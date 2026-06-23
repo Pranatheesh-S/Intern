@@ -6,14 +6,14 @@ import {
   CheckCircle, 
   BookOpen, 
   Info,
-  Lightbulb
+  Lightbulb,
+  ArrowLeft
 } from 'lucide-react';
 import Stage1_Experiment from './components/Stage1_Experiment';
 import PredictionPanel from './components/PredictionPanel';
 import QuizPanel from './components/QuizPanel';
-import './App.css';
 
-export default function App() {
+export default function SphericalMirrorsActivity({ onBackToDashboard }) {
   const [activeTab, setActiveTab] = useState('experiment');
   const [progress, setProgress] = useState({
     experiment: false,
@@ -41,14 +41,25 @@ export default function App() {
     <div className="app-container">
       {/* Premium Header */}
       <header className="header">
-        <div>
-          <div className="header-title">
-            <BookOpen style={{ color: '#6366f1' }} size={24} />
-            <h1>Spherical Mirrors Lab</h1>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+          {onBackToDashboard && (
+            <button 
+              onClick={onBackToDashboard}
+              className="outline"
+              style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)', height: 'fit-content' }}
+            >
+              <ArrowLeft size={14} /> Back
+            </button>
+          )}
+          <div>
+            <div className="header-title">
+              <BookOpen style={{ color: '#6366f1' }} size={24} />
+              <h1>Spherical Mirrors Lab</h1>
+            </div>
+            <p className="header-subtitle">
+              Explore Image Formation using Concave and Convex Surfaces
+            </p>
           </div>
-          <p className="header-subtitle">
-            Explore Image Formation using Concave and Convex Surfaces
-          </p>
         </div>
 
         {/* Tabbed Navigation Bar */}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { 
+  HelpCircle, 
   Check, 
   X, 
   RotateCcw, 
@@ -13,55 +14,58 @@ import {
 const QUESTIONS = [
   {
     id: 1,
-    title: "Mall Entrance",
-    question: "A curved mirror is fixed near the entrance of a shopping mall. Why is this mirror useful?",
+    question: "Why does the bulb glow when the safety pin touches both drawing pins?",
     options: [
-      { key: 'A', text: "It makes objects brighter" },
-      { key: 'B', text: "It allows a larger area to be seen" },
-      { key: 'C', text: "It makes people taller" },
-      { key: 'D', text: "It shows only nearby objects" }
+      { key: 'A', text: "The safety pin generates its own electrical energy." },
+      { key: 'B', text: "It completes the circuit, creating a closed path for current to flow." },
+      { key: 'C', text: "The drawing pins heat up the wires, making the bulb glow." }
     ],
     correct: 'B',
-    explanation: "Convex mirrors provide a wide field of view and help monitor large areas."
+    explanation: "A switch works by completing the loop. When the safety pin (a conductor) touches both pins, it closes the gap in the circuit, allowing electric current to flow continuously."
   },
   {
     id: 2,
-    title: "Fun House",
-    question: "A student stands near a curved mirror and sees her face enlarged. When she moves away, the image becomes upside down. What does this show?",
+    question: "What would happen if we replaced the metal safety pin with a plastic paperclip?",
     options: [
-      { key: 'A', text: "Mirror always enlarges images" },
-      { key: 'B', text: "Image changes with distance" },
-      { key: 'C', text: "Mirror behaves like a plane mirror" },
-      { key: 'D', text: "Mirror only forms upright images" }
+      { key: 'A', text: "The bulb would glow brighter than before." },
+      { key: 'B', text: "The bulb would not glow because plastic is an insulator." },
+      { key: 'C', text: "The plastic paperclip would melt due to the electricity." }
     ],
     correct: 'B',
-    explanation: "Concave mirrors can form different images depending on object distance."
+    explanation: "Plastic is an insulator, meaning it does not allow electric current to pass through it. Replacing a conductor with an insulator keeps the circuit open electrically."
   },
   {
     id: 3,
-    title: "Cosmetic Shop",
-    question: "Why do people use certain curved mirrors while applying makeup?",
+    question: "An electric switch is a device that is designed to:",
     options: [
-      { key: 'A', text: "To see fine details clearly" },
-      { key: 'B', text: "To see many people at once" },
-      { key: 'C', text: "To reduce brightness" },
-      { key: 'D', text: "To make objects look farther away" }
+      { key: 'A', text: "Generate electricity from mechanical movement." },
+      { key: 'B', text: "Store electrical charge like a battery." },
+      { key: 'C', text: "Either complete (close) or break (open) a circuit." }
     ],
-    correct: 'A',
-    explanation: "Concave mirrors can form enlarged images of nearby objects."
+    correct: 'C',
+    explanation: "A switch is a simple controller. In the ON position it completes (closes) the path for current, and in the OFF position it breaks (opens) the path."
   },
   {
     id: 4,
-    title: "School Corridor",
-    question: "Why is a curved mirror fixed near a sharp turn?",
+    question: "If a wire in the circuit is cut or disconnected, the circuit is called:",
     options: [
-      { key: 'A', text: "Decoration" },
-      { key: 'B', text: "To see around corners" },
-      { key: 'C', text: "To shorten images" },
-      { key: 'D', text: "To reflect sunlight" }
+      { key: 'A', text: "An open circuit." },
+      { key: 'B', text: "A closed circuit." },
+      { key: 'C', text: "A parallel circuit." }
+    ],
+    correct: 'A',
+    explanation: "An open circuit has a break or gap in its path. Current cannot flow across a physical gap, so the load (bulb) remains inactive."
+  },
+  {
+    id: 5,
+    question: "Which component acts as the source of electrical energy in our circuit?",
+    options: [
+      { key: 'A', text: "The steel safety pin." },
+      { key: 'B', text: "The 1.5V electric cell (battery)." },
+      { key: 'C', text: "The electric bulb holder." }
     ],
     correct: 'B',
-    explanation: "Convex mirrors help prevent accidents by showing a wider area."
+    explanation: "The battery (electric cell) is the energy source. It converts stored chemical energy into electrical energy, pushing the current around the circuit."
   }
 ];
 
@@ -97,11 +101,14 @@ export default function QuizPanel() {
       setCurrentIdx(currentIdx + 1);
     } else {
       setQuizFinished(true);
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.6 }
-      });
+      // Trigger confetti if they got a perfect score!
+      if (score + (selectedKey === currentQuestion.correct ? 1 : 0) === QUESTIONS.length) {
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+      }
     }
   };
 
@@ -113,6 +120,14 @@ export default function QuizPanel() {
     setQuizFinished(false);
   };
 
+  // Result assessment text
+  const getFeedbackMessage = () => {
+    const percentage = (score / QUESTIONS.length) * 100;
+    if (percentage === 100) return "Expert Electrician! 🎓 You've mastered switches and circuits!";
+    if (percentage >= 60) return "Great job! You have a solid grasp of how circuits work. 👍";
+    return "Keep practicing! Review the sandbox and stages to reinforce your concepts. 📚";
+  };
+
   return (
     <div className="glass-panel" style={{ maxWidth: '650px', margin: '0 auto', minHeight: '400px', display: 'flex', flexDirection: 'column' }}>
       
@@ -120,7 +135,7 @@ export default function QuizPanel() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '0.75rem', marginBottom: '1.25rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <BookOpen style={{ color: '#6366f1' }} size={20} />
-          <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Knowledge Check</h3>
+          <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Concept Challenge</h3>
         </div>
         {!quizFinished && (
           <span style={{ fontSize: '0.8rem', color: '#94a3b8', background: 'rgba(30, 41, 59, 0.6)', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
@@ -131,6 +146,7 @@ export default function QuizPanel() {
 
       <AnimatePresence mode="wait">
         {!quizFinished ? (
+          /* Question Panel */
           <motion.div
             key={currentIdx}
             initial={{ opacity: 0, x: 20 }}
@@ -138,12 +154,12 @@ export default function QuizPanel() {
             exit={{ opacity: 0, x: -20 }}
             style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
           >
-            <h4 style={{ fontSize: '1rem', color: '#f8fafc', lineHeight: '1.5', marginBottom: '0.25rem' }}>
-              <span style={{ color: '#818cf8', fontWeight: 'bold' }}>{currentQuestion.title}: </span> 
+            {/* Question Text */}
+            <h4 style={{ fontSize: '1rem', color: '#f8fafc', lineHeight: '1.5', marginBottom: '1.25rem' }}>
               {currentQuestion.question}
             </h4>
-            <div style={{ marginBottom: '1.25rem' }}></div>
 
+            {/* Options list */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1 }}>
               {currentQuestion.options.map((opt) => {
                 const isSelected = selectedKey === opt.key;
@@ -156,6 +172,7 @@ export default function QuizPanel() {
                   fontSize: '0.875rem'
                 };
 
+                // Style logic after answering
                 if (answered) {
                   if (isCorrectOption) {
                     buttonStyle.background = 'rgba(16, 185, 129, 0.1)';
@@ -205,6 +222,7 @@ export default function QuizPanel() {
               })}
             </div>
 
+            {/* Explanation & Next controls */}
             <div style={{ marginTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '1rem' }}>
               <AnimatePresence>
                 {answered && (
@@ -248,6 +266,7 @@ export default function QuizPanel() {
             </div>
           </motion.div>
         ) : (
+          /* Finished Screen */
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -275,26 +294,23 @@ export default function QuizPanel() {
               <Award size={48} />
             </div>
 
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Congratulations!</h2>
-            <p style={{ maxWidth: '400px', fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1.5rem' }}>
-              You explored spherical mirrors and discovered how image formation changes with mirror shape and distance.
-            </p>
-
-            {/* Summary Screen */}
-            <div style={{ background: 'rgba(30, 41, 59, 0.6)', borderRadius: '8px', padding: '1rem', textAlign: 'left', width: '100%', marginBottom: '1.5rem' }}>
-              <h4 style={{ color: '#818cf8', margin: '0 0 0.5rem 0', fontSize: '1rem' }}>Key Takeaways</h4>
-              <ul style={{ fontSize: '0.85rem', color: '#cbd5e1', paddingLeft: '1.2rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                <li>✓ Curved mirrors are called spherical mirrors.</li>
-                <li>✓ A concave mirror curves inward.</li>
-                <li>✓ A convex mirror curves outward.</li>
-                <li>✓ Concave mirrors can produce enlarged or inverted images.</li>
-                <li>✓ Convex mirrors produce smaller upright images.</li>
-                <li>✓ Convex mirrors are useful for safety and surveillance.</li>
-              </ul>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Quiz Completed!</h2>
+            
+            <div style={{ margin: '0.5rem 0 1rem 0' }}>
+              <span style={{ fontSize: '2.5rem', fontWeight: '800', color: '#ffffff' }}>
+                {score}
+              </span>
+              <span style={{ fontSize: '1.25rem', color: '#64748b', fontWeight: 'bold' }}>
+                /{QUESTIONS.length}
+              </span>
             </div>
 
+            <p style={{ maxWidth: '400px', fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1.5rem' }}>
+              {getFeedbackMessage()}
+            </p>
+
             <button onClick={handleRestart} className="primary" style={{ gap: '0.5rem' }}>
-              <RotateCcw size={16} /> Play Again
+              <RotateCcw size={16} /> Restart Quiz
             </button>
           </motion.div>
         )}
