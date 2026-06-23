@@ -42,7 +42,7 @@ export default function App() {
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
         gap: '1.25rem',
         marginTop: '0.5rem'
       }}>
@@ -175,7 +175,7 @@ export default function App() {
       {/* Physics Activities Grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '1.25rem'
       }}>
         {/* Activity Card 1: Electric Switch */}

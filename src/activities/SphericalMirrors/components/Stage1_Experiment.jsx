@@ -81,7 +81,7 @@ export default function Stage1_Experiment({ onComplete }) {
         <div>
           <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem', color: '#cbd5e1' }}>Interactive Controls</h3>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '1rem' }}>
+          <div className="responsive-grid-2" style={{ gap: '0.5rem', marginBottom: '1rem' }}>
             <button 
               className={mirrorType === 'concave' ? 'primary' : 'outline'}
               onClick={() => handleMirrorChange('concave')}
@@ -98,7 +98,7 @@ export default function Stage1_Experiment({ onComplete }) {
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+          <div className="responsive-grid-2" style={{ gap: '0.5rem' }}>
             <button 
               className={distance === 'close' ? 'primary' : 'outline'}
               onClick={() => handleDistanceChange('close')}
