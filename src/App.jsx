@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, 
   Zap, 
@@ -13,19 +13,44 @@ import {
 import ElectricSwitchActivity from './activities/ElectricSwitch';
 import ActivityTemplate from './activities/ActivityTemplate';
 import SphericalMirrorsActivity from './activities/SphericalMirrors';
+import FoodTestingActivity from './activities/FoodTesting';
+import FatTestingActivity from './activities/FatTesting';
+import ProteinTestingActivity from './activities/ProteinTesting';
 import './App.css';
 
 export default function App() {
-  const [activeSubject, setActiveSubject] = useState(null); // null | 'physics' | 'chemistry' | 'biology'
-  const [activeActivity, setActiveActivity] = useState(null); // null | 'electric_switch' | 'boilerplate' | 'spherical_mirrors'
+  const [activeSubject, setActiveSubject] = useState(() => {
+    const params = new URLSearchParams(window.location.hash.replace('#', '?'));
+    return params.get('subject') || null;
+  });
+  const [activeActivity, setActiveActivity] = useState(() => {
+    const params = new URLSearchParams(window.location.hash.replace('#', '?'));
+    return params.get('activity') || null;
+  });
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const params = new URLSearchParams(window.location.hash.replace('#', '?'));
+      setActiveSubject(params.get('subject') || null);
+      setActiveActivity(params.get('activity') || null);
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const navigateTo = (subject, activity) => {
+    const params = new URLSearchParams();
+    if (subject) params.set('subject', subject);
+    if (activity) params.set('activity', activity);
+    window.location.hash = params.toString();
+  };
 
   const handleBackToSubjects = () => {
-    setActiveSubject(null);
-    setActiveActivity(null);
+    navigateTo(null, null);
   };
 
   const handleBackToLabs = () => {
-    setActiveActivity(null);
+    navigateTo(activeSubject, null);
   };
 
   // Renders the main subject selector dashboard
@@ -46,42 +71,7 @@ export default function App() {
         gap: '1.25rem',
         marginTop: '0.5rem'
       }}>
-        {/* Subject Card 1: Physics */}
-        <div 
-          className="glass-panel"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid rgba(99, 102, 241, 0.1)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
-            3 LABS ACTIVE
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Zap size={22} style={{ color: '#fbbf24' }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Physics Wing</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Explore electricity, simple switch circuits, conductors and insulators, and electromagnetism through step-by-step assembly and parameter sandboxing.
-          </p>
-
-          <button 
-            onClick={() => setActiveSubject('physics')}
-            className="primary" 
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            Enter Physics Wing <ArrowRight size={14} />
-          </button>
-        </div>
-
-        {/* Subject Card 2: Chemistry */}
+        {/* Subject Card 1: Class 6th */}
         <div 
           className="glass-panel"
           style={{
@@ -99,24 +89,59 @@ export default function App() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <FlaskConical size={22} style={{ color: '#06b6d4' }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Chemistry Wing</h3>
+            <Compass size={22} style={{ color: '#fbbf24' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 6th Wing</h3>
           </div>
 
           <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Practice acid-base titration, balance chemical equations, and inspect periodic properties within virtual chemical test tubes safely.
+            Explore introductory science concepts with interactive experiments designed specifically for 6th-grade students.
           </p>
 
           <button 
-            onClick={() => setActiveSubject('chemistry')}
+            onClick={() => navigateTo('class6', null)}
             className="outline" 
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
-            Explore Chemistry Wing <ArrowRight size={14} />
+            Explore Class 6th <ArrowRight size={14} />
           </button>
         </div>
 
-        {/* Subject Card 3: Biology */}
+        {/* Subject Card 2: Class 7th */}
+        <div 
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid rgba(99, 102, 241, 0.1)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+            3 LABS ACTIVE
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <FlaskConical size={22} style={{ color: '#06b6d4' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 7th Wing</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Dive into advanced interactive experiments including electricity, spherical mirrors, and more curriculum-aligned labs.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class7', null)}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            Enter Class 7th <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Subject Card 3: Class 8th */}
         <div 
           className="glass-panel"
           style={{
@@ -135,7 +160,7 @@ export default function App() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Dna size={22} style={{ color: '#10b981' }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Biology Wing</h3>
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 8th Wing</h3>
           </div>
 
           <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0, lineHeight: '1.5', flex: 1 }}>
@@ -143,19 +168,290 @@ export default function App() {
           </p>
 
           <button 
-            onClick={() => setActiveSubject('biology')}
+            onClick={() => navigateTo('class8', null)}
             className="outline" 
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
-            Explore Biology Wing <ArrowRight size={14} />
+            Explore Class 8th <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Subject Card 4: Class 9th */}
+        <div 
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid rgba(255, 255, 255, 0.04)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+            COMING SOON
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Zap size={22} style={{ color: '#ec4899' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 9th Wing</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Explore high school science fundamentals with complex virtual labs and conceptual checkouts.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class9', null)}
+            className="outline" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            Explore Class 9th <ArrowRight size={14} />
           </button>
         </div>
       </div>
     </div>
   );
 
-  // Renders Physics Activities List
-  const renderPhysicsWing = () => (
+  // Renders Class 6th Activities List
+  const renderClass6Wing = () => {
+    const chapters = Array.from({ length: 9 }, (_, i) => i + 1);
+    
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Subheader Wing Navigation */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
+          <button 
+            onClick={handleBackToSubjects}
+            className="outline"
+            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
+          >
+            <ArrowLeft size={14} /> Back to Subjects
+          </button>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 6th Wing</h2>
+            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Interactive Demonstrations & Labs for Class 6</span>
+          </div>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '1.25rem'
+        }}>
+          {chapters.map(chapterNum => {
+            if (chapterNum === 3) {
+              return (
+                <div 
+                  key={chapterNum}
+                  className="glass-panel" 
+                  style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: '1rem',
+                    padding: '1.5rem',
+                    border: '1px solid rgba(99, 102, 241, 0.4)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Active Chapter
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <BookOpen size={20} style={{ color: '#818cf8' }} />
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Chapter 3</h3>
+                  </div>
+
+                  <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                    Includes Activity 3.5: Testing for Starch.
+                  </p>
+
+                  <button 
+                    onClick={() => navigateTo('class6', 'chapter3')}
+                    className="primary" 
+                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                  >
+                    Open Chapter <ArrowRight size={14} />
+                  </button>
+                </div>
+              );
+            }
+
+            return (
+            <div 
+              key={chapterNum}
+              className="glass-panel" 
+              style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '1rem',
+                padding: '1.5rem',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Coming Soon
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <BookOpen size={20} style={{ color: '#818cf8' }} />
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Chapter {chapterNum}</h3>
+              </div>
+
+              <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                Interactive science concepts, virtual experiments, and quizzes for Chapter {chapterNum}.
+              </p>
+
+              <button 
+                disabled
+                className="outline" 
+                style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem', opacity: 0.5, cursor: 'not-allowed' }}
+              >
+                Module Locked
+              </button>
+            </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const renderClass6Chapter3 = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
+        <button 
+          onClick={() => navigateTo('class6', null)}
+          className="outline"
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
+        >
+          <ArrowLeft size={14} /> Back to Class 6 Wing
+        </button>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Chapter 3 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Select a lab to begin</span>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '1.25rem'
+      }}>
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid rgba(16, 185, 129, 0.4)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <FlaskConical size={20} style={{ color: '#06b6d4' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Activity 3.5</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Testing for Starch. Learn how to identify starch in food items using dilute iodine solution.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'food_testing')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity 3.6 Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid rgba(16, 185, 129, 0.4)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <FlaskConical size={20} style={{ color: '#06b6d4' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Activity 3.6</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Testing for Fats. Learn how to identify fats using the paper press test.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'fat_testing')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity 3.7 Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid rgba(139, 92, 246, 0.4)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <FlaskConical size={20} style={{ color: '#06b6d4' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Activity 3.7</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Testing for Proteins. Use the Biuret test to discover which foods contain protein.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'protein_testing')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Renders Class 7th Activities List
+  const renderClass7Wing = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Subheader Wing Navigation */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
@@ -167,8 +463,8 @@ export default function App() {
           <ArrowLeft size={14} /> Back to Subjects
         </button>
         <div>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Physics Wing</h2>
-          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Interactive Physics Demonstrations & Labs</span>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 7th Wing</h2>
+          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Interactive Demonstrations & Labs for Class 7</span>
         </div>
       </div>
 
@@ -205,7 +501,7 @@ export default function App() {
           </p>
 
           <button 
-            onClick={() => setActiveActivity('electric_switch')}
+            onClick={() => navigateTo(activeSubject, 'electric_switch')}
             className="primary" 
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
@@ -240,7 +536,7 @@ export default function App() {
           </p>
 
           <button 
-            onClick={() => setActiveActivity('spherical_mirrors')}
+            onClick={() => navigateTo(activeSubject, 'spherical_mirrors')}
             className="primary" 
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
@@ -275,7 +571,7 @@ export default function App() {
           </p>
 
           <button 
-            onClick={() => setActiveActivity('boilerplate')}
+            onClick={() => navigateTo(activeSubject, 'boilerplate')}
             className="outline" 
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
@@ -359,16 +655,33 @@ export default function App() {
           </div>
           {activeSubject && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#64748b' }}>
-              <Home size={14} />
-              <span>Dashboard</span>
+              <div 
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }} 
+                onClick={handleBackToSubjects}
+                title="Go back to Dashboard"
+              >
+                <Home size={14} />
+                <span style={{ cursor: 'pointer' }}>Dashboard</span>
+              </div>
               <ArrowRight size={10} />
-              <span style={{ color: '#cbd5e1', textTransform: 'capitalize' }}>{activeSubject}</span>
+              <span 
+                style={{ color: '#cbd5e1', textTransform: 'capitalize', cursor: activeActivity ? 'pointer' : 'default' }}
+                onClick={() => activeActivity && handleBackToLabs()}
+                title={activeActivity ? "Go back to class" : ""}
+              >
+                {activeSubject === 'class6' ? 'Class 6th' : 
+                 activeSubject === 'class7' ? 'Class 7th' : 
+                 activeSubject === 'class8' ? 'Class 8th' : 'Class 9th'}
+              </span>
               {activeActivity && (
                 <>
                   <ArrowRight size={10} />
                   <span style={{ color: '#818cf8' }}>
                     {activeActivity === 'electric_switch' ? 'Electric Switch' : 
                      activeActivity === 'spherical_mirrors' ? 'Spherical Mirrors' : 
+                     activeActivity === 'food_testing' ? 'Food Testing' :
+                     activeActivity === 'fat_testing' ? 'Fat Testing' :
+                     activeActivity === 'protein_testing' ? 'Protein Testing' :
                      'Template Demo'}
                   </span>
                 </>
@@ -383,7 +696,7 @@ export default function App() {
         {/* HIERARCHICAL ROUTER */}
         {activeSubject === null ? (
           renderSubjectSelector()
-        ) : activeSubject === 'physics' ? (
+        ) : activeSubject === 'class7' ? (
           activeActivity === 'electric_switch' ? (
             <ElectricSwitchActivity onBackToDashboard={handleBackToLabs} />
           ) : activeActivity === 'spherical_mirrors' ? (
@@ -391,12 +704,24 @@ export default function App() {
           ) : activeActivity === 'boilerplate' ? (
             <ActivityTemplate onBackToDashboard={handleBackToLabs} />
           ) : (
-            renderPhysicsWing()
+            renderClass7Wing()
           )
-        ) : activeSubject === 'chemistry' ? (
-          renderUnderConstruction('Chemistry', FlaskConical, '#06b6d4')
-        ) : activeSubject === 'biology' ? (
-          renderUnderConstruction('Biology', Dna, '#10b981')
+        ) : activeSubject === 'class6' ? (
+          activeActivity === 'food_testing' ? (
+            <FoodTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
+          ) : activeActivity === 'fat_testing' ? (
+            <FatTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
+          ) : activeActivity === 'protein_testing' ? (
+            <ProteinTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
+          ) : activeActivity === 'chapter3' ? (
+            renderClass6Chapter3()
+          ) : (
+            renderClass6Wing()
+          )
+        ) : activeSubject === 'class8' ? (
+          renderUnderConstruction('Class 8th', Dna, '#10b981')
+        ) : activeSubject === 'class9' ? (
+          renderUnderConstruction('Class 9th', Zap, '#ec4899')
         ) : null}
       </main>
     </div>
