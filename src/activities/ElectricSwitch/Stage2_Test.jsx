@@ -136,7 +136,7 @@ export default function Stage2_Test({ onComplete }) {
               className="primary"
               style={{ width: '100%', gap: '0.5rem' }}
             >
-              <Play size={16} fill="currentColor" /> Submit Prediction & Test
+              <Play size={16} fill="currentColor" /> Submit Prediction &amp; Test
             </button>
           </div>
         ) : (
@@ -285,16 +285,9 @@ export default function Stage2_Test({ onComplete }) {
           viewBox="0 0 600 480" 
           style={{ maxWidth: '600px', maxHeight: '480px' }}
         >
-          {/* Cardboard Base */}
           <CardboardSVG />
-
-          {/* Bulb Component */}
           <BulbSVG isPlaced={true} isOn={isBulbOn} />
-
-          {/* Battery Component */}
           <BatterySVG isPlaced={true} />
-
-          {/* Connecting Wires */}
           <WiresSVG 
             isWireConnected={true} 
             isBatteryPresent={true}
@@ -302,11 +295,7 @@ export default function Stage2_Test({ onComplete }) {
             arePinsPlaced={true}
             isCurrentFlowing={isCurrentFlowing}
           />
-
-          {/* Drawing Pin 1 (Pivot) */}
           <DrawingPinSVG x={450} y={250} label="Drawing Pin 1" isPlaced={true} />
-
-          {/* Safety Pin (Pivoted at Pin 1. Rotates dynamically!) */}
           <motion.g
             animate={{ rotate: isPinConnected ? 0 : -35 }}
             transition={{ type: 'spring', stiffness: 90, damping: 10 }}
@@ -316,17 +305,15 @@ export default function Stage2_Test({ onComplete }) {
             <SafetyPinSVG 
               x={450} 
               y={250} 
-              rotation={0} // rotation is controlled by motion.g above
+              rotation={0}
               isPlaced={true}
               material="metal"
             />
           </motion.g>
-
-          {/* Drawing Pin 2 (Contact Point) */}
           <DrawingPinSVG x={450} y={370} label="Drawing Pin 2" isPlaced={true} />
         </svg>
 
-        {/* Action Prompt Overlay inside Canvas */}
+        {/* Action Prompt Overlay */}
         {predictionSubmitted && !testTriggered && (
           <div style={{ 
             position: 'absolute', 

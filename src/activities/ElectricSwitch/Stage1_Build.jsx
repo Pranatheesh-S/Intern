@@ -734,15 +734,14 @@ export default function Stage1_Build({ onComplete }) {
                             : isUnlocked
                               ? "rgba(30, 41, 59, 0.7)"
                               : "rgba(15, 23, 42, 0.25)",
-                      border: `1px solid ${
-                        isPlaced && !isWires
+                      border: `1px solid ${isPlaced && !isWires
                           ? "rgba(16, 185, 129, 0.3)"
                           : isSelected
                             ? "#6366f1"
                             : isUnlocked
                               ? "rgba(99, 102, 241, 0.25)"
                               : "rgba(255,255,255,0.03)"
-                      }`,
+                        }`,
                       color:
                         isPlaced && !isWires
                           ? "#6ee7b7"
