@@ -6,8 +6,8 @@ const ITEMS = [
   { id: 'copper', name: 'Piece of copper', correctLustre: 'lustrous', correctHardness: 'hard', correctHammer: 'flattens' },
   { id: 'aluminium', name: 'Piece of aluminium', correctLustre: 'lustrous', correctHardness: 'hard', correctHammer: 'flattens' },
   { id: 'iron_nail', name: 'Iron nail', correctLustre: 'lustrous', correctHardness: 'hard', correctHammer: 'flattens' },
-  { id: 'coal', name: 'Piece of coal', correctLustre: 'non-lustrous', correctHardness: 'hard', correctHammer: 'breaks' },
-  { id: 'sulfur', name: 'Lump of sulfur', correctLustre: 'non-lustrous', correctHardness: 'soft', correctHammer: 'breaks' },
+  { id: 'coal', name: 'Piece of coal', correctLustre: 'non-lustrous', correctHardness: 'soft', correctHammer: 'breaks' },
+  { id: 'sulfur', name: 'Lump of sulfur (pea-sized)', correctLustre: 'non-lustrous', correctHardness: 'soft_brittle', correctHammer: 'breaks' },
   { id: 'wood', name: 'Block of wood', correctLustre: 'non-lustrous', correctHardness: 'hard', correctHammer: 'breaks' }
 ];
 
@@ -127,6 +127,7 @@ export default function QuizPanel({ observations }) {
                       <option value="" disabled>Select...</option>
                       <option value="hard">Hard</option>
                       <option value="soft">Soft</option>
+                      <option value="soft_brittle">Soft and brittle</option>
                     </select>
                   </td>
                   <td style={{ padding: '1rem' }}>
@@ -144,7 +145,7 @@ export default function QuizPanel({ observations }) {
                       }}
                     >
                       <option value="" disabled>Select...</option>
-                      <option value="flattens">Flattens into pieces</option>
+                      <option value="flattens">Flattens into sheets</option>
                       <option value="breaks">Breaks into pieces</option>
                     </select>
                   </td>

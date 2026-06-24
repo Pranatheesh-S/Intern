@@ -3,12 +3,12 @@ import { motion } from 'framer-motion';
 import { Eye, CheckCircle, ArrowRight, ShieldAlert, Sparkles, Hand, Box } from 'lucide-react';
 
 const ITEMS = [
-  { id: 'copper', name: 'Piece of copper', color: '#b87333', defaultLustre: 'lustrous', defaultHardness: 'hard', img: 'copper' },
-  { id: 'aluminium', name: 'Piece of aluminium', color: '#a6a9b6', defaultLustre: 'lustrous', defaultHardness: 'hard', img: 'aluminium' },
-  { id: 'iron_nail', name: 'Iron nail', color: '#5b5b5b', defaultLustre: 'lustrous', defaultHardness: 'hard', img: 'iron_nail' },
-  { id: 'coal', name: 'Piece of coal', color: '#2d2d2d', defaultLustre: 'non-lustrous', defaultHardness: 'hard', img: 'coal' },
-  { id: 'sulfur', name: 'Lump of sulfur', color: '#e8d82a', defaultLustre: 'non-lustrous', defaultHardness: 'soft', img: 'sulfur' },
-  { id: 'wood', name: 'Block of wood', color: '#8b5a2b', defaultLustre: 'non-lustrous', defaultHardness: 'hard', img: 'wood' }
+  { id: 'copper', name: 'Piece of copper', color: '#b87333', defaultLustre: 'lustrous', defaultHardness: 'hard', img: 'copper', isShiny: true },
+  { id: 'aluminium', name: 'Piece of aluminium', color: '#a6a9b6', defaultLustre: 'lustrous', defaultHardness: 'hard', img: 'aluminium', isShiny: true },
+  { id: 'iron_nail', name: 'Iron nail', color: '#5b5b5b', defaultLustre: 'lustrous', defaultHardness: 'hard', img: 'iron_nail', isShiny: true },
+  { id: 'coal', name: 'Piece of coal', color: '#2d2d2d', defaultLustre: 'non-lustrous', defaultHardness: 'hard', img: 'coal', isShiny: false },
+  { id: 'sulfur', name: 'Lump of sulfur', color: '#e8d82a', defaultLustre: 'non-lustrous', defaultHardness: 'soft', img: 'sulfur', isShiny: false },
+  { id: 'wood', name: 'Block of wood', color: '#8b5a2b', defaultLustre: 'non-lustrous', defaultHardness: 'hard', img: 'wood', isShiny: false }
 ];
 
 export default function Stage1_Observation({ onComplete }) {
@@ -82,19 +82,12 @@ export default function Stage1_Observation({ onComplete }) {
                   position: 'relative',
                   overflow: 'hidden'
                 }}>
-                  {item.defaultLustre === 'lustrous' && (
+                  {item.isShiny && (
                     <motion.div
-                      animate={{ x: ['-150%', '250%'] }}
-                      transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '40%',
-                        height: '100%',
-                        background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent)',
-                        transform: 'skewX(-20deg)'
-                      }}
+                      initial={{ x: '-150%' }}
+                      animate={{ x: '150%' }}
+                      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut", repeatDelay: 1 }}
+                      style={{ position: 'absolute', top: 0, left: '-50%', width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)', transform: 'skewX(-20deg)' }}
                     />
                   )}
                 </div>
@@ -135,19 +128,12 @@ export default function Stage1_Observation({ onComplete }) {
                     position: 'relative',
                     overflow: 'hidden'
                   }}>
-                    {item.defaultLustre === 'lustrous' && (
+                    {item.isShiny && (
                       <motion.div
-                        animate={{ x: ['-150%', '250%'] }}
+                        initial={{ x: '-150%' }}
+                        animate={{ x: '150%' }}
                         transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }}
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '40%',
-                          height: '100%',
-                          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent)',
-                          transform: 'skewX(-20deg)'
-                        }}
+                        style={{ position: 'absolute', top: 0, left: '-50%', width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)', transform: 'skewX(-20deg)' }}
                       />
                     )}
                   </div>
@@ -188,20 +174,27 @@ export default function Stage1_Observation({ onComplete }) {
                       <Hand size={14} style={{ display: 'inline', marginRight: '0.25rem', verticalAlign: 'middle' }} /> 
                       Hardness
                     </label>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <button
                         onClick={() => handleObservation(item.id, 'hardness', 'hard')}
                         className={`tab-btn ${obs.hardness === 'hard' ? 'active' : ''}`}
-                        style={{ flex: 1, padding: '0.75rem', background: obs.hardness === 'hard' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.05)', border: obs.hardness === 'hard' ? '1px solid #6366f1' : '1px solid transparent' }}
+                        style={{ flex: '1 1 30%', padding: '0.75rem', background: obs.hardness === 'hard' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.05)', border: obs.hardness === 'hard' ? '1px solid #6366f1' : '1px solid transparent' }}
                       >
                         Hard
                       </button>
                       <button
                         onClick={() => handleObservation(item.id, 'hardness', 'soft')}
                         className={`tab-btn ${obs.hardness === 'soft' ? 'active' : ''}`}
-                        style={{ flex: 1, padding: '0.75rem', background: obs.hardness === 'soft' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.05)', border: obs.hardness === 'soft' ? '1px solid #6366f1' : '1px solid transparent' }}
+                        style={{ flex: '1 1 30%', padding: '0.75rem', background: obs.hardness === 'soft' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.05)', border: obs.hardness === 'soft' ? '1px solid #6366f1' : '1px solid transparent' }}
                       >
                         Soft
+                      </button>
+                      <button
+                        onClick={() => handleObservation(item.id, 'hardness', 'soft_brittle')}
+                        className={`tab-btn ${obs.hardness === 'soft_brittle' ? 'active' : ''}`}
+                        style={{ flex: '1 1 30%', padding: '0.75rem', background: obs.hardness === 'soft_brittle' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.05)', border: obs.hardness === 'soft_brittle' ? '1px solid #6366f1' : '1px solid transparent' }}
+                      >
+                        Soft & Brittle
                       </button>
                     </div>
                   </div>
