@@ -16,6 +16,7 @@ import SphericalMirrorsActivity from './activities/SphericalMirrors';
 import FoodTestingActivity from './activities/FoodTesting';
 import FatTestingActivity from './activities/FatTesting';
 import ProteinTestingActivity from './activities/ProteinTesting';
+import MaterialsPropertiesActivity from './activities/MaterialsProperties';
 import './App.css';
 
 export default function App() {
@@ -241,7 +242,7 @@ export default function App() {
           gap: '1.25rem'
         }}>
           {chapters.map(chapterNum => {
-            if (chapterNum === 3) {
+            if (chapterNum === 3 || chapterNum === 4) {
               return (
                 <div 
                   key={chapterNum}
@@ -262,15 +263,17 @@ export default function App() {
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
                     <BookOpen size={20} style={{ color: '#818cf8' }} />
-                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Chapter 3</h3>
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Chapter {chapterNum}</h3>
                   </div>
 
                   <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
-                    Includes Activity 3.5: Testing for Starch.
+                    {chapterNum === 3 
+                      ? "Includes Activity 3.5: Testing for Starch." 
+                      : "Includes Activity 4.1: Appearance, hardness, and effect of hammering on different materials."}
                   </p>
 
                   <button 
-                    onClick={() => navigateTo('class6', 'chapter3')}
+                    onClick={() => navigateTo('class6', `chapter${chapterNum}`)}
                     className="primary" 
                     style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
                   >
@@ -440,6 +443,64 @@ export default function App() {
 
           <button 
             onClick={() => navigateTo('class6', 'protein_testing')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderClass6Chapter4 = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
+        <button 
+          onClick={() => navigateTo('class6', null)}
+          className="outline"
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
+        >
+          <ArrowLeft size={14} /> Back to Class 6 Wing
+        </button>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Chapter 4 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Select a lab to begin</span>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '1.25rem'
+      }}>
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid rgba(139, 92, 246, 0.4)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <FlaskConical size={20} style={{ color: '#06b6d4' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Activity 4.1</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Properties of Materials. Test the appearance, hardness, and hammering effect on various materials.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'materials_properties')}
             className="primary" 
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
@@ -682,6 +743,7 @@ export default function App() {
                      activeActivity === 'food_testing' ? 'Food Testing' :
                      activeActivity === 'fat_testing' ? 'Fat Testing' :
                      activeActivity === 'protein_testing' ? 'Protein Testing' :
+                     activeActivity === 'materials_properties' ? 'Properties of Materials' :
                      'Template Demo'}
                   </span>
                 </>
@@ -713,8 +775,12 @@ export default function App() {
             <FatTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
           ) : activeActivity === 'protein_testing' ? (
             <ProteinTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
+          ) : activeActivity === 'materials_properties' ? (
+            <MaterialsPropertiesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'chapter3' ? (
             renderClass6Chapter3()
+          ) : activeActivity === 'chapter4' ? (
+            renderClass6Chapter4()
           ) : (
             renderClass6Wing()
           )
