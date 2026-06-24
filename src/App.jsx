@@ -273,7 +273,7 @@ export default function App() {
                   </p>
 
                   <button 
-                    onClick={() => navigateTo('class6', 'chapter3')}
+                    onClick={() => navigateTo('class6', `chapter${chapterNum}`)}
                     className="primary" 
                     style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
                   >
@@ -743,6 +743,7 @@ export default function App() {
                      activeActivity === 'food_testing' ? 'Food Testing' :
                      activeActivity === 'fat_testing' ? 'Fat Testing' :
                      activeActivity === 'protein_testing' ? 'Protein Testing' :
+                     activeActivity === 'materials_properties' ? 'Properties of Materials' :
                      'Template Demo'}
                   </span>
                 </>

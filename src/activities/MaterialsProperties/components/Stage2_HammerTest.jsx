@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Hammer, CheckCircle, ArrowRight, Play, RefreshCw, Box } from 'lucide-react';
 
 const ITEMS = [
-  { id: 'copper', name: 'Piece of copper', color: '#b87333', result: 'flattens' },
-  { id: 'aluminium', name: 'Piece of aluminium', color: '#a6a9b6', result: 'flattens' },
-  { id: 'iron_nail', name: 'Iron nail', color: '#5b5b5b', result: 'flattens' },
-  { id: 'coal', name: 'Piece of coal', color: '#2d2d2d', result: 'breaks' },
-  { id: 'sulfur', name: 'Lump of sulfur', color: '#e8d82a', result: 'breaks' },
-  { id: 'wood', name: 'Block of wood', color: '#8b5a2b', result: 'breaks' }
+  { id: 'copper', name: 'Piece of copper', color: '#b87333', result: 'flattens', isShiny: true },
+  { id: 'aluminium', name: 'Piece of aluminium', color: '#a6a9b6', result: 'flattens', isShiny: true },
+  { id: 'iron_nail', name: 'Iron nail', color: '#5b5b5b', result: 'flattens', isShiny: true },
+  { id: 'coal', name: 'Piece of coal', color: '#2d2d2d', result: 'breaks', isShiny: false },
+  { id: 'sulfur', name: 'Lump of sulfur', color: '#e8d82a', result: 'breaks', isShiny: false },
+  { id: 'wood', name: 'Block of wood', color: '#8b5a2b', result: 'breaks', isShiny: false }
 ];
 
 export default function Stage2_HammerTest({ onComplete }) {
@@ -74,23 +74,14 @@ export default function Stage2_HammerTest({ onComplete }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <div style={{
                     width: '24px', height: '24px', borderRadius: '4px', background: item.color,
-                    boxShadow: 'inset 0 0 5px rgba(0,0,0,0.5)',
-                    position: 'relative',
-                    overflow: 'hidden'
+                    boxShadow: 'inset 0 0 5px rgba(0,0,0,0.5)', position: 'relative', overflow: 'hidden'
                   }}>
-                    {['copper', 'aluminium', 'iron_nail'].includes(item.id) && (
+                    {item.isShiny && (
                       <motion.div
-                        animate={{ x: ['-150%', '250%'] }}
-                        transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }}
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '40%',
-                          height: '100%',
-                          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent)',
-                          transform: 'skewX(-20deg)'
-                        }}
+                        initial={{ x: '-150%' }}
+                        animate={{ x: '150%' }}
+                        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut", repeatDelay: 1 }}
+                        style={{ position: 'absolute', top: 0, left: '-50%', width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)', transform: 'skewX(-20deg)' }}
                       />
                     )}
                   </div>
@@ -146,19 +137,12 @@ export default function Stage2_HammerTest({ onComplete }) {
                         overflow: 'hidden'
                       }}
                     >
-                      {['copper', 'aluminium', 'iron_nail'].includes(item.id) && (
+                      {item.isShiny && (
                         <motion.div
-                          animate={{ x: ['-150%', '250%'] }}
+                          initial={{ x: '-150%' }}
+                          animate={{ x: '150%' }}
                           transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 1 }}
-                          style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '40%',
-                            height: '100%',
-                            background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent)',
-                            transform: 'skewX(-20deg)'
-                          }}
+                          style={{ position: 'absolute', top: 0, left: '-50%', width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)', transform: 'skewX(-20deg)' }}
                         />
                       )}
                     </motion.div>
@@ -233,7 +217,7 @@ export default function Stage2_HammerTest({ onComplete }) {
                         className="tab-btn"
                         style={{ flex: 1, padding: '0.75rem', border: '1px solid #6366f1', background: 'rgba(99, 102, 241, 0.1)' }}
                       >
-                        Flattens into a sheet
+                        Flattens into sheets
                       </button>
                       <button 
                         onClick={() => handleRecord(item.id, 'breaks')}
