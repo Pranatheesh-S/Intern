@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  BookOpen, 
-  Zap, 
-  FlaskConical, 
-  Dna, 
-  ArrowLeft, 
-  Compass, 
-  Play, 
+import {
+  BookOpen,
+  Zap,
+  FlaskConical,
+  Dna,
+  ArrowLeft,
+  Compass,
+  Play,
   ArrowRight,
   Home
 } from 'lucide-react';
@@ -73,7 +73,7 @@ export default function App() {
         marginTop: '0.5rem'
       }}>
         {/* Subject Card 1: Class 6th */}
-        <div 
+        <div
           className="glass-panel"
           style={{
             display: 'flex',
@@ -98,9 +98,9 @@ export default function App() {
             Explore introductory science concepts with interactive experiments designed specifically for 6th-grade students.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo('class6', null)}
-            className="outline" 
+            className="outline"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             Explore Class 6th <ArrowRight size={14} />
@@ -108,7 +108,7 @@ export default function App() {
         </div>
 
         {/* Subject Card 2: Class 7th */}
-        <div 
+        <div
           className="glass-panel"
           style={{
             display: 'flex',
@@ -133,9 +133,9 @@ export default function App() {
             Dive into advanced interactive experiments including electricity, spherical mirrors, and more curriculum-aligned labs.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo('class7', null)}
-            className="primary" 
+            className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             Enter Class 7th <ArrowRight size={14} />
@@ -143,7 +143,7 @@ export default function App() {
         </div>
 
         {/* Subject Card 3: Class 8th */}
-        <div 
+        <div
           className="glass-panel"
           style={{
             display: 'flex',
@@ -168,9 +168,9 @@ export default function App() {
             Explore food webs and ecosystems, dissect cell organelles under a virtual microscope, and model human respiratory systems.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo('class8', null)}
-            className="outline" 
+            className="outline"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             Explore Class 8th <ArrowRight size={14} />
@@ -178,7 +178,7 @@ export default function App() {
         </div>
 
         {/* Subject Card 4: Class 9th */}
-        <div 
+        <div
           className="glass-panel"
           style={{
             display: 'flex',
@@ -203,9 +203,9 @@ export default function App() {
             Explore high school science fundamentals with complex virtual labs and conceptual checkouts.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo('class9', null)}
-            className="outline" 
+            className="outline"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             Explore Class 9th <ArrowRight size={14} />
@@ -218,12 +218,12 @@ export default function App() {
   // Renders Class 6th Activities List
   const renderClass6Wing = () => {
     const chapters = Array.from({ length: 9 }, (_, i) => i + 1);
-    
+
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Subheader Wing Navigation */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
-          <button 
+          <button
             onClick={handleBackToSubjects}
             className="outline"
             style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
@@ -244,12 +244,12 @@ export default function App() {
           {chapters.map(chapterNum => {
             if (chapterNum === 3 || chapterNum === 4) {
               return (
-                <div 
+                <div
                   key={chapterNum}
-                  className="glass-panel" 
-                  style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
+                  className="glass-panel"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
                     gap: '1rem',
                     padding: '1.5rem',
                     border: '1px solid rgba(99, 102, 241, 0.4)',
@@ -273,7 +273,7 @@ export default function App() {
                   </p>
 
                   <button 
-                    onClick={() => navigateTo('class6', `chapter${chapterNum}`)}
+                    onClick={() => navigateTo('class6', 'chapter3')}
                     className="primary" 
                     style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
                   >
@@ -284,40 +284,40 @@ export default function App() {
             }
 
             return (
-            <div 
-              key={chapterNum}
-              className="glass-panel" 
-              style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '1rem',
-                padding: '1.5rem',
-                border: '1px solid rgba(255, 255, 255, 0.04)',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Coming Soon
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                <BookOpen size={20} style={{ color: '#818cf8' }} />
-                <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Chapter {chapterNum}</h3>
-              </div>
-
-              <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
-                Interactive science concepts, virtual experiments, and quizzes for Chapter {chapterNum}.
-              </p>
-
-              <button 
-                disabled
-                className="outline" 
-                style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem', opacity: 0.5, cursor: 'not-allowed' }}
+              <div
+                key={chapterNum}
+                className="glass-panel"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  padding: '1.5rem',
+                  border: '1px solid rgba(255, 255, 255, 0.04)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
               >
-                Module Locked
-              </button>
-            </div>
+                <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Coming Soon
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                  <BookOpen size={20} style={{ color: '#818cf8' }} />
+                  <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Chapter {chapterNum}</h3>
+                </div>
+
+                <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                  Interactive science concepts, virtual experiments, and quizzes for Chapter {chapterNum}.
+                </p>
+
+                <button
+                  disabled
+                  className="outline"
+                  style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem', opacity: 0.5, cursor: 'not-allowed' }}
+                >
+                  Module Locked
+                </button>
+              </div>
             );
           })}
         </div>
@@ -328,7 +328,7 @@ export default function App() {
   const renderClass6Chapter3 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
-        <button 
+        <button
           onClick={() => navigateTo('class6', null)}
           className="outline"
           style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
@@ -346,11 +346,11 @@ export default function App() {
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '1.25rem'
       }}>
-        <div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
             border: '1px solid rgba(16, 185, 129, 0.4)',
@@ -371,9 +371,9 @@ export default function App() {
             Testing for Starch. Learn how to identify starch in food items using dilute iodine solution.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo('class6', 'food_testing')}
-            className="primary" 
+            className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
@@ -381,11 +381,11 @@ export default function App() {
         </div>
 
         {/* Activity 3.6 Card */}
-        <div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
             border: '1px solid rgba(16, 185, 129, 0.4)',
@@ -406,9 +406,9 @@ export default function App() {
             Testing for Fats. Learn how to identify fats using the paper press test.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo('class6', 'fat_testing')}
-            className="primary" 
+            className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
@@ -416,11 +416,11 @@ export default function App() {
         </div>
 
         {/* Activity 3.7 Card */}
-        <div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
             border: '1px solid rgba(139, 92, 246, 0.4)',
@@ -441,9 +441,9 @@ export default function App() {
             Testing for Proteins. Use the Biuret test to discover which foods contain protein.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo('class6', 'protein_testing')}
-            className="primary" 
+            className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
@@ -516,7 +516,7 @@ export default function App() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Subheader Wing Navigation */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
-        <button 
+        <button
           onClick={handleBackToSubjects}
           className="outline"
           style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
@@ -536,11 +536,11 @@ export default function App() {
         gap: '1.25rem'
       }}>
         {/* Activity Card 1: Electric Switch */}
-        <div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
             border: '1px solid rgba(99, 102, 241, 0.1)',
@@ -558,12 +558,12 @@ export default function App() {
           </div>
 
           <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            NCERT Class 6 Chapter 3 (Activities 3.8 & 3.9). Learn how to build a switch, predict electrical flows, and test materials like wood, plastic, or metals.
+            NCERT Class 7 Chapter 3 (Activities 3.8 & 3.9). Learn how to build a switch, predict electrical flows, and test materials like wood, plastic, or metals.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo(activeSubject, 'electric_switch')}
-            className="primary" 
+            className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Switch Lab <ArrowRight size={14} />
@@ -571,11 +571,11 @@ export default function App() {
         </div>
 
         {/* Activity Card 2: Spherical Mirrors */}
-        <div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
             border: '1px solid rgba(99, 102, 241, 0.1)',
@@ -596,9 +596,9 @@ export default function App() {
             NCERT Class 7 Chapter 15. Explore Image Formation using Concave and Convex Surfaces. Interactive virtual experiments and concept checks.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo(activeSubject, 'spherical_mirrors')}
-            className="primary" 
+            className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Mirrors Lab <ArrowRight size={14} />
@@ -606,11 +606,11 @@ export default function App() {
         </div>
 
         {/* Activity Card 3: Boilerplate Template */}
-        <div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
             border: '1px solid rgba(255, 255, 255, 0.04)',
@@ -631,9 +631,9 @@ export default function App() {
             A ready-to-copy code blueprint designed with the exact same structure and styling. Duplicate this folder to build new science activities.
           </p>
 
-          <button 
+          <button
             onClick={() => navigateTo(activeSubject, 'boilerplate')}
-            className="outline" 
+            className="outline"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             View Template Demo <ArrowRight size={14} />
@@ -647,7 +647,7 @@ export default function App() {
   const renderUnderConstruction = (subjectName, IconComponent, colorHex) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
-        <button 
+        <button
           onClick={handleBackToSubjects}
           className="outline"
           style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
@@ -689,9 +689,9 @@ export default function App() {
             We are designing beautiful, interactive molecular and genetic experiments for the {subjectName} curriculum. Check back soon!
           </p>
         </div>
-        <button 
-          onClick={handleBackToSubjects} 
-          className="outline" 
+        <button
+          onClick={handleBackToSubjects}
+          className="outline"
           style={{ fontSize: '0.85rem', padding: '0.5rem 1rem', marginTop: '0.5rem' }}
         >
           Return to Subjects
@@ -716,8 +716,8 @@ export default function App() {
           </div>
           {activeSubject && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#64748b' }}>
-              <div 
-                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }} 
+              <div
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
                 onClick={handleBackToSubjects}
                 title="Go back to Dashboard"
               >
@@ -725,14 +725,14 @@ export default function App() {
                 <span style={{ cursor: 'pointer' }}>Dashboard</span>
               </div>
               <ArrowRight size={10} />
-              <span 
+              <span
                 style={{ color: '#cbd5e1', textTransform: 'capitalize', cursor: activeActivity ? 'pointer' : 'default' }}
                 onClick={() => activeActivity && handleBackToLabs()}
                 title={activeActivity ? "Go back to class" : ""}
               >
-                {activeSubject === 'class6' ? 'Class 6th' : 
-                 activeSubject === 'class7' ? 'Class 7th' : 
-                 activeSubject === 'class8' ? 'Class 8th' : 'Class 9th'}
+                {activeSubject === 'class6' ? 'Class 6th' :
+                  activeSubject === 'class7' ? 'Class 7th' :
+                    activeSubject === 'class8' ? 'Class 8th' : 'Class 9th'}
               </span>
               {activeActivity && (
                 <>
@@ -743,7 +743,6 @@ export default function App() {
                      activeActivity === 'food_testing' ? 'Food Testing' :
                      activeActivity === 'fat_testing' ? 'Fat Testing' :
                      activeActivity === 'protein_testing' ? 'Protein Testing' :
-                     activeActivity === 'materials_properties' ? 'Properties of Materials' :
                      'Template Demo'}
                   </span>
                 </>
