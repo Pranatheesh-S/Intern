@@ -1,4 +1,5 @@
 import React from 'react';
+import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Center } from '@react-three/drei';
 
@@ -145,26 +146,67 @@ const BulbModel = () => (
   </group>
 );
 
-// --- Wires 3D Model ---
-const WiresModel = () => (
-  <group rotation={[0, 0, Math.PI / 4]}>
-    {/* Coiled Wire Loop 1 (Red) */}
-    <mesh castShadow position={[-0.2, 0, 0]} rotation={[0, Math.PI / 6, 0]}>
-      <torusGeometry args={[0.55, 0.06, 12, 48]} />
-      <meshStandardMaterial color="#dc2626" roughness={0.4} metalness={0.1} />
+// --- Wires 3D Model (Simple Wavy Wire) ---
+const WireSegment = ({ p1, p2, radius, color }) => {
+  const dx = p2[0] - p1[0];
+  const dy = p2[1] - p1[1];
+  const dz = p2[2] - p1[2];
+  const len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+  if (len === 0) return null;
+
+  const pos = [p1[0] + dx / 2, p1[1] + dy / 2, p1[2] + dz / 2];
+  
+  // Align cylinder along the vector p2 - p1
+  const dir = new THREE.Vector3(dx, dy, dz).normalize();
+  const alignAxis = new THREE.Vector3(0, 1, 0);
+  const quaternion = new THREE.Quaternion().setFromUnitVectors(alignAxis, dir);
+
+  return (
+    <mesh position={pos} quaternion={quaternion} castShadow>
+      <cylinderGeometry args={[radius, radius, len, 16]} />
+      <meshStandardMaterial 
+        color={color} 
+        roughness={color === '#ca8a04' ? 0.15 : 0.3} 
+        metalness={color === '#ca8a04' ? 0.95 : 0.1} 
+      />
     </mesh>
-    {/* Coiled Wire Loop 2 (Green) */}
-    <mesh castShadow position={[0.2, 0, 0]} rotation={[Math.PI / 4, 0, 0]}>
-      <torusGeometry args={[0.52, 0.06, 12, 48]} />
-      <meshStandardMaterial color="#10b981" roughness={0.4} metalness={0.1} />
-    </mesh>
-    {/* Exposed Copper Tip end */}
-    <mesh position={[-0.7, 0.3, 0.1]} rotation={[0, 0, Math.PI / 3]}>
-      <cylinderGeometry args={[0.03, 0.03, 0.2, 8]} />
-      <meshStandardMaterial color="#ca8a04" metalness={0.9} roughness={0.1} />
-    </mesh>
-  </group>
-);
+  );
+};
+
+const WiresModel = () => {
+  const points = [
+    [-1.0, -0.3, 0.2],       // 0: Left copper tip start
+    [-0.85, -0.25, 0.15],    // 1: Left copper tip end / insulation start
+    [-0.6, -0.05, 0.05],     // 2
+    [-0.3, 0.15, -0.05],     // 3
+    [0.0, 0.2, -0.1],        // 4
+    [0.3, 0.1, -0.05],       // 5
+    [0.6, -0.1, 0.05],       // 6
+    [0.8, -0.22, 0.1],       // 7
+    [0.9, -0.25, 0.12],      // 8: Insulation end / right copper tip start
+    [1.0, -0.3, 0.15]        // 9: Right copper tip end
+  ];
+
+  return (
+    <group rotation={[0.1, 0.2, 0]}>
+      {points.map((p, i) => {
+        if (i === points.length - 1) return null;
+        const isCopper = i === 0 || i === points.length - 2;
+        const color = isCopper ? '#ca8a04' : '#dc2626';
+        const radius = isCopper ? 0.025 : 0.045;
+        return (
+          <WireSegment 
+            key={i} 
+            p1={p} 
+            p2={points[i + 1]} 
+            radius={radius} 
+            color={color} 
+          />
+        );
+      })}
+    </group>
+  );
+};
 
 export default function ThreeDViewer({ componentId }) {
   const renderModel = () => {
