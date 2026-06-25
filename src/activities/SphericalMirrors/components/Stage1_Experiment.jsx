@@ -7,7 +7,8 @@ import {
   ZoomOut, 
   FlipHorizontal,
   Eye,
-  CircleDot
+  CircleDot,
+  RotateCcw
 } from 'lucide-react';
 import { MirrorSVG, ReflectedObject } from './MirrorElements';
 
@@ -40,6 +41,17 @@ export default function Stage1_Experiment({ onComplete }) {
   };
 
   const hasExploredAll = explored.concaveClose && explored.concaveFar && explored.convexClose && explored.convexFar;
+
+  const handleReset = () => {
+    setMirrorType('concave');
+    setDistance('close');
+    setExplored({
+      concaveClose: false,
+      concaveFar: false,
+      convexClose: false,
+      convexFar: false
+    });
+  };
 
   // Determine image properties based on physics rules
   let imageScale = 1;
@@ -163,12 +175,19 @@ export default function Stage1_Experiment({ onComplete }) {
         </div>
 
         {/* Action button */}
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <button 
+            onClick={handleReset} 
+            className="outline" 
+            style={{ padding: '0.75rem 1rem', display: 'flex', gap: '0.4rem', fontSize: '0.85rem' }}
+          >
+            <RotateCcw size={16} /> Reset
+          </button>
           <button 
             onClick={onComplete} 
             className="success" 
             disabled={!hasExploredAll}
-            style={{ flex: 1, gap: '0.35rem' }}
+            style={{ flex: 1, gap: '0.35rem', padding: '0.75rem' }}
             title={!hasExploredAll ? "Please test all mirrors and distances first!" : ""}
           >
             {hasExploredAll ? "Go to Prediction" : "Explore all combinations to continue"} <ArrowRight size={16} />
