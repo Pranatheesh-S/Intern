@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, FlaskConical, RotateCcw, Droplet, RefreshCw } from 'lucide-react';
+import { CheckCircle2, FlaskConical, RotateCcw, Droplet, RefreshCw, ArrowRight } from 'lucide-react';
+import ThreeDFoodViewer from '../../FoodTesting/components/ThreeDFoodViewer';
 
 const FOOD_ITEMS = [
   { id: 'bread', name: 'Bread', hasProtein: false, hasFat: false, baseColor: '#fed7aa' },
@@ -36,9 +37,6 @@ export default function Stage1_Experiment({ onComplete }) {
         setTubeStep('done');
         setResults(prev => {
           const next = { ...prev, [activeItem]: true };
-          if (Object.keys(next).length === FOOD_ITEMS.length) {
-            setTimeout(onComplete, 1000);
-          }
           return next;
         });
       }, 2000);
@@ -277,7 +275,9 @@ export default function Stage1_Experiment({ onComplete }) {
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: item.baseColor }} />
+                    <div style={{ width: '32px', height: '32px', pointerEvents: 'none', position: 'relative', zIndex: 10 }}>
+                      <ThreeDFoodViewer foodId={item.id} />
+                    </div>
                     <span style={{ fontSize: '0.85rem' }}>{item.name}</span>
                   </div>
                   {isTested && <CheckCircle2 size={14} style={{ color: 'var(--success)' }} />}
@@ -339,6 +339,20 @@ export default function Stage1_Experiment({ onComplete }) {
             A violet color indicates the presence of proteins. Notice that Peanuts contain both fats (from the previous activity) and proteins! Foods often contain multiple nutrients.
           </p>
         </div>
+
+        {Object.keys(results).length === FOOD_ITEMS.length && (
+          <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+            <motion.button 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="primary" 
+              onClick={onComplete} 
+              style={{ width: '100%', fontSize: '1rem', padding: '0.8rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+            >
+              Next Stage <ArrowRight size={18} />
+            </motion.button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, FlaskConical, RotateCcw, FileText, Sun } from 'lucide-react';
+import { CheckCircle2, FlaskConical, RotateCcw, FileText, Sun, ArrowRight } from 'lucide-react';
+import ThreeDFoodViewer from '../../FoodTesting/components/ThreeDFoodViewer';
 
 const FOOD_ITEMS = [
   { id: 'potato', name: 'Slice of Potato', hasFat: false, hasWater: true, baseColor: '#fef08a' },
@@ -29,11 +30,6 @@ export default function Stage1_Experiment({ onComplete }) {
     setTimeout(() => {
       setTestedItems(prev => {
         const next = { ...prev, [itemId]: lightOn ? 'light_tested' : 'paper' };
-        // Check if all tested completely
-        const allCompleted = Object.values(next).filter(v => v === 'light_tested').length === FOOD_ITEMS.length;
-        if (allCompleted) {
-          setTimeout(onComplete, 1000);
-        }
         return next;
       });
       setAnimatingId(null);
@@ -55,10 +51,7 @@ export default function Stage1_Experiment({ onComplete }) {
         });
         
         if (changed) {
-           const allCompleted = Object.values(next).filter(v => v === 'light_tested').length === FOOD_ITEMS.length;
-           if (allCompleted) {
-             setTimeout(onComplete, 1000);
-           }
+           // State changed
         }
         return changed ? next : prev;
       });
@@ -247,14 +240,15 @@ export default function Stage1_Experiment({ onComplete }) {
                   <motion.div 
                     animate={{ opacity: showPaper && !isAnimating ? 0 : 1 }}
                     style={{
-                      width: '40px',
-                      height: '40px',
-                      backgroundColor: item.baseColor,
-                      borderRadius: item.id.includes('oil') || item.id.includes('butter') ? '10px' : '40% 60% 70% 30% / 40% 50% 60% 50%',
-                      boxShadow: '0 4px 6px var(--border)',
-                      position: 'absolute'
+                      width: '80px',
+                      height: '80px',
+                      position: 'absolute',
+                      pointerEvents: 'none',
+                      zIndex: 10
                     }}
-                  />
+                  >
+                    <ThreeDFoodViewer foodId={item.id} />
+                  </motion.div>
 
                   {/* Paper wrapper */}
                   <AnimatePresence>
@@ -349,6 +343,20 @@ export default function Stage1_Experiment({ onComplete }) {
             An oily patch on paper that lets light faintly pass through confirms the presence of fat. Peanuts, oil, butter, and crushed coconut contain fats.
           </p>
         </div>
+
+        {Object.values(testedItems).filter(v => v === 'light_tested').length === FOOD_ITEMS.length && (
+          <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+            <motion.button 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="primary" 
+              onClick={onComplete} 
+              style={{ width: '100%', fontSize: '1rem', padding: '0.8rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+            >
+              Next Stage <ArrowRight size={18} />
+            </motion.button>
+          </div>
+        )}
       </div>
     </div>
   );
