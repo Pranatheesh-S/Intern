@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, CheckCircle, ArrowRight, ShieldAlert, Sparkles, Hand, Box } from 'lucide-react';
+import { Eye, CheckCircle, ArrowRight, ShieldAlert, Sparkles, Hand, Box, RotateCcw } from 'lucide-react';
 
 const ITEMS = [
   { id: 'copper', name: 'Piece of copper', color: '#b87333', defaultLustre: 'lustrous', defaultHardness: 'hard', img: 'copper', isShiny: true },
@@ -36,6 +36,11 @@ export default function Stage1_Observation({ onComplete }) {
     if (allComplete) {
       onComplete(observations);
     }
+  };
+
+  const handleReset = () => {
+    setSelectedItem(null);
+    setObservations({});
   };
 
   return (
@@ -210,7 +215,14 @@ export default function Stage1_Observation({ onComplete }) {
         </div>
       </div>
 
-      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
+      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
+        <button
+          onClick={handleReset}
+          className="outline"
+          style={{ padding: '0.75rem 1.5rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+        >
+          <RotateCcw size={16} /> Reset Activity
+        </button>
         <button
           onClick={handleComplete}
           disabled={!allComplete}
