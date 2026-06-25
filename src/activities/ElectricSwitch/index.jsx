@@ -47,13 +47,13 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
 
   return (
     <div>
-      {/* Subheader Navigation with Back Button */}
+      {/* Subheader Navigation */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
         marginBottom: '2rem',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+        borderBottom: '1px solid var(--border)',
         paddingBottom: '1rem',
         flexWrap: 'wrap',
         gap: '1rem'
@@ -65,19 +65,18 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
             style={{ 
               padding: '0.4rem 0.8rem', 
               fontSize: '0.8rem', 
-              gap: '0.35rem',
-              borderColor: 'rgba(255,255,255,0.1)'
+              gap: '0.35rem'
             }}
           >
             <ArrowLeft size={14} /> Back to Labs
           </button>
           <div>
             <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Electric Switch Science Lab</h2>
-            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Activities 3.8 & 3.9</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Activities 3.8 & 3.9</span>
           </div>
         </div>
 
-        {/* Tabbed Navigation Bar */}
+        {/* Tabbed Navigation */}
         <nav className="tabs-container">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -102,7 +101,7 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
                 <Icon size={14} />
                 <span>{tab.name}</span>
                 {isCompleted && (
-                  <CheckCircle size={12} style={{ color: '#10b981', marginLeft: '0.15rem' }} />
+                  <CheckCircle size={12} style={{ color: 'var(--success)', marginLeft: '0.15rem' }} />
                 )}
               </button>
             );
@@ -110,7 +109,7 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
         </nav>
       </div>
 
-      {/* Active Stage Panel */}
+      {/* Active Stage */}
       <main style={{ minHeight: '480px', marginBottom: '2rem' }}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -125,15 +124,15 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
         </AnimatePresence>
       </main>
 
-      {/* Footer Educational Box */}
+      {/* Footer */}
       <footer className="glass-panel" style={{ marginTop: '2rem', padding: '1.25rem' }}>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-          <Info style={{ color: '#6366f1', flexShrink: 0 }} size={20} />
+          <Info style={{ color: 'var(--accent-text)', flexShrink: 0 }} size={20} />
           <div>
-            <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#f8fafc' }}>
+            <h4 style={{ margin: 0, fontSize: '0.9rem' }}>
               Did you know? (Science Insights)
             </h4>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: '#94a3b8', lineHeight: '1.5' }}>
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', lineHeight: '1.5' }}>
               An <strong>electric switch</strong> is a simple device that either completes (closes) or breaks (opens) an electrical circuit. 
               Switches used in household lighting and electronics work on this exact same principle—by moving a metal conductor into 
               and out of contact with the circuit terminals to start or halt the flow of current.

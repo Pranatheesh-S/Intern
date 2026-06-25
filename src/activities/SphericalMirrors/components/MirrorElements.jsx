@@ -9,9 +9,9 @@ export function MirrorSVG({ type = 'concave', width = 160, height = 300 }) {
     <svg width={width} height={height} viewBox="0 0 160 300">
       <defs>
         <linearGradient id="mirrorMetal" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#e2e8f0" />
-          <stop offset="50%" stopColor="#94a3b8" />
-          <stop offset="100%" stopColor="#475569" />
+          <stop offset="0%" stopColor="var(--border)" />
+          <stop offset="50%" stopColor="var(--text-faint)" />
+          <stop offset="100%" stopColor="var(--text-secondary)" />
         </linearGradient>
         {/* Concave depth */}
         <radialGradient id="concaveDepth" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
@@ -21,17 +21,17 @@ export function MirrorSVG({ type = 'concave', width = 160, height = 300 }) {
         {/* Convex bulge */}
         <radialGradient id="convexBulge" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
           <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
-          <stop offset="100%" stopColor="rgba(0,0,0,0.2)" />
+          <stop offset="100%" stopColor="var(--surface)" />
         </radialGradient>
       </defs>
 
       {/* Stand base */}
-      <path d="M 40 280 L 120 280 L 100 250 L 60 250 Z" fill="#334155" />
+      <path d="M 40 280 L 120 280 L 100 250 L 60 250 Z" fill="var(--text-secondary)" />
       {/* Stand pole */}
-      <rect x="75" y="160" width="10" height="100" fill="#475569" />
+      <rect x="75" y="160" width="10" height="100" fill="var(--text-secondary)" />
 
       {/* Mirror Frame */}
-      <circle cx="80" cy="90" r="75" fill="#1e293b" />
+      <circle cx="80" cy="90" r="75" fill="var(--text-primary)" />
       <circle cx="80" cy="90" r="70" fill="url(#mirrorMetal)" />
       
       {/* Glass Surface */}
@@ -57,11 +57,11 @@ export function ReflectedObject({ scale = 1, isVerticallyInverted = false, opaci
     >
       <svg width="80" height="120" viewBox="0 0 80 120">
         {/* Candle body */}
-        <rect x="25" y="40" width="30" height="80" fill="#f8fafc" rx="2" />
-        <path d="M 25 40 Q 40 35 55 40" fill="#e2e8f0" />
-        <rect x="25" y="45" width="30" height="75" fill="#f1f5f9" />
+        <rect x="25" y="40" width="30" height="80" fill="var(--text-heading)" rx="2" />
+        <path d="M 25 40 Q 40 35 55 40" fill="var(--border)" />
+        <rect x="25" y="45" width="30" height="75" fill="var(--neutral-bg)" />
         {/* Wick */}
-        <path d="M 40 40 Q 38 30 40 25" fill="none" stroke="#334155" strokeWidth="2" />
+        <path d="M 40 40 Q 38 30 40 25" fill="none" stroke="var(--text-secondary)" strokeWidth="2" />
         {/* Flame */}
         <path d="M 40 5 Q 50 15 40 25 Q 30 15 40 5" fill="#fde047" />
         <path d="M 40 10 Q 45 15 40 25 Q 35 15 40 10" fill="#f97316" />

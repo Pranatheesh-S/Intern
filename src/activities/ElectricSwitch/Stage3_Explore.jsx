@@ -23,116 +23,40 @@ import {
 
 function getBulbProfile(battV, bulbV) {
   if (battV <= 0)
-    return {
-      zone: "none",
-      label: "No voltage — bulb off",
-      color: "#475569",
-      brightness: 0,
-    };
+    return { zone: "none", label: "No voltage — bulb off", color: "var(--text-faint)", brightness: 0 };
 
-  if (battV === bulbV) {
-    return {
-      zone: "active",
-      label: "Normal glow ✅",
-      color: "#10b981",
-      brightness: 100,
-    };
-  }
+  if (battV === bulbV)
+    return { zone: "active", label: "Normal glow ✅", color: "var(--success)", brightness: 100 };
 
   if (battV === 1.5 && bulbV === 3)
-    return {
-      zone: "active",
-      label: "Very dim ⚠️",
-      color: "#7c6f3e",
-      brightness: 50,
-    };
+    return { zone: "active", label: "Very dim ⚠️", color: "var(--warning)", brightness: 50 };
   if (battV === 1.5 && bulbV === 6)
-    return {
-      zone: "active",
-      label: "May not glow ⚠️",
-      color: "#64748b",
-      brightness: 25,
-    };
+    return { zone: "active", label: "May not glow ⚠️", color: "var(--text-muted)", brightness: 25 };
   if (battV === 1.5 && bulbV === 9)
-    return {
-      zone: "active",
-      label: "No visible glow ⚠️",
-      color: "#475569",
-      brightness: 10,
-    };
+    return { zone: "active", label: "No visible glow ⚠️", color: "var(--text-faint)", brightness: 10 };
 
   if (battV === 3 && bulbV === 1.5)
-    return {
-      zone: "danger",
-      label: "Very bright, may damage bulb ❌",
-      color: "#fbbf24",
-      brightness: 120,
-    };
+    return { zone: "danger", label: "Very bright, may damage bulb ❌", color: "var(--danger)", brightness: 120 };
   if (battV === 3 && bulbV === 6)
-    return {
-      zone: "active",
-      label: "Dim glow ⚠️",
-      color: "#a37d2c",
-      brightness: 50,
-    };
+    return { zone: "active", label: "Dim glow ⚠️", color: "var(--warning)", brightness: 50 };
   if (battV === 3 && bulbV === 9)
-    return {
-      zone: "active",
-      label: "Very dim ⚠️",
-      color: "#7c6f3e",
-      brightness: 30,
-    };
+    return { zone: "active", label: "Very dim ⚠️", color: "var(--warning)", brightness: 30 };
 
   if (battV === 6 && bulbV === 1.5)
-    return {
-      zone: "burned",
-      label: "Burns out quickly ❌",
-      color: "#f43f5e",
-      brightness: 0,
-    };
+    return { zone: "burned", label: "Burns out quickly ❌", color: "var(--danger)", brightness: 0 };
   if (battV === 6 && bulbV === 3)
-    return {
-      zone: "danger",
-      label: "Very bright, may burn out ❌",
-      color: "#f97316",
-      brightness: 120,
-    };
+    return { zone: "danger", label: "Very bright, may burn out ❌", color: "var(--danger)", brightness: 120 };
   if (battV === 6 && bulbV === 9)
-    return {
-      zone: "active",
-      label: "Dim glow ⚠️",
-      color: "#a37d2c",
-      brightness: 60,
-    };
+    return { zone: "active", label: "Dim glow ⚠️", color: "var(--warning)", brightness: 60 };
 
   if (battV === 9 && bulbV === 1.5)
-    return {
-      zone: "burned",
-      label: "Immediate burn out ❌",
-      color: "#ef4444",
-      brightness: 0,
-    };
+    return { zone: "burned", label: "Immediate burn out ❌", color: "var(--danger)", brightness: 0 };
   if (battV === 9 && bulbV === 3)
-    return {
-      zone: "burned",
-      label: "Burns out quickly ❌",
-      color: "#f43f5e",
-      brightness: 0,
-    };
+    return { zone: "burned", label: "Burns out quickly ❌", color: "var(--danger)", brightness: 0 };
   if (battV === 9 && bulbV === 6)
-    return {
-      zone: "danger",
-      label: "Very bright, possible damage ❌",
-      color: "#fbbf24",
-      brightness: 120,
-    };
+    return { zone: "danger", label: "Very bright, possible damage ❌", color: "var(--danger)", brightness: 120 };
 
-  return {
-    zone: "active",
-    label: "Unknown ⚠️",
-    color: "#475569",
-    brightness: 0,
-  };
+  return { zone: "active", label: "Unknown ⚠️", color: "var(--text-faint)", brightness: 0 };
 }
 
 export default function Stage3_Explore() {
@@ -141,7 +65,6 @@ export default function Stage3_Explore() {
   const [wireConnected, setWireConnected] = useState(true);
   const [pinMaterial, setPinMaterial] = useState("metal");
 
-  // Using explicit voltages for the simulation
   const [voltage, setVoltage] = useState(1.5);
   const [bulbV, setBulbV] = useState(1.5);
 
@@ -150,8 +73,7 @@ export default function Stage3_Explore() {
 
   const profile = getBulbProfile(voltage, bulbV);
   const isConductor = pinMaterial === "metal";
-  const circuitClosed =
-    isPinConnected && batteryPresent && wireConnected && isConductor;
+  const circuitClosed = isPinConnected && batteryPresent && wireConnected && isConductor;
 
   const isBurned =
     circuitClosed &&
@@ -160,15 +82,10 @@ export default function Stage3_Explore() {
       profile.label.includes("damage"));
   const isCurrentFlowing = circuitClosed && !isBurned;
   const isBulbOn = isCurrentFlowing;
-
   const brightness = isBulbOn ? profile.brightness : 0;
 
   useEffect(() => {
-    if (
-      circuitClosed &&
-      profile.zone === "burned" &&
-      prevZoneRef.current !== "burned"
-    ) {
+    if (circuitClosed && profile.zone === "burned" && prevZoneRef.current !== "burned") {
       setBurnAnim(true);
       setTimeout(() => setBurnAnim(false), 2000);
     }
@@ -201,13 +118,13 @@ export default function Stage3_Explore() {
     if (!batteryPresent)
       return {
         title: "Battery Missing",
-        desc: "No voltage source means no energy to push electrons. The circuit is incomplete without a battery.",
+        desc: "No voltage source means no energy to push electrons.",
         status: "warning",
       };
     if (!wireConnected)
       return {
         title: "Wire Broken (Open Circuit)",
-        desc: "A broken wire interrupts the path. Current needs a continuous loop to flow.",
+        desc: "A broken wire interrupts the path. Current needs a continuous loop.",
         status: "warning",
       };
     if (!isConductor)
@@ -235,45 +152,41 @@ export default function Stage3_Explore() {
       status: "danger",
     };
   };
+
   const exp = getExplanation();
-  const expColors = {
-    success: "#34d399",
-    danger: "#f87171",
-    warning: "#fbbf24",
-    neutral: "#e2e8f0",
+  const expBg = {
+    success: { bg: "var(--success-bg)", border: "var(--success-border)", text: "var(--success)" },
+    danger:  { bg: "var(--danger-bg)", border: "var(--danger-border)", text: "var(--danger)" },
+    warning: { bg: "var(--warning-bg)", border: "var(--warning-border)", text: "var(--warning)" },
+    neutral: { bg: "var(--neutral-bg)", border: "var(--border)", text: "var(--text-secondary)" },
   };
+  const expStyle = expBg[exp.status] || expBg.neutral;
 
   return (
     <div className="main-grid">
+      {/* ── LEFT PANEL ── */}
       <div
         className="glass-panel"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          overflowY: "auto",
-        }}
+        style={{ display: "flex", flexDirection: "column", gap: "1rem", overflowY: "auto" }}
       >
         <div>
           <span
             className="status-badge neutral"
-            style={{ background: "rgba(16,185,129,0.15)", color: "#34d399" }}
+            style={{ background: "var(--success-bg)", color: "var(--success)", borderColor: "var(--success-border)" }}
           >
             Stage 3: Sandbox Lab
           </span>
-          <h2 style={{ marginTop: "0.5rem", marginBottom: "0.25rem" }}>
-            Circuit Explorer
-          </h2>
-          <p style={{ fontSize: "0.85rem", margin: 0, color: "#94a3b8" }}>
-            Change voltage, toggle components, and discover how electricity
-            behaves.
+          <h2 style={{ marginTop: "0.5rem", marginBottom: "0.25rem" }}>Circuit Explorer</h2>
+          <p style={{ fontSize: "0.85rem", margin: 0, color: "var(--text-muted)" }}>
+            Change voltage, toggle components, and discover how electricity behaves.
           </p>
         </div>
 
+        {/* ── VOLTAGE EXPERIMENT ── */}
         <div
           style={{
-            background: "rgba(30,41,59,0.6)",
-            border: "1px solid rgba(99,102,241,0.25)",
+            background: "var(--surface)",
+            border: "1px solid var(--border)",
             borderRadius: "14px",
             padding: "1rem",
             display: "flex",
@@ -282,26 +195,18 @@ export default function Stage3_Explore() {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-            <Zap size={15} style={{ color: "#fbbf24" }} />
-            <span
-              style={{
-                fontSize: "0.85rem",
-                fontWeight: "700",
-                color: "#cbd5e1",
-              }}
-            >
+            <Zap size={15} style={{ color: "var(--warning)" }} />
+            <span style={{ fontSize: "0.85rem", fontWeight: "700", color: "var(--text-primary)" }}>
               Voltage Experiment
             </span>
           </div>
 
-          {/* Battery options */}
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}
-          >
+          {/* Battery voltage */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
             <span
               style={{
                 fontSize: "0.82rem",
-                color: "#cbd5e1",
+                color: "var(--text-secondary)",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.35rem",
@@ -309,53 +214,37 @@ export default function Stage3_Explore() {
             >
               <Battery size={13} /> Battery Voltage
             </span>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4,1fr)",
-                gap: "0.3rem",
-              }}
-            >
-              {[1.5, 3, 6, 9].map((v) => {
-                return (
-                  <button
-                    key={`batt-${v}`}
-                    onClick={() => setVoltage(v)}
-                    style={{
-                      padding: "0.3rem 0",
-                      borderRadius: "7px",
-                      fontSize: "0.72rem",
-                      fontWeight: "700",
-                      border: `1px solid ${voltage === v ? "#60a5fa" : "rgba(255,255,255,0.07)"}`,
-                      background:
-                        voltage === v
-                          ? `rgba(96, 165, 250, 0.2)`
-                          : "rgba(15,23,42,0.4)",
-                      color: voltage === v ? "#60a5fa" : "#64748b",
-                      cursor: "pointer",
-                      transition: "all 0.2s",
-                    }}
-                  >
-                    {v}V
-                  </button>
-                );
-              })}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "0.3rem" }}>
+              {[1.5, 3, 6, 9].map((v) => (
+                <button
+                  key={`batt-${v}`}
+                  onClick={() => setVoltage(v)}
+                  style={{
+                    padding: "0.3rem 0",
+                    borderRadius: "7px",
+                    fontSize: "0.72rem",
+                    fontWeight: "700",
+                    border: `1.5px solid ${voltage === v ? "var(--accent-border)" : "var(--border)"}`,
+                    background: voltage === v ? "var(--accent-bg)" : "var(--btn-bg)",
+                    color: voltage === v ? "var(--accent-text)" : "var(--text-muted)",
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  {v}V
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Bulb options */}
+          {/* Bulb voltage rating */}
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.35rem",
-              marginTop: "0.5rem",
-            }}
+            style={{ display: "flex", flexDirection: "column", gap: "0.35rem", marginTop: "0.5rem" }}
           >
             <span
               style={{
                 fontSize: "0.82rem",
-                color: "#cbd5e1",
+                color: "var(--text-secondary)",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.35rem",
@@ -363,44 +252,34 @@ export default function Stage3_Explore() {
             >
               <Lightbulb size={13} /> Bulb Voltage Rating
             </span>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4,1fr)",
-                gap: "0.3rem",
-              }}
-            >
-              {[1.5, 3, 6, 9].map((v) => {
-                return (
-                  <button
-                    key={`bulb-${v}`}
-                    onClick={() => setBulbV(v)}
-                    style={{
-                      padding: "0.3rem 0",
-                      borderRadius: "7px",
-                      fontSize: "0.72rem",
-                      fontWeight: "700",
-                      border: `1px solid ${bulbV === v ? "#fbbf24" : "rgba(255,255,255,0.07)"}`,
-                      background:
-                        bulbV === v
-                          ? `rgba(251, 191, 36, 0.2)`
-                          : "rgba(15,23,42,0.4)",
-                      color: bulbV === v ? "#fbbf24" : "#64748b",
-                      cursor: "pointer",
-                      transition: "all 0.2s",
-                    }}
-                  >
-                    {v}V
-                  </button>
-                );
-              })}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "0.3rem" }}>
+              {[1.5, 3, 6, 9].map((v) => (
+                <button
+                  key={`bulb-${v}`}
+                  onClick={() => setBulbV(v)}
+                  style={{
+                    padding: "0.3rem 0",
+                    borderRadius: "7px",
+                    fontSize: "0.72rem",
+                    fontWeight: "700",
+                    border: `1.5px solid ${bulbV === v ? "var(--warning-border)" : "var(--border)"}`,
+                    background: bulbV === v ? "var(--warning-bg)" : "var(--btn-bg)",
+                    color: bulbV === v ? "var(--warning)" : "var(--text-muted)",
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  {v}V
+                </button>
+              ))}
             </div>
           </div>
 
+          {/* Zone badge */}
           <div
             style={{
-              background: `${profile.color}18`,
-              border: `1px solid ${profile.color}44`,
+              background: profile.zone === "burned" ? "var(--danger-bg)" : profile.zone === "danger" ? "var(--warning-bg)" : "var(--success-bg)",
+              border: `1px solid ${profile.zone === "burned" ? "var(--danger-border)" : profile.zone === "danger" ? "var(--warning-border)" : "var(--success-border)"}`,
               borderRadius: "8px",
               padding: "0.5rem 0.7rem",
               marginTop: "0.5rem",
@@ -419,24 +298,15 @@ export default function Stage3_Explore() {
                 : profile.label}
             </p>
           </div>
-
-
         </div>
 
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}
-        >
+        {/* ── SANDBOX CONTROLS ── */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+          {/* Science report */}
           <div
             style={{
-              background:
-                exp.status === "success"
-                  ? "rgba(16,185,129,0.08)"
-                  : exp.status === "danger"
-                    ? "rgba(239,68,68,0.08)"
-                    : exp.status === "warning"
-                      ? "rgba(245,158,11,0.08)"
-                      : "rgba(30,41,59,0.6)",
-              border: `1px solid ${exp.status === "success" ? "rgba(16,185,129,0.2)" : exp.status === "danger" ? "rgba(239,68,68,0.2)" : exp.status === "warning" ? "rgba(245,158,11,0.2)" : "rgba(255,255,255,0.06)"}`,
+              background: expStyle.bg,
+              border: `1px solid ${expStyle.border}`,
               borderRadius: "10px",
               padding: "0.8rem",
             }}
@@ -445,38 +315,28 @@ export default function Stage3_Explore() {
               style={{
                 margin: "0 0 0.3rem 0",
                 fontSize: "0.85rem",
-                color: expColors[exp.status],
+                color: expStyle.text,
                 display: "flex",
                 alignItems: "center",
                 gap: "0.35rem",
               }}
             >
-              {exp.status === "success" ? (
-                <CheckCircle size={14} />
-              ) : (
-                <ZapOff size={14} />
-              )}{" "}
+              {exp.status === "success" ? <CheckCircle size={14} /> : <ZapOff size={14} />}{" "}
               {exp.title}
             </h4>
-            <p
-              style={{
-                margin: 0,
-                fontSize: "0.75rem",
-                color: "#cbd5e1",
-                lineHeight: 1.5,
-              }}
-            >
+            <p style={{ margin: 0, fontSize: "0.75rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
               {exp.desc}
             </p>
           </div>
 
+          {/* Toggle controls */}
           {[
             {
               label: "Safety Pin Switch",
               action: () => setIsPinConnected((p) => !p),
               btnLabel: isPinConnected ? "Closed (ON)" : "Open (OFF)",
               icon: isPinConnected ? (
-                <ToggleRight size={14} style={{ color: "#34d399" }} />
+                <ToggleRight size={14} style={{ color: "var(--success)" }} />
               ) : (
                 <ToggleLeft size={14} />
               ),
@@ -496,36 +356,25 @@ export default function Stage3_Explore() {
           ].map((ctrl) => (
             <div
               key={ctrl.label}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
+              style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
             >
-              <span style={{ fontSize: "0.82rem", color: "#cbd5e1" }}>
-                {ctrl.label}
-              </span>
+              <span style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>{ctrl.label}</span>
               <button
                 onClick={ctrl.action}
                 className="outline"
-                style={{
-                  padding: "0.35rem 0.7rem",
-                  fontSize: "0.78rem",
-                  gap: "0.3rem",
-                }}
+                style={{ padding: "0.35rem 0.7rem", fontSize: "0.78rem", gap: "0.3rem" }}
               >
                 {ctrl.icon} {ctrl.btnLabel}
               </button>
             </div>
           ))}
 
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}
-          >
+          {/* Material selector */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
             <span
               style={{
                 fontSize: "0.82rem",
-                color: "#cbd5e1",
+                color: "var(--text-secondary)",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.35rem",
@@ -533,18 +382,12 @@ export default function Stage3_Explore() {
             >
               <Layers size={13} /> Safety Pin Material
             </span>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
-                gap: "0.35rem",
-              }}
-            >
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.35rem" }}>
               {[
-                ["metal", "Metal", "#6366f1"],
-                ["plastic", "Plastic", "#06b6d4"],
-                ["wood", "Wood", "#b45309"],
-              ].map(([id, label, clr]) => (
+                ["metal", "Metal", "var(--accent-text)", "var(--accent-bg)", "var(--accent-border)"],
+                ["plastic", "Plastic", "var(--success)", "var(--success-bg)", "var(--success-border)"],
+                ["wood", "Wood", "var(--warning)", "var(--warning-bg)", "var(--warning-border)"],
+              ].map(([id, label, clr, bgActive, borderActive]) => (
                 <button
                   key={id}
                   onClick={() => setPinMaterial(id)}
@@ -552,9 +395,9 @@ export default function Stage3_Explore() {
                     fontSize: "0.72rem",
                     padding: "0.45rem 0.2rem",
                     borderRadius: "7px",
-                    border: `1px solid ${pinMaterial === id ? clr : "rgba(255,255,255,0.04)"}`,
-                    background: pinMaterial === id ? `${clr}22` : "#0f172a",
-                    color: pinMaterial === id ? clr : "#64748b",
+                    border: `1.5px solid ${pinMaterial === id ? borderActive : "var(--border)"}`,
+                    background: pinMaterial === id ? bgActive : "var(--btn-bg)",
+                    color: pinMaterial === id ? clr : "var(--text-muted)",
                     cursor: "pointer",
                   }}
                 >
@@ -574,9 +417,11 @@ export default function Stage3_Explore() {
         </button>
       </div>
 
+      {/* ── RIGHT PANEL — Circuit Canvas ── */}
       <div className="canvas-container" style={{ padding: "2rem" }}>
         <div className="canvas-bg-grid" />
 
+        {/* Status badges */}
         <div
           style={{
             position: "absolute",
@@ -607,15 +452,16 @@ export default function Stage3_Explore() {
               fontWeight: "700",
               padding: "0.2rem 0.6rem",
               borderRadius: "20px",
-              background: `${profile.color}22`,
-              border: `1px solid ${profile.color}55`,
-              color: profile.color,
+              background: "var(--accent-bg)",
+              border: "1px solid var(--accent-border)",
+              color: "var(--accent-text)",
             }}
           >
             {voltage}V Battery
           </span>
         </div>
 
+        {/* SVG Circuit */}
         <svg
           width="100%"
           height="100%"
@@ -656,7 +502,7 @@ export default function Stage3_Explore() {
               cy={55}
               r={28 + brightness * 0.12}
               fill="none"
-              stroke={profile.color}
+              stroke="var(--warning)"
               strokeWidth={3}
               opacity={0.15 + brightness * 0.005}
               style={{ filter: "blur(5px)", transition: "all 0.4s" }}
@@ -679,12 +525,7 @@ export default function Stage3_Explore() {
             onClick={() => setWireConnected((p) => !p)}
           />
 
-          <DrawingPinSVG
-            x={450}
-            y={250}
-            label="Drawing Pin 1"
-            isPlaced={true}
-          />
+          <DrawingPinSVG x={450} y={250} label="Drawing Pin 1" isPlaced={true} />
 
           <motion.g
             animate={{ rotate: isPinConnected ? 0 : -35 }}
@@ -692,69 +533,45 @@ export default function Stage3_Explore() {
             style={{ originX: "450px", originY: "250px", cursor: "pointer" }}
             onClick={() => setIsPinConnected((p) => !p)}
           >
-            <SafetyPinSVG
-              x={450}
-              y={250}
-              rotation={0}
-              isPlaced={true}
-              material={pinMaterial}
-            />
+            <SafetyPinSVG x={450} y={250} rotation={0} isPlaced={true} material={pinMaterial} />
           </motion.g>
 
-          <DrawingPinSVG
-            x={450}
-            y={370}
-            label="Drawing Pin 2"
-            isPlaced={true}
-          />
+          <DrawingPinSVG x={450} y={370} label="Drawing Pin 2" isPlaced={true} />
         </svg>
 
+        {/* Live overlay */}
         {(isBulbOn || isBurned) && (
           <div
             style={{
               position: "absolute",
               bottom: "1rem",
               left: "1rem",
-              background: "rgba(15,23,42,0.85)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "var(--card-bg)",
+              border: "1px solid var(--border)",
               borderRadius: "10px",
               padding: "0.45rem 0.75rem",
               display: "flex",
               gap: "1rem",
-              backdropFilter: "blur(4px)",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
             }}
           >
             {[
-              { l: "Batt V", v: `${voltage}V`, c: "#60a5fa" },
-              { l: "Bulb V", v: `${bulbV}V`, c: "#34d399" },
+              { l: "Batt V", v: `${voltage}V`, c: "var(--accent-text)" },
+              { l: "Bulb V", v: `${bulbV}V`, c: "var(--success)" },
               {
                 l: "Brightness",
                 v: isBurned ? "🔥 BURNED" : `${brightness}%`,
-                c: isBurned ? "#ef4444" : "#fbbf24",
+                c: isBurned ? "var(--danger)" : "var(--warning)",
               },
             ].map((m) => (
               <div
                 key={m.l}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
+                style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
               >
-                <span
-                  style={{
-                    fontSize: "0.58rem",
-                    color: "#64748b",
-                    fontWeight: "700",
-                  }}
-                >
+                <span style={{ fontSize: "0.58rem", color: "var(--text-faint)", fontWeight: "700" }}>
                   {m.l}
                 </span>
-                <span
-                  style={{ fontSize: "0.8rem", fontWeight: "800", color: m.c }}
-                >
-                  {m.v}
-                </span>
+                <span style={{ fontSize: "0.8rem", fontWeight: "800", color: m.c }}>{m.v}</span>
               </div>
             ))}
           </div>
@@ -771,12 +588,10 @@ export default function Stage3_Explore() {
             pointerEvents: "none",
           }}
         >
-          <span
-            style={{ fontSize: "0.7rem", color: "#475569", fontWeight: "bold" }}
-          >
+          <span style={{ fontSize: "0.7rem", color: "var(--text-faint)", fontWeight: "bold" }}>
             SANDBOX MODE
           </span>
-          <span style={{ fontSize: "0.68rem", color: "#334155" }}>
+          <span style={{ fontSize: "0.68rem", color: "var(--text-faint)" }}>
             Tap battery, wires or switch directly
           </span>
         </div>

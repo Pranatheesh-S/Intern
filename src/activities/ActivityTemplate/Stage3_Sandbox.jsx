@@ -79,7 +79,7 @@ export default function Stage3_Sandbox() {
       {/* Left Panel: Sandbox controls */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
         <div>
-          <span className="status-badge closed" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#34d399' }}>
+          <span className="status-badge closed" style={{ background: 'rgba(16, 185, 129, 0.15)', color: 'var(--success)' }}>
             Stage 3: Sandbox Lab
           </span>
           <h2 style={{ marginTop: '0.5rem', marginBottom: '0.25rem' }}>Circuit Explorer</h2>
@@ -92,7 +92,7 @@ export default function Stage3_Sandbox() {
         <div style={{
           background: explanation.status === 'success' ? 'rgba(16, 185, 129, 0.08)' : 
                       explanation.status === 'danger' ? 'rgba(239, 68, 68, 0.08)' :
-                      explanation.status === 'warning' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(30, 41, 59, 0.6)',
+                      explanation.status === 'warning' ? 'rgba(245, 158, 11, 0.08)' : 'var(--tab-bg)',
           border: `1px solid ${
             explanation.status === 'success' ? 'rgba(16, 185, 129, 0.2)' : 
             explanation.status === 'danger' ? 'rgba(239, 68, 68, 0.2)' :
@@ -107,9 +107,9 @@ export default function Stage3_Sandbox() {
           <h4 style={{ 
             margin: 0, 
             fontSize: '0.95rem', 
-            color: explanation.status === 'success' ? '#34d399' : 
-                   explanation.status === 'danger' ? '#f87171' : 
-                   explanation.status === 'warning' ? '#fbbf24' : '#e2e8f0',
+            color: explanation.status === 'success' ? 'var(--success)' : 
+                   explanation.status === 'danger' ? 'var(--danger)' : 
+                   explanation.status === 'warning' ? 'var(--warning)' : 'var(--border)',
             display: 'flex',
             alignItems: 'center',
             gap: '0.4rem'
@@ -117,7 +117,7 @@ export default function Stage3_Sandbox() {
             <HelpCircle size={16} />
             {explanation.title}
           </h4>
-          <p style={{ margin: 0, fontSize: '0.825rem', color: '#cbd5e1', lineHeight: '1.5' }}>
+          <p style={{ margin: 0, fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
             {explanation.desc}
           </p>
         </div>
@@ -127,7 +127,7 @@ export default function Stage3_Sandbox() {
           
           {/* Bridge switch */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>Connection Bridge</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-faint)' }}>Connection Bridge</span>
             <button 
               onClick={() => setIsClosed(!isClosed)} 
               className="outline" 
@@ -135,7 +135,7 @@ export default function Stage3_Sandbox() {
             >
               {isClosed ? (
                 <>
-                  <ToggleRight size={16} style={{ color: '#34d399' }} /> Closed (ON)
+                  <ToggleRight size={16} style={{ color: 'var(--success)' }} /> Closed (ON)
                 </>
               ) : (
                 <>
@@ -147,7 +147,7 @@ export default function Stage3_Sandbox() {
 
           {/* Cell status */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>Power Source</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-faint)' }}>Power Source</span>
             <button 
               onClick={() => setHasCell(!hasCell)} 
               className={hasCell ? 'outline' : 'warning'} 
@@ -159,7 +159,7 @@ export default function Stage3_Sandbox() {
 
           {/* Wire status */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>Wires Loop</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-faint)' }}>Wires Loop</span>
             <button 
               onClick={() => setIsWireOk(!isWireOk)} 
               className={isWireOk ? 'outline' : 'success'} 
@@ -172,7 +172,7 @@ export default function Stage3_Sandbox() {
 
           {/* Material selection */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.5rem' }}>
-            <span style={{ fontSize: '0.85rem', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-faint)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <Layers size={14} /> Bridge Material
             </span>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
@@ -181,8 +181,8 @@ export default function Stage3_Sandbox() {
                 style={{ 
                   fontSize: '0.75rem', 
                   padding: '0.5rem',
-                  borderColor: material === 'metal' ? '#6366f1' : 'rgba(255,255,255,0.02)',
-                  background: material === 'metal' ? 'rgba(99, 102, 241, 0.15)' : '#0f172a'
+                  borderColor: material === 'metal' ? 'var(--accent)' : 'var(--surface)',
+                  background: material === 'metal' ? 'var(--accent-bg)' : 'var(--text-heading)'
                 }}
               >
                 Metal (Conductor)
@@ -192,8 +192,8 @@ export default function Stage3_Sandbox() {
                 style={{ 
                   fontSize: '0.75rem', 
                   padding: '0.5rem',
-                  borderColor: material === 'plastic' ? '#06b6d4' : 'rgba(255,255,255,0.02)',
-                  background: material === 'plastic' ? 'rgba(6, 182, 212, 0.15)' : '#0f172a'
+                  borderColor: material === 'plastic' ? '#06b6d4' : 'var(--surface)',
+                  background: material === 'plastic' ? 'rgba(6, 182, 212, 0.15)' : 'var(--text-heading)'
                 }}
               >
                 Plastic (Insulator)
@@ -263,12 +263,12 @@ export default function Stage3_Sandbox() {
               y1={250} 
               x2={450} 
               y2={370} 
-              stroke={material === 'metal' ? '#f59e0b' : '#06b6d4'} 
+              stroke={material === 'metal' ? 'var(--warning)' : '#06b6d4'} 
               strokeWidth={6} 
               strokeLinecap="round" 
             />
-            <circle cx={450} cy={250} r={4} fill="#ffffff" />
-            <circle cx={450} cy={370} r={6} fill={material === 'metal' ? '#f59e0b' : '#06b6d4'} />
+            <circle cx={450} cy={250} r={4} fill="var(--card-bg)" />
+            <circle cx={450} cy={370} r={6} fill={material === 'metal' ? 'var(--warning)' : '#06b6d4'} />
           </motion.g>
 
           {/* Terminal 2 */}

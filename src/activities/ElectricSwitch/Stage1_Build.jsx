@@ -544,13 +544,13 @@ export default function Stage1_Build({ onComplete }) {
             style={{ pointerEvents: "none" }}
           >
             {/* Outer red loop */}
-            <path d="M4 12c0-4 3-7 8-7s8 3 8 7-3 7-8 7" stroke="#ef4444" />
+            <path d="M4 12c0-4 3-7 8-7s8 3 8 7-3 7-8 7" stroke="var(--danger)" />
             {/* Inner yellow loop */}
-            <path d="M6 13c0-3 2.5-5 6-5s6 2 6 5-2 5-6 5" stroke="#f59e0b" />
+            <path d="M6 13c0-3 2.5-5 6-5s6 2 6 5-2 5-6 5" stroke="var(--warning)" />
             {/* Left metallic tip */}
-            <path d="M4 12H2" stroke="#cbd5e1" strokeWidth="1.5" />
+            <path d="M4 12H2" stroke="var(--text-faint)" strokeWidth="1.5" />
             {/* Right metallic tip */}
-            <path d="M20 12h2" stroke="#cbd5e1" strokeWidth="1.5" />
+            <path d="M20 12h2" stroke="var(--text-faint)" strokeWidth="1.5" />
           </svg>
         );
       default:
@@ -576,8 +576,8 @@ export default function Stage1_Build({ onComplete }) {
   };
 
   const terminals = [
-    { id: "battery-neg", label: "Battery (-)", color: "#ef4444" },
-    { id: "battery-pos", label: "Battery (+)", color: "#ef4444" },
+    { id: "battery-neg", label: "Battery (-)", color: "var(--danger)" },
+    { id: "battery-pos", label: "Battery (+)", color: "var(--danger)" },
     { id: "bulb-left", label: "Bulb Terminal A", color: "#3b82f6" },
     { id: "bulb-right", label: "Bulb Terminal B", color: "#3b82f6" },
     { id: "pin1", label: "Drawing Pin 1", color: "#ca8a04" },
@@ -615,8 +615,8 @@ export default function Stage1_Build({ onComplete }) {
             <span
               className="status-badge neutral"
               style={{
-                background: "rgba(99, 102, 241, 0.15)",
-                color: "#818cf8",
+              background: "var(--accent-bg)",
+                color: "var(--accent-text)",
                 fontWeight: "bold",
               }}
             >
@@ -629,7 +629,7 @@ export default function Stage1_Build({ onComplete }) {
           <div
             style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}
           >
-            <span style={{ fontSize: "0.85rem", color: "#94a3b8" }}>
+            <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
               Progress:{" "}
               <strong>
                 {completedCount} / {STEPS.length}
@@ -639,7 +639,7 @@ export default function Stage1_Build({ onComplete }) {
               style={{
                 width: "100px",
                 height: "6px",
-                background: "rgba(255,255,255,0.06)",
+                background: "var(--border)",
                 borderRadius: "3px",
                 overflow: "hidden",
                 alignSelf: "center",
@@ -649,7 +649,7 @@ export default function Stage1_Build({ onComplete }) {
                 style={{
                   width: `${progressPercent}%`,
                   height: "100%",
-                  background: "#10b981",
+                  background: "var(--success)",
                   transition: "width 0.3s",
                 }}
               />
@@ -683,19 +683,19 @@ export default function Stage1_Build({ onComplete }) {
                 display: "flex",
                 gap: "0.75rem",
                 alignItems: "flex-start",
-                background: "rgba(30, 41, 59, 0.4)",
+                background: "var(--neutral-bg)",
                 padding: "0.6rem 0.8rem",
                 borderRadius: "10px",
-                border: "1px solid rgba(255,255,255,0.04)",
+                border: "1px solid var(--border)",
               }}
             >
-              <Info style={{ color: "#6366f1", flexShrink: 0 }} size={16} />
-              <span style={{ fontSize: "0.75rem", color: "#cbd5e1" }}>
+              <Info style={{ color: "var(--accent)", flexShrink: 0 }} size={16} />
+              <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>
                 {getNextStepPrompt()}
               </span>
             </div>
 
-            <h3 style={{ margin: 0, fontSize: "0.95rem", color: "#cbd5e1" }}>
+            <h3 style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
               Component Tray
             </h3>
 
@@ -728,34 +728,34 @@ export default function Stage1_Build({ onComplete }) {
                       borderRadius: "12px",
                       background:
                         isPlaced && !isWires
-                          ? "rgba(16, 185, 129, 0.08)"
+                          ? "var(--success-bg)"
                           : isSelected
-                            ? "rgba(99, 102, 241, 0.2)"
+                            ? "var(--accent-bg)"
                             : isUnlocked
-                              ? "rgba(30, 41, 59, 0.7)"
-                              : "rgba(15, 23, 42, 0.25)",
+                              ? "var(--surface)"
+                              : "var(--neutral-bg)",
                       border: `1px solid ${isPlaced && !isWires
-                          ? "rgba(16, 185, 129, 0.3)"
+                          ? "var(--success-border)"
                           : isSelected
-                            ? "#6366f1"
+                            ? "var(--accent)"
                             : isUnlocked
-                              ? "rgba(99, 102, 241, 0.25)"
-                              : "rgba(255,255,255,0.03)"
+                              ? "var(--accent-border)"
+                              : "var(--border)"
                         }`,
                       color:
                         isPlaced && !isWires
-                          ? "#6ee7b7"
+                          ? "var(--success)"
                           : isUnlocked
-                            ? "#e2e8f0"
-                            : "#334155",
+                            ? "var(--text-primary)"
+                            : "var(--text-faint)",
                       cursor: isDisabled ? "not-allowed" : "pointer",
                       transition: "all 0.2s ease",
                       position: "relative",
                       minHeight: "72px",
                       boxShadow: isSelected
-                        ? "0 0 0 2px rgba(99,102,241,0.5)"
+                        ? "0 0 0 2px rgba(99,102,241,0.4)"
                         : isUnlocked && !isPlaced
-                          ? "0 2px 8px rgba(0,0,0,0.3)"
+                          ? "0 1px 4px rgba(0,0,0,0.08)"
                           : "none",
                     }}
                   >
@@ -764,7 +764,7 @@ export default function Stage1_Build({ onComplete }) {
                       style={{
                         width: "34px",
                         height: "34px",
-                        background: "rgba(15,23,42,0.55)",
+                        background: "var(--border)",
                         borderRadius: "8px",
                         display: "flex",
                         alignItems: "center",
@@ -797,9 +797,9 @@ export default function Stage1_Build({ onComplete }) {
                       style={{ position: "absolute", top: "5px", right: "5px" }}
                     >
                       {isPlaced && !isWires ? (
-                        <CheckCircle2 size={12} style={{ color: "#10b981" }} />
+                        <CheckCircle2 size={12} style={{ color: "var(--success)" }} />
                       ) : !isUnlocked ? (
-                        <Lock size={10} style={{ color: "#475569" }} />
+                        <Lock size={10} style={{ color: "var(--text-secondary)" }} />
                       ) : null}
                     </div>
                   </button>
@@ -818,9 +818,9 @@ export default function Stage1_Build({ onComplete }) {
               minHeight: "480px",
               display: "flex",
               flexDirection: "column",
-              background: "rgba(15, 23, 42, 0.4)",
+              background: "var(--canvas-bg)",
               borderRadius: "16px",
-              border: "1px solid rgba(255,255,255,0.04)",
+              border: "1px solid var(--canvas-border)",
               overflow: "hidden",
             }}
           >
@@ -847,7 +847,7 @@ export default function Stage1_Build({ onComplete }) {
                     height={210}
                     rx={12}
                     fill="none"
-                    stroke="#6366f1"
+                    stroke="var(--accent)"
                     strokeWidth={1.5}
                     strokeDasharray="4,4"
                     opacity={0.3}
@@ -864,7 +864,7 @@ export default function Stage1_Build({ onComplete }) {
                       height={20}
                       rx={4}
                       fill="none"
-                      stroke="#6366f1"
+                      stroke="var(--accent)"
                       strokeWidth={1.5}
                       strokeDasharray="3,3"
                     />
@@ -873,7 +873,7 @@ export default function Stage1_Build({ onComplete }) {
                       cy={45}
                       r={22}
                       fill="none"
-                      stroke="#6366f1"
+                      stroke="var(--accent)"
                       strokeWidth={1.5}
                       strokeDasharray="3,3"
                     />
@@ -889,7 +889,7 @@ export default function Stage1_Build({ onComplete }) {
                     height={48}
                     rx={6}
                     fill="none"
-                    stroke="#6366f1"
+                    stroke="var(--accent)"
                     strokeWidth={1.5}
                     strokeDasharray="4,4"
                     opacity={0.3}
@@ -903,7 +903,7 @@ export default function Stage1_Build({ onComplete }) {
                     cy={250}
                     r={14}
                     fill="none"
-                    stroke="#6366f1"
+                    stroke="var(--accent)"
                     strokeWidth={1.5}
                     strokeDasharray="3,3"
                     opacity={0.3}
@@ -918,7 +918,7 @@ export default function Stage1_Build({ onComplete }) {
                       cy={0}
                       r={8}
                       fill="none"
-                      stroke="#6366f1"
+                      stroke="var(--accent)"
                       strokeWidth={1.5}
                       strokeDasharray="3,3"
                     />
@@ -927,7 +927,7 @@ export default function Stage1_Build({ onComplete }) {
                       y1={0}
                       x2={0}
                       y2={110}
-                      stroke="#6366f1"
+                      stroke="var(--accent)"
                       strokeWidth={1.5}
                       strokeDasharray="3,3"
                     />
@@ -941,7 +941,7 @@ export default function Stage1_Build({ onComplete }) {
                     cy={370}
                     r={14}
                     fill="none"
-                    stroke="#6366f1"
+                    stroke="var(--accent)"
                     strokeWidth={1.5}
                     strokeDasharray="3,3"
                     opacity={0.3}
@@ -970,7 +970,7 @@ export default function Stage1_Build({ onComplete }) {
                         getTerminalCoords("bulb-left"),
                       )}
                       fill="none"
-                      stroke="#6366f1"
+                      stroke="var(--accent)"
                       strokeWidth={2.5}
                       strokeDasharray="4,4"
                       opacity={0.3}
@@ -986,7 +986,7 @@ export default function Stage1_Build({ onComplete }) {
                         getTerminalCoords("pin2"),
                       )}
                       fill="none"
-                      stroke="#6366f1"
+                      stroke="var(--accent)"
                       strokeWidth={2.5}
                       strokeDasharray="4,4"
                       opacity={0.3}
@@ -1002,7 +1002,7 @@ export default function Stage1_Build({ onComplete }) {
                         getTerminalCoords("bulb-right"),
                       )}
                       fill="none"
-                      stroke="#6366f1"
+                      stroke="var(--accent)"
                       strokeWidth={2.5}
                       strokeDasharray="4,4"
                       opacity={0.3}
@@ -1029,7 +1029,7 @@ export default function Stage1_Build({ onComplete }) {
                         getTerminalCoords("bulb-left"),
                       )}
                       fill="none"
-                      stroke="#ef4444"
+                      stroke="var(--danger)"
                       strokeWidth={2.5}
                       strokeLinecap="round"
                     />
@@ -1163,7 +1163,7 @@ export default function Stage1_Build({ onComplete }) {
                         height={210}
                         rx={12}
                         fill="rgba(99, 102, 241, 0.05)"
-                        stroke="#6366f1"
+                        stroke="var(--accent)"
                         strokeWidth={2.5}
                         strokeDasharray="5,5"
                       />
@@ -1174,7 +1174,7 @@ export default function Stage1_Build({ onComplete }) {
                         cy={250}
                         r={14}
                         fill="rgba(99, 102, 241, 0.05)"
-                        stroke="#6366f1"
+                        stroke="var(--accent)"
                         strokeWidth={2.5}
                         strokeDasharray="3,3"
                       />
@@ -1186,7 +1186,7 @@ export default function Stage1_Build({ onComplete }) {
                           cy={0}
                           r={10}
                           fill="none"
-                          stroke="#6366f1"
+                          stroke="var(--accent)"
                           strokeWidth={2}
                           strokeDasharray="3,3"
                         />
@@ -1195,7 +1195,7 @@ export default function Stage1_Build({ onComplete }) {
                           y1={0}
                           x2={0}
                           y2={110}
-                          stroke="#6366f1"
+                          stroke="var(--accent)"
                           strokeWidth={2}
                           strokeDasharray="3,3"
                         />
@@ -1207,7 +1207,7 @@ export default function Stage1_Build({ onComplete }) {
                         cy={370}
                         r={14}
                         fill="rgba(99, 102, 241, 0.05)"
-                        stroke="#6366f1"
+                        stroke="var(--accent)"
                         strokeWidth={2.5}
                         strokeDasharray="3,3"
                       />
@@ -1220,7 +1220,7 @@ export default function Stage1_Build({ onComplete }) {
                         height={48}
                         rx={6}
                         fill="rgba(99, 102, 241, 0.05)"
-                        stroke="#6366f1"
+                        stroke="var(--accent)"
                         strokeWidth={2.5}
                         strokeDasharray="5,5"
                       />
@@ -1234,7 +1234,7 @@ export default function Stage1_Build({ onComplete }) {
                           height={20}
                           rx={4}
                           fill="rgba(99, 102, 241, 0.05)"
-                          stroke="#6366f1"
+                          stroke="var(--accent)"
                           strokeWidth={2.5}
                           strokeDasharray="3,3"
                         />
@@ -1243,7 +1243,7 @@ export default function Stage1_Build({ onComplete }) {
                           cy={45}
                           r={22}
                           fill="none"
-                          stroke="#6366f1"
+                          stroke="var(--accent)"
                           strokeWidth={2.5}
                           strokeDasharray="3,3"
                         />
@@ -1259,17 +1259,17 @@ export default function Stage1_Build({ onComplete }) {
                     const isSelected = selectedTerminal === t.id;
                     const isConnected = isTerminalConnected(t.id);
                     const strokeColor = !pinsValid
-                      ? "#64748b"
+                      ? "var(--text-muted)"
                       : isSelected
                         ? "#60a5fa"
                         : t.color;
                     const fillColor = !pinsValid
-                      ? "#94a3b8"
+                      ? "var(--text-faint)"
                       : isSelected
                         ? "#3b82f6"
                         : isConnected
-                          ? "#10b981"
-                          : "#ffffff";
+                          ? "var(--success)"
+                          : "var(--card-bg)";
 
                     return (
                       <g
@@ -1319,14 +1319,14 @@ export default function Stage1_Build({ onComplete }) {
                 <span
                   style={{
                     fontSize: "0.65rem",
-                    color: "#475569",
+                    color: "var(--text-secondary)",
                     fontWeight: "bold",
                     letterSpacing: "0.05em",
                   }}
                 >
                   WORKSPACE ASSEMBLY
                 </span>
-                <span style={{ fontSize: "0.7rem", color: "#64748b" }}>
+                <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
                   {selectedItemId === "wires"
                     ? selectedTerminal
                       ? `Connecting from: ${terminals.find((t) => t.id === selectedTerminal)?.label}`
@@ -1353,11 +1353,11 @@ export default function Stage1_Build({ onComplete }) {
                       borderRadius: "8px",
                       padding: "0.6rem 0.8rem",
                       fontSize: "0.8rem",
-                      color: "#ffffff",
+                      color: "var(--card-bg)",
                       display: "flex",
                       alignItems: "center",
                       gap: "0.4rem",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                      boxShadow: "0 4px 12px var(--border)",
                       zIndex: 40,
                     }}
                   >
@@ -1380,8 +1380,8 @@ export default function Stage1_Build({ onComplete }) {
             flexDirection: "column",
             gap: "0.75rem",
             padding: "1rem",
-            background: "rgba(15, 23, 42, 0.4)",
-            borderColor: "rgba(255,255,255,0.04)",
+            background: "var(--card-bg)",
+            borderColor: "var(--border)",
             borderRadius: "16px",
           }}
         >
@@ -1396,7 +1396,7 @@ export default function Stage1_Build({ onComplete }) {
               style={{
                 margin: 0,
                 fontSize: "0.95rem",
-                color: "#818cf8",
+                color: "var(--accent-text)",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.35rem",
@@ -1405,7 +1405,7 @@ export default function Stage1_Build({ onComplete }) {
               <Info size={14} /> Parts Bench
             </h3>
             {activeStep && (
-              <span style={{ fontSize: "0.7rem", color: "#64748b" }}>
+              <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
                 💡 Click & Drag model below to inspect
               </span>
             )}
@@ -1426,8 +1426,8 @@ export default function Stage1_Build({ onComplete }) {
                   style={{
                     borderRadius: "12px",
                     overflow: "hidden",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                    background: "#090d16",
+                    border: "1px solid var(--border)",
+                    background: "var(--surface)",
                     height: "180px",
                     position: "relative",
                   }}
@@ -1442,23 +1442,23 @@ export default function Stage1_Build({ onComplete }) {
                     gap: "0.5rem",
                   }}
                 >
-                  <h4 style={{ margin: 0, fontSize: "1rem", color: "#ffffff" }}>
+                  <h4 style={{ margin: 0, fontSize: "1rem", color: "var(--text-heading)" }}>
                     Connecting Wires
                   </h4>
                   {!pinsValid ? (
                     <div
                       style={{
-                        background: "rgba(239, 68, 68, 0.1)",
-                        border: "1px solid rgba(239, 68, 68, 0.25)",
+                        background: "var(--danger-bg)",
+                        border: "1px solid var(--danger-border)",
                         borderRadius: "8px",
                         padding: "0.6rem",
-                        color: "#fca5a5",
+                        color: "var(--danger)",
                       }}
                     >
                       <strong
                         style={{
                           fontSize: "0.75rem",
-                          color: "#f87171",
+                          color: "var(--danger)",
                           display: "flex",
                           alignItems: "center",
                           gap: "0.2rem",
@@ -1470,7 +1470,7 @@ export default function Stage1_Build({ onComplete }) {
                         style={{
                           margin: "0.3rem 0 0 0",
                           fontSize: "0.7rem",
-                          color: "#cbd5e1",
+                          color: "var(--text-secondary)",
                           lineHeight: "1.3",
                         }}
                       >
@@ -1485,7 +1485,7 @@ export default function Stage1_Build({ onComplete }) {
                         style={{
                           margin: "0.4rem 0 0 0",
                           fontSize: "0.68rem",
-                          color: "#f87171",
+                          color: "var(--danger)",
                           fontWeight: "bold",
                         }}
                       >
@@ -1499,7 +1499,7 @@ export default function Stage1_Build({ onComplete }) {
                         style={{
                           margin: 0,
                           fontSize: "0.75rem",
-                          color: "#94a3b8",
+                          color: "var(--text-faint)",
                           lineHeight: "1.4",
                         }}
                       >
@@ -1509,7 +1509,7 @@ export default function Stage1_Build({ onComplete }) {
                       <div
                         style={{
                           fontSize: "0.75rem",
-                          color: "#818cf8",
+                          color: "var(--accent-text)",
                           fontWeight: "bold",
                           marginTop: "0.5rem",
                         }}
@@ -1527,8 +1527,8 @@ export default function Stage1_Build({ onComplete }) {
                   style={{
                     borderRadius: "12px",
                     overflow: "hidden",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                    background: "#090d16",
+                    border: "1px solid var(--border)",
+                    background: "var(--surface)",
                     height: "180px",
                     position: "relative",
                   }}
@@ -1547,7 +1547,7 @@ export default function Stage1_Build({ onComplete }) {
                 >
                   <div>
                     <h4
-                      style={{ margin: 0, fontSize: "1rem", color: "#ffffff" }}
+                      style={{ margin: 0, fontSize: "1rem", color: "var(--text-heading)" }}
                     >
                       {activeStep.name}
                     </h4>
@@ -1555,7 +1555,7 @@ export default function Stage1_Build({ onComplete }) {
                       style={{
                         margin: "0.25rem 0 0 0",
                         fontSize: "0.75rem",
-                        color: "#94a3b8",
+                        color: "var(--text-faint)",
                         lineHeight: "1.4",
                       }}
                     >
@@ -1574,7 +1574,7 @@ export default function Stage1_Build({ onComplete }) {
                     <span
                       style={{
                         fontSize: "0.7rem",
-                        color: "#64748b",
+                        color: "var(--text-muted)",
                         fontWeight: "bold",
                       }}
                     >
@@ -1587,10 +1587,10 @@ export default function Stage1_Build({ onComplete }) {
                           alignItems: "center",
                           gap: "0.5rem",
                           padding: "0.5rem 0.75rem",
-                          background: "rgba(99, 102, 241, 0.15)",
+                          background: "var(--accent-bg)",
                           border: "1px dashed rgba(99, 102, 241, 0.4)",
                           borderRadius: "10px",
-                          color: "#a5b4fc",
+                          color: "var(--accent-text)",
                           fontSize: "0.8rem",
                           fontWeight: "600",
                           boxShadow: "0 4px 10px rgba(99,102,241,0.1)",
@@ -1600,7 +1600,7 @@ export default function Stage1_Build({ onComplete }) {
                           style={{
                             width: "28px",
                             height: "28px",
-                            background: "rgba(15, 23, 42, 0.6)",
+                            background: "var(--border)",
                             borderRadius: "6px",
                             overflow: "hidden",
                             display: "flex",
@@ -1621,7 +1621,7 @@ export default function Stage1_Build({ onComplete }) {
                           <span
                             style={{
                               fontSize: "0.65rem",
-                              color: "#818cf8",
+                              color: "var(--accent-text)",
                               fontWeight: "normal",
                             }}
                           >
@@ -1641,7 +1641,7 @@ export default function Stage1_Build({ onComplete }) {
                   alignItems: "center",
                   justifyContent: "center",
                   height: "180px",
-                  color: "#475569",
+                  color: "var(--text-secondary)",
                   textAlign: "center",
                   padding: "1rem",
                 }}
@@ -1690,10 +1690,10 @@ export default function Stage1_Build({ onComplete }) {
                 background: "rgba(99, 102, 241, 0.25)",
                 border: "2px solid #818cf8",
                 borderRadius: "10px",
-                color: "#ffffff",
+                color: "var(--accent-text)",
                 fontSize: "0.8rem",
                 fontWeight: "600",
-                boxShadow: "0 8px 24px rgba(0,0,0,0.6)",
+                boxShadow: "0 8px 24px rgba(99,102,241,0.15)",
                 backdropFilter: "blur(4px)",
                 cursor: "grabbing",
                 opacity: 0.9,
@@ -1704,7 +1704,7 @@ export default function Stage1_Build({ onComplete }) {
                 style={{
                   width: "28px",
                   height: "28px",
-                  background: "rgba(15, 23, 42, 0.6)",
+                  background: "var(--border)",
                   borderRadius: "6px",
                   overflow: "hidden",
                   display: "flex",

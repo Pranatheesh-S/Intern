@@ -199,17 +199,17 @@ export default function AssemblyFramework({
         {/* Workspace Title & Instructions */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div>
-            <span className="status-badge neutral" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', fontWeight: 'bold' }}>
+            <span className="status-badge neutral" style={{ background: 'var(--accent-bg)', color: 'var(--accent-text)', fontWeight: 'bold' }}>
               {subjectBadge}
             </span>
             <h2 style={{ margin: '0.2rem 0 0 0', fontSize: '1.4rem' }}>{title}</h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-faint)' }}>
               Progress: <strong>{completedCount} / {steps.length}</strong>
             </span>
             <div style={{ width: '100px', height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden', alignSelf: 'center' }}>
-              <div style={{ width: `${progressPercent}%`, height: '100%', background: '#10b981', transition: 'width 0.3s' }} />
+              <div style={{ width: `${progressPercent}%`, height: '100%', background: 'var(--success)', transition: 'width 0.3s' }} />
             </div>
           </div>
         </div>
@@ -228,7 +228,7 @@ export default function AssemblyFramework({
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '16px',
             overflow: 'hidden',
-            background: '#090d16',
+            background: 'var(--canvas-bg)',
             boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
           }}
         >
@@ -261,14 +261,14 @@ export default function AssemblyFramework({
                   height={activeStep.targetPos.height} 
                   rx={8} 
                   fill="rgba(99, 102, 241, 0.04)" 
-                  stroke="#6366f1" 
+                  stroke="var(--accent)" 
                   strokeWidth={2} 
                   strokeDasharray="5,5" 
                 />
                 <text 
                   x={activeStep.targetPos.x + activeStep.targetPos.width / 2} 
                   y={activeStep.targetPos.y + activeStep.targetPos.height / 2 + 4} 
-                  fill="#818cf8" 
+                  fill="var(--accent-text)" 
                   fontSize="11" 
                   fontWeight="bold" 
                   textAnchor="middle"
@@ -293,7 +293,7 @@ export default function AssemblyFramework({
                     height: '100%',
                     borderRadius: '8px',
                     transition: 'background-color 0.2s',
-                    backgroundColor: isOver ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
+                    backgroundColor: isOver ? 'var(--accent-bg)' : 'transparent',
                     border: isOver ? '2px solid #818cf8' : 'none',
                     boxSizing: 'border-box'
                   }}
@@ -304,10 +304,10 @@ export default function AssemblyFramework({
 
           {/* Interactive Guides & Feedback */}
           <div style={{ position: 'absolute', bottom: '0.75rem', left: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.15rem', pointerEvents: 'none' }}>
-            <span style={{ fontSize: '0.65rem', color: '#475569', fontWeight: 'bold', letterSpacing: '0.05em' }}>
+            <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 'bold', letterSpacing: '0.05em' }}>
               WORKSPACE ASSEMBLY
             </span>
-            <span style={{ fontSize: '0.7rem', color: '#64748b' }}>
+            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
               {activeStep ? `Target highlighted: ${activeStep.name}` : "Workspace awaits components..."}
             </span>
           </div>
@@ -328,11 +328,11 @@ export default function AssemblyFramework({
                   borderRadius: '8px',
                   padding: '0.6rem 0.8rem',
                   fontSize: '0.8rem',
-                  color: '#ffffff',
+                  color: 'var(--text-heading)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                  boxShadow: '0 4px 12px var(--border)',
                   zIndex: 40
                 }}
               >
@@ -353,17 +353,17 @@ export default function AssemblyFramework({
             flexDirection: 'column', 
             gap: '0.75rem', 
             padding: '1rem',
-            background: 'rgba(15, 23, 42, 0.4)',
-            borderColor: 'rgba(255,255,255,0.04)',
+            background: 'var(--surface)',
+            borderColor: 'var(--border)',
             borderRadius: '16px'
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, fontSize: '0.95rem', color: '#818cf8', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <h3 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--accent-text)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <Info size={14} /> Parts Bench
             </h3>
             {activeStep && (
-              <span style={{ fontSize: '0.7rem', color: '#64748b' }}>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
                 💡 Click & Drag model below to inspect
               </span>
             )}
@@ -377,8 +377,8 @@ export default function AssemblyFramework({
                 <div style={{ 
                   borderRadius: '12px', 
                   overflow: 'hidden', 
-                  border: '1px solid rgba(255,255,255,0.05)',
-                  background: '#090d16',
+                  border: '1px solid var(--border)',
+                  background: 'var(--canvas-bg)',
                   height: '180px',
                   position: 'relative'
                 }}>
@@ -388,22 +388,22 @@ export default function AssemblyFramework({
                 {/* Info and Draggable Area */}
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '0.5rem' }}>
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '1rem', color: '#ffffff' }}>{activeStep.name}</h4>
-                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: '#94a3b8', lineHeight: '1.4' }}>
+                    <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-heading)' }}>{activeStep.name}</h4>
+                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-faint)', lineHeight: '1.4' }}>
                       {activeStep.desc}
                     </p>
                   </div>
                   
                   {/* Draggable Token handle */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                    <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 'bold' }}>DRAG TO ASSEMBLE:</span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>DRAG TO ASSEMBLE:</span>
                     <DraggableToken id={activeStep.id}>
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.5rem',
                         padding: '0.5rem 0.75rem',
-                        background: 'rgba(99, 102, 241, 0.15)',
+                        background: 'var(--accent-bg)',
                         border: '1px dashed rgba(99, 102, 241, 0.4)',
                         borderRadius: '10px',
                         color: '#a5b4fc',
@@ -416,7 +416,7 @@ export default function AssemblyFramework({
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
                           <span>{activeStep.name}</span>
-                          <span style={{ fontSize: '0.65rem', color: '#818cf8', fontWeight: 'normal' }}>Drag me up to workspace</span>
+                          <span style={{ fontSize: '0.65rem', color: 'var(--accent-text)', fontWeight: 'normal' }}>Drag me up to workspace</span>
                         </div>
                       </div>
                     </DraggableToken>
@@ -424,7 +424,7 @@ export default function AssemblyFramework({
                 </div>
               </>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '180px', color: '#475569', textAlign: 'center', padding: '1rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '180px', color: 'var(--text-secondary)', textAlign: 'center', padding: '1rem' }}>
                 <p style={{ margin: 0, fontSize: '0.85rem', maxWidth: '280px' }}>
                   Select an unlocked component from the <strong>Component Tray</strong> below to inspect and drag it onto the workspace.
                 </p>
@@ -438,7 +438,7 @@ export default function AssemblyFramework({
         {/* INVENTORY TRAY (BOTTOM PANEL)                  */}
         {/* ============================================== */}
         <div className="glass-panel" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <h3 style={{ margin: 0, fontSize: '0.95rem', color: '#cbd5e1' }}>Component Tray</h3>
+          <h3 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-faint)' }}>Component Tray</h3>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '0.5rem' }}>
             {steps.map((step) => {
@@ -461,15 +461,15 @@ export default function AssemblyFramework({
                     background: isPlaced 
                       ? 'rgba(16, 185, 129, 0.05)' 
                       : isSelected
-                        ? 'rgba(99, 102, 241, 0.15)'
+                        ? 'var(--accent-bg)'
                         : isUnlocked 
-                          ? 'rgba(30, 41, 59, 0.6)' 
+                          ? 'var(--tab-bg)' 
                           : 'rgba(15, 23, 42, 0.3)',
                     border: `1px solid ${
                       isPlaced 
                         ? 'rgba(16, 185, 129, 0.25)' 
                         : isSelected
-                          ? '#6366f1'
+                          ? 'var(--accent)'
                           : isUnlocked 
                             ? 'rgba(99, 102, 241, 0.2)' 
                             : 'rgba(255, 255, 255, 0.02)'
@@ -477,8 +477,8 @@ export default function AssemblyFramework({
                     color: isPlaced 
                       ? '#a7f3d0' 
                       : isUnlocked 
-                        ? '#ffffff' 
-                        : '#475569',
+                        ? 'var(--card-bg)' 
+                        : 'var(--text-secondary)',
                     cursor: isPlaced || !isUnlocked ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s',
                     position: 'relative'
@@ -506,9 +506,9 @@ export default function AssemblyFramework({
                   {/* Badge Indicators */}
                   <div style={{ position: 'absolute', top: '4px', right: '4px' }}>
                     {isPlaced ? (
-                      <CheckCircle2 size={12} style={{ color: '#10b981' }} />
+                      <CheckCircle2 size={12} style={{ color: 'var(--success)' }} />
                     ) : !isUnlocked ? (
-                      <Lock size={10} style={{ color: '#475569' }} />
+                      <Lock size={10} style={{ color: 'var(--text-secondary)' }} />
                     ) : null}
                   </div>
                 </button>
@@ -544,7 +544,7 @@ export default function AssemblyFramework({
               background: 'rgba(99, 102, 241, 0.25)',
               border: '2px solid #818cf8',
               borderRadius: '10px',
-              color: '#ffffff',
+              color: 'var(--text-heading)',
               fontSize: '0.8rem',
               fontWeight: '600',
               boxShadow: '0 8px 24px rgba(0,0,0,0.6)',

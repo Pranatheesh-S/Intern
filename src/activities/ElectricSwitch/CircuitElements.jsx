@@ -24,8 +24,8 @@ export const DrawingPinSVG = ({ x, y, label, isPlaced, isTarget, onClick }) => {
     if (isTarget) {
       return (
         <g onClick={onClick} style={{ cursor: 'pointer' }} className="pulse-target">
-          <circle cx={x} cy={y} r={14} fill="rgba(99, 102, 241, 0.15)" stroke="#6366f1" strokeWidth={2} strokeDasharray="3,3" />
-          <text x={x} y={y + 4} fill="#818cf8" fontSize="9" fontWeight="bold" textAnchor="middle">PIN</text>
+          <circle cx={x} cy={y} r={14} fill="var(--accent-bg)" stroke="var(--accent)" strokeWidth={2} strokeDasharray="3,3" />
+          <text x={x} y={y + 4} fill="var(--accent-text)" fontSize="9" fontWeight="bold" textAnchor="middle">PIN</text>
         </g>
       );
     }
@@ -66,11 +66,11 @@ export const SafetyPinSVG = ({ x, y, rotation, material = 'metal', isPlaced, isT
         <g onClick={onClick} style={{ cursor: 'pointer' }}>
           {/* Target Outline */}
           <g transform={`translate(${x}, ${y}) rotate(${rotation})`}>
-            <circle cx={0} cy={0} r={10} fill="none" stroke="#6366f1" strokeWidth={1.5} strokeDasharray="3,3" />
-            <line x1={0} y1={0} x2={0} y2={120} stroke="#6366f1" strokeWidth={1.5} strokeDasharray="3,3" />
-            <rect x={-8} y={110} width={16} height={16} fill="none" stroke="#6366f1" strokeWidth={1.5} strokeDasharray="3,3" />
+            <circle cx={0} cy={0} r={10} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="3,3" />
+            <line x1={0} y1={0} x2={0} y2={120} stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="3,3" />
+            <rect x={-8} y={110} width={16} height={16} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="3,3" />
           </g>
-          <text x={x + 24} y={y + 60} fill="#818cf8" fontSize="10" fontWeight="bold">ATTACH SAFETY PIN</text>
+          <text x={x + 24} y={y + 60} fill="var(--accent-text)" fontSize="10" fontWeight="bold">ATTACH SAFETY PIN</text>
         </g>
       );
     }
@@ -78,8 +78,8 @@ export const SafetyPinSVG = ({ x, y, rotation, material = 'metal', isPlaced, isT
   }
 
   // Determine material styling
-  let strokeColor = '#94a3b8'; // metal
-  let claspColor = '#cbd5e1';
+  let strokeColor = 'var(--text-faint)'; // metal
+  let claspColor = 'var(--text-faint)';
   let label = "Safety Pin (Metal)";
   
   if (material === 'plastic') {
@@ -88,7 +88,7 @@ export const SafetyPinSVG = ({ x, y, rotation, material = 'metal', isPlaced, isT
     label = "Plastic Pin (Insulator)";
   } else if (material === 'wood') {
     strokeColor = '#b45309'; // wood brown
-    claspColor = '#d97706';
+    claspColor = 'var(--warning)';
     label = "Wooden Pin (Insulator)";
   }
 
@@ -97,7 +97,7 @@ export const SafetyPinSVG = ({ x, y, rotation, material = 'metal', isPlaced, isT
       <defs>
         <linearGradient id="pin-metal-grad" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor={strokeColor} />
-          <stop offset="40%" stopColor="#ffffff" />
+          <stop offset="40%" stopColor="var(--card-bg)" />
           <stop offset="100%" stopColor={strokeColor} />
         </linearGradient>
       </defs>
@@ -135,9 +135,9 @@ export const BulbSVG = ({ isOn, isPlaced, isTarget, onClick }) => {
     if (isTarget) {
       return (
         <g onClick={onClick} style={{ cursor: 'pointer' }} className="pulse-target">
-          <rect x={260} y={80} width={80} height={20} rx={4} fill="rgba(99, 102, 241, 0.15)" stroke="#6366f1" strokeWidth={2} strokeDasharray="3,3" />
-          <circle cx={300} cy={45} r={22} fill="none" stroke="#6366f1" strokeWidth={1.5} strokeDasharray="3,3" />
-          <text x={300} y={49} fill="#818cf8" fontSize="10" fontWeight="bold" textAnchor="middle">BULB</text>
+          <rect x={260} y={80} width={80} height={20} rx={4} fill="var(--accent-bg)" stroke="var(--accent)" strokeWidth={2} strokeDasharray="3,3" />
+          <circle cx={300} cy={45} r={22} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="3,3" />
+          <text x={300} y={49} fill="var(--accent-text)" fontSize="10" fontWeight="bold" textAnchor="middle">BULB</text>
         </g>
       );
     }
@@ -164,10 +164,10 @@ export const BulbSVG = ({ isOn, isPlaced, isTarget, onClick }) => {
       <rect x="270" y="114" width="60" height="4" fill="#172554" />
       
       {/* Terminals screws */}
-      <circle cx="270" cy="102" r="5" fill="#d97706" stroke="#b45309" strokeWidth={1} />
-      <circle cx="270" cy="102" r="2" fill="#f59e0b" />
-      <circle cx="330" cy="102" r="5" fill="#d97706" stroke="#b45309" strokeWidth={1} />
-      <circle cx="330" cy="102" r="2" fill="#f59e0b" />
+      <circle cx="270" cy="102" r="5" fill="var(--warning)" stroke="#b45309" strokeWidth={1} />
+      <circle cx="270" cy="102" r="2" fill="var(--warning)" />
+      <circle cx="330" cy="102" r="5" fill="var(--warning)" stroke="#b45309" strokeWidth={1} />
+      <circle cx="330" cy="102" r="2" fill="var(--warning)" />
 
       {/* Screw brass sleeve */}
       <rect x="288" y="70" width="24" height="20" fill="#854d0e" stroke="#a16207" strokeWidth={1} />
@@ -181,27 +181,27 @@ export const BulbSVG = ({ isOn, isPlaced, isTarget, onClick }) => {
       
       {/* Glass globe */}
       <circle cx="300" cy="45" r="22" 
-              fill={isOn ? '#fef08a' : 'rgba(255,255,255,0.05)'} 
-              stroke={isOn ? '#f59e0b' : '#64748b'} 
+              fill={isOn ? '#fef08a' : 'var(--border)'} 
+              stroke={isOn ? 'var(--warning)' : 'var(--text-muted)'} 
               strokeWidth="2.5" />
       {/* Glass highlight reflection */}
-      <path d="M 284,40 A 16,16 0 0,1 306,26" fill="none" stroke="#ffffff" strokeWidth="1.5" opacity={isOn ? 0.8 : 0.2} />
+      <path d="M 284,40 A 16,16 0 0,1 306,26" fill="none" stroke="var(--card-bg)" strokeWidth="1.5" opacity={isOn ? 0.8 : 0.2} />
       
       {/* Filament */}
       {/* Left lead */}
-      <line x1="293" y1="70" x2="293" y2="52" stroke="#cbd5e1" strokeWidth="1.5" />
+      <line x1="293" y1="70" x2="293" y2="52" stroke="var(--text-faint)" strokeWidth="1.5" />
       {/* Right lead */}
-      <line x1="307" y1="70" x2="307" y2="52" stroke="#cbd5e1" strokeWidth="1.5" />
+      <line x1="307" y1="70" x2="307" y2="52" stroke="var(--text-faint)" strokeWidth="1.5" />
       {/* Filament loop */}
       <path d="M 293,52 C 293,44 297,44 300,47 C 303,44 307,44 307,52" 
             fill="none" 
-            stroke={isOn ? '#ea580c' : '#475569'} 
+            stroke={isOn ? '#ea580c' : 'var(--text-secondary)'} 
             strokeWidth="2" 
             strokeLinecap="round" />
 
       {/* Ray flares when lit */}
       {isOn && (
-        <g stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" opacity={0.9}>
+        <g stroke="var(--warning)" strokeWidth="2.5" strokeLinecap="round" opacity={0.9}>
           <line x1="300" y1="12" x2="300" y2="2" />
           <line x1="277" y1="22" x2="269" y2="14" />
           <line x1="323" y1="22" x2="331" y2="14" />
@@ -219,8 +219,8 @@ export const BatterySVG = ({ isPlaced, isTarget, onClick }) => {
     if (isTarget) {
       return (
         <g onClick={onClick} style={{ cursor: 'pointer' }} className="pulse-target">
-          <rect x={104} y={366} width={92} height={48} rx={6} fill="rgba(99, 102, 241, 0.15)" stroke="#6366f1" strokeWidth={2} strokeDasharray="3,3" />
-          <text x={150} y={394} fill="#818cf8" fontSize="10" fontWeight="bold" textAnchor="middle">BATTERY</text>
+          <rect x={104} y={366} width={92} height={48} rx={6} fill="var(--accent-bg)" stroke="var(--accent)" strokeWidth={2} strokeDasharray="3,3" />
+          <text x={150} y={394} fill="var(--accent-text)" fontSize="10" fontWeight="bold" textAnchor="middle">BATTERY</text>
         </g>
       );
     }
@@ -231,29 +231,29 @@ export const BatterySVG = ({ isPlaced, isTarget, onClick }) => {
     <g onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
       <defs>
         <linearGradient id="battery-cylinder" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#ef4444" />
-          <stop offset="40%" stopColor="#dc2626" />
+          <stop offset="0%" stopColor="var(--danger)" />
+          <stop offset="40%" stopColor="var(--danger)" />
           <stop offset="70%" stopColor="#991b1b" />
           <stop offset="100%" stopColor="#7f1d1d" />
         </linearGradient>
         <linearGradient id="metal-caps" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#f1f5f9" />
-          <stop offset="50%" stopColor="#94a3b8" />
-          <stop offset="100%" stopColor="#475569" />
+          <stop offset="0%" stopColor="var(--neutral-bg)" />
+          <stop offset="50%" stopColor="var(--text-faint)" />
+          <stop offset="100%" stopColor="var(--text-secondary)" />
         </linearGradient>
       </defs>
       
       {/* Battery body shadow */}
-      <rect x={108 + 2} y={370 + 2} width={84} height={40} rx={4} fill="rgba(0,0,0,0.3)" />
+      <rect x={108 + 2} y={370 + 2} width={84} height={40} rx={4} fill="var(--border)" />
 
       {/* Negative Flat End (Left) */}
-      <rect x="104" y="372" width="6" height="36" rx="2" fill="url(#metal-caps)" stroke="#475569" strokeWidth="0.5" />
+      <rect x="104" y="372" width="6" height="36" rx="2" fill="url(#metal-caps)" stroke="var(--text-secondary)" strokeWidth="0.5" />
       
       {/* Cylinder body */}
       <rect x="110" y="370" width="76" height="40" rx="4" fill="url(#battery-cylinder)" stroke="#b91c1c" strokeWidth="1" />
       
       {/* Positive Cap (Right) */}
-      <rect x="186" y="378" width="6" height="24" rx="2" fill="url(#metal-caps)" stroke="#475569" strokeWidth="0.5" />
+      <rect x="186" y="378" width="6" height="24" rx="2" fill="url(#metal-caps)" stroke="var(--text-secondary)" strokeWidth="0.5" />
       {/* Positive Pip */}
       <rect x="192" y="383" width="3" height="14" rx="1" fill="url(#metal-caps)" />
 
@@ -261,9 +261,9 @@ export const BatterySVG = ({ isPlaced, isTarget, onClick }) => {
       <text x="122" y="395" fill="#fca5a5" fontSize="18" fontWeight="bold" textAnchor="middle">-</text>
       <text x="174" y="395" fill="#fca5a5" fontSize="16" fontWeight="bold" textAnchor="middle">+</text>
       
-      <rect x="133" y="376" width="30" height="28" fill="#1e293b" rx="2" opacity={0.6} />
+      <rect x="133" y="376" width="30" height="28" fill="var(--text-primary)" rx="2" opacity={0.6} />
       <text x="148" y="388" fill="#fef08a" fontSize="8" fontWeight="bold" textAnchor="middle" letterSpacing="0.05em">CELL</text>
-      <text x="148" y="398" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">1.5V</text>
+      <text x="148" y="398" fill="var(--card-bg)" fontSize="8" fontWeight="bold" textAnchor="middle">1.5V</text>
     </g>
   );
 };
@@ -300,10 +300,10 @@ export const WiresSVG = ({
       return (
         <g onClick={onClick} style={{ cursor: 'pointer' }} className="pulse-target">
           {/* Wire placeholders */}
-          <path d={path1} fill="none" stroke="#6366f1" strokeWidth={2} strokeDasharray="4,4" opacity={isBulbPresent && isBatteryPresent ? 0.7 : 0.2} />
-          <path d={path2} fill="none" stroke="#6366f1" strokeWidth={2} strokeDasharray="4,4" opacity={isBatteryPresent && arePinsPlaced ? 0.7 : 0.2} />
-          <path d={path3} fill="none" stroke="#6366f1" strokeWidth={2} strokeDasharray="4,4" opacity={arePinsPlaced && isBulbPresent ? 0.7 : 0.2} />
-          <text x="300" y="220" fill="#818cf8" fontSize="11" fontWeight="bold" textAnchor="middle">CONNECT WIRES</text>
+          <path d={path1} fill="none" stroke="var(--accent)" strokeWidth={2} strokeDasharray="4,4" opacity={isBulbPresent && isBatteryPresent ? 0.7 : 0.2} />
+          <path d={path2} fill="none" stroke="var(--accent)" strokeWidth={2} strokeDasharray="4,4" opacity={isBatteryPresent && arePinsPlaced ? 0.7 : 0.2} />
+          <path d={path3} fill="none" stroke="var(--accent)" strokeWidth={2} strokeDasharray="4,4" opacity={arePinsPlaced && isBulbPresent ? 0.7 : 0.2} />
+          <text x="300" y="220" fill="var(--accent-text)" fontSize="11" fontWeight="bold" textAnchor="middle">CONNECT WIRES</text>
         </g>
       );
     }
@@ -319,26 +319,26 @@ export const WiresSVG = ({
     return (
       <g>
         {/* Wire 1: Red */}
-        <path d={path1} fill="none" stroke="#dc2626" strokeWidth={4} strokeLinecap="round" opacity={isBatteryPresent && isBulbPresent ? 1 : 0.4} />
-        <path d={path1} fill="none" stroke="#ef4444" strokeWidth={2} strokeLinecap="round" opacity={isBatteryPresent && isBulbPresent ? 1 : 0.4} />
+        <path d={path1} fill="none" stroke="var(--danger)" strokeWidth={4} strokeLinecap="round" opacity={isBatteryPresent && isBulbPresent ? 1 : 0.4} />
+        <path d={path1} fill="none" stroke="var(--danger)" strokeWidth={2} strokeLinecap="round" opacity={isBatteryPresent && isBulbPresent ? 1 : 0.4} />
         
         {/* Wire 3: Yellow */}
         <path d={path3} fill="none" stroke="#eab308" strokeWidth={4} strokeLinecap="round" opacity={isBulbPresent && arePinsPlaced ? 1 : 0.4} />
         <path d={path3} fill="none" stroke="#fde047" strokeWidth={2} strokeLinecap="round" opacity={isBulbPresent && arePinsPlaced ? 1 : 0.4} />
         
         {/* Wire 2 broken pieces */}
-        <g stroke="#d97706" strokeWidth={4} strokeLinecap="round" fill="none">
+        <g stroke="var(--warning)" strokeWidth={4} strokeLinecap="round" fill="none">
           <path d={path2PartA} />
           <path d={path2PartB} />
         </g>
-        <g stroke="#fbbf24" strokeWidth={2} strokeLinecap="round" fill="none">
+        <g stroke="var(--warning)" strokeWidth={2} strokeLinecap="round" fill="none">
           <path d={path2PartA} />
           <path d={path2PartB} />
         </g>
         
         {/* Sparkles or exclamation at cut */}
-        <circle cx="295" cy="387" r="3" fill="#ef4444" className="bulb-glowing" />
-        <text x="295" y="375" fill="#f87171" fontSize="10" fontWeight="bold" textAnchor="middle">WIRE CUT</text>
+        <circle cx="295" cy="387" r="3" fill="var(--danger)" className="bulb-glowing" />
+        <text x="295" y="375" fill="var(--danger)" fontSize="10" fontWeight="bold" textAnchor="middle">WIRE CUT</text>
       </g>
     );
   }
@@ -347,7 +347,7 @@ export const WiresSVG = ({
     <g onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
       {/* Wire 1 (Bulb Left -> Battery Negative) - Red Wire */}
       <path d={path1} fill="none" stroke="#b91c1c" strokeWidth={5} strokeLinecap="round" opacity={isBatteryPresent && isBulbPresent ? 1 : 0.4} />
-      <path d={path1} fill="none" stroke="#ef4444" strokeWidth={2.5} strokeLinecap="round" opacity={isBatteryPresent && isBulbPresent ? 1 : 0.4} />
+      <path d={path1} fill="none" stroke="var(--danger)" strokeWidth={2.5} strokeLinecap="round" opacity={isBatteryPresent && isBulbPresent ? 1 : 0.4} />
 
       {/* Wire 2 (Battery Positive -> Pin 2) - Yellow Wire */}
       <path d={path2} fill="none" stroke="#ca8a04" strokeWidth={5} strokeLinecap="round" opacity={isBatteryPresent && arePinsPlaced ? 1 : 0.4} />

@@ -6,12 +6,12 @@ const FOOD_ITEMS = [
   { id: 'potato', name: 'Slice of Potato', hasStarch: true, baseColor: '#fef08a' },
   { id: 'cucumber', name: 'Cucumber', hasStarch: false, baseColor: '#bbf7d0' },
   { id: 'bread', name: 'Bread', hasStarch: true, baseColor: '#fed7aa' },
-  { id: 'rice', name: 'Boiled Rice', hasStarch: true, baseColor: '#f8fafc' },
+  { id: 'rice', name: 'Boiled Rice', hasStarch: true, baseColor: 'var(--text-heading)' },
   { id: 'gram', name: 'Boiled Gram', hasStarch: false, baseColor: '#fcd34d' },
   { id: 'peanuts', name: 'Crushed Peanuts', hasStarch: false, baseColor: '#d6d3d1' },
   { id: 'oil', name: 'Oil', hasStarch: false, baseColor: '#fef08a' },
   { id: 'butter', name: 'Butter', hasStarch: false, baseColor: '#fef3c7' },
-  { id: 'coconut', name: 'Crushed Coconut', hasStarch: false, baseColor: '#f1f5f9' },
+  { id: 'coconut', name: 'Crushed Coconut', hasStarch: false, baseColor: 'var(--neutral-bg)' },
 ];
 
 export default function Stage1_Experiment({ onComplete }) {
@@ -46,7 +46,7 @@ export default function Stage1_Experiment({ onComplete }) {
             <h3 style={{ margin: 0, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <FlaskConical size={20} style={{ color: '#06b6d4' }} /> Virtual Lab Bench
             </h3>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.85rem', color: '#94a3b8' }}>
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.85rem', color: 'var(--text-faint)' }}>
               1. Select the Iodine Dropper.<br/>
               2. Click on each food item to drop iodine on it.<br/>
               3. Observe the colour change.
@@ -67,10 +67,10 @@ export default function Stage1_Experiment({ onComplete }) {
           justifyContent: 'center',
           gap: '1rem',
           padding: '1rem',
-          background: 'rgba(0,0,0,0.2)',
+          background: 'var(--surface)',
           borderRadius: '12px',
           marginBottom: '2rem',
-          border: '1px solid rgba(255,255,255,0.05)'
+          border: '1px solid var(--border)'
         }}>
           <button 
             onClick={() => setSelectedTool(selectedTool === 'iodine' ? null : 'iodine')}
@@ -80,11 +80,11 @@ export default function Stage1_Experiment({ onComplete }) {
               alignItems: 'center', 
               gap: '0.5rem',
               background: selectedTool === 'iodine' ? 'rgba(234, 179, 8, 0.2)' : 'transparent',
-              border: `2px solid ${selectedTool === 'iodine' ? '#eab308' : 'rgba(255,255,255,0.1)'}`,
+              border: `2px solid ${selectedTool === 'iodine' ? '#eab308' : 'var(--border)'}`,
               padding: '1rem',
               borderRadius: '8px',
               cursor: 'pointer',
-              color: '#ffffff',
+              color: 'var(--text-heading)',
               transition: 'all 0.2s'
             }}
           >
@@ -114,8 +114,8 @@ export default function Stage1_Experiment({ onComplete }) {
                 onClick={() => handleTestItem(item.id)}
                 whileHover={{ scale: selectedTool === 'iodine' && !isTested ? 1.05 : 1 }}
                 style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: `2px solid ${isTested ? (item.hasStarch ? '#6366f1' : '#eab308') : 'rgba(255,255,255,0.1)'}`,
+                  background: 'var(--surface)',
+                  border: `2px solid ${isTested ? (item.hasStarch ? 'var(--accent)' : '#eab308') : 'var(--border)'}`,
                   borderRadius: '12px',
                   padding: '1rem',
                   display: 'flex',
@@ -132,7 +132,7 @@ export default function Stage1_Experiment({ onComplete }) {
                   width: '70px',
                   height: '70px',
                   borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.1)',
+                  background: 'var(--border)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -146,13 +146,13 @@ export default function Stage1_Experiment({ onComplete }) {
                       width: '40px',
                       height: '40px',
                       borderRadius: item.id.includes('oil') || item.id.includes('butter') ? '10px' : '40% 60% 70% 30% / 40% 50% 60% 50%',
-                      boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                      boxShadow: '0 4px 6px var(--border)',
                     }}
                   />
                 </div>
                 
                 <div style={{ textAlign: 'center' }}>
-                  <span style={{ fontSize: '0.85rem', color: '#f8fafc', fontWeight: '500' }}>{item.name}</span>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-heading)', fontWeight: '500' }}>{item.name}</span>
                 </div>
 
                 {/* Drop animation overlay */}
@@ -181,11 +181,11 @@ export default function Stage1_Experiment({ onComplete }) {
 
       {/* Right Panel: Observation Table */}
       <div className="glass-panel" style={{ padding: '1.5rem' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: '#ffffff' }}>Observation Table 3.3</h3>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--text-heading)' }}>Observation Table 3.3</h3>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {/* Table Header */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', padding: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 'bold' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', padding: '0.5rem', borderBottom: '1px solid var(--border)', fontSize: '0.85rem', color: 'var(--text-faint)', fontWeight: 'bold' }}>
             <span>Food Item</span>
             <span>Blue-Black?</span>
           </div>
@@ -200,16 +200,16 @@ export default function Stage1_Experiment({ onComplete }) {
                   display: 'grid', 
                   gridTemplateColumns: '1fr auto', 
                   padding: '0.5rem', 
-                  background: 'rgba(255,255,255,0.02)',
+                  background: 'var(--surface)',
                   borderRadius: '6px',
                   fontSize: '0.85rem',
                   alignItems: 'center',
-                  opacity: isTested ? 1 : 0.4
+                  opacity: isTested ? 1 : 0.7
                 }}
               >
-                <span style={{ color: '#f8fafc' }}>{item.name}</span>
+                <span style={{ color: 'var(--text-heading)' }}>{item.name}</span>
                 <span style={{ 
-                  color: isTested ? (item.hasStarch ? '#818cf8' : '#fb7185') : '#64748b',
+                  color: isTested ? (item.hasStarch ? 'var(--accent-text)' : '#fb7185') : 'var(--text-muted)',
                   fontWeight: 'bold',
                   display: 'flex',
                   justifyContent: 'center',
@@ -224,10 +224,10 @@ export default function Stage1_Experiment({ onComplete }) {
 
         <div style={{ marginTop: '2rem', padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <CheckCircle2 size={16} style={{ color: '#34d399' }} />
-            <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#34d399' }}>Conclusion</h4>
+            <CheckCircle2 size={16} style={{ color: 'var(--success)' }} />
+            <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--success)' }}>Conclusion</h4>
           </div>
-          <p style={{ margin: 0, fontSize: '0.8rem', color: '#cbd5e1', lineHeight: '1.5' }}>
+          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
             A blue-black colour indicates the presence of starch. Potato, bread, and boiled rice contain starch.
           </p>
         </div>

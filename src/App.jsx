@@ -8,8 +8,11 @@ import {
   Compass,
   Play,
   ArrowRight,
-  Home
+  Home,
+  Sun,
+  Moon
 } from 'lucide-react';
+import { useTheme } from './ThemeContext.jsx';
 import ElectricSwitchActivity from './activities/ElectricSwitch';
 import ActivityTemplate from './activities/ActivityTemplate';
 import SphericalMirrorsActivity from './activities/SphericalMirrors';
@@ -20,6 +23,7 @@ import MaterialsPropertiesActivity from './activities/MaterialsProperties';
 import './App.css';
 
 export default function App() {
+  const { theme, setTheme, toggleTheme } = useTheme();
   const [activeSubject, setActiveSubject] = useState(() => {
     const params = new URLSearchParams(window.location.hash.replace('#', '?'));
     return params.get('subject') || null;
@@ -57,11 +61,11 @@ export default function App() {
   // Renders the main subject selector dashboard
   const renderSubjectSelector = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div className="glass-panel" style={{ padding: '1.5rem', borderLeft: '4px solid #6366f1' }}>
-        <h3 style={{ margin: 0, color: '#f8fafc', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Compass size={18} style={{ color: '#818cf8' }} /> Welcome to the Interactive Science Laboratory
+      <div className="glass-panel" style={{ padding: '1.5rem', borderLeft: '4px solid #4f46e5' }}>
+        <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <Compass size={18} style={{ color: 'var(--accent-text)' }} /> Welcome to the Interactive Science Laboratory
         </h3>
-        <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.85rem', color: '#94a3b8', lineHeight: '1.5' }}>
+        <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
           Choose a subject wing to explore. Each subject contains curriculum-aligned virtual experiments designed for active learning, interactive testing, and concept checkouts.
         </p>
       </div>
@@ -80,21 +84,21 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(255, 255, 255, 0.04)',
+            border: '1px solid var(--border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
             COMING SOON
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Compass size={22} style={{ color: '#fbbf24' }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 6th Wing</h3>
+            <Compass size={22} style={{ color: 'var(--warning)' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Wing</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             Explore introductory science concepts with interactive experiments designed specifically for 6th-grade students.
           </p>
 
@@ -115,27 +119,27 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(99, 102, 241, 0.1)',
+            border: '1px solid var(--accent-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
             3 LABS ACTIVE
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <FlaskConical size={22} style={{ color: '#06b6d4' }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 7th Wing</h3>
+            <FlaskConical size={22} style={{ color: '#0891b2' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 7th Wing</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             Dive into advanced interactive experiments including electricity, spherical mirrors, and more curriculum-aligned labs.
           </p>
 
           <button
             onClick={() => navigateTo('class7', null)}
-            className="primary"
+            className="outline"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             Enter Class 7th <ArrowRight size={14} />
@@ -150,7 +154,7 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(255, 255, 255, 0.04)',
+            border: '1px solid var(--border)',
             position: 'relative',
             overflow: 'hidden'
           }}
@@ -160,11 +164,11 @@ export default function App() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Dna size={22} style={{ color: '#10b981' }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 8th Wing</h3>
+            <Dna size={22} style={{ color: 'var(--success)' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 8th Wing</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             Explore food webs and ecosystems, dissect cell organelles under a virtual microscope, and model human respiratory systems.
           </p>
 
@@ -185,7 +189,7 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(255, 255, 255, 0.04)',
+            border: '1px solid var(--border)',
             position: 'relative',
             overflow: 'hidden'
           }}
@@ -195,11 +199,11 @@ export default function App() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Zap size={22} style={{ color: '#ec4899' }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 9th Wing</h3>
+            <Zap size={22} style={{ color: '#db2777' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 9th Wing</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             Explore high school science fundamentals with complex virtual labs and conceptual checkouts.
           </p>
 
@@ -222,17 +226,17 @@ export default function App() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Subheader Wing Navigation */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
           <button
             onClick={handleBackToSubjects}
             className="outline"
-            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
+            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
           >
             <ArrowLeft size={14} /> Back to Subjects
           </button>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 6th Wing</h2>
-            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Interactive Demonstrations & Labs for Class 6</span>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 6th Wing</h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Interactive Demonstrations & Labs for Class 6</span>
           </div>
         </div>
 
@@ -252,21 +256,21 @@ export default function App() {
                     flexDirection: 'column',
                     gap: '1rem',
                     padding: '1.5rem',
-                    border: '1px solid rgba(99, 102, 241, 0.4)',
+                    border: '1px solid var(--accent-border)',
                     position: 'relative',
                     overflow: 'hidden'
                   }}
                 >
-                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     Active Chapter
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                    <BookOpen size={20} style={{ color: '#818cf8' }} />
-                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Chapter {chapterNum}</h3>
+                    <BookOpen size={20} style={{ color: 'var(--accent-text)' }} />
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapterNum}</h3>
                   </div>
 
-                  <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
                     {chapterNum === 3 
                       ? "Includes Activity 3.5: Testing for Starch." 
                       : "Includes Activity 4.1: Appearance, hardness, and effect of hammering on different materials."}
@@ -292,21 +296,21 @@ export default function App() {
                   flexDirection: 'column',
                   gap: '1rem',
                   padding: '1.5rem',
-                  border: '1px solid rgba(255, 255, 255, 0.04)',
+                  border: '1px solid var(--border)',
                   position: 'relative',
                   overflow: 'hidden'
                 }}
               >
-                <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   Coming Soon
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
                   <BookOpen size={20} style={{ color: '#818cf8' }} />
-                  <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Chapter {chapterNum}</h3>
+                  <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapterNum}</h3>
                 </div>
 
-                <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
                   Interactive science concepts, virtual experiments, and quizzes for Chapter {chapterNum}.
                 </p>
 
@@ -327,17 +331,17 @@ export default function App() {
 
   const renderClass6Chapter3 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
         <button
           onClick={() => navigateTo('class6', null)}
           className="outline"
-          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
         >
           <ArrowLeft size={14} /> Back to Class 6 Wing
         </button>
         <div>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Chapter 3 Activities</h2>
-          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Select a lab to begin</span>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 3 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
         </div>
       </div>
 
@@ -353,21 +357,21 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(16, 185, 129, 0.4)',
+            border: '1px solid var(--success-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Active Lab
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <FlaskConical size={20} style={{ color: '#06b6d4' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Activity 3.5</h3>
+            <FlaskConical size={20} style={{ color: '#0891b2' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 3.5</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             Testing for Starch. Learn how to identify starch in food items using dilute iodine solution.
           </p>
 
@@ -388,21 +392,21 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(16, 185, 129, 0.4)',
+            border: '1px solid var(--success-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Active Lab
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <FlaskConical size={20} style={{ color: '#06b6d4' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Activity 3.6</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 3.6</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             Testing for Fats. Learn how to identify fats using the paper press test.
           </p>
 
@@ -423,21 +427,21 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(139, 92, 246, 0.4)',
+            border: '1px solid var(--accent-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Active Lab
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <FlaskConical size={20} style={{ color: '#06b6d4' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Activity 3.7</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 3.7</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             Testing for Proteins. Use the Biuret test to discover which foods contain protein.
           </p>
 
@@ -455,17 +459,17 @@ export default function App() {
 
   const renderClass6Chapter4 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
         <button 
           onClick={() => navigateTo('class6', null)}
           className="outline"
-          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
         >
           <ArrowLeft size={14} /> Back to Class 6 Wing
         </button>
         <div>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Chapter 4 Activities</h2>
-          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Select a lab to begin</span>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 4 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
         </div>
       </div>
 
@@ -481,21 +485,21 @@ export default function App() {
             flexDirection: 'column', 
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(139, 92, 246, 0.4)',
+            border: '1px solid var(--accent-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Active Lab
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <FlaskConical size={20} style={{ color: '#06b6d4' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Activity 4.1</h3>
+            <FlaskConical size={20} style={{ color: '#0891b2' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.1</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             Properties of Materials. Test the appearance, hardness, and hammering effect on various materials.
           </p>
 
@@ -515,17 +519,17 @@ export default function App() {
   const renderClass7Wing = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Subheader Wing Navigation */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
         <button
           onClick={handleBackToSubjects}
           className="outline"
-          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
         >
           <ArrowLeft size={14} /> Back to Subjects
         </button>
         <div>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Class 7th Wing</h2>
-          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Interactive Demonstrations & Labs for Class 7</span>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 7th Wing</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Interactive Demonstrations & Labs for Class 7</span>
         </div>
       </div>
 
@@ -543,21 +547,21 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(99, 102, 241, 0.1)',
+            border: '1px solid var(--accent-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Active Lab
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Zap size={20} style={{ color: '#f59e0b' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Electric Switch</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Electric Switch</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             NCERT Class 7 Chapter 3 (Activities 3.8 & 3.9). Learn how to build a switch, predict electrical flows, and test materials like wood, plastic, or metals.
           </p>
 
@@ -583,16 +587,16 @@ export default function App() {
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(16, 185, 129, 0.15)', color: '#34d399', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Active Lab
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <BookOpen size={20} style={{ color: '#ec4899' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Spherical Mirrors</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Spherical Mirrors</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             NCERT Class 7 Chapter 15. Explore Image Formation using Concave and Convex Surfaces. Interactive virtual experiments and concept checks.
           </p>
 
@@ -613,7 +617,7 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(255, 255, 255, 0.04)',
+            border: '1px solid var(--border)',
             position: 'relative',
             overflow: 'hidden'
           }}
@@ -624,10 +628,10 @@ export default function App() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <BookOpen size={20} style={{ color: '#818cf8' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#ffffff' }}>Activity Template</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity Template</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: 0, lineHeight: '1.5', flex: 1 }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
             A ready-to-copy code blueprint designed with the exact same structure and styling. Duplicate this folder to build new science activities.
           </p>
 
@@ -646,17 +650,17 @@ export default function App() {
   // Renders Under Construction screen for Chemistry or Biology
   const renderUnderConstruction = (subjectName, IconComponent, colorHex) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
         <button
           onClick={handleBackToSubjects}
           className="outline"
-          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)' }}
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
         >
           <ArrowLeft size={14} /> Back to Subjects
         </button>
         <div>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>{subjectName} Wing</h2>
-          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Modules and Experiments</span>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>{subjectName} Wing</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Modules and Experiments</span>
         </div>
       </div>
 
@@ -668,14 +672,14 @@ export default function App() {
         textAlign: 'center',
         padding: '3rem 2rem',
         gap: '1rem',
-        border: '1px dashed rgba(255,255,255,0.08)'
+        border: '1px dashed var(--border)'
       }}>
         <div style={{
           width: '70px',
           height: '70px',
           borderRadius: '50%',
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.06)',
+          background: 'var(--neutral-bg)',
+          border: '1px solid var(--border)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -684,8 +688,8 @@ export default function App() {
           <IconComponent size={32} />
         </div>
         <div>
-          <h3 style={{ margin: '0 0 0.25rem 0', color: '#ffffff' }}>{subjectName} Lab Under Construction</h3>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: '#94a3b8', maxWidth: '420px', lineHeight: '1.5' }}>
+          <h3 style={{ margin: '0 0 0.25rem 0' }}>{subjectName} Lab Under Construction</h3>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-faint)', maxWidth: '420px', lineHeight: '1.5' }}>
             We are designing beautiful, interactive molecular and genetic experiments for the {subjectName} curriculum. Check back soon!
           </p>
         </div>
@@ -707,15 +711,35 @@ export default function App() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <div className="header-title">
-              <BookOpen style={{ color: '#6366f1' }} size={24} />
+              <BookOpen style={{ color: 'var(--accent)' }} size={24} />
               <h1 style={{ fontSize: '1.75rem' }}>Interactive Science Labs</h1>
             </div>
             <p className="header-subtitle">
               Active-learning simulations and concepts reviews for middle school science
             </p>
           </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {/* Theme Toggle */}
+            <button 
+              className="outline" 
+              onClick={toggleTheme}
+              style={{ 
+                padding: '0.4rem 0.8rem', 
+                fontSize: '0.85rem', 
+                gap: '0.5rem', 
+                borderRadius: '8px',
+                borderColor: 'var(--border)'
+              }}
+            >
+              {theme === 'dark' ? (
+                <><Sun size={14} /> <span>Light Theme</span></>
+              ) : (
+                <><Moon size={14} /> <span>Dark Theme</span></>
+              )}
+            </button>
+          </div>
           {activeSubject && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#64748b' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
               <div
                 style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
                 onClick={handleBackToSubjects}
@@ -726,7 +750,7 @@ export default function App() {
               </div>
               <ArrowRight size={10} />
               <span
-                style={{ color: '#cbd5e1', textTransform: 'capitalize', cursor: activeActivity ? 'pointer' : 'default' }}
+                style={{ color: 'var(--text-secondary)', textTransform: 'capitalize', cursor: activeActivity ? 'pointer' : 'default' }}
                 onClick={() => activeActivity && handleBackToLabs()}
                 title={activeActivity ? "Go back to class" : ""}
               >
@@ -737,7 +761,7 @@ export default function App() {
               {activeActivity && (
                 <>
                   <ArrowRight size={10} />
-                  <span style={{ color: '#818cf8' }}>
+                  <span style={{ color: 'var(--accent-text)' }}>
                     {activeActivity === 'electric_switch' ? 'Electric Switch' : 
                      activeActivity === 'spherical_mirrors' ? 'Spherical Mirrors' : 
                      activeActivity === 'food_testing' ? 'Food Testing' :

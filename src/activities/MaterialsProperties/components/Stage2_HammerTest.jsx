@@ -41,10 +41,10 @@ export default function Stage2_HammerTest({ onComplete }) {
     <div className="glass-panel" style={{ padding: '2rem' }}>
       <div style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
         <h3 style={{ margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1.5rem' }}>
-          <Hammer style={{ color: '#ef4444' }} />
+          <Hammer style={{ color: 'var(--danger)' }} />
           Hammer Test
         </h3>
-        <p style={{ color: '#94a3b8', margin: 0 }}>
+        <p style={{ color: 'var(--text-faint)', margin: 0 }}>
           Place each item on the surface and beat it with a hammer. Does it flatten into a sheet or break into pieces?
         </p>
       </div>
@@ -52,7 +52,7 @@ export default function Stage2_HammerTest({ onComplete }) {
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
         {/* Left: Item Queue */}
         <div style={{ flex: '1 1 250px' }}>
-          <h4 style={{ color: '#e2e8f0', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h4 style={{ color: 'var(--border)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Box size={18} /> Select Material
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -66,8 +66,8 @@ export default function Stage2_HammerTest({ onComplete }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  border: selectedItem === item.id ? '2px solid #ef4444' : '1px solid rgba(255,255,255,0.1)',
-                  background: isItemComplete(item.id) ? 'rgba(16, 185, 129, 0.1)' : 'rgba(255,255,255,0.05)',
+                  border: selectedItem === item.id ? '2px solid #ef4444' : '1px solid var(--border)',
+                  background: isItemComplete(item.id) ? 'rgba(16, 185, 129, 0.1)' : 'var(--border)',
                   cursor: 'pointer'
                 }}
               >
@@ -85,20 +85,20 @@ export default function Stage2_HammerTest({ onComplete }) {
                       />
                     )}
                   </div>
-                  <span style={{ color: '#f8fafc', fontSize: '0.9rem' }}>{item.name}</span>
+                  <span style={{ color: 'var(--text-heading)', fontSize: '0.9rem' }}>{item.name}</span>
                 </div>
-                {isItemComplete(item.id) && <CheckCircle size={16} style={{ color: '#10b981' }} />}
+                {isItemComplete(item.id) && <CheckCircle size={16} style={{ color: 'var(--success)' }} />}
               </button>
             ))}
           </div>
         </div>
 
         {/* Right: Hammering Arena */}
-        <div className="glass-panel" style={{ flex: '2 1 400px', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', background: 'rgba(0,0,0,0.3)', position: 'relative', overflow: 'hidden' }}>
+        <div className="glass-panel" style={{ flex: '2 1 400px', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', background: 'var(--border)', position: 'relative', overflow: 'hidden' }}>
           {!selectedItem ? (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}>
-              <Hammer size={48} style={{ color: '#64748b', marginBottom: '1rem' }} />
-              <p style={{ color: '#f8fafc', margin: 0 }}>Select a material from the list to test it.</p>
+              <Hammer size={48} style={{ color: 'var(--text-muted)', marginBottom: '1rem' }} />
+              <p style={{ color: 'var(--text-heading)', margin: 0 }}>Select a material from the list to test it.</p>
             </div>
           ) : (() => {
             const item = ITEMS.find(i => i.id === selectedItem);
@@ -108,7 +108,7 @@ export default function Stage2_HammerTest({ onComplete }) {
                 <div style={{ height: '200px', width: '100%', position: 'relative', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', marginBottom: '2rem' }}>
                   
                   {/* Hard Surface Line */}
-                  <div style={{ position: 'absolute', bottom: 0, width: '80%', height: '8px', background: '#334155', borderRadius: '4px' }} />
+                  <div style={{ position: 'absolute', bottom: 0, width: '80%', height: '8px', background: 'var(--text-secondary)', borderRadius: '4px' }} />
                   
                   {/* The Item */}
                   <AnimatePresence mode="wait">
@@ -170,7 +170,7 @@ export default function Stage2_HammerTest({ onComplete }) {
                         transition={{ duration: 1.5, times: [0, 0.2, 0.4, 0.6, 0.8, 1] }}
                         style={{ position: 'absolute', bottom: '60px', right: '50%', transformOrigin: 'bottom right' }}
                       >
-                        <Hammer size={64} style={{ color: '#cbd5e1' }} fill="#94a3b8" />
+                        <Hammer size={64} style={{ color: 'var(--text-faint)' }} fill="var(--text-faint)" />
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -179,7 +179,7 @@ export default function Stage2_HammerTest({ onComplete }) {
                 {/* Controls & Recording */}
                 {hammerStatus === 'idle' ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                    <p style={{ color: '#cbd5e1', fontSize: '0.9rem', margin: 0, textAlign: 'center' }}>
+                    <p style={{ color: 'var(--text-faint)', fontSize: '0.9rem', margin: 0, textAlign: 'center' }}>
                       Drag the hammer onto the material to test it
                     </p>
                     <motion.div
@@ -205,12 +205,12 @@ export default function Stage2_HammerTest({ onComplete }) {
                         zIndex: 10
                       }}
                     >
-                      <Hammer size={32} style={{ color: '#ef4444' }} fill="rgba(239, 68, 68, 0.5)" />
+                      <Hammer size={32} style={{ color: 'var(--danger)' }} fill="rgba(239, 68, 68, 0.5)" />
                     </motion.div>
                   </div>
                 ) : hammerStatus === 'finished' ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', width: '100%' }}>
-                    <p style={{ color: '#f8fafc', fontSize: '1.1rem', margin: 0 }}>What happened?</p>
+                    <p style={{ color: 'var(--text-heading)', fontSize: '1.1rem', margin: 0 }}>What happened?</p>
                     <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
                       <button 
                         onClick={() => handleRecord(item.id, 'flattens')}
@@ -229,7 +229,7 @@ export default function Stage2_HammerTest({ onComplete }) {
                     </div>
                   </div>
                 ) : (
-                  <div style={{ color: '#ef4444', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div style={{ color: 'var(--danger)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <RefreshCw size={18} className="spin" /> Hammering in progress...
                   </div>
                 )}
@@ -239,7 +239,7 @@ export default function Stage2_HammerTest({ onComplete }) {
         </div>
       </div>
 
-      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
+      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
         <button
           onClick={() => onComplete(observations)}
           disabled={!allComplete}

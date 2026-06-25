@@ -64,7 +64,7 @@ export default function QuizPanel({ observations }) {
           <TableIcon style={{ color: '#8b5cf6' }} />
           Table 4.1 Checkout
         </h3>
-        <p style={{ color: '#94a3b8', margin: 0 }}>
+        <p style={{ color: 'var(--text-faint)', margin: 0 }}>
           Based on your observations, fill in Table 4.1 to classify the materials.
         </p>
       </div>
@@ -72,11 +72,11 @@ export default function QuizPanel({ observations }) {
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
-            <tr style={{ borderBottom: '2px solid rgba(255,255,255,0.1)' }}>
-              <th style={{ padding: '1rem', color: '#f8fafc' }}>Object / Material</th>
-              <th style={{ padding: '1rem', color: '#f8fafc' }}>Appearance</th>
-              <th style={{ padding: '1rem', color: '#f8fafc' }}>Hardness</th>
-              <th style={{ padding: '1rem', color: '#f8fafc' }}>Effect of Hammering</th>
+            <tr style={{ borderBottom: '2px solid var(--border)' }}>
+              <th style={{ padding: '1rem', color: 'var(--text-heading)' }}>Object / Material</th>
+              <th style={{ padding: '1rem', color: 'var(--text-heading)' }}>Appearance</th>
+              <th style={{ padding: '1rem', color: 'var(--text-heading)' }}>Hardness</th>
+              <th style={{ padding: '1rem', color: 'var(--text-heading)' }}>Effect of Hammering</th>
             </tr>
           </thead>
           <tbody>
@@ -87,8 +87,8 @@ export default function QuizPanel({ observations }) {
               const isCorrectHammer = ans.hammer === item.correctHammer;
 
               return (
-                <tr key={item.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={{ padding: '1rem', color: '#cbd5e1' }}>
+                <tr key={item.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '1rem', color: 'var(--text-faint)' }}>
                     {index + 1}. {item.name}
                   </td>
                   <td style={{ padding: '1rem' }}>
@@ -98,9 +98,9 @@ export default function QuizPanel({ observations }) {
                       disabled={isSubmitted}
                       style={{
                         padding: '0.5rem',
-                        background: 'rgba(0,0,0,0.3)',
+                        background: 'var(--border)',
                         color: '#fff',
-                        border: isSubmitted ? (isCorrectLustre ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid rgba(255,255,255,0.2)',
+                        border: isSubmitted ? (isCorrectLustre ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid var(--border)',
                         borderRadius: '4px',
                         width: '100%'
                       }}
@@ -117,9 +117,9 @@ export default function QuizPanel({ observations }) {
                       disabled={isSubmitted}
                       style={{
                         padding: '0.5rem',
-                        background: 'rgba(0,0,0,0.3)',
+                        background: 'var(--border)',
                         color: '#fff',
-                        border: isSubmitted ? (isCorrectHardness ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid rgba(255,255,255,0.2)',
+                        border: isSubmitted ? (isCorrectHardness ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid var(--border)',
                         borderRadius: '4px',
                         width: '100%'
                       }}
@@ -137,9 +137,9 @@ export default function QuizPanel({ observations }) {
                       disabled={isSubmitted}
                       style={{
                         padding: '0.5rem',
-                        background: 'rgba(0,0,0,0.3)',
+                        background: 'var(--border)',
                         color: '#fff',
-                        border: isSubmitted ? (isCorrectHammer ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid rgba(255,255,255,0.2)',
+                        border: isSubmitted ? (isCorrectHammer ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid var(--border)',
                         borderRadius: '4px',
                         width: '100%'
                       }}
@@ -173,11 +173,11 @@ export default function QuizPanel({ observations }) {
             className="glass-panel"
             style={{ padding: '1.5rem', textAlign: 'center', background: score === totalPossible ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)', border: score === totalPossible ? '1px solid #10b981' : '1px solid #f59e0b' }}
           >
-            <h4 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', margin: '0 0 0.5rem 0', fontSize: '1.25rem', color: score === totalPossible ? '#10b981' : '#f59e0b' }}>
+            <h4 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', margin: '0 0 0.5rem 0', fontSize: '1.25rem', color: score === totalPossible ? 'var(--success)' : 'var(--warning)' }}>
               <Award size={24} />
               {score === totalPossible ? 'Perfect Observation!' : 'Good effort!'}
             </h4>
-            <p style={{ color: '#e2e8f0', margin: '0 0 1rem 0' }}>
+            <p style={{ color: 'var(--border)', margin: '0 0 1rem 0' }}>
               You got {score} out of {totalPossible} correct.
             </p>
             {score < totalPossible && (

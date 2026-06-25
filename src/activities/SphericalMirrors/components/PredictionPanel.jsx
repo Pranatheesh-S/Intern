@@ -36,7 +36,7 @@ export default function PredictionPanel({ onComplete }) {
       
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '0.75rem', marginBottom: '1.25rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Brain style={{ color: '#6366f1' }} size={20} />
+          <Brain style={{ color: 'var(--accent)' }} size={20} />
           <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Prediction Check</h3>
         </div>
       </div>
@@ -49,7 +49,7 @@ export default function PredictionPanel({ onComplete }) {
           exit={{ opacity: 0, x: -20 }}
           style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
         >
-          <h4 style={{ fontSize: '1rem', color: '#f8fafc', lineHeight: '1.5', marginBottom: '1.25rem' }}>
+          <h4 style={{ fontSize: '1rem', color: 'var(--text-heading)', lineHeight: '1.5', marginBottom: '1.25rem' }}>
             {QUESTION.text}
           </h4>
 
@@ -67,13 +67,13 @@ export default function PredictionPanel({ onComplete }) {
               if (answered) {
                 if (isSelected) {
                   buttonStyle.background = 'rgba(99, 102, 241, 0.1)';
-                  buttonStyle.borderColor = '#6366f1';
-                  buttonStyle.color = '#818cf8';
+                  buttonStyle.borderColor = 'var(--accent)';
+                  buttonStyle.color = 'var(--accent-text)';
                 } else {
                   buttonStyle.opacity = 0.5;
                 }
               } else if (isSelected) {
-                buttonStyle.borderColor = '#6366f1';
+                buttonStyle.borderColor = 'var(--accent)';
                 buttonStyle.background = 'rgba(99, 102, 241, 0.1)';
               }
 
@@ -93,10 +93,10 @@ export default function PredictionPanel({ onComplete }) {
                       width: '24px', 
                       height: '24px', 
                       borderRadius: '6px', 
-                      background: isSelected ? '#6366f1' : 'rgba(255,255,255,0.04)',
+                      background: isSelected ? 'var(--accent)' : 'var(--border)',
                       fontSize: '0.8rem',
                       fontWeight: 'bold',
-                      color: '#ffffff',
+                      color: 'var(--text-heading)',
                       flexShrink: 0
                     }}>
                       {answered && isSelected ? <Check size={14} /> : opt.key}
@@ -122,10 +122,10 @@ export default function PredictionPanel({ onComplete }) {
                     borderLeft: `4px solid #6366f1`
                   }}
                 >
-                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#818cf8' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent-text)' }}>
                     PREDICTION SAVED
                   </span>
-                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: '#cbd5e1', lineHeight: '1.4' }}>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: 'var(--text-faint)', lineHeight: '1.4' }}>
                     Great! Now let's test your prediction in the Virtual Experiment.
                   </p>
                 </motion.div>
