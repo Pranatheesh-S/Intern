@@ -491,3 +491,131 @@ button.outline.active {
 .tray-btn:hover:not(:disabled) {
   animation: tray-shake 0.5s ease;
 }
+
+/* ═══════════════════════════════════════════
+   STAGE 1 REDESIGN CUSTOM STYLES
+   ═══════════════════════════════════════════ */
+
+.stage1-grid {
+  display: grid;
+  grid-template-columns: 310px 1fr 340px;
+  gap: 1.25rem;
+  align-items: stretch;
+}
+@media (max-width: 1200px) {
+  .stage1-grid {
+    grid-template-columns: 300px 1fr;
+  }
+}
+@media (max-width: 900px) {
+  .stage1-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Child-Friendly Interactive Animations & Glows */
+@keyframes target-glow-pulse {
+  0%, 100% {
+    stroke-width: 1.5;
+    stroke: var(--accent);
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  50% {
+    stroke-width: 3.5;
+    stroke: #818cf8;
+    stroke-dashoffset: 10;
+    opacity: 1;
+    filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.8));
+  }
+}
+.active-target-glow {
+  stroke-dasharray: 6,4;
+  animation: target-glow-pulse 1.6s infinite ease-in-out;
+}
+
+@keyframes led-blink-yellow {
+  0%, 100% {
+    r: 6;
+    fill: #f59e0b;
+    filter: drop-shadow(0 0 1px #f59e0b);
+    opacity: 0.5;
+  }
+  50% {
+    r: 8;
+    fill: #fbbf24;
+    filter: drop-shadow(0 0 8px #fbbf24) drop-shadow(0 0 16px #fbbf24);
+    opacity: 1;
+  }
+}
+.led-glowing-yellow {
+  animation: led-blink-yellow 1.2s infinite ease-in-out;
+}
+
+@keyframes hand-bounce {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-6px, -4px) scale(1.08);
+  }
+}
+.guide-hand-animation {
+  animation: hand-bounce 1s infinite ease-in-out;
+}
+
+@keyframes item-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+    border-color: var(--warning-border);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(245, 158, 11, 0.2);
+    border-color: #fbbf24;
+  }
+}
+.active-step-btn-pulse {
+  animation: item-pulse 2s infinite ease-in-out !important;
+}
+
+/* Modal styling for Onboarding */
+.lab-onboarding-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1.5rem;
+}
+
+.lab-onboarding-card {
+  width: 100%;
+  max-width: 820px;
+  max-height: 90vh;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.lab-onboarding-body {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+@media (max-width: 768px) {
+  .lab-onboarding-body {
+    grid-template-columns: 1fr;
+  }
+}
