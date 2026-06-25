@@ -38,14 +38,14 @@ export default function ProteinTestingActivity({ onBackToDashboard }) {
             <button 
               onClick={onBackToDashboard}
               className="outline"
-              style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'rgba(255,255,255,0.1)', height: 'fit-content' }}
+              style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'var(--border)', height: 'fit-content' }}
             >
               <ArrowLeft size={14} /> Back
             </button>
           )}
           <div>
             <div className="header-title">
-              <BookOpen style={{ color: '#6366f1' }} size={24} />
+              <BookOpen style={{ color: 'var(--accent)' }} size={24} />
               <h1>Protein Testing Lab</h1>
             </div>
             <p className="header-subtitle">
@@ -79,7 +79,7 @@ export default function ProteinTestingActivity({ onBackToDashboard }) {
                 <Icon size={14} />
                 <span>{tab.name}</span>
                 {isCompleted && (
-                  <CheckCircle size={12} style={{ color: '#10b981', marginLeft: '0.15rem' }} />
+                  <CheckCircle size={12} style={{ color: 'var(--success)', marginLeft: '0.15rem' }} />
                 )}
               </button>
             );
@@ -99,10 +99,10 @@ export default function ProteinTestingActivity({ onBackToDashboard }) {
           gap: '1rem',
           alignItems: 'flex-start'
         }}>
-          <AlertTriangle style={{ color: '#ef4444', flexShrink: 0, marginTop: '0.2rem' }} size={24} />
+          <AlertTriangle style={{ color: 'var(--danger)', flexShrink: 0, marginTop: '0.2rem' }} size={24} />
           <div>
-            <h4 style={{ margin: 0, color: '#ef4444', fontSize: '1rem' }}>Safety Precautions</h4>
-            <ul style={{ margin: '0.5rem 0 0 0', paddingLeft: '1.25rem', color: '#f8fafc', fontSize: '0.85rem', lineHeight: '1.5' }}>
+            <h4 style={{ margin: 0, color: 'var(--danger)', fontSize: '1rem' }}>Safety Precautions</h4>
+            <ul style={{ margin: '0.5rem 0 0 0', paddingLeft: '1.25rem', color: 'var(--text-heading)', fontSize: '0.85rem', lineHeight: '1.5' }}>
               <li>These chemicals are harmful and need to be handled with care. Do not touch any of these chemicals unless asked to do so.</li>
               <li>If any chemical gets spilled on your body, immediately wash the affected area with water.</li>
               <li>Do not put any of these chemicals into your mouth, or try to smell them.</li>
@@ -129,12 +129,12 @@ export default function ProteinTestingActivity({ onBackToDashboard }) {
       {/* Footer Educational Box */}
       <footer className="glass-panel" style={{ marginTop: '2rem', padding: '1.25rem' }}>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-          <Info style={{ color: '#6366f1', flexShrink: 0 }} size={20} />
+          <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
           <div>
-            <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#f8fafc' }}>
+            <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-heading)' }}>
               Did you know? (Science Insights)
             </h4>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: '#94a3b8', lineHeight: '1.5' }}>
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
               <strong>Proteins</strong> react with copper sulfate and caustic soda (sodium hydroxide) to form a distinct violet-colored complex. This is known as the Biuret test.
             </p>
           </div>

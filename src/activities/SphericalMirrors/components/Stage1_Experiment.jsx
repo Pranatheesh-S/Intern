@@ -68,7 +68,7 @@ export default function Stage1_Experiment({ onComplete }) {
       {/* Left Panel: Controls & Observations */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         <div>
-          <span className="status-badge neutral" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8' }}>
+          <span className="status-badge neutral" style={{ background: 'var(--accent-bg)', color: 'var(--accent-text)' }}>
             Stage 1: Virtual Experiment
           </span>
           <h2 style={{ marginTop: '0.5rem', marginBottom: '0.25rem' }}>Spherical Mirrors</h2>
@@ -79,7 +79,7 @@ export default function Stage1_Experiment({ onComplete }) {
 
         {/* Interactive Controls */}
         <div>
-          <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem', color: '#cbd5e1' }}>Interactive Controls</h3>
+          <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem', color: 'var(--text-faint)' }}>Interactive Controls</h3>
           
           <div className="responsive-grid-2" style={{ gap: '0.5rem', marginBottom: '1rem' }}>
             <button 
@@ -118,7 +118,7 @@ export default function Stage1_Experiment({ onComplete }) {
 
         {/* Observation Panel */}
         <div style={{ flex: 1 }}>
-          <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem', color: '#cbd5e1' }}>Observation Panel</h3>
+          <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem', color: 'var(--text-faint)' }}>Observation Panel</h3>
           
           <AnimatePresence mode="wait">
             <motion.div
@@ -127,7 +127,7 @@ export default function Stage1_Experiment({ onComplete }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -5 }}
               style={{
-                background: 'rgba(30, 41, 59, 0.6)',
+                background: 'var(--tab-bg)',
                 border: '1px solid rgba(255, 255, 255, 0.05)',
                 borderRadius: '8px',
                 padding: '1rem'
@@ -135,11 +135,11 @@ export default function Stage1_Experiment({ onComplete }) {
             >
               {mirrorType === 'concave' ? (
                 <>
-                  <h4 style={{ color: '#818cf8', margin: '0 0 0.5rem 0' }}>Concave Mirror</h4>
-                  <span style={{ fontSize: '0.75rem', color: '#f8fafc', background: 'rgba(99, 102, 241, 0.4)', padding: '0.2rem 0.5rem', borderRadius: '4px', marginBottom: '0.75rem', display: 'inline-block' }}>
+                  <h4 style={{ color: 'var(--accent-text)', margin: '0 0 0.5rem 0' }}>Concave Mirror</h4>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-heading)', background: 'rgba(99, 102, 241, 0.4)', padding: '0.2rem 0.5rem', borderRadius: '4px', marginBottom: '0.75rem', display: 'inline-block' }}>
                     Curved Inwards
                   </span>
-                  <ul style={{ fontSize: '0.85rem', color: '#cbd5e1', paddingLeft: '1.2rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <ul style={{ fontSize: '0.85rem', color: 'var(--text-faint)', paddingLeft: '1.2rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                     <li>Can produce enlarged images (when object is close).</li>
                     <li>Can produce inverted images (when object is far).</li>
                     <li>Image heavily depends on distance.</li>
@@ -147,11 +147,11 @@ export default function Stage1_Experiment({ onComplete }) {
                 </>
               ) : (
                 <>
-                  <h4 style={{ color: '#34d399', margin: '0 0 0.5rem 0' }}>Convex Mirror</h4>
-                  <span style={{ fontSize: '0.75rem', color: '#f8fafc', background: 'rgba(16, 185, 129, 0.4)', padding: '0.2rem 0.5rem', borderRadius: '4px', marginBottom: '0.75rem', display: 'inline-block' }}>
+                  <h4 style={{ color: 'var(--success)', margin: '0 0 0.5rem 0' }}>Convex Mirror</h4>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-heading)', background: 'rgba(16, 185, 129, 0.4)', padding: '0.2rem 0.5rem', borderRadius: '4px', marginBottom: '0.75rem', display: 'inline-block' }}>
                     Curved Outwards
                   </span>
-                  <ul style={{ fontSize: '0.85rem', color: '#cbd5e1', paddingLeft: '1.2rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <ul style={{ fontSize: '0.85rem', color: 'var(--text-faint)', paddingLeft: '1.2rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                     <li>Always produces upright images.</li>
                     <li>Images always appear smaller.</li>
                     <li>Provides a wider field of view.</li>
@@ -196,8 +196,8 @@ export default function Stage1_Experiment({ onComplete }) {
 
         {/* Legend Overlay */}
         <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', pointerEvents: 'none', background: 'rgba(15, 23, 42, 0.7)', padding: '0.5rem', borderRadius: '8px' }}>
-          <span style={{ fontSize: '0.75rem', color: '#cbd5e1', fontWeight: 'bold' }}>Simulation Active</span>
-          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-faint)', fontWeight: 'bold' }}>Simulation Active</span>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)' }}>
             Distance: {distance === 'close' ? 'Object is Close' : 'Object is Far Away'}
           </span>
         </div>

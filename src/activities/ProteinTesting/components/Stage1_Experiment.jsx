@@ -4,7 +4,7 @@ import { CheckCircle2, FlaskConical, RotateCcw, Droplet, RefreshCw } from 'lucid
 
 const FOOD_ITEMS = [
   { id: 'bread', name: 'Bread', hasProtein: false, hasFat: false, baseColor: '#fed7aa' },
-  { id: 'rice', name: 'Boiled Rice', hasProtein: false, hasFat: false, baseColor: '#f8fafc' },
+  { id: 'rice', name: 'Boiled Rice', hasProtein: false, hasFat: false, baseColor: 'var(--text-heading)' },
   { id: 'peanuts', name: 'Crushed Peanuts', hasProtein: true, hasFat: true, baseColor: '#d6d3d1' },
   { id: 'soya', name: 'Soya Bean', hasProtein: true, hasFat: false, baseColor: '#fde68a' },
   { id: 'peas', name: 'Peas', hasProtein: true, hasFat: false, baseColor: '#bbf7d0' },
@@ -68,10 +68,10 @@ export default function Stage1_Experiment({ onComplete }) {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#f8fafc' }}>
+            <h3 style={{ margin: 0, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-heading)' }}>
               <FlaskConical size={20} style={{ color: '#06b6d4' }} /> Virtual Lab Bench
             </h3>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.85rem', color: '#94a3b8' }}>
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.85rem', color: 'var(--text-faint)' }}>
               1. Select a food item to crush and place in the test tube.<br/>
               2. Add Water, Copper Sulfate (2 drops), and Caustic Soda (10 drops).<br/>
               3. Shake and observe the color change.
@@ -91,14 +91,14 @@ export default function Stage1_Experiment({ onComplete }) {
           {/* Reagents & Test Tube Area */}
           <div style={{ 
             flex: 1, 
-            background: 'rgba(0,0,0,0.2)', 
+            background: 'var(--surface)', 
             borderRadius: '12px', 
             padding: '2rem',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             position: 'relative',
-            border: '1px solid rgba(255,255,255,0.05)'
+            border: '1px solid var(--border)'
           }}>
             {/* Toolbar for Chemicals */}
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '3rem' }}>
@@ -114,7 +114,7 @@ export default function Stage1_Experiment({ onComplete }) {
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  border: tubeStep === 'food' ? '2px solid #60a5fa' : '2px solid rgba(255,255,255,0.1)'
+                  border: tubeStep === 'food' ? '2px solid #60a5fa' : '2px solid var(--border)'
                 }}
               >
                 <Droplet size={24} style={{ color: '#60a5fa' }} />
@@ -133,7 +133,7 @@ export default function Stage1_Experiment({ onComplete }) {
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  border: tubeStep === 'water' ? '2px solid #3b82f6' : '2px solid rgba(255,255,255,0.1)'
+                  border: tubeStep === 'water' ? '2px solid #3b82f6' : '2px solid var(--border)'
                 }}
               >
                 <Droplet size={24} style={{ color: '#3b82f6' }} />
@@ -152,10 +152,10 @@ export default function Stage1_Experiment({ onComplete }) {
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  border: tubeStep === 'copper' ? '2px solid #f8fafc' : '2px solid rgba(255,255,255,0.1)'
+                  border: tubeStep === 'copper' ? '2px solid #f8fafc' : '2px solid var(--border)'
                 }}
               >
-                <Droplet size={24} style={{ color: '#f8fafc' }} />
+                <Droplet size={24} style={{ color: 'var(--text-heading)' }} />
                 <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Caustic Soda<br/>(10 drops)</span>
               </button>
             </div>
@@ -177,8 +177,8 @@ export default function Stage1_Experiment({ onComplete }) {
                   borderBottomRightRadius: '30px',
                   position: 'relative',
                   overflow: 'hidden',
-                  background: 'rgba(255,255,255,0.05)',
-                  boxShadow: 'inset 0 0 10px rgba(255,255,255,0.1)'
+                  background: 'var(--border)',
+                  boxShadow: 'inset 0 0 10px var(--border)'
                 }}
               >
                 {/* Food particles */}
@@ -212,7 +212,7 @@ export default function Stage1_Experiment({ onComplete }) {
                     backgroundColor: tubeStep === 'done' && activeFood?.hasProtein ? 'rgba(139, 92, 246, 0.8)' : // Violet
                                      tubeStep === 'done' && !activeFood?.hasProtein ? 'rgba(96, 165, 250, 0.4)' : // Pale Blue
                                      tubeStep === 'copper' || tubeStep === 'soda' || tubeStep === 'shaking' ? 'rgba(59, 130, 246, 0.3)' : // Light blue (copper)
-                                     tubeStep === 'water' ? 'rgba(255,255,255,0.2)' : 'transparent'
+                                     tubeStep === 'water' ? 'var(--border)' : 'transparent'
                   }}
                   transition={{ duration: 0.5 }}
                   style={{
@@ -242,7 +242,7 @@ export default function Stage1_Experiment({ onComplete }) {
                 <button 
                   onClick={handleResetTube}
                   className="outline"
-                  style={{ gap: '0.5rem', borderColor: '#6366f1', color: '#818cf8' }}
+                  style={{ gap: '0.5rem', borderColor: 'var(--accent)', color: 'var(--accent-text)' }}
                 >
                   <RotateCcw size={16} /> Empty & Clean Tube
                 </button>
@@ -252,7 +252,7 @@ export default function Stage1_Experiment({ onComplete }) {
 
           {/* Food Selection Grid */}
           <div style={{ width: '220px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#94a3b8', fontSize: '0.85rem', textTransform: 'uppercase' }}>Select Food to Test</h4>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-faint)', fontSize: '0.85rem', textTransform: 'uppercase' }}>Select Food to Test</h4>
             {FOOD_ITEMS.map(item => {
               const isTested = results[item.id];
               const isActive = activeItem === item.id;
@@ -263,11 +263,11 @@ export default function Stage1_Experiment({ onComplete }) {
                   onClick={() => handleSelectFood(item.id)}
                   disabled={tubeStep !== 'empty' && tubeStep !== 'done'}
                   style={{
-                    background: isActive ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${isActive ? '#6366f1' : 'rgba(255,255,255,0.1)'}`,
+                    background: isActive ? 'rgba(99, 102, 241, 0.2)' : 'var(--surface)',
+                    border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
                     padding: '0.75rem',
                     borderRadius: '8px',
-                    color: '#f8fafc',
+                    color: 'var(--text-heading)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -280,7 +280,7 @@ export default function Stage1_Experiment({ onComplete }) {
                     <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: item.baseColor }} />
                     <span style={{ fontSize: '0.85rem' }}>{item.name}</span>
                   </div>
-                  {isTested && <CheckCircle2 size={14} style={{ color: '#10b981' }} />}
+                  {isTested && <CheckCircle2 size={14} style={{ color: 'var(--success)' }} />}
                 </button>
               )
             })}
@@ -291,10 +291,10 @@ export default function Stage1_Experiment({ onComplete }) {
 
       {/* Right Panel: Observation Table */}
       <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: '#ffffff' }}>Observation Table 3.3</h3>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--text-heading)' }}>Observation Table 3.3</h3>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', padding: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', fontSize: '0.85rem', color: '#94a3b8', fontWeight: 'bold' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', padding: '0.5rem', borderBottom: '1px solid var(--border)', fontSize: '0.85rem', color: 'var(--text-faint)', fontWeight: 'bold' }}>
             <span>Food Item</span>
             <span>Turns Violet?</span>
           </div>
@@ -308,16 +308,16 @@ export default function Stage1_Experiment({ onComplete }) {
                   display: 'grid', 
                   gridTemplateColumns: '1fr auto', 
                   padding: '0.5rem', 
-                  background: 'rgba(255,255,255,0.02)',
+                  background: 'var(--surface)',
                   borderRadius: '6px',
                   fontSize: '0.85rem',
                   alignItems: 'center',
-                  opacity: isTested ? 1 : 0.4
+                  opacity: isTested ? 1 : 0.7
                 }}
               >
-                <span style={{ color: '#f8fafc' }}>{item.name}</span>
+                <span style={{ color: 'var(--text-heading)' }}>{item.name}</span>
                 <span style={{ 
-                  color: isTested ? (item.hasProtein ? '#8b5cf6' : '#94a3b8') : '#64748b',
+                  color: isTested ? (item.hasProtein ? '#8b5cf6' : 'var(--text-faint)') : 'var(--text-muted)',
                   fontWeight: 'bold',
                   display: 'flex',
                   justifyContent: 'center',
@@ -335,7 +335,7 @@ export default function Stage1_Experiment({ onComplete }) {
             <CheckCircle2 size={16} style={{ color: '#a78bfa' }} />
             <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#a78bfa' }}>Conclusion</h4>
           </div>
-          <p style={{ margin: 0, fontSize: '0.8rem', color: '#cbd5e1', lineHeight: '1.5' }}>
+          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
             A violet color indicates the presence of proteins. Notice that Peanuts contain both fats (from the previous activity) and proteins! Foods often contain multiple nutrients.
           </p>
         </div>

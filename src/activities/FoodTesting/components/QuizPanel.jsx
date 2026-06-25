@@ -57,9 +57,9 @@ export default function QuizPanel() {
   if (isFinished) {
     return (
       <div className="glass-panel" style={{ padding: '3rem 2rem', textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
-        <GraduationCap size={48} style={{ color: '#10b981', margin: '0 auto 1rem auto' }} />
-        <h2 style={{ margin: '0 0 1rem 0', color: '#ffffff' }}>Quiz Completed!</h2>
-        <p style={{ fontSize: '1.2rem', color: '#cbd5e1', marginBottom: '2rem' }}>
+        <GraduationCap size={48} style={{ color: 'var(--success)', margin: '0 auto 1rem auto' }} />
+        <h2 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)' }}>Quiz Completed!</h2>
+        <p style={{ fontSize: '1.2rem', color: 'var(--text-faint)', marginBottom: '2rem' }}>
           You scored {score} out of {QUIZ_QUESTIONS.length}
         </p>
         <button 
@@ -81,17 +81,17 @@ export default function QuizPanel() {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h3 style={{ margin: 0, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <GraduationCap size={20} style={{ color: '#6366f1' }} />
+        <h3 style={{ margin: 0, color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <GraduationCap size={20} style={{ color: 'var(--accent)' }} />
           Concept Quiz
         </h3>
-        <span style={{ fontSize: '0.85rem', color: '#94a3b8', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '12px' }}>
+        <span style={{ fontSize: '0.85rem', color: 'var(--text-faint)', background: 'var(--border)', padding: '0.2rem 0.6rem', borderRadius: '12px' }}>
           Question {currentQuestion + 1} of {QUIZ_QUESTIONS.length}
         </span>
       </div>
 
       <div className="glass-panel" style={{ padding: '2rem' }}>
-        <h2 style={{ margin: '0 0 2rem 0', fontSize: '1.25rem', color: '#ffffff', lineHeight: '1.4' }}>
+        <h2 style={{ margin: '0 0 2rem 0', fontSize: '1.25rem', color: 'var(--text-heading)', lineHeight: '1.4' }}>
           {question.question}
         </h2>
 
@@ -101,19 +101,19 @@ export default function QuizPanel() {
             const isCorrect = index === question.correctAnswer;
             const showCorrectness = showExplanation && (isSelected || isCorrect);
             
-            let borderColor = 'rgba(255,255,255,0.1)';
-            let bgColor = 'rgba(255,255,255,0.03)';
+            let borderColor = 'var(--border)';
+            let bgColor = 'var(--surface)';
             
             if (showCorrectness) {
               if (isCorrect) {
-                borderColor = '#10b981';
+                borderColor = 'var(--success)';
                 bgColor = 'rgba(16, 185, 129, 0.1)';
               } else if (isSelected) {
-                borderColor = '#ef4444';
+                borderColor = 'var(--danger)';
                 bgColor = 'rgba(239, 68, 68, 0.1)';
               }
             } else if (isSelected) {
-              borderColor = '#6366f1';
+              borderColor = 'var(--accent)';
               bgColor = 'rgba(99, 102, 241, 0.1)';
             }
 
@@ -129,7 +129,7 @@ export default function QuizPanel() {
                   background: bgColor,
                   border: `1px solid ${borderColor}`,
                   borderRadius: '8px',
-                  color: '#f8fafc',
+                  color: 'var(--text-heading)',
                   fontSize: '0.95rem',
                   textAlign: 'left',
                   cursor: showExplanation ? 'default' : 'pointer',
@@ -140,8 +140,8 @@ export default function QuizPanel() {
               >
                 <span>{option}</span>
                 {showCorrectness && (
-                  isCorrect ? <CheckCircle2 size={18} style={{ color: '#10b981' }} /> : 
-                  (isSelected ? <XCircle size={18} style={{ color: '#ef4444' }} /> : null)
+                  isCorrect ? <CheckCircle2 size={18} style={{ color: 'var(--success)' }} /> : 
+                  (isSelected ? <XCircle size={18} style={{ color: 'var(--danger)' }} /> : null)
                 )}
               </button>
             );
@@ -158,13 +158,13 @@ export default function QuizPanel() {
               <div style={{ 
                 padding: '1rem', 
                 background: selectedAnswer === question.correctAnswer ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', 
-                borderLeft: `4px solid ${selectedAnswer === question.correctAnswer ? '#10b981' : '#ef4444'}`,
+                borderLeft: `4px solid ${selectedAnswer === question.correctAnswer ? 'var(--success)' : 'var(--danger)'}`,
                 borderRadius: '4px'
               }}>
-                <h4 style={{ margin: '0 0 0.25rem 0', color: '#ffffff', fontSize: '0.95rem' }}>
+                <h4 style={{ margin: '0 0 0.25rem 0', color: 'var(--text-heading)', fontSize: '0.95rem' }}>
                   {selectedAnswer === question.correctAnswer ? 'Correct!' : 'Incorrect'}
                 </h4>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: '1.5' }}>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
                   {question.explanation}
                 </p>
               </div>

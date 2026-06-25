@@ -55,14 +55,14 @@ export default function MaterialsPropertiesActivity({ onBackToDashboard }) {
               padding: '0.4rem 0.8rem', 
               fontSize: '0.8rem', 
               gap: '0.35rem',
-              borderColor: 'rgba(255,255,255,0.1)'
+              borderColor: 'var(--border)'
             }}
           >
             <ArrowLeft size={14} /> Back to Class 6 Chapter 4
           </button>
           <div>
             <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Activity 4.1: Properties of Materials</h2>
-            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Appearance, Hardness, and Hammering Effect</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Appearance, Hardness, and Hammering Effect</span>
           </div>
         </div>
 
@@ -91,7 +91,7 @@ export default function MaterialsPropertiesActivity({ onBackToDashboard }) {
                 <Icon size={14} />
                 <span>{tab.name}</span>
                 {isCompleted && (
-                  <CheckCircle size={12} style={{ color: '#10b981', marginLeft: '0.15rem' }} />
+                  <CheckCircle size={12} style={{ color: 'var(--success)', marginLeft: '0.15rem' }} />
                 )}
               </button>
             );
@@ -117,12 +117,12 @@ export default function MaterialsPropertiesActivity({ onBackToDashboard }) {
       {/* Footer Educational Box */}
       <footer className="glass-panel" style={{ marginTop: '2rem', padding: '1.25rem' }}>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-          <Info style={{ color: '#6366f1', flexShrink: 0 }} size={20} />
+          <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
           <div>
-            <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#f8fafc' }}>
+            <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-heading)' }}>
               Educational Tip
             </h4>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: '#94a3b8', lineHeight: '1.5' }}>
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
               Materials have different properties. Some are lustrous (shiny) and hard, while others are dull and soft. Metals generally flatten when beaten (malleability), whereas non-metals like coal and sulfur break into pieces (brittleness).
             </p>
           </div>

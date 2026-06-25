@@ -90,11 +90,11 @@ export default function QuizPanel() {
       {/* Title */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '0.75rem', marginBottom: '1.25rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <BookOpen style={{ color: '#6366f1' }} size={20} />
+          <BookOpen style={{ color: 'var(--accent)' }} size={20} />
           <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Concept Check</h3>
         </div>
         {!quizFinished && (
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8', background: 'rgba(30, 41, 59, 0.6)', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-faint)', background: 'var(--tab-bg)', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
             Question {currentIdx + 1} of {QUESTIONS.length}
           </span>
         )}
@@ -110,7 +110,7 @@ export default function QuizPanel() {
             style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
           >
             {/* Question Text */}
-            <h4 style={{ fontSize: '1rem', color: '#f8fafc', lineHeight: '1.5', marginBottom: '1.25rem' }}>
+            <h4 style={{ fontSize: '1rem', color: 'var(--text-heading)', lineHeight: '1.5', marginBottom: '1.25rem' }}>
               {currentQuestion.question}
             </h4>
 
@@ -130,17 +130,17 @@ export default function QuizPanel() {
                 if (answered) {
                   if (isCorrectOption) {
                     buttonStyle.background = 'rgba(16, 185, 129, 0.1)';
-                    buttonStyle.borderColor = '#10b981';
-                    buttonStyle.color = '#34d399';
+                    buttonStyle.borderColor = 'var(--success)';
+                    buttonStyle.color = 'var(--success)';
                   } else if (isSelected) {
                     buttonStyle.background = 'rgba(239, 68, 68, 0.1)';
-                    buttonStyle.borderColor = '#ef4444';
-                    buttonStyle.color = '#f87171';
+                    buttonStyle.borderColor = 'var(--danger)';
+                    buttonStyle.color = 'var(--danger)';
                   } else {
                     buttonStyle.opacity = 0.5;
                   }
                 } else if (isSelected) {
-                  buttonStyle.borderColor = '#6366f1';
+                  buttonStyle.borderColor = 'var(--accent)';
                   buttonStyle.background = 'rgba(99, 102, 241, 0.1)';
                 }
 
@@ -160,10 +160,10 @@ export default function QuizPanel() {
                         width: '24px', 
                         height: '24px', 
                         borderRadius: '6px', 
-                        background: isSelected ? '#6366f1' : 'rgba(255,255,255,0.04)',
+                        background: isSelected ? 'var(--accent)' : 'var(--border)',
                         fontSize: '0.8rem',
                         fontWeight: 'bold',
-                        color: '#ffffff',
+                        color: 'var(--text-heading)',
                         flexShrink: 0
                       }}>
                         {answered && isCorrectOption ? <Check size={14} /> : 
@@ -188,13 +188,13 @@ export default function QuizPanel() {
                       borderRadius: '8px',
                       padding: '0.85rem 1rem',
                       marginBottom: '1rem',
-                      borderLeft: `4px solid ${selectedKey === currentQuestion.correct ? '#10b981' : '#ef4444'}`
+                      borderLeft: `4px solid ${selectedKey === currentQuestion.correct ? 'var(--success)' : 'var(--danger)'}`
                     }}
                   >
-                    <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: selectedKey === currentQuestion.correct ? '#34d399' : '#f87171' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: selectedKey === currentQuestion.correct ? 'var(--success)' : 'var(--danger)' }}>
                       {selectedKey === currentQuestion.correct ? '✓ CORRECT' : '❌ INCORRECT'}
                     </span>
-                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.85rem', color: '#cbd5e1', lineHeight: '1.4' }}>
+                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.85rem', color: 'var(--text-faint)', lineHeight: '1.4' }}>
                       {currentQuestion.explanation}
                     </p>
                   </motion.div>
@@ -243,7 +243,7 @@ export default function QuizPanel() {
               alignItems: 'center', 
               justifyContent: 'center', 
               marginBottom: '1rem',
-              color: '#fbbf24'
+              color: 'var(--warning)'
             }}>
               <Award size={40} />
             </div>
@@ -251,10 +251,10 @@ export default function QuizPanel() {
             <h2 style={{ fontSize: '1.4rem', marginBottom: '0.25rem' }}>Review Completed!</h2>
             
             <div style={{ margin: '0.5rem 0 1rem 0' }}>
-              <span style={{ fontSize: '2.5rem', fontWeight: '800', color: '#ffffff' }}>
+              <span style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--text-heading)' }}>
                 {score}
               </span>
-              <span style={{ fontSize: '1.25rem', color: '#64748b', fontWeight: 'bold' }}>
+              <span style={{ fontSize: '1.25rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>
                 /{QUESTIONS.length}
               </span>
             </div>

@@ -85,7 +85,7 @@ export default function Stage1_Assemble({ onComplete }) {
       {/* Left Panel: Steps & Inventory Tray */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
         <div>
-          <span className="status-badge closed" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8' }}>
+          <span className="status-badge closed" style={{ background: 'var(--accent-bg)', color: 'var(--accent-text)' }}>
             Stage 1: Assembly
           </span>
           <h2 style={{ marginTop: '0.5rem', marginBottom: '0.25rem' }}>Assemble Circuit</h2>
@@ -110,24 +110,24 @@ export default function Stage1_Assemble({ onComplete }) {
                   padding: '0.65rem 0.8rem',
                   borderRadius: '10px',
                   background: isActive ? 'rgba(99, 102, 241, 0.08)' : 'rgba(30, 41, 59, 0.4)',
-                  border: `1px solid ${isActive ? 'rgba(99, 102, 241, 0.25)' : 'rgba(255,255,255,0.03)'}`,
+                  border: `1px solid ${isActive ? 'rgba(99, 102, 241, 0.25)' : 'var(--surface)'}`,
                   opacity: isDone ? 0.6 : 1,
                   transition: 'all 0.2s'
                 }}
               >
                 {isDone ? (
-                  <CheckCircle2 size={16} style={{ color: '#10b981', flexShrink: 0 }} />
+                  <CheckCircle2 size={16} style={{ color: 'var(--success)', flexShrink: 0 }} />
                 ) : (
                   <div style={{
                     width: '16px',
                     height: '16px',
                     borderRadius: '50%',
-                    border: `2px solid ${isActive ? '#6366f1' : '#475569'}`,
+                    border: `2px solid ${isActive ? 'var(--accent)' : 'var(--text-secondary)'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: '9px',
-                    color: isActive ? '#818cf8' : '#64748b',
+                    color: isActive ? 'var(--accent-text)' : 'var(--text-muted)',
                     fontWeight: 'bold',
                     flexShrink: 0
                   }}>
@@ -137,7 +137,7 @@ export default function Stage1_Assemble({ onComplete }) {
                 <span style={{ 
                   fontSize: '0.825rem', 
                   fontWeight: isActive ? 'bold' : 'normal',
-                  color: isActive ? '#f8fafc' : isDone ? '#64748b' : '#cbd5e1'
+                  color: isActive ? 'var(--text-heading)' : isDone ? 'var(--text-muted)' : 'var(--text-faint)'
                 }}>
                   {step.label}
                 </span>
@@ -151,7 +151,7 @@ export default function Stage1_Assemble({ onComplete }) {
           <div style={{
             background: 'rgba(239, 68, 68, 0.08)',
             border: '1px solid rgba(239, 68, 68, 0.2)',
-            color: '#f87171',
+            color: 'var(--danger)',
             borderRadius: '10px',
             padding: '0.75rem',
             fontSize: '0.8rem',
@@ -164,7 +164,7 @@ export default function Stage1_Assemble({ onComplete }) {
         {/* Placement buttons tray */}
         {!completed ? (
           <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 'bold' }}>INVENTORY TRAY</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>INVENTORY TRAY</span>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
               <button 
                 onClick={() => handlePlaceComponent('basePlaced')}
@@ -221,10 +221,10 @@ export default function Stage1_Assemble({ onComplete }) {
             flexDirection: 'column',
             gap: '0.65rem'
           }}>
-            <h4 style={{ margin: 0, color: '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
+            <h4 style={{ margin: 0, color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
               <Sparkles size={16} /> Circuit Built!
             </h4>
-            <p style={{ margin: 0, fontSize: '0.75rem', color: '#cbd5e1' }}>
+            <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-faint)' }}>
               Your circuit is fully assembled. You are ready to run tests.
             </p>
             <button onClick={onComplete} className="success" style={{ width: '100%', gap: '0.25rem', padding: '0.5rem' }}>
@@ -291,7 +291,7 @@ export default function Stage1_Assemble({ onComplete }) {
 
         {/* Interactive Instruction Overlay */}
         <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', pointerEvents: 'none' }}>
-          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             💡 Tip: Click items in the tray or tap matching dash boundaries to place them.
           </span>
         </div>
