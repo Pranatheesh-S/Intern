@@ -245,6 +245,51 @@ const CompletedSwitchModel = () => {
   );
 };
 
+// --- Completed Switch 3D Model ---
+const CompletedSwitchModel = () => (
+  <group scale={[0.85, 0.85, 0.85]} position={[0, -0.15, 0]}>
+    {/* Cardboard Base */}
+    <group position={[0, 0, 0]}>
+      <CardboardModel />
+    </group>
+    
+    {/* Battery */}
+    <group position={[0, 0.39, -0.6]} scale={[0.8, 0.8, 0.8]}>
+      <BatteryModel />
+    </group>
+    
+    {/* Bulb */}
+    <group position={[-0.7, 0.685, -0.6]} scale={[0.85, 0.85, 0.85]}>
+      <BulbModel />
+    </group>
+    
+    {/* Drawing Pin 1 (pivot) */}
+    <group position={[-0.5, 0.06, 0.4]}>
+      <DrawingPinModel />
+    </group>
+    
+    {/* Drawing Pin 2 (contact) */}
+    <group position={[0.5, 0.06, 0.4]}>
+      <DrawingPinModel />
+    </group>
+    
+    {/* Safety Pin (closed switch, connecting Pin 1 to Pin 2) */}
+    <group position={[-0.5, 0.12, 0.4]} rotation={[0, Math.PI / 2, 0]}>
+      <SafetyPinModel />
+    </group>
+    
+    {/* Wires */}
+    <group>
+      {/* Wire 1: Battery Neg -> Bulb Left */}
+      <WireSegment p1={[-0.6, 0.39, -0.6]} p2={[-1.15, 0.335, -0.6]} radius={0.025} color="var(--danger)" />
+      {/* Wire 2: Battery Pos -> Pin 2 */}
+      <WireSegment p1={[0.6, 0.39, -0.6]} p2={[0.5, 0.06, 0.4]} radius={0.025} color="#ca8a04" />
+      {/* Wire 3: Pin 1 -> Bulb Right */}
+      <WireSegment p1={[-0.5, 0.06, 0.4]} p2={[-0.25, 0.335, -0.6]} radius={0.025} color="#f97316" />
+    </group>
+  </group>
+);
+
 export default function ThreeDViewer({ componentId }) {
   const renderModel = () => {
     switch (componentId) {
