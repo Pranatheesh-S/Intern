@@ -89,8 +89,8 @@ export default function App() {
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
-            COMING SOON
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+            2 CHAPTERS ACTIVE
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -125,7 +125,7 @@ export default function App() {
           }}
         >
           <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
-            3 LABS ACTIVE
+            2 CHAPTERS ACTIVE
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -159,8 +159,8 @@ export default function App() {
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
-            COMING SOON
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+            0 CHAPTERS ACTIVE
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -194,8 +194,8 @@ export default function App() {
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
-            COMING SOON
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+            0 CHAPTERS ACTIVE
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -219,10 +219,23 @@ export default function App() {
     </div>
   );
 
+  const CLASS_6_CHAPTERS = [
+    { num: 1, title: "The Wonderful World of Science" },
+    { num: 2, title: "Diversity in the Living World" },
+    { num: 3, title: "Mindful Eating: A Path to a Healthy Body" },
+    { num: 4, title: "Exploring Magnets" },
+    { num: 5, title: "Measurement of Length and Motion" },
+    { num: 6, title: "Materials Around Us" },
+    { num: 7, title: "Temperature and its Measurement" },
+    { num: 8, title: "A Journey through States of Water" },
+    { num: 9, title: "Methods of Separation in Everyday Life" },
+    { num: 10, title: "Living Creatures: Exploring their Characteristics" },
+    { num: 11, title: "Nature's Treasures" },
+    { num: 12, title: "Beyond Earth" }
+  ];
+
   // Renders Class 6th Activities List
   const renderClass6Wing = () => {
-    const chapters = Array.from({ length: 9 }, (_, i) => i + 1);
-
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Subheader Wing Navigation */}
@@ -245,11 +258,11 @@ export default function App() {
           gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
           gap: '1.25rem'
         }}>
-          {chapters.map(chapterNum => {
-            if (chapterNum === 3 || chapterNum === 4) {
+          {CLASS_6_CHAPTERS.map(chapter => {
+            if (chapter.num === 3 || chapter.num === 4) {
               return (
                 <div
-                  key={chapterNum}
+                  key={chapter.num}
                   className="glass-panel"
                   style={{
                     display: 'flex',
@@ -265,19 +278,22 @@ export default function App() {
                     Active Chapter
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                    <BookOpen size={20} style={{ color: 'var(--accent-text)' }} />
-                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapterNum}</h3>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <BookOpen size={20} style={{ color: 'var(--accent-text)', marginTop: '0.25rem' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--accent-text)', fontWeight: '500' }}>{chapter.title}</p>
+                    </div>
                   </div>
 
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-                    {chapterNum === 3 
+                    {chapter.num === 3 
                       ? "Includes Activity 3.5: Testing for Starch." 
                       : "Includes Activity 4.1: Appearance, hardness, and effect of hammering on different materials."}
                   </p>
 
                   <button 
-                    onClick={() => navigateTo('class6', `chapter${chapterNum}`)}
+                    onClick={() => navigateTo('class6', `chapter${chapter.num}`)}
                     className="primary" 
                     style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
                   >
@@ -289,7 +305,7 @@ export default function App() {
 
             return (
               <div
-                key={chapterNum}
+                key={chapter.num}
                 className="glass-panel"
                 style={{
                   display: 'flex',
@@ -305,13 +321,16 @@ export default function App() {
                   Coming Soon
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                  <BookOpen size={20} style={{ color: '#818cf8' }} />
-                  <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapterNum}</h3>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  <BookOpen size={20} style={{ color: '#818cf8', marginTop: '0.25rem' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{chapter.title}</p>
+                  </div>
                 </div>
 
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-                  Interactive science concepts, virtual experiments, and quizzes for Chapter {chapterNum}.
+                  Interactive science concepts, virtual experiments, and quizzes for this chapter.
                 </p>
 
                 <button
@@ -633,10 +652,23 @@ export default function App() {
     </div>
   );
 
+  const CLASS_7_CHAPTERS = [
+    { num: 1, title: "The Ever-Evolving World of Science" },
+    { num: 2, title: "Exploring Substances: Acidic, Basic, and Neutral" },
+    { num: 3, title: "Electricity: Circuits and their Components" },
+    { num: 4, title: "The World of Metals and Non-metals" },
+    { num: 5, title: "Changes Around Us: Physical and Chemical" },
+    { num: 6, title: "Adolescence: A Stage of Growth and Change" },
+    { num: 7, title: "Heat Transfer in Nature" },
+    { num: 8, title: "Measurement of Time and Motion" },
+    { num: 9, title: "Life Processes in Animals" },
+    { num: 10, title: "Life Processes in Plants" },
+    { num: 11, title: "Light: Shadows and Reflections" },
+    { num: 12, title: "Earth, Moon, and the Sun" }
+  ];
+
   // Renders Class 7th Activities List
   const renderClass7Wing = () => {
-    const chapters = Array.from({ length: 12 }, (_, i) => i + 1);
-
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Subheader Wing Navigation */}
@@ -659,11 +691,11 @@ export default function App() {
           gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
           gap: '1.25rem'
         }}>
-          {chapters.map(chapterNum => {
-            if (chapterNum === 3 || chapterNum === 11) {
+          {CLASS_7_CHAPTERS.map(chapter => {
+            if (chapter.num === 3 || chapter.num === 11) {
               return (
                 <div
-                  key={chapterNum}
+                  key={chapter.num}
                   className="glass-panel"
                   style={{
                     display: 'flex',
@@ -679,19 +711,22 @@ export default function App() {
                     Active Chapter
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                    <BookOpen size={20} style={{ color: 'var(--accent-text)' }} />
-                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapterNum}</h3>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <BookOpen size={20} style={{ color: 'var(--accent-text)', marginTop: '0.25rem' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--accent-text)', fontWeight: '500' }}>{chapter.title}</p>
+                    </div>
                   </div>
 
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-                    {chapterNum === 3
+                    {chapter.num === 3
                       ? "Includes Electric Switch. Learn about electrical flows and test materials."
                       : "Includes Spherical Mirrors. Explore Image Formation using Concave and Convex Surfaces."}
                   </p>
 
                   <button 
-                    onClick={() => navigateTo('class7', `chapter${chapterNum}`)}
+                    onClick={() => navigateTo('class7', `chapter${chapter.num}`)}
                     className="primary" 
                     style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
                   >
@@ -703,7 +738,7 @@ export default function App() {
 
             return (
               <div
-                key={chapterNum}
+                key={chapter.num}
                 className="glass-panel"
                 style={{
                   display: 'flex',
@@ -719,13 +754,16 @@ export default function App() {
                   Coming Soon
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                  <BookOpen size={20} style={{ color: '#818cf8' }} />
-                  <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapterNum}</h3>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  <BookOpen size={20} style={{ color: '#818cf8', marginTop: '0.25rem' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{chapter.title}</p>
+                  </div>
                 </div>
 
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-                  Interactive science concepts, virtual experiments, and quizzes for Chapter {chapterNum}.
+                  Interactive science concepts, virtual experiments, and quizzes for this chapter.
                 </p>
 
                 <button
