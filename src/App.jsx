@@ -515,25 +515,22 @@ export default function App() {
     </div>
   );
 
-  // Renders Class 7th Activities List
-  const renderClass7Wing = () => (
+  const renderClass7Chapter3 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      {/* Subheader Wing Navigation */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
         <button
-          onClick={handleBackToSubjects}
+          onClick={() => navigateTo('class7', null)}
           className="outline"
           style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
         >
-          <ArrowLeft size={14} /> Back to Subjects
+          <ArrowLeft size={14} /> Back to Class 7 Wing
         </button>
         <div>
-          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 7th Wing</h2>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Interactive Demonstrations & Labs for Class 7</span>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 3 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
         </div>
       </div>
 
-      {/* Physics Activities Grid */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
@@ -566,14 +563,38 @@ export default function App() {
           </p>
 
           <button
-            onClick={() => navigateTo(activeSubject, 'electric_switch')}
+            onClick={() => navigateTo('class7', 'electric_switch')}
             className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Switch Lab <ArrowRight size={14} />
           </button>
         </div>
+      </div>
+    </div>
+  );
 
+  const renderClass7Chapter11 = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+        <button
+          onClick={() => navigateTo('class7', null)}
+          className="outline"
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+        >
+          <ArrowLeft size={14} /> Back to Class 7 Wing
+        </button>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 11 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '1.25rem'
+      }}>
         {/* Activity Card 2: Spherical Mirrors */}
         <div
           className="glass-panel"
@@ -597,55 +618,130 @@ export default function App() {
           </div>
 
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            NCERT Class 7 Chapter 15. Explore Image Formation using Concave and Convex Surfaces. Interactive virtual experiments and concept checks.
+            NCERT Class 7 Chapter 11. Explore Image Formation using Concave and Convex Surfaces. Interactive virtual experiments and concept checks.
           </p>
 
           <button
-            onClick={() => navigateTo(activeSubject, 'spherical_mirrors')}
+            onClick={() => navigateTo('class7', 'spherical_mirrors')}
             className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Mirrors Lab <ArrowRight size={14} />
           </button>
         </div>
-
-        {/* Activity Card 3: Boilerplate Template */}
-        <div
-          className="glass-panel"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid var(--border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Boilerplate
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <BookOpen size={20} style={{ color: '#818cf8' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity Template</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            A ready-to-copy code blueprint designed with the exact same structure and styling. Duplicate this folder to build new science activities.
-          </p>
-
-          <button
-            onClick={() => navigateTo(activeSubject, 'boilerplate')}
-            className="outline"
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            View Template Demo <ArrowRight size={14} />
-          </button>
-        </div>
       </div>
     </div>
   );
+
+  // Renders Class 7th Activities List
+  const renderClass7Wing = () => {
+    const chapters = Array.from({ length: 12 }, (_, i) => i + 1);
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Subheader Wing Navigation */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+          <button
+            onClick={handleBackToSubjects}
+            className="outline"
+            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+          >
+            <ArrowLeft size={14} /> Back to Subjects
+          </button>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 7th Wing</h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Interactive Demonstrations & Labs for Class 7</span>
+          </div>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '1.25rem'
+        }}>
+          {chapters.map(chapterNum => {
+            if (chapterNum === 3 || chapterNum === 11) {
+              return (
+                <div
+                  key={chapterNum}
+                  className="glass-panel"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    padding: '1.5rem',
+                    border: '1px solid var(--accent-border)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Active Chapter
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <BookOpen size={20} style={{ color: 'var(--accent-text)' }} />
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapterNum}</h3>
+                  </div>
+
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                    {chapterNum === 3
+                      ? "Includes Electric Switch. Learn about electrical flows and test materials."
+                      : "Includes Spherical Mirrors. Explore Image Formation using Concave and Convex Surfaces."}
+                  </p>
+
+                  <button 
+                    onClick={() => navigateTo('class7', `chapter${chapterNum}`)}
+                    className="primary" 
+                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                  >
+                    Open Chapter <ArrowRight size={14} />
+                  </button>
+                </div>
+              );
+            }
+
+            return (
+              <div
+                key={chapterNum}
+                className="glass-panel"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  padding: '1.5rem',
+                  border: '1px solid var(--border)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Coming Soon
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                  <BookOpen size={20} style={{ color: '#818cf8' }} />
+                  <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapterNum}</h3>
+                </div>
+
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                  Interactive science concepts, virtual experiments, and quizzes for Chapter {chapterNum}.
+                </p>
+
+                <button
+                  disabled
+                  className="outline"
+                  style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem', opacity: 0.5, cursor: 'not-allowed' }}
+                >
+                  Module Locked
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   // Renders Under Construction screen for Chemistry or Biology
   const renderUnderConstruction = (subjectName, IconComponent, colorHex) => (
@@ -784,11 +880,15 @@ export default function App() {
           renderSubjectSelector()
         ) : activeSubject === 'class7' ? (
           activeActivity === 'electric_switch' ? (
-            <ElectricSwitchActivity onBackToDashboard={handleBackToLabs} />
+            <ElectricSwitchActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
           ) : activeActivity === 'spherical_mirrors' ? (
-            <SphericalMirrorsActivity onBackToDashboard={handleBackToLabs} />
+            <SphericalMirrorsActivity onBackToDashboard={() => navigateTo('class7', 'chapter11')} />
           ) : activeActivity === 'boilerplate' ? (
-            <ActivityTemplate onBackToDashboard={handleBackToLabs} />
+            <ActivityTemplate onBackToDashboard={() => navigateTo('class7', null)} />
+          ) : activeActivity === 'chapter3' ? (
+            renderClass7Chapter3()
+          ) : activeActivity === 'chapter11' ? (
+            renderClass7Chapter11()
           ) : (
             renderClass7Wing()
           )

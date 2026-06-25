@@ -282,11 +282,34 @@ export default function Stage1_Build({ onComplete }) {
       const rect = canvas.getBoundingClientRect();
       const activeRect = event.active.rect.current.translated;
       if (activeRect) {
-        const clientX = activeRect.left + activeRect.width / 2;
-        const clientY = activeRect.top + activeRect.height / 2;
+        let x, y;
+        
+        // Calculate true SVG scale and offsets because of preserveAspectRatio="xMidYMid meet"
+        const svgScale = Math.min(rect.width / 600, rect.height / 480);
+        const offsetX = (rect.width - 600 * svgScale) / 2;
+        const offsetY = (rect.height - 480 * svgScale) / 2;
+        
+        if (placed[draggedId]) {
+          // If already placed, use precise drag delta rather than bounding box math
+          const dx = event.delta.x / svgScale;
+          const dy = event.delta.y / svgScale;
+          x = positions[draggedId].x + dx;
+          y = positions[draggedId].y + dy;
+        } else {
+          // Dragged from tray
+          const clientX = activeRect.left + activeRect.width / 2;
+          const clientY = activeRect.top + activeRect.height / 2;
+          
+          x = (clientX - rect.left - offsetX) / svgScale;
+          y = (clientY - rect.top - offsetY) / svgScale;
 
-        let x = ((clientX - rect.left) / rect.width) * 600;
-        let y = ((clientY - rect.top) / rect.height) * 480;
+          // Cardboard SVG uses top-left coordinates, not center.
+          // Subtract half width and height (160x210) to map drag center correctly.
+          if (draggedId === "cardboard") {
+            x -= 80;
+            y -= 105;
+          }
+        }
 
         // Apply snapping
         const snapped = snapToIdeal(draggedId, x, y);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Droplet, CheckCircle2, FlaskConical, RotateCcw } from 'lucide-react';
+import { Droplet, CheckCircle2, FlaskConical, RotateCcw, ArrowRight } from 'lucide-react';
+import ThreeDFoodViewer from './ThreeDFoodViewer';
 
 const FOOD_ITEMS = [
   { id: 'potato', name: 'Slice of Potato', hasStarch: true, baseColor: '#fef08a' },
@@ -22,11 +23,7 @@ export default function Stage1_Experiment({ onComplete }) {
     if (selectedTool !== 'iodine') return;
     setTestedItems(prev => {
       const next = { ...prev, [itemId]: true };
-      // Check if all tested
       const newCount = Object.keys(next).length;
-      if (newCount === FOOD_ITEMS.length) {
-        setTimeout(onComplete, 1000);
-      }
       return next;
     });
   };
@@ -138,17 +135,10 @@ export default function Stage1_Experiment({ onComplete }) {
                   justifyContent: 'center',
                   boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)'
                 }}>
-                  {/* Food representation */}
-                  <motion.div 
-                    animate={{ backgroundColor: activeColor }}
-                    transition={{ duration: 0.8 }}
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: item.id.includes('oil') || item.id.includes('butter') ? '10px' : '40% 60% 70% 30% / 40% 50% 60% 50%',
-                      boxShadow: '0 4px 6px var(--border)',
-                    }}
-                  />
+                  {/* Food representation 3D */}
+                  <div style={{ width: '80px', height: '80px', pointerEvents: 'none', zIndex: 10 }}>
+                    <ThreeDFoodViewer foodId={item.id} colorOverride={activeColor !== item.baseColor ? activeColor : undefined} />
+                  </div>
                 </div>
                 
                 <div style={{ textAlign: 'center' }}>
@@ -231,6 +221,20 @@ export default function Stage1_Experiment({ onComplete }) {
             A blue-black colour indicates the presence of starch. Potato, bread, and boiled rice contain starch.
           </p>
         </div>
+
+        {Object.keys(testedItems).length === FOOD_ITEMS.length && (
+          <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+            <motion.button 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="primary" 
+              onClick={onComplete} 
+              style={{ width: '100%', fontSize: '1rem', padding: '0.8rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+            >
+              Next Stage <ArrowRight size={18} />
+            </motion.button>
+          </div>
+        )}
       </div>
     </div>
   );
