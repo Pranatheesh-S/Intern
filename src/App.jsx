@@ -446,12 +446,12 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid var(--accent-border)',
+            border: '1px solid var(--success-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Active Lab
           </div>
 
@@ -504,12 +504,12 @@ export default function App() {
             flexDirection: 'column', 
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid var(--accent-border)',
+            border: '1px solid var(--success-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Active Lab
           </div>
 
@@ -563,7 +563,7 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid var(--accent-border)',
+            border: '1px solid var(--success-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
@@ -622,7 +622,7 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid rgba(99, 102, 241, 0.1)',
+            border: '1px solid var(--success-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
