@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -106,20 +106,6 @@ function DraggableToken({ id, children }) {
 }
 
 // Droppable Canvas component
-
-// Draggable wrapper for Component Tray
-function TrayDraggable({ id, disabled, children }) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: id,
-    disabled: disabled,
-  });
-  return (
-    <div ref={setNodeRef} {...listeners} {...attributes} style={{ display: 'flex', flexDirection: 'column', height: '100%', touchAction: 'none', opacity: isDragging ? 0.4 : 1, cursor: disabled ? "not-allowed" : (isDragging ? "grabbing" : "grab") }}>
-      {children}
-    </div>
-  );
-}
-
 function CanvasDroppable({ children }) {
   const { setNodeRef } = useDroppable({
     id: "canvas",
@@ -201,6 +187,7 @@ export default function Stage1_Build({ onComplete }) {
   const [activeDraggingId, setActiveDraggingId] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
 
   // Wire Connection States
   const [selectedTerminal, setSelectedTerminal] = useState(null);
@@ -243,24 +230,27 @@ export default function Stage1_Build({ onComplete }) {
       battery: { x: 150, y: 390 },
       bulb: { x: 300, y: 102 },
     };
+
     const ideal = ideals[id];
     if (!ideal) return { x, y };
 
-    const dist = Math.sqrt((x - ideal.x) ** 2 + (y - ideal.y) ** 2);
-    if (dist < 40) {
-      return ideal; // snap
+    // The cardboard base has only one correct position, so it always snaps to the ideal target
+    if (id === "cardboard") {
+      return ideals.cardboard;
     }
-    return { x, y }; // keep free dropped pos
+
+    // Increased snap threshold for all other elements from 40 to 180 to make it extremely child-friendly
+    const dist = Math.sqrt((x - ideal.x) ** 2 + (y - ideal.y) ** 2);
+    if (dist < 180) {
+      return ideal;
+    }
+    return ideal; // Auto-snap to ideal target when dropped anywhere on canvas
   };
 
   const isStepUnlocked = (stepId) => {
     const step = STEPS.find((s) => s.id === stepId);
     if (!step) return false;
-    const prereqsMet = step.prereq.every((pId) => placed[pId] === true);
-    if (stepId === "wires") {
-      return prereqsMet && pinsValid;
-    }
-    return prereqsMet;
+    return step.prereq.every((pId) => placed[pId] === true);
   };
 
   const handleSelectTrayItem = (stepId) => {
@@ -269,18 +259,12 @@ export default function Stage1_Build({ onComplete }) {
     if (!step) return;
 
     if (!isStepUnlocked(stepId)) {
-      if (stepId === "wires" && step.prereq.every((pId) => placed[pId])) {
-        setError(
-          "⚠️ Scientific Check Warning: Both drawing pins must be placed on the Cardboard Base! The cardboard sheet acts as an insulator preventing current from leaking into the table/surface."
-        );
-        return;
-      }
       const missingPrereqs = step.prereq.filter((pId) => !placed[pId]);
       const missingNames = missingPrereqs
         .map((pId) => STEPS.find((s) => s.id === pId)?.name)
         .join(", ");
       setError(
-        `❌ Cannot select "${step.name}". You must place the following first: ${missingNames}`,
+        `Γ¥î Cannot select "${step.name}". You must place the following first: ${missingNames}`,
       );
       return;
     }
@@ -292,22 +276,20 @@ export default function Stage1_Build({ onComplete }) {
   const handleDragStart = (event) => {
     setIsDragging(true);
     setActiveDraggingId(event.active.id);
-    setSelectedItemId(event.active.id);
+    setSelectedItemId(event.active.id); // Auto-select the dragged item so details/3D preview update immediately
     setError("");
-  };
-
-  const [activeDragDelta, setActiveDragDelta] = useState({ x: 0, y: 0 });
-
-  const handleDragMove = (event) => {
-    setActiveDragDelta({ x: event.delta.x, y: event.delta.y });
   };
 
   const handleDragEnd = (event) => {
     setIsDragging(false);
-    setActiveDragDelta({ x: 0, y: 0 });
     const draggedId = activeDraggingId;
     setActiveDraggingId(null);
     if (!event.active || !draggedId) return;
+
+    // Check if dropped over the canvas droppable area
+    if (!event.over || event.over.id !== "canvas") {
+      return;
+    }
 
     const canvas = document.getElementById("assembly-canvas");
     if (canvas) {
@@ -352,26 +334,11 @@ export default function Stage1_Build({ onComplete }) {
         x = Math.max(20, Math.min(580, x));
         y = Math.max(20, Math.min(460, y));
 
+        // Update Position state
         setPositions((prev) => {
           const newPos = { ...prev, [draggedId]: { x, y } };
           if (draggedId === "pin1") {
             newPos.safetyPin = { x, y }; // Safety pin anchors to pin 1
-          }
-          if (draggedId === "cardboard") {
-            const dx = x - prev.cardboard.x;
-            const dy = y - prev.cardboard.y;
-            
-            // If the pin is currently placed on the cardboard, move it!
-            const pin1OnBoard = Math.abs(prev.pin1.x - (prev.cardboard.x + 80)) < 2 && Math.abs(prev.pin1.y - (prev.cardboard.y + 50)) < 2;
-            if (placed.pin1 && pin1OnBoard) {
-              newPos.pin1 = { x: prev.pin1.x + dx, y: prev.pin1.y + dy };
-              if (placed.safetyPin) newPos.safetyPin = { x: prev.safetyPin.x + dx, y: prev.safetyPin.y + dy };
-            }
-
-            const pin2OnBoard = Math.abs(prev.pin2.x - (prev.cardboard.x + 80)) < 2 && Math.abs(prev.pin2.y - (prev.cardboard.y + 170)) < 2;
-            if (placed.pin2 && pin2OnBoard) {
-              newPos.pin2 = { x: prev.pin2.x + dx, y: prev.pin2.y + dy };
-            }
           }
           return newPos;
         });
@@ -379,7 +346,7 @@ export default function Stage1_Build({ onComplete }) {
         // Set placed state (if it was from the parts bench)
         if (!placed[draggedId]) {
           setPlaced((prev) => ({ ...prev, [draggedId]: true }));
-          setSelectedItemId(null); // Clear selected item from 3D Viewer
+          setSelectedItemId(null); // Clear selected item from Parts Bench
 
           confetti({
             particleCount: 25,
@@ -414,6 +381,36 @@ export default function Stage1_Build({ onComplete }) {
     setConnectedWires([]);
     setError("");
     setSuccess(false);
+  };
+
+  const handleAutoPlace = (itemId) => {
+    if (!itemId) return;
+    const ideals = {
+      cardboard: { x: 370, y: 200 },
+      pin1: { x: 450, y: 250 },
+      safetyPin: { x: 450, y: 250 },
+      pin2: { x: 450, y: 370 },
+      battery: { x: 150, y: 390 },
+      bulb: { x: 300, y: 102 },
+    };
+    const ideal = ideals[itemId];
+    if (ideal) {
+      setPositions((prev) => {
+        const newPos = { ...prev, [itemId]: ideal };
+        if (itemId === "pin1") {
+          newPos.safetyPin = ideal;
+        }
+        return newPos;
+      });
+      setPlaced((prev) => ({ ...prev, [itemId]: true }));
+      setSelectedItemId(null);
+      
+      confetti({
+        particleCount: 45,
+        spread: 50,
+        origin: { y: 0.6 },
+      });
+    }
   };
 
   // Helper to calculate actual terminal coordinates based on placed component coordinates
@@ -466,20 +463,12 @@ export default function Stage1_Build({ onComplete }) {
 
   const handleTerminalClick = (terminalId) => {
     setError("");
-    
-    // Ensure the wires step is fully unlocked (all prerequisites placed and valid)
-    if (!isStepUnlocked("wires")) {
-      // Just ignore clicks if they shouldn't be wiring yet
-      return;
-    }
-    
     if (!pinsValid) {
       setError(
-        "⚠️ Scientific Check Warning: Both drawing pins must be placed on the Cardboard Base! The cardboard sheet acts as an insulator preventing current from leaking into the table/surface."
+        "ΓÜá∩╕Å Scientific Check Warning: Both drawing pins must be placed on the Cardboard Base! The cardboard sheet acts as an insulator preventing current from leaking into the table/surface.",
       );
       return;
     }
-    
     if (!selectedTerminal) {
       setSelectedTerminal(terminalId);
     } else {
@@ -502,7 +491,7 @@ export default function Stage1_Build({ onComplete }) {
 
       if (wireId) {
         if (connectedWires.includes(wireId)) {
-          setError("ℹ️ This connection is already established!");
+          setError("Γä╣∩╕Å This connection is already established!");
         } else {
           setConnectedWires((prev) => [...prev, wireId]);
           confetti({
@@ -515,19 +504,19 @@ export default function Stage1_Build({ onComplete }) {
         // Detailed pedagogical feedback for incorrect connections
         if (t1.startsWith("battery") && t2.startsWith("battery")) {
           setError(
-            "❌ Short Circuit! Connecting the positive and negative terminals of a battery directly causes a short circuit.",
+            "Γ¥î Short Circuit! Connecting the positive and negative terminals of a battery directly causes a short circuit.",
           );
         } else if (t1.startsWith("bulb") && t2.startsWith("bulb")) {
           setError(
-            "❌ Connecting the bulb terminals together won't power the bulb. You need to connect it to the battery and switch.",
+            "Γ¥î Connecting the bulb terminals together won't power the bulb. You need to connect it to the battery and switch.",
           );
         } else if (t1.startsWith("pin") && t2.startsWith("pin")) {
           setError(
-            "❌ Connecting the switch pins directly bypasses the circuit loop.",
+            "Γ¥î Connecting the switch pins directly bypasses the circuit loop.",
           );
         } else {
           setError(
-            "❌ Invalid connection. Follow the dotted guide lines to connect the circuit!",
+            "Γ¥î Invalid connection. Follow the dotted guide lines to connect the circuit!",
           );
         }
       }
@@ -637,20 +626,20 @@ export default function Stage1_Build({ onComplete }) {
   };
 
   const getNextStepPrompt = () => {
-    if (success) return "✅ Switch Constructed Successfully!";
+    if (success) return "Γ£à Switch Constructed Successfully!";
     if (selectedItemId === "wires") {
       if (!pinsValid) {
-        return "⚠️ Scientific Check: Place both Drawing Pins on the Cardboard Base first!";
+        return "ΓÜá∩╕Å Scientific Check: Place both Drawing Pins on the Cardboard Base first!";
       }
       return "Instruction: Click a glowing terminal dot, then click another to connect them with a wire.";
     }
     const placedCount = Object.values(placed).filter(Boolean).length;
     if (placedCount === 0)
-      return "🔬 Choose any component from the tray below and drag it onto the canvas to begin!";
+      return "≡ƒö¼ Choose any component from the tray below and drag it onto the canvas to begin!";
     const remaining = STEPS.filter((s) => s.id !== "wires" && !placed[s.id]);
     if (remaining.length > 0)
-      return `🔧 ${remaining.length} component${remaining.length > 1 ? "s" : ""} left — pick any from the tray and place them on the canvas.`;
-    return "⚡ All components placed! Now select Connecting Wires to link everything together.";
+      return `≡ƒöº ${remaining.length} component${remaining.length > 1 ? "s" : ""} left ΓÇö pick any from the tray and place them on the canvas.`;
+    return "ΓÜí All components placed! Now select Connecting Wires to link everything together.";
   };
 
   const terminals = [
@@ -666,17 +655,110 @@ export default function Stage1_Build({ onComplete }) {
     <DndContext
       sensors={sensors}
       onDragStart={handleDragStart}
-      onDragMove={handleDragMove}
       onDragEnd={handleDragEnd}
     >
+      {/* Onboarding Welcome Preview Modal */}
+      {showIntro && (
+        <div className="lab-onboarding-overlay">
+          <div className="lab-onboarding-card">
+            <div style={{
+              background: "linear-gradient(135deg, #1e1b4b 0%, #311042 100%)",
+              padding: "1.25rem 1.5rem",
+              color: "white",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderBottom: "1px solid rgba(255,255,255,0.1)"
+            }}>
+              <div>
+                <h2 style={{ margin: 0, color: "white", fontSize: "1.35rem" }}>
+                  Welcome to the Electric Switch Lab! ΓÜí
+                </h2>
+                <span style={{ fontSize: "0.75rem", opacity: 0.8 }}>
+                  NCERT Class 7 Science Wing
+                </span>
+              </div>
+            </div>
+            
+            <div className="lab-onboarding-body">
+              {/* Completed Switch 3D Preview */}
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.75rem"
+              }}>
+                <div style={{
+                  height: "260px",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  border: "1px solid var(--border)",
+                  background: "var(--surface)"
+                }}>
+                  <ThreeDViewer componentId="completed_switch" />
+                </div>
+                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", textAlign: "center", fontStyle: "italic" }}>
+                  ≡ƒÆí Drag to rotate, scroll to zoom, and inspect the finished switch above!
+                </span>
+              </div>
+              
+              {/* Objective and Instructions */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <div>
+                  <h4 style={{ margin: "0 0 0.5rem 0", color: "var(--accent-text)" }}>Your Mission:</h4>
+                  <p style={{ fontSize: "0.85rem", margin: 0, color: "var(--text-secondary)", lineHeight: "1.5" }}>
+                    Build a working electrical switch that can close a gap in a circuit and light up a bulb. You will assemble the parts and draw the wiring loop!
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 style={{ margin: "0 0 0.5rem 0", color: "var(--text-primary)" }}>≡ƒö¼ Experiment Checklist:</h4>
+                  <ul style={{
+                    margin: 0,
+                    paddingLeft: "1.25rem",
+                    fontSize: "0.8rem",
+                    color: "var(--text-secondary)",
+                    lineHeight: "1.6",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.3rem"
+                  }}>
+                    <li>≡ƒº▒ <strong>Cardboard Base:</strong> Non-conductive base to anchor the circuit parts.</li>
+                    <li>≡ƒôî <strong>Two Drawing Pins:</strong> Serves as the circuit connection terminals.</li>
+                    <li>≡ƒº╖ <strong>Safety Pin:</strong> The metallic arm that opens or closes the circuit gap.</li>
+                    <li>≡ƒöï <strong>Electric Cell:</strong> The energy source that pushes the electric current.</li>
+                    <li>≡ƒÆí <strong>Bulb:</strong> Lights up to show that electrical current is flowing!</li>
+                    <li>≡ƒöî <strong>Wires:</strong> Provides a continuous path for current to loop around.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div style={{
+              padding: "1rem 1.5rem",
+              borderTop: "1px solid var(--border)",
+              display: "flex",
+              justifyContent: "flex-end",
+              background: "var(--surface)"
+            }}>
+              <button
+                className="primary"
+                onClick={() => setShowIntro(false)}
+                style={{ padding: "0.6rem 1.5rem", fontSize: "0.9rem" }}
+              >
+                Let's Build It! ≡ƒ¢á∩╕Å
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div
-        className="main-grid"
         style={{
           display: "flex",
           flexDirection: "column",
           gap: "1rem",
           padding: "1rem",
-          maxWidth: "1200px",
+          maxWidth: "1400px",
           margin: "0 auto",
         }}
       >
@@ -694,7 +776,7 @@ export default function Stage1_Build({ onComplete }) {
             <span
               className="status-badge neutral"
               style={{
-              background: "var(--accent-bg)",
+                background: "var(--accent-bg)",
                 color: "var(--accent-text)",
                 fontWeight: "bold",
               }}
@@ -736,162 +818,64 @@ export default function Stage1_Build({ onComplete }) {
           </div>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "300px 1fr",
-            gap: "1rem",
-            alignItems: "stretch",
-          }}
-        >
+        {/* THREE COLUMN GRID */}
+        <div className="stage1-grid">
           {/* ============================================== */}
-          {/* COMPONENTS SECTION (LEFT PANEL)                */}
+          {/* COLUMN 1: HANDBOOK / ABOUT PANEL               */}
           {/* ============================================== */}
           <div
             className="glass-panel"
             style={{
-              padding: "1rem",
+              padding: "1.25rem 1rem",
               display: "flex",
               flexDirection: "column",
-              gap: "0.75rem",
+              gap: "1rem",
               height: "100%",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                gap: "0.75rem",
-                alignItems: "flex-start",
-                background: "var(--neutral-bg)",
-                padding: "0.6rem 0.8rem",
-                borderRadius: "10px",
-                border: "1px solid var(--border)",
-              }}
-            >
-              <Info style={{ color: "var(--accent)", flexShrink: 0 }} size={16} />
-              <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>
-                {getNextStepPrompt()}
-              </span>
+            <h3 style={{ margin: 0, fontSize: "1.05rem", borderBottom: "2px solid var(--accent-border)", paddingBottom: "0.5rem", color: "var(--accent-text)" }}>
+              ≡ƒôû Lab Handbook
+            </h3>
+            
+            <div style={{ fontSize: "0.8rem", display: "flex", flexDirection: "column", gap: "0.8rem", color: "var(--text-secondary)", lineHeight: "1.5" }}>
+              <div>
+                <strong style={{ color: "var(--text-primary)", display: "block", marginBottom: "0.2rem" }}>≡ƒö¼ Objective</strong>
+                Assemble an electric switch and connect all elements in a closed circuit loop to power the lightbulb.
+              </div>
+              <div>
+                <strong style={{ color: "var(--text-primary)", display: "block", marginBottom: "0.2rem" }}>≡ƒº▒ Cardboard Insulator</strong>
+                Cardboard does not allow electric current to pass. It is an <strong>insulator</strong> and serves as a safe base.
+              </div>
+              <div>
+                <strong style={{ color: "var(--text-primary)", display: "block", marginBottom: "0.2rem" }}>≡ƒº╖ Conductor Arm</strong>
+                The safety pin is metal. Metal is a <strong>conductor</strong>. When rotated, it connects terminals to let current pass.
+              </div>
             </div>
 
-            <h3 style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
-              Component Tray
-            </h3>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "0.5rem",
-                alignContent: "start",
-              }}
-            >
-              {STEPS.map((step) => {
-                const isPlaced = placed[step.id];
-                const isWires = step.id === "wires";
-                const isUnlocked = isStepUnlocked(step.id);
-                const isSelected = selectedItemId === step.id;
-                const isDisabled = (isPlaced && !isWires) || !isUnlocked;
-
-                return (
-                  <TrayDraggable key={step.id} id={step.id} disabled={isDisabled}>
-<button
-                    key={step.id}
-                    className="tray-btn"
-                    onClick={() => handleSelectTrayItem(step.id)}
-                    disabled={isDisabled}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      padding: "0.6rem 0.4rem",
-                      borderRadius: "12px",
-                      background:
-                        isPlaced && !isWires
-                          ? "var(--success-bg)"
-                          : isSelected
-                            ? "var(--accent-bg)"
-                            : isUnlocked
-                              ? "var(--surface)"
-                              : "var(--neutral-bg)",
-                      border: `1px solid ${isPlaced && !isWires
-                          ? "var(--success-border)"
-                          : isSelected
-                            ? "var(--accent)"
-                            : isUnlocked
-                              ? "var(--accent-border)"
-                              : "var(--border)"
-                        }`,
-                      color:
-                        isPlaced && !isWires
-                          ? "var(--success)"
-                          : isUnlocked
-                            ? "var(--text-primary)"
-                            : "var(--text-faint)",
-                      cursor: isDisabled ? "not-allowed" : "pointer",
-                      transition: "all 0.2s ease",
-                      position: "relative",
-                      minHeight: "72px",
-                      boxShadow: isSelected
-                        ? "0 0 0 2px rgba(99,102,241,0.4)"
-                        : isUnlocked && !isPlaced
-                          ? "0 1px 4px rgba(0,0,0,0.08)"
-                          : "none",
-                    }}
-                  >
-                    {/* Thumbnail */}
-                    <div
-                      style={{
-                        width: "34px",
-                        height: "34px",
-                        background: "var(--border)",
-                        borderRadius: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginBottom: "0.35rem",
-                        opacity: isUnlocked ? 1 : 0.2,
-                        transition: "opacity 0.2s",
-                      }}
-                    >
-                      {renderThumbnailSVG(step.id)}
+            <div style={{ marginTop: "auto", borderTop: "1px solid var(--border)", paddingTop: "0.85rem" }}>
+              <h4 style={{ margin: "0 0 0.5rem 0", fontSize: "0.85rem", color: "var(--text-heading)" }}>≡ƒôï Parts List Checklist:</h4>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                {STEPS.map((s) => {
+                  const isDone = placed[s.id] && s.id !== "wires" || (s.id === "wires" && placed.wires);
+                  return (
+                    <div key={s.id} style={{ display: "flex", alignItems: "center", gap: "0.45rem", fontSize: "0.78rem" }}>
+                      {isDone ? (
+                        <CheckCircle2 size={13} style={{ color: "var(--success)", flexShrink: 0 }} />
+                      ) : (
+                        <span style={{ width: "12px", height: "12px", borderRadius: "50%", border: "1.5px solid var(--border)", flexShrink: 0, display: "inline-block" }} />
+                      )}
+                      <span style={{ color: isDone ? "var(--text-muted)" : "var(--text-primary)", textDecoration: isDone ? "line-through" : "none" }}>
+                        {s.name}
+                      </span>
                     </div>
-
-                    <span
-                      style={{
-                        fontSize: "0.68rem",
-                        fontWeight: "600",
-                        textAlign: "center",
-                        whiteSpace: "nowrap",
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                        width: "100%",
-                        opacity: isUnlocked ? 1 : 0.3,
-                      }}
-                    >
-                      {step.name}
-                    </span>
-
-                    {/* Badge: check if placed, lock if locked */}
-                    <div
-                      style={{ position: "absolute", top: "5px", right: "5px" }}
-                    >
-                      {isPlaced && !isWires ? (
-                        <CheckCircle2 size={12} style={{ color: "var(--success)" }} />
-                      ) : !isUnlocked ? (
-                        <Lock size={10} style={{ color: "var(--text-secondary)" }} />
-                      ) : null}
-                    </div>
-                  </button>
-                  </TrayDraggable>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
 
           {/* ============================================== */}
-          {/* ASSEMBLY WORKSPACE (RIGHT PANEL)               */}
+          {/* COLUMN 2: ASSEMBLY CANVAS (CENTER PANEL)       */}
           {/* ============================================== */}
           <div
             style={{
@@ -919,17 +903,124 @@ export default function Stage1_Build({ onComplete }) {
                   height: "100%",
                 }}
               >
-                {/* Initial Dotted Placement Guide Lines Removed */}
+                {/* Visual Dotted Placement Guide Lines (Faint backgrounds) */}
+                {/* Cardboard Base Dotted outline */}
+                {!placed.cardboard && (
+                  <rect
+                    x={370}
+                    y={200}
+                    width={160}
+                    height={210}
+                    rx={12}
+                    fill="none"
+                    stroke="var(--accent)"
+                    strokeWidth={1.5}
+                    strokeDasharray="4,4"
+                    opacity={0.3}
+                  />
+                )}
+
+                {/* Bulb Dotted outline */}
+                {placed.cardboard && !placed.bulb && (
+                  <g opacity={0.3}>
+                    <rect
+                      x={260}
+                      y={80}
+                      width={80}
+                      height={20}
+                      rx={4}
+                      fill="none"
+                      stroke="var(--accent)"
+                      strokeWidth={1.5}
+                      strokeDasharray="3,3"
+                    />
+                    <circle
+                      cx={300}
+                      cy={45}
+                      r={22}
+                      fill="none"
+                      stroke="var(--accent)"
+                      strokeWidth={1.5}
+                      strokeDasharray="3,3"
+                    />
+                  </g>
+                )}
+
+                {/* Battery Dotted outline */}
+                {placed.cardboard && !placed.battery && (
+                  <rect
+                    x={104}
+                    y={366}
+                    width={92}
+                    height={48}
+                    rx={6}
+                    fill="none"
+                    stroke="var(--accent)"
+                    strokeWidth={1.5}
+                    strokeDasharray="4,4"
+                    opacity={0.3}
+                  />
+                )}
+
+                {/* Pin 1 Dotted outline */}
+                {!placed.pin1 && (
+                  <circle
+                    cx={450}
+                    cy={250}
+                    r={14}
+                    fill="none"
+                    stroke="var(--accent)"
+                    strokeWidth={1.5}
+                    strokeDasharray="3,3"
+                    opacity={0.3}
+                  />
+                )}
+
+                {/* Safety Pin Dotted outline */}
+                {!placed.safetyPin && (
+                  <g transform="translate(450, 250) rotate(-35)" opacity={0.3}>
+                    <circle
+                      cx={0}
+                      cy={0}
+                      r={8}
+                      fill="none"
+                      stroke="var(--accent)"
+                      strokeWidth={1.5}
+                      strokeDasharray="3,3"
+                    />
+                    <line
+                      x1={0}
+                      y1={0}
+                      x2={0}
+                      y2={110}
+                      stroke="var(--accent)"
+                      strokeWidth={1.5}
+                      strokeDasharray="3,3"
+                    />
+                  </g>
+                )}
+
+                {/* Pin 2 Dotted outline */}
+                {!placed.pin2 && (
+                  <circle
+                    cx={450}
+                    cy={370}
+                    r={14}
+                    fill="none"
+                    stroke="var(--accent)"
+                    strokeWidth={1.5}
+                    strokeDasharray="3,3"
+                    opacity={0.3}
+                  />
+                )}
 
                 {/* REAL COMPONENT PLACEMENT RENDERING */}
-                {/* Cardboard Base (Bottom Layer) */}
+                {/* Cardboard Base (Bottom Layer) - Locked in place once placed to prevent layout shift */}
                 {placed.cardboard && (
-                  <DraggableSVGGroup id="cardboard" isDraggable={!success}>
-                    <CardboardSVG
-                      x={positions.cardboard.x}
-                      y={positions.cardboard.y}
-                    />
-                  </DraggableSVGGroup>
+                  <CardboardSVG
+                    x={positions.cardboard.x}
+                    y={positions.cardboard.y}
+                  />
                 )}
 
                 {/* DOTTED WIRE GUIDE LINES (Help students know which terminals connect) */}
@@ -1083,7 +1174,7 @@ export default function Stage1_Build({ onComplete }) {
 
                 {/* Safety Pin (Rendered independently ONLY if pin1 is not placed yet) */}
                 {placed.safetyPin && !placed.pin1 && (
-                  <DraggableSVGGroup id="safetyPin" isDraggable={!success} additionalTransform={activeDraggingId === "cardboard" && isPinOnCardboard(positions.safetyPin, positions.cardboard) ? activeDragDelta : null}>
+                  <DraggableSVGGroup id="safetyPin" isDraggable={!success}>
                     <SafetyPinSVG
                       x={positions.safetyPin.x}
                       y={positions.safetyPin.y}
@@ -1095,7 +1186,7 @@ export default function Stage1_Build({ onComplete }) {
 
                 {/* Pin 1 & Safety Pin (If pin1 is placed, safetyPin anchors/drags with it) */}
                 {placed.pin1 && (
-                  <DraggableSVGGroup id="pin1" isDraggable={!success} additionalTransform={activeDraggingId === "cardboard" && isPinOnCardboard(positions.pin1, positions.cardboard) ? activeDragDelta : null}>
+                  <DraggableSVGGroup id="pin1" isDraggable={!success}>
                     <DrawingPinSVG
                       x={positions.pin1.x}
                       y={positions.pin1.y}
@@ -1115,7 +1206,7 @@ export default function Stage1_Build({ onComplete }) {
 
                 {/* Pin 2 */}
                 {placed.pin2 && (
-                  <DraggableSVGGroup id="pin2" isDraggable={!success} additionalTransform={activeDraggingId === "cardboard" && isPinOnCardboard(positions.pin2, positions.cardboard) ? activeDragDelta : null}>
+                  <DraggableSVGGroup id="pin2" isDraggable={!success}>
                     <DrawingPinSVG
                       x={positions.pin2.x}
                       y={positions.pin2.y}
@@ -1125,105 +1216,101 @@ export default function Stage1_Build({ onComplete }) {
                   </DraggableSVGGroup>
                 )}
 
-                {/* Visual highlight target outline during component dragging */}
-                {isDragging && activeStep && (
-                  <g className="pulse-target" style={{ opacity: 0.8 }}>
-                    {activeStep.id === "cardboard" && (
-                      <rect
-                        x={370}
-                        y={200}
-                        width={160}
-                        height={210}
-                        rx={12}
-                        fill="rgba(99, 102, 241, 0.05)"
-                        stroke="var(--accent)"
-                        strokeWidth={2.5}
-                        strokeDasharray="5,5"
-                      />
-                    )}
-                    {activeStep.id === "pin1" && (
-                      <circle
-                        cx={450}
-                        cy={250}
-                        r={14}
-                        fill="rgba(99, 102, 241, 0.05)"
-                        stroke="var(--accent)"
-                        strokeWidth={2.5}
-                        strokeDasharray="3,3"
-                      />
-                    )}
-                    {activeStep.id === "safetyPin" && (
-                      <g transform="translate(450, 250) rotate(-35)">
-                        <circle
-                          cx={0}
-                          cy={0}
-                          r={10}
-                          fill="none"
-                          stroke="var(--accent)"
-                          strokeWidth={2}
-                          strokeDasharray="3,3"
-                        />
-                        <line
-                          x1={0}
-                          y1={0}
-                          x2={0}
-                          y2={110}
-                          stroke="var(--accent)"
-                          strokeWidth={2}
-                          strokeDasharray="3,3"
-                        />
-                      </g>
-                    )}
-                    {activeStep.id === "pin2" && (
-                      <circle
-                        cx={450}
-                        cy={370}
-                        r={14}
-                        fill="rgba(99, 102, 241, 0.05)"
-                        stroke="var(--accent)"
-                        strokeWidth={2.5}
-                        strokeDasharray="3,3"
-                      />
-                    )}
-                    {activeStep.id === "battery" && (
-                      <rect
-                        x={104}
-                        y={366}
-                        width={92}
-                        height={48}
-                        rx={6}
-                        fill="rgba(99, 102, 241, 0.05)"
-                        stroke="var(--accent)"
-                        strokeWidth={2.5}
-                        strokeDasharray="5,5"
-                      />
-                    )}
-                    {activeStep.id === "bulb" && (
-                      <g>
-                        <rect
-                          x={260}
-                          y={80}
-                          width={80}
-                          height={20}
-                          rx={4}
-                          fill="rgba(99, 102, 241, 0.05)"
-                          stroke="var(--accent)"
-                          strokeWidth={2.5}
-                          strokeDasharray="3,3"
-                        />
-                        <circle
-                          cx={300}
-                          cy={45}
-                          r={22}
-                          fill="none"
-                          stroke="var(--accent)"
-                          strokeWidth={2.5}
-                          strokeDasharray="3,3"
-                        />
-                      </g>
-                    )}
+                {/* VISUAL HIGHLIGHT TARGET OUTLINES (Blinking/Glowing when step is active) */}
+                {selectedItemId === "cardboard" && (
+                  <rect
+                    x={370}
+                    y={200}
+                    width={160}
+                    height={210}
+                    rx={12}
+                    fill="rgba(99, 102, 241, 0.02)"
+                    stroke="var(--accent)"
+                    className="active-target-glow"
+                  />
+                )}
+                {selectedItemId === "pin1" && (
+                  <circle
+                    cx={450}
+                    cy={250}
+                    r={14}
+                    fill="none"
+                    stroke="#ca8a04"
+                    className="active-target-glow"
+                  />
+                )}
+                {selectedItemId === "safetyPin" && (
+                  <g transform="translate(450, 250) rotate(-35)">
+                    <circle
+                      cx={0}
+                      cy={0}
+                      r={10}
+                      fill="none"
+                      stroke="var(--accent)"
+                      className="active-target-glow"
+                    />
+                    <line
+                      x1={0}
+                      y1={0}
+                      x2={0}
+                      y2={110}
+                      stroke="var(--accent)"
+                      className="active-target-glow"
+                    />
                   </g>
                 )}
+                {selectedItemId === "pin2" && (
+                  <circle
+                    cx={450}
+                    cy={370}
+                    r={14}
+                    fill="none"
+                    stroke="#ca8a04"
+                    className="active-target-glow"
+                  />
+                )}
+                {selectedItemId === "battery" && (
+                  <rect
+                    x={104}
+                    y={366}
+                    width={92}
+                    height={48}
+                    rx={6}
+                    fill="rgba(99, 102, 241, 0.02)"
+                    stroke="var(--accent)"
+                    className="active-target-glow"
+                  />
+                )}
+                {selectedItemId === "bulb" && (
+                  <g>
+                    <rect
+                      x={260}
+                      y={80}
+                      width={80}
+                      height={20}
+                      rx={4}
+                      fill="none"
+                      stroke="var(--accent)"
+                      className="active-target-glow"
+                    />
+                    <circle
+                      cx={300}
+                      cy={45}
+                      r={22}
+                      fill="none"
+                      stroke="var(--accent)"
+                      className="active-target-glow"
+                    />
+                  </g>
+                )}
+
+                {/* BLINKING GUIDE LIGHTS (Outlining targets with glowing gold LEDs) */}
+                {selectedItemId === "cardboard" && <circle cx={450} cy={305} className="led-glowing-yellow" />}
+                {selectedItemId === "pin1" && <circle cx={450} cy={250} className="led-glowing-yellow" />}
+                {selectedItemId === "safetyPin" && <circle cx={450} cy={300} className="led-glowing-yellow" />}
+                {selectedItemId === "pin2" && <circle cx={450} cy={370} className="led-glowing-yellow" />}
+                {selectedItemId === "battery" && <circle cx={150} cy={390} className="led-glowing-yellow" />}
+                {selectedItemId === "bulb" && <circle cx={300} cy={45} className="led-glowing-yellow" />}
 
                 {/* INTERACTIVE TERMINAL DOTS FOR WIRE CONNECTION MODE */}
                 {selectedItemId === "wires" &&
@@ -1341,293 +1428,364 @@ export default function Stage1_Build({ onComplete }) {
               </AnimatePresence>
             </CanvasDroppable>
           </div>
-        </div>
 
-        {/* ============================================== */}
-        {/* PARTS BENCH (BOTTOM PANEL)                     */}
-        {/* ============================================== */}
-        <div
-          className="glass-panel"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.75rem",
-            padding: "1rem",
-            background: "var(--card-bg)",
-            borderColor: "var(--border)",
-            borderRadius: "16px",
-          }}
-        >
+          {/* ============================================== */}
+          {/* COLUMN 3: COMPONENTS & INSPECTOR (RIGHT PANEL) */}
+          {/* ============================================== */}
           <div
             style={{
               display: "flex",
-              justifyContext: "space-between",
-              alignItems: "center",
+              flexDirection: "column",
+              gap: "1rem",
+              height: "100%",
             }}
           >
-            <h3
+            {/* Component Tray Drawer Card */}
+            <div
+              className="glass-panel"
               style={{
-                margin: 0,
-                fontSize: "0.95rem",
-                color: "var(--accent-text)",
+                padding: "1rem",
                 display: "flex",
-                alignItems: "center",
-                gap: "0.35rem",
+                flexDirection: "column",
+                gap: "0.75rem",
               }}
             >
-              <span>🧊</span> 3D Viewer
-            </h3>
-            {activeStep && (
-              <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
-                💡 Click & Drag model below to inspect
-              </span>
-            )}
-          </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  alignItems: "flex-start",
+                  background: "var(--neutral-bg)",
+                  padding: "0.5rem 0.75rem",
+                  borderRadius: "10px",
+                  border: "1px solid var(--border)",
+                }}
+              >
+                <Info style={{ color: "var(--accent)", flexShrink: 0, marginTop: "0.1rem" }} size={14} />
+                <span style={{ fontSize: "0.72rem", color: "var(--text-secondary)", lineHeight: "1.4" }}>
+                  {getNextStepPrompt()}
+                </span>
+              </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                activeStep || selectedItemId === "wires" ? "1.2fr 1fr" : "1fr",
-              gap: "1rem",
-              minHeight: "180px",
-            }}
-          >
-            {selectedItemId === "wires" ? (
-              <>
-                <div
-                  style={{
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    border: "1px solid var(--border)",
-                    background: "var(--surface)",
-                    height: "180px",
-                    position: "relative",
-                  }}
-                >
-                  <ThreeDViewer componentId="wires" />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <h4 style={{ margin: 0, fontSize: "1rem", color: "var(--text-heading)" }}>
-                    Connecting Wires
-                  </h4>
-                  {!pinsValid ? (
-                    <div
+              <h3 style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>
+                Component Tray
+              </h3>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "0.5rem",
+                  alignContent: "start",
+                }}
+              >
+                {STEPS.map((step) => {
+                  const isPlaced = placed[step.id];
+                  const isWires = step.id === "wires";
+                  const isUnlocked = isStepUnlocked(step.id);
+                  const isSelected = selectedItemId === step.id;
+                  const isDisabled = (isPlaced && !isWires) || !isUnlocked;
+                  const isNextStep = !isPlaced && isUnlocked && !selectedItemId;
+
+                  const buttonContent = (
+                    <button
+                      onClick={() => handleSelectTrayItem(step.id)}
+                      disabled={isDisabled}
+                      className={isNextStep ? "active-step-btn-pulse" : ""}
                       style={{
-                        background: "var(--danger-bg)",
-                        border: "1px solid var(--danger-border)",
-                        borderRadius: "8px",
-                        padding: "0.6rem",
-                        color: "var(--danger)",
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "0.5rem 0.4rem",
+                        borderRadius: "12px",
+                        background:
+                          isPlaced && !isWires
+                            ? "var(--success-bg)"
+                            : isSelected
+                              ? "var(--accent-bg)"
+                              : isUnlocked
+                                ? "var(--surface)"
+                                : "var(--neutral-bg)",
+                        border: `1px solid ${
+                          isPlaced && !isWires
+                            ? "var(--success-border)"
+                            : isSelected
+                              ? "var(--accent)"
+                              : isUnlocked
+                                ? "var(--accent-border)"
+                                : "var(--border)"
+                        }`,
+                        color:
+                          isPlaced && !isWires
+                            ? "var(--success)"
+                            : isUnlocked
+                              ? "var(--text-primary)"
+                              : "var(--text-faint)",
+                        cursor: isDisabled ? "not-allowed" : "grab",
+                        transition: "all 0.2s ease",
+                        position: "relative",
+                        minHeight: "72px",
+                        boxShadow: isSelected
+                          ? "0 0 0 2px rgba(99,102,241,0.4)"
+                          : isUnlocked && !isPlaced
+                            ? "0 1px 4px rgba(0,0,0,0.08)"
+                            : "none",
                       }}
                     >
-                      <strong
-                        style={{
-                          fontSize: "0.75rem",
-                          color: "var(--danger)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.2rem",
-                        }}
-                      >
-                        ⚠️ Scientific Check Warning
-                      </strong>
-                      <p
-                        style={{
-                          margin: "0.3rem 0 0 0",
-                          fontSize: "0.7rem",
-                          color: "var(--text-secondary)",
-                          lineHeight: "1.3",
-                        }}
-                      >
-                        Both drawing pins must be placed on the Cardboard Base.
-                        <strong>Why?</strong> Cardboard is an{" "}
-                        <strong>insulator</strong> (non-conductor). Placing
-                        drawing pins directly on the workspace would leak
-                        electric current if the underlying table is conductive.
-                        The cardboard sheet provides a safe insulating base.
-                      </p>
-                      <p
-                        style={{
-                          margin: "0.4rem 0 0 0",
-                          fontSize: "0.68rem",
-                          color: "var(--danger)",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        👉 Drag the drawing pins or the cardboard base on the
-                        canvas to correct their positions.
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize: "0.75rem",
-                          color: "var(--text-faint)",
-                          lineHeight: "1.4",
-                        }}
-                      >
-                        Click on the glowing terminal points on the canvas to
-                        draw wires and connect your components.
-                      </p>
+                      {/* Thumbnail */}
                       <div
                         style={{
-                          fontSize: "0.75rem",
-                          color: "var(--accent-text)",
-                          fontWeight: "bold",
-                          marginTop: "0.5rem",
+                          width: "30px",
+                          height: "30px",
+                          background: "var(--border)",
+                          borderRadius: "8px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginBottom: "0.25rem",
+                          opacity: isUnlocked ? 1 : 0.2,
+                          transition: "opacity 0.2s",
                         }}
                       >
-                        Wires connected: {connectedWires.length}/3
+                        {renderThumbnailSVG(step.id)}
                       </div>
-                    </>
-                  )}
-                </div>
-              </>
-            ) : activeStep ? (
-              <>
-                {/* 3D Viewer Panel */}
-                <div
-                  style={{
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    border: "1px solid var(--border)",
-                    background: "var(--surface)",
-                    height: "180px",
-                    position: "relative",
-                  }}
-                >
-                  <ThreeDViewer componentId={activeStep.id} />
-                </div>
 
-                {/* Info and Draggable Area */}
-                <div
+                      <span
+                        style={{
+                          fontSize: "0.68rem",
+                          fontWeight: "600",
+                          textAlign: "center",
+                          whiteSpace: "nowrap",
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                          width: "100%",
+                          opacity: isUnlocked ? 1 : 0.3,
+                        }}
+                      >
+                        {step.name}
+                      </span>
+
+                      {/* Badge: check if placed, lock if locked */}
+                      <div
+                        style={{ position: "absolute", top: "5px", right: "5px" }}
+                      >
+                        {isPlaced && !isWires ? (
+                          <CheckCircle2 size={11} style={{ color: "var(--success)" }} />
+                        ) : !isUnlocked ? (
+                          <Lock size={9} style={{ color: "var(--text-secondary)" }} />
+                        ) : null}
+                      </div>
+                    </button>
+                  );
+
+                  // If it can be dragged, wrap it in DraggableToken
+                  if (isUnlocked && !isPlaced && step.id !== "wires") {
+                    return (
+                      <DraggableToken key={step.id} id={step.id}>
+                        {buttonContent}
+                      </DraggableToken>
+                    );
+                  }
+
+                  return <div key={step.id}>{buttonContent}</div>;
+                })}
+              </div>
+            </div>
+
+            {/* 3D Inspector Card */}
+            <div
+              className="glass-panel"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.75rem",
+                padding: "1rem",
+                background: "var(--card-bg)",
+                borderColor: "var(--border)",
+                borderRadius: "16px",
+                flex: 1,
+                minHeight: "280px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <h3
                   style={{
+                    margin: 0,
+                    fontSize: "0.9rem",
+                    color: "var(--accent-text)",
                     display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    gap: "0.5rem",
+                    alignItems: "center",
+                    gap: "0.35rem",
                   }}
                 >
-                  <div>
-                    <h4
-                      style={{ margin: 0, fontSize: "1rem", color: "var(--text-heading)" }}
-                    >
+                  <Sparkles size={14} /> 3D Inspector
+                </h3>
+                {activeStep && (
+                  <span style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>
+                    ≡ƒÆí Rotate model below
+                  </span>
+                )}
+              </div>
+
+              {selectedItemId === "wires" ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", height: "100%" }}>
+                  <div
+                    style={{
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      border: "1px solid var(--border)",
+                      background: "var(--surface)",
+                      height: "140px",
+                      position: "relative",
+                    }}
+                  >
+                    <ThreeDViewer componentId="wires" />
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    <h4 style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-heading)" }}>
+                      Connecting Wires
+                    </h4>
+                    {!pinsValid ? (
+                      <div
+                        style={{
+                          background: "var(--danger-bg)",
+                          border: "1px solid var(--danger-border)",
+                          borderRadius: "8px",
+                          padding: "0.5rem",
+                          color: "var(--danger)",
+                        }}
+                      >
+                        <strong
+                          style={{
+                            fontSize: "0.72rem",
+                            color: "var(--danger)",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.2rem",
+                          }}
+                        >
+                          ΓÜá∩╕Å Placement Check Warning
+                        </strong>
+                        <p
+                          style={{
+                            margin: "0.25rem 0 0 0",
+                            fontSize: "0.68rem",
+                            color: "var(--text-secondary)",
+                            lineHeight: "1.3",
+                          }}
+                        >
+                          Both drawing pins must be placed on the Cardboard Base. Cardboard is an <strong>insulator</strong> which protects the electrical loop.
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        <p style={{ margin: 0, fontSize: "0.72rem", color: "var(--text-faint)", lineHeight: "1.4" }}>
+                          Click on the glowing terminal points on the canvas to draw wires and connect your components.
+                        </p>
+                        <div style={{ fontSize: "0.75rem", color: "var(--accent-text)", fontWeight: "bold", marginTop: "0.25rem" }}>
+                          Wires connected: {connectedWires.length}/3
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ) : activeStep ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", height: "100%", justifyContent: "space-between" }}>
+                  {/* 3D Viewer Panel */}
+                  <div
+                    style={{
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      border: "1px solid var(--border)",
+                      background: "var(--surface)",
+                      height: "140px",
+                      position: "relative",
+                    }}
+                  >
+                    <ThreeDViewer componentId={activeStep.id} />
+                  </div>
+
+                  {/* Info and Drag Handle */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    <h4 style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-heading)" }}>
                       {activeStep.name}
                     </h4>
-                    <p
-                      style={{
-                        margin: "0.25rem 0 0 0",
-                        fontSize: "0.75rem",
-                        color: "var(--text-faint)",
-                        lineHeight: "1.4",
-                      }}
-                    >
+                    <p style={{ margin: 0, fontSize: "0.72rem", color: "var(--text-faint)", lineHeight: "1.3" }}>
                       {activeStep.desc}
                     </p>
                   </div>
 
-                  {/* Draggable Token handle */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.4rem",
-                    }}
-                  >
-                    <span
+                  {/* Visual Instruction instead of redundant Drag Handle */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", marginTop: "0.25rem" }}>
+                    <div
                       style={{
-                        fontSize: "0.7rem",
-                        color: "var(--text-muted)",
-                        fontWeight: "bold",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.6rem",
+                        padding: "0.6rem 0.8rem",
+                        background: "var(--accent-bg)",
+                        border: "1px dashed var(--accent-border)",
+                        borderRadius: "12px",
+                        color: "var(--accent-text)",
+                        fontSize: "0.75rem",
+                        lineHeight: "1.3"
                       }}
                     >
-                      HOW TO ASSEMBLE:
-                    </span>
-                    
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.5rem",
-                          padding: "0.5rem 0.75rem",
-                          background: "var(--accent-bg)",
-                          border: "1px dashed rgba(99, 102, 241, 0.4)",
-                          borderRadius: "10px",
-                          color: "var(--accent-text)",
-                          fontSize: "0.8rem",
-                          fontWeight: "600",
-                          boxShadow: "0 4px 10px rgba(99,102,241,0.1)",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: "28px",
-                            height: "28px",
-                            background: "var(--border)",
-                            borderRadius: "6px",
-                            overflow: "hidden",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          {renderThumbnailSVG(activeStep.id)}
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            textAlign: "left",
-                          }}
-                        >
-                          <span>{activeStep.name}</span>
-                          <span
-                            style={{
-                              fontSize: "0.65rem",
-                              color: "var(--accent-text)",
-                              fontWeight: "normal",
-                            }}
-                          >
-                            Drag from Component Tray to Workspace
-                          </span>
-                        </div>
-                      </div>
-                    
+                      <span style={{ fontSize: "1.2rem" }} className="guide-hand-animation">≡ƒæê</span>
+                      <span>
+                        Drag the <strong>{activeStep.name}</strong> button from the <strong>Component Tray</strong> directly onto the canvas target!
+                      </span>
+                    </div>
+
+                    {/* Auto-Place accessibility button */}
+                    <button
+                      onClick={() => handleAutoPlace(activeStep.id)}
+                      style={{
+                        padding: "0.4rem 0.6rem",
+                        fontSize: "0.75rem",
+                        border: "1px dashed var(--success-border)",
+                        background: "var(--success-bg)",
+                        color: "var(--success)",
+                        borderRadius: "8px",
+                        width: "100%",
+                        fontWeight: "600",
+                        gap: "0.25rem",
+                      }}
+                    >
+                      ΓÜí Auto-Place Component
+                    </button>
                   </div>
                 </div>
-              </>
-            ) : (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "180px",
-                  color: "var(--text-secondary)",
-                  textAlign: "center",
-                  padding: "1rem",
-                }}
-              >
-                <p
-                  style={{ margin: 0, fontSize: "0.85rem", maxWidth: "280px" }}
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flex: 1,
+                    color: "var(--text-secondary)",
+                    textAlign: "center",
+                    padding: "1rem",
+                    border: "1px dashed var(--border)",
+                    borderRadius: "12px",
+                    background: "var(--surface)",
+                  }}
                 >
-                  Select an unlocked component from the{" "}
-                  <strong>Component Tray</strong> below to inspect and drag it
-                  onto the workspace.
-                </p>
-              </div>
-            )}
+                  <p style={{ margin: 0, fontSize: "0.8rem", maxWidth: "220px", lineHeight: "1.4" }}>
+                    Select an unlocked component from the <strong>Component Tray</strong> above to inspect and assemble it.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
