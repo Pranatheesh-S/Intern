@@ -99,7 +99,7 @@ export default function QuizPanel({ observations }) {
                       style={{
                         padding: '0.5rem',
                         background: 'var(--border)',
-                        color: '#fff',
+                        color: 'var(--text-heading)',
                         border: isSubmitted ? (isCorrectLustre ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid var(--border)',
                         borderRadius: '4px',
                         width: '100%'
@@ -118,7 +118,7 @@ export default function QuizPanel({ observations }) {
                       style={{
                         padding: '0.5rem',
                         background: 'var(--border)',
-                        color: '#fff',
+                        color: 'var(--text-heading)',
                         border: isSubmitted ? (isCorrectHardness ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid var(--border)',
                         borderRadius: '4px',
                         width: '100%'
@@ -138,7 +138,7 @@ export default function QuizPanel({ observations }) {
                       style={{
                         padding: '0.5rem',
                         background: 'var(--border)',
-                        color: '#fff',
+                        color: 'var(--text-heading)',
                         border: isSubmitted ? (isCorrectHammer ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid var(--border)',
                         borderRadius: '4px',
                         width: '100%'
@@ -177,7 +177,7 @@ export default function QuizPanel({ observations }) {
               <Award size={24} />
               {score === totalPossible ? 'Perfect Observation!' : 'Good effort!'}
             </h4>
-            <p style={{ color: 'var(--border)', margin: '0 0 1rem 0' }}>
+            <p style={{ color: 'var(--text-secondary)', margin: '0 0 1rem 0' }}>
               You got {score} out of {totalPossible} correct.
             </p>
             {score < totalPossible && (

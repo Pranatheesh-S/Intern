@@ -53,7 +53,7 @@ export default function Stage1_Observation({ onComplete }) {
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
         {/* Left Side: Item Selection */}
         <div style={{ flex: '1 1 300px' }}>
-          <h4 style={{ color: 'var(--border)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h4 style={{ color: 'var(--text-secondary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Box size={18} /> Materials
           </h4>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
@@ -102,7 +102,7 @@ export default function Stage1_Observation({ onComplete }) {
 
         {/* Right Side: Observation Area */}
         <div style={{ flex: '1 1 350px', display: 'flex', flexDirection: 'column' }}>
-          <h4 style={{ color: 'var(--border)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h4 style={{ color: 'var(--text-secondary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Eye size={18} /> Observation Panel
           </h4>
           
@@ -138,7 +138,7 @@ export default function Stage1_Observation({ onComplete }) {
                     )}
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, color: '#fff', fontSize: '1.25rem' }}>{item.name}</h3>
+                    <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.25rem' }}>{item.name}</h3>
                     <p style={{ margin: 0, color: 'var(--text-faint)', fontSize: '0.85rem' }}>Examine carefully.</p>
                   </div>
                 </div>
@@ -154,14 +154,14 @@ export default function Stage1_Observation({ onComplete }) {
                       <button
                         onClick={() => handleObservation(item.id, 'lustre', 'lustrous')}
                         className={`tab-btn ${obs.lustre === 'lustrous' ? 'active' : ''}`}
-                        style={{ flex: 1, padding: '0.75rem', background: obs.lustre === 'lustrous' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.lustre === 'lustrous' ? '1px solid #6366f1' : '1px solid transparent' }}
+                        style={{ flex: 1, padding: '0.75rem', background: obs.lustre === 'lustrous' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.lustre === 'lustrous' ? '1px solid #6366f1' : '1px solid transparent', color: 'var(--text-heading)' }}
                       >
                         Lustrous (Shiny)
                       </button>
                       <button
                         onClick={() => handleObservation(item.id, 'lustre', 'non-lustrous')}
                         className={`tab-btn ${obs.lustre === 'non-lustrous' ? 'active' : ''}`}
-                        style={{ flex: 1, padding: '0.75rem', background: obs.lustre === 'non-lustrous' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.lustre === 'non-lustrous' ? '1px solid #6366f1' : '1px solid transparent' }}
+                        style={{ flex: 1, padding: '0.75rem', background: obs.lustre === 'non-lustrous' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.lustre === 'non-lustrous' ? '1px solid #6366f1' : '1px solid transparent', color: 'var(--text-heading)' }}
                       >
                         Non-lustrous (Dull)
                       </button>
@@ -178,21 +178,21 @@ export default function Stage1_Observation({ onComplete }) {
                       <button
                         onClick={() => handleObservation(item.id, 'hardness', 'hard')}
                         className={`tab-btn ${obs.hardness === 'hard' ? 'active' : ''}`}
-                        style={{ flex: '1 1 30%', padding: '0.75rem', background: obs.hardness === 'hard' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.hardness === 'hard' ? '1px solid #6366f1' : '1px solid transparent' }}
+                        style={{ flex: '1 1 30%', padding: '0.75rem', background: obs.hardness === 'hard' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.hardness === 'hard' ? '1px solid #6366f1' : '1px solid transparent', color: 'var(--text-heading)' }}
                       >
                         Hard
                       </button>
                       <button
                         onClick={() => handleObservation(item.id, 'hardness', 'soft')}
                         className={`tab-btn ${obs.hardness === 'soft' ? 'active' : ''}`}
-                        style={{ flex: '1 1 30%', padding: '0.75rem', background: obs.hardness === 'soft' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.hardness === 'soft' ? '1px solid #6366f1' : '1px solid transparent' }}
+                        style={{ flex: '1 1 30%', padding: '0.75rem', background: obs.hardness === 'soft' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.hardness === 'soft' ? '1px solid #6366f1' : '1px solid transparent', color: 'var(--text-heading)' }}
                       >
                         Soft
                       </button>
                       <button
                         onClick={() => handleObservation(item.id, 'hardness', 'soft_brittle')}
                         className={`tab-btn ${obs.hardness === 'soft_brittle' ? 'active' : ''}`}
-                        style={{ flex: '1 1 30%', padding: '0.75rem', background: obs.hardness === 'soft_brittle' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.hardness === 'soft_brittle' ? '1px solid #6366f1' : '1px solid transparent' }}
+                        style={{ flex: '1 1 30%', padding: '0.75rem', background: obs.hardness === 'soft_brittle' ? 'rgba(99, 102, 241, 0.2)' : 'var(--border)', border: obs.hardness === 'soft_brittle' ? '1px solid #6366f1' : '1px solid transparent', color: 'var(--text-heading)' }}
                       >
                         Soft & Brittle
                       </button>

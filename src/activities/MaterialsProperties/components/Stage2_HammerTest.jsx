@@ -52,7 +52,7 @@ export default function Stage2_HammerTest({ onComplete }) {
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
         {/* Left: Item Queue */}
         <div style={{ flex: '1 1 250px' }}>
-          <h4 style={{ color: 'var(--border)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h4 style={{ color: 'var(--text-secondary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Box size={18} /> Select Material
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -215,14 +215,14 @@ export default function Stage2_HammerTest({ onComplete }) {
                       <button 
                         onClick={() => handleRecord(item.id, 'flattens')}
                         className="tab-btn"
-                        style={{ flex: 1, padding: '0.75rem', border: '1px solid #6366f1', background: 'rgba(99, 102, 241, 0.1)' }}
+                        style={{ flex: 1, padding: '0.75rem', border: '1px solid #6366f1', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--text-heading)' }}
                       >
                         Flattens into sheets
                       </button>
                       <button 
                         onClick={() => handleRecord(item.id, 'breaks')}
                         className="tab-btn"
-                        style={{ flex: 1, padding: '0.75rem', border: '1px solid #6366f1', background: 'rgba(99, 102, 241, 0.1)' }}
+                        style={{ flex: 1, padding: '0.75rem', border: '1px solid #6366f1', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--text-heading)' }}
                       >
                         Breaks into pieces
                       </button>
