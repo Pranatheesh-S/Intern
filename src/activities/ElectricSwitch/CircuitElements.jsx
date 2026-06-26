@@ -268,6 +268,171 @@ export const BatterySVG = ({ isPlaced, isTarget, onClick }) => {
   );
 };
 
+// BatteryBareSVG (Just the cell itself)
+export const BatteryBareSVG = () => {
+  return (
+    <g>
+      <defs>
+        <linearGradient id="battery-cylinder-bare" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="var(--danger)" />
+          <stop offset="40%" stopColor="var(--danger)" />
+          <stop offset="70%" stopColor="#991b1b" />
+          <stop offset="100%" stopColor="#7f1d1d" />
+        </linearGradient>
+        <linearGradient id="metal-caps-bare" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="var(--neutral-bg)" />
+          <stop offset="50%" stopColor="var(--text-faint)" />
+          <stop offset="100%" stopColor="var(--text-secondary)" />
+        </linearGradient>
+      </defs>
+      
+      {/* Battery body shadow */}
+      <rect x={2} y={2} width={84} height={40} rx={4} fill="rgba(0,0,0,0.2)" />
+
+      {/* Negative Flat End (Left) */}
+      <rect x="0" y="2" width="6" height="36" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
+      
+      {/* Cylinder body */}
+      <rect x="6" y="0" width="76" height="40" rx="4" fill="url(#battery-cylinder-bare)" stroke="#b91c1c" strokeWidth="1" />
+      
+      {/* Positive Cap (Right) */}
+      <rect x="82" y="8" width="6" height="24" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
+      {/* Positive Pip */}
+      <rect x="88" y="13" width="3" height="14" rx="1" fill="url(#metal-caps-bare)" />
+
+      {/* Label and Symbols */}
+      <text x="18" y="25" fill="#111827" fontSize="18" fontWeight="bold" textAnchor="middle">-</text>
+      <text x="70" y="25" fill="#111827" fontSize="16" fontWeight="bold" textAnchor="middle">+</text>
+      
+      <rect x="29" y="6" width="30" height="28" fill="var(--text-primary)" rx="2" opacity={0.6} />
+      <text x="44" y="18" fill="#fef08a" fontSize="8" fontWeight="bold" textAnchor="middle" letterSpacing="0.05em">CELL</text>
+      <text x="44" y="28" fill="var(--card-bg)" fontSize="8" fontWeight="bold" textAnchor="middle">1.5V</text>
+    </g>
+  );
+};
+
+// BatteryHolderSVG (The plastic case holding the cell, with terminals)
+export const BatteryHolderSVG = ({ hasCell }) => {
+  return (
+    <g>
+      {/* Plastic case bottom */}
+      <rect x={0} y={0} width={100} height={48} rx={6} fill="#374151" stroke="#1f2937" strokeWidth={2} />
+      {/* Inner compartment */}
+      <rect x={4} y={4} width={92} height={40} rx={4} fill="#111827" />
+      
+      {/* Left terminal spring (negative) */}
+      <path d="M 12 8 Q 18 24 12 40" fill="none" stroke="#9ca3af" strokeWidth={2} />
+      
+      {/* Right terminal contact (positive) */}
+      <rect x={90} y={14} width={4} height={20} fill="#9ca3af" />
+
+      {/* If cell is inserted, render it inside */}
+      {hasCell && (
+        <g transform="translate(6, 4)">
+          <BatteryBareSVG />
+        </g>
+      )}
+
+      {/* Case clamps / top part */}
+      <rect x={20} y={-4} width={10} height={12} rx={2} fill="#374151" />
+      <rect x={70} y={-4} width={10} height={12} rx={2} fill="#374151" />
+      <rect x={20} y={40} width={10} height={12} rx={2} fill="#374151" />
+      <rect x={70} y={40} width={10} height={12} rx={2} fill="#374151" />
+
+      {/* Wiring Terminals (Screws on the outside) */}
+      <line x1={-15} y1={24} x2={0} y2={24} stroke="#9ca3af" strokeWidth={3} />
+      <line x1={100} y1={24} x2={115} y2={24} stroke="#9ca3af" strokeWidth={3} />
+      
+      {/* Screw Heads */}
+      <circle cx={-15} cy={24} r={5} fill="var(--warning)" stroke="#b45309" strokeWidth={1} />
+      <circle cx={-15} cy={24} r={2} fill="var(--warning)" />
+      
+      <circle cx={115} cy={24} r={5} fill="var(--warning)" stroke="#b45309" strokeWidth={1} />
+      <circle cx={115} cy={24} r={2} fill="var(--warning)" />
+
+      {/* Labels */}
+      <text x={-15} y={14} fill="var(--text-primary)" fontSize="12" fontWeight="bold" textAnchor="middle">-</text>
+      <text x={115} y={14} fill="var(--text-primary)" fontSize="12" fontWeight="bold" textAnchor="middle">+</text>
+    </g>
+  );
+};
+
+// BulbBareSVG (Just the glass and filament)
+export const BulbBareSVG = ({ isOn }) => {
+  return (
+    <g>
+      {/* Screw brass sleeve */}
+      <rect x="-12" y="25" width="24" height="20" fill="#854d0e" stroke="#a16207" strokeWidth={1} />
+      <line x1="-12" y1="31" x2="12" y2="31" stroke="#713f12" strokeWidth={2} />
+      <line x1="-12" y1="37" x2="12" y2="37" stroke="#713f12" strokeWidth={2} />
+      
+      {/* Bulb glow overlay */}
+      {isOn && (
+        <circle cx="0" cy="0" r="45" fill="url(#bulb-glow)" pointerEvents="none" className="bulb-glowing" />
+      )}
+      
+      {/* Glass globe */}
+      <circle cx="0" cy="0" r="22" 
+              fill={isOn ? '#fef08a' : 'var(--border)'} 
+              stroke={isOn ? 'var(--warning)' : 'var(--text-muted)'} 
+              strokeWidth="2.5" />
+      {/* Glass highlight */}
+      <path d="M -16,-5 A 16,16 0 0,1 6,-19" fill="none" stroke="var(--card-bg)" strokeWidth="1.5" opacity={isOn ? 0.8 : 0.2} />
+      
+      {/* Left lead */}
+      <line x1="-7" y1="25" x2="-7" y2="7" stroke="var(--text-faint)" strokeWidth="1.5" />
+      {/* Right lead */}
+      <line x1="7" y1="25" x2="7" y2="7" stroke="var(--text-faint)" strokeWidth="1.5" />
+      {/* Filament loop */}
+      <path d="M -7,7 C -7,-1 -3,-1 0,2 C 3,-1 7,-1 7,7" 
+            fill="none" 
+            stroke={isOn ? '#ea580c' : 'var(--text-secondary)'} 
+            strokeWidth="2" 
+            strokeLinecap="round" />
+            
+      {/* Ray flares when lit */}
+      {isOn && (
+        <g stroke="var(--warning)" strokeWidth="2.5" strokeLinecap="round" opacity={0.9}>
+          <line x1="0" y1="-33" x2="0" y2="-43" />
+          <line x1="-23" y1="-23" x2="-31" y2="-31" />
+          <line x1="23" y1="-23" x2="31" y2="-31" />
+          <line x1="-32" y1="0" x2="-42" y2="0" />
+          <line x1="32" y1="0" x2="42" y2="0" />
+        </g>
+      )}
+    </g>
+  );
+};
+
+// BulbHolderSVG (The base with terminals)
+export const BulbHolderSVG = ({ hasBulb, isOn }) => {
+  return (
+    <g>
+      {/* Holder base */}
+      <rect x="-44" y="45" width="88" height="24" rx="6" fill="#1e3a8a" stroke="#2563eb" strokeWidth={2} />
+      <rect x="-30" y="69" width="60" height="4" fill="#172554" />
+      
+      {/* Terminals screws */}
+      <circle cx="-30" cy="57" r="5" fill="var(--warning)" stroke="#b45309" strokeWidth={1} />
+      <circle cx="-30" cy="57" r="2" fill="var(--warning)" />
+      <circle cx="30" cy="57" r="5" fill="var(--warning)" stroke="#b45309" strokeWidth={1} />
+      <circle cx="30" cy="57" r="2" fill="var(--warning)" />
+
+      {/* Socket opening (dark inside) */}
+      {!hasBulb && (
+        <rect x="-14" y="32" width="28" height="13" fill="#111827" stroke="#374151" strokeWidth={1} />
+      )}
+
+      {/* If bulb is inserted, render it */}
+      {hasBulb && (
+        <g transform="translate(0, 0)">
+          <BulbBareSVG isOn={isOn} />
+        </g>
+      )}
+    </g>
+  );
+};
+
 // Wires
 export const WiresSVG = ({ 
   isWireConnected, 
