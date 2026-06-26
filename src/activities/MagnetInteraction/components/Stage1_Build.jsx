@@ -19,7 +19,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Box, Cylinder } from "@react-three/drei";
+import { OrbitControls, Box, Cylinder, Text } from "@react-three/drei";
 
 const STEPS = [
   {
@@ -165,6 +165,13 @@ export default function Stage1_Build({ onComplete, onNext }) {
   const isStepUnlocked = (stepId) => {
     const step = STEPS.find((s) => s.id === stepId);
     if (!step) return false;
+    
+    if (stepId === "magnetB") {
+      const isMagnetAOnPencils = placed.magnetA && placed.pencils && 
+        Math.sqrt((positions.magnetA.x - positions.pencils.x) ** 2 + (positions.magnetA.y - positions.pencils.y) ** 2) <= 60;
+      return isMagnetAOnPencils;
+    }
+
     return step.prereq.every((pId) => placed[pId] === true);
   };
 
@@ -172,6 +179,10 @@ export default function Stage1_Build({ onComplete, onNext }) {
     if (placed[stepId]) return;
     const step = STEPS.find((s) => s.id === stepId);
     if (!isStepUnlocked(stepId)) {
+      if (stepId === "magnetB" && placed.magnetA) {
+        setError("❌ Magnet B is locked! You must first place Magnet A exactly on top of the pencils.");
+        return;
+      }
       const missingPrereqs = step.prereq.filter((pId) => !placed[pId]);
       const missingNames = missingPrereqs
         .map((pId) => STEPS.find((s) => s.id === pId)?.name)
@@ -226,16 +237,13 @@ export default function Stage1_Build({ onComplete, onNext }) {
         x = snapped.x;
         y = snapped.y;
 
+        let currentError = "";
+
         // --- Positional Validation ---
         if (draggedId === "magnetA") {
           const distToPencils = Math.sqrt((x - positions.pencils.x) ** 2 + (y - positions.pencils.y) ** 2);
-          if (distToPencils > 50) {
-            setError("⚠️ Place Magnet A horizontally across the pencils.");
-            // Reset position if already placed but moved illegally
-            if (placed.magnetA) {
-               setPositions(prev => ({ ...prev, magnetA: { x: prev.pencils.x, y: prev.pencils.y } }));
-            }
-            return;
+          if (distToPencils > 60) {
+            currentError = "ℹ️ You placed Magnet A. Now, drag it directly on top of the pencils so it can roll freely!";
           }
         }
 
@@ -251,7 +259,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
           }
         }
 
-        setError("");
+        setError(currentError);
         setPositions((prev) => ({ ...prev, [draggedId]: { x, y } }));
 
         if (!placed[draggedId]) {
@@ -379,15 +387,33 @@ export default function Stage1_Build({ onComplete, onNext }) {
                         ))}
                       </group>
                     )}
-                    {(activeStep.id === "magnetA" || activeStep.id === "magnetB") && (
-                      <Box args={[2, 0.3, 0.5]}>
-                        <meshStandardMaterial attach="material-0" color="#ef4444" />
-                        <meshStandardMaterial attach="material-1" color="#ef4444" />
-                        <meshStandardMaterial attach="material-2" color="#ef4444" />
-                        <meshStandardMaterial attach="material-3" color="#ef4444" />
-                        <meshStandardMaterial attach="material-4" color="#ef4444" />
-                        <meshStandardMaterial attach="material-5" color="#3b82f6" />
-                      </Box>
+                    {(activeStep.id === "magnetA") && (
+                      <group>
+                        <Box args={[1, 0.3, 0.5]} position={[-0.5, 0, 0]}>
+                          <meshStandardMaterial color="#ef4444" />
+                        </Box>
+                        <Box args={[1, 0.3, 0.5]} position={[0.5, 0, 0]}>
+                          <meshStandardMaterial color="#3b82f6" />
+                        </Box>
+                        <Text position={[-0.5, 0, 0.26]} fontSize={0.2} color="white" fontWeight="bold">N</Text>
+                        <Text position={[0.5, 0, 0.26]} fontSize={0.2} color="white" fontWeight="bold">S</Text>
+                        <Text position={[-0.5, 0.16, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.2} color="white" fontWeight="bold">N</Text>
+                        <Text position={[0.5, 0.16, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.2} color="white" fontWeight="bold">S</Text>
+                      </group>
+                    )}
+                    {(activeStep.id === "magnetB") && (
+                      <group>
+                        <Box args={[1, 0.3, 0.5]} position={[-0.5, 0, 0]}>
+                          <meshStandardMaterial color="#3b82f6" />
+                        </Box>
+                        <Box args={[1, 0.3, 0.5]} position={[0.5, 0, 0]}>
+                          <meshStandardMaterial color="#ef4444" />
+                        </Box>
+                        <Text position={[-0.5, 0, 0.26]} fontSize={0.2} color="white" fontWeight="bold">S</Text>
+                        <Text position={[0.5, 0, 0.26]} fontSize={0.2} color="white" fontWeight="bold">N</Text>
+                        <Text position={[-0.5, 0.16, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.2} color="white" fontWeight="bold">S</Text>
+                        <Text position={[0.5, 0.16, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.2} color="white" fontWeight="bold">N</Text>
+                      </group>
                     )}
                     <OrbitControls enableZoom={true} enablePan={false} />
                   </Canvas>
@@ -434,7 +460,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                 <CanvasDroppable>
                   {/* Pencils SVG */}
                   {placed.pencils && (
-                    <DraggableSVGGroup id="pencils" isDraggable={!placed.magnetA}>
+                    <DraggableSVGGroup id="pencils" isDraggable={true}>
                       <g transform={`translate(${positions.pencils.x - 40}, ${positions.pencils.y - 60})`}>
                         {[...Array(6)].map((_, i) => (
                           <rect key={i} x={i * 14} y={0} width="8" height="120" rx="4" fill="url(#pencilGrad)" filter="drop-shadow(2px 2px 2px rgba(0,0,0,0.3))" />
