@@ -1,0 +1,17 @@
+export const TEST_MATERIALS = [
+  { id: 'spoon', name: 'Metal Spoon', material: 'Metal', isConductor: true, icon: '🥄' },
+  { id: 'coin', name: 'Coin', material: 'Metal', isConductor: true, icon: '🪙' },
+  { id: 'cork', name: 'Cork', material: 'Wood', isConductor: false, icon: '🍾' },
+  { id: 'eraser', name: 'Eraser', material: 'Rubber', isConductor: false, icon: '🧽' },
+  { id: 'glass', name: 'Glass Bangle', material: 'Glass', isConductor: false, icon: '⭕' },
+  { id: 'key', name: 'Key', material: 'Metal', isConductor: true, icon: '🔑' },
+  { id: 'pin', name: 'Pin', material: 'Metal', isConductor: true, icon: '📍' },
+  { id: 'scale', name: 'Plastic Scale', material: 'Plastic', isConductor: false, icon: '📏' },
+  { id: 'wooden_block', name: 'Wooden Block', material: 'Wood', isConductor: false, icon: '🧱' },
+  { id: 'aluminium_foil', name: 'Aluminium Foil', material: 'Metal', isConductor: true, icon: '🗞️' },
+  { id: 'candle', name: 'Candle', material: 'Wax', isConductor: false, icon: '🕯️' },
+  { id: 'needle', name: 'Sewing Needle', material: 'Metal', isConductor: true, icon: '🪡' },
+  { id: 'cardboard', name: 'Cardboard', material: 'Paper', isConductor: false, icon: '📦' },
+  { id: 'paper', name: 'Paper Strip', material: 'Paper', isConductor: false, icon: '📄' },
+  { id: 'pencil_lead', name: 'Pencil Lead', material: 'Graphite', isConductor: true, icon: '✏️' },
+];
