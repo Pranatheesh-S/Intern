@@ -1,26 +1,14 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Magnet, CheckCircle, RotateCcw, ArrowRight, Activity, Beaker } from 'lucide-react';
+import { Magnet, CheckCircle, RotateCcw, ArrowRight, Activity, Beaker, MousePointer2 } from 'lucide-react';
 
 export default function Stage1_Magnetize({ onComplete }) {
   const [strokeCount, setStrokeCount] = useState(0);
-  const [isStroking, setIsStroking] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const [testComplete, setTestComplete] = useState(false);
   
   const maxStrokes = 5;
   const isMagnetized = strokeCount >= maxStrokes;
-
-  const handleStroke = () => {
-    if (isStroking || isMagnetized) return;
-    setIsStroking(true);
-    
-    // Animation lasts about 1.5 seconds
-    setTimeout(() => {
-      setStrokeCount(prev => prev + 1);
-      setIsStroking(false);
-    }, 1500);
-  };
 
   const handleTest = () => {
     setIsTesting(true);
@@ -35,7 +23,6 @@ export default function Stage1_Magnetize({ onComplete }) {
 
   const handleReset = () => {
     setStrokeCount(0);
-    setIsStroking(false);
     setIsTesting(false);
     setTestComplete(false);
   };
@@ -47,7 +34,7 @@ export default function Stage1_Magnetize({ onComplete }) {
         <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
           <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Magnetization Process</h3>
           <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            Rub one pole of the magnet along the iron needle.
+            Manually drag the magnet across the iron needle from left to right.
           </p>
         </div>
 
@@ -65,7 +52,9 @@ export default function Stage1_Magnetize({ onComplete }) {
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
+          boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)',
+          userSelect: 'none',
+          WebkitUserSelect: 'none'
         }}>
           {/* Iron Needle Container */}
           <div style={{
@@ -114,7 +103,7 @@ export default function Stage1_Magnetize({ onComplete }) {
             zIndex: 5
           }}>
             {Array.from({ length: 7 }).map((_, i) => {
-              const progressRatio = strokeCount / maxStrokes;
+              const progressRatio = Math.min(strokeCount / maxStrokes, 1);
               const initialRot = i % 2 === 0 ? 55 + (i * 5) : -45 - (i * 5);
               const currentRot = initialRot * (1 - progressRatio);
               
@@ -140,45 +129,76 @@ export default function Stage1_Magnetize({ onComplete }) {
             })}
           </div>
 
-          {/* Steel Pins (for testing) */}
+          {/* Steel Pins / Iron Filings (for testing) */}
           <AnimatePresence>
             {isMagnetized && (
-              <div style={{ position: 'absolute', bottom: '30px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '15px' }}>
-                {[...Array(4)].map((_, i) => (
-                  <motion.div
-                    key={`pin-${i}`}
-                    initial={{ y: 0, rotate: (i - 1.5) * 20 }}
-                    animate={
-                      isTesting 
-                        ? { y: -25, rotate: 0, x: (i - 1.5) * -5 } 
-                        : { y: 0, rotate: (i - 1.5) * 20 }
-                    }
-                    transition={{ type: 'spring', stiffness: 60, delay: i * 0.1 }}
-                    style={{ width: '2px', height: '12px', background: '#94a3b8', borderRadius: '1px', boxShadow: '1px 1px 2px rgba(0,0,0,0.2)' }}
-                  />
-                ))}
+              <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', width: '300px', height: '40px' }}>
+                {[...Array(40)].map((_, i) => {
+                  const pseudoX = (i * 137) % 300 - 150; // spread from -150 to +150
+                  const pseudoY = (i * 93) % 40; // spread from 0 to 40 (on the table)
+                  const rot = ((i * 71) % 360) - 180;
+                  
+                  // Target positions at the poles (needle is ~250px wide, so poles at -110 and +110 relative to center)
+                  const isLeftPole = pseudoX < 0;
+                  const targetX = isLeftPole ? -110 + ((i*17)%40 - 20) : 110 + ((i*17)%40 - 20);
+                  // Needle is at bottom: 70px. Container is at bottom: 20px. Diff is 50px up (y = -50).
+                  const targetY = -50 + ((i*23)%20 - 10);
+                  const targetRot = isLeftPole ? -90 + ((i*11)%180) : 90 + ((i*11)%180);
+                  
+                  return (
+                    <motion.div
+                      key={`pin-${i}`}
+                      initial={{ y: pseudoY, x: pseudoX, rotate: rot }}
+                      animate={
+                        isTesting 
+                          ? { y: targetY, x: targetX, rotate: targetRot } 
+                          : { y: pseudoY, x: pseudoX, rotate: rot }
+                      }
+                      transition={{ type: 'spring', stiffness: 50, damping: 10, delay: (i % 10) * 0.02 }}
+                      style={{ 
+                        position: 'absolute', 
+                        left: '50%',
+                        bottom: '0',
+                        width: '3px', 
+                        height: '10px', 
+                        background: 'linear-gradient(135deg, #f1f5f9, #94a3b8)', // Light silver to slate
+                        borderRadius: '2px', 
+                        boxShadow: '0 0 2px rgba(255,255,255,0.4), 1px 1px 3px rgba(0,0,0,0.9)',
+                        marginLeft: '-1.5px'
+                      }}
+                    />
+                  );
+                })}
               </div>
             )}
           </AnimatePresence>
+
+          {/* Drag Indicator */}
+          {!isMagnetized && strokeCount === 0 && (
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 0.6, x: -50 }}
+              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+              style={{ position: 'absolute', bottom: '150px', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}
+            >
+              <MousePointer2 size={24} /> <span>Drag right</span> <ArrowRight size={18} />
+            </motion.div>
+          )}
 
           {/* Bar Magnet */}
           <AnimatePresence>
             {!isTesting && (
               <motion.div
                 initial={{ x: -125, y: -60, rotate: 10 }}
-                animate={
-                  isStroking 
-                  ? [
-                      { x: -125, y: -60, rotate: 10 }, // start position
-                      { x: -125, y: -10, rotate: 10 }, // move down to touch needle
-                      { x: 125, y: -10, rotate: 10 },  // drag across needle
-                      { x: 125, y: -80, rotate: 10 },  // lift up
-                      { x: -125, y: -80, rotate: 10 }, // return over top
-                      { x: -125, y: -60, rotate: 10 }  // back to start
-                    ]
-                  : { x: -125, y: -60, rotate: 10 }
-                }
-                transition={isStroking ? { duration: 1.5, times: [0, 0.15, 0.6, 0.75, 0.9, 1], ease: "easeInOut" } : { duration: 0.5 }}
+                animate={{ x: -125, y: -60, rotate: 10 }}
+                drag={!isMagnetized}
+                dragSnapToOrigin={true}
+                dragElastic={0.1}
+                onDragEnd={(event, info) => {
+                  if (info.offset.x > 150) {
+                    setStrokeCount(prev => Math.min(prev + 1, maxStrokes));
+                  }
+                }}
                 exit={{ opacity: 0, y: -100 }}
                 style={{
                   position: 'absolute',
@@ -190,8 +210,10 @@ export default function Stage1_Magnetize({ onComplete }) {
                   borderRadius: '4px',
                   overflow: 'hidden',
                   boxShadow: '0 6px 12px rgba(0, 0, 0, 0.3)',
-                  zIndex: 10
+                  zIndex: 10,
+                  cursor: isMagnetized ? 'default' : 'grab'
                 }}
+                whileTap={{ cursor: 'grabbing', scale: 1.05 }}
               >
                 <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.9rem' }}>N</div>
                 <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.9rem' }}>S</div>
@@ -203,7 +225,7 @@ export default function Stage1_Magnetize({ onComplete }) {
         {/* Progress Bar */}
         <div style={{ width: '100%', maxWidth: '500px', marginTop: '1rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-            <span>Magnetization Level</span>
+            <span>Strokes: {strokeCount} / {maxStrokes}</span>
             <span>{Math.round((strokeCount / maxStrokes) * 100)}%</span>
           </div>
           <div style={{ width: '100%', height: '8px', background: 'var(--border)', borderRadius: '4px', overflow: 'hidden' }}>
@@ -216,16 +238,7 @@ export default function Stage1_Magnetize({ onComplete }) {
 
         {/* Controls */}
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-          {!isMagnetized ? (
-            <button 
-              onClick={handleStroke} 
-              disabled={isStroking}
-              className="primary"
-              style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-            >
-              <Activity size={18} /> Stroke Needle
-            </button>
-          ) : (
+          {isMagnetized && (
             <button 
               onClick={handleTest} 
               disabled={isTesting}
@@ -255,10 +268,10 @@ export default function Stage1_Magnetize({ onComplete }) {
               Place the iron sewing needle on a wooden table.
             </li>
             <li style={{ fontWeight: !isMagnetized ? 'bold' : 'normal', color: !isMagnetized ? 'var(--accent-text)' : 'inherit' }}>
-              Keep any one pole of the magnet at one end of the needle. Move the magnet over the needle along its length.
+              Keep any one pole of the magnet at one end of the needle. <strong>Drag</strong> the magnet over the needle along its length.
             </li>
             <li style={{ fontWeight: !isMagnetized ? 'bold' : 'normal', color: !isMagnetized ? 'var(--accent-text)' : 'inherit' }}>
-              When it reaches the other end, lift it up. Bring the same pole back to the start. Repeat this at least 30 to 40 times.
+              When it reaches the other end, lift it up. Bring the same pole back to the start. Repeat this at least 5 times.
             </li>
             <li style={{ fontWeight: isMagnetized && !testComplete ? 'bold' : 'normal', color: isMagnetized && !testComplete ? 'var(--accent-text)' : 'inherit' }}>
               Bring some iron filings or steel pins near the needle to test if it has become a magnet.

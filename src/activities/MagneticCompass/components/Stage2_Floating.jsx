@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, CheckCircle, RotateCcw, AlertCircle, Flag } from 'lucide-react';
+import { Compass, CheckCircle, RotateCcw, AlertCircle, Flag, Hand } from 'lucide-react';
 
 export default function Stage2_Floating({ onComplete }) {
   const [step, setStep] = useState('initial'); // 'initial', 'floating', 'settled'
   const [rotationAngle, setRotationAngle] = useState(0);
+  const [spinCount, setSpinCount] = useState(0);
 
   const handlePlaceCork = () => {
     // Random starting rotation
@@ -21,6 +22,25 @@ export default function Stage2_Floating({ onComplete }) {
     }, 1000);
   };
 
+  const handleSpin = () => {
+    if (step !== 'settled') return;
+    
+    setSpinCount(prev => prev + 1);
+    const spinAmount = (Math.random() > 0.5 ? 1 : -1) * (180 + Math.random() * 180);
+    setRotationAngle(prev => prev + spinAmount);
+    setStep('floating');
+
+    setTimeout(() => {
+      // Return back to nearest 360 multiple of 0
+      // Actually, just going to 0 is visually fine if we use spring, but to avoid unwind we can set to 0 and rely on framer motion
+      // Or just modulo 360, but setting to 0 is perfectly fine for a simple spring animation.
+      setRotationAngle(0);
+      setTimeout(() => {
+        setStep('settled');
+      }, 1500);
+    }, 1000);
+  };
+
   const handleFinish = () => {
     onComplete();
   };
@@ -28,7 +48,40 @@ export default function Stage2_Floating({ onComplete }) {
   const handleReset = () => {
     setStep('initial');
     setRotationAngle(0);
+    setSpinCount(0);
   };
+
+  const renderCorkWithNeedle = (isInteractive) => (
+    <motion.div
+      style={{
+        position: 'relative',
+        width: '80px',
+        height: '80px',
+        borderRadius: '50%',
+        background: '#d97706', // Cork color
+        boxShadow: 'inset -5px -5px 10px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: isInteractive ? 'pointer' : 'grab'
+      }}
+      whileHover={isInteractive ? { scale: 1.05 } : {}}
+      whileTap={isInteractive ? { scale: 0.95 } : { cursor: 'grabbing' }}
+    >
+      {/* Needle */}
+      <div style={{
+        position: 'absolute',
+        width: '6px',
+        height: '140px',
+        background: 'linear-gradient(to bottom, #ef4444 0%, #ef4444 10%, #cbd5e1 50%, #3b82f6 90%, #3b82f6 100%)',
+        borderRadius: '3px',
+        boxShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+      }}>
+        {/* Needle Eye */}
+        <div style={{ position: 'absolute', top: '5px', left: '2px', width: '2px', height: '6px', background: 'white', borderRadius: '1px' }} />
+      </div>
+    </motion.div>
+  );
 
   return (
     <div className="glass-panel" style={{ padding: '2rem', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
@@ -37,7 +90,9 @@ export default function Stage2_Floating({ onComplete }) {
         <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
           <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Floating the Compass</h3>
           <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            Place the cork with the magnetized needle into the bowl of water.
+            {step === 'initial' 
+              ? "Drag the cork into the bowl of water."
+              : "Click the cork to gently rotate it and see what happens."}
           </p>
         </div>
 
@@ -45,29 +100,19 @@ export default function Stage2_Floating({ onComplete }) {
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          maxWidth: '400px', 
+          maxWidth: '500px', 
           height: '350px', 
           background: 'var(--surface)',
           border: '1px solid var(--border)',
           borderRadius: '8px',
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row', // align side by side
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
           boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
         }}>
-          {/* Compass Rose Background */}
-          <div style={{ position: 'absolute', opacity: 0.1, pointerEvents: 'none' }}>
-            <Compass size={250} />
-          </div>
-
-          {/* North/South Labels on the Bowl rim */}
-          <div style={{ position: 'absolute', top: '10px', fontWeight: 'bold', color: '#1e293b' }}>N</div>
-          <div style={{ position: 'absolute', bottom: '10px', fontWeight: 'bold', color: '#1e293b' }}>S</div>
-          <div style={{ position: 'absolute', right: '15px', fontWeight: 'bold', color: '#1e293b' }}>E</div>
-          <div style={{ position: 'absolute', left: '15px', fontWeight: 'bold', color: '#1e293b' }}>W</div>
-
+          
           {/* Water Bowl */}
           <div style={{
             width: '280px',
@@ -79,8 +124,21 @@ export default function Stage2_Floating({ onComplete }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            position: 'relative'
+            position: 'relative',
+            marginLeft: step === 'initial' ? '-100px' : '0', // shift left when cork is on the right
+            transition: 'margin-left 0.5s ease-in-out'
           }}>
+            {/* Compass Rose Background */}
+            <div style={{ position: 'absolute', opacity: 0.15, pointerEvents: 'none' }}>
+              <Compass size={250} />
+            </div>
+
+            {/* North/South Labels on the Bowl rim */}
+            <div style={{ position: 'absolute', top: '10px', fontWeight: 'bold', color: '#1e293b' }}>N</div>
+            <div style={{ position: 'absolute', bottom: '10px', fontWeight: 'bold', color: '#1e293b' }}>S</div>
+            <div style={{ position: 'absolute', right: '15px', fontWeight: 'bold', color: '#1e293b' }}>E</div>
+            <div style={{ position: 'absolute', left: '15px', fontWeight: 'bold', color: '#1e293b' }}>W</div>
+
             {/* Water ripples animation */}
             {step === 'floating' && (
               <motion.div 
@@ -91,7 +149,7 @@ export default function Stage2_Floating({ onComplete }) {
               />
             )}
 
-            {/* Cork with Needle */}
+            {/* Cork with Needle (Inside Bowl) */}
             <AnimatePresence>
               {step !== 'initial' && (
                 <motion.div
@@ -101,47 +159,43 @@ export default function Stage2_Floating({ onComplete }) {
                     rotate: { type: 'spring', stiffness: 30, damping: 10, mass: 2 },
                     scale: { duration: 0.3 }
                   }}
-                  style={{
-                    position: 'relative',
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '50%',
-                    background: '#d97706', // Cork color
-                    boxShadow: 'inset -5px -5px 10px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
+                  onClick={handleSpin}
+                  title={step === 'settled' ? "Click to spin!" : ""}
                 >
-                  {/* Needle */}
-                  <div style={{
-                    position: 'absolute',
-                    width: '6px',
-                    height: '140px',
-                    background: 'linear-gradient(to bottom, #ef4444 0%, #ef4444 10%, #cbd5e1 50%, #3b82f6 90%, #3b82f6 100%)',
-                    borderRadius: '3px',
-                    boxShadow: '2px 2px 4px rgba(0,0,0,0.3)'
-                  }}>
-                    {/* Needle Eye */}
-                    <div style={{ position: 'absolute', top: '5px', left: '2px', width: '2px', height: '6px', background: 'white', borderRadius: '1px' }} />
-                  </div>
+                  {renderCorkWithNeedle(step === 'settled')}
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
+
+          {/* Initial Draggable Cork (Outside Bowl) */}
+          <AnimatePresence>
+            {step === 'initial' && (
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0 }}
+                style={{ position: 'absolute', right: '40px', zIndex: 10 }}
+                drag
+                dragSnapToOrigin={true}
+                dragElastic={0.1}
+                onDragEnd={(e, info) => {
+                  if (info.offset.x < -80) { // Dragged leftwards towards the bowl
+                    handlePlaceCork();
+                  }
+                }}
+              >
+                {renderCorkWithNeedle(false)}
+                <div style={{ position: 'absolute', bottom: '-30px', left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap', fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                  <Hand size={14} /> Drag me left
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Controls */}
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-          <button 
-            onClick={handlePlaceCork} 
-            disabled={step !== 'initial'}
-            className="primary"
-            style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-          >
-            Place Cork in Water
-          </button>
-          
           <button 
             onClick={handleReset}
             className="outline"
@@ -161,16 +215,19 @@ export default function Stage2_Floating({ onComplete }) {
               Insert the magnetized needle through a small piece of cork.
             </li>
             <li style={{ fontWeight: step === 'initial' ? 'bold' : 'normal', color: step === 'initial' ? 'var(--accent-text)' : 'inherit' }}>
-              Let the cork float in a glass bowl or tub containing water. Make sure the needle does not touch the water.
+              <strong>Drag</strong> the cork to let it float in the bowl of water. Make sure the needle does not touch the water.
             </li>
-            <li style={{ fontWeight: step !== 'initial' ? 'bold' : 'normal', color: step !== 'initial' ? 'var(--accent-text)' : 'inherit' }}>
+            <li style={{ fontWeight: step === 'settled' && spinCount === 0 ? 'bold' : 'normal', color: step === 'settled' && spinCount === 0 ? 'var(--accent-text)' : 'inherit' }}>
               Observe the direction in which the needle points when the cork stops rotating.
+            </li>
+            <li style={{ fontWeight: step === 'settled' && spinCount > 0 ? 'bold' : 'normal', color: step === 'settled' && spinCount > 0 ? 'var(--accent-text)' : 'inherit' }}>
+              <strong>Click the cork</strong> to gently rotate it and wait till it stops rotating. Repeat this a few more times. Do the ends always point in the same direction?
             </li>
           </ol>
         </div>
 
         <AnimatePresence>
-          {step === 'settled' && (
+          {step === 'settled' && spinCount > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -182,7 +239,7 @@ export default function Stage2_Floating({ onComplete }) {
                 Observation
               </h4>
               <p style={{ margin: '0 0 1rem 0', color: 'var(--success)', fontSize: '0.9rem', fontWeight: '500' }}>
-                The magnetized needle, floating freely in the water, comes to rest pointing in the <strong>North-South</strong> direction, just like a standard magnetic compass!
+                Yes! No matter how you spin it, the magnetized needle always comes to rest pointing in the <strong>North-South</strong> direction, just like a standard magnetic compass!
               </p>
               
               <button 
