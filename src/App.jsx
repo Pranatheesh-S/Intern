@@ -30,6 +30,7 @@ import LinearMotionActivity from './activities/LinearMotion';
 import CircularMotionActivity from './activities/CircularMotion';
 import TorchExplorerActivity from './activities/TorchExplorer';
 import LampExplorerActivity from './activities/LampExplorer';
+import Activity3_7 from './activities/Activity3_7';
 import './App.css';
 
 export default function App() {
@@ -906,6 +907,37 @@ export default function App() {
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
           </button>
         </div>
+
+        {/* Activity Card 3: Activity 3.7 */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Zap size={20} style={{ color: '#ec4899' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 3.7</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Test a double-cell battery and learn why an LED is a one-way street for electric current.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class7', 'activity_3_7')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1307,6 +1339,8 @@ export default function App() {
             <ElectricCircuitActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
           ) : activeActivity === 'lamp_explorer' ? (
             <LampExplorerActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
+          ) : activeActivity === 'activity_3_7' ? (
+            <Activity3_7 onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
           ) : activeActivity === 'torch_explorer' ? (
             <TorchExplorerActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
           ) : activeActivity === 'spherical_mirrors' ? (
