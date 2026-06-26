@@ -538,3 +538,90 @@ export const WiresSVG = ({
     </g>
   );
 };
+
+// DoubleBatteryHolderSVG
+export const DoubleBatteryHolderSVG = ({ cellsCount }) => {
+  return (
+    <g>
+      <rect x={0} y={0} width={192} height={48} rx={6} fill="#374151" stroke="#1f2937" strokeWidth={2} />
+      <rect x={4} y={4} width={184} height={40} rx={4} fill="#111827" />
+
+      {/* Left terminal spring (negative for cell 1) */}
+      <path d="M 12 8 Q 18 24 12 40" fill="none" stroke="#9ca3af" strokeWidth={2} />
+      
+      {/* Middle contact */}
+      <rect x={96} y={14} width={2} height={20} fill="#9ca3af" />
+      
+      {/* Right terminal contact (positive for cell 2) */}
+      <rect x={184} y={14} width={4} height={20} fill="#9ca3af" />
+
+      {/* Cell 1 */}
+      {cellsCount >= 1 && (
+        <g transform="translate(6, 4)">
+          <BatteryBareSVG />
+        </g>
+      )}
+      {/* Cell 2 */}
+      {cellsCount >= 2 && (
+        <g transform="translate(98, 4)">
+          <BatteryBareSVG />
+        </g>
+      )}
+
+      {/* Case clamps / top part */}
+      <rect x={20} y={-4} width={10} height={12} rx={2} fill="#374151" />
+      <rect x={160} y={-4} width={10} height={12} rx={2} fill="#374151" />
+      <rect x={20} y={40} width={10} height={12} rx={2} fill="#374151" />
+      <rect x={160} y={40} width={10} height={12} rx={2} fill="#374151" />
+
+      {/* Wiring Terminals (Screws on the outside) */}
+      <line x1={-15} y1={24} x2={0} y2={24} stroke="#9ca3af" strokeWidth={3} />
+      <line x1={192} y1={24} x2={207} y2={24} stroke="#9ca3af" strokeWidth={3} />
+      
+      {/* Screw Heads */}
+      <circle cx={-15} cy={24} r={5} fill="var(--warning)" stroke="#b45309" strokeWidth={1} />
+      <circle cx={-15} cy={24} r={2} fill="var(--warning)" />
+      
+      <circle cx={207} cy={24} r={5} fill="var(--warning)" stroke="#b45309" strokeWidth={1} />
+      <circle cx={207} cy={24} r={2} fill="var(--warning)" />
+
+      {/* Labels */}
+      <text x={-15} y={14} fill="var(--text-primary)" fontSize="12" fontWeight="bold" textAnchor="middle">-</text>
+      <text x={207} y={14} fill="var(--text-primary)" fontSize="12" fontWeight="bold" textAnchor="middle">+</text>
+    </g>
+  );
+};
+
+// LEDSVG
+export const LEDSVG = ({ isOn, color = '#ef4444' }) => {
+  return (
+    <g>
+      {/* LED Legs */}
+      {/* Short leg (-) left */}
+      <line x1="-15" y1="20" x2="-15" y2="45" stroke="#9ca3af" strokeWidth="3" />
+      {/* Long leg (+) right */}
+      <line x1="15" y1="20" x2="15" y2="55" stroke="#9ca3af" strokeWidth={3} />
+      
+      {/* Terminal hooks/holes */}
+      <circle cx="-15" cy="45" r="4" fill="none" stroke="#9ca3af" strokeWidth={2} />
+      <circle cx="15" cy="55" r="4" fill="none" stroke="#9ca3af" strokeWidth={2} />
+
+      {/* Base */}
+      <rect x="-18" y="10" width="36" height="10" rx="3" fill="#6b7280" />
+
+      {/* Inner components */}
+      <polygon points="-5,10 0,-5 5,10" fill="#4b5563" />
+
+      {/* Colored dome */}
+      {isOn && (
+        <circle cx="0" cy="-5" r="30" fill={color} opacity="0.4" pointerEvents="none" className="bulb-glowing" />
+      )}
+      <path d="M -15,10 C -15,-20 15,-20 15,10 Z" fill={color} opacity={isOn ? 0.9 : 0.6} stroke={isOn ? '#fca5a5' : '#7f1d1d'} strokeWidth={1} />
+      <path d="M -8,5 C -8,-10 0,-10 0,5 Z" fill="#ffffff" opacity="0.4" />
+
+      {/* Labels */}
+      <text x="-30" y="48" fill="var(--text-primary)" fontSize="12" fontWeight="bold" textAnchor="middle">-</text>
+      <text x="30" y="58" fill="var(--text-primary)" fontSize="12" fontWeight="bold" textAnchor="middle">+</text>
+    </g>
+  );
+};
