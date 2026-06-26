@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from './ThemeContext.jsx';
 import ElectricSwitchActivity from './activities/ElectricSwitch';
+import ElectricCircuitActivity from './activities/ElectricCircuit';
 import ActivityTemplate from './activities/ActivityTemplate';
 import SphericalMirrorsActivity from './activities/SphericalMirrors';
 import FoodTestingActivity from './activities/FoodTesting';
@@ -798,6 +799,41 @@ export default function App() {
             <Play size={14} fill="#ffffff" /> Open Switch Lab <ArrowRight size={14} />
           </button>
         </div>
+
+        {/* Activity Card 2: Electric Circuit */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Zap size={20} style={{ color: '#3b82f6' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 3.6</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Connecting a cell to a lamp. Predict and test whether different wire arrangements will make a lamp glow.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class7', 'electric_circuit')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1194,6 +1230,8 @@ export default function App() {
         ) : activeSubject === 'class7' ? (
           activeActivity === 'electric_switch' ? (
             <ElectricSwitchActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
+          ) : activeActivity === 'electric_circuit' ? (
+            <ElectricCircuitActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
           ) : activeActivity === 'spherical_mirrors' ? (
             <SphericalMirrorsActivity onBackToDashboard={() => navigateTo('class7', 'chapter11')} />
           ) : activeActivity === 'materials_properties' ? (

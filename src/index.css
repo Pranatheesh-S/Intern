@@ -413,6 +413,32 @@ button.outline:hover {
 }
 
 /* ═══════════════════════════════════════════
+   TERMINAL HITBOXES
+   ═══════════════════════════════════════════ */
+.terminal-hitbox {
+  border-radius: 50%;
+  border: 2px dashed var(--text-faint);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  transition: all 0.2s ease-in-out;
+}
+
+.terminal-hitbox:hover {
+  border: 2px solid var(--accent);
+  background: rgba(99, 102, 241, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
+}
+
+.terminal-hitbox.active {
+  border: 2px solid var(--accent);
+  background: rgba(99, 102, 241, 0.4);
+  transform: scale(1.1);
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.3);
+}
+
+/* ═══════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════ */
 @media (max-width: 1024px) {
