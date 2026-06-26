@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Check, X, AlertTriangle, AlertCircle } from 'lucide-react';
+import { ArrowRight, Check, X, AlertTriangle, AlertCircle, RotateCcw } from 'lucide-react';
 import CircuitSandbox from './CircuitSandbox';
 import ReferenceDiagram from './HintDiagram';
 
@@ -70,6 +70,7 @@ export default function Stage2_Experiment({ onComplete }) {
   const [currentWires, setCurrentWires] = useState([]);
   const [assembly, setAssembly] = useState({ isCellInHolder: false, isLampInHolder: false });
   const [resetSignal, setResetSignal] = useState(0);
+  const [fullResetSignal, setFullResetSignal] = useState(0);
 
   const currentArrangement = arrangements[currentIndex];
   
@@ -103,13 +104,28 @@ export default function Stage2_Experiment({ onComplete }) {
   return (
     <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
-      <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto' }}>
-        <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)', fontSize: '1.5rem' }}>
-          Interactive Assembly & Wiring
-        </h3>
-        <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-          Drag the Electric Cell and Lamp into their holders, then wire them up according to the instructions.
-        </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ flex: 1, textAlign: 'center', maxWidth: '700px', margin: '0 auto' }}>
+          <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)', fontSize: '1.5rem' }}>
+            Interactive Assembly & Wiring
+          </h3>
+          <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+            Drag the Electric Cell and Lamp into their holders, then wire them up according to the instructions.
+          </p>
+        </div>
+        <button 
+          onClick={() => {
+            setFullResetSignal(prev => prev + 1);
+            setCurrentWires([]);
+            setCurrentPrediction(null);
+            setIsTesting(false);
+          }} 
+          className="outline" 
+          style={{ padding: '0.5rem', borderRadius: '50%' }} 
+          title="Reset Lab"
+        >
+          <RotateCcw size={18} />
+        </button>
       </div>
 
       {/* Progress Bar */}
@@ -159,6 +175,7 @@ export default function Stage2_Experiment({ onComplete }) {
               isTesting={isTesting}
               isGlowing={isTesting && currentArrangement.glows}
               resetSignal={resetSignal}
+              fullResetSignal={fullResetSignal}
             />
           </div>
         </div>
