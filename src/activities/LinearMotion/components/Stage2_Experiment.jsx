@@ -16,10 +16,10 @@ export default function Stage2_Experiment({ onComplete }) {
   const dropZoneRef = useRef(null);
 
   const objects = [
-    { id: 'car', name: 'Toy Car', icon: Car, color: '#3b82f6', distance: 300, duration: 1.5, type: 'car' },
-    { id: 'marble', name: 'Marble', icon: Circle, color: '#10b981', distance: 300, duration: 2, type: 'marble' },
-    { id: 'pencil', name: 'Pencil', icon: Pencil, color: '#f59e0b', distance: 300, duration: 2, type: 'pencil' },
-    { id: 'box', name: 'Small Box', icon: Box, color: '#ec4899', distance: 120, duration: 1, type: 'slide' }
+    { id: 'car', name: 'Toy Car', icon: Car, color: '#3b82f6', distance: 800, duration: 3, type: 'car' },
+    { id: 'marble', name: 'Marble', icon: Circle, color: '#10b981', distance: 800, duration: 4, type: 'marble' },
+    { id: 'pencil', name: 'Pencil', icon: Pencil, color: '#f59e0b', distance: 800, duration: 4, type: 'pencil' },
+    { id: 'box', name: 'Small Box', icon: Box, color: '#ec4899', distance: 300, duration: 1.5, type: 'slide' }
   ];
 
   const currentObj = activeObject ? objects.find(o => o.id === activeObject) : null;
@@ -113,7 +113,7 @@ export default function Stage2_Experiment({ onComplete }) {
     <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* Object Tray */}
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', position: 'relative', zIndex: 50 }}>
         <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)', fontSize: '1.2rem' }}>Drag an Object to the Start Line</h3>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', flexWrap: 'wrap', minHeight: '80px', alignItems: 'center' }}>
           {objects.map(obj => {
@@ -232,7 +232,7 @@ export default function Stage2_Experiment({ onComplete }) {
                 y: { duration: currentObj.duration, ease: "easeInOut" }
               }}
               drag="x"
-              dragConstraints={{ left: 0, right: 350 }}
+              dragConstraints={{ left: 0, right: 800 }}
               dragElastic={0}
               onDragStart={() => setIsPlaying(false)}
               whileDrag={{ cursor: 'grabbing', scale: 1.05 }}

@@ -297,7 +297,7 @@ export default function App() {
                       ? "Includes Activity 3.5: Testing for Starch." 
                       : chapter.num === 4 
                         ? "Includes Activity 4.1: Appearance, hardness, and effect of hammering on different materials."
-                        : "Includes Activity 5.1: Linear Motion and observation of moving objects."}
+                        : "Includes Activity 5.3: Linear Motion and observation of moving objects."}
                   </p>
 
                   <button 
@@ -688,7 +688,7 @@ export default function App() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Compass size={20} style={{ color: '#0891b2' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 5.1</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 5.3</h3>
           </div>
 
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
