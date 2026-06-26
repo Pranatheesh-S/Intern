@@ -25,6 +25,7 @@ import MagneticPolesActivity from './activities/MagneticPoles';
 import SuspendedMagnetActivity from './activities/SuspendedMagnet';
 import MagneticCompassActivity from './activities/MagneticCompass';
 import MagnetInteractionActivity from './activities/MagnetInteraction';
+import LinearMotionActivity from './activities/LinearMotion';
 import './App.css';
 
 export default function App() {
@@ -264,7 +265,7 @@ export default function App() {
           gap: '1.25rem'
         }}>
           {CLASS_6_CHAPTERS.map(chapter => {
-            if (chapter.num === 3 || chapter.num === 4) {
+            if (chapter.num === 3 || chapter.num === 4 || chapter.num === 5) {
               return (
                 <div
                   key={chapter.num}
@@ -294,7 +295,9 @@ export default function App() {
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
                     {chapter.num === 3 
                       ? "Includes Activity 3.5: Testing for Starch." 
-                      : "Includes Activity 4.1: Appearance, hardness, and effect of hammering on different materials."}
+                      : chapter.num === 4 
+                        ? "Includes Activity 4.1: Appearance, hardness, and effect of hammering on different materials."
+                        : "Includes Activity 5.1: Linear Motion and observation of moving objects."}
                   </p>
 
                   <button 
@@ -679,6 +682,64 @@ export default function App() {
     </div>
   );
 
+  const renderClass6Chapter5 = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+        <button 
+          onClick={() => navigateTo('class6', null)}
+          className="outline"
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+        >
+          <ArrowLeft size={14} /> Back to Class 6 Wing
+        </button>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 5 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '1.25rem'
+      }}>
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={20} style={{ color: '#0891b2' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 5.1</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Linear Motion. Predict and observe which objects move in a straight line when pushed or rolled.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'linear_motion')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderClass7Chapter3 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
@@ -1051,6 +1112,7 @@ export default function App() {
                      activeActivity === 'suspended_magnet' ? 'Suspended Magnet' :
                      activeActivity === 'magnetic_compass' ? 'Make a Compass' :
                      activeActivity === 'magnet_interaction' ? 'Magnet Interaction' :
+                     activeActivity === 'linear_motion' ? 'Linear Motion' :
                      'Template Demo'}
                   </span>
                 </>
@@ -1096,10 +1158,14 @@ export default function App() {
             <MagneticCompassActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'magnet_interaction' ? (
             <MagnetInteractionActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+          ) : activeActivity === 'linear_motion' ? (
+            <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
           ) : activeActivity === 'chapter3' ? (
             renderClass6Chapter3()
           ) : activeActivity === 'chapter4' ? (
             renderClass6Chapter4()
+          ) : activeActivity === 'chapter5' ? (
+            renderClass6Chapter5()
           ) : (
             renderClass6Wing()
           )
