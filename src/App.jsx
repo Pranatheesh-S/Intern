@@ -29,6 +29,7 @@ import MagnetInteractionActivity from './activities/MagnetInteraction';
 import LinearMotionActivity from './activities/LinearMotion';
 import CircularMotionActivity from './activities/CircularMotion';
 import TorchExplorerActivity from './activities/TorchExplorer';
+import LampExplorerActivity from './activities/LampExplorer';
 import './App.css';
 
 export default function App() {
@@ -836,6 +837,41 @@ export default function App() {
           </button>
         </div>
 
+        {/* Activity Card: Lamp Explorer */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Zap size={20} style={{ color: '#10b981' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 3.4 & 3.5</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Lamp Explorer. Disassemble an incandescent lamp, observe its filament, and compare it with an LED.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class7', 'lamp_explorer')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lamp Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
         {/* Activity Card 2: Electric Circuit */}
         <div
           className="glass-panel"
@@ -1269,6 +1305,8 @@ export default function App() {
             <ElectricSwitchActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
           ) : activeActivity === 'electric_circuit' ? (
             <ElectricCircuitActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
+          ) : activeActivity === 'lamp_explorer' ? (
+            <LampExplorerActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
           ) : activeActivity === 'torch_explorer' ? (
             <TorchExplorerActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
           ) : activeActivity === 'spherical_mirrors' ? (
