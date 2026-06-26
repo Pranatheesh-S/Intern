@@ -145,9 +145,9 @@ export default function Stage2_Experiment({ onComplete }) {
           </span>
         </h4>
 
-        <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%', maxWidth: '1100px', alignItems: 'flex-start', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', gap: '2rem', width: '100%', maxWidth: '1200px', alignItems: 'flex-start', flexWrap: 'wrap', justifyContent: 'center' }}>
           {/* Left Side: Target Diagram */}
-          <div style={{ flex: '0 0 300px', width: '100%' }}>
+          <div style={{ flex: '0 0 400px', width: '100%' }}>
             <ReferenceDiagram arrangementId={currentArrangement.id} />
           </div>
 
@@ -226,20 +226,25 @@ export default function Stage2_Experiment({ onComplete }) {
             <div style={{ 
               padding: '1rem 2rem', 
               borderRadius: '8px', 
-              background: currentArrangement.glows ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-              border: `1px solid ${currentArrangement.glows ? 'var(--success-border)' : '#fca5a5'}`,
+              background: currentPrediction === currentArrangement.glows ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+              border: `1px solid ${currentPrediction === currentArrangement.glows ? 'var(--success-border)' : '#fca5a5'}`,
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem'
             }}>
-              {currentArrangement.glows ? (
+              {currentPrediction === currentArrangement.glows ? (
                 <Check size={24} style={{ color: 'var(--success)' }} />
               ) : (
                 <X size={24} style={{ color: '#ef4444' }} />
               )}
-              <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: currentArrangement.glows ? 'var(--success)' : '#ef4444' }}>
-                {currentArrangement.glows ? 'The lamp glows!' : 'The lamp does not glow.'}
-              </span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: currentPrediction === currentArrangement.glows ? 'var(--success)' : '#ef4444' }}>
+                  {currentPrediction === currentArrangement.glows ? 'Prediction Correct!' : 'Prediction Incorrect'}
+                </span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                  {currentArrangement.glows ? 'The lamp glows in this arrangement.' : 'The lamp does not glow in this arrangement.'}
+                </span>
+              </div>
             </div>
 
             <button 

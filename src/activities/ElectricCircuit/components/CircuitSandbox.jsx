@@ -112,6 +112,11 @@ export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, r
     };
   };
 
+  const isBatteryInUse = (tId) => {
+    if (tId !== 'cellHolder-neg' && tId !== 'cellHolder-pos') return false;
+    return wires.some(w => w.start === tId || w.end === tId);
+  };
+
   const handleTerminalClick = (terminalId) => {
     if (isTesting) return;
     
@@ -126,6 +131,10 @@ export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, r
         return;
       }
       
+      if (isBatteryInUse(terminalId)) {
+        return; // Battery terminal already in use
+      }
+
       // Prevent duplicate wires
       const exists = wires.find(w => 
         (w.start === activeTerminal && w.end === terminalId) ||
@@ -137,6 +146,9 @@ export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, r
       }
       setActiveTerminal(null);
     } else {
+      if (isBatteryInUse(terminalId)) {
+        return; // Battery terminal already in use
+      }
       setActiveTerminal(terminalId);
     }
   };
@@ -230,7 +242,7 @@ export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, r
                   onClick={() => handleTerminalClick('cellHolder-neg')}
                   style={{
                     position: 'absolute', left: 5 - 15, top: 34 - 15, width: 30, height: 30,
-                    cursor: isTesting ? 'default' : 'crosshair', pointerEvents: isTesting ? 'none' : 'auto', zIndex: 20
+                    cursor: isTesting || isBatteryInUse('cellHolder-neg') ? 'default' : 'crosshair', pointerEvents: isTesting || isBatteryInUse('cellHolder-neg') ? 'none' : 'auto', zIndex: 20
                   }}
                 />
                 <div 
@@ -238,7 +250,7 @@ export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, r
                   onClick={() => handleTerminalClick('cellHolder-pos')}
                   style={{
                     position: 'absolute', left: 135 - 15, top: 34 - 15, width: 30, height: 30,
-                    cursor: isTesting ? 'default' : 'crosshair', pointerEvents: isTesting ? 'none' : 'auto', zIndex: 20
+                    cursor: isTesting || isBatteryInUse('cellHolder-pos') ? 'default' : 'crosshair', pointerEvents: isTesting || isBatteryInUse('cellHolder-pos') ? 'none' : 'auto', zIndex: 20
                   }}
                 />
              </>

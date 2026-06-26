@@ -33,10 +33,10 @@ export default function ReferenceDiagram({ arrangementId }) {
       flexDirection: 'column',
       alignItems: 'center',
       width: '100%',
-      maxWidth: '300px'
+      maxWidth: '400px'
     }}>
-      <h5 style={{ margin: '0.5rem 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Target Circuit</h5>
-      <svg width="100%" height="auto" viewBox="0 0 500 360" style={{ display: 'block', maxWidth: '250px' }}>
+      <h5 style={{ margin: '0.5rem 0', fontSize: '1rem', color: 'var(--text-secondary)' }}>Target Circuit</h5>
+      <svg width="100%" height="auto" viewBox="0 0 500 360" style={{ display: 'block', maxWidth: '100%' }}>
         {/* Wires */}
         {wires.map((wire, i) => {
           const controlY = Math.max(wire.start.y, wire.end.y) + 40;
