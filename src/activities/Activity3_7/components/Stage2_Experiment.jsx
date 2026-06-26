@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Check, X, AlertTriangle, AlertCircle } from 'lucide-react';
+import { ArrowRight, Check, X, AlertTriangle, AlertCircle, RotateCcw } from 'lucide-react';
 import CircuitSandbox3_7 from './CircuitSandbox3_7';
 import HintDiagram3_7 from './HintDiagram3_7';
 
@@ -68,13 +68,28 @@ export default function Stage2_Experiment({ onComplete }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 1rem auto' }}>
-        <h3 style={{ fontSize: '1.5rem', margin: '0 0 1rem 0', color: 'var(--text-heading)' }}>
-          Testing LED Directionality
-        </h3>
-        <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-          Wire the assembled battery to the LED according to the instructions.
-        </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <div style={{ flex: 1, textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
+          <h3 style={{ fontSize: '1.5rem', margin: '0 0 1rem 0', color: 'var(--text-heading)' }}>
+            Testing LED Directionality
+          </h3>
+          <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+            Wire the assembled battery to the LED according to the instructions.
+          </p>
+        </div>
+        <button 
+          onClick={() => {
+            setCurrentWires([]);
+            setResetSignal(prev => prev + 1);
+            setCurrentPrediction(null);
+            setIsTesting(false);
+          }} 
+          className="outline" 
+          style={{ padding: '0.5rem', borderRadius: '50%' }} 
+          title="Reset Wiring"
+        >
+          <RotateCcw size={18} />
+        </button>
       </div>
 
       {/* Progress Bar */}
@@ -125,18 +140,6 @@ export default function Stage2_Experiment({ onComplete }) {
                 resetSignal={resetSignal}
               />
             </div>
-            {!isTesting && (
-              <button 
-                className="outline" 
-                onClick={() => {
-                  setCurrentWires([]);
-                  setResetSignal(prev => prev + 1);
-                }}
-                style={{ fontSize: '0.85rem', padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-              >
-                Reset Wiring
-              </button>
-            )}
           </div>
         </div>
 
