@@ -131,7 +131,7 @@ export default function App() {
           }}
         >
           <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
-            2 CHAPTERS ACTIVE
+            3 CHAPTERS ACTIVE
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -505,39 +505,6 @@ export default function App() {
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '1.25rem'
       }}>
-        <div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid var(--success-border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Active Lab
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <FlaskConical size={20} style={{ color: '#0891b2' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.1</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Properties of Materials. Test the appearance, hardness, and hammering effect on various materials.
-          </p>
-
-          <button 
-            onClick={() => navigateTo('class6', 'materials_properties')}
-            className="primary" 
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
-          </button>
-        </div>
 
         {/* Activity 4.2 Card */}
         <div 
@@ -799,6 +766,65 @@ export default function App() {
     </div>
   );
 
+  const renderClass7Chapter4 = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+        <button
+          onClick={() => navigateTo('class7', null)}
+          className="outline"
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+        >
+          <ArrowLeft size={14} /> Back to Class 7 Wing
+        </button>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 4 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '1.25rem'
+      }}>
+        {/* Activity 4.1 Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <FlaskConical size={20} style={{ color: '#0891b2' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.1</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Properties of Materials. Test the appearance, hardness, and hammering effect on various materials.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class7', 'materials_properties')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderClass7Chapter11 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
@@ -898,7 +924,7 @@ export default function App() {
           gap: '1.25rem'
         }}>
           {CLASS_7_CHAPTERS.map(chapter => {
-            if (chapter.num === 3 || chapter.num === 11) {
+            if (chapter.num === 3 || chapter.num === 4 || chapter.num === 11) {
               return (
                 <div
                   key={chapter.num}
@@ -928,6 +954,8 @@ export default function App() {
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
                     {chapter.num === 3
                       ? "Includes Electric Switch. Learn about electrical flows and test materials."
+                      : chapter.num === 4
+                      ? "Includes Properties of Materials. Test the appearance, hardness, and hammering effect on various materials."
                       : "Includes Spherical Mirrors. Explore Image Formation using Concave and Convex Surfaces."}
                   </p>
 
@@ -1132,10 +1160,14 @@ export default function App() {
             <ElectricSwitchActivity onBackToDashboard={() => navigateTo('class7', 'chapter3')} />
           ) : activeActivity === 'spherical_mirrors' ? (
             <SphericalMirrorsActivity onBackToDashboard={() => navigateTo('class7', 'chapter11')} />
+          ) : activeActivity === 'materials_properties' ? (
+            <MaterialsPropertiesActivity onBackToDashboard={() => navigateTo('class7', 'chapter4')} />
           ) : activeActivity === 'boilerplate' ? (
             <ActivityTemplate onBackToDashboard={() => navigateTo('class7', null)} />
           ) : activeActivity === 'chapter3' ? (
             renderClass7Chapter3()
+          ) : activeActivity === 'chapter4' ? (
+            renderClass7Chapter4()
           ) : activeActivity === 'chapter11' ? (
             renderClass7Chapter11()
           ) : (
@@ -1148,8 +1180,6 @@ export default function App() {
             <FatTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
           ) : activeActivity === 'protein_testing' ? (
             <ProteinTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
-          ) : activeActivity === 'materials_properties' ? (
-            <MaterialsPropertiesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'magnetic_poles' ? (
             <MagneticPolesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'suspended_magnet' ? (
