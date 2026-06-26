@@ -12,6 +12,7 @@ const DraggableComponent = ({ id, position, onDragEnd, children, disabled }) => 
       onDragEnd={(e, info) => onDragEnd(id, info.offset.x, info.offset.y)}
       initial={position}
       animate={position}
+      whileDrag={{ zIndex: 100, scale: 1.05 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       style={{
         position: 'absolute',
@@ -25,7 +26,7 @@ const DraggableComponent = ({ id, position, onDragEnd, children, disabled }) => 
   );
 };
 
-export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, resetSignal, onAssemblyStatusChange }) {
+export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, resetSignal, fullResetSignal, onAssemblyStatusChange }) {
   // Component positions
   const [positions, setPositions] = useState({
     cell: { x: 50, y: 50 },
@@ -69,6 +70,23 @@ export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, r
       // We don't reset assembly state between arrangements to save time for the student
     }
   }, [resetSignal]);
+
+  useEffect(() => {
+    if (fullResetSignal > 0) {
+      setWires([]);
+      setActiveTerminal(null);
+      setPositions({
+        cell: { x: 50, y: 50 },
+        cellHolder: { x: 100, y: 300 },
+        lamp: { x: 450, y: 50 },
+        lampHolder: { x: 400, y: 200 }
+      });
+      setAssembly({
+        isCellInHolder: false,
+        isLampInHolder: false
+      });
+    }
+  }, [fullResetSignal]);
 
   const handleDragEnd = (id, offsetX, offsetY) => {
     if (isTesting) return;
