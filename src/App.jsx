@@ -21,6 +21,8 @@ import FatTestingActivity from './activities/FatTesting';
 import ProteinTestingActivity from './activities/ProteinTesting';
 import MaterialsPropertiesActivity from './activities/MaterialsProperties';
 import MagneticPolesActivity from './activities/MagneticPoles';
+import SuspendedMagnetActivity from './activities/SuspendedMagnet';
+import MagneticCompassActivity from './activities/MagneticCompass';
 import './App.css';
 
 export default function App() {
@@ -566,6 +568,76 @@ export default function App() {
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
           </button>
         </div>
+
+        {/* Activity 4.3 Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={20} style={{ color: '#ef4444' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.3</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            A Freely Suspended Magnet. Spin a magnet and observe which direction it always points when it comes to rest.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'suspended_magnet')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity 4.4 Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={20} style={{ color: '#ef4444' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.4</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Make a Simple Magnetic Compass. Learn how to magnetize an iron needle and use it to find directions by floating it on water.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'magnetic_compass')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -939,6 +1011,8 @@ export default function App() {
                      activeActivity === 'protein_testing' ? 'Protein Testing' :
                      activeActivity === 'materials_properties' ? 'Properties of Materials' :
                      activeActivity === 'magnetic_poles' ? 'Magnetic Poles' :
+                     activeActivity === 'suspended_magnet' ? 'Suspended Magnet' :
+                     activeActivity === 'magnetic_compass' ? 'Make a Compass' :
                      'Template Demo'}
                   </span>
                 </>
@@ -978,6 +1052,10 @@ export default function App() {
             <MaterialsPropertiesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'magnetic_poles' ? (
             <MagneticPolesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+          ) : activeActivity === 'suspended_magnet' ? (
+            <SuspendedMagnetActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+          ) : activeActivity === 'magnetic_compass' ? (
+            <MagneticCompassActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'chapter3' ? (
             renderClass6Chapter3()
           ) : activeActivity === 'chapter4' ? (
