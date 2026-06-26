@@ -10,7 +10,8 @@ import {
   ArrowRight,
   Home,
   Sun,
-  Moon
+  Moon,
+  Hammer
 } from 'lucide-react';
 import { useTheme } from './ThemeContext.jsx';
 import ElectricSwitchActivity from './activities/ElectricSwitch';
@@ -23,6 +24,7 @@ import MaterialsPropertiesActivity from './activities/MaterialsProperties';
 import MagneticPolesActivity from './activities/MagneticPoles';
 import SuspendedMagnetActivity from './activities/SuspendedMagnet';
 import MagneticCompassActivity from './activities/MagneticCompass';
+import MagnetInteractionActivity from './activities/MagnetInteraction';
 import './App.css';
 
 export default function App() {
@@ -638,6 +640,41 @@ export default function App() {
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
           </button>
         </div>
+
+        {/* Activity 4.5 Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Hammer size={20} style={{ color: '#8b5cf6' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.5</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Interaction Between Two Bar Magnets. Build the setup, predict outcomes, and explore attraction and repulsion in a sandbox.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'magnet_interaction')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1013,6 +1050,7 @@ export default function App() {
                      activeActivity === 'magnetic_poles' ? 'Magnetic Poles' :
                      activeActivity === 'suspended_magnet' ? 'Suspended Magnet' :
                      activeActivity === 'magnetic_compass' ? 'Make a Compass' :
+                     activeActivity === 'magnet_interaction' ? 'Magnet Interaction' :
                      'Template Demo'}
                   </span>
                 </>
@@ -1056,6 +1094,8 @@ export default function App() {
             <SuspendedMagnetActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'magnetic_compass' ? (
             <MagneticCompassActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+          ) : activeActivity === 'magnet_interaction' ? (
+            <MagnetInteractionActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'chapter3' ? (
             renderClass6Chapter3()
           ) : activeActivity === 'chapter4' ? (
