@@ -119,8 +119,8 @@ export default function TorchExplorerActivity({ onBackToDashboard }) {
           </AnimatePresence>
         </main>
 
-        <aside style={{ width: '280px', flexShrink: 0 }}>
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
+        <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
+          <div className="glass-panel" style={{ padding: '1.25rem' }}>
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
               <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
               <div>

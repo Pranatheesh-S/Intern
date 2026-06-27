@@ -14,6 +14,35 @@ import Stage2_Test from './components/Stage2_Test';
 import Stage3_Sandbox from './components/Stage3_Sandbox';
 import Stage4_Quiz from './components/Stage4_Quiz';
 
+const FAQItem = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div style={{ marginTop: '0.75rem', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '0.6rem 0.8rem', background: 'var(--surface)', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.8rem', color: 'var(--text-heading)', fontWeight: '600', gap: '0.5rem' }}
+      >
+        <span style={{ flex: 1, lineHeight: '1.3' }}>{question}</span>
+        <span style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', fontSize: '0.8rem', flexShrink: 0, marginTop: '2px' }}>▼</span>
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ padding: '0.6rem 0.8rem', fontSize: '0.75rem', color: 'var(--text-secondary)', background: 'var(--neutral-bg)', borderTop: '1px solid var(--border)', lineHeight: '1.4' }}>
+              {answer.split('\n').map((line, i) => <div key={i} style={{ marginBottom: i !== answer.split('\n').length - 1 ? '0.4rem' : 0 }}>{line}</div>)}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 export default function ElectromagnetBuilderActivity({ onBackToDashboard }) {
   const [activeTab, setActiveTab] = useState('build');
   const [progress, setProgress] = useState({
@@ -123,8 +152,8 @@ export default function ElectromagnetBuilderActivity({ onBackToDashboard }) {
           </AnimatePresence>
         </main>
 
-        <aside style={{ width: '280px', flexShrink: 0 }}>
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
+        <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
+          <div className="glass-panel" style={{ padding: '1.25rem' }}>
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
               <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
               <div>
@@ -137,6 +166,27 @@ export default function ElectromagnetBuilderActivity({ onBackToDashboard }) {
                 <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
                   An electromagnet is a temporary magnet. Its magnetism is only present when an electric current is flowing through the coil of wire wrapped around the iron core.
                 </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="glass-panel" style={{ padding: '1.25rem', marginTop: '1rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🤔</span>
+              <div style={{ width: '100%' }}>
+                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                  Why?
+                </h4>
+                
+                <FAQItem 
+                  question="Why is the wire tightly wound around the iron nail?"
+                  answer={"The wire is tightly wound to produce a stronger magnetic field.\nThis makes the iron nail a stronger electromagnet."}
+                />
+                
+                <FAQItem 
+                  question="Why is an iron nail used instead of a wooden stick?"
+                  answer={"Iron can become magnetic when electric current flows through the coil.\nWood cannot become magnetic, so it does not work as an electromagnet."}
+                />
               </div>
             </div>
           </div>
