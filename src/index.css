@@ -296,6 +296,12 @@ button.outline:hover {
   background: var(--outline-hover-bg);
   border-color: var(--outline-hover-border);
 }
+button.outline.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent-text);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
 
 /* ═══════════════════════════════════════════
    ANIMATIONS
