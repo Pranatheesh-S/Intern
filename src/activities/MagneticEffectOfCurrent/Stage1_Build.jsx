@@ -637,52 +637,21 @@ export default function Stage1_Build({ onComplete }) {
           {/* RIGHT PANEL: CANVAS */}
           <div style={{ flex: 1, position: "relative", minHeight: "480px", display: "flex", flexDirection: "column", background: "var(--canvas-bg)", borderRadius: "16px", border: "1px solid var(--canvas-border)", overflow: "hidden" }}>
             
-            {/* Reference Blueprint */}
-            <div 
-              style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '0.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', zIndex: 50, display: 'flex', flexDirection: 'column', gap: '0.25rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-secondary)', userSelect: 'none' }}>Reference Blueprint</span>
-              </div>
-              <svg width="220" height="150" viewBox="130 90 580 400" style={{ opacity: 0.85 }}>
-                {/* Components */}
-                <CardboardSwitchSVG x={IDEALS.switchBoard.x} y={IDEALS.switchBoard.y} />
-                <CompassCardboardSVG x={IDEALS.compassBoard.x} y={IDEALS.compassBoard.y} />
-                
-                <DrawingPinSVG x={IDEALS.pin1.x} y={IDEALS.pin1.y} isPlaced={true} />
-                <SafetyPinSVG x={IDEALS.safetyPin.x} y={IDEALS.safetyPin.y} rotation={-30} isPlaced={true} />
-                <DrawingPinSVG x={IDEALS.pin2.x} y={IDEALS.pin2.y} isPlaced={true} />
-                
-                <g transform={`translate(${IDEALS.compass.x - 250}, ${IDEALS.compass.y - 150})`}>
-                  <CompassSVG x={250} y={150} isPlaced={true} />
-                </g>
-                
-                <g transform={`translate(${IDEALS.battery.x - 44}, ${IDEALS.battery.y - 366})`}>
-                  <BatterySVG isPlaced={true} />
-                </g>
-
-                {/* Wires */}
-                <path d={getWirePath({ x: IDEALS.battery.x + 91, y: IDEALS.battery.y + 20 }, { x: IDEALS.pin2.x, y: IDEALS.pin2.y })} stroke="#fde047" strokeWidth="4" fill="none" opacity="0.6" />
-                <path d={getWirePath({ x: IDEALS.pin1.x, y: IDEALS.pin1.y }, { x: IDEALS.compassBoard.x + 200, y: IDEALS.compassBoard.y + 90 })} stroke="#ef4444" strokeWidth="4" fill="none" opacity="0.6" />
-                <path d={getWirePath({ x: IDEALS.compassBoard.x + 40, y: IDEALS.compassBoard.y + 90 }, { x: IDEALS.battery.x, y: IDEALS.battery.y + 20 })} stroke="#6b7280" strokeWidth="4" fill="none" opacity="0.6" />
-                <path d={`M ${IDEALS.compassBoard.x + 40},${IDEALS.compassBoard.y + 90} L ${IDEALS.compassBoard.x + 200},${IDEALS.compassBoard.y + 90}`} stroke="#f59e0b" strokeWidth="4" fill="none" opacity="0.6" />
-              </svg>
-            </div>
 
             <CanvasDroppable>
               <svg width="100%" height="100%" viewBox="0 0 800 600" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
                 
                 {/* Visual Guidelines Removed */}
 
-                {/* Real Placed Items */}
-                {placed.switchBoard && (
-                  <DraggableSVGGroup id="switchBoard" isDraggable={!placed.wires}>
-                    <CardboardSwitchSVG x={positions.switchBoard.x} y={positions.switchBoard.y} />
-                  </DraggableSVGGroup>
-                )}
+                {/* Real Placed Items - Back to Front */}
                 {placed.compassBoard && (
                   <DraggableSVGGroup id="compassBoard" isDraggable={!placed.wires}>
                     <CompassCardboardSVG x={positions.compassBoard.x} y={positions.compassBoard.y} />
+                  </DraggableSVGGroup>
+                )}
+                {placed.switchBoard && (
+                  <DraggableSVGGroup id="switchBoard" isDraggable={!placed.wires}>
+                    <CardboardSwitchSVG x={positions.switchBoard.x} y={positions.switchBoard.y} />
                   </DraggableSVGGroup>
                 )}
                 
