@@ -20,6 +20,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import ThreeDViewer from "./ThreeDViewer";
+import ReferenceOverlay from "../../components/ReferenceOverlay";
 import {
   CardboardSwitchSVG,
   CompassCardboardSVG,
@@ -637,6 +638,32 @@ export default function Stage1_Build({ onComplete }) {
           {/* RIGHT PANEL: CANVAS */}
           <div style={{ flex: 1, position: "relative", minHeight: "480px", display: "flex", flexDirection: "column", background: "var(--canvas-bg)", borderRadius: "16px", border: "1px solid var(--canvas-border)", overflow: "hidden" }}>
             
+            {/* Reference Blueprint */}
+            <ReferenceOverlay title="Reference Blueprint">
+              <svg width="220" height="150" viewBox="130 90 580 400" style={{ opacity: 0.85 }}>
+                {/* Components */}
+                <CardboardSwitchSVG x={IDEALS.switchBoard.x} y={IDEALS.switchBoard.y} />
+                <CompassCardboardSVG x={IDEALS.compassBoard.x} y={IDEALS.compassBoard.y} />
+                
+                <DrawingPinSVG x={IDEALS.pin1.x} y={IDEALS.pin1.y} isPlaced={true} />
+                <SafetyPinSVG x={IDEALS.safetyPin.x} y={IDEALS.safetyPin.y} rotation={-30} isPlaced={true} />
+                <DrawingPinSVG x={IDEALS.pin2.x} y={IDEALS.pin2.y} isPlaced={true} />
+                
+                <g transform={`translate(${IDEALS.compass.x - 250}, ${IDEALS.compass.y - 150})`}>
+                  <CompassSVG x={250} y={150} isPlaced={true} />
+                </g>
+                
+                <g transform={`translate(${IDEALS.battery.x - 44}, ${IDEALS.battery.y - 366})`}>
+                  <BatterySVG isPlaced={true} />
+                </g>
+
+                {/* Wires */}
+                <path d={getWirePath({ x: IDEALS.battery.x + 91, y: IDEALS.battery.y + 20 }, { x: IDEALS.pin2.x, y: IDEALS.pin2.y })} stroke="#fde047" strokeWidth="4" fill="none" opacity="0.6" />
+                <path d={getWirePath({ x: IDEALS.pin1.x, y: IDEALS.pin1.y }, { x: IDEALS.compassBoard.x + 200, y: IDEALS.compassBoard.y + 90 })} stroke="#ef4444" strokeWidth="4" fill="none" opacity="0.6" />
+                <path d={getWirePath({ x: IDEALS.compassBoard.x + 40, y: IDEALS.compassBoard.y + 90 }, { x: IDEALS.battery.x, y: IDEALS.battery.y + 20 })} stroke="#6b7280" strokeWidth="4" fill="none" opacity="0.6" />
+                <path d={`M ${IDEALS.compassBoard.x + 40},${IDEALS.compassBoard.y + 90} L ${IDEALS.compassBoard.x + 200},${IDEALS.compassBoard.y + 90}`} stroke="#f59e0b" strokeWidth="4" fill="none" opacity="0.6" />
+              </svg>
+            </ReferenceOverlay>
 
             <CanvasDroppable>
               <svg width="100%" height="100%" viewBox="0 0 800 600" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>

@@ -7,6 +7,7 @@ import ThreeDViewer from "./ThreeDViewer";
 
 import { ChartPaperSVG, IronNailSVG, CopperCoilSVG, CompassSVG, PaperClipsSVG } from "./CircuitElements2D";
 import { BatterySVG, CardboardSwitchSVG, DrawingPinSVG, SafetyPinSVG } from "../../MagneticEffectOfCurrent/CircuitElements";
+import ReferenceOverlay from "../../../components/ReferenceOverlay";
 
 const STEPS = [
   { id: "chart_paper", name: "Chart Paper", desc: [
@@ -462,12 +463,7 @@ export default function Stage1_Build({ onComplete }) {
           <div style={{ flex: 1, position: "relative", minHeight: "480px", display: "flex", flexDirection: "column", background: "var(--canvas-bg)", borderRadius: "16px", border: "1px solid var(--canvas-border)", overflow: "hidden" }}>
             
             {/* Reference Blueprint */}
-            <div 
-              style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '0.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', zIndex: 50, display: 'flex', flexDirection: 'column', gap: '0.25rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-secondary)', userSelect: 'none' }}>Reference Blueprint</span>
-              </div>
+            <ReferenceOverlay title="Reference Blueprint">
               <svg width="280" height="180" viewBox="40 80 500 320" style={{ opacity: 0.85 }}>
                 <ChartPaperSVG x={IDEALS.chart_paper.x} y={IDEALS.chart_paper.y} isPlaced={true} />
                 <IronNailSVG x={IDEALS.nail.x} y={IDEALS.nail.y} isPlaced={true} />
@@ -483,7 +479,7 @@ export default function Stage1_Build({ onComplete }) {
                 <path d={getWirePath({ x: IDEALS.pin1.x, y: IDEALS.pin1.y }, { x: IDEALS.wire.x + 80, y: IDEALS.wire.y - 50 })} fill="none" stroke="#b91c1c" strokeWidth={5} strokeLinecap="round" />
                 <path d={getWirePath({ x: IDEALS.wire.x - 70, y: IDEALS.wire.y - 50 }, { x: IDEALS.battery.x, y: IDEALS.battery.y + 20 })} fill="none" stroke="#374151" strokeWidth={5} strokeLinecap="round" />
               </svg>
-            </div>
+            </ReferenceOverlay>
 
             <CanvasDroppable>
               <svg width="100%" height="100%" viewBox="0 0 600 480" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
