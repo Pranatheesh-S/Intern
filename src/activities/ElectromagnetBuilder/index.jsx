@@ -152,45 +152,47 @@ export default function ElectromagnetBuilderActivity({ onBackToDashboard }) {
           </AnimatePresence>
         </main>
 
-        <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Did you know?
-                </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-                  Temporary Magnetism
+        {activeTab !== 'quiz' && (
+          <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
+            <div className="glass-panel" style={{ padding: '1.25rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                    Did you know?
+                  </h4>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+                    Temporary Magnetism
+                  </div>
+                  <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
+                    An electromagnet is a temporary magnet. Its magnetism is only present when an electric current is flowing through the coil of wire wrapped around the iron core.
+                  </p>
                 </div>
-                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  An electromagnet is a temporary magnet. Its magnetism is only present when an electric current is flowing through the coil of wire wrapped around the iron core.
-                </p>
               </div>
             </div>
-          </div>
-          
-          <div className="glass-panel" style={{ padding: '1.25rem', marginTop: '1rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🤔</span>
-              <div style={{ width: '100%' }}>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Why?
-                </h4>
-                
-                <FAQItem 
-                  question="Why is the wire tightly wound around the iron nail?"
-                  answer={"The wire is tightly wound to produce a stronger magnetic field.\nThis makes the iron nail a stronger electromagnet."}
-                />
-                
-                <FAQItem 
-                  question="Why is an iron nail used instead of a wooden stick?"
-                  answer={"Iron can become magnetic when electric current flows through the coil.\nWood cannot become magnetic, so it does not work as an electromagnet."}
-                />
+            
+            <div className="glass-panel" style={{ padding: '1.25rem', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🤔</span>
+                <div style={{ width: '100%' }}>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                    Why?
+                  </h4>
+                  
+                  <FAQItem 
+                    question="Why is the wire tightly wound around the iron nail?"
+                    answer={"The wire is tightly wound to produce a stronger magnetic field.\nThis makes the iron nail a stronger electromagnet."}
+                  />
+                  
+                  <FAQItem 
+                    question="Why is an iron nail used instead of a wooden stick?"
+                    answer={"Iron can become magnetic when electric current flows through the coil.\nWood cannot become magnetic, so it does not work as an electromagnet."}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        )}
       </div>
     </div>
   );

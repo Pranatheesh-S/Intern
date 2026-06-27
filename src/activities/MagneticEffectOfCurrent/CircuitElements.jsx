@@ -275,8 +275,8 @@ export const WiresSVG = ({
   // Coordinates mapping
   const p_batteryNeg = { x: 44, y: 386 };
   const p_batteryPos = { x: 135, y: 386 };
-  const p_pin1 = { x: 450, y: 250 };
-  const p_pin2 = { x: 450, y: 370 };
+  const p_pin1 = { x: 480, y: 250 };
+  const p_pin2 = { x: 480, y: 370 };
   const p_nail1 = { x: 155, y: 150 };
   const p_nail2 = { x: 345, y: 150 };
 
@@ -287,7 +287,7 @@ export const WiresSVG = ({
   const path1 = `M ${p_batteryPos.x},${p_batteryPos.y} C 200,420 380,420 ${p_pin2.x},${p_pin2.y}`;
   
   // Path 2: Pin 1 -> Nail 2 (Red/Orange)
-  const path2 = `M ${p_pin1.x},${p_pin1.y} C 450,150 400,100 ${p_nail2.x},${p_nail2.y}`;
+  const path2 = `M ${p_pin1.x},${p_pin1.y} C 480,150 400,100 ${p_nail2.x},${p_nail2.y}`;
 
   // Path 3: Nail 1 -> Battery Negative (Black/Dark)
   const path3 = `M ${p_nail1.x},${p_nail1.y} C 50,100 29,200 ${p_batteryNeg.x},${p_batteryNeg.y}`;

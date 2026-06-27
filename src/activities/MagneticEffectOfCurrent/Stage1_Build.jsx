@@ -438,11 +438,11 @@ export default function Stage1_Build({ onComplete }) {
       wires: false,
     });
     setPositions({
-      switchBoard: { x: 370, y: 200 },
+      switchBoard: { x: 400, y: 200 },
       compassBoard: { x: 120, y: 60 },
-      pin1: { x: 450, y: 250 },
-      safetyPin: { x: 450, y: 250 },
-      pin2: { x: 450, y: 370 },
+      pin1: { x: 480, y: 250 },
+      safetyPin: { x: 480, y: 250 },
+      pin2: { x: 480, y: 370 },
       compass: { x: 250, y: 150 },
       battery: { x: 44, y: 366 },
     });
