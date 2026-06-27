@@ -93,13 +93,26 @@ const STEPS = [
   ], hint: "CLICK THE SWITCH ON THE BOARD to turn on the current.", prereq: ["paper_clips"] }
 ];
 
-function DraggableToken({ id, children }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id });
-  const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    touchAction: "none", cursor: isDragging ? "grabbing" : "grab", zIndex: isDragging ? 1000 : 10,
-  };
-  return <div ref={setNodeRef} style={style} {...listeners} {...attributes}>{children}</div>;
+function TrayDraggable({ id, disabled, children }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: id,
+    disabled: disabled,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={{
+        opacity: isDragging ? 0.4 : 1,
+        touchAction: "none",
+        cursor: disabled ? "not-allowed" : "grab",
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 function CanvasDroppable({ children }) {
