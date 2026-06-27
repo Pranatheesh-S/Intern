@@ -245,7 +245,7 @@ export const CompassSVG = ({ x = 250, y = 150, isPlaced, isTarget, onClick, defl
       <line x1={-18} y1={0} x2={18} y2={0} stroke="#d1d5db" strokeWidth={1} />
       
       {/* Compass Needle (rotated based on deflection) */}
-      <g transform={`rotate(${deflection})`} style={{ transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
+      <g style={{ transform: `rotate(${deflection}deg)`, transformOrigin: '0px 0px', transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
         {/* Shadow */}
         <polygon points="-3,-3 0,-25 3,-3 0,25" fill="rgba(0,0,0,0.3)" />
         {/* Red North pointer */}
