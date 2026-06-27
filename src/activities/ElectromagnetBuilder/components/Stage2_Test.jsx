@@ -116,11 +116,17 @@ export default function Stage2_Test({ onComplete }) {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: hasTestedOn ? 0.5 : 1 }}>
+                  <div 
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: hasTestedOn ? 0.5 : 1, cursor: !switchOn ? 'pointer' : 'default' }}
+                    onClick={() => { if (!switchOn) toggleSwitch(); }}
+                  >
                     {hasTestedOn ? <CheckCircle2 size={16} color="var(--success)" /> : <div style={{ width: 16, height: 16, borderRadius: '50%', border: '1.5px solid var(--text-faint)' }} />}
                     <span style={{ fontSize: '0.85rem' }}>1. Turn switch ON</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: hasTestedOff ? 0.5 : 1 }}>
+                  <div 
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: hasTestedOff ? 0.5 : 1, cursor: switchOn ? 'pointer' : 'default' }}
+                    onClick={() => { if (switchOn) toggleSwitch(); }}
+                  >
                     {hasTestedOff ? <CheckCircle2 size={16} color="var(--success)" /> : <div style={{ width: 16, height: 16, borderRadius: '50%', border: '1.5px solid var(--text-faint)' }} />}
                     <span style={{ fontSize: '0.85rem' }}>2. Turn switch OFF</span>
                   </div>

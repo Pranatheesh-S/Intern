@@ -130,9 +130,9 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
         </nav>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: '1.5rem', alignItems: 'start' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '1.5rem', alignItems: 'start' }}>
         {/* Left Column: Active Stage */}
-        <main style={{ minHeight: '480px', marginBottom: '2rem' }}>
+        <main style={{ flex: 1, minHeight: '480px', marginBottom: '2rem' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -147,45 +147,51 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
         </main>
 
         {/* Right Column: Did you know? */}
-        <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Did you know?
-                </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-                  Science Insights
+        {activeTab !== 'quiz' && (
+          <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
+            <div className="glass-panel" style={{ padding: '1.25rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                    Did you know?
+                  </h4>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+                    {activeTab === 'build' && "Science Insights"}
+                    {activeTab === 'test' && "Tiny Magnets"}
+                    {activeTab === 'explore' && "Magnetic Reversals"}
+                  </div>
+                  <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
+                    {activeTab === 'build' && "In 1820, Hans Christian Ørsted accidentally discovered that an electric current creates a magnetic field. When he turned on a circuit, a nearby compass needle twitched! This groundbreaking discovery showed that electricity and magnetism are deeply linked, leading to the invention of electromagnets."}
+                    {activeTab === 'test' && "A compass needle is actually a tiny magnet! When it's placed near a wire carrying electric current, the magnetic field produced by the current exerts a force on the compass needle, causing it to deflect from its usual North-South resting position."}
+                    {activeTab === 'explore' && "The direction of the magnetic field depends on the direction of the electric current. If you reverse the battery connections, the current flows the opposite way, and the compass needle will deflect in the opposite direction!"}
+                  </p>
                 </div>
-                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  In 1820, Hans Christian Ørsted accidentally discovered that an electric current creates a magnetic field. When he turned on a circuit, a nearby compass needle twitched! This groundbreaking discovery showed that electricity and magnetism are deeply linked, leading to the invention of electromagnets.
-                </p>
               </div>
             </div>
-          </div>
-          
-          <div className="glass-panel" style={{ padding: '1.25rem', marginTop: '1rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🤔</span>
-              <div style={{ width: '100%' }}>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Why?
-                </h4>
-                
-                <FAQItem 
-                  question="Why does the compass needle deflect when the switch is turned ON?"
-                  answer={"When the switch is turned ON, electric current flows through the wire.\nThe current creates a magnetic field that causes the compass needle to deflect."}
-                />
-                
-                <FAQItem 
-                  question="Why does the compass needle return to its original position when the switch is turned OFF?"
-                  answer={"When the switch is turned OFF, the electric current stops flowing.\nThe magnetic field disappears, so the compass needle returns to its original position."}
-                />
+            
+            <div className="glass-panel" style={{ padding: '1.25rem', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🤔</span>
+                <div style={{ width: '100%' }}>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                    Why?
+                  </h4>
+                  
+                  <FAQItem 
+                    question="Why does the compass needle deflect when the switch is turned ON?"
+                    answer={"When the switch is turned ON, electric current flows through the wire.\nThe current creates a magnetic field that causes the compass needle to deflect."}
+                  />
+                  
+                  <FAQItem 
+                    question="Why does the compass needle return to its original position when the switch is turned OFF?"
+                    answer={"When the switch is turned OFF, the electric current stops flowing.\nThe magnetic field disappears, so the compass needle returns to its original position."}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        )}
       </div>
     </div>
   );
