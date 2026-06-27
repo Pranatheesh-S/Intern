@@ -230,13 +230,13 @@ export default function Stage1_Build({ onComplete }) {
   });
 
   const [positions, setPositions] = useState({
-    switchBoard: { x: 370, y: 200 },
-    compassBoard: { x: 120, y: 60 },
-    pin1: { x: 450, y: 250 },
-    safetyPin: { x: 450, y: 250 },
-    pin2: { x: 450, y: 370 },
-    compass: { x: 250, y: 150 },
-    battery: { x: 44, y: 366 },
+    switchBoard: { x: 520, y: 250 },
+    compassBoard: { x: 270, y: 110 },
+    pin1: { x: 600, y: 300 },
+    safetyPin: { x: 600, y: 300 },
+    pin2: { x: 600, y: 420 },
+    compass: { x: 400, y: 200 },
+    battery: { x: 194, y: 416 },
   });
 
   const [selectedItemId, setSelectedItemId] = useState(null);
@@ -261,13 +261,13 @@ export default function Stage1_Build({ onComplete }) {
   }, [connectedWires]);
 
   const IDEALS = {
-    switchBoard: { x: 370, y: 200 },
-    compassBoard: { x: 120, y: 60 },
-    pin1: { x: 450, y: 250 },
-    safetyPin: { x: 450, y: 250 },
-    pin2: { x: 450, y: 370 },
-    compass: { x: 250, y: 150 }, 
-    battery: { x: 44, y: 366 },
+    switchBoard: { x: 520, y: 250 },
+    compassBoard: { x: 270, y: 110 },
+    pin1: { x: 600, y: 300 },
+    safetyPin: { x: 600, y: 300 },
+    pin2: { x: 600, y: 420 },
+    compass: { x: 400, y: 200 }, 
+    battery: { x: 194, y: 416 },
   };
 
   const snapToIdeal = (id, x, y) => {
@@ -358,9 +358,9 @@ export default function Stage1_Build({ onComplete }) {
       const activeRect = event.active.rect.current.translated;
       if (activeRect) {
         let x, y;
-        const svgScale = Math.min(rect.width / 600, rect.height / 480);
-        const offsetX = (rect.width - 600 * svgScale) / 2;
-        const offsetY = (rect.height - 480 * svgScale) / 2;
+        const svgScale = Math.min(rect.width / 800, rect.height / 600);
+        const offsetX = (rect.width - 800 * svgScale) / 2;
+        const offsetY = (rect.height - 600 * svgScale) / 2;
         
         if (placed[draggedId]) {
           const dx = event.delta.x / svgScale;
@@ -382,8 +382,8 @@ export default function Stage1_Build({ onComplete }) {
         x = snapped.x;
         y = snapped.y;
 
-        x = Math.max(0, Math.min(600, x));
-        y = Math.max(0, Math.min(480, y));
+        x = Math.max(0, Math.min(800, x));
+        y = Math.max(0, Math.min(600, y));
 
         setPositions((prev) => {
           const newPos = { ...prev, [draggedId]: { x, y } };
@@ -438,13 +438,13 @@ export default function Stage1_Build({ onComplete }) {
       wires: false,
     });
     setPositions({
-      switchBoard: { x: 400, y: 200 },
-      compassBoard: { x: 120, y: 60 },
-      pin1: { x: 480, y: 250 },
-      safetyPin: { x: 480, y: 250 },
-      pin2: { x: 480, y: 370 },
-      compass: { x: 250, y: 150 },
-      battery: { x: 44, y: 366 },
+      switchBoard: { x: 550, y: 250 },
+      compassBoard: { x: 270, y: 110 },
+      pin1: { x: 630, y: 300 },
+      safetyPin: { x: 630, y: 300 },
+      pin2: { x: 630, y: 420 },
+      compass: { x: 400, y: 200 },
+      battery: { x: 194, y: 416 },
     });
     setSelectedItemId(null);
     setConnectedWires([]);
@@ -636,8 +636,41 @@ export default function Stage1_Build({ onComplete }) {
 
           {/* RIGHT PANEL: CANVAS */}
           <div style={{ flex: 1, position: "relative", minHeight: "480px", display: "flex", flexDirection: "column", background: "var(--canvas-bg)", borderRadius: "16px", border: "1px solid var(--canvas-border)", overflow: "hidden" }}>
+            
+            {/* Reference Blueprint */}
+            <div 
+              style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '0.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', zIndex: 50, display: 'flex', flexDirection: 'column', gap: '0.25rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-secondary)', userSelect: 'none' }}>Reference Blueprint</span>
+              </div>
+              <svg width="220" height="150" viewBox="130 90 580 400" style={{ opacity: 0.85 }}>
+                {/* Components */}
+                <CardboardSwitchSVG x={IDEALS.switchBoard.x} y={IDEALS.switchBoard.y} />
+                <CompassCardboardSVG x={IDEALS.compassBoard.x} y={IDEALS.compassBoard.y} />
+                
+                <DrawingPinSVG x={IDEALS.pin1.x} y={IDEALS.pin1.y} isPlaced={true} />
+                <SafetyPinSVG x={IDEALS.safetyPin.x} y={IDEALS.safetyPin.y} rotation={-30} isPlaced={true} />
+                <DrawingPinSVG x={IDEALS.pin2.x} y={IDEALS.pin2.y} isPlaced={true} />
+                
+                <g transform={`translate(${IDEALS.compass.x - 250}, ${IDEALS.compass.y - 150})`}>
+                  <CompassSVG x={250} y={150} isPlaced={true} />
+                </g>
+                
+                <g transform={`translate(${IDEALS.battery.x - 44}, ${IDEALS.battery.y - 366})`}>
+                  <BatterySVG isPlaced={true} />
+                </g>
+
+                {/* Wires */}
+                <path d={getWirePath({ x: IDEALS.battery.x + 91, y: IDEALS.battery.y + 20 }, { x: IDEALS.pin2.x, y: IDEALS.pin2.y })} stroke="#fde047" strokeWidth="4" fill="none" opacity="0.6" />
+                <path d={getWirePath({ x: IDEALS.pin1.x, y: IDEALS.pin1.y }, { x: IDEALS.compassBoard.x + 200, y: IDEALS.compassBoard.y + 90 })} stroke="#ef4444" strokeWidth="4" fill="none" opacity="0.6" />
+                <path d={getWirePath({ x: IDEALS.compassBoard.x + 40, y: IDEALS.compassBoard.y + 90 }, { x: IDEALS.battery.x, y: IDEALS.battery.y + 20 })} stroke="#6b7280" strokeWidth="4" fill="none" opacity="0.6" />
+                <path d={`M ${IDEALS.compassBoard.x + 40},${IDEALS.compassBoard.y + 90} L ${IDEALS.compassBoard.x + 200},${IDEALS.compassBoard.y + 90}`} stroke="#f59e0b" strokeWidth="4" fill="none" opacity="0.6" />
+              </svg>
+            </div>
+
             <CanvasDroppable>
-              <svg width="100%" height="100%" viewBox="0 0 600 480" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
+              <svg width="100%" height="100%" viewBox="0 0 800 600" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
                 
                 {/* Visual Guidelines Removed */}
 
