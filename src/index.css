@@ -88,8 +88,8 @@
 }
 
 [data-theme="dark"] {
-  --page-bg: #080b11;
-  --page-bg-gradient: #080b11;
+  --page-bg: #12102a;
+  --page-bg-gradient: #12102a;
 
   --card-bg: rgba(30, 41, 59, 0.4);
   --card-border: rgba(255, 255, 255, 0.12);

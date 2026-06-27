@@ -47,6 +47,90 @@ const QUESTIONS = [
     ],
     correct: 'C',
     explanation: "This experiment proves that an electric current flowing through a conductor creates a magnetic field around it, known as the magnetic effect of electric current."
+  },
+  {
+    id: 4,
+    question: "In Oersted's experiment, what happens if the direction of the electric current is reversed?",
+    options: [
+      { key: 'A', text: "The compass needle points in the same direction" },
+      { key: 'B', text: "The compass needle deflects in the opposite direction" },
+      { key: 'C', text: "The compass needle starts spinning rapidly" },
+      { key: 'D', text: "The magnetic field disappears" }
+    ],
+    correct: 'B',
+    explanation: "The direction of the magnetic field depends on the direction of the electric current. Reversing the current reverses the magnetic field, causing opposite deflection."
+  },
+  {
+    id: 5,
+    question: "Which device makes use of the magnetic effect of electric current?",
+    options: [
+      { key: 'A', text: "Electric heater" },
+      { key: 'B', text: "Electric iron" },
+      { key: 'C', text: "Electromagnet" },
+      { key: 'D', text: "Light bulb" }
+    ],
+    correct: 'C',
+    explanation: "An electromagnet is a temporary magnet made by winding a wire around an iron core and passing an electric current through it."
+  },
+  {
+    id: 6,
+    question: "Who was the first scientist to discover the magnetic effect of electric current?",
+    options: [
+      { key: 'A', text: "Thomas Edison" },
+      { key: 'B', text: "Nikola Tesla" },
+      { key: 'C', text: "Michael Faraday" },
+      { key: 'D', text: "Hans Christian Oersted" }
+    ],
+    correct: 'D',
+    explanation: "Hans Christian Oersted accidentally discovered in 1820 that a compass needle deflects near a current-carrying wire."
+  },
+  {
+    id: 7,
+    question: "What happens to the strength of the magnetic field if you increase the electric current in the wire?",
+    options: [
+      { key: 'A', text: "It decreases" },
+      { key: 'B', text: "It remains the same" },
+      { key: 'C', text: "It increases" },
+      { key: 'D', text: "The field disappears completely" }
+    ],
+    correct: 'C',
+    explanation: "The strength of the magnetic field produced by a current-carrying wire is directly proportional to the amount of current flowing through it."
+  },
+  {
+    id: 8,
+    question: "A compass needle is essentially a:",
+    options: [
+      { key: 'A', text: "Tiny piece of unmagnetized iron" },
+      { key: 'B', text: "Tiny magnet" },
+      { key: 'C', text: "Piece of copper" },
+      { key: 'D', text: "Conductor of electricity" }
+    ],
+    correct: 'B',
+    explanation: "A compass needle is a small, lightweight magnet that aligns itself with magnetic fields, such as Earth's field or the field produced by a current."
+  },
+  {
+    id: 9,
+    question: "What shape does the magnetic field take around a straight current-carrying wire?",
+    options: [
+      { key: 'A', text: "Straight lines parallel to the wire" },
+      { key: 'B', text: "Concentric circles around the wire" },
+      { key: 'C', text: "Zig-zag patterns" },
+      { key: 'D', text: "No specific shape" }
+    ],
+    correct: 'B',
+    explanation: "The magnetic field lines around a straight current-carrying wire form concentric circles with the wire at the center."
+  },
+  {
+    id: 10,
+    question: "If you wrap a current-carrying wire into a coil and place an iron nail inside, what does the nail become?",
+    options: [
+      { key: 'A', text: "A permanent magnet" },
+      { key: 'B', text: "An electromagnet" },
+      { key: 'C', text: "A compass" },
+      { key: 'D', text: "A good insulator" }
+    ],
+    correct: 'B',
+    explanation: "The coil creates a strong magnetic field that temporarily magnetizes the iron nail, turning it into an electromagnet while the current flows."
   }
 ];
 

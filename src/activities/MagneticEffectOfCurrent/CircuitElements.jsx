@@ -207,8 +207,8 @@ export const CompassSVG = ({ x = 250, y = 150, isPlaced, isTarget, onClick, defl
     if (isTarget) {
       return (
         <g onClick={onClick} style={{ cursor: 'pointer' }} className="pulse-target">
-          <circle cx={x} cy={y} r={35} fill="var(--accent-bg)" stroke="var(--accent)" strokeWidth={2} strokeDasharray="3,3" />
-          <text x={x} y={y + 4} fill="var(--accent-text)" fontSize="9" fontWeight="bold" textAnchor="middle">COMPASS</text>
+          <circle cx={x} cy={y} r={52} fill="var(--accent-bg)" stroke="var(--accent)" strokeWidth={2} strokeDasharray="3,3" />
+          <text x={x} y={y + 4} fill="var(--accent-text)" fontSize="11" fontWeight="bold" textAnchor="middle">COMPASS</text>
         </g>
       );
     }
@@ -217,47 +217,49 @@ export const CompassSVG = ({ x = 250, y = 150, isPlaced, isTarget, onClick, defl
 
   return (
     <g onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }} transform={`translate(${x}, ${y})`}>
-      <defs>
-        <radialGradient id="compass-glass" cx="40%" cy="30%" r="60%">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.7)" />
-          <stop offset="70%" stopColor="rgba(255,255,255,0.1)" />
-          <stop offset="100%" stopColor="rgba(255,255,255,0.4)" />
-        </radialGradient>
-      </defs>
-      
-      {/* Shadow */}
-      <circle cx={2} cy={2} r={35} fill="rgba(0,0,0,0.3)" />
-      
-      {/* Outer casing */}
-      <circle cx={0} cy={0} r={35} fill="#1f2937" stroke="#4b5563" strokeWidth={2} />
-      
-      {/* Inner dial */}
-      <circle cx={0} cy={0} r={31} fill="#f9fafb" />
-      
-      {/* Markings */}
-      <text x={0} y={-21} fill="#111827" fontSize="10" fontWeight="bold" textAnchor="middle">N</text>
-      <text x={0} y={27} fill="#111827" fontSize="10" fontWeight="bold" textAnchor="middle">S</text>
-      <text x={24} y={3} fill="#111827" fontSize="10" fontWeight="bold" textAnchor="middle">E</text>
-      <text x={-24} y={3} fill="#111827" fontSize="10" fontWeight="bold" textAnchor="middle">W</text>
-      
-      {/* Crosshairs */}
-      <line x1={0} y1={-18} x2={0} y2={18} stroke="#d1d5db" strokeWidth={1} />
-      <line x1={-18} y1={0} x2={18} y2={0} stroke="#d1d5db" strokeWidth={1} />
-      
-      {/* Compass Needle (rotated based on deflection) */}
-      <g style={{ transform: `rotate(${deflection}deg)`, transformOrigin: '0px 0px', transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
+      <g transform="scale(1.5)">
+        <defs>
+          <radialGradient id="compass-glass" cx="40%" cy="30%" r="60%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.7)" />
+            <stop offset="70%" stopColor="rgba(255,255,255,0.1)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0.4)" />
+          </radialGradient>
+        </defs>
+        
         {/* Shadow */}
-        <polygon points="-3,-3 0,-25 3,-3 0,25" fill="rgba(0,0,0,0.3)" />
-        {/* Red North pointer */}
-        <polygon points="-3,0 0,-25 3,0" fill="#ef4444" />
-        {/* Blue/White South pointer */}
-        <polygon points="-3,0 0,25 3,0" fill="#3b82f6" />
-        {/* Center pivot */}
-        <circle cx={0} cy={0} r={2.5} fill="#fbbf24" stroke="#b45309" strokeWidth={1} />
+        <circle cx={1.5} cy={1.5} r={35} fill="rgba(0,0,0,0.3)" />
+        
+        {/* Outer casing */}
+        <circle cx={0} cy={0} r={35} fill="#1f2937" stroke="#4b5563" strokeWidth={2} />
+        
+        {/* Inner dial */}
+        <circle cx={0} cy={0} r={31} fill="#f9fafb" />
+        
+        {/* Markings */}
+        <text x={0} y={-21} fill="#111827" fontSize="10" fontWeight="bold" textAnchor="middle">N</text>
+        <text x={0} y={27} fill="#111827" fontSize="10" fontWeight="bold" textAnchor="middle">S</text>
+        <text x={24} y={3} fill="#111827" fontSize="10" fontWeight="bold" textAnchor="middle">E</text>
+        <text x={-24} y={3} fill="#111827" fontSize="10" fontWeight="bold" textAnchor="middle">W</text>
+        
+        {/* Crosshairs */}
+        <line x1={0} y1={-18} x2={0} y2={18} stroke="#d1d5db" strokeWidth={1} />
+        <line x1={-18} y1={0} x2={18} y2={0} stroke="#d1d5db" strokeWidth={1} />
+        
+        {/* Compass Needle (rotated based on deflection) */}
+        <g style={{ transform: `rotate(${deflection}deg)`, transformOrigin: '0px 0px', transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
+          {/* Shadow */}
+          <polygon points="-3,-3 0,-25 3,-3 0,25" fill="rgba(0,0,0,0.3)" />
+          {/* Red North pointer */}
+          <polygon points="-3,0 0,-25 3,0" fill="#ef4444" />
+          {/* Blue/White South pointer */}
+          <polygon points="-3,0 0,25 3,0" fill="#3b82f6" />
+          {/* Center pivot */}
+          <circle cx={0} cy={0} r={2.5} fill="#fbbf24" stroke="#b45309" strokeWidth={1} />
+        </g>
+        
+        {/* Glass dome */}
+        <circle cx={0} cy={0} r={33} fill="url(#compass-glass)" pointerEvents="none" />
       </g>
-      
-      {/* Glass dome */}
-      <circle cx={0} cy={0} r={33} fill="url(#compass-glass)" pointerEvents="none" />
     </g>
   );
 };
@@ -275,8 +277,8 @@ export const WiresSVG = ({
   // Coordinates mapping
   const p_batteryNeg = { x: 44, y: 386 };
   const p_batteryPos = { x: 135, y: 386 };
-  const p_pin1 = { x: 450, y: 250 };
-  const p_pin2 = { x: 450, y: 370 };
+  const p_pin1 = { x: 480, y: 250 };
+  const p_pin2 = { x: 480, y: 370 };
   const p_nail1 = { x: 155, y: 150 };
   const p_nail2 = { x: 345, y: 150 };
 
@@ -287,7 +289,7 @@ export const WiresSVG = ({
   const path1 = `M ${p_batteryPos.x},${p_batteryPos.y} C 200,420 380,420 ${p_pin2.x},${p_pin2.y}`;
   
   // Path 2: Pin 1 -> Nail 2 (Red/Orange)
-  const path2 = `M ${p_pin1.x},${p_pin1.y} C 450,150 400,100 ${p_nail2.x},${p_nail2.y}`;
+  const path2 = `M ${p_pin1.x},${p_pin1.y} C 480,150 400,100 ${p_nail2.x},${p_nail2.y}`;
 
   // Path 3: Nail 1 -> Battery Negative (Black/Dark)
   const path3 = `M ${p_nail1.x},${p_nail1.y} C 50,100 29,200 ${p_batteryNeg.x},${p_batteryNeg.y}`;
