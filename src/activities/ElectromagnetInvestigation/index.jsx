@@ -14,7 +14,7 @@ import Stage2_Test from './components/Stage2_Test';
 import Stage3_Sandbox from './components/Stage3_Sandbox';
 import Stage4_Quiz from './components/Stage4_Quiz';
 
-export default function ElectromagnetBuilderActivity({ onBackToDashboard }) {
+export default function ElectromagnetInvestigationActivity({ onBackToDashboard }) {
   const [activeTab, setActiveTab] = useState('build');
   const [progress, setProgress] = useState({
     build: false,
@@ -71,8 +71,8 @@ export default function ElectromagnetBuilderActivity({ onBackToDashboard }) {
             <ArrowLeft size={14} /> Back to Labs
           </button>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Activity 4.2</h2>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Class 8 • Electromagnet Builder</span>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Activity 4.3 & 4.4</h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Class 8 • Electromagnet Investigation</span>
           </div>
         </div>
 
@@ -129,10 +129,10 @@ export default function ElectromagnetBuilderActivity({ onBackToDashboard }) {
               <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
               <div>
                 <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-heading)' }}>
-                  Temporary Magnetism
+                  Electromagnet Properties
                 </h4>
                 <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  An electromagnet is a temporary magnet. Its magnetism is only present when an electric current is flowing through the coil of wire wrapped around the iron core.
+                  A current-carrying coil behaves like a magnet. Inserting an iron core concentrates the magnetic field, producing a much stronger electromagnet. Reversing the current direction reverses its magnetic poles.
                 </p>
               </div>
             </div>
