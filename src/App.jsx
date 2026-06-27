@@ -11,7 +11,8 @@ import {
   Home,
   Sun,
   Moon,
-  Hammer
+  Hammer,
+  Battery
 } from 'lucide-react';
 import { useTheme } from './ThemeContext.jsx';
 import ElectricSwitchActivity from './activities/ElectricSwitch';
@@ -29,6 +30,7 @@ import MagnetInteractionActivity from './activities/MagnetInteraction';
 import LinearMotionActivity from './activities/LinearMotion';
 import CircularMotionActivity from './activities/CircularMotion';
 import HeatingEffectActivity from './activities/HeatingEffectOfCurrent';
+import LemonBatteryLabActivity from './activities/LemonBatteryLab';
 import TorchExplorerActivity from './activities/TorchExplorer';
 import LampExplorerActivity from './activities/LampExplorer';
 import Activity3_7 from './activities/Activity3_7';
@@ -1345,6 +1347,37 @@ export default function App() {
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
           </button>
         </div>
+
+        {/* Lemon Battery Lab Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Battery size={20} style={{ color: '#eab308' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.6</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Lemon Battery Lab. Construct a working battery using lemons, copper strips, and iron nails to light an LED.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class8', 'lemon_battery')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1689,6 +1722,8 @@ export default function App() {
             <ElectromagnetInvestigationActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
           ) : activeActivity === 'heating_effect' ? (
             <HeatingEffectActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
+          ) : activeActivity === 'lemon_battery' ? (
+            <LemonBatteryLabActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
           ) : activeActivity === 'chapter4' ? (
             renderClass8Chapter4()
           ) : (

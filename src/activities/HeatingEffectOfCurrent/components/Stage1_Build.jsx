@@ -6,6 +6,7 @@ import ThreeDViewer from "./ThreeDViewer";
 
 import { CardboardBaseSVG, NailSVG, NichromeWireSVG } from "./CircuitElements2D";
 import { BatteryBareSVG, CardboardSwitchSVG, DrawingPinSVG, SafetyPinSVG } from "../../MagneticEffectOfCurrent/CircuitElements";
+import ReferenceOverlay from "../../../components/ReferenceOverlay";
 
 const STEPS = [
   { id: "base", name: "Cardboard Base", desc: ["Provides a safe, non-conductive foundation."], hint: "Place Cardboard Base on workspace.", prereq: [] },
@@ -374,13 +375,7 @@ export default function Stage1_Build({ onComplete }) {
           {/* RIGHT PANEL: MAIN CANVAS */}
           <div className="glass-panel" style={{ flex: 1, position: "relative", minHeight: "480px", display: "flex", flexDirection: "column", background: "var(--canvas-bg)", borderRadius: "16px", border: "1px solid var(--canvas-border)", overflow: "hidden" }}>
             
-            {/* Reference Blueprint */}
-            <div 
-              style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '0.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', zIndex: 50, display: 'flex', flexDirection: 'column', gap: '0.25rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-secondary)', userSelect: 'none' }}>Reference Blueprint</span>
-              </div>
+            <ReferenceOverlay title="Reference Blueprint">
               <svg width="280" height="180" viewBox="40 80 500 320" style={{ opacity: 0.85 }}>
                 {/* Components */}
                 <CardboardBaseSVG x={IDEALS.base.x} y={IDEALS.base.y} isPlaced={true} />
@@ -398,9 +393,9 @@ export default function Stage1_Build({ onComplete }) {
                 {/* Wires (Rendered after components so they appear on top) */}
                 <path d={getSaggingWirePath(getIdealTerminalCoords("battery-pos"), getIdealTerminalCoords("nail1"))} stroke="var(--danger)" strokeWidth="4" fill="none" opacity="0.6" />
                 <path d={getSaggingWirePath(getIdealTerminalCoords("battery-neg"), getIdealTerminalCoords("pin2"))} stroke="var(--text-primary)" strokeWidth="4" fill="none" opacity="0.6" />
-                <path d={getSaggingWirePath(getIdealTerminalCoords("nail2"), getIdealTerminalCoords("pin1"))} stroke="var(--warning)" strokeWidth="4" fill="none" opacity="0.6" />
+                <path d={getSaggingWirePath(getIdealTerminalCoords("nail2"), getIdealTerminalCoords("pin1"))} stroke="#000" strokeWidth="4" fill="none" opacity="0.6" />
               </svg>
-            </div>
+            </ReferenceOverlay>
 
             {selectedItemId === "connect" && (
               <div style={{ position: "absolute", top: "1rem", left: "1rem", right: "1rem", background: "var(--surface)", border: "1px solid var(--primary)", borderRadius: "12px", zIndex: 10, padding: "0.8rem 1rem", display: "flex", alignItems: "center", gap: "1rem", boxShadow: "0 5px 20px rgba(14,165,233,0.15)" }}>
