@@ -118,43 +118,21 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
         </main>
 
         {/* Right Column: Did you know? */}
-        <aside className="glass-panel" style={{ padding: '1rem', position: 'sticky', top: '2rem', marginTop: '1rem' }}>
-          <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
-            <h4 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-heading)' }}>
-              Did you know?
-            </h4>
-          </div>
-          <div style={{ fontSize: '0.8rem', lineHeight: '1.5', color: 'var(--text-secondary)' }}>
-            <p style={{ margin: '0 0 0.75rem 0', fontWeight: 'bold', color: 'var(--text)' }}>
-              Science Insights
-            </p>
-            <p style={{ margin: '0 0 0.75rem 0' }}>
-              Hans Christian Oersted discovered in 1820 that an electric current flowing through a wire creates a magnetic field around it.
-            </p>
-            <p style={{ margin: '0 0 0.75rem 0' }}>
-              This is demonstrated by a magnetic compass needle deflecting when placed near the wire. 
-            </p>
-            <p style={{ margin: '0' }}>
-              This fundamental principle led to the invention of electromagnets, electric motors, and modern power generation!
-            </p>
-            
-            <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
-              <svg viewBox="-80 -80 160 160" width="140" height="140">
-                <g stroke="#818cf8" fill="none" strokeWidth="1.5" strokeOpacity="0.5">
-                  <line x1="0" y1="-75" x2="0" y2="75" />
-                  
-                  <ellipse cx="0" cy="0" rx="35" ry="50" />
-                  <ellipse cx="0" cy="0" rx="55" ry="70" />
-                  
-                  <polygon points="-4,-53 2,-50 -4,-47" fill="#818cf8" stroke="none" />
-                  <polygon points="4,53 -2,50 4,47" fill="#818cf8" stroke="none" />
-                  
-                  <polygon points="-4,-73 2,-70 -4,-67" fill="#818cf8" stroke="none" />
-                  <polygon points="4,73 -2,70 4,67" fill="#818cf8" stroke="none" />
-                </g>
-                <CompassSVG isPlaced={true} x={0} y={0} deflection={20} />
-              </svg>
+        <aside style={{ width: '280px', flexShrink: 0 }}>
+          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
+              <div>
+                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                  Did you know?
+                </h4>
+                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+                  Science Insights
+                </div>
+                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
+                  In 1820, Hans Christian Ørsted accidentally discovered that an electric current creates a magnetic field. When he turned on a circuit, a nearby compass needle twitched! This groundbreaking discovery showed that electricity and magnetism are deeply linked, leading to the invention of electromagnets.
+                </p>
+              </div>
             </div>
           </div>
         </aside>

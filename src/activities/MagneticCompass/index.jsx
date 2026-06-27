@@ -92,7 +92,8 @@ export default function MagneticCompassActivity({ onBackToDashboard }) {
       </div>
 
       {/* Active Stage Panel */}
-      <main style={{ minHeight: '480px', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '1.5rem', alignItems: 'stretch' }}>
+        <main style={{ flex: 1,  minHeight: '480px', marginBottom: '2rem' }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -106,20 +107,26 @@ export default function MagneticCompassActivity({ onBackToDashboard }) {
         </AnimatePresence>
       </main>
 
-      {/* Footer Educational Box */}
-      <footer className="glass-panel" style={{ marginTop: '2rem', padding: '1.25rem' }}>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-          <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
-          <div>
-            <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-heading)' }}>
-              Educational Tip
-            </h4>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-              We can magnetize an iron object, like a sewing needle, by rubbing it with a permanent magnet in the same direction repeatedly. Once magnetized, it behaves like a bar magnet and aligns North-South when floating freely!
-            </p>
+        {/* Right Sidebar (Educational Tip) */}
+        <aside style={{ width: '280px', flexShrink: 0 }}>
+          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
+              <div>
+                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                  Did you know?
+                </h4>
+                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+                  Science Insights
+                </div>
+                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
+                  We can magnetize an iron object, like a sewing needle, by rubbing it with a permanent magnet in the same direction repeatedly. Once magnetized, it behaves like a bar magnet and aligns North-South when floating freely!
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </footer>
+        </aside>
+      </div>
     </div>
   );
 }

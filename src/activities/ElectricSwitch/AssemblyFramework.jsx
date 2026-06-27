@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import ThreeDViewer from './ThreeDViewer';
 
-// --- Draggable Token wrapper for the Parts Bench ---
+// --- Draggable Token wrapper for the 3D Viewer ---
 function DraggableToken({ id, children }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: id,
@@ -360,7 +360,7 @@ export default function AssemblyFramework({
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--accent-text)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <Info size={14} /> Parts Bench
+              <span>🧊</span> 3D Viewer
             </h3>
             {activeStep && (
               <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>

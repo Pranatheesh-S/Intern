@@ -332,7 +332,7 @@ export default function Stage1_Build({ onComplete }) {
         // Set placed state (if it was from the parts bench)
         if (!placed[draggedId]) {
           setPlaced((prev) => ({ ...prev, [draggedId]: true }));
-          setSelectedItemId(null); // Clear selected item from Parts Bench
+          setSelectedItemId(null); // Clear selected item from 3D Viewer
 
           confetti({
             particleCount: 25,
@@ -1425,7 +1425,7 @@ export default function Stage1_Build({ onComplete }) {
                 gap: "0.35rem",
               }}
             >
-              <Info size={14} /> Parts Bench
+              <span>🧊</span> 3D Viewer
             </h3>
             {activeStep && (
               <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>

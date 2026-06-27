@@ -87,7 +87,8 @@ export default function FoodTestingActivity({ onBackToDashboard }) {
       </header>
 
       {/* Main Workspace content */}
-      <main style={{ minHeight: '520px', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '1.5rem', alignItems: 'stretch' }}>
+        <main style={{ flex: 1,  minHeight: '520px', marginBottom: '2rem' }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -101,23 +102,29 @@ export default function FoodTestingActivity({ onBackToDashboard }) {
         </AnimatePresence>
       </main>
 
-      {/* Footer Educational Box */}
-      <footer className="glass-panel" style={{ marginTop: '2rem', padding: '1.25rem' }}>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-          <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
-          <div>
-            <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-heading)' }}>
-              Did you know? (Science Insights)
-            </h4>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-              <strong>Starch</strong> is a complex carbohydrate found in many foods like potatoes and rice. 
+        {/* Right Sidebar (Educational Tip) */}
+        <aside style={{ width: '280px', flexShrink: 0 }}>
+          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
+              <div>
+                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                  Did you know?
+                </h4>
+                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+                  Science Insights
+                </div>
+                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
+                  <strong>Starch</strong> is a complex carbohydrate found in many foods like potatoes and rice. 
               When a dilute iodine solution (which is usually brownish-yellow) comes into contact with starch, 
               a chemical reaction occurs that turns it into a striking <strong>blue-black</strong> color. 
               This is one of the most reliable tests for starch!
-            </p>
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </footer>
+        </aside>
+      </div>
     </div>
   );
 }
