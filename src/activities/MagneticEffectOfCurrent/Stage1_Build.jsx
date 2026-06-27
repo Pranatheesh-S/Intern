@@ -512,7 +512,7 @@ export default function Stage1_Build({ onComplete }) {
     if (success) return "✅ Circuit Constructed Successfully!";
     if (selectedItemId === "wires") return "Instruction: Click the glowing terminals to connect the circuit automatically.";
     const remaining = STEPS.filter((s) => s.id !== "wires" && !placed[s.id]);
-    if (remaining.length > 0) return `🔧 ${remaining.length} component(s) left — pick any from the Component Tray.`;
+    if (remaining.length > 0) return `${remaining.length} component(s) left — pick any from the Component Tray.`;
     return "⚡ All components placed! Now select Connecting Wires to link everything together.";
   };
 
@@ -538,9 +538,9 @@ export default function Stage1_Build({ onComplete }) {
         <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch" }}>
           {/* LEFT PANEL: Component Tray */}
           <div className="glass-panel" style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "0.75rem", height: "100%" }}>
-            <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start", background: "var(--neutral-bg)", padding: "0.6rem 0.8rem", borderRadius: "10px", border: "1px solid var(--border)" }}>
+            <div style={{ display: "flex", gap: "0.35rem", alignItems: "center", background: "var(--neutral-bg)", padding: "0.6rem 0.8rem", borderRadius: "10px", border: "1px solid var(--border)" }}>
               <Info style={{ color: "var(--accent)", flexShrink: 0 }} size={16} />
-              <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>{getNextStepPrompt()}</span>
+              <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)", lineHeight: "1.4" }}>{getNextStepPrompt()}</span>
             </div>
 
             <h3 style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>Component Tray</h3>

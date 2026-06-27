@@ -11,6 +11,7 @@ import {
 import Stage1_Build from './Stage1_Build';
 import Stage2_Test from './Stage2_Test';
 import QuizPanel from './QuizPanel';
+import { CompassSVG } from './CircuitElements';
 
 export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
   const [activeTab, setActiveTab] = useState('build');
@@ -137,6 +138,24 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
             <p style={{ margin: '0' }}>
               This fundamental principle led to the invention of electromagnets, electric motors, and modern power generation!
             </p>
+            
+            <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+              <svg viewBox="-80 -80 160 160" width="140" height="140">
+                <g stroke="#818cf8" fill="none" strokeWidth="1.5" strokeOpacity="0.5">
+                  <line x1="0" y1="-75" x2="0" y2="75" />
+                  
+                  <ellipse cx="0" cy="0" rx="35" ry="50" />
+                  <ellipse cx="0" cy="0" rx="55" ry="70" />
+                  
+                  <polygon points="-4,-53 2,-50 -4,-47" fill="#818cf8" stroke="none" />
+                  <polygon points="4,53 -2,50 4,47" fill="#818cf8" stroke="none" />
+                  
+                  <polygon points="-4,-73 2,-70 -4,-67" fill="#818cf8" stroke="none" />
+                  <polygon points="4,73 -2,70 4,67" fill="#818cf8" stroke="none" />
+                </g>
+                <CompassSVG isPlaced={true} x={0} y={0} deflection={20} />
+              </svg>
+            </div>
           </div>
         </aside>
       </div>
