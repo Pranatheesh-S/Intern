@@ -34,56 +34,104 @@ const STEPS = [
   {
     id: "switchBoard",
     name: "Switch Board",
-    desc: "Small cardboard to hold the switch.",
+    desc: [
+      "A sturdy base made of cardboard to hold our switch parts securely.",
+      "It provides a safe, non-conductive surface to work on.",
+      "The small size makes it easy to move and place in our circuit.",
+      "It acts as the foundation for the drawing pins and safety pin.",
+      "Cardboard is an insulator, so electricity won't flow through it!"
+    ],
     hint: "Drag the switch board onto the left side of the canvas.",
     prereq: [],
   },
   {
     id: "pin1",
     name: "Drawing Pin 1",
-    desc: "Pivot point for the safety pin switch.",
+    desc: [
+      "Acts as the starting terminal for our switch, where electricity enters.",
+      "Made of metal, it is a great conductor of electricity.",
+      "It anchors the safety pin so it can pivot like a hinge.",
+      "Pushed into the cardboard base to stay firmly in place.",
+      "It forms the first half of our simple electrical switch."
+    ],
     hint: "Place the first drawing pin into the switch board.",
     prereq: [],
   },
   {
     id: "safetyPin",
     name: "Safety Pin",
-    desc: "The movable conductor to close/open the gap.",
+    desc: [
+      "Made of metal, it conducts electricity and acts like a bridge.",
+      "It can swing open or closed to control the flow of current.",
+      "When closed, it lets electricity pass through the circuit.",
+      "When open, the circuit breaks, stopping the electricity.",
+      "This is exactly how light switches in your house work!"
+    ],
     hint: "Attach the safety pin to the first drawing pin.",
     prereq: [],
   },
   {
     id: "pin2",
     name: "Drawing Pin 2",
-    desc: "Contact terminal for the safety pin.",
+    desc: [
+      "Acts as the ending terminal. When touched, the bridge is complete!",
+      "It is placed at a specific distance so the safety pin can reach it.",
+      "Like the first pin, it is pushed securely into the cardboard base.",
+      "It completes the pathway for electricity to continue flowing.",
+      "It's a simple but vital part of our switch mechanism."
+    ],
     hint: "Fix the second drawing pin so the safety pin can touch it.",
     prereq: [],
   },
   {
     id: "compassBoard",
     name: "Compass Bench",
-    desc: "Cardboard with two fixed nails.",
+    desc: [
+      "A base with two nails to hold the wire straight over the compass.",
+      "It creates a steady platform for the magnetic compass to sit on.",
+      "The nails help stretch the copper wire directly across the compass.",
+      "This setup ensures the compass is perfectly aligned with the wire.",
+      "It makes Oersted's experiment easy to observe and measure!"
+    ],
     hint: "Place the compass bench on the right side of the canvas.",
     prereq: [],
   },
   {
     id: "compass",
     name: "Magnetic Compass",
-    desc: "Indicates the presence of a magnetic field.",
+    desc: [
+      "A tiny magnet that points North. It will wiggle if there's a magnetic field!",
+      "It detects invisible magnetic forces around it.",
+      "Normally, it aligns with Earth's natural magnetic field.",
+      "When electricity flows nearby, its needle will deflect.",
+      "This deflection proves that electricity creates magnetism!"
+    ],
     hint: "Place the compass between the two nails on the compass bench.",
     prereq: [],
   },
   {
     id: "battery",
     name: "Electric Cell",
-    desc: "Provides electric current.",
+    desc: [
+      "The power source! It pushes electrical energy through the wires.",
+      "It converts stored chemical energy into electrical energy.",
+      "It has a positive (+) terminal and a negative (-) terminal.",
+      "Current flows from one terminal, through the circuit, to the other.",
+      "Without it, there would be no electricity and no magnetic field!"
+    ],
     hint: "Place the battery on the canvas.",
     prereq: [],
   },
   {
     id: "wires",
     name: "Connecting Wires",
-    desc: "Link the components together.",
+    desc: [
+      "Copper pathways that carry the electric current to the other parts.",
+      "Covered in plastic insulation to keep the electricity safely inside.",
+      "They act like water pipes, but for electrical charges instead of water.",
+      "They must form a continuous, unbroken loop for current to flow.",
+      "They are the final pieces needed to connect our entire circuit together!"
+    ],
     hint: "Connect the battery, switch, and the nails.",
     prereq: ["switchBoard", "pin1", "safetyPin", "pin2", "compassBoard", "compass", "battery"],
   },
@@ -704,7 +752,7 @@ export default function Stage1_Build({ onComplete }) {
             )}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: activeStep || selectedItemId === "wires" ? "1.2fr 1fr" : "1fr", gap: "1rem", minHeight: "180px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: activeStep || selectedItemId === "wires" ? "0.8fr 1.2fr" : "1fr", gap: "1rem", minHeight: "180px" }}>
             {selectedItemId === "wires" ? (
               <>
                 <div style={{ borderRadius: "12px", overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", height: "180px", position: "relative" }}>
@@ -712,9 +760,13 @@ export default function Stage1_Build({ onComplete }) {
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: "0.5rem" }}>
                   <h4 style={{ margin: 0, fontSize: "1rem", color: "var(--text-heading)" }}>Connecting Wires</h4>
-                  <p style={{ margin: 0, fontSize: "0.75rem", color: "var(--text-faint)", lineHeight: "1.4" }}>
-                    Click on the glowing terminal points on the canvas to draw wires and connect your components.
-                  </p>
+                  <ul style={{ margin: "0.25rem 0 0 1rem", padding: 0, fontSize: "0.75rem", color: "var(--text-faint)", lineHeight: "1.4", display: "flex", flexDirection: "column", gap: "0.2rem" }}>
+                    <li>Click on the glowing terminal points on the canvas to draw wires and connect your components.</li>
+                    <li>Copper pathways that carry the electric current to the other parts.</li>
+                    <li>Covered in plastic insulation to keep the electricity safely inside.</li>
+                    <li>They must form a continuous, unbroken loop for current to flow.</li>
+                    <li>They are the final pieces needed to connect our entire circuit together!</li>
+                  </ul>
                   <div style={{ fontSize: "0.75rem", color: "var(--accent-text)", fontWeight: "bold", marginTop: "0.5rem" }}>
                     Wires connected: {connectedWires.length}/4
                   </div>
@@ -728,7 +780,11 @@ export default function Stage1_Build({ onComplete }) {
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "0.5rem" }}>
                   <div>
                     <h4 style={{ margin: 0, fontSize: "1rem", color: "var(--text-heading)" }}>{activeStep.name}</h4>
-                    <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", color: "var(--text-faint)", lineHeight: "1.4" }}>{activeStep.desc}</p>
+                    <ul style={{ margin: "0.25rem 0 0 1rem", padding: 0, fontSize: "0.75rem", color: "var(--text-faint)", lineHeight: "1.4", display: "flex", flexDirection: "column", gap: "0.2rem" }}>
+                      {Array.isArray(activeStep.desc) 
+                        ? activeStep.desc.map((line, i) => <li key={i}>{line}</li>)
+                        : <li>{activeStep.desc}</li>}
+                    </ul>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                     <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "bold" }}>DRAG TO ASSEMBLE:</span>
