@@ -230,13 +230,12 @@ export default function ThreeDViewer({ componentId }) {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', outline: 'none' }}>
+    <div style={{ width: '100%', height: '100%', outline: 'none', background: 'var(--canvas-bg)' }}>
       <Canvas
         shadows
         camera={{ position: [0, 1.8, 2.5], fov: 45 }}
-        gl={{ antialias: true, preserveDrawingBuffer: true }}
+        gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}
       >
-        <color attach="background" args={['var(--canvas-bg)']} />
         
         {/* Lights */}
         <ambientLight intensity={1.1} />

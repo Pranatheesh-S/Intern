@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DndContext, useSensor, useSensors, PointerSensor, TouchSensor, useDraggable, useDroppable } from "@dnd-kit/core";
+import { DndContext, useSensor, useSensors, PointerSensor, TouchSensor, useDraggable, useDroppable, DragOverlay } from "@dnd-kit/core";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { ArrowRight, Info, Lock, CheckCircle2, AlertCircle, RotateCcw } from "lucide-react";
@@ -9,28 +9,106 @@ import { ChartPaperSVG, IronNailSVG, CopperCoilSVG, CompassSVG } from "./Circuit
 import { BatterySVG, CardboardSwitchSVG, DrawingPinSVG, SafetyPinSVG } from "../../MagneticEffectOfCurrent/CircuitElements";
 
 const STEPS = [
-  { id: "chart_paper", name: "Chart Paper", desc: ["Roll to make a hollow cylinder."], hint: "Place Chart Paper on workspace.", prereq: [] },
-  { id: "wire", name: "Copper Coil", desc: ["Wind ~50 turns around paper cylinder."], hint: "Drag Copper Coil onto Chart Paper.", prereq: ["chart_paper"] },
-  { id: "switchBoard", name: "Switch Base", desc: ["Base for switch."], hint: "Place Switch Base.", prereq: [] },
-  { id: "pin1", name: "Drawing Pin 1", desc: ["Terminal 1."], hint: "Place Pin 1 on switch board.", prereq: [] },
-  { id: "safetyPin", name: "Safety Pin", desc: ["Moving part."], hint: "Attach Safety Pin.", prereq: [] },
-  { id: "pin2", name: "Drawing Pin 2", desc: ["Terminal 2."], hint: "Place Pin 2 on switch board.", prereq: [] },
-  { id: "battery", name: "Electric Cell", desc: ["Power source."], hint: "Place Battery.", prereq: [] },
-  { id: "connect", name: "Action: Wire Circuit", desc: ["Complete the circuit."], hint: "Click terminals to connect.", prereq: ["wire", "battery", "pin1", "pin2", "safetyPin", "switchBoard"] },
-  { id: "compass1", name: "Compass (End A)", desc: ["Place near left end of coil."], hint: "Drag Compass to left of coil.", prereq: ["connect"] },
-  { id: "compass2", name: "Compass (End B)", desc: ["Place near right end of coil."], hint: "Drag Compass to right of coil.", prereq: ["connect"] },
-  { id: "test_air", name: "Action: Test Air-Core", desc: ["An air-core coil creates a weak magnetic field.", "Observe the small deflection in the compass needles."], hint: "CLICK THE SWITCH ON THE BOARD to turn on the current.", prereq: ["compass1", "compass2"] },
-  { id: "nail", name: "Iron Nail", desc: ["Insert into cylinder to strengthen magnet."], hint: "Drag Iron Nail into cylinder.", prereq: ["test_air"] },
-  { id: "test_iron", name: "Action: Test Iron-Core", desc: ["The iron nail acts as a core, magnifying the magnetic field greatly.", "Observe the much larger deflection in the compass needles."], hint: "CLICK THE SWITCH ON THE BOARD to turn on the current.", prereq: ["nail"] }
+  { id: "chart_paper", name: "Chart Paper", desc: [
+    "Rolled into a hollow cylindrical shape.",
+    "Acts as an air-core for the coil.",
+    "Provides structure to wrap the wire around.",
+    "Does not interact with the magnetic field."
+  ], hint: "Place Chart Paper on workspace.", prereq: [] },
+  { id: "wire", name: "Copper Coil", desc: [
+    "Insulated copper wire wound into a solenoid.",
+    "Creates a magnetic field when current flows.",
+    "Wrapped around the chart paper cylinder.",
+    "Forms the main coil of the electromagnet."
+  ], hint: "Drag Copper Coil onto Chart Paper.", prereq: ["chart_paper"] },
+  { id: "switchBoard", name: "Switch Base", desc: [
+    "Provides a sturdy non-conductive base.",
+    "Secures the switch components in place.",
+    "Prevents short circuits on the table.",
+    "Serves as the foundation for the control mechanism."
+  ], hint: "Place Switch Base.", prereq: [] },
+  { id: "pin1", name: "Drawing Pin 1", desc: [
+    "Acts as the first contact terminal.",
+    "Secures the safety pin to the base.",
+    "Connects to the copper coil wire.",
+    "Made of conductive brass or steel."
+  ], hint: "Place Pin 1 on switch board.", prereq: [] },
+  { id: "safetyPin", name: "Safety Pin", desc: [
+    "Functions as the movable switch bridge.",
+    "Conducts electricity when closed.",
+    "Completes the circuit loop.",
+    "Can easily be opened to break the circuit."
+  ], hint: "Attach Safety Pin.", prereq: [] },
+  { id: "pin2", name: "Drawing Pin 2", desc: [
+    "Acts as the second contact terminal.",
+    "Receives the safety pin when closed.",
+    "Connects to the battery's positive terminal.",
+    "Completes the switch assembly."
+  ], hint: "Place Pin 2 on switch board.", prereq: [] },
+  { id: "battery", name: "Electric Cell", desc: [
+    "Provides the electrical energy.",
+    "Has positive (+) and negative (-) terminals.",
+    "Drives current through the closed circuit.",
+    "Powers the electromagnet."
+  ], hint: "Place Battery.", prereq: [] },
+  { id: "connect", name: "Action: Wire Circuit", desc: [
+    "Links all components with conductive wires.",
+    "Forms a closed loop for current.",
+    "Connects battery to switch to coil.",
+    "Essential for the circuit to function."
+  ], hint: "Click terminals to connect.", prereq: ["wire", "battery", "pin1", "pin2", "safetyPin", "switchBoard"] },
+  { id: "compass1", name: "Compass (End A)", desc: [
+    "Detects the presence of a magnetic field.",
+    "Placed near the left end of the coil.",
+    "Needle deflects according to polarity.",
+    "Helps visualize invisible magnetic lines."
+  ], hint: "Drag Compass to left of coil.", prereq: ["connect"] },
+  { id: "compass2", name: "Compass (End B)", desc: [
+    "Detects the presence of a magnetic field.",
+    "Placed near the right end of the coil.",
+    "Deflects opposite to compass 1.",
+    "Confirms the two poles of the magnet."
+  ], hint: "Drag Compass to right of coil.", prereq: ["connect"] },
+  { id: "test_air", name: "Action: Test Air-Core", desc: [
+    "Tests the coil with only air inside.",
+    "Creates a relatively weak magnetic field.",
+    "Causes minor compass needle deflection.",
+    "Proves that the coil alone has magnetism."
+  ], hint: "CLICK THE SWITCH ON THE BOARD to turn on the current.", prereq: ["compass1", "compass2"] },
+  { id: "nail", name: "Iron Nail", desc: [
+    "Acts as a solid magnetic core.",
+    "Made of ferromagnetic iron.",
+    "Inserted into the hollow chart paper.",
+    "Significantly boosts magnetic strength."
+  ], hint: "Drag Iron Nail into cylinder.", prereq: ["test_air"] },
+  { id: "test_iron", name: "Action: Test Iron-Core", desc: [
+    "Tests the coil with the iron core.",
+    "Creates a very strong magnetic field.",
+    "Causes major compass needle deflection.",
+    "Demonstrates how cores affect electromagnets."
+  ], hint: "CLICK THE SWITCH ON THE BOARD to turn on the current.", prereq: ["nail"] }
 ];
 
-function DraggableToken({ id, children }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id });
-  const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    touchAction: "none", cursor: isDragging ? "grabbing" : "grab", zIndex: isDragging ? 1000 : 10,
-  };
-  return <div ref={setNodeRef} style={style} {...listeners} {...attributes}>{children}</div>;
+function TrayDraggable({ id, disabled, children }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: id,
+    disabled: disabled,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={{
+        opacity: isDragging ? 0.4 : 1,
+        touchAction: "none",
+        cursor: disabled ? "not-allowed" : "grab",
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 function CanvasDroppable({ children }) {
@@ -277,7 +355,6 @@ export default function Stage1_Build({ onComplete }) {
       case "safetyPin": return <svg viewBox="-20 -20 40 150" width="24" height="24"><SafetyPinSVG x={0} y={0} rotation={0} isPlaced={true} /></svg>;
       case "battery": return <svg viewBox="40 340 100 70" width="24" height="24"><BatterySVG isPlaced={true} y={350} /></svg>;
       case "compass1": case "compass2": return <svg viewBox="-30 -30 60 60" width="24" height="24"><CompassSVG isPlaced={true} /></svg>;
-      case "test_iron": return <RotateCcw size={24} color="#fca5a5" />;
       case "connect": case "test_air": case "test_iron": return <svg viewBox="0 0 24 24" width="24" height="24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12c0-4 3-7 8-7s8 3 8 7-3 7-8 7" stroke="var(--danger)" /><path d="M6 13c0-3 2.5-5 6-5s6 2 6 5-2 5-6 5" stroke="var(--warning)" /></svg>;
       default: return null;
     }
@@ -300,6 +377,8 @@ export default function Stage1_Build({ onComplete }) {
     compass1Rot = -75;
     compass2Rot = 75;
   }
+
+  const activeDraggingStep = activeDraggingId ? STEPS.find((s) => s.id === activeDraggingId) : null;
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
@@ -336,23 +415,25 @@ export default function Stage1_Build({ onComplete }) {
                 const isDisabled = (isPlaced && !isActionStep) || !isUnlocked || (isActionStep && isPlaced);
 
                 return (
-                  <button key={step.id} onClick={() => handleSelectTrayItem(step.id)} disabled={isDisabled}
-                    style={{
-                      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0.6rem 0.4rem", borderRadius: "12px",
-                      background: isPlaced ? "var(--success-bg)" : isSelected ? "var(--accent-bg)" : isUnlocked ? "var(--surface)" : "var(--neutral-bg)",
-                      border: `1px solid ${isPlaced ? "var(--success-border)" : isSelected ? "var(--accent)" : isUnlocked ? "var(--accent-border)" : "var(--border)"}`,
-                      color: isPlaced ? "var(--success)" : isUnlocked ? "var(--text-primary)" : "var(--text-faint)",
-                      cursor: isDisabled ? "not-allowed" : "pointer", transition: "all 0.2s ease", position: "relative", minHeight: "72px",
-                      boxShadow: isSelected ? "0 0 0 2px rgba(99,102,241,0.4)" : "none", opacity: (isPlaced && !isActionStep) ? 0.6 : 1
-                    }}>
-                    <div style={{ width: "34px", height: "34px", background: "var(--border)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "0.35rem", opacity: isUnlocked ? 1 : 0.2 }}>
-                      {renderThumbnailSVG(step.id)}
-                    </div>
-                    <span style={{ fontSize: "0.68rem", fontWeight: "600", textAlign: "center", width: "100%", opacity: isUnlocked ? 1 : 0.3 }}>{step.name}</span>
-                    <div style={{ position: "absolute", top: "5px", right: "5px" }}>
-                      {isPlaced ? <CheckCircle2 size={12} style={{ color: "var(--success)" }} /> : !isUnlocked ? <Lock size={10} style={{ color: "var(--text-secondary)" }} /> : null}
-                    </div>
-                  </button>
+                  <TrayDraggable key={step.id} id={step.id} disabled={isDisabled}>
+                    <button onClick={() => handleSelectTrayItem(step.id)} disabled={isDisabled}
+                      style={{
+                        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0.6rem 0.4rem", borderRadius: "12px",
+                        background: isPlaced ? "var(--success-bg)" : isSelected ? "var(--accent-bg)" : isUnlocked ? "var(--surface)" : "var(--neutral-bg)",
+                        border: `1px solid ${isPlaced ? "var(--success-border)" : isSelected ? "var(--accent)" : isUnlocked ? "var(--accent-border)" : "var(--border)"}`,
+                        color: isPlaced ? "var(--success)" : isUnlocked ? "var(--text-primary)" : "var(--text-faint)",
+                        cursor: isDisabled ? "not-allowed" : "pointer", transition: "all 0.2s ease", position: "relative", minHeight: "72px",
+                        boxShadow: isSelected ? "0 0 0 2px rgba(99,102,241,0.4)" : "none", opacity: (isPlaced && !isActionStep) ? 0.6 : 1, width: "100%"
+                      }}>
+                      <div style={{ width: "34px", height: "34px", background: "var(--border)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "0.35rem", opacity: isUnlocked ? 1 : 0.2 }}>
+                        {renderThumbnailSVG(step.id)}
+                      </div>
+                      <span style={{ fontSize: "0.68rem", fontWeight: "600", textAlign: "center", width: "100%", opacity: isUnlocked ? 1 : 0.3 }}>{step.name}</span>
+                      <div style={{ position: "absolute", top: "5px", right: "5px" }}>
+                        {isPlaced ? <CheckCircle2 size={12} style={{ color: "var(--success)" }} /> : !isUnlocked ? <Lock size={10} style={{ color: "var(--text-secondary)" }} /> : null}
+                      </div>
+                    </button>
+                  </TrayDraggable>
                 );
               })}
             </div>
@@ -487,14 +568,23 @@ export default function Stage1_Build({ onComplete }) {
                 </div>
                 <div style={{ flex: 1.2, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "0.5rem" }}>
                   <div>
-                    <h4 style={{ margin: 0, fontSize: "1rem" }}>{STEPS.find(s => s.id === selectedItemId)?.name}</h4>
-                    <p style={{ fontSize: "0.75rem", color: "var(--text-faint)" }}>{STEPS.find(s => s.id === selectedItemId)?.desc}</p>
+                    <h4 style={{ margin: 0, fontSize: "1rem", color: "var(--text-heading)" }}>{STEPS.find(s => s.id === selectedItemId)?.name}</h4>
+                    <ul style={{ margin: "0.25rem 0 0 1rem", padding: 0, fontSize: "0.75rem", color: "var(--text-faint)", lineHeight: "1.4", display: "flex", flexDirection: "column", gap: "0.2rem" }}>
+                      {STEPS.find(s => s.id === selectedItemId)?.desc.map((line, i) => <li key={i}>{line}</li>)}
+                    </ul>
                   </div>
-                  <DraggableToken id={selectedItemId}>
-                    <div style={{ padding: "0.5rem", background: "var(--accent-bg)", border: "1px dashed rgba(99,102,241,0.4)", borderRadius: "8px", color: "var(--accent)", cursor: "grab", textAlign: "center", fontWeight: "bold" }}>
-                      DRAG ME TO THE CANVAS
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "bold" }}>HOW TO ASSEMBLE:</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "var(--accent-bg)", border: "1px dashed rgba(99, 102, 241, 0.4)", borderRadius: "10px", color: "var(--accent-text)", fontSize: "0.8rem", fontWeight: "600", boxShadow: "0 4px 10px rgba(99,102,241,0.1)", cursor: "default" }}>
+                      <div style={{ width: "28px", height: "28px", background: "var(--border)", borderRadius: "6px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {renderThumbnailSVG(selectedItemId)}
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+                        <span>{STEPS.find(s => s.id === selectedItemId)?.name}</span>
+                        <span style={{ fontSize: "0.65rem", color: "var(--accent-text)", fontWeight: "normal" }}>Drag from Component Tray to Workspace</span>
+                      </div>
                     </div>
-                  </DraggableToken>
+                  </div>
                 </div>
               </div>
             ) : selectedItemId ? (
@@ -509,6 +599,20 @@ export default function Stage1_Build({ onComplete }) {
           </div>
         </div>
 
+        {/* Drag Overlay layer */}
+        <DragOverlay>
+          {isDragging && activeDraggingStep ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "rgba(99, 102, 241, 0.25)", border: "2px solid #818cf8", borderRadius: "10px", color: "var(--accent-text)", fontSize: "0.8rem", fontWeight: "600", boxShadow: "0 8px 24px rgba(99,102,241,0.15)", backdropFilter: "blur(4px)", cursor: "grabbing", opacity: 0.9, transform: "scale(1.05)" }}>
+              <div style={{ width: "28px", height: "28px", background: "var(--border)", borderRadius: "6px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {renderThumbnailSVG(activeDraggingStep.id)}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+                <span>{activeDraggingStep.name}</span>
+                <span style={{ fontSize: "0.65rem", color: "#a5b4fc" }}>Placing in workspace...</span>
+              </div>
+            </div>
+          ) : null}
+        </DragOverlay>
       </div>
     </DndContext>
   );

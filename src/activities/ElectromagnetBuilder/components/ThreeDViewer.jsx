@@ -209,14 +209,16 @@ export default function ThreeDViewer({ componentId }) {
   };
 
   return (
-    <Canvas camera={{ position: [0, 2, 5], fov: 45 }}>
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 5, 5]} intensity={1} />
-      <Environment preset="city" />
-      <AutoRotateGroup>
-        {getModel()}
-      </AutoRotateGroup>
-      <OrbitControls enableZoom={false} enablePan={false} />
-    </Canvas>
+    <div style={{ width: '100%', height: '100%', outline: 'none', background: 'var(--canvas-bg)' }}>
+      <Canvas camera={{ position: [0, 2, 5], fov: 45 }} gl={{ alpha: true }}>
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[5, 5, 5]} intensity={1} />
+        <Environment preset="city" />
+        <AutoRotateGroup>
+          {getModel()}
+        </AutoRotateGroup>
+        <OrbitControls enableZoom={false} enablePan={false} />
+      </Canvas>
+    </div>
   );
 }

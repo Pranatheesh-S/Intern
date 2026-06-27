@@ -11,10 +11,10 @@
 
   /* ── Card / Panel ── */
   --card-bg: #f8fafc;
-  --card-border: #cbd5e1;
-  --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
-  --card-hover-border: #94a3b8;
-  --card-hover-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  --card-border: #94a3b8; /* slightly darker for more emphasis */
+  --card-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.05);
+  --card-hover-border: #64748b;
+  --card-hover-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
 
   /* ── Text ── */
   --text-heading: #000000;
@@ -92,10 +92,10 @@
   --page-bg-gradient: #080b11;
 
   --card-bg: rgba(30, 41, 59, 0.4);
-  --card-border: rgba(255, 255, 255, 0.06);
-  --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  --card-hover-border: rgba(255, 255, 255, 0.1);
-  --card-hover-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.6);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --card-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
+  --card-hover-border: rgba(99, 102, 241, 0.4);
+  --card-hover-shadow: 0 15px 50px -5px rgba(99, 102, 241, 0.2);
 
   --text-heading: #ffffff;
   --text-primary: #f1f5f9;
@@ -210,15 +210,14 @@ p {
    ═══════════════════════════════════════════ */
 .glass-panel {
   background: var(--card-bg);
-  border: 1px solid var(--card-border);
+  border: 2px solid var(--accent);
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--card-hover-shadow);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .glass-panel:hover {
-  border-color: var(--card-hover-border);
-  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-2px);
 }
 [data-theme="dark"] .glass-panel {
   backdrop-filter: blur(12px);
@@ -357,8 +356,8 @@ button.outline.active {
   display: flex; flex-direction: column; justify-content: center; align-items: center;
   position: relative; min-height: 480px;
   background: var(--canvas-bg); border-radius: 16px;
-  border: 1px solid var(--canvas-border); overflow: hidden;
-  box-shadow: var(--card-shadow);
+  border: 2px solid var(--accent); overflow: hidden;
+  box-shadow: var(--card-hover-shadow);
 }
 .canvas-bg-grid {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -473,4 +472,22 @@ button.outline.active {
 .responsive-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; }
 @media (max-width: 600px) {
   .responsive-grid-2, .responsive-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════
+   COMPONENT TRAY SHAKE HOVER ANIMATION
+   ═══════════════════════════════════════════ */
+@keyframes tray-shake {
+  0%   { transform: rotate(0deg) scale(1); }
+  15%  { transform: rotate(-6deg) scale(1.06); }
+  30%  { transform: rotate(6deg) scale(1.06); }
+  45%  { transform: rotate(-5deg) scale(1.04); }
+  60%  { transform: rotate(5deg) scale(1.04); }
+  75%  { transform: rotate(-3deg) scale(1.02); }
+  90%  { transform: rotate(3deg) scale(1.02); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+.tray-btn:hover:not(:disabled) {
+  animation: tray-shake 0.5s ease;
 }

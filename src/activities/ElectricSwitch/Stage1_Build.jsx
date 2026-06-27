@@ -296,8 +296,15 @@ export default function Stage1_Build({ onComplete }) {
     setError("");
   };
 
+  const [activeDragDelta, setActiveDragDelta] = useState({ x: 0, y: 0 });
+
+  const handleDragMove = (event) => {
+    setActiveDragDelta({ x: event.delta.x, y: event.delta.y });
+  };
+
   const handleDragEnd = (event) => {
     setIsDragging(false);
+    setActiveDragDelta({ x: 0, y: 0 });
     const draggedId = activeDraggingId;
     setActiveDraggingId(null);
     if (!event.active || !draggedId) return;
@@ -345,11 +352,26 @@ export default function Stage1_Build({ onComplete }) {
         x = Math.max(20, Math.min(580, x));
         y = Math.max(20, Math.min(460, y));
 
-        // Update Position state
         setPositions((prev) => {
           const newPos = { ...prev, [draggedId]: { x, y } };
           if (draggedId === "pin1") {
             newPos.safetyPin = { x, y }; // Safety pin anchors to pin 1
+          }
+          if (draggedId === "cardboard") {
+            const dx = x - prev.cardboard.x;
+            const dy = y - prev.cardboard.y;
+            
+            // If the pin is currently placed on the cardboard, move it!
+            const pin1OnBoard = Math.abs(prev.pin1.x - (prev.cardboard.x + 80)) < 2 && Math.abs(prev.pin1.y - (prev.cardboard.y + 50)) < 2;
+            if (placed.pin1 && pin1OnBoard) {
+              newPos.pin1 = { x: prev.pin1.x + dx, y: prev.pin1.y + dy };
+              if (placed.safetyPin) newPos.safetyPin = { x: prev.safetyPin.x + dx, y: prev.safetyPin.y + dy };
+            }
+
+            const pin2OnBoard = Math.abs(prev.pin2.x - (prev.cardboard.x + 80)) < 2 && Math.abs(prev.pin2.y - (prev.cardboard.y + 170)) < 2;
+            if (placed.pin2 && pin2OnBoard) {
+              newPos.pin2 = { x: prev.pin2.x + dx, y: prev.pin2.y + dy };
+            }
           }
           return newPos;
         });
@@ -444,6 +466,13 @@ export default function Stage1_Build({ onComplete }) {
 
   const handleTerminalClick = (terminalId) => {
     setError("");
+    
+    // Ensure the wires step is fully unlocked (all prerequisites placed and valid)
+    if (!isStepUnlocked("wires")) {
+      // Just ignore clicks if they shouldn't be wiring yet
+      return;
+    }
+    
     if (!pinsValid) {
       setError(
         "⚠️ Scientific Check Warning: Both drawing pins must be placed on the Cardboard Base! The cardboard sheet acts as an insulator preventing current from leaking into the table/surface."
@@ -637,6 +666,7 @@ export default function Stage1_Build({ onComplete }) {
     <DndContext
       sensors={sensors}
       onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
       onDragEnd={handleDragEnd}
     >
       <div
@@ -767,6 +797,7 @@ export default function Stage1_Build({ onComplete }) {
                   <TrayDraggable key={step.id} id={step.id} disabled={isDisabled}>
 <button
                     key={step.id}
+                    className="tray-btn"
                     onClick={() => handleSelectTrayItem(step.id)}
                     disabled={isDisabled}
                     style={{
@@ -888,116 +919,7 @@ export default function Stage1_Build({ onComplete }) {
                   height: "100%",
                 }}
               >
-                {/* Visual Dotted Placement Guide Lines (Faint backgrounds) */}
-                {/* Cardboard Base Dotted outline */}
-                {!placed.cardboard && (
-                  <rect
-                    x={370}
-                    y={200}
-                    width={160}
-                    height={210}
-                    rx={12}
-                    fill="none"
-                    stroke="var(--accent)"
-                    strokeWidth={1.5}
-                    strokeDasharray="4,4"
-                    opacity={0.3}
-                  />
-                )}
-
-                {/* Bulb Dotted outline */}
-                {placed.cardboard && !placed.bulb && (
-                  <g opacity={0.3}>
-                    <rect
-                      x={260}
-                      y={80}
-                      width={80}
-                      height={20}
-                      rx={4}
-                      fill="none"
-                      stroke="var(--accent)"
-                      strokeWidth={1.5}
-                      strokeDasharray="3,3"
-                    />
-                    <circle
-                      cx={300}
-                      cy={45}
-                      r={22}
-                      fill="none"
-                      stroke="var(--accent)"
-                      strokeWidth={1.5}
-                      strokeDasharray="3,3"
-                    />
-                  </g>
-                )}
-
-                {/* Battery Dotted outline */}
-                {placed.cardboard && !placed.battery && (
-                  <rect
-                    x={104}
-                    y={366}
-                    width={92}
-                    height={48}
-                    rx={6}
-                    fill="none"
-                    stroke="var(--accent)"
-                    strokeWidth={1.5}
-                    strokeDasharray="4,4"
-                    opacity={0.3}
-                  />
-                )}
-
-                {/* Pin 1 Dotted outline */}
-                {!placed.pin1 && (
-                  <circle
-                    cx={450}
-                    cy={250}
-                    r={14}
-                    fill="none"
-                    stroke="var(--accent)"
-                    strokeWidth={1.5}
-                    strokeDasharray="3,3"
-                    opacity={0.3}
-                  />
-                )}
-
-                {/* Safety Pin Dotted outline */}
-                {!placed.safetyPin && (
-                  <g transform="translate(450, 250) rotate(-35)" opacity={0.3}>
-                    <circle
-                      cx={0}
-                      cy={0}
-                      r={8}
-                      fill="none"
-                      stroke="var(--accent)"
-                      strokeWidth={1.5}
-                      strokeDasharray="3,3"
-                    />
-                    <line
-                      x1={0}
-                      y1={0}
-                      x2={0}
-                      y2={110}
-                      stroke="var(--accent)"
-                      strokeWidth={1.5}
-                      strokeDasharray="3,3"
-                    />
-                  </g>
-                )}
-
-                {/* Pin 2 Dotted outline */}
-                {!placed.pin2 && (
-                  <circle
-                    cx={450}
-                    cy={370}
-                    r={14}
-                    fill="none"
-                    stroke="var(--accent)"
-                    strokeWidth={1.5}
-                    strokeDasharray="3,3"
-                    opacity={0.3}
-                  />
-                )}
+                {/* Initial Dotted Placement Guide Lines Removed */}
 
                 {/* REAL COMPONENT PLACEMENT RENDERING */}
                 {/* Cardboard Base (Bottom Layer) */}
@@ -1161,7 +1083,7 @@ export default function Stage1_Build({ onComplete }) {
 
                 {/* Safety Pin (Rendered independently ONLY if pin1 is not placed yet) */}
                 {placed.safetyPin && !placed.pin1 && (
-                  <DraggableSVGGroup id="safetyPin" isDraggable={!success}>
+                  <DraggableSVGGroup id="safetyPin" isDraggable={!success} additionalTransform={activeDraggingId === "cardboard" && isPinOnCardboard(positions.safetyPin, positions.cardboard) ? activeDragDelta : null}>
                     <SafetyPinSVG
                       x={positions.safetyPin.x}
                       y={positions.safetyPin.y}
@@ -1173,7 +1095,7 @@ export default function Stage1_Build({ onComplete }) {
 
                 {/* Pin 1 & Safety Pin (If pin1 is placed, safetyPin anchors/drags with it) */}
                 {placed.pin1 && (
-                  <DraggableSVGGroup id="pin1" isDraggable={!success}>
+                  <DraggableSVGGroup id="pin1" isDraggable={!success} additionalTransform={activeDraggingId === "cardboard" && isPinOnCardboard(positions.pin1, positions.cardboard) ? activeDragDelta : null}>
                     <DrawingPinSVG
                       x={positions.pin1.x}
                       y={positions.pin1.y}
@@ -1193,7 +1115,7 @@ export default function Stage1_Build({ onComplete }) {
 
                 {/* Pin 2 */}
                 {placed.pin2 && (
-                  <DraggableSVGGroup id="pin2" isDraggable={!success}>
+                  <DraggableSVGGroup id="pin2" isDraggable={!success} additionalTransform={activeDraggingId === "cardboard" && isPinOnCardboard(positions.pin2, positions.cardboard) ? activeDragDelta : null}>
                     <DrawingPinSVG
                       x={positions.pin2.x}
                       y={positions.pin2.y}
