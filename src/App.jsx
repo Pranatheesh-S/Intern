@@ -33,7 +33,6 @@ import LampExplorerActivity from './activities/LampExplorer';
 import Activity3_7 from './activities/Activity3_7';
 import Activity3_11 from './activities/Activity3_11';
 import MagneticEffectOfCurrentActivity from './activities/MagneticEffectOfCurrent';
-import ElectromagnetBuilderActivity from './activities/ElectromagnetBuilder';
 import ElectromagnetInvestigationActivity from './activities/ElectromagnetInvestigation';
 import './App.css';
 
@@ -1286,41 +1285,6 @@ export default function App() {
           </button>
         </div>
 
-        {/* Electromagnet Builder Card */}
-        <div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid var(--success-border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Active Lab
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Zap size={20} style={{ color: '#0891b2' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.2</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Electromagnet Builder. Build an electromagnet and test how the number of turns and current strength affect magnetic power.
-          </p>
-
-          <button 
-            onClick={() => navigateTo('class8', 'electromagnet_builder')}
-            className="primary" 
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
-          </button>
-        </div>
-
         {/* Electromagnet Investigation Card */}
         <div 
           className="glass-panel" 
@@ -1336,7 +1300,7 @@ export default function App() {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Zap size={20} style={{ color: '#0891b2' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.3 & 4.4</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.2, 4.3 & 4.4</h3>
           </div>
 
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
@@ -1616,8 +1580,7 @@ export default function App() {
                      activeActivity === 'activity_3_11' ? 'Activity 3.11' :
                      activeActivity === 'linear_motion' ? 'Linear Motion' :
                      activeActivity === 'magnetic_effect' ? 'Activity 4.1' :
-                     activeActivity === 'electromagnet_builder' ? 'Activity 4.2' :
-                     activeActivity === 'electromagnet_investigation' ? 'Activity 4.3 & 4.4' :
+                     activeActivity === 'electromagnet_investigation' ? 'Activity 4.2, 4.3 & 4.4' :
                      'Template Demo'}
                   </span>
                 </>
@@ -1691,8 +1654,6 @@ export default function App() {
         ) : activeSubject === 'class8' ? (
           activeActivity === '4.1' ? (
             <MagneticEffectOfCurrentActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
-          ) : activeActivity === 'electromagnet_builder' ? (
-            <ElectromagnetBuilderActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
           ) : activeActivity === 'electromagnet_investigation' ? (
             <ElectromagnetInvestigationActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
           ) : activeActivity === 'chapter4' ? (

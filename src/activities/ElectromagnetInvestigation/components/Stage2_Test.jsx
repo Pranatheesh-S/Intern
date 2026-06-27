@@ -38,14 +38,25 @@ export default function Stage2_Test({ onComplete }) {
       successMessage: "The iron core concentrates the magnetic field, producing a stronger electromagnet."
     },
     3: {
-      question: "Investigation 3: What happens when the switch is turned OFF?",
+      question: "Investigation 3: What happens to the iron clips when the switch is turned ON with the iron core?",
+      options: [
+        { id: "nothing", text: "Nothing happens" },
+        { id: "attract", text: "The clips are attracted to the nail" },
+        { id: "repel", text: "The clips are repelled away" }
+      ],
+      correct: "attract",
+      setup: { nailPlaced: true, reverseBattery: false, clipsPlaced: true },
+      successMessage: "The strong magnetic field of the iron-core electromagnet attracts magnetic materials like iron clips!"
+    },
+    4: {
+      question: "Investigation 4: What happens when the switch is turned OFF?",
       options: [
         { id: "stays", text: "Magnetism stays" },
         { id: "disappears", text: "Magnetism disappears" }
       ],
       correct: "disappears",
-      setup: { nailPlaced: true, reverseBattery: false },
-      successMessage: "Without current, the electromagnet loses its magnetism."
+      setup: { nailPlaced: true, reverseBattery: false, clipsPlaced: true },
+      successMessage: "Without current, the electromagnet loses its magnetism. The paper clips will fall off!"
     }
   };
 
@@ -56,7 +67,7 @@ export default function Stage2_Test({ onComplete }) {
   const submitPrediction = () => {
     if (prediction) {
       setPredictionSubmitted(true);
-      if (investigation === 3) {
+      if (investigation === 4) {
         setSwitchOn(true); // force on before test
       }
     }
@@ -68,10 +79,11 @@ export default function Stage2_Test({ onComplete }) {
     
     if (investigation === 1 && newState) setHasTested(true);
     if (investigation === 2 && newState) setHasTested(true);
-    if (investigation === 3 && !newState) setHasTested(true);
+    if (investigation === 3 && newState) setHasTested(true);
+    if (investigation === 4 && !newState) setHasTested(true);
     
     if (prediction === investigations[investigation]?.correct) {
-      if ((investigation === 1 && newState) || (investigation === 2 && newState) || (investigation === 3 && !newState)) {
+      if ((investigation === 1 && newState) || (investigation === 2 && newState) || (investigation === 3 && newState) || (investigation === 4 && !newState)) {
         confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
       }
     }
@@ -85,7 +97,7 @@ export default function Stage2_Test({ onComplete }) {
     setSwitchOn(false);
   };
 
-  const currentSetup = investigation <= 3 ? investigations[investigation].setup : { nailPlaced: true, reverseBattery: false };
+  const currentSetup = investigation <= 4 ? investigations[investigation].setup : { nailPlaced: true, reverseBattery: false, clipsPlaced: true };
 
   return (
     <div className="main-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem', maxWidth: '1200px', margin: '0 auto' }}>
@@ -103,7 +115,7 @@ export default function Stage2_Test({ onComplete }) {
         <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', height: '100%' }}>
           
           <AnimatePresence mode="wait">
-            {investigation <= 3 && !predictionSubmitted ? (
+            {investigation <= 4 && !predictionSubmitted ? (
               <motion.div key={`predict-${investigation}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', background: 'var(--warning-bg)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--warning-border)', marginBottom: '1rem' }}>
                   <HelpCircle style={{ color: 'var(--warning)', flexShrink: 0 }} size={20} />
@@ -159,7 +171,7 @@ export default function Stage2_Test({ onComplete }) {
                 )}
               </motion.div>
             ) : (
-              <motion.div key="inv-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <motion.div key="inv-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', background: 'var(--accent-bg)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--accent-border)', marginBottom: '1rem' }}>
                   <HelpCircle style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
                   <div>
@@ -232,10 +244,11 @@ export default function Stage2_Test({ onComplete }) {
               switchOn={switchOn}
               turns={50}
               cells={1}
-              material={currentSetup.nailPlaced ? "iron" : "air"}
+              core={currentSetup.nailPlaced ? "iron" : "air"}
               showCompass={true}
               showFieldLines={investigation === 2 && switchOn}
               reverseBattery={false}
+              paperClipsPlaced={currentSetup.clipsPlaced || false}
             />
             
             <OrbitControls enablePan={true} enableZoom={true} />
