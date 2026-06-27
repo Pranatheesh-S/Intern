@@ -3,6 +3,8 @@ import { DndContext, useSensor, useSensors, PointerSensor, TouchSensor, useDragg
 import confetti from "canvas-confetti";
 import { Info, RotateCcw, Lock, CheckCircle2, ArrowRight } from "lucide-react";
 import { LemonSVG, CopperStripSVG, IronNailSVG, LEDSVG, VoltmeterSVG } from "./CircuitElements2D";
+import ReferenceOverlay from "../../../components/ReferenceOverlay";
+import blueprintImg from "../../../assets/lemon_battery_blueprint.png";
 
 const STEPS = [
   { id: "lemons", name: "Lemons (x5)", desc: ["The electrolyte."], hint: "Drag all 5 lemons onto the table.", prereq: [] },
@@ -51,7 +53,7 @@ function DraggableSVGGroup({ id, children, isDraggable, onClick }) {
 }
 
 export default function Stage1_Build({ onComplete }) {
-  const [placed, setPlaced] = useState({ lemons: 0, copper: 0, iron: 0, wires: 0, led: false });
+  const [placed, setPlaced] = useState({ lemons: 0, copper: 0, iron: 0, wires: 0, led: false, ledWires: 0 });
   const [positions, setPositions] = useState({
     lemon1: { x: 150, y: 350 }, lemon2: { x: 280, y: 350 }, lemon3: { x: 410, y: 350 }, lemon4: { x: 540, y: 350 }, lemon5: { x: 670, y: 350 },
     led: { x: 410, y: 150 }
@@ -70,11 +72,11 @@ export default function Stage1_Build({ onComplete }) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }), useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } }));
 
   useEffect(() => {
-    if (placed.led) {
+    if (placed.ledWires === 2) {
       setSuccess(true);
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     }
-  }, [placed.led]);
+  }, [placed.ledWires]);
 
   const isStepUnlocked = (stepId) => {
     if (stepId === "lemons") return true;
@@ -108,8 +110,35 @@ export default function Stage1_Build({ onComplete }) {
     if (!canvas) return;
     
     const rect = canvas.getBoundingClientRect();
-    const activeRect = e.active.rect.current.translated;
+    const svgScale = Math.min(rect.width / 800, rect.height / 600);
     
+    if (id.startsWith('placed-lemon-')) {
+       const index = id.split('-')[2];
+       if (e.delta) {
+          setPositions(p => ({
+            ...p,
+            [`lemon${index}`]: {
+              x: p[`lemon${index}`].x + (e.delta.x / svgScale),
+              y: p[`lemon${index}`].y + (e.delta.y / svgScale)
+            }
+          }));
+       }
+       return;
+    }
+    
+    if (id === 'placed-led') {
+       if (e.delta) {
+          setPositions(p => ({
+            ...p,
+            led: {
+              x: p.led.x + (e.delta.x / svgScale),
+              y: p.led.y + (e.delta.y / svgScale)
+            }
+          }));
+       }
+       return;
+    }
+
     if (id.startsWith('lemons')) {
       if (placed.lemons < 5) {
         setPlaced(p => ({ ...p, lemons: p.lemons + 1 }));
@@ -147,7 +176,7 @@ export default function Stage1_Build({ onComplete }) {
               if (step.id === 'copper') isDone = placed.copper === 5;
               if (step.id === 'iron') isDone = placed.iron === 5;
               if (step.id === 'wires') isDone = placed.wires === 4;
-              if (step.id === 'led') isDone = placed.led;
+              if (step.id === 'led') isDone = placed.led && placed.ledWires === 2;
               
               const isSelected = selectedItemId === step.id;
               
@@ -156,14 +185,28 @@ export default function Stage1_Build({ onComplete }) {
                   {!unlocked && <Lock size={14} style={{ position: "absolute", top: "0.5rem", right: "0.5rem", color: "var(--text-faint)" }} />}
                   {isDone && <CheckCircle2 size={14} style={{ position: "absolute", top: "0.5rem", right: "0.5rem", color: "var(--success)" }} />}
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", height: "100%" }}>
-                    <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <span style={{ fontSize: '1.5rem', fontFamily: 'monospace' }}>[ ]</span>
+                    <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "50px" }}>
+                      {step.id === 'lemons' && <svg width="100" height="60"><LemonSVG scale={0.5} x={0} y={-20} /></svg>}
+                      {step.id === 'copper' && <svg width="40" height="60"><CopperStripSVG scale={0.7} x={15} y={10} /></svg>}
+                      {step.id === 'iron' && <svg width="40" height="60"><IronNailSVG scale={0.7} x={15} y={10} /></svg>}
+                      {step.id === 'wires' && (
+                        <svg width="60" height="60" viewBox="0 0 40 40">
+                          <path d="M 5,20 C 15,0 25,40 35,20" fill="none" stroke="#475569" strokeWidth="3" />
+                          <circle cx="5" cy="20" r="3" fill="#ef4444" />
+                          <circle cx="35" cy="20" r="3" fill="#10b981" />
+                        </svg>
+                      )}
+                      {step.id === 'led' && <svg width="60" height="60"><LEDSVG scale={0.5} x={5} y={-5} /></svg>}
                     </div>
                     <span style={{ fontSize: "0.75rem", fontWeight: "600", textAlign: "center", color: isSelected ? 'var(--primary)' : 'var(--text-secondary)' }}>
-                      {step.name}
+                      {step.id === 'lemons' ? `Lemons (x${5 - placed.lemons})` : 
+                       step.id === 'copper' ? `Copper Strips (x${5 - placed.copper})` : 
+                       step.id === 'iron' ? `Iron Nails (x${5 - placed.iron})` : 
+                       step.id === 'wires' ? `Connect Series (x${4 - placed.wires})` : 
+                       step.name}
                     </span>
                   </div>
-                  {unlocked && !isDone && (
+                  {unlocked && !isDone && step.id !== 'wires' && (
                     <TrayDraggable id={step.id}>
                       <div style={{ position: "absolute", inset: 0, zIndex: 10 }} />
                     </TrayDraggable>
@@ -197,46 +240,141 @@ export default function Stage1_Build({ onComplete }) {
         {/* RIGHT PANEL */}
         <div style={{ flex: 1, position: "relative", minHeight: "480px", display: "flex", flexDirection: "column", background: "var(--canvas-bg)", borderRadius: "16px", border: "1px solid var(--canvas-border)", overflow: "hidden" }}>
           
+          <ReferenceOverlay title="Lemon Battery Blueprint">
+            <img src={blueprintImg} alt="Lemon Battery Reference" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          </ReferenceOverlay>
+
           <CanvasDroppable>
             <svg width="100%" height="100%" viewBox="0 0 800 600" style={{ position: "absolute", top: 0, left: 0 }}>
               
-              {/* Wiring (Simulated) */}
-              {placed.wires > 0 && <line x1={positions.lemon1.x+30} y1={positions.lemon1.y-20} x2={positions.lemon2.x-30} y2={positions.lemon2.y-20} stroke="#333" strokeWidth="3" />}
-              {placed.wires > 1 && <line x1={positions.lemon2.x+30} y1={positions.lemon2.y-20} x2={positions.lemon3.x-30} y2={positions.lemon3.y-20} stroke="#333" strokeWidth="3" />}
-              {placed.wires > 2 && <line x1={positions.lemon3.x+30} y1={positions.lemon3.y-20} x2={positions.lemon4.x-30} y2={positions.lemon4.y-20} stroke="#333" strokeWidth="3" />}
-              {placed.wires > 3 && <line x1={positions.lemon4.x+30} y1={positions.lemon4.y-20} x2={positions.lemon5.x-30} y2={positions.lemon5.y-20} stroke="#333" strokeWidth="3" />}
+              {/* Wiring (Simulated Clickable) */}
+              {[1, 2, 3, 4].map(i => {
+                if (placed.iron < 5) return null; // Only show placeholders when nails are in
+                const startX = positions[`lemon${i}`].x + 19;
+                const startY = positions[`lemon${i}`].y - 35;
+                const endX = positions[`lemon${i+1}`].x - 20;
+                const endY = positions[`lemon${i+1}`].y - 30;
+                const midX = (startX + endX) / 2;
+                const midY = Math.min(startY, endY) - 30;
+                
+                const d = `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`;
+                const isConnected = placed.wires >= i;
+                const isNext = placed.wires === (i - 1);
+
+                return (
+                  <g key={`wire-${i}`}>
+                    {!isConnected && isNext && (
+                      <path 
+                        d={d} 
+                        fill="none" 
+                        stroke="rgba(0,0,0,0)" 
+                        strokeWidth="24" 
+                        style={{ cursor: "pointer", pointerEvents: "stroke" }}
+                        onClick={() => setPlaced(p => ({ ...p, wires: p.wires + 1 }))}
+                      />
+                    )}
+                    {(isConnected || isNext) && (
+                      <path 
+                        d={d} 
+                        fill="none" 
+                        stroke={isConnected ? "#3b82f6" : "#94a3b8"} 
+                        strokeWidth={isConnected ? "4" : "3"}
+                        strokeDasharray={isConnected ? "none" : "6,6"}
+                        style={{ pointerEvents: "none" }}
+                      />
+                    )}
+                  </g>
+                );
+              })}
               
               {placed.led && (
                 <>
-                  <path d={`M ${positions.led.x-20},${positions.led.y+40} L ${positions.lemon1.x-30},${positions.lemon1.y-20}`} stroke="#ef4444" strokeWidth="3" fill="none" />
-                  <path d={`M ${positions.led.x+20},${positions.led.y+40} L ${positions.lemon5.x+30},${positions.lemon5.y-20}`} stroke="#3b82f6" strokeWidth="3" fill="none" />
+                  {/* LED Wire 1 (Anode to Lemon 1) */}
+                  <g>
+                    {placed.ledWires < 1 && (
+                      <path 
+                        d={`M ${positions.led.x-10} ${positions.led.y+40} Q ${positions.led.x-30} ${positions.led.y+60} ${positions.lemon1.x-20} ${positions.lemon1.y-30}`}
+                        fill="none" 
+                        stroke="rgba(0,0,0,0)" 
+                        strokeWidth="24" 
+                        style={{ cursor: "pointer", pointerEvents: "stroke" }}
+                        onClick={() => setPlaced(p => ({ ...p, ledWires: p.ledWires + 1 }))}
+                      />
+                    )}
+                    <path 
+                      d={`M ${positions.led.x-10} ${positions.led.y+40} Q ${positions.led.x-30} ${positions.led.y+60} ${positions.lemon1.x-20} ${positions.lemon1.y-30}`}
+                      fill="none" 
+                      stroke={placed.ledWires >= 1 ? "#ef4444" : "#fca5a5"} 
+                      strokeWidth={placed.ledWires >= 1 ? "4" : "3"} 
+                      strokeDasharray={placed.ledWires >= 1 ? "none" : "6,6"}
+                      style={{ pointerEvents: "none" }}
+                    />
+                    {placed.ledWires < 1 && (
+                      <circle cx={positions.led.x-25} cy={positions.led.y+50} r="6" fill="#ef4444" style={{ pointerEvents: "none", animation: "pulse 1.5s infinite" }} />
+                    )}
+                  </g>
+
+                  {/* LED Wire 2 (Cathode to Lemon 5) */}
+                  <g>
+                    {placed.ledWires === 1 && (
+                      <path 
+                        d={`M ${positions.led.x+10} ${positions.led.y+30} Q ${positions.led.x+30} ${positions.led.y+50} ${positions.lemon5.x+19} ${positions.lemon5.y-35}`}
+                        fill="none" 
+                        stroke="rgba(0,0,0,0)" 
+                        strokeWidth="24" 
+                        style={{ cursor: "pointer", pointerEvents: "stroke" }}
+                        onClick={() => setPlaced(p => ({ ...p, ledWires: p.ledWires + 1 }))}
+                      />
+                    )}
+                    {(placed.ledWires >= 1) && (
+                      <path 
+                        d={`M ${positions.led.x+10} ${positions.led.y+30} Q ${positions.led.x+30} ${positions.led.y+50} ${positions.lemon5.x+19} ${positions.lemon5.y-35}`}
+                        fill="none" 
+                        stroke={placed.ledWires === 2 ? "#3b82f6" : "#93c5fd"} 
+                        strokeWidth={placed.ledWires === 2 ? "4" : "3"} 
+                        strokeDasharray={placed.ledWires === 2 ? "none" : "6,6"}
+                        style={{ pointerEvents: "none" }}
+                      />
+                    )}
+                    {placed.ledWires === 1 && (
+                      <circle cx={positions.led.x+25} cy={positions.led.y+40} r="6" fill="#3b82f6" style={{ pointerEvents: "none", animation: "pulse 1.5s infinite" }} />
+                    )}
+                  </g>
                 </>
               )}
 
               {/* Components */}
               {[1,2,3,4,5].map(i => (
                 placed.lemons >= i && (
-                  <LemonSVG 
-                    key={`lemon-${i}`} 
-                    x={positions[`lemon${i}`].x - 50} 
-                    y={positions[`lemon${i}`].y - 50} 
-                    hasCopper={placed.copper >= i}
-                    hasIron={placed.iron >= i}
-                  />
+                  <DraggableSVGGroup
+                    key={`placed-lemon-${i}`}
+                    id={`placed-lemon-${i}`}
+                    isDraggable={true}
+                  >
+                    <LemonSVG 
+                      x={positions[`lemon${i}`].x - 50} 
+                      y={positions[`lemon${i}`].y - 50} 
+                      hasCopper={placed.copper >= i}
+                      hasIron={placed.iron >= i}
+                    />
+                  </DraggableSVGGroup>
                 )
               ))}
 
-              {placed.led && <LEDSVG x={positions.led.x - 40} y={positions.led.y - 40} isGlowing={success} />}
+              {placed.led && (
+                <DraggableSVGGroup
+                  key="placed-led"
+                  id="placed-led"
+                  isDraggable={true}
+                >
+                  <LEDSVG x={positions.led.x - 40} y={positions.led.y - 40} isGlowing={success} />
+                </DraggableSVGGroup>
+              )}
               
             </svg>
           </CanvasDroppable>
 
           {/* Controls */}
-          {placed.iron === 5 && placed.wires < 4 && (
-            <div style={{ position: "absolute", bottom: "1.5rem", left: "50%", transform: "translateX(-50%)", zIndex: 50 }}>
-               <button onClick={() => setPlaced(p => ({ ...p, wires: p.wires + 1 }))} className="primary">Connect Next Wire</button>
-            </div>
-          )}
 
           {success && (
             <div style={{ position: "absolute", bottom: "1.5rem", right: "1.5rem", zIndex: 50 }}>
@@ -248,10 +386,18 @@ export default function Stage1_Build({ onComplete }) {
         </div>
       </div>
       
-      <DragOverlay>
+      <DragOverlay dropAnimation={{ duration: 0 }}>
         {activeDraggingId ? (
-          <div style={{ transform: "scale(1.2)", opacity: 0.8, filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.2))" }}>
-             <span style={{ fontSize: '3rem', fontFamily: 'monospace', background: 'white', border: '2px solid black', padding: '10px' }}>[ ]</span>
+          <div style={{ opacity: 0.8, filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.2))" }}>
+             {activeDraggingId.startsWith('lemons') && <svg width="100" height="100" style={{ overflow: 'visible' }}><LemonSVG scale={1} x={0} y={0} /></svg>}
+             {activeDraggingId.startsWith('copper') && <svg width="50" height="100" style={{ overflow: 'visible' }}><CopperStripSVG scale={1} x={15} y={0} /></svg>}
+             {activeDraggingId.startsWith('iron') && <svg width="50" height="100" style={{ overflow: 'visible' }}><IronNailSVG scale={1} x={15} y={0} /></svg>}
+             {activeDraggingId.startsWith('wires') && (
+                <svg width="60" height="60" viewBox="0 0 40 40">
+                  <path d="M 5,20 C 15,0 25,40 35,20" fill="none" stroke="#475569" strokeWidth="3" />
+                </svg>
+             )}
+             {activeDraggingId.startsWith('led') && <svg width="80" height="100" style={{ overflow: 'visible' }}><LEDSVG scale={1} x={0} y={0} /></svg>}
           </div>
         ) : null}
       </DragOverlay>

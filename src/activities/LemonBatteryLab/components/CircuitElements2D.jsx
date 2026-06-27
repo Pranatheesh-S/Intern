@@ -1,44 +1,45 @@
 import React from 'react';
 
-// Common style wrapper for dragging 
-const DraggableStyle = { pointerEvents: 'none', userSelect: 'none' };
+// Common style wrapper
+const DraggableStyle = { userSelect: 'none' };
 
 export const LemonSVG = ({ x = 0, y = 0, scale = 1, isPlaced = false, hasCopper = false, hasIron = false }) => (
   <g transform={`translate(${x}, ${y}) scale(${scale})`} style={DraggableStyle}>
     {/* Shadow */}
     <ellipse cx="50" cy="85" rx="45" ry="15" fill="rgba(0,0,0,0.15)" />
     
-    {/* Lemon Body */}
-    <ellipse cx="50" cy="50" rx="40" ry="35" fill="url(#lemonGrad)" stroke="#a1a11f" strokeWidth="2" />
+    {/* Lemon Body (Half Cut) */}
+    {/* Base */}
+    <path d="M 10 50 A 40 30 0 0 0 90 50 Z" fill="url(#lemonGrad)" stroke="#a1a11f" strokeWidth="2" />
     
-    {/* Texture details */}
-    <circle cx="25" cy="45" r="2" fill="#c2c232" />
-    <circle cx="35" cy="60" r="3" fill="#c2c232" />
-    <circle cx="65" cy="35" r="2" fill="#c2c232" />
-    <circle cx="75" cy="65" r="2.5" fill="#c2c232" />
-    <circle cx="45" cy="25" r="2" fill="#c2c232" />
+    {/* Cut Surface (Top) */}
+    <ellipse cx="50" cy="50" rx="40" ry="15" fill="#fef08a" stroke="#a1a11f" strokeWidth="2" />
     
-    {/* Ends */}
-    <ellipse cx="12" cy="50" rx="4" ry="10" fill="#a1a11f" />
-    <ellipse cx="88" cy="50" rx="4" ry="10" fill="#a1a11f" />
+    {/* Inner Flesh Segments */}
+    <ellipse cx="50" cy="50" rx="36" ry="12" fill="#fde047" />
+    <path d="M 14 50 Q 50 50 86 50 M 50 38 Q 50 50 50 62 M 25 41 Q 50 50 75 59 M 25 59 Q 50 50 75 41" stroke="#fef08a" strokeWidth="1.5" fill="none" />
+    
+    {/* Small seeds */}
+    <ellipse cx="40" cy="45" rx="1.5" ry="2.5" fill="#eab308" transform="rotate(30, 40, 45)" />
+    <ellipse cx="60" cy="55" rx="1.5" ry="2.5" fill="#eab308" transform="rotate(210, 60, 55)" />
 
-    {/* Slits for electrodes */}
-    <line x1="30" y1="20" x2="45" y2="25" stroke="rgba(0,0,0,0.3)" strokeWidth="3" strokeLinecap="round" />
-    <line x1="55" y1="25" x2="70" y2="20" stroke="rgba(0,0,0,0.3)" strokeWidth="3" strokeLinecap="round" />
+    {/* Slits for electrodes (now on the cut surface) */}
+    <line x1="25" y1="50" x2="35" y2="50" stroke="rgba(0,0,0,0.5)" strokeWidth="2" strokeLinecap="round" />
+    <line x1="65" y1="50" x2="75" y2="50" stroke="rgba(0,0,0,0.5)" strokeWidth="2" strokeLinecap="round" />
     
     {hasCopper && (
-      <g transform="translate(30, -20)">
-        <rect x="0" y="0" width="12" height="40" fill="#ca8a04" stroke="#a16207" />
+      <g transform="translate(24, 15)">
+        <rect x="0" y="0" width="12" height="35" fill="#ca8a04" stroke="#a16207" />
         <circle cx="6" cy="5" r="2" fill="var(--danger)" /> {/* Connection point */}
       </g>
     )}
 
     {hasIron && (
-      <g transform="translate(60, -20)">
+      <g transform="translate(64, 15)">
         {/* Nail Head */}
         <ellipse cx="5" cy="0" rx="8" ry="3" fill="#6b7280" stroke="#374151" />
         {/* Nail Body */}
-        <polygon points="2,0 8,0 6,40 4,40" fill="#9ca3af" stroke="#4b5563" strokeWidth="1" />
+        <polygon points="2,0 8,0 6,35 4,35" fill="#9ca3af" stroke="#4b5563" strokeWidth="1" />
         <circle cx="5" cy="0" r="2" fill="var(--text-primary)" /> {/* Connection point */}
       </g>
     )}
