@@ -45,7 +45,7 @@ const STEPS = [
   },
 ];
 
-// Draggable wrapper for Parts Bench
+// Draggable wrapper for 3D Viewer
 function DraggableToken({ id, children }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id });
@@ -225,7 +225,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
           x = positions[draggedId].x + dx;
           y = positions[draggedId].y + dy;
         } else {
-          // Dropped from Parts Bench
+          // Dropped from 3D Viewer
           const clientX = activeRect.left + activeRect.width / 2;
           const clientY = activeRect.top + activeRect.height / 2;
           
@@ -334,7 +334,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
 
         <div style={{ display: "grid", gridTemplateColumns: "250px 1fr", gap: "1.5rem" }}>
           <div className="glass-panel" style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "1rem", background: "var(--surface)" }}>
-            <h4 style={{ margin: 0, borderBottom: "1px solid var(--border)", paddingBottom: "0.5rem" }}>Parts Bench</h4>
+            <h4 style={{ margin: 0, borderBottom: "1px solid var(--border)", paddingBottom: "0.5rem" }}>🧊 3D Viewer</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
               {STEPS.map((step) => {
                 const isPlaced = placed[step.id];

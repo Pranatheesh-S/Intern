@@ -538,7 +538,7 @@ export default function Stage1_Assemble({ onComplete }) {
         <div className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "0.75rem", padding: "1rem", background: "var(--card-bg)", borderColor: "var(--border)", borderRadius: "16px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <h3 style={{ margin: 0, fontSize: "0.95rem", color: "var(--accent-text)", display: "flex", alignItems: "center", gap: "0.35rem" }}>
-              <Info size={14} /> Parts Bench
+              <span>🧊</span> 3D Viewer
             </h3>
             {activeStep && (
               <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>

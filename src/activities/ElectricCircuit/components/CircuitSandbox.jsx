@@ -31,8 +31,8 @@ export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, r
   const [positions, setPositions] = useState({
     cell: { x: 50, y: 50 },
     cellHolder: { x: 100, y: 300 },
-    lamp: { x: 450, y: 50 },
-    lampHolder: { x: 400, y: 200 }
+    lamp: { x: 250, y: 50 },
+    lampHolder: { x: 200, y: 200 }
   });
 
   const [assembly, setAssembly] = useState({
@@ -78,8 +78,8 @@ export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, r
       setPositions({
         cell: { x: 50, y: 50 },
         cellHolder: { x: 100, y: 300 },
-        lamp: { x: 450, y: 50 },
-        lampHolder: { x: 400, y: 200 }
+        lamp: { x: 250, y: 50 },
+        lampHolder: { x: 200, y: 200 }
       });
       setAssembly({
         isCellInHolder: false,
@@ -93,7 +93,7 @@ export default function CircuitSandbox({ onWiringChange, isTesting, isGlowing, r
     
     setPositions(prev => {
       const newPos = {
-        x: Math.max(20, Math.min(550, prev[id].x + offsetX)),
+        x: Math.max(20, Math.min(containerRef.current ? containerRef.current.clientWidth - 100 : 450, prev[id].x + offsetX)),
         y: Math.max(20, Math.min(380, prev[id].y + offsetY))
       };
 

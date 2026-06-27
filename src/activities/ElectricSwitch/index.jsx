@@ -110,7 +110,8 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
       </div>
 
       {/* Active Stage */}
-      <main style={{ minHeight: '480px', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '1.5rem', alignItems: 'stretch' }}>
+        <main style={{ flex: 1,  minHeight: '480px', marginBottom: '2rem' }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -124,22 +125,28 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
         </AnimatePresence>
       </main>
 
-      {/* Footer */}
-      <footer className="glass-panel" style={{ marginTop: '2rem', padding: '1.25rem' }}>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-          <Info style={{ color: 'var(--accent-text)', flexShrink: 0 }} size={20} />
-          <div>
-            <h4 style={{ margin: 0, fontSize: '0.9rem' }}>
-              Did you know? (Science Insights)
-            </h4>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', lineHeight: '1.5' }}>
-              An <strong>electric switch</strong> is a simple device that either completes (closes) or breaks (opens) an electrical circuit. 
+        {/* Right Sidebar (Educational Tip) */}
+        <aside style={{ width: '280px', flexShrink: 0 }}>
+          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
+              <div>
+                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                  Did you know?
+                </h4>
+                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+                  Science Insights
+                </div>
+                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
+                  An <strong>electric switch</strong> is a simple device that either completes (closes) or breaks (opens) an electrical circuit. 
               Switches used in household lighting and electronics work on this exact same principle—by moving a metal conductor into 
               and out of contact with the circuit terminals to start or halt the flow of current.
-            </p>
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </footer>
+        </aside>
+      </div>
     </div>
   );
 }
