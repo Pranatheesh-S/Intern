@@ -28,6 +28,7 @@ import MagneticCompassActivity from './activities/MagneticCompass';
 import MagnetInteractionActivity from './activities/MagnetInteraction';
 import LinearMotionActivity from './activities/LinearMotion';
 import CircularMotionActivity from './activities/CircularMotion';
+import HeatingEffectActivity from './activities/HeatingEffectOfCurrent';
 import TorchExplorerActivity from './activities/TorchExplorer';
 import LampExplorerActivity from './activities/LampExplorer';
 import Activity3_7 from './activities/Activity3_7';
@@ -1315,6 +1316,35 @@ export default function App() {
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
           </button>
         </div>
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Zap size={20} style={{ color: '#ef4444' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.5</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Heating Effect of Electric Current. Build a circuit with nichrome wire and observe how electrical energy converts into heat.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class8', 'heating_effect')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1581,6 +1611,7 @@ export default function App() {
                      activeActivity === 'linear_motion' ? 'Linear Motion' :
                      activeActivity === 'magnetic_effect' ? 'Activity 4.1' :
                      activeActivity === 'electromagnet_investigation' ? 'Activity 4.2, 4.3 & 4.4' :
+                     activeActivity === 'heating_effect' ? 'Activity 4.5' :
                      'Template Demo'}
                   </span>
                 </>
@@ -1656,6 +1687,8 @@ export default function App() {
             <MagneticEffectOfCurrentActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
           ) : activeActivity === 'electromagnet_investigation' ? (
             <ElectromagnetInvestigationActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
+          ) : activeActivity === 'heating_effect' ? (
+            <HeatingEffectActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
           ) : activeActivity === 'chapter4' ? (
             renderClass8Chapter4()
           ) : (
