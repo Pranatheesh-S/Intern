@@ -100,37 +100,46 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
         </nav>
       </div>
 
-      {/* Active Stage */}
-      <main style={{ minHeight: '480px', marginBottom: '2rem' }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
-            {tabs.find(t => t.id === activeTab)?.component}
-          </motion.div>
-        </AnimatePresence>
-      </main>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: '1.5rem', alignItems: 'start' }}>
+        {/* Left Column: Active Stage */}
+        <main style={{ minHeight: '480px', marginBottom: '2rem' }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              {tabs.find(t => t.id === activeTab)?.component}
+            </motion.div>
+          </AnimatePresence>
+        </main>
 
-      {/* Footer */}
-      <footer className="glass-panel" style={{ marginTop: '2rem', padding: '1.25rem' }}>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-          <Info style={{ color: 'var(--accent-text)', flexShrink: 0 }} size={20} />
-          <div>
-            <h4 style={{ margin: 0, fontSize: '0.9rem' }}>
-              Did you know? (Science Insights)
+        {/* Right Column: Did you know? */}
+        <aside className="glass-panel" style={{ padding: '1rem', position: 'sticky', top: '2rem', marginTop: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
+            <h4 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-heading)' }}>
+              Did you know?
             </h4>
-            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', lineHeight: '1.5' }}>
-              Hans Christian Oersted discovered in 1820 that an electric current flowing through a wire creates a magnetic field around it. 
-              This is demonstrated by a magnetic compass needle deflecting when placed near the wire. This fundamental principle led to the 
-              invention of electromagnets, electric motors, and modern power generation!
+          </div>
+          <div style={{ fontSize: '0.8rem', lineHeight: '1.5', color: 'var(--text-secondary)' }}>
+            <p style={{ margin: '0 0 0.75rem 0', fontWeight: 'bold', color: 'var(--text)' }}>
+              Science Insights
+            </p>
+            <p style={{ margin: '0 0 0.75rem 0' }}>
+              Hans Christian Oersted discovered in 1820 that an electric current flowing through a wire creates a magnetic field around it.
+            </p>
+            <p style={{ margin: '0 0 0.75rem 0' }}>
+              This is demonstrated by a magnetic compass needle deflecting when placed near the wire. 
+            </p>
+            <p style={{ margin: '0' }}>
+              This fundamental principle led to the invention of electromagnets, electric motors, and modern power generation!
             </p>
           </div>
-        </div>
-      </footer>
+        </aside>
+      </div>
     </div>
   );
 }
