@@ -88,7 +88,7 @@ export default function Stage2_Test({ onComplete }) {
                     <Sparkles size={16} /> Discovery Made!
                   </h4>
                   <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.5" }}>
-                    The compass needle deflects only when the current flows. This shows that an electric current produces a magnetic field!
+                    Notice how when the current flows, the compass needle gets deflected from its original direction. When the current stops, the needle returns to its original direction! This shows that an electric current produces a magnetic field.
                   </p>
                 </div>
                 <button onClick={onComplete} className="primary" style={{ width: "100%" }}>Proceed to Quiz</button>
