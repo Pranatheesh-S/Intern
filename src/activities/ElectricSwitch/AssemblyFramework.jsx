@@ -396,8 +396,8 @@ export default function AssemblyFramework({
                   
                   {/* Draggable Token handle */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>DRAG TO ASSEMBLE:</span>
-                    <DraggableToken id={activeStep.id}>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>HOW TO ASSEMBLE:</span>
+                    
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -416,10 +416,10 @@ export default function AssemblyFramework({
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
                           <span>{activeStep.name}</span>
-                          <span style={{ fontSize: '0.65rem', color: 'var(--accent-text)', fontWeight: 'normal' }}>Drag me up to workspace</span>
+                          <span style={{ fontSize: '0.65rem', color: 'var(--accent-text)', fontWeight: 'normal' }}>Drag from Component Tray to Workspace</span>
                         </div>
                       </div>
-                    </DraggableToken>
+                    
                   </div>
                 </div>
               </>
@@ -447,7 +447,8 @@ export default function AssemblyFramework({
               const isSelected = selectedItemId === step.id;
 
               return (
-                <button
+                <TrayDraggable key={step.id} id={step.id} disabled={isPlaced || !isUnlocked}>
+<button
                   key={step.id}
                   onClick={() => handleSelectTrayItem(step.id)}
                   disabled={isPlaced || !isUnlocked}
@@ -512,6 +513,7 @@ export default function AssemblyFramework({
                     ) : null}
                   </div>
                 </button>
+                </TrayDraggable>
               );
             })}
           </div>

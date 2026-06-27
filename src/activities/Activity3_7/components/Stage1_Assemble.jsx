@@ -122,12 +122,17 @@ export default function Stage1_Assemble({ onComplete }) {
   const isFull = slot0 && slot1;
   const isCorrect = isFull && !slot0.reversed && !slot1.reversed;
   
+  const bothReversed = isFull && slot0.reversed && slot1.reversed;
+  const opposing = isFull && slot0.reversed !== slot1.reversed;
+  
   let feedbackMessage = "";
   if (isFull) {
     if (isCorrect) {
       feedbackMessage = "Battery is ready to use! The positive and negative terminals are correctly arranged.";
-    } else {
-      feedbackMessage = "The cells are in the holder, but one or both are placed backwards. The negative (-) flat end must face left towards the spring! Double-click a cell to flip it.";
+    } else if (opposing) {
+      feedbackMessage = "The cells are facing opposite directions. Scientific Reason: Their voltages oppose and cancel each other out (1.5V - 1.5V = 0V). No current will flow. The positive (+) terminal of one cell must connect to the negative (-) terminal of the next!";
+    } else if (bothReversed) {
+      feedbackMessage = "Both cells are backwards. Scientific Reason: The metal spring in the holder is designed to press against the flat negative (-) terminal for proper physical contact. Reversing them flips the circuit's polarity, preventing polarized components (like LEDs) from working. The negative (-) end must face left towards the spring!";
     }
   }
 

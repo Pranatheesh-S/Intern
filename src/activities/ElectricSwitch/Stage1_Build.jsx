@@ -106,6 +106,20 @@ function DraggableToken({ id, children }) {
 }
 
 // Droppable Canvas component
+
+// Draggable wrapper for Component Tray
+function TrayDraggable({ id, disabled, children }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: id,
+    disabled: disabled,
+  });
+  return (
+    <div ref={setNodeRef} {...listeners} {...attributes} style={{ display: 'flex', flexDirection: 'column', height: '100%', touchAction: 'none', opacity: isDragging ? 0.4 : 1, cursor: disabled ? "not-allowed" : (isDragging ? "grabbing" : "grab") }}>
+      {children}
+    </div>
+  );
+}
+
 function CanvasDroppable({ children }) {
   const { setNodeRef } = useDroppable({
     id: "canvas",
@@ -242,7 +256,11 @@ export default function Stage1_Build({ onComplete }) {
   const isStepUnlocked = (stepId) => {
     const step = STEPS.find((s) => s.id === stepId);
     if (!step) return false;
-    return step.prereq.every((pId) => placed[pId] === true);
+    const prereqsMet = step.prereq.every((pId) => placed[pId] === true);
+    if (stepId === "wires") {
+      return prereqsMet && pinsValid;
+    }
+    return prereqsMet;
   };
 
   const handleSelectTrayItem = (stepId) => {
@@ -251,6 +269,12 @@ export default function Stage1_Build({ onComplete }) {
     if (!step) return;
 
     if (!isStepUnlocked(stepId)) {
+      if (stepId === "wires" && step.prereq.every((pId) => placed[pId])) {
+        setError(
+          "⚠️ Scientific Check Warning: Both drawing pins must be placed on the Cardboard Base! The cardboard sheet acts as an insulator preventing current from leaking into the table/surface."
+        );
+        return;
+      }
       const missingPrereqs = step.prereq.filter((pId) => !placed[pId]);
       const missingNames = missingPrereqs
         .map((pId) => STEPS.find((s) => s.id === pId)?.name)
@@ -268,6 +292,7 @@ export default function Stage1_Build({ onComplete }) {
   const handleDragStart = (event) => {
     setIsDragging(true);
     setActiveDraggingId(event.active.id);
+    setSelectedItemId(event.active.id);
     setError("");
   };
 
@@ -421,10 +446,11 @@ export default function Stage1_Build({ onComplete }) {
     setError("");
     if (!pinsValid) {
       setError(
-        "⚠️ Scientific Check Warning: Both drawing pins must be placed on the Cardboard Base! The cardboard sheet acts as an insulator preventing current from leaking into the table/surface.",
+        "⚠️ Scientific Check Warning: Both drawing pins must be placed on the Cardboard Base! The cardboard sheet acts as an insulator preventing current from leaking into the table/surface."
       );
       return;
     }
+    
     if (!selectedTerminal) {
       setSelectedTerminal(terminalId);
     } else {
@@ -738,7 +764,8 @@ export default function Stage1_Build({ onComplete }) {
                 const isDisabled = (isPlaced && !isWires) || !isUnlocked;
 
                 return (
-                  <button
+                  <TrayDraggable key={step.id} id={step.id} disabled={isDisabled}>
+<button
                     key={step.id}
                     onClick={() => handleSelectTrayItem(step.id)}
                     disabled={isDisabled}
@@ -826,6 +853,7 @@ export default function Stage1_Build({ onComplete }) {
                       ) : null}
                     </div>
                   </button>
+                  </TrayDraggable>
                 );
               })}
             </div>
@@ -1601,9 +1629,9 @@ export default function Stage1_Build({ onComplete }) {
                         fontWeight: "bold",
                       }}
                     >
-                      DRAG TO ASSEMBLE:
+                      HOW TO ASSEMBLE:
                     </span>
-                    <DraggableToken id={activeStep.id}>
+                    
                       <div
                         style={{
                           display: "flex",
@@ -1648,11 +1676,11 @@ export default function Stage1_Build({ onComplete }) {
                               fontWeight: "normal",
                             }}
                           >
-                            Drag me up to workspace
+                            Drag from Component Tray to Workspace
                           </span>
                         </div>
                       </div>
-                    </DraggableToken>
+                    
                   </div>
                 </div>
               </>

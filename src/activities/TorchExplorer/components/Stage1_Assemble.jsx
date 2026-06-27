@@ -69,6 +69,20 @@ function DraggableToken({ id, children }) {
   );
 }
 
+
+// Draggable wrapper for Component Tray
+function TrayDraggable({ id, disabled, children }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: id,
+    disabled: disabled,
+  });
+  return (
+    <div ref={setNodeRef} {...listeners} {...attributes} style={{ display: 'flex', flexDirection: 'column', height: '100%', touchAction: 'none', opacity: isDragging ? 0.4 : 1, cursor: disabled ? "not-allowed" : (isDragging ? "grabbing" : "grab") }}>
+      {children}
+    </div>
+  );
+}
+
 function CanvasDroppable({ children }) {
   const { setNodeRef } = useDroppable({ id: "canvas" });
   return (
@@ -173,6 +187,7 @@ export default function Stage1_Assemble({ onComplete }) {
 
   const handleDragStart = (event) => {
     setActiveDraggingId(event.active.id);
+    setSelectedItemId(event.active.id);
     setError("");
   };
 
@@ -342,7 +357,8 @@ export default function Stage1_Assemble({ onComplete }) {
                 const isSelected = selectedItemId === step.id;
 
                 return (
-                  <button
+                  <TrayDraggable key={step.id} id={step.id} disabled={isSnapped}>
+<button
                     key={step.id}
                     onClick={() => handleSelectTrayItem(step.id)}
                     disabled={isSnapped}
@@ -372,6 +388,7 @@ export default function Stage1_Assemble({ onComplete }) {
                       ) : null}
                     </div>
                   </button>
+                  </TrayDraggable>
                 );
               })}
             </div>
@@ -616,16 +633,15 @@ export default function Stage1_Assemble({ onComplete }) {
                     </ul>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "bold" }}>DRAG TO ASSEMBLE:</span>
+                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "bold" }}>HOW TO ASSEMBLE:</span>
                     {!placed[activeStep.id] ? (
-                      <DraggableToken id={activeStep.id}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "var(--accent-bg)", border: "1px dashed rgba(99, 102, 241, 0.4)", borderRadius: "10px", color: "var(--accent-text)", fontSize: "0.8rem", fontWeight: "600", boxShadow: "0 4px 10px rgba(99,102,241,0.1)", cursor: "grab" }}>
-                          <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "var(--accent-bg)", border: "1px dashed rgba(99, 102, 241, 0.4)", borderRadius: "10px", color: "var(--accent-text)", fontSize: "0.8rem", fontWeight: "600", boxShadow: "0 4px 10px rgba(99,102,241,0.1)", cursor: "default" }}>
+<div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
                             <span>{activeStep.name}</span>
-                            <span style={{ fontSize: "0.65rem", color: "var(--accent-text)", fontWeight: "normal" }}>Drag me up to workspace</span>
+                            <span style={{ fontSize: "0.65rem", color: "var(--accent-text)", fontWeight: "normal" }}>Drag from Component Tray to Workspace</span>
                           </div>
                         </div>
-                      </DraggableToken>
+                      
                     ) : (
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "var(--surface)", border: "1px dashed var(--border)", borderRadius: "10px", color: "var(--text-secondary)", fontSize: "0.8rem", fontWeight: "600" }}>
                         <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
