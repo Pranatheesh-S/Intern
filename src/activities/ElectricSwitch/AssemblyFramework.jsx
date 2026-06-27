@@ -450,6 +450,7 @@ export default function AssemblyFramework({
                 <TrayDraggable key={step.id} id={step.id} disabled={isPlaced || !isUnlocked}>
 <button
                   key={step.id}
+                  className="tray-btn"
                   onClick={() => handleSelectTrayItem(step.id)}
                   disabled={isPlaced || !isUnlocked}
                   style={{

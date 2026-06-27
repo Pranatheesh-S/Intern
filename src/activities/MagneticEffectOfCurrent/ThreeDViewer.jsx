@@ -243,9 +243,8 @@ export default function ThreeDViewer({ componentId }) {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', outline: 'none' }}>
-      <Canvas shadows camera={{ position: [0, 1.8, 2.5], fov: 45 }} gl={{ antialias: true, preserveDrawingBuffer: true }}>
-        <color attach="background" args={['var(--canvas-bg)']} />
+    <div style={{ width: '100%', height: '100%', outline: 'none', background: 'var(--canvas-bg)' }}>
+      <Canvas shadows camera={{ position: [0, 1.8, 2.5], fov: 45 }} gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}>
         <ambientLight intensity={1.1} />
         <pointLight position={[10, 10, 10]} intensity={1.8} castShadow />
         <pointLight position={[-10, 5, -10]} intensity={0.6} />

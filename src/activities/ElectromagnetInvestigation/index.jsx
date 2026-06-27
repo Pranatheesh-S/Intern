@@ -14,6 +14,35 @@ import Stage2_Test from './components/Stage2_Test';
 import Stage3_Sandbox from './components/Stage3_Sandbox';
 import Stage4_Quiz from './components/Stage4_Quiz';
 
+const FAQItem = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div style={{ marginTop: '0.75rem', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '0.6rem 0.8rem', background: 'var(--surface)', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.8rem', color: 'var(--text-heading)', fontWeight: '600', gap: '0.5rem' }}
+      >
+        <span style={{ flex: 1, lineHeight: '1.3' }}>{question}</span>
+        <span style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', fontSize: '0.8rem', flexShrink: 0, marginTop: '2px' }}>▼</span>
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ padding: '0.6rem 0.8rem', fontSize: '0.75rem', color: 'var(--text-secondary)', background: 'var(--neutral-bg)', borderTop: '1px solid var(--border)', lineHeight: '1.4' }}>
+              {answer.split('\n').map((line, i) => <div key={i} style={{ marginBottom: i !== answer.split('\n').length - 1 ? '0.4rem' : 0 }}>{line}</div>)}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 export default function ElectromagnetInvestigationActivity({ onBackToDashboard }) {
   const [activeTab, setActiveTab] = useState('build');
   const [progress, setProgress] = useState({
@@ -71,8 +100,8 @@ export default function ElectromagnetInvestigationActivity({ onBackToDashboard }
             <ArrowLeft size={14} /> Back to Labs
           </button>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Activity 4.3 & 4.4</h2>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Class 8 • Electromagnet Investigation</span>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Electromagnet Investigation</h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Class 8 Activity 4.3 & 4.4</span>
           </div>
         </div>
 
@@ -108,8 +137,8 @@ export default function ElectromagnetInvestigationActivity({ onBackToDashboard }
         </nav>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '1.5rem', alignItems: 'stretch' }}>
-        <main style={{ flex: 1, minHeight: '480px', marginBottom: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: '1.5rem', alignItems: 'start' }}>
+        <main style={{ minHeight: '480px', marginBottom: '2rem' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -123,17 +152,41 @@ export default function ElectromagnetInvestigationActivity({ onBackToDashboard }
           </AnimatePresence>
         </main>
 
-        <aside style={{ width: '280px', flexShrink: 0 }}>
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
+        <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem' }}>
+          <div className="glass-panel" style={{ padding: '1.25rem' }}>
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
+              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
               <div>
-                <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-heading)' }}>
-                  Electromagnet Properties
+                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                  Did you know?
                 </h4>
-                <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+                  Electromagnet Properties
+                </div>
+                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
                   A current-carrying coil behaves like a magnet. Inserting an iron core concentrates the magnetic field, producing a much stronger electromagnet. Reversing the current direction reverses its magnetic poles.
                 </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="glass-panel" style={{ padding: '1.25rem', marginTop: '1rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🤔</span>
+              <div style={{ width: '100%' }}>
+                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                  Why?
+                </h4>
+                
+                <FAQItem 
+                  question="Why does the compass needle deflect when the switch is turned ON?"
+                  answer={"When the switch is turned ON, electric current flows through the wire.\nThe current creates a magnetic field that causes the compass needle to deflect."}
+                />
+                
+                <FAQItem 
+                  question="Why does the compass needle return to its original position when the switch is turned OFF?"
+                  answer={"When the switch is turned OFF, the electric current stops flowing.\nThe magnetic field disappears, so the compass needle returns to its original position."}
+                />
               </div>
             </div>
           </div>

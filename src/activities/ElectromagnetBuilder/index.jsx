@@ -126,12 +126,15 @@ export default function ElectromagnetBuilderActivity({ onBackToDashboard }) {
         <aside style={{ width: '280px', flexShrink: 0 }}>
           <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={20} />
+              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
               <div>
-                <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-heading)' }}>
-                  Temporary Magnetism
+                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                  Did you know?
                 </h4>
-                <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+                  Temporary Magnetism
+                </div>
+                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
                   An electromagnet is a temporary magnet. Its magnetism is only present when an electric current is flowing through the coil of wire wrapped around the iron core.
                 </p>
               </div>

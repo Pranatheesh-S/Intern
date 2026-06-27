@@ -7,6 +7,7 @@ import {
   TouchSensor,
   useDraggable,
   useDroppable,
+  DragOverlay,
 } from "@dnd-kit/core";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
@@ -26,56 +27,96 @@ const STEPS = [
   {
     id: "switchBoard",
     name: "Switch Base",
-    desc: ["A base to hold the switch parts securely."],
+    desc: [
+      "Provides a sturdy non-conductive base.",
+      "Secures the switch components in place.",
+      "Prevents short circuits on the table.",
+      "Serves as the foundation for the control mechanism."
+    ],
     hint: "Place the switch base on the workspace.",
     prereq: [],
   },
   {
     id: "pin1",
     name: "Drawing Pin 1",
-    desc: ["First terminal of our switch."],
+    desc: [
+      "Acts as the first contact terminal.",
+      "Secures the safety pin to the base.",
+      "Connects to the copper coil wire.",
+      "Made of conductive brass or steel."
+    ],
     hint: "Place Pin 1 on the switch base.",
     prereq: [],
   },
   {
     id: "safetyPin",
     name: "Safety Pin",
-    desc: ["The moving part of the switch."],
+    desc: [
+      "Functions as the movable switch bridge.",
+      "Conducts electricity when closed.",
+      "Completes the circuit loop.",
+      "Can easily be opened to break the circuit."
+    ],
     hint: "Attach Safety Pin to Pin 1.",
     prereq: [],
   },
   {
     id: "pin2",
     name: "Drawing Pin 2",
-    desc: ["Second terminal of the switch."],
+    desc: [
+      "Acts as the second contact terminal.",
+      "Receives the safety pin when closed.",
+      "Connects to the battery's positive terminal.",
+      "Completes the switch assembly."
+    ],
     hint: "Place Pin 2 on the switch base.",
     prereq: [],
   },
   {
     id: "nail",
     name: "Iron Nail",
-    desc: ["Acts as the core of our electromagnet."],
+    desc: [
+      "Acts as the magnetic core.",
+      "Made of ferromagnetic iron material.",
+      "Concentrates the magnetic field lines.",
+      "Becomes a temporary magnet when current flows."
+    ],
     hint: "Drag the Iron Nail onto the workspace.",
     prereq: [],
   },
   {
     id: "wire",
     name: "Copper Coil",
-    desc: ["Insulated copper wire wrapped around the nail."],
+    desc: [
+      "Insulated copper wire wound in a coil.",
+      "Creates a magnetic field when current flows.",
+      "More turns create a stronger magnetic field.",
+      "Wrapped around the iron nail core."
+    ],
     hint: "Drag the Copper Coil onto the Iron Nail.",
     prereq: [],
   },
   {
     id: "battery",
     name: "Electric Cell",
-    desc: ["Provides the electric current."],
+    desc: [
+      "Provides the electrical energy.",
+      "Has positive (+) and negative (-) terminals.",
+      "Drives current through the closed circuit.",
+      "Powers the electromagnet."
+    ],
     hint: "Place the Battery onto the workspace.",
     prereq: [],
   },
   {
     id: "connect",
     name: "Connecting Wires",
-    desc: ["Link the components to form a continuous loop."],
+    desc: [
+      "Links all components with conductive wires.",
+      "Forms a closed loop for current.",
+      "Connects battery to switch to coil.",
+      "Essential for the circuit to function."
+    ],
     hint: "Click the terminals to connect the circuit.",
     prereq: ["nail", "wire", "battery", "pin1", "pin2", "safetyPin", "switchBoard"],
   },
@@ -96,6 +137,19 @@ function DraggableToken({ id, children }) {
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      {children}
+    </div>
+  );
+}
+
+// Draggable wrapper for Component Tray
+function TrayDraggable({ id, disabled, children }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: id,
+    disabled: disabled,
+  });
+  return (
+    <div ref={setNodeRef} {...listeners} {...attributes} style={{ display: 'flex', flexDirection: 'column', height: '100%', touchAction: 'none', opacity: isDragging ? 0.4 : 1, cursor: disabled ? "not-allowed" : (isDragging ? "grabbing" : "grab") }}>
       {children}
     </div>
   );
@@ -123,16 +177,17 @@ function CanvasDroppable({ children }) {
   );
 }
 
-function DraggableSVGGroup({ id, children, isDraggable }) {
+function DraggableSVGGroup({ id, children, isDraggable, additionalTransform }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: id,
-      disabled: !isDraggable,
-    });
+    useDraggable({ id: id, disabled: !isDraggable });
+
+  const finalTransform = transform 
+    ? { x: transform.x + (additionalTransform?.x || 0), y: transform.y + (additionalTransform?.y || 0) } 
+    : additionalTransform;
 
   const style = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+    transform: finalTransform
+      ? `translate3d(${finalTransform.x}px, ${finalTransform.y}px, 0)`
       : undefined,
     cursor: isDraggable ? (isDragging ? "grabbing" : "grab") : "default",
     touchAction: "none",
@@ -266,11 +321,19 @@ export default function Stage1_Build({ onComplete }) {
   const handleDragStart = (event) => {
     setIsDragging(true);
     setActiveDraggingId(event.active.id);
+    setSelectedItemId(event.active.id);
     setError("");
+  };
+
+  const [activeDragDelta, setActiveDragDelta] = useState({ x: 0, y: 0 });
+
+  const handleDragMove = (event) => {
+    setActiveDragDelta({ x: event.delta.x, y: event.delta.y });
   };
 
   const handleDragEnd = (event) => {
     setIsDragging(false);
+    setActiveDragDelta({ x: 0, y: 0 });
     const draggedId = activeDraggingId;
     setActiveDraggingId(null);
     if (!event.active || !draggedId) return;
@@ -463,8 +526,10 @@ export default function Stage1_Build({ onComplete }) {
     return "⚡ All components correctly snapped! Now select Connecting Wires to link everything together.";
   };
 
+  const activeDraggingStep = activeDraggingId ? STEPS.find((s) => s.id === activeDraggingId) : null;
+
   return (
-    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
       <div className="main-grid" style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "1rem", maxWidth: "1200px", margin: "0 auto" }}>
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
@@ -506,10 +571,11 @@ export default function Stage1_Build({ onComplete }) {
                 const isDisabled = (isPlaced && !isConnect) || !isUnlocked;
 
                 return (
-                  <button
-                    key={step.id}
-                    onClick={() => handleSelectTrayItem(step.id)}
-                    disabled={isDisabled}
+                  <TrayDraggable key={step.id} id={step.id} disabled={isDisabled}>
+                    <button
+                      className="tray-btn"
+                      onClick={() => handleSelectTrayItem(step.id)}
+                      disabled={isDisabled}
                     style={{
                       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0.6rem 0.4rem", borderRadius: "12px",
                       background: isPlaced && !isConnect ? "var(--success-bg)" : isSelected ? "var(--accent-bg)" : isUnlocked ? "var(--surface)" : "var(--neutral-bg)",
@@ -536,6 +602,7 @@ export default function Stage1_Build({ onComplete }) {
                       ) : null}
                     </div>
                   </button>
+                  </TrayDraggable>
                 );
               })}
             </div>
@@ -554,18 +621,7 @@ export default function Stage1_Build({ onComplete }) {
             <CanvasDroppable>
               <svg width="100%" height="100%" viewBox="0 0 600 480" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
                 
-                {/* Visual Guidelines (Initial Fixed Targets) */}
-                {!placed.switchBoard && (
-                  <rect x={IDEALS.switchBoard.x} y={IDEALS.switchBoard.y} width={160} height={210} rx={12} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="4,4" opacity={0.3} />
-                )}
-                {!placed.nail && (
-                  <rect x={IDEALS.nail.x - 80} y={IDEALS.nail.y - 10} width={160} height={20} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="4,4" opacity={0.3} />
-                )}
-                {!placed.battery && (
-                  <rect x={IDEALS.battery.x} y={IDEALS.battery.y} width={100} height={40} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="4,4" opacity={0.3} />
-                )}
-
-
+                {/* Visual Guidelines (Initial Fixed Targets) Removed */}
 
                 {/* Real Placed Items */}
                 {placed.switchBoard && (
@@ -575,23 +631,20 @@ export default function Stage1_Build({ onComplete }) {
                 )}
                 
                 {placed.pin1 && (
-                  <DraggableSVGGroup id="pin1" isDraggable={!placed.connect}>
+                  <DraggableSVGGroup id="pin1" isDraggable={!placed.connect} additionalTransform={activeDraggingId === "switchBoard" && isProperlyPlaced("pin1") ? activeDragDelta : null}>
                     <DrawingPinSVG x={positions.pin1.x} y={positions.pin1.y} label="PIN 1" isPlaced={true} />
-                    {placed.safetyPin && (
-                      <SafetyPinSVG x={positions.pin1.x} y={positions.pin1.y} rotation={-30} isPlaced={true} />
-                    )}
+                  </DraggableSVGGroup>
+                )}
+                
+                {placed.safetyPin && (
+                  <DraggableSVGGroup id="safetyPin" isDraggable={!placed.connect} additionalTransform={activeDraggingId === "switchBoard" && isProperlyPlaced("pin1") ? activeDragDelta : null}>
+                    <SafetyPinSVG x={positions.safetyPin.x} y={positions.safetyPin.y} rotation={-30} isPlaced={true} />
                   </DraggableSVGGroup>
                 )}
                 
                 {placed.pin2 && (
-                  <DraggableSVGGroup id="pin2" isDraggable={!placed.connect}>
+                  <DraggableSVGGroup id="pin2" isDraggable={!placed.connect} additionalTransform={activeDraggingId === "switchBoard" && isProperlyPlaced("pin2") ? activeDragDelta : null}>
                     <DrawingPinSVG x={positions.pin2.x} y={positions.pin2.y} label="PIN 2" isPlaced={true} />
-                  </DraggableSVGGroup>
-                )}
-                
-                {placed.safetyPin && !placed.pin1 && (
-                  <DraggableSVGGroup id="safetyPin" isDraggable={!placed.connect}>
-                    <SafetyPinSVG x={positions.safetyPin.x} y={positions.safetyPin.y} rotation={-30} isPlaced={true} />
                   </DraggableSVGGroup>
                 )}
 
@@ -602,7 +655,7 @@ export default function Stage1_Build({ onComplete }) {
                 )}
 
                 {placed.wire && (
-                  <DraggableSVGGroup id="wire" isDraggable={!placed.connect}>
+                  <DraggableSVGGroup id="wire" isDraggable={!placed.connect} additionalTransform={activeDraggingId === "nail" && isProperlyPlaced("wire") ? activeDragDelta : null}>
                     <CopperCoilSVG x={positions.wire.x} y={positions.wire.y} isPlaced={true} />
                   </DraggableSVGGroup>
                 )}
@@ -735,15 +788,16 @@ export default function Stage1_Build({ onComplete }) {
                     </ul>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "bold" }}>DRAG TO ASSEMBLE:</span>
-                    <DraggableToken id={activeStep.id}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "var(--accent-bg)", border: "1px dashed rgba(99, 102, 241, 0.4)", borderRadius: "10px", color: "var(--accent-text)", fontSize: "0.8rem", fontWeight: "600", boxShadow: "0 4px 10px rgba(99,102,241,0.1)", cursor: "grab" }}>
-                        <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
-                          <span>{activeStep.name}</span>
-                          <span style={{ fontSize: "0.65rem", color: "var(--accent-text)", fontWeight: "normal" }}>Drag me up to the workspace area</span>
-                        </div>
+                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "bold" }}>HOW TO ASSEMBLE:</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "var(--accent-bg)", border: "1px dashed rgba(99, 102, 241, 0.4)", borderRadius: "10px", color: "var(--accent-text)", fontSize: "0.8rem", fontWeight: "600", boxShadow: "0 4px 10px rgba(99,102,241,0.1)", cursor: "default" }}>
+                      <div style={{ width: "28px", height: "28px", background: "var(--border)", borderRadius: "6px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {renderThumbnailSVG(activeStep.id)}
                       </div>
-                    </DraggableToken>
+                      <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+                        <span>{activeStep.name}</span>
+                        <span style={{ fontSize: "0.65rem", color: "var(--accent-text)", fontWeight: "normal" }}>Drag from Component Tray to Workspace</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </>
@@ -755,6 +809,20 @@ export default function Stage1_Build({ onComplete }) {
           </div>
         </div>
 
+        {/* Drag Overlay layer */}
+        <DragOverlay>
+          {isDragging && activeDraggingStep ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "rgba(99, 102, 241, 0.25)", border: "2px solid #818cf8", borderRadius: "10px", color: "var(--accent-text)", fontSize: "0.8rem", fontWeight: "600", boxShadow: "0 8px 24px rgba(99,102,241,0.15)", backdropFilter: "blur(4px)", cursor: "grabbing", opacity: 0.9, transform: "scale(1.05)" }}>
+              <div style={{ width: "28px", height: "28px", background: "var(--border)", borderRadius: "6px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {renderThumbnailSVG(activeDraggingStep.id)}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+                <span>{activeDraggingStep.name}</span>
+                <span style={{ fontSize: "0.65rem", color: "#a5b4fc" }}>Placing in workspace...</span>
+              </div>
+            </div>
+          ) : null}
+        </DragOverlay>
       </div>
     </DndContext>
   );

@@ -191,16 +191,20 @@ function CanvasDroppable({ children }) {
   );
 }
 
-function DraggableSVGGroup({ id, children, isDraggable }) {
+function DraggableSVGGroup({ id, children, isDraggable, additionalTransform }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: id,
       disabled: !isDraggable,
     });
 
+  const finalTransform = transform 
+    ? { x: transform.x + (additionalTransform?.x || 0), y: transform.y + (additionalTransform?.y || 0) } 
+    : additionalTransform;
+
   const style = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+    transform: finalTransform
+      ? `translate3d(${finalTransform.x}px, ${finalTransform.y}px, 0)`
       : undefined,
     cursor: isDraggable ? (isDragging ? "grabbing" : "grab") : "default",
     touchAction: "none",
@@ -335,8 +339,15 @@ export default function Stage1_Build({ onComplete }) {
     setError("");
   };
 
+  const [activeDragDelta, setActiveDragDelta] = useState({ x: 0, y: 0 });
+
+  const handleDragMove = (event) => {
+    setActiveDragDelta({ x: event.delta.x, y: event.delta.y });
+  };
+
   const handleDragEnd = (event) => {
     setIsDragging(false);
+    setActiveDragDelta({ x: 0, y: 0 });
     const draggedId = activeDraggingId;
     setActiveDraggingId(null);
     if (!event.active || !draggedId) return;
@@ -378,6 +389,22 @@ export default function Stage1_Build({ onComplete }) {
           const newPos = { ...prev, [draggedId]: { x, y } };
           if (draggedId === "pin1") {
             newPos.safetyPin = { x, y }; 
+          }
+          if (draggedId === "switchBoard") {
+            const dx = x - prev.switchBoard.x;
+            const dy = y - prev.switchBoard.y;
+            
+            // If the pin is currently placed on the switchBoard, move it!
+            const pin1OnBoard = Math.abs(prev.pin1.x - (prev.switchBoard.x + 80)) < 2 && Math.abs(prev.pin1.y - (prev.switchBoard.y + 50)) < 2;
+            if (placed.pin1 && pin1OnBoard) {
+              newPos.pin1 = { x: prev.pin1.x + dx, y: prev.pin1.y + dy };
+              if (placed.safetyPin) newPos.safetyPin = { x: prev.safetyPin.x + dx, y: prev.safetyPin.y + dy };
+            }
+
+            const pin2OnBoard = Math.abs(prev.pin2.x - (prev.switchBoard.x + 80)) < 2 && Math.abs(prev.pin2.y - (prev.switchBoard.y + 170)) < 2;
+            if (placed.pin2 && pin2OnBoard) {
+              newPos.pin2 = { x: prev.pin2.x + dx, y: prev.pin2.y + dy };
+            }
           }
           if (draggedId === "compassBoard") {
             // Move compass proportionally if it is placed
@@ -532,7 +559,7 @@ export default function Stage1_Build({ onComplete }) {
   };
 
   return (
-    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
       <div className="main-grid" style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "1rem", maxWidth: "1200px", margin: "0 auto" }}>
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
@@ -572,6 +599,7 @@ export default function Stage1_Build({ onComplete }) {
                   <TrayDraggable key={step.id} id={step.id} disabled={isDisabled}>
 <button
                     key={step.id}
+                    className="tray-btn"
                     onClick={() => handleSelectTrayItem(step.id)}
                     disabled={isDisabled}
                     style={{
@@ -611,19 +639,7 @@ export default function Stage1_Build({ onComplete }) {
             <CanvasDroppable>
               <svg width="100%" height="100%" viewBox="0 0 600 480" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}>
                 
-                {/* Visual Guidelines */}
-                {!placed.switchBoard && (
-                  <rect x={370} y={200} width={160} height={210} rx={12} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="4,4" opacity={0.3} />
-                )}
-                {!placed.compassBoard && (
-                  <rect x={120} y={60} width={260} height={180} rx={12} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="4,4" opacity={0.3} />
-                )}
-                {!placed.pin1 && (
-                  <circle cx={450} cy={250} r={14} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="3,3" opacity={0.3} />
-                )}
-                {!placed.pin2 && (
-                  <circle cx={450} cy={370} r={14} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="3,3" opacity={0.3} />
-                )}
+                {/* Visual Guidelines Removed */}
 
                 {/* Real Placed Items */}
                 {placed.switchBoard && (
@@ -638,7 +654,7 @@ export default function Stage1_Build({ onComplete }) {
                 )}
                 
                 {placed.pin1 && (
-                  <DraggableSVGGroup id="pin1" isDraggable={!placed.wires}>
+                  <DraggableSVGGroup id="pin1" isDraggable={!placed.wires} additionalTransform={activeDraggingId === "switchBoard" && isProperlyPlaced("pin1") ? activeDragDelta : null}>
                     <DrawingPinSVG x={positions.pin1.x} y={positions.pin1.y} label="PIN 1" isPlaced={true} />
                     {placed.safetyPin && (
                       <SafetyPinSVG x={positions.pin1.x} y={positions.pin1.y} rotation={-30} isPlaced={true} />
@@ -647,13 +663,13 @@ export default function Stage1_Build({ onComplete }) {
                 )}
                 
                 {placed.pin2 && (
-                  <DraggableSVGGroup id="pin2" isDraggable={!placed.wires}>
+                  <DraggableSVGGroup id="pin2" isDraggable={!placed.wires} additionalTransform={activeDraggingId === "switchBoard" && isProperlyPlaced("pin2") ? activeDragDelta : null}>
                     <DrawingPinSVG x={positions.pin2.x} y={positions.pin2.y} label="PIN 2" isPlaced={true} />
                   </DraggableSVGGroup>
                 )}
                 
                 {placed.safetyPin && !placed.pin1 && (
-                  <DraggableSVGGroup id="safetyPin" isDraggable={!placed.wires}>
+                  <DraggableSVGGroup id="safetyPin" isDraggable={!placed.wires} additionalTransform={activeDraggingId === "switchBoard" && isProperlyPlaced("safetyPin") ? activeDragDelta : null}>
                     <SafetyPinSVG x={positions.safetyPin.x} y={positions.safetyPin.y} rotation={-30} isPlaced={true} />
                   </DraggableSVGGroup>
                 )}

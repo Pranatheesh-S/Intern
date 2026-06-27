@@ -360,6 +360,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                   <TrayDraggable key={step.id} id={step.id} disabled={isPlaced}>
 <button
                     key={step.id}
+                    className="tray-btn"
                     onClick={() => handleSelectTrayItem(step.id)}
                     disabled={isPlaced}
                     style={{
