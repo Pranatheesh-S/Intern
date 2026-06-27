@@ -204,6 +204,17 @@ export default function Stage3_BatteryTest({ onComplete }) {
     }, 3000);
   }
 
+  let insightText = "";
+  if (!circuitComplete && switchOn && activeSlots.some(Boolean)) {
+    if (message.includes("upside down")) {
+      insightText = "Even though the cells are connected, the pack is backwards! The flat negative (−) end often cannot make a proper physical connection with the bulb's base. Also,the torch uses an LED bulb, electricity can only flow through it in one direction!";
+    } else if (message.includes("continuously")) {
+      insightText = "Electricity needs a continuous, unbroken path to flow from the battery to the bulb and back. A gap between the cells breaks the circuit, preventing the electric current from reaching the bulb!";
+    } else {
+      insightText = "If batteries are connected + to + or − to −, they do not work properly because they push against each other. To make the bulb glow, connect them + to − so that they work together.";
+    }
+  }
+
   return (
     <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -367,6 +378,24 @@ export default function Stage3_BatteryTest({ onComplete }) {
               >
                 {message}
               </motion.div>
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {!circuitComplete && switchOn && activeSlots.some(Boolean) && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <div style={{ padding: '1rem', borderRadius: '8px', background: 'var(--neutral-bg)', border: '1px dashed var(--border)', color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '0.4rem' }}>
+                      <Info size={16} /> Why doesn't it glow?
+                    </div>
+                    {insightText}
+                  </div>
+                </motion.div>
+              )}
             </AnimatePresence>
 
             {sandboxMode && (
