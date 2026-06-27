@@ -177,7 +177,7 @@ export default function App() {
           }}
         >
           <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
-            0 CHAPTERS ACTIVE
+            1 CHAPTER ACTIVE
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -793,7 +793,7 @@ export default function App() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Zap size={20} style={{ color: '#0891b2' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Torch Explorer</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activities 3.1, 3.2 & 3.3</h3>
           </div>
 
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
@@ -806,41 +806,6 @@ export default function App() {
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
-          </button>
-        </div>
-
-        {/* Activity Card 2: Electric Switch */}
-        <div
-          className="glass-panel"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid var(--success-border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Active Lab
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Zap size={20} style={{ color: '#f59e0b' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Electric Switch</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            NCERT Class 7 Chapter 3 (Activities 3.8 & 3.9). Learn how to build a switch, predict electrical flows, and test materials like wood, plastic, or metals.
-          </p>
-
-          <button
-            onClick={() => navigateTo('class7', 'electric_switch')}
-            className="primary"
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            <Play size={14} fill="#ffffff" /> Open Switch Lab <ArrowRight size={14} />
           </button>
         </div>
 
@@ -863,7 +828,7 @@ export default function App() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Zap size={20} style={{ color: '#10b981' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 3.4 & 3.5</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activities 3.4 & 3.5</h3>
           </div>
 
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
@@ -922,11 +887,15 @@ export default function App() {
             flexDirection: 'column',
             gap: '1rem',
             padding: '1.5rem',
-            border: '1px solid var(--border)',
+            border: '1px solid var(--success-border)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Zap size={20} style={{ color: '#ec4899' }} />
             <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 3.7</h3>
@@ -942,6 +911,41 @@ export default function App() {
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity Card 2: Electric Switch */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Zap size={20} style={{ color: '#f59e0b' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activities 3.8 & 3.9</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            NCERT Class 7 Chapter 3 (Activities 3.8 & 3.9). Learn how to build a switch, predict electrical flows, and test materials like wood, plastic, or metals.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class7', 'electric_switch')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Switch Lab <ArrowRight size={14} />
           </button>
         </div>
 
@@ -1301,9 +1305,13 @@ export default function App() {
             overflow: 'hidden'
           }}
         >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Zap size={20} style={{ color: '#0891b2' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.2, 4.3 & 4.4</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activities 4.2, 4.3 & 4.4</h3>
           </div>
 
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
@@ -1330,6 +1338,10 @@ export default function App() {
             overflow: 'hidden'
           }}
         >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Zap size={20} style={{ color: '#ef4444' }} />
             <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.5</h3>
@@ -1361,6 +1373,10 @@ export default function App() {
             overflow: 'hidden'
           }}
         >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
             <Battery size={20} style={{ color: '#eab308' }} />
             <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.6</h3>
@@ -1629,8 +1645,8 @@ export default function App() {
                 <>
                   <ArrowRight size={10} />
                   <span style={{ color: 'var(--accent-text)' }}>
-                    {activeActivity === 'electric_switch' ? 'Electric Switch' : 
-                     activeActivity === 'torch_explorer' ? 'Torch Explorer' :
+                    {activeActivity === 'electric_switch' ? 'Activities 3.8 & 3.9' : 
+                     activeActivity === 'torch_explorer' ? 'Activities 3.1, 3.2 & 3.3' :
                      activeActivity === 'spherical_mirrors' ? 'Spherical Mirrors' : 
                      activeActivity === 'food_testing' ? 'Food Testing' :
                      activeActivity === 'fat_testing' ? 'Fat Testing' :
@@ -1643,7 +1659,7 @@ export default function App() {
                      activeActivity === 'activity_3_11' ? 'Activity 3.11' :
                      activeActivity === 'linear_motion' ? 'Linear Motion' :
                      activeActivity === 'magnetic_effect' ? 'Activity 4.1' :
-                     activeActivity === 'electromagnet_investigation' ? 'Activity 4.2, 4.3 & 4.4' :
+                     activeActivity === 'electromagnet_investigation' ? 'Activities 4.2, 4.3 & 4.4' :
                      activeActivity === 'heating_effect' ? 'Activity 4.5' :
                      'Template Demo'}
                   </span>
