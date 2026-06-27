@@ -104,7 +104,7 @@ export default function Stage2_Test({ onComplete }) {
         </div>
 
         {/* RIGHT PANEL: INTERACTIVE CANVAS */}
-        <div className="glass-panel" style={{ padding: "0", position: "relative", minHeight: "480px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc" }}>
+        <div className="glass-panel" style={{ padding: "0", position: "relative", minHeight: "480px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--canvas-bg)" }}>
           <div className="canvas-bg-grid" style={{ position: "absolute", inset: 0, opacity: 0.5 }} />
           
           <svg width="600" height="480" viewBox="0 0 600 480" style={{ zIndex: 10, overflow: "visible" }}>
