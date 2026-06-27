@@ -153,7 +153,8 @@ export default function HeatingEffectActivity({ onBackToDashboard }) {
         </main>
 
         <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem' }}>
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
+          <div className="glass-panel" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {/* Did you know? Section */}
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
               <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
               <div>
@@ -168,9 +169,10 @@ export default function HeatingEffectActivity({ onBackToDashboard }) {
                 </p>
               </div>
             </div>
-          </div>
-          
-          <div className="glass-panel" style={{ padding: '1.25rem', marginTop: '1rem' }}>
+            
+            <div style={{ height: '1px', background: 'var(--border)', margin: '0 -1.25rem' }} />
+
+            {/* Why? Section */}
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
               <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🤔</span>
               <div style={{ width: '100%' }}>

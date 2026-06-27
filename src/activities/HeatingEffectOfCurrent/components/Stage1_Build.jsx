@@ -323,52 +323,75 @@ export default function Stage1_Build({ onComplete }) {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch" }}>
-          {/* LEFT PANEL */}
-          <div className="glass-panel" style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "0.75rem", height: "100%" }}>
-            <div style={{ display: "flex", gap: "0.35rem", alignItems: "center", background: "var(--neutral-bg)", padding: "0.6rem 0.8rem", borderRadius: "10px", border: "1px solid var(--border)" }}>
-              <Info style={{ color: "var(--accent)", flexShrink: 0 }} size={16} />
-              <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)", lineHeight: "1.4" }}>{getNextStepPrompt()}</span>
+          {/* LEFT PANEL: COMPONENT TRAY */}
+          <div className="glass-panel" style={{ width: "320px", display: "flex", flexDirection: "column", gap: "1rem", overflow: "hidden", border: "1px solid var(--border)" }}>
+            <div style={{ padding: "1rem 1rem 0 1rem" }}>
+              <h3 style={{ margin: 0, fontSize: "1rem", color: "var(--text-heading)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                Component Tray
+              </h3>
             </div>
 
-            <h3 style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-primary)" }}>Assembly Steps</h3>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", alignContent: "start", flex: 1, overflowY: "auto", paddingRight: "4px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1, overflowY: "auto", padding: "0 1rem" }}>
               {STEPS.map((step) => {
                 const isDropped = placed[step.id];
                 const isProperlyPlacedOnCanvas = isDropped && isProperlyPlaced(step.id);
                 const isActionStep = step.id === "connect";
                 const isUnlocked = isStepUnlocked(step.id);
                 const isSelected = selectedItemId === step.id;
-                // If it is dropped, it's disabled in the tray so they MUST correct it on the canvas
                 const isDisabled = (isDropped && !isActionStep) || !isUnlocked || (isActionStep && isDropped);
 
                 return (
-                  <TrayDraggable key={step.id} id={step.id} disabled={isDisabled}>
+                  <div key={step.id} style={{ position: "relative" }}>
                     <button
                       onClick={() => !isDisabled && handleSelectTrayItem(step.id)}
                       disabled={isDisabled}
                       style={{
-                        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0.6rem 0.4rem", borderRadius: "12px",
+                        display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: "0.75rem", padding: "0.5rem 1rem", borderRadius: "12px",
                         background: isProperlyPlacedOnCanvas ? "var(--success-bg)" : (isDropped && !isProperlyPlacedOnCanvas) ? "rgba(239, 68, 68, 0.05)" : isSelected ? "var(--accent-bg)" : isUnlocked ? "var(--surface)" : "var(--neutral-bg)",
                         border: `1px solid ${isProperlyPlacedOnCanvas ? "var(--success-border)" : (isDropped && !isProperlyPlacedOnCanvas) ? "rgba(239, 68, 68, 0.4)" : isSelected ? "var(--accent)" : isUnlocked ? "var(--accent-border)" : "var(--border)"}`,
                         color: isProperlyPlacedOnCanvas ? "var(--success)" : (isDropped && !isProperlyPlacedOnCanvas) ? "var(--danger)" : isUnlocked ? "var(--text-primary)" : "var(--text-faint)",
-                        cursor: isDisabled ? "not-allowed" : "pointer", transition: "all 0.2s ease", position: "relative", minHeight: "72px",
+                        cursor: isDisabled ? "not-allowed" : "pointer", transition: "all 0.2s ease", position: "relative",
                         boxShadow: isSelected ? "0 0 0 2px rgba(99,102,241,0.4)" : "none", opacity: (isProperlyPlacedOnCanvas && !isActionStep) ? 0.6 : 1, width: "100%"
                       }}
                     >
-                      <div style={{ width: "34px", height: "34px", background: "var(--border)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "0.35rem", opacity: isUnlocked ? 1 : 0.2 }}>
+                      <div style={{ width: "34px", height: "34px", background: "var(--border)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, opacity: isUnlocked ? 1 : 0.2 }}>
                         {renderThumbnailSVG(step.id)}
                       </div>
-                      <span style={{ fontSize: "0.68rem", fontWeight: "600", textAlign: "center", width: "100%", opacity: isUnlocked ? 1 : 0.3 }}>
+                      <span style={{ fontSize: "0.8rem", fontWeight: "600", textAlign: "left", opacity: isUnlocked ? 1 : 0.3, flex: 1 }}>
                         {step.name}
                       </span>
-                      <div style={{ position: "absolute", top: "5px", right: "5px" }}>
-                        {isProperlyPlacedOnCanvas ? <CheckCircle2 size={12} style={{ color: "var(--success)" }} /> : !isUnlocked ? <Lock size={10} style={{ color: "var(--text-secondary)" }} /> : null}
+                      <div style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
+                        {isProperlyPlacedOnCanvas ? <CheckCircle2 size={16} style={{ color: "var(--success)" }} /> : !isUnlocked ? <Lock size={14} style={{ color: "var(--text-secondary)" }} /> : null}
                       </div>
                     </button>
-                  </TrayDraggable>
+                    {isUnlocked && !isDisabled && (
+                      <TrayDraggable id={step.id}>
+                        <div style={{ position: "absolute", inset: 0, zIndex: 10 }} />
+                      </TrayDraggable>
+                    )}
+                  </div>
                 );
               })}
+            </div>
+
+            <div style={{ padding: "1rem", borderTop: "1px solid var(--border)", background: "var(--neutral-bg)", minHeight: "120px" }}>
+              <h4 style={{ margin: "0 0 0.5rem 0", fontSize: "0.85rem", color: "var(--text-heading)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                <Info size={14} /> Instructions
+              </h4>
+              {error ? (
+                <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--danger)", lineHeight: "1.4" }}>{error}</p>
+              ) : selectedItemId ? (
+                <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", lineHeight: "1.4" }}>
+                  <strong style={{ color: "var(--text-primary)" }}>{STEPS.find(s => s.id === selectedItemId)?.hint || STEPS.find(s => s.id === selectedItemId)?.name}</strong>
+                  <ul style={{ margin: "0.5rem 0 0 0", paddingLeft: "1.2rem", color: "var(--text-faint)" }}>
+                    {STEPS.find(s => s.id === selectedItemId)?.desc.map((d, i) => <li key={i}>{d}</li>)}
+                  </ul>
+                </div>
+              ) : (
+                <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--text-faint)", fontStyle: "italic" }}>
+                  {success ? "Circuit complete! Click 'Continue' to observe." : "Select a component from the tray to begin."}
+                </p>
+              )}
             </div>
           </div>
 
@@ -465,56 +488,6 @@ export default function Stage1_Build({ onComplete }) {
                 <button onClick={onComplete} className="primary" style={{ padding: "0.8rem 1.5rem", fontSize: "1rem", boxShadow: "0 10px 25px rgba(16, 185, 129, 0.4)" }}>
                   Continue to Observation <ArrowRight size={18} />
                 </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* BOTTOM PANEL: PARTS BENCH (Matches Electromagnet Investigation exactly) */}
-        <div className="glass-panel" style={{ display: "flex", flexDirection: "column", gap: "0.75rem", padding: "1rem", background: "var(--card-bg)", borderColor: "var(--border)", borderRadius: "16px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 style={{ margin: 0, fontSize: "0.95rem", color: "var(--accent-text)", display: "flex", alignItems: "center", gap: "0.35rem" }}><Info size={14} /> Parts Bench</h3>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1rem", minHeight: "180px" }}>
-            {selectedItemId && !["connect"].includes(selectedItemId) ? (
-              <div style={{ display: "flex", gap: "1rem" }}>
-                <div style={{ flex: 0.8, borderRadius: "12px", overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)", height: "180px", position: "relative" }}>
-                  <ThreeDViewer modelId={selectedItemId} />
-                  <div style={{ position: "absolute", bottom: "0.5rem", left: "0", right: "0", textAlign: "center", fontSize: "0.7rem", color: "var(--text-muted)", pointerEvents: "none" }}>Drag to rotate 3D view</div>
-                </div>
-                <div style={{ flex: 1.2, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "0.5rem" }}>
-                  <div>
-                    <h4 style={{ margin: 0, fontSize: "1rem", color: "var(--text-heading)" }}>{STEPS.find(s => s.id === selectedItemId)?.name}</h4>
-                    <ul style={{ margin: "0.25rem 0 0 1rem", padding: 0, fontSize: "0.75rem", color: "var(--text-faint)", lineHeight: "1.4", display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                      {STEPS.find(s => s.id === selectedItemId)?.desc.map((line, i) => <li key={i}>{line}</li>)}
-                    </ul>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: "bold" }}>HOW TO ASSEMBLE:</span>
-                    <TrayDraggable id={selectedItemId}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "var(--accent-bg)", border: "1px dashed rgba(99, 102, 241, 0.4)", borderRadius: "10px", color: "var(--accent-text)", fontSize: "0.8rem", fontWeight: "600", boxShadow: "0 4px 10px rgba(99,102,241,0.1)", cursor: "grab" }}>
-                        <div style={{ width: "28px", height: "28px", background: "var(--border)", borderRadius: "6px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                          {renderThumbnailSVG(selectedItemId)}
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", textAlign: "left", width: "100%" }}>
-                          <span style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                            {STEPS.find(s => s.id === selectedItemId)?.name}
-                            <ArrowRight size={14} />
-                          </span>
-                          <span style={{ fontSize: "0.65rem", color: "var(--accent-text)", fontWeight: "normal" }}>Drag from Component Tray (or here) to Workspace</span>
-                        </div>
-                      </div>
-                    </TrayDraggable>
-                  </div>
-                </div>
-              </div>
-            ) : selectedItemId ? (
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "var(--text-primary)" }}>
-                Follow the instructions on the canvas to complete this action step.
-              </div>
-            ) : (
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "var(--text-muted)" }}>
-                Select a component from the left panel to inspect it here before dragging it to the workspace.
               </div>
             )}
           </div>
