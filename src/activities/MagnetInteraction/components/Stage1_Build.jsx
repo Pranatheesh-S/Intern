@@ -67,6 +67,20 @@ function DraggableToken({ id, children }) {
 }
 
 // Droppable Canvas
+
+// Draggable wrapper for Component Tray
+function TrayDraggable({ id, disabled, children }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: id,
+    disabled: disabled,
+  });
+  return (
+    <div ref={setNodeRef} {...listeners} {...attributes} style={{ display: 'flex', flexDirection: 'column', height: '100%', touchAction: 'none', opacity: isDragging ? 0.4 : 1, cursor: disabled ? "not-allowed" : (isDragging ? "grabbing" : "grab") }}>
+      {children}
+    </div>
+  );
+}
+
 function CanvasDroppable({ children }) {
   const { setNodeRef } = useDroppable({ id: "canvas" });
   return (
@@ -197,6 +211,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
   const handleDragStart = (event) => {
     setIsDragging(true);
     setActiveDraggingId(event.active.id);
+    setSelectedItemId(event.active.id);
     setError("");
   };
 
@@ -342,7 +357,8 @@ export default function Stage1_Build({ onComplete, onNext }) {
                 const isSelected = selectedItemId === step.id;
 
                 return (
-                  <button
+                  <TrayDraggable key={step.id} id={step.id} disabled={isPlaced}>
+<button
                     key={step.id}
                     onClick={() => handleSelectTrayItem(step.id)}
                     disabled={isPlaced}
@@ -367,6 +383,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     </div>
                     {isPlaced && <CheckCircle2 size={16} style={{ color: "var(--success)" }} />}
                   </button>
+                  </TrayDraggable>
                 );
               })}
             </div>
@@ -420,11 +437,11 @@ export default function Stage1_Build({ onComplete, onNext }) {
                 </div>
                 
                 <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center" }}>
-                  <DraggableToken id={activeStep.id}>
+                  
                     <div style={{ padding: "0.5rem 1rem", background: "var(--accent)", color: "white", borderRadius: "20px", fontSize: "0.8rem", fontWeight: "bold", display: "flex", alignItems: "center", gap: "0.5rem", boxShadow: "0 4px 6px rgba(0,0,0,0.1)" }}>
                       Drag to Workspace <ArrowRight size={14} />
                     </div>
-                  </DraggableToken>
+                  
                 </div>
               </div>
             )}
