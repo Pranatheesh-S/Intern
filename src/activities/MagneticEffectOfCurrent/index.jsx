@@ -16,28 +16,31 @@ import { CompassSVG } from './CircuitElements';
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div style={{ marginTop: '0.75rem', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '0.6rem 0.8rem', background: 'var(--surface)', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.8rem', color: 'var(--text-heading)', fontWeight: '600', gap: '0.5rem' }}
-      >
-        <span style={{ flex: 1, lineHeight: '1.3' }}>{question}</span>
-        <span style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', fontSize: '0.8rem', flexShrink: 0, marginTop: '2px' }}>▼</span>
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            style={{ overflow: 'hidden' }}
-          >
-            <div style={{ padding: '0.6rem 0.8rem', fontSize: '0.75rem', color: 'var(--text-secondary)', background: 'var(--neutral-bg)', borderTop: '1px solid var(--border)', lineHeight: '1.4' }}>
-              {answer.split('\n').map((line, i) => <div key={i} style={{ marginBottom: i !== answer.split('\n').length - 1 ? '0.4rem' : 0 }}>{line}</div>)}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem', alignItems: 'flex-start' }}>
+      <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '8px' }}>👉</span>
+      <div style={{ flex: 1, border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '0.6rem 0.8rem', background: 'var(--surface)', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: '0.8rem', color: 'var(--text-heading)', fontWeight: '600', gap: '0.5rem' }}
+        >
+          <span style={{ flex: 1, lineHeight: '1.3' }}>{question}</span>
+          <span style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', fontSize: '0.8rem', flexShrink: 0, marginTop: '2px' }}>▼</span>
+        </button>
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              style={{ overflow: 'hidden' }}
+            >
+              <div style={{ padding: '0.6rem 0.8rem', fontSize: '0.75rem', color: 'var(--text-secondary)', background: 'var(--neutral-bg)', borderTop: '1px solid var(--border)', lineHeight: '1.4' }}>
+                {answer.split('\n').map((line, i) => <div key={i} style={{ marginBottom: i !== answer.split('\n').length - 1 ? '0.4rem' : 0 }}>{line}</div>)}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
@@ -130,9 +133,9 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
         </nav>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: '1.5rem', alignItems: 'start' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '1.5rem', alignItems: 'start' }}>
         {/* Left Column: Active Stage */}
-        <main style={{ minHeight: '480px', marginBottom: '2rem' }}>
+        <main style={{ flex: 1, minHeight: '480px', marginBottom: '2rem' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -146,46 +149,90 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
           </AnimatePresence>
         </main>
 
-        {/* Right Column: Did you know? */}
-        <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem' }}>
-          <div className="glass-panel" style={{ padding: '1.25rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Did you know?
-                </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-                  Science Insights
+        {/* Right Column: Did you know? / Why? */}
+        {activeTab !== 'quiz' && (
+          <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
+            {activeTab === 'build' && (
+              <div className="glass-panel" style={{ padding: '1.25rem' }}>
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)', marginTop: '4px' }}>
+                    Did you know?
+                  </h4>
                 </div>
-                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  In 1820, Hans Christian Ørsted accidentally discovered that an electric current creates a magnetic field. When he turned on a circuit, a nearby compass needle twitched! This groundbreaking discovery showed that electricity and magnetism are deeply linked, leading to the invention of electromagnets.
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="glass-panel" style={{ padding: '1.25rem', marginTop: '1rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🤔</span>
-              <div style={{ width: '100%' }}>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Why?
-                </h4>
                 
-                <FAQItem 
-                  question="Why does the compass needle deflect when the switch is turned ON?"
-                  answer={"When the switch is turned ON, electric current flows through the wire.\nThe current creates a magnetic field that causes the compass needle to deflect."}
-                />
-                
-                <FAQItem 
-                  question="Why does the compass needle return to its original position when the switch is turned OFF?"
-                  answer={"When the switch is turned OFF, the electric current stops flowing.\nThe magnetic field disappears, so the compass needle returns to its original position."}
-                />
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                  <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '2px' }}>👉</span>
+                  <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+                      Science Insights
+                    </div>
+                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5', textAlign: 'justify' }}>
+                      In 1820, Hans Christian Ørsted accidentally discovered that an electric current creates a magnetic field. When he turned on a circuit, a nearby compass needle twitched!
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                  <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '2px' }}>👉</span>
+                  <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+                      Tiny Magnets
+                    </div>
+                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5', textAlign: 'justify' }}>
+                      A compass needle is actually a tiny magnet! When it's placed near a wire carrying electric current, the magnetic field produced by the current exerts a force on the compass needle, causing it to deflect.
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                  <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '2px' }}>👉</span>
+                  <div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+                      Magnetic Reversals
+                    </div>
+                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5', textAlign: 'justify' }}>
+                      The direction of the magnetic field depends on the direction of the electric current. If you reverse the battery connections, the compass needle will deflect in the opposite direction!
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </aside>
+            )}
+            
+            {activeTab === 'test' && (
+              <div className="glass-panel" style={{ padding: '1.25rem' }}>
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🤔</span>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)', marginTop: '4px' }}>
+                    Why?
+                  </h4>
+                </div>
+                
+                <div style={{ marginTop: '0.5rem' }}>
+                  <FAQItem 
+                    question="Why does the compass needle deflect when the switch is turned ON?"
+                    answer={"When the switch is turned ON, electric current flows through the wire.\nThe current creates a magnetic field that causes the compass needle to deflect."}
+                  />
+                  
+                  <FAQItem 
+                    question="Why does the compass needle return to its original position when the switch is turned OFF?"
+                    answer={"When the switch is turned OFF, the electric current stops flowing.\nThe magnetic field disappears, so the compass needle returns to its original position."}
+                  />
+                  
+                  <FAQItem 
+                    question="Why is the magnetic field present only when current flows through the wire?"
+                    answer={"A magnetic field is produced only when electric current flows through the wire.\nWhen the current stops, the magnetic field disappears."}
+                  />
+                  
+                  <FAQItem 
+                    question="Why does the compass respond to the current-carrying wire even though the wire is not a magnet?"
+                    answer={"The current-carrying wire produces a magnetic field around it.\nThe compass needle detects this magnetic field and deflects."}
+                  />
+                </div>
+              </div>
+            )}
+          </aside>
+        )}
       </div>
     </div>
   );

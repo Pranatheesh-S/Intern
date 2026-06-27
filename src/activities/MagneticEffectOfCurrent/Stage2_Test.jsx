@@ -57,12 +57,18 @@ export default function Stage2_Test({ onComplete }) {
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
             <h3 style={{ margin: 0, fontSize: "1rem", color: "var(--text-primary)" }}>Tasks:</h3>
             
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", opacity: hasTestedOn ? 0.6 : 1 }}>
+            <div 
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem", opacity: hasTestedOn ? 0.6 : 1, cursor: !switchOn ? "pointer" : "default" }}
+              onClick={() => { if (!switchOn) handleToggleSwitch(); }}
+            >
               {hasTestedOn ? <CheckCircle2 size={16} color="var(--success)" /> : <div style={{ width: 16, height: 16, borderRadius: "50%", border: "1.5px solid var(--text-faint)" }} />}
               <span style={{ fontSize: "0.85rem", textDecoration: hasTestedOn ? "line-through" : "none" }}>1. Turn the switch ON</span>
             </div>
             
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", opacity: hasTestedOff ? 0.6 : 1 }}>
+            <div 
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem", opacity: hasTestedOff ? 0.6 : 1, cursor: switchOn ? "pointer" : "default" }}
+              onClick={() => { if (switchOn) handleToggleSwitch(); }}
+            >
               {hasTestedOff ? <CheckCircle2 size={16} color="var(--success)" /> : <div style={{ width: 16, height: 16, borderRadius: "50%", border: "1.5px solid var(--text-faint)" }} />}
               <span style={{ fontSize: "0.85rem", textDecoration: hasTestedOff ? "line-through" : "none" }}>2. Turn the switch OFF</span>
             </div>
@@ -98,16 +104,16 @@ export default function Stage2_Test({ onComplete }) {
         </div>
 
         {/* RIGHT PANEL: INTERACTIVE CANVAS */}
-        <div className="glass-panel" style={{ padding: "0", position: "relative", minHeight: "480px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc" }}>
+        <div className="glass-panel" style={{ padding: "0", position: "relative", minHeight: "480px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--canvas-bg)" }}>
           <div className="canvas-bg-grid" style={{ position: "absolute", inset: 0, opacity: 0.5 }} />
           
           <svg width="600" height="480" viewBox="0 0 600 480" style={{ zIndex: 10, overflow: "visible" }}>
             {/* The base components (always placed since Stage 1 is complete) */}
-            <CardboardSwitchSVG x={370} y={200} />
+            <CardboardSwitchSVG x={400} y={200} />
             <CompassCardboardSVG x={120} y={60} />
             
-            <DrawingPinSVG x={450} y={250} isPlaced={true} />
-            <DrawingPinSVG x={450} y={370} isPlaced={true} />
+            <DrawingPinSVG x={480} y={250} isPlaced={true} />
+            <DrawingPinSVG x={480} y={370} isPlaced={true} />
             
             {/* Compass - deflecting based on switch state */}
             {/* Normal: 0 deg. Deflected: 45 deg */}
@@ -126,7 +132,7 @@ export default function Stage2_Test({ onComplete }) {
 
             {/* Safety Pin (Interactive Switch) */}
             <SafetyPinSVG 
-              x={450} 
+              x={480} 
               y={250} 
               rotation={switchOn ? 0 : -30} 
               isPlaced={true} 

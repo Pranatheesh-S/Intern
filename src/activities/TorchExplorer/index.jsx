@@ -119,26 +119,28 @@ export default function TorchExplorerActivity({ onBackToDashboard }) {
           </AnimatePresence>
         </main>
 
-        <aside style={{ width: '280px', flexShrink: 0 }}>
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Did you know?
-                </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-                  Science Insights
+        {activeTab !== 'quiz' && (
+          <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
+            <div className="glass-panel" style={{ padding: '1.25rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+                    Did you know?
+                  </h4>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+                    Science Insights
+                  </div>
+                  <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
+                    A torch bulb glows when an electric current passes through its filament. Connecting multiple cells forms a <strong>battery</strong>. In a standard torch, cells are connected in a <strong>series connection</strong> (the positive (+) terminal of one cell touches the negative (−) terminal of the next). This series connection adds up their voltages to make the bulb glow brightly! 
+                    <br/><br/>
+                    <em>Why not parallel?</em> In a parallel connection (where all positives connect together), the voltage stays the same as a single cell, which wouldn't be enough to make a standard torch bulb shine bright.
+                  </p>
                 </div>
-                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  A torch bulb glows when an electric current passes through its filament. Connecting multiple cells forms a <strong>battery</strong>. In a standard torch, cells are connected in a <strong>series connection</strong> (the positive (+) terminal of one cell touches the negative (−) terminal of the next). This series connection adds up their voltages to make the bulb glow brightly! 
-                  <br/><br/>
-                  <em>Why not parallel?</em> In a parallel connection (where all positives connect together), the voltage stays the same as a single cell, which wouldn't be enough to make a standard torch bulb shine bright.
-                </p>
               </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        )}
       </div>
     </div>
   );

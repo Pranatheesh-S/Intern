@@ -137,8 +137,8 @@ export default function ElectromagnetInvestigationActivity({ onBackToDashboard }
         </nav>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: '1.5rem', alignItems: 'start' }}>
-        <main style={{ minHeight: '480px', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '1.5rem', alignItems: 'start' }}>
+        <main style={{ flex: 1, minHeight: '480px', marginBottom: '2rem' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -152,7 +152,8 @@ export default function ElectromagnetInvestigationActivity({ onBackToDashboard }
           </AnimatePresence>
         </main>
 
-        <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem' }}>
+        {activeTab !== 'quiz' && (
+          <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
           <div className="glass-panel" style={{ padding: '1.25rem' }}>
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
               <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
@@ -191,6 +192,7 @@ export default function ElectromagnetInvestigationActivity({ onBackToDashboard }
             </div>
           </div>
         </aside>
+        )}
       </div>
     </div>
   );
