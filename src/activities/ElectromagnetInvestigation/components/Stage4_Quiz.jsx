@@ -147,6 +147,18 @@ export default function Stage4_Quiz({ onComplete }) {
             {message}
           </p>
 
+          {/* Activity Summary Box */}
+          <div style={{ background: 'var(--surface)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border)', textAlign: 'left', marginTop: '1rem', maxWidth: '100%' }}>
+            <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+              What we learned in this lab:
+            </h3>
+            <ul style={{ margin: 0, padding: '0 0 0 1.2rem', display: 'flex', flexDirection: 'column', gap: '0.8rem', color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+              <li><strong>Activity 4.2:</strong> Build a simple electromagnet using a nail, coil, and battery. Observe that paper clips stick only when current flows.</li>
+              <li><strong>Activity 4.3:</strong> Improve the setup by making a cylindrical coil, compare the air-core coil with an iron-core electromagnet, and observe compass deflection.</li>
+              <li><strong>Activity 4.4:</strong> Use the same electromagnet to identify the North and South poles with a compass, then reverse the battery and observe the poles swap.</li>
+            </ul>
+          </div>
+
           <button onClick={onComplete} className="primary" style={{ marginTop: '1rem', padding: '0.75rem 2rem', gap: '0.5rem', fontSize: '1rem' }}>
             <Home size={18} /> Return to Dashboard
           </button>

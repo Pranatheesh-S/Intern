@@ -3,6 +3,28 @@ import { useFrame } from '@react-three/fiber';
 import { ContactShadows, Cylinder, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
+const PaperClipsPile = ({ isAttracted }) => {
+  return (
+    <group position={[0, -0.1, 0]}>
+      {/* Clip 1 */}
+      <mesh position={isAttracted ? [0.2, 1.4, 0.2] : [0.5, 0, 0.5]} rotation={[0, isAttracted ? 1 : 0.5, isAttracted ? 1.5 : 1.57]}>
+        <capsuleGeometry args={[0.05, 0.3, 4, 8]} />
+        <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
+      </mesh>
+      {/* Clip 2 */}
+      <mesh position={isAttracted ? [-0.2, 1.3, -0.2] : [-0.3, 0, -0.4]} rotation={[0, isAttracted ? -0.5 : -1.2, isAttracted ? 1.2 : 1.57]}>
+        <capsuleGeometry args={[0.05, 0.3, 4, 8]} />
+        <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
+      </mesh>
+      {/* Clip 3 */}
+      <mesh position={isAttracted ? [0, 1.3, 0.3] : [0.2, 0, -0.2]} rotation={[isAttracted ? 0.5 : 0, isAttracted ? 0.2 : 2.1, isAttracted ? 1.4 : 1.57]}>
+        <capsuleGeometry args={[0.05, 0.3, 4, 8]} />
+        <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
+      </mesh>
+    </group>
+  );
+};
+
 const WireSegment = ({ p1, p2, radius, color }) => {
   const dx = p2[0] - p1[0];
   const dy = p2[1] - p1[1];
@@ -85,6 +107,7 @@ export default function Electromagnet3D({
   showCompass = false,
   reverseBattery = false,
   showFieldLines = false,
+  paperClipsPlaced = false,
   strength = 0
 }) {
   const fieldRef = useRef();
@@ -233,7 +256,8 @@ export default function Electromagnet3D({
         </>
       )}
 
-
+      {/* Paper Clips */}
+      {paperClipsPlaced && <PaperClipsPile isAttracted={switchOn && actualStrength > 0} />}
 
       <ContactShadows position={[0, -0.15, 0]} opacity={0.4} scale={10} blur={2} far={4} />
       

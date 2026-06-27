@@ -100,8 +100,8 @@ export default function ElectromagnetInvestigationActivity({ onBackToDashboard }
             <ArrowLeft size={14} /> Back to Labs
           </button>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Electromagnet Investigation</h2>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Class 8 Activity 4.3 & 4.4</span>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Activity 4.2, 4.3 & 4.4</h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Class 8 • Electromagnet Investigation</span>
           </div>
         </div>
 

@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 import { ArrowRight, Info, Lock, CheckCircle2, AlertCircle, RotateCcw } from "lucide-react";
 import ThreeDViewer from "./ThreeDViewer";
 
-import { ChartPaperSVG, IronNailSVG, CopperCoilSVG, CompassSVG } from "./CircuitElements2D";
+import { ChartPaperSVG, IronNailSVG, CopperCoilSVG, CompassSVG, PaperClipsSVG } from "./CircuitElements2D";
 import { BatterySVG, CardboardSwitchSVG, DrawingPinSVG, SafetyPinSVG } from "../../MagneticEffectOfCurrent/CircuitElements";
 
 const STEPS = [
@@ -81,34 +81,25 @@ const STEPS = [
     "Inserted into the hollow chart paper.",
     "Significantly boosts magnetic strength."
   ], hint: "Drag Iron Nail into cylinder.", prereq: ["test_air"] },
+  { id: "paper_clips", name: "Iron Clips", desc: [
+    "Place clips to test magnetic strength.",
+    "Will stick to the iron nail when ON."
+  ], hint: "Drag clips near the coil.", prereq: ["nail"] },
   { id: "test_iron", name: "Action: Test Iron-Core", desc: [
     "Tests the coil with the iron core.",
     "Creates a very strong magnetic field.",
     "Causes major compass needle deflection.",
     "Demonstrates how cores affect electromagnets."
-  ], hint: "CLICK THE SWITCH ON THE BOARD to turn on the current.", prereq: ["nail"] }
+  ], hint: "CLICK THE SWITCH ON THE BOARD to turn on the current.", prereq: ["paper_clips"] }
 ];
 
-function TrayDraggable({ id, disabled, children }) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: id,
-    disabled: disabled,
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      style={{
-        opacity: isDragging ? 0.4 : 1,
-        touchAction: "none",
-        cursor: disabled ? "not-allowed" : "grab",
-      }}
-    >
-      {children}
-    </div>
-  );
+function DraggableToken({ id, children }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id });
+  const style = {
+    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    touchAction: "none", cursor: isDragging ? "grabbing" : "grab", zIndex: isDragging ? 1000 : 10,
+  };
+  return <div ref={setNodeRef} style={style} {...listeners} {...attributes}>{children}</div>;
 }
 
 function CanvasDroppable({ children }) {
@@ -149,14 +140,14 @@ export default function Stage1_Build({ onComplete }) {
     chart_paper: { x: 200, y: 150 }, wire: { x: 200, y: 150 },
     switchBoard: { x: 370, y: 150 }, pin1: { x: 450, y: 200 }, safetyPin: { x: 450, y: 200 }, pin2: { x: 450, y: 320 },
     battery: { x: 200, y: 350 }, compass1: { x: 80, y: 150 }, compass2: { x: 320, y: 150 },
-    nail: { x: 200, y: 150 }
+    nail: { x: 200, y: 150 }, paper_clips: { x: 340, y: 230 }
   });
 
   const IDEALS = {
     chart_paper: { x: 200, y: 150 }, wire: { x: 200, y: 150 },
     switchBoard: { x: 370, y: 150 }, pin1: { x: 450, y: 200 }, safetyPin: { x: 450, y: 200 }, pin2: { x: 450, y: 320 },
     battery: { x: 200, y: 350 }, compass1: { x: 80, y: 150 }, compass2: { x: 320, y: 150 },
-    nail: { x: 200, y: 150 }
+    nail: { x: 200, y: 150 }, paper_clips: { x: 340, y: 230 }
   };
 
   const [selectedItemId, setSelectedItemId] = useState(null);
@@ -199,7 +190,7 @@ export default function Stage1_Build({ onComplete }) {
 
   const isProperlyPlaced = (id) => {
     if (!placed[id]) return false;
-    if (["safetyPin", "chart_paper", "battery", "compass1", "compass2", "test_air", "test_iron", "connect"].includes(id)) return true;
+    if (["safetyPin", "chart_paper", "battery", "compass1", "compass2", "test_air", "test_iron", "connect", "paper_clips"].includes(id)) return true;
     if (id === "wire") return Math.sqrt((positions.wire.x - positions.chart_paper.x)**2 + (positions.wire.y - positions.chart_paper.y)**2) < 10;
     if (id === "nail") return Math.sqrt((positions.nail.x - positions.chart_paper.x)**2 + (positions.nail.y - positions.chart_paper.y)**2) < 10;
     if (id === "pin1") return Math.sqrt((positions.pin1.x - (positions.switchBoard.x + 80))**2 + (positions.pin1.y - (positions.switchBoard.y + 50))**2) < 10;
@@ -211,7 +202,7 @@ export default function Stage1_Build({ onComplete }) {
     const step = STEPS.find((s) => s.id === stepId);
     if (!step) return false;
     return step.prereq.every((pId) => {
-      if (pId === "connect" || pId === "test_air" || pId === "test_iron") return placed[pId];
+      if (["connect", "test_air", "test_iron"].includes(pId)) return placed[pId];
       return isProperlyPlaced(pId);
     });
   };
@@ -295,7 +286,7 @@ export default function Stage1_Build({ onComplete }) {
         setPlaced(prev => ({ ...prev, test_air: true }));
         setSelectedItemId(null);
         confetti({ particleCount: 40, spread: 50, origin: { y: 0.8 } });
-      } else if (selectedItemId === "test_iron" && placed.nail) {
+      } else if (selectedItemId === "test_iron" && placed.nail && placed.paper_clips) {
         setPlaced(prev => ({ ...prev, test_iron: true }));
         setSelectedItemId(null);
         confetti({ particleCount: 40, spread: 50, origin: { y: 0.8 } });
@@ -350,12 +341,14 @@ export default function Stage1_Build({ onComplete }) {
       case "chart_paper": return <svg viewBox="-100 -20 200 40" width="24" height="24"><ChartPaperSVG isPlaced={true} /></svg>;
       case "wire": return <svg viewBox="-100 -60 200 120" width="24" height="24"><CopperCoilSVG isPlaced={true} /></svg>;
       case "nail": return <svg viewBox="-100 -20 200 40" width="24" height="24"><IronNailSVG isPlaced={true} /></svg>;
+      case "paper_clips": return <svg viewBox="-25 -15 50 45" width="24" height="24"><PaperClipsSVG isPlaced={true} /></svg>;
       case "switchBoard": return <svg viewBox="360 140 180 230" width="24" height="24"><CardboardSwitchSVG y={150} /></svg>;
       case "pin1": case "pin2": return <svg viewBox="430 180 40 40" width="24" height="24"><DrawingPinSVG x={450} y={200} isPlaced={true} /></svg>;
       case "safetyPin": return <svg viewBox="-20 -20 40 150" width="24" height="24"><SafetyPinSVG x={0} y={0} rotation={0} isPlaced={true} /></svg>;
       case "battery": return <svg viewBox="40 340 100 70" width="24" height="24"><BatterySVG isPlaced={true} y={350} /></svg>;
       case "compass1": case "compass2": return <svg viewBox="-30 -30 60 60" width="24" height="24"><CompassSVG isPlaced={true} /></svg>;
-      case "connect": case "test_air": case "test_iron": return <svg viewBox="0 0 24 24" width="24" height="24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12c0-4 3-7 8-7s8 3 8 7-3 7-8 7" stroke="var(--danger)" /><path d="M6 13c0-3 2.5-5 6-5s6 2 6 5-2 5-6 5" stroke="var(--warning)" /></svg>;
+      case "test_iron": return <RotateCcw size={24} color="#fca5a5" />;
+      case "connect": case "test_air": return <svg viewBox="0 0 24 24" width="24" height="24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12c0-4 3-7 8-7s8 3 8 7-3 7-8 7" stroke="var(--danger)" /><path d="M6 13c0-3 2.5-5 6-5s6 2 6 5-2 5-6 5" stroke="var(--warning)" /></svg>;
       default: return null;
     }
   };
@@ -489,6 +482,7 @@ export default function Stage1_Build({ onComplete }) {
                 {/* Placed Items */}
                 {placed.chart_paper && <DraggableSVGGroup id="chart_paper" isDraggable={!placed.connect}><ChartPaperSVG x={positions.chart_paper.x} y={positions.chart_paper.y} isPlaced={true} /></DraggableSVGGroup>}
                 {placed.nail && <DraggableSVGGroup id="nail" isDraggable={!placed.test_iron}><IronNailSVG x={positions.nail.x} y={positions.nail.y} isPlaced={true} /></DraggableSVGGroup>}
+                {placed.paper_clips && <DraggableSVGGroup id="paper_clips" isDraggable={!placed.test_iron}><PaperClipsSVG x={positions.paper_clips.x} y={positions.paper_clips.y} isPlaced={true} /></DraggableSVGGroup>}
                 {placed.wire && <DraggableSVGGroup id="wire" isDraggable={!placed.connect}><CopperCoilSVG x={positions.wire.x} y={positions.wire.y} isPlaced={true} /></DraggableSVGGroup>}
                 
                 {placed.switchBoard && <DraggableSVGGroup id="switchBoard" isDraggable={!placed.connect}><CardboardSwitchSVG x={positions.switchBoard.x} y={positions.switchBoard.y} /></DraggableSVGGroup>}

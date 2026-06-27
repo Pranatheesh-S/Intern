@@ -151,6 +151,25 @@ function CompassModel() {
   );
 }
 
+function PaperClipsModel() {
+  return (
+    <group scale={4}>
+      <mesh position={[0.2, 0, 0.2]} rotation={[0, 1, 1.57]}>
+        <capsuleGeometry args={[0.05, 0.3, 4, 8]} />
+        <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
+      </mesh>
+      <mesh position={[-0.2, 0, -0.2]} rotation={[0, -0.5, 1.57]}>
+        <capsuleGeometry args={[0.05, 0.3, 4, 8]} />
+        <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
+      </mesh>
+      <mesh position={[0, 0.05, 0]} rotation={[0, 0.2, 1.57]}>
+        <capsuleGeometry args={[0.05, 0.3, 4, 8]} />
+        <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} />
+      </mesh>
+    </group>
+  );
+}
+
 const WireSegment = ({ p1, p2, radius, color }) => {
   const dx = p2[0] - p1[0];
   const dy = p2[1] - p1[1];
@@ -193,6 +212,7 @@ export default function ThreeDViewer({ componentId }) {
       case 'wire': return <CoilModel />;
       case 'battery': return <BatteryModel />;
       case 'compass1': case 'compass2': return <CompassModel />;
+      case 'paper_clips': return <PaperClipsModel />;
 
       case 'connect': case 'test_air': case 'test_iron': return <WiresModel />;
       default: return null;

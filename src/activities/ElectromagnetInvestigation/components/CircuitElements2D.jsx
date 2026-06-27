@@ -47,6 +47,37 @@ export const CopperCoilSVG = ({ x = 0, y = 0, isPlaced }) => {
   );
 };
 
+export const SwitchSVG = ({ isPlaced = true, isClosed = false, x = 0, y = 0 }) => {
+  if (!isPlaced) return null;
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      <rect x={-40} y={-25} width={80} height={50} rx={4} fill="#eaddcf" stroke="#d4bb9e" strokeWidth={2} />
+      <circle cx={-20} cy={0} r={5} fill="#eab308" />
+      <circle cx={20} cy={0} r={5} fill="#eab308" />
+      <line 
+        x1={-20} y1={0} 
+        x2={isClosed ? 20 : 15} 
+        y2={isClosed ? 0 : -20} 
+        stroke="#94a3b8" strokeWidth={4} strokeLinecap="round" 
+      />
+    </g>
+  );
+};
+
+export const PaperClipsSVG = ({ x = 0, y = 0, isPlaced }) => {
+  if (!isPlaced) return null;
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      {/* Clip 1 */}
+      <path d="M-5,-10 C-10,-10 -10,10 -5,10 L5,10 C10,10 10,-5 5,-5 L-2,-5 C-5,-5 -5,5 -2,5 L2,5" stroke="#64748b" strokeWidth="3" fill="none" />
+      {/* Clip 2 */}
+      <path d="M10,-5 C5,-5 5,15 10,15 L20,15 C25,15 25,0 20,0 L13,0 C10,0 10,10 13,10 L17,10" stroke="#475569" strokeWidth="3" fill="none" />
+      {/* Clip 3 */}
+      <path d="M-15,5 C-20,5 -20,25 -15,25 L-5,25 C0,25 0,10 -5,10 L-12,10 C-15,10 -15,20 -12,20 L-8,20" stroke="#334155" strokeWidth="3" fill="none" />
+    </g>
+  );
+};
+
 export const CompassSVG = ({ x = 0, y = 0, isPlaced, needleRotation = 0 }) => {
   if (!isPlaced) return null;
   return (
