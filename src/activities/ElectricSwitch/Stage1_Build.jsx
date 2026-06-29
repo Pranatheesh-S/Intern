@@ -531,32 +531,32 @@ export default function Stage1_Build({ onComplete }) {
     switch (id) {
       case "cardboard":
         return (
-          <svg viewBox="440 230 180 230" width="24" height="24" style={{ pointerEvents: "none" }}>
-            <CardboardSVG />
+          <svg viewBox="360 190 180 230" width="24" height="24" style={{ pointerEvents: "none" }}>
+            <CardboardSVG x={370} y={200} />
           </svg>
         );
       case "pin1":
       case "pin2":
         return (
-          <svg viewBox="540 270 40 40" width="24" height="24" style={{ pointerEvents: "none" }}>
-            <DrawingPinSVG x={560} y={290} isPlaced={true} />
+          <svg viewBox="430 230 40 40" width="24" height="24" style={{ pointerEvents: "none" }}>
+            <DrawingPinSVG x={450} y={250} isPlaced={true} />
           </svg>
         );
       case "safetyPin":
         return (
-          <svg viewBox="-20 -20 40 150" width="24" height="24" style={{ pointerEvents: "none" }}>
+          <svg viewBox="-20 -15 40 145" width="24" height="24" style={{ pointerEvents: "none" }}>
             <SafetyPinSVG x={0} y={0} rotation={0} isPlaced={true} />
           </svg>
         );
       case "battery":
         return (
-          <svg viewBox="170 400 100 50" width="24" height="24" style={{ pointerEvents: "none" }}>
+          <svg viewBox="100 365 100 50" width="24" height="24" style={{ pointerEvents: "none" }}>
             <BatterySVG isPlaced={true} />
           </svg>
         );
       case "bulb":
         return (
-          <svg viewBox="350 40 100 100" width="24" height="24" style={{ pointerEvents: "none" }}>
+          <svg viewBox="250 20 100 100" width="24" height="24" style={{ pointerEvents: "none" }}>
             <BulbSVG isPlaced={true} />
           </svg>
         );
