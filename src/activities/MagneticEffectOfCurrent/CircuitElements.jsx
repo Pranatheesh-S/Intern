@@ -110,7 +110,7 @@ export const SafetyPinSVG = ({ x, y, rotation, isPlaced, isTarget, onClick }) =>
 };
 
 // Battery Bare
-export const BatteryBareSVG = () => {
+export const BatteryBareSVG = ({ isFlipped }) => {
   return (
     <g>
       <defs>
@@ -127,14 +127,16 @@ export const BatteryBareSVG = () => {
         </linearGradient>
       </defs>
       
-      <rect x={2} y={2} width={84} height={40} rx={4} fill="rgba(0,0,0,0.2)" />
-      <rect x="0" y="2" width="6" height="36" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
-      <rect x="6" y="0" width="76" height="40" rx="4" fill="url(#battery-cylinder-bare)" stroke="#b91c1c" strokeWidth="1" />
-      <rect x="82" y="8" width="6" height="24" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
-      <rect x="88" y="13" width="3" height="14" rx="1" fill="url(#metal-caps-bare)" />
+      <g transform={isFlipped ? "translate(91, 0) scale(-1, 1)" : ""}>
+        <rect x={2} y={2} width={84} height={40} rx={4} fill="rgba(0,0,0,0.2)" />
+        <rect x="0" y="2" width="6" height="36" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
+        <rect x="6" y="0" width="76" height="40" rx="4" fill="url(#battery-cylinder-bare)" stroke="#b91c1c" strokeWidth="1" />
+        <rect x="82" y="8" width="6" height="24" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
+        <rect x="88" y="13" width="3" height="14" rx="1" fill="url(#metal-caps-bare)" />
+      </g>
 
-      <text x="18" y="25" fill="#111827" fontSize="18" fontWeight="bold" textAnchor="middle">-</text>
-      <text x="70" y="25" fill="#111827" fontSize="16" fontWeight="bold" textAnchor="middle">+</text>
+      <text x={isFlipped ? 70 : 18} y="25" fill="#111827" fontSize="18" fontWeight="bold" textAnchor="middle">-</text>
+      <text x={isFlipped ? 18 : 70} y="25" fill="#111827" fontSize="16" fontWeight="bold" textAnchor="middle">+</text>
       
       <rect x="29" y="6" width="30" height="28" fill="var(--text-primary)" rx="2" opacity={0.6} />
       <text x="44" y="18" fill="#fef08a" fontSize="8" fontWeight="bold" textAnchor="middle" letterSpacing="0.05em">CELL</text>
@@ -144,7 +146,7 @@ export const BatteryBareSVG = () => {
 };
 
 // Battery Without Holder
-export const BatterySVG = ({ isPlaced, isTarget, onClick }) => {
+export const BatterySVG = ({ isPlaced, isTarget, onClick, isFlipped }) => {
   if (!isPlaced) {
     if (isTarget) {
       return (
@@ -159,7 +161,7 @@ export const BatterySVG = ({ isPlaced, isTarget, onClick }) => {
 
   return (
     <g onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }} transform="translate(44, 366)">
-      <BatteryBareSVG />
+      <BatteryBareSVG isFlipped={isFlipped} />
     </g>
   );
 };
@@ -271,6 +273,7 @@ export const WiresSVG = ({
   isCompassPlaced, 
   arePinsPlaced,
   isCurrentFlowing, 
+  isBatteryFlipped,
   isTarget = false, 
   onClick 
 }) => {
@@ -333,15 +336,19 @@ export const WiresSVG = ({
       {/* Current Flowing Overlay */}
       {isCurrentFlowing && (
         <g>
-          {/* Electron flow: Battery- -> Nail1 -> Nail2 -> Pin1 -> Pin2 -> Battery+ */}
-          {[0, 0.6, 1.2, 1.8, 2.4].map((delay, index) => (
+          {/* Electron flow direction depends on battery flip */}
+          {Array.from({ length: 16 }, (_, i) => i * 0.5).map((delay, index) => (
             <g key={index}>
               <circle r={8} fill="#3b82f6" stroke="#ffffff" strokeWidth={1.5} />
               <text fill="#ffffff" fontSize="10" fontWeight="bold" textAnchor="middle" dy="3.5">e</text>
               <animateMotion 
-                dur="3s" 
+                dur="8s" 
                 repeatCount="indefinite" 
-                path={`M ${p_batteryNeg.x},${p_batteryNeg.y} C 29,200 50,100 ${p_nail1.x},${p_nail1.y} L ${p_nail2.x},${p_nail2.y} C 400,100 480,150 ${p_pin1.x},${p_pin1.y} L ${p_pin2.x},${p_pin2.y} C 380,420 200,420 ${p_batteryPos.x},${p_batteryPos.y}`} 
+                path={
+                  isBatteryFlipped
+                    ? `M ${p_batteryPos.x},${p_batteryPos.y} C 200,420 380,420 ${p_pin2.x},${p_pin2.y} L ${p_pin1.x},${p_pin1.y} C 480,150 400,100 ${p_nail2.x},${p_nail2.y} L ${p_nail1.x},${p_nail1.y} C 50,100 29,200 ${p_batteryNeg.x},${p_batteryNeg.y}`
+                    : `M ${p_batteryNeg.x},${p_batteryNeg.y} C 29,200 50,100 ${p_nail1.x},${p_nail1.y} L ${p_nail2.x},${p_nail2.y} C 400,100 480,150 ${p_pin1.x},${p_pin1.y} L ${p_pin2.x},${p_pin2.y} C 380,420 200,420 ${p_batteryPos.x},${p_batteryPos.y}`
+                } 
                 begin={`-${delay}s`} 
               />
             </g>
