@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Power, Info, Sparkles, CheckCircle2, RefreshCcw, ArrowRight } from "lucide-react";
 import confetti from "canvas-confetti";
 import {
   CardboardSwitchSVG,
+  CompassCardboardSVG,
   DrawingPinSVG,
   SafetyPinSVG,
-  CompassCardboardSVG,
-  CompassSVG,
   BatterySVG,
-  WiresSVG
+  CompassSVG,
+  WiresSVG,
 } from "./CircuitElements";
 
 export default function Stage2_Test({ onComplete }) {
@@ -113,6 +113,7 @@ export default function Stage2_Test({ onComplete }) {
                     Notice how when the current flows, the compass needle gets deflected from its original direction. When the current stops, the needle returns to its original direction! This shows that an electric current produces a magnetic field.
                   </p>
                 </div>
+                <button onClick={onComplete} className="primary" style={{ width: "100%" }}>Proceed to Quiz</button>
               </motion.div>
             )}
           </AnimatePresence>
