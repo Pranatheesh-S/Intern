@@ -339,22 +339,24 @@ export const WiresSVG = ({
           {/* Magnetic Field Lines */}
           <g>
             <text x={250} y={45} fill="#3b82f6" fontSize="14" fontWeight="bold" textAnchor="middle">Magnetic Field Lines</text>
-            {[ 
-              {rx: 60, ry: 50}, 
-              {rx: 85, ry: 70}, 
-              {rx: 110, ry: 90}, 
-              {rx: 135, ry: 110} 
-            ].map((line, i) => {
-              const cx = 250;
+            {[180, 250, 320].map((cx, i) => {
               const cy = 150;
               const color = "#3b82f6";
               return (
-                <g key={`mag-${i}`}>
-                  <ellipse cx={cx} cy={cy} rx={line.rx} ry={line.ry} fill="none" stroke={color} strokeWidth={1.5} opacity={0.7} />
-                  {/* Top Arrow */}
-                  <polygon points="-5,-4 5,0 -5,4" fill={color} transform={`translate(${cx}, ${cy - line.ry}) ${isBatteryFlipped ? '' : 'rotate(180)'}`} />
-                  {/* Bottom Arrow */}
-                  <polygon points="-5,-4 5,0 -5,4" fill={color} transform={`translate(${cx}, ${cy + line.ry}) ${isBatteryFlipped ? 'rotate(180)' : ''}`} />
+                <g key={`mag-pos-${i}`}>
+                  {[ {rx: 12, ry: 35}, {rx: 24, ry: 70} ].map((line, j) => (
+                    <g key={`mag-${i}-${j}`}>
+                      {/* Back half of the loop (dashed or lighter) */}
+                      <path d={`M ${cx},${cy - line.ry} A ${line.rx},${line.ry} 0 0,0 ${cx},${cy + line.ry}`} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4,4" opacity={0.5} />
+                      {/* Front half of the loop (solid) */}
+                      <path d={`M ${cx},${cy - line.ry} A ${line.rx},${line.ry} 0 0,1 ${cx},${cy + line.ry}`} fill="none" stroke={color} strokeWidth={2} opacity={0.8} />
+                      
+                      {/* Arrow Front (Right side of ellipse) */}
+                      <polygon points="-4,-5 4,0 -4,5" fill={color} transform={`translate(${cx + line.rx}, ${cy}) rotate(${isBatteryFlipped ? 90 : -90})`} />
+                      {/* Arrow Back (Left side of ellipse) */}
+                      <polygon points="-4,-5 4,0 -4,5" fill={color} transform={`translate(${cx - line.rx}, ${cy}) rotate(${isBatteryFlipped ? -90 : 90})`} opacity={0.6} />
+                    </g>
+                  ))}
                 </g>
               );
             })}
