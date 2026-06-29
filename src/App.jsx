@@ -37,6 +37,7 @@ const Activity3_7 = lazy(() => import('./activities/Activity3_7'));
 const Activity3_11 = lazy(() => import('./activities/Activity3_11'));
 const MagneticEffectOfCurrentActivity = lazy(() => import('./activities/MagneticEffectOfCurrent'));
 const ElectromagnetInvestigationActivity = lazy(() => import('./activities/ElectromagnetInvestigation'));
+const GrassrootsDemocracyActivity = lazy(() => import('./activities/GrassrootsDemocracy'));
 import './App.css';
 
 export default function App() {
@@ -230,6 +231,41 @@ export default function App() {
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             Explore Class 9th <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Subject Card 5: Class 6th Civics (Social Science) */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--accent-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+            1 CHAPTER ACTIVE
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <BookOpen size={22} style={{ color: 'var(--success)' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Civics</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Explore Social Science interactively. Engage in decision-making, governance simulators, and civic participation.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6_civics', 'chapter11')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            Enter FuturaX Social Lab <ArrowRight size={14} />
           </button>
         </div>
       </div>
@@ -1752,6 +1788,12 @@ export default function App() {
           )
         ) : activeSubject === 'class9' ? (
           renderUnderConstruction('Class 9th', Zap, '#ec4899')
+        ) : activeSubject === 'class6_civics' ? (
+          activeActivity === 'chapter11' ? (
+            <GrassrootsDemocracyActivity onBackToDashboard={() => navigateTo(null, null)} />
+          ) : (
+            <GrassrootsDemocracyActivity onBackToDashboard={() => navigateTo(null, null)} />
+          )
         ) : null}
         </Suspense>
       </main>
