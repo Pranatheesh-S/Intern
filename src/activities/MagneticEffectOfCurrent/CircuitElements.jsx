@@ -332,12 +332,20 @@ export const WiresSVG = ({
 
       {/* Current Flowing Overlay */}
       {isCurrentFlowing && (
-        <g fill="none" strokeWidth={3} strokeLinecap="round" className="current-flow">
-          {/* Current moving: Battery+ -> Pin2 -> Pin1 -> Nail2 -> Nail1 -> Battery- */}
-          <path d={path1} stroke="#67e8f9" />
-          <path d={path2} stroke="#67e8f9" />
-          <path d={`M ${p_nail2.x - 15},${p_nail2.y} L ${p_nail1.x + 15},${p_nail1.y}`} stroke="#67e8f9" />
-          <path d={path3} stroke="#67e8f9" />
+        <g>
+          {/* Electron flow: Battery- -> Nail1 -> Nail2 -> Pin1 -> Pin2 -> Battery+ */}
+          {[0, 0.6, 1.2, 1.8, 2.4].map((delay, index) => (
+            <g key={index}>
+              <circle r={8} fill="#3b82f6" stroke="#ffffff" strokeWidth={1.5} />
+              <text fill="#ffffff" fontSize="10" fontWeight="bold" textAnchor="middle" dy="3.5">e</text>
+              <animateMotion 
+                dur="3s" 
+                repeatCount="indefinite" 
+                path={`M ${p_batteryNeg.x},${p_batteryNeg.y} C 29,200 50,100 ${p_nail1.x},${p_nail1.y} L ${p_nail2.x},${p_nail2.y} C 400,100 480,150 ${p_pin1.x},${p_pin1.y} L ${p_pin2.x},${p_pin2.y} C 380,420 200,420 ${p_batteryPos.x},${p_batteryPos.y}`} 
+                begin={`-${delay}s`} 
+              />
+            </g>
+          ))}
         </g>
       )}
     </g>
