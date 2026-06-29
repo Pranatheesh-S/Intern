@@ -151,7 +151,7 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
 
         {/* Right Column: Did you know? / Why? */}
         {activeTab !== 'quiz' && (
-          <aside style={{ width: '280px', flexShrink: 0, position: 'sticky', top: '2rem', marginTop: '1rem' }}>
+          <aside style={{ width: '280px', flexShrink: 0, marginTop: '1rem' }}>
             {activeTab === 'build' && (
               <div className="glass-panel" style={{ padding: '1.25rem' }}>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
