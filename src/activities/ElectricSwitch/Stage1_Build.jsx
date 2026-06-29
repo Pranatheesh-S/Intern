@@ -423,7 +423,7 @@ export default function Stage1_Build({ onComplete }) {
       case "battery-neg":
         return { x: battery.x - 46, y: battery.y };
       case "battery-pos":
-        return { x: battery.x + 42, y: battery.y };
+        return { x: battery.x + 46, y: battery.y };
       case "bulb-left":
         return { x: bulb.x - 30, y: bulb.y };
       case "bulb-right":
@@ -1036,7 +1036,7 @@ export default function Stage1_Build({ onComplete }) {
                 {/* Bulb */}
                 {placed.bulb && (
                   <DraggableSVGGroup id="bulb" isDraggable={!success}>
-                    <g transform={`translate(${positions.bulb.x - 400}, ${positions.bulb.y - 120})`}>
+                    <g transform={`translate(${positions.bulb.x - 300}, ${positions.bulb.y - 102})`}>
                       <BulbSVG isPlaced={true} isOn={false} />
                     </g>
                   </DraggableSVGGroup>
@@ -1045,7 +1045,7 @@ export default function Stage1_Build({ onComplete }) {
                 {/* Battery */}
                 {placed.battery && (
                   <DraggableSVGGroup id="battery" isDraggable={!success}>
-                    <g transform={`translate(${positions.battery.x - 220}, ${positions.battery.y - 430})`}>
+                    <g transform={`translate(${positions.battery.x - 150}, ${positions.battery.y - 390})`}>
                       <BatterySVG isPlaced={true} />
                     </g>
                   </DraggableSVGGroup>
