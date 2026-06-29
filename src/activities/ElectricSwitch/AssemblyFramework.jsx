@@ -537,32 +537,10 @@ export default function AssemblyFramework({
         </div>
 
         {/* Drag Overlay layer */}
-        <DragOverlay>
+        <DragOverlay dropAnimation={null}>
           {isDragging && activeStep ? (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.5rem 0.75rem',
-              background: 'rgba(99, 102, 241, 0.25)',
-              border: '2px solid #818cf8',
-              borderRadius: '10px',
-              color: 'var(--text-heading)',
-              fontSize: '0.8rem',
-              fontWeight: '600',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
-              backdropFilter: 'blur(4px)',
-              cursor: 'grabbing',
-              opacity: 0.9,
-              transform: 'scale(1.05)',
-            }}>
-              <div style={{ width: '28px', height: '28px', background: 'rgba(15, 23, 42, 0.6)', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {activeStep.renderPartsBenchIcon()}
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-                <span>{activeStep.name}</span>
-                <span style={{ fontSize: '0.65rem', color: '#a5b4fc' }}>Placing in workspace...</span>
-              </div>
+            <div style={{ display: "inline-flex", opacity: 0.8, filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.2))", pointerEvents: "none", transform: "scale(1.5)", transformOrigin: "center" }}>
+              {activeStep.renderPartsBenchIcon()}
             </div>
           ) : null}
         </DragOverlay>

@@ -554,7 +554,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
         </div>
       </div>
 
-      <DragOverlay>
+      <DragOverlay dropAnimation={null}>
         {activeDraggingId && !placed[activeDraggingId] ? (
           <div style={{ opacity: 0.8, pointerEvents: "none" }}>
             {/* Show a mini visual representation when dragging from parts bench */}
