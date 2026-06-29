@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { 
   CheckCircle2, 
@@ -7,10 +7,9 @@ import {
   Play,
   RotateCcw,
   ArrowRight,
-  Lightbulb,
   MousePointerClick,
-  Sparkles,
-  Zap
+  Zap,
+  MoveDown
 } from 'lucide-react';
 import { 
   CardboardSVG, 
@@ -22,15 +21,16 @@ import {
 } from './CircuitElements';
 
 const CONDUCTOR_ITEMS = [
-  { id: 'metal', name: 'Safety Pin', type: 'Conductor (Metal)', desc: 'Conducts electric current and closes the circuit gap.' },
-  { id: 'plastic', name: 'Plastic Clip', type: 'Insulator (Plastic)', desc: 'Non-conductive plastic; current cannot pass through.' },
-  { id: 'wood', name: 'Wooden Stick', type: 'Insulator (Wood)', desc: 'Non-conductive wood; current cannot pass through.' }
+  { id: 'metal', name: 'Safety Pin', type: 'Conductor (Metal)' },
+  { id: 'plastic', name: 'Plastic Clip', type: 'Insulator (Plastic)' },
+  { id: 'wood', name: 'Wooden Stick', type: 'Insulator (Wood)' }
 ];
 
 export default function Stage2_Test({ onComplete }) {
   const [prediction, setPrediction] = useState(null);
   const [predictionSubmitted, setPredictionSubmitted] = useState(false);
   const [selectedMaterial, setSelectedMaterial] = useState('metal');
+  const [isPinPlacedOnBoard, setIsPinPlacedOnBoard] = useState(false);
   const [isPinConnected, setIsPinConnected] = useState(false);
   const [testTriggered, setTestTriggered] = useState(false);
 
@@ -40,8 +40,17 @@ export default function Stage2_Test({ onComplete }) {
     }
   };
 
-  const handleToggleSwitch = () => {
+  const handlePlacePinOnBoard = () => {
     if (!predictionSubmitted) return;
+    setIsPinPlacedOnBoard(true);
+  };
+
+  const handleToggleSwitchAlignment = () => {
+    if (!predictionSubmitted) return;
+    if (!isPinPlacedOnBoard) {
+      setIsPinPlacedOnBoard(true);
+      return;
+    }
     const nextState = !isPinConnected;
     setIsPinConnected(nextState);
     setTestTriggered(true);
@@ -65,26 +74,28 @@ export default function Stage2_Test({ onComplete }) {
     setPrediction(null);
     setPredictionSubmitted(false);
     setSelectedMaterial('metal');
+    setIsPinPlacedOnBoard(false);
     setIsPinConnected(false);
     setTestTriggered(false);
   };
 
   const isConductor = selectedMaterial === 'metal';
-  const isCurrentFlowing = isPinConnected && isConductor;
+  const isCurrentFlowing = isPinPlacedOnBoard && isPinConnected && isConductor;
   const isBulbOn = isCurrentFlowing;
   const isPredictionCorrect = (prediction === 'on' && isConductor) || (prediction === 'off' && !isConductor);
+  const currentItemName = CONDUCTOR_ITEMS.find(i => i.id === selectedMaterial)?.name || 'Safety Pin';
 
   return (
     <div className="main-grid" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
       {/* Left Panel */}
-      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
         <div>
           <span className="status-badge neutral" style={{ background: 'var(--warning-bg)', color: 'var(--warning)', borderColor: '#fde68a' }}>
             Stage 2: Test the Switch
           </span>
           <h2 style={{ marginTop: '0.5rem', marginBottom: '0.25rem', color: 'var(--text-heading)' }}>Active Learning</h2>
           <p style={{ fontSize: '0.85rem', margin: 0, color: 'var(--text-muted)' }}>
-            Align the safety pin to bridge the drawing pins and test electric current flow!
+            Place the switch arm onto Drawing Pin 1, then swing its clasp to touch Drawing Pin 2!
           </p>
         </div>
 
@@ -105,7 +116,7 @@ export default function Stage2_Test({ onComplete }) {
                 <h4 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem' }}>Predict the Outcome</h4>
               </div>
               <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                What will happen to the electric bulb when you drag/align the metallic safety pin so that it touches Drawing Pin 2?
+                What will happen to the electric bulb when you place the metallic safety pin and align it so that it touches Drawing Pin 2?
               </p>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.25rem' }}>
@@ -162,18 +173,18 @@ export default function Stage2_Test({ onComplete }) {
           </div>
         ) : (
           /* Test & Observe */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
             <div style={{ 
               background: 'var(--surface)',
               border: '1px solid var(--border)',
-              borderRadius: '12px',
-              padding: '0.85rem 1rem',
-              fontSize: '0.85rem'
+              borderRadius: '10px',
+              padding: '0.75rem 0.9rem',
+              fontSize: '0.82rem'
             }}>
               <span style={{ color: 'var(--text-faint)', fontWeight: 'bold', fontSize: '0.7rem', letterSpacing: '0.05em' }}>
                 PREDICTION SUBMITTED
               </span>
-              <p style={{ margin: '0.2rem 0 0 0', color: 'var(--text-secondary)' }}>
+              <p style={{ margin: '0.15rem 0 0 0', color: 'var(--text-secondary)' }}>
                 Your prediction: <strong style={{ color: prediction === 'on' ? 'var(--warning)' : 'var(--text-muted)' }}>
                   Bulb will stay {prediction.toUpperCase()}
                 </strong>
@@ -181,9 +192,9 @@ export default function Stage2_Test({ onComplete }) {
             </div>
 
             {/* Switch Arm Material Tray Selector */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>
-                SELECT SWITCH ARM MATERIAL:
+                1. SELECT SWITCH ARM MATERIAL:
               </span>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.4rem' }}>
                 {CONDUCTOR_ITEMS.map((item) => {
@@ -193,7 +204,7 @@ export default function Stage2_Test({ onComplete }) {
                       key={item.id}
                       onClick={() => handleSelectMaterial(item.id)}
                       style={{
-                        padding: '0.5rem 0.25rem',
+                        padding: '0.45rem 0.2rem',
                         borderRadius: '8px',
                         fontSize: '0.72rem',
                         fontWeight: '600',
@@ -202,8 +213,7 @@ export default function Stage2_Test({ onComplete }) {
                         color: isSel ? 'var(--accent-text)' : 'var(--text-secondary)',
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '0.2rem'
+                        alignItems: 'center'
                       }}
                     >
                       <span>{item.name}</span>
@@ -213,22 +223,55 @@ export default function Stage2_Test({ onComplete }) {
               </div>
             </div>
 
+            {/* STEP 2: Component Tray Button to Drop Pin */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>
+                2. SWITCH ARM TRAY:
+              </span>
+              <button
+                onClick={handlePlacePinOnBoard}
+                disabled={isPinPlacedOnBoard}
+                className="tray-btn"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '0.65rem 0.9rem',
+                  borderRadius: '10px',
+                  background: isPinPlacedOnBoard ? 'var(--success-bg)' : 'var(--accent-bg)',
+                  border: `1px solid ${isPinPlacedOnBoard ? 'var(--success)' : 'var(--accent)'}`,
+                  color: isPinPlacedOnBoard ? 'var(--success)' : 'var(--accent-text)',
+                  fontWeight: '600',
+                  fontSize: '0.82rem'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '1.1rem' }}>🧷</span>
+                  <span>{isPinPlacedOnBoard ? `${currentItemName} Placed on Board` : `Add ${currentItemName} to Circuit`}</span>
+                </div>
+                {!isPinPlacedOnBoard && <MoveDown size={16} className="bulb-glowing" />}
+              </button>
+            </div>
+
             {!testTriggered ? (
               <div className="pulse-target" style={{ 
                 background: 'var(--accent-bg)', 
                 border: '1px solid var(--accent-border)',
                 borderRadius: '10px',
-                padding: '0.85rem 1rem',
-                textAlign: 'center',
+                padding: '0.75rem 0.9rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.75rem'
               }}>
-                <MousePointerClick size={24} style={{ color: 'var(--accent-text)', flexShrink: 0 }} />
+                <MousePointerClick size={22} style={{ color: 'var(--accent-text)', flexShrink: 0 }} />
                 <div style={{ textAlign: 'left' }}>
-                  <h4 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-primary)' }}>Align the Switch Arm!</h4>
+                  <h4 style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-primary)' }}>
+                    {!isPinPlacedOnBoard ? 'Step A: Drop Pin on Board' : 'Step B: Align Clasp to Pin 2'}
+                  </h4>
                   <p style={{ margin: '0.1rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                    Click or drag the safety pin on the right canvas to touch Drawing Pin 2 and complete the circuit.
+                    {!isPinPlacedOnBoard 
+                      ? 'Click the tray button above or tap Drawing Pin 1 to place the pin.' 
+                      : 'Click or drag the safety pin clasp to touch Drawing Pin 2.'}
                   </p>
                 </div>
               </div>
@@ -240,7 +283,7 @@ export default function Stage2_Test({ onComplete }) {
                   background: isBulbOn ? 'var(--success-bg)' : 'var(--danger-bg)', 
                   border: isBulbOn ? '1px solid #a7f3d0' : '1px solid #fecaca',
                   borderRadius: '10px',
-                  padding: '0.85rem 1rem'
+                  padding: '0.75rem 0.9rem'
                 }}
               >
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.3rem' }}>
@@ -249,11 +292,11 @@ export default function Stage2_Test({ onComplete }) {
                   ) : (
                     <HelpCircle style={{ color: 'var(--danger)' }} size={18} />
                   )}
-                  <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                  <h4 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-primary)' }}>
                     {isBulbOn ? 'Circuit CLOSED (Current Flowing)' : 'Circuit OPEN / Broken Path'}
                   </h4>
                 </div>
-                <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                <p style={{ margin: 0, fontSize: '0.76rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
                   {isBulbOn ? (
                     <>
                       {isPredictionCorrect ? (
@@ -264,7 +307,7 @@ export default function Stage2_Test({ onComplete }) {
                   ) : (
                     <>
                       {!isConductor ? (
-                        <span>The <strong>{CONDUCTOR_ITEMS.find(i => i.id === selectedMaterial)?.name}</strong> is an insulator. Even when aligned, current cannot pass through it!</span>
+                        <span>The <strong>{currentItemName}</strong> is an insulator. Even when aligned, current cannot pass through it!</span>
                       ) : (
                         <span>When the safety pin is swung away, an air gap is left. Since air is an insulator, the path is broken and the bulb remains <strong>OFF</strong>.</span>
                       )}
@@ -277,18 +320,18 @@ export default function Stage2_Test({ onComplete }) {
             {/* Live Stats Card */}
             <div style={{ 
               display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem',
-              background: 'var(--surface)', borderRadius: '10px', padding: '0.75rem',
+              background: 'var(--surface)', borderRadius: '10px', padding: '0.65rem 0.75rem',
               border: '1px solid var(--border)'
             }}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)' }}>SWITCH ARM</span>
-                <span style={{ fontSize: '0.82rem', fontWeight: '600', color: isPinConnected ? 'var(--success)' : 'var(--text-secondary)' }}>
-                  {isPinConnected ? 'ALIGNED (CONNECTED)' : 'OPEN (GAP)'}
+                <span style={{ fontSize: '0.68rem', color: 'var(--text-faint)' }}>SWITCH ARM</span>
+                <span style={{ fontSize: '0.8rem', fontWeight: '600', color: isPinConnected ? 'var(--success)' : 'var(--text-secondary)' }}>
+                  {!isPinPlacedOnBoard ? 'NOT PLACED' : isPinConnected ? 'ALIGNED (CLOSED)' : 'OPEN (GAP)'}
                 </span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)' }}>BULB LIGHT</span>
-                <span style={{ fontSize: '0.82rem', fontWeight: '600', color: isBulbOn ? 'var(--warning)' : 'var(--text-faint)' }}>
+                <span style={{ fontSize: '0.68rem', color: 'var(--text-faint)' }}>BULB LIGHT</span>
+                <span style={{ fontSize: '0.8rem', fontWeight: '600', color: isBulbOn ? 'var(--warning)' : 'var(--text-faint)' }}>
                   {isBulbOn ? '💡 GLOWING' : 'DARK'}
                 </span>
               </div>
@@ -342,45 +385,72 @@ export default function Stage2_Test({ onComplete }) {
             isCurrentFlowing={isCurrentFlowing}
           />
 
-          {/* Drawing Pin 1 (Pivot Pin) */}
-          <DrawingPinSVG x={560} y={290} label="Drawing Pin 1" isPlaced={true} />
-
-          {/* Interactive Swinging Switch Arm (Safety Pin / Plastic / Wood) */}
-          <motion.g
-            animate={{ rotate: isPinConnected ? 0 : -45 }}
-            transition={{ type: 'spring', stiffness: 120, damping: 12 }}
-            style={{ originX: '560px', originY: '290px', cursor: predictionSubmitted ? 'pointer' : 'not-allowed' }}
-            onClick={handleToggleSwitch}
-          >
-            <SafetyPinSVG x={560} y={290} rotation={0} isPlaced={true} material={selectedMaterial} />
-          </motion.g>
-
-          {/* Drawing Pin 2 (Contact Pin) */}
-          <g onClick={handleToggleSwitch} style={{ cursor: predictionSubmitted ? 'pointer' : 'default' }}>
-            <DrawingPinSVG x={560} y={410} label="Drawing Pin 2" isPlaced={true} isTarget={!isPinConnected && predictionSubmitted} />
+          {/* Drawing Pin 1 (Pivot Pin Target / Anchor) */}
+          <g onClick={handlePlacePinOnBoard} style={{ cursor: predictionSubmitted && !isPinPlacedOnBoard ? 'pointer' : 'default' }}>
+            <DrawingPinSVG x={560} y={290} label="Drawing Pin 1" isPlaced={true} isTarget={predictionSubmitted && !isPinPlacedOnBoard} />
           </g>
 
-          {/* Connection Sparkle & Hint Target */}
-          {predictionSubmitted && !isPinConnected && (
-            <g transform="translate(560, 410)" style={{ cursor: 'pointer' }} onClick={handleToggleSwitch}>
+          {/* Visual Drop Target Highlight when pin is not yet placed */}
+          {predictionSubmitted && !isPinPlacedOnBoard && (
+            <g transform="translate(560, 290)" onClick={handlePlacePinOnBoard} style={{ cursor: 'pointer' }}>
+              <circle r={24} fill="rgba(234, 179, 8, 0.15)" stroke="var(--warning)" strokeWidth={2} strokeDasharray="4,4" className="bulb-glowing" />
+              <text x={0} y={-32} fill="var(--warning)" fontSize="11" fontWeight="bold" textAnchor="middle">
+                🎯 Drop Pin Here!
+              </text>
+            </g>
+          )}
+
+          {/* Interactive Swinging Switch Arm (Rendered ONLY when placed on board) */}
+          {isPinPlacedOnBoard && (
+            <motion.g
+              animate={{ rotate: isPinConnected ? 0 : -45 }}
+              transition={{ type: 'spring', stiffness: 120, damping: 12 }}
+              style={{ originX: '560px', originY: '290px', cursor: 'pointer' }}
+              onClick={handleToggleSwitchAlignment}
+            >
+              <SafetyPinSVG x={560} y={290} rotation={0} isPlaced={true} material={selectedMaterial} />
+            </motion.g>
+          )}
+
+          {/* Drawing Pin 2 (Contact Pin) */}
+          <g onClick={handleToggleSwitchAlignment} style={{ cursor: predictionSubmitted ? 'pointer' : 'default' }}>
+            <DrawingPinSVG x={560} y={410} label="Drawing Pin 2" isPlaced={true} isTarget={isPinPlacedOnBoard && !isPinConnected} />
+          </g>
+
+          {/* Connection Sparkle & Alignment Hint Target */}
+          {predictionSubmitted && isPinPlacedOnBoard && !isPinConnected && (
+            <g transform="translate(560, 410)" style={{ cursor: 'pointer' }} onClick={handleToggleSwitchAlignment}>
               <circle r={22} fill="rgba(99, 102, 241, 0.15)" stroke="var(--accent)" strokeWidth={2} strokeDasharray="4,4" className="bulb-glowing" />
               <text x={0} y={35} fill="var(--accent-text)" fontSize="11" fontWeight="bold" textAnchor="middle">
-                🎯 Click Pin 2 to Align!
+                🔄 Click Pin 2 to Align!
               </text>
             </g>
           )}
         </svg>
 
-        {predictionSubmitted && !testTriggered && (
+        {predictionSubmitted && !isPinPlacedOnBoard && (
           <div style={{ 
-            position: 'absolute', top: '52%', right: '28%', 
+            position: 'absolute', top: '48%', right: '28%', 
             background: 'var(--accent)', color: 'white',
             padding: '0.45rem 0.9rem', borderRadius: '8px',
             fontSize: '0.8rem', fontWeight: 'bold',
             boxShadow: '0 4px 14px rgba(79,70,229,0.4)',
             pointerEvents: 'none', display: 'flex', alignItems: 'center', gap: '0.35rem'
           }} className="bulb-glowing">
-            <Zap size={14} style={{ color: '#fbbf24' }} /> Click safety pin to close switch!
+            <Zap size={14} style={{ color: '#fbbf24' }} /> Click tray button or Pin 1 to drop switch pin!
+          </div>
+        )}
+
+        {predictionSubmitted && isPinPlacedOnBoard && !testTriggered && (
+          <div style={{ 
+            position: 'absolute', top: '56%', right: '28%', 
+            background: 'var(--accent)', color: 'white',
+            padding: '0.45rem 0.9rem', borderRadius: '8px',
+            fontSize: '0.8rem', fontWeight: 'bold',
+            boxShadow: '0 4px 14px rgba(79,70,229,0.4)',
+            pointerEvents: 'none', display: 'flex', alignItems: 'center', gap: '0.35rem'
+          }} className="bulb-glowing">
+            <Zap size={14} style={{ color: '#fbbf24' }} /> Click safety pin or Pin 2 to align clasp!
           </div>
         )}
       </div>
