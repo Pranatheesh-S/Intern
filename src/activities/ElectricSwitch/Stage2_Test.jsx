@@ -484,14 +484,9 @@ export default function Stage2_Test({ onComplete }) {
 
             {/* Interactive Swinging Switch Arm (Rendered ONLY when placed on board) */}
             {isPinPlacedOnBoard && (
-              <motion.g
-                animate={{ rotate: isPinConnected ? 0 : -45 }}
-                transition={{ type: 'spring', stiffness: 120, damping: 12 }}
-                style={{ originX: '560px', originY: '290px', cursor: 'pointer' }}
-                onClick={handleToggleSwitchAlignment}
-              >
-                <SafetyPinSVG x={560} y={290} rotation={0} isPlaced={true} material={selectedMaterial} />
-              </motion.g>
+              <g onClick={handleToggleSwitchAlignment} style={{ cursor: 'pointer' }}>
+                <SafetyPinSVG x={560} y={290} rotation={isPinConnected ? 0 : -35} isPlaced={true} material={selectedMaterial} />
+              </g>
             )}
 
             {/* Drawing Pin 2 (Contact Pin) */}
