@@ -154,6 +154,39 @@ export default function Stage2_Test({ onComplete }) {
               onClick={handleToggleSwitch} 
             />
           </svg>
+          
+          {/* Battery Reversed Popup */}
+          <AnimatePresence>
+            {isBatteryFlipped && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                style={{
+                  position: "absolute",
+                  top: "20px",
+                  right: "20px",
+                  width: "250px",
+                  maxWidth: "calc(100% - 40px)",
+                  background: "var(--card-bg)",
+                  padding: "0.75rem",
+                  borderRadius: "8px",
+                  border: "1px solid var(--accent-border)",
+                  boxShadow: "var(--card-shadow)",
+                  zIndex: 20,
+                  display: "flex",
+                  gap: "0.5rem",
+                  alignItems: "flex-start",
+                  backdropFilter: "blur(8px)"
+                }}
+              >
+                <Info size={16} color="var(--accent)" style={{ flexShrink: 0, marginTop: "2px" }} />
+                <p style={{ margin: 0, fontSize: "0.75rem", color: "var(--text-secondary)", lineHeight: "1.4" }}>
+                  Changing the battery terminals changes the direction of current in the wire. This reverses the magnetic field around the wire, causing the compass needle to turn in the opposite direction.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

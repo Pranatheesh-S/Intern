@@ -151,7 +151,7 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
 
         {/* Right Column: Did you know? / Why? */}
         {activeTab !== 'quiz' && (
-          <aside style={{ width: '280px', flexShrink: 0, marginTop: '1rem' }}>
+          <aside style={{ width: '280px', flexShrink: 0, marginTop: activeTab === 'build' ? '6rem' : '6.5rem' }}>
             {activeTab === 'build' && (
               <div className="glass-panel" style={{ padding: '1.25rem' }}>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
@@ -160,38 +160,43 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
                     Did you know?
                   </h4>
                 </div>
+                <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
                 
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '2px' }}>👉</span>
                   <div>
                     <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
                       Science Insights
                     </div>
-                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5', textAlign: 'justify' }}>
+                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: '1.5', textAlign: 'justify' }}>
                       In 1820, Hans Christian Ørsted accidentally discovered that an electric current creates a magnetic field. When he turned on a circuit, a nearby compass needle twitched!
                     </p>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
+
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '2px' }}>👉</span>
                   <div>
                     <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
                       Tiny Magnets
                     </div>
-                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5', textAlign: 'justify' }}>
+                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: '1.5', textAlign: 'justify' }}>
                       A compass needle is actually a tiny magnet! When it's placed near a wire carrying electric current, the magnetic field produced by the current exerts a force on the compass needle, causing it to deflect.
                     </p>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
+
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '2px' }}>👉</span>
                   <div>
                     <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
                       Magnetic Reversals
                     </div>
-                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5', textAlign: 'justify' }}>
+                    <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: '1.5', textAlign: 'justify' }}>
                       The direction of the magnetic field depends on the direction of the electric current. If you reverse the battery connections, the compass needle will deflect in the opposite direction!
                     </p>
                   </div>
@@ -209,24 +214,31 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
                 </div>
                 
                 <div style={{ marginTop: '0.5rem' }}>
+                  <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
                   <FAQItem 
-                    question="Why does the compass needle deflect when the switch is turned ON?"
-                    answer={"When the switch is turned ON, electric current flows through the wire.\nThe current creates a magnetic field that causes the compass needle to deflect."}
+                    question="Why does the compass needle stop moving after a few seconds?"
+                    answer="The compass needle stops moving because it aligns itself with the combined magnetic field of the Earth and the current-carrying wire. Once it reaches this position, it becomes stable."
                   />
                   
+                  <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
+
                   <FAQItem 
                     question="Why does the compass needle return to its original position when the switch is turned OFF?"
-                    answer={"When the switch is turned OFF, the electric current stops flowing.\nThe magnetic field disappears, so the compass needle returns to its original position."}
+                    answer="When the switch is turned OFF, current stops flowing through the wire. The magnetic field produced by the wire disappears, so the compass aligns only with Earth's magnetic field and returns to its original north-south direction."
                   />
                   
+                  <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
+
                   <FAQItem 
-                    question="Why is the magnetic field present only when current flows through the wire?"
-                    answer={"A magnetic field is produced only when electric current flows through the wire.\nWhen the current stops, the magnetic field disappears."}
+                    question="Why should the wire be placed close to the compass?"
+                    answer="The magnetic field is strongest near the current-carrying wire. Keeping the wire close to the compass makes the magnetic effect stronger, allowing the compass needle to deflect clearly."
                   />
                   
+                  <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
+
                   <FAQItem 
-                    question="Why does the compass respond to the current-carrying wire even though the wire is not a magnet?"
-                    answer={"The current-carrying wire produces a magnetic field around it.\nThe compass needle detects this magnetic field and deflects."}
+                    question="Why does the compass needle not touch the wire even though it moves?"
+                    answer="The compass needle moves because it responds to the magnetic field around the wire, not because of physical contact. A magnetic field can act through space without touching the compass."
                   />
                 </div>
               </div>
