@@ -11,6 +11,7 @@ import {
   ToggleLeft,
   ToggleRight,
   Lightbulb,
+  ArrowRight,
 } from "lucide-react";
 import {
   CardboardSVG,
@@ -59,7 +60,7 @@ function getBulbProfile(battV, bulbV) {
   return { zone: "active", label: "Unknown ⚠️", color: "var(--text-faint)", brightness: 0 };
 }
 
-export default function Stage3_Explore() {
+export default function Stage3_Explore({ onComplete }) {
   const [isPinConnected, setIsPinConnected] = useState(false);
   const [batteryPresent, setBatteryPresent] = useState(true);
   const [wireConnected, setWireConnected] = useState(true);
@@ -163,7 +164,7 @@ export default function Stage3_Explore() {
   const expStyle = expBg[exp.status] || expBg.neutral;
 
   return (
-    <div className="main-grid">
+    <div className="main-grid" style={{ userSelect: "none", WebkitUserSelect: "none" }}>
       {/* ── LEFT PANEL ── */}
       <div
         className="glass-panel"
@@ -408,17 +409,28 @@ export default function Stage3_Explore() {
           </div>
         </div>
 
-        <button
-          onClick={handleReset}
-          className="outline"
-          style={{ gap: "0.35rem", marginTop: "auto" }}
-        >
-          <RotateCcw size={14} /> Reset Sandbox
-        </button>
+        <div style={{ display: "flex", gap: "0.5rem", marginTop: "auto", paddingTop: "0.5rem" }}>
+          <button
+            onClick={handleReset}
+            className="outline"
+            style={{ gap: "0.35rem", flex: 1 }}
+          >
+            <RotateCcw size={14} /> Reset
+          </button>
+          {onComplete && (
+            <button
+              onClick={onComplete}
+              className="success"
+              style={{ gap: "0.35rem", flex: 2 }}
+            >
+              Go to Quiz <ArrowRight size={14} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ── RIGHT PANEL — Circuit Canvas ── */}
-      <div className="canvas-container" style={{ padding: "2rem" }}>
+      <div className="canvas-container" style={{ padding: "2rem", userSelect: "none", WebkitUserSelect: "none" }}>
         <div className="canvas-bg-grid" />
 
         {/* Status badges */}
@@ -466,7 +478,7 @@ export default function Stage3_Explore() {
           width="100%"
           height="100%"
           viewBox="0 0 600 480"
-          style={{ maxWidth: "600px", maxHeight: "480px" }}
+          style={{ maxWidth: "600px", maxHeight: "480px", userSelect: "none", WebkitUserSelect: "none" }}
         >
           <CardboardSVG />
 
