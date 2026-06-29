@@ -639,7 +639,7 @@ export default function Stage1_Build({ onComplete }) {
           <div style={{ flex: 1, position: "relative", minHeight: "480px", display: "flex", flexDirection: "column", background: "var(--canvas-bg)", borderRadius: "16px", border: "1px solid var(--canvas-border)", overflow: "hidden" }}>
             
             {/* Reference Blueprint */}
-            <ReferenceOverlay title="Reference Blueprint">
+            <ReferenceOverlay title="Reference Blueprint" position="right">
               <svg width="220" height="150" viewBox="130 90 580 400" style={{ opacity: 0.85 }}>
                 {/* Components */}
                 <CardboardSwitchSVG x={IDEALS.switchBoard.x} y={IDEALS.switchBoard.y} />
