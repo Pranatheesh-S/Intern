@@ -445,9 +445,9 @@ export const WiresSVG = ({
   isTarget = false, 
   onClick 
 }) => {
-  const path1 = "M 270,102 C 180,102 80,240 104,390";
-  const path2 = "M 192,390 C 260,430 380,410 450,370";
-  const path3 = "M 450,250 C 450,150 400,102 330,102";
+  const path1 = "M 370,120 C 220,120 120,260 174,430";
+  const path2 = "M 266,430 C 350,480 480,460 560,410";
+  const path3 = "M 560,290 C 560,180 500,120 430,120";
 
   if (!isWireConnected) {
     if (isTarget) {
