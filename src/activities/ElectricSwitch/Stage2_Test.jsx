@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import { 
   CheckCircle2, 
   HelpCircle,
@@ -33,8 +34,18 @@ export default function Stage2_Test({ onComplete }) {
 
   const handleToggleSwitch = () => {
     if (!predictionSubmitted) return;
-    setIsPinConnected(!isPinConnected);
+    const nextState = !isPinConnected;
+    setIsPinConnected(nextState);
     setTestTriggered(true);
+
+    if (nextState) {
+      confetti({
+        particleCount: 40,
+        spread: 60,
+        colors: ['#60a5fa', '#fde047', '#38bdf8', '#ffffff'],
+        origin: { x: 0.72, y: 0.65 },
+      });
+    }
   };
 
   const handleReset = () => {
@@ -49,7 +60,7 @@ export default function Stage2_Test({ onComplete }) {
   const isBulbOn = isPinConnected;
 
   return (
-    <div className="main-grid">
+    <div className="main-grid" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
       {/* Left Panel */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         <div>
@@ -57,7 +68,7 @@ export default function Stage2_Test({ onComplete }) {
             Stage 2: Test the Switch
           </span>
           <h2 style={{ marginTop: '0.5rem', marginBottom: '0.25rem' }}>Active Learning</h2>
-          <p style={{ fontSize: '0.9rem', margin: 0 }}>
+          <p style={{ fontSize: '0.9rem', margin: 0, color: 'var(--text-muted)' }}>
             Test how the switch regulates the flow of current in a closed circuit loop.
           </p>
         </div>
@@ -249,7 +260,7 @@ export default function Stage2_Test({ onComplete }) {
       </div>
 
       {/* Right Panel: SVG Canvas */}
-      <div className="canvas-container" style={{ padding: '2rem' }}>
+      <div className="canvas-container" style={{ padding: '2rem', userSelect: 'none', WebkitUserSelect: 'none' }}>
         <div className="canvas-bg-grid" />
         
         <div style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', zIndex: 10 }}>
@@ -258,7 +269,7 @@ export default function Stage2_Test({ onComplete }) {
           </span>
         </div>
 
-        <svg width="100%" height="100%" viewBox="0 0 600 480" style={{ maxWidth: '600px', maxHeight: '480px' }}>
+        <svg width="100%" height="100%" viewBox="0 0 600 480" style={{ maxWidth: '600px', maxHeight: '480px', userSelect: 'none', WebkitUserSelect: 'none' }}>
           <CardboardSVG />
           <BulbSVG isPlaced={true} isOn={isBulbOn} />
           <BatterySVG isPlaced={true} />

@@ -6,8 +6,7 @@ import {
   Globe, 
   HelpCircle, 
   CheckCircle, 
-  ArrowLeft,
-  Info
+  ArrowLeft
 } from 'lucide-react';
 import Stage1_Build from './Stage1_Build';
 import Stage2_Test from './Stage2_Test';
@@ -46,13 +45,13 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
   ];
 
   return (
-    <div>
+    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 1rem' }}>
       {/* Subheader Navigation */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        marginBottom: '2rem',
+        marginBottom: '1.5rem',
         borderBottom: '1px solid var(--border)',
         paddingBottom: '1rem',
         flexWrap: 'wrap',
@@ -71,7 +70,7 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
             <ArrowLeft size={14} /> Back to Labs
           </button>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Electric Switch Science Lab</h2>
+            <h2 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Electric Switch Science Lab</h2>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Activities 3.8 & 3.9</span>
           </div>
         </div>
@@ -109,9 +108,8 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
         </nav>
       </div>
 
-      {/* Active Stage */}
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '1.5rem', alignItems: 'stretch' }}>
-        <main style={{ flex: 1,  minHeight: '480px', marginBottom: '2rem' }}>
+      {/* Active Stage View */}
+      <main style={{ width: '100%', minHeight: '480px', marginBottom: '1.5rem' }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -124,29 +122,6 @@ export default function ElectricSwitchActivity({ onBackToDashboard }) {
           </motion.div>
         </AnimatePresence>
       </main>
-
-        {/* Right Sidebar (Educational Tip) */}
-        <aside style={{ width: '280px', flexShrink: 0 }}>
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Did you know?
-                </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-                  Science Insights
-                </div>
-                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  An <strong>electric switch</strong> is a simple device that either completes (closes) or breaks (opens) an electrical circuit. 
-              Switches used in household lighting and electronics work on this exact same principle—by moving a metal conductor into 
-              and out of contact with the circuit terminals to start or halt the flow of current.
-                </p>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
     </div>
   );
 }
