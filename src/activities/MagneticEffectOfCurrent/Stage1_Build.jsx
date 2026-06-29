@@ -9,6 +9,7 @@ import {
   useDraggable,
   useDroppable,
 } from "@dnd-kit/core";
+import { snapCenterToCursor } from "@dnd-kit/modifiers";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import {
@@ -907,16 +908,10 @@ export default function Stage1_Build({ onComplete }) {
         </div>
 
         {/* Drag Overlay layer */}
-        <DragOverlay>
+        <DragOverlay dropAnimation={null} modifiers={[snapCenterToCursor]}>
           {isDragging && activeStep ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 0.75rem", background: "rgba(99, 102, 241, 0.25)", border: "2px solid #818cf8", borderRadius: "10px", color: "var(--accent-text)", fontSize: "0.8rem", fontWeight: "600", boxShadow: "0 8px 24px rgba(99,102,241,0.15)", backdropFilter: "blur(4px)", cursor: "grabbing", opacity: 0.9, transform: "scale(1.05)" }}>
-              <div style={{ width: "28px", height: "28px", background: "var(--border)", borderRadius: "6px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {renderThumbnailSVG(activeStep.id)}
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
-                <span>{activeStep.name}</span>
-                <span style={{ fontSize: "0.65rem", color: "#a5b4fc" }}>Placing in workspace...</span>
-              </div>
+            <div style={{ display: "inline-flex", opacity: 0.8, filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.2))", pointerEvents: "none", transform: "scale(1.5)", transformOrigin: "center" }}>
+              {renderThumbnailSVG(activeStep.id)}
             </div>
           ) : null}
         </DragOverlay>

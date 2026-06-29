@@ -676,7 +676,7 @@ export default function Stage1_Assemble({ onComplete }) {
         </div>
       </div>
 
-      <DragOverlay>
+      <DragOverlay dropAnimation={null}>
         {activeDraggingId && !placed[activeDraggingId] ? (
           <div style={{ opacity: 0.8, pointerEvents: "none" }}>
             {activeDraggingId === "torch_body" && (

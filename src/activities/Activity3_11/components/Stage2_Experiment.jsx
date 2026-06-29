@@ -200,7 +200,7 @@ export default function Stage2_Experiment({ onComplete }) {
       </div>
     </div>
     
-    <DragOverlay dropAnimation={{ duration: 150, easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)' }}>
+    <DragOverlay dropAnimation={null}>
       {activeDragItem ? (
         <div style={{
           width: '80px',

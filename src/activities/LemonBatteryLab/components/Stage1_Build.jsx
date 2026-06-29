@@ -386,7 +386,7 @@ export default function Stage1_Build({ onComplete }) {
         </div>
       </div>
       
-      <DragOverlay dropAnimation={{ duration: 0 }}>
+      <DragOverlay dropAnimation={null}>
         {activeDraggingId ? (
           <div style={{ opacity: 0.8, filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.2))" }}>
              {activeDraggingId.startsWith('lemons') && <svg width="100" height="100" style={{ overflow: 'visible' }}><LemonSVG scale={1} x={0} y={0} /></svg>}

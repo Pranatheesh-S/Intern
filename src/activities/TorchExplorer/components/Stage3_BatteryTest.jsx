@@ -414,7 +414,7 @@ export default function Stage3_BatteryTest({ onComplete }) {
 
         </div>
 
-        <DragOverlay>
+        <DragOverlay dropAnimation={null}>
           {activeId ? <DraggableCell id={activeId} reversed={cells.find(c => c.id === activeId)?.reversed} /> : null}
         </DragOverlay>
       </DndContext>
