@@ -349,15 +349,15 @@ const CompletedSwitchModel = () => (
     </group>
     
     {/* Safety Pin (closed switch, connecting Pin 1 to Pin 2) */}
-    <group position={[-0.4, 0.04, 0.5]} rotation={[0, Math.PI / 2, 0]}>
+    <group position={[0, 0.03, 0.5]} rotation={[0, 0, 0]}>
       <SafetyPinModel isOpen={false} />
     </group>
     
     {/* Circuit Wires */}
     <group>
       <WireSegment p1={[-0.05, 0.24, -0.4]} p2={[-0.82, 0.16, -0.4]} radius={0.014} color="#dc2626" />
-      <WireSegment p1={[0.95, 0.24, -0.4]} p2={[0.4, 0.04, 0.5]} radius={0.014} color="#ca8a04" />
-      <WireSegment p1={[-0.4, 0.04, 0.5]} p2={[-0.48, 0.16, -0.4]} radius={0.014} color="#f97316" />
+      <WireSegment p1={[0.95, 0.24, -0.4]} p2={[0.4, 0.03, 0.5]} radius={0.014} color="#ca8a04" />
+      <WireSegment p1={[-0.4, 0.03, 0.5]} p2={[-0.48, 0.16, -0.4]} radius={0.014} color="#f97316" />
     </group>
   </group>
 );
