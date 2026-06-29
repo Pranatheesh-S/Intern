@@ -39,13 +39,13 @@ export default function GrassrootsDemocracyActivity({ onBackToDashboard }) {
   };
 
   const tabs = [
-    { id: 'explore', num: 1, title: 'Explore', subtitle: 'The village problem', component: <Stage1_Explore onComplete={() => handleStageComplete('explore', 'discover1')} addXp={addXp} /> },
-    { id: 'discover1', num: 2, title: 'Discover', subtitle: 'Three-tier system', component: <Stage2_Discover onComplete={() => handleStageComplete('discover1', 'experience')} addXp={addXp} />, locked: !progress.explore },
-    { id: 'experience', num: 3, title: 'Experience', subtitle: 'Run the Gram Sabha', component: <Stage3_Experience onComplete={() => handleStageComplete('experience', 'discover2')} addXp={addXp} />, locked: !progress.discover1 },
-    { id: 'discover2', num: 4, title: 'Discover', subtitle: 'Real changemakers', component: <Stage4_DiscoverHeroes onComplete={() => handleStageComplete('discover2', 'decide')} addXp={addXp} />, locked: !progress.experience },
-    { id: 'decide', num: 5, title: 'Decide', subtitle: 'Test yourself', component: <Stage5_Decide onComplete={() => handleStageComplete('decide', 'connect')} addXp={addXp} />, locked: !progress.discover2 },
-    { id: 'connect', num: 6, title: 'Connect', subtitle: 'Ancient blueprint', component: <Stage6_Connect onComplete={() => handleStageComplete('connect', 'reflect')} addXp={addXp} />, locked: !progress.decide },
-    { id: 'reflect', num: 7, title: 'Reflect', subtitle: 'Your voice', component: <Stage7_Reflect onComplete={() => handleStageComplete('reflect', null)} addXp={addXp} />, locked: !progress.connect }
+    { id: 'explore', num: 1, title: 'Introduction', subtitle: 'Lakshmanpur Village', component: <Stage1_Explore onComplete={() => handleStageComplete('explore', 'discover1')} addXp={addXp} /> },
+    { id: 'discover1', num: 2, title: 'Structure', subtitle: 'Panchayati Raj System', component: <Stage2_Discover onComplete={() => handleStageComplete('discover1', 'experience')} addXp={addXp} />, locked: !progress.explore },
+    { id: 'experience', num: 3, title: 'Gram Panchayat', subtitle: 'Gram Sabha & Roles', component: <Stage3_Experience onComplete={() => handleStageComplete('experience', 'discover2')} addXp={addXp} />, locked: !progress.discover1 },
+    { id: 'discover2', num: 4, title: 'Changemakers', subtitle: 'Bal Panchayat', component: <Stage4_DiscoverHeroes onComplete={() => handleStageComplete('discover2', 'decide')} addXp={addXp} />, locked: !progress.experience },
+    { id: 'decide', num: 5, title: 'Block & District', subtitle: 'Information Flow', component: <Stage5_Decide onComplete={() => handleStageComplete('decide', 'connect')} addXp={addXp} />, locked: !progress.discover2 },
+    { id: 'connect', num: 6, title: 'Ancient Roots', subtitle: 'Arthaśāstra', component: <Stage6_Connect onComplete={() => handleStageComplete('connect', 'reflect')} addXp={addXp} />, locked: !progress.decide },
+    { id: 'reflect', num: 7, title: 'Summary', subtitle: 'Concept Map & Quiz', component: <Stage7_Reflect onComplete={() => handleStageComplete('reflect', null)} addXp={addXp} />, locked: !progress.connect }
   ];
 
   return (
