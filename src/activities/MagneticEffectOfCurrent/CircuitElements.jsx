@@ -336,6 +336,30 @@ export const WiresSVG = ({
       {/* Current Flowing Overlay */}
       {isCurrentFlowing && (
         <g>
+          {/* Magnetic Field Lines */}
+          <g>
+            <text x={250} y={45} fill="#3b82f6" fontSize="14" fontWeight="bold" textAnchor="middle">Magnetic Field Lines</text>
+            {[ 
+              {rx: 60, ry: 50}, 
+              {rx: 85, ry: 70}, 
+              {rx: 110, ry: 90}, 
+              {rx: 135, ry: 110} 
+            ].map((line, i) => {
+              const cx = 250;
+              const cy = 150;
+              const color = "#3b82f6";
+              return (
+                <g key={`mag-${i}`}>
+                  <ellipse cx={cx} cy={cy} rx={line.rx} ry={line.ry} fill="none" stroke={color} strokeWidth={1.5} opacity={0.7} />
+                  {/* Top Arrow */}
+                  <polygon points="-5,-4 5,0 -5,4" fill={color} transform={`translate(${cx}, ${cy - line.ry}) ${isBatteryFlipped ? '' : 'rotate(180)'}`} />
+                  {/* Bottom Arrow */}
+                  <polygon points="-5,-4 5,0 -5,4" fill={color} transform={`translate(${cx}, ${cy + line.ry}) ${isBatteryFlipped ? 'rotate(180)' : ''}`} />
+                </g>
+              );
+            })}
+          </g>
+
           {/* Electron flow direction depends on battery flip */}
           {Array.from({ length: 16 }, (_, i) => i * 0.5).map((delay, index) => (
             <g key={index}>
