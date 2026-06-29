@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import {
   BookOpen,
   Zap,
@@ -15,28 +15,28 @@ import {
   Battery
 } from 'lucide-react';
 import { useTheme } from './ThemeContext.jsx';
-import ElectricSwitchActivity from './activities/ElectricSwitch';
-import ElectricCircuitActivity from './activities/ElectricCircuit';
-import ActivityTemplate from './activities/ActivityTemplate';
-import SphericalMirrorsActivity from './activities/SphericalMirrors';
-import FoodTestingActivity from './activities/FoodTesting';
-import FatTestingActivity from './activities/FatTesting';
-import ProteinTestingActivity from './activities/ProteinTesting';
-import MaterialsPropertiesActivity from './activities/MaterialsProperties';
-import MagneticPolesActivity from './activities/MagneticPoles';
-import SuspendedMagnetActivity from './activities/SuspendedMagnet';
-import MagneticCompassActivity from './activities/MagneticCompass';
-import MagnetInteractionActivity from './activities/MagnetInteraction';
-import LinearMotionActivity from './activities/LinearMotion';
-import CircularMotionActivity from './activities/CircularMotion';
-import HeatingEffectActivity from './activities/HeatingEffectOfCurrent';
-import LemonBatteryLabActivity from './activities/LemonBatteryLab';
-import TorchExplorerActivity from './activities/TorchExplorer';
-import LampExplorerActivity from './activities/LampExplorer';
-import Activity3_7 from './activities/Activity3_7';
-import Activity3_11 from './activities/Activity3_11';
-import MagneticEffectOfCurrentActivity from './activities/MagneticEffectOfCurrent';
-import ElectromagnetInvestigationActivity from './activities/ElectromagnetInvestigation';
+const ElectricSwitchActivity = lazy(() => import('./activities/ElectricSwitch'));
+const ElectricCircuitActivity = lazy(() => import('./activities/ElectricCircuit'));
+const ActivityTemplate = lazy(() => import('./activities/ActivityTemplate'));
+const SphericalMirrorsActivity = lazy(() => import('./activities/SphericalMirrors'));
+const FoodTestingActivity = lazy(() => import('./activities/FoodTesting'));
+const FatTestingActivity = lazy(() => import('./activities/FatTesting'));
+const ProteinTestingActivity = lazy(() => import('./activities/ProteinTesting'));
+const MaterialsPropertiesActivity = lazy(() => import('./activities/MaterialsProperties'));
+const MagneticPolesActivity = lazy(() => import('./activities/MagneticPoles'));
+const SuspendedMagnetActivity = lazy(() => import('./activities/SuspendedMagnet'));
+const MagneticCompassActivity = lazy(() => import('./activities/MagneticCompass'));
+const MagnetInteractionActivity = lazy(() => import('./activities/MagnetInteraction'));
+const LinearMotionActivity = lazy(() => import('./activities/LinearMotion'));
+const CircularMotionActivity = lazy(() => import('./activities/CircularMotion'));
+const HeatingEffectActivity = lazy(() => import('./activities/HeatingEffectOfCurrent'));
+const LemonBatteryLabActivity = lazy(() => import('./activities/LemonBatteryLab'));
+const TorchExplorerActivity = lazy(() => import('./activities/TorchExplorer'));
+const LampExplorerActivity = lazy(() => import('./activities/LampExplorer'));
+const Activity3_7 = lazy(() => import('./activities/Activity3_7'));
+const Activity3_11 = lazy(() => import('./activities/Activity3_11'));
+const MagneticEffectOfCurrentActivity = lazy(() => import('./activities/MagneticEffectOfCurrent'));
+const ElectromagnetInvestigationActivity = lazy(() => import('./activities/ElectromagnetInvestigation'));
 import './App.css';
 
 export default function App() {
@@ -1672,6 +1672,11 @@ export default function App() {
 
       {/* Main Workspace content */}
       <main style={{ minHeight: '520px', marginBottom: '2rem' }}>
+        <Suspense fallback={
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', color: 'var(--text-muted)' }}>
+            Loading activity...
+          </div>
+        }>
         {/* HIERARCHICAL ROUTER */}
         {activeSubject === null ? (
           renderSubjectSelector()
@@ -1748,6 +1753,7 @@ export default function App() {
         ) : activeSubject === 'class9' ? (
           renderUnderConstruction('Class 9th', Zap, '#ec4899')
         ) : null}
+        </Suspense>
       </main>
     </div>
   );
