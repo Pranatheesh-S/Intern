@@ -245,6 +245,7 @@ export default function Stage1_Build({ onComplete }) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [connectedWires, setConnectedWires] = useState([]);
   const [selectedTerminal, setSelectedTerminal] = useState(null);
 
@@ -258,6 +259,7 @@ export default function Stage1_Build({ onComplete }) {
       setPlaced((prev) => ({ ...prev, wires: true }));
       setSuccess(true);
       confetti({ particleCount: 100, spread: 80, origin: { y: 0.5 } });
+      setTimeout(() => setShowPopup(true), 1500);
     }
   }, [connectedWires]);
 
@@ -272,12 +274,31 @@ export default function Stage1_Build({ onComplete }) {
   };
 
   const snapToIdeal = (id, x, y) => {
-    const ideal = IDEALS[id];
-    if (!ideal) return { x, y };
+    let idealX, idealY;
+    let snapDistance = 40;
 
-    const dist = Math.sqrt((x - ideal.x) ** 2 + (y - ideal.y) ** 2);
-    if (dist < 40) {
-      return ideal; 
+    if (id === "pin1" || id === "safetyPin") {
+      idealX = positions.switchBoard.x + 80;
+      idealY = positions.switchBoard.y + 50;
+      snapDistance = 150; // Auto-fit if dropped near the switch board
+    } else if (id === "pin2") {
+      idealX = positions.switchBoard.x + 80;
+      idealY = positions.switchBoard.y + 170;
+      snapDistance = 150;
+    } else if (id === "compass") {
+      idealX = positions.compassBoard.x + 130;
+      idealY = positions.compassBoard.y + 90;
+      snapDistance = 180; // Auto-fit if dropped near the compass bench
+    } else {
+      const ideal = IDEALS[id];
+      if (!ideal) return { x, y };
+      idealX = ideal.x;
+      idealY = ideal.y;
+    }
+
+    const dist = Math.sqrt((x - idealX) ** 2 + (y - idealY) ** 2);
+    if (dist < snapDistance) {
+      return { x: idealX, y: idealY }; 
     }
     return { x, y }; 
   };
@@ -452,6 +473,7 @@ export default function Stage1_Build({ onComplete }) {
     setSelectedTerminal(null);
     setError("");
     setSuccess(false);
+    setShowPopup(false);
   };
 
   const getTerminalCoords = (terminalId) => {
@@ -774,8 +796,9 @@ export default function Stage1_Build({ onComplete }) {
 
                   return (
                     <g key={t.id} transform={`translate(${coords.x}, ${coords.y})`} style={{ cursor: "pointer" }} onClick={() => handleTerminalClick(t.id)}>
-                      <circle r={isSelected ? 11 : 7} fill="none" stroke={strokeColor} strokeWidth={isSelected ? 3 : 2} className={isSelected ? "bulb-glowing" : ""} />
-                      <circle r={4} fill={fillColor} />
+                      <circle r={24} fill="transparent" />
+                      <circle r={isSelected ? 11 : 7} fill="none" stroke={strokeColor} strokeWidth={isSelected ? 3 : 2} className={isSelected ? "bulb-glowing" : ""} pointerEvents="none" />
+                      <circle r={4} fill={fillColor} pointerEvents="none" />
                     </g>
                   );
                 })}
@@ -897,6 +920,33 @@ export default function Stage1_Build({ onComplete }) {
             </div>
           ) : null}
         </DragOverlay>
+
+        {/* Completion Modal */}
+        <AnimatePresence>
+          {showPopup && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', maxWidth: '400px', width: '90%', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', textAlign: 'center', border: '1px solid var(--border)' }}
+              >
+                <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>🎉</div>
+                <h2 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)', fontSize: '1.5rem' }}>Stage 1 Complete!</h2>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.5', fontSize: '0.95rem' }}>
+                  You have successfully constructed the Oersted Circuit. You are now ready to test the magnetic effect!
+                </p>
+                <button onClick={onComplete} className="primary" style={{ width: '100%', padding: '0.8rem', fontSize: '1rem', fontWeight: 'bold', display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
+                  Proceed to Stage 2 <ArrowRight size={18} />
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
       </div>
     </DndContext>
