@@ -464,8 +464,8 @@ export const WiresSVG = ({
   }
 
   if (isBroken) {
-    const path2PartA = "M 192,390 C 220,405 250,405 270,395";
-    const path2PartB = "M 320,380 C 360,375 410,372 450,370";
+    const path2PartA = "M 266,430 C 310,455 350,450 380,445";
+    const path2PartB = "M 560,410 C 500,450 450,450 420,445";
     
     return (
       <g style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'all' }}>
@@ -484,8 +484,8 @@ export const WiresSVG = ({
           <path d={path2PartB} />
         </g>
         
-        <circle cx="295" cy="387" r="3" fill="var(--danger)" className="bulb-glowing" />
-        <text x="295" y="375" fill="var(--danger)" fontSize="10" fontWeight="bold" textAnchor="middle" style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' }}>WIRE CUT</text>
+        <circle cx="400" cy="445" r="3.5" fill="var(--danger)" className="bulb-glowing" />
+        <text x="400" y="430" fill="var(--danger)" fontSize="11" fontWeight="bold" textAnchor="middle" style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' }}>WIRE CUT</text>
       </g>
     );
   }
