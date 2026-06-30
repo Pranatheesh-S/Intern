@@ -126,30 +126,34 @@ export default function Stage1_Explore({ onComplete, addXp }) {
           100% { transform: scale(0.95); opacity: 0; }
         }
         .hotspot-button {
-          position: absolute;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
+          position: absolute !important;
+          width: 28px !important;
+          height: 28px !important;
+          padding: 0 !important;
+          min-width: 28px !important;
+          min-height: 28px !important;
+          aspect-ratio: 1 / 1 !important;
+          border-radius: 50% !important;
           cursor: pointer;
           border: none;
           outline: none;
           transform: translate(-50%, -50%);
-          display: flex;
-          align-items: center;
-          justifyContent: center;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          box-shadow: 0 6px 16px rgba(0,0,0,0.25);
           transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           z-index: 10;
         }
         .hotspot-button:hover {
-          transform: translate(-50%, -50%) scale(1.3);
-          box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+          transform: translate(-50%, -50%) scale(1.2);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.35);
         }
         .hotspot-pulse {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
+          position: absolute !important;
+          width: 100% !important;
+          height: 100% !important;
+          border-radius: 50% !important;
           animation: pulseRing 2s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
           pointer-events: none;
         }
