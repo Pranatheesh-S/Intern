@@ -38,8 +38,14 @@ export default function Stage2_Discover({ onComplete, addXp }) {
   return (
     <div style={{ paddingBottom: '4rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
-      {/* Top Navigation Row placeholder if needed, but the main app handles tabs */}
-
+      <style>{`
+        @keyframes kenBurnsEffect {
+          0% { transform: scale(1.0); }
+          50% { transform: scale(1.04) translate(-0.8%, -0.4%); }
+          100% { transform: scale(1.0); }
+        }
+      `}</style>
+      
       {/* Main Content Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))', gap: '2rem' }}>
         
@@ -145,50 +151,186 @@ export default function Stage2_Discover({ onComplete, addXp }) {
             flex: 1, minHeight: '400px', borderRadius: '16px', position: 'relative', overflow: 'hidden',
             border: '1px solid var(--border)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
           }}>
-            <img src="/village_gram_sabha.png" alt="Gram Sabha Meeting" style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute' }} />
+            {/* Animated Background Image */}
+            <img 
+              src="/village_gram_sabha.png" 
+              alt="Gram Sabha Meeting" 
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'cover', 
+                position: 'absolute',
+                animation: 'kenBurnsEffect 30s ease-in-out infinite',
+                pointerEvents: 'none'
+              }} 
+            />
+
+            {/* Dark Vignette Overlay for readability */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(15, 23, 42, 0.2)',
+              pointerEvents: 'none'
+            }} />
             
-            {/* Pyramid Overlay */}
-            <div style={{ position: 'absolute', top: '2rem', left: '2rem', width: '220px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+            {/* Centered Pyramid Layout with Absolute Labels */}
+            <div style={{ 
+              position: 'absolute', 
+              top: '2.5rem', 
+              left: '1.5rem', 
+              width: '360px', 
+              height: '220px' 
+            }}>
               
-              {/* Top Tier (District) */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', transform: 'translateX(30px)' }}>
-                <div style={{ 
-                  width: '100px', height: '70px', background: 'rgba(14, 165, 233, 0.9)', 
-                  clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '10px'
-                }}>
-                  <Map size={24} color="white" />
+              {/* Centered shapes column */}
+              <div style={{
+                position: 'absolute',
+                left: '20px',
+                width: '220px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                {/* Top Tier (District) */}
+                <div 
+                  onClick={() => { playClick(); setActiveTier('district'); addXp(1); }}
+                  style={{ 
+                    width: '100px', height: '65px', 
+                    background: activeTier === 'district' ? 'rgba(14, 165, 233, 1)' : 'rgba(14, 165, 233, 0.85)', 
+                    clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)', 
+                    display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '10px',
+                    cursor: 'pointer', transition: 'all 0.25s ease',
+                    transform: activeTier === 'district' ? 'scale(1.04)' : 'none',
+                    boxShadow: activeTier === 'district' ? '0 8px 24px rgba(14, 165, 233, 0.4)' : 'none'
+                  }}
+                >
+                  <Map size={22} color="white" />
                 </div>
-                <div style={{ color: '#0ea5e9', fontWeight: 'bold', fontSize: '0.85rem', background: 'rgba(255,255,255,0.9)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>District<br/>Level</div>
+
+                {/* Middle Tier (Block) */}
+                <div 
+                  onClick={() => { playClick(); setActiveTier('block'); addXp(1); }}
+                  style={{ 
+                    width: '160px', height: '65px', 
+                    background: activeTier === 'block' ? 'rgba(249, 115, 22, 1)' : 'rgba(249, 115, 22, 0.85)', 
+                    clipPath: 'polygon(18.75% 0%, 81.25% 0%, 100% 100%, 0% 100%)', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', transition: 'all 0.25s ease',
+                    transform: activeTier === 'block' ? 'scale(1.04)' : 'none',
+                    boxShadow: activeTier === 'block' ? '0 8px 24px rgba(249, 115, 22, 0.4)' : 'none'
+                  }}
+                >
+                  <Layers size={24} color="white" />
+                </div>
+
+                {/* Bottom Tier (Village) */}
+                <div 
+                  onClick={() => { playClick(); setActiveTier('village'); addXp(1); }}
+                  style={{ 
+                    width: '220px', height: '65px', 
+                    background: activeTier === 'village' ? 'rgba(132, 204, 22, 1)' : 'rgba(132, 204, 22, 0.85)', 
+                    clipPath: 'polygon(13.6% 0%, 86.4% 0%, 100% 100%, 0% 100%)', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', transition: 'all 0.25s ease',
+                    transform: activeTier === 'village' ? 'scale(1.04)' : 'none',
+                    boxShadow: activeTier === 'village' ? '0 8px 24px rgba(132, 204, 22, 0.4)' : 'none'
+                  }}
+                >
+                  <Home size={28} color="white" />
+                </div>
               </div>
 
-              {/* Middle Tier (Block) */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', transform: 'translateX(30px)' }}>
-                <div style={{ 
-                  width: '160px', height: '70px', background: 'rgba(249, 115, 22, 0.9)', 
-                  clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}>
-                  <Layers size={28} color="white" />
-                </div>
-                <div style={{ color: '#f97316', fontWeight: 'bold', fontSize: '0.85rem', background: 'rgba(255,255,255,0.9)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>Block<br/>Level</div>
+              {/* Staggered Absolute Labels on the Right */}
+              {/* District Label */}
+              <div 
+                onClick={() => { playClick(); setActiveTier('district'); }}
+                style={{
+                  position: 'absolute',
+                  top: '15px',
+                  left: '190px',
+                  color: '#0ea5e9',
+                  fontWeight: 'bold',
+                  fontSize: '0.8rem',
+                  background: 'rgba(255,255,255,0.95)',
+                  padding: '0.35rem 0.65rem',
+                  borderRadius: '8px',
+                  boxShadow: activeTier === 'district' ? '0 6px 15px rgba(14, 165, 233, 0.2)' : '0 3px 8px rgba(0,0,0,0.1)',
+                  border: `1.5px solid ${activeTier === 'district' ? '#0ea5e9' : 'rgba(14, 165, 233, 0.2)'}`,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                District Level
               </div>
 
-              {/* Bottom Tier (Village) */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', transform: 'translateX(30px)' }}>
-                <div style={{ 
-                  width: '220px', height: '70px', background: 'rgba(132, 204, 22, 0.9)', 
-                  clipPath: 'polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}>
-                  <Home size={32} color="white" />
-                </div>
-                <div style={{ color: '#84cc16', fontWeight: 'bold', fontSize: '0.85rem', background: 'rgba(255,255,255,0.9)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>Village<br/>Level</div>
+              {/* Block Label */}
+              <div 
+                onClick={() => { playClick(); setActiveTier('block'); }}
+                style={{
+                  position: 'absolute',
+                  top: '84px',
+                  left: '220px',
+                  color: '#f97316',
+                  fontWeight: 'bold',
+                  fontSize: '0.8rem',
+                  background: 'rgba(255,255,255,0.95)',
+                  padding: '0.35rem 0.65rem',
+                  borderRadius: '8px',
+                  boxShadow: activeTier === 'block' ? '0 6px 15px rgba(249, 115, 22, 0.2)' : '0 3px 8px rgba(0,0,0,0.1)',
+                  border: `1.5px solid ${activeTier === 'block' ? '#f97316' : 'rgba(249, 115, 22, 0.2)'}`,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                Block Level
+              </div>
+
+              {/* Village Label */}
+              <div 
+                onClick={() => { playClick(); setActiveTier('village'); }}
+                style={{
+                  position: 'absolute',
+                  top: '153px',
+                  left: '250px',
+                  color: '#84cc16',
+                  fontWeight: 'bold',
+                  fontSize: '0.8rem',
+                  background: 'rgba(255,255,255,0.95)',
+                  padding: '0.35rem 0.65rem',
+                  borderRadius: '8px',
+                  boxShadow: activeTier === 'village' ? '0 6px 15px rgba(132, 204, 22, 0.2)' : '0 3px 8px rgba(0,0,0,0.1)',
+                  border: `1.5px solid ${activeTier === 'village' ? '#84cc16' : 'rgba(132, 204, 22, 0.2)'}`,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                Village Level
               </div>
 
             </div>
 
-            {/* Quote Banner */}
-            <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', right: '2rem', background: 'rgba(255, 255, 255, 0.95)', padding: '1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem', backdropFilter: 'blur(10px)', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+            {/* Quote Banner (Forced slate dark color to fix dark mode contrast) */}
+            <div style={{ 
+              position: 'absolute', 
+              bottom: '1.5rem', 
+              left: '1.5rem', 
+              right: '1.5rem', 
+              background: 'rgba(255, 255, 255, 0.95)', 
+              padding: '1rem', 
+              borderRadius: '16px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '1rem', 
+              backdropFilter: 'blur(12px)', 
+              boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+              border: '1px solid rgba(255,255,255,0.8)'
+            }}>
               <Lightbulb size={24} color="#10b981" style={{ flexShrink: 0 }} />
-              <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+              <p style={{ margin: 0, color: '#1e293b', fontSize: '0.92rem', lineHeight: '1.5', fontWeight: '500' }}>
                 Together, these institutions cover almost all aspects of life in the district – agriculture, roads, water, education, health care, social welfare and more.
               </p>
             </div>
