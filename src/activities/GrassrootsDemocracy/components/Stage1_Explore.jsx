@@ -531,7 +531,7 @@ export default function Stage1_Explore({ onComplete, addXp }) {
         </div>
       </section>
 
-      {/* 3. Problem Question (Redesigned matching mockup) */}
+      {/* 3. Problem Question (Redesigned matching original text & mockup styling) */}
       <AnimatePresence>
         {allDiscovered && (
           <motion.section 
@@ -540,103 +540,68 @@ export default function Stage1_Explore({ onComplete, addXp }) {
             transition={{ type: 'spring', damping: 25 }}
           >
             <div className="glass-panel" style={{ padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <MessageSquare size={20} color="var(--accent-text)" />
                 </div>
                 <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
-                  Make a Decision
+                  The Big Question 🤔
                 </h3>
               </div>
               
               <p style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.6', maxWidth: '800px' }}>
-                These are some of the urgent problems faced by the villagers of Lakshmanpur. 
-                <strong> What do you think should be done about these issues?</strong>
+                The village has many immediate needs: roads, water, school repairs. 
+                <strong> Who should be responsible for making these daily decisions and solving these local problems?</strong>
               </p>
 
-              {/* Two Option Cards matching the mockup layout */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', marginTop: '2rem' }}>
-                {/* Option 1: Villagers come together */}
-                <button
-                  onClick={() => handleSelect('Option 1')}
-                  disabled={selectedAnswer !== null}
-                  style={{
-                    padding: '1.5rem', 
-                    borderRadius: '20px', 
-                    textAlign: 'left',
-                    background: selectedAnswer === 'Option 1' ? 'rgba(59, 130, 246, 0.1)' : 'var(--surface)',
-                    border: `2px solid ${selectedAnswer === 'Option 1' ? '#3b82f6' : 'var(--border)'}`,
-                    cursor: selectedAnswer === null ? 'pointer' : 'default', 
-                    transition: 'all 0.25s ease',
-                    opacity: selectedAnswer !== null && selectedAnswer !== 'Option 1' ? 0.45 : 1,
-                    display: 'flex',
-                    gap: '1rem',
-                    alignItems: 'flex-start',
-                    boxShadow: selectedAnswer === 'Option 1' ? '0 8px 24px rgba(59, 130, 246, 0.15)' : 'none'
-                  }}
-                >
-                  <div style={{ 
-                    width: '38px', 
-                    height: '38px', 
-                    borderRadius: '50%', 
-                    background: '#dbeafe', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    <Users size={18} color="#1d4ed8" />
-                  </div>
-                  <div>
-                    <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.05rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
-                      Panchayati Raj (Local governance)
-                    </h4>
-                    <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                      Let the villagers come together, discuss their own local problems, and find solutions themselves.
-                    </p>
-                  </div>
-                </button>
-
-                {/* Option 2: Send to Central Capital */}
-                <button
-                  onClick={() => handleSelect('Option 2')}
-                  disabled={selectedAnswer !== null}
-                  style={{
-                    padding: '1.5rem', 
-                    borderRadius: '20px', 
-                    textAlign: 'left',
-                    background: selectedAnswer === 'Option 2' ? 'rgba(139, 92, 246, 0.1)' : 'var(--surface)',
-                    border: `2px solid ${selectedAnswer === 'Option 2' ? '#8b5cf6' : 'var(--border)'}`,
-                    cursor: selectedAnswer === null ? 'pointer' : 'default', 
-                    transition: 'all 0.25s ease',
-                    opacity: selectedAnswer !== null && selectedAnswer !== 'Option 2' ? 0.45 : 1,
-                    display: 'flex',
-                    gap: '1rem',
-                    alignItems: 'flex-start',
-                    boxShadow: selectedAnswer === 'Option 2' ? '0 8px 24px rgba(139, 92, 246, 0.15)' : 'none'
-                  }}
-                >
-                  <div style={{ 
-                    width: '38px', 
-                    height: '38px', 
-                    borderRadius: '50%', 
-                    background: '#f3e8ff', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    <Mountain size={18} color="#7c3aed" />
-                  </div>
-                  <div>
-                    <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.05rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
-                      Centralized Decision-Making
-                    </h4>
-                    <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                      Send every issue to the State capital or to New Delhi (national capital) to decide.
-                    </p>
-                  </div>
-                </button>
+              {/* Three Option Cards stacked vertically */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem' }}>
+                {[
+                  { id: 'PM', text: 'The Prime Minister in New Delhi', icon: Mountain, color: '#3b82f6', bgLight: 'rgba(59, 130, 246, 0.1)', border: '#3b82f6' },
+                  { id: 'CM', text: 'The Chief Minister in the State Capital', icon: Home, color: '#8b5cf6', bgLight: 'rgba(139, 92, 246, 0.1)', border: '#8b5cf6' },
+                  { id: 'Villagers', text: 'The Villagers themselves', icon: Users, color: '#10b981', bgLight: 'rgba(16, 185, 129, 0.1)', border: '#10b981' }
+                ].map((opt) => {
+                  const isSelected = selectedAnswer === opt.text;
+                  const isCorrect = opt.id === 'Villagers';
+                  
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => handleSelect(opt.text)}
+                      disabled={selectedAnswer !== null}
+                      style={{
+                        padding: '1.25rem 1.5rem', 
+                        borderRadius: '16px', 
+                        textAlign: 'left',
+                        background: isSelected ? (isCorrect ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)') : 'var(--surface)',
+                        border: `2px solid ${isSelected ? (isCorrect ? '#10b981' : '#ef4444') : 'var(--border)'}`,
+                        cursor: selectedAnswer === null ? 'pointer' : 'default', 
+                        transition: 'all 0.25s ease',
+                        opacity: selectedAnswer !== null && !isSelected ? 0.5 : 1,
+                        display: 'flex',
+                        gap: '1rem',
+                        alignItems: 'center',
+                        boxShadow: isSelected ? `0 8px 24px ${isCorrect ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'}` : 'none'
+                      }}
+                    >
+                      <div style={{ 
+                        width: '36px', 
+                        height: '36px', 
+                        borderRadius: '50%', 
+                        background: opt.bgLight, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        <opt.icon size={18} color={opt.color} />
+                      </div>
+                      <span style={{ fontSize: '1.05rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
+                        {opt.text}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
 
               {/* 3B. Think About It - Feedback Panel */}
@@ -662,23 +627,22 @@ export default function Stage1_Explore({ onComplete, addXp }) {
                   
                   <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap-reverse' }}>
                     <p style={{ margin: 0, fontSize: '0.98rem', lineHeight: '1.6', flex: 1 }}>
-                      {selectedAnswer === 'Option 1' ? (
+                      {selectedAnswer === 'The Villagers themselves' ? (
                         <>
-                          <strong>Exactly!</strong> Local villagers understand their challenges best. 
-                          It would be extremely slow and inefficient if they had to travel hundreds of kilometers to the State or National capital just to fix a leaking pipe, clear a road, or maintain their school. 
-                          India is vast, and governing local issues locally (at the grassroots level) is why we have the <strong>Panchayati Raj System</strong>.
+                          <strong>Exactly!</strong> Imagine if a villager had to travel 500 km to the capital just to fix a leaking pipe. 
+                          India is too large. Villages need the power to govern their own local issues. 
+                          This is why we have the <strong>Panchayati Raj System</strong>.
                         </>
                       ) : (
                         <>
-                          <strong>Consider this:</strong> Can people run to the State or the national capital for every single small issue? 
-                          Imagine waiting months for the central government in New Delhi just to fix a leaking pipe or clear a small dirt road. 
-                          It is far more efficient to give local villagers the power to govern, discuss, and decide on issues affecting their daily lives. 
-                          This is the essence of <strong>Grassroots Democracy</strong>.
+                          <strong>Not quite!</strong> Imagine if a villager had to travel hundreds of kilometers to the state capital or to New Delhi just to fix a leaking pipe or clear a small dirt road. 
+                          India is vast, and governing local issues locally (at the grassroots level) is far more efficient. 
+                          This is why villages need the power to govern their own local issues.
                         </>
                       )}
                     </p>
                     
-                    {/* Floating Kid Illustration Placeholder from Mockup */}
+                    {/* Floating Kid Illustration Placeholder */}
                     <div style={{ 
                       width: '100px', 
                       height: '80px', 
