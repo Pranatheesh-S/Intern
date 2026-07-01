@@ -40,6 +40,7 @@ const MagneticEffectOfCurrentActivity = lazy(() => import('./activities/Magnetic
 const ElectromagnetInvestigationActivity = lazy(() => import('./activities/ElectromagnetInvestigation'));
 const GrassrootsDemocracyActivity = lazy(() => import('./activities/GrassrootsDemocracy'));
 const Activity9_1 = lazy(() => import('./activities/SolutesAndSolvents'));
+const LineSegmentLabActivity = lazy(() => import('./activities/LineSegmentLab'));
 import './App.css';
 
 export default function App() {
@@ -363,6 +364,41 @@ export default function App() {
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             Enter Class 7th <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Subject Card 6: Class 6th Mathematics */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--accent-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+            1 CHAPTER ACTIVE
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Zap size={22} style={{ color: '#8b5cf6' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Mathematics</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Explore geometry and numbers through visual, interactive coordinate systems and measuring tools.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6_maths', null)}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            Enter FuturaX Math Lab <ArrowRight size={14} />
           </button>
         </div>
       </div>
@@ -750,6 +786,193 @@ export default function App() {
       </div>
     );
   };
+
+  const CLASS_6_MATHS_CHAPTERS = [
+    { num: 1, title: "Knowing our Numbers" },
+    { num: 2, title: "Whole Numbers" },
+    { num: 3, title: "Playing with Numbers" },
+    { num: 4, title: "Basic Geometrical Ideas" },
+    { num: 5, title: "Understanding Elementary Shapes" },
+    { num: 6, title: "Integers" },
+    { num: 7, title: "Fractions" },
+    { num: 8, title: "Decimals" },
+    { num: 9, title: "Data Handling" },
+    { num: 10, title: "Mensuration" },
+    { num: 11, title: "Algebra" },
+    { num: 12, title: "Ratio and Proportion" },
+    { num: 13, title: "Symmetry" },
+    { num: 14, title: "Practical Geometry" }
+  ];
+
+  // Renders Class 6th Maths wing
+  const renderClass6MathsWing = () => {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+          <button
+            onClick={handleBackToSubjects}
+            className="outline"
+            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+          >
+            <ArrowLeft size={14} /> Back to Subjects
+          </button>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 6th Mathematics Wing</h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Interactive Geometry & Arithmetic Labs for Class 6</span>
+          </div>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '1.25rem'
+        }}>
+          {CLASS_6_MATHS_CHAPTERS.map(chapter => {
+            if (chapter.num === 4) {
+              return (
+                <div
+                  key={chapter.num}
+                  className="glass-panel"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    padding: '1.5rem',
+                    border: '1px solid var(--accent-border)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Active Chapter
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <BookOpen size={20} style={{ color: 'var(--accent-text)', marginTop: '0.25rem' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--accent-text)', fontWeight: '500' }}>{chapter.title}</p>
+                    </div>
+                  </div>
+
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                    Includes Activity 2.2: Defining Line Segment. Learn the difference between segments, rays, and lines with threads and dividers.
+                  </p>
+
+                  <button
+                    onClick={() => navigateTo('class6_maths', 'chapter4')}
+                    className="primary"
+                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                  >
+                     Open Chapter <ArrowRight size={14} />
+                  </button>
+                </div>
+              );
+            }
+
+            return (
+              <div
+                key={chapter.num}
+                className="glass-panel"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  padding: '1.5rem',
+                  border: '1px solid var(--border)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Coming Soon
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  <BookOpen size={20} style={{ color: '#818cf8', marginTop: '0.25rem' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{chapter.title}</p>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                  Interactive mathematical concept simulations and exercises for this chapter.
+                </p>
+
+                <button
+                  disabled
+                  className="outline"
+                  style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem', opacity: 0.5, cursor: 'not-allowed' }}
+                >
+                  Module Locked
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const renderClass6MathsChapter4 = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+        <button
+          onClick={() => navigateTo('class6_maths', null)}
+          className="outline"
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+        >
+          <ArrowLeft size={14} /> Back to Mathematics Wing
+        </button>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 4 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '1.25rem'
+      }}>
+        {/* Activity 2.2 Card */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Hammer size={20} style={{ color: '#8b5cf6' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 2.2</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Line Segment Explorer. Connect endpoints with various threads and drag them to discover that the straight line segment is the shortest distance.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6_maths', 'line_segment_lab')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderClass6Chapter3 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -2081,6 +2304,7 @@ export default function App() {
                 title={activeActivity ? "Go back to class" : ""}
               >
                 {activeSubject === 'class6' ? 'Class 6th' :
+                  activeSubject === 'class6_maths' ? 'Class 6th Maths' :
                   activeSubject === 'class7' ? 'Class 7th' :
                     activeSubject === 'class8' ? 'Class 8th' : 
                       activeSubject === 'class9' ? 'Class 9th' :
@@ -2108,6 +2332,7 @@ export default function App() {
                      activeActivity === 'magnetic_effect' ? 'Activity 4.1' :
                      activeActivity === 'electromagnet_investigation' ? 'Activities 4.2, 4.3 & 4.4' :
                      activeActivity === 'heating_effect' ? 'Activity 4.5' :
+                     activeActivity === 'line_segment_lab' ? 'Activity 2.2: Line Segment Lab' :
                      'Template Demo'}
                   </span>
                 </>
@@ -2216,6 +2441,14 @@ export default function App() {
             <GeographyExpeditionActivity onBackToDashboard={() => navigateTo('class7_social', null)} />
           ) : (
             renderClass7SocialWing()
+          )
+        ) : activeSubject === 'class6_maths' ? (
+          activeActivity === 'line_segment_lab' ? (
+            <LineSegmentLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
+          ) : activeActivity === 'chapter4' ? (
+            renderClass6MathsChapter4()
+          ) : (
+            renderClass6MathsWing()
           )
         ) : null}
         </Suspense>
