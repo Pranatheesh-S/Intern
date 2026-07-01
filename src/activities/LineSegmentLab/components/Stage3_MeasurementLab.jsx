@@ -196,6 +196,10 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
   const questSpanMatched = activeTool === 'divider' && Math.abs(dividerSpan - 144) < 15;
   const questDividerPlaced = compareCompleted;
 
+  const pPrime = { x: tracingPos.x + 20, y: tracingPos.y + 40 };
+  const distPPrimeToR = Math.sqrt(Math.pow(pPrime.x - rS.start.x, 2) + Math.pow(pPrime.y - rS.start.y, 2));
+  const isTracingAligned = isTraced && distPPrimeToR < 35;
+
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '1.5rem', alignItems: 'stretch' }}>
       {/* LEFT PANEL */}
@@ -320,8 +324,13 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
           {activeTool === 'none' && (
             <span>👈 Select a tool above to start. Notice how PQ and RS are angled differently, making comparison by observation hard!</span>
           )}
-          {activeTool === 'tracing' && (
+          {activeTool === 'tracing' && !isTracingAligned && (
             <span>📖 Drag the translucent tracing paper over PQ, click <strong>Trace Line PQ</strong>, then align it over RS to visually compare them.</span>
+          )}
+          {activeTool === 'tracing' && isTracingAligned && (
+            <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>
+              🔍 Tracing paper shows that Point S extends past the traced Q' point. Therefore, RS is longer! Now try the <strong>Geometrical Divider</strong> to compare them with 100% precision.
+            </span>
           )}
           {activeTool === 'ruler' && (
             <span>📏 Align the ruler with PQ and RS to read their measurements. Try changing the <strong>Eye View Angle</strong> to observe parallax error.</span>
@@ -422,6 +431,22 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
               <text x={rS.start.x - 12} y={rS.start.y + 16} fill="#f8fafc" fontSize="12" fontWeight="bold">R</text>
               <text x={rS.end.x + 12} y={rS.end.y + 16} fill="#f8fafc" fontSize="12" fontWeight="bold">S</text>
             </g>
+
+            {/* Tracing alignment explanation popup inside canvas */}
+            {activeTool === 'tracing' && isTracingAligned && (
+              <g transform="translate(240, 45)">
+                <rect x="0" y="0" width="320" height="75" rx="8" fill="rgba(9, 13, 22, 0.95)" stroke="#10b981" strokeWidth={1.5} />
+                <text x="160" y="22" fill="#10b981" fontSize="11" fontWeight="bold" textAnchor="middle">
+                  🔍 Tracing Observation Clear!
+                </text>
+                <text x="160" y="42" fill="#cbd5e1" fontSize="9" textAnchor="middle">
+                  Line RS extends past the traced Q' line (RS &gt; PQ).
+                </text>
+                <text x="160" y="58" fill="#e2e8f0" fontSize="9" fontWeight="bold" textAnchor="middle">
+                  Now choose "Geometrical Divider" to get 100% precision!
+                </text>
+              </g>
+            )}
 
             {/* 1. TRACING PAPER OVERLAY */}
             {activeTool === 'tracing' && (
