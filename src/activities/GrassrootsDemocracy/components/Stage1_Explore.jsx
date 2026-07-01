@@ -1,212 +1,19 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import useSound from 'use-sound';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, BookOpen, Tractor, MapPin, Waves, Check } from 'lucide-react';
-import * as THREE from 'three';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Html, Environment, Sky, ContactShadows } from '@react-three/drei';
-
-function CameraRig({ targetPos, targetLookAt }) {
-  const currentLookAt = useRef(new THREE.Vector3(0, 0, 0));
-
-  useFrame((state, delta) => {
-    // Smoothly interpolate camera position
-    state.camera.position.lerp(targetPos, delta * 3);
-    // Smoothly interpolate look-at target
-    currentLookAt.current.lerp(targetLookAt, delta * 3);
-    state.camera.lookAt(currentLookAt.current);
-  });
-  return null;
-}
-
-function VillageScene({ spots, discoveredSpots, activeSpot, onDiscover }) {
-  // Map spot IDs to 3D positions [x, y, z]
-  const positions = {
-    school: [-6, 0, -5],
-    farm: [7, 0, -4],
-    road: [0, 0, 3],
-    water: [5, 0, 4]
-  };
-
-  // Determine camera targets
-  let targetPos = new THREE.Vector3(0, 15, 20); // Default overview
-  let targetLookAt = new THREE.Vector3(0, 0, 0);
-
-  if (activeSpot) {
-    const pos = positions[activeSpot];
-    if (pos) {
-      targetPos = new THREE.Vector3(pos[0], 6, pos[2] + 8);
-      targetLookAt = new THREE.Vector3(pos[0], 0, pos[2]);
-    }
-  }
-
-  const renderModel = (id) => {
-    switch(id) {
-      case 'school':
-        return (
-          <group>
-            {/* Main Building Base */}
-            <mesh position={[0, 1.5, 0]} castShadow receiveShadow><boxGeometry args={[5, 3, 3]} /><meshStandardMaterial color="#fef08a" /></mesh>
-            {/* Door */}
-            <mesh position={[0, 1, 1.51]}><boxGeometry args={[1, 2, 0.05]} /><meshStandardMaterial color="#8b5a2b" /></mesh>
-            {/* Windows */}
-            <mesh position={[-1.5, 1.5, 1.51]}><boxGeometry args={[1, 1, 0.05]} /><meshStandardMaterial color="#38bdf8" /></mesh>
-            <mesh position={[1.5, 1.5, 1.51]}><boxGeometry args={[1, 1, 0.05]} /><meshStandardMaterial color="#38bdf8" /></mesh>
-            {/* Roof Base */}
-            <mesh position={[0, 3.5, 0]} rotation={[0, Math.PI/4, 0]} castShadow><coneGeometry args={[4.5, 2, 4]} /><meshStandardMaterial color="#ef4444" /></mesh>
-            {/* Chimney */}
-            <mesh position={[-1.5, 4, -0.5]} castShadow><boxGeometry args={[0.5, 1.5, 0.5]} /><meshStandardMaterial color="#78716c" /></mesh>
-            {/* Crack/Hole in roof */}
-            <mesh position={[1, 3.9, 1]} rotation={[0, Math.PI/4, 0]}><boxGeometry args={[1.2, 0.1, 1.2]} /><meshStandardMaterial color="#450a0a" /></mesh>
-            {/* Broken tile debris */}
-            <mesh position={[1.5, 3.7, 1.5]} rotation={[0.2, 0.5, 0.1]}><boxGeometry args={[0.4, 0.05, 0.4]} /><meshStandardMaterial color="#ef4444" /></mesh>
-            <mesh position={[0.5, 3.6, 1.8]} rotation={[-0.1, 0.3, 0.4]}><boxGeometry args={[0.3, 0.05, 0.3]} /><meshStandardMaterial color="#ef4444" /></mesh>
-          </group>
-        );
-      case 'farm':
-        return (
-          <group>
-            {/* Field Base */}
-            <mesh position={[0, 0.05, 0]} rotation={[-Math.PI/2, 0, 0]} receiveShadow><planeGeometry args={[8, 8]} /><meshStandardMaterial color="#65a30d" /></mesh>
-            {/* Crop Rows */}
-            {[-2, -1, 0, 1, 2].map(x => (
-              <mesh key={x} position={[x, 0.1, 1]} rotation={[-Math.PI/2, 0, 0]}><cylinderGeometry args={[0.1, 0.1, 6, 8]} /><meshStandardMaterial color="#4d7c0f" /></mesh>
-            ))}
-            {/* Tractor Body */}
-            <mesh position={[-1.5, 0.8, -1]} castShadow><boxGeometry args={[1.5, 1, 2.5]} /><meshStandardMaterial color="#ef4444" /></mesh>
-            {/* Tractor Cabin */}
-            <mesh position={[-1.5, 1.8, -0.2]} castShadow><boxGeometry args={[1.2, 1.2, 1.2]} /><meshStandardMaterial color="#1f2937" /></mesh>
-            {/* Tractor Window */}
-            <mesh position={[-1.5, 1.8, 0.41]}><boxGeometry args={[1, 0.8, 0.05]} /><meshStandardMaterial color="#9ca3af" /></mesh>
-            {/* Exhaust Pipe */}
-            <mesh position={[-1.5, 1.6, -1.8]}><cylinderGeometry args={[0.05, 0.05, 1]} /><meshStandardMaterial color="#d1d5db" /></mesh>
-            {/* Big Rear Wheels */}
-            <mesh position={[-2.4, 0.6, -0.2]} rotation={[0, 0, Math.PI/2]} castShadow><cylinderGeometry args={[0.8, 0.8, 0.4, 16]} /><meshStandardMaterial color="#111827" /></mesh>
-            <mesh position={[-0.6, 0.6, -0.2]} rotation={[0, 0, Math.PI/2]} castShadow><cylinderGeometry args={[0.8, 0.8, 0.4, 16]} /><meshStandardMaterial color="#111827" /></mesh>
-            {/* Small Front Wheels */}
-            <mesh position={[-2.3, 0.4, -1.8]} rotation={[0, 0, Math.PI/2]} castShadow><cylinderGeometry args={[0.4, 0.4, 0.3, 16]} /><meshStandardMaterial color="#111827" /></mesh>
-            <mesh position={[-0.7, 0.4, -1.8]} rotation={[0, 0, Math.PI/2]} castShadow><cylinderGeometry args={[0.4, 0.4, 0.3, 16]} /><meshStandardMaterial color="#111827" /></mesh>
-          </group>
-        );
-      case 'road':
-        return (
-          <group>
-            {/* Broken part of the road base */}
-            <mesh position={[0, 0.04, 0]} rotation={[-Math.PI/2, 0, 0]} receiveShadow><planeGeometry args={[3.2, 4]} /><meshStandardMaterial color="#292524" /></mesh>
-            {/* Deep Pothole */}
-            <mesh position={[0.2, 0.05, -0.2]} rotation={[-Math.PI/2, 0, 0]}><planeGeometry args={[1.8, 2]} /><meshStandardMaterial color="#1c1917" /></mesh>
-            <mesh position={[-0.5, 0.05, 0.8]} rotation={[-Math.PI/2, 0, 0]}><planeGeometry args={[1, 1.2]} /><meshStandardMaterial color="#1c1917" /></mesh>
-            {/* Dashed Lines */}
-            <mesh position={[0, 0.06, -1.5]} rotation={[-Math.PI/2, 0, 0]}><planeGeometry args={[0.2, 1]} /><meshStandardMaterial color="#ffffff" /></mesh>
-            <mesh position={[0, 0.06, 1.5]} rotation={[-Math.PI/2, 0, 0]}><planeGeometry args={[0.2, 1]} /><meshStandardMaterial color="#ffffff" /></mesh>
-            {/* Debris/Rocks */}
-            <mesh position={[0.8, 0.1, -0.5]} rotation={[0.2, 0.5, 0.1]} castShadow><boxGeometry args={[0.3, 0.2, 0.3]} /><meshStandardMaterial color="#57534e" /></mesh>
-            <mesh position={[-0.8, 0.08, 0.2]} rotation={[-0.1, 0.3, 0.4]} castShadow><boxGeometry args={[0.2, 0.15, 0.2]} /><meshStandardMaterial color="#78716c" /></mesh>
-            <mesh position={[0.3, 0.05, 1.2]} rotation={[0.4, 0.1, 0.2]} castShadow><boxGeometry args={[0.15, 0.1, 0.15]} /><meshStandardMaterial color="#57534e" /></mesh>
-          </group>
-        );
-      case 'water':
-        return (
-          <group>
-            {/* Stone Well Base */}
-            <mesh position={[0, 0.8, 0]} castShadow receiveShadow><cylinderGeometry args={[1.4, 1.4, 1.6, 12]} /><meshStandardMaterial color="#78716c" /></mesh>
-            <mesh position={[0, 1.7, 0]} castShadow><cylinderGeometry args={[1.2, 1.2, 0.2, 12]} /><meshStandardMaterial color="#0ea5e9" /></mesh>
-            {/* Wooden Frame */}
-            <mesh position={[-1.2, 2, 0]} castShadow><boxGeometry args={[0.2, 2.5, 0.2]} /><meshStandardMaterial color="#78350f" /></mesh>
-            <mesh position={[1.2, 2, 0]} castShadow><boxGeometry args={[0.2, 2.5, 0.2]} /><meshStandardMaterial color="#78350f" /></mesh>
-            <mesh position={[0, 3.2, 0]} castShadow><boxGeometry args={[2.6, 0.2, 0.2]} /><meshStandardMaterial color="#78350f" /></mesh>
-            {/* Bucket */}
-            <mesh position={[0, 1.9, 0]} castShadow><cylinderGeometry args={[0.4, 0.3, 0.5, 12]} /><meshStandardMaterial color="#fcd34d" /></mesh>
-            {/* Broken Pipe/Pump structure on the side */}
-            <mesh position={[1.8, 1, 0]} castShadow><cylinderGeometry args={[0.15, 0.15, 2, 8]} /><meshStandardMaterial color="#ef4444" /></mesh>
-            <mesh position={[2, 2, 0]} rotation={[0, 0, Math.PI/4]} castShadow><cylinderGeometry args={[0.1, 0.1, 1, 8]} /><meshStandardMaterial color="#ef4444" /></mesh>
-            {/* Puddle */}
-            <mesh position={[2.5, 0.05, 0]} rotation={[-Math.PI/2, 0, 0]}><planeGeometry args={[1.5, 1.5]} /><meshStandardMaterial color="#38bdf8" transparent opacity={0.8} /></mesh>
-          </group>
-        );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <>
-      <CameraRig targetPos={targetPos} targetLookAt={targetLookAt} />
-      <Sky sunPosition={[100, 20, 100]} turbidity={0.1} rayleigh={0.5} />
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[10, 20, 10]} intensity={1.5} castShadow shadow-mapSize={[1024, 1024]} />
-      <Environment preset="sunset" />
-
-      {/* Ground Terrain */}
-      <mesh rotation={[-Math.PI/2, 0, 0]} receiveShadow>
-        <planeGeometry args={[100, 100]} />
-        <meshStandardMaterial color="#22c55e" />
-      </mesh>
-      
-      {/* Main Road visual across terrain */}
-      <mesh position={[0, 0.02, 0]} rotation={[-Math.PI/2, 0, 0]} receiveShadow>
-        <planeGeometry args={[3, 100]} />
-        <meshStandardMaterial color="#44403c" />
-      </mesh>
-
-      {/* Spots */}
-      {spots.map(spot => {
-        const pos = positions[spot.id];
-        const isActive = activeSpot === spot.id;
-        const isDiscovered = discoveredSpots.includes(spot.id);
-
-        return (
-          <group key={spot.id} position={pos}>
-            {/* 3D Model wrapper - click to activate */}
-            <group onClick={(e) => { e.stopPropagation(); onDiscover(spot.id); }} onPointerOver={() => document.body.style.cursor = 'pointer'} onPointerOut={() => document.body.style.cursor = 'auto'}>
-              {renderModel(spot.id)}
-              
-              {/* Highlight Ring */}
-              {!isActive && (
-                <mesh position={[0, 0.1, 0]} rotation={[-Math.PI/2, 0, 0]}>
-                  <ringGeometry args={[2.5, 3, 32]} />
-                  <meshBasicMaterial color={isDiscovered ? "#10b981" : "#fcd34d"} transparent opacity={0.6} />
-                </mesh>
-              )}
-            </group>
-
-            {/* Floating Marker / Popup */}
-            <Html position={[0, 5, 0]} center zIndexRange={[100, 0]}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', pointerEvents: 'none' }}>
-                {isActive ? (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.8, y: 10 }} 
-                    animate={{ opacity: 1, scale: 1, y: 0 }} 
-                    style={{ background: 'rgba(15, 23, 42, 0.9)', color: 'white', padding: '1.25rem', borderRadius: '16px', width: '260px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}
-                  >
-                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.75rem auto' }}>
-                      <spot.icon size={24} color="#34d399" />
-                    </div>
-                    <strong style={{ fontSize: '1.1rem', color: '#6ee7b7', display: 'block', marginBottom: '0.5rem' }}>{spot.label}</strong>
-                    <span style={{ lineHeight: '1.5', opacity: 0.9, fontSize: '0.9rem', display: 'block' }}>{spot.text}</span>
-                  </motion.div>
-                ) : (
-                  <motion.div 
-                    animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                    style={{ background: isDiscovered ? '#10b981' : 'white', color: isDiscovered ? 'white' : '#059669', width: '50px', height: '50px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', boxShadow: '0 8px 16px rgba(0,0,0,0.3)', border: isDiscovered ? 'none' : '2px solid #059669', cursor: 'pointer', pointerEvents: 'auto' }}
-                    onClick={(e) => { e.stopPropagation(); onDiscover(spot.id); }}
-                  >
-                    {isDiscovered ? <Check size={24} /> : spot.emoji}
-                  </motion.div>
-                )}
-              </div>
-            </Html>
-          </group>
-        );
-      })}
-
-      {/* Global click to reset camera view */}
-      <mesh position={[0,0,0]} visible={false} scale={1000} onClick={() => onDiscover(null)}>
-        <boxGeometry />
-      </mesh>
-    </>
-  );
-}
+import { 
+  ArrowRight, 
+  BookOpen, 
+  Tractor, 
+  MapPin, 
+  Waves, 
+  Check, 
+  Users, 
+  Home, 
+  Mountain, 
+  HelpCircle,
+  MessageSquare
+} from 'lucide-react';
 
 export default function Stage1_Explore({ onComplete, addXp }) {
   const [playClick] = useSound('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', { volume: 0.5 });
@@ -215,11 +22,72 @@ export default function Stage1_Explore({ onComplete, addXp }) {
   const [activeSpot, setActiveSpot] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
+  // Spot data matching the clean background image coordinates
   const spots = [
-    { id: 'school', emoji: '🏫', icon: BookOpen, label: 'Primary School', text: 'The roof is leaking after heavy rains and needs urgent maintenance.', x: 25, y: 35 },
-    { id: 'farm', emoji: '🚜', icon: Tractor, label: 'Farms', text: 'The fields require better irrigation facilities for the upcoming season.', x: 75, y: 40 },
-    { id: 'road', emoji: '🛣️', icon: MapPin, label: 'Main Road', text: 'Heavy rains have severely damaged the main connecting road.', x: 45, y: 70 },
-    { id: 'water', emoji: '🚰', icon: Waves, label: 'Village Well', text: 'The village faces a water shortage and needs a new handpump.', x: 65, y: 65 },
+    { 
+      id: 'school', 
+      emoji: '🏫', 
+      icon: BookOpen, 
+      label: 'Primary School', 
+      text: 'The roof is leaking after heavy rains and needs urgent maintenance.', 
+      x: 18, 
+      y: 59,
+      cardX: 10,
+      cardY: 32,
+      lineX1: 18,
+      lineY1: 44,
+      color: '#3b82f6',
+      bgLight: 'rgba(59, 130, 246, 0.1)',
+      borderLight: 'rgba(59, 130, 246, 0.3)'
+    },
+    { 
+      id: 'road', 
+      emoji: '🛣️', 
+      icon: MapPin, 
+      label: 'Main Road', 
+      text: 'Heavy rains have severely damaged the main connecting road.', 
+      x: 43, 
+      y: 67,
+      cardX: 31,
+      cardY: 44,
+      lineX1: 39,
+      lineY1: 56,
+      color: '#ef4444',
+      bgLight: 'rgba(239, 68, 68, 0.1)',
+      borderLight: 'rgba(239, 68, 68, 0.3)'
+    },
+    { 
+      id: 'farm', 
+      emoji: '🚜', 
+      icon: Tractor, 
+      label: 'Farms', 
+      text: 'The fields require better irrigation facilities for the upcoming season.', 
+      x: 67, 
+      y: 64,
+      cardX: 56,
+      cardY: 32,
+      lineX1: 64,
+      lineY1: 44,
+      color: '#10b981',
+      bgLight: 'rgba(16, 185, 129, 0.1)',
+      borderLight: 'rgba(16, 185, 129, 0.3)'
+    },
+    { 
+      id: 'water', 
+      emoji: '🚰', 
+      icon: Waves, 
+      label: 'Village Well', 
+      text: 'The village faces a water shortage and needs a new handpump.', 
+      x: 91, 
+      y: 66,
+      cardX: 80,
+      cardY: 44,
+      lineX1: 88,
+      lineY1: 56,
+      color: '#8b5cf6',
+      bgLight: 'rgba(139, 92, 246, 0.1)',
+      borderLight: 'rgba(139, 92, 246, 0.3)'
+    },
   ];
 
   const handleDiscover = (id) => {
@@ -243,8 +111,54 @@ export default function Stage1_Explore({ onComplete, addXp }) {
   const allDiscovered = discoveredSpots.length === spots.length;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem', paddingBottom: '4rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', paddingBottom: '4rem' }}>
       
+      {/* Dynamic Keyframes injected into the page */}
+      <style>{`
+        @keyframes kenBurnsEffect {
+          0% { transform: scale(1.0); }
+          50% { transform: scale(1.04) translate(-0.8%, -0.4%); }
+          100% { transform: scale(1.0); }
+        }
+        @keyframes pulseRing {
+          0% { transform: scale(0.95); opacity: 0.8; }
+          50% { transform: scale(1.4); opacity: 0; }
+          100% { transform: scale(0.95); opacity: 0; }
+        }
+        .hotspot-button {
+          position: absolute !important;
+          width: 28px !important;
+          height: 28px !important;
+          padding: 0 !important;
+          min-width: 28px !important;
+          min-height: 28px !important;
+          aspect-ratio: 1 / 1 !important;
+          border-radius: 50% !important;
+          cursor: pointer;
+          border: none;
+          outline: none;
+          transform: translate(-50%, -50%);
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          z-index: 10;
+        }
+        .hotspot-button:hover {
+          transform: translate(-50%, -50%) scale(1.2);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+        }
+        .hotspot-pulse {
+          position: absolute !important;
+          width: 100% !important;
+          height: 100% !important;
+          border-radius: 50% !important;
+          animation: pulseRing 2s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
+          pointer-events: none;
+        }
+      `}</style>
+
       {/* 1. Introduction Header */}
       <section>
         <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent-text)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -254,27 +168,11 @@ export default function Stage1_Explore({ onComplete, addXp }) {
         <h1 style={{ margin: 0, fontSize: '3rem', color: 'var(--text-heading)', lineHeight: '1.2' }}>
           Grassroots <span style={{ color: '#38bdf8' }}>Democracy</span>
         </h1>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '2rem' }}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-panel" style={{ padding: '1.5rem', background: 'var(--surface)' }}>
-            <div style={{ color: '#eab308', fontSize: '2rem', fontWeight: 'bold' }}>6 lakh</div>
-            <div style={{ color: 'var(--text-secondary)' }}>villages across India</div>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="glass-panel" style={{ padding: '1.5rem', background: 'var(--surface)' }}>
-            <div style={{ color: '#eab308', fontSize: '2rem', fontWeight: 'bold' }}>~2/3</div>
-            <div style={{ color: 'var(--text-secondary)' }}>of 1.4 billion people live in rural areas</div>
-          </motion.div>
-        </div>
-
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} style={{ borderLeft: '3px solid #eab308', paddingLeft: '1rem', color: 'var(--text-secondary)', fontStyle: 'italic', marginTop: '2rem' }}>
-          <p style={{ margin: 0, fontSize: '1.2rem' }}>"The real India lives in its villages."</p>
-          <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.9rem', color: '#eab308', fontWeight: 'bold' }}>— Mahatma Gandhi</p>
-        </motion.div>
       </section>
 
-      {/* 2. Meet Lakshmanpur - 3D MAP */}
+      {/* 2. Meet Lakshmanpur - Interactive 2D Landscape */}
       <section>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.5rem', gap: '2rem' }}>
           <div>
             <h2 style={{ fontSize: '1.8rem', color: 'var(--text-heading)', margin: '0 0 0.5rem 0' }}>Meet Lakshmanpur</h2>
             <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', margin: 0 }}>
@@ -282,76 +180,484 @@ export default function Stage1_Explore({ onComplete, addXp }) {
             </p>
           </div>
           {activeSpot && (
-            <button onClick={() => setActiveSpot(null)} style={{ padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text-primary)', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-              Reset View
+            <button 
+              onClick={() => setActiveSpot(null)} 
+              className="outline"
+              style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', cursor: 'pointer', whiteSpace: 'nowrap' }}
+            >
+              Overview View
             </button>
           )}
         </div>
-        
+
+        {/* Outer container */}
         <div style={{ 
-          width: '100%', height: '500px', borderRadius: '16px', position: 'relative', 
+          width: '100%', 
+          height: '620px', 
+          borderRadius: '24px', 
+          position: 'relative', 
           background: '#0ea5e9',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.2)', overflow: 'hidden'
+          boxShadow: '0 20px 45px rgba(0,0,0,0.3)', 
+          overflow: 'hidden',
+          border: '1px solid var(--border)'
         }}>
-          <Canvas shadows camera={{ position: [0, 15, 20], fov: 45 }}>
-            <VillageScene 
-              spots={spots} 
-              discoveredSpots={discoveredSpots} 
-              activeSpot={activeSpot}
-              onDiscover={handleDiscover}
-            />
-          </Canvas>
           
+          {/* Animated Background Image */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: "url('/lakshmanpur_clean_background.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            width: '100%',
+            height: '100%',
+            animation: 'kenBurnsEffect 30s ease-in-out infinite',
+            pointerEvents: 'none'
+          }} />
+
+          {/* Dark Overlay Vignette for readability */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to bottom, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0.1) 40%, rgba(15, 23, 42, 0.1) 70%, rgba(15, 23, 42, 0.4) 100%)',
+            pointerEvents: 'none'
+          }} />
+
+          {/* 2A. OVERLAY HEADER INFO & STATS */}
+          <div style={{
+            position: 'absolute',
+            top: '24px',
+            left: '24px',
+            right: '24px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            zIndex: 5,
+            pointerEvents: 'none'
+          }}>
+            {/* Left Hand Title and Quote */}
+            <div style={{ maxWidth: '42%', display: 'flex', flexDirection: 'column', gap: '0.75rem', pointerEvents: 'auto' }}>
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.85)',
+                backdropFilter: 'blur(12px)',
+                padding: '1rem 1.25rem',
+                borderRadius: '16px',
+                border: '1px solid rgba(255,255,255,0.4)',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+              }}>
+                <h3 style={{ margin: '0 0 0.25rem 0', color: '#0f172a', fontSize: '1.25rem', fontWeight: 'bold' }}>
+                  Life in Lakshmanpur
+                </h3>
+                <p style={{ margin: 0, color: '#475569', fontSize: '0.8rem', lineHeight: '1.4' }}>
+                  Lakshmanpur is a small village in the foothills of the Himalayas. The people work hard, but face many challenges.
+                </p>
+              </div>
+
+              {/* Gandhi Quote card */}
+              <div style={{
+                background: 'rgba(59, 130, 246, 0.95)',
+                color: 'white',
+                padding: '0.65rem 1rem',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.2)',
+                boxShadow: '0 8px 20px rgba(59, 130, 246, 0.25)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.15rem'
+              }}>
+                <span style={{ fontSize: '0.78rem', fontStyle: 'italic', fontWeight: '600' }}>
+                  "The real India lives in its villages."
+                </span>
+                <span style={{ fontSize: '0.65rem', alignSelf: 'flex-end', opacity: 0.9, fontWeight: '700' }}>
+                  — Mahatma Gandhi
+                </span>
+              </div>
+            </div>
+
+            {/* Right Hand Stats Cards */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '0.6rem',
+              maxWidth: '54%',
+              pointerEvents: 'auto'
+            }}>
+              {/* Stat 1: People */}
+              <div style={{
+                background: 'rgba(255,255,255,0.9)',
+                backdropFilter: 'blur(8px)',
+                padding: '0.6rem 0.8rem',
+                borderRadius: '14px',
+                border: '1px solid rgba(255,255,255,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                boxShadow: '0 6px 16px rgba(0,0,0,0.1)'
+              }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#dcfce7', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center' }}>
+                  <Users size={16} color="#15803d" />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ color: '#166534', fontSize: '0.85rem', fontWeight: 'bold', lineHeight: 1.1 }}>700</span>
+                  <span style={{ color: '#475569', fontSize: '0.65rem', fontWeight: '600' }}>People</span>
+                </div>
+              </div>
+
+              {/* Stat 2: Houses */}
+              <div style={{
+                background: 'rgba(255,255,255,0.9)',
+                backdropFilter: 'blur(8px)',
+                padding: '0.6rem 0.8rem',
+                borderRadius: '14px',
+                border: '1px solid rgba(255,255,255,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                boxShadow: '0 6px 16px rgba(0,0,0,0.1)'
+              }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Home size={16} color="#1d4ed8" />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ color: '#1e40af', fontSize: '0.85rem', fontWeight: 'bold', lineHeight: 1.1 }}>200</span>
+                  <span style={{ color: '#475569', fontSize: '0.65rem', fontWeight: '600' }}>Houses</span>
+                </div>
+              </div>
+
+              {/* Stat 3: Farmers */}
+              <div style={{
+                background: 'rgba(255,255,255,0.9)',
+                backdropFilter: 'blur(8px)',
+                padding: '0.6rem 0.8rem',
+                borderRadius: '14px',
+                border: '1px solid rgba(255,255,255,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                boxShadow: '0 6px 16px rgba(0,0,0,0.1)'
+              }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#fef9c3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Tractor size={16} color="#ca8a04" />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ color: '#854d0e', fontSize: '0.8rem', fontWeight: 'bold', lineHeight: 1.1 }}>Most People</span>
+                  <span style={{ color: '#475569', fontSize: '0.65rem', fontWeight: '600' }}>are Farmers</span>
+                </div>
+              </div>
+
+              {/* Stat 4: Himalayas */}
+              <div style={{
+                background: 'rgba(255,255,255,0.9)',
+                backdropFilter: 'blur(8px)',
+                padding: '0.6rem 0.8rem',
+                borderRadius: '14px',
+                border: '1px solid rgba(255,255,255,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                boxShadow: '0 6px 16px rgba(0,0,0,0.1)'
+              }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#f3e8ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Mountain size={16} color="#7c3aed" />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ color: '#6b21a8', fontSize: '0.8rem', fontWeight: 'bold', lineHeight: 1.1 }}>Foothills</span>
+                  <span style={{ color: '#475569', fontSize: '0.65rem', fontWeight: '600' }}>of the Himalayas</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 2B. SVG CONNECTOR LINES LAYER */}
+          <svg style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            zIndex: 6
+          }}>
+            <AnimatePresence>
+              {spots.map(spot => {
+                const isDiscovered = discoveredSpots.includes(spot.id);
+                if (!isDiscovered) return null;
+
+                return (
+                  <motion.line
+                    key={`line-${spot.id}`}
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.8 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    x1={`${spot.lineX1}%`}
+                    y1={`${spot.lineY1}%`}
+                    x2={`${spot.x}%`}
+                    y2={`${spot.y}%`}
+                    stroke={spot.color}
+                    strokeWidth="2.5"
+                    strokeDasharray="5,5"
+                  />
+                );
+              })}
+            </AnimatePresence>
+          </svg>
+
+          {/* 2C. INTERACTIVE HOTSPOTS */}
+          {spots.map(spot => {
+            const isDiscovered = discoveredSpots.includes(spot.id);
+            const isActive = activeSpot === spot.id;
+
+            return (
+              <button
+                key={`hotspot-${spot.id}`}
+                className="hotspot-button"
+                style={{
+                  left: `${spot.x}%`,
+                  top: `${spot.y}%`,
+                  background: isDiscovered ? spot.color : '#ffffff',
+                  border: `3px solid ${spot.color}`
+                }}
+                onClick={() => handleDiscover(spot.id)}
+              >
+                {/* Pulse Ring */}
+                <div 
+                  className="hotspot-pulse" 
+                  style={{ background: spot.color }} 
+                />
+                
+                {/* Center Content: Check if discovered, otherwise small center dot */}
+                {isDiscovered ? (
+                  <Check size={12} color="#ffffff" strokeWidth={3} />
+                ) : (
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: spot.color }} />
+                )}
+              </button>
+            );
+          })}
+
+          {/* 2D. FLOATING INFORMATION CARDS */}
+          <AnimatePresence>
+            {spots.map(spot => {
+              const isDiscovered = discoveredSpots.includes(spot.id);
+              if (!isDiscovered) return null;
+
+              const isActive = activeSpot === spot.id;
+
+              return (
+                <motion.div
+                  key={`card-${spot.id}`}
+                  initial={{ opacity: 0, scale: 0.9, y: 15 }}
+                  animate={{ 
+                    opacity: isActive ? 1 : 0.85, 
+                    scale: isActive ? 1.03 : 1.0, 
+                    y: 0,
+                    boxShadow: isActive ? '0 12px 30px rgba(0,0,0,0.25)' : '0 6px 15px rgba(0,0,0,0.15)'
+                  }}
+                  exit={{ opacity: 0, scale: 0.9, y: 15 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                  style={{
+                    position: 'absolute',
+                    left: `${spot.cardX}%`,
+                    top: `${spot.cardY}%`,
+                    width: '180px',
+                    transform: 'translate(-50%, -50%)',
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(8px)',
+                    border: `1.5px solid ${isActive ? spot.color : 'rgba(255,255,255,0.8)'}`,
+                    borderRadius: '16px',
+                    padding: '0.8rem 1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.35rem',
+                    zIndex: isActive ? 8 : 7,
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => handleDiscover(spot.id)}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <div style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      background: spot.bgLight,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <spot.icon size={13} color={spot.color} />
+                    </div>
+                    <strong style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 'bold' }}>
+                      {spot.label}
+                    </strong>
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.72rem', color: '#475569', lineHeight: '1.35' }}>
+                    {spot.text}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+
           {/* Instruction overlay when nothing is active */}
           <AnimatePresence>
             {!activeSpot && discoveredSpots.length < spots.length && (
-              <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(255,255,255,0.9)', padding: '0.75rem 1.5rem', borderRadius: '20px', fontWeight: 'bold', color: '#0f172a', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', pointerEvents: 'none' }}>
-                Click on the markers to explore!
+              <motion.div 
+                initial={{ opacity: 0, y: -20, x: '-50%' }} 
+                animate={{ opacity: 1, y: 0, x: '-50%' }} 
+                exit={{ opacity: 0, y: -20, x: '-50%' }} 
+                style={{ 
+                  position: 'absolute', 
+                  bottom: '30px', 
+                  left: '50%', 
+                  background: 'rgba(15, 23, 42, 0.95)', 
+                  backdropFilter: 'blur(8px)',
+                  padding: '0.8rem 1.6rem', 
+                  borderRadius: '20px', 
+                  fontWeight: 'bold', 
+                  color: '#ffffff', 
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.3)', 
+                  pointerEvents: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  border: '1px solid rgba(255,255,255,0.1)'
+                }}
+              >
+                <HelpCircle size={16} color="#38bdf8" />
+                <span>Click on the pulsing markers to explore the village issues!</span>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </section>
 
-      {/* 3. Problem Question */}
+      {/* 3. Problem Question (Redesigned matching original text & mockup styling) */}
       <AnimatePresence>
         {allDiscovered && (
-          <motion.section initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{ overflow: 'hidden' }}>
-            <div className="glass-panel" style={{ padding: '2rem', background: 'var(--card-bg)', border: '1px solid var(--accent-border)' }}>
-              <h3 style={{ margin: 0, fontSize: '1.3rem', color: 'var(--text-heading)' }}>The Big Question 🤔</h3>
-              <p style={{ marginTop: '1rem', color: 'var(--text-primary)', lineHeight: '1.6' }}>
-                The village has many immediate needs: roads, water, school repairs. Who should be responsible for making these daily decisions and solving these local problems?
+          <motion.section 
+            initial={{ opacity: 0, y: 30 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ type: 'spring', damping: 25 }}
+          >
+            <div className="glass-panel" style={{ padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <MessageSquare size={20} color="var(--accent-text)" />
+                </div>
+                <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
+                  The Big Question 🤔
+                </h3>
+              </div>
+              
+              <p style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.6', maxWidth: '800px' }}>
+                The village has many immediate needs: roads, water, school repairs. 
+                <strong> Who should be responsible for making these daily decisions and solving these local problems?</strong>
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1.5rem' }}>
-                {['The Prime Minister in New Delhi', 'The Chief Minister in the State Capital', 'The Villagers themselves'].map((option, index) => {
-                  const isSelected = selectedAnswer === option;
-                  const isCorrect = index === 2;
+              {/* Three Option Cards stacked vertically */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem' }}>
+                {[
+                  { id: 'PM', text: 'The Prime Minister in New Delhi', icon: Mountain, color: '#3b82f6', bgLight: 'rgba(59, 130, 246, 0.1)', border: '#3b82f6' },
+                  { id: 'CM', text: 'The Chief Minister in the State Capital', icon: Home, color: '#8b5cf6', bgLight: 'rgba(139, 92, 246, 0.1)', border: '#8b5cf6' },
+                  { id: 'Villagers', text: 'The Villagers themselves', icon: Users, color: '#10b981', bgLight: 'rgba(16, 185, 129, 0.1)', border: '#10b981' }
+                ].map((opt) => {
+                  const isSelected = selectedAnswer === opt.text;
+                  const isCorrect = opt.id === 'Villagers';
                   
                   return (
                     <button
-                      key={option}
-                      onClick={() => handleSelect(option)}
+                      key={opt.id}
+                      onClick={() => handleSelect(opt.text)}
                       disabled={selectedAnswer !== null}
                       style={{
-                        padding: '1rem', borderRadius: '12px', textAlign: 'left',
-                        background: isSelected ? (isCorrect ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)') : 'var(--surface)',
-                        border: `1px solid ${isSelected ? (isCorrect ? '#10b981' : '#ef4444') : 'var(--border)'}`,
-                        cursor: selectedAnswer === null ? 'pointer' : 'default', transition: 'all 0.2s',
-                        opacity: selectedAnswer !== null && !isSelected ? 0.5 : 1
+                        padding: '1.25rem 1.5rem', 
+                        borderRadius: '16px', 
+                        textAlign: 'left',
+                        background: isSelected ? (isCorrect ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)') : 'var(--surface)',
+                        border: `2px solid ${isSelected ? (isCorrect ? '#10b981' : '#ef4444') : 'var(--border)'}`,
+                        cursor: selectedAnswer === null ? 'pointer' : 'default', 
+                        transition: 'all 0.25s ease',
+                        opacity: selectedAnswer !== null && !isSelected ? 0.5 : 1,
+                        display: 'flex',
+                        gap: '1rem',
+                        alignItems: 'center',
+                        boxShadow: isSelected ? `0 8px 24px ${isCorrect ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'}` : 'none'
                       }}
                     >
-                      <span style={{ fontSize: '1rem', color: isSelected ? (isCorrect ? '#10b981' : '#ef4444') : 'var(--text-primary)' }}>
-                        {option}
+                      <div style={{ 
+                        width: '36px', 
+                        height: '36px', 
+                        borderRadius: '50%', 
+                        background: opt.bgLight, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        <opt.icon size={18} color={opt.color} />
+                      </div>
+                      <span style={{ fontSize: '1.05rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
+                        {opt.text}
                       </span>
                     </button>
                   );
                 })}
               </div>
 
+              {/* 3B. Think About It - Feedback Panel */}
               {selectedAnswer && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ marginTop: '1.5rem', padding: '1rem', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', color: 'var(--text-primary)', lineHeight: '1.5' }}>
-                  <strong>Exactly!</strong> Imagine if a villager had to travel 500 km to the capital just to fix a leaking pipe. India is too large. Villages need the power to govern their own local issues. This is why we have the <strong>Panchayati Raj System</strong>.
+                <motion.div 
+                  initial={{ opacity: 0, y: 15 }} 
+                  animate={{ opacity: 1, y: 0 }} 
+                  style={{ 
+                    marginTop: '2rem', 
+                    padding: '1.75rem', 
+                    borderRadius: '20px', 
+                    background: 'rgba(234, 179, 8, 0.08)', 
+                    border: '1px solid rgba(234, 179, 8, 0.35)', 
+                    color: 'var(--text-primary)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ca8a04', fontWeight: 'bold', fontSize: '1.1rem' }}>
+                    💡 Think About It
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap-reverse' }}>
+                    <p style={{ margin: 0, fontSize: '0.98rem', lineHeight: '1.6', flex: 1 }}>
+                      {selectedAnswer === 'The Villagers themselves' ? (
+                        <>
+                          <strong>Exactly!</strong> Imagine if a villager had to travel 500 km to the capital just to fix a leaking pipe. 
+                          India is too large. Villages need the power to govern their own local issues. 
+                          This is why we have the <strong>Panchayati Raj System</strong>.
+                        </>
+                      ) : (
+                        <>
+                          <strong>Not quite!</strong> Imagine if a villager had to travel hundreds of kilometers to the state capital or to New Delhi just to fix a leaking pipe or clear a small dirt road. 
+                          India is vast, and governing local issues locally (at the grassroots level) is far more efficient. 
+                          This is why villages need the power to govern their own local issues.
+                        </>
+                      )}
+                    </p>
+                    
+                    {/* Floating Kid Illustration Placeholder */}
+                    <div style={{ 
+                      width: '100px', 
+                      height: '80px', 
+                      background: 'rgba(234, 179, 8, 0.15)',
+                      borderRadius: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '2.5rem',
+                      userSelect: 'none',
+                      flexShrink: 0
+                    }}>
+                      👦🏻👧🏻
+                    </div>
+                  </div>
                 </motion.div>
               )}
             </div>
@@ -365,9 +671,9 @@ export default function Stage1_Explore({ onComplete, addXp }) {
           onClick={onComplete}
           disabled={!selectedAnswer}
           className="primary" 
-          style={{ opacity: selectedAnswer ? 1 : 0.5, padding: '0.8rem 1.5rem', gap: '0.5rem', borderRadius: '8px' }}
+          style={{ opacity: selectedAnswer ? 1 : 0.5, padding: '0.8rem 1.75rem', gap: '0.5rem', borderRadius: '10px', fontSize: '1rem', fontWeight: 'bold' }}
         >
-          Discover Panchayati Raj <ArrowRight size={16} />
+          Discover Panchayati Raj <ArrowRight size={18} />
         </button>
       </div>
     </div>
