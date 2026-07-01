@@ -146,7 +146,7 @@ export const BatteryBareSVG = ({ isFlipped }) => {
 };
 
 // Battery Without Holder
-export const BatterySVG = ({ isPlaced, isTarget, onClick, isFlipped }) => {
+export const BatterySVG = ({ isPlaced, isTarget, onClick, isFlipped, hasExtraBattery }) => {
   if (!isPlaced) {
     if (isTarget) {
       return (
@@ -162,6 +162,11 @@ export const BatterySVG = ({ isPlaced, isTarget, onClick, isFlipped }) => {
   return (
     <g onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }} transform="translate(44, 366)">
       <BatteryBareSVG isFlipped={isFlipped} />
+      {hasExtraBattery && (
+        <g transform="translate(90, 0)">
+          <BatteryBareSVG isFlipped={isFlipped} />
+        </g>
+      )}
     </g>
   );
 };
@@ -274,12 +279,13 @@ export const WiresSVG = ({
   arePinsPlaced,
   isCurrentFlowing, 
   isBatteryFlipped,
+  hasExtraBattery,
   isTarget = false, 
   onClick 
 }) => {
   // Coordinates mapping
   const p_batteryNeg = { x: 44, y: 386 };
-  const p_batteryPos = { x: 135, y: 386 };
+  const p_batteryPos = { x: hasExtraBattery ? 225 : 135, y: 386 };
   const p_pin1 = { x: 480, y: 250 };
   const p_pin2 = { x: 480, y: 370 };
   const p_nail1 = { x: 155, y: 150 };
@@ -342,9 +348,13 @@ export const WiresSVG = ({
             {[180, 250, 320].map((cx, i) => {
               const cy = 150;
               const color = "#3b82f6";
+              const fieldLines = hasExtraBattery 
+                ? [ {rx: 18, ry: 52}, {rx: 36, ry: 105} ]
+                : [ {rx: 12, ry: 35}, {rx: 24, ry: 70} ];
+
               return (
                 <g key={`mag-pos-${i}`}>
-                  {[ {rx: 12, ry: 35}, {rx: 24, ry: 70} ].map((line, j) => (
+                  {fieldLines.map((line, j) => (
                     <g key={`mag-${i}-${j}`}>
                       {/* Back half of the loop (dashed or lighter) */}
                       <path d={`M ${cx},${cy - line.ry} A ${line.rx},${line.ry} 0 0,0 ${cx},${cy + line.ry}`} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4,4" opacity={0.5} />
