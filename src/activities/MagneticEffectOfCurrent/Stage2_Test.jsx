@@ -17,7 +17,7 @@ export default function Stage2_Test({ onComplete }) {
   const [hasTestedOn, setHasTestedOn] = useState(false);
   const [hasTestedOff, setHasTestedOff] = useState(false);
   const [isBatteryFlipped, setIsBatteryFlipped] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+  const [hasExtraBattery, setHasExtraBattery] = useState(false);
 
   const handleToggleSwitch = () => {
     const newState = !switchOn;
@@ -33,12 +33,6 @@ export default function Stage2_Test({ onComplete }) {
   };
 
   const isTestingComplete = hasTestedOn && hasTestedOff;
-
-  useEffect(() => {
-    if (isTestingComplete) {
-      setTimeout(() => setShowPopup(true), 2500);
-    }
-  }, [isTestingComplete]);
 
   return (
     <div className="main-grid" style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "1rem", maxWidth: "1200px", margin: "0 auto" }}>
@@ -98,6 +92,13 @@ export default function Stage2_Test({ onComplete }) {
             >
               <RefreshCcw size={16} /> Flip Battery
             </button>
+            <button
+              onClick={() => setHasExtraBattery(!hasExtraBattery)}
+              className="outline"
+              style={{ width: "100%", display: "flex", justifyContent: "center", gap: "0.5rem" }}
+            >
+              <Power size={16} /> {hasExtraBattery ? "Remove Extra Battery" : "Add Extra Battery"}
+            </button>
             <p style={{ margin: 0, fontSize: "0.75rem", color: "var(--text-muted)" }}>You can also click the Safety Pin on the board.</p>
           </div>
 
@@ -130,10 +131,10 @@ export default function Stage2_Test({ onComplete }) {
             <DrawingPinSVG x={480} y={370} isPlaced={true} />
             
             {/* Compass - deflecting based on switch state */}
-            {/* Normal: 0 deg. Deflected: 45 or -45 deg */}
-            <CompassSVG x={250} y={150} isPlaced={true} deflection={switchOn ? (isBatteryFlipped ? -45 : 45) : 0} />
+            {/* Normal: 0 deg. Deflected: 45/75 or -45/-75 deg */}
+            <CompassSVG x={250} y={150} isPlaced={true} deflection={switchOn ? (isBatteryFlipped ? (hasExtraBattery ? -75 : -45) : (hasExtraBattery ? 75 : 45)) : 0} />
             
-            <BatterySVG isPlaced={true} isFlipped={isBatteryFlipped} />
+            <BatterySVG isPlaced={true} isFlipped={isBatteryFlipped} hasExtraBattery={hasExtraBattery} />
             
             {/* Wires */}
             <WiresSVG 
@@ -143,6 +144,7 @@ export default function Stage2_Test({ onComplete }) {
               arePinsPlaced={true} 
               isCurrentFlowing={switchOn} 
               isBatteryFlipped={isBatteryFlipped}
+              hasExtraBattery={hasExtraBattery}
             />
 
             {/* Safety Pin (Interactive Switch) */}
@@ -189,33 +191,12 @@ export default function Stage2_Test({ onComplete }) {
           </AnimatePresence>
         </div>
       </div>
-
-      {/* Completion Modal */}
-      <AnimatePresence>
-        {showPopup && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', maxWidth: '400px', width: '90%', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', textAlign: 'center', border: '1px solid var(--border)' }}
-            >
-              <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>✨</div>
-              <h2 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)', fontSize: '1.5rem' }}>Discovery Made!</h2>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', lineHeight: '1.5', fontSize: '0.95rem' }}>
-                You have successfully observed Oersted's Experiment! You saw that an electric current produces a magnetic field, deflecting the compass needle.
-              </p>
-              <button onClick={onComplete} className="primary" style={{ width: '100%', padding: '0.8rem', fontSize: '1rem', fontWeight: 'bold', display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
-                Proceed to Quiz <ArrowRight size={18} />
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Footer controls */}
+      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.5rem" }}>
+        <button onClick={onComplete} className="success" disabled={!isTestingComplete} style={{ padding: "0.8rem 2rem", fontSize: "1rem", fontWeight: "bold", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          Proceed to Quiz <ArrowRight size={18} />
+        </button>
+      </div>
     </div>
   );
 }

@@ -60,10 +60,10 @@ const CompassModel = () => {
       </mesh>
       {/* Markings */}
       <group position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <Text position={[0, 0.9, 0]} fontSize={0.25} color="#111827" fontWeight="bold">N</Text>
-        <Text position={[0, -0.9, 0]} fontSize={0.25} color="#111827" fontWeight="bold">S</Text>
-        <Text position={[0.9, 0, 0]} fontSize={0.25} color="#111827" fontWeight="bold">E</Text>
-        <Text position={[-0.9, 0, 0]} fontSize={0.25} color="#111827" fontWeight="bold">W</Text>
+        <Text position={[0, 0.9, 0]} fontSize={0.25} color="#111827">N</Text>
+        <Text position={[0, -0.9, 0]} fontSize={0.25} color="#111827">S</Text>
+        <Text position={[0.9, 0, 0]} fontSize={0.25} color="#111827">E</Text>
+        <Text position={[-0.9, 0, 0]} fontSize={0.25} color="#111827">W</Text>
       </group>
       {/* Compass Needle Group */}
       <group ref={needleRef} position={[0, 0.1, 0]}>
@@ -161,9 +161,9 @@ const BatteryModel = () => (
     </mesh>
     
     {/* Labels (rotated by +90deg around Z so they are upright in world space) */}
-    <Text position={[0, 0.5, 0.44]} rotation={[0, 0, Math.PI / 2]} fontSize={0.25} color="#111827" fontWeight="bold">+</Text>
-    <Text position={[0, -0.5, 0.44]} rotation={[0, 0, Math.PI / 2]} fontSize={0.3} color="#111827" fontWeight="bold">-</Text>
-    <Text position={[0, 0, 0.44]} rotation={[0, 0, Math.PI / 2]} fontSize={0.12} color="#fef08a" fontWeight="bold" letterSpacing={0.1}>CELL 1.5V</Text>
+    <Text position={[0, 0.5, 0.44]} rotation={[0, 0, Math.PI / 2]} fontSize={0.25} color="#111827">+</Text>
+    <Text position={[0, -0.5, 0.44]} rotation={[0, 0, Math.PI / 2]} fontSize={0.3} color="#111827">-</Text>
+    <Text position={[0, 0, 0.44]} rotation={[0, 0, Math.PI / 2]} fontSize={0.12} color="#fef08a" letterSpacing={0.1}>CELL 1.5V</Text>
   </group>
 );
 
@@ -227,6 +227,22 @@ const WiresModel = () => {
   );
 };
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return <div style={{ color: 'red', padding: '1rem' }}>3D Viewer Error: {this.state.error?.message}</div>;
+    }
+    return this.props.children;
+  }
+}
+
 export default function ThreeDViewer({ componentId }) {
   const renderModel = () => {
     switch (componentId) {
@@ -244,14 +260,16 @@ export default function ThreeDViewer({ componentId }) {
 
   return (
     <div style={{ width: '100%', height: '100%', outline: 'none', background: 'var(--canvas-bg)' }}>
-      <Canvas shadows camera={{ position: [0, 1.8, 2.5], fov: 45 }} gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}>
-        <ambientLight intensity={1.1} />
-        <pointLight position={[10, 10, 10]} intensity={1.8} castShadow />
-        <pointLight position={[-10, 5, -10]} intensity={0.6} />
-        <directionalLight position={[0, 5, 2]} intensity={1.2} />
-        <Center>{renderModel()}</Center>
-        <OrbitControls enableDamping={true} dampingFactor={0.06} minDistance={1.5} maxDistance={4.5} makeDefault />
-      </Canvas>
+      <ErrorBoundary>
+        <Canvas shadows camera={{ position: [0, 1.8, 2.5], fov: 45 }} gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}>
+          <ambientLight intensity={1.1} />
+          <pointLight position={[10, 10, 10]} intensity={1.8} castShadow />
+          <pointLight position={[-10, 5, -10]} intensity={0.6} />
+          <directionalLight position={[0, 5, 2]} intensity={1.2} />
+          <Center>{renderModel()}</Center>
+          <OrbitControls enableDamping={true} dampingFactor={0.06} minDistance={1.5} maxDistance={4.5} makeDefault />
+        </Canvas>
+      </ErrorBoundary>
     </div>
   );
 }
