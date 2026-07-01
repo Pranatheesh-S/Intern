@@ -161,7 +161,7 @@ export default function Stage1_ThreadExplorer({ onComplete, addXp }) {
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', background: 'var(--neutral-bg)', padding: '0.8rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
           <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={18} />
           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-            A line segment represents the **shortest path** between two points. Let's verify this experimentally.
+            A line segment represents the <strong>shortest path</strong> between two points. Let's verify this experimentally.
           </p>
         </div>
 
@@ -288,7 +288,7 @@ export default function Stage1_ThreadExplorer({ onComplete, addXp }) {
                   <Sparkles size={16} /> Experiment complete!
                 </h4>
                 <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Notice that no matter how you drag Peg A and B, the **Red (Straight)** thread is *always* the shortest length. This shortest path defines a **Line Segment**!
+                  Notice that no matter how you drag Peg A and B, the <strong>Red (Straight)</strong> thread is <em>always</em> the shortest length. This shortest path defines a <strong>Line Segment</strong>!
                 </p>
               </div>
               <button onClick={onComplete} className="primary" style={{ width: '100%' }}>

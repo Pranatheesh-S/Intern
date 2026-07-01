@@ -135,7 +135,7 @@ export default function Stage4_Quiz({ onComplete, addXp, onBackToDashboard }) {
         <div>
           <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Quiz Completed!</h2>
           <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-            You scored **{score} out of {QUESTIONS.length}** correct answers.
+            You scored <strong>{score} out of {QUESTIONS.length}</strong> correct answers.
           </p>
         </div>
 

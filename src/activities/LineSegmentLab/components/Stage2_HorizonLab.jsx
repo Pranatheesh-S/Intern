@@ -220,7 +220,7 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
                   <Sparkles size={16} /> Discovery Made!
                 </h4>
                 <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  Zooming out shows that the **Segment** stays locked, the **Ray** stretches off-canvas in one direction, and the **Line** stretches off-screen in both directions!
+                  Zooming out shows that the <strong>Segment</strong> stays locked, the <strong>Ray</strong> stretches off-canvas in one direction, and the <strong>Line</strong> stretches off-screen in both directions!
                 </p>
               </div>
               <button onClick={onComplete} className="primary" style={{ width: '100%' }}>
