@@ -1,37 +1,25 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Users, UserCheck, CheckCircle2, FileText, Landmark, Map } from 'lucide-react';
+import { ArrowRight, Users, UserCheck, FileText, Map, PieChart } from 'lucide-react';
 import useSound from 'use-sound';
 
-export default function Stage3_Experience({ onComplete, addXp }) {
+export default function Stage3_Experience({ onComplete, addXp, setElectedSarpanch }) {
   const [playClick] = useSound('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', { volume: 0.5 });
+  const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
   const [step, setStep] = useState(0);
-  const [budget, setBudget] = useState(10);
-  const [improvements, setImprovements] = useState([]);
+  const [votedFor, setVotedFor] = useState(null);
 
-  const issues = [
-    { id: 'road', name: 'Repair Main Road', cost: 4 },
-    { id: 'school', name: 'Fix School Roof', cost: 3 },
-    { id: 'water', name: 'New Water Pump', cost: 5 },
-    { id: 'hospital', name: 'Village Dispensary', cost: 6 }
-  ];
-
-  const handleVote = () => {
+  const handleVote = (candidate) => {
     playClick();
-    addXp(20);
+    setVotedFor(candidate);
+    if(setElectedSarpanch) setElectedSarpanch(candidate);
     setStep(1);
   };
 
-  const handleBuy = (issue) => {
-    if (budget >= issue.cost && !improvements.includes(issue.id)) {
-      playClick();
-      setBudget(prev => prev - issue.cost);
-      setImprovements([...improvements, issue.id]);
-      addXp(10);
-      if (improvements.length >= 1) {
-        setStep(2);
-      }
-    }
+  const continueAfterVote = () => {
+    playSuccess();
+    addXp(20);
+    setStep(2);
   };
 
   return (
@@ -48,78 +36,84 @@ export default function Stage3_Experience({ onComplete, addXp }) {
         </h2>
 
         {step === 0 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel" style={{ padding: '2rem', background: 'var(--card-bg)' }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel" style={{ padding: '2.5rem', background: 'var(--card-bg)', borderRadius: '24px' }}>
             <h3 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem' }}>
               <Users size={28} color="var(--primary)" /> The Gram Sabha is gathering
             </h3>
             <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '1.1rem' }}>
-              The Gram Sabha is a meeting of all adults who live in the area covered by a Panchayat. Anyone who is 18 years old or more and has the right to vote is a member. 
+              The Gram Sabha consists of <strong>all eligible adult voters</strong> in the village. Anyone who is 18 years old or more and has the right to vote is a member. 
             </p>
-            <p style={{ color: 'var(--text-primary)', lineHeight: '1.6', fontSize: '1.1rem', fontWeight: 'bold' }}>
-              Today is special! It's election day for the new Sarpanch (Panchayat President). Cast your vote:
+            <p style={{ color: 'var(--text-primary)', lineHeight: '1.6', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '1rem', padding: '1rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '12px', borderLeft: '4px solid var(--primary)' }}>
+              These members elect the Sarpanch (Panchayat President). Today is election day! Two candidates are running, each with different development priorities.
             </p>
             
             <div style={{ display: 'flex', gap: '1.5rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-              <button onClick={handleVote} className="outline" style={{ flex: 1, minWidth: '200px', padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', borderRadius: '12px' }}>
-                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--neutral-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>👩🏽</div>
-                <strong style={{ fontSize: '1.2rem' }}>Meera Devi</strong>
-                <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Promises better schools</span>
+              <button onClick={() => handleVote('Meera Devi')} className="outline" style={{ flex: 1, minWidth: '200px', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', borderRadius: '16px' }}>
+                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--neutral-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem' }}>👩🏽</div>
+                <div style={{ textAlign: 'center' }}>
+                  <strong style={{ fontSize: '1.3rem', display: 'block', marginBottom: '0.25rem' }}>Meera Devi</strong>
+                  <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>Focus: Better Schools & Clinics</span>
+                </div>
+                <div style={{ marginTop: '0.5rem', padding: '0.5rem 1rem', background: 'var(--primary)', color: 'white', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Vote for Meera</div>
               </button>
-              <button onClick={handleVote} className="outline" style={{ flex: 1, minWidth: '200px', padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', borderRadius: '12px' }}>
-                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--neutral-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>👨🏽</div>
-                <strong style={{ fontSize: '1.2rem' }}>Ramesh Kumar</strong>
-                <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Promises better farming</span>
+
+              <button onClick={() => handleVote('Ramesh Kumar')} className="outline" style={{ flex: 1, minWidth: '200px', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', borderRadius: '16px' }}>
+                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--neutral-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem' }}>👨🏽</div>
+                <div style={{ textAlign: 'center' }}>
+                  <strong style={{ fontSize: '1.3rem', display: 'block', marginBottom: '0.25rem' }}>Ramesh Kumar</strong>
+                  <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>Focus: Roads & Agriculture</span>
+                </div>
+                <div style={{ marginTop: '0.5rem', padding: '0.5rem 1rem', background: 'var(--primary)', color: 'white', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Vote for Ramesh</div>
               </button>
             </div>
           </motion.div>
         )}
 
-        <AnimatePresence>
-          {step >= 1 && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="glass-panel" style={{ padding: '2rem', background: 'var(--card-bg)' }}>
-              <h3 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontSize: '1.5rem' }}>
-                <UserCheck size={28} /> The Sarpanch is Elected!
-              </h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '1.1rem' }}>
-                Every village Panchayat is divided into wards. Each ward elects a representative known as the Ward Member (Panch). All the members of the Gram Sabha also elect a Sarpanch who is the Panchayat President.
-              </p>
-              
-              <div style={{ background: 'var(--surface)', padding: '1.5rem', borderRadius: '12px', marginTop: '1.5rem', borderLeft: '4px solid var(--primary)' }}>
-                <h4 style={{ margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Landmark size={20} /> Budget Allocation Simulation
-                </h4>
-                <p style={{ color: 'var(--text-primary)', marginBottom: '1rem' }}>
-                  The Gram Panchayat has received a budget of <strong>₹{budget} Lakhs</strong> from the state government. The Gram Sabha must now approve where this money goes. Click on the issues to solve them!
-                </p>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-                  {issues.map(issue => {
-                    const isBought = improvements.includes(issue.id);
-                    const canAfford = budget >= issue.cost;
-                    return (
-                      <button 
-                        key={issue.id} 
-                        onClick={() => handleBuy(issue)}
-                        disabled={isBought || !canAfford}
-                        style={{
-                          padding: '1rem', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start',
-                          background: isBought ? 'rgba(16, 185, 129, 0.1)' : 'var(--surface)',
-                          border: `1px solid ${isBought ? '#10b981' : 'var(--border)'}`,
-                          opacity: (!isBought && !canAfford) ? 0.5 : 1, cursor: (isBought || !canAfford) ? 'default' : 'pointer'
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                          <span style={{ color: isBought ? '#10b981' : 'var(--text-primary)', fontWeight: 'bold' }}>{issue.name}</span>
-                          {isBought && <CheckCircle2 size={16} color="#10b981" />}
-                        </div>
-                        <span style={{ background: 'var(--neutral-bg)', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                          Cost: ₹{issue.cost}L
-                        </span>
-                      </button>
-                    );
-                  })}
+        <AnimatePresence mode="wait">
+          {step === 1 && (
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, height: 0 }} className="glass-panel" style={{ padding: '2.5rem', background: 'var(--card-bg)', borderRadius: '24px', textAlign: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <PieChart size={32} />
                 </div>
               </div>
+              <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.8rem', color: 'var(--text-heading)' }}>Election Results</h3>
+              
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', marginBottom: '2rem' }}>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{votedFor === 'Meera Devi' ? '👩🏽' : '👨🏽'}</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>{votedFor}</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>58%</div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>WINNER</div>
+                </div>
+                
+                <div style={{ width: '1px', background: 'var(--border)' }}></div>
+                
+                <div style={{ textAlign: 'center', opacity: 0.6 }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{votedFor === 'Meera Devi' ? '👨🏽' : '👩🏽'}</div>
+                  <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>{votedFor === 'Meera Devi' ? 'Ramesh Kumar' : 'Meera Devi'}</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-muted)' }}>42%</div>
+                </div>
+              </div>
+
+              <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '1.5rem', borderRadius: '12px', color: 'var(--text-primary)', fontSize: '1.1rem', marginBottom: '2rem' }}>
+                <strong>Congratulations!</strong> {votedFor} has secured the majority vote and is officially the new Sarpanch. This demonstrates how democratic decision-making works in a Gram Sabha!
+              </div>
+
+              <button onClick={continueAfterVote} className="primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem', borderRadius: '12px' }}>
+                Continue Learning
+              </button>
+            </motion.div>
+          )}
+
+          {step >= 2 && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="glass-panel" style={{ padding: '2.5rem', background: 'var(--card-bg)', borderRadius: '24px' }}>
+              <h3 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontSize: '1.5rem' }}>
+                <UserCheck size={28} /> The Gram Panchayat is Formed
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '1.1rem' }}>
+                Every village Panchayat is divided into wards. Each ward elects a representative known as the Ward Member (Panch). The <strong>Panchs</strong> and the <strong>Sarpanch</strong> (whom you just elected) together form the Gram Panchayat for a term of five years.
+              </p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -143,7 +137,7 @@ export default function Stage3_Experience({ onComplete, addXp }) {
                   </div>
                 </div>
                 <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', margin: 0 }}>
-                  The Gram Panchayat has a Secretary who is also the Secretary of the Gram Sabha. This person is <strong>not elected</strong> but appointed by the government. The Secretary is responsible for calling the meeting of the Gram Sabha and Gram Panchayat and keeping a record of the proceedings.
+                  The Gram Panchayat has a Secretary who is also the Secretary of the Gram Sabha. This person is <strong>not elected</strong> but appointed by the government. The Secretary is responsible for calling the meeting of the Gram Sabha and keeping records.
                 </p>
               </div>
 
@@ -158,7 +152,7 @@ export default function Stage3_Experience({ onComplete, addXp }) {
                   </div>
                 </div>
                 <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', margin: 0 }}>
-                  Measuring land and keeping land records is the main work of the Patwari. The Patwari is known by different names in different states. They are responsible for a group of villages, maintaining and updating the records of the village.
+                  Measuring land and keeping land records is the main work of the Patwari. They are responsible for a group of villages, maintaining and updating the records of the village.
                 </p>
               </div>
 
