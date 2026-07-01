@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Check, Info, Sparkles, ZoomIn, Eye } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function Stage2_HorizonLab({ onComplete, addXp }) {
-  const [pegA, setPegA] = useState({ x: 200, y: 220 });
-  const [pegB, setPegB] = useState({ x: 400, y: 220 });
+  const [pegA, setPegA] = useState({ x: 250, y: 230 });
+  const [pegB, setPegB] = useState({ x: 550, y: 230 });
   const [mode, setMode] = useState('segment'); // 'segment' | 'ray' | 'line'
   const [zoom, setZoom] = useState(1); // 1 to 10
   const [draggingPeg, setDraggingPeg] = useState(null);
@@ -35,6 +35,17 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
   };
 
+  // Convert client mouse coordinates to SVG viewBox coordinates using CTM matrix
+  const getSVGCoordinates = (clientX, clientY) => {
+    if (!svgRef.current) return { x: 0, y: 0 };
+    const svg = svgRef.current;
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return { x: Math.round(svgP.x), y: Math.round(svgP.y) };
+  };
+
   // Drag handlers
   const handleMouseDown = (peg) => {
     setDraggingPeg(peg);
@@ -42,15 +53,13 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
 
   const handleMouseMove = (e) => {
     if (!draggingPeg || !svgRef.current) return;
-    const rect = svgRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const coords = getSVGCoordinates(e.clientX, e.clientY);
 
-    const boundedX = Math.max(50, Math.min(rect.width - 50, x));
-    const boundedY = Math.max(50, Math.min(rect.height - 50, y));
+    const boundedX = Math.max(50, Math.min(750, coords.x));
+    const boundedY = Math.max(50, Math.min(410, coords.y));
 
     // When zoomed out, we scale our movements back to the absolute coordinate space
-    const center = { x: 300, y: 220 };
+    const center = { x: 400, y: 230 };
     
     // Reverse the zoom formula: inputCoord = center + (movedCoord - center) * zoom
     const absX = center.x + (boundedX - center.x) * zoom;
@@ -80,7 +89,7 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
   }, []);
 
   // Compute rendered positions based on zoom level relative to canvas center
-  const center = { x: 300, y: 220 };
+  const center = { x: 400, y: 230 };
   const rA = {
     x: center.x + (pegA.x - center.x) / zoom,
     y: center.y + (pegA.y - center.y) / zoom
@@ -238,13 +247,13 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
       {/* RIGHT PANEL: INTERACTIVE CANVAS */}
       <div className="glass-panel" style={{ padding: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#090d16', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
         
-        {/* Visual Cue Overlay */}
+        {/* Visual Cue Overlay (fixed light color for visibility on dark canvas) */}
         <div style={{ 
           position: 'absolute', 
           top: '15px', 
           left: '15px', 
           background: 'rgba(9, 13, 22, 0.85)', 
-          border: '1px solid var(--border)', 
+          border: '1px solid rgba(255,255,255,0.1)', 
           borderRadius: '8px', 
           padding: '0.5rem 0.8rem', 
           zIndex: 10,
@@ -253,7 +262,7 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
           alignItems: 'center',
           gap: '0.4rem',
           fontSize: '0.75rem',
-          color: 'var(--text-primary)'
+          color: '#f8fafc'
         }}>
           <Eye size={14} style={{ color: 'var(--accent)' }} />
           <span>
@@ -267,15 +276,13 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
         <div style={{ flex: 1, position: 'relative' }}>
           <svg 
             ref={svgRef}
-            width="100%" 
-            height="460" 
+            viewBox="0 0 800 460"
             onMouseMove={handleMouseMove}
-            style={{ display: 'block', overflow: 'hidden', cursor: draggingPeg ? 'grabbing' : 'default' }}
+            style={{ width: '100%', height: '100%', display: 'block', overflow: 'hidden', cursor: draggingPeg ? 'grabbing' : 'default' }}
           >
             {/* Grid Pattern Background */}
             <defs>
               <pattern id="peg-grid-stage2" width="40" height="40" patternUnits="userSpaceOnUse">
-                {/* Dynamically scale grid spacing with zoom */}
                 <circle cx={20} cy={20} r="1" fill="rgba(255,255,255,0.05)" />
               </pattern>
               
@@ -288,27 +295,23 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
             {/* Background grid */}
             <rect width="100%" height="100%" fill="url(#peg-grid-stage2)" />
 
-            {/* Infinite extension indicator shading */}
+            {/* Infinite extension indicator shading (fixed light color) */}
             {zoom > 1.5 && (
-              <g opacity={0.1}>
-                {/* Infinite boundaries */}
-                <circle cx={center.x} cy={center.y} r={180} fill="none" stroke="var(--text-muted)" strokeWidth={1} strokeDasharray="5,5" />
-                <text x={center.x} y={center.y + 195} fill="var(--text-muted)" fontSize="9" textAnchor="middle">Simulation Viewport Horizon</text>
+              <g opacity={0.25}>
+                <circle cx={center.x} cy={center.y} r={180} fill="none" stroke="#94a3b8" strokeWidth={1} strokeDasharray="5,5" />
+                <text x={center.x} y={center.y + 195} fill="#94a3b8" fontSize="9" textAnchor="middle">Simulation Viewport Horizon</text>
               </g>
             )}
 
             {/* DYNAMIC PATH DRAWING */}
             {mode === 'segment' && (
               <g>
-                {/* Line segment AB */}
                 <line x1={rA.x} y1={rA.y} x2={rB.x} y2={rB.y} stroke="var(--accent)" strokeWidth={3} strokeLinecap="round" />
-                {/* Infinite border glow indicator (none for segment) */}
               </g>
             )}
 
             {mode === 'ray' && (
               <g>
-                {/* Ray starts at A and goes past B to infinity */}
                 <line 
                   x1={rA.x} 
                   y1={rA.y} 
@@ -323,7 +326,6 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
 
             {mode === 'line' && (
               <g>
-                {/* Line goes to infinity in both directions */}
                 <line 
                   x1={rA.x - infLen * vx} 
                   y1={rA.y - infLen * vy} 
@@ -348,7 +350,8 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
               <circle cx="0" cy="0" r={13} fill="rgba(99, 102, 241, 0.15)" stroke="var(--accent)" strokeWidth={1} strokeDasharray="3,3" />
               <circle cx="0" cy="0" r={8} fill={mode === 'line' ? 'transparent' : '#6366f1'} stroke="#a5b4fc" strokeWidth={2} />
               {mode !== 'line' && <circle cx="-2.5" cy="-2.5" r={2} fill="#fff" opacity={0.7} />}
-              <text x="0" y="-18" fill="var(--accent)" fontSize="10" fontWeight="bold" textAnchor="middle">
+              {/* Fixed bright text color */}
+              <text x="0" y="-18" fill="#a5b4fc" fontSize="10" fontWeight="bold" textAnchor="middle">
                 {mode === 'line' ? 'A (Point on Line)' : 'Endpoint A'}
               </text>
             </g>
@@ -363,7 +366,8 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
               <circle cx="0" cy="0" r={13} fill="rgba(99, 102, 241, 0.15)" stroke="var(--accent)" strokeWidth={1} strokeDasharray="3,3" />
               <circle cx="0" cy="0" r={8} fill={mode === 'segment' ? '#6366f1' : 'transparent'} stroke="#a5b4fc" strokeWidth={2} />
               {mode === 'segment' && <circle cx="-2.5" cy="-2.5" r={2} fill="#fff" opacity={0.7} />}
-              <text x="0" y="-18" fill="var(--accent)" fontSize="10" fontWeight="bold" textAnchor="middle">
+              {/* Fixed bright text color */}
+              <text x="0" y="-18" fill="#a5b4fc" fontSize="10" fontWeight="bold" textAnchor="middle">
                 {mode === 'segment' ? 'Endpoint B' : 'Point B'}
               </text>
             </g>
@@ -371,10 +375,10 @@ export default function Stage2_HorizonLab({ onComplete, addXp }) {
           </svg>
         </div>
 
-        {/* Footer info text */}
+        {/* Footer info text (fixed light text color) */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '0.8rem 1rem' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-            💡 Try changing the **Zoom Out** slider to observe how endpoints behave. Notice how infinite rays and lines keep stretching off-screen!
+          <span style={{ fontSize: '0.75rem', color: '#cbd5e1' }}>
+            💡 Try changing the <strong>Zoom Out</strong> slider to observe how endpoints behave. Notice how infinite rays and lines keep stretching off-screen!
           </span>
         </div>
       </div>
