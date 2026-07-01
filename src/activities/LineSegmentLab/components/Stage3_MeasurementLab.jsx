@@ -1,0 +1,550 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Info, Sparkles, Move, RotateCw, RefreshCcw } from 'lucide-react';
+import confetti from 'canvas-confetti';
+
+export default function Stage3_MeasurementLab({ onComplete, addXp }) {
+  const [activeTool, setActiveTool] = useState('none'); // 'none' | 'tracing' | 'ruler' | 'divider'
+  
+  // Tracing paper state
+  const [tracingPos, setTracingPos] = useState({ x: 50, y: 300 });
+  const [isTraced, setIsTraced] = useState(false);
+  const [tracingDragActive, setTracingDragActive] = useState(false);
+
+  // Ruler state
+  const [rulerPos, setRulerPos] = useState({ x: 200, y: 280 });
+  const [rulerRotation, setRulerRotation] = useState(0);
+  const [rulerDragActive, setRulerDragActive] = useState(false);
+  const [rulerRotateActive, setRulerRotateActive] = useState(false);
+  const [parallaxAngle, setParallaxAngle] = useState('center'); // 'left' | 'center' | 'right'
+
+  // Divider state
+  const [dividerPos, setDividerPos] = useState({ x: 280, y: 300 });
+  const [dividerRotation, setDividerRotation] = useState(0);
+  const [dividerSpan, setDividerSpan] = useState(60); // px span between legs
+  const [dividerDragActive, setDividerDragActive] = useState(false);
+  const [dividerSpanActive, setDividerSpanActive] = useState(false);
+  const [dividerRotateActive, setDividerRotateActive] = useState(false);
+
+  // Completed check: must compare using divider
+  const [compareCompleted, setCompareCompleted] = useState(false);
+
+  // Segment geometries
+  // Segment PQ (7.2 cm = 144px at 15 degrees)
+  const pQ = {
+    start: { x: 100, y: 120 },
+    end: { x: 239, y: 157 } // dx=139, dy=37 -> len = 144 (approx 7.2cm)
+  };
+
+  // Segment RS (7.6 cm = 152px at -20 degrees)
+  const rS = {
+    start: { x: 340, y: 190 },
+    end: { x: 483, y: 138 } // dx=143, dy=-52 -> len = 152 (approx 7.6cm)
+  };
+
+  const containerRef = useRef(null);
+  const dragStartOffset = useRef({ x: 0, y: 0 });
+  const rotateStartAngle = useRef(0);
+
+  // SVG Mouse event listeners
+  const handleMouseDown = (tool, type, e) => {
+    e.stopPropagation();
+    const rect = containerRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    if (tool === 'tracing') {
+      setTracingDragActive(true);
+      dragStartOffset.current = { x: mouseX - tracingPos.x, y: mouseY - tracingPos.y };
+    } else if (tool === 'ruler') {
+      if (type === 'drag') {
+        setRulerDragActive(true);
+        dragStartOffset.current = { x: mouseX - rulerPos.x, y: mouseY - rulerPos.y };
+      } else if (type === 'rotate') {
+        setRulerRotateActive(true);
+        const dx = mouseX - rulerPos.x;
+        const dy = mouseY - rulerPos.y;
+        rotateStartAngle.current = Math.atan2(dy, dx) * 180 / Math.PI - rulerRotation;
+      }
+    } else if (tool === 'divider') {
+      if (type === 'drag') {
+        setDividerDragActive(true);
+        dragStartOffset.current = { x: mouseX - dividerPos.x, y: mouseY - dividerPos.y };
+      } else if (type === 'rotate') {
+        setDividerRotateActive(true);
+        const dx = mouseX - dividerPos.x;
+        const dy = mouseY - dividerPos.y;
+        rotateStartAngle.current = Math.atan2(dy, dx) * 180 / Math.PI - dividerRotation;
+      } else if (type === 'span') {
+        setDividerSpanActive(true);
+        // Distance of span handle from divider pivot
+        const rad = dividerRotation * Math.PI / 180;
+        const pivotX = dividerPos.x;
+        const pivotY = dividerPos.y;
+        dragStartOffset.current = { x: mouseX, y: mouseY };
+      }
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Tracing paper drag
+    if (tracingDragActive) {
+      setTracingPos({
+        x: mouseX - dragStartOffset.current.x,
+        y: mouseY - dragStartOffset.current.y
+      });
+    }
+
+    // Ruler drag or rotate
+    if (rulerDragActive) {
+      setRulerPos({
+        x: mouseX - dragStartOffset.current.x,
+        y: mouseY - dragStartOffset.current.y
+      });
+    } else if (rulerRotateActive) {
+      const dx = mouseX - rulerPos.x;
+      const dy = mouseY - rulerPos.y;
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI - rotateStartAngle.current;
+      setRulerRotation(angle);
+    }
+
+    // Divider drag, rotate, or span adjustment
+    if (dividerDragActive) {
+      setDividerPos({
+        x: mouseX - dragStartOffset.current.x,
+        y: mouseY - dragStartOffset.current.y
+      });
+    } else if (dividerRotateActive) {
+      const dx = mouseX - dividerPos.x;
+      const dy = mouseY - dividerPos.y;
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI - rotateStartAngle.current;
+      setDividerRotation(angle);
+    } else if (dividerSpanActive) {
+      // Calculate distance between mouse pointer and divider pivot
+      const dist = Math.sqrt(Math.pow(mouseX - dividerPos.x, 2) + Math.pow(mouseY - dividerPos.y, 2));
+      // Leg length is 160px. Span at bottom tip = 2 * legLength * sin(angle)
+      // For simplicity, we directly adjust span distance between 20px and 200px
+      const boundedSpan = Math.max(20, Math.min(200, dist * 0.8));
+      setDividerSpan(Math.round(boundedSpan));
+    }
+  };
+
+  const handleMouseUp = () => {
+    setTracingDragActive(false);
+    setRulerDragActive(false);
+    setRulerRotateActive(false);
+    setDividerDragActive(false);
+    setDividerRotateActive(false);
+    setDividerSpanActive(false);
+
+    // Check if divider is placed near Segment RS to evaluate comparison
+    if (activeTool === 'divider') {
+      const distToR = Math.sqrt(Math.pow(dividerPos.x - rS.start.x, 2) + Math.pow(dividerPos.y - rS.start.y, 2));
+      // Divider span should match Segment PQ (144px)
+      const spanMatched = Math.abs(dividerSpan - 144) < 10;
+      
+      if (distToR < 25 && spanMatched && !compareCompleted) {
+        setCompareCompleted(true);
+        addXp(100);
+        confetti({ particleCount: 45, spread: 60, origin: { y: 0.75 } });
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => window.removeEventListener('mouseup', handleMouseUp);
+  }, [tracingDragActive, rulerDragActive, rulerRotateActive, dividerDragActive, dividerRotateActive, dividerSpanActive, activeTool, dividerSpan, dividerPos]);
+
+  const handleReset = () => {
+    setActiveTool('none');
+    setIsTraced(false);
+    setTracingPos({ x: 50, y: 300 });
+    setRulerPos({ x: 200, y: 280 });
+    setRulerRotation(0);
+    setDividerPos({ x: 280, y: 300 });
+    setDividerRotation(0);
+    setDividerSpan(60);
+  };
+
+  // Helper vectors for drawing ruler ticks
+  const rulerTicks = [];
+  for (let i = 0; i <= 80; i += 2) {
+    rulerTicks.push(i);
+  }
+
+  // Divider leg vectors for drawing caliper pivot arms
+  const halfSpan = dividerSpan / 2;
+  const legLength = 160;
+  // Calculate vertical drop height of pivot
+  const height = Math.sqrt(Math.max(0, legLength * legLength - halfSpan * halfSpan));
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '1.5rem', alignItems: 'stretch' }}>
+      {/* LEFT PANEL */}
+      <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', background: 'var(--neutral-bg)', padding: '0.8rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
+          <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={18} />
+          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+            We have two angled line segments: **PQ** and **RS**. Select a tool below to measure and compare their lengths!
+          </p>
+        </div>
+
+        {/* Tool Selector Tray */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-primary)' }}>Select Measurement Tool:</h3>
+          
+          {/* Tool 1: None */}
+          <button 
+            onClick={() => setActiveTool('none')}
+            className={activeTool === 'none' ? 'primary' : 'outline'}
+            style={{ justifyContent: 'flex-start', padding: '0.75rem' }}
+          >
+            Observation (Just Looking)
+          </button>
+
+          {/* Tool 2: Tracing Paper */}
+          <button 
+            onClick={() => { setActiveTool('tracing'); setIsTraced(false); }}
+            className={activeTool === 'tracing' ? 'primary' : 'outline'}
+            style={{ justifyContent: 'flex-start', padding: '0.75rem' }}
+          >
+            Tracing Paper Method
+          </button>
+
+          {/* Tool 3: Ruler */}
+          <button 
+            onClick={() => setActiveTool('ruler')}
+            className={activeTool === 'ruler' ? 'primary' : 'outline'}
+            style={{ justifyContent: 'flex-start', padding: '0.75rem' }}
+          >
+            Standard Ruler (Scale)
+          </button>
+
+          {/* Tool 4: Divider */}
+          <button 
+            onClick={() => setActiveTool('divider')}
+            className={activeTool === 'divider' ? 'primary' : 'outline'}
+            style={{ justifyContent: 'flex-start', padding: '0.75rem' }}
+          >
+            Geometrical Divider (Calipers)
+          </button>
+        </div>
+
+        {/* Parallax controls (if ruler is active) */}
+        {activeTool === 'ruler' && (
+          <div style={{ 
+            background: 'var(--surface)', 
+            border: '1px solid var(--border)', 
+            borderRadius: '10px', 
+            padding: '0.75rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem'
+          }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Eye View Angle (Parallax Error):</span>
+            <div style={{ display: 'flex', gap: '0.25rem' }}>
+              <button 
+                onClick={() => setParallaxAngle('left')} 
+                className="outline" 
+                style={{ flex: 1, padding: '0.3rem', fontSize: '0.75rem', background: parallaxAngle === 'left' ? 'var(--danger-bg)' : 'transparent', color: parallaxAngle === 'left' ? 'var(--danger)' : 'var(--text-primary)' }}
+              >
+                Left Offset
+              </button>
+              <button 
+                onClick={() => setParallaxAngle('center')} 
+                className="outline" 
+                style={{ flex: 1, padding: '0.3rem', fontSize: '0.75rem', background: parallaxAngle === 'center' ? 'var(--success-bg)' : 'transparent', color: parallaxAngle === 'center' ? 'var(--success)' : 'var(--text-primary)' }}
+              >
+                Straight
+              </button>
+              <button 
+                onClick={() => setParallaxAngle('right')} 
+                className="outline" 
+                style={{ flex: 1, padding: '0.3rem', fontSize: '0.75rem', background: parallaxAngle === 'right' ? 'var(--danger-bg)' : 'transparent', color: parallaxAngle === 'right' ? 'var(--danger)' : 'var(--text-primary)' }}
+              >
+                Right Offset
+              </button>
+            </div>
+            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
+              Notice how viewing tick marks from an angle shifts the measurement readouts slightly!
+            </span>
+          </div>
+        )}
+
+        <button onClick={handleReset} className="outline" style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', width: '100%' }}>
+          <RefreshCcw size={14} /> Reset Lab Tools
+        </button>
+
+        {/* Complete Dialog */}
+        <div style={{ marginTop: 'auto' }}>
+          {compareCompleted ? (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <div style={{ background: 'var(--success-bg)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--success-border)', marginBottom: '0.75rem' }}>
+                <h4 style={{ margin: '0 0 0.4rem 0', color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.9rem' }}>
+                  <Sparkles size={16} /> Accurate Comparison!
+                </h4>
+                <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                  By locking the span of **PQ** (7.2 cm) inside the **Divider** and matching it against **RS** (7.6 cm), you have proved RS is longer with 100% accuracy!
+                </p>
+              </div>
+              <button onClick={onComplete} className="primary" style={{ width: '100%' }}>
+                Proceed to Quiz
+              </button>
+            </motion.div>
+          ) : (
+            <div style={{ background: 'var(--surface)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border)', textAlign: 'center' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                Measure segment PQ, lock it in the **Divider**, and overlay it on segment RS to proceed.
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* RIGHT PANEL: SVG CANVAS */}
+      <div 
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        className="glass-panel" 
+        style={{ padding: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#090d16', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}
+      >
+        <div style={{ flex: 1, position: 'relative' }}>
+          <svg 
+            width="100%" 
+            height="460" 
+            style={{ display: 'block', overflow: 'visible' }}
+          >
+            {/* Grid background */}
+            <defs>
+              <pattern id="measurement-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <circle cx="20" cy="20" r="1.5" fill="rgba(255,255,255,0.06)" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#measurement-grid)" />
+
+            {/* SEGMENTS */}
+            {/* Segment PQ */}
+            <g>
+              <line x1={pQ.start.x} y1={pQ.start.y} x2={pQ.end.x} y2={pQ.end.y} stroke="#3b82f6" strokeWidth={4} strokeLinecap="round" />
+              <circle cx={pQ.start.x} cy={pQ.start.y} r={6} fill="#60a5fa" stroke="#1d4ed8" strokeWidth={1.5} />
+              <circle cx={pQ.end.x} cy={pQ.end.y} r={6} fill="#60a5fa" stroke="#1d4ed8" strokeWidth={1.5} />
+              <text x={pQ.start.x - 12} y={pQ.start.y - 8} fill="var(--text-primary)" fontSize="12" fontWeight="bold">P</text>
+              <text x={pQ.end.x + 12} y={pQ.end.y - 8} fill="var(--text-primary)" fontSize="12" fontWeight="bold">Q</text>
+            </g>
+
+            {/* Segment RS */}
+            <g>
+              <line x1={rS.start.x} y1={rS.start.y} x2={rS.end.x} y2={rS.end.y} stroke="#10b981" strokeWidth={4} strokeLinecap="round" />
+              <circle cx={rS.start.x} cy={rS.start.y} r={6} fill="#34d399" stroke="#047857" strokeWidth={1.5} />
+              <circle cx={rS.end.x} cy={rS.end.y} r={6} fill="#34d399" stroke="#047857" strokeWidth={1.5} />
+              <text x={rS.start.x - 12} y={rS.start.y + 16} fill="var(--text-primary)" fontSize="12" fontWeight="bold">R</text>
+              <text x={rS.end.x + 12} y={rS.end.y + 16} fill="var(--text-primary)" fontSize="12" fontWeight="bold">S</text>
+            </g>
+
+            {/* 1. TRACING PAPER OVERLAY */}
+            {activeTool === 'tracing' && (
+              <g 
+                transform={`translate(${tracingPos.x}, ${tracingPos.y})`}
+                style={{ cursor: tracingDragActive ? 'grabbing' : 'grab' }}
+              >
+                {/* Translucent Tracing Paper Sheet */}
+                <rect 
+                  x="0" 
+                  y="0" 
+                  width="180" 
+                  height="120" 
+                  rx="6" 
+                  fill="rgba(255,255,255,0.15)" 
+                  stroke="rgba(255,255,255,0.4)" 
+                  strokeWidth={1.5}
+                  onMouseDown={(e) => handleMouseDown('tracing', 'drag', e)}
+                />
+                
+                {/* Drag Handle Tag */}
+                <g onMouseDown={(e) => handleMouseDown('tracing', 'drag', e)}>
+                  <rect x="5" y="-18" width="80" height="18" rx="4" fill="var(--surface)" stroke="var(--border)" strokeWidth={1} />
+                  <text x="45" y="-5" fill="var(--text-muted)" fontSize="9" textAnchor="middle" fontWeight="bold">TRACING PAPER</text>
+                </g>
+
+                {/* Tracing actions buttons inside the paper */}
+                <foreignObject x="15" y="68" width="150" height="40">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsTraced(true);
+                      playSnap();
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '0.3rem',
+                      fontSize: '0.75rem',
+                      background: 'rgba(99,102,241,0.85)',
+                      borderRadius: '4px',
+                      color: '#fff',
+                      fontWeight: 'bold',
+                      border: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {isTraced ? '⚡ PQ Traced Successfully' : '🖊️ Trace Line PQ'}
+                  </button>
+                </foreignObject>
+
+                {/* Traced Red Segment on the Paper */}
+                {isTraced && (
+                  <g>
+                    {/* Shifted segment to fit tracing paper coordinate box */}
+                    <line x1="20" y1="40" x2="164" y2="40" stroke="#ef4444" strokeWidth={3.5} strokeDasharray="3,3" />
+                    <circle cx="20" cy="40" r="5" fill="#f87171" stroke="#b91c1c" strokeWidth={1} />
+                    <circle cx="164" cy="40" r="5" fill="#f87171" stroke="#b91c1c" strokeWidth={1} />
+                    <text x="20" y="32" fill="#ef4444" fontSize="9" fontWeight="bold">P'</text>
+                    <text x="164" y="32" fill="#ef4444" fontSize="9" fontWeight="bold">Q'</text>
+                  </g>
+                )}
+              </g>
+            )}
+
+            {/* 2. ROTATABLE RULER OVERLAY */}
+            {activeTool === 'ruler' && (
+              <g 
+                transform={`translate(${rulerPos.x}, ${rulerPos.y}) rotate(${rulerRotation})`}
+                style={{ cursor: rulerDragActive ? 'grabbing' : 'default' }}
+              >
+                {/* Transparent Plastic Ruler Body */}
+                <rect 
+                  x="-20" 
+                  y="-20" 
+                  width="220" 
+                  height="40" 
+                  rx="4" 
+                  fill="rgba(243,244,246,0.18)" 
+                  stroke="rgba(255,255,255,0.3)" 
+                  strokeWidth={1.5}
+                  onMouseDown={(e) => handleMouseDown('ruler', 'drag', e)}
+                  style={{ cursor: 'grab' }}
+                />
+
+                {/* Tick marks */}
+                {rulerTicks.map((tick) => {
+                  const tickX = tick * 2.2; // scale ticks to match ruler size
+                  const isCm = tick % 10 === 0;
+                  const tickHeight = isCm ? 12 : (tick % 5 === 0 ? 8 : 5);
+                  
+                  // Parallax effect offset: shift ticks slightly based on view selection
+                  let pShift = 0;
+                  if (parallaxAngle === 'left') pShift = -3.5;
+                  if (parallaxAngle === 'right') pShift = 3.5;
+
+                  return (
+                    <g key={tick} transform={`translate(${tickX}, 0)`}>
+                      <line x1={pShift} y1={-20} x2={pShift} y2={-20 + tickHeight} stroke="var(--text-muted)" strokeWidth={isCm ? 1 : 0.5} />
+                      {isCm && (
+                        <text x={pShift} y={5} fill="var(--text-muted)" fontSize="8" textAnchor="middle">
+                          {tick / 10}
+                        </text>
+                      )}
+                    </g>
+                  );
+                })}
+
+                {/* drag indicator */}
+                <g 
+                  transform="translate(190, 0)" 
+                  onMouseDown={(e) => handleMouseDown('ruler', 'rotate', e)}
+                  style={{ cursor: 'crosshair' }}
+                >
+                  <circle cx="0" cy="0" r="10" fill="var(--accent)" stroke="#fff" strokeWidth={1} />
+                  <RotateCw size={10} color="#fff" style={{ transform: 'translate(-5px, -5px)' }} />
+                </g>
+                <text x="180" y="24" fill="var(--text-faint)" fontSize="8" textAnchor="end">Drag handle to rotate</text>
+              </g>
+            )}
+
+            {/* 3. METALLIC DIVIDER TOOL */}
+            {activeTool === 'divider' && (
+              <g 
+                transform={`translate(${dividerPos.x}, ${dividerPos.y}) rotate(${dividerRotation})`}
+                style={{ cursor: dividerDragActive ? 'grabbing' : 'default' }}
+              >
+                {/* Pivot joint shadow */}
+                <circle cx="0" cy={-height} r="8" fill="rgba(0,0,0,0.4)" />
+                
+                {/* Left Leg */}
+                <line x1={-halfSpan} y1="0" x2="0" y2={-height} stroke="#d1d5db" strokeWidth={6} strokeLinecap="round" />
+                <line x1={-halfSpan} y1="0" x2="0" y2={-height} stroke="#9ca3af" strokeWidth={3} strokeLinecap="round" />
+                {/* Metal Point tip */}
+                <polygon points={`${-halfSpan - 1.5},0 ${-halfSpan + 1.5},0 ${-halfSpan},15`} fill="#9ca3af" />
+
+                {/* Right Leg */}
+                <line x1={halfSpan} y1="0" x2="0" y2={-height} stroke="#d1d5db" strokeWidth={6} strokeLinecap="round" />
+                <line x1={halfSpan} y1="0" x2="0" y2={-height} stroke="#9ca3af" strokeWidth={3} strokeLinecap="round" />
+                {/* Metal Point tip */}
+                <polygon points={`${halfSpan - 1.5},0 ${halfSpan + 1.5},0 ${halfSpan},15`} fill="#9ca3af" />
+
+                {/* Pivot Cap screw */}
+                <circle cx="0" cy={-height} r="6" fill="#fbbf24" stroke="#d97706" strokeWidth={1.5} />
+                <circle cx="0" cy={-height} r="1.5" fill="#fff" />
+
+                {/* Drag body handle hit box */}
+                <rect 
+                  x={-halfSpan} 
+                  y={-height} 
+                  width={dividerSpan} 
+                  height={height} 
+                  fill="transparent" 
+                  onMouseDown={(e) => handleMouseDown('divider', 'drag', e)}
+                  style={{ cursor: 'grab' }}
+                />
+
+                {/* Span width adjuster handles at the tips */}
+                <g 
+                  transform={`translate(${halfSpan}, 0)`}
+                  onMouseDown={(e) => handleMouseDown('divider', 'span', e)}
+                  style={{ cursor: 'ew-resize' }}
+                >
+                  <circle cx="0" cy="0" r="10" fill="var(--accent)" stroke="#fff" strokeWidth={1} opacity={0.8} />
+                  <text x="0" y="3" fill="#fff" fontSize="8" fontWeight="bold" textAnchor="middle">↔</text>
+                </g>
+
+                {/* Rotate handle above the pivot */}
+                <g 
+                  transform={`translate(0, ${-height - 18})`}
+                  onMouseDown={(e) => handleMouseDown('divider', 'rotate', e)}
+                  style={{ cursor: 'crosshair' }}
+                >
+                  <circle cx="0" cy="0" r="8" fill="#10b981" stroke="#fff" strokeWidth={1} />
+                  <RotateCw size={8} color="#fff" style={{ transform: 'translate(-4px, -4px)' }} />
+                </g>
+
+                {/* locked dimension banner */}
+                <g transform="translate(0, -30)">
+                  <rect x="-30" y="-8" width="60" height="15" rx="3" fill="#1f2937" stroke="rgba(255,255,255,0.1)" strokeWidth={1} />
+                  <text x="0" y="3" fill="#fff" fontSize="8" textAnchor="middle">
+                    {(dividerSpan * 0.05).toFixed(1)} cm
+                  </text>
+                </g>
+              </g>
+            )}
+
+          </svg>
+        </div>
+
+        {/* Action description banner */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '0.8rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+            {activeTool === 'none' ? '👀 Tap Tracing, Ruler, or Divider to begin precise measurements.' :
+             activeTool === 'tracing' ? '📖 Drag Tracing Paper over PQ, trace it, then compare it directly by dragging it over RS.' :
+             activeTool === 'ruler' ? '📏 Align the ruler with segments to read them. Toggle viewpoints to see parallax.' :
+             '📐 Stretch the divider tips to fit PQ, then drag it and align the left tip with point R on segment RS.'}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
