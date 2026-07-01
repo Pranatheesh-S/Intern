@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ChevronDown, Check, Lightbulb, MessageSquare, Map, Layers, Home } from 'lucide-react';
+import { ArrowRight, ChevronDown, Check, Lightbulb, MessageSquare, Map, Layers, Home, BookOpen, Calendar, Award, FileText, Shield, CheckCircle } from 'lucide-react';
 import useSound from 'use-sound';
 
 export default function Stage2_Discover({ onComplete, addXp }) {
@@ -14,7 +14,7 @@ export default function Stage2_Discover({ onComplete, addXp }) {
       level: 'District Level',
       name: 'District Panchayat / Zila Parishad', 
       color: '#0ea5e9', 
-      desc: 'Works at the district level and looks after planning, development and coordination of schemes across blocks and villages.',
+      desc: 'Works at the highest tier, the district level. It reviews plans from all Panchayat Samitis and presents them to the State government. It ensures funds are properly distributed and makes special rules so disadvantaged sections and women get fair representation (one-third of seats are reserved for women!).',
       icon: Map
     },
     { 
@@ -22,7 +22,7 @@ export default function Stage2_Discover({ onComplete, addXp }) {
       level: 'Block Level',
       name: 'Block Panchayat / Panchayat Samiti', 
       color: '#f97316', 
-      desc: 'Works at the block level and coordinates between the district administration and Gram Panchayats.',
+      desc: 'Works at the block level, acting as a crucial link between villages and the district. It collects development plans from all Gram Panchayats and helps allot funds for government schemes like the Pradhan Mantri Gram Sadak Yojana (for building all-weather roads).',
       icon: Layers
     },
     { 
@@ -30,7 +30,7 @@ export default function Stage2_Discover({ onComplete, addXp }) {
       level: 'Village Level',
       name: 'Gram Panchayat', 
       color: '#84cc16', 
-      desc: 'Works at the village level. Elected by the Gram Sabha and responsible for local issues and development.',
+      desc: 'Works at the village level. Its members are elected directly by the Gram Sabha (all adult voters in the area). Headed by a Sarpanch, it solves daily village issues like water supply and roads. It is also assisted by a Panchayat Secretary and a Patwari (who maintains land records).',
       icon: Home
     }
   ];
@@ -336,24 +336,67 @@ export default function Stage2_Discover({ onComplete, addXp }) {
             </div>
           </div>
 
-          {/* Think About It Card */}
-          <div style={{ background: '#fef3c7', border: '1px solid #fde68a', borderRadius: '12px', padding: '1.5rem', marginTop: '1rem' }}>
-            <h3 style={{ margin: '0 0 0.5rem 0', color: '#b45309', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <MessageSquare size={20} /> Think About It
-            </h3>
-            <p style={{ margin: '0 0 1rem 0', color: '#92400e', fontSize: '0.95rem', lineHeight: '1.5' }}>
-              Old maps kept by the Patwari are generations old! How do you think they can be helpful for us? Can they tell us something about the past and the present?
-            </p>
-            <button 
-              onClick={() => { playClick(); setThoughtShared(true); addXp(5); }}
-              disabled={thoughtShared}
-              style={{ 
-                background: thoughtShared ? 'transparent' : 'white', color: thoughtShared ? '#b45309' : '#d97706', border: thoughtShared ? 'none' : '1px solid #d97706', 
-                padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', cursor: thoughtShared ? 'default' : 'pointer', fontWeight: 'bold'
-              }}
-            >
-              {thoughtShared ? '✓ Thought Shared' : '✎ Share your thoughts'}
-            </button>
+          {/* Constitutional Facts Card */}
+          <div className="glass-panel" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #312e81 100%)', border: '1px solid #4338ca', borderRadius: '16px', padding: '1.5rem', marginTop: '1rem', color: 'white', boxShadow: '0 10px 25px rgba(30, 58, 138, 0.25)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ background: 'rgba(255,255,255,0.2)', padding: '0.5rem', borderRadius: '8px' }}>
+                  <BookOpen size={24} color="#60a5fa" />
+                </div>
+                <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 'bold', color: '#e0e7ff', letterSpacing: '0.5px' }}>
+                  Constitutional Facts
+                </h3>
+              </div>
+              <button 
+                onClick={() => { playClick(); setThoughtShared(true); addXp(5); }}
+                disabled={thoughtShared}
+                style={{ 
+                  background: thoughtShared ? 'rgba(255,255,255,0.1)' : '#4f46e5', color: thoughtShared ? '#a5b4fc' : '#ffffff', border: 'none', 
+                  padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', cursor: thoughtShared ? 'default' : 'pointer', fontWeight: 'bold',
+                  display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'all 0.2s'
+                }}
+              >
+                {thoughtShared ? <><CheckCircle size={16} /> Reviewed</> : 'Mark as Read'}
+              </button>
+            </div>
+            
+            <div style={{ background: 'rgba(0,0,0,0.25)', padding: '1rem', borderRadius: '12px', marginBottom: '1rem', borderLeft: '4px solid #60a5fa' }}>
+              <strong style={{ display: 'block', fontSize: '1.1rem', color: '#93c5fd', marginBottom: '0.5rem' }}>
+                73rd Amendment Act
+              </strong>
+              <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem', color: '#c7d2fe', flexWrap: 'wrap' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(96, 165, 250, 0.15)', padding: '0.2rem 0.6rem', borderRadius: '6px' }}><Calendar size={14} color="#60a5fa" /> Passed: 1992</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(96, 165, 250, 0.15)', padding: '0.2rem 0.6rem', borderRadius: '6px' }}><Award size={14} color="#60a5fa" /> Enforced: 24 Apr 1993</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.85rem', borderRadius: '10px' }}>
+                <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#818cf8', fontWeight: 'bold', letterSpacing: '0.5px' }}>Added to Constitution</span>
+                <span style={{ fontSize: '0.9rem', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><FileText size={14} color="#a78bfa" /> Part IX</span>
+                <span style={{ fontSize: '0.9rem', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><FileText size={14} color="#a78bfa" /> Eleventh Schedule</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.85rem', borderRadius: '10px' }}>
+                <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#818cf8', fontWeight: 'bold', letterSpacing: '0.5px' }}>Special Day</span>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                  <Calendar size={16} color="#f472b6" style={{ marginTop: '2px', flexShrink: 0 }} /> 
+                  <span style={{ fontSize: '0.9rem', color: '#f8fafc', lineHeight: '1.3' }}>
+                    National Panchayati Raj Day<br/> <strong style={{ color: '#fbcfe8', fontSize: '1rem' }}>24 April</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ background: 'rgba(255,255,255,0.08)', padding: '1rem', borderRadius: '10px', fontSize: '0.9rem', lineHeight: '1.5', color: '#e0e7ff' }}>
+              <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '0.6rem', alignItems: 'flex-start' }}>
+                <Shield size={18} color="#34d399" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <span><strong style={{ color: '#6ee7b7' }}>Purpose:</strong> Gave constitutional status to Panchayati Raj Institutions.</span>
+              </div>
+              <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start' }}>
+                <Shield size={18} color="#34d399" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <span><strong style={{ color: '#6ee7b7' }}>Objective:</strong> Strengthen local self-government in rural India.</span>
+              </div>
+            </div>
           </div>
 
         </div>

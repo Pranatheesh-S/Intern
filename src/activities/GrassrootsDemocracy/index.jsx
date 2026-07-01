@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import Stage1_Explore from './components/Stage1_Explore';
@@ -7,10 +7,13 @@ import Stage3_Experience from './components/Stage3_Experience';
 import Stage4_DiscoverHeroes from './components/Stage4_DiscoverHeroes';
 import Stage5_Decide from './components/Stage5_Decide';
 import Stage6_Connect from './components/Stage6_Connect';
-import Stage7_Reflect from './components/Stage7_Reflect';
+import Stage7_BudgetAllocation from './components/Stage7_BudgetAllocation';
+import Stage8_Reflect from './components/Stage8_Reflect';
+import Stage9_Respond from './components/Stage9_Respond';
 import useSound from 'use-sound';
 
 export default function GrassrootsDemocracyActivity({ onBackToDashboard }) {
+  const [electedSarpanch, setElectedSarpanch] = useState(null);
   const [activeTab, setActiveTab] = useState('explore');
   const [progress, setProgress] = useState({
     explore: false,
@@ -19,9 +22,20 @@ export default function GrassrootsDemocracyActivity({ onBackToDashboard }) {
     discover2: false,
     decide: false,
     connect: false,
-    reflect: false
+    reflect: false,
+    respond: false
   });
   const [xp, setXp] = useState(0);
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    if (navRef.current) {
+      const activeEl = navRef.current.querySelector('[data-active="true"]');
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
+  }, [activeTab]);
 
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
   const [playClick] = useSound('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', { volume: 0.5 });
@@ -41,11 +55,13 @@ export default function GrassrootsDemocracyActivity({ onBackToDashboard }) {
   const tabs = [
     { id: 'explore', num: 1, title: 'Introduction', subtitle: 'Lakshmanpur Village', component: <Stage1_Explore onComplete={() => handleStageComplete('explore', 'discover1')} addXp={addXp} /> },
     { id: 'discover1', num: 2, title: 'Structure', subtitle: 'Panchayati Raj System', component: <Stage2_Discover onComplete={() => handleStageComplete('discover1', 'experience')} addXp={addXp} />, locked: !progress.explore },
-    { id: 'experience', num: 3, title: 'Gram Panchayat', subtitle: 'Gram Sabha & Roles', component: <Stage3_Experience onComplete={() => handleStageComplete('experience', 'discover2')} addXp={addXp} />, locked: !progress.discover1 },
+    { id: 'experience', num: 3, title: 'Gram Sabha', subtitle: 'Election & Roles', component: <Stage3_Experience onComplete={() => handleStageComplete('experience', 'discover2')} addXp={addXp} setElectedSarpanch={setElectedSarpanch} />, locked: !progress.discover1 },
     { id: 'discover2', num: 4, title: 'Changemakers', subtitle: 'Bal Panchayat', component: <Stage4_DiscoverHeroes onComplete={() => handleStageComplete('discover2', 'decide')} addXp={addXp} />, locked: !progress.experience },
     { id: 'decide', num: 5, title: 'Block & District', subtitle: 'Information Flow', component: <Stage5_Decide onComplete={() => handleStageComplete('decide', 'connect')} addXp={addXp} />, locked: !progress.discover2 },
-    { id: 'connect', num: 6, title: 'Ancient Roots', subtitle: 'Arthaśāstra', component: <Stage6_Connect onComplete={() => handleStageComplete('connect', 'reflect')} addXp={addXp} />, locked: !progress.decide },
-    { id: 'reflect', num: 7, title: 'Summary', subtitle: 'Concept Map & Quiz', component: <Stage7_Reflect onComplete={() => handleStageComplete('reflect', null)} addXp={addXp} />, locked: !progress.connect }
+    { id: 'connect', num: 6, title: 'Ancient Roots', subtitle: 'Arthaśāstra', component: <Stage6_Connect onComplete={() => handleStageComplete('connect', 'budget')} addXp={addXp} />, locked: !progress.decide },
+    { id: 'budget', num: 7, title: 'Budget Allocation', subtitle: 'Village Development', component: <Stage7_BudgetAllocation onComplete={() => handleStageComplete('budget', 'reflect')} addXp={addXp} electedSarpanch={electedSarpanch} />, locked: !progress.connect },
+    { id: 'reflect', num: 8, title: 'Summary', subtitle: 'Concept Map', component: <Stage8_Reflect onComplete={() => handleStageComplete('reflect', 'respond')} addXp={addXp} />, locked: !progress.budget },
+    { id: 'respond', num: 9, title: 'Quiz', subtitle: 'Final Challenge', component: <Stage9_Respond onComplete={() => handleStageComplete('respond', null)} addXp={addXp} />, locked: !progress.reflect }
   ];
 
   return (
@@ -69,13 +85,14 @@ export default function GrassrootsDemocracyActivity({ onBackToDashboard }) {
       </div>
 
       {/* Tabs */}
-      <nav style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '1.5rem', scrollbarWidth: 'none' }}>
+      <nav ref={navRef} style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '1.5rem', scrollbarWidth: 'none' }}>
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const isCompleted = progress[tab.id];
           return (
             <button
               key={tab.id}
+              data-active={isActive}
               onClick={() => {
                 if (!tab.locked) {
                   playClick();
