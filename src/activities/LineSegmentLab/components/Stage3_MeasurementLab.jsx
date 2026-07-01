@@ -191,7 +191,7 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', background: 'var(--neutral-bg)', padding: '0.8rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
           <Info style={{ color: 'var(--accent)', flexShrink: 0 }} size={18} />
           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-            We have two angled line segments: **PQ** and **RS**. Select a tool below to measure and compare their lengths!
+            We have two angled line segments: <strong>PQ</strong> and <strong>RS</strong>. Select a tool below to measure and compare their lengths!
           </p>
         </div>
 
@@ -290,7 +290,7 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
                   <Sparkles size={16} /> Accurate Comparison!
                 </h4>
                 <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  By locking the span of **PQ** (7.2 cm) inside the **Divider** and matching it against **RS** (7.6 cm), you have proved RS is longer with 100% accuracy!
+                  By locking the span of <strong>PQ</strong> (7.2 cm) inside the <strong>Divider</strong> and matching it against <strong>RS</strong> (7.6 cm), you have proved RS is longer with 100% accuracy!
                 </p>
               </div>
               <button onClick={onComplete} className="primary" style={{ width: '100%' }}>
