@@ -140,28 +140,54 @@ export default function Stage1_CurveDrawer({ onComplete, addXp }) {
     const px = 400;
     const py = 230;
     
-    // Determine which endpoint of the open curve is closer to the puppy
-    const dStart = Math.sqrt(Math.pow(start.x - px, 2) + Math.pow(start.y - py, 2));
-    const dEnd = Math.sqrt(Math.pow(end.x - px, 2) + Math.pow(end.y - py, 2));
+    // 1. Try to find the midpoint of the gap between the endpoints
+    const gapMidX = (start.x + end.x) / 2;
+    const gapMidY = (start.y + end.y) / 2;
     
-    const escapeEnd = dStart < dEnd ? start : end;
+    // Check if the line segment from the puppy center to the gap midpoint crosses the curve
+    let gapBlocked = false;
+    for (let i = 0; i < pathPoints.length - 1; i++) {
+      if (segmentsIntersect({ x: px, y: py }, { x: gapMidX, y: gapMidY }, pathPoints[i], pathPoints[i+1])) {
+        gapBlocked = true;
+        break;
+      }
+    }
     
-    // Vector from puppy's initial center to the chosen endpoint
-    const dx = escapeEnd.x - px;
-    const dy = escapeEnd.y - py;
-    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    let waypointX, waypointY, offscreenX, offscreenY;
     
-    // Waypoint is 55px past the endpoint along the same direction (giving a wide clearance around the wall tip)
-    const waypointX = escapeEnd.x + (dx / dist) * 55 - 20; // subtracting 20 local offset
-    const waypointY = escapeEnd.y + (dy / dist) * 55 - 20; // subtracting 20 local offset
-    
-    // Offscreen target continuing in that direction
-    const offscreenX = waypointX + (dx / dist) * 450;
-    const offscreenY = waypointY + (dy / dist) * 450;
+    if (!gapBlocked) {
+      // Escape path is clear! Go directly through the center of the gap
+      waypointX = gapMidX - 20; // local offset adjustment
+      waypointY = gapMidY - 20;
+      
+      const dx = gapMidX - px;
+      const dy = gapMidY - py;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      
+      offscreenX = waypointX + (dx / dist) * 450;
+      offscreenY = waypointY + (dy / dist) * 450;
+    } else {
+      // Escape path to midpoint is blocked (e.g. straight line wall). Go around the closer endpoint.
+      const dStart = Math.sqrt(Math.pow(start.x - px, 2) + Math.pow(start.y - py, 2));
+      const dEnd = Math.sqrt(Math.pow(end.x - px, 2) + Math.pow(end.y - py, 2));
+      
+      const escapeEnd = dStart < dEnd ? start : end;
+      
+      const dx = escapeEnd.x - px;
+      const dy = escapeEnd.y - py;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      
+      // Waypoint is 55px past the endpoint along the same direction (giving a wide clearance around the wall tip)
+      waypointX = escapeEnd.x + (dx / dist) * 55 - 20;
+      waypointY = escapeEnd.y + (dy / dist) * 55 - 20;
+      
+      offscreenX = waypointX + (dx / dist) * 450;
+      offscreenY = waypointY + (dy / dist) * 450;
+    }
     
     dogControls.set({ x: 380, y: 210, opacity: 1 });
     
-    // 1. Walk directly to the open endpoint and pass around it
+    // 1. Walk directly to the open endpoint or gap center and pass it
     await dogControls.start({
       x: waypointX,
       y: waypointY,
