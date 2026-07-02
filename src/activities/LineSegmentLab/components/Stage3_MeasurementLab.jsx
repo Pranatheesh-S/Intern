@@ -28,6 +28,7 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
 
   // Completed check: must compare using divider
   const [compareCompleted, setCompareCompleted] = useState(false);
+  const [demoActive, setDemoActive] = useState(false);
 
   // Segment geometries (centered within 800x460 space)
   // Segment PQ (7.2 cm = 144px at 15 degrees)
@@ -129,10 +130,25 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
 
     // Divider drag, rotate, or span adjustment
     if (dividerDragActive) {
-      setDividerPos({
+      const newPos = {
         x: coords.x - dragStartOffset.current.x,
         y: coords.y - dragStartOffset.current.y
-      });
+      };
+
+      // Auto-rotation / Snapping helper:
+      // PQ midpoint is roughly (220, 168), RS midpoint is roughly (520, 194)
+      const distToPQ = Math.sqrt(Math.pow(newPos.x - 220, 2) + Math.pow(newPos.y - 168, 2));
+      const distToRS = Math.sqrt(Math.pow(newPos.x - 520, 2) + Math.pow(newPos.y - 194, 2));
+
+      let autoAngle = dividerRotation;
+      if (distToPQ < 120) {
+        autoAngle = 15; // Snaps to PQ's angle
+      } else if (distToRS < 120) {
+        autoAngle = -20; // Snaps to RS's angle
+      }
+
+      setDividerPos(newPos);
+      setDividerRotation(autoAngle);
     } else if (dividerRotateActive) {
       const dx = coords.x - dividerPos.x;
       const dy = coords.y - dividerPos.y;
@@ -155,7 +171,10 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
 
     // Check if divider is placed near Segment RS to evaluate comparison
     if (activeTool === 'divider') {
-      const distToR = Math.sqrt(Math.pow(dividerPos.x - rS.start.x, 2) + Math.pow(dividerPos.y - rS.start.y, 2));
+      const rad = (dividerRotation * Math.PI) / 180;
+      const leftTipX = dividerPos.x - halfSpan * Math.cos(rad) - 15 * Math.sin(rad);
+      const leftTipY = dividerPos.y - halfSpan * Math.sin(rad) + 15 * Math.cos(rad);
+      const distToR = Math.sqrt(Math.pow(leftTipX - rS.start.x, 2) + Math.pow(leftTipY - rS.start.y, 2));
       const spanMatched = Math.abs(dividerSpan - 144) < 15;
       
       if (distToR < 35 && spanMatched && !compareCompleted) {
@@ -180,6 +199,33 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
     setDividerPos({ x: 380, y: 300 });
     setDividerRotation(0);
     setDividerSpan(60);
+  };
+
+  const runDemo = () => {
+    if (demoActive) return;
+    setDemoActive(true);
+    setActiveTool('divider');
+    setDividerSpan(60);
+    setDividerRotation(15);
+    setDividerPos({ x: 220, y: 155 });
+    
+    // Step 1: Stretch to fit PQ
+    setTimeout(() => {
+      setDividerSpan(144);
+      setDividerPos({ x: 222, y: 172 });
+    }, 1500);
+
+    // Step 2: Move to RS
+    setTimeout(() => {
+      setDividerRotation(-20);
+      setDividerPos({ x: 518, y: 200 });
+    }, 3200);
+
+    // Step 3: Complete demo & reset
+    setTimeout(() => {
+      setDemoActive(false);
+      handleReset();
+    }, 6200);
   };
 
   const rulerTicks = [];
@@ -317,6 +363,27 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
 
         <button onClick={handleReset} className="outline" style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', width: '100%' }}>
           <RefreshCcw size={14} /> Reset Lab Tools
+        </button>
+
+        {/* Visual Demo Trigger */}
+        <button 
+          onClick={runDemo} 
+          className="outline" 
+          disabled={demoActive}
+          style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            gap: '0.5rem', 
+            width: '100%', 
+            background: demoActive ? 'rgba(99, 102, 241, 0.2)' : 'rgba(99, 102, 241, 0.08)',
+            borderColor: 'var(--accent)', 
+            color: 'var(--accent-text)',
+            fontWeight: 'bold',
+            marginTop: '-0.5rem'
+          }}
+        >
+          🎬 {demoActive ? 'Playing Guide Demo...' : 'Show Visual Guide (Demo)'}
         </button>
 
         {/* Dynamic Instructional Quest Guide */}
@@ -567,22 +634,25 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
             {activeTool === 'divider' && (
               <g 
                 transform={`translate(${dividerPos.x}, ${dividerPos.y}) rotate(${dividerRotation})`}
-                style={{ cursor: dividerDragActive ? 'grabbing' : 'default' }}
+                style={{ 
+                  cursor: dividerDragActive ? 'grabbing' : 'default',
+                  transition: demoActive ? 'transform 1.2s ease-in-out' : 'none'
+                }}
               >
-                <circle cx="0" cy={-height} r="8" fill="rgba(0,0,0,0.4)" />
+                <circle cx="0" cy={-height} r="8" fill="rgba(0,0,0,0.4)" style={{ transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }} />
                 
                 {/* Left Leg */}
-                <line x1={-halfSpan} y1="0" x2="0" y2={-height} stroke="#d1d5db" strokeWidth={6} strokeLinecap="round" />
-                <line x1={-halfSpan} y1="0" x2="0" y2={-height} stroke="#9ca3af" strokeWidth={3} strokeLinecap="round" />
-                <polygon points={`${-halfSpan - 1.5},0 ${-halfSpan + 1.5},0 ${-halfSpan},15`} fill="#9ca3af" />
+                <line x1={-halfSpan} y1="0" x2="0" y2={-height} stroke="#d1d5db" strokeWidth={6} strokeLinecap="round" style={{ transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }} />
+                <line x1={-halfSpan} y1="0" x2="0" y2={-height} stroke="#9ca3af" strokeWidth={3} strokeLinecap="round" style={{ transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }} />
+                <polygon points={`${-halfSpan - 1.5},0 ${-halfSpan + 1.5},0 ${-halfSpan},15`} fill="#9ca3af" style={{ transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }} />
 
                 {/* Right Leg */}
-                <line x1={halfSpan} y1="0" x2="0" y2={-height} stroke="#d1d5db" strokeWidth={6} strokeLinecap="round" />
-                <line x1={halfSpan} y1="0" x2="0" y2={-height} stroke="#9ca3af" strokeWidth={3} strokeLinecap="round" />
-                <polygon points={`${halfSpan - 1.5},0 ${halfSpan + 1.5},0 ${halfSpan},15`} fill="#9ca3af" />
+                <line x1={halfSpan} y1="0" x2="0" y2={-height} stroke="#d1d5db" strokeWidth={6} strokeLinecap="round" style={{ transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }} />
+                <line x1={halfSpan} y1="0" x2="0" y2={-height} stroke="#9ca3af" strokeWidth={3} strokeLinecap="round" style={{ transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }} />
+                <polygon points={`${halfSpan - 1.5},0 ${halfSpan + 1.5},0 ${halfSpan},15`} fill="#9ca3af" style={{ transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }} />
 
-                <circle cx="0" cy={-height} r="6" fill="#fbbf24" stroke="#d97706" strokeWidth={1.5} />
-                <circle cx="0" cy={-height} r="1.5" fill="#fff" />
+                <circle cx="0" cy={-height} r={6} fill="#fbbf24" stroke="#d97706" strokeWidth={1.5} style={{ transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }} />
+                <circle cx="0" cy={-height} r={1.5} fill="#fff" style={{ transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }} />
 
                 <rect 
                   x={-halfSpan} 
@@ -591,14 +661,14 @@ export default function Stage3_MeasurementLab({ onComplete, addXp }) {
                   height={height} 
                   fill="transparent" 
                   onMouseDown={(e) => handleMouseDown('divider', 'drag', e)}
-                  style={{ cursor: 'grab' }}
+                  style={{ cursor: 'grab', transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }}
                 />
 
                 {/* Span width adjuster handle at the tip */}
                 <g 
                   transform={`translate(${halfSpan}, 0)`}
                   onMouseDown={(e) => handleMouseDown('divider', 'span', e)}
-                  style={{ cursor: 'ew-resize' }}
+                  style={{ cursor: 'ew-resize', transition: demoActive ? 'all 1.2s ease-in-out' : 'none' }}
                 >
                   <circle cx="0" cy="0" r={10} fill="var(--accent)" stroke="#fff" strokeWidth={1} opacity={0.8} />
                   <text x="0" y="3" fill="#fff" fontSize="8" fontWeight="bold" textAnchor="middle">↔</text>
