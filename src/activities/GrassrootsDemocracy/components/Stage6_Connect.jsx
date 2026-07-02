@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Scroll, Clock, ArrowDown } from 'lucide-react';
 import useSound from 'use-sound';
-import AncientVillageScene from './AncientVillageScene';
-import AncientRootsAnimation from './AncientRootsAnimation';
 
 export default function Stage6_Connect({ onComplete, addXp }) {
   const [playClick] = useSound('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', { volume: 0.5 });
@@ -26,10 +24,10 @@ export default function Stage6_Connect({ onComplete, addXp }) {
           <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '4px', background: 'var(--border)', transform: 'translateX(-50%)', borderRadius: '4px' }}></div>
 
           {/* Point 1: Ancient India */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: '100%', marginBottom: '4rem', position: 'relative' }}>
-            <div style={{ width: '45%', minWidth: '300px', display: 'flex', justifyContent: 'flex-end', paddingRight: '2rem' }}>
-              <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} className="glass-panel" style={{ padding: '1.5rem', background: 'var(--card-bg)', textAlign: 'right', position: 'relative', width: '100%' }}>
-                <div className="timeline-dot" style={{ position: 'absolute', top: '20px', right: '-45px', width: '20px', height: '20px', background: '#b45309', borderRadius: '50%', zIndex: 2, border: '4px solid var(--bg)' }}></div>
+          <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', marginBottom: '4rem', position: 'relative' }}>
+            <div style={{ width: '45%', display: 'flex', justifyContent: 'flex-end' }}>
+              <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} className="glass-panel" style={{ padding: '1.5rem', background: 'var(--card-bg)', textAlign: 'right', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: '20px', right: '-35px', width: '20px', height: '20px', background: '#b45309', borderRadius: '50%', zIndex: 2, border: '4px solid var(--bg)' }}></div>
                 <div style={{ color: '#b45309', fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem' }}>
                    300 BCE <Clock size={20} />
                 </div>
@@ -40,20 +38,14 @@ export default function Stage6_Connect({ onComplete, addXp }) {
                 </div>
               </motion.div>
             </div>
-            <div style={{ width: '45%', minWidth: '300px', display: 'flex', justifyContent: 'flex-start', paddingLeft: '2rem' }}>
-               <AncientVillageScene />
-            </div>
           </div>
 
           {/* Point 2: Modern India */}
           {step >= 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', width: '100%', position: 'relative' }}>
-              <div style={{ width: '45%', minWidth: '300px', display: 'flex', justifyContent: 'flex-end', paddingRight: '2rem' }}>
-                 <AncientRootsAnimation />
-              </div>
-              <div style={{ width: '45%', minWidth: '300px', display: 'flex', justifyContent: 'flex-start', paddingLeft: '2rem' }}>
-                <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="glass-panel" style={{ padding: '1.5rem', background: 'var(--card-bg)', textAlign: 'left', position: 'relative', width: '100%' }}>
-                  <div className="timeline-dot" style={{ position: 'absolute', top: '20px', left: '-45px', width: '20px', height: '20px', background: '#10b981', borderRadius: '50%', zIndex: 2, border: '4px solid var(--bg)' }}></div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative' }}>
+              <div style={{ width: '45%', display: 'flex', justifyContent: 'flex-start' }}>
+                <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="glass-panel" style={{ padding: '1.5rem', background: 'var(--card-bg)', textAlign: 'left', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '20px', left: '-35px', width: '20px', height: '20px', background: '#10b981', borderRadius: '50%', zIndex: 2, border: '4px solid var(--bg)' }}></div>
                   <div style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Clock size={20} /> Today
                   </div>
