@@ -358,11 +358,12 @@ export default function Stage8_Reflect({ onComplete, addXp }) {
                    </div>
                    <button 
                      onClick={() => { playClick(); setActiveTopicIndex(null); }} 
-                     style={{ background: 'rgba(255,255,255,0.05)', border: 'none', color: '#fff', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }}
-                     onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                     onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                     aria-label="Close modal"
+                     style={{ background: 'rgba(255, 255, 255, 0.05)', border: '2px solid rgba(239, 68, 68, 0.5)', color: '#ef4444', cursor: 'pointer', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s', fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'sans-serif', zIndex: 10 }}
+                     onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)'; e.currentTarget.style.borderColor = '#ef4444'; }}
+                     onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'; e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.5)'; }}
                    >
-                     <X size={24} />
+                     &#x2715;
                    </button>
                 </div>
                 
@@ -384,7 +385,7 @@ export default function Stage8_Reflect({ onComplete, addXp }) {
                        <h4 style={{ color: topics[activeTopicIndex].color, fontSize: '1.1rem', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                          <CheckCircle size={18} /> Key Responsibilities
                        </h4>
-                       <ul style={{ margin: 0, paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '1.05rem' }}>
+                       <ul style={{ margin: 0, paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '1.05rem', color: '#e2e8f0' }}>
                          {topics[activeTopicIndex].keyPoints.map((pt, i) => (
                            <li key={i}>{pt}</li>
                          ))}
@@ -395,7 +396,7 @@ export default function Stage8_Reflect({ onComplete, addXp }) {
                        <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                          <Info size={18} color={topics[activeTopicIndex].color} /> Did You Know?
                        </div>
-                       <p style={{ margin: 0, fontSize: '0.95rem' }}>{topics[activeTopicIndex].didYouKnow}</p>
+                       <p style={{ margin: 0, fontSize: '0.95rem', color: '#cbd5e1', lineHeight: '1.5' }}>{topics[activeTopicIndex].didYouKnow}</p>
                      </div>
                   </div>
                 </div>
