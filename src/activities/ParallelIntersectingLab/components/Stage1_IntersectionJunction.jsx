@@ -4,13 +4,13 @@ import { Info, Sparkles, CheckSquare, TrafficCone, Eye } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function Stage1_IntersectionJunction({ onComplete, addXp }) {
-  // Endpoints of Street A (Line 1)
-  const [p1, setP1] = useState({ x: 150, y: 120 });
-  const [p2, setP2] = useState({ x: 350, y: 280 });
+  // Endpoints of Street A (Line 1) - Left side, vertical-ish slope
+  const [p1, setP1] = useState({ x: 180, y: 120 });
+  const [p2, setP2] = useState({ x: 250, y: 320 });
 
-  // Endpoints of Street B (Line 2)
-  const [p3, setP3] = useState({ x: 450, y: 120 });
-  const [p4, setP4] = useState({ x: 200, y: 320 });
+  // Endpoints of Street B (Line 2) - Right side, vertical-ish slope
+  const [p3, setP3] = useState({ x: 580, y: 120 });
+  const [p4, setP4] = useState({ x: 510, y: 320 });
 
   const [activeTool, setActiveTool] = useState('drag'); // 'drag' | 'traffic_light'
   const [trafficLightPlaced, setTrafficLightPlaced] = useState(false);
