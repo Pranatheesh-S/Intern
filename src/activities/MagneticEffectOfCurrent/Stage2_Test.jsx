@@ -11,13 +11,16 @@ import {
   BatterySVG,
   WiresSVG
 } from "./CircuitElements";
+import { playOneShot } from "./audioManager";
 
 export default function Stage2_Test({ onComplete }) {
   const [switchOn, setSwitchOn] = useState(false);
   const [hasTestedOn, setHasTestedOn] = useState(false);
   const [hasTestedOff, setHasTestedOff] = useState(false);
   const [isBatteryFlipped, setIsBatteryFlipped] = useState(false);
+  const [hasPlayedFlipAudio, setHasPlayedFlipAudio] = useState(false);
   const [hasExtraBattery, setHasExtraBattery] = useState(false);
+  const [hasPlayedAddBatteryAudio, setHasPlayedAddBatteryAudio] = useState(false);
 
   const handleToggleSwitch = () => {
     const newState = !switchOn;
@@ -86,14 +89,26 @@ export default function Stage2_Test({ onComplete }) {
               <Power size={16} /> {switchOn ? "TURN OFF" : "TURN ON"}
             </button>
             <button
-              onClick={() => setIsBatteryFlipped(!isBatteryFlipped)}
+              onClick={() => {
+                setIsBatteryFlipped(!isBatteryFlipped);
+                if (!hasPlayedFlipAudio) {
+                  playOneShot('/flip_battery.mp3');
+                  setHasPlayedFlipAudio(true);
+                }
+              }}
               className="outline"
               style={{ width: "100%", display: "flex", justifyContent: "center", gap: "0.5rem" }}
             >
               <RefreshCcw size={16} /> Flip Battery
             </button>
             <button
-              onClick={() => setHasExtraBattery(!hasExtraBattery)}
+              onClick={() => {
+                setHasExtraBattery(!hasExtraBattery);
+                if (!hasPlayedAddBatteryAudio && !hasExtraBattery) {
+                  playOneShot('/add_battery.mp3');
+                  setHasPlayedAddBatteryAudio(true);
+                }
+              }}
               className="outline"
               style={{ width: "100%", display: "flex", justifyContent: "center", gap: "0.5rem" }}
             >
