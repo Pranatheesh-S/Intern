@@ -113,7 +113,7 @@ export default function Stage1_CurveDrawer({ onComplete, addXp }) {
       // Auto-connect wasn't triggered, it is open
       setHasDrawnOpen(true);
       addXp(50);
-      triggerDogEscape();
+      triggerDogEscape(points);
     } else if (type === 'Closed Simple') {
       // It is closed! We snap the end to the start point to render a perfect loop
       setPoints(prev => {
@@ -128,14 +128,53 @@ export default function Stage1_CurveDrawer({ onComplete, addXp }) {
     }
   };
 
-  const triggerDogEscape = async () => {
+  const triggerDogEscape = async (pathPoints) => {
+    if (!pathPoints || pathPoints.length < 2) return;
     setDogRunning(true);
-    // Animate puppy running to the right off screen
+    
+    const start = pathPoints[0];
+    const end = pathPoints[pathPoints.length - 1];
+    
+    // Puppy center in global SVG coordinates is (400, 230)
+    // (x: 380, y: 210 in local coords + 20 px offsets)
+    const px = 400;
+    const py = 230;
+    
+    // Determine which endpoint of the open curve is closer to the puppy
+    const dStart = Math.sqrt(Math.pow(start.x - px, 2) + Math.pow(start.y - py, 2));
+    const dEnd = Math.sqrt(Math.pow(end.x - px, 2) + Math.pow(end.y - py, 2));
+    
+    const escapeEnd = dStart < dEnd ? start : end;
+    
+    // Vector from puppy's initial center to the chosen endpoint
+    const dx = escapeEnd.x - px;
+    const dy = escapeEnd.y - py;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    
+    // Waypoint is 35px past the endpoint along the same direction (going around the wall tip)
+    const waypointX = escapeEnd.x + (dx / dist) * 35 - 20; // subtracting 20 local offset
+    const waypointY = escapeEnd.y + (dy / dist) * 35 - 20; // subtracting 20 local offset
+    
+    // Offscreen target continuing in that direction
+    const offscreenX = waypointX + (dx / dist) * 450;
+    const offscreenY = waypointY + (dy / dist) * 450;
+    
     dogControls.set({ x: 380, y: 210, opacity: 1 });
+    
+    // 1. Walk directly to the open endpoint and pass around it
     await dogControls.start({
-      x: 820,
-      transition: { duration: 2.2, ease: 'easeIn' }
+      x: waypointX,
+      y: waypointY,
+      transition: { duration: 1.5, ease: 'easeOut' }
     });
+    
+    // 2. Dash off screen through the open space!
+    await dogControls.start({
+      x: offscreenX,
+      y: offscreenY,
+      transition: { duration: 1.2, ease: 'easeIn' }
+    });
+    
     setDogRunning(false);
   };
 
