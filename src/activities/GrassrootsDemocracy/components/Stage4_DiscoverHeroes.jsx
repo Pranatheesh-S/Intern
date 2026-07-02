@@ -50,7 +50,7 @@ export default function Stage4_DiscoverHeroes({ onComplete, addXp }) {
                 className="glass-panel" 
                 style={{ 
                   padding: '1.5rem', background: isActive ? 'var(--card-bg)' : 'var(--surface)',
-                  border: `1px solid ${isActive ? 'var(--primary)' : 'transparent'}`, cursor: 'pointer'
+                  border: `1px solid ${isActive ? 'var(--accent)' : 'transparent'}`, cursor: 'pointer'
                 }}
                 whileHover={{ scale: 1.02 }}
               >
@@ -58,7 +58,7 @@ export default function Stage4_DiscoverHeroes({ onComplete, addXp }) {
                   <Star size={20} fill="#eab308" />
                 </div>
                 <h3 style={{ margin: '0 0 0.2rem 0', color: 'var(--text-heading)' }}>{hero.name}</h3>
-                <div style={{ fontSize: '0.85rem', color: 'var(--primary)', marginBottom: '1rem', fontWeight: 'bold' }}>{hero.title}</div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--accent)', marginBottom: '1rem', fontWeight: 'bold' }}>{hero.title}</div>
                 
                 <AnimatePresence>
                   {isActive && (

@@ -372,9 +372,8 @@ export default function Stage2_Discover({ onComplete, addXp }) {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.85rem', borderRadius: '10px' }}>
-                <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#818cf8', fontWeight: 'bold', letterSpacing: '0.5px' }}>Added to Constitution</span>
-                <span style={{ fontSize: '0.9rem', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><FileText size={14} color="#a78bfa" /> Part IX</span>
-                <span style={{ fontSize: '0.9rem', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><FileText size={14} color="#a78bfa" /> Eleventh Schedule</span>
+                <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#818cf8', fontWeight: 'bold', letterSpacing: '0.5px' }}>Foundation Done By</span>
+                <span style={{ fontSize: '0.9rem', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><FileText size={14} color="#a78bfa" /> Rajiv Gandhi</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.85rem', borderRadius: '10px' }}>
                 <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#818cf8', fontWeight: 'bold', letterSpacing: '0.5px' }}>Special Day</span>

@@ -38,12 +38,12 @@ export default function Stage3_Experience({ onComplete, addXp, setElectedSarpanc
         {step === 0 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel" style={{ padding: '2.5rem', background: 'var(--card-bg)', borderRadius: '24px' }}>
             <h3 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem' }}>
-              <Users size={28} color="var(--primary)" /> The Gram Sabha is gathering
+              <Users size={28} color="var(--accent)" /> The Gram Sabha is gathering
             </h3>
             <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '1.1rem' }}>
               The Gram Sabha consists of <strong>all eligible adult voters</strong> in the village. Anyone who is 18 years old or more and has the right to vote is a member. 
             </p>
-            <p style={{ color: 'var(--text-primary)', lineHeight: '1.6', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '1rem', padding: '1rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '12px', borderLeft: '4px solid var(--primary)' }}>
+            <p style={{ color: 'var(--text-primary)', lineHeight: '1.6', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '1rem', padding: '1rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '12px', borderLeft: '4px solid var(--accent)' }}>
               These members elect the Sarpanch (Panchayat President). Today is election day! Two candidates are running, each with different development priorities.
             </p>
             
@@ -54,7 +54,7 @@ export default function Stage3_Experience({ onComplete, addXp, setElectedSarpanc
                   <strong style={{ fontSize: '1.3rem', display: 'block', marginBottom: '0.25rem' }}>Meera Devi</strong>
                   <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>Focus: Better Schools & Clinics</span>
                 </div>
-                <div style={{ marginTop: '0.5rem', padding: '0.5rem 1rem', background: 'var(--primary)', color: 'white', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Vote for Meera</div>
+                <div style={{ marginTop: '0.5rem', padding: '0.5rem 1rem', background: 'var(--accent)', color: 'white', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Vote for Meera</div>
               </button>
 
               <button onClick={() => handleVote('Ramesh Kumar')} className="outline" style={{ flex: 1, minWidth: '200px', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', borderRadius: '16px' }}>
@@ -63,7 +63,7 @@ export default function Stage3_Experience({ onComplete, addXp, setElectedSarpanc
                   <strong style={{ fontSize: '1.3rem', display: 'block', marginBottom: '0.25rem' }}>Ramesh Kumar</strong>
                   <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>Focus: Roads & Agriculture</span>
                 </div>
-                <div style={{ marginTop: '0.5rem', padding: '0.5rem 1rem', background: 'var(--primary)', color: 'white', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Vote for Ramesh</div>
+                <div style={{ marginTop: '0.5rem', padding: '0.5rem 1rem', background: 'var(--accent)', color: 'white', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Vote for Ramesh</div>
               </button>
             </div>
           </motion.div>
