@@ -2,7 +2,15 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Power, Info, Sparkles, CheckCircle2, RefreshCcw, ArrowRight } from "lucide-react";
 import confetti from "canvas-confetti";
-import ThreeDViewer from "./ThreeDViewer";
+import {
+  CardboardSwitchSVG,
+  DrawingPinSVG,
+  SafetyPinSVG,
+  CompassCardboardSVG,
+  CompassSVG,
+  BatterySVG,
+  WiresSVG
+} from "./CircuitElements";
 
 export default function Stage2_Test({ onComplete }) {
   const [switchOn, setSwitchOn] = useState(false);
@@ -10,7 +18,6 @@ export default function Stage2_Test({ onComplete }) {
   const [hasTestedOff, setHasTestedOff] = useState(false);
   const [isBatteryFlipped, setIsBatteryFlipped] = useState(false);
   const [hasExtraBattery, setHasExtraBattery] = useState(false);
-  const [isCompassFlipped, setIsCompassFlipped] = useState(false);
 
   const handleToggleSwitch = () => {
     const newState = !switchOn;
@@ -92,13 +99,6 @@ export default function Stage2_Test({ onComplete }) {
             >
               <Power size={16} /> {hasExtraBattery ? "Remove Extra Battery" : "Add Extra Battery"}
             </button>
-            <button
-              onClick={() => setIsCompassFlipped(!isCompassFlipped)}
-              className="outline"
-              style={{ width: "100%", display: "flex", justifyContent: "center", gap: "0.5rem" }}
-            >
-              <RefreshCcw size={16} /> {isCompassFlipped ? "Face Compass Upward" : "Face Compass Downward"}
-            </button>
             <p style={{ margin: 0, fontSize: "0.75rem", color: "var(--text-muted)" }}>You can also click the Safety Pin on the board.</p>
           </div>
 
@@ -122,16 +122,40 @@ export default function Stage2_Test({ onComplete }) {
         <div className="glass-panel" style={{ padding: "0", position: "relative", minHeight: "480px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--canvas-bg)" }}>
           <div className="canvas-bg-grid" style={{ position: "absolute", inset: 0, opacity: 0.5 }} />
           
-          <div style={{ width: '100%', height: '100%', zIndex: 10 }}>
-             <ThreeDViewer 
-               componentId="circuit" 
-               switchOn={switchOn} 
-               isBatteryFlipped={isBatteryFlipped} 
-               hasExtraBattery={hasExtraBattery} 
-               deflection={switchOn ? (isBatteryFlipped ? (hasExtraBattery ? -75 : -45) : (hasExtraBattery ? 75 : 45)) : 0} 
-               isCompassFlipped={isCompassFlipped}
-             />
-          </div>
+          <svg width="600" height="480" viewBox="0 0 600 480" style={{ zIndex: 10, overflow: "visible" }}>
+            {/* The base components (always placed since Stage 1 is complete) */}
+            <CardboardSwitchSVG x={400} y={200} />
+            <CompassCardboardSVG x={120} y={60} />
+            
+            <DrawingPinSVG x={480} y={250} isPlaced={true} />
+            <DrawingPinSVG x={480} y={370} isPlaced={true} />
+            
+            {/* Compass - deflecting based on switch state */}
+            {/* Normal: 0 deg. Deflected: 45/75 or -45/-75 deg */}
+            <CompassSVG x={250} y={150} isPlaced={true} deflection={switchOn ? (isBatteryFlipped ? (hasExtraBattery ? -75 : -45) : (hasExtraBattery ? 75 : 45)) : 0} />
+            
+            <BatterySVG isPlaced={true} isFlipped={isBatteryFlipped} hasExtraBattery={hasExtraBattery} />
+            
+            {/* Wires */}
+            <WiresSVG 
+              isWireConnected={true} 
+              isBatteryPresent={true} 
+              isCompassPlaced={true} 
+              arePinsPlaced={true} 
+              isCurrentFlowing={switchOn} 
+              isBatteryFlipped={isBatteryFlipped}
+              hasExtraBattery={hasExtraBattery}
+            />
+
+            {/* Safety Pin (Interactive Switch) */}
+            <SafetyPinSVG 
+              x={480} 
+              y={250} 
+              rotation={switchOn ? 0 : -30} 
+              isPlaced={true} 
+              onClick={handleToggleSwitch} 
+            />
+          </svg>
           
           {/* Battery Reversed Popup */}
           <AnimatePresence>
