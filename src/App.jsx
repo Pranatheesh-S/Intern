@@ -40,6 +40,7 @@ const ElectromagnetInvestigationActivity = lazy(() => import('./activities/Elect
 const GrassrootsDemocracyActivity = lazy(() => import('./activities/GrassrootsDemocracy'));
 const LineSegmentLabActivity = lazy(() => import('./activities/LineSegmentLab'));
 const ParallelIntersectingLabActivity = lazy(() => import('./activities/ParallelIntersectingLab'));
+const CurvesRegionsLabActivity = lazy(() => import('./activities/CurvesRegionsLab'));
 import './App.css';
 
 export default function App() {
@@ -652,6 +653,41 @@ export default function App() {
 
           <button
             onClick={() => navigateTo('class6_maths', 'parallel_intersecting_lab')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity 2.4 Card */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Hammer size={20} style={{ color: '#ec4899' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 2.4</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Robo-Pen Curve Escape. Draw curves and drag items to categorize Interior, Boundary, and Exterior regions.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6_maths', 'curves_regions_lab')}
             className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
@@ -1959,6 +1995,7 @@ export default function App() {
                      activeActivity === 'heating_effect' ? 'Activity 4.5' :
                      activeActivity === 'line_segment_lab' ? 'Activity 2.2: Line Segment Lab' :
                      activeActivity === 'parallel_intersecting_lab' ? 'Activity 2.3: Parallel & Intersecting Lines' :
+                     activeActivity === 'curves_regions_lab' ? 'Activity 2.4: Curves & Closed Regions' :
                      'Template Demo'}
                   </span>
                 </>
@@ -2061,6 +2098,8 @@ export default function App() {
             <LineSegmentLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
           ) : activeActivity === 'parallel_intersecting_lab' ? (
             <ParallelIntersectingLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
+          ) : activeActivity === 'curves_regions_lab' ? (
+            <CurvesRegionsLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
           ) : activeActivity === 'chapter4' ? (
             renderClass6MathsChapter4()
           ) : (
