@@ -6,14 +6,17 @@ import {
   HelpCircle, 
   CheckCircle, 
   ArrowLeft,
-  Info
+  Info,
+  Volume2,
+  Pause
 } from 'lucide-react';
 import Stage1_Build from './Stage1_Build';
 import Stage2_Test from './Stage2_Test';
 import QuizPanel from './QuizPanel';
 import { CompassSVG } from './CircuitElements';
+import { toggleAudio } from './audioManager';
 
-const FAQItem = ({ question, answer }) => {
+const FAQItem = ({ question, answer, audioSrc }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem', alignItems: 'flex-start' }}>
@@ -35,13 +38,49 @@ const FAQItem = ({ question, answer }) => {
               style={{ overflow: 'hidden' }}
             >
               <div style={{ padding: '0.6rem 0.8rem', fontSize: '0.75rem', color: 'var(--text-secondary)', background: 'var(--neutral-bg)', borderTop: '1px solid var(--border)', lineHeight: '1.4' }}>
-                {answer.split('\n').map((line, i) => <div key={i} style={{ marginBottom: i !== answer.split('\n').length - 1 ? '0.4rem' : 0 }}>{line}</div>)}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                  <div style={{ flex: 1 }}>
+                    {answer.split('\n').map((line, i) => <div key={i} style={{ marginBottom: i !== answer.split('\n').length - 1 ? '0.4rem' : 0 }}>{line}</div>)}
+                  </div>
+                  {audioSrc && <AudioButton audioSrc={audioSrc} />}
+                </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
     </div>
+  );
+};
+
+function AudioButton({ audioSrc }) {
+  const [isPlaying, setIsPlaying] = React.useState(false);
+
+  const togglePlay = () => {
+    toggleAudio(audioSrc, setIsPlaying);
+  };
+
+  return (
+    <button 
+      onClick={togglePlay}
+      style={{ 
+        background: 'var(--primary, #007bff)', 
+        border: 'none', 
+        cursor: 'pointer', 
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0.2rem',
+        borderRadius: '50%',
+        marginLeft: '0.5rem',
+        width: '24px',
+        height: '24px'
+      }}
+      title={isPlaying ? "Pause Audio" : "Play Audio"}
+    >
+      {isPlaying ? <Pause size={12} /> : <Volume2 size={12} />}
+    </button>
   );
 };
 
@@ -165,8 +204,11 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '2px' }}>👉</span>
                   <div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
-                      Science Insights
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+                        Science Insights
+                      </div>
+                      <AudioButton audioSrc="/diduknow1.mp3" />
                     </div>
                     <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: '1.5', textAlign: 'justify' }}>
                       In 1820, Hans Christian Ørsted accidentally discovered that an electric current creates a magnetic field. When he turned on a circuit, a nearby compass needle twitched!
@@ -179,8 +221,11 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '2px' }}>👉</span>
                   <div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
-                      Tiny Magnets
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+                        Tiny Magnets
+                      </div>
+                      <AudioButton audioSrc="/diduknow2.mp3" />
                     </div>
                     <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: '1.5', textAlign: 'justify' }}>
                       A compass needle is actually a tiny magnet! When it's placed near a wire carrying electric current, the magnetic field produced by the current exerts a force on the compass needle, causing it to deflect.
@@ -193,8 +238,11 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <span style={{ fontSize: '0.85rem', flexShrink: 0, marginTop: '2px' }}>👉</span>
                   <div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
-                      Magnetic Reversals
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+                        Magnetic Reversals
+                      </div>
+                      <AudioButton audioSrc="/diduknow3.mp3" />
                     </div>
                     <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: '1.5', textAlign: 'justify' }}>
                       The direction of the magnetic field depends on the direction of the electric current. If you reverse the battery connections, the compass needle will deflect in the opposite direction!
@@ -218,6 +266,7 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
                   <FAQItem 
                     question="Why does the compass needle stop moving after a few seconds?"
                     answer="The compass needle stops moving because it aligns itself with the combined magnetic field of the Earth and the current-carrying wire. Once it reaches this position, it becomes stable."
+                    audioSrc="/why1.mp3"
                   />
                   
                   <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
@@ -225,6 +274,7 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
                   <FAQItem 
                     question="Why does the compass needle return to its original position when the switch is turned OFF?"
                     answer="When the switch is turned OFF, current stops flowing through the wire. The magnetic field produced by the wire disappears, so the compass aligns only with Earth's magnetic field and returns to its original north-south direction."
+                    audioSrc="/why2.mp3"
                   />
                   
                   <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
@@ -232,6 +282,7 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
                   <FAQItem 
                     question="Why should the wire be placed close to the compass?"
                     answer="The magnetic field is strongest near the current-carrying wire. Keeping the wire close to the compass makes the magnetic effect stronger, allowing the compass needle to deflect clearly."
+                    audioSrc="/why3.mp3"
                   />
                   
                   <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1rem 0' }} />
@@ -239,6 +290,7 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
                   <FAQItem 
                     question="Why does the compass needle not touch the wire even though it moves?"
                     answer="The compass needle moves because it responds to the magnetic field around the wire, not because of physical contact. A magnetic field can act through space without touching the compass."
+                    audioSrc="/why4.mp3"
                   />
                 </div>
               </div>
