@@ -20,9 +20,7 @@ export default function Stage7_BudgetAllocation({ onComplete, addXp, electedSarp
     { id: 'water', name: 'Drinking Water', min: 120000, icon: '🚰', overlayX: 90, overlayY: 66 },
     { id: 'health', name: 'Health Centre', min: 100000, icon: '🏥', overlayX: 78, overlayY: 35 },
     { id: 'agriculture', name: 'Agriculture', min: 80000, icon: '🌾', overlayX: 68, overlayY: 65 },
-    { id: 'drainage', name: 'Drainage', min: 50000, icon: '💧', overlayX: 50, overlayY: 85 },
-    { id: 'lights', name: 'Street Lights', min: 50000, icon: '💡', overlayX: 43, overlayY: 67 },
-    { id: 'welfare', name: 'Community Welfare', min: 50000, icon: '🤝', overlayX: 50, overlayY: 53 }
+    { id: 'lights', name: 'Street Lights', min: 50000, icon: '💡', overlayX: 43, overlayY: 67 }
   ];
 
   const [allocations, setAllocations] = useState(
@@ -35,7 +33,7 @@ export default function Stage7_BudgetAllocation({ onComplete, addXp, electedSarp
   const remainingBudget = TOTAL_BUDGET - totalAllocated;
 
   const handleInputChange = (id, value) => {
-    const num = parseInt(value.replace(/[^0-9]/g, ''), 10) || 0;
+    const num = parseInt(value, 10) || 0;
     setAllocations(prev => ({ ...prev, [id]: num }));
     setErrorMsg('');
   };
@@ -100,7 +98,7 @@ export default function Stage7_BudgetAllocation({ onComplete, addXp, electedSarp
               
               <div style={{ flex: '1 1 300px' }}>
                 <h3 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem' }}>
-                  <Landmark size={24} color="var(--primary)" /> Village Fund
+                  <Landmark size={24} color="var(--accent)" /> Village Fund
                 </h3>
                 <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '1rem', marginBottom: '2rem' }}>
                   The government has granted your Panchayat <strong>₹10,00,000</strong>. Allocate funds to the sectors below. You must spend the entire budget to submit your plan, but choose wisely!
@@ -108,18 +106,55 @@ export default function Stage7_BudgetAllocation({ onComplete, addXp, electedSarp
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {categories.map(cat => (
-                    <div key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--surface)', padding: '1rem', borderRadius: '12px' }}>
-                      <span style={{ fontSize: '1.5rem' }}>{cat.icon}</span>
-                      <div style={{ flex: 1, fontWeight: 'bold' }}>{cat.name}</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg)', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>₹</span>
+                    <div key={cat.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: 'var(--surface)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div style={{ padding: '0.5rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', fontSize: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {cat.icon}
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--text-heading)' }}>{cat.name}</div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Drag to allocate</div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-primary)' }}>₹{allocations[cat.id].toLocaleString('en-IN')}</div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{Math.round((allocations[cat.id] / TOTAL_BUDGET) * 100)}%</div>
+                        </div>
+                      </div>
+                      <div style={{ position: 'relative', height: '8px', background: 'var(--border)', borderRadius: '4px', marginTop: '0.5rem' }}>
+                        <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', background: 'linear-gradient(90deg, var(--accent), #a855f7)', borderRadius: '4px', width: `${(allocations[cat.id] / TOTAL_BUDGET) * 100}%`, transition: 'width 0.1s' }} />
                         <input 
-                          type="text" 
-                          value={allocations[cat.id] === 0 ? '' : allocations[cat.id].toLocaleString('en-IN')}
+                          type="range" 
+                          min="0" 
+                          max={TOTAL_BUDGET}
+                          step="10000"
+                          value={allocations[cat.id]}
                           onChange={(e) => handleInputChange(cat.id, e.target.value)}
-                          placeholder="0"
-                          style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', outline: 'none', width: '100px', fontWeight: 'bold', fontSize: '1.1rem', textAlign: 'right' }}
+                          style={{
+                            position: 'absolute',
+                            top: '-16px',
+                            left: 0,
+                            width: '100%',
+                            height: '40px',
+                            opacity: 0,
+                            cursor: 'pointer',
+                            zIndex: 10
+                          }}
                         />
+                        {/* Custom thumb to match the slider track position */}
+                        <div style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: `calc(${(allocations[cat.id] / TOTAL_BUDGET) * 100}% - 10px)`,
+                          width: '20px',
+                          height: '20px',
+                          background: 'var(--surface)',
+                          border: '4px solid var(--accent)',
+                          borderRadius: '50%',
+                          transform: 'translateY(-50%)',
+                          pointerEvents: 'none',
+                          transition: 'left 0.1s',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                        }} />
                       </div>
                     </div>
                   ))}
@@ -176,7 +211,7 @@ export default function Stage7_BudgetAllocation({ onComplete, addXp, electedSarp
               
               <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
                 <span style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>Overall Development Score</span>
-                <div style={{ fontSize: '3rem', fontWeight: 'bold', color: 'var(--primary)' }}>{getOverallScore()}%</div>
+                <div style={{ fontSize: '3rem', fontWeight: 'bold', color: 'var(--accent)' }}>{getOverallScore()}%</div>
               </div>
 
               {/* Visual Report Image overlay */}
