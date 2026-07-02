@@ -151,9 +151,9 @@ export default function Stage1_CurveDrawer({ onComplete, addXp }) {
     const dy = escapeEnd.y - py;
     const dist = Math.sqrt(dx * dx + dy * dy) || 1;
     
-    // Waypoint is 35px past the endpoint along the same direction (going around the wall tip)
-    const waypointX = escapeEnd.x + (dx / dist) * 35 - 20; // subtracting 20 local offset
-    const waypointY = escapeEnd.y + (dy / dist) * 35 - 20; // subtracting 20 local offset
+    // Waypoint is 55px past the endpoint along the same direction (giving a wide clearance around the wall tip)
+    const waypointX = escapeEnd.x + (dx / dist) * 55 - 20; // subtracting 20 local offset
+    const waypointY = escapeEnd.y + (dy / dist) * 55 - 20; // subtracting 20 local offset
     
     // Offscreen target continuing in that direction
     const offscreenX = waypointX + (dx / dist) * 450;
