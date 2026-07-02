@@ -14,6 +14,7 @@ export default function Stage2_ParallelRails({ onComplete, addXp }) {
 
   const [isParallel, setIsParallel] = useState(false);
   const [trainRunning, setTrainRunning] = useState(false);
+  const [trainRunCompleted, setTrainRunCompleted] = useState(false);
   const [draggingNode, setDraggingNode] = useState(null); // 'left' | 'right'
 
   const svgRef = useRef(null);
@@ -59,16 +60,15 @@ export default function Stage2_ParallelRails({ onComplete, addXp }) {
     return () => window.removeEventListener('mouseup', handleMouseUp);
   }, [draggingNode]);
 
-  // Calculate slopes and parallel status
-  const slopeA = (p2.y - p1.y) / (p2.x - p1.x); // Should be 0
-  const slopeB = (p4.y - p3.y) / (p4.x - p3.x);
-
-  // Check parallel status with tolerance
-  const slopeDifference = Math.abs(slopeA - slopeB);
-  const parallelMatched = slopeDifference < 0.02; // very close to horizontal
+  // Check parallel status: Rail A is perfectly horizontal, so Rail B is parallel
+  // if the Y coordinates of both ends are practically equal (distance constant).
+  const parallelMatched = Math.abs(p3.y - p4.y) <= 2;
 
   useEffect(() => {
     setIsParallel(parallelMatched);
+    if (!parallelMatched) {
+      setTrainRunCompleted(false);
+    }
   }, [parallelMatched]);
 
   const handleLaunchTrain = async () => {
@@ -85,11 +85,12 @@ export default function Stage2_ParallelRails({ onComplete, addXp }) {
     addXp(100);
     confetti({ particleCount: 35, spread: 50, origin: { y: 0.7 } });
     setTrainRunning(false);
+    setTrainRunCompleted(true);
   };
 
   // Checklist status
   const questRailsParallel = isParallel;
-  const questTrainSuccess = !trainRunning && isParallel; 
+  const questTrainSuccess = trainRunCompleted; 
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '1.5rem', alignItems: 'stretch' }}>
@@ -167,7 +168,7 @@ export default function Stage2_ParallelRails({ onComplete, addXp }) {
 
         {/* Stage complete navigation card */}
         <div style={{ marginTop: 'auto' }}>
-          {isParallel && !trainRunning ? (
+          {trainRunCompleted ? (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <div style={{ background: 'var(--success-bg)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--success-border)', marginBottom: '0.75rem' }}>
                 <h4 style={{ margin: '0 0 0.4rem 0', color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.9rem' }}>
