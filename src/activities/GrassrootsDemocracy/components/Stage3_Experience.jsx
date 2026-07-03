@@ -140,9 +140,27 @@ const InteractiveCharacterCard = ({ role, name, icon: Icon, color, bg, hotspots 
             {hotspots[activeSpot].desc}
           </motion.div>
         ) : (
-          <div style={{ color: 'var(--text-muted)', fontSize: '1.05rem', fontStyle: 'italic' }}>
+          <motion.div 
+            initial={{ opacity: 0.8 }} 
+            animate={{ opacity: 1, y: [0, -5, 0] }} 
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            style={{ 
+              color: 'var(--text-heading)', 
+              fontSize: '1.1rem', 
+              fontWeight: '600',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              background: 'var(--surface)',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '20px',
+              border: `1px dashed ${color}`,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            }}
+          >
+            <Search size={20} color={color} />
             Click the interactive items above to explore their duties.
-          </div>
+          </motion.div>
         )}
       </div>
 
@@ -265,17 +283,17 @@ export default function Stage3_Experience({ onComplete, addXp, setElectedSarpanc
   };
 
   const secretaryHotspots = [
-    { icon: BookOpen, label: "Meeting Register", desc: "Records the decisions and attendance of Gram Sabha meetings." },
-    { icon: Bell, label: "Notice Board", desc: "Announces upcoming meetings and village notices to everyone." },
-    { icon: Shield, label: "Government Seal", desc: "The Secretary is a government-appointed official, not an elected one." },
+    { icon: BookOpen, label: "Meeting Management", desc: "Records the decisions and attendance of Gram Sabha meetings." },
+    { icon: Bell, label: "Public Notice", desc: "Announces upcoming meetings and village notices to everyone." },
+    { icon: Shield, label: "Government Officer", desc: "The Secretary is a government-appointed official, not an elected one." },
     { icon: FileText, label: "Village Records", desc: "Maintains official village documents and development plans." }
   ];
 
   const patwariHotspots = [
-    { icon: Map, label: "Land Map", desc: "Maintains accurate maps of all agricultural and residential land." },
-    { icon: Search, label: "Survey Equip", desc: "Measures land boundaries to resolve disputes between farmers." },
+    { icon: Map, label: "Village Map", desc: "Maintains accurate maps of all agricultural and residential land." },
+    { icon: Search, label: "Land Survey", desc: "Measures land boundaries to resolve disputes between farmers." },
     { icon: Droplet, label: "Crop Records", desc: "Records what crops are grown in each field during every season." },
-    { icon: FileText, label: "Village Register", desc: "Updates ownership records whenever land is bought or sold." }
+    { icon: FileText, label: "Land Registration", desc: "Updates ownership records whenever land is bought or sold." }
   ];
 
   return (

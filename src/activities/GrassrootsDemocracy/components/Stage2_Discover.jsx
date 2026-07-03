@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ChevronDown, Check, Lightbulb, MessageSquare, Map, Layers, Home, BookOpen, Calendar, Award, FileText, Shield, CheckCircle } from 'lucide-react';
+import { ArrowRight, ChevronDown, Check, Lightbulb, MessageSquare, Map, Layers, Home, BookOpen, Calendar, Award, FileText, Shield, CheckCircle, Volume2 } from 'lucide-react';
 import useSound from 'use-sound';
+import gramPanchayatAudio from '../../../assets/audio/gram_panchayat_voice.mp3';
+import panchayatSamitiAudio from '../../../assets/audio/panchayat_samiti_voice.mp3';
+import zilaParishadAudio from '../../../assets/audio/zila_parishad_voice.mp3';
 
 export default function Stage2_Discover({ onComplete, addXp }) {
   const [playClick] = useSound('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', { volume: 0.5 });
+  const [playVoice, { stop: stopVoice }] = useSound(gramPanchayatAudio, { volume: 1.0 });
+  const [playSamitiVoice, { stop: stopSamitiVoice }] = useSound(panchayatSamitiAudio, { volume: 1.0 });
+  const [playZilaVoice, { stop: stopZilaVoice }] = useSound(zilaParishadAudio, { volume: 1.0 });
   const [activeTier, setActiveTier] = useState('village');
   const [thoughtShared, setThoughtShared] = useState(false);
 
@@ -71,7 +77,14 @@ export default function Stage2_Discover({ onComplete, addXp }) {
               return (
                 <div 
                   key={tier.id}
-                  onClick={() => { playClick(); setActiveTier(isActive ? null : tier.id); addXp(2); }}
+                  onClick={() => { 
+                    playClick(); 
+                    stopVoice(); 
+                    stopSamitiVoice(); 
+                    stopZilaVoice(); 
+                    setActiveTier(isActive ? null : tier.id); 
+                    addXp(2); 
+                  }}
                   style={{
                     background: isActive ? `${tier.color}11` : 'var(--surface)',
                     border: '1px solid',
@@ -94,7 +107,38 @@ export default function Stage2_Discover({ onComplete, addXp }) {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <strong style={{ color: tier.color, fontSize: '1.1rem' }}>{tier.name}</strong>
-                      <ChevronDown size={20} style={{ color: tier.color, transform: isActive ? 'rotate(180deg)' : 'none', transition: '0.3s' }} />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        {isActive && (
+                          <div 
+                            onClick={(e) => { 
+                              e.stopPropagation(); 
+                              stopVoice();
+                              stopSamitiVoice();
+                              stopZilaVoice();
+                              if (tier.id === 'village') {
+                                playVoice();
+                              } else if (tier.id === 'block') {
+                                playSamitiVoice();
+                              } else if (tier.id === 'district') {
+                                playZilaVoice();
+                              } else {
+                                playClick();
+                              }
+                            }}
+                            style={{ 
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                              cursor: 'pointer', padding: '0.25rem', borderRadius: '50%', 
+                              background: 'rgba(255,255,255,0.05)', transition: 'background 0.2s'
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                            title="Listen"
+                          >
+                            <Volume2 size={18} color={tier.color} />
+                          </div>
+                        )}
+                        <ChevronDown size={20} style={{ color: tier.color, transform: isActive ? 'rotate(180deg)' : 'none', transition: '0.3s' }} />
+                      </div>
                     </div>
                     <AnimatePresence>
                       {isActive && (
