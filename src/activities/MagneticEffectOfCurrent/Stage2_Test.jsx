@@ -146,8 +146,8 @@ export default function Stage2_Test({ onComplete }) {
             <DrawingPinSVG x={480} y={370} isPlaced={true} />
             
             {/* Compass - deflecting based on switch state */}
-            {/* Normal: 0 deg. Deflected: 45/75 or -45/-75 deg */}
-            <CompassSVG x={250} y={150} isPlaced={true} deflection={switchOn ? (isBatteryFlipped ? (hasExtraBattery ? -75 : -45) : (hasExtraBattery ? 75 : 45)) : 0} />
+            {/* Normal: 0 deg. Deflected: -45/-75 or 45/75 deg */}
+            <CompassSVG x={250} y={150} isPlaced={true} deflection={switchOn ? (isBatteryFlipped ? (hasExtraBattery ? 75 : 45) : (hasExtraBattery ? -75 : -45)) : 0} />
             
             <BatterySVG isPlaced={true} isFlipped={isBatteryFlipped} hasExtraBattery={hasExtraBattery} />
             
@@ -209,7 +209,7 @@ export default function Stage2_Test({ onComplete }) {
       {/* Footer controls */}
       <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.5rem" }}>
         <button onClick={onComplete} className="success" disabled={!isTestingComplete} style={{ padding: "0.8rem 2rem", fontSize: "1rem", fontWeight: "bold", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          Proceed to Quiz <ArrowRight size={18} />
+          Proceed to 3-D Map <ArrowRight size={18} />
         </button>
       </div>
     </div>

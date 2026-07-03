@@ -346,7 +346,7 @@ const FlowingElectrons = ({ curve, speed = 0.3, direction = 1, color = "#3b82f6"
           {/* e- Label */}
           <Billboard follow={true}>
             <Text position={[0, 0, radius + 0.01]} fontSize={0.12} color="#ffffff" fontWeight="bold">
-              e⁻
+              e-
             </Text>
           </Billboard>
         </group>
