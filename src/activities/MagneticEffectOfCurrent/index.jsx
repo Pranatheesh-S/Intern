@@ -8,10 +8,12 @@ import {
   ArrowLeft,
   Info,
   Volume2,
-  Pause
+  Pause,
+  Box
 } from 'lucide-react';
 import Stage1_Build from './Stage1_Build';
 import Stage2_Test from './Stage2_Test';
+import Stage3_3DView from './Stage3_3DView';
 import QuizPanel from './QuizPanel';
 import { CompassSVG } from './CircuitElements';
 import { toggleAudio } from './audioManager';
@@ -89,6 +91,7 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
   const [progress, setProgress] = useState({
     build: false,
     test: false,
+    threed: false,
     quiz: false
   });
 
@@ -99,13 +102,19 @@ export default function MagneticEffectOfCurrentActivity({ onBackToDashboard }) {
 
   const handleStage2Complete = () => {
     setProgress(prev => ({ ...prev, test: true }));
+    setActiveTab('threed');
+  };
+
+  const handleStage3Complete = () => {
+    setProgress(prev => ({ ...prev, threed: true }));
     setActiveTab('quiz');
   };
 
   const tabs = [
     { id: 'build', name: '1. Build Circuit', icon: Wrench, component: <Stage1_Build onComplete={handleStage1Complete} /> },
     { id: 'test', name: '2. Test Effect', icon: Play, component: <Stage2_Test onComplete={handleStage2Complete} />, locked: !progress.build },
-    { id: 'quiz', name: '3. Concept Quiz', icon: HelpCircle, component: <QuizPanel />, locked: !progress.test }
+    { id: 'threed', name: '3. 3D View', icon: Box, component: <Stage3_3DView onComplete={handleStage3Complete} />, locked: !progress.test },
+    { id: 'quiz', name: '4. Concept Quiz', icon: HelpCircle, component: <QuizPanel />, locked: !progress.threed }
   ];
 
   return (

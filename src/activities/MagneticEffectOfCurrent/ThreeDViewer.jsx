@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Center, Text } from '@react-three/drei';
+import { OrbitControls, Center, Text, Billboard } from '@react-three/drei';
 
 // --- Switch Board 3D Model ---
 const SwitchBoardModel = () => (
@@ -37,57 +37,148 @@ const CompassBoardModel = () => (
 );
 
 // --- Compass 3D Model ---
-const CompassModel = () => {
+const CompassModel = ({ compassPosition = "below", onToggleCompassPosition }) => {
   const needleRef = useRef();
+  const groupRef = useRef();
+  const currentDeflection = useRef(Math.PI / 3);
+  const [hovered, setHovered] = React.useState(false);
   
-  useFrame((state) => {
+  React.useEffect(() => {
+    document.body.style.cursor = hovered ? 'pointer' : 'auto';
+    return () => { document.body.style.cursor = 'auto' };
+  }, [hovered]);
+  
+  useFrame((state, delta) => {
     if (needleRef.current) {
-      needleRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 2) * 0.2;
+      // Smoothly animate the needle deflection
+      const targetDeflection = compassPosition === "above" ? -Math.PI / 3 : Math.PI / 3;
+      currentDeflection.current = THREE.MathUtils.lerp(currentDeflection.current, targetDeflection, delta * 1.5);
+      needleRef.current.rotation.y = currentDeflection.current + Math.sin(state.clock.elapsedTime * 3) * 0.02;
+    }
+    
+    // Smoothly animate the compass height
+    if (groupRef.current) {
+      const targetY = compassPosition === "above" ? 1.3 : 0.12;
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, delta * 2.5);
     }
   });
 
+  // Generate degree tick marks
+  const ticks = Array.from({ length: 72 }).map((_, i) => {
+    const angle = (i * Math.PI * 2) / 72;
+    const isMajor = i % 18 === 0;
+    const isMedium = i % 9 === 0 && !isMajor;
+    const length = isMajor ? 0.15 : isMedium ? 0.1 : 0.05;
+    const thickness = isMajor ? 0.02 : 0.01;
+    return (
+      <mesh key={i} position={[Math.sin(angle) * 1.05, 0.01, Math.cos(angle) * 1.05]} rotation={[0, angle, 0]}>
+        <boxGeometry args={[thickness, 0.01, length]} />
+        <meshBasicMaterial color="#111827" />
+      </mesh>
+    );
+  });
+
   return (
-    <group scale={[1.2, 1.2, 1.2]}>
-      {/* Base Case */}
-      <mesh castShadow position={[0, -0.2, 0]}>
-        <cylinderGeometry args={[1.2, 1.2, 0.15, 32]} />
-        <meshStandardMaterial color="#f8fafc" roughness={0.2} metalness={0.1} />
+    <group 
+      ref={groupRef} 
+      position={[0, 0.12, 0]}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (onToggleCompassPosition) onToggleCompassPosition();
+      }}
+      onPointerOver={(e) => { e.stopPropagation(); setHovered(true); }}
+      onPointerOut={(e) => { e.stopPropagation(); setHovered(false); }}
+    >
+      <group scale={[1.2, 1.2, 1.2]}>
+      {/* Brass Base Body */}
+      <mesh castShadow position={[0, -0.15, 0]}>
+        <cylinderGeometry args={[1.25, 1.25, 0.2, 64]} />
+        <meshStandardMaterial color="#b5a642" roughness={0.2} metalness={0.9} />
       </mesh>
-      {/* Compass rim */}
-      <mesh position={[0, -0.05, 0]}>
-        <cylinderGeometry args={[1.25, 1.25, 0.2, 32]} />
-        <meshStandardMaterial color="#64748b" roughness={0.6} metalness={0.8} />
+      
+      {/* Beveled Bottom Edge */}
+      <mesh position={[0, -0.25, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.2, 0.05, 16, 64]} />
+        <meshStandardMaterial color="#b5a642" roughness={0.3} metalness={0.8} />
       </mesh>
+      
+      {/* Beveled Top Rim */}
+      <mesh position={[0, -0.05, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.22, 0.05, 16, 64]} />
+        <meshStandardMaterial color="#b5a642" roughness={0.15} metalness={0.95} />
+      </mesh>
+
+      {/* Inner Wall */}
+      <mesh position={[0, 0.05, 0]}>
+        <cylinderGeometry args={[1.22, 1.22, 0.2, 64]} />
+        <meshStandardMaterial color="#d4af37" roughness={0.4} metalness={0.7} side={THREE.BackSide} />
+      </mesh>
+
+      {/* Dial Face */}
+      <mesh position={[0, -0.04, 0]}>
+        <cylinderGeometry args={[1.21, 1.21, 0.02, 64]} />
+        <meshStandardMaterial color="#fdfbf7" roughness={0.8} metalness={0.1} />
+      </mesh>
+
+      {/* Degree Ticks */}
+      <group position={[0, -0.02, 0]}>
+        {ticks}
+      </group>
+
       {/* Markings */}
-      <group position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <Text position={[0, 0.9, 0]} fontSize={0.25} color="#111827">N</Text>
-        <Text position={[0, -0.9, 0]} fontSize={0.25} color="#111827">S</Text>
-        <Text position={[0.9, 0, 0]} fontSize={0.25} color="#111827">E</Text>
-        <Text position={[-0.9, 0, 0]} fontSize={0.25} color="#111827">W</Text>
+      <group position={[0, -0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        {/* Major directions */}
+        <Text position={[0, 0.85, 0]} fontSize={0.25} color="#111827">N</Text>
+        <Text position={[0, -0.85, 0]} fontSize={0.25} color="#111827">S</Text>
+        <Text position={[0.85, 0, 0]} fontSize={0.25} color="#111827">E</Text>
+        <Text position={[-0.85, 0, 0]} fontSize={0.25} color="#111827">W</Text>
+        
+        {/* Minor directions */}
+        <Text position={[0.6, 0.6, 0]} fontSize={0.12} color="#4b5563">NE</Text>
+        <Text position={[-0.6, 0.6, 0]} fontSize={0.12} color="#4b5563">NW</Text>
+        <Text position={[0.6, -0.6, 0]} fontSize={0.12} color="#4b5563">SE</Text>
+        <Text position={[-0.6, -0.6, 0]} fontSize={0.12} color="#4b5563">SW</Text>
       </group>
+
+      {/* Central Pivot */}
+      <mesh position={[0, 0.02, 0]}>
+        <coneGeometry args={[0.04, 0.15, 16]} />
+        <meshStandardMaterial color="#d4af37" roughness={0.2} metalness={0.9} />
+      </mesh>
+
       {/* Compass Needle Group */}
-      <group ref={needleRef} position={[0, 0.1, 0]}>
-        {/* Center pin */}
-        <mesh>
-          <cylinderGeometry args={[0.05, 0.05, 0.2, 16]} />
-          <meshStandardMaterial color="#334155" metalness={0.8} />
+      <group ref={needleRef} position={[0, 0.12, 0]}>
+        {/* Pivot Cap */}
+        <mesh position={[0, 0.02, 0]}>
+          <sphereGeometry args={[0.06, 16, 16]} />
+          <meshStandardMaterial color="#9ca3af" roughness={0.3} metalness={0.8} />
         </mesh>
+        
         {/* North (Red) Needle */}
-        <mesh position={[0, 0, -0.4]} rotation={[-Math.PI / 2, 0, 0]}>
-          <coneGeometry args={[0.15, 0.8, 4]} />
-          <meshStandardMaterial color="#ef4444" roughness={0.3} metalness={0.2} />
+        <mesh position={[0, 0, -0.45]} rotation={[-Math.PI / 2, 0, 0]}>
+          <coneGeometry args={[0.12, 0.9, 32]} />
+          <meshStandardMaterial color="#dc2626" roughness={0.2} metalness={0.4} />
         </mesh>
-        {/* South (Blue) Needle */}
-        <mesh position={[0, 0, 0.4]} rotation={[Math.PI / 2, 0, 0]}>
-          <coneGeometry args={[0.15, 0.8, 4]} />
-          <meshStandardMaterial color="#3b82f6" roughness={0.3} metalness={0.2} />
+        
+        {/* South (Black) Needle */}
+        <mesh position={[0, 0, 0.45]} rotation={[Math.PI / 2, 0, 0]}>
+          <coneGeometry args={[0.12, 0.9, 32]} />
+          <meshStandardMaterial color="#111827" roughness={0.2} metalness={0.5} />
         </mesh>
       </group>
+
       {/* Glass Cover */}
       <mesh position={[0, 0.15, 0]}>
-        <cylinderGeometry args={[1.18, 1.18, 0.05, 32]} />
-        <meshStandardMaterial color="#ffffff" opacity={0.3} transparent roughness={0} metalness={0.9} />
+        <cylinderGeometry args={[1.21, 1.21, 0.02, 64]} />
+        <meshStandardMaterial color="#ffffff" opacity={0.15} transparent roughness={0} metalness={1} />
       </mesh>
+      
+      {/* Top Glass Rim Retainer */}
+      <mesh position={[0, 0.16, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.2, 0.02, 16, 64]} />
+        <meshStandardMaterial color="#b5a642" roughness={0.2} metalness={0.9} />
+      </mesh>
+      </group>
     </group>
   );
 };
@@ -227,6 +318,193 @@ const WiresModel = () => {
   );
 };
 
+const FlowingElectrons = ({ curve, speed = 0.3, direction = 1, color = "#3b82f6", radius = 0.08 }) => {
+  // Lower density so they look like individual particles rather than a dotted line
+  const count = Math.max(2, Math.floor(curve.getLength() * 1.5));
+  const particles = React.useRef([]);
+  
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    particles.current.forEach((particle, i) => {
+      if (!particle) return;
+      let t = ((time * speed) + (i / count)) % 1;
+      if (direction < 0) t = 1 - t;
+      const pos = curve.getPointAt(t);
+      particle.position.copy(pos);
+    });
+  });
+
+  return (
+    <group>
+      {Array.from({ length: count }).map((_, i) => (
+        <group key={i} ref={el => particles.current[i] = el}>
+          {/* Electron Sphere */}
+          <mesh>
+            <sphereGeometry args={[radius, 16, 16]} />
+            <meshStandardMaterial color={color} roughness={0.3} metalness={0.2} emissive={color} emissiveIntensity={0.2} />
+          </mesh>
+          {/* e- Label */}
+          <Billboard follow={true}>
+            <Text position={[0, 0, radius + 0.01]} fontSize={0.12} color="#ffffff" fontWeight="bold">
+              e⁻
+            </Text>
+          </Billboard>
+        </group>
+      ))}
+    </group>
+  );
+};
+
+const SafetyPinFlow = () => {
+  const curve = React.useMemo(() => {
+    return new THREE.CatmullRomCurve3([
+      new THREE.Vector3(3.0, 0.12, 0.2),
+      new THREE.Vector3(3.0, 0.12, 1.8)
+    ]);
+  }, []);
+  
+  return <FlowingElectrons curve={curve} />;
+};
+
+const MagneticFieldLine = ({ radius = 0.5, speed = 1, color = "#10b981", direction = -1 }) => {
+  const groupRef = React.useRef();
+  
+  useFrame((state, delta) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.x += speed * delta * direction;
+    }
+  });
+
+  const arrows = [0, 1, 2, 3].map(i => {
+    const angle = (i * Math.PI) / 2;
+    return (
+      <group key={i} rotation={[angle, 0, 0]}>
+         <group position={[0, 0, radius]}>
+            <mesh rotation={[direction > 0 ? Math.PI : 0, 0, 0]}>
+              <coneGeometry args={[0.12, 0.36, 8]} />
+              <meshBasicMaterial color={color} />
+            </mesh>
+         </group>
+      </group>
+    );
+  });
+
+  return (
+    <group>
+      <mesh rotation={[0, Math.PI / 2, 0]}>
+        <torusGeometry args={[radius, 0.025, 16, 64]} />
+        <meshBasicMaterial color={color} transparent opacity={0.6} />
+      </mesh>
+      <group ref={groupRef}>
+        {arrows}
+      </group>
+    </group>
+  );
+};
+
+
+
+const CurvedWire = ({ p1, p2, controlPoints, radius, color, animateFlow = true }) => {
+  const curve = React.useMemo(() => {
+    const points = [
+      new THREE.Vector3(...p1),
+      ...(controlPoints || []).map(p => new THREE.Vector3(...p)),
+      new THREE.Vector3(...p2)
+    ];
+    return new THREE.CatmullRomCurve3(points);
+  }, [p1, p2, controlPoints]);
+
+  return (
+    <group>
+      <mesh castShadow>
+        <tubeGeometry args={[curve, 32, radius, 8, false]} />
+        <meshStandardMaterial 
+          color={color} 
+          roughness={color === '#ca8a04' ? 0.15 : 0.3} 
+          metalness={color === '#ca8a04' ? 0.95 : 0.1} 
+        />
+      </mesh>
+      {animateFlow && <FlowingElectrons curve={curve} radius={radius + 0.015} />}
+    </group>
+  );
+};
+
+// --- Full Circuit 3D Model ---
+const FullCircuitModel = ({ compassPosition = "below", onToggleCompassPosition }) => {
+  return (
+    <group position={[0, -0.2, 0]}>
+      {/* Battery */}
+      <group position={[-3.0, 0.4, 2.0]} rotation={[0, 0, 0]}>
+        <BatteryModel />
+      </group>
+
+      {/* Switch Board */}
+      <group position={[3.0, 0, 1.0]} rotation={[0, Math.PI / 2, 0]}>
+        <SwitchBoardModel />
+        {/* Top Pin (Pin 1) */}
+        <group position={[0.8, 0.12, 0]}>
+          <DrawingPinModel />
+          <group position={[0, 0.05, 0]} rotation={[0, -Math.PI / 2, 0]}>
+            <group position={[0, 0, 1.08]}>
+              <SafetyPinModel />
+            </group>
+          </group>
+        </group>
+        {/* Bottom Pin (Pin 2) */}
+        <group position={[-0.8, 0.12, 0]}>
+          <DrawingPinModel />
+        </group>
+      </group>
+
+      {/* Compass Bench */}
+      <group position={[-1.0, 0, -1.5]}>
+        <CompassBoardModel />
+        <CompassModel compassPosition={compassPosition} onToggleCompassPosition={onToggleCompassPosition} />
+      </group>
+
+      {/* Wires */}
+      <group>
+        {/* Black wire (Battery - to Compass Left Nail) */}
+        <CurvedWire 
+          p1={[-3.77, 0.4, 2.0]} 
+          p2={[-2.6, 0.7, -1.5]} 
+          controlPoints={[[-4.0, 0.35, 0.5], [-3.0, 0.5, -1.0]]} 
+          radius={0.045} color="#374151" 
+        />
+        
+        {/* Red wire (Compass Right Nail to Switch Top Pin) */}
+        <CurvedWire 
+          p1={[0.6, 0.7, -1.5]} 
+          p2={[3.0, 0.12, 0.2]} 
+          controlPoints={[[1.5, 0.5, -1.0], [2.2, 0.2, -0.5]]} 
+          radius={0.045} color="#ef4444" 
+        />
+
+        {/* Yellow wire (Switch Bottom Pin to Battery +) */}
+        <CurvedWire 
+          p1={[3.0, 0.12, 1.8]} 
+          p2={[-2.23, 0.4, 2.0]} 
+          controlPoints={[[2.0, 0.2, 2.5], [0, 0.2, 3.0]]} 
+          radius={0.045} color="#ca8a04" 
+        />
+
+        {/* Copper wire (Straight over compass, Nail 1 to Nail 2) */}
+        <CurvedWire p1={[-2.6, 0.7, -1.5]} p2={[0.6, 0.7, -1.5]} radius={0.025} color="#ca8a04" />
+
+        {/* Safety Pin connection flow */}
+        <SafetyPinFlow />
+
+        {/* Magnetic Field around copper wire */}
+        <group position={[-1.0, 0.7, -1.5]}>
+          <MagneticFieldLine radius={0.6} speed={1.5} color="#10b981" />
+          <MagneticFieldLine radius={1.2} speed={1.1} color="#10b981" />
+          <MagneticFieldLine radius={1.8} speed={0.8} color="#10b981" />
+        </group>
+      </group>
+    </group>
+  );
+};
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -243,7 +521,7 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-export default function ThreeDViewer({ componentId }) {
+export default function ThreeDViewer({ componentId, compassPosition, onToggleCompassPosition }) {
   const renderModel = () => {
     switch (componentId) {
       case 'switchBoard': return <SwitchBoardModel />;
@@ -254,20 +532,25 @@ export default function ThreeDViewer({ componentId }) {
       case 'battery': return <BatteryModel />;
       case 'compass': return <CompassModel />;
       case 'wires': return <WiresModel />;
+      case 'fullCircuit': return <FullCircuitModel compassPosition={compassPosition} onToggleCompassPosition={onToggleCompassPosition} />;
       default: return null;
     }
   };
 
+  const isFullCircuit = componentId === 'fullCircuit';
+  const initialCameraPos = isFullCircuit ? [0, 6, 8.5] : [0, 1.8, 2.5];
+  const maxDist = isFullCircuit ? 15 : 4.5;
+
   return (
     <div style={{ width: '100%', height: '100%', outline: 'none', background: 'var(--canvas-bg)' }}>
       <ErrorBoundary>
-        <Canvas shadows camera={{ position: [0, 1.8, 2.5], fov: 45 }} gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}>
+        <Canvas shadows camera={{ position: initialCameraPos, fov: 45 }} gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}>
           <ambientLight intensity={1.1} />
           <pointLight position={[10, 10, 10]} intensity={1.8} castShadow />
           <pointLight position={[-10, 5, -10]} intensity={0.6} />
           <directionalLight position={[0, 5, 2]} intensity={1.2} />
           <Center>{renderModel()}</Center>
-          <OrbitControls enableDamping={true} dampingFactor={0.06} minDistance={1.5} maxDistance={4.5} makeDefault />
+          <OrbitControls enableDamping={true} dampingFactor={0.06} minDistance={1.5} maxDistance={maxDist} makeDefault />
         </Canvas>
       </ErrorBoundary>
     </div>
