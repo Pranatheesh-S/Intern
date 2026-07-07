@@ -6,11 +6,60 @@ import {
   CheckCircle, 
   BookOpen, 
   ArrowLeft,
-  Wrench
+  Wrench,
+  Volume2,
+  Pause
 } from 'lucide-react';
 import Stage1_Setup from './components/Stage1_Setup';
 import Stage2_Experiment from './components/Stage2_Experiment';
 import QuizPanel from './components/QuizPanel';
+
+function AudioButton({ audioSrc }) {
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const audioRef = React.useRef(null);
+
+  React.useEffect(() => {
+    audioRef.current = new Audio(audioSrc);
+    audioRef.current.onended = () => setIsPlaying(false);
+    return () => {
+      audioRef.current.pause();
+      audioRef.current = null;
+    };
+  }, [audioSrc]);
+
+  const togglePlay = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().catch(console.error);
+      setIsPlaying(true);
+    }
+  };
+
+  return (
+    <button 
+      onClick={togglePlay}
+      style={{ 
+        background: 'var(--primary, #007bff)', 
+        border: 'none', 
+        cursor: 'pointer', 
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0.2rem',
+        borderRadius: '50%',
+        width: '24px',
+        height: '24px',
+        flexShrink: 0
+      }}
+      title={isPlaying ? "Pause Audio" : "Play Audio"}
+    >
+      {isPlaying ? <Pause size={12} /> : <Volume2 size={12} />}
+    </button>
+  );
+}
 
 export default function SolutesAndSolventsActivity({ onBackToDashboard }) {
   const [activeTab, setActiveTab] = useState('setup');
@@ -113,25 +162,44 @@ export default function SolutesAndSolventsActivity({ onBackToDashboard }) {
         {/* Right Sidebar (Educational Tip) */}
         <aside style={{ width: '280px', flexShrink: 0 }}>
           <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', columnGap: '0.75rem', rowGap: '1.25rem', alignItems: 'start' }}>
+              
+              {/* Row 1: Header */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2px' }}>
+                <span style={{ fontSize: '1.25rem' }}>🧠</span>
+              </div>
               <div>
                 <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
                   Did you know?
                 </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
+              </div>
+
+              {/* Row 2: Dilute vs Concentrated */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.35rem' }}>
+                <AudioButton audioSrc="/dilute.mp3" />
+              </div>
+              <div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
                   Dilute vs Concentrated
                 </div>
                 <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
                   The amount of solute present in a fixed quantity of solution is its <strong>concentration</strong>. A solution with less solute is <em>dilute</em>, while one with more is <em>concentrated</em>. These are relative terms!
                 </p>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '1rem' }}>
+              </div>
+
+              {/* Row 3: Saturated Solutions */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.35rem' }}>
+                <AudioButton audioSrc="/solubility.mp3" />
+              </div>
+              <div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
                   Saturated Solutions
                 </div>
                 <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
                   When no more solute can be dissolved at a given temperature, it becomes a <strong>saturated solution</strong>. The maximum amount of solute that dissolves is called its <em>solubility</em>.
                 </p>
               </div>
+
             </div>
           </div>
         </aside>
