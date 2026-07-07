@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Beaker, RotateCcw, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { DndContext, useDraggable, useDroppable, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, useDraggable, useDroppable, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors, pointerWithin } from '@dnd-kit/core';
+import { snapCenterToCursor } from '@dnd-kit/modifiers';
 
 // Draggable spoon component
 const DraggableSpoon = ({ id, disabled }) => {
@@ -69,7 +70,7 @@ export default function Stage2_Experiment({ onComplete }) {
   const spoonAmounts = ['One', 'Two', 'Three', 'Four'];
 
   const handleAddSalt = () => {
-    if (spoonsAdded >= MAX_SPOONS || isStirring || isAnimatingSpoon) return;
+    if (spoonsAdded >= MAX_SPOONS || spoonsAdded > stirCount || isStirring || isAnimatingSpoon) return;
     
     setIsAnimatingSpoon(true);
     // Simulate spoon animation
@@ -133,6 +134,8 @@ export default function Stage2_Experiment({ onComplete }) {
   // Calculate water opacity based on concentration
   // The more dissolved salt, the slightly more cloudy/opaque the water might look (subtle effect)
   const waterOpacity = 0.5 + (dissolvedAmount * 0.1);
+  const isSaturated = stirCount > SATURATION_POINT;
+  const waterColor = isSaturated ? `rgba(186, 230, 253, ${waterOpacity + 0.1})` : `rgba(56, 189, 248, ${waterOpacity})`;
   
   const isActivityComplete = observations.length >= MAX_SPOONS;
 
@@ -172,7 +175,7 @@ export default function Stage2_Experiment({ onComplete }) {
         </div>
 
         {/* Experiment Visualizer */}
-        <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <DndContext sensors={sensors} collisionDetection={pointerWithin} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <div style={{ 
             flex: 1, 
             display: 'flex', 
@@ -189,7 +192,7 @@ export default function Stage2_Experiment({ onComplete }) {
             {/* Salt Bowl area */}
             <div style={{ position: 'absolute', bottom: '20px', left: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div style={{ marginBottom: '-10px', zIndex: 2 }}>
-                <DraggableSpoon id="spoon-drag" disabled={spoonsAdded >= MAX_SPOONS || isStirring || isAnimatingSpoon} />
+                <DraggableSpoon id="spoon-drag" disabled={spoonsAdded >= MAX_SPOONS || spoonsAdded > stirCount || isStirring || isAnimatingSpoon} />
               </div>
               <div style={{ width: '80px', height: '40px', background: '#cbd5e1', borderRadius: '0 0 40px 40px', border: '3px solid #94a3b8', borderTop: 'none', position: 'relative', display: 'flex', justifyContent: 'center' }}>
                 <div style={{ position: 'absolute', top: '-5px', width: '70px', height: '15px', background: 'white', borderRadius: '50%' }} />
@@ -217,11 +220,11 @@ export default function Stage2_Experiment({ onComplete }) {
               bottom: 0,
               width: '100%',
               height: '60%',
-              background: `rgba(56, 189, 248, ${waterOpacity})`,
+              background: waterColor,
               borderTop: '2px solid rgba(255,255,255,0.5)',
               transition: 'background 0.5s ease',
             }}>
-              {/* Stirring Animation Effect (Swirls) */}
+              {/* High-Quality Stirring Animation Effect */}
               <AnimatePresence>
                 {isStirring && (
                   <motion.div
@@ -230,15 +233,76 @@ export default function Stage2_Experiment({ onComplete }) {
                     exit={{ opacity: 0 }}
                     style={{
                       position: 'absolute',
-                      top: '20%',
-                      left: '20%',
-                      width: '60%',
-                      height: '60%',
-                      borderRadius: '50%',
-                      border: '2px dashed rgba(255,255,255,0.6)',
-                      animation: 'spin 1s linear infinite'
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      pointerEvents: 'none',
                     }}
-                  />
+                  >
+                    {/* Vortex Gradient */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '10%',
+                      left: '10%',
+                      width: '80%',
+                      height: '80%',
+                      borderRadius: '50%',
+                      background: 'conic-gradient(from 0deg, transparent 0%, rgba(255,255,255,0.4) 25%, transparent 50%, rgba(255,255,255,0.2) 75%, transparent 100%)',
+                      animation: 'spin 0.6s linear infinite',
+                      filter: 'blur(3px)',
+                      transformOrigin: 'center center'
+                    }} />
+
+                    {/* Ripples */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '10%',
+                      left: '10%',
+                      width: '80%',
+                      height: '80%',
+                      borderRadius: '50%',
+                      border: '2px solid rgba(255,255,255,0.5)',
+                      animation: 'ripple 1.2s ease-out infinite'
+                    }} />
+                    <div style={{
+                      position: 'absolute',
+                      top: '10%',
+                      left: '10%',
+                      width: '80%',
+                      height: '80%',
+                      borderRadius: '50%',
+                      border: '2px solid rgba(255,255,255,0.3)',
+                      animation: 'ripple 1.2s ease-out infinite 0.6s'
+                    }} />
+
+                    {/* Rotating Silver Spoon */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '15%',
+                      left: '50%',
+                      width: '20px',
+                      height: '110px',
+                      marginTop: '-55px',
+                      marginLeft: '-10px',
+                      animation: 'orbit-spoon 0.6s linear infinite'
+                    }}>
+                      <svg viewBox="0 0 20 100" width="100%" height="100%" style={{ filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.4))' }}>
+                        {/* Spoon Handle */}
+                        <rect x="8" y="0" width="4" height="70" fill="url(#silver-grad)" rx="2" />
+                        {/* Spoon Bowl */}
+                        <ellipse cx="10" cy="85" rx="8" ry="15" fill="url(#silver-grad)" />
+                        
+                        <defs>
+                          <linearGradient id="silver-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#f8fafc" />
+                            <stop offset="50%" stopColor="#94a3b8" />
+                            <stop offset="100%" stopColor="#64748b" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    </div>
+                  </motion.div>
                 )}
               </AnimatePresence>
 
@@ -261,6 +325,42 @@ export default function Stage2_Experiment({ onComplete }) {
                       boxShadow: '0 -2px 10px rgba(255,255,255,0.5)'
                     }}
                   />
+                )}
+              </AnimatePresence>
+
+              {/* Saturated solution floating salt particles */}
+              <AnimatePresence>
+                {isSaturated && (
+                  <>
+                    {[...Array(12)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0 }}
+                        animate={{ 
+                          opacity: [0, 1, 0],
+                          y: [0, -50, -20],
+                          x: [0, (i % 2 === 0 ? 25 : -25), (i % 2 === 0 ? -15 : 15)]
+                        }}
+                        transition={{
+                          duration: 3 + (i % 3),
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: i * 0.3
+                        }}
+                        style={{
+                          position: 'absolute',
+                          bottom: `${15 + (i % 5) * 10}%`,
+                          left: `${15 + (i % 8) * 10}%`,
+                          width: '4.5px',
+                          height: '4.5px',
+                          background: '#ffffff',
+                          borderRadius: '50%',
+                          boxShadow: '0 0 3px rgba(0,0,0,0.3)',
+                          filter: 'blur(0.2px)'
+                        }}
+                      />
+                    ))}
+                  </>
                 )}
               </AnimatePresence>
             </div>
@@ -324,9 +424,22 @@ export default function Stage2_Experiment({ onComplete }) {
               from { transform: rotate(0deg); }
               to { transform: rotate(360deg); }
             }
+            @keyframes ripple {
+              0% { transform: scale(0.2); opacity: 1; border-width: 4px; }
+              100% { transform: scale(1); opacity: 0; border-width: 1px; }
+            }
+            @keyframes orbit-spoon {
+              0% { transform: rotate(0deg) translateX(25px) rotate(0deg); }
+              100% { transform: rotate(360deg) translateX(25px) rotate(-360deg); }
+            }
+            @keyframes pulse-glow {
+              0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
+              70% { box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
+              100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+            }
           `}</style>
 
-          <DragOverlay dropAnimation={null}>
+          <DragOverlay dropAnimation={null} modifiers={[snapCenterToCursor]}>
             {activeDragId ? (
               <div style={{ pointerEvents: 'none', opacity: 0.8, transform: 'scale(1.2)' }}>
                 <SaltSpoonSVG />
@@ -351,13 +464,14 @@ export default function Stage2_Experiment({ onComplete }) {
             style={{ 
               padding: '0.8rem 1.5rem',
               background: 'var(--accent)',
-              color: 'var(--accent-text)',
+              color: '#ffffff',
               border: 'none',
               borderRadius: '8px',
               fontWeight: 'bold',
               fontSize: '0.9rem',
               cursor: (spoonsAdded === 0 || spoonsAdded === stirCount || isStirring || isAnimatingSpoon) ? 'not-allowed' : 'pointer',
-              opacity: (spoonsAdded === 0 || spoonsAdded === stirCount || isStirring || isAnimatingSpoon) ? 0.5 : 1
+              opacity: (spoonsAdded === 0 || spoonsAdded === stirCount || isStirring || isAnimatingSpoon) ? 0.5 : 1,
+              animation: (spoonsAdded > stirCount && !isAnimatingSpoon && !isStirring) ? 'pulse-glow 1s infinite' : 'none'
             }}
           >
             {isStirring ? 'Stirring...' : 'Stir Well'}
