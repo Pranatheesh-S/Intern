@@ -18,6 +18,7 @@ import { useTheme } from './ThemeContext.jsx';
 const ElectricSwitchActivity = lazy(() => import('./activities/ElectricSwitch'));
 const ElectricCircuitActivity = lazy(() => import('./activities/ElectricCircuit'));
 const ActivityTemplate = lazy(() => import('./activities/ActivityTemplate'));
+const GeographyExpeditionActivity = lazy(() => import('./activities/Class7Geography'));
 const SphericalMirrorsActivity = lazy(() => import('./activities/SphericalMirrors'));
 const FoodTestingActivity = lazy(() => import('./activities/FoodTesting'));
 const FatTestingActivity = lazy(() => import('./activities/FatTesting'));
@@ -235,7 +236,102 @@ export default function App() {
           </button>
         </div>
 
-        {/* Subject Card 5: Class 6th Civics (Social Science) */}
+        {/* Enter FuturaX Social Lab Card */}
+        <div
+          className="glass-panel"
+          style={{
+            gridColumn: '1 / -1',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1.5rem',
+            padding: '2rem',
+            background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%)',
+            border: '2px solid rgba(139, 92, 246, 0.3)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <BookOpen size={28} style={{ color: '#a855f7' }} />
+              <h3 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>FuturaX Social Lab</h3>
+            </div>
+            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', maxWidth: '600px' }}>
+              Step into the world of Social Sciences. Explore interactive modules on civics, history, geography, and governance through engaging, gamified experiences.
+            </p>
+          </div>
+          <button
+            onClick={() => navigateTo('social_lab', null)}
+            className="primary"
+            style={{ flexShrink: 0, padding: '0.8rem 1.5rem', fontSize: '1rem', gap: '0.5rem', background: '#9333ea', borderColor: '#9333ea' }}
+          >
+            Enter FuturaX Social Lab <ArrowRight size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Renders Social Lab main dashboard
+  const renderSocialLabWings = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+        <button
+          onClick={handleBackToSubjects}
+          className="outline"
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+        >
+          <ArrowLeft size={14} /> Back to Dashboard
+        </button>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>FuturaX Social Lab</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Explore Social Sciences Interactively</span>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+        gap: '1.25rem',
+        marginTop: '0.5rem'
+      }}>
+        {/* Social Card 1: Class 6th */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+            1 CHAPTER ACTIVE
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={22} style={{ color: 'var(--warning)' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Wing</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Explore foundational social science concepts, government structures, and civic duties through interactive experiences designed for 6th-grade students.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6_social', null)}
+            className="outline"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            Explore Class 6th <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Social Card 2: Class 7th */}
         <div
           className="glass-panel"
           style={{
@@ -248,30 +344,281 @@ export default function App() {
             overflow: 'hidden'
           }}
         >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
             1 CHAPTER ACTIVE
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <BookOpen size={22} style={{ color: 'var(--success)' }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Civics</h3>
+            <FlaskConical size={22} style={{ color: '#0891b2' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 7th Wing</h3>
           </div>
 
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Explore Social Science interactively. Engage in decision-making, governance simulators, and civic participation.
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Dive into advanced interactive social studies including history, geography, and political structures.
           </p>
 
           <button
-            onClick={() => navigateTo('class6_civics', 'chapter11')}
-            className="primary"
+            onClick={() => navigateTo('class7_social', null)}
+            className="outline"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
-            Enter FuturaX Social Lab <ArrowRight size={14} />
+            Enter Class 7th <ArrowRight size={14} />
           </button>
         </div>
       </div>
     </div>
   );
+
+  const CLASS_6_SOCIAL_CHAPTERS = [
+    { num: 1, title: "Understanding Diversity" },
+    { num: 2, title: "Diversity and Discrimination" },
+    { num: 3, title: "What is Government?" },
+    { num: 4, title: "Key Elements of a Democratic Government" },
+    { num: 5, title: "Panchayati Raj" },
+    { num: 6, title: "Rural Administration" },
+    { num: 7, title: "Urban Administration" },
+    { num: 8, title: "Rural Livelihoods" },
+    { num: 9, title: "Urban Livelihoods" },
+    { num: 10, title: "Exploring History" },
+    { num: 11, title: "Grassroots Democracy" }
+  ];
+
+  const renderClass6SocialWing = () => {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Subheader Wing Navigation */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+          <button
+            onClick={() => navigateTo('social_lab', null)}
+            className="outline"
+            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+          >
+            <ArrowLeft size={14} /> Back to Social Lab
+          </button>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 6th Wing (Social)</h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Interactive Demonstrations & Labs for Class 6 Social Science</span>
+          </div>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '1.25rem'
+        }}>
+          {CLASS_6_SOCIAL_CHAPTERS.map(chapter => {
+            if (chapter.num === 11) {
+              return (
+                <div
+                  key={chapter.num}
+                  className="glass-panel"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    padding: '1.5rem',
+                    border: '1px solid var(--accent-border)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Active Chapter
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <BookOpen size={20} style={{ color: 'var(--accent-text)', marginTop: '0.25rem' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--accent-text)', fontWeight: '500' }}>{chapter.title}</p>
+                    </div>
+                  </div>
+
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                    Dive into Grassroots Democracy. Explore the Panchayati Raj system, local administration, and civic participation interactively.
+                  </p>
+
+                  <button 
+                    onClick={() => navigateTo('class6_social', `chapter${chapter.num}`)}
+                    className="primary" 
+                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                  >
+                    Open Chapter <ArrowRight size={14} />
+                  </button>
+                </div>
+              );
+            }
+
+            return (
+              <div
+                key={chapter.num}
+                className="glass-panel"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  padding: '1.5rem',
+                  border: '1px solid var(--border)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Coming Soon
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  <BookOpen size={20} style={{ color: '#818cf8', marginTop: '0.25rem' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{chapter.title}</p>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                  Interactive social science concepts and virtual scenarios for this chapter.
+                </p>
+
+                <button
+                  disabled
+                  className="outline"
+                  style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem', opacity: 0.5, cursor: 'not-allowed' }}
+                >
+                  Module Locked
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const CLASS_7_SOCIAL_CHAPTERS = [
+    { num: 1, title: "Geography of India" },
+    { num: 2, title: "Inside Our Earth" },
+    { num: 3, title: "Our Changing Earth" },
+    { num: 4, title: "Air" },
+    { num: 5, title: "Water" },
+    { num: 6, title: "Natural Vegetation and Wildlife" },
+    { num: 7, title: "Human Environment - Settlement, Transport and Communication" },
+    { num: 8, title: "Human Environment Interactions" },
+    { num: 9, title: "Life in the Temperate Grasslands" },
+    { num: 10, title: "Life in the Deserts" },
+    { num: 11, title: "Tracing Changes Through a Thousand Years" },
+    { num: 12, title: "New Kings and Kingdoms" }
+  ];
+
+  const renderClass7SocialWing = () => {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Subheader Wing Navigation */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+          <button
+            onClick={() => navigateTo('social_lab', null)}
+            className="outline"
+            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+          >
+            <ArrowLeft size={14} /> Back to Social Lab
+          </button>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 7th Wing (Social)</h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Interactive Demonstrations & Labs for Class 7 Social Science</span>
+          </div>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: '1.25rem'
+        }}>
+          {CLASS_7_SOCIAL_CHAPTERS.map(chapter => {
+            if (chapter.num === 1) {
+              return (
+                <div
+                  key={chapter.num}
+                  className="glass-panel"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    padding: '1.5rem',
+                    border: '1px solid var(--accent-border)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Active Chapter
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <BookOpen size={20} style={{ color: 'var(--accent-text)', marginTop: '0.25rem' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--accent-text)', fontWeight: '500' }}>{chapter.title}</p>
+                    </div>
+                  </div>
+
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                    Explore the geography of India through an immersive expedition across its diverse landscapes and regions.
+                  </p>
+
+                  <button 
+                    onClick={() => navigateTo('class7_social', `chapter${chapter.num}`)}
+                    className="primary" 
+                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                  >
+                    Open Chapter <ArrowRight size={14} />
+                  </button>
+                </div>
+              );
+            }
+
+            return (
+              <div
+                key={chapter.num}
+                className="glass-panel"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  padding: '1.5rem',
+                  border: '1px solid var(--border)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Coming Soon
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  <BookOpen size={20} style={{ color: '#818cf8', marginTop: '0.25rem' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{chapter.title}</p>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                  Interactive social science concepts and virtual scenarios for this chapter.
+                </p>
+
+                <button
+                  disabled
+                  className="outline"
+                  style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem', opacity: 0.5, cursor: 'not-allowed' }}
+                >
+                  Module Locked
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   const CLASS_6_CHAPTERS = [
     { num: 1, title: "The Wonderful World of Science" },
@@ -1735,7 +2082,11 @@ export default function App() {
               >
                 {activeSubject === 'class6' ? 'Class 6th' :
                   activeSubject === 'class7' ? 'Class 7th' :
-                    activeSubject === 'class8' ? 'Class 8th' : 'Class 9th'}
+                    activeSubject === 'class8' ? 'Class 8th' : 
+                      activeSubject === 'class9' ? 'Class 9th' :
+                        activeSubject === 'social_lab' ? 'Social Lab' :
+                          activeSubject === 'class6_social' ? 'Class 6th (Social)' :
+                            activeSubject === 'class7_social' ? 'Class 7th (Social)' : 'Class'}
               </span>
               {activeActivity && (
                 <>
@@ -1852,11 +2203,19 @@ export default function App() {
           )
         ) : activeSubject === 'class9' ? (
           renderUnderConstruction('Class 9th', Zap, '#ec4899')
-        ) : activeSubject === 'class6_civics' ? (
+        ) : activeSubject === 'social_lab' ? (
+          renderSocialLabWings()
+        ) : activeSubject === 'class6_social' ? (
           activeActivity === 'chapter11' ? (
-            <GrassrootsDemocracyActivity onBackToDashboard={() => navigateTo(null, null)} />
+            <GrassrootsDemocracyActivity onBackToDashboard={() => navigateTo('class6_social', null)} />
           ) : (
-            <GrassrootsDemocracyActivity onBackToDashboard={() => navigateTo(null, null)} />
+            renderClass6SocialWing()
+          )
+        ) : activeSubject === 'class7_social' ? (
+          activeActivity === 'chapter1' ? (
+            <GeographyExpeditionActivity onBackToDashboard={() => navigateTo('class7_social', null)} />
+          ) : (
+            renderClass7SocialWing()
           )
         ) : null}
         </Suspense>
