@@ -251,9 +251,7 @@ export default function Stage1_Setup({ onComplete }) {
   };
 
   const isStepUnlocked = (stepId) => {
-    const step = STEPS.find((s) => s.id === stepId);
-    if (!step) return false;
-    return step.prereq.every((pId) => placed[pId] === true);
+    return true;
   };
 
   const handleSelectTrayItem = (stepId) => {
