@@ -12,7 +12,8 @@ import {
   Sun,
   Moon,
   Hammer,
-  Battery
+  Battery,
+  Flame
 } from 'lucide-react';
 import { useTheme } from './ThemeContext.jsx';
 const ElectricSwitchActivity = lazy(() => import('./activities/ElectricSwitch'));
@@ -40,6 +41,7 @@ const MagneticEffectOfCurrentActivity = lazy(() => import('./activities/Magnetic
 const ElectromagnetInvestigationActivity = lazy(() => import('./activities/ElectromagnetInvestigation'));
 const GrassrootsDemocracyActivity = lazy(() => import('./activities/GrassrootsDemocracy'));
 const Activity9_1 = lazy(() => import('./activities/SolutesAndSolvents'));
+const Activity9_2 = lazy(() => import('./activities/SolubilityOfBakingSoda'));
 import './App.css';
 
 export default function App() {
@@ -1837,6 +1839,41 @@ export default function App() {
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
           </button>
         </div>
+
+        {/* Activity 9.2 Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--accent-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Flame size={20} style={{ color: '#db2777' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 9.2</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Explore how temperature affects the solubility of baking soda.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class8', '9.2')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -2108,6 +2145,7 @@ export default function App() {
                      activeActivity === 'magnetic_effect' ? 'Activity 4.1' :
                      activeActivity === 'electromagnet_investigation' ? 'Activities 4.2, 4.3 & 4.4' :
                      activeActivity === 'heating_effect' ? 'Activity 4.5' :
+                     activeActivity === '9.2' ? 'Activity 9.2' :
                      'Template Demo'}
                   </span>
                 </>
@@ -2194,6 +2232,8 @@ export default function App() {
             <LemonBatteryLabActivity onBackToDashboard={() => navigateTo('class8', 'chapter4')} />
           ) : activeActivity === '9.1' ? (
             <Activity9_1 onBackToDashboard={() => navigateTo('class8', 'chapter9')} />
+          ) : activeActivity === '9.2' ? (
+            <Activity9_2 onBackToDashboard={() => navigateTo('class8', 'chapter9')} />
           ) : activeActivity === 'chapter4' ? (
             renderClass8Chapter4()
           ) : activeActivity === 'chapter9' ? (
