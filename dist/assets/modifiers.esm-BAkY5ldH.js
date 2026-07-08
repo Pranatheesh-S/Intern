@@ -1,0 +1,1 @@
+import{g as i}from"./core.esm-lbfh02gg.js";const c=n=>{let{activatorEvent:e,draggingNodeRect:t,transform:o}=n;if(t&&e){const r=i(e);if(!r)return o;const s=r.x-t.left,a=r.y-t.top;return{...o,x:o.x+s-t.width/2,y:o.y+a-t.height/2}}return o};export{c as s};
