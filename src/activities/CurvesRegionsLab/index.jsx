@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import Stage1_CurveDrawer from './components/Stage1_CurveDrawer';
@@ -7,16 +7,58 @@ import Stage3_Quiz from './components/Stage3_Quiz';
 import useSound from 'use-sound';
 
 export default function CurvesRegionsLabActivity({ onBackToDashboard }) {
-  const [activeTab, setActiveTab] = useState('curve_drawer');
-  const [progress, setProgress] = useState({
-    curve_drawer: false,
-    region_rescue: false,
-    concept_quiz: false
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      return localStorage.getItem('curves_regions_active_tab') || 'curve_drawer';
+    } catch (e) {
+      return 'curve_drawer';
+    }
   });
-  const [xp, setXp] = useState(0);
+  const [progress, setProgress] = useState(() => {
+    try {
+      const saved = localStorage.getItem('curves_regions_progress');
+      if (saved && saved !== 'undefined' && saved !== 'null') {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error("Failed to parse curves_regions_progress", e);
+    }
+    return {
+      curve_drawer: false,
+      region_rescue: false,
+      concept_quiz: false
+    };
+  });
+  const [xp, setXp] = useState(() => {
+    try {
+      const saved = localStorage.getItem('curves_regions_xp');
+      if (saved) {
+        const parsed = parseInt(saved, 10);
+        if (!isNaN(parsed)) return parsed;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return 0;
+  });
 
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
   const [playClick] = useSound('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', { volume: 0.5 });
+
+  useEffect(() => {
+    localStorage.setItem('curves_regions_active_tab', activeTab);
+  }, [activeTab]);
+
+  useEffect(() => {
+    localStorage.setItem('curves_regions_progress', JSON.stringify(progress));
+  }, [progress]);
+
+  useEffect(() => {
+    localStorage.setItem('curves_regions_xp', xp.toString());
+  }, [xp]);
 
   const addXp = (amount) => {
     setXp(prev => prev + amount);
@@ -32,6 +74,13 @@ export default function CurvesRegionsLabActivity({ onBackToDashboard }) {
     if (nextStageId) {
       setActiveTab(nextStageId);
     }
+  };
+
+  const handleBack = () => {
+    localStorage.removeItem('curves_regions_active_tab');
+    localStorage.removeItem('curves_regions_progress');
+    localStorage.removeItem('curves_regions_xp');
+    onBackToDashboard();
   };
 
   const tabs = [
@@ -55,7 +104,7 @@ export default function CurvesRegionsLabActivity({ onBackToDashboard }) {
       num: 3, 
       title: 'Concept Check', 
       subtitle: 'Geometry Quiz', 
-      component: <Stage3_Quiz onComplete={() => handleStageComplete('concept_quiz', null)} addXp={addXp} onBackToDashboard={onBackToDashboard} />,
+      component: <Stage3_Quiz onComplete={() => handleStageComplete('concept_quiz', null)} addXp={addXp} onBackToDashboard={handleBack} />,
       locked: !progress.region_rescue 
     }
   ];
@@ -75,7 +124,7 @@ export default function CurvesRegionsLabActivity({ onBackToDashboard }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button 
-            onClick={onBackToDashboard} 
+            onClick={handleBack} 
             className="outline" 
             style={{ 
               padding: '0.4rem 0.8rem', 

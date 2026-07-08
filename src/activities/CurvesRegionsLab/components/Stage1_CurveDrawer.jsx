@@ -157,8 +157,8 @@ export default function Stage1_CurveDrawer({ onComplete, addXp }) {
     
     if (!gapBlocked) {
       // Escape path is clear! Go directly through the center of the gap
-      waypointX = gapMidX - 20; // local offset adjustment
-      waypointY = gapMidY - 20;
+      waypointX = gapMidX;
+      waypointY = gapMidY;
       
       const dx = gapMidX - px;
       const dy = gapMidY - py;
@@ -167,39 +167,94 @@ export default function Stage1_CurveDrawer({ onComplete, addXp }) {
       offscreenX = waypointX + (dx / dist) * 450;
       offscreenY = waypointY + (dy / dist) * 450;
     } else {
-      // Escape path to midpoint is blocked (e.g. straight line wall). Go around the closer endpoint.
-      const dStart = Math.sqrt(Math.pow(start.x - px, 2) + Math.pow(start.y - py, 2));
-      const dEnd = Math.sqrt(Math.pow(end.x - px, 2) + Math.pow(end.y - py, 2));
+      // Try to find a clear ray among 12 directions (30 degree intervals)
+      let clearAngle = null;
+      let minAngleDiff = Infinity;
       
-      const escapeEnd = dStart < dEnd ? start : end;
+      const preferredAngle = Math.atan2(gapMidY - py, gapMidX - px);
       
-      const dx = escapeEnd.x - px;
-      const dy = escapeEnd.y - py;
-      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      for (let k = 0; k < 12; k++) {
+        const angle = (k * Math.PI) / 6;
+        const tx = px + Math.cos(angle) * 300;
+        const ty = py + Math.sin(angle) * 300;
+        
+        let rayBlocked = false;
+        for (let i = 0; i < pathPoints.length - 1; i++) {
+          if (segmentsIntersect({ x: px, y: py }, { x: tx, y: ty }, pathPoints[i], pathPoints[i+1])) {
+            rayBlocked = true;
+            break;
+          }
+        }
+        
+        if (!rayBlocked) {
+          let diff = Math.abs(angle - preferredAngle);
+          if (diff > Math.PI) diff = 2 * Math.PI - diff;
+          if (diff < minAngleDiff) {
+            minAngleDiff = diff;
+            clearAngle = angle;
+          }
+        }
+      }
       
-      // Waypoint is 55px past the endpoint along the same direction (giving a wide clearance around the wall tip)
-      waypointX = escapeEnd.x + (dx / dist) * 55 - 20;
-      waypointY = escapeEnd.y + (dy / dist) * 55 - 20;
-      
-      offscreenX = waypointX + (dx / dist) * 450;
-      offscreenY = waypointY + (dy / dist) * 450;
+      if (clearAngle !== null) {
+        waypointX = px + Math.cos(clearAngle) * 160;
+        waypointY = py + Math.sin(clearAngle) * 160;
+        offscreenX = px + Math.cos(clearAngle) * 600;
+        offscreenY = py + Math.sin(clearAngle) * 600;
+      } else {
+        // Fallback: escape past the closer endpoint to go around the barrier tip
+        const dStart = Math.sqrt(Math.pow(start.x - px, 2) + Math.pow(start.y - py, 2));
+        const dEnd = Math.sqrt(Math.pow(end.x - px, 2) + Math.pow(end.y - py, 2));
+        const escapeEnd = dStart < dEnd ? start : end;
+        
+        const dx = escapeEnd.x - px;
+        const dy = escapeEnd.y - py;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        
+        waypointX = escapeEnd.x + (dx / dist) * 55;
+        waypointY = escapeEnd.y + (dy / dist) * 55;
+        offscreenX = waypointX + (dx / dist) * 450;
+        offscreenY = waypointY + (dy / dist) * 450;
+      }
     }
     
-    dogControls.set({ x: 380, y: 210, opacity: 1 });
+    // Adjust waypoint for the 40x40 dog component top-left position
+    const runWaypointX = waypointX - 20;
+    const runWaypointY = waypointY - 20;
+    const runOffscreenX = offscreenX - 20;
+    const runOffscreenY = offscreenY - 20;
     
-    // 1. Walk directly to the open endpoint or gap center and pass it
+    const angle1 = Math.atan2(runWaypointY - 210, runWaypointX - 380) * (180 / Math.PI) - 90;
+    const angle2 = Math.atan2(runOffscreenY - runWaypointY, runOffscreenX - runWaypointX) * (180 / Math.PI) - 90;
+    
+    // Reset starting state
+    dogControls.set({ x: 380, y: 210, rotate: 0, opacity: 1 });
+    
+    // 1. Quick, alert steering rotation to face the waypoint (0.35s)
     await dogControls.start({
-      x: waypointX,
-      y: waypointY,
-      transition: { duration: 1.5, ease: 'easeOut' }
+      rotate: angle1,
+      transition: { duration: 0.35, ease: 'easeInOut' }
     });
     
-    // 2. Dash off screen through the open space!
+    // 2. Jog towards the waypoint/exit (1.3s)
     await dogControls.start({
-      x: offscreenX,
-      y: offscreenY,
-      transition: { duration: 1.2, ease: 'easeIn' }
+      x: runWaypointX,
+      y: runWaypointY,
+      transition: { duration: 1.3, ease: 'easeOut' }
     });
+    
+    // 3. Smoothly steer towards the final dash direction while accelerating offscreen
+    await Promise.all([
+      dogControls.start({
+        rotate: angle2,
+        transition: { duration: 0.35, ease: 'easeInOut' }
+      }),
+      dogControls.start({
+        x: runOffscreenX,
+        y: runOffscreenY,
+        transition: { duration: 1.2, ease: 'easeIn' }
+      })
+    ]);
     
     setDogRunning(false);
   };
@@ -208,7 +263,7 @@ export default function Stage1_CurveDrawer({ onComplete, addXp }) {
     setPoints([]);
     setClassification(null);
     setDogInsidePen(false);
-    dogControls.set({ x: 380, y: 210, opacity: 1 });
+    dogControls.set({ x: 380, y: 210, rotate: 0, opacity: 1 });
   };
 
   // Convert points array to smooth SVG path
@@ -389,25 +444,123 @@ export default function Stage1_CurveDrawer({ onComplete, addXp }) {
             {/* PUPPY CHARACTER */}
             <motion.g 
               animate={dogControls} 
-              initial={{ x: 380, y: 210, opacity: 1 }}
-              style={{ originX: 0.5, originY: 0.5 }}
+              initial={{ x: 380, y: 210, opacity: 1, rotate: 0 }}
+              style={{ originX: '20px', originY: '20px' }}
             >
-              {/* Cute puppy illustration */}
-              <circle cx="20" cy="20" r="18" fill="#e2e8f0" stroke="#475569" strokeWidth={2} />
-              {/* Ears */}
-              <ellipse cx="2" cy="5" rx="6" ry="12" fill="#94a3b8" />
-              <ellipse cx="38" cy="5" rx="6" ry="12" fill="#94a3b8" />
-              {/* Eyes */}
-              <circle cx="12" cy="18" r="2.5" fill="#1e293b" />
-              <circle cx="28" cy="18" r="2.5" fill="#1e293b" />
-              {/* Nose */}
-              <polygon points="20,22 17,25 23,25" fill="#1e293b" />
-              {/* Tongue if happy */}
-              {dogInsidePen && <ellipse cx="20" cy="28" rx="3" ry="5" fill="#f87171" />}
-              {/* Sleeping state visual check overlay */}
-              {dogInsidePen && (
-                <text x="20" y="-12" fill="#34d399" fontSize="12" fontWeight="bold" textAnchor="middle">💤 Happy & Safe</text>
-              )}
+              <motion.g
+                animate={dogRunning ? {
+                  y: [0, -5, 0],
+                  scaleY: [1, 0.85, 1.05, 1],
+                  scaleX: [1, 1.05, 0.95, 1],
+                  transition: {
+                    duration: 0.35,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }
+                } : {
+                  y: 0,
+                  scaleY: 1,
+                  scaleX: 1
+                }}
+                style={{ originX: '20px', originY: '20px' }}
+              >
+                {/* Tail (Wags when running or happy inside pen) */}
+                <motion.path 
+                  d="M 20 6 Q 20 -4 26 -2" 
+                  stroke="#94a3b8" 
+                  strokeWidth={4.5} 
+                  strokeLinecap="round" 
+                  fill="none"
+                  animate={dogRunning ? {
+                    rotate: [-35, 35, -35],
+                    transition: { duration: 0.2, repeat: Infinity, ease: "linear" }
+                  } : dogInsidePen ? {
+                    rotate: [-15, 15, -15],
+                    transition: { duration: 0.5, repeat: Infinity, ease: "easeInOut" }
+                  } : { rotate: 0 }}
+                  style={{ originX: '20px', originY: '6px' }}
+                />
+
+                {/* Back Paws (Rendered behind the body) */}
+                <motion.ellipse 
+                  cx="8" cy="8" rx="4" ry="5" fill="#cbd5e1" stroke="#475569" strokeWidth={1.5}
+                  animate={dogRunning ? {
+                    y: [0, -3, 3, 0],
+                    transition: { duration: 0.35, repeat: Infinity, ease: "easeInOut" }
+                  } : {}}
+                />
+                <motion.ellipse 
+                  cx="32" cy="8" rx="4" ry="5" fill="#cbd5e1" stroke="#475569" strokeWidth={1.5}
+                  animate={dogRunning ? {
+                    y: [0, 3, -3, 0],
+                    transition: { duration: 0.35, repeat: Infinity, ease: "easeInOut" }
+                  } : {}}
+                />
+
+                {/* Front Paws (Rendered behind the body) */}
+                <motion.ellipse 
+                  cx="6" cy="32" rx="4.5" ry="5.5" fill="#e2e8f0" stroke="#475569" strokeWidth={1.5}
+                  animate={dogRunning ? {
+                    y: [0, 3, -3, 0],
+                    transition: { duration: 0.35, repeat: Infinity, ease: "easeInOut" }
+                  } : {}}
+                />
+                <motion.ellipse 
+                  cx="34" cy="32" rx="4.5" ry="5.5" fill="#e2e8f0" stroke="#475569" strokeWidth={1.5}
+                  animate={dogRunning ? {
+                    y: [0, -3, 3, 0],
+                    transition: { duration: 0.35, repeat: Infinity, ease: "easeInOut" }
+                  } : {}}
+                />
+
+                {/* Body/Head Circle */}
+                <circle cx="20" cy="20" r="18" fill="#e2e8f0" stroke="#475569" strokeWidth={2} />
+                
+                {/* Cute Spots on the Puppy's Back */}
+                <circle cx="12" cy="14" r="4.5" fill="#94a3b8" opacity={0.6} />
+                <circle cx="27" cy="24" r="3" fill="#94a3b8" opacity={0.6} />
+
+                {/* Ears */}
+                <motion.ellipse 
+                  cx="3" cy="6" rx="5" ry="11" fill="#94a3b8" stroke="#475569" strokeWidth={1.5}
+                  animate={dogRunning ? {
+                    rotate: [-20, 10, -20],
+                    transition: { duration: 0.3, repeat: Infinity, ease: "easeInOut" }
+                  } : { rotate: 0 }}
+                  style={{ originX: '8px', originY: '6px' }}
+                />
+                <motion.ellipse 
+                  cx="37" cy="6" rx="5" ry="11" fill="#94a3b8" stroke="#475569" strokeWidth={1.5}
+                  animate={dogRunning ? {
+                    rotate: [20, -10, 20],
+                    transition: { duration: 0.3, repeat: Infinity, ease: "easeInOut" }
+                  } : { rotate: 0 }}
+                  style={{ originX: '32px', originY: '6px' }}
+                />
+
+                {/* Eyes */}
+                <circle cx="12" cy="18" r="2.5" fill="#1e293b" />
+                <circle cx="28" cy="18" r="2.5" fill="#1e293b" />
+                
+                {/* Snout Detail */}
+                <ellipse cx="20" cy="23" rx="4" ry="3" fill="#f1f5f9" />
+                <polygon points="20,21 17.5,23.5 22.5,23.5" fill="#1e293b" />
+                
+                {/* Tongue (Panting if running, happy if in pen) */}
+                {(dogInsidePen || dogRunning) && (
+                  <motion.ellipse 
+                    cx="20" cy="27" rx="2.5" ry="4.5" fill="#f87171" 
+                    animate={dogRunning ? { scaleY: [1, 1.25, 1] } : {}}
+                    transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ originX: '20px', originY: '25px' }}
+                  />
+                )}
+
+                {/* Status Overlay */}
+                {dogInsidePen && (
+                  <text x="20" y="-12" fill="#34d399" fontSize="12" fontWeight="bold" textAnchor="middle">💤 Happy & Safe</text>
+                )}
+              </motion.g>
             </motion.g>
 
           </svg>
