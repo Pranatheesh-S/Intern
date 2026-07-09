@@ -23,8 +23,8 @@ export default function MissionCard({ currentStopIndex }) {
         backdropFilter: 'blur(12px)',
         border: '1px solid var(--accent-border)',
         borderRadius: '16px',
-        padding: '1.75rem',
-        marginTop: '2rem',
+        padding: '1.25rem',
+        marginTop: '1.5rem',
         boxShadow: 'var(--card-shadow)'
       }}
     >
@@ -41,13 +41,13 @@ export default function MissionCard({ currentStopIndex }) {
         color: 'var(--text-heading)', 
         fontSize: '1.25rem', 
         fontWeight: '500',
-        margin: '0 0 1.5rem 0',
+        margin: '0 0 1rem 0',
         lineHeight: '1.4'
       }}>
         Find out why India is called a Mini-Continent.
       </p>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {checklistItems.map((item, index) => {
           const isReached = currentStopIndex >= index;
           
