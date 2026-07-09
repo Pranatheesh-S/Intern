@@ -42,6 +42,7 @@ const ElectromagnetInvestigationActivity = lazy(() => import('./activities/Elect
 const GrassrootsDemocracyActivity = lazy(() => import('./activities/GrassrootsDemocracy'));
 const Activity9_1 = lazy(() => import('./activities/SolutesAndSolvents'));
 const Activity9_2 = lazy(() => import('./activities/SolubilityOfBakingSoda'));
+const ForceExplorerActivity = lazy(() => import('./activities/ForceExplorer'));
 import './App.css';
 
 export default function App() {
@@ -1784,6 +1785,64 @@ export default function App() {
     </div>
   );
 
+  const renderClass8Chapter5 = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+        <button
+          onClick={() => navigateTo('class8', null)}
+          className="outline"
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+        >
+          <ArrowLeft size={14} /> Back to Class 8 Wing
+        </button>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 5 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '1.25rem'
+      }}>
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Play size={20} style={{ color: '#ef4444' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 5.1</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Force Explorer. Explore the four types of force: Push, Pull, Lift, and Carry in an interactive physics simulation.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class8', '5.1')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Force Explorer <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderClass8Chapter9 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
@@ -1923,7 +1982,7 @@ export default function App() {
           gap: '1.25rem'
         }}>
           {CLASS_8_CHAPTERS.map(chapter => {
-            if (chapter.num === 4 || chapter.num === 9) {
+            if (chapter.num === 4 || chapter.num === 5 || chapter.num === 9) {
               return (
                 <div
                   key={chapter.num}
@@ -1951,7 +2010,7 @@ export default function App() {
                   </div>
 
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-                    {chapter.num === 4 ? "Includes Materials: Metals and Non-Metals. Test the appearance, hardness, and hammering effect on various materials." : "Includes Activity 9.1: Solutes, Solvents, and Solutions."}
+                    {chapter.num === 4 ? "Includes Materials: Metals and Non-Metals. Test the appearance, hardness, and hammering effect on various materials." : chapter.num === 5 ? "Includes Activity 5.1: Force Explorer." : "Includes Activity 9.1: Solutes, Solvents, and Solutions."}
                   </p>
 
                   <button 
@@ -2234,8 +2293,12 @@ export default function App() {
             <Activity9_1 onBackToDashboard={() => navigateTo('class8', 'chapter9')} />
           ) : activeActivity === '9.2' ? (
             <Activity9_2 onBackToDashboard={() => navigateTo('class8', 'chapter9')} />
+          ) : activeActivity === '5.1' ? (
+            <ForceExplorerActivity onBackToDashboard={() => navigateTo('class8', 'chapter5')} />
           ) : activeActivity === 'chapter4' ? (
             renderClass8Chapter4()
+          ) : activeActivity === 'chapter5' ? (
+            renderClass8Chapter5()
           ) : activeActivity === 'chapter9' ? (
             renderClass8Chapter9()
           ) : (
