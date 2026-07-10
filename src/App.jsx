@@ -43,6 +43,9 @@ const Activity9_1 = lazy(() => import('./activities/SolutesAndSolvents'));
 const LineSegmentLabActivity = lazy(() => import('./activities/LineSegmentLab'));
 const ParallelIntersectingLabActivity = lazy(() => import('./activities/ParallelIntersectingLab'));
 const CurvesRegionsLabActivity = lazy(() => import('./activities/CurvesRegionsLab'));
+const AnglesLabActivity = lazy(() => import('./activities/AnglesLab'));
+const PolygonsLabActivity = lazy(() => import('./activities/PolygonsLab'));
+const CirclesLabActivity = lazy(() => import('./activities/CirclesLab'));
 import './App.css';
 
 export default function App() {
@@ -239,6 +242,41 @@ export default function App() {
           </button>
         </div>
 
+        {/* Subject Card 6: Class 6th Mathematics */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--accent-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+            1 CHAPTER ACTIVE
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Zap size={22} style={{ color: '#8b5cf6' }} />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Mathematics</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Explore geometry and numbers through visual, interactive coordinate systems and measuring tools.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6_maths', null)}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            Enter FuturaX Math Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
         {/* Enter FuturaX Social Lab Card */}
         <div
           className="glass-panel"
@@ -369,40 +407,6 @@ export default function App() {
           </button>
         </div>
 
-        {/* Subject Card 6: Class 6th Mathematics */}
-        <div
-          className="glass-panel"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid var(--accent-border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
-            1 CHAPTER ACTIVE
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Zap size={22} style={{ color: '#8b5cf6' }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Mathematics</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Explore geometry and numbers through visual, interactive coordinate systems and measuring tools.
-          </p>
-
-          <button
-            onClick={() => navigateTo('class6_maths', null)}
-            className="primary"
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            Enter FuturaX Math Lab <ArrowRight size={14} />
-          </button>
-        </div>
       </div>
     </div>
   );
@@ -1036,6 +1040,111 @@ export default function App() {
 
           <button
             onClick={() => navigateTo('class6_maths', 'curves_regions_lab')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity 2.5 Card */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={20} style={{ color: '#a78bfa' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 2.5</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Solar Alignment Hinge. Drag tracking panels to align beams, identify Vertex/Arms, and measure solar path angles.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6_maths', 'angles_lab')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity 2.6 Card */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Hammer size={20} style={{ color: '#60a5fa' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 2.6</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Geo-Truss Bridge Builder. Build structures using polygon sides, vertices, and diagonals. Run stress tests to confirm rigidity.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6_maths', 'polygons_lab')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity 2.7 Card */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={20} style={{ color: '#facc15' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 2.7</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Radar Scope Observatory. Sweeps radius and diameter circles. Map out target arcs, chords, sectors, and segments.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6_maths', 'circles_lab')}
             className="primary"
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
@@ -2523,6 +2632,12 @@ export default function App() {
             <ParallelIntersectingLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
           ) : activeActivity === 'curves_regions_lab' ? (
             <CurvesRegionsLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
+          ) : activeActivity === 'angles_lab' ? (
+            <AnglesLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
+          ) : activeActivity === 'polygons_lab' ? (
+            <PolygonsLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
+          ) : activeActivity === 'circles_lab' ? (
+            <CirclesLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
           ) : activeActivity === 'chapter4' ? (
             renderClass6MathsChapter4()
           ) : (

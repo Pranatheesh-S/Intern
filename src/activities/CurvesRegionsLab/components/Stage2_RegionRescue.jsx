@@ -1,9 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
+import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Info, Sparkles, CheckSquare, Shield, RefreshCw } from 'lucide-react';
 import confetti from 'canvas-confetti';
+
+const createGableShape = () => {
+  const shape = new THREE.Shape();
+  shape.moveTo(-1.12, 1.0);
+  shape.lineTo(1.12, 1.0);
+  shape.lineTo(0, 1.65);
+  shape.closePath();
+  return shape;
+};
+const gableShape = createGableShape();
 
 // 3D Voxel/Primitive Puppy Companion Model
 function VoxelPuppy({ happy }) {
@@ -178,16 +189,17 @@ function HouseLabScene({
   setPuddlePos,
   draggedItem,
   setDraggedItem,
+  draggedItemRef,
   setControlsEnabled,
   handleDrop
 }) {
   return (
     <group>
       {/* Atmospheric lighting based on Day/Night theme */}
-      <ambientLight intensity={isDarkMode ? 0.18 : 0.72} />
+      <ambientLight intensity={isDarkMode ? 0.32 : 0.72} />
       <directionalLight 
         position={[5, 12, 5]} 
-        intensity={isDarkMode ? 0.35 : 1.1} 
+        intensity={isDarkMode ? 0.48 : 1.1} 
         color={isDarkMode ? "#93c5fd" : "#fffbeb"}
         castShadow 
         shadow-mapSize={[1024, 1024]}
@@ -195,7 +207,7 @@ function HouseLabScene({
       {/* Warm internal house lighting */}
       <pointLight 
         position={[0, 0.8, 0]} 
-        intensity={isDarkMode ? 1.05 : 0.25} 
+        intensity={isDarkMode ? 1.25 : 0.25} 
         color="#fef08a" 
         distance={2.5}
       />
@@ -206,17 +218,19 @@ function HouseLabScene({
         position={[0, -0.16, 0]} 
         receiveShadow
         onPointerMove={(e) => {
-          if (!draggedItem) return;
+          const activeDrag = draggedItemRef.current;
+          if (!activeDrag) return;
           e.stopPropagation();
           const targetCoords = [e.point.x, -0.05, e.point.z];
-          if (draggedItem === 'bone') setBonePos(targetCoords);
-          else if (draggedItem === 'sensor') setSensorPos(targetCoords);
-          else if (draggedItem === 'puddle') setPuddlePos([e.point.x, -0.14, e.point.z]);
+          if (activeDrag === 'bone') setBonePos(targetCoords);
+          else if (activeDrag === 'sensor') setSensorPos(targetCoords);
+          else if (activeDrag === 'puddle') setPuddlePos([e.point.x, -0.14, e.point.z]);
         }}
         onPointerUp={(e) => {
-          if (!draggedItem) return;
+          const activeDrag = draggedItemRef.current;
+          if (!activeDrag) return;
           e.stopPropagation();
-          handleDrop(draggedItem);
+          handleDrop(activeDrag);
         }}
       >
         <planeGeometry args={[16, 16]} />
@@ -234,6 +248,66 @@ function HouseLabScene({
         <boxGeometry args={[0.7, 0.08, 1.3]} />
         <meshStandardMaterial color="#4b5563" roughness={0.7} /> {/* Gray metal/wood platform */}
       </mesh>
+
+      {/* Street Lamp 1 (near supply platform) */}
+      <group position={[-2.6, -0.16, 1.2]}>
+        <mesh position={[0, 0.45, 0]} castShadow>
+          <cylinderGeometry args={[0.02, 0.03, 0.9, 8]} />
+          <meshStandardMaterial color="#1f2937" roughness={0.5} />
+        </mesh>
+        <mesh position={[0.05, 0.9, 0]} castShadow>
+          <boxGeometry args={[0.12, 0.02, 0.04]} />
+          <meshStandardMaterial color="#1f2937" />
+        </mesh>
+        <mesh position={[0.1, 0.82, 0]} castShadow>
+          <cylinderGeometry args={[0.05, 0.035, 0.1, 6]} />
+          <meshStandardMaterial color="#374151" roughness={0.3} />
+        </mesh>
+        <mesh position={[0.1, 0.75, 0]}>
+          <sphereGeometry args={[0.03, 8, 8]} />
+          <meshBasicMaterial color={isDarkMode ? "#fef08a" : "#9ca3af"} />
+        </mesh>
+        {isDarkMode && (
+          <pointLight
+            position={[0.1, 0.72, 0]}
+            intensity={2.8}
+            distance={5.0}
+            color="#fef08a"
+            castShadow
+            shadow-bias={-0.002}
+          />
+        )}
+      </group>
+
+      {/* Street Lamp 2 (near sprinkler zone) */}
+      <group position={[2.6, -0.16, 1.2]}>
+        <mesh position={[0, 0.45, 0]} castShadow>
+          <cylinderGeometry args={[0.02, 0.03, 0.9, 8]} />
+          <meshStandardMaterial color="#1f2937" roughness={0.5} />
+        </mesh>
+        <mesh position={[-0.05, 0.9, 0]} castShadow>
+          <boxGeometry args={[0.12, 0.02, 0.04]} />
+          <meshStandardMaterial color="#1f2937" />
+        </mesh>
+        <mesh position={[-0.1, 0.82, 0]} castShadow>
+          <cylinderGeometry args={[0.05, 0.035, 0.1, 6]} />
+          <meshStandardMaterial color="#374151" roughness={0.3} />
+        </mesh>
+        <mesh position={[-0.1, 0.75, 0]}>
+          <sphereGeometry args={[0.03, 8, 8]} />
+          <meshBasicMaterial color={isDarkMode ? "#fef08a" : "#9ca3af"} />
+        </mesh>
+        {isDarkMode && (
+          <pointLight
+            position={[-0.1, 0.72, 0]}
+            intensity={2.8}
+            distance={5.0}
+            color="#fef08a"
+            castShadow
+            shadow-bias={-0.002}
+          />
+        )}
+      </group>
 
       {/* 3D HOUSE FRAME (CLOSED BOUNDARY STRUCTURE) */}
       {/* Wood floor representing the interior footprint */}
@@ -281,6 +355,18 @@ function HouseLabScene({
       <mesh position={[0.8, 0.5, 0.95]}>
         <boxGeometry args={[0.62, 1.0, 0.02]} />
         <meshStandardMaterial color="#bfdbfe" transparent opacity={0.12} roughness={0.05} metalness={0.95} />
+      </mesh>
+
+      {/* Front Gable Glass */}
+      <mesh position={[0, 0, 0.95]}>
+        <shapeGeometry args={[gableShape]} />
+        <meshStandardMaterial color="#bfdbfe" transparent opacity={0.15} roughness={0.05} metalness={0.95} side={THREE.DoubleSide} />
+      </mesh>
+
+      {/* Back Gable Glass */}
+      <mesh position={[0, 0, -0.95]}>
+        <shapeGeometry args={[gableShape]} />
+        <meshStandardMaterial color="#bfdbfe" transparent opacity={0.15} roughness={0.05} metalness={0.95} side={THREE.DoubleSide} />
       </mesh>
 
       {/* Door frame */}
@@ -434,6 +520,29 @@ function HouseLabScene({
         )}
       </group>
 
+      {/* Decorative Stone Circle for Puddle Drop Area */}
+      <group position={[2.2, -0.15, 0.8]}>
+        {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+          const angle = (i * Math.PI) / 4;
+          const r = 0.36;
+          const x = r * Math.cos(angle);
+          const z = r * Math.sin(angle);
+          const scaleY = 0.6 + (i % 3) * 0.25;
+          const size = 0.06 + (i % 2) * 0.02;
+          return (
+            <mesh 
+              key={i} 
+              position={[x, size * scaleY / 2, z]} 
+              rotation={[0.1 * (i % 3), angle, 0.2 * (i % 2)]}
+              castShadow
+            >
+              <boxGeometry args={[size * 1.2, size * scaleY, size]} />
+              <meshStandardMaterial color="#6b7280" roughness={0.9} />
+            </mesh>
+          );
+        })}
+      </group>
+
       {/* DRAGGABLE MESHES */}
       {/* 1. Bone */}
       <group 
@@ -442,6 +551,7 @@ function HouseLabScene({
           if (boneInInterior) return;
           e.stopPropagation();
           e.target.setPointerCapture(e.pointerId);
+          draggedItemRef.current = 'bone';
           setDraggedItem('bone');
           setControlsEnabled(false);
         }}
@@ -461,16 +571,20 @@ function HouseLabScene({
           </mesh>
         )}
 
-        {/* Visual 3D Bone */}
+        {/* Visual 3D Bone - Stylized Cartoon Voxel Bone */}
         <group rotation={[0, Math.PI / 4, 0]}>
           <mesh castShadow>
-            <cylinderGeometry args={[0.02, 0.02, 0.18, 8]} rotation={[0, 0, Math.PI / 2]} />
-            <meshStandardMaterial color="#ffffff" roughness={0.3} />
+            <boxGeometry args={[0.22, 0.05, 0.05]} />
+            <meshStandardMaterial color="#f8fafc" roughness={0.4} metalness={0.1} />
           </mesh>
-          <mesh position={[-0.09, 0, 0.025]}><sphereGeometry args={[0.035, 8, 8]} /><meshStandardMaterial color="#ffffff" /></mesh>
-          <mesh position={[-0.09, 0, -0.025]}><sphereGeometry args={[0.035, 8, 8]} /><meshStandardMaterial color="#ffffff" /></mesh>
-          <mesh position={[0.09, 0, 0.025]}><sphereGeometry args={[0.035, 8, 8]} /><meshStandardMaterial color="#ffffff" /></mesh>
-          <mesh position={[0.09, 0, -0.025]}><sphereGeometry args={[0.035, 8, 8]} /><meshStandardMaterial color="#ffffff" /></mesh>
+          <mesh position={[-0.11, 0.02, 0.025]} castShadow><sphereGeometry args={[0.042, 10, 10]} /><meshStandardMaterial color="#f8fafc" roughness={0.4} /></mesh>
+          <mesh position={[-0.11, -0.02, -0.025]} castShadow><sphereGeometry args={[0.042, 10, 10]} /><meshStandardMaterial color="#f8fafc" roughness={0.4} /></mesh>
+          <mesh position={[-0.11, 0.02, -0.025]} castShadow><sphereGeometry args={[0.042, 10, 10]} /><meshStandardMaterial color="#f8fafc" roughness={0.4} /></mesh>
+          <mesh position={[-0.11, -0.02, 0.025]} castShadow><sphereGeometry args={[0.042, 10, 10]} /><meshStandardMaterial color="#f8fafc" roughness={0.4} /></mesh>
+          <mesh position={[0.11, 0.02, 0.025]} castShadow><sphereGeometry args={[0.042, 10, 10]} /><meshStandardMaterial color="#f8fafc" roughness={0.4} /></mesh>
+          <mesh position={[0.11, -0.02, -0.025]} castShadow><sphereGeometry args={[0.042, 10, 10]} /><meshStandardMaterial color="#f8fafc" roughness={0.4} /></mesh>
+          <mesh position={[0.11, 0.02, -0.025]} castShadow><sphereGeometry args={[0.042, 10, 10]} /><meshStandardMaterial color="#f8fafc" roughness={0.4} /></mesh>
+          <mesh position={[0.11, -0.02, 0.025]} castShadow><sphereGeometry args={[0.042, 10, 10]} /><meshStandardMaterial color="#f8fafc" roughness={0.4} /></mesh>
         </group>
       </group>
 
@@ -481,6 +595,7 @@ function HouseLabScene({
           if (sensorOnBoundary) return;
           e.stopPropagation();
           e.target.setPointerCapture(e.pointerId);
+          draggedItemRef.current = 'sensor';
           setDraggedItem('sensor');
           setControlsEnabled(false);
         }}
@@ -517,6 +632,7 @@ function HouseLabScene({
           if (puddleInExterior) return;
           e.stopPropagation();
           e.target.setPointerCapture(e.pointerId);
+          draggedItemRef.current = 'puddle';
           setDraggedItem('puddle');
           setControlsEnabled(false);
         }}
@@ -536,7 +652,7 @@ function HouseLabScene({
         )}
 
         {/* Visual 3D Puddle */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh>
           <cylinderGeometry args={[0.24, 0.26, 0.012, 16]} />
           <meshStandardMaterial color="#2563eb" roughness={0.1} metalness={0.6} />
         </mesh>
@@ -558,10 +674,11 @@ export default function Stage2_RegionRescue({ onComplete, addXp }) {
   // 3D Positions in space
   const [bonePos, setBonePos] = useState([-2.1, -0.05, 0.4]);
   const [sensorPos, setSensorPos] = useState([-2.1, -0.05, -0.4]);
-  const [puddlePos, setPuddlePos] = useState([-2.1, -0.14, 0.0]);
+  const [puddlePos, setPuddlePos] = useState([-2.1, -0.075, 0.0]);
 
   // Drag state
   const [draggedItem, setDraggedItem] = useState(null);
+  const draggedItemRef = useRef(null);
   const [controlsEnabled, setControlsEnabled] = useState(true);
 
   // Detect Dark Mode attribute changes
@@ -588,6 +705,7 @@ export default function Stage2_RegionRescue({ onComplete, addXp }) {
 
   // Raycast drop handler (checking proximity coordinates)
   const handleDrop = (itemType) => {
+    draggedItemRef.current = null;
     setDraggedItem(null);
 
     if (itemType === 'bone') {
@@ -623,7 +741,7 @@ export default function Stage2_RegionRescue({ onComplete, addXp }) {
         addXp(50);
         setFeedback({ type: 'success', text: '💧 Sprinkler water puddle released in the green yard (Exterior)!' });
       } else {
-        setPuddlePos([-2.1, -0.14, 0.0]); // bounce
+        setPuddlePos([-2.1, -0.075, 0.0]); // bounce
         setFeedback({ type: 'error', text: '❌ Wrong zone! Drop the puddle outside the house structure in the yard (Exterior).' });
       }
     }
@@ -682,7 +800,7 @@ export default function Stage2_RegionRescue({ onComplete, addXp }) {
   const handleReset = () => {
     setBonePos([-2.1, -0.05, 0.4]);
     setSensorPos([-2.1, -0.05, -0.4]);
-    setPuddlePos([-2.1, -0.14, 0.0]);
+    setPuddlePos([-2.1, -0.075, 0.0]);
     setBoneInInterior(false);
     setSensorOnBoundary(false);
     setPuddleInExterior(false);
@@ -865,7 +983,7 @@ export default function Stage2_RegionRescue({ onComplete, addXp }) {
             <color attach="background" args={[isDarkMode ? "#090d16" : "#bfdbfe"]} />
 
             {/* Fog for atmospheric depth */}
-            <fog attach="fog" args={[isDarkMode ? "#090d16" : "#bfdbfe", 5, 12]} />
+            <fog attach="fog" args={[isDarkMode ? "#090d16" : "#bfdbfe", 7.5, 18]} />
 
             {/* OrbitControls to steer camera */}
             <OrbitControls 
@@ -893,6 +1011,7 @@ export default function Stage2_RegionRescue({ onComplete, addXp }) {
               setPuddlePos={setPuddlePos}
               draggedItem={draggedItem}
               setDraggedItem={setDraggedItem}
+              draggedItemRef={draggedItemRef}
               setControlsEnabled={setControlsEnabled}
               handleDrop={handleDrop}
             />
