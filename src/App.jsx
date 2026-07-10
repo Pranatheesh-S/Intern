@@ -46,6 +46,7 @@ const Activity9_2 = lazy(() => import('./activities/SolubilityOfBakingSoda'));
 const ForceExplorerActivity = lazy(() => import('./activities/ForceExplorer'));
 const MicroscopeDiscovery = lazy(() => import('./activities/MicroscopeDiscovery'));
 const MaterialDetectiveActivity = lazy(() => import('./activities/MaterialDetective'));
+const Activity4_1 = lazy(() => import('./activities/Activity4_1'));
 import './App.css';
 
 export default function App() {
@@ -1024,6 +1025,41 @@ export default function App() {
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '1.25rem'
       }}>
+
+        {/* Activity 4.1 Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Search size={20} style={{ color: '#0ea5e9' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.1</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Magnetic and Non-magnetic Materials. Drag objects near the magnet and observe which stick to it.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'activity_4_1')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
 
         {/* Activity 4.2 Card */}
         <div 
@@ -2378,6 +2414,7 @@ export default function App() {
                      activeActivity === 'fat_testing' ? 'Fat Testing' :
                      activeActivity === 'protein_testing' ? 'Protein Testing' :
                      activeActivity === 'materials_properties' ? 'Properties of Materials' :
+                     activeActivity === 'activity_4_1' ? 'Activity 4.1' :
                      activeActivity === 'magnetic_poles' ? 'Magnetic Poles' :
                      activeActivity === 'suspended_magnet' ? 'Suspended Magnet' :
                      activeActivity === 'magnetic_compass' ? 'Make a Compass' :
@@ -2444,6 +2481,8 @@ export default function App() {
             <FatTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
           ) : activeActivity === 'protein_testing' ? (
             <ProteinTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
+          ) : activeActivity === 'activity_4_1' ? (
+            <Activity4_1 onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'magnetic_poles' ? (
             <MagneticPolesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'suspended_magnet' ? (
