@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, ArrowRight, HelpCircle, CheckCircle2, XCircle, RotateCcw } from 'lucide-react';
+import { Star, ArrowRight, HelpCircle, CheckCircle2, XCircle, RotateCcw, Trophy } from 'lucide-react';
 
 const challenges = [
   {
