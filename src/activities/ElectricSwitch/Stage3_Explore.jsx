@@ -11,6 +11,7 @@ import {
   ToggleLeft,
   ToggleRight,
   Lightbulb,
+  ArrowRight,
 } from "lucide-react";
 import {
   CardboardSVG,
@@ -59,7 +60,7 @@ function getBulbProfile(battV, bulbV) {
   return { zone: "active", label: "Unknown ⚠️", color: "var(--text-faint)", brightness: 0 };
 }
 
-export default function Stage3_Explore() {
+export default function Stage3_Explore({ onComplete }) {
   const [isPinConnected, setIsPinConnected] = useState(false);
   const [batteryPresent, setBatteryPresent] = useState(true);
   const [wireConnected, setWireConnected] = useState(true);
@@ -163,7 +164,7 @@ export default function Stage3_Explore() {
   const expStyle = expBg[exp.status] || expBg.neutral;
 
   return (
-    <div className="main-grid">
+    <div className="main-grid" style={{ userSelect: "none", WebkitUserSelect: "none" }}>
       {/* ── LEFT PANEL ── */}
       <div
         className="glass-panel"
@@ -408,17 +409,28 @@ export default function Stage3_Explore() {
           </div>
         </div>
 
-        <button
-          onClick={handleReset}
-          className="outline"
-          style={{ gap: "0.35rem", marginTop: "auto" }}
-        >
-          <RotateCcw size={14} /> Reset Sandbox
-        </button>
+        <div style={{ display: "flex", gap: "0.5rem", marginTop: "auto", paddingTop: "0.5rem" }}>
+          <button
+            onClick={handleReset}
+            className="outline"
+            style={{ gap: "0.35rem", flex: 1 }}
+          >
+            <RotateCcw size={14} /> Reset
+          </button>
+          {onComplete && (
+            <button
+              onClick={onComplete}
+              className="success"
+              style={{ gap: "0.35rem", flex: 2 }}
+            >
+              Go to Quiz <ArrowRight size={14} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ── RIGHT PANEL — Circuit Canvas ── */}
-      <div className="canvas-container" style={{ padding: "2rem" }}>
+      <div className="canvas-container" style={{ padding: "2rem", userSelect: "none", WebkitUserSelect: "none" }}>
         <div className="canvas-bg-grid" />
 
         {/* Status badges */}
@@ -465,30 +477,32 @@ export default function Stage3_Explore() {
         <svg
           width="100%"
           height="100%"
-          viewBox="0 0 600 480"
-          style={{ maxWidth: "600px", maxHeight: "480px" }}
+          viewBox="0 0 800 600"
+          style={{ width: "100%", height: "100%", userSelect: "none", WebkitUserSelect: "none" }}
         >
-          <CardboardSVG />
+          <CardboardSVG x={480} y={240} />
 
-          <g
-            style={{
-              filter: isBurned
-                ? "grayscale(1) brightness(0.3)"
-                : `brightness(${0.35 + brightness / 130})`,
-              transition: "filter 0.4s",
-            }}
-          >
-            <BulbSVG isPlaced={true} isOn={isBulbOn} />
+          <g transform="translate(100, 18)">
+            <g
+              style={{
+                filter: isBurned
+                  ? "grayscale(1) brightness(0.3)"
+                  : `brightness(${0.35 + brightness / 130})`,
+                transition: "filter 0.4s",
+              }}
+            >
+              <BulbSVG isPlaced={true} isOn={isBulbOn} />
+            </g>
           </g>
 
           <AnimatePresence>
             {burnAnim && (
               <motion.text
-                x={270}
-                y={20}
+                x={400}
+                y={50}
                 fontSize={28}
-                initial={{ opacity: 1, y: 20 }}
-                animate={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 1, y: 50 }}
+                animate={{ opacity: 0, y: 20 }}
                 transition={{ duration: 1.8 }}
               >
                 🔥
@@ -498,8 +512,8 @@ export default function Stage3_Explore() {
 
           {isBulbOn && (
             <circle
-              cx={300}
-              cy={55}
+              cx={400}
+              cy={95}
               r={28 + brightness * 0.12}
               fill="none"
               stroke="var(--warning)"
@@ -509,11 +523,13 @@ export default function Stage3_Explore() {
             />
           )}
 
-          <BatterySVG
-            isPlaced={batteryPresent}
-            isTarget={!batteryPresent}
-            onClick={() => setBatteryPresent((p) => !p)}
-          />
+          <g transform="translate(70, 40)">
+            <BatterySVG
+              isPlaced={batteryPresent}
+              isTarget={!batteryPresent}
+              onClick={() => setBatteryPresent((p) => !p)}
+            />
+          </g>
 
           <WiresSVG
             isWireConnected={true}
@@ -525,18 +541,13 @@ export default function Stage3_Explore() {
             onClick={() => setWireConnected((p) => !p)}
           />
 
-          <DrawingPinSVG x={450} y={250} label="Drawing Pin 1" isPlaced={true} />
+          <DrawingPinSVG x={560} y={290} label="Drawing Pin 1" isPlaced={true} />
 
-          <motion.g
-            animate={{ rotate: isPinConnected ? 0 : -35 }}
-            transition={{ type: "spring", stiffness: 90, damping: 10 }}
-            style={{ originX: "450px", originY: "250px", cursor: "pointer" }}
-            onClick={() => setIsPinConnected((p) => !p)}
-          >
-            <SafetyPinSVG x={450} y={250} rotation={0} isPlaced={true} material={pinMaterial} />
-          </motion.g>
+          <g onClick={() => setIsPinConnected((p) => !p)} style={{ cursor: "pointer" }}>
+            <SafetyPinSVG x={560} y={290} rotation={isPinConnected ? 0 : -35} isPlaced={true} material={pinMaterial} />
+          </g>
 
-          <DrawingPinSVG x={450} y={370} label="Drawing Pin 2" isPlaced={true} />
+          <DrawingPinSVG x={560} y={410} label="Drawing Pin 2" isPlaced={true} />
         </svg>
 
         {/* Live overlay */}

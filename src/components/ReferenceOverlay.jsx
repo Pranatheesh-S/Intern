@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, X, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 
-export default function ReferenceOverlay({ title = "Reference Blueprint", position = "left", children }) {
+export default function ReferenceOverlay({ title = "Reference Blueprint", children }) {
   const storageKey = `ref_overlay_${title.replace(/\s+/g, '_')}`;
   
   const [isOpen, setIsOpen] = useState(() => {
@@ -29,7 +29,7 @@ export default function ReferenceOverlay({ title = "Reference Blueprint", positi
           style={{
             position: 'absolute',
             top: '1rem',
-            ...(position === 'right' ? { right: '1rem' } : { left: '1rem' }),
+            left: '1rem',
             zIndex: 40,
             display: 'flex',
             alignItems: 'center',
@@ -59,7 +59,7 @@ export default function ReferenceOverlay({ title = "Reference Blueprint", positi
             style={{
               position: 'absolute',
               top: '1rem',
-              ...(position === 'right' ? { right: '1rem' } : { left: '1rem' }),
+              left: '1rem',
               zIndex: 100,
               background: 'var(--surface)',
               border: '1px solid var(--border)',
