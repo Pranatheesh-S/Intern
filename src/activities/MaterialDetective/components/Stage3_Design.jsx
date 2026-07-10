@@ -850,7 +850,7 @@ export default function Stage3_Design({ onComplete }) {
               <motion.g
                 animate={{ rotate: [0, 20, -10, 20, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
-                style={{ transformOrigin: "64px 32px" }}
+                style={{ transformOrigin: "64px 32px", transformBox: "view-box" }}
               >
                 <path d="M 64,32 L 80,54 L 74,58 L 62,44 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
                 {/* Right sleeve cuff white line */}
