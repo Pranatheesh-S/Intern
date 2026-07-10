@@ -846,16 +846,10 @@ export default function Stage3_Design({ onComplete }) {
               {/* Left sleeve cuff white line */}
               <path d="M 20.5,54 L 25.5,57.5" stroke="white" strokeWidth="1" opacity="0.7" />
 
-              {/* Happily waving Right Sleeve */}
-              <motion.g
-                animate={{ rotate: [0, 20, -10, 20, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-                style={{ transformOrigin: "64px 32px", transformBox: "view-box" }}
-              >
-                <path d="M 64,32 L 80,54 L 74,58 L 62,44 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
-                {/* Right sleeve cuff white line */}
-                <path d="M 79.5,54 L 74.5,57.5" stroke="white" strokeWidth="1" opacity="0.7" />
-              </motion.g>
+              {/* Static Right Sleeve */}
+              <path d="M 64,32 L 80,54 L 74,58 L 62,44 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
+              {/* Right sleeve cuff white line */}
+              <path d="M 79.5,54 L 74.5,57.5" stroke="white" strokeWidth="1" opacity="0.7" />
 
               {/* Body */}
               <path d="M 36,32 L 64,32 L 72,76 L 28,76 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
