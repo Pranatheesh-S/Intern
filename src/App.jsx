@@ -47,6 +47,7 @@ const ForceExplorerActivity = lazy(() => import('./activities/ForceExplorer'));
 const MicroscopeDiscovery = lazy(() => import('./activities/MicroscopeDiscovery'));
 const MaterialDetectiveActivity = lazy(() => import('./activities/MaterialDetective'));
 const Activity4_1 = lazy(() => import('./activities/Activity4_1'));
+const Activity4_6 = lazy(() => import('./activities/Activity4_6'));
 import './App.css';
 
 export default function App() {
@@ -89,6 +90,7 @@ export default function App() {
         'suspended_magnet': 'Suspended Magnet Lab',
         'magnetic_compass': 'Magnetic Compass Lab',
         'magnet_interaction': 'Magnet Interaction Lab',
+        'activity_4_6': 'Compass and Bar Magnet Lab',
         'linear_motion': 'Linear Motion Lab',
         'circular_motion': 'Circular Motion Lab',
         'material_detective': 'Material Detective Lab',
@@ -1194,6 +1196,40 @@ export default function App() {
 
           <button 
             onClick={() => navigateTo('class6', 'magnet_interaction')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+        {/* Activity 4.6 Card */}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={20} style={{ color: '#0ea5e9' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.6</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Compass and Bar Magnet. Explore attraction and repulsion, and see how a compass needle reacts to magnetic poles.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'activity_4_6')}
             className="primary" 
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
@@ -2491,6 +2527,8 @@ export default function App() {
             <MagneticCompassActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'magnet_interaction' ? (
             <MagnetInteractionActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+          ) : activeActivity === 'activity_4_6' ? (
+            <Activity4_6 onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'linear_motion' ? (
             <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
           ) : activeActivity === 'circular_motion' ? (
