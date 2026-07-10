@@ -1083,10 +1083,10 @@ export default function Stage3_Design({ onComplete }) {
               <div style={{ display: 'flex', gap: '1rem', width: '100%', maxWidth: '360px', marginTop: '0.5rem' }}>
                 <button
                   onClick={onComplete}
-                  className="success"
-                  style={{ flex: 1, fontSize: '0.875rem' }}
+                  className="primary"
+                  style={{ flex: 1, fontSize: '0.875rem', gap: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
-                  <Trophy size={16} /> Complete Activity
+                  Take Final Quiz <ArrowRight size={16} />
                 </button>
               </div>
             </motion.div>

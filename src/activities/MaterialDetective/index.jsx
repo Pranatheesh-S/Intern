@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, FolderSync, Wrench, CheckCircle, ArrowLeft, BookOpen } from 'lucide-react';
+import { Search, FolderSync, Wrench, CheckCircle, ArrowLeft, BookOpen, GraduationCap } from 'lucide-react';
 import Stage1_Identify from './components/Stage1_Identify';
 import Stage2_Classify from './components/Stage2_Classify';
 import Stage3_Design from './components/Stage3_Design';
+import Stage4_Quiz from './components/Stage4_Quiz';
 
 export default function MaterialDetectiveActivity({ onBackToDashboard }) {
   const [activeTab, setActiveTab] = useState('identify');
   const [progress, setProgress] = useState({
     identify: false,
     classify: false,
-    design: false
+    design: false,
+    quiz: false
   });
 
   const handleStageComplete = (stageId) => {
@@ -22,6 +24,10 @@ export default function MaterialDetectiveActivity({ onBackToDashboard }) {
         setActiveTab('classify');
       } else if (stageId === 'classify') {
         setActiveTab('design');
+      } else if (stageId === 'design') {
+        setActiveTab('quiz');
+      } else if (stageId === 'quiz') {
+        onBackToDashboard();
       }
       
       return nextProgress;
@@ -48,6 +54,13 @@ export default function MaterialDetectiveActivity({ onBackToDashboard }) {
       icon: Wrench, 
       component: <Stage3_Design onComplete={() => handleStageComplete('design')} />,
       locked: !progress.classify 
+    },
+    { 
+      id: 'quiz', 
+      name: '4. Final Quiz', 
+      icon: GraduationCap, 
+      component: <Stage4_Quiz onComplete={() => handleStageComplete('quiz')} />,
+      locked: !progress.design 
     }
   ];
 
