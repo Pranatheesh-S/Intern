@@ -99,24 +99,33 @@ const RulerModel = () => (
 );
 
 const BootModel = () => (
-  <group position={[0, -0.35, 0]} rotation={[0, 0.4, 0]}>
-    {/* Boot Sole */}
-    <mesh castShadow position={[0, 0.05, 0.1]}>
-      <boxGeometry args={[0.45, 0.08, 0.95]} />
-      <meshStandardMaterial color="#1e293b" roughness={0.9} />
+  <group position={[0, -0.2, 0]} rotation={[0, 0.4, 0]}>
+    {/* Shoe Sole */}
+    <mesh castShadow position={[0, 0.04, 0.05]}>
+      <boxGeometry args={[0.38, 0.06, 0.85]} />
+      <meshStandardMaterial color="#171717" roughness={0.9} />
     </mesh>
-    {/* Boot Foot */}
-    <mesh castShadow position={[0, 0.2, 0.15]} scale={[1, 0.8, 1.2]}>
-      <sphereGeometry args={[0.22, 16, 16]} />
-      <meshStandardMaterial color="#7c2d12" roughness={0.8} />
+
+    {/* Shoe Body - Front Foot (smooth sphere) */}
+    <mesh castShadow position={[0, 0.14, 0.12]} scale={[1, 0.8, 1.3]}>
+      <sphereGeometry args={[0.19, 16, 16]} />
+      <meshStandardMaterial color="#7c2d12" roughness={0.6} />
     </mesh>
-    {/* Boot Shaft (Leg) */}
-    <mesh castShadow position={[0, 0.45, 0]}>
-      <cylinderGeometry args={[0.2, 0.22, 0.6, 16]} />
-      <meshStandardMaterial color="#7c2d12" roughness={0.8} />
+
+    {/* Shoe Body - Ankle part (cylinder) */}
+    <mesh castShadow position={[0, 0.22, -0.15]}>
+      <cylinderGeometry args={[0.18, 0.18, 0.25, 16]} />
+      <meshStandardMaterial color="#7c2d12" roughness={0.6} />
+    </mesh>
+
+    {/* Shoe Collar Opening (black top cap) */}
+    <mesh position={[0, 0.35, -0.15]}>
+      <cylinderGeometry args={[0.175, 0.175, 0.01, 16]} />
+      <meshStandardMaterial color="#171717" roughness={0.9} />
     </mesh>
   </group>
 );
+
 
 const ShirtModel = () => (
   <group position={[0, -0.15, 0]} rotation={[0, 0.2, 0]}>
