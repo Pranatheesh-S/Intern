@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle2, RotateCcw, Compass, Activity, Eye, EyeOff, Pointer } from 'lucide-react';
-import { DndContext, useSensor, useSensors, PointerSensor, TouchSensor, useDraggable } from '@dnd-kit/core';
+import { DndContext, useSensor, useSensors, PointerSensor, TouchSensor, useDraggable, useDroppable } from '@dnd-kit/core';
 
 // Helper: Calculate angle between two points
 const calculateAngle = (cx, cy, px, py) => {
@@ -35,7 +35,6 @@ const CompassNeedle = ({ rotation }) => (
   </div>
 );
 
-// Draggable Bar Magnet
 const DraggableMagnet = ({ isFlipped }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: 'bar_magnet',
@@ -62,103 +61,218 @@ const DraggableMagnet = ({ isFlipped }) => {
   );
 };
 
+// Draggable Compass
+const DraggableCompass = ({ rotation }) => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: 'compass',
+  });
+
+  const style = {
+    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    zIndex: isDragging ? 1000 : 10,
+    cursor: isDragging ? 'grabbing' : 'grab',
+    touchAction: 'none'
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      <CompassNeedle rotation={rotation} />
+    </div>
+  );
+};
+
+const SidebarDraggableCompass = () => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: 'sidebar_compass',
+  });
+  
+  const style = {
+    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    zIndex: isDragging ? 1000 : 10,
+    cursor: isDragging ? 'grabbing' : 'grab',
+    touchAction: 'none',
+    width: '100px', height: '100px',
+    display: 'flex', alignItems: 'center', justifyContent: 'center'
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+       <CompassNeedle rotation={0} />
+    </div>
+  );
+};
+
+const SidebarDraggableMagnet = () => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: 'sidebar_magnet',
+  });
+  
+  const style = {
+    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    zIndex: isDragging ? 1000 : 10,
+    cursor: isDragging ? 'grabbing' : 'grab',
+    touchAction: 'none',
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      <div style={{ 
+        width: '160px', height: '40px', display: 'flex', borderRadius: '4px', overflow: 'hidden', 
+        boxShadow: isDragging ? '0 10px 15px rgba(0,0,0,0.3)' : '0 4px 6px rgba(0,0,0,0.1)',
+      }}>
+        <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>N</div>
+        <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>S</div>
+      </div>
+    </div>
+  );
+};
+
 export default function Simulation({ onComplete, onNext }) {
   const [step, setStep] = useState(1);
   const [magnetPos, setMagnetPos] = useState({ x: 650, y: 500 });
+  const [compassPos, setCompassPos] = useState({ x: 650, y: 300 });
   const [isFlipped, setIsFlipped] = useState(false);
   const [needleRotation, setNeedleRotation] = useState(0); // 0 is North (pointing up)
-  const [showFields, setShowFields] = useState(false);
   const [feedback, setFeedback] = useState(null);
-
-  const compassPos = { x: 650, y: 300 };
+  const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 });
+  const [activeDragId, setActiveDragId] = useState(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } })
   );
 
-  const calculateMagneticEffect = (x, y, flipped) => {
-    // Magnet poles relative to magnet center
+  const { setNodeRef: setWorkspaceRef } = useDroppable({
+    id: 'workspace',
+  });
+
+  const getNeedleRotation = (mX, mY, cX, cY, flipped) => {
     const magnetWidth = 160;
-    const nPoleX = flipped ? x + magnetWidth / 4 : x - magnetWidth / 4;
-    const sPoleX = flipped ? x - magnetWidth / 4 : x + magnetWidth / 4;
-    const poleY = y;
+    const nPoleX = flipped ? mX + magnetWidth / 4 : mX - magnetWidth / 4;
+    const sPoleX = flipped ? mX - magnetWidth / 4 : mX + magnetWidth / 4;
+    const poleY = mY;
 
-    // Distances
-    const distN = Math.sqrt((nPoleX - compassPos.x) ** 2 + (poleY - compassPos.y) ** 2);
-    const distS = Math.sqrt((sPoleX - compassPos.x) ** 2 + (poleY - compassPos.y) ** 2);
+    const distN = Math.sqrt((nPoleX - cX) ** 2 + (poleY - cY) ** 2);
+    const distS = Math.sqrt((sPoleX - cX) ** 2 + (poleY - cY) ** 2);
 
-    // If magnet is far away, Earth's field dominates (0 degrees)
+    if (distN > 250 && distS > 250) return 0;
+
+    const angleToN = calculateAngle(cX, cY, nPoleX, poleY);
+    const angleToS = calculateAngle(cX, cY, sPoleX, poleY);
+
+    if (distN < distS) {
+      return angleToN + 90;
+    } else {
+      return angleToS - 90;
+    }
+  };
+
+  const checkStepCompletion = (mX, mY, cX, cY, flipped) => {
+    const magnetWidth = 160;
+    const nPoleX = flipped ? mX + magnetWidth / 4 : mX - magnetWidth / 4;
+    const sPoleX = flipped ? mX - magnetWidth / 4 : mX + magnetWidth / 4;
+    const poleY = mY;
+
+    const distN = Math.sqrt((nPoleX - cX) ** 2 + (poleY - cY) ** 2);
+    const distS = Math.sqrt((sPoleX - cX) ** 2 + (poleY - cY) ** 2);
+
     if (distN > 250 && distS > 250) {
-      setNeedleRotation(0);
       setFeedback({ type: 'info', text: "Earth's magnetic field aligns the compass needle." });
       return;
     }
 
-    // Determine the dominating pole based on distance
-    // The North pole of the magnet will repel the North pole (red) of the compass
-    // The compass N-pole points away from the Magnet N-pole, and towards the Magnet S-pole
-    
-    // Angle from compass to N-pole of magnet
-    const angleToN = calculateAngle(compassPos.x, compassPos.y, nPoleX, poleY);
-    // Angle from compass to S-pole of magnet
-    const angleToS = calculateAngle(compassPos.x, compassPos.y, sPoleX, poleY);
-
     if (distN < distS) {
-      // Near North pole -> compass North points AWAY from it. 
-      // angleToN is the angle towards the magnet N pole. We want the opposite.
-      let newRot = angleToN + 90; // +90 because our visual needle has 0 deg pointing UP (y-axis negative in DOM)
-      
-      setNeedleRotation(newRot);
-      
       if (step === 3 && distN < 120 && !flipped) {
         setFeedback({ type: 'success', text: '✅ Like poles repel. Compass needle moves away!' });
-        setTimeout(() => setStep(4), 2000);
+        setTimeout(() => setStep(prev => prev === 3 ? 4 : prev), 2000);
       } else {
         setFeedback({ type: 'success', text: '✅ Like poles repel.' });
       }
-
     } else {
-      // Near South pole -> compass North points TOWARDS it.
-      let newRot = angleToS - 90;
-      
-      setNeedleRotation(newRot);
-
       if (step === 4 && distS < 120 && flipped) {
         setFeedback({ type: 'success', text: '✅ Unlike poles attract. Compass needle moves toward!' });
-        setTimeout(() => setStep(5), 2000);
+        setTimeout(() => setStep(prev => prev === 4 ? 5 : prev), 2000);
       } else {
         setFeedback({ type: 'success', text: '✅ Unlike poles attract.' });
       }
     }
   };
 
+  const handleDragStart = (event) => {
+    setActiveDragId(event.active.id);
+  };
+
+  const handleDragMove = (event) => {
+    const { active, delta } = event;
+    setDragDelta(delta);
+    
+    let mX = magnetPos.x;
+    let mY = magnetPos.y;
+    let cX = compassPos.x;
+    let cY = compassPos.y;
+    
+    if (active.id === 'bar_magnet') {
+      mX += delta.x;
+      mY += delta.y;
+    } else if (active.id === 'compass') {
+      cX += delta.x;
+      cY += delta.y;
+    }
+    
+    setNeedleRotation(getNeedleRotation(mX, mY, cX, cY, isFlipped));
+  };
+
   const handleDragEnd = (event) => {
-    const { delta } = event;
-    const newX = magnetPos.x + delta.x;
-    const newY = magnetPos.y + delta.y;
+    setActiveDragId(null);
+    setDragDelta({ x: 0, y: 0 });
     
-    // Boundary check
-    const boundedX = Math.max(80, Math.min(newX, 1220));
-    const boundedY = Math.max(20, Math.min(newY, 680));
+    const { active, over, delta } = event;
+
+    if (active.id === 'sidebar_compass') {
+      setCompassPos({ x: 650, y: 300 });
+      setStep(2);
+      return;
+    }
     
-    setMagnetPos({ x: boundedX, y: boundedY });
-    calculateMagneticEffect(boundedX, boundedY, isFlipped);
+    if (active.id === 'sidebar_magnet') {
+      setMagnetPos({ x: 650, y: 500 });
+      setStep(3);
+      return;
+    }
+
+    let newMX = magnetPos.x;
+    let newMY = magnetPos.y;
+    let newCX = compassPos.x;
+    let newCY = compassPos.y;
+    
+    if (active.id === 'bar_magnet') {
+      newMX = Math.max(80, Math.min(magnetPos.x + delta.x, 1220));
+      newMY = Math.max(20, Math.min(magnetPos.y + delta.y, 680));
+      setMagnetPos({ x: newMX, y: newMY });
+    } else if (active.id === 'compass') {
+      newCX = Math.max(80, Math.min(compassPos.x + delta.x, 1220));
+      newCY = Math.max(20, Math.min(compassPos.y + delta.y, 680));
+      setCompassPos({ x: newCX, y: newCY });
+    }
+    
+    setNeedleRotation(getNeedleRotation(newMX, newMY, newCX, newCY, isFlipped));
+    checkStepCompletion(newMX, newMY, newCX, newCY, isFlipped);
   };
 
   const flipMagnet = () => {
     const newFlipped = !isFlipped;
     setIsFlipped(newFlipped);
-    calculateMagneticEffect(magnetPos.x, magnetPos.y, newFlipped);
+    setNeedleRotation(getNeedleRotation(magnetPos.x, magnetPos.y, compassPos.x, compassPos.y, newFlipped));
+    checkStepCompletion(magnetPos.x, magnetPos.y, compassPos.x, compassPos.y, newFlipped);
   };
 
   const handleReset = () => {
     setMagnetPos({ x: 650, y: 500 });
+    setCompassPos({ x: 650, y: 300 });
     setIsFlipped(false);
     setNeedleRotation(0);
     setFeedback(null);
     setStep(1);
-    setShowFields(false);
   };
 
   useEffect(() => {
@@ -169,7 +283,10 @@ export default function Simulation({ onComplete, onNext }) {
 
   // Handle magnetic field animation overlay
   const renderMagneticFields = () => {
-    if (!showFields) return null;
+    if (step < 3) return null;
+    const currentMX = magnetPos.x + (activeDragId === 'bar_magnet' ? dragDelta.x : 0);
+    const currentMY = magnetPos.y + (activeDragId === 'bar_magnet' ? dragDelta.y : 0);
+    
     return (
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', opacity: 0.3 }}>
         <svg width="100%" height="100%">
@@ -180,7 +297,7 @@ export default function Simulation({ onComplete, onNext }) {
               <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
             </linearGradient>
           </defs>
-          <g transform={`translate(${magnetPos.x}, ${magnetPos.y}) ${isFlipped ? 'scale(-1, 1)' : ''}`}>
+          <g transform={`translate(${currentMX}, ${currentMY}) ${isFlipped ? 'scale(-1, 1)' : ''}`}>
              <path d="M -80 0 Q 0 -150 80 0" fill="none" stroke="url(#fieldGrad)" strokeWidth="2" strokeDasharray="5,5">
                <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
              </path>
@@ -200,7 +317,8 @@ export default function Simulation({ onComplete, onNext }) {
   };
 
   return (
-    <div className="main-grid" style={{ gridTemplateColumns: "1fr", gap: "1rem", maxWidth: "1800px", margin: "0 auto", width: "100%" }}>
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
+      <div className="main-grid" style={{ gridTemplateColumns: "1fr", gap: "1rem", maxWidth: "1800px", margin: "0 auto", width: "100%" }}>
       
       <div style={{ display: "grid", gridTemplateColumns: "350px 1fr", gap: "1.5rem" }}>
         
@@ -214,7 +332,12 @@ export default function Simulation({ onComplete, onNext }) {
               <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--accent)' }}>Step 1</div>
               <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>Take a magnetic compass and a bar magnet.</p>
               {step === 1 && (
-                <button onClick={() => setStep(2)} className="primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', marginTop: '0.5rem' }}>Next</button>
+                <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '8px', border: '1px dashed var(--border)' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '500' }}>
+                    <Pointer size={14} /> Drag into workspace
+                  </div>
+                  <SidebarDraggableCompass />
+                </div>
               )}
             </div>
 
@@ -222,7 +345,12 @@ export default function Simulation({ onComplete, onNext }) {
               <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--accent)' }}>Step 2</div>
               <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>Place the compass on the surface. Observe it resting towards North.</p>
               {step === 2 && (
-                <button onClick={() => setStep(3)} className="primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', marginTop: '0.5rem' }}>Next</button>
+                <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '8px', border: '1px dashed var(--border)' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '500' }}>
+                    <Pointer size={14} /> Drag into workspace
+                  </div>
+                  <SidebarDraggableMagnet />
+                </div>
               )}
             </div>
 
@@ -254,10 +382,6 @@ export default function Simulation({ onComplete, onNext }) {
           
           <div className="glass-panel" style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button onClick={() => setShowFields(!showFields)} className="outline" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                {showFields ? <EyeOff size={16} /> : <Eye size={16} />} 
-                {showFields ? "Hide Field Lines" : "Show Field Lines"}
-              </button>
               <button onClick={flipMagnet} className="outline" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <RotateCcw size={16} /> Flip Magnet
               </button>
@@ -267,25 +391,23 @@ export default function Simulation({ onComplete, onNext }) {
             </button>
           </div>
 
-          <div className="glass-panel" style={{ position: 'relative', flex: 1, minHeight: '700px', background: '#f8fafc', borderRadius: '12px', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
+          <div id="simulation-workspace" ref={setWorkspaceRef} className="glass-panel" style={{ position: 'relative', flex: 1, minHeight: '700px', background: 'var(--bg-color)', borderRadius: '12px', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
             
             {renderMagneticFields()}
 
-            {/* Compass Container (Fixed) */}
-            <div style={{ position: 'absolute', left: compassPos.x - 50, top: compassPos.y - 50 }}>
-              <CompassNeedle rotation={needleRotation} />
+            {/* Draggable Area */}
+            <div style={{ position: 'absolute', inset: 0 }}>
+              {step >= 2 && (
+                <div style={{ position: 'absolute', left: compassPos.x - 50, top: compassPos.y - 50 }}>
+                  <DraggableCompass rotation={needleRotation} />
+                </div>
+              )}
+              {step >= 3 && (
+                <div style={{ position: 'absolute', left: magnetPos.x - 80, top: magnetPos.y - 20 }}>
+                  <DraggableMagnet isFlipped={isFlipped} />
+                </div>
+              )}
             </div>
-
-            {/* Draggable Magnet Area */}
-            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-              <div style={{ position: 'absolute', inset: 0 }}>
-                {step >= 3 && (
-                  <div style={{ position: 'absolute', left: magnetPos.x - 80, top: magnetPos.y - 20 }}>
-                    <DraggableMagnet isFlipped={isFlipped} />
-                  </div>
-                )}
-              </div>
-            </DndContext>
 
             {/* Feedback Overlay */}
             <AnimatePresence>
@@ -321,6 +443,7 @@ export default function Simulation({ onComplete, onNext }) {
         </div>
 
       </div>
-    </div>
+      </div>
+    </DndContext>
   );
 }
