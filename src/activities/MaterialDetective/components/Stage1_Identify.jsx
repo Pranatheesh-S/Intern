@@ -154,149 +154,161 @@ export default function Stage1_Identify({ onComplete }) {
   const isFinished = identifiedCount === OBJECTS.length;
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem' }}>
-      {/* Workbench Left Area */}
+    <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr 320px', gap: '1.25rem', alignItems: 'stretch' }}>
+      {/* 1. Left Side: Detective's Workbench */}
+      <div className="glass-panel" style={{ padding: '1.25rem', background: 'var(--surface)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span>🛠️</span> Workbench
+        </h3>
+        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+          Inspect each object on the desk and scan its composition. Identify all 6 to solve Case 1!
+        </p>
+
+        {/* Grid of Objects - vertical 2-column layout */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '0.75rem',
+          padding: '0.75rem',
+          background: 'var(--canvas-bg)',
+          borderRadius: '12px',
+          border: '2px dashed var(--accent)',
+          flex: 1,
+          alignContent: 'start'
+        }}>
+          {OBJECTS.map((obj) => {
+            const isDone = identified[obj.id];
+            const isCurrent = selectedObj?.id === obj.id;
+
+            return (
+              <motion.button
+                key={obj.id}
+                onClick={() => handleSelectObject(obj)}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.98 }}
+                style={{
+                  background: obj.color,
+                  border: isCurrent 
+                    ? '3px solid var(--accent)' 
+                    : isDone 
+                      ? '3px solid var(--success)' 
+                      : '1px solid var(--border)',
+                  borderRadius: '12px',
+                  padding: '1rem 0.5rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  minHeight: '100px',
+                  position: 'relative',
+                  boxShadow: isCurrent 
+                    ? '0 0 12px rgba(99, 102, 241, 0.4)' 
+                    : 'none',
+                  color: '#1e293b'
+                }}
+              >
+                {/* Status Indicator Badge */}
+                <span style={{ fontSize: '2rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }}>
+                  {obj.icon}
+                </span>
+                
+                <span style={{ 
+                  fontSize: '0.75rem', 
+                  fontWeight: 'bold', 
+                  color: '#0f172a',
+                  textAlign: 'center',
+                  lineHeight: '1.2'
+                }}>
+                  {obj.name}
+                </span>
+
+                {isDone && (
+                  <div style={{ 
+                    position: 'absolute', 
+                    top: '4px', 
+                    right: '4px', 
+                    background: 'white', 
+                    borderRadius: '50%',
+                    padding: '1px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <CheckCircle2 size={14} style={{ color: 'var(--success)' }} />
+                  </div>
+                )}
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. Center: Large section box to view objects in 360 view & small section below for options */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-        <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--surface)' }}>
-          <h3 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span>🛠️</span> Detective's Workbench
+        {/* Top: 360 View Box */}
+        <div className="glass-panel" style={{ 
+          padding: '1.25rem', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          flex: 1,
+          position: 'relative'
+        }}>
+          <h3 style={{ margin: 0, fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-heading)' }}>
+            <Eye size={18} /> 360° Object Viewer
           </h3>
-          <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', margin: '0.25rem 0 1rem 0' }}>
-            Inspect each object on the desk and scan its composition. Once you identify all 6, you solve Case 1!
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '0.25rem 0 0.75rem 0' }}>
+            Click and drag the model to rotate and inspect it in 360 degrees.
           </p>
 
-          {/* Workbench Grid */}
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '1rem',
-            padding: '1rem',
-            background: 'var(--canvas-bg)',
+            flex: 1,
             borderRadius: '12px',
-            border: '2px dashed var(--accent)',
-            minHeight: '260px',
-            position: 'relative'
+            background: 'var(--canvas-bg)',
+            border: '1px solid var(--border)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+            minHeight: '280px'
           }}>
-            {OBJECTS.map((obj) => {
-              const isDone = identified[obj.id];
-              const isCurrent = selectedObj?.id === obj.id;
-
-              return (
-                <motion.button
-                  key={obj.id}
-                  onClick={() => handleSelectObject(obj)}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.98 }}
-                  style={{
-                    background: obj.color,
-                    border: isCurrent 
-                      ? '3px solid var(--accent)' 
-                      : isDone 
-                        ? '3px solid var(--success)' 
-                        : '1px solid var(--border)',
-                    borderRadius: '12px',
-                    padding: '1.5rem 1rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.75rem',
-                    minHeight: '110px',
-                    position: 'relative',
-                    boxShadow: isCurrent 
-                      ? '0 0 15px rgba(99, 102, 241, 0.4)' 
-                      : 'none',
-                    color: '#1e293b'
-                  }}
-                >
-                  {/* Status Indicator Badge */}
-                  <span style={{ fontSize: '2.5rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }}>
-                    {obj.icon}
-                  </span>
-                  
-                  <span style={{ 
-                    fontSize: '0.85rem', 
-                    fontWeight: 'bold', 
-                    color: '#0f172a',
-                    textAlign: 'center'
-                  }}>
-                    {obj.name}
-                  </span>
-
-                  {isDone && (
-                    <div style={{ 
-                      position: 'absolute', 
-                      top: '6px', 
-                      right: '6px', 
-                      background: 'white', 
-                      borderRadius: '50%',
-                      padding: '2px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <CheckCircle2 size={16} style={{ color: 'var(--success)' }} />
-                    </div>
-                  )}
-                </motion.button>
-              );
-            })}
+            {selectedObj ? (
+              <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                <ThreeDObjectViewer objectId={selectedObj.id} />
+              </div>
+            ) : (
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center', padding: '2rem' }}>
+                Select an object from the workbench to inspect it in 360°
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Action / Lens Detail Panel */}
-        <AnimatePresence mode="wait">
-          {selectedObj && (
-            <motion.div
-              key={selectedObj.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="glass-panel"
-              style={{ padding: '1.5rem', display: 'flex', gap: '1.5rem', alignItems: 'center' }}
-            >
-              {/* Interactive 3D object viewer representation */}
-              <div style={{
-                width: '150px',
-                height: '150px',
-                borderRadius: '16px',
-                background: 'var(--canvas-bg)',
-                border: '2px solid var(--accent)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: 'var(--card-shadow)',
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: '6px',
-                  left: '6px',
-                  background: 'var(--accent)',
-                  color: 'white',
-                  borderRadius: '12px',
-                  padding: '2px 6px',
-                  zIndex: 10,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                  fontSize: '0.65rem',
-                  fontWeight: 'bold'
-                }}>
-                  <Eye size={12} /> 360° View
-                </div>
-                <ThreeDObjectViewer objectId={selectedObj.id} />
-              </div>
-
-              {/* Composition Scanning Form */}
-              <div style={{ flex: 1 }}>
-                <h4 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-heading)' }}>
+        {/* Bottom: Lens Scanner / Options */}
+        <div className="glass-panel" style={{ 
+          padding: '1.25rem', 
+          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%)',
+          border: '1.5px solid var(--accent-border)',
+          minHeight: '120px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
+        }}>
+          <AnimatePresence mode="wait">
+            {selectedObj ? (
+              <motion.div
+                key={selectedObj.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                style={{ width: '100%' }}
+              >
+                <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-heading)' }}>
                   Lens Scanner: {selectedObj.name}
                 </h4>
-                <p style={{ margin: '0.25rem 0 0.75rem 0', fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
+                <p style={{ margin: '0.25rem 0 0.75rem 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
                   Select the core material used to make this object:
                 </p>
 
@@ -307,26 +319,28 @@ export default function Stage1_Identify({ onComplete }) {
                     gap: '0.5rem', 
                     color: 'var(--success)', 
                     background: 'var(--success-bg)',
-                    padding: '0.5rem 1rem',
+                    padding: '0.4rem 0.8rem',
                     borderRadius: '8px',
                     border: '1px solid var(--success-border)',
                     fontWeight: 'bold',
-                    fontSize: '0.85rem'
+                    fontSize: '0.8rem'
                   }}>
-                    <ShieldCheck size={18} />
+                    <CheckCircle2 size={16} />
                     Composition verified: {selectedObj.material}
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                     {MATERIALS.map((mat) => (
                       <button
                         key={mat}
                         onClick={() => handleSelectMaterial(mat)}
                         className="outline"
                         style={{
-                          padding: '0.35rem 0.75rem',
-                          fontSize: '0.8rem',
-                          borderRadius: '8px'
+                          padding: '0.3rem 0.7rem',
+                          fontSize: '0.75rem',
+                          borderRadius: '8px',
+                          background: 'var(--surface)',
+                          cursor: 'pointer'
                         }}
                       >
                         {mat}
@@ -334,21 +348,24 @@ export default function Stage1_Identify({ onComplete }) {
                     ))}
                   </div>
                 )}
+              </motion.div>
+            ) : (
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center' }}>
+                Lens Scanner ready. Choose an object to scan.
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
-      {/* Sidebar Area with AI Mentor & Case Progress */}
+      {/* 3. Right: Progress & AI Mentor */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-        {/* Case Progress Card */}
+        {/* Case Progress */}
         <div className="glass-panel" style={{ padding: '1.25rem' }}>
           <h4 style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-heading)' }}>
             Case 1 Progress
           </h4>
           
-          {/* Progress Bar */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.75rem' }}>
             <div style={{ flex: 1, height: '8px', background: 'var(--border-light)', borderRadius: '4px', overflow: 'hidden' }}>
               <div style={{ 
@@ -369,7 +386,6 @@ export default function Stage1_Identify({ onComplete }) {
               : "Scan objects to locate and verify their molecular makeup."}
           </div>
 
-          {/* Reset button */}
           <button 
             onClick={() => {
               setIdentified({});
@@ -413,7 +429,7 @@ export default function Stage1_Identify({ onComplete }) {
           )}
         </div>
 
-        {/* AI Detective Mentor Dialog */}
+        {/* AI Mentor */}
         <AIMentor 
           state={mentorState} 
           text={mentorText} 
