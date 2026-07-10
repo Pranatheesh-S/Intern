@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowLeft, BookOpen } from 'lucide-react';
 
 export default function Activity4_1({ onBackToDashboard }) {
+  const iframeRef = useRef(null);
+
+  useEffect(() => {
+    const handleMessage = (e) => {
+      if (e.data && e.data.type === 'resize_iframe' && iframeRef.current) {
+        // Add a small buffer to prevent nested scrollbars during transitions
+        iframeRef.current.style.height = `${e.data.height + 20}px`;
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -36,10 +49,11 @@ export default function Activity4_1({ onBackToDashboard }) {
           </div>
         </div>
       </div>
-      <div style={{ flex: 1, borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+      <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border)', minHeight: '600px' }}>
         <iframe 
+          ref={iframeRef}
           src="/Activity4_1/index.html" 
-          style={{ width: '100%', height: '100%', border: 'none' }}
+          style={{ width: '100%', height: '600px', border: 'none', transition: 'height 0.3s ease' }}
           title="Activity 4.1"
         />
       </div>

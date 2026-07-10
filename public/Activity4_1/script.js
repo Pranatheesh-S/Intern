@@ -1,7 +1,7 @@
 const ITEMS = [
     { id: 'wooden_block', name: 'Wooden block', material: 'Wood', magnetic: false, emoji: '🪵' },
     { id: 'iron_nail', name: 'Iron nail', material: 'Iron', magnetic: true, emoji: '🔨' },
-    { id: 'steel_screw', name: 'Steel screw', material: 'Steel', magnetic: true, emoji: '🔩' },
+
     { id: 'rubber_eraser', name: 'Rubber eraser', material: 'Rubber', magnetic: false, emoji: '🧽' },
     { id: 'paper_clip', name: 'Paper clip', material: 'Steel', magnetic: true, emoji: '📎' },
     { id: 'copper_wire', name: 'Copper wire', material: 'Copper', magnetic: false, emoji: '🪢' },
@@ -111,36 +111,65 @@ function initPrediction() {
     const btnStartExp = document.getElementById('btn-start-experiment');
     btnStartExp.disabled = true;
     
-    ITEMS.forEach(item => {
+    for (let i = 0; i < ITEMS.length; i += 2) {
+        const item1 = ITEMS[i];
+        const item2 = ITEMS[i + 1];
+        
         const tr = document.createElement('tr');
-        tr.innerHTML = `
+        let html = `
             <td>
                 <div class="object-cell">
-                    <div class="emoji-icon">${item.emoji}</div>
-                    <span>${item.name}</span>
+                    <div class="emoji-icon">${item1.emoji}</div>
+                    <span>${item1.name}</span>
                 </div>
             </td>
             <td>
                 <div class="radio-group">
                     <label class="radio-label">
-                        <input type="radio" name="pred_${item.id}" value="magnetic"> Magnetic
+                        <input type="radio" name="pred_${item1.id}" value="magnetic"> Magnetic
                     </label>
                     <label class="radio-label">
-                        <input type="radio" name="pred_${item.id}" value="non-magnetic"> Not Magnetic
+                        <input type="radio" name="pred_${item1.id}" value="non-magnetic"> Not Magnetic
                     </label>
                 </div>
             </td>
         `;
+        
+        if (item2) {
+            html += `
+                <td>
+                    <div class="object-cell">
+                        <div class="emoji-icon">${item2.emoji}</div>
+                        <span>${item2.name}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="pred_${item2.id}" value="magnetic"> Magnetic
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="pred_${item2.id}" value="non-magnetic"> Not Magnetic
+                        </label>
+                    </div>
+                </td>
+            `;
+        } else {
+            html += `<td></td><td></td>`;
+        }
+        
+        tr.innerHTML = html;
         tbody.appendChild(tr);
 
         const radios = tr.querySelectorAll('input[type="radio"]');
         radios.forEach(radio => {
             radio.addEventListener('change', (e) => {
-                state.predictions[item.id] = e.target.value;
+                const itemId = e.target.name.replace('pred_', '');
+                state.predictions[itemId] = e.target.value;
                 checkPredictionsComplete();
             });
         });
-    });
+    }
 
     const newBtn = btnStartExp.cloneNode(true);
     btnStartExp.parentNode.replaceChild(newBtn, btnStartExp);
@@ -210,6 +239,36 @@ function initWorkspace() {
     });
 }
 
+let scrollInterval = null;
+let currentPointerY = 0;
+
+function startAutoScroll() {
+    if (scrollInterval) return;
+    scrollInterval = setInterval(() => {
+        try {
+            if (window.parent && window.frameElement) {
+                const frameRect = window.frameElement.getBoundingClientRect();
+                const screenY = frameRect.top + currentPointerY;
+                const parentHeight = window.parent.innerHeight;
+                const margin = 100;
+                
+                if (screenY > parentHeight - margin) {
+                    window.parent.scrollBy({ top: 15, behavior: 'instant' });
+                } else if (screenY < margin) {
+                    window.parent.scrollBy({ top: -15, behavior: 'instant' });
+                }
+            }
+        } catch(e) {}
+    }, 16);
+}
+
+function stopAutoScroll() {
+    if (scrollInterval) {
+        clearInterval(scrollInterval);
+        scrollInterval = null;
+    }
+}
+
 function onPointerDown(e) {
     if(phases.workspace.classList.contains('hidden')) return;
     
@@ -218,6 +277,8 @@ function onPointerDown(e) {
     
     e.preventDefault();
     originalCard = card;
+    currentPointerY = e.clientY;
+    startAutoScroll();
     
     const rect = originalCard.getBoundingClientRect();
     offsetX = e.clientX - rect.left;
@@ -243,10 +304,13 @@ function onPointerMove(e) {
     if (!draggingClone) return;
     draggingClone.style.left = `${e.clientX - offsetX}px`;
     draggingClone.style.top = `${e.clientY - offsetY}px`;
+    currentPointerY = e.clientY;
 }
 
 function onPointerUp(e) {
     if (!draggingClone) return;
+    
+    stopAutoScroll();
     
     const isMagnetic = originalCard.dataset.magnetic === 'true';
     const clone = draggingClone;
@@ -363,3 +427,21 @@ function initResults() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 }
+
+// Auto-resize iframe
+function reportHeight() {
+    const container = document.querySelector('.app-container');
+    if (container) {
+        window.parent.postMessage({ type: 'resize_iframe', height: container.scrollHeight }, '*');
+    }
+}
+window.addEventListener('load', reportHeight);
+window.addEventListener('resize', reportHeight);
+const observer = new MutationObserver(reportHeight);
+observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+// Also report height after phase switches
+const originalSwitchPhase = switchPhase;
+switchPhase = function(phaseName) {
+    originalSwitchPhase(phaseName);
+    setTimeout(reportHeight, 50);
+};
