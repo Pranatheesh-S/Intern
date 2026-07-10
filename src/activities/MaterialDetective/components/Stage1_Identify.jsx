@@ -41,7 +41,7 @@ const OBJECTS = [
   },
   {
     id: 'tumbler',
-    name: 'Glass Tumbler',
+    name: 'Tumbler',
     material: 'Glass',
     description: 'A transparent cup for holding water.',
     hint: 'You can see right through it, but be careful—it is fragile and breaks easily!',
@@ -116,7 +116,7 @@ export default function Stage1_Identify({ onComplete }) {
   const [identified, setIdentified] = useState({});
   const [mentorState, setMentorState] = useState('idle');
   const [mentorText, setMentorText] = useState(
-    "Welcome to the Crime Scene, Detective! 🕵️‍♂️ We have 6 objects here. We need to identify what materials they are made of. Click on any object on the workbench to inspect it."
+    "Welcome to the Crime Scene, Detective! 🕵️‍♂️ We have 6 objects here. We need to identify what materials they are made of. Click on any object on the detective bench to inspect it."
   );
   const [mentorHint, setMentorHint] = useState("");
 
@@ -158,7 +158,7 @@ export default function Stage1_Identify({ onComplete }) {
       {/* 1. Left Side: Detective's Workbench */}
       <div className="glass-panel" style={{ padding: '1.25rem', background: 'var(--surface)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         <h3 style={{ margin: 0, fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span>🛠️</span> Workbench
+          <span>🛠️</span> Detective Bench
         </h3>
         <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
           Inspect each object on the desk and scan its composition. Identify all 6 to solve Case 1!
@@ -280,7 +280,7 @@ export default function Stage1_Identify({ onComplete }) {
               </div>
             ) : (
               <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center', padding: '2rem' }}>
-                Select an object from the workbench to inspect it in 360°
+                Select an object from the detective bench to inspect it in 360°
               </div>
             )}
           </div>
@@ -391,7 +391,7 @@ export default function Stage1_Identify({ onComplete }) {
               setIdentified({});
               setSelectedObj(null);
               setMentorState('idle');
-              setMentorText("Progress reset! Click on any object on the workbench to inspect it.");
+              setMentorText("Progress reset! Click on any object on the detective bench to inspect it.");
               setMentorHint("");
             }}
             className="outline" 
