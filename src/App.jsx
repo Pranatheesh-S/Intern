@@ -50,6 +50,8 @@ const MaterialsAroundUsActivity = lazy(() => import('./activities/MaterialsAroun
 const Activity4_1 = lazy(() => import('./activities/Activity4_1'));
 const Activity4_6 = lazy(() => import('./activities/Activity4_6'));
 const Activity4_7 = lazy(() => import('./activities/Activity4_7'));
+const Chapter4Flow = lazy(() => import('./activities/Chapter4Flow'));
+const IntroMagnets = lazy(() => import('./activities/IntroMagnets'));
 import './App.css';
 
 export default function App() {
@@ -62,12 +64,17 @@ export default function App() {
     const params = new URLSearchParams(window.location.hash.replace('#', '?'));
     return params.get('activity') || null;
   });
+  const [activeSection, setActiveSection] = useState(() => {
+    const params = new URLSearchParams(window.location.hash.replace('#', '?'));
+    return params.get('section') || null;
+  });
 
   useEffect(() => {
     const handleHashChange = () => {
       const params = new URLSearchParams(window.location.hash.replace('#', '?'));
       setActiveSubject(params.get('subject') || null);
       setActiveActivity(params.get('activity') || null);
+      setActiveSection(params.get('section') || null);
     };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
@@ -126,10 +133,11 @@ export default function App() {
     document.title = title;
   }, [activeSubject, activeActivity]);
 
-  const navigateTo = (subject, activity) => {
+  const navigateTo = (subject, activity, section = null) => {
     const params = new URLSearchParams();
     if (subject) params.set('subject', subject);
     if (activity) params.set('activity', activity);
+    if (section) params.set('section', section);
     window.location.hash = params.toString();
   };
 
@@ -825,13 +833,22 @@ export default function App() {
                           : "Includes Activities 6.1, 6.2, and 6.3: Material Detective case study."}
                   </p>
 
-                  <button 
-                    onClick={() => navigateTo('class6', `chapter${chapter.num}`)}
-                    className="primary" 
-                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                  >
-                    Open Chapter <ArrowRight size={14} />
-                  </button>
+                  <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
+                    <button 
+                      onClick={() => navigateTo('class6', chapter.num === 4 ? 'chapter4_flow' : `chapter${chapter.num}`)}
+                      className="outline" 
+                      style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                    >
+                      <BookOpen size={14} /> Open Chapter
+                    </button>
+                    <button 
+                      onClick={() => navigateTo('class6', `chapter${chapter.num}`)}
+                      className="primary" 
+                      style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                    >
+                      Activity Page <ArrowRight size={14} />
+                    </button>
+                  </div>
                 </div>
               );
             }
@@ -2590,8 +2607,16 @@ export default function App() {
             <FatTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
           ) : activeActivity === 'protein_testing' ? (
             <ProteinTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
+          ) : activeActivity === 'intro_magnets' ? (
+            <IntroMagnets 
+              onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} 
+              onComplete={() => navigateTo('class6', 'chapter4_flow', 'act-4-1')}
+            />
           ) : activeActivity === 'activity_4_1' ? (
-            <Activity4_1 onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+            <Activity4_1 
+              onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} 
+              onComplete={() => navigateTo('class6', 'chapter4_flow', 'sec-4-2')}
+            />
           ) : activeActivity === 'magnetic_poles' ? (
             <MagneticPolesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'suspended_magnet' ? (
@@ -2616,6 +2641,12 @@ export default function App() {
             renderClass6Chapter3()
           ) : activeActivity === 'chapter4' ? (
             renderClass6Chapter4()
+          ) : activeActivity === 'chapter4_flow' ? (
+            <Chapter4Flow 
+              onBackToDashboard={() => navigateTo('class6', null)} 
+              onLaunchActivity={(act) => navigateTo('class6', act)} 
+              initialSection={activeSection}
+            />
           ) : activeActivity === 'chapter5' ? (
             renderClass6Chapter5()
           ) : activeActivity === 'chapter6' ? (
