@@ -77,6 +77,16 @@ export default function Stage1_Experiment({ onComplete }) {
           
           {/* Magnet Container */}
           <motion.div
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.5}
+            onDragEnd={(e, info) => {
+              if (Math.abs(info.offset.x) > 20 || Math.abs(info.velocity.x) > 100) {
+                if (!isSpinning && quizAnswer !== 'yes') {
+                  handleSpin();
+                }
+              }
+            }}
             animate={{ rotate: magnetRotation }}
             transition={{ 
               type: 'spring', 
@@ -90,8 +100,10 @@ export default function Stage1_Experiment({ onComplete }) {
               width: '160px',
               height: '30px',
               marginTop: '-5px',
-              zIndex: 10
+              zIndex: 10,
+              cursor: isSpinning || quizAnswer === 'yes' ? 'default' : 'grab'
             }}
+            whileDrag={{ cursor: 'grabbing' }}
           >
             <div style={{
               width: '100%',
