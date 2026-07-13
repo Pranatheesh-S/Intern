@@ -46,6 +46,9 @@ const CurvesRegionsLabActivity = lazy(() => import('./activities/CurvesRegionsLa
 const AnglesLabActivity = lazy(() => import('./activities/AnglesLab'));
 const PolygonsLabActivity = lazy(() => import('./activities/PolygonsLab'));
 const CirclesLabActivity = lazy(() => import('./activities/CirclesLab'));
+const VirtualBiodiversityExplorerActivity = lazy(() => import('./activities/VirtualBiodiversityExplorer'));
+const PlantDetectiveActivity = lazy(() => import('./activities/PlantDetective'));
+const AnimalHabitatExplorerActivity = lazy(() => import('./activities/AnimalHabitatExplorer'));
 import './App.css';
 
 export default function App() {
@@ -702,7 +705,7 @@ export default function App() {
           gap: '1.25rem'
         }}>
           {CLASS_6_CHAPTERS.map(chapter => {
-            if (chapter.num === 3 || chapter.num === 4 || chapter.num === 5) {
+            if (chapter.num === 2 || chapter.num === 3 || chapter.num === 4 || chapter.num === 5) {
               return (
                 <div
                   key={chapter.num}
@@ -730,11 +733,13 @@ export default function App() {
                   </div>
 
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-                    {chapter.num === 3 
-                      ? "Includes Activity 3.5: Testing for Starch." 
-                      : chapter.num === 4 
-                        ? "Includes Activity 4.1: Appearance, hardness, and effect of hammering on different materials."
-                        : "Includes Activity 5.3: Linear Motion and observation of moving objects."}
+                    {chapter.num === 2
+                      ? "Virtual Biodiversity Explorer, Plant Detective, and Animal Habitat Explorer."
+                      : chapter.num === 3 
+                        ? "Includes Activity 3.5: Testing for Starch." 
+                        : chapter.num === 4 
+                          ? "Includes Activity 4.1: Appearance, hardness, and effect of hammering on different materials."
+                          : "Includes Activity 5.3: Linear Motion and observation of moving objects."}
                   </p>
 
                   <button 
@@ -1149,6 +1154,135 @@ export default function App() {
             style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
           >
             <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderClass6Chapter2 = () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+        <button
+          onClick={() => navigateTo('class6', null)}
+          className="outline"
+          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+        >
+          <ArrowLeft size={14} /> Back to Class 6 Wing
+        </button>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 2 Activities</h2>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: '1.25rem'
+      }}>
+        {/* Activity Card 1: Virtual Biodiversity Explorer */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={20} style={{ color: '#05b6d4' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Virtual Biodiversity Explorer</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Explore a virtual park, search for different species of plants and animals, and record their details in a biodiversity notebook.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6', 'virtual_biodiversity')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Explorer <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity Card 2: Plant Detective */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={20} style={{ color: '#10b981' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Plant Detective</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Inspect mystery plants under a magnifying glass, classify their stem and leaf arrangements, and identify the species.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6', 'plant_detective')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Detective Lab <ArrowRight size={14} />
+          </button>
+        </div>
+
+        {/* Activity Card 3: Animal Habitat Explorer */}
+        <div
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--success-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Active Lab
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Compass size={20} style={{ color: '#f59e0b' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Animal Habitat Explorer</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Discover animal habitats, match feeding preferences, and observe how movement modes are adapted to survival.
+          </p>
+
+          <button
+            onClick={() => navigateTo('class6', 'animal_habitat')}
+            className="primary"
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+          >
+            <Play size={14} fill="#ffffff" /> Open Habitat Explorer <ArrowRight size={14} />
           </button>
         </div>
       </div>
@@ -2516,6 +2650,9 @@ export default function App() {
                      activeActivity === 'line_segment_lab' ? 'Activity 2.2: Line Segment Lab' :
                      activeActivity === 'parallel_intersecting_lab' ? 'Activity 2.3: Parallel & Intersecting Lines' :
                      activeActivity === 'curves_regions_lab' ? 'Activity 2.4: Curves & Closed Regions' :
+                     activeActivity === 'virtual_biodiversity' ? 'Virtual Biodiversity Explorer' :
+                     activeActivity === 'plant_detective' ? 'Plant Detective' :
+                     activeActivity === 'animal_habitat' ? 'Animal Habitat Explorer' :
                      'Template Demo'}
                   </span>
                 </>
@@ -2582,6 +2719,14 @@ export default function App() {
             <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
           ) : activeActivity === 'circular_motion' ? (
             <CircularMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
+          ) : activeActivity === 'virtual_biodiversity' ? (
+            <VirtualBiodiversityExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
+          ) : activeActivity === 'plant_detective' ? (
+            <PlantDetectiveActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
+          ) : activeActivity === 'animal_habitat' ? (
+            <AnimalHabitatExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
+          ) : activeActivity === 'chapter2' ? (
+            renderClass6Chapter2()
           ) : activeActivity === 'chapter3' ? (
             renderClass6Chapter3()
           ) : activeActivity === 'chapter4' ? (
