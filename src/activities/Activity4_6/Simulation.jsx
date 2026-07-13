@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle2, RotateCcw, Compass, Activity, Eye, EyeOff, Pointer } from 'lucide-react';
-import { DndContext, useSensor, useSensors, PointerSensor, TouchSensor, useDraggable, useDroppable } from '@dnd-kit/core';
+import { DndContext, useSensor, useSensors, PointerSensor, TouchSensor, useDraggable, useDroppable, DragOverlay } from '@dnd-kit/core';
 
 // Helper: Calculate angle between two points
 const calculateAngle = (cx, cy, px, py) => {
@@ -14,7 +14,7 @@ const calculateAngle = (cx, cy, px, py) => {
 
 // Compass component
 const CompassNeedle = ({ rotation }) => (
-  <div style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '50%', background: '#fff', border: '4px solid #94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+  <div style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '50%', background: '#fff', border: '4px solid #94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', userSelect: 'none' }}>
     <div style={{ position: 'absolute', top: '5px', fontWeight: 'bold', color: '#ef4444', fontSize: '10px' }}>N</div>
     <div style={{ position: 'absolute', bottom: '5px', fontWeight: 'bold', color: '#3b82f6', fontSize: '10px' }}>S</div>
     <div style={{ position: 'absolute', left: '5px', fontWeight: 'bold', color: '#94a3b8', fontSize: '10px' }}>W</div>
@@ -35,41 +35,46 @@ const CompassNeedle = ({ rotation }) => (
   </div>
 );
 
-const DraggableMagnet = ({ isFlipped }) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+const MagnetVisual = ({ isFlipped, isDragging }) => (
+  <div style={{ 
+    width: '160px', height: '40px', display: 'flex', borderRadius: '4px', overflow: 'hidden', 
+    boxShadow: isDragging ? '0 10px 15px rgba(0,0,0,0.3)' : '0 4px 6px rgba(0,0,0,0.1)',
+    flexDirection: isFlipped ? 'row-reverse' : 'row',
+    userSelect: 'none'
+  }}>
+    <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>N</div>
+    <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>S</div>
+  </div>
+);
+
+const DraggableMagnet = ({ isFlipped, onDoubleClick }) => {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: 'bar_magnet',
   });
 
   const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    zIndex: isDragging ? 1000 : 10,
+    opacity: isDragging ? 0 : 1,
+    zIndex: 10,
     cursor: isDragging ? 'grabbing' : 'grab',
     touchAction: 'none'
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <div style={{ 
-        width: '160px', height: '40px', display: 'flex', borderRadius: '4px', overflow: 'hidden', 
-        boxShadow: isDragging ? '0 10px 15px rgba(0,0,0,0.3)' : '0 4px 6px rgba(0,0,0,0.1)',
-        flexDirection: isFlipped ? 'row-reverse' : 'row'
-      }}>
-        <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>N</div>
-        <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>S</div>
-      </div>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes} onDoubleClick={onDoubleClick}>
+      <MagnetVisual isFlipped={isFlipped} isDragging={false} />
     </div>
   );
 };
 
 // Draggable Compass
 const DraggableCompass = ({ rotation }) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: 'compass',
   });
 
   const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    zIndex: isDragging ? 1000 : 10,
+    opacity: isDragging ? 0 : 1,
+    zIndex: 10,
     cursor: isDragging ? 'grabbing' : 'grab',
     touchAction: 'none'
   };
@@ -82,13 +87,13 @@ const DraggableCompass = ({ rotation }) => {
 };
 
 const SidebarDraggableCompass = () => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: 'sidebar_compass',
   });
   
   const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    zIndex: isDragging ? 1000 : 10,
+    opacity: isDragging ? 0 : 1,
+    zIndex: 10,
     cursor: isDragging ? 'grabbing' : 'grab',
     touchAction: 'none',
     width: '100px', height: '100px',
@@ -103,26 +108,20 @@ const SidebarDraggableCompass = () => {
 };
 
 const SidebarDraggableMagnet = () => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: 'sidebar_magnet',
   });
   
   const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    zIndex: isDragging ? 1000 : 10,
+    opacity: isDragging ? 0 : 1,
+    zIndex: 10,
     cursor: isDragging ? 'grabbing' : 'grab',
     touchAction: 'none',
   };
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <div style={{ 
-        width: '160px', height: '40px', display: 'flex', borderRadius: '4px', overflow: 'hidden', 
-        boxShadow: isDragging ? '0 10px 15px rgba(0,0,0,0.3)' : '0 4px 6px rgba(0,0,0,0.1)',
-      }}>
-        <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>N</div>
-        <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>S</div>
-      </div>
+      <MagnetVisual isFlipped={false} isDragging={false} />
     </div>
   );
 };
@@ -229,13 +228,39 @@ export default function Simulation({ onComplete, onNext }) {
     const { active, over, delta } = event;
 
     if (active.id === 'sidebar_compass') {
-      setCompassPos({ x: 650, y: 300 });
+      let finalX = 650;
+      let finalY = 300;
+      if (active.rect?.current?.translated) {
+        const translatedRect = active.rect.current.translated;
+        const wsEl = document.getElementById('simulation-workspace');
+        if (wsEl) {
+          const wsRect = wsEl.getBoundingClientRect();
+          finalX = (translatedRect.left + translatedRect.width / 2) - wsRect.left;
+          finalY = (translatedRect.top + translatedRect.height / 2) - wsRect.top;
+          finalX = Math.max(80, Math.min(finalX, wsRect.width - 80));
+          finalY = Math.max(20, Math.min(finalY, wsRect.height - 20));
+        }
+      }
+      setCompassPos({ x: finalX, y: finalY });
       setStep(2);
       return;
     }
     
     if (active.id === 'sidebar_magnet') {
-      setMagnetPos({ x: 650, y: 500 });
+      let finalX = 650;
+      let finalY = 500;
+      if (active.rect?.current?.translated) {
+        const translatedRect = active.rect.current.translated;
+        const wsEl = document.getElementById('simulation-workspace');
+        if (wsEl) {
+          const wsRect = wsEl.getBoundingClientRect();
+          finalX = (translatedRect.left + translatedRect.width / 2) - wsRect.left;
+          finalY = (translatedRect.top + translatedRect.height / 2) - wsRect.top;
+          finalX = Math.max(80, Math.min(finalX, wsRect.width - 80));
+          finalY = Math.max(20, Math.min(finalY, wsRect.height - 20));
+        }
+      }
+      setMagnetPos({ x: finalX, y: finalY });
       setStep(3);
       return;
     }
@@ -404,7 +429,7 @@ export default function Simulation({ onComplete, onNext }) {
               )}
               {step >= 3 && (
                 <div style={{ position: 'absolute', left: magnetPos.x - 80, top: magnetPos.y - 20 }}>
-                  <DraggableMagnet isFlipped={isFlipped} />
+                  <DraggableMagnet isFlipped={isFlipped} onDoubleClick={flipMagnet} />
                 </div>
               )}
             </div>
@@ -444,6 +469,24 @@ export default function Simulation({ onComplete, onNext }) {
 
       </div>
       </div>
+      
+      <DragOverlay zIndex={2000}>
+        {activeDragId === 'sidebar_compass' ? (
+          <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <CompassNeedle rotation={0} />
+          </div>
+        ) : null}
+        {activeDragId === 'sidebar_magnet' ? (
+          <MagnetVisual isFlipped={false} isDragging={true} />
+        ) : null}
+        {activeDragId === 'compass' ? (
+          <CompassNeedle rotation={needleRotation} />
+        ) : null}
+        {activeDragId === 'bar_magnet' ? (
+          <MagnetVisual isFlipped={isFlipped} isDragging={true} />
+        ) : null}
+      </DragOverlay>
+
     </DndContext>
   );
 }
