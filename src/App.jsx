@@ -47,15 +47,12 @@ const Activity9_2 = lazy(() => import('./activities/SolubilityOfBakingSoda'));
 const ForceExplorerActivity = lazy(() => import('./activities/ForceExplorer'));
 const MicroscopeDiscovery = lazy(() => import('./activities/MicroscopeDiscovery'));
 const MaterialDetectiveActivity = lazy(() => import('./activities/MaterialDetective'));
-<<<<<<< Updated upstream
 const MaterialsAroundUsActivity = lazy(() => import('./activities/MaterialsAroundUs'));
 const Activity4_1 = lazy(() => import('./activities/Activity4_1'));
 const Activity4_6 = lazy(() => import('./activities/Activity4_6'));
 const Activity4_7 = lazy(() => import('./activities/Activity4_7'));
 const Chapter4Flow = lazy(() => import('./activities/Chapter4Flow'));
 const IntroMagnets = lazy(() => import('./activities/IntroMagnets'));
-=======
->>>>>>> Stashed changes
 import './App.css';
 
 export default function App() {
@@ -2618,7 +2615,6 @@ export default function App() {
             <FatTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
           ) : activeActivity === 'protein_testing' ? (
             <ProteinTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
-<<<<<<< Updated upstream
           ) : activeActivity === 'intro_magnets' ? (
             <IntroMagnets 
               onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} 
@@ -2629,8 +2625,6 @@ export default function App() {
               onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} 
               onComplete={() => navigateTo('class6', 'chapter4_flow', 'sec-4-2')}
             />
-=======
->>>>>>> Stashed changes
           ) : activeActivity === 'magnetic_poles' ? (
             <MagneticPolesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
           ) : activeActivity === 'suspended_magnet' ? (
