@@ -1,24 +1,60 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, User, Check, RefreshCw, AlertCircle } from 'lucide-react';
+import { BookOpen, User, GraduationCap, Check, RefreshCw } from 'lucide-react';
 
 export default function Stage1_Intro({ onComplete, addXp }) {
   const [clickedObjects, setClickedObjects] = useState({});
   const [completed, setCompleted] = useState(false);
 
   const classroomObjects = [
-    { id: 'notebook', name: 'Notebook', material: 'Paper', desc: 'Used for writing, made of sheets of paper bound together.', position: { top: '65%', left: '15%' }, color: '#3b82f6' },
-    { id: 'pen', name: 'Pen', material: 'Plastic & Metal', desc: 'Used for writing, combines a plastic barrel, metal tip, and ink.', position: { top: '63%', left: '26%' }, color: '#10b981' },
-    { id: 'desk', name: 'Wooden Desk', material: 'Wood', desc: 'Provides a sturdy writing surface, made of processed wood.', position: { top: '75%', left: '35%' }, color: '#8b5cf6' },
-    { id: 'window', name: 'Window Pane', material: 'Glass', desc: 'Allows light to enter, made of transparent glass.', position: { top: '25%', left: '75%' }, color: '#06b6d4' },
-    { id: 'bottle', name: 'Water Bottle', material: 'Metal (Stainless Steel)', desc: 'Keeps water cool and safe, made of durable metal.', position: { top: '55%', left: '48%' }, color: '#ec4899' },
-    { id: 'cushion', name: 'Chair Cushion', material: 'Cloth / Fabric', desc: 'Provides comfort on seats, made of soft fabric.', position: { top: '72%', left: '55%' }, color: '#f59e0b' }
+    { 
+      id: 'notebook', 
+      name: 'Notebook', 
+      material: 'Paper', 
+      desc: 'Used for writing, made of sheets of paper bound together.',
+      pos: { bottom: '130px', left: '70px' }
+    },
+    { 
+      id: 'pen', 
+      name: 'Pen', 
+      material: 'Plastic & Metal', 
+      desc: 'Used for writing, combines a plastic barrel, metal tip, and ink.',
+      pos: { bottom: '135px', left: '135px' }
+    },
+    { 
+      id: 'desk', 
+      name: 'Wooden Desk', 
+      material: 'Wood', 
+      desc: 'Provides a sturdy writing surface, made of processed wood.',
+      pos: { bottom: '40px', left: '40px' }
+    },
+    { 
+      id: 'window', 
+      name: 'Window Pane', 
+      material: 'Glass', 
+      desc: 'Allows light to enter, made of transparent glass.',
+      pos: { top: '40px', right: '50px' }
+    },
+    { 
+      id: 'bottle', 
+      name: 'Water Bottle', 
+      material: 'Metal (Stainless Steel)', 
+      desc: 'Keeps water cool and safe, made of durable metal.',
+      pos: { bottom: '130px', left: '195px' }
+    },
+    { 
+      id: 'cushion', 
+      name: 'Chair Cushion', 
+      material: 'Cloth / Fabric', 
+      desc: 'Provides comfort on seats, made of soft fabric.',
+      pos: { bottom: '50px', left: '330px' }
+    }
   ];
 
-  const handleObjectClick = (obj) => {
-    if (clickedObjects[obj.id]) return;
+  const handleObjectClick = (objId) => {
+    if (clickedObjects[objId]) return;
     
-    const newClicked = { ...clickedObjects, [obj.id]: true };
+    const newClicked = { ...clickedObjects, [objId]: true };
     setClickedObjects(newClicked);
     
     // Check if all objects are clicked
@@ -35,6 +71,29 @@ export default function Stage1_Intro({ onComplete, addXp }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+      <style>{`
+        :root {
+          --classroom-bg: linear-gradient(to bottom, #e2e8f0 0%, #f1f5f9 100%);
+          --classroom-border: 2px dashed #94a3b8;
+        }
+        [data-theme="dark"] {
+          --classroom-bg: linear-gradient(to bottom, #0f172a 0%, #1e293b 100%);
+          --classroom-border: 2px dashed var(--accent);
+        }
+        .interactive-container {
+          position: absolute;
+        }
+        .interactive-label {
+          opacity: 0;
+          transition: opacity 0.2s ease-in-out;
+          pointer-events: none;
+          z-index: 30;
+        }
+        .interactive-container.clicked .interactive-label {
+          opacity: 1;
+        }
+      `}</style>
+
       {/* Introduction Card */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--accent-border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -43,89 +102,198 @@ export default function Stage1_Intro({ onComplete, addXp }) {
         </div>
         
         <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-          Ghulan and Sheeta are excited to go to their new class after the summer break. 
-          They look at their new school supplies and start talking. 
-          Madam Vidya enters and asks a fascinating question: <strong>"How are objects similar or different? What materials are they made of?"</strong>
+          <strong>You</strong> are excited to go to your new class after the summer break. 
+          You look at your new school supplies and start talking. 
+          The <strong>Teacher</strong> enters and asks a fascinating question: <strong>"How are objects similar or different? What materials are they made of?"</strong>
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', minHeight: '450px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', minHeight: '480px' }}>
         {/* Interactive Classroom Scene */}
-        <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', height: '480px', overflow: 'hidden', padding: 0, border: '2px dashed var(--accent)' }}>
-          {/* Visual Classroom Canvas */}
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, #1e293b 0%, #0f172a 100%)', zIndex: 1 }} />
+        <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', height: '480px', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', background: 'var(--classroom-bg)' }}>
           
-          {/* Classroom Background Elements (SVG style chalkboard and window) */}
-          <div style={{ position: 'absolute', top: '10%', left: '10%', width: '50%', height: '35%', border: '8px solid #475569', background: '#064e3b', borderRadius: '4px', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', boxShadow: 'inset 0 4px 10px rgba(0,0,0,0.5)' }}>
-            <span style={{ fontFamily: '"Comic Sans MS", cursive', color: '#a7f3d0', fontSize: '1.1rem', textAlign: 'center', lineHeight: '1.4' }}>
-              Welcome back!<br/>
-              What is <strong style={{ color: '#fbbf24' }}>Material</strong>?<br/>
-              Find all 6 classroom items!
-            </span>
+          {/* Classroom Chalkboard */}
+          <div style={{ position: 'absolute', top: '30px', left: '40px', width: '270px', height: '140px', border: '6px solid #4b5563', background: '#064e3b', borderRadius: '6px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', boxShadow: 'inset 0 4px 10px rgba(0,0,0,0.6)', zIndex: 15 }}>
+            {completed ? (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif', color: '#6ee7b7', fontSize: '0.85rem', fontWeight: 'bold' }}>All Objects Identified!</span>
+                <button 
+                  onClick={onComplete}
+                  className="success" 
+                  style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer', boxShadow: '0 0 10px rgba(16, 185, 129, 0.5)' }}
+                >
+                  Proceed to Stage 2
+                </button>
+              </div>
+            ) : (
+              <span style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif', color: '#a7f3d0', fontSize: '0.9rem', textAlign: 'center', lineHeight: '1.4' }}>
+                Welcome back!<br/>
+                What is <strong style={{ color: '#fbbf24' }}>Material</strong>?<br/>
+                Click on the classroom objects to scan.
+              </span>
+            )}
           </div>
 
-          <div style={{ position: 'absolute', top: '10%', left: '70%', width: '25%', height: '40%', border: '6px solid #475569', background: '#38bdf8', borderRadius: '4px', zIndex: 2, overflow: 'hidden', opacity: 0.8 }}>
-            <div style={{ width: '100%', height: '50%', borderBottom: '2px solid #475569' }} />
-            <div style={{ width: '50%', height: '100%', borderRight: '2px solid #475569', position: 'absolute', top: 0, left: 0 }} />
+          {/* Interactive Window Pane SVG */}
+          <div 
+            onClick={() => handleObjectClick('window')}
+            className={`interactive-container ${clickedObjects.window ? 'clicked' : ''}`}
+            style={{ 
+              ...classroomObjects.find(o => o.id === 'window').pos, 
+              cursor: 'pointer',
+              borderRadius: '6px',
+              border: clickedObjects.window ? '2px solid #10b981' : '2px dashed transparent',
+              boxShadow: clickedObjects.window ? '0 0 10px #10b981' : 'none',
+              transition: 'all 0.3s'
+            }}
+          >
+            <svg width="110" height="110" viewBox="0 0 100 100">
+              <rect x="2" y="2" width="96" height="96" fill="rgba(56, 189, 248, 0.2)" stroke="#475569" strokeWidth="4" />
+              <line x1="50" y1="2" x2="50" y2="98" stroke="#475569" strokeWidth="4" />
+              <line x1="2" y1="50" x2="98" y2="50" stroke="#475569" strokeWidth="4" />
+              <path d="M15,10 L35,10 L10,35 L10,15 Z" fill="rgba(255,255,255,0.25)" />
+              <path d="M65,10 L85,10 L60,35 L60,15 Z" fill="rgba(255,255,255,0.25)" />
+            </svg>
+            <span className="interactive-label" style={{ position: 'absolute', top: '-20px', left: '15px', background: 'rgba(0,0,0,0.7)', color: '#fff', fontSize: '0.65rem', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>Window Pane</span>
           </div>
 
-          {/* Teacher desk / Workbench SVG */}
-          <div style={{ position: 'absolute', bottom: 0, left: '5%', right: '40%', height: '30%', background: '#451a03', borderTop: '6px solid #78350f', borderTopLeftRadius: '12px', borderTopRightRadius: '12px', zIndex: 3, boxShadow: '0 -4px 15px rgba(0,0,0,0.5)' }} />
+          {/* Interactive Wooden Desk SVG */}
+          <div 
+            onClick={() => handleObjectClick('desk')}
+            className={`interactive-container ${clickedObjects.desk ? 'clicked' : ''}`}
+            style={{ 
+              ...classroomObjects.find(o => o.id === 'desk').pos, 
+              cursor: 'pointer',
+              borderRadius: '6px',
+              border: clickedObjects.desk ? '2px solid #10b981' : '2px dashed transparent',
+              boxShadow: clickedObjects.desk ? '0 0 10px #10b981' : 'none',
+              transition: 'all 0.3s'
+            }}
+          >
+            <svg width="250" height="120" viewBox="0 0 220 110">
+              <rect x="10" y="20" width="200" height="15" rx="3" fill="#78350f" stroke="#451a03" strokeWidth="1.5" />
+              <rect x="25" y="35" width="55" height="45" fill="#582007" />
+              <rect x="30" y="42" width="45" height="10" fill="#451a03" />
+              <circle cx="52" cy="47" r="2.5" fill="#f59e0b" />
+              <rect x="15" y="35" width="10" height="70" fill="#451a03" />
+              <rect x="195" y="35" width="10" height="70" fill="#451a03" />
+            </svg>
+            <span className="interactive-label" style={{ position: 'absolute', bottom: '-5px', left: '70px', background: 'rgba(0,0,0,0.7)', color: '#fff', fontSize: '0.65rem', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>Wooden Desk</span>
+          </div>
 
-          {/* Interactive Object Anchors */}
-          {classroomObjects.map((obj) => {
-            const isClicked = clickedObjects[obj.id];
-            return (
-              <button
-                key={obj.id}
-                onClick={() => handleObjectClick(obj)}
-                style={{
-                  position: 'absolute',
-                  top: obj.position.top,
-                  left: obj.position.left,
-                  zIndex: 10,
-                  padding: '0.4rem 0.8rem',
-                  fontSize: '0.8rem',
-                  fontWeight: 'bold',
-                  background: isClicked ? 'var(--success-bg)' : 'var(--accent-bg)',
-                  color: isClicked ? 'var(--success)' : 'var(--accent-text)',
-                  borderColor: isClicked ? 'var(--success-border)' : 'var(--accent-border)',
-                  borderWidth: '2px',
-                  borderRadius: '20px',
-                  boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-                  cursor: isClicked ? 'default' : 'pointer',
-                  transform: 'translate(-50%, -50%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  transition: 'all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-                }}
-              >
-                {isClicked ? <Check size={12} /> : null}
-                {obj.name}
-              </button>
-            );
-          })}
+          {/* Notebook (placed on Desk) */}
+          <div 
+            onClick={() => handleObjectClick('notebook')}
+            className={`interactive-container ${clickedObjects.notebook ? 'clicked' : ''}`}
+            style={{ 
+              ...classroomObjects.find(o => o.id === 'notebook').pos, 
+              cursor: 'pointer',
+              zIndex: 10,
+              borderRadius: '4px',
+              border: clickedObjects.notebook ? '2px solid #10b981' : '2px dashed transparent',
+              boxShadow: clickedObjects.notebook ? '0 0 10px #10b981' : 'none',
+              transition: 'all 0.3s'
+            }}
+          >
+            <svg width="45" height="40" viewBox="0 0 40 35">
+              <rect x="5" y="2" width="30" height="30" rx="3" fill="#3b82f6" />
+              <path d="M5,2 L8,2 L8,32 L5,32 Z" fill="#2563eb" />
+              <line x1="10" y1="7" x2="30" y2="7" stroke="#fff" strokeWidth="1.5" />
+              <line x1="10" y1="12" x2="30" y2="12" stroke="#fff" strokeWidth="1.5" />
+              <line x1="10" y1="17" x2="30" y2="17" stroke="#fff" strokeWidth="1.5" />
+              <circle cx="4" cy="6" r="1.2" fill="#94a3b8" />
+              <circle cx="4" cy="12" r="1.2" fill="#94a3b8" />
+              <circle cx="4" cy="18" r="1.2" fill="#94a3b8" />
+            </svg>
+            <span className="interactive-label" style={{ position: 'absolute', top: '-18px', left: '-5px', background: 'rgba(0,0,0,0.7)', color: '#fff', fontSize: '0.65rem', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>Notebook</span>
+          </div>
+
+          {/* Pen (placed on Desk) */}
+          <div 
+            onClick={() => handleObjectClick('pen')}
+            className={`interactive-container ${clickedObjects.pen ? 'clicked' : ''}`}
+            style={{ 
+              ...classroomObjects.find(o => o.id === 'pen').pos, 
+              cursor: 'pointer',
+              zIndex: 11,
+              borderRadius: '4px',
+              border: clickedObjects.pen ? '2px solid #10b981' : '2px dashed transparent',
+              boxShadow: clickedObjects.pen ? '0 0 10px #10b981' : 'none',
+              transition: 'all 0.3s'
+            }}
+          >
+            <svg width="40" height="20" viewBox="0 0 35 15" style={{ transform: 'rotate(-10deg)' }}>
+              <rect x="2" y="5" width="22" height="5" rx="1" fill="#10b981" />
+              <polygon points="24,5 30,7.5 24,10" fill="#cbd5e1" />
+              <circle cx="30" cy="7.5" r="0.8" fill="#000" />
+            </svg>
+            <span className="interactive-label" style={{ position: 'absolute', top: '-18px', left: '0px', background: 'rgba(0,0,0,0.7)', color: '#fff', fontSize: '0.65rem', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>Pen</span>
+          </div>
+
+          {/* Water Bottle (placed on Desk) */}
+          <div 
+            onClick={() => handleObjectClick('bottle')}
+            className={`interactive-container ${clickedObjects.bottle ? 'clicked' : ''}`}
+            style={{ 
+              ...classroomObjects.find(o => o.id === 'bottle').pos, 
+              cursor: 'pointer',
+              zIndex: 12,
+              borderRadius: '4px',
+              border: clickedObjects.bottle ? '2px solid #10b981' : '2px dashed transparent',
+              boxShadow: clickedObjects.bottle ? '0 0 10px #10b981' : 'none',
+              transition: 'all 0.3s'
+            }}
+          >
+            <svg width="30" height="55" viewBox="0 0 25 50">
+              <rect x="3" y="15" width="19" height="32" rx="3" fill="#94a3b8" />
+              <rect x="5" y="17" width="3" height="28" fill="rgba(255,255,255,0.4)" rx="1" />
+              <rect x="6" y="8" width="13" height="7" fill="#64748b" />
+              <rect x="8" y="2" width="9" height="6" rx="1" fill="#475569" />
+            </svg>
+            <span className="interactive-label" style={{ position: 'absolute', top: '-18px', left: '-10px', background: 'rgba(0,0,0,0.7)', color: '#fff', fontSize: '0.65rem', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>Water Bottle</span>
+          </div>
+
+          {/* Chair (with Cushion Seat) */}
+          <div 
+            onClick={() => handleObjectClick('cushion')}
+            className={`interactive-container ${clickedObjects.cushion ? 'clicked' : ''}`}
+            style={{ 
+              ...classroomObjects.find(o => o.id === 'cushion').pos, 
+              cursor: 'pointer',
+              borderRadius: '6px',
+              border: clickedObjects.cushion ? '2px solid #10b981' : '2px dashed transparent',
+              boxShadow: clickedObjects.cushion ? '0 0 10px #10b981' : 'none',
+              transition: 'all 0.3s'
+            }}
+          >
+            <svg width="100" height="130" viewBox="0 0 90 120">
+              <rect x="25" y="10" width="40" height="40" rx="4" fill="#5c4033" stroke="#3d2b1f" strokeWidth="1.5" />
+              <ellipse cx="45" cy="55" rx="30" ry="12" fill="#d97706" stroke="#b45309" strokeWidth="2" />
+              <rect x="20" y="62" width="6" height="50" fill="#3d2b1f" />
+              <rect x="64" y="62" width="6" height="50" fill="#3d2b1f" />
+            </svg>
+            <span className="interactive-label" style={{ position: 'absolute', bottom: '-5px', left: '15px', background: 'rgba(0,0,0,0.7)', color: '#fff', fontSize: '0.65rem', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>Chair Cushion</span>
+          </div>
 
           {/* Character Avatars */}
-          <div style={{ position: 'absolute', bottom: '5%', right: '5%', zIndex: 4, display: 'flex', gap: '1rem' }}>
+          <div style={{ position: 'absolute', bottom: '15px', right: '20px', zIndex: 20, display: 'flex', gap: '1rem', background: 'rgba(15,23,42,0.6)', padding: '0.4rem 0.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#f59e0b', border: '3px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold' }}>G</div>
-              <span style={{ fontSize: '0.7rem', color: '#fff', fontWeight: 'bold', textShadow: '1px 1px 2px #000' }}>Ghulan</span>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                <User size={18} />
+              </div>
+              <span style={{ fontSize: '0.65rem', color: '#fff', fontWeight: 'bold' }}>You</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#ec4899', border: '3px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold' }}>S</div>
-              <span style={{ fontSize: '0.7rem', color: '#fff', fontWeight: 'bold', textShadow: '1px 1px 2px #000' }}>Sheeta</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#3b82f6', border: '3px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold' }}>V</div>
-              <span style={{ fontSize: '0.7rem', color: '#fff', fontWeight: 'bold', textShadow: '1px 1px 2px #000' }}>Madam Vidya</span>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                <GraduationCap size={18} />
+              </div>
+              <span style={{ fontSize: '0.65rem', color: '#fff', fontWeight: 'bold' }}>Teacher</span>
             </div>
           </div>
         </div>
 
         {/* Info panel */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', background: 'var(--card-bg)' }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', border: '1px solid var(--border)', background: 'var(--card-bg)', height: '480px' }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-heading)' }}>Investigation Progress</span>
             <button onClick={resetInvestigation} className="outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', gap: '0.25rem' }}>
@@ -133,39 +301,51 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             </button>
           </div>
 
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-            Click on elements inside the classroom layout to reveal what material they are made of.
-          </div>
+          {completed ? (
+            <motion.button 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              onClick={onComplete} 
+              className="primary" 
+              style={{ width: '100%', padding: '0.7rem', fontSize: '0.85rem', fontWeight: 'bold' }}
+            >
+              Proceed to Scanner Desk
+            </motion.button>
+          ) : (
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              Click on elements inside the classroom layout to reveal what material they are made of.
+            </div>
+          )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, overflowY: 'auto', maxHeight: '200px', paddingRight: '4px' }}>
             {classroomObjects.map((obj) => {
               const isClicked = clickedObjects[obj.id];
               return (
                 <div 
                   key={obj.id} 
                   style={{ 
-                    padding: '0.6rem 0.8rem', 
+                    padding: '0.5rem 0.75rem', 
                     borderRadius: '8px', 
                     background: isClicked ? 'var(--success-bg)' : 'var(--surface)', 
                     border: `1px solid ${isClicked ? 'var(--success-border)' : 'var(--border)'}`,
                     display: 'flex', 
                     flexDirection: 'column', 
-                    gap: '0.25rem',
+                    gap: '0.2rem',
                     transition: 'all 0.2s'
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontWeight: 'bold', fontSize: '0.8rem', color: isClicked ? 'var(--success)' : 'var(--text-heading)' }}>
+                    <span style={{ fontWeight: 'bold', fontSize: '0.75rem', color: isClicked ? 'var(--success)' : 'var(--text-heading)' }}>
                       {obj.name}
                     </span>
                     {isClicked && (
-                      <span style={{ fontSize: '0.75rem', fontWeight: 'bold', background: 'var(--success)', color: '#fff', padding: '0.05rem 0.4rem', borderRadius: '4px' }}>
+                      <span style={{ fontSize: '0.65rem', fontWeight: 'bold', background: 'var(--success)', color: '#fff', padding: '0.05rem 0.3rem', borderRadius: '4px' }}>
                         {obj.material}
                       </span>
                     )}
                   </div>
                   {isClicked && (
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', lineHeight: '1.3' }}>
                       {obj.desc}
                     </span>
                   )}
@@ -174,29 +354,23 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             })}
           </div>
 
+          {/* Divider Line below scrollable container */}
+          <div style={{ height: '1px', width: '100%', background: 'var(--border)', margin: '0.25rem 0' }} />
+
           {completed && (
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              style={{ padding: '0.8rem', borderRadius: '8px', background: 'var(--success-bg)', border: '1px solid var(--success-border)', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}
+              style={{ padding: '0.6rem', borderRadius: '8px', background: 'var(--success-bg)', border: '1px solid var(--success-border)', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.85rem' }}>
-                <Check size={16} /> <span>All Objects Found! (+30 XP)</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                <Check size={14} /> <span>All Objects Found! (+30 XP)</span>
               </div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+              <p style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.3' }}>
                 <strong>Key Concept:</strong> A <strong>material</strong> is any substance used to make objects. Different objects can be made of the same material, or one object can be made of multiple materials!
               </p>
             </motion.div>
           )}
-
-          <button 
-            disabled={!completed} 
-            onClick={onComplete} 
-            className="primary" 
-            style={{ width: '100%', gap: '0.5rem', padding: '0.75rem', fontSize: '0.9rem' }}
-          >
-            <span>Proceed to Scanner Desk</span>
-          </button>
         </div>
       </div>
     </div>

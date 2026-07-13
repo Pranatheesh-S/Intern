@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, ShieldAlert, Check } from 'lucide-react';
+import { Eye, EyeOff, ShieldAlert, Check, RefreshCw } from 'lucide-react';
 
 export default function Stage6_Transparency({ onComplete, addXp }) {
   // Hide & Seek game state
@@ -14,21 +14,21 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
       id: 'wall', 
       name: 'Brick Wall', 
       type: 'Opaque', 
-      seekerDialog: 'Where is Ghulan? I cannot see him at all! A brick wall does not allow any light to pass through.',
+      seekerDialog: 'Where are you? I cannot see you at all! A brick wall does not allow any light to pass through.',
       description: 'Materials through which we cannot see are called Opaque.' 
     },
     { 
       id: 'frosted', 
       name: 'Frosted Glass Door', 
       type: 'Translucent', 
-      seekerDialog: 'Ah, I see a blurry outline of Sara! I can see through, but not clearly. Frosted glass lets some light pass.',
+      seekerDialog: 'Ah, I see a blurry outline of your classmate! I can see through, but not clearly. Frosted glass lets some light pass.',
       description: 'Materials through which objects can be seen, but not clearly, are called Translucent.' 
     },
     { 
       id: 'window', 
       name: 'Clear Glass Window', 
       type: 'Transparent', 
-      seekerDialog: 'Aha! I see Sheeta smiling! Glass allows light to pass through completely, making it perfectly clear.',
+      seekerDialog: 'Aha! I see you smiling clearly! Glass allows light to pass through completely, making it perfectly clear.',
       description: 'Materials through which things can be seen clearly are called Transparent.' 
     }
   ];
@@ -55,6 +55,11 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
     addXp(10);
   };
 
+  const resetStage = () => {
+    setSelectedHidingSpot(null);
+    setClassifications({});
+  };
+
   const correctClassificationsCount = objectsToClassify.filter(o => classifications[o.id] === o.correct).length;
   const classificationComplete = correctClassificationsCount === objectsToClassify.length;
 
@@ -76,8 +81,11 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem' }}>
         {/* Interactive Yard */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
-          <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+          <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>1. Hide & Seek Yard (Click to reveal visibility)</span>
+            <button onClick={resetStage} className="outline" style={{ padding: '0.2rem 0.5rem', fontSize: '0.7rem', gap: '0.25rem' }}>
+              <RefreshCw size={10} /> Reset Lab
+            </button>
           </div>
 
           <div style={{ display: 'flex', gap: '1rem', flex: 1, minHeight: '180px' }}>
