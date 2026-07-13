@@ -46,6 +46,7 @@ const Activity9_2 = lazy(() => import('./activities/SolubilityOfBakingSoda'));
 const ForceExplorerActivity = lazy(() => import('./activities/ForceExplorer'));
 const MicroscopeDiscovery = lazy(() => import('./activities/MicroscopeDiscovery'));
 const MaterialDetectiveActivity = lazy(() => import('./activities/MaterialDetective'));
+const MaterialsAroundUsActivity = lazy(() => import('./activities/MaterialsAroundUs'));
 const Activity4_1 = lazy(() => import('./activities/Activity4_1'));
 const Activity4_6 = lazy(() => import('./activities/Activity4_6'));
 import './App.css';
@@ -1387,6 +1388,41 @@ export default function App() {
             <Play size={14} fill="#ffffff" /> Open Case <ArrowRight size={14} />
           </button>
         </div>
+
+        <div 
+          className="glass-panel" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            padding: '1.5rem',
+            border: '1px solid var(--accent-border)',
+            position: 'relative',
+            overflow: 'hidden',
+            background: 'var(--card-bg)'
+          }}
+        >
+          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Full Chapter
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <BookOpen size={20} style={{ color: 'var(--accent)' }} />
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Materials Around Us</h3>
+          </div>
+
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+            Class 6 Science, Chapter 6: Explore classroom chats, scan materials, classify shapes, design tumblers, test lustre & hardness, play hide-and-seek visibility, and stir water mixtures.
+          </p>
+
+          <button 
+            onClick={() => navigateTo('class6', 'materials_around_us')}
+            className="primary" 
+            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem', background: 'linear-gradient(135deg, var(--accent) 0%, #818cf8 100%)' }}
+          >
+            <BookOpen size={14} /> Start Journey <ArrowRight size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -2535,6 +2571,8 @@ export default function App() {
             <CircularMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
           ) : activeActivity === 'material_detective' ? (
             <MaterialDetectiveActivity onBackToDashboard={() => navigateTo('class6', 'chapter6')} />
+          ) : activeActivity === 'materials_around_us' ? (
+            <MaterialsAroundUsActivity onBackToDashboard={() => navigateTo('class6', 'chapter6')} />
           ) : activeActivity === 'chapter3' ? (
             renderClass6Chapter3()
           ) : activeActivity === 'chapter4' ? (
