@@ -41,6 +41,7 @@ const Activity3_11 = lazy(() => import('./activities/Activity3_11'));
 const MagneticEffectOfCurrentActivity = lazy(() => import('./activities/MagneticEffectOfCurrent'));
 const ElectromagnetInvestigationActivity = lazy(() => import('./activities/ElectromagnetInvestigation'));
 const GrassrootsDemocracyActivity = lazy(() => import('./activities/GrassrootsDemocracy'));
+const LocatingPlacesActivity = lazy(() => import('./activities/LocatingPlaces'));
 const Activity9_1 = lazy(() => import('./activities/SolutesAndSolvents'));
 const Activity9_2 = lazy(() => import('./activities/SolubilityOfBakingSoda'));
 const ForceExplorerActivity = lazy(() => import('./activities/ForceExplorer'));
@@ -112,6 +113,7 @@ export default function App() {
         '9.1': 'Solutions Lab 1',
         '9.2': 'Solutions Lab 2',
         'chapter11': 'Grassroots Democracy Lab',
+        'locating_places': 'Locating Places Lab',
         'chapter1': 'Geography Expedition Lab'
       };
       const name = activityNames[activeActivity] || 'Interactive Lab';
@@ -506,7 +508,7 @@ export default function App() {
   );
 
   const CLASS_6_SOCIAL_CHAPTERS = [
-    { num: 1, title: "Understanding Diversity" },
+    { num: 1, title: "Locating Places on the Earth" },
     { num: 2, title: "Diversity and Discrimination" },
     { num: 3, title: "What is Government?" },
     { num: 4, title: "Key Elements of a Democratic Government" },
@@ -543,6 +545,48 @@ export default function App() {
           gap: '1.25rem'
         }}>
           {CLASS_6_SOCIAL_CHAPTERS.map(chapter => {
+            if (chapter.num === 1) {
+              return (
+                <div
+                  key={chapter.num}
+                  className="glass-panel"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    padding: '1.5rem',
+                    border: '1px solid var(--accent-border)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Active Chapter
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <BookOpen size={20} style={{ color: 'var(--accent-text)', marginTop: '0.25rem' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--accent-text)', fontWeight: '500' }}>{chapter.title}</p>
+                    </div>
+                  </div>
+
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                    Introduce maps by experiencing what it's like to navigate without one. Learn how maps help locate places.
+                  </p>
+
+                  <button 
+                    onClick={() => navigateTo('class6_social', 'locating_places')}
+                    className="primary" 
+                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                  >
+                    Open Chapter <ArrowRight size={14} />
+                  </button>
+                </div>
+              );
+            }
+
             if (chapter.num === 11) {
               return (
                 <div
@@ -1047,41 +1091,6 @@ export default function App() {
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '1.25rem'
       }}>
-
-        {/* Activity 4.1 Card */}
-        <div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid var(--success-border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Active Lab
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Search size={20} style={{ color: '#0ea5e9' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Activity 4.1</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Magnetic and Non-magnetic Materials. Drag objects near the magnet and observe which stick to it.
-          </p>
-
-          <button 
-            onClick={() => navigateTo('class6', 'activity_4_1')}
-            className="primary" 
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            <Play size={14} fill="#ffffff" /> Open Lab <ArrowRight size={14} />
-          </button>
-        </div>
 
         {/* Activity 4.2 Card */}
         <div 
@@ -2540,7 +2549,6 @@ export default function App() {
                      activeActivity === 'fat_testing' ? 'Fat Testing' :
                      activeActivity === 'protein_testing' ? 'Protein Testing' :
                      activeActivity === 'materials_properties' ? 'Properties of Materials' :
-                     activeActivity === 'activity_4_1' ? 'Activity 4.1' :
                      activeActivity === 'magnetic_poles' ? 'Magnetic Poles' :
                      activeActivity === 'suspended_magnet' ? 'Suspended Magnet' :
                      activeActivity === 'magnetic_compass' ? 'Make a Compass' :
@@ -2687,6 +2695,8 @@ export default function App() {
         ) : activeSubject === 'class6_social' ? (
           activeActivity === 'chapter11' ? (
             <GrassrootsDemocracyActivity onBackToDashboard={() => navigateTo('class6_social', null)} />
+          ) : activeActivity === 'locating_places' ? (
+            <LocatingPlacesActivity onBackToDashboard={() => navigateTo('class6_social', null)} />
           ) : (
             renderClass6SocialWing()
           )
