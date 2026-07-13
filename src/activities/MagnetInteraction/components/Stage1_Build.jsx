@@ -17,6 +17,7 @@ import {
   Info,
   CheckCircle2,
   AlertCircle,
+  Lock,
 } from "lucide-react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Box, Cylinder, Text } from "@react-three/drei";
@@ -350,40 +351,75 @@ export default function Stage1_Build({ onComplete, onNext }) {
         <div style={{ display: "grid", gridTemplateColumns: "250px 1fr", gap: "1.5rem" }}>
           <div className="glass-panel" style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "1rem", background: "var(--surface)" }}>
             <h4 style={{ margin: 0, borderBottom: "1px solid var(--border)", paddingBottom: "0.5rem" }}>🧊 3D Viewer</h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", alignContent: "start", flex: 1 }}>
               {STEPS.map((step) => {
                 const isPlaced = placed[step.id];
                 const isUnlocked = isStepUnlocked(step.id);
                 const isSelected = selectedItemId === step.id;
+                const isDisabled = isPlaced || !isUnlocked;
+
+                const renderThumbnailSVG = (id) => {
+                  switch (id) {
+                    case "pencils": return (
+                      <svg viewBox="-5 -5 60 50" width="24" height="24">
+                        <g transform="translate(0, 5)">
+                          {[...Array(6)].map((_, i) => <rect key={i} x={i * 8} y={0} width="4" height="30" rx="2" fill="#fde047" />)}
+                        </g>
+                      </svg>
+                    );
+                    case "magnetA": return (
+                      <svg viewBox="0 0 100 40" width="24" height="24">
+                        <rect x="0" y="0" width="50" height="40" fill="#ef4444" />
+                        <rect x="50" y="0" width="50" height="40" fill="#3b82f6" />
+                        <text x="25" y="26" fill="white" fontSize="20" fontWeight="bold" textAnchor="middle">N</text>
+                        <text x="75" y="26" fill="white" fontSize="20" fontWeight="bold" textAnchor="middle">S</text>
+                      </svg>
+                    );
+                    case "magnetB": return (
+                      <svg viewBox="0 0 100 40" width="24" height="24">
+                        <rect x="0" y="0" width="50" height="40" fill="#3b82f6" />
+                        <rect x="50" y="0" width="50" height="40" fill="#ef4444" />
+                        <text x="25" y="26" fill="white" fontSize="20" fontWeight="bold" textAnchor="middle">S</text>
+                        <text x="75" y="26" fill="white" fontSize="20" fontWeight="bold" textAnchor="middle">N</text>
+                      </svg>
+                    );
+                    default: return null;
+                  }
+                };
 
                 return (
-                  <TrayDraggable key={step.id} id={step.id} disabled={isPlaced}>
-<button
-                    key={step.id}
-                    className="tray-btn"
-                    onClick={() => handleSelectTrayItem(step.id)}
-                    disabled={isPlaced}
-                    style={{
-                      padding: "0.75rem",
-                      borderRadius: "6px",
-                      border: `1px solid ${isSelected ? "var(--accent)" : isPlaced ? "var(--success-border)" : "var(--border)"}`,
-                      background: isSelected ? "var(--accent-bg)" : isPlaced ? "var(--success-bg)" : "var(--surface)",
-                      opacity: isPlaced ? 0.6 : isUnlocked ? 1 : 0.5,
-                      textAlign: "left",
-                      cursor: isPlaced ? "default" : isUnlocked ? "pointer" : "not-allowed",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      transition: "all 0.2s"
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: "0.85rem", fontWeight: "bold", color: isPlaced ? "var(--success)" : "var(--text-primary)" }}>
-                        {step.name}
+                  <TrayDraggable key={step.id} id={step.id} disabled={isDisabled}>
+                    <button
+                      key={step.id}
+                      className="tray-btn"
+                      onClick={() => handleSelectTrayItem(step.id)}
+                      disabled={isDisabled}
+                      style={{
+                        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0.6rem 0.4rem", borderRadius: "12px",
+                        background: isPlaced ? "var(--success-bg)" : isSelected ? "var(--accent-bg)" : isUnlocked ? "var(--surface)" : "var(--neutral-bg)",
+                        border: `1px solid ${isPlaced ? "var(--success-border)" : isSelected ? "var(--accent)" : isUnlocked ? "var(--accent-border)" : "var(--border)"}`,
+                        color: isPlaced ? "var(--success)" : isUnlocked ? "var(--text-primary)" : "var(--text-faint)",
+                        cursor: isDisabled ? "not-allowed" : "pointer",
+                        transition: "all 0.2s ease",
+                        position: "relative",
+                        minHeight: "72px",
+                        boxShadow: isSelected ? "0 0 0 2px rgba(99,102,241,0.4)" : isUnlocked && !isPlaced ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
+                      }}
+                    >
+                      <div style={{ width: "34px", height: "34px", background: "var(--border)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "0.35rem", opacity: isUnlocked ? 1 : 0.2, transition: "opacity 0.2s" }}>
+                        {renderThumbnailSVG(step.id)}
                       </div>
-                    </div>
-                    {isPlaced && <CheckCircle2 size={16} style={{ color: "var(--success)" }} />}
-                  </button>
+                      <span style={{ fontSize: "0.68rem", fontWeight: "600", textAlign: "center", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden", width: "100%", opacity: isUnlocked ? 1 : 0.3 }}>
+                        {step.name}
+                      </span>
+                      <div style={{ position: "absolute", top: "5px", right: "5px" }}>
+                        {isPlaced ? (
+                          <CheckCircle2 size={12} style={{ color: "var(--success)" }} />
+                        ) : !isUnlocked ? (
+                          <Lock size={10} style={{ color: "var(--text-secondary)" }} />
+                        ) : null}
+                      </div>
+                    </button>
                   </TrayDraggable>
                 );
               })}

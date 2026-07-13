@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 4.1: Exploring Magnets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- Phase 1: Instructions -->
+        <section id="phase-instructions" class="phase active">
+            <div class="instructions-card glass-panel">
+                <div class="steps-container">
+                    <div class="step" id="step-1">
+                        <div class="step-number">1</div>
+                        <p>Collect different objects.</p>
+                    </div>
+                    <div class="step" id="step-2">
+                        <div class="step-number">2</div>
+                        <p>Predict which objects are magnetic.</p>
+                    </div>
+                    <div class="step" id="step-3">
+                        <div class="step-number">3</div>
+                        <p>Drag the objects near the magnet.</p>
+                    </div>
+                    <div class="step" id="step-4">
+                        <div class="step-number">4</div>
+                        <p>Observe whether they stick or not.</p>
+                    </div>
+                </div>
+                <button id="btn-start-prediction" class="primary-btn glow-btn">Start Prediction <span class="arrow">→</span></button>
+            </div>
+        </section>
+
+        <!-- Phase 2: Prediction -->
+        <section id="phase-prediction" class="phase hidden">
+            <div class="prediction-container glass-panel">
+                <h3>Make Your Predictions</h3>
+                <p class="subtitle">Will these objects stick to a magnet?</p>
+                <div class="table-wrapper">
+                    <table class="prediction-table">
+                        <thead>
+                            <tr>
+                                <th>Object</th>
+                                <th>My Prediction</th>
+                                <th>Object</th>
+                                <th>My Prediction</th>
+                            </tr>
+                        </thead>
+                        <tbody id="prediction-body">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <button id="btn-start-experiment" class="primary-btn glow-btn" disabled>Start Experiment <span class="arrow">→</span></button>
+            </div>
+        </section>
+
+        <!-- Phase 3: Experiment Workspace -->
+        <section id="phase-workspace" class="phase hidden">
+            <div class="workspace-container">
+                <!-- Left Side: Objects -->
+                <div class="workspace-left glass-panel" style="padding: 1.5rem; display: flex; flexDirection: column; align-items: stretch; text-align: left;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: #fff; font-weight: 700; text-align: left;">Component Tray</h3>
+                    <div id="objects-grid" class="objects-grid">
+                        <!-- Draggable items injected here -->
+                    </div>
+                </div>
+
+                <!-- Right Side: Magnet -->
+                <div class="workspace-right glass-panel">
+                    <div id="magnet-area" class="magnet-area">
+                        <!-- CSS/SVG Horseshoe Magnet -->
+                        <div class="horseshoe-magnet" id="magnet">
+                            <div class="magnet-body"></div>
+                            <div class="magnet-poles">
+                                <div class="pole north">N</div>
+                                <div class="pole south">S</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btn-view-results" class="primary-btn glow-btn hidden">View Results <span class="arrow">→</span></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 4: Results -->
+        <section id="phase-results" class="phase hidden">
+            <div class="results-container glass-panel">
+                <h3>Experiment Results</h3>
+                <p class="subtitle">Let's see how accurate your predictions were!</p>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Object</th>
+                                <th>Prediction</th>
+                                <th>Actual Result</th>
+                                <th>Correct/Incorrect</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <button id="btn-retry" class="primary-btn glow-btn">Retry Activity <span>↻</span></button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js" type="module"></script>
+</body>
+</html>

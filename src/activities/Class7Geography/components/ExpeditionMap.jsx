@@ -22,27 +22,27 @@ const STATE_TO_REGION = {
 };
 
 const REGION_COLORS = {
-  himalayas: '#e0f2fe',
-  plains: '#bbf7d0',
-  desert: '#fef08a',
-  plateau: '#fed7aa',
-  west_coast: '#bae6fd',
-  east_coast: '#bae6fd',
-  islands: '#38bdf8',
-  northeast: '#86efac',
-  default: 'var(--card-bg)'
+  himalayas: { fill: '#C7D2FE', border: '#6366F1' },
+  plains: { fill: '#D1FAE5', border: '#10B981' },
+  desert: { fill: '#FEF3C7', border: '#F59E0B' },
+  plateau: { fill: '#FBCFE8', border: '#EC4899' },
+  west_coast: { fill: '#DBEAFE', border: '#3B82F6' },
+  east_coast: { fill: '#E9D5FF', border: '#8B5CF6' },
+  northeast: { fill: '#BBF7D0', border: '#22C55E' },
+  islands: { fill: '#BAE6FD', border: '#0EA5E9' },
+  default: { fill: 'var(--card-bg)', border: 'rgba(139, 92, 246, 0.3)' }
 };
 
 // Coordinates adjusted for viewBox="0 0 612 696"
 const REGIONS = [
-  { id: 'himalayas', label: 'Himalayas', description: 'Snow-covered Mountains', x: 200, y: 100, color: '#e0f2fe' },
-  { id: 'plains', label: 'Northern Plains', description: 'Fertile River Valleys', x: 280, y: 250, color: '#bbf7d0' },
-  { id: 'desert', label: 'Thar Desert', description: 'Golden Sand Dunes', x: 120, y: 280, color: '#fef08a' },
-  { id: 'plateau', label: 'Peninsular Plateau', description: 'Rocky Elevated Terrain', x: 250, y: 400, color: '#fed7aa' },
-  { id: 'west_coast', label: 'Western Coast', description: 'Arabian Sea Shoreline', x: 150, y: 500, color: '#bae6fd' },
-  { id: 'east_coast', label: 'Eastern Coast', description: 'Bay of Bengal Shoreline', x: 280, y: 550, color: '#bae6fd' },
-  { id: 'islands', label: 'Islands', description: 'Tropical Archipelagos', x: 500, y: 600, color: '#38bdf8' },
-  { id: 'northeast', label: 'Northeast', description: 'Dense Green Hills', x: 480, y: 250, color: '#86efac' }
+  { id: 'himalayas', label: 'Himalayas', description: 'Snow-covered Mountains', x: 200, y: 100, color: REGION_COLORS.himalayas.border },
+  { id: 'plains', label: 'Northern Plains', description: 'Fertile River Valleys', x: 280, y: 250, color: REGION_COLORS.plains.border },
+  { id: 'desert', label: 'Thar Desert', description: 'Golden Sand Dunes', x: 120, y: 280, color: REGION_COLORS.desert.border },
+  { id: 'plateau', label: 'Peninsular Plateau', description: 'Rocky Elevated Terrain', x: 250, y: 400, color: REGION_COLORS.plateau.border },
+  { id: 'west_coast', label: 'Western Coast', description: 'Arabian Sea Shoreline', x: 150, y: 500, color: REGION_COLORS.west_coast.border },
+  { id: 'east_coast', label: 'Eastern Coast', description: 'Bay of Bengal Shoreline', x: 280, y: 550, color: REGION_COLORS.east_coast.border },
+  { id: 'islands', label: 'Islands', description: 'Tropical Archipelagos', x: 500, y: 600, color: REGION_COLORS.islands.border },
+  { id: 'northeast', label: 'Northeast', description: 'Dense Green Hills', x: 480, y: 250, color: REGION_COLORS.northeast.border }
 ];
 
 export default function ExpeditionMap({ currentStopIndex, onStopReached }) {
@@ -97,8 +97,8 @@ export default function ExpeditionMap({ currentStopIndex, onStopReached }) {
             
             // If the route has reached this region, color it. Otherwise, use default dark color.
             const isReached = regionIndex !== -1 && currentStopIndex >= regionIndex;
-            const fillColor = isReached ? (REGION_COLORS[regionId] + '33') : REGION_COLORS.default; // Add 33 for 20% opacity to highlight
-            const strokeColor = isReached ? REGION_COLORS[regionId] : 'rgba(139, 92, 246, 0.3)';
+            const fillColor = isReached ? REGION_COLORS[regionId].fill : REGION_COLORS.default.fill;
+            const strokeColor = isReached ? REGION_COLORS[regionId].border : REGION_COLORS.default.border;
 
             return (
               <motion.path
@@ -180,21 +180,24 @@ export default function ExpeditionMap({ currentStopIndex, onStopReached }) {
               style={{
                 position: 'absolute',
                 left: `${((hoverInfo || activeInfo).x / 612) * 100}%`,
-                top: `${((hoverInfo || activeInfo).y / 696) * 100 - 5}%`,
-                transform: 'translate(-50%, -100%)',
+                top: `${((hoverInfo || activeInfo).y / 696) * 100 - 2}%`,
+                pointerEvents: 'none',
+                zIndex: 50,
+              }}
+            >
+              <div style={{
+                transform: (hoverInfo || activeInfo).x > 400 ? 'translate(-95%, -100%)' : 'translate(-50%, -100%)',
                 background: 'var(--card-bg)',
                 backdropFilter: 'blur(8px)',
                 border: `1px solid ${(hoverInfo || activeInfo).color}`,
                 padding: '0.75rem 1.25rem',
                 borderRadius: '8px',
                 whiteSpace: 'nowrap',
-                pointerEvents: 'none',
-                zIndex: 50,
                 boxShadow: `var(--card-shadow)`
-              }}
-            >
-              <h4 style={{ margin: '0 0 0.25rem 0', color: 'var(--text-heading)', fontSize: '1rem' }}>{(hoverInfo || activeInfo).label}</h4>
-              <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.8rem' }}>{(hoverInfo || activeInfo).description}</p>
+              }}>
+                <h4 style={{ margin: '0 0 0.25rem 0', color: 'var(--text-heading)', fontSize: '1rem' }}>{(hoverInfo || activeInfo).label}</h4>
+                <p style={{ margin: 0, color: 'var(--map-popup-desc)', fontSize: '0.8rem' }}>{(hoverInfo || activeInfo).description}</p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -208,8 +211,8 @@ export default function ExpeditionMap({ currentStopIndex, onStopReached }) {
         transition={{ delay: 1 }}
         style={{
           position: 'absolute',
-          bottom: '2rem',
-          left: '2rem',
+          top: '2rem',
+          right: '2rem',
           background: 'var(--card-bg)',
           backdropFilter: 'blur(10px)',
           border: '1px solid var(--card-border)',
