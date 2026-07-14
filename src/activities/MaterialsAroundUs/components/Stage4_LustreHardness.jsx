@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, HelpCircle, Check } from 'lucide-react';
 
@@ -9,15 +9,45 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHoveringBench, setIsHoveringBench] = useState(false);
+  
+  // Track physical mouse distance
+  const lastMousePos = useRef({ x: null, y: null });
+  const distanceAccumulator = useRef(0);
 
   // Hardness state
   const [hardnessTests, setHardnessTests] = useState({});
   const [selectedHardnessObject, setSelectedHardnessObject] = useState(null);
+  const [completedTests, setCompletedTests] = useState({ squeeze: false, scratch: false });
+  const [activeTestAnim, setActiveTestAnim] = useState(null);
 
   const lustreMaterials = {
-    iron: { name: 'Rusty Iron Rod', baseColor: '#5a4a42', shinyColor: '#cbd5e1', isMetal: true },
-    copper: { name: 'Oxidized Copper Plate', baseColor: '#5c523d', shinyColor: '#f97316', isMetal: true },
-    wood: { name: 'Wooden Branch', baseColor: '#78350f', shinyColor: '#78350f', isMetal: false }
+    iron: { 
+      name: 'Rusty Iron Rod', 
+      isMetal: true,
+      shapeStyles: { width: '85%', height: '26px', borderRadius: '4px' },
+      baseBg: 'linear-gradient(180deg, #4a210b, #8c4114 30%, #592e13 70%, #291204)',
+      shinyBg: 'linear-gradient(180deg, #94a3b8 0%, #cbd5e1 30%, #94a3b8 70%, #64748b 100%)',
+      overlayBg: 'repeating-linear-gradient(65deg, transparent, transparent 10px, rgba(0,0,0,0.6) 10px, rgba(0,0,0,0.8) 14px), linear-gradient(180deg, transparent 46%, rgba(0,0,0,0.6) 48%, rgba(0,0,0,0.6) 52%, transparent 54%)'
+    },
+    copper: { 
+      name: 'Oxidized Copper Plate', 
+      isMetal: true,
+      shapeStyles: { width: '80px', height: '130px', borderRadius: '2px', border: '1px solid rgba(0,0,0,0.3)' },
+      baseBg: 'linear-gradient(135deg, #4a2b1a, #633b26 40%, #2e1a10 100%)', // Dull dark reddish-brown tarnish
+      shinyBg: 'linear-gradient(135deg, #cc7722 0%, #f4a460 30%, #e68a35 60%, #8b4513 100%)', // Polished brushed copper
+      overlayBg: 'repeating-linear-gradient(75deg, transparent, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px)' // Brushed scratch marks
+    },
+    wood: { 
+      name: 'Wooden Branch', 
+      isMetal: false,
+      shapeStyles: { 
+        width: '90%', height: '50px', 
+        clipPath: 'polygon(2% 25%, 8% 18%, 25% 25%, 45% 12%, 65% 22%, 85% 8%, 98% 18%, 100% 40%, 96% 65%, 98% 85%, 82% 95%, 62% 82%, 42% 95%, 22% 85%, 8% 92%, 0% 75%, 3% 50%)'
+      },
+      baseBg: 'linear-gradient(180deg, #4a382e, #635043 30%, #3d2f25 70%, #261c15 100%)', // Bark
+      shinyBg: 'linear-gradient(180deg, #d8bc8a, #ecd1a5 30%, #b38c56 70%, #876233 100%)', // Sanded inner wood
+      overlayBg: 'repeating-linear-gradient(3deg, transparent, transparent 3px, rgba(0,0,0,0.4) 4px, transparent 8px), repeating-linear-gradient(-2deg, transparent, transparent 15px, rgba(0,0,0,0.2) 16px, transparent 25px)' // Longitudinal bark grain
+    }
   };
 
   const hardnessObjects = [
@@ -41,18 +71,40 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
       clientY = e.touches[0].clientY;
     }
     
-    setMousePos({ x: clientX - rect.left, y: clientY - rect.top });
+    const currentX = clientX - rect.left;
+    const currentY = clientY - rect.top;
+    
+    setMousePos({ x: currentX, y: currentY });
 
-    // Progress logic
-    setLustreProgress(prev => {
-      const current = prev[activeScrubTarget];
-      if (current >= 100) return prev;
-      const next = Math.min(current + 1.5, 100);
-      if (next === 100 && current < 100) {
-        addXp(10);
-      }
-      return { ...prev, [activeScrubTarget]: next };
-    });
+    // Physical distance logic
+    let distance = 0;
+    if (lastMousePos.current.x !== null) {
+      const dx = currentX - lastMousePos.current.x;
+      const dy = currentY - lastMousePos.current.y;
+      distance = Math.sqrt(dx * dx + dy * dy);
+      
+      // Cap massive jumps (e.g., leaving and re-entering the box quickly)
+      if (distance > 100) distance = 0;
+    }
+    
+    lastMousePos.current = { x: currentX, y: currentY };
+    distanceAccumulator.current += distance;
+
+    // Progress updates every ~30px of movement
+    if (distanceAccumulator.current > 30) {
+      const increments = Math.floor(distanceAccumulator.current / 30);
+      distanceAccumulator.current = distanceAccumulator.current % 30;
+      
+      setLustreProgress(prev => {
+        const current = prev[activeScrubTarget];
+        if (current >= 100) return prev;
+        const next = Math.min(current + (increments * 1.5), 100);
+        if (next === 100 && current < 100) {
+          addXp(10);
+        }
+        return { ...prev, [activeScrubTarget]: next };
+      });
+    }
   };
 
   const handleHardnessTest = (objId, answer) => {
@@ -68,14 +120,20 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
   const correctHardnessCount = hardnessObjects.filter(obj => hardnessTests[obj.id] === obj.correct).length;
   const allHardnessTested = correctHardnessCount === hardnessObjects.length;
 
+  useEffect(() => {
+    if (allLustrePolished && allHardnessTested) {
+      onComplete();
+    }
+  }, [allLustrePolished, allHardnessTested, onComplete]);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.35rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Sparkles size={22} style={{ color: 'var(--accent)' }} /> 6.3.1 & 6.3.2: Lustre & Hardness Testing Lab
         </h3>
-        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
           Metals are shiny (lustrous) when polished, but can look dull if exposed to air. 
           Materials can also be classified as <strong>hard</strong> (difficult to scratch/compress) or <strong>soft</strong> (easy to scratch/compress).
         </p>
@@ -85,10 +143,10 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
         {/* Lustre Polish Workbench */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>1. Sandpaper Lustre Scrape</span>
+            <span style={{ fontWeight: 'bold', fontSize: '1.15rem' }}>1. Sandpaper Lustre Scrape</span>
           </div>
 
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0 }}>
+          <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
             Select an item, then <strong>scrub it rapidly by moving your mouse (or finger) back and forth over it</strong> to scrape off the outer layer!
           </p>
 
@@ -102,7 +160,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
                   key={key}
                   onClick={() => setActiveScrubTarget(key)}
                   className={activeScrubTarget === key ? 'primary' : 'outline'}
-                  style={{ fontSize: '0.75rem', padding: '0.5rem' }}
+                  style={{ fontSize: '0.95rem', padding: '0.6rem 0.8rem' }}
                 >
                   {m.name} {progress === 100 ? '✨' : ''}
                 </button>
@@ -114,7 +172,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           <div 
             style={{ 
               height: '160px', 
-              background: '#1e293b', 
+              background: 'var(--surface)', 
               borderRadius: '12px', 
               display: 'flex', 
               alignItems: 'center', 
@@ -122,7 +180,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
               flexDirection: 'column',
               position: 'relative',
               overflow: 'hidden',
-              border: '2px solid #334155',
+              border: '2px solid var(--border)',
               cursor: activeScrubTarget && lustreProgress[activeScrubTarget] < 100 ? 'none' : 'default'
             }}
             onMouseMove={handleMouseMove}
@@ -132,27 +190,26 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           >
             {activeScrubTarget ? (
               <>
-                <span style={{ fontSize: '0.7rem', color: '#94a3b8', position: 'absolute', top: '0.5rem' }}>Polishing Bench (Scrub Here!)</span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', position: 'absolute', top: '0.5rem' }}>Polishing Bench (Scrub Here!)</span>
                 
                 {/* Physical Object Representation */}
-                <div style={{ width: '70%', height: '50px', borderRadius: '8px', position: 'relative', overflow: 'hidden', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)' }}>
+                <div style={{ 
+                  ...lustreMaterials[activeScrubTarget].shapeStyles, 
+                  position: 'relative', overflow: 'hidden', 
+                  boxShadow: lustreMaterials[activeScrubTarget].shapeStyles.clipPath ? 'none' : '0 10px 15px -3px rgba(0,0,0,0.5)',
+                  filter: lustreMaterials[activeScrubTarget].shapeStyles.clipPath ? 'drop-shadow(0 10px 15px rgba(0,0,0,0.5))' : 'none'
+                }}>
                   
                   {/* Shiny underlying layer (always on bottom) */}
                   <div 
                     style={{ 
                       position: 'absolute', 
                       top: 0, left: 0, right: 0, bottom: 0, 
-                      background: lustreMaterials[activeScrubTarget].shinyColor,
+                      background: lustreMaterials[activeScrubTarget].shinyBg,
                       boxShadow: lustreProgress[activeScrubTarget] > 50 && lustreMaterials[activeScrubTarget].isMetal ? 'inset 0 0 20px rgba(255,255,255,0.8)' : 'none',
                       display: 'flex', alignItems: 'center', justifyContent: 'center'
                     }} 
                   >
-                     {lustreProgress[activeScrubTarget] === 100 && lustreMaterials[activeScrubTarget].isMetal && (
-                        <div style={{ color: '#fff', fontWeight: 'bold', textShadow: '0 0 5px rgba(0,0,0,0.8)', fontSize: '1.2rem', letterSpacing: '2px' }}>✨ LUSTROUS ✨</div>
-                     )}
-                     {lustreProgress[activeScrubTarget] === 100 && !lustreMaterials[activeScrubTarget].isMetal && (
-                        <div style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 'bold', fontSize: '1.1rem' }}>DULL (Non-lustrous)</div>
-                     )}
                   </div>
 
                   {/* Dull rusty layer on top (fades away as you scrub) */}
@@ -160,49 +217,80 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
                     style={{ 
                       position: 'absolute', 
                       top: 0, left: 0, right: 0, bottom: 0, 
-                      background: lustreMaterials[activeScrubTarget].baseColor,
+                      background: lustreMaterials[activeScrubTarget].baseBg,
                       opacity: 1 - (lustreProgress[activeScrubTarget] / 100),
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       pointerEvents: 'none'
                     }} 
                   >
                     {/* Texture for rust/dullness */}
-                    <div style={{ width: '100%', height: '100%', opacity: 0.3, backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(0,0,0,0.5) 5px, rgba(0,0,0,0.5) 10px)' }}></div>
+                    <div style={{ width: '100%', height: '100%', opacity: 0.5, background: lustreMaterials[activeScrubTarget].overlayBg }}></div>
                   </div>
                 </div>
                 
+                {/* Global Result Overlay */}
+                {lustreProgress[activeScrubTarget] === 100 && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.5, y: '-50%', x: '-50%' }}
+                    animate={{ opacity: 1, scale: 1, y: '-50%', x: '-50%' }}
+                    transition={{ type: 'spring', bounce: 0.5, duration: 0.6 }}
+                    style={{
+                      position: 'absolute',
+                      top: '50%', left: '50%', 
+                      background: 'rgba(15, 23, 42, 0.95)',
+                      padding: '0.75rem 1.5rem', borderRadius: '12px',
+                      boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                      pointerEvents: 'none', zIndex: 10,
+                      backdropFilter: 'blur(4px)',
+                      border: lustreMaterials[activeScrubTarget].isMetal ? '2px solid rgba(251,191,36,0.6)' : '1px solid rgba(255,255,255,0.1)',
+                      whiteSpace: 'nowrap',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}
+                  >
+                    {lustreMaterials[activeScrubTarget].isMetal ? (
+                      <span style={{ color: '#fbbf24', fontWeight: 'bold', textShadow: '0 0 10px rgba(251,191,36,0.6)', fontSize: '1.4rem', letterSpacing: '2px' }}>✨ LUSTROUS ✨</span>
+                    ) : (
+                      <span style={{ color: '#94a3b8', fontWeight: 'bold', fontSize: '1.2rem', letterSpacing: '1px' }}>DULL (Non-lustrous)</span>
+                    )}
+                  </motion.div>
+                )}
+
                 {/* Custom Sandpaper Cursor */}
                 {isHoveringBench && lustreProgress[activeScrubTarget] < 100 && (
                   <div style={{ 
                     position: 'absolute', 
-                    left: mousePos.x - 20, 
+                    left: mousePos.x - 25, 
                     top: mousePos.y - 20, 
-                    width: '40px', 
-                    height: '30px', 
-                    background: '#d97706', // Sandpaper color
-                    border: '2px solid #92400e',
-                    borderRadius: '4px',
+                    width: '50px', 
+                    height: '40px', 
+                    // Simulate folded corner: top left is golden backing, rest is dark charcoal abrasive
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 25%, #3f3f46 27%, #27272a 100%)', 
+                    border: '1px solid #18181b',
+                    borderRadius: '2px',
                     pointerEvents: 'none',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                    boxShadow: '2px 4px 8px rgba(0,0,0,0.5)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     transform: `rotate(${mousePos.x % 15 - 7}deg)` // Adds slight rotation based on movement
                   }}>
-                     <div style={{ width: '100%', height: '100%', opacity: 0.4, backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '4px 4px' }}></div>
+                     {/* Fine grain texture */}
+                     <div style={{ width: '100%', height: '100%', opacity: 0.5, backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '2px 2px' }}></div>
                   </div>
                 )}
                 
-                <div style={{ position: 'absolute', bottom: '0.5rem', fontSize: '0.75rem', color: lustreProgress[activeScrubTarget] === 100 ? 'var(--success)' : '#cbd5e1' }}>
+                <div style={{ position: 'absolute', bottom: '0.5rem', fontSize: '0.95rem', color: lustreProgress[activeScrubTarget] === 100 ? 'var(--success)' : 'var(--text-muted)' }}>
                   Rust Removed: {Math.floor(lustreProgress[activeScrubTarget])}%
                 </div>
               </>
             ) : (
-              <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Select an item from the tray above</span>
+              <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Select an item from the tray above</span>
             )}
           </div>
 
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: '1.4', minHeight: '40px' }}>
+          <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5', minHeight: '60px' }}>
             {activeScrubTarget && lustreProgress[activeScrubTarget] === 100 ? (
               lustreMaterials[activeScrubTarget].isMetal ? (
                 <div style={{ color: 'var(--success)' }}>
@@ -222,10 +310,10 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
         {/* Hardness compression/scratch test */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>2. Compression & Scratch Test</span>
+            <span style={{ fontWeight: 'bold', fontSize: '1.15rem' }}>2. Compression & Scratch Test</span>
           </div>
 
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0 }}>
+          <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
             Pick an item to test. Hold it, squeeze it, or try to scratch it with a key. Then record if it is Hard or Soft.
           </p>
 
@@ -233,50 +321,109 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
             {hardnessObjects.map((obj) => (
               <button
                 key={obj.id}
-                onClick={() => setSelectedHardnessObject(obj)}
+                onClick={() => {
+                  setSelectedHardnessObject(obj);
+                  setCompletedTests({ squeeze: false, scratch: false });
+                  setActiveTestAnim(null);
+                }}
                 className={selectedHardnessObject?.id === obj.id ? 'outline active' : 'outline'}
-                style={{ padding: '0.35rem 0.6rem', fontSize: '0.7rem' }}
+                style={{ padding: '0.5rem 0.8rem', fontSize: '0.9rem' }}
               >
                 {obj.name} {hardnessTests[obj.id] ? '✓' : ''}
               </button>
             ))}
           </div>
 
-          <div style={{ minHeight: '160px', background: 'var(--surface)', borderRadius: '8px', padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div style={{ minHeight: '160px', background: 'var(--surface)', borderRadius: '8px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {selectedHardnessObject ? (
               <>
-                <strong style={{ fontSize: '0.85rem', color: 'var(--text-heading)' }}>Testing: {selectedHardnessObject.name}</strong>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                <strong style={{ fontSize: '1.1rem', color: 'var(--text-heading)' }}>Testing: {selectedHardnessObject.name}</strong>
+                <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
                   <div><strong>Material:</strong> {selectedHardnessObject.material}</div>
-                  <div><strong>Squeeze Test:</strong> {selectedHardnessObject.squeezeEffect}</div>
-                  <div><strong>Key Scratch Test:</strong> {selectedHardnessObject.scratchEffect}</div>
+                </div>
+
+                {/* Interactive Test Area */}
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', padding: '1rem 0' }}>
+                  <motion.div 
+                    animate={
+                      activeTestAnim === 'squeeze' ? (
+                        selectedHardnessObject.correct === 'Soft' ? { scale: [1, 0.8, 0.9, 1] } : { x: [-2, 2, -2, 2, 0] }
+                      ) : activeTestAnim === 'scratch' ? { rotate: [0, -10, 10, -5, 5, 0] } : {}
+                    }
+                    transition={{ duration: 0.5 }}
+                    style={{ 
+                      width: '60px', height: '60px', background: 'var(--accent-bg)', 
+                      borderRadius: '8px', border: '1px solid var(--accent)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem'
+                    }}
+                  >
+                    📦
+                  </motion.div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
                   <button 
-                    onClick={() => handleHardnessTest(selectedHardnessObject.id, 'Soft')}
-                    className={hardnessTests[selectedHardnessObject.id] === 'Soft' ? 'primary' : 'outline'}
-                    style={{ flex: 1, padding: '0.35rem', fontSize: '0.75rem' }}
+                    onClick={() => {
+                      setActiveTestAnim('squeeze');
+                      setTimeout(() => {
+                        setCompletedTests(prev => ({ ...prev, squeeze: true }));
+                        setActiveTestAnim(null);
+                      }, 600);
+                    }}
+                    className="outline"
+                    style={{ flex: 1, padding: '0.5rem', fontSize: '0.95rem', display: 'flex', gap: '0.5rem', alignItems: 'center', justifyContent: 'center' }}
                   >
-                    It is Soft
+                    ✊ Squeeze Test
                   </button>
                   <button 
-                    onClick={() => handleHardnessTest(selectedHardnessObject.id, 'Hard')}
-                    className={hardnessTests[selectedHardnessObject.id] === 'Hard' ? 'primary' : 'outline'}
-                    style={{ flex: 1, padding: '0.35rem', fontSize: '0.75rem' }}
+                    onClick={() => {
+                      setActiveTestAnim('scratch');
+                      setTimeout(() => {
+                        setCompletedTests(prev => ({ ...prev, scratch: true }));
+                        setActiveTestAnim(null);
+                      }, 600);
+                    }}
+                    className="outline"
+                    style={{ flex: 1, padding: '0.5rem', fontSize: '0.95rem', display: 'flex', gap: '0.5rem', alignItems: 'center', justifyContent: 'center' }}
                   >
-                    It is Hard
+                    🔑 Key Scratch
                   </button>
                 </div>
 
+                {/* Results shown only after testing */}
+                <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', minHeight: '40px', marginTop: '0.75rem' }}>
+                  {completedTests.squeeze && <div><strong>Squeeze Result:</strong> {selectedHardnessObject.squeezeEffect}</div>}
+                  {completedTests.scratch && <div><strong>Scratch Result:</strong> {selectedHardnessObject.scratchEffect}</div>}
+                </div>
+
+                {/* Final Classification (shown only if at least one test is done) */}
+                {(completedTests.squeeze || completedTests.scratch) && (
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem', borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
+                    <button 
+                      onClick={() => handleHardnessTest(selectedHardnessObject.id, 'Soft')}
+                      className={hardnessTests[selectedHardnessObject.id] === 'Soft' ? 'primary' : 'outline'}
+                      style={{ flex: 1, padding: '0.5rem', fontSize: '0.95rem' }}
+                    >
+                      It is Soft
+                    </button>
+                    <button 
+                      onClick={() => handleHardnessTest(selectedHardnessObject.id, 'Hard')}
+                      className={hardnessTests[selectedHardnessObject.id] === 'Hard' ? 'primary' : 'outline'}
+                      style={{ flex: 1, padding: '0.5rem', fontSize: '0.95rem' }}
+                    >
+                      It is Hard
+                    </button>
+                  </div>
+                )}
+
                 {hardnessTests[selectedHardnessObject.id] && (
-                  <div style={{ fontSize: '0.7rem', color: hardnessTests[selectedHardnessObject.id] === selectedHardnessObject.correct ? 'var(--success)' : 'var(--danger)', fontWeight: 'bold' }}>
+                  <div style={{ fontSize: '0.9rem', color: hardnessTests[selectedHardnessObject.id] === selectedHardnessObject.correct ? 'var(--success)' : 'var(--danger)', fontWeight: 'bold', marginTop: '0.5rem' }}>
                     {hardnessTests[selectedHardnessObject.id] === selectedHardnessObject.correct ? 'Correct observation!' : 'Incorrect, try to re-read the test details.'}
                   </div>
                 )}
               </>
             ) : (
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '1rem' }}>
                 Select an item to run tests
               </div>
             )}
@@ -285,15 +432,12 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
       </div>
 
       {/* Footer */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-        <button
-          disabled={!allLustrePolished || !allHardnessTested}
-          onClick={onComplete}
-          className="primary"
-          style={{ padding: '0.75rem 2rem' }}
-        >
-          Proceed to Material Suitability
-        </button>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
+        {allLustrePolished && allHardnessTested && (
+          <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}>
+            Tests Complete! Click "Proceed to next" in the top right.
+          </div>
+        )}
       </div>
     </div>
   );

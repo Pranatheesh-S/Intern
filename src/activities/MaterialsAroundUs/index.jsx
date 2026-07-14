@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, CheckCircle, RefreshCw } from 'lucide-react';
+import { ArrowLeft, CheckCircle, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
 import useSound from 'use-sound';
+import { useTheme } from '../../ThemeContext.jsx';
 
 // Stages and Components
 import IntroBriefing from './components/IntroBriefing';
@@ -72,7 +73,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
     }
   };
 
-  const handleStageComplete = (stageId, nextStageId) => {
+  const handleStageComplete = (stageId, autoAdvanceTo = null) => {
     setProgress(prev => {
       const nextProgress = { ...prev, [stageId]: true };
       
@@ -81,43 +82,43 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           title: "Mission Accepted! 🕵️‍♂️",
           text: "Let's head straight into the classroom and begin finding the evidence.",
           icon: "🔍",
-          buttonText: "Begin Investigation"
+          buttonText: "Dismiss"
         });
       } else if (stageId === 'stage2') {
         setCongratsMessage({
           title: "Barrier 1 Cleared! 🌟",
           text: "Outstanding work! You've successfully scanned all evidence and identified the base materials. Let's group them now.",
           icon: "🔓",
-          buttonText: "Unlock Barrier 2"
+          buttonText: "Dismiss"
         });
       } else if (stageId === 'sportsball') {
         setCongratsMessage({
           title: "Barrier 2 Cleared! 🏆",
           text: "You successfully designed the sports product and grouped materials! Next, let's test specific properties.",
           icon: "🔓",
-          buttonText: "Unlock Barrier 3"
+          buttonText: "Dismiss"
         });
       } else if (stageId === 'stage7_sol') {
         setCongratsMessage({
           title: "Barrier 3 Cleared! 🧪",
           text: "Brilliant analysis! You have categorized materials by lustre, hardness, transparency, and solubility. Now let's explore matter itself.",
           icon: "🔓",
-          buttonText: "Unlock Barrier 4"
+          buttonText: "Dismiss"
         });
       } else if (stageId === 'quiz') {
         setCongratsMessage({
           title: "Case Closed! 🏆",
           text: "Congratulations, Master Investigator! You have solved all experimental barriers, successfully analyzed the materials, and completed the chapter.",
           icon: "🎉",
-          buttonText: "Finish Investigation"
+          buttonText: "Dismiss"
         });
       }
       
       return nextProgress;
     });
 
-    if (nextStageId) {
-      setActiveTab(nextStageId);
+    if (autoAdvanceTo) {
+      setActiveTab(autoAdvanceTo);
     }
   };
 
@@ -135,130 +136,152 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
     },
     {
       id: 'stage1', num: 2, title: 'Barrier 1: 6.1 Observing Objects Around Us', subtitle: 'Phase 1: Find Objects',
-      component: <Stage1_Intro key={`stage1-${resetKeys.stage1}`} onComplete={() => handleStageComplete('stage1', 'stage2')} addXp={addXp} />,
+      component: <Stage1_Intro key={`stage1-${resetKeys.stage1}`} onComplete={() => handleStageComplete('stage1')} addXp={addXp} />,
       locked: !progress.intro
     },
     {
       id: 'stage2', num: 3, title: 'Barrier 1: 6.1 Observing Objects Around Us', subtitle: 'Phase 2: Scan Evidence',
-      component: <Stage2_Identify key={`stage2-${resetKeys.stage2}`} onComplete={() => handleStageComplete('stage2', 'stage3')} addXp={addXp} />,
+      component: <Stage2_Identify key={`stage2-${resetKeys.stage2}`} onComplete={() => handleStageComplete('stage2')} addXp={addXp} />,
       locked: !progress.stage1
     },
     {
       id: 'stage3', num: 4, title: 'Barrier 2: 6.2 How to Group Materials?', subtitle: 'Phase 1: Classification',
-      component: <Stage3_Classification key={`stage3-${resetKeys.stage3}`} onComplete={() => handleStageComplete('stage3', 'stage5')} addXp={addXp} />,
+      component: <Stage3_Classification key={`stage3-${resetKeys.stage3}`} onComplete={() => handleStageComplete('stage3')} addXp={addXp} />,
       locked: !progress.stage2
     },
     {
       id: 'stage5', num: 5, title: 'Barrier 2: 6.2 How to Group Materials?', subtitle: 'Phase 2: Suitability',
-      component: <Stage5_Suitability key={`stage5-${resetKeys.stage5}`} onComplete={() => handleStageComplete('stage5', 'sportsball')} addXp={addXp} />,
+      component: <Stage5_Suitability key={`stage5-${resetKeys.stage5}`} onComplete={() => handleStageComplete('stage5')} addXp={addXp} />,
       locked: !progress.stage3
     },
     {
       id: 'sportsball', num: 6, title: 'Barrier 2: 6.2 How to Group Materials?', subtitle: 'Phase 3: Product Design',
-      component: <Stage_SportsBall key={`sportsball-${resetKeys.sportsball}`} onComplete={() => handleStageComplete('sportsball', 'stage4')} addXp={addXp} />,
+      component: <Stage_SportsBall key={`sportsball-${resetKeys.sportsball}`} onComplete={() => handleStageComplete('sportsball')} addXp={addXp} />,
       locked: !progress.stage5
     },
     {
       id: 'stage4', num: 7, title: 'Barrier 3: 6.3 Properties of Materials', subtitle: 'Stage 6.3.1 & 6.3.2: Appearance & Hardness',
-      component: <Stage4_LustreHardness key={`stage4-${resetKeys.stage4}`} onComplete={() => handleStageComplete('stage4', 'stage6')} addXp={addXp} />,
+      component: <Stage4_LustreHardness key={`stage4-${resetKeys.stage4}`} onComplete={() => handleStageComplete('stage4')} addXp={addXp} />,
       locked: !progress.sportsball
     },
     {
       id: 'stage6', num: 8, title: 'Barrier 3: 6.3 Properties of Materials', subtitle: 'Stage 6.3.3: Transparency',
-      component: <Stage6_Transparency key={`stage6-${resetKeys.stage6}`} onComplete={() => handleStageComplete('stage6', 'stage7_sol')} addXp={addXp} />,
+      component: <Stage6_Transparency key={`stage6-${resetKeys.stage6}`} onComplete={() => handleStageComplete('stage6')} addXp={addXp} />,
       locked: !progress.stage4
     },
     {
       id: 'stage7_sol', num: 9, title: 'Barrier 3: 6.3 Properties of Materials', subtitle: 'Stage 6.3.4: Solubility',
-      component: <Stage7_SolubilityMatter mode="solubility" key={`stage7_sol-${resetKeys.stage7_sol}`} onComplete={() => handleStageComplete('stage7_sol', 'stage7_mat')} addXp={addXp} />,
+      component: <Stage7_SolubilityMatter mode="solubility" key={`stage7_sol-${resetKeys.stage7_sol}`} onComplete={() => handleStageComplete('stage7_sol')} addXp={addXp} />,
       locked: !progress.stage6
     },
     {
       id: 'stage7_mat', num: 10, title: 'Barrier 4: 6.4 What is Matter?', subtitle: 'Mass and Space',
-      component: <Stage7_SolubilityMatter mode="matter" key={`stage7_mat-${resetKeys.stage7_mat}`} onComplete={() => handleStageComplete('stage7_mat', 'summary')} addXp={addXp} />,
+      component: <Stage7_SolubilityMatter mode="matter" key={`stage7_mat-${resetKeys.stage7_mat}`} onComplete={() => handleStageComplete('stage7_mat')} addXp={addXp} />,
       locked: !progress.stage7_sol
     },
     {
       id: 'summary', num: 11, title: 'Summary', subtitle: 'Concept Map',
-      component: <Stage8_AyurvedaSummary key={`summary-${resetKeys.summary}`} onComplete={() => handleStageComplete('summary', 'quiz')} addXp={addXp} />,
+      component: <Stage8_AyurvedaSummary key={`summary-${resetKeys.summary}`} onComplete={() => handleStageComplete('summary')} addXp={addXp} />,
       locked: !progress.stage7_mat
     },
     {
       id: 'quiz', num: 12, title: 'Final Quiz', subtitle: 'Master Investigator',
-      component: <Stage9_Quiz key={`quiz-${resetKeys.quiz}`} onComplete={() => handleStageComplete('quiz', null)} addXp={addXp} />,
+      component: <Stage9_Quiz key={`quiz-${resetKeys.quiz}`} onComplete={() => handleStageComplete('quiz')} addXp={addXp} />,
       locked: !progress.summary
     }
   ];
 
   const activeTabData = tabs.find(t => t.id === activeTab);
+  
+  // Navigation Next Logic
+  const activeTabIdx = tabs.findIndex(t => t.id === activeTab);
+  const nextTab = activeTabIdx >= 0 && activeTabIdx < tabs.length - 1 ? tabs[activeTabIdx + 1] : null;
+  const canProceed = nextTab && !nextTab.locked;
+
+  // Global Theme Hook
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <div style={{ maxWidth: '1800px', margin: '0 auto', padding: '2rem 1.5rem' }}>
-      {/* Top Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+    <div className="activity-workspace">
+      {/* ═══════════════════════════════════════════
+          GLOBAL ACTION BAR (WINDOW CHROME)
+          ═══════════════════════════════════════════ */}
+      <div className="global-action-bar">
+        <div className="global-action-bar-left">
           <button 
             onClick={onBackToDashboard} 
             className="outline" 
-            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem', borderColor: 'var(--border)', borderRadius: '8px' }}
+            style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px' }}
           >
-            <ArrowLeft size={14} /> Back
+            <ArrowLeft size={16} /> Back
           </button>
-          <div>
-            <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>Chapter 6: Materials Around Us</h2>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Material Investigation Lab • Active Learning Simulation</span>
-          </div>
         </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+
+        <div className="global-action-bar-center">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', padding: '0.4rem 1rem', borderRadius: '20px', border: '1px solid var(--border)' }}>
             <span style={{ fontSize: '1.2rem' }}>
               {progress.quiz ? '🏆' : progress.barrier3 ? '🎖️' : progress.barrier1 ? '🕵️‍♂️' : '🔍'}
             </span>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
               <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Rank</span>
               <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
                 {progress.quiz ? 'Master Investigator' : progress.barrier3 ? 'Senior Analyst' : progress.barrier1 ? 'Active Investigator' : 'Novice Detective'}
               </span>
             </div>
           </div>
+        </div>
+        
+        <div className="global-action-bar-right">
+          <button 
+            className="outline" 
+            onClick={toggleTheme}
+            title="Toggle Theme"
+            style={{ padding: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
           <button 
             onClick={handleResetCurrentStage}
             className="outline"
             style={{
-              padding: '0.45rem 0.8rem',
-              fontSize: '0.8rem',
-              gap: '0.35rem',
+              padding: '0.45rem 1rem',
+              fontSize: '0.85rem',
+              gap: '0.5rem',
               borderColor: 'var(--danger-border)',
               color: 'var(--danger)',
               background: 'var(--danger-bg)',
               fontWeight: 'bold',
-              borderRadius: '20px'
+              borderRadius: '8px'
             }}
           >
-            <RefreshCw size={12} /> Reset Lab
+            <RefreshCw size={14} /> Reset Lab
           </button>
-          <div style={{ background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)', padding: '0.4rem 0.8rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#eab308', fontWeight: 'bold', fontSize: '0.85rem' }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#eab308', boxShadow: '0 0 8px #eab308' }} />
-            {xp} XP
-          </div>
+
+          <button 
+            onClick={() => {
+              if (canProceed) setActiveTab(nextTab.id);
+            }}
+            className={canProceed ? "primary" : "outline"}
+            disabled={!canProceed}
+            style={{ 
+              padding: '0.45rem 1rem', 
+              fontSize: '0.85rem', 
+              gap: '0.5rem', 
+              borderRadius: '8px',
+              opacity: canProceed ? 1 : 0.5,
+              cursor: canProceed ? 'pointer' : 'not-allowed'
+            }}
+          >
+            Proceed to next <ArrowRight size={16} />
+          </button>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem', alignItems: 'start' }}>
+      <div className="main-grid">
         
         {/* Left Sidebar: Timeline Progress */}
-        <div className="glass-panel" style={{ 
-          background: 'var(--card-bg)', 
-          border: '1px solid var(--border)', 
-          borderRadius: '12px', 
-          padding: '1.5rem 1rem', 
-          position: 'sticky', 
-          top: '2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem'
-        }}>
+        <div className="lab-sidebar">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border)', color: 'var(--text-heading)', fontWeight: 'bold' }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
             Timeline Progress
