@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, AlertCircle, Award, RefreshCw, Star } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -111,16 +111,22 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
     setQuizFinished(false);
   };
 
+  useEffect(() => {
+    if (quizFinished) {
+      onComplete();
+    }
+  }, [quizFinished, onComplete]);
+
   return (
     <div style={{ maxWidth: '650px', margin: '0 auto', width: '100%' }}>
       {!quizFinished ? (
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', border: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Question {currentQIndex + 1} of {questions.length}</span>
-            <span style={{ fontSize: '0.8rem', color: 'var(--accent)', fontWeight: 'bold' }}>Score: {score}</span>
+            <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Question {currentQIndex + 1} of {questions.length}</span>
+            <span style={{ fontSize: '1rem', color: 'var(--accent)', fontWeight: 'bold' }}>Score: {score}</span>
           </div>
 
-          <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-heading)', lineHeight: '1.5' }}>
+          <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)', lineHeight: '1.5' }}>
             {questions[currentQIndex].q}
           </h3>
 
@@ -156,12 +162,12 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
                   disabled={isAnswered}
                   style={{
                     width: '100%',
-                    padding: '0.75rem 1rem',
+                    padding: '1rem',
                     borderRadius: '10px',
                     border: `1px solid ${btnBorder}`,
                     background: btnBg,
                     color: textColor,
-                    fontSize: '0.85rem',
+                    fontSize: '1rem',
                     textAlign: 'left',
                     justifyContent: 'flex-start',
                     fontWeight: isSelected ? 'bold' : 'normal',
@@ -180,15 +186,15 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               style={{
-                padding: '0.8rem',
+                padding: '1rem',
                 borderRadius: '8px',
                 background: selectedAns === questions[currentQIndex].correctIndex ? 'var(--success-bg)' : 'var(--danger-bg)',
                 border: `1px solid ${selectedAns === questions[currentQIndex].correctIndex ? 'var(--success-border)' : 'var(--danger-border)'}`,
                 display: 'flex',
                 gap: '0.5rem',
-                fontSize: '0.8rem',
+                fontSize: '1rem',
                 color: selectedAns === questions[currentQIndex].correctIndex ? 'var(--success)' : 'var(--danger)',
-                lineHeight: '1.4'
+                lineHeight: '1.5'
               }}
             >
               {selectedAns === questions[currentQIndex].correctIndex ? (
@@ -208,7 +214,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
                 onClick={handleVerify} 
                 disabled={selectedAns === null} 
                 className="primary" 
-                style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem' }}
+                style={{ padding: '0.75rem 2rem', fontSize: '1rem' }}
               >
                 Verify Answer
               </button>
@@ -216,7 +222,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
               <button 
                 onClick={handleNext} 
                 className="primary" 
-                style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem' }}
+                style={{ padding: '0.75rem 2rem', fontSize: '1rem' }}
               >
                 {currentQIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
               </button>
@@ -235,23 +241,23 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
           </div>
 
           <div>
-            <h3 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>Chapter Completed!</h3>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>You scored {score} out of {questions.length} questions correctly.</span>
+            <h3 style={{ margin: 0, fontSize: '1.75rem', color: 'var(--text-heading)' }}>Chapter Completed!</h3>
+            <span style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>You scored {score} out of {questions.length} questions correctly.</span>
           </div>
 
           {score === questions.length ? (
-            <div style={{ padding: '0.8rem', borderRadius: '8px', background: 'var(--success-bg)', border: '1px solid var(--success-border)', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontSize: '0.85rem', fontWeight: 'bold' }}>
-              <Star size={16} fill="var(--success)" /> Perfect Score! Master Investigator Badge Unlocked!
+            <div style={{ padding: '1rem', borderRadius: '8px', background: 'var(--success-bg)', border: '1px solid var(--success-border)', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontSize: '1rem', fontWeight: 'bold' }}>
+              <Star size={18} fill="var(--success)" /> Perfect Score! Master Investigator Badge Unlocked!
             </div>
           ) : null}
 
-          <div style={{ display: 'flex', gap: '0.75rem', width: '100%' }}>
-            <button onClick={restartQuiz} className="outline" style={{ flex: 1, gap: '0.4rem', padding: '0.6rem' }}>
-              <RefreshCw size={14} /> Restart Quiz
+          <div style={{ display: 'flex', gap: '1rem', width: '100%', marginTop: '1rem' }}>
+            <button onClick={restartQuiz} className="outline" style={{ flex: 1, gap: '0.5rem', padding: '0.75rem', fontSize: '1rem' }}>
+              <RefreshCw size={16} /> Restart Quiz
             </button>
-            <button onClick={onComplete} className="primary" style={{ flex: 1, padding: '0.6rem' }}>
-              Finish Case Study
-            </button>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--success-bg)', border: '1px solid var(--success-border)', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}>
+              Click "Proceed" in Top Right!
+            </div>
           </div>
         </motion.div>
       )}

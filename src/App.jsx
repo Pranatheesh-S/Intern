@@ -181,6 +181,38 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // Objective 2: Focus Mode (Content First Learning)
+    // Automatically hide header and sidebars during immersive interactive labs
+    const isOverview = !activeActivity || activeActivity.startsWith('chapter') || activeActivity === 'boilerplate';
+    if (!isOverview) {
+      document.body.classList.add('focus-mode-active');
+    } else {
+      document.body.classList.remove('focus-mode-active');
+    }
+
+    // Inactivity Timer for Focus Mode UI
+    let timeout;
+    const handleMouseMove = () => {
+      // User is active, show the UI (if hovered)
+      document.body.classList.remove('ui-inactive');
+      clearTimeout(timeout);
+      
+      // If we are in an activity, start the 2.5s auto-hide countdown
+      if (!isOverview) {
+        timeout = setTimeout(() => {
+          document.body.classList.add('ui-inactive');
+        }, 2500);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(timeout);
+    };
+  }, [activeActivity]);
+
+  useEffect(() => {
     let title = "FuturaX Interactive Labs";
     if (activeActivity) {
       const activityNames = {
@@ -3988,8 +4020,12 @@ export default function App() {
 
   return (
     <div className="app-container">
+      {/* Invisible Triggers for Focus Mode Reveal */}
+      <div className="focus-trigger-top" />
+      <div className="focus-trigger-left" />
+
       {/* Page Title Header */}
-      <header className="header" style={{ marginBottom: activeSubject ? '1.5rem' : '2.5rem' }}>
+      <header className="header">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <div className="header-title">
@@ -4083,7 +4119,7 @@ export default function App() {
       </header>
 
       {/* Main Workspace content */}
-      <main style={{ minHeight: '520px', marginBottom: '2rem' }}>
+      <main className="content-wrapper">
         <Suspense fallback={
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', color: 'var(--text-muted)' }}>
             Loading activity...
