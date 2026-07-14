@@ -3,12 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle, RefreshCw } from 'lucide-react';
 import useSound from 'use-sound';
 
-// Stages and Barriers
+// Stages and Components
 import IntroBriefing from './components/IntroBriefing';
-import Barrier1_Observing from './components/Barrier1_Observing';
-import Barrier2_Grouping from './components/Barrier2_Grouping';
-import Barrier3_Properties from './components/Barrier3_Properties';
-import Barrier4_Matter from './components/Barrier4_Matter';
+import Stage1_Intro from './components/Stage1_Intro';
+import Stage2_Identify from './components/Stage2_Identify';
+import Stage3_Classification from './components/Stage3_Classification';
+import Stage4_LustreHardness from './components/Stage4_LustreHardness';
+import Stage5_Suitability from './components/Stage5_Suitability';
+import Stage_SportsBall from './components/Stage_SportsBall';
+import Stage6_Transparency from './components/Stage6_Transparency';
+import Stage7_SolubilityMatter from './components/Stage7_SolubilityMatter';
 import Stage8_AyurvedaSummary from './components/Stage8_AyurvedaSummary';
 import Stage9_Quiz from './components/Stage9_Quiz';
 
@@ -16,20 +20,30 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [activeTab, setActiveTab] = useState('intro');
   const [progress, setProgress] = useState({
     intro: false,
-    barrier1: false,
-    barrier2: false,
-    barrier3: false,
-    barrier4: false,
+    stage1: false,
+    stage2: false,
+    stage3: false,
+    stage5: false,
+    sportsball: false,
+    stage4: false,
+    stage6: false,
+    stage7_sol: false,
+    stage7_mat: false,
     summary: false,
     quiz: false
   });
   const [xp, setXp] = useState(0);
   const [resetKeys, setResetKeys] = useState({
     intro: 0,
-    barrier1: 0,
-    barrier2: 0,
-    barrier3: 0,
-    barrier4: 0,
+    stage1: 0,
+    stage2: 0,
+    stage3: 0,
+    stage5: 0,
+    sportsball: 0,
+    stage4: 0,
+    stage6: 0,
+    stage7_sol: 0,
+    stage7_mat: 0,
     summary: 0,
     quiz: 0
   });
@@ -62,22 +76,28 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
     setProgress(prev => {
       const nextProgress = { ...prev, [stageId]: true };
       
-      // Check milestones/barriers completions
       if (stageId === 'intro') {
         setCongratsMessage({
           title: "Mission Accepted! 🕵️‍♂️",
-          text: "Let's head straight into the classroom and begin scanning the evidence. Proceed to Barrier 1.",
+          text: "Let's head straight into the classroom and begin finding the evidence.",
           icon: "🔍",
-          buttonText: "Begin Barrier 1"
+          buttonText: "Begin Investigation"
         });
-      } else if (stageId === 'barrier1') {
+      } else if (stageId === 'stage2') {
         setCongratsMessage({
           title: "Barrier 1 Cleared! 🌟",
           text: "Outstanding work! You've successfully scanned all evidence and identified the base materials. Let's group them now.",
           icon: "🔓",
           buttonText: "Unlock Barrier 2"
         });
-      } else if (stageId === 'barrier3') {
+      } else if (stageId === 'sportsball') {
+        setCongratsMessage({
+          title: "Barrier 2 Cleared! 🏆",
+          text: "You successfully designed the sports product and grouped materials! Next, let's test specific properties.",
+          icon: "🔓",
+          buttonText: "Unlock Barrier 3"
+        });
+      } else if (stageId === 'stage7_sol') {
         setCongratsMessage({
           title: "Barrier 3 Cleared! 🧪",
           text: "Brilliant analysis! You have categorized materials by lustre, hardness, transparency, and solubility. Now let's explore matter itself.",
@@ -110,57 +130,61 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
   const tabs = [
     {
-      id: 'intro',
-      num: 1,
-      title: 'Introduction',
-      subtitle: 'Mission Briefing',
-      component: <IntroBriefing key={`intro-${resetKeys.intro}`} onComplete={() => handleStageComplete('intro', 'barrier1')} addXp={addXp} />
+      id: 'intro', num: 1, title: 'Introduction', subtitle: 'Mission Briefing',
+      component: <IntroBriefing key={`intro-${resetKeys.intro}`} onComplete={() => handleStageComplete('intro', 'stage1')} addXp={addXp} />
     },
     {
-      id: 'barrier1',
-      num: 2,
-      title: 'Barrier 1',
-      subtitle: '6.1 Observing Objects',
-      component: <Barrier1_Observing key={`barrier1-${resetKeys.barrier1}`} onComplete={() => handleStageComplete('barrier1', 'barrier2')} addXp={addXp} />,
+      id: 'stage1', num: 2, title: 'Barrier 1: 6.1 Observing Objects Around Us', subtitle: 'Phase 1: Find Objects',
+      component: <Stage1_Intro key={`stage1-${resetKeys.stage1}`} onComplete={() => handleStageComplete('stage1', 'stage2')} addXp={addXp} />,
       locked: !progress.intro
     },
     {
-      id: 'barrier2',
-      num: 3,
-      title: 'Barrier 2',
-      subtitle: '6.2 Grouping Materials',
-      component: <Barrier2_Grouping key={`barrier2-${resetKeys.barrier2}`} onComplete={() => handleStageComplete('barrier2', 'barrier3')} addXp={addXp} />,
-      locked: !progress.barrier1
+      id: 'stage2', num: 3, title: 'Barrier 1: 6.1 Observing Objects Around Us', subtitle: 'Phase 2: Scan Evidence',
+      component: <Stage2_Identify key={`stage2-${resetKeys.stage2}`} onComplete={() => handleStageComplete('stage2', 'stage3')} addXp={addXp} />,
+      locked: !progress.stage1
     },
     {
-      id: 'barrier3',
-      num: 4,
-      title: 'Barrier 3',
-      subtitle: '6.3 Properties',
-      component: <Barrier3_Properties key={`barrier3-${resetKeys.barrier3}`} onComplete={() => handleStageComplete('barrier3', 'barrier4')} addXp={addXp} />,
-      locked: !progress.barrier2
+      id: 'stage3', num: 4, title: 'Barrier 2: 6.2 How to Group Materials?', subtitle: 'Phase 1: Classification',
+      component: <Stage3_Classification key={`stage3-${resetKeys.stage3}`} onComplete={() => handleStageComplete('stage3', 'stage5')} addXp={addXp} />,
+      locked: !progress.stage2
     },
     {
-      id: 'barrier4',
-      num: 5,
-      title: 'Barrier 4',
-      subtitle: '6.4 What is Matter?',
-      component: <Barrier4_Matter key={`barrier4-${resetKeys.barrier4}`} onComplete={() => handleStageComplete('barrier4', 'summary')} addXp={addXp} />,
-      locked: !progress.barrier3
+      id: 'stage5', num: 5, title: 'Barrier 2: 6.2 How to Group Materials?', subtitle: 'Phase 2: Suitability',
+      component: <Stage5_Suitability key={`stage5-${resetKeys.stage5}`} onComplete={() => handleStageComplete('stage5', 'sportsball')} addXp={addXp} />,
+      locked: !progress.stage3
     },
     {
-      id: 'summary',
-      num: 6,
-      title: 'Summary',
-      subtitle: 'Concept Map',
+      id: 'sportsball', num: 6, title: 'Barrier 2: 6.2 How to Group Materials?', subtitle: 'Phase 3: Product Design',
+      component: <Stage_SportsBall key={`sportsball-${resetKeys.sportsball}`} onComplete={() => handleStageComplete('sportsball', 'stage4')} addXp={addXp} />,
+      locked: !progress.stage5
+    },
+    {
+      id: 'stage4', num: 7, title: 'Barrier 3: 6.3 Properties of Materials', subtitle: 'Stage 6.3.1 & 6.3.2: Appearance & Hardness',
+      component: <Stage4_LustreHardness key={`stage4-${resetKeys.stage4}`} onComplete={() => handleStageComplete('stage4', 'stage6')} addXp={addXp} />,
+      locked: !progress.sportsball
+    },
+    {
+      id: 'stage6', num: 8, title: 'Barrier 3: 6.3 Properties of Materials', subtitle: 'Stage 6.3.3: Transparency',
+      component: <Stage6_Transparency key={`stage6-${resetKeys.stage6}`} onComplete={() => handleStageComplete('stage6', 'stage7_sol')} addXp={addXp} />,
+      locked: !progress.stage4
+    },
+    {
+      id: 'stage7_sol', num: 9, title: 'Barrier 3: 6.3 Properties of Materials', subtitle: 'Stage 6.3.4: Solubility',
+      component: <Stage7_SolubilityMatter mode="solubility" key={`stage7_sol-${resetKeys.stage7_sol}`} onComplete={() => handleStageComplete('stage7_sol', 'stage7_mat')} addXp={addXp} />,
+      locked: !progress.stage6
+    },
+    {
+      id: 'stage7_mat', num: 10, title: 'Barrier 4: 6.4 What is Matter?', subtitle: 'Mass and Space',
+      component: <Stage7_SolubilityMatter mode="matter" key={`stage7_mat-${resetKeys.stage7_mat}`} onComplete={() => handleStageComplete('stage7_mat', 'summary')} addXp={addXp} />,
+      locked: !progress.stage7_sol
+    },
+    {
+      id: 'summary', num: 11, title: 'Summary', subtitle: 'Concept Map',
       component: <Stage8_AyurvedaSummary key={`summary-${resetKeys.summary}`} onComplete={() => handleStageComplete('summary', 'quiz')} addXp={addXp} />,
-      locked: !progress.barrier4
+      locked: !progress.stage7_mat
     },
     {
-      id: 'quiz',
-      num: 7,
-      title: 'Final Quiz',
-      subtitle: 'Master Investigator',
+      id: 'quiz', num: 12, title: 'Final Quiz', subtitle: 'Master Investigator',
       component: <Stage9_Quiz key={`quiz-${resetKeys.quiz}`} onComplete={() => handleStageComplete('quiz', null)} addXp={addXp} />,
       locked: !progress.summary
     }

@@ -87,14 +87,14 @@ export default function Stage3_Classification({ onComplete, addXp }) {
   const [errorMessage, setErrorMessage] = useState('');
 
   const items = [
-    { id: 'textbook', name: 'Textbook', icon: TextbookIcon, correctUse: 'School Shelf', correctMaterial: 'Paper' },
-    { id: 'ruler', name: 'Ruler', icon: RulerIcon, correctUse: 'School Shelf', correctMaterial: 'Plastic' },
-    { id: 'geometry', name: 'Geometry Box', icon: GeometryBoxIcon, correctUse: 'School Shelf', correctMaterial: 'Metal' },
-    { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass' },
-    { id: 'plate', name: 'Plate', icon: PlateIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Ceramic' },
-    { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal' },
-    { id: 'candle', name: 'Candle', icon: CandleIcon, correctUse: 'Home Shelf', correctMaterial: 'Wax' },
-    { id: 'cricket_ball', name: 'Cricket Ball', icon: BallIcon, correctUse: 'Home Shelf', correctMaterial: 'Leather' }
+    { id: 'textbook', name: 'Textbook', icon: TextbookIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where you use it for learning.', materialHint: 'Think about what pages are made from.' },
+    { id: 'ruler', name: 'Ruler', icon: RulerIcon, correctUse: 'School Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you measure and draw lines.', materialHint: 'Think about what light, synthetic material is often used for school tools.' },
+    { id: 'geometry', name: 'Geometry Box', icon: GeometryBoxIcon, correctUse: 'School Shelf', correctMaterial: 'Metal', useHint: 'Think about where you use drawing tools.', materialHint: 'Think about what strong, cold-to-the-touch material is used for durable boxes.' },
+    { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' },
+    { id: 'plate', name: 'Plate', icon: PlateIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Ceramic', useHint: 'Think about where food is served.', materialHint: 'Think about what hard, baked material is used for dishware.' },
+    { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard material is used for cutlery.' },
+    { id: 'candle', name: 'Candle', icon: CandleIcon, correctUse: 'Home Shelf', correctMaterial: 'Wax', useHint: 'Think about where you use it for light during a power cut.', materialHint: 'Think about what melts easily when heated.' },
+    { id: 'cricket_ball', name: 'Cricket Ball', icon: BallIcon, correctUse: 'Home Shelf', correctMaterial: 'Leather', useHint: 'Think about where you store your sports equipment to play with at home.', materialHint: 'Think about what tough, stitched material is used for this ball.' }
   ];
 
   const handleUseSort = (itemId, targetShelf) => {
@@ -105,7 +105,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
       setErrorMessage('');
       addXp(5);
     } else {
-      setErrorMessage(`"${item.name}" belongs on the ${item.correctUse}, not the ${targetShelf}!`);
+      setErrorMessage(`"${item.name}" doesn't belong here. ${item.useHint}`);
       setTimeout(() => setErrorMessage(''), 4000);
     }
   };
@@ -118,7 +118,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
       setErrorMessage('');
       addXp(5);
     } else {
-      setErrorMessage(`"${item.name}" is made of ${item.correctMaterial}, not ${targetMaterial}!`);
+      setErrorMessage(`Incorrect material. ${item.materialHint}`);
       setTimeout(() => setErrorMessage(''), 4000);
     }
   };
