@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import {
   BookOpen,
   Zap,
@@ -59,6 +59,11 @@ const MaterialsAroundUsActivity = lazy(() => import('./activities/MaterialsAroun
 const Activity4_1 = lazy(() => import('./activities/Activity4_1'));
 const Activity4_6 = lazy(() => import('./activities/Activity4_6'));
 const Activity4_7 = lazy(() => import('./activities/Activity4_7'));
+const AppreciatingBiodiversityActivity = lazy(() => import('./activities/AppreciatingBiodiversityActivity'));
+const LeafVenationLab = lazy(() => import('./activities/LeafVenationLab'));
+const RootSystemsLab = lazy(() => import('./activities/RootSystemsLab'));
+const VenationRootCorrelationLab = lazy(() => import('./activities/VenationRootCorrelationLab'));
+const SeedDissectionLab = lazy(() => import('./activities/SeedDissectionLab'));
 import './App.css';
 
 export default function App() {
@@ -71,6 +76,91 @@ export default function App() {
     const params = new URLSearchParams(window.location.hash.replace('#', '?'));
     return params.get('activity') || null;
   });
+  const [activeActivityPhase, setActiveActivityPhase] = useState(1);
+  const [sortCorrectCounts, setSortCorrectCounts] = useState({});
+  const [selectedSortItem, setSelectedSortItem] = useState(null);
+  const [sortStatusMsg, setSortStatusMsg] = useState('');
+  const [showSortSuccess, setShowSortSuccess] = useState(false);
+  const [activeContentLesson, setActiveContentLesson] = useState(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [quizChecked, setQuizChecked] = useState(false);
+  const [contentLessonProgress, setContentLessonProgress] = useState({});
+
+  const [activeSectionId, setActiveSectionId] = useState(null);
+  const sidebarItemRefs = useRef({});
+  const timelineContainerRef = useRef(null);
+  const [pointerTop, setPointerTop] = useState(0);
+  const [pointerLeft, setPointerLeft] = useState(0);
+
+  useEffect(() => {
+    if (activeSubject !== 'class6' || activeActivity !== 'chapter2') return;
+
+    let ticking = false;
+
+    const updatePointer = () => {
+      const sectionEls = Array.from(document.querySelectorAll('.timeline-section'));
+      if (sectionEls.length === 0) return;
+
+      let bestMatch = sectionEls[0];
+      let minDistance = Infinity;
+      const targetY = window.innerHeight * 0.35; // 35% down the screen
+
+      sectionEls.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const distance = Math.abs(rect.top - targetY);
+        // Also if the element spans across the targetY, it's definitely the active one
+        if (rect.top <= targetY && rect.bottom >= targetY) {
+           bestMatch = el;
+           minDistance = 0;
+        } else if (distance < minDistance) {
+          minDistance = distance;
+          bestMatch = el;
+        }
+      });
+
+      if (bestMatch && timelineContainerRef.current) {
+        setActiveSectionId(bestMatch.id);
+        const nodeEl = bestMatch.querySelector('.timeline-node');
+        if (nodeEl) {
+          const containerRect = timelineContainerRef.current.getBoundingClientRect();
+          const nodeRect = nodeEl.getBoundingClientRect();
+          
+          const nodeCenterY = (nodeRect.top - containerRect.top) + (nodeRect.height / 2);
+          const nodeCenterX = (nodeRect.left - containerRect.left) + (nodeRect.width / 2);
+          
+          setPointerTop(nodeCenterY);
+          setPointerLeft(nodeCenterX);
+        }
+      }
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updatePointer);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial update
+    setTimeout(updatePointer, 100);
+    setTimeout(updatePointer, 500); // extra safety after images/fonts might load
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [activeSubject, activeActivity]);
+
+  useEffect(() => {
+    if (activeSectionId && sidebarItemRefs.current[activeSectionId]) {
+      sidebarItemRefs.current[activeSectionId].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  }, [activeSectionId]);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -160,86 +250,171 @@ export default function App() {
 
   // Renders the main subject selector dashboard
   const renderSubjectSelector = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div className="glass-panel" style={{ padding: '1.5rem', borderLeft: '4px solid #4f46e5' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div className="glass-panel" style={{ padding: '1.5rem', borderLeft: '4px solid var(--accent)' }}>
         <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Compass size={18} style={{ color: 'var(--accent-text)' }} /> Welcome to FuturaX Interactive Labs
+          <Compass size={18} style={{ color: 'var(--accent-text)' }} /> Welcome to FuturaX Interactive Learning Labs
         </h3>
         <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
-          Choose a laboratory wing to explore. Each wing contains curriculum-aligned virtual experiments and interactive modules designed for active learning, interactive testing, and concept checkouts.
+          Explore curriculum-aligned active-learning simulations, virtual experiments, and conceptual checkouts across different departments.
         </p>
       </div>
 
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.25rem'
-      }}>
-        {/* Enter Science Lab Card */}
-        <div
-          className="glass-panel"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1.5rem',
-            padding: '2rem',
-            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%)',
-            border: '2px solid rgba(59, 130, 246, 0.3)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-              <FlaskConical size={28} style={{ color: '#3b82f6' }} />
-              <h3 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>Interactive Science Lab</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+        {/* Science Department Section */}
+        <section style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--card-border)', paddingBottom: '0.5rem', margin: 0, color: 'var(--text-heading)', fontSize: '1.25rem' }}>
+            <FlaskConical size={20} style={{ color: '#3b82f6' }} /> Science Department
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '1.25rem'
+          }}>
+            {/* Science Card 1: Class 6th */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+                5 CHAPTERS ACTIVE
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <Compass size={22} style={{ color: 'var(--warning)' }} />
+                <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Science</h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                Biodiversity, food testing, magnets, motion, and material classification.
+              </p>
+              <button onClick={() => navigateTo('class6', null)} className="outline" style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}>
+                Enter Wing <ArrowRight size={14} />
+              </button>
             </div>
-            <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', maxWidth: '600px' }}>
-              Dive into interactive experiments across Physics, Chemistry, and Biology. Perform hands-on virtual laboratory investigations and concept checkouts.
-            </p>
-          </div>
-          <button
-            onClick={() => navigateTo('science_lab', null)}
-            className="primary"
-            style={{ flexShrink: 0, padding: '0.8rem 1.5rem', fontSize: '1rem', gap: '0.5rem', background: '#3b82f6', borderColor: '#3b82f6' }}
-          >
-            Enter Science Lab <ArrowRight size={18} />
-          </button>
-        </div>
 
-        {/* Enter FuturaX Social Lab Card */}
-        <div
-          className="glass-panel"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1.5rem',
-            padding: '2rem',
-            background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%)',
-            border: '2px solid rgba(139, 92, 246, 0.3)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-              <BookOpen size={28} style={{ color: '#a855f7' }} />
-              <h3 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>FuturaX Social Lab</h3>
+            {/* Science Card 2: Class 7th */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', border: '1px solid var(--accent-border)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+                3 CHAPTERS ACTIVE
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <FlaskConical size={22} style={{ color: '#0891b2' }} />
+                <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 7th Science</h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                Electrical circuits, heat transfer, and light reflection on spherical mirrors.
+              </p>
+              <button onClick={() => navigateTo('class7', null)} className="outline" style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}>
+                Enter Wing <ArrowRight size={14} />
+              </button>
             </div>
-            <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', maxWidth: '600px' }}>
-              Step into the world of Social Sciences. Explore interactive modules on civics, history, geography, and governance through engaging, gamified experiences.
-            </p>
+
+            {/* Science Card 3: Class 8th */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+                2 CHAPTERS ACTIVE
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <Dna size={22} style={{ color: 'var(--success)' }} />
+                <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 8th Science</h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                Electromagnetism, chemical battery generation, and solution testing.
+              </p>
+              <button onClick={() => navigateTo('class8', null)} className="outline" style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}>
+                Enter Wing <ArrowRight size={14} />
+              </button>
+            </div>
+
+            {/* Science Card 4: Class 9th */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden', opacity: 0.75 }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--warning-bg)', color: 'var(--warning)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+                COMING SOON
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <Zap size={22} style={{ color: '#db2777' }} />
+                <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 9th Science</h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                High school biology, chemistry, and physics laboratories.
+              </p>
+              <button disabled className="outline" style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem', cursor: 'not-allowed', opacity: 0.5 }}>
+                Locked
+              </button>
+            </div>
           </div>
-          <button
-            onClick={() => navigateTo('social_lab', null)}
-            className="primary"
-            style={{ flexShrink: 0, padding: '0.8rem 1.5rem', fontSize: '1rem', gap: '0.5rem', background: '#9333ea', borderColor: '#9333ea' }}
-          >
-            Enter FuturaX Social Lab <ArrowRight size={18} />
-          </button>
-        </div>
+        </section>
+
+        {/* Mathematics Department Section */}
+        <section style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--card-border)', paddingBottom: '0.5rem', margin: 0, color: 'var(--text-heading)', fontSize: '1.25rem' }}>
+            <Compass size={20} style={{ color: '#8b5cf6' }} /> Mathematics Department
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '1.25rem'
+          }}>
+            {/* Math Card 1: Class 6th */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', border: '1px solid var(--accent-border)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+                1 CHAPTER ACTIVE
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <Zap size={22} style={{ color: '#8b5cf6' }} />
+                <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Mathematics</h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                Geometrical ideas, parallel/intersecting lines, curves, angles, and circle segments.
+              </p>
+              <button onClick={() => navigateTo('class6_maths', null)} className="primary" style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}>
+                Enter Math Wing <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Social Sciences Department Section */}
+        <section style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--card-border)', paddingBottom: '0.5rem', margin: 0, color: 'var(--text-heading)', fontSize: '1.25rem' }}>
+            <BookOpen size={20} style={{ color: '#e11d48' }} /> Social Sciences Department
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '1.25rem'
+          }}>
+            {/* Social Card 1: Class 6th */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+                1 CHAPTER ACTIVE
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <Compass size={22} style={{ color: 'var(--warning)' }} />
+                <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 6th Social Science</h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                Panchayati Raj, local administration, and grassroots democracy participation.
+              </p>
+              <button onClick={() => navigateTo('class6_social', null)} className="outline" style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}>
+                Enter Social Wing <ArrowRight size={14} />
+              </button>
+            </div>
+
+            {/* Social Card 2: Class 7th */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', border: '1px solid var(--accent-border)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
+                1 CHAPTER ACTIVE
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <FlaskConical size={22} style={{ color: '#0891b2' }} />
+                <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-heading)' }}>Class 7th Social Science</h3>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                Geography of India, regional terrain mappings, and geological time travel.
+              </p>
+              <button onClick={() => navigateTo('class7_social', null)} className="outline" style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}>
+                Enter Social Wing <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
@@ -1323,134 +1498,1038 @@ export default function App() {
     </div>
   );
 
-  const renderClass6Chapter2 = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-        <button
-          onClick={() => navigateTo('class6', null)}
-          className="outline"
-          style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
-        >
-          <ArrowLeft size={14} /> Back to Class 6 Wing
-        </button>
-        <div>
-          <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 2 Activities</h2>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Select a lab to begin</span>
+  const renderClass6Chapter2 = () => {
+    const sections = [
+      { id: 'sec-2-1',       title: '2.1 Diversity in Plants & Animals Around Us', type: 'content',  lessonId: 'biodiversity_concept' },
+      { id: 'sec-2-1-act',   title: 'Activity 2.1: Nature Walk — Observe & Record', type: 'activity', activityId: 'virtual_biodiversity' },
+      { id: 'sec-2-2-act',   title: 'Activity 2.2: Let Us Appreciate — Memory Board', type: 'activity', activityId: 'appreciating_biodiversity' },
+      { id: 'sec-2-2',       title: '2.2 How to Group Plants & Animals?', type: 'content',  lessonId: 'grouping_basics_concept' },
+      { id: 'sec-2-3-act',   title: 'Activity 2.3: Let Us Group (Card Sorting)', type: 'activity', activityId: 'inline_sorting' },
+      { id: 'sec-2-2-1-a',   title: '2.2.1-A Plant Classification: Herbs, Shrubs & Trees', type: 'content',  lessonId: 'plant_variety_concept' },
+      { id: 'sec-2-4-act',   title: 'Activity 2.4: Stems & Heights — Classify Plants', type: 'activity', activityId: 'plant_detective_stem' },
+      { id: 'sec-2-2-1-b',   title: '2.2.1-B Leaf Venation & Root Systems', type: 'content',  lessonId: 'venation_roots_concept' },
+      { id: 'sec-2-5-act',   title: 'Activity 2.5: Leaf Venation Lightbox Lab', type: 'activity', activityId: 'leaf_venation_lab' },
+      { id: 'sec-2-6-act',   title: 'Activity 2.6: Root Excavation Station', type: 'activity', activityId: 'root_systems_lab' },
+      { id: 'sec-2-7-act',   title: 'Activity 2.7: Venation ↔ Root Correlation (Table 2.4)', type: 'activity', activityId: 'venation_root_correlation' },
+      { id: 'sec-2-2-1-c',   title: '2.2.1-C Seeds & Cotyledons (Monocot / Dicot)', type: 'content',  lessonId: 'cotyledons_concept' },
+      { id: 'sec-2-8-act',   title: 'Activity 2.8: Seed Dissection — Chickpea vs Maize', type: 'activity', activityId: 'seed_dissection_lab' },
+      { id: 'sec-2-2-2',     title: '2.2.2 How to Group Animals?', type: 'content',  lessonId: 'grouping_animals_concept' },
+      { id: 'sec-2-9-act',   title: 'Activity 2.9: Observe Animal Locomotion & Body Parts', type: 'activity', activityId: 'animal_locomotion' },
+      { id: 'sec-2-3',       title: '2.3 Plants & Animals in Different Surroundings', type: 'content',  lessonId: 'adaptations_concept' },
+      { id: 'sec-2-10-act',  title: 'Activity 2.10: Match Animals to Habitats & Adaptations', type: 'activity', activityId: 'animal_habitat_matching' }
+    ];
+
+    const contentLessonsData = {
+      'biodiversity_concept': {
+        title: '2.1 Diversity in Plants & Animals Around Us',
+        slides: [
+          {
+            title: '🌿 The Nature Walk Begins',
+            content: 'The lesson begins with an exciting nature walk led by Dr Raghu and Maniram chacha. During the walk, the students observe different plants, trees, birds, butterflies, monkeys, and many other living things around them. They learn to watch nature carefully, listen to the unique calls of birds, and respect all living creatures without disturbing them.',
+            bullets: [
+              '👀 Observe carefully — notice stems, leaves, flowers, and any interesting features.',
+              '🎵 Listen! Maniram chacha mimics bird calls to show how animals communicate.',
+              '📋 Record your observations in Tables 2.1 and 2.2 — plants and animals separately.',
+              '🤝 Compare your findings with classmates — everyone notices something different!'
+            ]
+          },
+          {
+            title: 'Understanding Biodiversity',
+            content: 'Biodiversity represents the rich variety of all living organisms on Earth—including plants, animals, insects, and fungi—living in mutual interdependence. Every species plays a crucial role in maintaining the ecological balance of our planet.',
+            bullets: [
+              'No organism lives in absolute isolation.',
+              'Diverse plants provide oxygen, shelter, and food.',
+              'Activity 2.1 nature walk logs details of local garden flora and fauna.'
+            ]
+          },
+          {
+            title: 'Organisms and Habitats',
+            content: 'The place where an organism lives, feeds, and reproduces is called its habitat. Different organisms are adapted to live in their specific surroundings. The primary habitat zones are:',
+            bullets: [
+              '🌳 Terrestrial: Land habitats (forests, deserts, grasslands, mountains).',
+              '💧 Aquatic: Water environments (ponds, rivers, lakes, oceans).',
+              '🐸 Amphibians: Organisms (like frogs) that live on both land and water shores.'
+            ]
+          },
+          {
+            title: 'Review Checkpoint',
+            isQuiz: true,
+            questions: [
+              {
+                q: 'Which of the following defines the term "biodiversity" correctly?',
+                opts: [
+                  'A single animal species dominating a specific forest area.',
+                  'The total variety of all living organisms coexisting in a region.',
+                  'The study of weather patterns in national parks.'
+                ],
+                correct: 1
+              },
+              {
+                q: 'Frogs are classified as amphibians because they:',
+                opts: [
+                  'Live only in high mountain pine tree canopies.',
+                  'Live only inside deep salt-water oceans.',
+                  'Can live on both land and water shores.'
+                ],
+                correct: 2
+              }
+            ]
+          }
+        ]
+      },
+      'grouping_basics_concept': {
+        title: '2.2 How to Group Plants & Animals?',
+        slides: [
+          {
+            title: 'The Purpose of Classification',
+            content: 'Grouping (classification) is the method of sorting things into groups based on their similarities and differences. It makes it easier to understand, compare, and study the vast diversity of living beings.',
+            bullets: [
+              'Helps in systematic cataloging.',
+              'Reveals relationships between different species.',
+              'Prevents confusion when studying millions of living things.'
+            ]
+          },
+          {
+            title: 'Criteria for Grouping',
+            content: 'Just like you organize books in a schoolbag, scientists group organisms using specific criteria:',
+            bullets: [
+              '🌸 Flowers: Grouping into flowering and non-flowering plants.',
+              '🌿 Stems: Grouping by soft, green vs hard, woody stems.',
+              '🥗 Eating Habits: What they eat and how they feed.',
+              '📍 Place they live: Ground, trees, water, or air.'
+            ]
+          },
+          {
+            title: 'Concept Checkpoint',
+            isQuiz: true,
+            questions: [
+              {
+                q: 'Why do we group plants and animals in science?',
+                opts: [
+                  'To prevent them from moving around.',
+                  'To make it easier to study their similarities and differences.',
+                  'To calculate the exact number of leaves on each tree.'
+                ],
+                correct: 1
+              },
+              {
+                q: 'Which of these is a valid scientific basis for grouping plants?',
+                opts: [
+                  'The height and nature of its stem.',
+                  'The names given to them by gardeners.',
+                  'The total amount of shade they cast at noon.'
+                ],
+                correct: 0
+              }
+            ]
+          }
+        ]
+      },
+      'plant_variety_concept': {
+        title: '2.2.1-A Plant Classification',
+        slides: [
+          {
+            title: 'Herbs, Shrubs, and Trees',
+            content: 'Plants display an incredible range of sizes and forms. We categorize them based on their height, stem thickness, and branch levels:',
+            bullets: [
+              '🌿 Herbs: Short plants with soft, green, and tender stems that bend easily (e.g. Grass, Tomato, Coriander, Tulsi).',
+              '🌺 Shrubs: Medium height, thin woody stems branching out close to the base/ground (e.g. Rose, Lemon, Hibiscus).',
+              '🌳 Trees: Tall plants with thick, hard brown woody trunks branching high up (e.g. Mango, Banyan, Neem, Deodar).'
+            ]
+          },
+          {
+            title: 'Climbers & Creepers',
+            content: 'Some plants have weak stems that cannot stand upright on their own:',
+            bullets: [
+              '🍉 Creepers: Plants that creep and spread horizontally along the ground (e.g., Pumpkin, Watermelon, Sweet Potato).',
+              '🍇 Climbers: Plants that climb up using neighboring structures or trees for support (e.g., Money Plant, Pea Plant, Grapevine).'
+            ]
+          },
+          {
+            title: 'Concept Checkpoint',
+            isQuiz: true,
+            questions: [
+              {
+                q: 'Which plant type branches close to the ground and has thin, woody stems?',
+                opts: [
+                  'Trees',
+                  'Herbs',
+                  'Shrubs'
+                ],
+                correct: 2
+              },
+              {
+                q: 'Watermelon plants spread horizontally along the soil. They are classified as:',
+                opts: [
+                  'Climbers',
+                  'Creepers',
+                  'Trees'
+                ],
+                correct: 1
+              }
+            ]
+          }
+        ]
+      },
+      'venation_roots_concept': {
+        title: '2.2.1-B Leaf Venations & Root Systems Correlation',
+        slides: [
+          {
+            title: 'Leaf Venation Patterns',
+            content: 'Veins are thin lines running across a leaf. The pattern formed by these veins is called leaf venation:',
+            bullets: [
+              '🕸️ Reticulate Venation: Veins form a net-like mesh on both sides of a thick midrib (e.g., Hibiscus, Mustard, Rose, Sadabahar).',
+              '📏 Parallel Venation: Veins run parallel to each other from the base to tip (e.g., Grass, Banana, Lemongrass, Wheat, Maize).'
+            ],
+            svg: 'venation'
+          },
+          {
+            title: 'Root Systems',
+            content: 'Roots anchor the plant and absorb water. There are two primary root types:',
+            bullets: [
+              '🥕 Taproot: A single, thick primary root growing deep vertically, with smaller side branches (lateral roots) (e.g., Mustard, Gram).',
+              '🌾 Fibrous Roots: A bunch of thin, equal-sized roots arising together from the base of the stem (e.g., Grass, Wheat, Maize).'
+            ],
+            svg: 'roots'
+          },
+          {
+            title: 'The Great Correlation',
+            content: 'NCERT notes show a fascinating 1-to-1 relationship in plants. You can tell a root system just by looking at its leaves!',
+            bullets: [
+              '🕸️ Reticulate Venation ⇄ 🥕 Taproot System (e.g., Mustard, Sadabahar, Chickpea).',
+              '📏 Parallel Venation ⇄ 🌾 Fibrous Root System (e.g., Lemongrass, Grass, Wheat).'
+            ],
+            svg: 'correlation'
+          },
+          {
+            title: 'Concept Checkpoint',
+            isQuiz: true,
+            questions: [
+              {
+                q: 'What root system is correlated with reticulate leaf venation?',
+                opts: [
+                  'Fibrous Root System',
+                  'Taproot System',
+                  'Adventitious Root System'
+                ],
+                correct: 1
+              },
+              {
+                q: 'Which of the following leaf-root pairs matches Lemongrass?',
+                opts: [
+                  'Parallel Venation and Fibrous Roots',
+                  'Reticulate Venation and Taproots',
+                  'Parallel Venation and Taproots'
+                ],
+                correct: 0
+              }
+            ]
+          }
+        ]
+      },
+      'cotyledons_concept': {
+        title: '2.2.1-C Seeds & Cotyledons',
+        slides: [
+          {
+            title: 'What is a Cotyledon?',
+            content: 'Inside a seed coat is the embryo and cotyledons (seed leaves) which store food reserves for the germinating plant:',
+            bullets: [
+              '🥜 Dicotyledons (Dicots): Seeds that easily split into two halves (e.g. Gram, Chickpea, Pea, Kidney Beans).',
+              '🌽 Monocotyledons (Monocots): Seeds with a single cotyledon that cannot be split (e.g. Maize, Wheat, Rice, Grass).'
+            ],
+            svg: 'cotyledon'
+          },
+          {
+            title: 'The Triad Correlation',
+            content: 'Combining seeds, venation, and roots, we have two primary plant divisions:',
+            bullets: [
+              '🌱 Monocots: 1 Cotyledon ⇄ Parallel Venation ⇄ Fibrous Roots (e.g., Wheat, Maize, Grass).',
+              '🌳 Dicots: 2 Cotyledons ⇄ Reticulate Venation ⇄ Taproots (e.g., Gram, Mustard, Rose).'
+            ]
+          },
+          {
+            title: 'Concept Checkpoint',
+            isQuiz: true,
+            questions: [
+              {
+                q: 'How many cotyledons does a chickpea seed have?',
+                opts: [
+                  'One (Monocot)',
+                  'Two (Dicot)',
+                  'Three'
+                ],
+                correct: 1
+              },
+              {
+                q: 'A plant with parallel leaf venation and fibrous roots is expected to have seeds with:',
+                opts: [
+                  'One cotyledon (Monocot)',
+                  'Two cotyledons (Dicot)',
+                  'No cotyledons'
+                ],
+                correct: 0
+              }
+            ]
+          }
+        ]
+      },
+      'grouping_animals_concept': {
+        title: '2.2.2 How to Group Animals?',
+        slides: [
+          {
+            title: 'Animal Locomotion Modes',
+            content: 'Unlike plants, animals move from place to place (locomotion). They use different body parts depending on their anatomy:',
+            bullets: [
+              '🐜 Ants / Goats / Cows: Legs to walk, run, or climb.',
+              '🦅 Birds / Houseflies: Wings to fly through the air.',
+              '🐟 Fishes: Fins and streamlined tails to swim in water.'
+            ]
+          },
+          {
+            title: 'Locomotion Reference',
+            content: 'Review Activity 2.9 (Table 2.5) details of animal movements and organs used:',
+            bullets: [
+              '🐜 Ant: Crawls using legs.',
+              '🐐 Goat: Walks, runs, and leaps using muscular legs.',
+              '🐦 Pigeon: Walks on legs and flies using wings.',
+              '🐟 Fish: Swims in water using fins.'
+            ]
+          },
+          {
+            title: 'Concept Checkpoint',
+            isQuiz: true,
+            questions: [
+              {
+                q: 'Which body part is primarily adapted for swimming in aquatic animals like fish?',
+                opts: [
+                  'Webbed wings',
+                  'Muscular legs',
+                  'Fins and streamlined tail'
+                ],
+                correct: 2
+              },
+              {
+                q: 'Pigeons can move by:',
+                opts: [
+                  'Only flying in the air',
+                  'Both walking on legs and flying with wings',
+                  'Swimming and hopping'
+                ],
+                correct: 1
+              }
+            ]
+          }
+        ]
+      },
+      'adaptations_concept': {
+        title: '2.3 Plants & Animals in Different Surroundings',
+        slides: [
+          {
+            title: 'What is Adaptation?',
+            content: 'An adaptation is a physical or behavioral feature that helps an organism survive and reproduce in its specific habitat:',
+            bullets: [
+              '🌵 Cactus: Fleshy water-storing stems, leaves modified into spines to prevent water loss in hot deserts.',
+              '🌲 Deodar: Conical shape with sloping branches to let heavy mountain snow slide off easily.'
+            ]
+          },
+          {
+            title: 'Camel Adaptations: Hot vs Cold Deserts',
+            content: 'Camels live in deserts, but show different features depending on temperature (Activity 2.10):',
+            bullets: [
+              '🐪 Hot Desert Camel (Rajasthan): 1 hump for fat storage, long legs to keep body away from hot sand, wide padded hooves.',
+              '🐫 Cold Desert Camel (Ladakh): 2 humps, shorter sturdy legs for mountain rocks, thick shaggy wool coat to survive sub-zero winters.'
+            ]
+          },
+          {
+            title: 'Biodiversity Conservation & Pioneers',
+            content: 'Appreciating and conserving biodiversity is vital for our survival. Key NCERT highlights:',
+            bullets: [
+              '🦅 Salim Ali: India\'s famous ornithologist (Birdman of India) who documented bird habitats and led sanctuaries.',
+              '🐅 Conservation projects: "Project Tiger" (1973) and "Cheetah Reintroduction Project" (2022).',
+              '🌳 Sacred Groves: Traditionally protected forest patches (like in Western Ghats) guarded by local communities.'
+            ]
+          },
+          {
+            title: 'Concept Checkpoint',
+            isQuiz: true,
+            questions: [
+              {
+                q: 'How does a cold desert camel (Ladakh) differ from a hot desert camel?',
+                opts: [
+                  'It has only one hump and no hair.',
+                  'It has two humps and a thick shaggy hair coat.',
+                  'It has gills to breathe underwater.'
+                ],
+                correct: 1
+              },
+              {
+                q: 'What is a "Sacred Grove" in NCERT terminology?',
+                opts: [
+                  'A plantation of agricultural crops.',
+                  'A forest area traditionally protected by local communities.',
+                  'A desert area where camels gather.'
+                ],
+                correct: 1
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    const sortItems = [
+      { id: 'rose', name: '🌹 Rose Plant', type: 'shrub', desc: 'Medium height, woody stem branching near base.' },
+      { id: 'grass', name: '🌱 Grass', type: 'herb', desc: 'Short, soft green stem with no woodiness.' },
+      { id: 'banyan', name: '🌳 Banyan Tree', type: 'tree', desc: 'Very tall, thick hard brown trunk.' },
+      { id: 'tomato', name: '🍅 Tomato Plant', type: 'herb', desc: 'Short, green tender stem.' },
+      { id: 'hibiscus', name: '🌺 Hibiscus', type: 'shrub', desc: 'Medium height, woody branches branching near ground.' },
+      { id: 'mango', name: '🥭 Mango Tree', type: 'tree', desc: 'Tall, thick woody trunk branching high up.' }
+    ];
+
+    const handleSortItemClick = (item) => {
+      if (sortCorrectCounts[item.id]) return; // already categorized
+      setSelectedSortItem(item);
+      setSortStatusMsg('');
+    };
+
+    const handleSortBinClick = (binType) => {
+      if (!selectedSortItem) return;
+      if (selectedSortItem.type === binType) {
+        setSortCorrectCounts(prev => {
+          const next = { ...prev, [selectedSortItem.id]: binType };
+          const allCorrect = Object.keys(next).length === 6;
+          if (allCorrect) {
+            setShowSortSuccess(true);
+          }
+          return next;
+        });
+        setSelectedSortItem(null);
+        setSortStatusMsg(`Correct! ${selectedSortItem.name} is categorized under ${binType.toUpperCase()}S.`);
+      } else {
+        setSortStatusMsg(`Incorrect. Think about the stem and size of ${selectedSortItem.name}!`);
+      }
+    };
+
+    const handleResetSortGame = () => {
+      setSortCorrectCounts({});
+      setSelectedSortItem(null);
+      setSortStatusMsg('');
+      setShowSortSuccess(false);
+    };
+
+    const handleReadAloud = (text) => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.95;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert('Text to speech is not supported in this browser.');
+      }
+    };
+
+    const handleStopSpeech = () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative' }}>
+        <style>{`
+          @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+          }
+          .timeline-thread {
+            position: absolute;
+            left: 20px;
+            top: 24px;
+            bottom: -24px;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent) 0%, var(--border) 100%);
+            z-index: 1;
+          }
+          .timeline-node {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border: 3px solid var(--page-bg);
+            box-shadow: 0 0 0 2px var(--accent);
+          }
+        `}</style>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+          <button
+            onClick={() => navigateTo('class6', null)}
+            className="outline"
+            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
+          >
+            <ArrowLeft size={14} /> Back to Class 6 Wing
+          </button>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Chapter 2: Diversity in the Living World</h2>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>NCERT curriculum explorer</span>
+          </div>
         </div>
+
+        <div style={{ display: 'flex', gap: '2rem', width: '100%', alignItems: 'flex-start' }}>
+          <div className="glass-panel" style={{
+            width: '280px',
+            position: 'sticky',
+            top: '1.5rem',
+            height: 'fit-content',
+            padding: '1.25rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            border: '1px solid var(--border)'
+          }}>
+            <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <BookOpen size={16} /> Timeline Progress
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', maxHeight: '500px', overflowY: 'auto' }}>
+              {sections.map((sec, idx) => {
+                const isCompleted = sec.type === 'content' 
+                  ? !!contentLessonProgress[sec.lessonId]
+                  : sec.activityId === 'inline_sorting'
+                    ? showSortSuccess
+                    : false;
+                return (
+                  <button
+                    key={sec.id}
+                    ref={(el) => sidebarItemRefs.current[sec.id] = el}
+                    onClick={() => document.getElementById(sec.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                    className="outline"
+                    style={{
+                      width: '100%',
+                      justifyContent: 'flex-start',
+                      textAlign: 'left',
+                      fontSize: '0.72rem',
+                      padding: '0.5rem 0.6rem',
+                      border: activeSectionId === sec.id ? '1px solid var(--accent)' : '1px solid transparent',
+                      background: activeSectionId === sec.id ? 'var(--accent-bg)' : 'transparent',
+                      color: activeSectionId === sec.id ? 'var(--accent-text)' : 'var(--text-muted)',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    <span style={{
+                      color: sec.type === 'activity' ? 'var(--warning)' : 'var(--accent)',
+                      fontWeight: 'bold'
+                    }}>
+                      {isCompleted ? '✅' : sec.type === 'activity' ? '🧪' : '📖'}
+                    </span>
+                    <span style={{ flex: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                      {sec.title}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div ref={timelineContainerRef} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2.5rem', position: 'relative' }}>
+            <div style={{
+              position: 'absolute',
+              left: `${pointerLeft}px`,
+              top: `${pointerTop}px`,
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              background: 'rgba(99, 102, 241, 0.15)',
+              boxShadow: '0 0 15px rgba(99, 102, 241, 0.4), inset 0 0 10px rgba(99, 102, 241, 0.2)',
+              border: '2px solid var(--accent)',
+              transition: 'all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)',
+              zIndex: 10,
+              transform: 'translate(-50%, -50%)',
+              pointerEvents: 'none',
+              opacity: pointerTop === 0 && pointerLeft === 0 ? 0 : 1
+            }} />
+            {sections.map((sec, idx) => {
+              const isContent = sec.type === 'content';
+              return (
+                <div key={sec.id} id={sec.id} className="timeline-section" style={{ display: 'flex', gap: '1.5rem', position: 'relative' }}>
+                  {idx < sections.length - 1 && <div className="timeline-thread" />}
+                  <div className="timeline-node">{idx + 1}</div>
+                  
+                  {isContent ? (
+                    <div className="glass-panel" style={{ flex: 1, padding: '1.5rem', border: '1px solid var(--border)' }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase' }}>
+                        NCERT Text Section
+                      </span>
+                      <h3 style={{ margin: '0.25rem 0 0.75rem 0', fontSize: '1.25rem', color: 'var(--text-heading)' }}>
+                        {sec.title}
+                      </h3>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.6', margin: '0 0 1rem 0' }}>
+                        {contentLessonsData[sec.lessonId]?.slides[0]?.content || 'Read standard NCERT curriculum concepts in detail.'}
+                      </p>
+                      <button
+                        onClick={() => {
+                          setActiveContentLesson(sec.lessonId);
+                          setActiveSlide(0);
+                          setQuizAnswers({});
+                          setQuizChecked(false);
+                        }}
+                        className="primary"
+                        style={{ gap: '0.35rem', fontSize: '0.8rem', padding: '0.5rem 1rem' }}
+                      >
+                        📖 {contentLessonProgress[sec.lessonId] ? 'Review Concept Lesson' : 'Open Concept Lesson'} {contentLessonProgress[sec.lessonId] && '✓'}
+                      </button>
+                    </div>
+                  ) : sec.activityId === 'inline_sorting' ? (
+                    <div className="glass-panel" style={{ flex: 1, padding: '1.5rem', border: '1px solid var(--warning-border)' }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--warning)', textTransform: 'uppercase' }}>
+                        Activity 2.3 (Interactive Mini-Lab)
+                      </span>
+                      <h3 style={{ margin: '0.25rem 0 0.75rem 0', fontSize: '1.25rem', color: 'var(--text-heading)' }}>
+                        Let Us Group Plants
+                      </h3>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '1rem' }}>
+                        Help sort the plants into their correct biological classes. Click a plant from the tray, then click its target class bucket.
+                      </p>
+
+                      <div style={{ background: 'var(--accent-bg)', borderRadius: '8px', padding: '1rem', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        {showSortSuccess ? (
+                          <div style={{ textAlign: 'center', padding: '1rem' }}>
+                            <span style={{ fontSize: '2rem' }}>🎉</span>
+                            <h4 style={{ color: 'var(--success)', margin: '0.5rem 0 0.25rem 0' }}>All Grouped Correctly!</h4>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0' }}>
+                              Herbs are tender and green, Shrubs branch near the base, and Trees have thick woody trunks.
+                            </p>
+                            <button onClick={handleResetSortGame} className="outline" style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>Play Again</button>
+                          </div>
+                        ) : (
+                          <>
+                            <div>
+                              <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)', display: 'block', marginBottom: '0.5rem' }}>Select a plant:</span>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                {sortItems.map(item => {
+                                  const isSorted = !!sortCorrectCounts[item.id];
+                                  const isSelected = selectedSortItem?.id === item.id;
+                                  return (
+                                    <button
+                                      key={item.id}
+                                      disabled={isSorted}
+                                      onClick={() => handleSortItemClick(item)}
+                                      className={isSelected ? 'primary' : 'outline'}
+                                      style={{
+                                        fontSize: '0.75rem',
+                                        padding: '0.4rem 0.6rem',
+                                        textDecoration: isSorted ? 'line-through' : 'none',
+                                        opacity: isSorted ? 0.4 : 1,
+                                        cursor: isSorted ? 'default' : 'pointer',
+                                        borderColor: isSelected ? 'var(--accent)' : 'var(--border)'
+                                      }}
+                                    >
+                                      {item.name}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginTop: '0.5rem' }}>
+                              {['herb', 'shrub', 'tree'].map(category => {
+                                const correctInBin = Object.entries(sortCorrectCounts)
+                                  .filter(([_, cat]) => cat === category)
+                                  .map(([itemId]) => sortItems.find(i => i.id === itemId)?.name || itemId);
+
+                                return (
+                                  <button
+                                    key={category}
+                                    disabled={!selectedSortItem}
+                                    onClick={() => handleSortBinClick(category)}
+                                    className="outline"
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      alignItems: 'center',
+                                      gap: '0.5rem',
+                                      padding: '0.75rem',
+                                      minHeight: '80px',
+                                      background: selectedSortItem ? 'var(--card-bg)' : 'rgba(0,0,0,0.02)',
+                                      border: '2px dashed var(--border)',
+                                      cursor: selectedSortItem ? 'pointer' : 'default'
+                                    }}
+                                  >
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
+                                      {category.toUpperCase()}S
+                                    </span>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', width: '100%' }}>
+                                      {correctInBin.map((n, i) => (
+                                        <span key={i} style={{ fontSize: '0.65rem', background: 'var(--success-bg)', color: 'var(--success)', padding: '0.1rem 0.3rem', borderRadius: '4px', textAlign: 'center' }}>
+                                          {n}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+
+                            {sortStatusMsg && (
+                              <div style={{ fontSize: '0.75rem', color: sortStatusMsg.startsWith('Correct') ? 'var(--success)' : 'var(--warning)', textAlign: 'center', fontWeight: '500' }}>
+                                {sortStatusMsg}
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="glass-panel" style={{ flex: 1, padding: '1.5rem', border: '1px solid var(--success-border)', background: 'linear-gradient(to bottom right, var(--card-bg), rgba(16, 185, 129, 0.03))' }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--success)', textTransform: 'uppercase' }}>
+                        Curriculum Lab Activity
+                      </span>
+                      <h3 style={{ margin: '0.25rem 0 0.75rem 0', fontSize: '1.25rem', color: 'var(--text-heading)' }}>
+                        {sec.title}
+                      </h3>
+                      
+                      {sec.activityId === 'virtual_biodiversity' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Go on a virtual nature walk! Log living things observed in the neighbourhood and school garden — track names, habitats, and interesting features in Tables 2.1 & 2.2.
+                        </p>
+                      )}
+                      {sec.activityId === 'appreciating_biodiversity' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Close your eyes for 10 seconds and think of one plant and one animal. Then add your choice to the virtual class memory board and discover the amazing diversity your whole class remembers together!
+                        </p>
+                      )}
+                      {sec.activityId === 'plant_detective_stem' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Activity 2.4: Observe plant height, stem colour, and bendability. Use these clues to classify plants into Herbs, Shrubs, and Trees — just like a real botanist!
+                        </p>
+                      )}
+                      {sec.activityId === 'leaf_venation_lab' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Activity 2.5: Select a leaf specimen and illuminate it on the virtual lightbox. Watch veins glow under light — identify Reticulate (net-like) vs Parallel venation across 5 different plant leaves.
+                        </p>
+                      )}
+                      {sec.activityId === 'root_systems_lab' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Activity 2.6: Select a potted plant and dig it up layer by layer. Wash the exposed roots and classify them — Taproot System (one thick main root) or Fibrous Root System (many thin equal roots).
+                        </p>
+                      )}
+                      {sec.activityId === 'venation_root_correlation' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Activity 2.7: Fill in Table 2.4 — record both the leaf venation type and root system for 5 plants. Then discover the golden rule: Reticulate ↔ Taproot, Parallel ↔ Fibrous!
+                        </p>
+                      )}
+                      {sec.activityId === 'seed_dissection_lab' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Activity 2.8: Soak chickpea and maize seeds, peel off the seed coat, and compare cotyledon count — 2 cotyledons (Dicot) vs 1 cotyledon (Monocot). The science of seed anatomy revealed!
+                        </p>
+                      )}
+                      {sec.activityId === 'animal_locomotion' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Activity 2.9: Observe how ants, goats, pigeons, houseflies, and fish move. List the body parts each animal uses and fill Table 2.5 to understand locomotion diversity.
+                        </p>
+                      )}
+                      {sec.activityId === 'animal_habitat_matching' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Activity 2.10: Match animals to their habitats — hot desert, cold desert, mountain, forest, and aquatic — and explain the adaptations that help them survive.
+                        </p>
+                      )}
+
+                      <button
+                        onClick={() => {
+                          if (sec.activityId === 'virtual_biodiversity') {
+                            navigateTo('class6', 'virtual_biodiversity');
+                          } else if (sec.activityId === 'appreciating_biodiversity') {
+                            navigateTo('class6', 'appreciating_biodiversity');
+                          } else if (sec.activityId === 'plant_detective_stem') {
+                            navigateTo('class6', 'plant_detective');
+                          } else if (sec.activityId === 'leaf_venation_lab') {
+                            navigateTo('class6', 'leaf_venation_lab');
+                          } else if (sec.activityId === 'root_systems_lab') {
+                            navigateTo('class6', 'root_systems_lab');
+                          } else if (sec.activityId === 'venation_root_correlation') {
+                            navigateTo('class6', 'venation_root_correlation');
+                          } else if (sec.activityId === 'seed_dissection_lab') {
+                            navigateTo('class6', 'seed_dissection_lab');
+                          } else if (sec.activityId === 'animal_locomotion') {
+                            setActiveActivityPhase(3);
+                            navigateTo('class6', 'animal_habitat');
+                          } else if (sec.activityId === 'animal_habitat_matching') {
+                            setActiveActivityPhase(1);
+                            navigateTo('class6', 'animal_habitat');
+                          }
+                        }}
+                        className="primary"
+                        style={{ gap: '0.35rem', background: 'var(--success)', borderColor: 'var(--success)', fontSize: '0.8rem', padding: '0.5rem 1rem' }}
+                      >
+                        <Play size={12} fill="#ffffff" /> Launch Lab Activity <ArrowRight size={12} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {activeContentLesson && (() => {
+          const lesson = contentLessonsData[activeContentLesson];
+          const slide = lesson.slides[activeSlide];
+          const totalSlides = lesson.slides.length;
+          const isLastSlide = activeSlide === totalSlides - 1;
+
+          return (
+            <div
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 10000,
+                background: 'var(--page-bg)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2rem',
+                animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+              }}
+            >
+              <div className="glass-panel" style={{
+                width: '100%',
+                maxWidth: '850px',
+                height: '90%',
+                maxHeight: '620px',
+                display: 'grid',
+                gridTemplateRows: '60px 1fr 60px',
+                border: '1px solid var(--border)',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                background: 'var(--card-bg)'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1.5rem', borderBottom: '1px solid var(--border)', background: 'rgba(0,0,0,0.05)' }}>
+                  <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-heading)' }}>
+                    {lesson.title}
+                  </h4>
+                  <button
+                    onClick={() => {
+                      handleStopSpeech();
+                      setActiveContentLesson(null);
+                    }}
+                    className="outline"
+                    style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem' }}
+                  >
+                    Close Lesson
+                  </button>
+                </div>
+
+                <div style={{ padding: '2rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h2 style={{ margin: 0, fontSize: '1.35rem', color: 'var(--accent-text)' }}>
+                      {slide.title}
+                    </h2>
+                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                      <button
+                        onClick={() => handleReadAloud(`${slide.title}. ${slide.content || ''}. ${slide.bullets ? slide.bullets.join('. ') : ''}`)}
+                        className="outline"
+                        style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+                      >
+                        🔊 Read Aloud
+                      </button>
+                      <button
+                        onClick={handleStopSpeech}
+                        className="outline"
+                        style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem' }}
+                      >
+                        Stop
+                      </button>
+                    </div>
+                  </div>
+
+                  {!slide.isQuiz ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: slide.svg ? '1fr 240px' : '1fr', gap: '2rem', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                          {slide.content}
+                        </p>
+                        {slide.bullets && (
+                          <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            {slide.bullets.map((b, i) => (
+                              <li key={i} style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                                {b}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                      {slide.svg && (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '12px' }}>
+                          {slide.svg === 'venation' && (
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                              <div style={{ textAlign: 'center' }}>
+                                <svg width="90" height="90" viewBox="0 0 100 100">
+                                  <path d="M50,10 C80,30 80,70 50,90 C20,70 20,30 50,10 Z" fill="#10b981" fillOpacity="0.1" stroke="#10b981" strokeWidth="2"/>
+                                  <line x1="50" y1="10" x2="50" y2="90" stroke="#047857" strokeWidth="2.5"/>
+                                </svg>
+                                <span style={{ fontSize: '0.65rem', display: 'block', color: 'var(--text-heading)', fontWeight: 'bold', marginTop: '0.25rem' }}>Reticulate</span>
+                              </div>
+                              <div style={{ textAlign: 'center' }}>
+                                <svg width="90" height="90" viewBox="0 0 100 100">
+                                  <path d="M50,10 C65,30 65,80 50,95 C35,80 35,30 50,10 Z" fill="#10b981" fillOpacity="0.1" stroke="#10b981" strokeWidth="2"/>
+                                  <line x1="50" y1="10" x2="50" y2="95" stroke="#047857" strokeWidth="2"/>
+                                </svg>
+                                <span style={{ fontSize: '0.65rem', display: 'block', color: 'var(--text-heading)', fontWeight: 'bold', marginTop: '0.25rem' }}>Parallel</span>
+                              </div>
+                            </div>
+                          )}
+                          {slide.svg === 'roots' && (
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                              <div style={{ textAlign: 'center' }}>
+                                <svg width="90" height="90" viewBox="0 0 100 100">
+                                  <line x1="10" y1="20" x2="90" y2="20" stroke="var(--border)" strokeWidth="2"/>
+                                  <path d="M50,20 C53,40 52,70 50,90 C48,70 47,40 50,20 Z" fill="#d97706" stroke="#b45309" strokeWidth="2"/>
+                                </svg>
+                                <span style={{ fontSize: '0.65rem', display: 'block', color: 'var(--text-heading)', fontWeight: 'bold', marginTop: '0.25rem' }}>Taproot</span>
+                              </div>
+                              <div style={{ textAlign: 'center' }}>
+                                <svg width="90" height="90" viewBox="0 0 100 100">
+                                  <line x1="10" y1="20" x2="90" y2="20" stroke="var(--border)" strokeWidth="2"/>
+                                  <path d="M50,20 Q60,40 55,85 M50,20 Q40,40 45,85" stroke="#b45309" strokeWidth="1.5" fill="none"/>
+                                </svg>
+                                <span style={{ fontSize: '0.65rem', display: 'block', color: 'var(--text-heading)', fontWeight: 'bold', marginTop: '0.25rem' }}>Fibrous Root</span>
+                              </div>
+                            </div>
+                          )}
+                          {slide.svg === 'correlation' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', textAlign: 'center' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--accent-bg)', padding: '0.35rem 0.6rem', borderRadius: '6px' }}>
+                                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent-text)' }}>🕸️ Reticulate ⇄ 🥕 Taproot</span>
+                              </div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--success-bg)', padding: '0.35rem 0.6rem', borderRadius: '6px' }}>
+                                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--success)' }}>📏 Parallel ⇄ 🌾 Fibrous</span>
+                              </div>
+                            </div>
+                          )}
+                          {slide.svg === 'cotyledon' && (
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                              <div style={{ textAlign: 'center' }}>
+                                <svg width="90" height="90" viewBox="0 0 120 100">
+                                  <path d="M60,45 C25,35 25,75 60,75 Z M60,45 C95,35 95,75 60,75 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5"/>
+                                </svg>
+                                <span style={{ fontSize: '0.65rem', display: 'block', color: 'var(--text-heading)', fontWeight: 'bold' }}>Dicot</span>
+                              </div>
+                              <div style={{ textAlign: 'center' }}>
+                                <svg width="90" height="90" viewBox="0 0 120 100">
+                                  <path d="M60,15 C85,15 90,75 60,85 C30,75 35,15 60,15 Z" fill="#fbbf24" fillOpacity="0.2" stroke="#d97706" strokeWidth="1.5"/>
+                                </svg>
+                                <span style={{ fontSize: '0.65rem', display: 'block', color: 'var(--text-heading)', fontWeight: 'bold' }}>Monocot</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                        Select the correct answers for each question to complete this concept section.
+                      </p>
+                      {slide.questions.map((qObj, qIdx) => {
+                        const userSel = quizAnswers[qIdx];
+                        return (
+                          <div key={qIdx} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', padding: '1rem', borderRadius: '8px' }}>
+                            <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-heading)', display: 'block', marginBottom: '0.5rem' }}>
+                              Question {qIdx + 1}: {qObj.q}
+                            </span>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                              {qObj.opts.map((optText, optIdx) => {
+                                const isSelected = userSel === optIdx;
+                                const isCorrectOpt = optIdx === qObj.correct;
+                                let btnBorder = 'var(--border)';
+                                let btnBg = 'transparent';
+                                if (isSelected) {
+                                  btnBorder = quizChecked ? (isCorrectOpt ? 'var(--success)' : 'var(--warning)') : 'var(--accent)';
+                                  btnBg = quizChecked ? (isCorrectOpt ? 'var(--success-bg)' : 'var(--warning-bg)') : 'var(--accent-bg)';
+                                }
+                                return (
+                                  <button
+                                    key={optIdx}
+                                    onClick={() => { if (!quizChecked) setQuizAnswers(prev => ({ ...prev, [qIdx]: optIdx })); }}
+                                    className="outline"
+                                    style={{ justifyContent: 'flex-start', textAlign: 'left', fontSize: '0.8rem', padding: '0.5rem 0.75rem', borderColor: btnBorder, background: btnBg }}
+                                  >
+                                    {optText}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {quizChecked ? (
+                        <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+                          {Object.entries(quizAnswers).every(([qI, val]) => val === slide.questions[qI].correct) ? (
+                            <button
+                              onClick={() => {
+                                setContentLessonProgress(prev => ({ ...prev, [activeContentLesson]: true }));
+                                setActiveContentLesson(null);
+                              }}
+                              className="primary"
+                              style={{ fontSize: '0.8rem', padding: '0.5rem 1.2rem' }}
+                            >
+                              Finish Lesson
+                            </button>
+                          ) : (
+                            <button onClick={() => { setQuizChecked(false); setQuizAnswers({}); }} className="outline" style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>Retry Quiz</button>
+                          )}
+                        </div>
+                      ) : (
+                        <button
+                          disabled={Object.keys(quizAnswers).length < slide.questions.length}
+                          onClick={() => setQuizChecked(true)}
+                          className="primary"
+                          style={{ alignSelf: 'center', fontSize: '0.8rem', padding: '0.5rem 1.5rem' }}
+                        >
+                          Check Answers
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1.5rem', borderTop: '1px solid var(--border)', background: 'rgba(0,0,0,0.05)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Slide {activeSlide + 1} of {totalSlides}</div>
+                  <div style={{ flex: 1, height: '4px', background: 'var(--border)', margin: '0 2rem', borderRadius: '2px' }}>
+                    <div style={{ height: '100%', background: 'var(--accent)', width: `${((activeSlide + 1) / totalSlides) * 100}%` }} />
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button disabled={activeSlide === 0} onClick={() => setActiveSlide(prev => Math.max(0, prev - 1))} className="outline" style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem' }}>Prev</button>
+                    {!isLastSlide && <button onClick={() => setActiveSlide(prev => Math.min(totalSlides - 1, prev + 1))} className="outline" style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem' }}>Next</button>}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {['virtual_biodiversity', 'plant_detective', 'animal_habitat'].includes(activeActivity) && (
+          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, background: 'var(--page-bg)', display: 'flex', flexDirection: 'column', animation: 'slideUp 0.3s' }}>
+            {activeActivity === 'virtual_biodiversity' && <VirtualBiodiversityExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />}
+            {activeActivity === 'plant_detective' && <PlantDetectiveActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />}
+            {activeActivity === 'animal_habitat' && <AnimalHabitatExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} initialPhase={activeActivityPhase} />}
+          </div>
+        )}
       </div>
-
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '1.25rem'
-      }}>
-        {/* Activity Card 1: Virtual Biodiversity Explorer */}
-        <div
-          className="glass-panel"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid var(--success-border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Active Lab
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Compass size={20} style={{ color: '#05b6d4' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Virtual Biodiversity Explorer</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Explore a virtual park, search for different species of plants and animals, and record their details in a biodiversity notebook.
-          </p>
-
-          <button
-            onClick={() => navigateTo('class6', 'virtual_biodiversity')}
-            className="primary"
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            <Play size={14} fill="#ffffff" /> Open Explorer <ArrowRight size={14} />
-          </button>
-        </div>
-
-        {/* Activity Card 2: Plant Detective */}
-        <div
-          className="glass-panel"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid var(--success-border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Active Lab
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Compass size={20} style={{ color: '#10b981' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Plant Detective</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Inspect mystery plants under a magnifying glass, classify their stem and leaf arrangements, and identify the species.
-          </p>
-
-          <button
-            onClick={() => navigateTo('class6', 'plant_detective')}
-            className="primary"
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            <Play size={14} fill="#ffffff" /> Open Detective Lab <ArrowRight size={14} />
-          </button>
-        </div>
-
-        {/* Activity Card 3: Animal Habitat Explorer */}
-        <div
-          className="glass-panel"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            padding: '1.5rem',
-            border: '1px solid var(--success-border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Active Lab
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <Compass size={20} style={{ color: '#f59e0b' }} />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Animal Habitat Explorer</h3>
-          </div>
-
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
-            Discover animal habitats, match feeding preferences, and observe how movement modes are adapted to survival.
-          </p>
-
-          <button
-            onClick={() => navigateTo('class6', 'animal_habitat')}
-            className="primary"
-            style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-          >
-            <Play size={14} fill="#ffffff" /> Open Habitat Explorer <ArrowRight size={14} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderClass6Chapter3 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -3108,8 +4187,8 @@ export default function App() {
                      activeActivity === 'line_segment_lab' ? 'Activity 2.2: Line Segment Lab' :
                      activeActivity === 'parallel_intersecting_lab' ? 'Activity 2.3: Parallel & Intersecting Lines' :
                      activeActivity === 'curves_regions_lab' ? 'Activity 2.4: Curves & Closed Regions' :
-                     activeActivity === 'virtual_biodiversity' ? 'Virtual Biodiversity Explorer' :
-                     activeActivity === 'plant_detective' ? 'Plant Detective' :
+                     activeActivity === 'virtual_biodiversity' ? 'Activity 2.1 — Virtual Biodiversity Explorer' :
+                     activeActivity === 'plant_detective' ? 'Plant Detective Lab' :
                      activeActivity === 'animal_habitat' ? 'Animal Habitat Explorer' :
                      activeActivity === '9.2' ? 'Activity 9.2' :
                      'Template Demo'}
@@ -3188,8 +4267,18 @@ export default function App() {
             <CircularMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
           ) : activeActivity === 'virtual_biodiversity' ? (
             <VirtualBiodiversityExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
+          ) : activeActivity === 'appreciating_biodiversity' ? (
+            <AppreciatingBiodiversityActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'plant_detective' ? (
             <PlantDetectiveActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
+          ) : activeActivity === 'leaf_venation_lab' ? (
+            <LeafVenationLab onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
+          ) : activeActivity === 'root_systems_lab' ? (
+            <RootSystemsLab onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
+          ) : activeActivity === 'venation_root_correlation' ? (
+            <VenationRootCorrelationLab onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
+          ) : activeActivity === 'seed_dissection_lab' ? (
+            <SeedDissectionLab onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'animal_habitat' ? (
             <AnimalHabitatExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'chapter2' ? (

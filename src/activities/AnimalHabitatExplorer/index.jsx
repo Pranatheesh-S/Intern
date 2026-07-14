@@ -89,8 +89,8 @@ const MOVEMENTS = [
   { id: 'fly', name: 'Fly with Wings' }
 ];
 
-export default function AnimalHabitatExplorer({ onBackToDashboard }) {
-  const [phase, setPhase] = useState(1); // 1: Habitat, 2: Feeding, 3: Movement
+export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase = 1 }) {
+  const [phase, setPhase] = useState(initialPhase); // 1: Habitat, 2: Feeding, 3: Movement
   const [draggedAnimalId, setDraggedAnimalId] = useState(null);
   const [draggedFoodId, setDraggedFoodId] = useState(null);
   
