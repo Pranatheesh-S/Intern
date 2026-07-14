@@ -44,7 +44,7 @@ export default function DidYouKnow() {
               <span style={{ fontSize: '1.2rem' }}>👉</span>
               <h4 style={{ margin: 0, fontSize: '1.05rem', color: '#f8fafc' }}>{fact.title}</h4>
             </div>
-            <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: '1.6', color: '#cbd5e1', paddingLeft: '1.7rem' }}>
+            <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: '1.6', color: '#cbd5e1', paddingLeft: '1.7rem', textAlign: 'justify' }}>
               {fact.content}
             </p>
           </div>
