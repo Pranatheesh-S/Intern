@@ -181,151 +181,150 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
 
   return (
     <div style={{
-      display: 'grid',
-      gridTemplateColumns: '320px 1fr',
+      position: 'relative',
       height: '100%',
-      minHeight: '520px',
-      background: '#022c22',
-      color: '#ecfdf5',
-      fontFamily: 'system-ui, sans-serif'
+      width: '100%',
+      minHeight: '600px',
+      background: 'linear-gradient(135deg, #064e3b 0%, #022c22 100%)',
+      color: 'var(--text-primary)',
+      fontFamily: 'system-ui, sans-serif',
+      overflow: 'hidden'
     }}>
-      {/* Left Sidebar Pane */}
-      <aside style={{
-        background: '#064e3b',
-        borderRight: '1px solid rgba(250, 204, 21, 0.1)',
+      {/* Floating Control Panel */}
+      <aside className="glass-panel" style={{
+        position: 'absolute',
+        bottom: '1.5rem',
+        left: '1.5rem',
+        width: '340px',
+        background: 'rgba(var(--card-bg-rgb), 0.85)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid var(--border)',
+        borderRadius: '16px',
         padding: '1.25rem',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        overflowY: 'auto'
+        gap: '1rem',
+        boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+        zIndex: 10
       }}>
-        <div>
-          {/* Header Back Button */}
+        {/* Back Button & Mission */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <button
             onClick={onBackToDashboard}
             style={{
-              background: 'none',
-              border: 'none',
-              color: '#34d399',
+              background: 'rgba(0,0,0,0.1)',
+              border: '1px solid var(--border)',
+              borderRadius: '8px',
+              color: 'var(--text-heading)',
               display: 'flex',
               alignItems: 'center',
               gap: '0.4rem',
               cursor: 'pointer',
               fontSize: '0.85rem',
-              padding: 0,
-              marginBottom: '1rem'
+              padding: '0.4rem 0.8rem',
+              fontWeight: 600,
+              width: 'max-content'
             }}
           >
             <ArrowLeft size={16} /> Back to Chapters
           </button>
-
-          {/* Mission Indicator */}
+          
           <div style={{
-            background: 'rgba(52, 211, 153, 0.08)',
-            borderLeft: '3px solid #34d399',
-            padding: '0.75rem',
+            background: 'var(--accent-bg)',
+            borderLeft: '3px solid var(--accent)',
+            padding: '0.5rem 0.75rem',
             borderRadius: '0 8px 8px 0',
-            marginBottom: '1.25rem'
           }}>
-            <strong style={{ color: '#fbbf24', fontSize: '0.75rem', textTransform: 'uppercase', display: 'block', marginBottom: '0.2rem' }}>
+            <strong style={{ color: 'var(--accent)', fontSize: '0.75rem', textTransform: 'uppercase', display: 'block', marginBottom: '0.2rem' }}>
               Your Mission:
             </strong>
-            <span style={{ fontSize: '0.8rem', lineHeight: '1.4' }}>
-              Explore the school garden ecosystem. Search for plants and animals, verify their details, and log all 8 organisms.
+            <span style={{ fontSize: '0.75rem', lineHeight: '1.3', color: 'var(--text-secondary)' }}>
+              Explore the garden. Find and log all 8 organisms.
             </span>
           </div>
+        </div>
 
-          {/* Notebook Checklist */}
-          <div style={{
-            background: 'rgba(0, 0, 0, 0.2)',
-            border: '1px solid rgba(255,255,255,0.05)',
-            padding: '1rem',
-            borderRadius: '10px',
-          }}>
+        {/* Notebook Checklist (Grid) */}
+        <div style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border-light)',
+          padding: '0.75rem 1rem',
+          borderRadius: '12px'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
             <h3 style={{
-              margin: '0 0 0.75rem 0',
-              fontSize: '0.9rem',
+              margin: 0,
+              fontSize: '0.85rem',
               fontWeight: 600,
               display: 'flex',
               alignItems: 'center',
               gap: '0.4rem',
-              color: '#fbbf24'
+              color: 'var(--text-heading)'
             }}>
-              📓 Biodiversity Notebook ({loggedCount}/8)
+              📓 Notebook ({loggedCount}/8)
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '200px', overflowY: 'auto' }}>
-              {ORGANISMS.map(org => {
-                const isLogged = notebook[org.id];
-                return (
-                  <div
-                    key={org.id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      fontSize: '0.8rem',
-                      color: isLogged ? '#a7f3d0' : '#9ca3af'
-                    }}
-                  >
-                    <CheckCircle2
-                      size={14}
-                      color={isLogged ? '#34d399' : '#4b5563'}
-                      fill={isLogged ? 'rgba(52, 211, 153, 0.2)' : 'none'}
-                    />
-                    <span>{org.name}</span>
-                  </div>
-                );
-              })}
-            </div>
+            <button
+              onClick={handleReset}
+              style={{
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.2)',
+                color: '#f87171',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem'
+              }}
+            >
+              <RefreshCw size={10} /> Reset Log
+            </button>
           </div>
-        </div>
-
-        {/* Footer Actions */}
-        <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.5rem' }}>
-          <button
-            onClick={handleReset}
-            style={{
-              flex: 1,
-              background: 'rgba(239, 68, 68, 0.1)',
-              border: '1px solid rgba(239, 68, 68, 0.2)',
-              color: '#f87171',
-              padding: '0.5rem',
-              borderRadius: '6px',
-              fontSize: '0.8rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.25rem'
-            }}
-          >
-            <RefreshCw size={12} /> Reset Log
-          </button>
+          
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(2, 1fr)', 
+            gap: '0.5rem'
+          }}>
+            {ORGANISMS.map(org => {
+              const isLogged = notebook[org.id];
+              return (
+                <div
+                  key={org.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    fontSize: '0.75rem',
+                    color: isLogged ? 'var(--text-primary)' : 'var(--text-muted)'
+                  }}
+                >
+                  <CheckCircle2
+                    size={12}
+                    color={isLogged ? 'var(--success)' : 'var(--text-faint)'}
+                    fill={isLogged ? 'var(--success-bg)' : 'none'}
+                  />
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{org.name}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </aside>
 
       {/* Main Exploration Pane */}
       <main style={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1.5rem',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
         overflow: 'hidden'
       }}>
-        {/* Interactive Landscape SVG */}
-        <div style={{
-          position: 'relative',
-          width: '600px',
-          height: '420px',
-          background: '#041710',
-          border: '2px solid rgba(250, 204, 21, 0.2)',
-          borderRadius: '16px',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-          overflow: 'hidden'
-        }}>
-          {/* SVG Ecosystem Graphics */}
-          <svg width="100%" height="100%" viewBox="0 0 600 420" style={{ display: 'block' }}>
+        {/* SVG Ecosystem Graphics */}
+        <svg width="100%" height="100%" viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice" style={{ display: 'block' }}>
             <defs>
               <linearGradient id="sunGlowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#fde68a" stopOpacity="0.4" />
@@ -549,35 +548,35 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
                 outline: none !important;
               }
 
-              /* Hover highlights for vector overlays using :has() */
-              .landscape-container:has(button[data-id="neem"]:hover) .neem-glow {
+              /* Direct hover styles for SVG groups */
+              .neem-glow:hover, .neem-glow:focus-visible {
                 filter: url(#neemOutline) drop-shadow(0 0 16px rgba(16, 185, 129, 1)) !important;
               }
-              .landscape-container:has(button[data-id="hibiscus"]:hover) .hibiscus-glow {
+              .hibiscus-glow:hover, .hibiscus-glow:focus-visible {
                 filter: url(#hibiscusOutline) drop-shadow(0 0 16px rgba(239, 68, 68, 1)) !important;
               }
-              .landscape-container:has(button[data-id="tulsi"]:hover) .tulsi-glow {
+              .tulsi-glow:hover, .tulsi-glow:focus-visible {
                 filter: url(#tulsiOutline) drop-shadow(0 0 16px rgba(168, 85, 247, 1)) !important;
               }
-              .landscape-container:has(button[data-id="butterfly"]:hover) .butterfly-glow {
+              .butterfly-glow:hover, .butterfly-glow:focus-visible {
                 filter: url(#butterflyOutline) drop-shadow(0 0 16px rgba(249, 115, 22, 1)) !important;
               }
-              .landscape-container:has(button[data-id="crow"]:hover) .crow-glow {
+              .crow-glow:hover, .crow-glow:focus-visible {
                 filter: url(#crowOutline) drop-shadow(0 0 16px rgba(255, 255, 255, 1)) !important;
               }
-              .landscape-container:has(button[data-id="ant"]:hover) .ant-glow {
+              .ant-glow:hover, .ant-glow:focus-visible {
                 filter: url(#antOutline) drop-shadow(0 0 16px rgba(6, 182, 212, 1)) !important;
               }
-              .landscape-container:has(button[data-id="frog"]:hover) .frog-glow {
+              .frog-glow:hover, .frog-glow:focus-visible {
                 filter: url(#frogOutline) drop-shadow(0 0 16px rgba(34, 197, 94, 1)) !important;
               }
-              .landscape-container:has(button[data-id="snail"]:hover) .snail-glow {
+              .snail-glow:hover, .snail-glow:focus-visible {
                 filter: url(#snailOutline) drop-shadow(0 0 16px rgba(234, 179, 8, 1)) !important;
               }
             `}</style>
 
             {/* Photorealistic Background Image with Translucent Opacity */}
-            <image href="/school_garden_bg.png" width="100%" height="100%" preserveAspectRatio="none" opacity="0.38" />
+            <image href="/school_garden_bg.png" width="100%" height="100%" preserveAspectRatio="none" opacity="0.85" />
 
             {/* Sun Rays Pulsing Overlay */}
             <circle cx="70" cy="65" r="45" fill="url(#sunGlowGrad)" style={{ animation: 'sunPulse 6s infinite ease-in-out', transformOrigin: '70px 65px' }} />
@@ -595,7 +594,18 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             </ellipse>
 
             {/* Glowing Neem Tree Leaf branch overlay */}
-            <g transform="translate(475, 95) scale(1.15)" className={notebook.neem ? 'logged-glow' : 'neem-glow'}>
+            <g 
+              transform="translate(475, 95) scale(1.15)" 
+              className={notebook.neem ? 'logged-glow' : 'neem-glow'}
+              onClick={() => handleSelectHotspot('neem')}
+              style={{ cursor: 'pointer', outline: 'none' }}
+              tabIndex={0}
+              role="button"
+              aria-label="Neem Tree"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('neem'); }}
+            >
+              {/* Flexible solid circular hitbox */}
+              <circle cx="15" cy="20" r="45" fill="transparent" pointerEvents="all" />
               {/* Main woody stem */}
               <path d="M -5 45 Q 12 18 35 0" fill="none" stroke="#78350f" strokeWidth="2" />
               <path d="M -5 45 Q 12 18 35 0" fill="none" stroke="#047857" strokeWidth="1" strokeDasharray="1,1" />
@@ -636,7 +646,18 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             </g>
 
             {/* Glowing Hibiscus Shrub flower overlay */}
-            <g transform="translate(95, 250) scale(1.2)" className={notebook.hibiscus ? 'logged-glow' : 'hibiscus-glow'}>
+            <g 
+              transform="translate(95, 250) scale(1.2)" 
+              className={notebook.hibiscus ? 'logged-glow' : 'hibiscus-glow'}
+              onClick={() => handleSelectHotspot('hibiscus')}
+              style={{ cursor: 'pointer', outline: 'none' }}
+              tabIndex={0}
+              role="button"
+              aria-label="Hibiscus Shrub"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('hibiscus'); }}
+            >
+              {/* Flexible solid circular hitbox */}
+              <circle cx="0" cy="-5" r="40" fill="transparent" pointerEvents="all" />
               {/* Petal 1 */}
               <path d="M 0 0 C -12 -5 -15 -18 -5 -20 C 5 -22 8 -8 0 0" fill="url(#hibiscusPetalGrad)" opacity="0.95" />
               {/* Petal 2 */}
@@ -665,7 +686,18 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             </g>
 
             {/* Glowing Tulsi Herb overlay */}
-            <g transform="translate(100, 360) scale(1.15)" className={notebook.tulsi ? 'logged-glow' : 'tulsi-glow'}>
+            <g 
+              transform="translate(100, 360) scale(1.15)" 
+              className={notebook.tulsi ? 'logged-glow' : 'tulsi-glow'}
+              onClick={() => handleSelectHotspot('tulsi')}
+              style={{ cursor: 'pointer', outline: 'none' }}
+              tabIndex={0}
+              role="button"
+              aria-label="Tulsi Herb"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('tulsi'); }}
+            >
+              {/* Flexible solid circular hitbox */}
+              <circle cx="0" cy="5" r="35" fill="transparent" pointerEvents="all" />
               {/* Branch stems */}
               <path d="M 0 25 Q -10 5 -15 -10" fill="none" stroke="#047857" strokeWidth="1.5" />
               <path d="M 0 25 Q 10 5 15 -10" fill="none" stroke="#047857" strokeWidth="1.5" />
@@ -712,8 +744,17 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             </g>
 
             {/* Indian Pond Frog overlay (with breathing animation) */}
-            <g style={{ animation: 'frogPuff 3s infinite ease-in-out' }}>
+            <g 
+              style={{ animation: 'frogPuff 3s infinite ease-in-out', cursor: 'pointer', outline: 'none' }}
+              onClick={() => handleSelectHotspot('frog')}
+              tabIndex={0}
+              role="button"
+              aria-label="Indian Pond Frog"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('frog'); }}
+            >
               <g className={notebook.frog ? 'logged-glow' : 'frog-glow'}>
+                {/* Flexible solid circular hitbox */}
+                <circle cx="0" cy="5" r="30" fill="transparent" pointerEvents="all" />
               {/* Webbed Back Feet */}
               <path d="M -15 8 C -22 6 -28 14 -20 18 C -16 20 -10 14 -12 8" fill="#15803d" stroke="#14532d" strokeWidth="1" />
               <path d="M 15 8 C 22 6 28 14 20 18 C 16 20 10 14 12 8" fill="#15803d" stroke="#14532d" strokeWidth="1" />
@@ -753,8 +794,17 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             </g>
 
             {/* Snail overlay (with slow crawling animation) */}
-            <g style={{ animation: 'snailMove 25s infinite linear' }}>
+            <g 
+              style={{ animation: 'snailMove 25s infinite linear', cursor: 'pointer', outline: 'none' }}
+              onClick={() => handleSelectHotspot('snail')}
+              tabIndex={0}
+              role="button"
+              aria-label="Garden Snail"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('snail'); }}
+            >
               <g className={notebook.snail ? 'logged-glow' : 'snail-glow'}>
+                {/* Flexible solid circular hitbox */}
+                <circle cx="-3" cy="2" r="25" fill="transparent" pointerEvents="all" />
               {/* Slime trail */}
               <path d="M -22 5 Q -10 4 0 5" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="2.5" strokeDasharray="3,3" />
               
@@ -782,8 +832,17 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             </g>
 
             {/* House Crow perched overlay (with head bobbing) */}
-            <g style={{ animation: 'crowTilt 9s infinite ease-in-out', transformOrigin: '6px -5px' }}>
+            <g 
+              style={{ animation: 'crowTilt 9s infinite ease-in-out', transformOrigin: '6px -5px', cursor: 'pointer', outline: 'none' }}
+              onClick={() => handleSelectHotspot('crow')}
+              tabIndex={0}
+              role="button"
+              aria-label="House Crow"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('crow'); }}
+            >
               <g className={notebook.crow ? 'logged-glow' : 'crow-glow'}>
+                {/* Flexible solid circular hitbox */}
+                <circle cx="2" cy="4" r="25" fill="transparent" pointerEvents="all" />
               {/* Claws gripping the branch */}
               <path d="M 0 6 Q -3 10 -4 14 M 2 6 Q 0 10 -1 14" stroke="#0f172a" strokeWidth="1.8" fill="none" />
               <path d="M 5 6 Q 3 10 2 14 M 7 6 Q 5 10 4 14" stroke="#0f172a" strokeWidth="1.8" fill="none" />
@@ -816,8 +875,17 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             </g>
 
             {/* Ant crawling up Neem Trunk */}
-            <g style={{ animation: 'antCrawl 15s infinite linear' }}>
+            <g 
+              style={{ animation: 'antCrawl 15s infinite linear', cursor: 'pointer', outline: 'none' }}
+              onClick={() => handleSelectHotspot('ant')}
+              tabIndex={0}
+              role="button"
+              aria-label="Black Garden Ant"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('ant'); }}
+            >
               <g className={notebook.ant ? 'logged-glow' : 'ant-glow'}>
+                {/* Flexible solid circular hitbox */}
+                <circle cx="-3" cy="0" r="20" fill="transparent" pointerEvents="all" />
               {/* Abdomen segmented */}
               <ellipse cx="-8" cy="0" rx="5" ry="3.5" fill="url(#antBodyGrad)" stroke="#090d16" strokeWidth="0.5" />
               <path d="M -9 -3 L -9 3" stroke="#1e293b" strokeWidth="0.5" />
@@ -848,8 +916,17 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             </g>
 
             {/* Monarch Butterfly flying & flapping wings */}
-            <g style={{ animation: 'flightPath 10s infinite linear' }}>
+            <g 
+              style={{ animation: 'flightPath 10s infinite linear', cursor: 'pointer', outline: 'none' }}
+              onClick={() => handleSelectHotspot('butterfly')}
+              tabIndex={0}
+              role="button"
+              aria-label="Monarch Butterfly"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('butterfly'); }}
+            >
               <g transform="scale(1.0)" className={notebook.butterfly ? 'logged-glow' : 'butterfly-glow'}>
+                {/* Flexible solid circular hitbox */}
+                <circle cx="0" cy="0" r="28" fill="transparent" pointerEvents="all" />
                 <g style={{ animation: 'flap 0.12s infinite ease-in-out', transformOrigin: '0px 0px' }}>
                   {/* Back wings */}
                   <path d="M 0 2 C -8 10 -15 15 -18 5 C -20 -3 -10 -5 0 2" fill="url(#orangeWingGrad)" stroke="#1e293b" strokeWidth="1" />
@@ -887,35 +964,13 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             <path d="M 0 0 C -3 -5 -8 -5 -5 -1 C -2 3 -5 5 0 0 Z" fill="#22c55e" opacity="0.8" style={{ animation: 'leafFallTwo 18s infinite linear' }} />
           </svg>
 
-          {/* Glowing Clickable Hotspots overlay */}
-          {ORGANISMS.map(org => {
-            const isSelected = selectedId === org.id;
-
-            return (
-              <button
-                key={org.id}
-                onClick={() => handleSelectHotspot(org.id)}
-                className="hotspot-btn"
-                data-id={org.id}
-                style={{
-                  position: 'absolute',
-                  left: `${org.x - org.radius}px`,
-                  top: `${org.y - org.radius}px`,
-                  width: `${org.radius * 2}px`,
-                  height: `${org.radius * 2}px`,
-                  zIndex: isSelected ? 30 : 20
-                }}
-                title={org.name}
-              />
-            );
-          })}
-        </div>
-
         {/* Microscopic Inspection Panel Overlay */}
         {activeOrganism && (
           <div style={{
             position: 'absolute',
-            bottom: '25px',
+            top: '40%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
             background: 'rgba(15, 23, 42, 0.95)',
             border: '1px solid rgba(250, 204, 21, 0.3)',
             padding: '1.25rem',
@@ -923,22 +978,45 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             width: '420px',
             boxShadow: '0 10px 25px rgba(0,0,0,0.6)',
             zIndex: 10,
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem'
+            animation: 'popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            color: 'var(--text-primary)'
           }}>
-            {/* Panel Title */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <Search size={16} /> Inspecting: {activeOrganism.name}
-              </h3>
-              <button 
+            <style>{`
+              @keyframes popUp {
+                0% { transform: translate(-50%, -40%) scale(0.9); opacity: 0; }
+                100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+              }
+            `}</style>
+            
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  background: activeOrganism.type === 'plant' ? 'var(--success-bg)' : 'var(--accent-bg)',
+                  border: `1px solid ${activeOrganism.type === 'plant' ? 'var(--success-border)' : 'var(--accent-border)'}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: activeOrganism.type === 'plant' ? 'var(--success)' : 'var(--accent)'
+                }}>
+                  {activeOrganism.type === 'plant' ? '🌿' : '🐾'}
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>{activeOrganism.name}</h3>
+                  <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: activeOrganism.type === 'plant' ? 'var(--success)' : 'var(--accent)', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+                    {activeOrganism.type} specimen
+                  </span>
+                </div>
+              </div>
+              <button
                 onClick={() => setSelectedId(null)}
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#9ca3af',
+                  color: 'var(--text-muted)',
                   cursor: 'pointer',
                   fontSize: '1.1rem',
                   padding: '0 0.5rem'
@@ -949,30 +1027,31 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             </div>
 
             {/* Specs Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '0.5rem', fontSize: '0.8rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '0.5rem', fontSize: '0.8rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.5rem' }}>
               <div><strong>Native Habitat:</strong></div>
-              <div style={{ color: '#34d399' }}>{activeOrganism.habitat}</div>
+              <div style={{ color: 'var(--success)' }}>{activeOrganism.habitat}</div>
               <div><strong>Scientific Note:</strong></div>
-              <div style={{ color: '#d1d5db', lineHeight: '1.3' }}>{activeOrganism.details}</div>
+              <div style={{ color: 'var(--text-secondary)', lineHeight: '1.3' }}>{activeOrganism.details}</div>
             </div>
 
             {/* Interesting Fact */}
             <div style={{
-              background: 'rgba(251, 191, 36, 0.08)',
-              borderLeft: '2px solid #fbbf24',
+              background: 'var(--warning-bg)',
+              borderLeft: '2px solid var(--warning)',
               padding: '0.5rem 0.75rem',
               borderRadius: '0 6px 6px 0',
               fontSize: '0.75rem',
               lineHeight: '1.3',
-              color: '#fde68a'
+              color: 'var(--text-primary)',
+              marginTop: '0.5rem'
             }}>
               💡 <strong>Did you know?</strong> {activeOrganism.fact}
             </div>
 
             {/* Quick Verification Question */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.25rem' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#f3f4f6' }}>🧪 Quick Verification check:</span>
-              <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{activeOrganism.question}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.75rem' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-heading)' }}>🧪 Quick Verification check:</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{activeOrganism.question}</span>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginTop: '0.2rem' }}>
                 {activeOrganism.options.map((opt, idx) => (
@@ -986,9 +1065,9 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
                       cursor: 'pointer',
                       padding: '0.35rem 0.5rem',
                       borderRadius: '6px',
-                      background: selectedAnswer === idx ? 'rgba(52, 211, 153, 0.15)' : 'rgba(255,255,255,0.03)',
-                      border: selectedAnswer === idx ? '1px solid #34d399' : '1px solid rgba(255,255,255,0.05)',
-                      color: selectedAnswer === idx ? '#34d399' : '#d1d5db'
+                      background: selectedAnswer === idx ? 'var(--success-bg)' : 'var(--surface)',
+                      border: selectedAnswer === idx ? '1px solid var(--success)' : '1px solid var(--border-light)',
+                      color: selectedAnswer === idx ? 'var(--success)' : 'var(--text-secondary)'
                     }}
                   >
                     <input
@@ -1009,7 +1088,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
 
             {/* Question Error Feedback */}
             {questionError && (
-              <span style={{ color: '#f87171', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+              <span style={{ color: 'var(--danger)', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.5rem' }}>
                 ❌ Please select the correct verification answer to log in the notebook.
               </span>
             )}
@@ -1017,18 +1096,20 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
             {/* Log Button */}
             <button
               onClick={handleLogToNotebook}
+              className="primary"
               style={{
                 width: '100%',
-                background: '#10b981',
-                border: 'none',
+                background: 'var(--success)',
+                border: '1px solid var(--success-border)',
                 color: '#ffffff',
                 padding: '0.55rem',
                 borderRadius: '8px',
                 fontSize: '0.8rem',
                 fontWeight: 600,
+                marginTop: '1rem',
                 cursor: 'pointer',
                 textAlign: 'center',
-                boxShadow: '0 4px 10px rgba(16, 185, 129, 0.3)'
+                boxShadow: 'var(--btn-shadow)'
               }}
             >
               Log in Notebook 📓
@@ -1038,10 +1119,11 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
 
         {/* Complete Success Certificate Overlay */}
         {showCertificate && (
-          <div style={{
+          <div className="glass-panel" style={{
             position: 'absolute',
             inset: 0,
-            background: 'rgba(2, 44, 34, 0.95)',
+            background: 'var(--page-bg)',
+            opacity: 0.95,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -1055,33 +1137,33 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
               width: '80px',
               height: '80px',
               borderRadius: '50%',
-              background: 'rgba(250, 204, 21, 0.15)',
+              background: 'var(--accent-bg)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#fbbf24',
+              color: 'var(--accent)',
               marginBottom: '1rem',
-              boxShadow: '0 0 20px rgba(250, 204, 21, 0.4)'
+              boxShadow: '0 0 20px var(--accent-bg)'
             }}>
               <Award size={48} />
             </div>
 
-            <h2 style={{ color: '#fbbf24', fontSize: '1.75rem', margin: '0 0 0.5rem 0' }}>Chapter 2 Complete!</h2>
-            <h3 style={{ fontSize: '1.2rem', color: '#ecfdf5', margin: '0 0 1rem 0' }}>Junior Naturalist Certification</h3>
+            <h2 style={{ color: 'var(--text-heading)', fontSize: '1.75rem', margin: '0 0 0.5rem 0' }}>Chapter 2 Complete!</h2>
+            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', margin: '0 0 1rem 0' }}>Junior Naturalist Certification</h3>
             
-            <p style={{ fontSize: '0.85rem', color: '#a7f3d0', maxWidth: '420px', lineHeight: '1.5', margin: '0 0 1.5rem 0' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '420px', lineHeight: '1.5', margin: '0 0 1.5rem 0' }}>
               Congratulations! You successfully explored the school garden ecosystem, inspected all plant and animal species, and logged their classification characteristics correctly!
             </p>
 
             <div style={{
-              background: 'rgba(0,0,0,0.2)',
-              border: '1px solid rgba(255,255,255,0.05)',
+              background: 'var(--surface)',
+              border: '1px solid var(--border-light)',
               padding: '0.8rem 1.5rem',
               borderRadius: '8px',
               fontSize: '0.85rem',
               marginBottom: '2rem'
             }}>
-              Ecosystem Score: <strong style={{ color: '#fbbf24' }}>100/100</strong>
+              Ecosystem Score: <strong style={{ color: 'var(--success)' }}>100/100</strong>
             </div>
 
             <div style={{ display: 'flex', gap: '1rem' }}>
