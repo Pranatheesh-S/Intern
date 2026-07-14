@@ -56,7 +56,6 @@ export default function ChallengeMode({ onComplete }) {
       setShowResult(false);
     } else {
       setIsFinished(true);
-      onComplete();
     }
   };
 
@@ -96,9 +95,16 @@ export default function ChallengeMode({ onComplete }) {
           {stars === 3 ? " Perfect prediction skills!" : stars > 0 ? " Good job, keep exploring!" : " Let's review the concepts and try again."}
         </p>
 
-        <button onClick={resetChallenge} className="outline" style={{ padding: '0.75rem 2rem', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <RotateCcw size={18} /> Try Again
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <button onClick={resetChallenge} className="outline" style={{ padding: '0.75rem 2rem', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <RotateCcw size={18} /> Try Again
+          </button>
+          {onComplete && (
+            <button onClick={onComplete} className="primary" style={{ padding: '0.75rem 2rem', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              Continue to Next Part <ArrowRight size={18} />
+            </button>
+          )}
+        </div>
       </div>
     );
   }

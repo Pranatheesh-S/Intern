@@ -4142,17 +4142,17 @@ export default function App() {
               onComplete={() => navigateTo('class6', 'chapter4_flow', 'sec-4-2')}
             />
           ) : activeActivity === 'magnetic_poles' ? (
-            <MagneticPolesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+            <MagneticPolesActivity onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow', 'sec-4-3')} />
           ) : activeActivity === 'suspended_magnet' ? (
-            <SuspendedMagnetActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+            <SuspendedMagnetActivity onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow', 'act-4-4')} />
           ) : activeActivity === 'magnetic_compass' ? (
-            <MagneticCompassActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+            <MagneticCompassActivity onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow', 'sec-4-4')} />
           ) : activeActivity === 'magnet_interaction' ? (
-            <MagnetInteractionActivity onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+            <MagnetInteractionActivity onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow', 'act-4-6')} />
           ) : activeActivity === 'activity_4_6' ? (
-            <Activity4_6 onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+            <Activity4_6 onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow', 'act-4-7')} />
           ) : activeActivity === 'activity_4_7' ? (
-            <Activity4_7 onBackToDashboard={() => navigateTo('class6', 'chapter4')} />
+            <Activity4_7 onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow')} />
           ) : activeActivity === 'linear_motion' ? (
             <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
           ) : activeActivity === 'circular_motion' ? (

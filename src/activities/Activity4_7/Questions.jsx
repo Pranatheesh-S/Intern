@@ -5,27 +5,63 @@ import { ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
 const questions = [
   {
     id: 1,
-    question: "What happened when the North Pole approached the North Pole of the compass?",
+    question: "What is placed between the bar magnet and the compass needle in this activity?",
     options: [
-      "Needle moved away",
-      "Needle did not move",
-      "Needle broke",
-      "Needle disappeared"
+      "An iron sheet",
+      "A wooden piece",
+      "A steel plate",
+      "An aluminium rod"
     ],
-    correctAnswer: "Needle moved away",
-    explanation: "Like poles repel each other. Since both were North poles, the compass needle rotated away from the magnet."
+    correctAnswer: "A wooden piece",
+    explanation: "A wooden piece is placed between the magnet and the compass to observe whether the magnetic effect passes through it."
   },
   {
     id: 2,
-    question: "What happened when the South Pole approached the North Pole of the compass?",
+    question: "Which of the following materials is tested in this activity?",
     options: [
-      "Needle moved toward the magnet",
-      "Needle moved away",
-      "Needle stopped",
-      "Nothing happened"
+      "Iron",
+      "Steel",
+      "Plastic",
+      "Nickel"
     ],
-    correctAnswer: "Needle moved toward the magnet",
-    explanation: "Unlike poles attract each other. The South pole of the magnet attracted the North pole of the compass needle."
+    correctAnswer: "Plastic",
+    explanation: "Plastic is one of the non-magnetic materials tested between the magnet and the compass needle."
+  },
+  {
+    id: 3,
+    question: "What happens to the compass needle when a cardboard sheet is placed between the magnet and the compass?",
+    options: [
+      "It stops moving completely.",
+      "It still shows deflection.",
+      "It points in the opposite direction.",
+      "It becomes magnetic."
+    ],
+    correctAnswer: "It still shows deflection.",
+    explanation: "The magnetic effect passes through cardboard, so the compass needle continues to deflect."
+  },
+  {
+    id: 4,
+    question: "What can be concluded from this activity?",
+    options: [
+      "Magnets work only in air.",
+      "Magnetic effect cannot pass through any material.",
+      "Magnetic effect can pass through non-magnetic materials.",
+      "Wood becomes magnetic when placed near a magnet."
+    ],
+    correctAnswer: "Magnetic effect can pass through non-magnetic materials.",
+    explanation: "The activity shows that materials like wood, cardboard, plastic, and glass do not block the magnetic effect."
+  },
+  {
+    id: 5,
+    question: "Which observation best supports the conclusion of this activity?",
+    options: [
+      "The compass needle shows similar deflection even when non-magnetic materials are placed between it and the magnet.",
+      "The wooden block sticks to the magnet.",
+      "The compass needle changes its colour.",
+      "The magnet becomes weaker after the experiment."
+    ],
+    correctAnswer: "The compass needle shows similar deflection even when non-magnetic materials are placed between it and the magnet.",
+    explanation: "The continued deflection of the compass needle shows that the magnetic effect passes through non-magnetic materials such as wood, cardboard, plastic, and glass."
   }
 ];
 
@@ -109,7 +145,7 @@ export default function Questions({ onComplete, onNext }) {
                 borderColor = 'var(--destructive-border)';
                 color = 'var(--destructive)';
               } else {
-                opacity: 0.5;
+                color = 'rgba(var(--text-primary-rgb), 0.5)';
               }
             } else if (isSelected) {
               bg = 'var(--accent-bg)';

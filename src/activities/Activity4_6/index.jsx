@@ -4,8 +4,9 @@ import { ArrowLeft, BookOpen, Compass, TestTube2, Trophy } from 'lucide-react';
 import Simulation from './Simulation';
 import Questions from './Questions';
 import ChallengeMode from './ChallengeMode';
+import DidYouKnow from './DidYouKnow';
 
-export default function Activity4_6({ onBackToDashboard }) {
+export default function Activity4_6({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('simulation');
   const [simCompleted, setSimCompleted] = useState(false);
   const [questionsCompleted, setQuestionsCompleted] = useState(false);
@@ -76,49 +77,54 @@ export default function Activity4_6({ onBackToDashboard }) {
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '2rem', maxWidth: '1800px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column' }}>
-        <AnimatePresence mode="wait">
-          {activeTab === 'simulation' && (
-            <motion.div
-              key="simulation"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
-            >
-              <Simulation onComplete={() => setSimCompleted(true)} onNext={() => setActiveTab('questions')} />
-            </motion.div>
-          )}
+      <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', padding: '2rem', maxWidth: '1800px', margin: '0 auto', width: '100%' }}>
+        <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <AnimatePresence mode="wait">
+            {activeTab === 'simulation' && (
+              <motion.div
+                key="simulation"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+              >
+                <Simulation onComplete={() => setSimCompleted(true)} onNext={() => setActiveTab('questions')} />
+              </motion.div>
+            )}
 
-          {activeTab === 'questions' && (
-            <motion.div
-              key="questions"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
-            >
-              <Questions onComplete={() => setQuestionsCompleted(true)} onNext={() => setActiveTab('challenge')} />
-            </motion.div>
-          )}
+            {activeTab === 'questions' && (
+              <motion.div
+                key="questions"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+              >
+                <Questions onComplete={() => setQuestionsCompleted(true)} onNext={() => setActiveTab('challenge')} />
+              </motion.div>
+            )}
 
-          {activeTab === 'challenge' && (
-            <motion.div
-              key="challenge"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
-            >
-              <ChallengeMode onComplete={() => console.log('Activity completed!')} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </main>
+            {activeTab === 'challenge' && (
+              <motion.div
+                key="challenge"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+              >
+                <ChallengeMode onComplete={onComplete} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </main>
+
+        <aside style={{ width: '280px', flexShrink: 0 }}>
+          <DidYouKnow />
+        </aside>
+      </div>
     </div>
   );
 }

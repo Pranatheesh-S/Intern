@@ -3,6 +3,8 @@ import { ArrowLeft, Compass, Search } from 'lucide-react';
 import { DndContext, useSensor, useSensors, PointerSensor, TouchSensor, DragOverlay } from '@dnd-kit/core';
 import MapGrid from './MapGrid';
 import DiscoveryLog from './DiscoveryLog';
+import Quiz from './Quiz';
+import DidYouKnow from './DidYouKnow';
 
 const INITIAL_ITEMS = [
   { id: 1, name: 'Iron Key', type: 'magnetic', x: -2, y: 1, discovered: false, icon: '🔑' },
@@ -18,6 +20,7 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
   const [items, setItems] = useState(INITIAL_ITEMS);
   const [feedback, setFeedback] = useState(null);
   const [activeDragId, setActiveDragId] = useState(null);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -53,6 +56,10 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
 
   const discoveredItems = items.filter(i => i.discovered);
   const isComplete = discoveredItems.length === items.length;
+
+  if (showQuiz) {
+    return <Quiz onComplete={onComplete} onBack={() => setShowQuiz(false)} />;
+  }
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
@@ -123,6 +130,7 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <DiscoveryLog discoveredItems={discoveredItems} totalItems={items.length} />
+          <DidYouKnow />
         </div>
       </div>
 
@@ -152,15 +160,13 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
               You successfully tested all materials on the island. You are now ready to continue to the next part of Chapter 4.
             </p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexDirection: 'column' }}>
-              {onComplete && (
-                <button 
-                  onClick={onComplete} 
-                  className="primary" 
-                  style={{ padding: '1rem', fontWeight: 'bold', fontSize: '1.1rem', background: '#10b981', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
-                >
-                  Continue to Next Content
-                </button>
-              )}
+              <button 
+                onClick={() => setShowQuiz(true)} 
+                className="primary" 
+                style={{ padding: '1rem', fontWeight: 'bold', fontSize: '1.1rem', background: '#10b981', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
+              >
+                Take the "Do You Know" Quiz
+              </button>
               <button 
                 onClick={onBackToDashboard} 
                 style={{ padding: '0.75rem', fontWeight: 'bold', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: 'var(--text-secondary)', borderRadius: '8px', cursor: 'pointer' }}

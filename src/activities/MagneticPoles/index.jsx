@@ -4,13 +4,17 @@ import { Compass, Scissors, ArrowLeft, Info, CheckCircle, Shapes } from 'lucide-
 import Stage1_Investigate from './components/Stage1_Investigate';
 import Stage2_BreakingMagnet from './components/Stage2_BreakingMagnet';
 import Stage3_Sandbox from './components/Stage3_Sandbox';
+import Quiz from './Quiz';
+import DidYouKnow from './DidYouKnow';
+import { HelpCircle } from 'lucide-react';
 
-export default function MagneticPolesActivity({ onBackToDashboard }) {
+export default function MagneticPolesActivity({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('investigate');
   const [progress, setProgress] = useState({
     investigate: false,
     breaking: false,
-    sandbox: false
+    sandbox: false,
+    quiz: false
   });
 
   const handleStage1Complete = () => {
@@ -25,12 +29,19 @@ export default function MagneticPolesActivity({ onBackToDashboard }) {
 
   const handleStage3Complete = () => {
     setProgress(prev => ({ ...prev, sandbox: true }));
+    setActiveTab('quiz');
+  };
+
+  const handleQuizComplete = () => {
+    setProgress(prev => ({ ...prev, quiz: true }));
+    if (onComplete) onComplete();
   };
 
   const tabs = [
     { id: 'investigate', name: '1. Let us Investigate', icon: Compass, component: <Stage1_Investigate onComplete={handleStage1Complete} /> },
     { id: 'breaking', name: '2. Breaking a Magnet', icon: Scissors, component: <Stage2_BreakingMagnet onComplete={handleStage2Complete} />, locked: !progress.investigate },
-    { id: 'sandbox', name: '3. Other Shapes', icon: Shapes, component: <Stage3_Sandbox onComplete={handleStage3Complete} />, locked: !progress.breaking }
+    { id: 'sandbox', name: '3. Other Shapes', icon: Shapes, component: <Stage3_Sandbox onComplete={handleStage3Complete} />, locked: !progress.breaking },
+    { id: 'quiz', name: '4. Quiz', icon: HelpCircle, component: <Quiz onComplete={handleQuizComplete} />, locked: !progress.sandbox }
   ];
 
   return (
@@ -116,22 +127,7 @@ export default function MagneticPolesActivity({ onBackToDashboard }) {
 
         {/* Right Sidebar (Educational Tip) */}
         <aside style={{ width: '280px', flexShrink: 0 }}>
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Did you know?
-                </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-                  Science Insights
-                </div>
-                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  The ends of the magnet where maximum iron filings stick are called the <strong>poles</strong> of the magnet—the North pole and the South pole. A single North pole or a South pole cannot exist independently.
-                </p>
-              </div>
-            </div>
-          </div>
+          <DidYouKnow />
         </aside>
       </div>
     </div>

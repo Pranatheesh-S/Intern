@@ -5,27 +5,63 @@ import { ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
 const questions = [
   {
     id: 1,
-    question: "What happened when the North Pole approached the North Pole of the compass?",
+    question: "What happens when the North pole of a bar magnet is brought close to the North pole of a magnetic compass?",
     options: [
-      "Needle moved away",
-      "Needle did not move",
-      "Needle broke",
-      "Needle disappeared"
+      "The compass needle does not move.",
+      "The compass needle moves away from the magnet.",
+      "The compass needle points upward.",
+      "The compass needle starts spinning continuously."
     ],
-    correctAnswer: "Needle moved away",
-    explanation: "Like poles repel each other. Since both were North poles, the compass needle rotated away from the magnet."
+    correctAnswer: "The compass needle moves away from the magnet.",
+    explanation: "The North pole of the magnet repels the North-seeking end of the compass needle, causing it to move away."
   },
   {
     id: 2,
-    question: "What happened when the South Pole approached the North Pole of the compass?",
+    question: "What happens when the South pole of a bar magnet is brought close to the North pole of a magnetic compass?",
     options: [
-      "Needle moved toward the magnet",
-      "Needle moved away",
-      "Needle stopped",
-      "Nothing happened"
+      "The compass needle moves away.",
+      "The compass needle is attracted towards the magnet.",
+      "The compass needle stops moving permanently.",
+      "The compass needle points downward."
     ],
-    correctAnswer: "Needle moved toward the magnet",
-    explanation: "Unlike poles attract each other. The South pole of the magnet attracted the North pole of the compass needle."
+    correctAnswer: "The compass needle is attracted towards the magnet.",
+    explanation: "Unlike poles attract each other, so the North-seeking end of the compass needle moves towards the South pole of the magnet."
+  },
+  {
+    id: 3,
+    question: "Why does the compass needle deflect when a bar magnet is brought near it?",
+    options: [
+      "The magnet changes the colour of the needle.",
+      "The magnetic force of the bar magnet acts on the compass needle.",
+      "The compass becomes heavier.",
+      "Air pushes the compass needle."
+    ],
+    correctAnswer: "The magnetic force of the bar magnet acts on the compass needle.",
+    explanation: "The magnetic field of the bar magnet exerts a force on the magnetic compass needle, causing it to deflect."
+  },
+  {
+    id: 4,
+    question: "Which instrument is used in this activity to observe the effect of a nearby magnet?",
+    options: [
+      "Thermometer",
+      "Compass",
+      "Spring balance",
+      "Measuring cylinder"
+    ],
+    correctAnswer: "Compass",
+    explanation: "A magnetic compass is used to observe how its needle responds when a bar magnet is brought close."
+  },
+  {
+    id: 5,
+    question: "What can be concluded from this activity?",
+    options: [
+      "A nearby magnet can change the direction of a compass needle.",
+      "A compass needle is not magnetic.",
+      "A magnet attracts every object placed near it.",
+      "A compass always points towards a nearby magnet."
+    ],
+    correctAnswer: "A nearby magnet can change the direction of a compass needle.",
+    explanation: "A bar magnet exerts a magnetic force on the compass needle, causing it to deflect from its usual North–South direction."
   }
 ];
 
@@ -109,7 +145,7 @@ export default function Questions({ onComplete, onNext }) {
                 borderColor = 'var(--destructive-border)';
                 color = 'var(--destructive)';
               } else {
-                opacity: 0.5;
+                color = 'rgba(var(--text-primary-rgb), 0.5)';
               }
             } else if (isSelected) {
               bg = 'var(--accent-bg)';

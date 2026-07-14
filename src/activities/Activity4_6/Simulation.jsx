@@ -347,6 +347,7 @@ export default function Simulation({ onComplete, onNext }) {
       
       <div style={{ display: "grid", gridTemplateColumns: "350px 1fr", gap: "1.5rem" }}>
         
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Left Panel: Instructions */}
         <div className="glass-panel" style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem", background: "var(--surface)" }}>
           <h3 style={{ margin: 0, color: "var(--text-heading)", borderBottom: "1px solid var(--border)", paddingBottom: "0.5rem" }}>Instructions</h3>
@@ -399,7 +400,8 @@ export default function Simulation({ onComplete, onNext }) {
               )}
             </div>
 
-          </div>
+        </div>
+        </div>
         </div>
 
         {/* Right Panel: Workspace */}
