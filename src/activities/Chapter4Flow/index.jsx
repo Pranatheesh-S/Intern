@@ -122,11 +122,21 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity, init
       id: 'act-4-6',
       type: 'activity',
       num: 10,
-      title: 'ACTIVITY 4.6 & 4.7',
+      title: 'ACTIVITY 4.6',
       subtitle: 'Compass and Bar Magnet Fields',
       content: 'Move a magnetic compass around a bar magnet. Observe how the compass needle deflects depending on which pole of the bar magnet it is near.',
       activityId: 'activity_4_6',
       buttonText: 'Launch Compass Interaction Lab'
+    },
+    {
+      id: 'act-4-7',
+      type: 'activity',
+      num: 11,
+      title: 'ACTIVITY 4.7',
+      subtitle: 'Magnetic Effect Through Materials',
+      content: 'Observe if the magnetic effect of a magnet passes through different non-magnetic materials like wood, plastic, or cardboard by placing them between the magnet and a compass.',
+      activityId: 'activity_4_7',
+      buttonText: 'Launch Materials Lab'
     }
   ];
 

@@ -5,48 +5,38 @@ import { CheckCircle2, AlertCircle, ArrowRight, Flag } from 'lucide-react';
 const QUESTIONS = [
   {
     id: 1,
-    question: "Which poles attract each other?",
-    options: ["North–North", "South–South", "North–South", "None"],
-    correctAnswer: "North–South",
-    explanation: "Unlike poles (North and South) attract each other."
+    question: "When the North pole of Magnet A is brought near the North pole of Magnet B, what happens?",
+    options: ["They attract each other.", "They repel each other.", "They stick together permanently.", "Nothing happens."],
+    correctAnswer: "They repel each other.",
+    explanation: "Like poles (North–North or South–South) repel each other."
   },
   {
     id: 2,
-    question: "Which poles repel each other?",
-    options: ["North–South", "South–North", "North–North and South–South", "None"],
-    correctAnswer: "North–North and South–South",
-    explanation: "Like poles always repel each other."
+    question: "Which pair of magnetic poles will attract each other?",
+    options: ["North Pole and North Pole", "South Pole and South Pole", "North Pole and South Pole", "Two North Poles of the same magnet"],
+    correctAnswer: "North Pole and South Pole",
+    explanation: "Unlike poles (North and South) attract each other."
   },
   {
     id: 3,
-    question: "Why is Magnet A placed on round pencils in this experiment?",
-    options: [
-      "To make the magnet stronger",
-      "To reduce friction and allow easy movement",
-      "To prevent the magnet from breaking",
-      "To act as insulators"
-    ],
-    correctAnswer: "To reduce friction and allow easy movement",
-    explanation: "The round pencils act as rollers, reducing friction so the magnetic force can easily push or pull the magnet."
+    question: "What property of a magnet helps identify its poles in this activity?",
+    options: ["Colour of the magnet", "Shape of the magnet", "Attraction and repulsion between magnets", "Weight of the magnet"],
+    correctAnswer: "Attraction and repulsion between magnets",
+    explanation: "By observing whether two poles attract or repel, the poles of a magnet can be identified."
   },
   {
     id: 4,
-    question: "True or False: Like poles attract each other.",
-    options: ["True", "False"],
-    correctAnswer: "False",
-    explanation: "False. Like poles repel each other. Unlike poles attract."
+    question: "A student observes that two poles of different magnets push each other away. What can be concluded?",
+    options: ["The magnets are not magnetic.", "The poles facing each other are unlike poles.", "The poles facing each other are like poles.", "The magnets have lost their magnetism."],
+    correctAnswer: "The poles facing each other are like poles.",
+    explanation: "Repulsion occurs only when like poles (North–North or South–South) face each other."
   },
   {
     id: 5,
-    question: "What happens when the South pole of one magnet approaches the North pole of another?",
-    options: [
-      "They repel and move apart",
-      "They attract and pull towards each other",
-      "They lose their magnetism",
-      "Nothing happens"
-    ],
-    correctAnswer: "They attract and pull towards each other",
-    explanation: "Because South and North are unlike poles, they exert an attractive force on each other."
+    question: "Which statement correctly describes the behaviour of magnetic poles?",
+    options: ["Like poles attract and unlike poles repel.", "All poles attract each other.", "Like poles repel and unlike poles attract.", "Magnetic poles neither attract nor repel."],
+    correctAnswer: "Like poles repel and unlike poles attract.",
+    explanation: "The fundamental property of magnets is that like poles repel, while unlike poles attract. This is confirmed through the activity."
   }
 ];
 
