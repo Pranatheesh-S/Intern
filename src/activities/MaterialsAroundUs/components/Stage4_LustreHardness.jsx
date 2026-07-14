@@ -7,8 +7,11 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
   const [lustreProgress, setLustreProgress] = useState({ iron: 0, copper: 0, wood: 0 });
   const [activeScrubTarget, setActiveScrubTarget] = useState(null);
 
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHoveringBench, setIsHoveringBench] = useState(false);
+
   // Hardness state
-  const [hardnessTests, setHardnessTests] = useState({}); // { brick: 'hard', sponge: 'soft', etc }
+  const [hardnessTests, setHardnessTests] = useState({});
   const [selectedHardnessObject, setSelectedHardnessObject] = useState(null);
 
   const lustreMaterials = {
@@ -25,13 +28,27 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
     { id: 'ironkey', name: 'Iron Bolt', correct: 'Hard', material: 'Iron metal', squeezeEffect: 'No effect', scratchEffect: 'Key slips off, no mark' }
   ];
 
-  const handleScrub = () => {
+  const handleMouseMove = (e) => {
     if (!activeScrubTarget) return;
+    
+    // Sandpaper tracking
+    const rect = e.currentTarget.getBoundingClientRect();
+    let clientX = e.clientX;
+    let clientY = e.clientY;
+    
+    if (e.touches && e.touches.length > 0) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    }
+    
+    setMousePos({ x: clientX - rect.left, y: clientY - rect.top });
+
+    // Progress logic
     setLustreProgress(prev => {
       const current = prev[activeScrubTarget];
       if (current >= 100) return prev;
-      const next = Math.min(current + 25, 100);
-      if (next === 100) {
+      const next = Math.min(current + 1.5, 100);
+      if (next === 100 && current < 100) {
         addXp(10);
       }
       return { ...prev, [activeScrubTarget]: next };
@@ -46,7 +63,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
     }
   };
 
-  const allLustrePolished = lustreProgress.iron === 100 && lustreProgress.copper === 100 && lustreProgress.wood >= 50; // wood is tested
+  const allLustrePolished = lustreProgress.iron === 100 && lustreProgress.copper === 100 && lustreProgress.wood === 100; // Require fully scrubbing wood too
   
   const correctHardnessCount = hardnessObjects.filter(obj => hardnessTests[obj.id] === obj.correct).length;
   const allHardnessTested = correctHardnessCount === hardnessObjects.length;
@@ -72,7 +89,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           </div>
 
           <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0 }}>
-            Select an item, then click the **Scrub with Sandpaper** button to scrape off the oxidized layer. Observe if it shines!
+            Select an item, then <strong>scrub it rapidly by moving your mouse (or finger) back and forth over it</strong> to scrape off the outer layer!
           </p>
 
           {/* Scrape Target Selectors */}
@@ -84,10 +101,10 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
                 <button
                   key={key}
                   onClick={() => setActiveScrubTarget(key)}
-                  className={activeScrubTarget === key ? 'outline active' : 'outline'}
+                  className={activeScrubTarget === key ? 'primary' : 'outline'}
                   style={{ fontSize: '0.75rem', padding: '0.5rem' }}
                 >
-                  {m.name} {progress === 100 ? '✨' : `(${progress}%)`}
+                  {m.name} {progress === 100 ? '✨' : ''}
                 </button>
               );
             })}
@@ -96,7 +113,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           {/* Active target visualization */}
           <div 
             style={{ 
-              height: '120px', 
+              height: '160px', 
               background: '#1e293b', 
               borderRadius: '12px', 
               display: 'flex', 
@@ -105,67 +122,100 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
               flexDirection: 'column',
               position: 'relative',
               overflow: 'hidden',
-              border: '1px solid rgba(255,255,255,0.06)'
+              border: '2px solid #334155',
+              cursor: activeScrubTarget && lustreProgress[activeScrubTarget] < 100 ? 'none' : 'default'
             }}
+            onMouseMove={handleMouseMove}
+            onTouchMove={handleMouseMove}
+            onMouseEnter={() => setIsHoveringBench(true)}
+            onMouseLeave={() => setIsHoveringBench(false)}
           >
             {activeScrubTarget ? (
               <>
-                <span style={{ fontSize: '0.7rem', color: '#94a3b8', position: 'absolute', top: '0.5rem' }}>Polishing Bench</span>
-                {/* Polish Progress bar */}
-                <div style={{ width: '80%', height: '24px', borderRadius: '12px', background: '#334155', position: 'relative', overflow: 'hidden', border: '2px solid #475569' }}>
-                  {/* Base Unpolished bar */}
+                <span style={{ fontSize: '0.7rem', color: '#94a3b8', position: 'absolute', top: '0.5rem' }}>Polishing Bench (Scrub Here!)</span>
+                
+                {/* Physical Object Representation */}
+                <div style={{ width: '70%', height: '50px', borderRadius: '8px', position: 'relative', overflow: 'hidden', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)' }}>
+                  
+                  {/* Shiny underlying layer (always on bottom) */}
                   <div 
                     style={{ 
                       position: 'absolute', 
-                      top: 0, 
-                      left: 0, 
-                      right: 0, 
-                      bottom: 0, 
+                      top: 0, left: 0, right: 0, bottom: 0, 
+                      background: lustreMaterials[activeScrubTarget].shinyColor,
+                      boxShadow: lustreProgress[activeScrubTarget] > 50 && lustreMaterials[activeScrubTarget].isMetal ? 'inset 0 0 20px rgba(255,255,255,0.8)' : 'none',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }} 
+                  >
+                     {lustreProgress[activeScrubTarget] === 100 && lustreMaterials[activeScrubTarget].isMetal && (
+                        <div style={{ color: '#fff', fontWeight: 'bold', textShadow: '0 0 5px rgba(0,0,0,0.8)', fontSize: '1.2rem', letterSpacing: '2px' }}>✨ LUSTROUS ✨</div>
+                     )}
+                     {lustreProgress[activeScrubTarget] === 100 && !lustreMaterials[activeScrubTarget].isMetal && (
+                        <div style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 'bold', fontSize: '1.1rem' }}>DULL (Non-lustrous)</div>
+                     )}
+                  </div>
+
+                  {/* Dull rusty layer on top (fades away as you scrub) */}
+                  <div 
+                    style={{ 
+                      position: 'absolute', 
+                      top: 0, left: 0, right: 0, bottom: 0, 
                       background: lustreMaterials[activeScrubTarget].baseColor,
-                      transition: 'background-color 0.3s'
+                      opacity: 1 - (lustreProgress[activeScrubTarget] / 100),
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      pointerEvents: 'none'
                     }} 
-                  />
-                  {/* Shining layer */}
-                  <div 
-                    style={{ 
-                      position: 'absolute', 
-                      top: 0, 
-                      left: 0, 
-                      width: `${lustreProgress[activeScrubTarget]}%`, 
-                      bottom: 0, 
-                      background: lustreMaterials[activeScrubTarget].shinyColor, 
-                      boxShadow: lustreProgress[activeScrubTarget] === 100 && lustreMaterials[activeScrubTarget].isMetal ? '0 0 15px #fff' : 'none',
-                      transition: 'width 0.3s, background-color 0.3s'
-                    }} 
-                  />
+                  >
+                    {/* Texture for rust/dullness */}
+                    <div style={{ width: '100%', height: '100%', opacity: 0.3, backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(0,0,0,0.5) 5px, rgba(0,0,0,0.5) 10px)' }}></div>
+                  </div>
                 </div>
                 
-                <button 
-                  onClick={handleScrub}
-                  disabled={lustreProgress[activeScrubTarget] === 100}
-                  className="primary" 
-                  style={{ marginTop: '0.75rem', padding: '0.35rem 1rem', fontSize: '0.75rem' }}
-                >
-                  Scrub with Sandpaper
-                </button>
+                {/* Custom Sandpaper Cursor */}
+                {isHoveringBench && lustreProgress[activeScrubTarget] < 100 && (
+                  <div style={{ 
+                    position: 'absolute', 
+                    left: mousePos.x - 20, 
+                    top: mousePos.y - 20, 
+                    width: '40px', 
+                    height: '30px', 
+                    background: '#d97706', // Sandpaper color
+                    border: '2px solid #92400e',
+                    borderRadius: '4px',
+                    pointerEvents: 'none',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transform: `rotate(${mousePos.x % 15 - 7}deg)` // Adds slight rotation based on movement
+                  }}>
+                     <div style={{ width: '100%', height: '100%', opacity: 0.4, backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '4px 4px' }}></div>
+                  </div>
+                )}
+                
+                <div style={{ position: 'absolute', bottom: '0.5rem', fontSize: '0.75rem', color: lustreProgress[activeScrubTarget] === 100 ? 'var(--success)' : '#cbd5e1' }}>
+                  Rust Removed: {Math.floor(lustreProgress[activeScrubTarget])}%
+                </div>
               </>
             ) : (
-              <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Select a target above to polish</span>
+              <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Select an item from the tray above</span>
             )}
           </div>
 
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: '1.4', minHeight: '40px' }}>
             {activeScrubTarget && lustreProgress[activeScrubTarget] === 100 ? (
               lustreMaterials[activeScrubTarget].isMetal ? (
                 <div style={{ color: 'var(--success)' }}>
                   <strong>Metal shines!</strong> Scraping away the outer corrosion reveals the underlying <strong>lustrous</strong> metal.
                 </div>
               ) : (
-                <div>
+                <div style={{ color: 'var(--text-secondary)' }}>
                   <strong>No shine:</strong> Wood does not possess a shiny surface, making it <strong>non-lustrous</strong>.
                 </div>
               )
-            ) : null}
+            ) : (
+               activeScrubTarget ? "Move your mouse back and forth inside the box to scrub!" : ""
+            )}
           </div>
         </div>
 

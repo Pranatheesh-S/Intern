@@ -5,12 +5,13 @@ import { Target, Search, ArrowRight, CheckCircle } from 'lucide-react';
 export default function Stage_SportsBall({ onComplete, addXp }) {
   const [activeBall, setActiveBall] = useState(null);
   const [inspected, setInspected] = useState({});
+  const [dropState, setDropState] = useState('reset'); // 'reset' or 'dropping'
 
   const balls = [
     {
       id: 'tennis',
       name: 'Tennis Ball',
-      emoji: '🎾',
+      emoji: '🥎',
       material: 'Rubber & Felt',
       hardness: 'Medium (Squeezable)',
       weight: 'Light',
@@ -19,7 +20,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
     {
       id: 'cricket',
       name: 'Cricket Ball',
-      emoji: '🏏',
+      emoji: '🔴',
       material: 'Leather & Cork',
       hardness: 'Very Hard',
       weight: 'Heavy',
@@ -28,11 +29,11 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
     {
       id: 'exercise',
       name: 'Exercise Ball',
-      emoji: '🎈', // using balloon as a close representation, or just a custom circle
-      material: 'Soft PVC / Rubber',
-      hardness: 'Soft & Flexible',
-      weight: 'Heavy (but low density)',
-      purpose: 'Body support, low impact bounce'
+      emoji: '🟡',
+      material: 'Soft Sponge / Foam',
+      hardness: 'Very Soft & Flexible',
+      weight: 'Light (low density)',
+      purpose: 'Hand exercise, stress relief'
     }
   ];
 
@@ -130,6 +131,16 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
                           <div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: 'var(--accent)', marginTop: '0.25rem' }}>{ball.purpose}</div>
                         </div>
                       </div>
+
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        style={{ marginTop: '0.5rem', padding: '0.85rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px dashed var(--accent)', borderRadius: '8px', color: 'var(--accent)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                      >
+                        <span style={{ fontSize: '1.2rem' }}>👇</span> 
+                        <span><strong>Detective Task:</strong> Scroll down to the <strong>Drop Test</strong> below to observe how this material's hardness physically affects its bounce!</span>
+                      </motion.div>
                     </>
                   );
                 })()}
@@ -142,6 +153,71 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
             )}
           </AnimatePresence>
         </div>
+      </div>
+
+      {/* Bounce Comparison Animation */}
+      <div className="glass-panel" style={{ background: 'var(--neutral-bg)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', padding: '1.5rem' }}>
+        <h4 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1rem' }}>Drop Test: Bounce Comparison</h4>
+        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Observe how the material's hardness affects its bounce height when dropped from the same level.</p>
+        
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+          <button 
+            onClick={() => setDropState('dropping')} 
+            disabled={dropState === 'dropping'}
+            className="primary" 
+            style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}
+          >
+            Drop Balls
+          </button>
+          <button 
+            onClick={() => setDropState('reset')} 
+            disabled={dropState === 'reset'}
+            className="outline" 
+            style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}
+          >
+            Reset
+          </button>
+        </div>
+
+        <svg width="100%" style={{ maxWidth: '500px' }} height="180px" viewBox="0 0 300 180">
+          {/* Ground */}
+          <line x1="20" y1="150" x2="280" y2="150" stroke="var(--border)" strokeWidth="4" strokeLinecap="round" />
+          
+          {/* Tennis Ball */}
+          <g>
+            <text x="60" y="170" fontSize="12" fill="var(--text-muted)" textAnchor="middle">Tennis Ball</text>
+            <motion.g 
+              animate={dropState === 'dropping' ? { y: [0, 120, 30, 120, 60, 120, 90, 120, 105, 120, 115, 120, 120] } : { y: 0 }} 
+              transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
+            >
+              <circle cx="60" cy="15" r="15" fill="#a3e635" />
+              <path d="M 48,8 Q 55,15 48,22 M 72,8 Q 65,15 72,22" stroke="#fff" strokeWidth="1.5" fill="none" opacity="0.7" />
+            </motion.g>
+          </g>
+
+          {/* Cricket Ball */}
+          <g>
+            <text x="150" y="170" fontSize="12" fill="var(--text-muted)" textAnchor="middle">Cricket Ball</text>
+            <motion.g 
+              animate={dropState === 'dropping' ? { y: [0, 120, 110, 120, 115, 120, 120, 120, 120, 120, 120, 120, 120] } : { y: 0 }} 
+              transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
+            >
+              <circle cx="150" cy="15" r="15" fill="#dc2626" />
+              <line x1="150" y1="0" x2="150" y2="30" stroke="#fff" strokeWidth="2" strokeDasharray="3,2" opacity="0.8" />
+            </motion.g>
+          </g>
+
+          {/* Sponge Ball */}
+          <g>
+            <text x="240" y="170" fontSize="12" fill="var(--text-muted)" textAnchor="middle">Sponge Ball</text>
+            <motion.g 
+              animate={dropState === 'dropping' ? { y: [0, 120, 80, 120, 100, 120, 110, 120, 115, 120, 120, 120, 120] } : { y: 0 }} 
+              transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
+            >
+              <circle cx="240" cy="15" r="15" fill="#fbbf24" />
+            </motion.g>
+          </g>
+        </svg>
       </div>
 
       {allInspected && (
