@@ -60,6 +60,7 @@ const MaterialsAroundUsActivity = lazy(() => import('./activities/MaterialsAroun
 const Activity4_1 = lazy(() => import('./activities/Activity4_1'));
 const Activity4_6 = lazy(() => import('./activities/Activity4_6'));
 const Activity4_7 = lazy(() => import('./activities/Activity4_7'));
+const FunWithMagnets = lazy(() => import('./activities/FunWithMagnets'));
 const Chapter4Flow = lazy(() => import('./activities/Chapter4Flow'));
 const IntroMagnets = lazy(() => import('./activities/IntroMagnets'));
 const AppreciatingBiodiversityActivity = lazy(() => import('./activities/AppreciatingBiodiversityActivity'));
@@ -4189,6 +4190,8 @@ export default function App() {
             <Activity4_6 onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow', 'act-4-7')} />
           ) : activeActivity === 'activity_4_7' ? (
             <Activity4_7 onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow')} />
+          ) : activeActivity === 'sci6-ch4-sec45-fun-with-magnets' ? (
+            <FunWithMagnets onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow')} />
           ) : activeActivity === 'linear_motion' ? (
             <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
           ) : activeActivity === 'circular_motion' ? (
