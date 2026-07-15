@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 4.4: Compass in a Bowl</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --north: #ef4444;
+            --south: #3b82f6;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 0%, #1e293b, #0f172a 70%);
+        }
+
+        .simulation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 15px rgba(56, 189, 248, 0.2);
+        }
+
+        p.instruction {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .scene {
+            width: 400px;
+            height: 400px;
+            perspective: 1200px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 500px) {
+            .scene { transform: scale(0.85); }
+        }
+        @media (max-width: 400px) {
+            .scene { transform: scale(0.75); }
+        }
+
+        .bowl-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform: rotateX(60deg);
+        }
+
+        .directions-3d {
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transform-style: preserve-3d;
+            pointer-events: none;
+        }
+
+        .dir {
+            position: absolute;
+            font-size: 26px;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 4px 15px rgba(0,0,0,0.8), 0 0 10px rgba(255,255,255,0.2);
+            transform-style: preserve-3d;
+        }
+
+        /* Orient letters to face camera */
+        .dir-n { top: -10px; left: 50%; transform: translateX(-50%) rotateX(-60deg); color: var(--north); }
+        .dir-s { bottom: -10px; left: 50%; transform: translateX(-50%) rotateX(-60deg); }
+        .dir-e { top: 50%; right: -10px; transform: translateY(-50%) rotateX(-60deg); }
+        .dir-w { top: 50%; left: -10px; transform: translateY(-50%) rotateX(-60deg); }
+
+        .bowl {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), rgba(0,0,0,0.4));
+            box-shadow: 
+                0 30px 50px rgba(0,0,0,0.9),
+                0 0 40px rgba(56, 189, 248, 0.1),
+                inset 0 0 20px rgba(255,255,255,0.2),
+                inset 0 10px 30px rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            /* backdrop-filter: blur(8px); removed to not distort the belly behind it too much */
+            transform-style: preserve-3d;
+        }
+
+        .bowl-belly-glass {
+            position: absolute;
+            width: 320px;
+            height: 160px;
+            left: 40px; /* Centered in 400px scene: (400-320)/2 */
+            top: 200px; /* Starts exactly at the equator */
+            border-bottom-left-radius: 160px;
+            border-bottom-right-radius: 160px;
+            /* Removed the white gradient mist */
+            background: rgba(0,0,0,0.2);
+            box-shadow: 
+                inset 0 -5px 15px rgba(0,0,0,0.3),
+                0 30px 40px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: none;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+
+        .bowl-belly-water {
+            position: absolute;
+            width: 296px; /* Inside the glass belly */
+            height: 148px;
+            left: 52px;
+            top: 200px;
+            border-bottom-left-radius: 148px;
+            border-bottom-right-radius: 148px;
+            background: linear-gradient(180deg, #38bdf8, #0284c7);
+            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.4);
+            z-index: 2;
+        }
+
+        .water-bottom {
+            /* Since we are using the 2.5D belly, we don't need a dark bottom on the 3D plane, 
+               or we can keep it translucent. Let's make it fully transparent so we can see the belly. */
+            display: none;
+        }
+
+        .water {
+            position: absolute;
+            width: 96%;
+            height: 96%;
+            left: 2%;
+            top: 2%;
+            border-radius: 50%;
+            /* Make surface more translucent so belly shows through */
+            background: radial-gradient(circle at 40% 40%, rgba(56, 189, 248, 0.2) 0%, rgba(2, 132, 199, 0.4) 100%);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transform: translateZ(0px);
+            transform-style: preserve-3d;
+        }
+
+        .water-surface {
+            position: absolute;
+            width: 96%;
+            height: 96%;
+            left: 2%;
+            top: 2%;
+            border-radius: 50%;
+            /* Removed the white mist background */
+            background: transparent;
+            pointer-events: none;
+            transform: translateZ(1px);
+        }
+
+        .bowl-rim {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid rgba(255,255,255,0.2);
+            box-sizing: border-box;
+            box-shadow: 
+                inset 0 0 10px rgba(255,255,255,0.3),
+                0 0 15px rgba(255,255,255,0.2);
+            transform: translateZ(8px);
+            pointer-events: none;
+        }
+
+        /* Cork & Needle */
+        .cork-assembly {
+            position: absolute;
+            width: 0;
+            height: 0;
+            left: 50%;
+            top: 50%;
+            transform-style: preserve-3d;
+        }
+
+        #cork-spin {
+            position: absolute;
+            width: 0;
+            height: 0;
+            transform-style: preserve-3d;
+            transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        #cork-wobble {
+            position: absolute;
+            width: 0;
+            height: 0;
+            transform-style: preserve-3d;
+        }
+
+        #cork-bobbing {
+            position: absolute;
+            width: 0;
+            height: 0;
+            transform-style: preserve-3d;
+            animation: gentle-bob 4s infinite ease-in-out;
+        }
+
+        #cork-bobbing.active {
+            animation: active-bob 3s ease-in-out forwards;
+        }
+
+        .cork-layer {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            left: -30px;
+            top: -30px;
+            border-radius: 50%;
+            background: #8b5a2b;
+        }
+        .layer-0 { transform: translateZ(0px); box-shadow: 0 0 15px rgba(0,0,0,0.6); background: #5c3a21; }
+        .layer-1 { transform: translateZ(1px); }
+        .layer-2 { transform: translateZ(2px); }
+        .layer-3 { transform: translateZ(3px); }
+        .layer-4 { transform: translateZ(4px); }
+        .layer-5 { transform: translateZ(5px); }
+        .layer-6 { transform: translateZ(6px); }
+        .layer-7 { transform: translateZ(7px); }
+        .layer-8 { transform: translateZ(8px); }
+        .layer-9 { 
+            transform: translateZ(9px); 
+            background: #d4a373;
+            background-image: 
+                radial-gradient(#e6ccb2 15%, transparent 15%),
+                radial-gradient(#8b5a2b 15%, transparent 15%);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+            border: 1px solid #734a21;
+            box-sizing: border-box;
+        }
+
+        .needle {
+            position: absolute;
+            width: 130px;
+            height: 12px;
+            left: -65px;
+            top: -6px;
+            transform: translateZ(10px) rotateZ(90deg);
+            transform-style: preserve-3d;
+            display: flex;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+        }
+
+        .needle-half {
+            width: 50%;
+            height: 100%;
+        }
+
+        .north {
+            background: linear-gradient(135deg, #f87171, #dc2626);
+            clip-path: polygon(0 50%, 100% 0, 100% 100%);
+        }
+
+        .south {
+            background: linear-gradient(135deg, #60a5fa, #2563eb);
+            clip-path: polygon(100% 50%, 0 0, 0 100%);
+        }
+
+        .needle-cap {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateZ(2px);
+            background: radial-gradient(circle at 30% 30%, #f1f5f9, #64748b);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .hit-area {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            left: -70px;
+            top: -70px;
+            border-radius: 50%;
+            transform: translateZ(20px);
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes gentle-bob {
+            0%, 100% { transform: translateZ(0px) rotateX(0deg) rotateY(0deg); }
+            50% { transform: translateZ(3px) rotateX(3deg) rotateY(-2deg); }
+        }
+
+        @keyframes active-bob {
+            0% { transform: translateZ(0px) rotateX(0deg) rotateY(0deg); }
+            10% { transform: translateZ(-4px) rotateX(6deg) rotateY(4deg); }
+            25% { transform: translateZ(6px) rotateX(-5deg) rotateY(-5deg); }
+            45% { transform: translateZ(-2px) rotateX(3deg) rotateY(2deg); }
+            70% { transform: translateZ(2px) rotateX(-1deg) rotateY(-1deg); }
+            100% { transform: translateZ(0px) rotateX(0deg) rotateY(0deg); }
+        }
+
+        @keyframes magnet-wobble {
+            0% { transform: rotateZ(0deg); }
+            40% { transform: rotateZ(0deg); } 
+            55% { transform: rotateZ(18deg); } 
+            75% { transform: rotateZ(-8deg); } 
+            88% { transform: rotateZ(3deg); } 
+            100% { transform: rotateZ(0deg); } 
+        }
+
+        .wobbling {
+            animation: magnet-wobble 3.5s ease-in-out forwards;
+        }
+
+        .ripple {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.5);
+            box-shadow: 0 0 10px rgba(255,255,255,0.2), inset 0 0 10px rgba(255,255,255,0.2);
+            opacity: 0;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes ripple-anim {
+            0% {
+                width: 70px;
+                height: 70px;
+                opacity: 0.8;
+                border-width: 4px;
+            }
+            100% {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        .ripple.active {
+            animation: ripple-anim 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="simulation-container">
+        <header>
+            <h1>Compass in a Bowl</h1>
+            <p class="instruction">Click the floating cork to disturb the compass and observe how it naturally aligns back to North.</p>
+        </header>
+
+        <div class="scene">
+            <!-- 2.5D Volumetric Belly -->
+            <div class="bowl-belly-glass"></div>
+            <div class="bowl-belly-water"></div>
+
+            <div class="bowl-wrapper" style="z-index: 3;">
+                
+                <div class="directions-3d">
+                    <div class="dir dir-n">N</div>
+                    <div class="dir dir-e">E</div>
+                    <div class="dir dir-s">S</div>
+                    <div class="dir dir-w">W</div>
+                </div>
+
+                <div class="bowl">
+                    <div class="water-bottom"></div>
+                    <div class="water" id="water-container">
+                        <!-- Ripples will be injected here -->
+                    </div>
+                    <div class="water-surface"></div>
+                    <div class="bowl-rim"></div>
+
+                    <div class="cork-assembly">
+                        <div id="cork-spin">
+                            <div id="cork-wobble">
+                                <div id="cork-bobbing">
+                                    <div class="cork-layer layer-0"></div>
+                                    <div class="cork-layer layer-1"></div>
+                                    <div class="cork-layer layer-2"></div>
+                                    <div class="cork-layer layer-3"></div>
+                                    <div class="cork-layer layer-4"></div>
+                                    <div class="cork-layer layer-5"></div>
+                                    <div class="cork-layer layer-6"></div>
+                                    <div class="cork-layer layer-7"></div>
+                                    <div class="cork-layer layer-8"></div>
+                                    <div class="cork-layer layer-9"></div>
+                                    
+                                    <div class="needle">
+                                        <div class="needle-half north"></div>
+                                        <div class="needle-half south"></div>
+                                        <div class="needle-cap"></div>
+                                    </div>
+
+                                    <div class="hit-area" id="hit-area"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentAngle = 0;
+        let isAnimating = false;
+
+        const hitArea = document.getElementById('hit-area');
+        const corkSpin = document.getElementById('cork-spin');
+        const corkWobble = document.getElementById('cork-wobble');
+        const corkBobbing = document.getElementById('cork-bobbing');
+        const waterContainer = document.getElementById('water-container');
+
+        function createRipple() {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple active';
+            waterContainer.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 2500);
+        }
+
+        hitArea.addEventListener('click', () => {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            // 1. Trigger ripple
+            createRipple();
+
+            // 2. Calculate new rotation (spin multiple times and land back on North)
+            const spins = 2 + Math.floor(Math.random() * 2); // 2 or 3 spins
+            currentAngle += 360 * spins;
+            corkSpin.style.transform = `rotateZ(${currentAngle}deg)`;
+
+            // 3. Trigger magnetic wobble
+            corkWobble.classList.remove('wobbling');
+            void corkWobble.offsetWidth; // Reflow to restart animation
+            corkWobble.classList.add('wobbling');
+
+            // 4. Trigger active bobbing
+            corkBobbing.classList.remove('active');
+            void corkBobbing.offsetWidth;
+            corkBobbing.classList.add('active');
+
+            // 5. Reset animating flag after full animation (3.5s)
+            setTimeout(() => {
+                isAnimating = false;
+                corkBobbing.classList.remove('active');
+            }, 3500);
+        });
+    </script>
+</body>
+</html>

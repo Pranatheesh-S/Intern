@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuturaX Lab · Exploring Magnets — The Opening · Grade 6</title>
+<style>
+:root{
+  --bg:#0B1026;--bg2:#0E1430;--panel:#151C3D;--panel2:#1B2350;--line:#2A3468;
+  --ink:#EAF0FF;--mut:#9AA6D6;--dim:#6C77A8;--indigo:#7C9EFF;--gold:#FFC24D;
+  --mint:#5CE1B9;--coral:#FF7A6E;--red:#F0655F;--blue:#5D9BF0;
+  --shadow:0 10px 30px rgba(3,6,20,.55);--r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+ background:radial-gradient(1100px 560px at 85% -10%,#1A2456 0%,transparent 60%),
+ radial-gradient(900px 500px at -10% 110%,#131B44 0%,transparent 55%),var(--bg);
+ color:var(--ink);min-height:100vh;padding-bottom:44px}
+.wrap{max-width:900px;margin:0 auto;padding:18px 16px 0}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--indigo),#4A66D8);
+ display:grid;place-items:center;font-weight:800;color:#0B1026;font-size:17px}
+.meta{font-size:12px;color:var(--mut)}.meta b{color:var(--ink);font-size:13.5px;display:block}
+.spacer{flex:1}
+.xp{background:linear-gradient(135deg,#2A2140,#3A2C14);border:1px solid #6E5518;color:var(--gold);
+ padding:7px 14px;border-radius:999px;font-weight:700;font-size:13px;display:flex;gap:7px;align-items:center;box-shadow:var(--shadow)}
+.xp .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.stepper{display:flex;gap:5px;margin:6px 0 4px}
+.stepper .st{flex:1;height:7px;border-radius:99px;background:var(--panel);border:1px solid var(--line)>
+.stepper .st.done{background:linear-gradient(90deg,var(--indigo),var(--mint));border-color:transparent}
+.stepper .st.cur{background:var(--indigo);box-shadow:0 0 12px rgba(124,158,255,.6);border-color:transparent}
+.stepper .st.visited{cursor:pointer}
+.steplabel{font-size:11px;color:var(--dim);text-align:right;margin-bottom:10px;letter-spacing:1.2px}
+.card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);
+ padding:26px;box-shadow:var(--shadow);animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.kicker{font-size:11px;letter-spacing:3px;color:var(--indigo);font-weight:700;margin-bottom:8px}
+h1{font-size:24px;line-height:1.25;margin-bottom:8px;font-weight:800}
+h2{font-size:16px;margin:14px 0 8px;font-weight:800}
+p.lead{color:var(--mut);font-size:14.5px;line-height:1.65;max-width:640px}
+p.note{color:var(--dim);font-size:12.5px;margin-top:10px;line-height:1.5}
+.hr{height:1px;background:var(--line);margin:16px 0}
+.btn{border:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;
+ background:linear-gradient(135deg,var(--indigo),#5A78E8);color:#0B1026;transition:transform .12s,filter .2s}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--mut);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--indigo);color:var(--ink)}
+.btnrow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;align-items:center}
+.choices{display:grid;gap:9px;margin-top:12px}
+.choice{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:12px 14px;cursor:pointer;
+ font-size:13.5px;color:var(--ink);text-align:left;transition:all .15s;display:flex;gap:10px;align-items:center}
+.choice:hover{border-color:var(--indigo)}
+.choice .key{width:23px;height:23px;border-radius:6px;background:var(--bg);border:1px solid var(--line);
+ display:grid;place-items:center;font-size:12px;color:var(--mut);flex:0 0 23px}
+.choice.right{border-color:var(--mint);background:rgba(92,225,185,.1)}.choice.right .key{background:var(--mint);color:#062;border-color:transparent}
+.choice.wrong{border-color:var(--coral);background:rgba(255,122,110,.08)}.choice.wrong .key{background:var(--coral);color:#500;border-color:transparent}
+.choice.lock{pointer-events:none}
+.reveal{margin-top:12px;background:rgba(92,225,185,.07);border:1px solid rgba(92,225,185,.35);border-radius:11px;
+ padding:13px 15px;font-size:13px;line-height:1.6;display:none;animation:pop .3s}
+.reveal.show{display:block}.reveal b{color:var(--mint)}
+.reveal.warn{background:rgba(255,194,77,.06);border-color:rgba(255,194,77,.4)}.reveal.warn b{color:var(--gold)}
+.sim{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:12px}
+canvas{display:block;width:100%;border-radius:10px;background:#080C1E;touch-action:none}
+.barmag{display:inline-flex;height:26px;border-radius:6px;overflow:hidden;border:1px solid #00000055;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.barmag .n{background:linear-gradient(180deg,#F07070,#C74444);color:#fff;font-weight:800;display:grid;place-items:center;padding:0 12px}
+.barmag .s{background:linear-gradient(180deg,#7FB2F0,#4477C7);color:#fff;font-weight:800;display:grid;place-items:center;padding:0 12px}
+/* everyday items scavenger */
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px;margin-top:12px}
+.item{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:12px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.item:hover{border-color:var(--indigo)}.item .emo{font-size:26px}.item .t{font-size:11.5px;margin-top:6px;font-weight:600}
+.item .r{font-size:10.5px;margin-top:4px;min-height:14px;font-weight:700}
+.item.hasM{border-color:var(--minu);background:rgba(92,225,185,.08)}.item.hasM .r{color:var(--mint)}
+.item.noM{opacity:.7}.item.noM .r{color:var(--coral)}.item.done{pointer-events:none}
+.item .emo.wob{animation:wob .5s}@keyframes wob{0%,100%{transform:rotate(0)}30%{transform:rotate(-9deg)}70%{transform:rotate(9deg)}}
+/* shapes */
+.shapes{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:12px}
+.shape{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:14px;text-align:center;cursor:pointer;transition:all .2s}
+.shape:hover{border-color:var(--indigo);transform:translateY(-2px)}.shape.open{border-color:var(--minu);background:#12213F}
+.shape .sv{height:52px;display:flex;align-items:center;justify-content:center;font-size:38px}
+.shape .nm{font-size:13px;font-weight:700}.shape .po{font-size:11px;color:var(--mut);margin-top:5px;display:none;line-height:1.4}.shape.open .po{display:block;animation:pop .25s}
+.shape .chk{color:var(--mint);opacity:0;font-size:12px}.shape.open .chk{opacity:1}
+/* timeline */
+.tl{display:grid;gap:9px;margin-top:12px}
+.tlrow{display:flex;gap:12px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.tlrow .dot{width:12px;height:12px;border-radius:50%;background:var(--indigo);margin-top:3px;flex:0 0 12px}
+.tlrow b{color:var(--ink);font-size:13px}.tlrow span{color:var(--mut);font-size:12.5px}
+/* question difficulty */
+.qbadge{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:1px;padding:4px 10px;border-radius:99px;margin-bottom:8px}
+.qbadge.easy{background:rgba(92,225,185,.12);color:var(--mint);border:1px solid rgba(92,225,185,.4)}
+.qbadge.med{background:rgba(255,194,77,.12);color:var(--gold);border:1px solid rgba(255,194,77,.4)}
+.qbadge.hard{background:rgba(255,122,110,.12);color:var(--coral);border:1px solid rgba(255,122,110,.4)}
+.badge{display:inline-flex;align-items:center;gap:9px;background:rgba(255,194,77,.09);border:1px solid rgba(255,194,77,.5);
+ color:var(--gold);border-radius:12px;padding:9px 15px;font-weight:800;font-size:14px;margin-top:12px}
+.big{font-size:38px;font-weight:800;background:linear-gradient(135deg,var(--gold),#3FF9F45);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sumgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:14px}
+.sum{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:13px}
+.sum b{display:block;font-size:13px;margin-bottom:4px;color:var(--indigo)}.sum span{font-size:12px;color:var(--mut);line-height:1.5}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1B2350;border:1px solid var(--gold);
+ color:var(--gold);font-weight:700;font-size:13px;border-radius:99px;padding:9px 18px;transition:transform .3s;z-index:50;box-shadow:var(--shadow)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:640px){h1{font-size:20px}.card{padding:18px 14px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">Fx</div>
+    <div class="meta"><b>Exploring Magnets · The Opening</b>FuturaX Lab · Science · Grade 6 · Chapter 4 (pages 61–62)</div>
+    <div class="spacer"></div>
+    <div class="xp"><span class="dot"></span><span id="xpVal">0</span> XP</div>
+  </header>
+  <div class="stepper" id="stepper"></div>
+  <div class="steplabel" id="stepLabel"></div>
+  <main id="stage"></main>
+</div>
+<div class="toast" id="toast">+10 XP</div>
+
+<script>
+"use strict";
+const LAB_ID="sci6-ch4-opening-spread";
+function emit(t,d={}){const p={lab:LAB_ID,type:t,...d,ts:Date.now()};
+ window.dispatchEvent(new CustomEvent("futura:lab",{detail:p}));
+ try{if(window.parent!==window)window.parent.postMessage({channel:"futura:lab",payload:p},"*");}catch(e){}}
+const S={step:0,xp:0,visited:new Set([0]),items:new Set(),shapes:new Set(),
+ qEasy:false,qMed:false,qHard:false,score:0};
+const STEPS=["Reshma's Problem","Magnets Around Us","Where Magnets Come From","Many Shapes","Easy","Medium","Hard"];
+function addXP(n,l){S.xp+=n;document.getElementById("xpVal").textContent=S.xp;
+ const t=document.getElementById("toast");t.textContent="+"+n+" XP"+(l?" · "+l:"");
+ t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),1400);
+ emit("xp",{amount:n,total:S.xp,label:l});}
+function drawStepper(){const el=document.getElementById("stepper");el.innerHTML="";
+ STEPS.forEach((nm,i)=>{const d=document.createElement("div");
+  d.className="st"+(i<S.step?" done":"")+(i===S.step?" cur":"")+(S.visited.has(i)?" visited":"");
+  d.title=(i+1)+". "+nm;if(S.visited.has(i))d.onclick=()=>go(i);el.appendChild(d);});
+ document.getElementById("stepLabel").textContent="STEP "+(S.step+1)+" OF "+STEPS.length+" · "+STEPS[S.step].toUpperCase();}
+function go(i){stopAll();S.step=i;S.visited.add(i);drawStepper();render();emit("step",{index:i,name:STEPS[i]});window.scrollTo({top:0,behavior:"smooth"});}
+function nav(ok,l){return `<div class="btnrow">
+  ${S.step>0?`<button class="btn ghost" onclick="go(${S.step-1})">Back</button>`:""}
+  ${S.step<STEPS.length-1?`<button class="btn" id="nextBtn" ${ok?"":"disabled"} onclick="go(${S.step+1})">${l||"Continue"}</button>`:""}
+</div>`;}
+function enableNext(){const b=document.getElementById("nextBtn");if(b)b.disabled=false;}
+let anims=[];function stopAll(){anims.forEach(a=>{cancelAnimationFrame(a);clearInterval(a);});anims=[];}
+function pickQ(el,ok,rid,xp,flag){const p=el.parentElement;if(p.dataset.done)return;p.dataset.done="1";
+ [...p.children].forEach(c=>c.classList.add("lock"));el.classList.add(ok?"right":"wrong");
+ if(!ok)[...p.children].forEach(c=>{if(c.dataset.ok==="1")c.classList.add("right");});
+ document.getElementById(rid).classList.add("show");
+ if(ok){S.score++;addXP(xp,"correct");}S[flag]=true;enableNext();
+ emit("quiz-answer",{q:flag,correct:ok});}
+
+const R=[];
+
+/* ---- 1 · Reshma's problem (concept: why a compass, the story hook) ---- */
+R[0]=()=>`
+<div class="card">
+  <div class="kicker">PAGE 61 · RESHMA'S STORY</div>
+  <h1>A storm hides the stars. Now what?</h1>
+  <p class="lead">Reshma, from a coastal town in Kerala, is writing a story for her grandmother's 60th birthday. It's about an old ship carrying spices. In the olden days sailors steered by the <b>stars</b> &mdash; but in Reshma's story a storm rolls in and hides every star. She's stuck: how can the sailors still find their direction? Predict, the way Reshma had to.</p>
+  <div class="choices">
+    <button class="choice" data-ok="0" onclick="pickHook(this,false)"><span class="key">A</span>Steer by the direction of the waves</button>
+    <button class="choice" data-ok="0" onclick="pickHook(this,false)"><span class="key">B</span>Stop the ship and wait days for clear skies</button>
+    <button class="choice" data-ok="1" onclick="pickHook(this,true)"><span class="key">C</span>Use a device with a needle that always points one way</button>
+    <button class="choice" data-ok="0" onclick="pickHook(this,false)"><span class="key">D</span>There is simply no way</button>
+  </div>
+  <div class="reveal" id="rh"><b>A magnetic compass.</b> When Reshma searched her library and the internet, she learned that travellers used this small device to find directions &mdash; even with no stars in sight. That single idea is what makes her whole story possible, and it's what this chapter is about. Curious like Reshma? Let's look at magnets properly.</div>
+  ${nav(false,"Explore with Reshma")}
+</div>`;
+function pickHook(el,ok){const p=el.parentElement;[...p.children].forEach(c=>c.classList.add("lock"));
+ el.classList.add(ok?"right":"wrong");if(!ok)[...p.children].forEach(c=>{if(c.dataset.ok==="1")c.classList.add("right");});
+ document.getElementById("rh").classList.add("show");if(ok)addXP(10,"like Reshma");enableNext();}
+
+/* ---- 2 · Magnets around us (concept: they're everywhere; Fig 4.1) ---- */
+const ITEMS=[
+ ["📥","Pencil-box clasp",true,"Keeps the lid snapped shut."],
+ ["👜","Purse / bag clip",true,"The 'click' when it closes is a magnet."],
+ ["🧹","Board duster",true,"Sticks to the metal writing board."],
+ ["🧊","Fridge sticker",true,"Holds your drawings on the fridge door."],
+ ["🎮","Toy / game piece",true,"Many toys hide tiny magnets."],
+ ["📕","Paper notebook",false,"Just paper — no magnet."],
+ ["🍶","Clay pot",false,"Baked clay — not magnetic."],
+ ["🪵","Wooden ruler",false,"Wood holds no magnet."]
+];
+R[1]=()=>`
+<div class="card">
+  <div class="kicker">PAGE 61–62 · MAGNETS ARE EVERYWHERE (FIG 4.2)</div>
+  <h1>Reshma looks around&hellip; and finds magnets hiding.</h1>
+  <p class="lead">Once curious, Reshma noticed magnets in things she used every day but had never looked at carefully. Tap each object &mdash; does it have a hidden magnet, or not? Find all 5 that do.</p>
+  <div class="sim">
+    <div class="items">
+      ${ITEMS.map((it,i)=>`<div class="item" id="it${i}" onclick="tapItem(${i})"><div class="emo" id="ie${i}">${it[0]}</div><div class="t">${it[1]}</div><div class="r" id="ir${i}"></div></div>`).join("")}
+    </div>
+    <p class="note" id="itNote">Magnets found: 0 / 5</p>
+  </div>
+  <div class="reveal" id="r1"><b>Magnets hide in plain sight.</b> Pencil boxes, purse clasps, the board duster, fridge stickers, toys &mdash; all use small magnets. The trick is to look carefully, the way a scientist does. Paper, clay and wood have none. Being <i>curious</i> about ordinary things is exactly how Reshma's investigation &mdash; and real science &mdash; begins.</div>
+  ${nav(S.items.size>=5)}
+</div>`;
+function tapItem(i){const it=ITEMS[i],el=document.getElementById("it"+i);if(el.classList.contains("done"))return;
+ el.classList.add("done");document.getElementById("ie"+i).classList.add("wob");
+ setTimeout(()=>{el.classList.add(it[2]?"hasM":"noM");document.getElementById("ir"+i).textContent=it[2]?"has a magnet!":"no magnet";},200);
+ if(it[2]){S.items.add(i);addXP(4,"found one");}
+ document.getElementById("itNote").textContent="Magnets found: "+S.items.size+" / 5";
+ if(S.items.size>=5){document.getElementById("r1").classList.add("show");enableNext();addXP(8,"all found");}}
+
+/* ---- 3 · Where magnets come from (concept: lodestone -> artificial) ---- */
+R[2]=()=>`
+<div class="card">
+  <div class="kicker">PAGE 62 · NATURAL vs ARTIFICIAL MAGNETS</div>
+  <h1>Where do magnets come from?</h1>
+  <p class="lead">Magnets have a long story. Tap through it in order:</p>
+  <div class="tl" id="tl">
+    <div class="tlrow" style="opacity:.35" id="tl0"><span class="dot"></span><div><b>Ancient times — lodestones</b><br><span>People discovered <b>lodestones</b>: naturally occurring rocks that were already magnetic. The first sailors' compasses used these.</span></div></div>
+    <div class="tlrow" style="opacity:.35" id="tl1"><span class="dot"></span><div><b>Later — magnets from iron</b><br><span>People learned that magnets could also be <b>made</b> from pieces of iron. No need to find a magic rock anymore.</span></div></div>
+    <div class="tlrow" style="opacity:.35" id="tl2"><span class="dot"></span><div><b>Today — artificial magnets everywhere</b><br><span>The magnets in your school lab, pencil box, stickers and toys are all <b>artificial magnets</b>, made in many shapes and sizes.</span></div></div>
+  </div>
+  <div class="btnrow"><button class="btn" id="tlBtn" onclick="revealTL()">Reveal the story →</button></div>
+  <div class="reveal" id="r2"><b>Natural → artificial.</b> The earliest magnets were natural <b>lodestones</b>. Then people found magnets could be made from iron &mdash; so today almost every magnet you meet is a human-made (artificial) magnet. Same powers, just manufactured to any shape we need.</div>
+  ${nav(S._tlDone===true)}
+</div>`;
+function revealTL(){let i=0;const btn=document.getElementById("tlBtn");btn.disabled=true;
+ const timer=setInterval(()=>{const row=document.getElementById("tl"+i);if(row)row.style.opacity="1";i++;
+  if(i>=3){clearInterval(timer);document.getElementById("r2").classList.add("show");S._tlDone=true;addXP(12,"story revealed");enableNext();}},650);
+ anims.push(timer);}
+
+/* ---- 4 · Many shapes (concept: shapes differ, poles always two; Fig 4.2) ---- */
+const SHAPES=[
+ ["Bar",'▬',"A straight bar. Poles sit at the two ends. The most common shape you'll use."],
+ ["U-shaped",'🧲',"Also called a horseshoe. It's a bar bent into a U so both poles face the same way — giving a stronger, focused pull."],
+ ["Ring",'⭕',"A flat ring (like a doughnut). Its two poles are on the flat faces — one face North, the other South."]
+];
+R[3]=()=>`
+<div class="card">
+  <div class="kicker">PAGE 62 · MAGNETS OF DIFFERENT SHAPES (FIG 4.2)</div>
+  <h1>Same magic, many shapes.</h1>
+  <p class="lead">Because magnets are made by people now, they come in handy shapes for different jobs. Tap each to see it &mdash; and where its poles are.</p>
+  <div class="shapes">
+    ${SHAPES.map((s,i)=>`<div class="shape" id="sh${i}" onclick="openShape(${i})">
+      <div class="sv">${s[1]}</div><div class="nm">${s[0]} magnet <span class="chk">✓</span></div><div class="po">${s[2]}</div></div>`).join("")}
+  </div>
+  <p class="note" id="shNote">Explored 0 / 3</p>
+  <div class="hr"></div>
+  <h2>One prediction before we finish.</h2>
+  <p class="lead">The magnet's biggest question for this chapter is written right on the page: <i>"Do magnets stick to objects made of certain materials only?"</i> What's your guess?</p>
+  <div class="choices" id="predCh">
+    <button class="choice" data-ok="0" onclick="predShape(this,false)"><span class="key">A</span>A magnet sticks to everything</button>
+    <button class="choice" data-ok="1" onclick="predShape(this,true)"><span class="key">B</span>Only to certain materials (we'll find out which)</button>
+    <button class="choice" data-ok="0" onclick="predShape(this,false)"><span class="key">C</span>Only to other magnets</button>
+  </div>
+  <div class="reveal" id="r3"><b>Whatever the shape, two things stay true:</b> every magnet has exactly <b>two poles</b>, and a magnet pulls only <b>certain materials</b> (mostly iron) &mdash; not everything. Those are the two mysteries the rest of the chapter investigates. You've reached the launch point of Reshma's journey!</div>
+  ${nav(S.shapes.size>=3 && S._predDone===true,"To the questions")}
+</div>`;
+function openShape(i){const el=document.getElementById("sh"+i);if(el.classList.contains("open"))return;
+ el.classList.add("open");S.shapes.add(i);addXP(4,"shape seen");
+ document.getElementById("shNote").textContent="Explored "+S.shapes.size+" / 5";
+ checkShapeStep();}
+function predShape(el,ok){const p=el.parentElement;if(p.dataset.done)return;p.dataset.done="1";
+ [...p.children].forEach(c=>c.classList.add("lock"));el.classList.add(ok?"right":"wrong");
+ if(!ok)[...p.children].forEach(c=>{if(c.dataset.ok==="1")c.classList.add("right");});
+ if(ok)addXP(10,"good prediction");S._predDone=true;checkShapeStep();}
+function checkShapeStep(){if(S.shapes.size>=3&&S._predDone){document.getElementById("r3").classList.add("show");enableNext();}}
+
+/* ---- 5 · EASY question ---- */
+R[4]=()=>`
+<div class="card">
+  <span class="qbadge easy">● EASY</span>
+  <div class="kicker">CHECK YOUR UNDERSTANDING</div>
+  <h1>Question 1</h1>
+  <p class="lead">In Reshma's story, the sailors were caught in a storm and could not see the stars. Which device helps travellers find directions even without stars?</p>
+  <div class="choices">
+    <button class="choice" data-ok="0" onclick="pickQ(this,false,'re',10,'qEasy')"><span class="key">A</span>A telescope</button>
+    <button class="choice" data-ok="1" onclick="pickQ(this,true,'re',10,'qEasy')"><span class="key">B</span>A magnetic compass</button>
+    <button class="choice" data-ok="0" onclick="pickQ(this,false,'re',10,'qEasy')"><span class="key">C</span>A clock</button>
+    <button class="choice" data-ok="0" onclick="pickQ(this,false,'re',10,'qEasy')"><span class="key">D</span>A pair of binoculars</button>
+  </div>
+  <div class="reveal" id="re"><b>A magnetic compass.</b> It uses a magnet to point out direction, so it works even on a starless, stormy night &mdash; exactly what Reshma's sailors needed. (Recall / remember level.)</div>
+  ${nav(S.qEasy)}
+</div>`;
+
+/* ---- 6 · MEDIUM question ---- */
+R[5]=()=>`
+<div class="card">
+  <span class="qbadge med">●● MEDIUM</span>
+  <div class="kicker">CHECK YOUR UNDERSTANDING</div>
+  <h1>Question 2</h1>
+  <p class="lead">Reshma found magnets in her pencil box and purse. The earliest sailors, however, did not have factory-made magnets. What did they use, and how is it different from the magnets in Reshma's pencil box?</p>
+  <div class="choices">
+    <button class="choice" data-ok="0" onclick="pickQ(this,false,'rm',15,'qMed')"><span class="key">A</span>They used iron nails; pencil-box magnets are also iron nails</button>
+    <button class="choice" data-ok="1" onclick="pickQ(this,true,'rm',15,'qMed')"><span class="key">B</span>They used natural lodestones; pencil-box magnets are artificial (human-made)</button>
+    <button class="choice" data-ok="0" onclick="pickQ(this,false,'rm',15,'qMed')"><span class="key">C</span>They used plastic magnets; pencil-box magnets are natural</button>
+    <button class="choice" data-ok="0" onclick="pickQ(this,false,'rm',15,'qMed')"><span class="key">D</span>They used glass; pencil-box magnets are wooden</button>
+  </div>
+  <div class="reveal" id="rm"><b>Lodestones vs artificial magnets.</b> Early sailors used <b>lodestones</b> &mdash; rocks that are <i>naturally</i> magnetic. Later people learned to <i>make</i> magnets from iron, so the magnets in Reshma's pencil box, stickers and toys are <b>artificial</b> (human-made). Same magnetism, different origin. (Understand / compare level.)</div>
+  ${nav(S.qMed)}
+</div>`;
+
+/* ---- 7 · HARD question + finish ---- */
+R[6]=()=>{if(S.qHard)setTimeout(()=>{const f=document.getElementById("finale");if(f)f.style.display="block";},50);return `
+<div class="card">
+  <span class="qbadge hard">●●● HARD</span>
+  <div class="kicker">THINK LIKE A SCIENTIST</div>
+  <h1>Question 3</h1>
+  <p class="lead">A U-shaped (horseshoe) magnet and a bar magnet are made from the same amount of the same material. A shopkeeper claims the U-shaped one "grips iron more strongly." Using only what this page taught you about <b>shape and poles</b>, which reasoning is soundest?</p>
+  <div class="choices">
+    <button class="choice" data-ok="0" onclick="pickQ(this,false,'rh3',20,'qHard')"><span class="key">A</span>Impossible — bending a magnet destroys its poles, so the U-magnet has none</button>
+    <button class="choice" data-ok="1" onclick="pickQ(this,true,'rh3',20,'qHard')"><span class="key">B</span>Reasonable — a U-magnet is a bar bent so both poles face the same way, letting both act on the iron together</button>
+    <button class="choice" data-ok="0" onclick="pickQ(this,false,'rh3',20,'qHard')"><span class="key">C</span>Impossible — only bar magnets have two poles; U-magnets have one</button>
+    <button class="choice" data-ok="0" onclick="pickQ(this,false,'rh3',20,'qHard')"><span class="key">D</span>Reasonable — the U-magnet is made of a different, stronger metal</button>
+  </div>
+  <div class="reveal" id="rh3"><b>B is soundest.</b> Every magnet keeps its <b>two poles</b> no matter the shape (bending doesn't remove them, and no magnet has just one). A U-shape simply brings <i>both</i> poles near the same spot, so they can pull on the iron together &mdash; which is exactly why horseshoe magnets are used for a firm grip. Same material, smarter shape. (Apply / reason level.)</div>
+  <div class="hr"></div>
+  <div id="finale" style="display:none">
+    <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+      <div><div class="big">${S.score}/3</div><div class="meta">QUESTIONS CORRECT</div></div>
+      <div><div class="big">${S.xp}</div><div class="meta">TOTAL XP</div></div>
+      <div class="badge">🧭 CURIOUS LIKE RESHMA · Page complete</div>
+    </div>
+    <div class="sumgrid">
+      <div class="sum"><b>Why a compass matters</b><span>It finds direction with no stars — the key to Reshma's storm story.</span></div>
+      <div class="sum"><b>Magnets are everywhere</b><span>Pencil boxes, purses, dusters, fridge stickers — if you look carefully.</span></div>
+      <div class="sum"><b>Natural → artificial</b><span>From natural lodestones to human-made magnets from iron.</span></div>
+      <div class="sum"><b>Many shapes, two poles</b><span>Bar, U, ring — every magnet always has exactly two poles.</span></div>
+    </div>
+    <p class="note">Next in the chapter: <i>which</i> materials a magnet actually sticks to (Activity 4.1) — the mystery this page set up.</p>
+    <div class="btnrow">
+      <button class="btn.ghost" onclick="go(${S.step-1})">Back</button>
+      <button class="btn" onclick="emit('complete')">Finish lab</button>
+    </div>
+  </div>
+</div>`};
+
+function render(){Document.getElementById("stage").innerHTML=R[S.step]();}
+
+emit("init");drawStepper();render();
+</script>
+</body>
+</html>

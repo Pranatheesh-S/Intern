@@ -52,35 +52,60 @@ export default function Stage2_Floating({ onComplete }) {
   };
 
   const renderCorkWithNeedle = (isInteractive) => (
-    <motion.div
-      style={{
-        position: 'relative',
-        width: '80px',
-        height: '80px',
-        borderRadius: '50%',
-        background: '#d97706', // Cork color
-        boxShadow: 'inset -5px -5px 10px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: isInteractive ? 'pointer' : 'grab'
-      }}
-      whileHover={isInteractive ? { scale: 1.05 } : {}}
-      whileTap={isInteractive ? { scale: 0.95 } : { cursor: 'grabbing' }}
-    >
-      {/* Needle */}
-      <div style={{
-        position: 'absolute',
-        width: '6px',
-        height: '140px',
-        background: 'linear-gradient(to bottom, #ef4444 0%, #ef4444 10%, #cbd5e1 50%, #3b82f6 90%, #3b82f6 100%)',
-        borderRadius: '3px',
-        boxShadow: '2px 2px 4px rgba(0,0,0,0.3)'
-      }}>
-        {/* Needle Eye */}
-        <div style={{ position: 'absolute', top: '5px', left: '2px', width: '2px', height: '6px', background: 'white', borderRadius: '1px' }} />
+    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', perspective: '1000px', pointerEvents: 'none' }}>
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transformStyle: 'preserve-3d', transform: 'rotateX(64.6deg)' }}>
+        
+        {/* Ripples */}
+        {step === 'floating' && (
+          <motion.div 
+            initial={{ scale: 0, opacity: 0.8 }}
+            animate={{ scale: 2, opacity: 0 }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            style={{ position: 'absolute', top: -50, left: -50, width: 100, height: 100, borderRadius: '50%', border: '2px solid white' }}
+          />
+        )}
+        
+        <motion.div
+          animate={{ z: step === 'floating' || step === 'settled' ? [0, 6, 0] : 0 }}
+          transition={{ z: { duration: 3, repeat: Infinity, ease: 'easeInOut' } }}
+          style={{ position: 'absolute', top: 0, left: 0, width: 0, height: 0, transformStyle: 'preserve-3d' }}
+        >
+          <motion.div
+            style={{
+              position: 'absolute', top: 0, left: 0, width: 0, height: 0,
+              transformStyle: 'preserve-3d', cursor: isInteractive ? 'pointer' : 'grab', pointerEvents: 'auto'
+            }}
+            animate={{ rotateZ: rotationAngle }}
+            transition={{ type: 'spring', stiffness: 30, damping: 10, mass: 2 }}
+            whileHover={isInteractive ? { scale: 1.05 } : {}}
+            whileTap={isInteractive ? { scale: 0.95 } : { cursor: 'grabbing' }}
+            onClick={isInteractive ? handleSpin : undefined}
+            title={isInteractive && step === 'settled' ? "Click to spin!" : ""}
+          >
+            <div style={{ position: 'absolute', width: 80, height: 80, left: -40, top: -40, transformStyle: 'preserve-3d' }}>
+              {/* Shadow on water */}
+              <div style={{ position: 'absolute', width: 80, height: 80, left: 0, top: 0, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', filter: 'blur(6px)', transform: 'translateZ(-2px)' }} />
+
+              {Array.from({length: 15}).map((_, i) => (
+                <div key={i} style={{ 
+                  position: 'absolute', width: '100%', height: '100%', borderRadius: '50%', 
+                  background: i === 14 ? 'radial-gradient(circle at 30% 30%, #f59e0b, #d97706)' : (i % 2 === 0 ? '#d97706' : '#b45309'), 
+                  boxShadow: i === 14 ? 'inset 0 0 10px rgba(0,0,0,0.3)' : 'none',
+                  transform: `translateZ(${i}px)` 
+                }} />
+              ))}
+              <div style={{ 
+                position: 'absolute', width: 6, height: 180, left: 37, top: -50, 
+                background: 'linear-gradient(to bottom, #ef4444 0%, #ef4444 48%, #cbd5e1 48%, #cbd5e1 52%, #3b82f6 52%, #3b82f6 100%)', 
+                transform: 'translateZ(15px)', borderRadius: '3px', boxShadow: '2px 2px 5px rgba(0,0,0,0.4)'
+              }}>
+                <div style={{ position: 'absolute', left: '1px', top: '4px', width: '4px', height: '4px', background: 'white', borderRadius: '50%', boxShadow: '0 0 2px rgba(0,0,0,0.5)' }} />
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 
   return (
@@ -100,8 +125,8 @@ export default function Stage2_Floating({ onComplete }) {
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          maxWidth: '500px', 
-          height: '350px', 
+          maxWidth: '440px', 
+          height: '260px', 
           background: 'var(--surface)',
           border: '1px solid var(--border)',
           borderRadius: '8px',
@@ -113,59 +138,76 @@ export default function Stage2_Floating({ onComplete }) {
           boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
         }}>
           
-          {/* Water Bowl */}
+          {/* Water Bowl (2.5D Isometric) */}
           <div style={{
-            width: '280px',
-            height: '280px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle at 30% 30%, #bae6fd 0%, #38bdf8 100%)',
-            border: '4px solid #cbd5e1',
-            boxShadow: '0 8px 16px rgba(0,0,0,0.1), inset 0 0 20px rgba(0,0,0,0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: '300px',
+            height: '240px',
             position: 'relative',
-            marginLeft: step === 'initial' ? '-100px' : '0', // shift left when cork is on the right
+            marginTop: '15px',
+            marginLeft: step === 'initial' ? '-80px' : '0',
             transition: 'margin-left 0.5s ease-in-out'
           }}>
-            {/* Compass Rose Background */}
-            <div style={{ position: 'absolute', opacity: 0.15, pointerEvents: 'none' }}>
-              <Compass size={250} />
+            {/* Front bowl body (Opaque) */}
+            <div style={{ 
+              position: 'absolute', top: 75, left: 0, width: 300, height: 140, 
+              borderRadius: '0 0 150px 150px', 
+              background: 'radial-gradient(circle at 50% 0%, #334155 0%, #0f172a 100%)', 
+              boxSizing: 'border-box',
+              border: '4px solid #475569',
+              borderTop: 'none',
+              boxShadow: '0 15px 30px rgba(0,0,0,0.5)'
+            }} />
+
+            {/* Top opening rim and inside */}
+            <div style={{ 
+              position: 'absolute', top: 10, left: 0, width: 300, height: 130, 
+              borderRadius: '50%', 
+              background: '#1e293b', 
+              boxSizing: 'border-box',
+              border: '4px solid #475569',
+              boxShadow: 'inset 0 10px 20px rgba(0,0,0,0.8)' 
+            }} />
+            
+            {/* Water surface */}
+            <div style={{ 
+              position: 'absolute', top: 16, left: 6, width: 288, height: 118, 
+              borderRadius: '50%', 
+              background: 'radial-gradient(circle at 50% 50%, #7dd3fc 0%, #38bdf8 50%, #0284c7 100%)', 
+              boxSizing: 'border-box',
+              overflow: 'hidden' 
+            }}>
+              {/* Concentric ripples */}
+              <div style={{ position: 'absolute', top: '5%', left: '5%', width: '90%', height: '90%', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.15)' }} />
+              <div style={{ position: 'absolute', top: '15%', left: '15%', width: '70%', height: '70%', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.1)' }} />
+              <div style={{ position: 'absolute', top: '25%', left: '25%', width: '50%', height: '50%', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.05)' }} />
+              
+              {/* Compass Rose faintly on water */}
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%) scale(1, 0.43)', opacity: 0.1, pointerEvents: 'none' }}>
+                <Compass size={250} />
+              </div>
             </div>
 
-            {/* North/South Labels on the Bowl rim */}
-            <div style={{ position: 'absolute', top: '10px', fontWeight: 'bold', color: '#1e293b' }}>N</div>
-            <div style={{ position: 'absolute', bottom: '10px', fontWeight: 'bold', color: '#1e293b' }}>S</div>
-            <div style={{ position: 'absolute', right: '15px', fontWeight: 'bold', color: '#1e293b' }}>E</div>
-            <div style={{ position: 'absolute', left: '15px', fontWeight: 'bold', color: '#1e293b' }}>W</div>
-
-            {/* Water ripples animation */}
-            {step === 'floating' && (
-              <motion.div 
-                initial={{ scale: 0, opacity: 0.8 }}
-                animate={{ scale: 2, opacity: 0 }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                style={{ position: 'absolute', width: '100px', height: '100px', borderRadius: '50%', border: '2px solid white' }}
-              />
-            )}
+            {/* North/South Labels adjusted for 3D */}
+            <div style={{ position: 'absolute', top: -10, left: 143, fontWeight: 'bold', color: '#ffffff', fontSize: '1.2rem', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>N</div>
+            <div style={{ position: 'absolute', top: 220, left: 143, fontWeight: 'bold', color: '#ffffff', fontSize: '1.2rem', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>S</div>
+            <div style={{ position: 'absolute', top: 62, left: -25, fontWeight: 'bold', color: '#ffffff', fontSize: '1.2rem', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>W</div>
+            <div style={{ position: 'absolute', top: 62, right: -25, fontWeight: 'bold', color: '#ffffff', fontSize: '1.2rem', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>E</div>
 
             {/* Cork with Needle (Inside Bowl) */}
-            <AnimatePresence>
-              {step !== 'initial' && (
-                <motion.div
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1, rotate: rotationAngle }}
-                  transition={{ 
-                    rotate: { type: 'spring', stiffness: 30, damping: 10, mass: 2 },
-                    scale: { duration: 0.3 }
-                  }}
-                  onClick={handleSpin}
-                  title={step === 'settled' ? "Click to spin!" : ""}
-                >
-                  {renderCorkWithNeedle(step === 'settled')}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div style={{ position: 'absolute', top: -60, left: 10, width: 280, height: 280, pointerEvents: 'none' }}>
+              <AnimatePresence>
+                {step !== 'initial' && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ scale: { duration: 0.3 } }}
+                    style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
+                  >
+                    {renderCorkWithNeedle(step === 'settled')}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Initial Draggable Cork (Outside Bowl) */}
@@ -175,7 +217,7 @@ export default function Stage2_Floating({ onComplete }) {
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0 }}
-                style={{ position: 'absolute', right: '40px', zIndex: 10 }}
+                style={{ position: 'absolute', right: '20px', width: 100, height: 100, zIndex: 10 }}
                 drag
                 dragSnapToOrigin={true}
                 dragElastic={0.1}
@@ -186,7 +228,7 @@ export default function Stage2_Floating({ onComplete }) {
                 }}
               >
                 {renderCorkWithNeedle(false)}
-                <div style={{ position: 'absolute', bottom: '-30px', left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap', fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <div style={{ position: 'absolute', bottom: '-10px', left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap', fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                   <Hand size={14} /> Drag me left
                 </div>
               </motion.div>
