@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Compass, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Compass, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 import AtlasBook from './AtlasBook';
 
 export default function AtlasIntroduction({ onNextActivity }) {
@@ -12,7 +12,34 @@ export default function AtlasIntroduction({ onNextActivity }) {
   const handleFinish = () => setIsCompleted(true);
 
   return (
-    <div style={{ paddingBottom: '4rem' }}>
+    <div style={{ paddingBottom: '4rem', position: 'relative' }}>
+      
+      {/* Back Button */}
+      {(isOpen || isCompleted) && (
+        <button 
+          onClick={() => {
+            if (isCompleted) setIsCompleted(false);
+            else { setIsOpen(false); setCurrentPage(1); }
+          }}
+          style={{ 
+            position: 'absolute', 
+            top: '-3rem', 
+            left: 0, 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.5rem', 
+            background: 'transparent', 
+            border: 'none', 
+            color: 'var(--text-secondary)', 
+            cursor: 'pointer', 
+            fontSize: '0.9rem', 
+            fontWeight: 'bold' 
+          }}
+        >
+          <ArrowLeft size={16} /> {isCompleted ? 'Back to Atlas' : 'Back to Intro'}
+        </button>
+      )}
+
       <div style={{
         width: '100%', 
         aspectRatio: '16/9',
@@ -29,9 +56,9 @@ export default function AtlasIntroduction({ onNextActivity }) {
       
       {/* LEFT PANEL */}
       <div style={{ 
-        flex: '0 0 35%', 
+        flex: '0 0 32%', 
         minWidth: '350px', 
-        padding: '2rem 2.5rem', 
+        padding: '2.5rem', 
         borderRight: '1px solid var(--border)', 
         background: 'var(--card-bg)',
         display: 'flex',
@@ -40,7 +67,7 @@ export default function AtlasIntroduction({ onNextActivity }) {
         boxShadow: '4px 0 20px rgba(0,0,0,0.05)',
         overflowY: 'auto'
       }}>
-        <div style={{ display: 'inline-flex', padding: '0.4rem 1rem', background: 'var(--accent-bg)', color: 'var(--accent-text)', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', alignSelf: 'flex-start', marginBottom: '2rem' }}>
+        <div style={{ display: 'inline-flex', padding: '0.4rem 1rem', background: 'var(--accent-bg)', color: 'var(--accent-text)', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', alignSelf: 'flex-start', marginBottom: '1.5rem' }}>
           Understanding Maps
         </div>
 

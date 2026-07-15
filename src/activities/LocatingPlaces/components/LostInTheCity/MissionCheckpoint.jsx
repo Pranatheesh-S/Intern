@@ -20,6 +20,7 @@ export default function MissionCheckpoint({ onComplete }) {
 
   // Q3 State
   const [q3Answer, setQ3Answer] = useState(null);
+  const [showCompletionPopup, setShowCompletionPopup] = useState(false);
 
   const checkpointRef = useRef(null);
 
@@ -31,13 +32,13 @@ export default function MissionCheckpoint({ onComplete }) {
   }, []);
 
   const buildings = [
-    { id: 'Railway Station', x: 16, y: 19, width: 18, height: 38 },
-    { id: 'Apartments', x: 38, y: 18, width: 20, height: 36 },
-    { id: 'Park', x: 62.5, y: 18, width: 23, height: 36 },
-    { id: 'School', x: 88, y: 18, width: 22, height: 36 },
-    { id: 'Hospital', x: 24, y: 57.5, width: 20, height: 29 },
-    { id: 'Market', x: 51, y: 57.5, width: 26, height: 29 },
-    { id: 'Bank', x: 77, y: 57.5, width: 18, height: 29 },
+    { id: 'Railway Station', x: 20.5, y: 25, width: 17, height: 22 },
+    { id: 'Apartments', x: 39, y: 14, width: 20, height: 16 },
+    { id: 'Park', x: 60, y: 24.5, width: 20, height: 25 },
+    { id: 'School', x: 83.5, y: 23, width: 25, height: 28 },
+    { id: 'Hospital', x: 20.5, y: 52.5, width: 19, height: 25 },
+    { id: 'Market', x: 48, y: 52.5, width: 36, height: 25 },
+    { id: 'Bank', x: 80.5, y: 52.5, width: 29, height: 25 },
   ];
 
   const handleBuildingClick = (buildingId) => {
@@ -66,19 +67,19 @@ export default function MissionCheckpoint({ onComplete }) {
   };
 
   const renderQuestion1 = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div style={{ marginBottom: '1rem' }}>
-        <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)', fontSize: '1.2rem' }}>Question 1</h4>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ marginBottom: '0.5rem' }}>
+        <h4 style={{ margin: '0 0 0.2rem 0', color: 'var(--text-heading)', fontSize: '1.2rem' }}>Question 1</h4>
         <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: 'bold' }}>
           Mark the Hospital on the map.
         </p>
-        <p style={{ margin: '0.5rem 0 0 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <p style={{ margin: '0.25rem 0 0 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
           Click on the building that represents the Hospital.
         </p>
       </div>
 
-      <div style={{ position: 'relative', width: '100%', maxWidth: '800px', aspectRatio: '16/9', margin: '0 auto', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border)' }}>
-        <img src={mapBg} alt="Interactive Map" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      <div style={{ position: 'relative', width: '100%', maxWidth: '550px', margin: '0 auto', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+        <img src={mapBg} alt="Interactive Map" style={{ width: '100%', height: 'auto', display: 'block' }} />
         
         {/* Clickable Overlay */}
         <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'auto' }} viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -161,15 +162,15 @@ export default function MissionCheckpoint({ onComplete }) {
   );
 
   const renderMCQ = (qNum, question, options, correctAnswer, explanation, state, setState) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div style={{ marginBottom: '1rem' }}>
-        <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)', fontSize: '1.2rem' }}>Question {qNum}</h4>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ marginBottom: '0.5rem' }}>
+        <h4 style={{ margin: '0 0 0.2rem 0', color: 'var(--text-heading)', fontSize: '1.2rem' }}>Question {qNum}</h4>
         <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: 'bold' }}>
           {question}
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {options.map((opt) => {
           const isSelected = state === opt;
           const isCorrect = opt === correctAnswer;
@@ -202,7 +203,7 @@ export default function MissionCheckpoint({ onComplete }) {
               }}
               disabled={state !== null}
               style={{
-                padding: '1.25rem 1.5rem', 
+                padding: '1rem 1.5rem', 
                 borderRadius: '16px', 
                 textAlign: 'left',
                 background: bg,
@@ -243,6 +244,12 @@ export default function MissionCheckpoint({ onComplete }) {
           <button className="primary" onClick={() => setCurrentQuestion(qNum + 1)} style={{ padding: '0.8rem 1.5rem', borderRadius: '12px' }}>Next Question</button>
         </div>
       )}
+
+      {state !== null && qNum === 3 && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+          <button className="primary" onClick={() => setShowCompletionPopup(true)} style={{ padding: '0.8rem 1.5rem', borderRadius: '12px', background: '#10b981' }}>Finish Mission</button>
+        </div>
+      )}
     </div>
   );
 
@@ -264,7 +271,7 @@ export default function MissionCheckpoint({ onComplete }) {
             MISSION CHECKPOINT
           </h3>
         </div>
-        <p style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.6', maxWidth: '800px', marginBottom: '2.5rem' }}>
+        <p style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.6', maxWidth: '800px', marginBottom: '1.5rem' }}>
           Let's answer a few questions about the map.
         </p>
 
@@ -291,27 +298,28 @@ export default function MissionCheckpoint({ onComplete }) {
           setQ3Answer
         )}
 
-        {/* Completion State */}
-        {currentQuestion === 3 && q3Answer !== null && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} style={{ marginTop: '3rem', borderTop: '1px solid var(--border)', paddingTop: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-             <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', boxShadow: '0 0 20px rgba(251, 191, 36, 0.3)' }}>
-               <span style={{ fontSize: '2rem' }}>🕵️</span>
-             </div>
-             <h2 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)', fontSize: '2rem' }}>Mission Complete!</h2>
-             <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '500px', marginBottom: '1.5rem', lineHeight: '1.5' }}>
-               You successfully explored the city map and answered all the checkpoint questions. You are now ready to learn more about maps.
-             </p>
-             <div style={{ padding: '0.5rem 1rem', borderRadius: '20px', background: 'rgba(245, 158, 11, 0.1)', color: '#d97706', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '2.5rem', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-               Map Observer
-             </div>
-             <button 
-                onClick={onComplete}
-                className="primary" 
-                style={{ padding: '1rem 2rem', gap: '0.5rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}
-              >
-                Continue to Atlas <ArrowRight size={20} />
-              </button>
-          </motion.div>
+        {/* Completion State POPUP */}
+        {showCompletionPopup && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5, type: 'spring', damping: 25 }} style={{ background: 'var(--surface)', padding: '3rem', borderRadius: '24px', textAlign: 'center', maxWidth: '450px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+               <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', boxShadow: '0 0 20px rgba(251, 191, 36, 0.3)' }}>
+                 <span style={{ fontSize: '2.5rem' }}>🕵️</span>
+               </div>
+               <h2 style={{ fontSize: '2.2rem', marginBottom: '1rem', color: 'var(--text-primary)', marginTop: 0 }}>Mission Complete!</h2>
+               <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1.1rem' }}>
+                 You successfully explored the city map and answered all the checkpoint questions. You are now ready to learn more about maps.
+               </p>
+               <div style={{ padding: '0.5rem 1rem', borderRadius: '20px', background: 'rgba(245, 158, 11, 0.1)', color: '#d97706', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '2.5rem', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                 Map Observer
+               </div>
+               <button 
+                  onClick={onComplete}
+                  style={{ background: 'var(--accent)', color: 'white', border: 'none', padding: '1.25rem 2rem', borderRadius: '14px', fontSize: '1.15rem', fontWeight: 'bold', cursor: 'pointer', width: '100%', boxShadow: '0 4px 12px rgba(147,51,234,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                >
+                  Continue to Atlas <ArrowRight size={20} />
+                </button>
+            </motion.div>
+          </div>
         )}
 
       </div>
