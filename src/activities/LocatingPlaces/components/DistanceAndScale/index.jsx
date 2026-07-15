@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Ruler, Map, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Ruler, Map, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function DistanceAndScale({ onComplete }) {
   const [step, setStep] = useState(1);
@@ -61,21 +61,25 @@ export default function DistanceAndScale({ onComplete }) {
   return (
     <div style={{ width: '100%', height: '750px', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', overflow: 'hidden', borderRadius: '24px', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
       
-      {/* Header */}
-      <div style={{ padding: '2rem 3rem', borderBottom: '1px solid var(--border)', background: 'var(--card-bg)', zIndex: 10 }}>
-        <h1 style={{ fontSize: '2.5rem', color: 'var(--text-heading)', margin: '0 0 0.5rem 0', lineHeight: 1.1 }}>
-          Distance and Scale
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', margin: 0 }}>
-          Maps cannot show the real size of places. Let's discover how they solve this problem.
-        </p>
-      </div>
+      {/* Top Bar for Back Button */}
+      {step > 1 && (
+        <div style={{ padding: '1rem 2rem', borderBottom: '1px solid var(--border)', background: 'var(--card-bg)' }}>
+          <button 
+            onClick={() => setStep(s => Math.max(1, s - 1))}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+          >
+            <ArrowLeft size={16} /> Back
+          </button>
+        </div>
+      )}
 
       {/* Two Column Layout */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         
         {/* LEFT: Interactive Learning Area */}
-        <div style={{ flex: '1 1 60%', padding: '2rem', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ flex: '1 1 70%', padding: '2rem', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
           <AnimatePresence mode="wait">
             
             {/* Step 1 & 2 Visual */}

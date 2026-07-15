@@ -9,13 +9,13 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
       width: '100%', height: '100%', 
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       perspective: '2000px',
-      padding: '2rem'
+      padding: '1rem'
     }}>
       <div style={{
         position: 'relative',
         width: '100%',
-        maxWidth: '1100px',
-        aspectRatio: '1.6 / 1',
+        maxWidth: '100%',
+        aspectRatio: '1.4 / 1',
         transform: isOpen ? 'translateX(0)' : 'translateX(-25%)',
         transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
         transformStyle: 'preserve-3d'
