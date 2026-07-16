@@ -61,7 +61,7 @@ export default function MazeGame({ onSolve, isSolved }) {
     const mzExit = { x: W - 46, y: H - 44, r: 22 };
     const mzWalls = [
       { x: 0, y: H * 0.42, w: W * 0.62, h: 12 },
-      { x: W * 0.72, y: 0, w: 12, h: H * 0.55 },
+      { x: W * 0.72, y: 0, w: 12, h: H * 0.7 },
       { x: W * 0.30, y: H * 0.7, w: W * 0.5, h: 12 }
     ];
 
