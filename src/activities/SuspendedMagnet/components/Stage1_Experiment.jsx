@@ -69,74 +69,162 @@ export default function Stage1_Experiment({ onComplete }) {
           overflow: 'hidden',
           boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
         }}>
-          {/* Ceiling / Stand */}
-          <div style={{ width: '60%', height: '10px', background: '#64748b', borderBottomRadius: '4px' }} />
+          {/* Books Stack */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '-2px', zIndex: 2 }}>
+            {/* Blue Book */}
+            <div style={{ width: '130px', height: '18px', background: '#3b82f6', border: '2px solid #1e293b', borderRadius: '4px', borderBottom: 'none', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 10px' }}>
+              <div style={{ width: '4px', height: '100%', background: '#fbbf24', borderLeft: '1px solid #1e293b', borderRight: '1px solid #1e293b' }} />
+              <div style={{ width: '4px', height: '100%', background: '#fbbf24', borderLeft: '1px solid #1e293b', borderRight: '1px solid #1e293b' }} />
+            </div>
+            {/* Green Book */}
+            <div style={{ width: '140px', height: '20px', background: '#10b981', border: '2px solid #1e293b', borderRadius: '4px', borderBottom: 'none', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fef08a', border: '1px solid #1e293b' }} />
+              <div style={{ width: '60px', height: '6px', background: '#fef08a', border: '1px solid #1e293b', borderRadius: '2px' }} />
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fef08a', border: '1px solid #1e293b' }} />
+            </div>
+            {/* Purple Book */}
+            <div style={{ width: '150px', height: '18px', background: '#8b5cf6', border: '2px solid #1e293b', borderRadius: '4px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px' }}>
+              <div style={{ width: '4px', height: '100%', background: '#fbbf24', borderLeft: '1px solid #1e293b', borderRight: '1px solid #1e293b' }} />
+              <div style={{ width: '4px', height: '100%', background: '#fbbf24', borderLeft: '1px solid #1e293b', borderRight: '1px solid #1e293b' }} />
+            </div>
+          </div>
+
+          {/* Detailed Wooden Desk */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', zIndex: 1 }}>
+            {/* Desk Top (Two halves) */}
+            <div style={{ display: 'flex', gap: '2px', width: '85%' }}>
+              <div style={{ flex: 1, height: '25px', background: '#d4a373', border: '2px solid #333', borderRadius: '2px' }} />
+              <div style={{ flex: 1, height: '25px', background: '#d4a373', border: '2px solid #333', borderRadius: '2px' }} />
+            </div>
+            {/* Desk Frame (Two halves) */}
+            <div style={{ display: 'flex', gap: '2px', width: '75%' }}>
+              <div style={{ flex: 1, height: '25px', background: '#c49a6c', border: '2px solid #333', borderTop: 'none' }} />
+              <div style={{ flex: 1, height: '25px', background: '#c49a6c', border: '2px solid #333', borderTop: 'none' }} />
+            </div>
+            
+            {/* Desk Legs */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '80%', marginTop: '-25px', zIndex: -1 }}>
+              <div style={{ width: '30px', height: '180px', background: '#b5835a', border: '2px solid #333', borderTop: 'none' }} />
+              <div style={{ width: '30px', height: '180px', background: '#b5835a', border: '2px solid #333', borderTop: 'none' }} />
+            </div>
+          </div>
           
           {/* String */}
-          <div style={{ width: '2px', height: '140px', background: '#cbd5e1' }} />
+          <div style={{ width: '2px', height: '150px', background: '#1e293b', marginTop: '-180px', zIndex: 0 }} />
           
-          {/* Magnet Container */}
-          <motion.div
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.5}
-            onDragEnd={(e, info) => {
-              if (Math.abs(info.offset.x) > 20 || Math.abs(info.velocity.x) > 100) {
-                if (!isSpinning && quizAnswer !== 'yes') {
-                  handleSpin();
-                }
-              }
-            }}
-            animate={{ rotate: magnetRotation }}
-            transition={{ 
-              type: 'spring', 
-              stiffness: 40, 
-              damping: 8, 
-              mass: 1.5,
-              restDelta: 0.1 
-            }}
-            style={{
-              position: 'relative',
-              width: '160px',
-              height: '30px',
-              marginTop: '-5px',
-              zIndex: 10,
-              cursor: isSpinning || quizAnswer === 'yes' ? 'default' : 'grab'
-            }}
-            whileDrag={{ cursor: 'grabbing' }}
-          >
+          {/* Magnet Wrapper for 3D Perspective */}
+          <div style={{
+            position: 'absolute',
+            bottom: '75px', // height above the ground
+            width: '160px',
+            height: '30px',
+            perspective: '1000px',
+            zIndex: 10
+          }}>
+            {/* The 60-deg tilted plane */}
             <div style={{
               width: '100%',
               height: '100%',
-              display: 'flex',
-              borderRadius: '4px',
-              overflow: 'hidden',
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)'
+              transformStyle: 'preserve-3d',
+              transform: 'rotateX(60deg)'
             }}>
-              <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.8rem' }}>N</div>
-              <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.8rem' }}>S</div>
+              <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.5}
+                onDragEnd={(e, info) => {
+                  if (Math.abs(info.offset.x) > 20 || Math.abs(info.velocity.x) > 100) {
+                    if (!isSpinning && quizAnswer !== 'yes') {
+                      handleSpin();
+                    }
+                  }
+                }}
+                animate={{ rotateZ: magnetRotation }}
+                transition={{ 
+                  type: 'spring', 
+                  stiffness: 40, 
+                  damping: 8, 
+                  mass: 1.5,
+                  restDelta: 0.1 
+                }}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  transformStyle: 'preserve-3d',
+                  cursor: isSpinning || quizAnswer === 'yes' ? 'default' : 'grab'
+                }}
+                whileDrag={{ cursor: 'grabbing' }}
+              >
+                {/* Stack 6 layers to give the magnet 3D thickness */}
+                {[0, 2, 4, 6, 8, 10].map(z => (
+                  <div key={z} style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    borderRadius: '2px',
+                    overflow: 'hidden',
+                    transform: `translateZ(${z}px)`,
+                    boxShadow: z === 0 ? '0 10px 15px -3px rgba(0, 0, 0, 0.5)' : 'none',
+                    filter: z < 10 ? 'brightness(0.6)' : 'none' /* darker sides */
+                  }}>
+                    <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.85rem' }}>{z === 10 ? 'N' : ''}</div>
+                    <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.85rem' }}>{z === 10 ? 'S' : ''}</div>
+                  </div>
+                ))}
+                
+                {/* Knot for the string attachment (top layer) */}
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%) translateZ(12px)', width: '6px', height: '6px', background: '#94a3b8', borderRadius: '50%' }} />
+              </motion.div>
             </div>
-            {/* Knot */}
-            <div style={{ position: 'absolute', top: '-4px', left: '50%', transform: 'translateX(-50%)', width: '8px', height: '8px', background: '#94a3b8', borderRadius: '50%' }} />
-          </motion.div>
+          </div>
 
-          {/* Ground Markings */}
+          {/* Ground Markings (Taped Paper compass) */}
           <div style={{
             position: 'absolute',
-            bottom: '40px',
-            width: '200px',
-            height: '60px',
-            border: '2px dashed #94a3b8',
-            borderRadius: '50%',
+            bottom: '10px',
+            width: '240px',
+            height: '110px',
             transform: 'rotateX(60deg)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 20px',
-            boxSizing: 'border-box'
+            justifyContent: 'center',
+            boxSizing: 'border-box',
+            zIndex: 0
           }}>
-            <span style={{ color: '#ef4444', fontWeight: 'bold' }}>N</span>
-            <span style={{ color: '#3b82f6', fontWeight: 'bold' }}>S</span>
+            {/* The paper */}
+            <div style={{
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              background: '#f8f9fa',
+              clipPath: 'polygon(15% 0, 85% 0, 100% 25%, 100% 75%, 85% 100%, 15% 100%, 0 75%, 0 25%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              {/* Vertical line */}
+              <div style={{ position: 'absolute', width: '2px', height: '65%', background: '#111' }} />
+              {/* Horizontal line */}
+              <div style={{ position: 'absolute', width: '75%', height: '2px', background: '#111' }} />
+              
+              {/* Labels */}
+              <span style={{ position: 'absolute', left: '10px', fontWeight: 'bold', fontSize: '1.2rem', color: '#000', fontFamily: 'serif' }}>N</span>
+              <span style={{ position: 'absolute', right: '10px', fontWeight: 'bold', fontSize: '1.2rem', color: '#000', fontFamily: 'serif' }}>S</span>
+              <span style={{ position: 'absolute', top: '5px', fontWeight: 'bold', fontSize: '1.1rem', color: '#000', fontFamily: 'serif' }}>W</span>
+              <span style={{ position: 'absolute', bottom: '5px', fontWeight: 'bold', fontSize: '1.1rem', color: '#000', fontFamily: 'serif' }}>E</span>
+            </div>
+
+            {/* Tape Corners */}
+            {/* Top-Left */}
+            <div style={{ position: 'absolute', top: '-2px', left: '5px', width: '45px', height: '14px', background: 'rgba(230, 224, 200, 0.9)', transform: 'rotate(-40deg)', boxShadow: '1px 1px 2px rgba(0,0,0,0.1)' }} />
+            {/* Top-Right */}
+            <div style={{ position: 'absolute', top: '-2px', right: '5px', width: '45px', height: '14px', background: 'rgba(230, 224, 200, 0.9)', transform: 'rotate(40deg)', boxShadow: '1px 1px 2px rgba(0,0,0,0.1)' }} />
+            {/* Bottom-Left */}
+            <div style={{ position: 'absolute', bottom: '-2px', left: '5px', width: '45px', height: '14px', background: 'rgba(230, 224, 200, 0.9)', transform: 'rotate(40deg)', boxShadow: '1px 1px 2px rgba(0,0,0,0.1)' }} />
+            {/* Bottom-Right */}
+            <div style={{ position: 'absolute', bottom: '-2px', right: '5px', width: '45px', height: '14px', background: 'rgba(230, 224, 200, 0.9)', transform: 'rotate(-40deg)', boxShadow: '1px 1px 2px rgba(0,0,0,0.1)' }} />
           </div>
           
           {/* Rest Line (appears after first spin) */}
