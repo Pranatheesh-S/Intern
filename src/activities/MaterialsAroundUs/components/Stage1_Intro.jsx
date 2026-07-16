@@ -160,11 +160,11 @@ export default function Stage1_Intro({ onComplete, addXp }) {
           <div style={{ position: 'absolute', top: '30px', left: '5%', width: '460px', height: '210px', border: '10px solid #4b5563', background: '#064e3b', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', boxShadow: 'inset 0 4px 15px rgba(0,0,0,0.7)', zIndex: 15 }}>
             {completed ? (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', textAlign: 'center' }}>
-                <span style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif', color: '#6ee7b7', fontSize: '1.3rem', fontWeight: 'bold' }}>All Objects Identified!</span>
-                <span style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif', color: '#fcd34d', fontSize: '1rem' }}>Click "Proceed to next" in the top right to continue!</span>
+                <span style={{ fontFamily: 'Arial, sans-serif', color: '#6ee7b7', fontSize: '1.3rem', fontWeight: 'bold' }}>All Objects Identified!</span>
+                <span style={{ fontFamily: 'Arial, sans-serif', color: '#fcd34d', fontSize: '1rem' }}>Click "Proceed to next" in the top right to continue!</span>
               </div>
             ) : (
-              <span style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif', color: '#a7f3d0', fontSize: '1.15rem', textAlign: 'center', lineHeight: '1.5' }}>
+              <span style={{ fontFamily: 'Arial, sans-serif', color: '#a7f3d0', fontSize: '1.15rem', textAlign: 'center', lineHeight: '1.5' }}>
                 Welcome back!<br/>
                 What is <strong style={{ color: '#fbbf24' }}>Material</strong>?<br/>
                 Click on the objects to scan.

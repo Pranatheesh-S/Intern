@@ -4,6 +4,9 @@ import Stage3_Classification from './components/Stage3_Classification';
 import Stage5_Suitability from './components/Stage5_Suitability';
 import Stage_SportsBall from './components/Stage_SportsBall';
 import Stage4_LustreHardness from './components/Stage4_LustreHardness';
+import Stage4a_Appearance_Observe from './components/Stage4a_Appearance_Observe';
+import Stage4b_Appearance_Group from './components/Stage4b_Appearance_Group';
+import Stage4c_Hardness_Observe from './components/Stage4c_Hardness_Observe';
 import Stage6_Transparency from './components/Stage6_Transparency';
 import Stage7_SolubilityMatter from './components/Stage7_SolubilityMatter';
 import Stage8_AyurvedaSummary from './components/Stage8_AyurvedaSummary';
@@ -14,31 +17,70 @@ export const chapterFlow = [
   {
     type: 'mission',
     title: 'The Classroom Mystery',
-    dialogue: 'Good morning, Detective. Headquarters has received an unusual science case. Strange objects have appeared in the classroom, and we need your keen eyes to identify them.',
-    objective: 'Find and scan objects to identify their base materials.',
+    dialogue: 'Good morning, Detective. Headquarters has received an unusual science case. Strange objects have appeared in the classroom. Before beginning any investigation, every detective studies the Investigation Handbook. Study today\'s handbook carefully, then begin your investigation.',
+    objective: 'Learn about materials, then find and scan objects.',
     difficulty: 1,
-    estimatedTime: '3 minutes',
+    estimatedTime: '5 minutes',
     rewardXP: 100
   },
-  // 1: Activity
-  { type: 'activity', id: 'stage1', title: 'Barrier 1: Observing Objects', subtitle: 'Phase 1: Find Objects', component: Stage1_Intro },
+  // 1: Handbook
+  { 
+    type: 'handbook', 
+    id: 'handbook_1', 
+    title: 'Investigation Handbook: Observing Objects', 
+    content: [
+      {
+        type: 'intro',
+        heading: 'What are Objects Made Of?',
+        text: 'Look around you. Everything you see is an object. A chair, a book, a water bottle. But what are they actually made of?',
+        image: '🕵️‍♂️'
+      },
+      {
+        type: 'interactive',
+        heading: 'Materials',
+        text: 'The "stuff" that makes up an object is called a MATERIAL. One object can be made of different materials, and one material can make many objects.',
+        highlights: ['MATERIAL', 'One Object → Many Materials'],
+        example: 'Think of a Plate: It can be made of Glass, Plastic, or Steel.'
+      }
+    ]
+  },
   // 2: Activity
-  { type: 'activity', id: 'stage2', title: 'Barrier 1: Observing Objects', subtitle: 'Phase 2: Scan Evidence', component: Stage2_Identify },
-  // 3: Debrief 1
+  { type: 'activity', id: 'stage1', title: 'Barrier 1: Practical Investigation', subtitle: 'Phase 1: Find Objects', component: Stage1_Intro },
+  // 3: Activity
+  { type: 'activity', id: 'stage2', title: 'Barrier 1: Practical Investigation', subtitle: 'Phase 2: Scan Evidence', component: Stage2_Identify },
+  // 4: Checkpoint
   {
-    type: 'debrief',
+    type: 'checkpoint',
+    id: 'checkpoint_1',
+    title: 'Detective Checkpoint',
+    questions: [
+      {
+        question: 'What do we call the "stuff" that an object is made of?',
+        options: ['Matter', 'Material', 'Thing'],
+        correct: 1
+      },
+      {
+        question: 'Can a single object like a plate be made from different materials (like glass, steel, or plastic)?',
+        options: ['Yes', 'No'],
+        correct: 0
+      }
+    ]
+  },
+  // 5: Summary
+  {
+    type: 'summary',
     barrier: 1,
-    title: 'Objects Identified',
-    dialogue: 'Excellent observation. That\'s exactly what experienced investigators notice. You\'ve successfully identified the materials.',
-    observations: [
-      { object: 'Textbook', finding: 'Paper' },
-      { object: 'Tumbler', finding: 'Glass' },
-      { object: 'Ruler', finding: 'Plastic' }
+    title: 'Evidence Summary Logged',
+    dialogue: 'Excellent work, Detective. You have successfully completed today\'s investigation. Let\'s record our findings in your permanent Investigation Handbook.',
+    discoveries: [
+      'Objects around us are made of one or more materials.',
+      'A material is the substance used to make an object.',
+      'The same object can be made of different materials (e.g. a glass tumbler vs plastic tumbler).'
     ],
     rewardReason: 'Barrier 1 Cleared',
     rewardXP: 200
   },
-  // 4: Mission 2
+  // 6: Mission 2
   {
     type: 'mission',
     title: 'Grouping Materials',
@@ -79,7 +121,35 @@ export const chapterFlow = [
     rewardXP: 200
   },
   // 10: Activities
-  { type: 'activity', id: 'stage4', title: 'Barrier 3: Properties', subtitle: 'Phase 1: Lustre & Hardness', component: Stage4_LustreHardness },
+  { type: 'activity', id: 'stage4_1', title: 'Barrier 3: Appearance', subtitle: 'Phase 1: Observation Notebook', component: Stage4a_Appearance_Observe },
+  { type: 'activity', id: 'stage4_2', title: 'Barrier 3: Appearance', subtitle: 'Phase 2: Group by Appearance', component: Stage4b_Appearance_Group },
+  {
+    type: 'debrief',
+    barrier: 3,
+    title: 'Detective Debrief',
+    dialogue: 'Materials with shiny surfaces are called Lustrous. Usually metals. BUT... Are all lustrous materials metals? No! Things like plastic spoons or wax can be shiny without being metals.',
+    observations: [
+      { object: 'Iron / Copper', finding: 'Shiny = Lustrous' },
+      { object: 'Wood / Paper', finding: 'Not shiny = Non-lustrous' }
+    ],
+    rewardReason: 'Appearance Observations',
+    rewardXP: 100
+  },
+  { type: 'activity', id: 'stage4_3', title: 'Barrier 3: Properties', subtitle: 'Phase 3: Lustre Testing', component: Stage4_LustreHardness, props: { mode: 'lustre_only' } },
+  { type: 'activity', id: 'stage4_4', title: 'Barrier 3: Properties', subtitle: 'Phase 4: Observe Hardness', component: Stage4c_Hardness_Observe },
+  { type: 'activity', id: 'stage4_5', title: 'Barrier 3: Properties', subtitle: 'Phase 5: Scratch Investigation', component: Stage4_LustreHardness, props: { mode: 'hardness_only' } },
+  {
+    type: 'debrief',
+    barrier: 3,
+    title: 'Hardness Conclusion',
+    dialogue: 'Excellent! Materials which can be compressed or scratched easily are soft, while those difficult to compress or scratch are hard. But remember: Hardness is relative! Rubber is harder than sponge but softer than iron.',
+    observations: [
+      { object: 'Sponge', finding: 'Compresses = Soft' },
+      { object: 'Iron', finding: 'Unscratchable = Hard' }
+    ],
+    rewardReason: 'Hardness Observations',
+    rewardXP: 100
+  },
   { type: 'activity', id: 'stage6', title: 'Barrier 3: Properties', subtitle: 'Phase 2: Transparency', component: Stage6_Transparency },
   { type: 'activity', id: 'stage7_sol', title: 'Barrier 3: Properties', subtitle: 'Phase 3: Solubility', component: Stage7_SolubilityMatter, props: { mode: 'solubility' } },
   // 13: Debrief 3
