@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Compass } from 'lucide-react';
-import ClassroomScene from './ClassroomScene';
-import MagneticTest from './MagneticTest';
-import Quiz from './Quiz';
+import MagneticTable from './MagneticTable';
 import DidYouKnow from './DidYouKnow';
+import Quiz from './Quiz';
 
 export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
-  const [stage, setStage] = useState('classroom'); // 'classroom', 'test', 'quiz'
-  const [collectedObjects, setCollectedObjects] = useState([]);
+  const [stage, setStage] = useState('table');
 
-  const handleClassroomComplete = (objects) => {
-    setCollectedObjects(objects);
-    setStage('test');
-  };
-
-  const handleTestComplete = () => {
+  const handleTableComplete = () => {
     setStage('quiz');
   };
 
-  if (stage === 'quiz') {
-    return <Quiz onComplete={onComplete} onBack={() => setStage('test')} />;
-  }
+  const handleQuizComplete = () => {
+    if (onComplete) onComplete();
+    if (onNext) onNext();
+  };
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', flexDirection: 'column', width: '100%' }}>
@@ -59,12 +53,13 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
 
       <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
         <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '600px' }}>
-          {stage === 'classroom' && (
-            <ClassroomScene onComplete={handleClassroomComplete} />
-          )}
-          
-          {stage === 'test' && (
-            <MagneticTest objects={collectedObjects} onComplete={handleTestComplete} />
+          {stage === 'table' ? (
+            <MagneticTable onComplete={handleTableComplete} />
+          ) : (
+            <Quiz 
+              onComplete={handleQuizComplete} 
+              onBack={() => setStage('table')} 
+            />
           )}
         </main>
 
