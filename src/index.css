@@ -415,11 +415,11 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-top:hover) .header {
   transition: transform 0.2s ease-out 0s, opacity 0.2s ease-out 0s;
 }
 
-/* 60px activation strip for easy targeting */
+/* 10px activation strip for easy targeting */
 .focus-trigger-top {
   position: fixed;
   top: 0; left: 0; right: 0;
-  height: 60px;
+  height: 10px;
   z-index: 99;
 }
 
@@ -562,20 +562,7 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-left:hover) .lab-sid
   width: 100%;
 }
 
-/* Hide internal header in focus mode */
-body.focus-mode-active .lab-internal-header {
-  opacity: 0;
-  height: 0;
-  margin-bottom: 0;
-  padding: 0;
-  pointer-events: none;
-}
-body.focus-mode-active:has(.focus-trigger-top:hover) .lab-internal-header {
-  opacity: 1;
-  height: auto;
-  margin-bottom: var(--space-xl);
-  pointer-events: all;
-}
+/* internal header is kept visible in focus mode to ensure tabs and back button are always accessible */
 
 .canvas-container {
   display: flex; flex-direction: column; justify-content: center; align-items: center;
