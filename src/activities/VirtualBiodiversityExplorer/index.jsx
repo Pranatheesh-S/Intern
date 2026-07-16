@@ -1,1206 +1,1163 @@
-import React, { useState } from 'react';
-import { BookOpen, Compass, Search, CheckCircle2, ArrowLeft, RefreshCw, Award, Info } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { X, RefreshCw, Volume2, CheckCircle, ChevronRight, Award, ArrowLeft, BookOpen, Target, Eye } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import natureWalkScene from '../../assets/nature_walk_scene.png';
+import { useTheme } from '../../ThemeContext.jsx';
 
-const ORGANISMS = [
+/* ─────────────────────────────────────────────
+   TARGET ORGANISMS (8 required species)
+───────────────────────────────────────────── */
+const TARGET_ORGANISMS = [
   {
-    id: 'neem',
-    name: 'Neem Tree',
-    type: 'plant',
-    habitat: 'Land',
-    details: 'A large evergreen tree known for its medicinal leaves, hard woody bark, and compound leaf structure.',
-    fact: 'Neem leaves are natural pest repellents and have been used in traditional medicine for thousands of years.',
-    question: 'How would you classify the Neem plant based on its stem?',
-    options: ['Herb (Soft green stem)', 'Shrub (Medium woody stem)', 'Tree (Hard, thick woody trunk)'],
-    correctIndex: 2,
-    x: 520,
-    y: 140,
-    radius: 48,
-    color: '#047857'
+    id: 'frog',
+    name: 'Indian Pond Frog',
+    emoji: '🐸',
+    type: 'animal',
+    x: 27, y: 83, w: 14, h: 14,
+    details: 'Lives both in the freshwater pond and on moist soil shores. Its green skin is smooth, and its feet are webbed for swimming.',
+    fact: 'Frogs can breathe through their lungs on land and directly through their moist skin underwater — they are true amphibians!',
+    verifyQ: { q: 'What type of habitat does an Indian Pond Frog live in?', opts: ['Only on dry land', 'Only in deep ocean', 'Both in freshwater and on moist shores', 'Only in desert sand'], correct: 2 },
+    tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Jumps and swims. Amphibian. Lives near pond.' },
   },
   {
-    id: 'hibiscus',
-    name: 'Hibiscus Shrub',
-    type: 'plant',
-    habitat: 'Land',
-    details: 'A flowering shrub with vibrant red petals, alternate leaf arrangement, and a woody but thin stem branching near the base.',
-    fact: 'Hibiscus flowers are rich in antioxidants and often brewed into tart herbal teas around the world.',
-    question: 'What is the branching pattern of a Shrub like Hibiscus?',
-    options: ['Branches high up on a single trunk', 'Branches near the base of the stem', 'Has no branches (soft single stem)'],
-    correctIndex: 1,
-    x: 95,
-    y: 250,
-    radius: 44,
-    color: '#dc2626'
-  },
-  {
-    id: 'tulsi',
-    name: 'Tulsi Herb',
-    type: 'plant',
-    habitat: 'Land',
-    details: 'A small aromatic herb with a soft, green, non-woody stem and opposite simple leaves.',
-    fact: 'Also known as Holy Basil, Tulsi is highly revered and commonly grown in Indian households for its wellness benefits.',
-    question: 'Which of these is true about Herbs like Tulsi?',
-    options: ['They have thick woody trunks', 'They have soft, green, and tender stems', 'They grow up to 20 feet tall'],
-    correctIndex: 1,
-    x: 100,
-    y: 360,
-    radius: 40,
-    color: '#059669'
+    id: 'squirrel',
+    name: 'Three-Striped Palm Squirrel',
+    emoji: '🐿️',
+    type: 'animal',
+    x: 91, y: 63, w: 14, h: 22,
+    details: 'A quick terrestrial rodent found climbing tree trunks, feeding on nuts, seeds, and berries. It has three distinctive pale stripes on its back.',
+    fact: 'Squirrels accidentally plant thousands of trees each year by forgetting where they buried their nut stashes!',
+    verifyQ: { q: 'Where would you most likely spot a Three-Striped Palm Squirrel?', opts: ['In the ocean', 'Climbing a tree trunk', 'Flying in the sky', 'Burrowing underground'], correct: 1 },
+    tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Runs and climbs. Lives on trees and land.' },
   },
   {
     id: 'butterfly',
     name: 'Monarch Butterfly',
+    emoji: '🦋',
     type: 'animal',
-    habitat: 'Air/Land',
-    details: 'A flying insect with colorful orange and black wings. Performs metamorphosis from caterpillar to butterfly.',
-    fact: 'Monarch butterflies travel thousands of miles during their seasonal migrations.',
-    question: 'What is the primary mode of movement for a butterfly?',
-    options: ['Crawling using 10 legs', 'Swimming in water', 'Flying using wings'],
-    correctIndex: 2,
-    x: 160,
-    y: 240,
-    radius: 24,
-    color: '#ea580c'
+    x: 55, y: 75, w: 14, h: 14,
+    details: 'A flying insect feeding on the sweet nectar of garden flowers. Moves dynamically from bloom to bloom, helping in pollination.',
+    fact: 'Butterflies taste their food using tiny sensory receptors on their feet — not their mouths!',
+    verifyQ: { q: 'How does a butterfly help plants?', opts: ['It eats all the leaves', 'It digs up roots', 'It helps in pollination by carrying pollen', 'It blocks sunlight'], correct: 2 },
+    tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Flies using wings. Feeds on flower nectar.' },
+  },
+  {
+    id: 'monkey',
+    name: 'Rhesus Macaque (Monkey)',
+    emoji: '🐒',
+    type: 'animal',
+    x: 81, y: 16, w: 16, h: 22,
+    details: 'A wild mammal seen perched high on tree branches, jumping between trees and grooming its group members in a social fashion.',
+    fact: 'Monkeys use vocal calls, facial expressions, and body language to communicate warnings, greetings, and emotions to their group!',
+    verifyQ: { q: 'Which habitat do Rhesus Macaque monkeys primarily live in?', opts: ['Underground burrows', 'Treetops in forests', 'Deep ocean', 'Arctic tundra'], correct: 1 },
+    tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Jumps and climbs. Lives high on trees.' },
+  },
+  {
+    id: 'sparrow',
+    name: 'House Sparrows (Perched)',
+    emoji: '🐦',
+    type: 'animal',
+    x: 71, y: 38, w: 16, h: 14,
+    details: 'Small birds chirping and resting on tree branches. They feed on insects, small seeds, and breadcrumbs near human settlements.',
+    fact: 'House Sparrows have lived alongside humans for over 10,000 years — they are one of the most widespread birds on Earth!',
+    verifyQ: { q: 'What do House Sparrows primarily eat?', opts: ['Large mammals', 'Insects and small seeds', 'Big fish', 'Tree bark'], correct: 1 },
+    tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Flies and hops. Perches on branches.' },
   },
   {
     id: 'crow',
-    name: 'House Crow',
+    name: 'House Crow (Flying)',
+    emoji: '🐦‍⬛',
     type: 'animal',
-    habitat: 'Tree/Air',
-    details: 'A highly intelligent grey-necked black bird. Feeds on seeds, insects, and food scraps.',
-    fact: 'Crows can recognize individual human faces and are known to use tools to solve complex puzzles.',
-    question: 'How do birds like crows adapt to their habitat?',
-    options: ['They have hollow bones and wings to fly', 'They have gills to breathe underwater', 'They have thick fur to survive snow'],
-    correctIndex: 0,
-    x: 390,
-    y: 100,
-    radius: 24,
-    color: '#1e293b'
+    x: 29, y: 13, w: 16, h: 14,
+    details: 'A grey-necked bird flying in the clear sky. Crows are scavengers that eat scraps, small pests, and seeds.',
+    fact: 'Crows are remarkably intelligent — they can recognize individual human faces and even use sticks as tools to fetch food!',
+    verifyQ: { q: 'What is a crow classified as in terms of its diet?', opts: ['Pure herbivore', 'Scavenger that eats scraps and pests', 'Deep-sea predator', 'Insect only feeder'], correct: 1 },
+    tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Flies. Soars in the open air.' },
   },
   {
-    id: 'ant',
-    name: 'Black Garden Ant',
-    type: 'animal',
-    habitat: 'Land (Underground)',
-    details: 'A tiny crawling insect that lives in highly organized colonies. Feeds on leaves, honeydew, and small pests.',
-    fact: 'Ants do not have lungs; they breathe through tiny holes all over their bodies called spiracles.',
-    question: 'How do ants move and search for food?',
-    options: ['Flying with hidden wings', 'Crawling on their six legs', 'Slithering like a snake'],
-    correctIndex: 1,
-    x: 450,
-    y: 260,
-    radius: 16,
-    color: '#0f172a'
+    id: 'rose_plants',
+    name: 'Hibiscus & Rose Bushes',
+    emoji: '🌺',
+    type: 'plant',
+    x: 10, y: 62, w: 18, h: 18,
+    details: 'Flowering shrubs with multiple thin but woody stems branching near the ground level. Produce vibrant red and pink blooms.',
+    fact: 'Shrubs are medium-sized plants with hard woody stems, but unlike trees they do not have a single thick main trunk!',
+    verifyQ: { q: 'Which plant classification do Hibiscus and Rose Bushes belong to?', opts: ['Herbs (soft stem)', 'Trees (single thick trunk)', 'Shrubs (woody stems, no main trunk)', 'Aquatic plants'], correct: 2 },
+    tableInfo: { stem: 'Hard, thin woody stems branching near base', leaves: 'Simple, alternate arrangement', flowers: 'Vibrant red and pink', notes: 'Classified as Shrub. Medium height.' },
   },
   {
-    id: 'frog',
-    name: 'Indian Pond Frog',
-    type: 'animal',
-    habitat: 'Pond (Water/Land)',
-    details: 'An amphibian with smooth green skin, webbed feet for swimming, and powerful hind legs for jumping.',
-    fact: 'Frogs can breathe both through their lungs on land and directly through their moist skin underwater.',
-    question: 'What is the habitat of an amphibian like a frog?',
-    options: ['Only deep ocean waters', 'Only high mountain dry deserts', 'Both land and freshwater ponds'],
-    correctIndex: 2,
-    x: 320,
-    y: 270,
-    radius: 28,
-    color: '#16a34a'
+    id: 'tulsi',
+    name: 'Tulsi & Grass Herbs',
+    emoji: '🌿',
+    type: 'plant',
+    x: 69, y: 89, w: 18, h: 16,
+    details: 'Small leafy green plants growing close to the ground, with soft tender stems and highly aromatic leaves.',
+    fact: 'Tulsi (Holy Basil) is considered sacred in India and has been used in traditional medicine for over 3,000 years!',
+    verifyQ: { q: 'What is the key feature that identifies Tulsi as an herb?', opts: ['It has a thick woody trunk', 'It lives underwater', 'It has soft green non-woody stems', 'It only grows in snow'], correct: 2 },
+    tableInfo: { stem: 'Soft, green, tender non-woody stem', leaves: 'Opposite simple green leaves', flowers: 'Small purplish spikes', notes: 'Classified as Herb. Very short height.' },
+  },
+];
+
+/* ─────────────────────────────────────────────
+   BONUS ORGANISMS (scannable for fun, no MCQ required)
+   ───────────────────────────────────────────── */
+const BONUS_ORGANISMS = [
+  {
+    id: 'peacock',
+    name: 'Pond Water Lilies',
+    emoji: '🪷',
+    x: 17, y: 77, w: 14, h: 14,
+    details: "Water lilies floating in the freshwater pond, supporting small aquatic organisms and adding biological beauty.",
+    fact: "Water lily leaves have stomata on their upper surfaces instead of their lower surfaces to breathe directly in contact with air!",
   },
   {
     id: 'snail',
     name: 'Garden Snail',
-    type: 'animal',
-    habitat: 'Moist Land',
-    details: 'A slow-crawling mollusk with a hard protective shell on its back. Prefers shady, moist gardens.',
-    fact: 'Snails leave a trail of slime behind them to reduce friction and protect their soft bodies.',
-    question: 'How does a snail protect its soft body from predators?',
-    options: ['It runs away very fast', 'It retracts into its hard calcium shell', 'It stings with poisonous claws'],
-    correctIndex: 1,
-    x: 235,
-    y: 365,
-    radius: 22,
-    color: '#854d0e'
+    emoji: '🐌',
+    x: 35, y: 86, w: 12, h: 12,
+    details: "A slow-moving mollusc that carries a protective spiral shell on its back and leaves a silvery slime trail.",
+    fact: "Snails cannot hear at all — they rely solely on their sense of touch and smell to find their way around!",
   }
 ];
 
+const QUIZ_QUESTIONS = [
+  { q: 'Why do we observe plants during the nature walk?', opts: ['To memorize their names', 'To compare their features', 'To collect all flowers', 'To remove weeds'], correct: 1, explain: 'Observation helps us compare features like leaf arrangement, stems, and heights between different plant types.' },
+  { q: 'Which part of a plant can be soft or hard?', opts: ['Flower', 'Stem', 'Seed', 'Fruit'], correct: 1, explain: 'Stems can be soft and green (in herbs) or hard and woody (in shrubs and trees).' },
+  { q: 'Which is the correct way to collect materials for a scrapbook?', opts: ['Pluck fresh flowers', 'Break branches', 'Collect fallen leaves', 'Remove small plants'], correct: 2, explain: 'To protect biodiversity, we should only collect fallen leaves or flowers and never harm living plants.' },
+  { q: 'Why should we not disturb plants and animals?', opts: ['They may disappear forever', 'Nature should be respected', 'It wastes time', 'It is difficult'], correct: 1, explain: 'Living creatures belong to nature and should be respected. We must observe them without disturbing their habitats.' },
+  { q: 'Which feature can be observed in flowers?', opts: ['Colour', 'Shape', 'Scent', 'All of these'], correct: 3, explain: 'Flowers differ in all these features—color, shape, and scent—to attract different pollinating insects.' },
+  { q: 'Which observation is suitable for animals?', opts: ['Stem type', 'Leaf arrangement', 'Way they move', 'Flower colour'], correct: 2, explain: 'Unlike plants, animals are capable of locomotion. Observing how they move helps in classifying them.' },
+  { q: 'Why do students record observations in a table?', opts: ['To make work longer', 'To organise information clearly', 'To decorate the notebook', 'To copy from friends'], correct: 1, explain: 'Tables help scientists organize large amounts of observation details systematically for comparison.' },
+  { q: 'Which skill is most important during this activity?', opts: ['Guessing', 'Careful observation', 'Running fast', 'Drawing only'], correct: 1, explain: 'Careful observation is the key skill required in science to gather factual evidence about the natural world.' },
+];
+
 export default function VirtualBiodiversityExplorer({ onBackToDashboard }) {
-  const [selectedId, setSelectedId] = useState(null);
-  const [notebook, setNotebook] = useState({});
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [questionError, setQuestionError] = useState(false);
-  const [showCertificate, setShowCertificate] = useState(false);
+  const { theme } = useTheme();
+  const [phase, setPhase] = useState('intro'); // intro | game | quiz | cert
+  const [notebook, setNotebook] = useState([]); // logged target IDs
+  const [bonusLog, setBonusLog] = useState([]); // logged bonus IDs
 
-  const activeOrganism = ORGANISMS.find(o => o.id === selectedId);
-  const loggedCount = Object.keys(notebook).length;
-  const isComplete = loggedCount === ORGANISMS.length;
+  // Bounding dimensions of the container
+  const [containerSize, setContainerSize] = useState({ width: 800, height: 450 });
 
-  const handleSelectHotspot = (id) => {
-    setSelectedId(id);
-    setSelectedAnswer(null);
-    setQuestionError(false);
-  };
+  // Scanner state
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isInsideImage, setIsInsideImage] = useState(false);
+  const [hoveredTarget, setHoveredTarget] = useState(null);
+  const [isHolding, setIsHolding] = useState(false);
+  const [holdProgress, setHoldProgress] = useState(0);
+  const [missMessage, setMissMessage] = useState('');
+  const [missPos, setMissPos] = useState({ x: 0, y: 0 });
 
-  const handleLogToNotebook = () => {
-    if (selectedAnswer === null) {
-      setQuestionError(true);
+  // Floating panel / Hints
+  const [showHints, setShowHints] = useState(false);
+  const [isPanelHovered, setIsPanelHovered] = useState(false);
+
+  // Popup state
+  const [scannedOrganism, setScannedOrganism] = useState(null); // target or bonus
+  const [isBonusScan, setIsBonusScan] = useState(false);
+  const [verifyAnswer, setVerifyAnswer] = useState(null);
+  const [verifyChecked, setVerifyChecked] = useState(false);
+  const [verifyCorrect, setVerifyCorrect] = useState(false);
+
+  // Quiz state
+  const [currentQIndex, setCurrentQIndex] = useState(0);
+  const [selectedOpt, setSelectedOpt] = useState(null);
+  const [quizChecked, setQuizChecked] = useState(false);
+  const [quizAnswers, setQuizAnswers] = useState({});
+
+  const containerRef = useRef(null);
+  const holdIntervalRef = useRef(null);
+
+  // Clean up Speech and Intervals
+  useEffect(() => {
+    return () => {
+      window.speechSynthesis.cancel();
+      clearInterval(holdIntervalRef.current);
+    };
+  }, []);
+
+  // Update container size dynamically to keep scanner coordinates precise
+  useEffect(() => {
+    if (phase !== 'game' || !containerRef.current) return;
+    const updateSize = () => {
+      if (containerRef.current) {
+        setContainerSize({
+          width: containerRef.current.clientWidth,
+          height: containerRef.current.clientHeight
+        });
+      }
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, [phase]);
+
+  // Mouse move inside canvas
+  const handleMouseMove = useCallback((e) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setMousePos({ x, y });
+
+    const pctX = (x / rect.width) * 100;
+    const pctY = (y / rect.height) * 100;
+
+    // 1. Check required targets
+    const target = TARGET_ORGANISMS.find(t =>
+      pctX >= t.x - t.w / 2 && pctX <= t.x + t.w / 2 &&
+      pctY >= t.y - t.h / 2 && pctY <= t.y + t.h / 2
+    );
+
+    // 2. Check bonus targets
+    const bonus = BONUS_ORGANISMS.find(b =>
+      pctX >= b.x - b.w / 2 && pctX <= b.x + b.w / 2 &&
+      pctY >= b.y - b.h / 2 && pctY <= b.y + b.h / 2
+    );
+
+    if (target) {
+      setHoveredTarget({ data: target, isBonus: false });
+    } else if (bonus) {
+      setHoveredTarget({ data: bonus, isBonus: true });
+    } else {
+      setHoveredTarget(null);
+      if (isHolding) stopHolding();
+    }
+  }, [isHolding]);
+
+  const startHolding = useCallback((e) => {
+    if (e.button !== 0) return; // Only left click
+    if (!hoveredTarget) {
+      setMissMessage('Try searching another area!');
+      setMissPos({ x: mousePos.x, y: mousePos.y });
+      setTimeout(() => setMissMessage(''), 1400);
       return;
     }
 
-    if (selectedAnswer !== activeOrganism.correctIndex) {
-      setQuestionError(true);
+    const { data, isBonus } = hoveredTarget;
+    const isAlreadyLogged = isBonus 
+      ? bonusLog.includes(data.id) 
+      : notebook.includes(data.id);
+
+    if (isAlreadyLogged) {
+      setMissMessage('Already logged! ✓');
+      setMissPos({ x: mousePos.x, y: mousePos.y });
+      setTimeout(() => setMissMessage(''), 1400);
       return;
     }
 
-    // Correct answer - Log it
-    const newNotebook = { ...notebook, [activeOrganism.id]: true };
-    setNotebook(newNotebook);
-    setSelectedId(null);
-    setSelectedAnswer(null);
-    setQuestionError(false);
+    setIsHolding(true);
+    setHoldProgress(0);
+    let prog = 0;
 
-    // Trigger success audio or celebrate
-    if (Object.keys(newNotebook).length === ORGANISMS.length) {
-      setShowCertificate(true);
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
+    holdIntervalRef.current = setInterval(() => {
+      prog += 8; // charges in ~1.2 seconds
+      if (prog >= 100) {
+        clearInterval(holdIntervalRef.current);
+        setHoldProgress(100);
+        setIsHolding(false);
+        setScannedOrganism(data);
+        setIsBonusScan(isBonus);
+        setVerifyAnswer(null);
+        setVerifyChecked(false);
+        setVerifyCorrect(false);
+      } else {
+        setHoldProgress(prog);
+      }
+    }, 100);
+  }, [hoveredTarget, mousePos, notebook, bonusLog]);
+
+  const stopHolding = useCallback(() => {
+    setIsHolding(false);
+    setHoldProgress(0);
+    clearInterval(holdIntervalRef.current);
+  }, []);
+
+  const logToNotebook = () => {
+    if (!scannedOrganism) return;
+    if (isBonusScan) {
+      if (!bonusLog.includes(scannedOrganism.id)) {
+        setBonusLog(prev => [...prev, scannedOrganism.id]);
+      }
+    } else {
+      if (!notebook.includes(scannedOrganism.id)) {
+        setNotebook(prev => [...prev, scannedOrganism.id]);
+      }
     }
+    setScannedOrganism(null);
+    setVerifyAnswer(null);
+    setVerifyChecked(false);
+    setVerifyCorrect(false);
   };
 
   const handleReset = () => {
-    setNotebook({});
-    setSelectedId(null);
-    setSelectedAnswer(null);
-    setQuestionError(false);
-    setShowCertificate(false);
+    setNotebook([]);
+    setBonusLog([]);
+    setScannedOrganism(null);
+    stopHolding();
+    setPhase('game');
+    setShowHints(false);
+  };
+
+  // Quiz checks
+  const handleCheckAnswer = () => {
+    setQuizChecked(true);
+    setQuizAnswers(prev => ({
+      ...prev,
+      [currentQIndex]: selectedOpt === QUIZ_QUESTIONS[currentQIndex].correct
+    }));
+  };
+
+  const handleNextQuestion = () => {
+    setSelectedOpt(null);
+    setQuizChecked(false);
+    if (currentQIndex < QUIZ_QUESTIONS.length - 1) {
+      setCurrentQIndex(currentQIndex + 1);
+    } else {
+      setPhase('cert');
+      confetti({ particleCount: 160, spread: 90, origin: { y: 0.6 } });
+    }
   };
 
   return (
     <div style={{
-      position: 'relative',
-      height: '100%',
       width: '100%',
-      minHeight: '600px',
-      background: 'linear-gradient(135deg, #064e3b 0%, #022c22 100%)',
+      minHeight: 'calc(100vh - 3rem)',
+      background: 'var(--page-bg)',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
       color: 'var(--text-primary)',
-      fontFamily: 'system-ui, sans-serif',
-      overflow: 'hidden'
+      display: 'flex',
+      flexDirection: 'column',
+      boxSizing: 'border-box',
     }}>
-      {/* Floating Control Panel */}
-      <aside className="glass-panel" style={{
-        position: 'absolute',
-        bottom: '1.5rem',
-        left: '1.5rem',
-        width: '340px',
-        background: 'rgba(var(--card-bg-rgb), 0.85)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid var(--border)',
-        borderRadius: '16px',
-        padding: '1.25rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-        zIndex: 10
-      }}>
-        {/* Back Button & Mission */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <button
-            onClick={onBackToDashboard}
-            style={{
-              background: 'rgba(0,0,0,0.1)',
-              border: '1px solid var(--border)',
-              borderRadius: '8px',
-              color: 'var(--text-heading)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              cursor: 'pointer',
-              fontSize: '0.85rem',
-              padding: '0.4rem 0.8rem',
-              fontWeight: 600,
-              width: 'max-content'
-            }}
-          >
-            <ArrowLeft size={16} /> Back to Chapters
-          </button>
-          
-          <div style={{
-            background: 'var(--accent-bg)',
-            borderLeft: '3px solid var(--accent)',
-            padding: '0.5rem 0.75rem',
-            borderRadius: '0 8px 8px 0',
-          }}>
-            <strong style={{ color: 'var(--accent)', fontSize: '0.75rem', textTransform: 'uppercase', display: 'block', marginBottom: '0.2rem' }}>
-              Your Mission:
-            </strong>
-            <span style={{ fontSize: '0.75rem', lineHeight: '1.3', color: 'var(--text-secondary)' }}>
-              Explore the garden. Find and log all 8 organisms.
-            </span>
-          </div>
-        </div>
+      {/* SVG Wave filter for the scanner lens distortion */}
+      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+        <defs>
+          <filter id="scanner-waves">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04 0.08" numOctaves="2" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
 
-        {/* Notebook Checklist (Grid) */}
+      {/* ────── INTRO PHASE ────── */}
+      {phase === 'intro' && (
         <div style={{
-          background: 'var(--surface)',
-          border: '1px solid var(--border-light)',
-          padding: '0.75rem 1rem',
-          borderRadius: '12px'
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          maxWidth: '1160px', // Restructured: Widescreen view utilizing full space
+          margin: '0 auto',
+          padding: '2.5rem 1.5rem',
+          boxSizing: 'border-box',
+          gap: '2.5rem',
+          animation: 'fadeIn 0.4s ease-out'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <h3 style={{
-              margin: 0,
-              fontSize: '0.85rem',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              color: 'var(--text-heading)'
+          {/* Header section */}
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              fontSize: '0.95rem',
+              fontWeight: 800,
+              color: 'var(--accent)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.15em',
+              marginBottom: '0.25rem'
             }}>
-              📓 Notebook ({loggedCount}/8)
-            </h3>
-            <button
-              onClick={handleReset}
-              style={{
-                background: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid rgba(239, 68, 68, 0.2)',
-                color: '#f87171',
-                padding: '0.25rem 0.5rem',
-                borderRadius: '6px',
-                fontSize: '0.7rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.25rem'
-              }}
-            >
-              <RefreshCw size={10} /> Reset Log
-            </button>
+              Phase 1: Concept Introduction
+            </div>
+            <h1 style={{
+              margin: 0,
+              fontSize: '2.8rem', // larger, clearer title font
+              color: 'var(--text-heading)',
+              fontWeight: 900,
+              letterSpacing: '-0.02em',
+              lineHeight: '1.2'
+            }}>
+              Understanding Biodiversity
+            </h1>
           </div>
-          
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(2, 1fr)', 
-            gap: '0.5rem'
+
+          {/* Main Content Grid (Two Columns) */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1.1fr 1.3fr',
+            gap: '2.5rem',
+            width: '100%',
+            alignItems: 'stretch'
           }}>
-            {ORGANISMS.map(org => {
-              const isLogged = notebook[org.id];
-              return (
+            {/* Left Column: Interactive Icon Shield & Concept Summary */}
+            <div className="glass-panel" style={{
+              background: 'linear-gradient(135deg, var(--card-bg) 0%, rgba(99, 102, 241, 0.02) 100%)',
+              borderRadius: '16px',
+              border: '1.5px solid var(--border)',
+              padding: '2.5rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '2rem',
+              textAlign: 'left',
+              boxShadow: '0 12px 35px rgba(0, 0, 0, 0.04)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              {/* Decorative background element */}
+              <div style={{
+                position: 'absolute',
+                top: '-20%',
+                right: '-20%',
+                width: '180px',
+                height: '180px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%)',
+                pointerEvents: 'none'
+              }} />
+
+              <div style={{
+                background: 'rgba(99, 102, 241, 0.12)',
+                borderRadius: '50%',
+                padding: '2.25rem',
+                border: '3px dashed var(--accent)',
+                boxShadow: '0 0 35px rgba(99, 102, 241, 0.15)',
+                alignSelf: 'center'
+              }}>
+                <Target size={60} style={{ color: 'var(--accent)' }} />
+              </div>
+              <div>
+                <p style={{
+                  fontSize: '1.35rem', // increased size to match activity 2.2
+                  color: 'var(--text-primary)',
+                  lineHeight: '1.75',
+                  margin: 0,
+                  fontWeight: '450',
+                  textAlign: 'left'
+                }}>
+                  <strong style={{ color: 'var(--accent)' }}>Biodiversity</strong> is the rich variety of all living organisms — plants, animals, insects, and fungi — living together in mutual interdependence. Every species plays a vital role in the ecological balance of our planet.
+                </p>
+              </div>
+            </div>
+
+            {/* Right Column: Premium Concept Cards */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.25rem',
+              justifyContent: 'center'
+            }}>
+              {[
+                {
+                  title: '🤝 Interdependence',
+                  desc: 'No living organism lives in isolation. Every species supports others in the ecosystem to maintain balance.',
+                  gradient: 'linear-gradient(to right, rgba(59, 130, 246, 0.03), rgba(59, 130, 246, 0.07))',
+                  border: 'rgba(59, 130, 246, 0.15)',
+                  leftBar: '6px solid #3b82f6',
+                  titleColor: '#1e3a8a'
+                },
+                {
+                  title: '🌱 Mutual Benefits',
+                  desc: 'Plants produce oxygen and food. Animals fertilise soil, pollinate flowers, and disperse seeds for propagation.',
+                  gradient: 'linear-gradient(to right, rgba(16, 185, 129, 0.03), rgba(16, 185, 129, 0.07))',
+                  border: 'rgba(16, 185, 129, 0.15)',
+                  leftBar: '6px solid #10b981',
+                  titleColor: '#065f46'
+                },
+                {
+                  title: '🚀 Your Mission',
+                  desc: 'Move the digital scanner over the scene to locate, identify, and log 8 target species in your field notebook!',
+                  gradient: 'linear-gradient(to right, rgba(245, 158, 11, 0.03), rgba(245, 158, 11, 0.07))',
+                  border: 'rgba(245, 158, 11, 0.15)',
+                  leftBar: '6px solid #f59e0b',
+                  titleColor: '#b45309'
+                }
+              ].map((card, i) => (
                 <div
-                  key={org.id}
+                  key={i}
+                  className="glass-panel"
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.35rem',
-                    fontSize: '0.75rem',
-                    color: isLogged ? 'var(--text-primary)' : 'var(--text-muted)'
+                    background: card.gradient,
+                    border: `1.5px solid ${card.border}`,
+                    borderLeft: card.leftBar,
+                    borderRadius: '16px',
+                    padding: '1.5rem 2rem',
+                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                    cursor: 'default',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.02)',
+                    textAlign: 'left'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.02)';
                   }}
                 >
-                  <CheckCircle2
-                    size={12}
-                    color={isLogged ? 'var(--success)' : 'var(--text-faint)'}
-                    fill={isLogged ? 'var(--success-bg)' : 'none'}
-                  />
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{org.name}</span>
+                  <h3 style={{
+                    margin: '0 0 0.25rem 0',
+                    fontSize: '1.4rem', // increased title font size
+                    color: 'var(--text-heading)',
+                    fontWeight: 'bold'
+                  }}>
+                    {card.title}
+                  </h3>
+                  <p style={{
+                    margin: 0,
+                    fontSize: '1.15rem', // increased description font size to match 2.2
+                    color: 'var(--text-secondary)',
+                    lineHeight: '1.5'
+                  }}>
+                    {card.desc}
+                  </p>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+          </div>
+
+          {/* Action buttons footer */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '1.25rem',
+            width: '100%',
+            marginTop: '0.5rem'
+          }}>
+            <button
+              onClick={onBackToDashboard}
+              className="outline"
+              style={{
+                padding: '0.8rem 1.75rem',
+                fontSize: '1.1rem',
+                borderRadius: '10px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Exit Activity
+            </button>
+            <button
+              onClick={() => setPhase('game')}
+              className="primary"
+              style={{
+                padding: '0.8rem 2.25rem',
+                fontSize: '1.1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontWeight: '700',
+                background: 'linear-gradient(135deg, var(--accent) 0%, #4f46e5 100%)',
+                boxShadow: '0 4px 15px rgba(99, 102, 241, 0.3)',
+                border: 'none',
+                color: '#fff',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.02)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.3)';
+              }}
+            >
+              Start Nature Walk <ChevronRight size={20} />
+            </button>
           </div>
         </div>
-      </aside>
+      )}
 
-      {/* Main Exploration Pane */}
-      <main style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 0,
-        overflow: 'hidden'
-      }}>
-        {/* SVG Ecosystem Graphics */}
-        <svg width="100%" height="100%" viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice" style={{ display: 'block' }}>
-            <defs>
-              <linearGradient id="sunGlowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#fde68a" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient id="orangeWingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#f97316" />
-                <stop offset="60%" stopColor="#ea580c" />
-                <stop offset="100%" stopColor="#b45309" />
-              </linearGradient>
-              <radialGradient id="frogBodyGrad" cx="50%" cy="40%" r="50%">
-                <stop offset="0%" stopColor="#4ade80" />
-                <stop offset="70%" stopColor="#22c55e" />
-                <stop offset="100%" stopColor="#15803d" />
-              </radialGradient>
-              <linearGradient id="snailBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#fef9c3" />
-                <stop offset="70%" stopColor="#fef08a" />
-                <stop offset="100%" stopColor="#fde047" />
-              </linearGradient>
-              <radialGradient id="snailShellGrad" cx="40%" cy="40%" r="50%">
-                <stop offset="0%" stopColor="#b45309" />
-                <stop offset="70%" stopColor="#92400e" />
-                <stop offset="100%" stopColor="#78350f" />
-              </radialGradient>
-              <linearGradient id="crowBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#1e293b" />
-                <stop offset="60%" stopColor="#0f172a" />
-                <stop offset="100%" stopColor="#020617" />
-              </linearGradient>
-              <linearGradient id="antBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#1e293b" />
-                <stop offset="100%" stopColor="#090d16" />
-              </linearGradient>
-              <radialGradient id="hibiscusPetalGrad" cx="0%" cy="0%" r="100%">
-                <stop offset="0%" stopColor="#9f1239" />
-                <stop offset="40%" stopColor="#f43f5e" />
-                <stop offset="90%" stopColor="#fda4af" />
-                <stop offset="100%" stopColor="#ffe4e6" />
-              </radialGradient>
-              <linearGradient id="tulsiLeafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#065f46" />
-                <stop offset="100%" stopColor="#0d9488" />
-              </linearGradient>
-
-              {/* Dilate Morphology filters for crisp, bright outline borders */}
-              <filter id="neemOutline" x="-20%" y="-20%" width="140%" height="140%">
-                <feMorphology in="SourceAlpha" operator="dilate" radius="0.8" result="dilated" />
-                <feFlood floodColor="#86efac" result="flood" />
-                <feComposite in="flood" in2="dilated" operator="in" result="outline" />
-                <feMerge>
-                  <feMergeNode in="outline" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="hibiscusOutline" x="-20%" y="-20%" width="140%" height="140%">
-                <feMorphology in="SourceAlpha" operator="dilate" radius="0.8" result="dilated" />
-                <feFlood floodColor="#ffffff" result="flood" />
-                <feComposite in="flood" in2="dilated" operator="in" result="outline" />
-                <feMerge>
-                  <feMergeNode in="outline" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="tulsiOutline" x="-20%" y="-20%" width="140%" height="140%">
-                <feMorphology in="SourceAlpha" operator="dilate" radius="0.8" result="dilated" />
-                <feFlood floodColor="#d8b4fe" result="flood" />
-                <feComposite in="flood" in2="dilated" operator="in" result="outline" />
-                <feMerge>
-                  <feMergeNode in="outline" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="butterflyOutline" x="-20%" y="-20%" width="140%" height="140%">
-                <feMorphology in="SourceAlpha" operator="dilate" radius="1.2" result="dilated" />
-                <feFlood floodColor="#fef08a" result="flood" />
-                <feComposite in="flood" in2="dilated" operator="in" result="outline" />
-                <feMerge>
-                  <feMergeNode in="outline" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="crowOutline" x="-20%" y="-20%" width="140%" height="140%">
-                <feMorphology in="SourceAlpha" operator="dilate" radius="1.2" result="dilated" />
-                <feFlood floodColor="#ffffff" result="flood" />
-                <feComposite in="flood" in2="dilated" operator="in" result="outline" />
-                <feMerge>
-                  <feMergeNode in="outline" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="antOutline" x="-20%" y="-20%" width="140%" height="140%">
-                <feMorphology in="SourceAlpha" operator="dilate" radius="1.2" result="dilated" />
-                <feFlood floodColor="#67e8f9" result="flood" />
-                <feComposite in="flood" in2="dilated" operator="in" result="outline" />
-                <feMerge>
-                  <feMergeNode in="outline" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="frogOutline" x="-20%" y="-20%" width="140%" height="140%">
-                <feMorphology in="SourceAlpha" operator="dilate" radius="1.2" result="dilated" />
-                <feFlood floodColor="#86efac" result="flood" />
-                <feComposite in="flood" in2="dilated" operator="in" result="outline" />
-                <feMerge>
-                  <feMergeNode in="outline" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="snailOutline" x="-20%" y="-20%" width="140%" height="140%">
-                <feMorphology in="SourceAlpha" operator="dilate" radius="1.2" result="dilated" />
-                <feFlood floodColor="#fef08a" result="flood" />
-                <feComposite in="flood" in2="dilated" operator="in" result="outline" />
-                <feMerge>
-                  <feMergeNode in="outline" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            <style>{`
-              @keyframes flap {
-                0%, 100% { transform: scaleX(1); }
-                50% { transform: scaleX(0.2); }
-              }
-              @keyframes flightPath {
-                0% { transform: translate(160px, 240px) rotate(0deg); }
-                25% { transform: translate(185px, 220px) rotate(15deg); }
-                50% { transform: translate(210px, 250px) rotate(-10deg); }
-                75% { transform: translate(175px, 270px) rotate(20deg); }
-                100% { transform: translate(160px, 240px) rotate(0deg); }
-              }
-              @keyframes antCrawl {
-                0% { transform: translate(450px, 300px) rotate(-90deg) scale(0.65); }
-                50% { transform: translate(450px, 220px) rotate(-90deg) scale(0.65); }
-                100% { transform: translate(450px, 300px) rotate(-90deg) scale(0.65); }
-              }
-              @keyframes frogPuff {
-                0%, 100% { transform: translate(320px, 270px) scale(1.05); }
-                50% { transform: translate(320px, 270px) scale(1.15); }
-              }
-              @keyframes snailMove {
-                0% { transform: translate(235px, 365px) scale(1.1); }
-                50% { transform: translate(255px, 363px) scale(1.1); }
-                100% { transform: translate(235px, 365px) scale(1.1); }
-              }
-              @keyframes sunPulse {
-                0%, 100% { transform: scale(1); opacity: 0.25; }
-                50% { transform: scale(1.15); opacity: 0.45; }
-              }
-              @keyframes crowTilt {
-                0%, 100% { transform: translate(390px, 100px) scale(1.05) rotate(0deg); }
-                30% { transform: translate(390px, 100px) scale(1.05) rotate(-15deg); }
-                40% { transform: translate(390px, 100px) scale(1.05) rotate(10deg); }
-                70% { transform: translate(390px, 100px) scale(1.05) rotate(0deg); }
-              }
-              @keyframes leafFallOne {
-                0% { transform: translate(490px, 70px) rotate(0deg); opacity: 0; }
-                10% { opacity: 0.7; }
-                90% { opacity: 0.7; }
-                100% { transform: translate(410px, 290px) rotate(420deg); opacity: 0; }
-              }
-              @keyframes leafFallTwo {
-                0% { transform: translate(520px, 50px) rotate(0deg); opacity: 0; }
-                10% { opacity: 0.7; }
-                90% { opacity: 0.7; }
-                100% { transform: translate(470px, 250px) rotate(-380deg); opacity: 0; }
-              }
-
-              /* Pulsing glow outlines for organisms */
-              @keyframes glowOrange {
-                0%, 100% { filter: url(#butterflyOutline) drop-shadow(0 0 3px rgba(249, 115, 22, 0.75)); }
-                50% { filter: url(#butterflyOutline) drop-shadow(0 0 12px rgba(249, 115, 22, 1)); }
-              }
-              @keyframes glowGreen {
-                0%, 100% { filter: url(#frogOutline) drop-shadow(0 0 3px rgba(16, 185, 129, 0.75)); }
-                50% { filter: url(#frogOutline) drop-shadow(0 0 12px rgba(16, 185, 129, 1)); }
-              }
-              @keyframes glowNeem {
-                0%, 100% { filter: url(#neemOutline) drop-shadow(0 0 3px rgba(16, 185, 129, 0.75)); }
-                50% { filter: url(#neemOutline) drop-shadow(0 0 12px rgba(16, 185, 129, 1)); }
-              }
-              @keyframes glowGold {
-                0%, 100% { filter: url(#snailOutline) drop-shadow(0 0 3px rgba(234, 179, 8, 0.75)); }
-                50% { filter: url(#snailOutline) drop-shadow(0 0 12px rgba(234, 179, 8, 1)); }
-              }
-              @keyframes glowPurple {
-                0%, 100% { filter: url(#tulsiOutline) drop-shadow(0 0 3px rgba(168, 85, 247, 0.75)); }
-                50% { filter: url(#tulsiOutline) drop-shadow(0 0 12px rgba(168, 85, 247, 1)); }
-              }
-              @keyframes glowRed {
-                0%, 100% { filter: url(#hibiscusOutline) drop-shadow(0 0 3px rgba(239, 68, 68, 0.75)); }
-                50% { filter: url(#hibiscusOutline) drop-shadow(0 0 12px rgba(239, 68, 68, 1)); }
-              }
-              @keyframes glowCyan {
-                0%, 100% { filter: url(#antOutline) drop-shadow(0 0 3px rgba(6, 182, 212, 0.75)); }
-                50% { filter: url(#antOutline) drop-shadow(0 0 12px rgba(6, 182, 212, 1)); }
-              }
-              @keyframes glowGrey {
-                0%, 100% { filter: url(#crowOutline) drop-shadow(0 0 3px rgba(255, 255, 255, 0.75)); }
-                50% { filter: url(#crowOutline) drop-shadow(0 0 12px rgba(255, 255, 255, 1)); }
-              }
-
-              .butterfly-glow { animation: glowOrange 2s infinite ease-in-out; }
-              .frog-glow { animation: glowGreen 2s infinite ease-in-out; }
-              .snail-glow { animation: glowGold 2s infinite ease-in-out; }
-              .crow-glow { animation: glowGrey 2s infinite ease-in-out; }
-              .ant-glow { animation: glowCyan 2s infinite ease-in-out; }
-              .neem-glow { animation: glowNeem 2.4s infinite ease-in-out; }
-              .hibiscus-glow { animation: glowRed 2.4s infinite ease-in-out; }
-              .tulsi-glow { animation: glowPurple 2.4s infinite ease-in-out; }
-
-              .logged-glow { filter: none !important; opacity: 0.95; }
-
-              /* Transparent click hotspots */
-              .hotspot-btn {
-                border: none !important;
-                background: transparent !important;
-                box-shadow: none !important;
-                cursor: pointer !important;
-                outline: none !important;
-              }
-
-              /* Direct hover styles for SVG groups */
-              .neem-glow:hover, .neem-glow:focus-visible {
-                filter: url(#neemOutline) drop-shadow(0 0 16px rgba(16, 185, 129, 1)) !important;
-              }
-              .hibiscus-glow:hover, .hibiscus-glow:focus-visible {
-                filter: url(#hibiscusOutline) drop-shadow(0 0 16px rgba(239, 68, 68, 1)) !important;
-              }
-              .tulsi-glow:hover, .tulsi-glow:focus-visible {
-                filter: url(#tulsiOutline) drop-shadow(0 0 16px rgba(168, 85, 247, 1)) !important;
-              }
-              .butterfly-glow:hover, .butterfly-glow:focus-visible {
-                filter: url(#butterflyOutline) drop-shadow(0 0 16px rgba(249, 115, 22, 1)) !important;
-              }
-              .crow-glow:hover, .crow-glow:focus-visible {
-                filter: url(#crowOutline) drop-shadow(0 0 16px rgba(255, 255, 255, 1)) !important;
-              }
-              .ant-glow:hover, .ant-glow:focus-visible {
-                filter: url(#antOutline) drop-shadow(0 0 16px rgba(6, 182, 212, 1)) !important;
-              }
-              .frog-glow:hover, .frog-glow:focus-visible {
-                filter: url(#frogOutline) drop-shadow(0 0 16px rgba(34, 197, 94, 1)) !important;
-              }
-              .snail-glow:hover, .snail-glow:focus-visible {
-                filter: url(#snailOutline) drop-shadow(0 0 16px rgba(234, 179, 8, 1)) !important;
-              }
-            `}</style>
-
-            {/* Photorealistic Background Image with Translucent Opacity */}
-            <image href="/school_garden_bg.png" width="100%" height="100%" preserveAspectRatio="none" opacity="0.85" />
-
-            {/* Sun Rays Pulsing Overlay */}
-            <circle cx="70" cy="65" r="45" fill="url(#sunGlowGrad)" style={{ animation: 'sunPulse 6s infinite ease-in-out', transformOrigin: '70px 65px' }} />
-
-            {/* Pond Water Ripples */}
-            <ellipse cx="320" cy="290" rx="35" ry="12" fill="none" stroke="rgba(34, 211, 238, 0.4)" strokeWidth="1.5">
-              <animate attributeName="rx" values="15;95" dur="4s" repeatCount="indefinite" />
-              <animate attributeName="ry" values="5;32" dur="4s" repeatCount="indefinite" />
-              <animate attributeName="opacity" values="0.8;0" dur="4s" repeatCount="indefinite" />
-            </ellipse>
-            <ellipse cx="320" cy="290" rx="35" ry="12" fill="none" stroke="rgba(34, 211, 238, 0.4)" strokeWidth="1.5">
-              <animate attributeName="rx" values="15;95" dur="4s" begin="2s" repeatCount="indefinite" />
-              <animate attributeName="ry" values="5;32" dur="4s" begin="2s" repeatCount="indefinite" />
-              <animate attributeName="opacity" values="0.8;0" dur="4s" begin="2s" repeatCount="indefinite" />
-            </ellipse>
-
-            {/* Glowing Neem Tree Leaf branch overlay */}
-            <g 
-              transform="translate(475, 95) scale(1.15)" 
-              className={notebook.neem ? 'logged-glow' : 'neem-glow'}
-              onClick={() => handleSelectHotspot('neem')}
-              style={{ cursor: 'pointer', outline: 'none' }}
-              tabIndex={0}
-              role="button"
-              aria-label="Neem Tree"
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('neem'); }}
-            >
-              {/* Flexible solid circular hitbox */}
-              <circle cx="15" cy="20" r="45" fill="transparent" pointerEvents="all" />
-              {/* Main woody stem */}
-              <path d="M -5 45 Q 12 18 35 0" fill="none" stroke="#78350f" strokeWidth="2" />
-              <path d="M -5 45 Q 12 18 35 0" fill="none" stroke="#047857" strokeWidth="1" strokeDasharray="1,1" />
-
-              {/* Compound Pinnate Leaflets with veins */}
-              {/* Leaflet 1 (Top tip) */}
-              <g transform="translate(35, 0) rotate(-15)">
-                <path d="M 0 0 C 5 -5 12 -5 15 0 C 12 5 5 5 0 0" fill="#10b981" stroke="#047857" strokeWidth="0.6" />
-                <line x1="0" y1="0" x2="10" y2="0" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-              {/* Pair 1 */}
-              <g transform="translate(25, 8) rotate(-45)">
-                <path d="M 0 0 C 5 -5 12 -5 15 0 C 12 5 5 5 0 0" fill="#10b981" stroke="#047857" strokeWidth="0.6" />
-                <line x1="0" y1="0" x2="10" y2="0" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-              <g transform="translate(27, 6) rotate(15)">
-                <path d="M 0 0 C 5 -5 12 -5 15 0 C 12 5 5 5 0 0" fill="#059669" stroke="#047857" strokeWidth="0.6" />
-                <line x1="0" y1="0" x2="10" y2="0" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-              {/* Pair 2 */}
-              <g transform="translate(15, 17) rotate(-55)">
-                <path d="M 0 0 C 6 -6 14 -5 17 0 C 14 6 6 6 0 0" fill="#10b981" stroke="#047857" strokeWidth="0.6" />
-                <line x1="0" y1="0" x2="11" y2="0" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-              <g transform="translate(17, 14) rotate(5)">
-                <path d="M 0 0 C 6 -6 14 -5 17 0 C 14 6 6 6 0 0" fill="#059669" stroke="#047857" strokeWidth="0.6" />
-                <line x1="0" y1="0" x2="11" y2="0" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-              {/* Pair 3 */}
-              <g transform="translate(5, 27) rotate(-65)">
-                <path d="M 0 0 C 7 -7 16 -6 19 0 C 16 7 7 7 0 0" fill="#10b981" stroke="#047857" strokeWidth="0.6" />
-                <line x1="0" y1="0" x2="13" y2="0" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-              <g transform="translate(7, 24) rotate(-5)">
-                <path d="M 0 0 C 7 -7 16 -6 19 0 C 16 7 7 7 0 0" fill="#059669" stroke="#047857" strokeWidth="0.6" />
-                <line x1="0" y1="0" x2="13" y2="0" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-            </g>
-
-            {/* Glowing Hibiscus Shrub flower overlay */}
-            <g 
-              transform="translate(95, 250) scale(1.2)" 
-              className={notebook.hibiscus ? 'logged-glow' : 'hibiscus-glow'}
-              onClick={() => handleSelectHotspot('hibiscus')}
-              style={{ cursor: 'pointer', outline: 'none' }}
-              tabIndex={0}
-              role="button"
-              aria-label="Hibiscus Shrub"
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('hibiscus'); }}
-            >
-              {/* Flexible solid circular hitbox */}
-              <circle cx="0" cy="-5" r="40" fill="transparent" pointerEvents="all" />
-              {/* Petal 1 */}
-              <path d="M 0 0 C -12 -5 -15 -18 -5 -20 C 5 -22 8 -8 0 0" fill="url(#hibiscusPetalGrad)" opacity="0.95" />
-              {/* Petal 2 */}
-              <path d="M 0 0 C -16 5 -22 -5 -18 -14 C -14 -22 -2 -14 0 0" fill="url(#hibiscusPetalGrad)" opacity="0.95" />
-              {/* Petal 3 */}
-              <path d="M 0 0 C -14 14 -2 22 4 15 C 8 8 5 -5 0 0" fill="url(#hibiscusPetalGrad)" opacity="0.95" />
-              {/* Petal 4 */}
-              <path d="M 0 0 C 12 12 18 -2 12 -12 C 6 -20 -2 -10 0 0" fill="url(#hibiscusPetalGrad)" opacity="0.95" />
-              {/* Petal 5 */}
-              <path d="M 0 0 C 16 -5 18 -18 8 -22 C -2 -24 -8 -10 0 0" fill="url(#hibiscusPetalGrad)" opacity="0.95" />
-              
-              {/* Petal Veins */}
-              <path d="M 0 0 Q -8 -10 -4 -16 M 0 0 Q -12 -5 -14 -10 M 0 0 Q -8 8 -2 12 M 0 0 Q 8 4 10 -4 M 0 0 Q 8 -12 4 -18" fill="none" stroke="#be123c" strokeWidth="0.6" opacity="0.7" />
-
-              {/* Center Dark Core */}
-              <circle cx="0" cy="0" r="4.5" fill="#881337" />
-
-              {/* Long elegant staminal column */}
-              <path d="M 0 0 Q 8 -10 14 -18" fill="none" stroke="#e11d48" strokeWidth="2" strokeLinecap="round" />
-              {/* Pollen buds at the tip */}
-              <circle cx="14" cy="-18" r="1.5" fill="#f59e0b" />
-              <circle cx="12" cy="-19" r="1.2" fill="#fbbf24" />
-              <circle cx="16" cy="-17" r="1.2" fill="#fbbf24" />
-              <circle cx="15" cy="-21" r="1" fill="#fde047" />
-              <circle cx="10" cy="-17" r="1" fill="#fde047" />
-            </g>
-
-            {/* Glowing Tulsi Herb overlay */}
-            <g 
-              transform="translate(100, 360) scale(1.15)" 
-              className={notebook.tulsi ? 'logged-glow' : 'tulsi-glow'}
-              onClick={() => handleSelectHotspot('tulsi')}
-              style={{ cursor: 'pointer', outline: 'none' }}
-              tabIndex={0}
-              role="button"
-              aria-label="Tulsi Herb"
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('tulsi'); }}
-            >
-              {/* Flexible solid circular hitbox */}
-              <circle cx="0" cy="5" r="35" fill="transparent" pointerEvents="all" />
-              {/* Branch stems */}
-              <path d="M 0 25 Q -10 5 -15 -10" fill="none" stroke="#047857" strokeWidth="1.5" />
-              <path d="M 0 25 Q 10 5 15 -10" fill="none" stroke="#047857" strokeWidth="1.5" />
-              <path d="M 0 25 Q 0 0 0 -18" fill="none" stroke="#047857" strokeWidth="1.8" />
-
-              {/* Leaves with serrated outlines and green gradient */}
-              <g transform="translate(-10, 8) rotate(-35)">
-                <path d="M 0 0 C -8 -4 -12 2 -14 -3 C -10 -8 -4 -6 0 0" fill="url(#tulsiLeafGrad)" stroke="#115e59" strokeWidth="0.5" />
-                <line x1="0" y1="0" x2="-8" y2="-2" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-              <g transform="translate(10, 8) rotate(35)">
-                <path d="M 0 0 C 8 -4 12 2 14 -3 C 10 -8 4 -6 0 0" fill="url(#tulsiLeafGrad)" stroke="#115e59" strokeWidth="0.5" />
-                <line x1="0" y1="0" x2="8" y2="-2" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-              <g transform="translate(-12, -4) rotate(-20)">
-                <path d="M 0 0 C -6 -3 -10 2 -12 -2 C -8 -6 -3 -5 0 0" fill="url(#tulsiLeafGrad)" stroke="#115e59" strokeWidth="0.5" />
-                <line x1="0" y1="0" x2="-8" y2="-1" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-              <g transform="translate(12, -4) rotate(20)">
-                <path d="M 0 0 C 6 -3 10 2 12 -2 C 8 -6 3 -5 0 0" fill="url(#tulsiLeafGrad)" stroke="#115e59" strokeWidth="0.5" />
-                <line x1="0" y1="0" x2="8" y2="-1" stroke="#065f46" strokeWidth="0.4" />
-              </g>
-
-              {/* Purple flower spikes */}
-              <g transform="translate(0, -18)">
-                <line x1="0" y1="0" x2="0" y2="-15" stroke="#a855f7" strokeWidth="1.5" />
-                <circle cx="0" cy="-3" r="1.5" fill="#c084fc" />
-                <circle cx="0" cy="-6" r="1.5" fill="#c084fc" />
-                <circle cx="0" cy="-9" r="1.2" fill="#d8b4fe" />
-                <circle cx="0" cy="-12" r="1" fill="#e9d5ff" />
-              </g>
-              <g transform="translate(-15, -10) rotate(-15)">
-                <line x1="0" y1="0" x2="0" y2="-12" stroke="#a855f7" strokeWidth="1.2" />
-                <circle cx="0" cy="-2" r="1.2" fill="#c084fc" />
-                <circle cx="0" cy="-5" r="1.2" fill="#c084fc" />
-                <circle cx="0" cy="-8" r="1" fill="#d8b4fe" />
-              </g>
-              <g transform="translate(15, -10) rotate(15)">
-                <line x1="0" y1="0" x2="0" y2="-12" stroke="#a855f7" strokeWidth="1.2" />
-                <circle cx="0" cy="-2" r="1.2" fill="#c084fc" />
-                <circle cx="0" cy="-5" r="1.2" fill="#c084fc" />
-                <circle cx="0" cy="-8" r="1" fill="#d8b4fe" />
-              </g>
-            </g>
-
-            {/* Indian Pond Frog overlay (with breathing animation) */}
-            <g 
-              style={{ animation: 'frogPuff 3s infinite ease-in-out', cursor: 'pointer', outline: 'none' }}
-              onClick={() => handleSelectHotspot('frog')}
-              tabIndex={0}
-              role="button"
-              aria-label="Indian Pond Frog"
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('frog'); }}
-            >
-              <g className={notebook.frog ? 'logged-glow' : 'frog-glow'}>
-                {/* Flexible solid circular hitbox */}
-                <circle cx="0" cy="5" r="30" fill="transparent" pointerEvents="all" />
-              {/* Webbed Back Feet */}
-              <path d="M -15 8 C -22 6 -28 14 -20 18 C -16 20 -10 14 -12 8" fill="#15803d" stroke="#14532d" strokeWidth="1" />
-              <path d="M 15 8 C 22 6 28 14 20 18 C 16 20 10 14 12 8" fill="#15803d" stroke="#14532d" strokeWidth="1" />
-              
-              {/* Front Limbs */}
-              <path d="M -8 10 L -12 18 C -14 21 -10 23 -8 20 L -4 12" fill="#22c55e" stroke="#15803d" strokeWidth="1" />
-              <path d="M 8 10 L 12 18 C 14 21 10 23 8 20 L 4 12" fill="#22c55e" stroke="#15803d" strokeWidth="1" />
-
-              {/* Body with rich green radial gradient */}
-              <ellipse cx="0" cy="7" rx="14" ry="11" fill="url(#frogBodyGrad)" stroke="#15803d" strokeWidth="1.5" />
-              
-              {/* Light green spots on back */}
-              <circle cx="-6" cy="4" r="2" fill="#4ade80" opacity="0.6" />
-              <circle cx="6" cy="6" r="1.5" fill="#4ade80" opacity="0.6" />
-              <circle cx="-2" cy="11" r="1.8" fill="#4ade80" opacity="0.6" />
-              
-              {/* Throat that puffs */}
-              <ellipse cx="0" cy="0" rx="9" ry="6" fill="#fef08a" opacity="0.8" />
-
-              {/* Head */}
-              <ellipse cx="0" cy="-3" rx="10" ry="8" fill="url(#frogBodyGrad)" stroke="#15803d" strokeWidth="1.5" />
-
-              {/* Expressive big eyes */}
-              <circle cx="-5" cy="-8" r="4.5" fill="#fbbf24" stroke="#15803d" strokeWidth="0.8" />
-              <circle cx="-5" cy="-8" r="2" fill="#000" />
-              <circle cx="-6" cy="-9.5" r="0.8" fill="#fff" />
-              
-              <circle cx="5" cy="-8" r="4.5" fill="#fbbf24" stroke="#15803d" strokeWidth="0.8" />
-              <circle cx="5" cy="-8" r="2" fill="#000" />
-              <circle cx="4" cy="-9.5" r="0.8" fill="#fff" />
-
-              {/* Smiling mouth and nose dots */}
-              <path d="M -5 1 Q 0 4 5 1" fill="none" stroke="#14532d" strokeWidth="1.5" />
-              <circle cx="-1.5" cy="-2.5" r="0.4" fill="#14532d" />
-              <circle cx="1.5" cy="-2.5" r="0.4" fill="#14532d" />
-            </g>
-            </g>
-
-            {/* Snail overlay (with slow crawling animation) */}
-            <g 
-              style={{ animation: 'snailMove 25s infinite linear', cursor: 'pointer', outline: 'none' }}
-              onClick={() => handleSelectHotspot('snail')}
-              tabIndex={0}
-              role="button"
-              aria-label="Garden Snail"
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('snail'); }}
-            >
-              <g className={notebook.snail ? 'logged-glow' : 'snail-glow'}>
-                {/* Flexible solid circular hitbox */}
-                <circle cx="-3" cy="2" r="25" fill="transparent" pointerEvents="all" />
-              {/* Slime trail */}
-              <path d="M -22 5 Q -10 4 0 5" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="2.5" strokeDasharray="3,3" />
-              
-              {/* Snail Foot (slithering body) with yellow gradient */}
-              <path d="M -22 5 C -15 5 -10 7 0 7 C 8 7 14 5 17 1 C 19 -2 15 -4 11 -3 C 8 -2 5 0 -22 5" fill="url(#snailBodyGrad)" stroke="#ca8a04" strokeWidth="0.8" />
-              
-              {/* Swirly 3D Shell */}
-              <g transform="translate(-4, -1)">
-                <circle cx="0" cy="0" r="9" fill="url(#snailShellGrad)" stroke="#78350f" strokeWidth="1" />
-                <path d="M 0 0 C 4 3 6 -2 3 -5 C 0 -8 -6 -3 -3 2 C 0 6 7 2 5 -4" fill="none" stroke="#78350f" strokeWidth="1" />
-              </g>
-
-              {/* Eye Tentacles */}
-              <line x1="12" y1="-2" x2="15" y2="-9" stroke="#fde047" strokeWidth="1.5" />
-              <line x1="9" y1="-2" x2="11" y2="-9" stroke="#fde047" strokeWidth="1.5" />
-              <circle cx="15" cy="-9" r="1.2" fill="#78350f" />
-              <circle cx="15.2" cy="-9.2" r="0.4" fill="#fff" />
-              <circle cx="11" cy="-9" r="1.2" fill="#78350f" />
-              <circle cx="11.2" cy="-9.2" r="0.4" fill="#fff" />
-              
-              {/* Lower sensory tentacles */}
-              <line x1="14" y1="1" x2="16" y2="-1" stroke="#fde047" strokeWidth="1" />
-              <line x1="12" y1="2" x2="13.5" y2="0.5" stroke="#fde047" strokeWidth="1" />
-            </g>
-            </g>
-
-            {/* House Crow perched overlay (with head bobbing) */}
-            <g 
-              style={{ animation: 'crowTilt 9s infinite ease-in-out', transformOrigin: '6px -5px', cursor: 'pointer', outline: 'none' }}
-              onClick={() => handleSelectHotspot('crow')}
-              tabIndex={0}
-              role="button"
-              aria-label="House Crow"
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('crow'); }}
-            >
-              <g className={notebook.crow ? 'logged-glow' : 'crow-glow'}>
-                {/* Flexible solid circular hitbox */}
-                <circle cx="2" cy="4" r="25" fill="transparent" pointerEvents="all" />
-              {/* Claws gripping the branch */}
-              <path d="M 0 6 Q -3 10 -4 14 M 2 6 Q 0 10 -1 14" stroke="#0f172a" strokeWidth="1.8" fill="none" />
-              <path d="M 5 6 Q 3 10 2 14 M 7 6 Q 5 10 4 14" stroke="#0f172a" strokeWidth="1.8" fill="none" />
-              
-              {/* Tail Feathers */}
-              <path d="M -10 3 L -26 14 L -21 17 L -7 5 Z" fill="#0f172a" />
-              <path d="M -9 4 L -28 9 L -24 12 L -6 6 Z" fill="#1e293b" />
-              
-              {/* Wings folded */}
-              <path d="M -8 1 C -18 3 -12 12 -3 8 C 3 5 0 2 -8 1" fill="#0f172a" stroke="#1e293b" strokeWidth="0.5" />
-
-              {/* Body (glossy black-blue gradient) */}
-              <ellipse cx="0" cy="2" rx="11" ry="8" fill="url(#crowBodyGrad)" stroke="#0f172a" strokeWidth="0.8" />
-              
-              {/* Grey Neck Collar */}
-              <path d="M 4 -2 C 2 -6 8 -4 6 1 C 5 4 1 2 4 -2" fill="#475569" />
-
-              {/* Head */}
-              <circle cx="7" cy="-5" r="5.5" fill="#0f172a" />
-
-              {/* Sharp Crow Beak */}
-              <path d="M 12 -7 L 20 -5 L 11 -2 Z" fill="#0f172a" stroke="#0f172a" strokeWidth="0.5" />
-              <path d="M 11.5 -4.5 L 18 -5" stroke="#1e293b" strokeWidth="0.6" />
-
-              {/* Crow Eye */}
-              <circle cx="8" cy="-6" r="1.5" fill="#fff" />
-              <circle cx="8" cy="-6" r="0.8" fill="#000" />
-              <circle cx="8.3" cy="-6.3" r="0.3" fill="#fff" />
-            </g>
-            </g>
-
-            {/* Ant crawling up Neem Trunk */}
-            <g 
-              style={{ animation: 'antCrawl 15s infinite linear', cursor: 'pointer', outline: 'none' }}
-              onClick={() => handleSelectHotspot('ant')}
-              tabIndex={0}
-              role="button"
-              aria-label="Black Garden Ant"
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('ant'); }}
-            >
-              <g className={notebook.ant ? 'logged-glow' : 'ant-glow'}>
-                {/* Flexible solid circular hitbox */}
-                <circle cx="-3" cy="0" r="20" fill="transparent" pointerEvents="all" />
-              {/* Abdomen segmented */}
-              <ellipse cx="-8" cy="0" rx="5" ry="3.5" fill="url(#antBodyGrad)" stroke="#090d16" strokeWidth="0.5" />
-              <path d="M -9 -3 L -9 3" stroke="#1e293b" strokeWidth="0.5" />
-              <path d="M -7 -3 L -7 3" stroke="#1e293b" strokeWidth="0.5" />
-
-              {/* Thorax */}
-              <ellipse cx="-2" cy="0" rx="2.5" ry="2.2" fill="#0f172a" />
-
-              {/* Head */}
-              <circle cx="3" cy="0" r="2.8" fill="url(#antBodyGrad)" />
-              <circle cx="3.8" cy="-1" r="0.5" fill="#fff" />
-              {/* Mandibles */}
-              <path d="M 5 -1 Q 7 -1.5 6.5 0.5" fill="none" stroke="#090d16" strokeWidth="0.8" />
-              <path d="M 5 1 Q 7 1.5 6.5 -0.5" fill="none" stroke="#090d16" strokeWidth="0.8" />
-
-              {/* Jointed legs */}
-              <path d="M -3 0 Q -5 -6 -9 -5" fill="none" stroke="#090d16" strokeWidth="1" />
-              <path d="M -3 0 Q -5 6 -9 5" fill="none" stroke="#090d16" strokeWidth="1" />
-              <path d="M -2 0 Q -2 -6 -4 -7" fill="none" stroke="#090d16" strokeWidth="1" />
-              <path d="M -2 0 Q -2 6 -4 7" fill="none" stroke="#090d16" strokeWidth="1" />
-              <path d="M -1 0 Q 1 -5 1 -8" fill="none" stroke="#090d16" strokeWidth="1" />
-              <path d="M -1 0 Q 1 5 1 8" fill="none" stroke="#090d16" strokeWidth="1" />
-
-              {/* Antennae */}
-              <path d="M 4 -1.5 Q 7 -4 10 -3" fill="none" stroke="#0f172a" strokeWidth="0.7" />
-              <path d="M 4 1.5 Q 7 4 10 3" fill="none" stroke="#0f172a" strokeWidth="0.7" />
-            </g>
-            </g>
-
-            {/* Monarch Butterfly flying & flapping wings */}
-            <g 
-              style={{ animation: 'flightPath 10s infinite linear', cursor: 'pointer', outline: 'none' }}
-              onClick={() => handleSelectHotspot('butterfly')}
-              tabIndex={0}
-              role="button"
-              aria-label="Monarch Butterfly"
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectHotspot('butterfly'); }}
-            >
-              <g transform="scale(1.0)" className={notebook.butterfly ? 'logged-glow' : 'butterfly-glow'}>
-                {/* Flexible solid circular hitbox */}
-                <circle cx="0" cy="0" r="28" fill="transparent" pointerEvents="all" />
-                <g style={{ animation: 'flap 0.12s infinite ease-in-out', transformOrigin: '0px 0px' }}>
-                  {/* Back wings */}
-                  <path d="M 0 2 C -8 10 -15 15 -18 5 C -20 -3 -10 -5 0 2" fill="url(#orangeWingGrad)" stroke="#1e293b" strokeWidth="1" />
-                  <path d="M 0 2 C 8 10 15 15 18 5 C 20 -3 10 -5 0 2" fill="url(#orangeWingGrad)" stroke="#1e293b" strokeWidth="1" />
-                  
-                  {/* Front wings */}
-                  <path d="M 0 0 C -12 -16 -28 -8 -26 4 C -24 12 -10 6 0 2" fill="url(#orangeWingGrad)" stroke="#0f172a" strokeWidth="1.5" />
-                  <path d="M 0 0 C 12 -16 28 -8 26 4 C 24 12 10 6 0 2" fill="url(#orangeWingGrad)" stroke="#0f172a" strokeWidth="1.5" />
-                  
-                  {/* Vein details */}
-                  <path d="M 0 0 Q -15 -10 -22 -4 M 0 0 Q -18 -4 -22 2 M 0 0 Q -10 -2 -18 4" fill="none" stroke="#0f172a" strokeWidth="0.8" />
-                  <path d="M 0 0 Q 15 -10 22 -4 M 0 0 Q 18 -4 22 2 M 0 0 Q 10 -2 18 4" fill="none" stroke="#0f172a" strokeWidth="0.8" />
-                  
-                  {/* White spots */}
-                  <circle cx="-24" cy="-5" r="0.8" fill="#fff" />
-                  <circle cx="-22" cy="-1" r="0.8" fill="#fff" />
-                  <circle cx="-23" cy="2" r="0.8" fill="#fff" />
-                  <circle cx="24" cy="-5" r="0.8" fill="#fff" />
-                  <circle cx="22" cy="-1" r="0.8" fill="#fff" />
-                  <circle cx="23" cy="2" r="0.8" fill="#fff" />
-
-                  {/* Body */}
-                  <ellipse cx="0" cy="2" rx="2" ry="7" fill="#0f172a" />
-                  <circle cx="0" cy="-6" r="2.2" fill="#0f172a" />
-                  <path d="M -0.8 -7 Q -3 -12 -5 -11" fill="none" stroke="#0f172a" strokeWidth="0.8" />
-                  <circle cx="-5" cy="-11" r="0.5" fill="#0f172a" />
-                  <path d="M 0.8 -7 Q 3 -12 5 -11" fill="none" stroke="#0f172a" strokeWidth="0.8" />
-                  <circle cx="5" cy="-11" r="0.5" fill="#0f172a" />
-                </g>
-              </g>
-            </g>
-
-            {/* Falling Leaves */}
-            <path d="M 0 0 C -3 -5 -8 -5 -5 -1 C -2 3 -5 5 0 0 Z" fill="#15803d" opacity="0.8" style={{ animation: 'leafFallOne 14s infinite linear' }} />
-            <path d="M 0 0 C -3 -5 -8 -5 -5 -1 C -2 3 -5 5 0 0 Z" fill="#22c55e" opacity="0.8" style={{ animation: 'leafFallTwo 18s infinite linear' }} />
-          </svg>
-
-        {/* Microscopic Inspection Panel Overlay */}
-        {activeOrganism && (
+      {/* ────── GAME PHASE ────── */}
+      {phase === 'game' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+          {/* Top Control Bar */}
           <div style={{
-            position: 'absolute',
-            top: '40%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            background: 'rgba(15, 23, 42, 0.95)',
-            border: '1px solid rgba(250, 204, 21, 0.3)',
-            padding: '1.25rem',
-            borderRadius: '14px',
-            width: '420px',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.6)',
-            zIndex: 10,
-            animation: 'popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-            color: 'var(--text-primary)'
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0.6rem 1.25rem',
+            background: theme === 'light' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(10, 14, 30, 0.85)',
+            backdropFilter: 'blur(10px)',
+            borderBottom: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.08)',
+            zIndex: 30,
+            position: 'relative'
           }}>
-            <style>{`
-              @keyframes popUp {
-                0% { transform: translate(-50%, -40%) scale(0.9); opacity: 0; }
-                100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-              }
-            `}</style>
-            
-            {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{
-                  width: '32px',
-                  height: '32px',
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <button
+                onClick={() => { window.speechSynthesis.cancel(); stopHolding(); onBackToDashboard(); }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  padding: '0.4rem 0.85rem',
                   borderRadius: '8px',
-                  background: activeOrganism.type === 'plant' ? 'var(--success-bg)' : 'var(--accent-bg)',
-                  border: `1px solid ${activeOrganism.type === 'plant' ? 'var(--success-border)' : 'var(--accent-border)'}`,
+                  border: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.2)',
+                  background: theme === 'light' ? 'var(--page-bg)' : 'rgba(255,255,255,0.06)',
+                  color: theme === 'light' ? 'var(--text-primary)' : '#fff',
+                  fontSize: '0.82rem',
+                  cursor: 'pointer'
+                }}
+              >
+                <ArrowLeft size={14} /> Exit Game
+              </button>
+              <div>
+                <div style={{ fontSize: '1.05rem', fontWeight: 'bold', color: theme === 'light' ? 'var(--text-heading)' : '#fff' }}>Phase 2: Interactive Nature Walk</div>
+                <div style={{ fontSize: '0.72rem', color: theme === 'light' ? 'var(--text-muted)' : 'rgba(255,255,255,0.55)' }}>Scan 8 species to log them in the notebook</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              {/* Progress info */}
+              <div style={{
+                padding: '0.4rem 0.9rem',
+                borderRadius: '20px',
+                background: notebook.length >= 8 ? 'rgba(22,163,74,0.18)' : 'rgba(99,102,241,0.15)',
+                border: `1px solid ${notebook.length >= 8 ? '#4ade80' : 'rgba(99,102,241,0.5)'}`,
+                color: notebook.length >= 8 ? (theme === 'light' ? '#16a34a' : '#4ade80') : (theme === 'light' ? 'var(--accent)' : '#818cf8'),
+                fontSize: '0.85rem',
+                fontWeight: 'bold'
+              }}>
+                {notebook.length} / 8 Logged
+              </div>
+              <button
+                onClick={handleReset}
+                style={{
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '8px',
+                  border: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.15)',
+                  background: theme === 'light' ? 'var(--page-bg)' : 'rgba(255,255,255,0.06)',
+                  color: theme === 'light' ? 'var(--text-secondary)' : 'rgba(255,255,255,0.7)',
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem'
+                }}
+              >
+                <RefreshCw size={13} /> Reset
+              </button>
+            </div>
+          </div>
+
+          {/* Interactive Game Canvas */}
+          <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+            <div
+              ref={containerRef}
+              onMouseMove={handleMouseMove}
+              onMouseDown={startHolding}
+              onMouseUp={stopHolding}
+              onMouseLeave={() => { setIsInsideImage(false); stopHolding(); setHoveredTarget(null); }}
+              onMouseEnter={() => setIsInsideImage(true)}
+              style={{ width: '100%', cursor: 'none', userSelect: 'none', position: 'relative' }}
+            >
+              {/* Nature Walk Scene Background — Natural responsive sizing (no object-fit crop bugs) */}
+              <img
+                src={natureWalkScene}
+                alt="Nature Walk Scene"
+                style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '12px', pointerEvents: 'none', userSelect: 'none' }}
+                draggable={false}
+              />
+
+              {/* Gold hint rings when showHints is true */}
+              {showHints && TARGET_ORGANISMS.map(t => {
+                const logged = notebook.includes(t.id);
+                if (logged) return null;
+                return (
+                  <div
+                    key={`hint-${t.id}`}
+                    style={{
+                      position: 'absolute',
+                      left: `${t.x}%`,
+                      top: `${t.y}%`,
+                      transform: 'translate(-50%, -50%)',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: '3px solid #f59e0b', // gold ring
+                      boxShadow: '0 0 10px #f59e0b',
+                      animation: 'hintGlow 1.5s infinite ease-in-out',
+                      pointerEvents: 'none',
+                      zIndex: 8,
+                    }}
+                  />
+                );
+              })}
+
+              {/* Scanned target checkmark green badges */}
+              {TARGET_ORGANISMS.map(t => {
+                const logged = notebook.includes(t.id);
+                if (!logged) return null;
+                return (
+                  <div key={`chk-${t.id}`} style={{
+                    position: 'absolute',
+                    left: `${t.x}%`,
+                    top: `${t.y}%`,
+                    transform: 'translate(-50%, -50%)',
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    background: '#16a34a',
+                    border: '2.5px solid #fff',
+                    boxShadow: '0 0 12px rgba(22,163,74,0.7)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    pointerEvents: 'none',
+                    zIndex: 10,
+                  }}>
+                    <CheckCircle size={15} color="#fff" strokeWidth={3} />
+                  </div>
+                );
+              })}
+
+              {/* Miss message floats */}
+              {missMessage && (
+                <div style={{ position: 'absolute', left: `${missPos.x}px`, top: `${missPos.y - 36}px`, transform: 'translateX(-50%)', background: 'rgba(239,68,68,0.92)', color: '#fff', padding: '0.35rem 0.8rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 'bold', pointerEvents: 'none', zIndex: 30, boxShadow: '0 4px 10px rgba(0,0,0,0.3)', animation: 'bounceUp 0.3s ease' }}>
+                  {missMessage}
+                </div>
+              )}
+
+              {/* Clean Blue Translucent Glass Scanner Rectangle (100px x 70px) */}
+              {isInsideImage && (
+                <div style={{
+                  position: 'absolute',
+                  left: `${mousePos.x}px`,
+                  top: `${mousePos.y}px`,
+                  transform: 'translate(-50%, -50%)',
+                  width: '100px',
+                  height: '70px',
+                  border: hoveredTarget ? '2.5px solid #22d3ee' : '2.5px solid #3b82f6',
+                  borderRadius: '8px',
+                  pointerEvents: 'none',
+                  zIndex: 25,
+                  background: hoveredTarget ? 'rgba(34, 211, 238, 0.22)' : 'rgba(59, 130, 246, 0.22)',
+                  backdropFilter: 'blur(1px)',
+                  boxShadow: hoveredTarget ? '0 0 20px rgba(34, 211, 238, 0.6)' : '0 0 16px rgba(59, 130, 246, 0.5)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: activeOrganism.type === 'plant' ? 'var(--success)' : 'var(--accent)'
                 }}>
-                  {activeOrganism.type === 'plant' ? '🌿' : '🐾'}
+                  {/* Hold Progress Bar */}
+                  {isHolding && (
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '4px', background: 'rgba(0,0,0,0.3)' }}>
+                      <div style={{ height: '100%', background: hoveredTarget?.isBonus ? '#fbbf24' : '#22d3ee', width: `${holdProgress}%` }} />
+                    </div>
+                  )}
+                  {/* Corner crosshairs */}
+                  {[['0px','0px','borderTop','borderLeft'],['0px','auto','borderTop','borderRight'],['auto','0px','borderBottom','borderLeft'],['auto','auto','borderBottom','borderRight']].map(([t,r,b1,b2],i) => (
+                    <div key={i} style={{ position: 'absolute', top: t !== 'auto' ? t : undefined, right: r !== 'auto' ? r : undefined, bottom: t === 'auto' ? '0px' : undefined, left: r === 'auto' ? '0px' : undefined, width: '10px', height: '10px', [b1]: '2px solid #fff', [b2]: '2px solid #fff', opacity: 0.8 }} />
+                  ))}
                 </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>{activeOrganism.name}</h3>
-                  <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: activeOrganism.type === 'plant' ? 'var(--success)' : 'var(--accent)', fontWeight: 'bold', letterSpacing: '0.5px' }}>
-                    {activeOrganism.type} specimen
-                  </span>
-                </div>
+              )}
+            </div>
+
+            {/* Bottom-Center Floating Glass Panel (Collapses & Expands smoothly on hover) */}
+            <div
+              onMouseEnter={() => setIsPanelHovered(true)}
+              onMouseLeave={() => setIsPanelHovered(false)}
+              style={{
+                position: 'fixed',
+                bottom: '1.75rem',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 9999,
+                width: isPanelHovered ? '480px' : '380px',
+                height: isPanelHovered ? '320px' : '52px',
+                background: theme === 'light'
+                  ? (isPanelHovered ? 'rgba(255, 255, 255, 0.98)' : 'rgba(243, 244, 246, 0.95)')
+                  : (isPanelHovered ? 'rgba(10, 18, 40, 0.97)' : 'rgba(15, 23, 42, 0.85)'),
+                backdropFilter: 'blur(20px)',
+                border: theme === 'light'
+                  ? (isPanelHovered ? '2px solid var(--accent)' : '1.5px solid var(--border)')
+                  : (isPanelHovered ? '2px solid rgba(99, 102, 241, 0.65)' : '1.5px solid rgba(99, 102, 241, 0.4)'),
+                borderRadius: isPanelHovered ? '24px' : '26px',
+                padding: '0.75rem 1.5rem',
+                color: theme === 'light' ? 'var(--text-primary)' : '#fff',
+                boxShadow: theme === 'light'
+                  ? (notebook.length >= 8 ? '0 12px 40px rgba(34, 197, 94, 0.18)' : '0 12px 40px rgba(99, 102, 241, 0.18)')
+                  : (notebook.length >= 8 
+                    ? '0 12px 40px rgba(34, 197, 94, 0.35), 0 0 15px rgba(34, 197, 94, 0.15)'
+                    : '0 12px 40px rgba(99, 102, 241, 0.35), 0 0 15px rgba(99, 102, 241, 0.15)'),
+                transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                cursor: 'pointer',
+              }}
+            >
+              {/* Header inside floating pill */}
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                height: isPanelHovered ? '28px' : '100%', 
+                flexShrink: 0 
+              }}>
+                <span style={{ 
+                  fontSize: '0.92rem', 
+                  fontWeight: 'bold', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem',
+                  color: notebook.length >= 8 
+                    ? (theme === 'light' ? '#16a34a' : '#4ade80') 
+                    : (theme === 'light' ? 'var(--accent)' : '#c7d2fe')
+                }}>
+                  <Target size={18} color={notebook.length >= 8 ? (theme === 'light' ? '#16a34a' : '#4ade80') : (theme === 'light' ? 'var(--accent)' : '#818cf8')} style={{ animation: notebook.length >= 8 ? 'none' : 'pulse 2s infinite' }} />
+                  {notebook.length >= 8 ? '🎉 Nature Walk Ready!' : `🔍 Logged: ${notebook.length} / 8 Species`}
+                </span>
+                <span style={{ 
+                  fontSize: '0.72rem', 
+                  color: theme === 'light' ? 'var(--text-muted)' : 'rgba(255,255,255,0.4)', 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '0.08em',
+                  fontWeight: '600'
+                }}>
+                  {isPanelHovered ? 'Hover away to close' : 'Hover to open'}
+                </span>
               </div>
-              <button
-                onClick={() => setSelectedId(null)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--text-muted)',
-                  cursor: 'pointer',
-                  fontSize: '1.1rem',
-                  padding: '0 0.5rem'
-                }}
-              >
-                ×
-              </button>
-            </div>
 
-            {/* Specs Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '0.5rem', fontSize: '0.8rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.5rem' }}>
-              <div><strong>Native Habitat:</strong></div>
-              <div style={{ color: 'var(--success)' }}>{activeOrganism.habitat}</div>
-              <div><strong>Scientific Note:</strong></div>
-              <div style={{ color: 'var(--text-secondary)', lineHeight: '1.3' }}>{activeOrganism.details}</div>
-            </div>
+              {/* Extended panel content (Visible only when hovered) */}
+              <div style={{
+                flex: 1,
+                opacity: isPanelHovered ? 1 : 0,
+                transition: 'opacity 0.2s ease',
+                marginTop: '1rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.85rem',
+                overflowY: 'auto',
+                pointerEvents: isPanelHovered ? 'auto' : 'none',
+              }}>
+                <div style={{ fontSize: '0.85rem', color: theme === 'light' ? 'var(--text-secondary)' : 'rgba(255,255,255,0.7)', lineHeight: 1.45 }}>
+                  Find all 8 highlighted targets by scanning them. Turn on Hints if you get stuck!
+                </div>
 
-            {/* Interesting Fact */}
-            <div style={{
-              background: 'var(--warning-bg)',
-              borderLeft: '2px solid var(--warning)',
-              padding: '0.5rem 0.75rem',
-              borderRadius: '0 6px 6px 0',
-              fontSize: '0.75rem',
-              lineHeight: '1.3',
-              color: 'var(--text-primary)',
-              marginTop: '0.5rem'
-            }}>
-              💡 <strong>Did you know?</strong> {activeOrganism.fact}
-            </div>
+                {/* Target checklist grid */}
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '1fr 1fr', 
+                  gap: '0.6rem', 
+                  borderTop: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.1)', 
+                  paddingTop: '0.75rem',
+                  paddingBottom: '0.5rem'
+                }}>
+                  {TARGET_ORGANISMS.map(t => {
+                    const logged = notebook.includes(t.id);
+                    return (
+                      <div 
+                        key={t.id} 
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: '0.5rem', 
+                          fontSize: '0.85rem', 
+                          color: logged 
+                            ? (theme === 'light' ? '#15803d' : '#4ade80') 
+                            : (theme === 'light' ? 'var(--text-muted)' : 'rgba(255,255,255,0.45)'),
+                          background: logged 
+                            ? (theme === 'light' ? 'rgba(22, 163, 74, 0.06)' : 'rgba(74, 222, 128, 0.08)') 
+                            : (theme === 'light' ? 'var(--page-bg)' : 'rgba(255, 255, 255, 0.03)'),
+                          border: logged 
+                            ? (theme === 'light' ? '1px solid rgba(22, 163, 74, 0.25)' : '1px solid rgba(74, 222, 128, 0.3)') 
+                            : (theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255, 255, 255, 0.06)'),
+                          borderRadius: '10px',
+                          padding: '0.45rem 0.8rem',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <span style={{ filter: logged ? 'none' : 'grayscale(100%)', opacity: logged ? 1 : 0.4, fontSize: '1rem' }}>{t.emoji}</span>
+                        <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '140px', fontWeight: logged ? '600' : '400' }}>{t.name}</span>
+                        {logged && <CheckCircle size={13} color={theme === 'light' ? '#16a34a' : '#4ade80'} style={{ marginLeft: 'auto' }} />}
+                      </div>
+                    );
+                  })}
+                </div>
 
-            {/* Quick Verification Question */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.75rem' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-heading)' }}>🧪 Quick Verification check:</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{activeOrganism.question}</span>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginTop: '0.2rem' }}>
-                {activeOrganism.options.map((opt, idx) => (
-                  <label
-                    key={idx}
+                {/* Controls in Expanded View */}
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  borderTop: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.1)', 
+                  paddingTop: '0.75rem', 
+                  marginTop: 'auto' 
+                }}>
+                  {/* Hint Toggle */}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setShowHints(h => !h); }}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.4rem',
-                      fontSize: '0.75rem',
+                      padding: '0.45rem 1rem',
+                      borderRadius: '8px',
+                      border: theme === 'light' ? '1.5px solid #d97706' : '1.5px solid rgba(245,158,11,0.5)',
+                      background: showHints 
+                        ? (theme === 'light' ? 'rgba(217, 119, 6, 0.15)' : 'rgba(245,158,11,0.2)') 
+                        : (theme === 'light' ? 'var(--page-bg)' : 'rgba(245,158,11,0.05)'),
+                      color: theme === 'light' ? '#d97706' : '#fbbf24',
+                      fontSize: '0.85rem',
+                      fontWeight: 'bold',
                       cursor: 'pointer',
-                      padding: '0.35rem 0.5rem',
-                      borderRadius: '6px',
-                      background: selectedAnswer === idx ? 'var(--success-bg)' : 'var(--surface)',
-                      border: selectedAnswer === idx ? '1px solid var(--success)' : '1px solid var(--border-light)',
-                      color: selectedAnswer === idx ? 'var(--success)' : 'var(--text-secondary)'
+                      transition: 'all 0.2s ease'
                     }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = theme === 'light' ? 'rgba(217, 119, 6, 0.1)' : 'rgba(245,158,11,0.25)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = showHints 
+                      ? (theme === 'light' ? 'rgba(217, 119, 6, 0.15)' : 'rgba(245,158,11,0.2)') 
+                      : (theme === 'light' ? 'var(--page-bg)' : 'rgba(245,158,11,0.05)')}
                   >
-                    <input
-                      type="radio"
-                      name="check_options"
-                      checked={selectedAnswer === idx}
-                      onChange={() => {
-                        setSelectedAnswer(idx);
-                        setQuestionError(false);
+                    <Eye size={14} /> {showHints ? 'Hide Hints' : 'Show Hints'}
+                  </button>
+
+                  {/* Proceed to Quiz button */}
+                  {notebook.length >= 8 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPhase('quiz');
+                        setCurrentQIndex(0);
+                        setSelectedOpt(null);
+                        setQuizChecked(false);
+                        setQuizAnswers({});
                       }}
-                      style={{ display: 'none' }}
-                    />
-                    <span>{opt}</span>
-                  </label>
-                ))}
+                      style={{
+                        padding: '0.45rem 1.25rem',
+                        borderRadius: '8px',
+                        border: 'none',
+                        background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+                        color: '#fff',
+                        fontSize: '0.85rem',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(99,102,241,0.4)',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
+                      onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    >
+                      Start Quiz →
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* Question Error Feedback */}
-            {questionError && (
-              <span style={{ color: 'var(--danger)', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.5rem' }}>
-                ❌ Please select the correct verification answer to log in the notebook.
-              </span>
+          {/* Scan Popup Modal (Verification Gate) */}
+          {scannedOrganism && (
+            <>
+              <div onClick={() => { setScannedOrganism(null); stopHolding(); }} style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} />
+              <div onClick={e => e.stopPropagation()} style={{
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%,-50%)',
+                zIndex: 60,
+                width: 'min(520px, 92vw)',
+                background: theme === 'light' ? 'rgba(255, 255, 255, 0.98)' : 'rgba(12,18,40,0.96)',
+                backdropFilter: 'blur(24px)',
+                border: theme === 'light' ? '1.5px solid var(--border)' : '1.5px solid rgba(96,165,250,0.3)',
+                borderRadius: '20px',
+                padding: '2rem',
+                color: theme === 'light' ? 'var(--text-primary)' : '#fff',
+                boxShadow: theme === 'light' ? '0 12px 48px rgba(0,0,0,0.1)' : '0 12px 48px rgba(0,0,0,0.6)',
+                animation: 'popupIn 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.25rem'
+              }}>
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 'bold', color: isBonusScan ? '#fbbf24' : '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.25rem' }}>
+                      {isBonusScan ? '⭐ Bonus Discovery!' : '🌿 Species Detected!'}
+                    </div>
+                    <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 'bold', color: theme === 'light' ? 'var(--text-heading)' : '#fff' }}>{scannedOrganism.emoji} {scannedOrganism.name}</h3>
+                  </div>
+                  <button onClick={() => setScannedOrganism(null)} style={{ background: theme === 'light' ? 'var(--page-bg)' : 'rgba(255,255,255,0.07)', border: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', color: theme === 'light' ? 'var(--text-secondary)' : '#fff', cursor: 'pointer', padding: '0.3rem', display: 'flex' }}>
+                    <X size={18} />
+                  </button>
+                </div>
+
+                {/* Description */}
+                <p style={{ margin: 0, fontSize: '1rem', color: theme === 'light' ? 'var(--text-primary)' : 'rgba(255,255,255,0.85)', lineHeight: '1.65' }}>{scannedOrganism.details}</p>
+
+                {/* Did You Know */}
+                <div style={{
+                  background: theme === 'light' ? 'rgba(22,163,74,0.08)' : 'rgba(22,163,74,0.1)',
+                  padding: '0.9rem 1rem',
+                  borderRadius: '10px',
+                  borderLeft: '4px solid #4ade80',
+                  fontSize: '0.9rem',
+                  color: theme === 'light' ? 'var(--text-secondary)' : 'rgba(255,255,255,0.8)',
+                  lineHeight: '1.6'
+                }}>
+                  <strong style={{ color: '#4ade80' }}>💡 Did You Know?</strong> {scannedOrganism.fact}
+                </div>
+
+                {/* Verification MCQ — only for non-bonus */}
+                {!isBonusScan && scannedOrganism.verifyQ && (
+                  <div style={{ borderTop: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
+                    <div style={{ fontSize: '0.78rem', color: '#60a5fa', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.6rem' }}>🔬 Verification Check</div>
+                    <p style={{ margin: '0 0 0.75rem', fontSize: '0.95rem', color: theme === 'light' ? 'var(--text-heading)' : 'rgba(255,255,255,0.85)', fontWeight: 'bold' }}>{scannedOrganism.verifyQ.q}</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {scannedOrganism.verifyQ.opts.map((opt, i) => {
+                        let bg = theme === 'light' ? 'var(--page-bg)' : 'rgba(255,255,255,0.04)';
+                        let border = theme === 'light' ? 'var(--border)' : 'rgba(255,255,255,0.1)';
+                        if (verifyChecked) {
+                          if (i === scannedOrganism.verifyQ.correct) { bg = 'rgba(22,163,74,0.18)'; border = '#4ade80'; }
+                          else if (i === verifyAnswer) { bg = 'rgba(239,68,68,0.18)'; border = '#f87171'; }
+                        } else if (verifyAnswer === i) {
+                          bg = 'rgba(99,102,241,0.15)'; border = 'rgba(99,102,241,0.6)';
+                        }
+                        return (
+                          <button key={i} disabled={verifyChecked} onClick={() => setVerifyAnswer(i)}
+                            style={{ textAlign: 'left', padding: '0.65rem 0.9rem', borderRadius: '8px', border: `1px solid ${border}`, background: bg, color: theme === 'light' ? 'var(--text-primary)' : 'rgba(255,255,255,0.88)', fontSize: '0.9rem', cursor: verifyChecked ? 'default' : 'pointer', transition: 'all 0.2s', width: '100%' }}>
+                            {opt}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {verifyChecked && (
+                      <div style={{ marginTop: '0.75rem', fontSize: '0.88rem', color: verifyCorrect ? (theme === 'light' ? '#15803d' : '#4ade80') : (theme === 'light' ? '#b91c1c' : '#f87171'), fontWeight: 'bold' }}>
+                        {verifyCorrect ? '✅ Correct! You may log this species.' : '❌ Not quite — but you can try again later!'}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Footer buttons */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.6rem', borderTop: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.08)', paddingTop: '1rem' }}>
+                  <button onClick={() => setScannedOrganism(null)} style={{ padding: '0.5rem 1rem', borderRadius: '8px', border: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.15)', background: theme === 'light' ? 'var(--page-bg)' : 'rgba(255,255,255,0.05)', color: theme === 'light' ? 'var(--text-secondary)' : 'rgba(255,255,255,0.7)', fontSize: '0.87rem', cursor: 'pointer' }}>
+                    Keep Searching
+                  </button>
+                  {/* For bonus → always enable log button */}
+                  {isBonusScan ? (
+                    <button onClick={logToNotebook} style={{ padding: '0.5rem 1.2rem', borderRadius: '8px', border: 'none', background: 'linear-gradient(135deg,#d97706,#f59e0b)', color: '#fff', fontSize: '0.87rem', fontWeight: 'bold', cursor: 'pointer' }}>
+                      ⭐ Log as Bonus
+                    </button>
+                  ) : !verifyChecked ? (
+                    <button
+                      disabled={verifyAnswer === null}
+                      onClick={() => {
+                        const correct = verifyAnswer === scannedOrganism.verifyQ.correct;
+                        setVerifyChecked(true);
+                        setVerifyCorrect(correct);
+                      }}
+                      style={{ padding: '0.5rem 1.2rem', borderRadius: '8px', border: 'none', background: verifyAnswer !== null ? 'linear-gradient(135deg,#3b82f6,#6366f1)' : (theme === 'light' ? 'var(--border)' : 'rgba(255,255,255,0.08)'), color: theme === 'light' && verifyAnswer === null ? 'var(--text-muted)' : '#fff', fontSize: '0.87rem', fontWeight: 'bold', cursor: verifyAnswer !== null ? 'pointer' : 'default', opacity: verifyAnswer === null ? 0.5 : 1 }}>
+                      Verify Answer
+                    </button>
+                  ) : (
+                    <button
+                      onClick={logToNotebook}
+                      disabled={!verifyCorrect}
+                      style={{ padding: '0.5rem 1.2rem', borderRadius: '8px', border: 'none', background: verifyCorrect ? 'linear-gradient(135deg,#16a34a,#22c55e)' : (theme === 'light' ? 'var(--border)' : 'rgba(255,255,255,0.08)'), color: theme === 'light' && !verifyCorrect ? 'var(--text-muted)' : '#fff', fontSize: '0.87rem', fontWeight: 'bold', cursor: verifyCorrect ? 'pointer' : 'not-allowed', opacity: verifyCorrect ? 1 : 0.5 }}>
+                      {verifyCorrect ? '📔 Log in Notebook' : 'Answer Incorrectly'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ────── QUIZ PHASE ────── */}
+      {phase === 'quiz' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', gap: '1.5rem', maxWidth: '720px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+            <div>
+              <div style={{ fontSize: '0.78rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase' }}>Phase 3: Concept Quiz</div>
+              <h2 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)' }}>Nature Walk Review</h2>
+            </div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Q {currentQIndex + 1} / {QUIZ_QUESTIONS.length}</div>
+          </div>
+
+          <div style={{ width: '100%', padding: '2rem', border: '1px solid var(--accent)', borderRadius: '16px', background: 'var(--card-bg)', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-heading)', lineHeight: 1.5 }}>
+              Q{currentQIndex + 1}. {QUIZ_QUESTIONS[currentQIndex].q}
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              {QUIZ_QUESTIONS[currentQIndex].opts.map((opt, i) => {
+                let border = '1px solid var(--border)';
+                let bg = 'var(--page-bg)';
+                if (quizChecked) {
+                  if (i === QUIZ_QUESTIONS[currentQIndex].correct) { border = '2px solid var(--success)'; bg = 'rgba(5,150,105,0.08)'; }
+                  else if (i === selectedOpt) { border = '2px solid var(--danger)'; bg = 'rgba(220,38,38,0.08)'; }
+                } else if (selectedOpt === i) { border = '2px solid var(--accent)'; bg = 'rgba(99,102,241,0.08)'; }
+                return (
+                  <button key={i} disabled={quizChecked} onClick={() => setSelectedOpt(i)}
+                    style={{ textAlign: 'left', padding: '0.9rem 1.25rem', borderRadius: '8px', border, background: bg, color: 'var(--text-primary)', fontSize: '1rem', cursor: quizChecked ? 'default' : 'pointer', transition: 'all 0.18s', width: '100%' }}>
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+            {quizChecked && (
+              <div style={{ background: selectedOpt === QUIZ_QUESTIONS[currentQIndex].correct ? 'rgba(5,150,105,0.07)' : 'rgba(220,38,38,0.07)', borderLeft: `4px solid ${selectedOpt === QUIZ_QUESTIONS[currentQIndex].correct ? 'var(--success)' : 'var(--danger)'}`, padding: '1rem 1.25rem', borderRadius: '8px', fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                <strong style={{ color: selectedOpt === QUIZ_QUESTIONS[currentQIndex].correct ? 'var(--success)' : 'var(--danger)' }}>
+                  {selectedOpt === QUIZ_QUESTIONS[currentQIndex].correct ? '✅ Correct!' : '❌ Incorrect.'}
+                </strong> {QUIZ_QUESTIONS[currentQIndex].explain}
+              </div>
             )}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1.2rem' }}>
+              {!quizChecked ? (
+                <button disabled={selectedOpt === null} onClick={handleCheckAnswer} className="primary" style={{ padding: '0.55rem 1.4rem', fontSize: '0.9rem', borderRadius: '8px', cursor: selectedOpt !== null ? 'pointer' : 'not-allowed', opacity: selectedOpt === null ? 0.5 : 1 }}>
+                  Verify Answer
+                </button>
+              ) : (
+                <button onClick={handleNextQuestion} className="primary" style={{ padding: '0.55rem 1.4rem', fontSize: '0.9rem', borderRadius: '8px', cursor: 'pointer' }}>
+                  {currentQIndex === QUIZ_QUESTIONS.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
-            {/* Log Button */}
-            <button
-              onClick={handleLogToNotebook}
-              className="primary"
-              style={{
-                width: '100%',
-                background: 'var(--success)',
-                border: '1px solid var(--success-border)',
-                color: '#ffffff',
-                padding: '0.55rem',
-                borderRadius: '8px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                marginTop: '1rem',
-                cursor: 'pointer',
-                textAlign: 'center',
-                boxShadow: 'var(--btn-shadow)'
-              }}
-            >
-              Log in Notebook 📓
+      {/* ────── CERTIFICATE PHASE ────── */}
+      {phase === 'cert' && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', gap: '2.5rem', maxWidth: '620px', margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ background: 'linear-gradient(135deg,rgba(217,119,6,0.15),rgba(99,102,241,0.1))', border: '2px dashed var(--accent)', borderRadius: '24px', padding: '3rem 2rem', boxShadow: '0 8px 32px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', width: '100%' }}>
+            <div style={{ background: 'rgba(217,119,6,0.2)', borderRadius: '50%', padding: '1.25rem', border: '2px solid rgb(217,119,6)' }}>
+              <Award size={64} style={{ color: 'rgb(217,119,6)' }} />
+            </div>
+            <div>
+              <h1 style={{ fontSize: '2rem', margin: 0, fontWeight: 800, color: 'var(--text-heading)' }}>Activity 2.1 Completed!</h1>
+              <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', marginTop: '0.5rem', lineHeight: 1.6 }}>
+                Excellent work, Field Scientist! You successfully logged all 8 organisms and demonstrated your understanding of biodiversity.
+              </p>
+            </div>
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem', width: '100%', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+              ⭐ Score: {Object.values(quizAnswers).filter(Boolean).length} / {QUIZ_QUESTIONS.length} Quiz Questions Correct
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button onClick={handleReset} className="outline" style={{ padding: '0.6rem 1.25rem', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem', borderRadius: '8px', cursor: 'pointer' }}>
+              <RefreshCw size={15} /> Reset
+            </button>
+            <button onClick={onBackToDashboard} className="primary" style={{ padding: '0.65rem 1.5rem', fontSize: '0.95rem', borderRadius: '8px', cursor: 'pointer' }}>
+              Back to Chapter 2
             </button>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Complete Success Certificate Overlay */}
-        {showCertificate && (
-          <div className="glass-panel" style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'var(--page-bg)',
-            opacity: 0.95,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            padding: '2rem',
-            zIndex: 20,
-            animation: 'fadeIn 0.3s ease-out'
-          }}>
-            <div style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '50%',
-              background: 'var(--accent-bg)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--accent)',
-              marginBottom: '1rem',
-              boxShadow: '0 0 20px var(--accent-bg)'
-            }}>
-              <Award size={48} />
-            </div>
-
-            <h2 style={{ color: 'var(--text-heading)', fontSize: '1.75rem', margin: '0 0 0.5rem 0' }}>Chapter 2 Complete!</h2>
-            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', margin: '0 0 1rem 0' }}>Junior Naturalist Certification</h3>
-            
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '420px', lineHeight: '1.5', margin: '0 0 1.5rem 0' }}>
-              Congratulations! You successfully explored the school garden ecosystem, inspected all plant and animal species, and logged their classification characteristics correctly!
-            </p>
-
-            <div style={{
-              background: 'var(--surface)',
-              border: '1px solid var(--border-light)',
-              padding: '0.8rem 1.5rem',
-              borderRadius: '8px',
-              fontSize: '0.85rem',
-              marginBottom: '2rem'
-            }}>
-              Ecosystem Score: <strong style={{ color: 'var(--success)' }}>100/100</strong>
-            </div>
-
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <button
-                onClick={handleReset}
-                className="outline"
-                style={{
-                  padding: '0.5rem 1.25rem',
-                  fontSize: '0.85rem',
-                  borderColor: 'rgba(255,255,255,0.2)',
-                  color: '#d1d5db',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  background: 'none'
-                }}
-              >
-                Explore Again
-              </button>
-              <button
-                onClick={onBackToDashboard}
-                style={{
-                  padding: '0.5rem 1.25rem',
-                  fontSize: '0.85rem',
-                  background: '#fbbf24',
-                  border: 'none',
-                  color: '#022c22',
-                  fontWeight: 'bold',
-                  borderRadius: '6px',
-                  cursor: 'pointer'
-                }}
-              >
-                Back to Activities
-              </button>
-            </div>
-          </div>
-        )}
-      </main>
+      {/* Styles */}
+      <style>{`
+        @keyframes bounceUp { from { opacity:0; transform: translateX(-50%) translateY(6px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+        @keyframes popupIn  { from { opacity:0; transform: translate(-50%,-48%) scale(0.9); } to { opacity:1; transform: translate(-50%,-50%) scale(1); } }
+        @keyframes hintGlow {
+          0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.65; }
+          50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; box-shadow: 0 0 16px #f59e0b, inset 0 0 8px #f59e0b; }
+        }
+      `}</style>
     </div>
   );
 }
