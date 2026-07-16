@@ -12,42 +12,42 @@ export default function Stage1_Intro({ onComplete, addXp }) {
       name: 'Notebook', 
       material: 'Paper', 
       desc: 'Used for writing, made of sheets of paper bound together.',
-      pos: { bottom: '130px', left: '70px' }
+      pos: { bottom: '155px', left: 'calc(40% + 40px)' }
     },
     { 
       id: 'pen', 
       name: 'Pen', 
       material: 'Plastic & Metal', 
       desc: 'Used for writing, combines a plastic barrel, metal tip, and ink.',
-      pos: { bottom: '135px', left: '135px' }
+      pos: { bottom: '160px', left: 'calc(40% + 120px)' }
     },
     { 
       id: 'desk', 
       name: 'Wooden Desk', 
       material: 'Wood', 
       desc: 'Provides a sturdy writing surface, made of processed wood.',
-      pos: { bottom: '40px', left: '40px' }
+      pos: { bottom: '30px', left: '40%' }
     },
     { 
       id: 'window', 
       name: 'Window Pane', 
       material: 'Glass', 
       desc: 'Allows light to enter, made of transparent glass.',
-      pos: { top: '40px', right: '50px' }
+      pos: { top: '40px', right: '8%' }
     },
     { 
       id: 'bottle', 
       name: 'Water Bottle', 
       material: 'Metal (Stainless Steel)', 
       desc: 'Keeps water cool and safe, made of durable metal.',
-      pos: { bottom: '130px', left: '195px' }
+      pos: { bottom: '155px', left: 'calc(40% + 220px)' }
     },
     { 
       id: 'cushion', 
       name: 'Chair Cushion', 
       material: 'Cloth / Fabric', 
       desc: 'Provides comfort on seats, made of soft fabric.',
-      pos: { bottom: '50px', left: '330px' }
+      pos: { bottom: '40px', left: 'calc(40% + 290px)' }
     }
   ];
 
@@ -95,6 +95,49 @@ export default function Stage1_Intro({ onComplete, addXp }) {
         }
       `}</style>
 
+      {/* Palm Leaf Manuscript Quote Card */}
+      <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '0.5rem' }}>
+        <div style={{
+          position: 'relative',
+          width: '90%',
+          background: 'linear-gradient(to right, #dca850 0%, #e8bc6c 15%, #e0b460 50%, #e8bc6c 85%, #dca850 100%)',
+          borderRadius: '2px',
+          boxShadow: '2px 4px 10px rgba(0,0,0,0.15), inset 0 0 15px rgba(100, 50, 10, 0.1)',
+          padding: '1.5rem 2.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '0.75rem',
+          overflow: 'hidden',
+          borderTop: '1px solid #f1ce86',
+          borderBottom: '2px solid #b88530',
+          borderLeft: '2px dashed #c08d35',
+          borderRight: '2px dashed #c08d35'
+        }}>
+          {/* Palm leaf texture lines */}
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.12, background: 'repeating-linear-gradient(to bottom, transparent, transparent 10px, #4a2810 11px, #4a2810 12px)', pointerEvents: 'none' }} />
+          
+          {/* Binding Holes */}
+          <div style={{ position: 'absolute', left: '8%', top: '50%', transform: 'translateY(-50%)', width: '12px', height: '12px', background: '#3e200c', borderRadius: '50%', boxShadow: 'inset 1px 2px 3px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.4)' }} />
+          <div style={{ position: 'absolute', right: '8%', top: '50%', transform: 'translateY(-50%)', width: '12px', height: '12px', background: '#3e200c', borderRadius: '50%', boxShadow: 'inset 1px 2px 3px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.4)' }} />
+
+          <div style={{ textAlign: 'center', color: '#4a2511', zIndex: 1, padding: '0.5rem', maxWidth: '85%' }}>
+            <p style={{ margin: '0 0 0.5rem 0', fontSize: '1.6rem', fontWeight: 'bold', fontFamily: 'serif', letterSpacing: '0.5px' }}>
+              उपादानं भवेत्तस्या (मूषाया:) मृत्तिका लोहमेव च ।
+            </p>
+            <p style={{ margin: '0 0 1.25rem 0', fontSize: '1.1rem', color: '#6e3c1b', fontFamily: 'serif' }}>
+              (रसरत्नसमुच्चय—१०.३)
+            </p>
+            <p style={{ margin: '0 0 0.5rem 0', fontSize: '1.35rem', fontStyle: 'italic', fontWeight: '500' }}>
+              "The materials used to make the crucible (a vessel used to melt substances) are clay and iron."
+            </p>
+            <p style={{ margin: 0, fontSize: '1.05rem', color: '#6e3c1b' }}>
+              (Rasaratnasamuchchaya–10.3)
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Introduction Card */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--accent-border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -114,7 +157,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
         <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', height: '480px', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', background: 'var(--classroom-bg)' }}>
           
           {/* Classroom Chalkboard */}
-          <div style={{ position: 'absolute', top: '30px', left: '40px', width: '340px', height: '170px', border: '8px solid #4b5563', background: '#064e3b', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem', boxShadow: 'inset 0 4px 10px rgba(0,0,0,0.6)', zIndex: 15 }}>
+          <div style={{ position: 'absolute', top: '30px', left: '5%', width: '460px', height: '210px', border: '10px solid #4b5563', background: '#064e3b', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', boxShadow: 'inset 0 4px 15px rgba(0,0,0,0.7)', zIndex: 15 }}>
             {completed ? (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', textAlign: 'center' }}>
                 <span style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif', color: '#6ee7b7', fontSize: '1.3rem', fontWeight: 'bold' }}>All Objects Identified!</span>
@@ -142,7 +185,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               transition: 'all 0.3s'
             }}
           >
-            <svg width="110" height="110" viewBox="0 0 100 100">
+            <svg width="130" height="130" viewBox="0 0 100 100">
               <rect x="2" y="2" width="96" height="96" fill="rgba(56, 189, 248, 0.2)" stroke="#475569" strokeWidth="4" />
               <line x1="50" y1="2" x2="50" y2="98" stroke="#475569" strokeWidth="4" />
               <line x1="2" y1="50" x2="98" y2="50" stroke="#475569" strokeWidth="4" />
@@ -165,7 +208,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               transition: 'all 0.3s'
             }}
           >
-            <svg width="250" height="120" viewBox="0 0 220 110">
+            <svg width="320" height="153" viewBox="0 0 220 110">
               <rect x="10" y="20" width="200" height="15" rx="3" fill="#78350f" stroke="#451a03" strokeWidth="1.5" />
               <rect x="25" y="35" width="55" height="45" fill="#582007" />
               <rect x="30" y="42" width="45" height="10" fill="#451a03" />
@@ -190,7 +233,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               transition: 'all 0.3s'
             }}
           >
-            <svg width="45" height="40" viewBox="0 0 40 35">
+            <svg width="55" height="48" viewBox="0 0 40 35">
               <rect x="5" y="2" width="30" height="30" rx="3" fill="#3b82f6" />
               <path d="M5,2 L8,2 L8,32 L5,32 Z" fill="#2563eb" />
               <line x1="10" y1="7" x2="30" y2="7" stroke="#fff" strokeWidth="1.5" />
@@ -217,7 +260,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               transition: 'all 0.3s'
             }}
           >
-            <svg width="40" height="20" viewBox="0 0 35 15" style={{ transform: 'rotate(-10deg)' }}>
+            <svg width="50" height="21" viewBox="0 0 35 15" style={{ transform: 'rotate(-10deg)' }}>
               <rect x="2" y="5" width="22" height="5" rx="1" fill="#10b981" />
               <polygon points="24,5 30,7.5 24,10" fill="#cbd5e1" />
               <circle cx="30" cy="7.5" r="0.8" fill="#000" />
@@ -239,7 +282,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               transition: 'all 0.3s'
             }}
           >
-            <svg width="30" height="55" viewBox="0 0 25 50">
+            <svg width="38" height="70" viewBox="0 0 25 50">
               <rect x="3" y="15" width="19" height="32" rx="3" fill="#94a3b8" />
               <rect x="5" y="17" width="3" height="28" fill="rgba(255,255,255,0.4)" rx="1" />
               <rect x="6" y="8" width="13" height="7" fill="#64748b" />
@@ -261,7 +304,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               transition: 'all 0.3s'
             }}
           >
-            <svg width="100" height="130" viewBox="0 0 90 120">
+            <svg width="120" height="156" viewBox="0 0 90 120">
               <rect x="25" y="10" width="40" height="40" rx="4" fill="#5c4033" stroke="#3d2b1f" strokeWidth="1.5" />
               <ellipse cx="45" cy="55" rx="30" ry="12" fill="#d97706" stroke="#b45309" strokeWidth="2" />
               <rect x="20" y="62" width="6" height="50" fill="#3d2b1f" />
@@ -349,7 +392,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               style={{ padding: '1rem', borderRadius: '8px', background: 'var(--success-bg)', border: '1px solid var(--success-border)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontWeight: 'bold', fontSize: '1.05rem' }}>
-                <Check size={18} /> <span>All Objects Found! (+30 XP)</span>
+                <Check size={18} /> <span>All Objects Found!</span>
               </div>
               <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
                 <strong>Key Concept:</strong> A <strong>material</strong> is any substance used to make objects. Different objects can be made of the same material, or one object can be made of multiple materials!
