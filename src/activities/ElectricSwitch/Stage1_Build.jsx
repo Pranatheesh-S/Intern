@@ -721,6 +721,7 @@ export default function Stage1_Build({ onComplete }) {
           gap: "1rem",
           userSelect: "none",
           WebkitUserSelect: "none",
+          width: "100%",
         }}
       >
         {/* Header Navigation with Progress */}
@@ -772,7 +773,7 @@ export default function Stage1_Build({ onComplete }) {
         </div>
 
         {/* 2-COLUMN TOP LAYOUT GRID: Left (Tray 300px), Right (Canvas 1fr) matching Activity 4.1! */}
-        <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch", width: "100%" }}>
           
           {/* ============================================== */}
           {/* LEFT PANEL: COMPONENT TRAY                     */}

@@ -308,7 +308,7 @@ export default function Stage1_Build({ onComplete }) {
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="main-grid" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div className="main-grid" style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}>
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
           <div>
@@ -322,7 +322,7 @@ export default function Stage1_Build({ onComplete }) {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch", width: "100%" }}>
           {/* LEFT PANEL: COMPONENT TRAY */}
           <div className="glass-panel" style={{ width: "320px", display: "flex", flexDirection: "column", gap: "1rem", overflow: "hidden", border: "1px solid var(--border)" }}>
             <div style={{ padding: "1rem 1rem 0 1rem" }}>
