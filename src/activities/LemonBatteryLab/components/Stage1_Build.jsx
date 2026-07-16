@@ -155,7 +155,7 @@ export default function Stage1_Build({ onComplete }) {
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch", width: '100%' }}>
         {/* LEFT PANEL */}
         <div className="glass-panel" style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ padding: "1rem", borderBottom: "1px solid var(--border)", background: "var(--surface)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>

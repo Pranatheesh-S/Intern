@@ -54,18 +54,18 @@ const VerticalLevelMap = ({ sections, activeSectionId }) => {
       `}</style>
       <div className="glass-panel hide-scrollbar" style={{
         width: `${mapWidth}px`,
-      position: 'sticky',
-      top: '1.5rem',
-      height: 'calc(100vh - 6rem)', // Full viewport height minus some padding
-      overflowY: 'hidden',
-      overflowX: 'hidden',
-      padding: '0',
-      border: '1px solid var(--border)',
-      display: 'flex',
-      flexDirection: 'column',
-      borderRadius: '12px',
-      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
-    }}>
+        position: 'sticky',
+        top: '6.5rem',
+        height: 'calc(100vh - 8rem)', // Full viewport height minus some padding
+        overflowY: 'hidden',
+        overflowX: 'hidden',
+        padding: '0',
+        border: '1px solid var(--border)',
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: '12px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+      }}>
       {/* Header */}
       <div style={{
         position: 'sticky',

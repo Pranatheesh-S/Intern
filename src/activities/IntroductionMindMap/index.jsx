@@ -1,452 +1,223 @@
 import React, { useState } from 'react';
-import { X, Volume2, VolumeX, ChevronRight, ArrowLeft } from 'lucide-react';
-import villageScene from '../../assets/village_scene.png';
+import { BookOpen, HelpCircle, Check, Award, ArrowLeft, Volume2, VolumeX, ArrowRight, Play } from 'lucide-react';
+import sanskritSlogan from '../../assets/sanskrit_slogan.png';
 import { useTheme } from '../../ThemeContext.jsx';
 
-const NODES = [
-  {
-    id: 'guides',
-    title: '👥 The Nature Walk Guides',
-    x: '55%',
-    y: '45%',
-    content: 'The walk is led by Dr. Raghu (a researcher) and Maniram chacha (a community elder). They help students discover and respect nature.',
-    details: [
-      'Dr. Raghu is a professional scientist who explains the scientific method.',
-      'Maniram chacha is an expert in identifying local plants and animal calls.',
-      'They teach us to observe without disrupting local habitats.',
-    ],
-    speechText: 'The walk is led by Doctor Raghu and Maniram chacha. Dr. Raghu is a researcher, and Maniram chacha is a community elder who mimics bird calls.',
-  },
-  {
-    id: 'observe',
-    title: '👀 Observe Carefully',
-    x: '20%',
-    y: '50%',
-    content: 'Look closely at stems, leaves, flowers, and any unique features of plants around you.',
-    details: [
-      'Notice if stems are soft and green or hard and woody.',
-      'Look at leaf shape and how they are arranged on branches.',
-      'Note the colors, shapes, and scents of flowers.',
-    ],
-    speechText: 'Observe carefully. Look closely at stems, leaves, flowers, and any unique features of plants around you. Note if stems are soft or hard.',
-  },
-  {
-    id: 'listen',
-    title: '🎵 Listen & Mimic',
-    x: '40%',
-    y: '22%',
-    content: 'Listen closely to the unique calls of different birds and learn how they communicate.',
-    details: [
-      'Maniram chacha mimics bird chirps to show how they communicate.',
-      'Every bird species has its own unique chirp or call.',
-      'Listening is as important as looking during a nature exploration.',
-    ],
-    speechText: 'Listen closely. Hear the unique calls of different birds and learn how they communicate. Maniram chacha mimics bird calls.',
-  },
-  {
-    id: 'record',
-    title: '📋 Record in Tables',
-    x: '30%',
-    y: '75%',
-    content: 'Keep a notebook handy to log observations in Tables 2.1 and 2.2 separately for plants and animals.',
-    details: [
-      'Table 2.1: Log plant names, stems, leaf arrangement, and flowers.',
-      'Table 2.2: Log animals, their habitats, and how they move.',
-      'Always carry a notebook, pen, and a water bottle.',
-    ],
-    speechText: 'Record in tables. Keep a notebook handy to log observations in Tables 2.1 and 2.2 separately for plants and animals.',
-  },
-  {
-    id: 'compare',
-    title: '🤝 Compare & Learn',
-    x: '75%',
-    y: '65%',
-    content: 'Compare findings with your classmates. Everyone notices something unique!',
-    details: [
-      'Sharing notes helps discover new species observed by others.',
-      'Helps understand how diverse organisms are spread in the environment.',
-      'Fosters teamwork and collaborative learning.',
-    ],
-    speechText: 'Compare and learn. Compare findings with your classmates. Everyone notices something unique, which helps us learn together.',
-  },
-];
-
-const IntroductionMindMap = ({ onBackToDashboard }) => {
+export default function IntroductionMindMap({ onBackToDashboard }) {
   const { theme } = useTheme();
-  const [unlockedCount, setUnlockedCount] = useState(1); // show first node only
-  const [activeNode, setActiveNode] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  const handleNodeClick = (node) => {
-    setActiveNode(node);
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
-  };
-
-  const handleClosePopup = (markComplete = false) => {
-    setActiveNode(null);
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
-    if (markComplete) {
-      onBackToDashboard(true);
-    } else {
-      setUnlockedCount((prev) => Math.min(prev + 1, NODES.length));
+  const handleReadAloud = (text) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95;
+      utterance.onend = () => setIsSpeaking(false);
+      setIsSpeaking(true);
+      window.speechSynthesis.speak(utterance);
     }
   };
 
-  const handleReadAloud = () => {
-    if (!activeNode) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(activeNode.speechText);
-    u.rate = 0.92;
-    u.onend = () => setIsSpeaking(false);
-    setIsSpeaking(true);
-    window.speechSynthesis.speak(u);
-  };
-
   const handleStopSpeech = () => {
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
   };
 
-  // Determine popup position relative to the activeNode's coordinates
-  let popupStyle = {};
-  if (activeNode) {
-    const nodeX = parseFloat(activeNode.x);
-    const nodeY = parseFloat(activeNode.y);
-    const isRightSide = nodeX > 50;
-    const isBottomSide = nodeY > 55;
-
-    popupStyle = {
-      position: 'absolute',
-      left: `${nodeX}%`,
-      top: `${nodeY}%`,
-      // Position the callout popup left/right/above/below of the circle point dynamically
-      transform: `translate(${isRightSide ? '-108%' : '8%'}, ${isBottomSide ? '-75%' : '-25%'})`,
-      zIndex: 100,
-      width: '320px',
-      background: theme === 'light' ? 'rgba(255, 255, 255, 0.98)' : 'rgba(12, 20, 42, 0.96)',
-      backdropFilter: 'blur(20px)',
-      border: '2px solid #2563eb', // bright blue border
-      borderRadius: '16px',
-      padding: '1.25rem',
-      color: theme === 'light' ? 'var(--text-primary)' : '#fff',
-      boxShadow: theme === 'light' ? '0 8px 32px rgba(0,0,0,0.12)' : '0 8px 32px rgba(0,0,0,0.5)',
-      animation: 'fadeInScale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '0.8rem',
-    };
-  }
+  const lessonSpeechText = `
+    Chapter 2, Diversity in the Living World.
+    The lesson begins with an exciting nature walk led by Doctor Raghu and Maniram chacha.
+    During the walk, the students observe different plants, trees, birds, butterflies, monkeys, and many other living things around them.
+    They learn to watch nature carefully, listen to the unique calls of birds, and respect all living creatures without disturbing them.
+    Dr Raghu is a researcher, and Maniram chacha is a community elder who mimics bird calls.
+  `;
 
   return (
-    <div
-      style={{
-        width: '100%',
-        minHeight: 'calc(100vh - 3rem)',
-        background: 'var(--page-bg)',
-        color: 'var(--text-primary)',
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '1.5rem',
-        boxSizing: 'border-box',
-      }}
-    >
-      {/* Container with a clean border matching Activity 2.1 */}
-      <div
-        style={{
-          flex: 1,
-          border: '1.5px solid var(--border)',
-          borderRadius: '16px',
-          background: 'var(--card-bg)',
-          overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
-          position: 'relative',
-        }}
-      >
-        {/* Top Header Bar */}
-        <div
-          style={{
+    <div className="book-container">
+      <div className="book-spread">
+        
+        {/* ============ LEFT PAGE ============ */}
+        <div className="book-page-left">
+          <div className="textbook-eyebrow">Lesson 2.1 · Class 6 Science</div>
+          <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)' }}>
+            Diversity in the<br />Living World
+          </h1>
+
+          {/* Slogan Board Mounted Box */}
+          <div style={{
+            position: 'relative',
+            background: 'var(--paper2)',
+            padding: '1rem',
+            borderRadius: '12px',
+            border: '2px solid var(--cardline)',
             display: 'flex',
-            justifyContent: 'space-between',
+            flexDirection: 'column',
+            justifyContent: 'center',
             alignItems: 'center',
-            padding: '0.9rem 1.25rem',
-            borderBottom: '1.5px solid var(--border)',
-            background: 'var(--page-bg)',
-            zIndex: 10,
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <button
-              onClick={() => {
-                window.speechSynthesis.cancel();
-                // Complete if all explored, otherwise normal exit
-                onBackToDashboard(unlockedCount >= NODES.length);
-              }}
+            margin: '1.25rem 0',
+            flex: 1,
+            minHeight: '260px'
+          }}>
+            <img 
+              src={sanskritSlogan} 
+              alt="Sanskrit Slogan" 
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                border: '1.5px solid var(--border)',
-                background: 'transparent',
-                color: 'var(--text-primary)',
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                fontWeight: '600',
+                width: '100%',
+                maxHeight: '220px',
+                objectFit: 'contain',
+                mixBlendMode: 'multiply',
+                borderRadius: '6px'
               }}
-            >
-              <ArrowLeft size={16} /> Exit Lesson
-            </button>
-            <div>
-              <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
-                Lesson 2.1: Nature Walk Introduction
-              </h2>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                Interactive Mind Map — click the bright blue blinking circles
-              </span>
+            />
+            <div style={{ 
+              marginTop: '0.75rem', 
+              fontSize: '0.75rem', 
+              fontFamily: 'var(--mono-font)', 
+              color: 'var(--navy)', 
+              textAlign: 'center',
+              letterSpacing: '0.04em'
+            }}>
+              Fig 2.1: A Sanskrit Subhashita (wise saying) describing the selfless, giving nature of trees.
             </div>
           </div>
 
-          {/* Progress indicators in the header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {NODES.map((n, i) => (
-              <div
-                key={n.id}
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: '50%',
-                  background:
-                    i < unlockedCount
-                      ? i <= unlockedCount - 2
-                        ? 'var(--success)' // green for completed
-                        : 'var(--accent)' // blue for current
-                      : 'var(--border)', // grey for locked
-                  transition: 'background 0.3s ease',
-                }}
-              />
-            ))}
-            <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontWeight: 'bold', marginLeft: '0.25rem' }}>
-              {Math.min(unlockedCount - 1, NODES.length)} / {NODES.length} Explored
-            </span>
+          <div style={{ 
+            marginTop: 'auto', 
+            fontSize: '0.85rem', 
+            lineHeight: '1.6', 
+            color: 'var(--ink)', 
+            background: '#ffffff',
+            borderLeft: '4px solid var(--amber)',
+            borderRadius: '8px',
+            padding: '1rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+          }}>
+            <span style={{ fontWeight: '700', color: 'var(--navy)', display: 'block', marginBottom: '0.25rem' }}>Ecosystem Wisdom</span>
+            Noble people, like trees, bear the heat of the sun to provide shade and fruits for others. This traditional Indian verse reminds us of the deep interdependence between humans, plants, and our shared environment.
           </div>
         </div>
 
-        {/* Mind Map Interactive Image Canvas */}
-        <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minHeight: '460px' }}>
-          <img
-            src={villageScene}
-            alt="Classroom Nature Walk Scene"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block',
-              pointerEvents: 'none',
-              userSelect: 'none',
-            }}
-          />
+        {/* ============ RIGHT PAGE ============ */}
+        <div className="book-page-right">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--cardline)', paddingBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--navy)', fontWeight: '700', fontSize: '18px', fontFamily: 'var(--geo-font)' }}>
+              <BookOpen size={20} strokeWidth={2.2} />
+              The Nature Walk Begins
+            </div>
+            
+            <div style={{ display: 'flex', gap: '0.4rem' }}>
+              {!isSpeaking ? (
+                <button
+                  onClick={() => handleReadAloud(lessonSpeechText)}
+                  className="outline"
+                  style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem', borderRadius: '6px' }}
+                >
+                  <Volume2 size={12} /> Read Lesson
+                </button>
+              ) : (
+                <button
+                  onClick={handleStopSpeech}
+                  className="outline"
+                  style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem', borderRadius: '6px', color: 'var(--danger)', borderColor: 'var(--danger)' }}
+                >
+                  <VolumeX size={12} /> Stop
+                </button>
+              )}
+            </div>
+          </div>
 
-          {/* Hotspot Circles */}
-          {NODES.map((node, idx) => {
-            const isUnlocked = idx < unlockedCount;
-            const isCurrent = idx === unlockedCount - 1;
-            if (!isUnlocked) return null;
+          {/* Scrollable contents */}
+          <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px', marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }} className="hide-scrollbar">
+            <div className="textbook-hero">
+              <h3>Exploring nature with Dr. Raghu &amp; Maniram chacha</h3>
+              <p>The lesson begins with an exciting nature walk in the local area and school garden. Students learn to watch nature carefully, listen to the calls of different birds, and record their findings systemically.</p>
+            </div>
 
-            return (
-              <button
-                key={node.id}
-                onClick={() => handleNodeClick(node)}
-                title={node.title}
-                style={{
-                  position: 'absolute',
-                  left: node.x,
-                  top: node.y,
-                  transform: 'translate(-50%, -50%)',
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '50%',
-                  // Bright Blue color as requested
-                  background: isCurrent ? '#2563eb' : '#16a34a',
-                  border: '2.5px solid #fff',
-                  cursor: 'pointer',
-                  zIndex: 20,
-                  padding: 0,
-                  boxShadow: isCurrent
-                    ? '0 0 0 5px rgba(37, 99, 235, 0.4), 0 0 15px rgba(37, 99, 235, 0.7)'
-                    : '0 0 0 4px rgba(22, 163, 74, 0.3), 0 0 10px rgba(22, 163, 74, 0.5)',
-                  // Blinking animation
-                  animation: 'beaconBlink 1.6s infinite ease-in-out',
-                }}
-              />
-            );
-          })}
-
-          {/* Render callout popup dynamically positioned next to clicked circle */}
-          {activeNode && (
-            <>
-              {/* Overlay Backdrop to close on click outside */}
-              <div
-                onClick={() => handleClosePopup(false)}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  zIndex: 80,
-                  background: 'rgba(0,0,0,0.15)',
-                }}
-              />
-
-              {/* Callout box */}
-              <div style={popupStyle} onClick={(e) => e.stopPropagation()}>
-                {/* Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: theme === 'light' ? '#1d4ed8' : '#60a5fa', lineHeight: 1.3 }}>
-                    {activeNode.title}
-                  </h3>
-                  <button
-                    onClick={() => handleClosePopup(false)}
-                    style={{
-                      background: theme === 'light' ? 'var(--page-bg)' : 'rgba(255,255,255,0.08)',
-                      border: theme === 'light' ? '1px solid var(--border)' : '1.5px solid rgba(255,255,255,0.15)',
-                      borderRadius: '6px',
-                      color: theme === 'light' ? 'var(--text-secondary)' : '#fff',
-                      cursor: 'pointer',
-                      padding: '0.2rem',
-                      display: 'flex',
-                    }}
-                  >
-                    <X size={16} />
-                  </button>
+            <div className="textbook-grid">
+              <div className="textbook-fact">
+                <div className="lab" style={{ color: 'var(--blue)' }}>Guides</div>
+                <div className="v">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  Raghu &amp; Maniram
                 </div>
-
-                {/* Body Text */}
-                <p style={{ margin: 0, fontSize: '0.92rem', color: theme === 'light' ? 'var(--text-primary)' : 'rgba(255,255,255,0.9)', lineHeight: 1.5 }}>
-                  {activeNode.content}
-                </p>
-
-                {/* Details list */}
-                <div style={{ borderTop: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.1)', paddingTop: '0.6rem' }}>
-                  <ul style={{ margin: 0, paddingLeft: '1rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                    {activeNode.details.map((detail, dIdx) => (
-                      <li key={dIdx} style={{ fontSize: '0.85rem', color: theme === 'light' ? 'var(--text-secondary)' : 'rgba(255,255,255,0.72)', lineHeight: 1.4 }}>
-                        {detail}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Footer Controls */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.1)', paddingTop: '0.6rem', gap: '0.5rem' }}>
-                  {/* Speech */}
-                  <div style={{ display: 'flex', gap: '0.3rem' }}>
-                    <button
-                      onClick={handleReadAloud}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem',
-                        padding: '0.35rem 0.65rem',
-                        borderRadius: '6px',
-                        border: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(96,165,250,0.3)',
-                        background: theme === 'light' ? 'var(--card-bg)' : (isSpeaking ? 'rgba(37,99,235,0.2)' : 'rgba(255,255,255,0.06)'),
-                        color: theme === 'light' ? 'var(--accent)' : '#93c5fd',
-                        fontSize: '0.78rem',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <Volume2 size={13} /> {isSpeaking ? 'Reading…' : 'Read'}
-                    </button>
-                    {isSpeaking && (
-                      <button
-                        onClick={handleStopSpeech}
-                        style={{
-                          padding: '0.35rem 0.5rem',
-                          borderRadius: '6px',
-                          border: theme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255,255,255,0.1)',
-                          background: theme === 'light' ? 'var(--page-bg)' : 'rgba(255,255,255,0.05)',
-                          color: theme === 'light' ? 'var(--text-secondary)' : 'rgba(255,255,255,0.6)',
-                          fontSize: '0.75rem',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        <VolumeX size={13} />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Next / Done CTA */}
-                  <button
-                    onClick={() => {
-                      const isLast = unlockedCount === NODES.length;
-                      handleClosePopup(isLast); // marks lesson complete if it is the 5th hotspot
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.25rem',
-                      padding: '0.4rem 0.85rem',
-                      borderRadius: '8px',
-                      border: 'none',
-                      background: 'linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)',
-                      color: '#fff',
-                      fontSize: '0.82rem',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 10px rgba(37,99,235,0.3)',
-                    }}
-                  >
-                    {unlockedCount < NODES.length ? (
-                      <>
-                        Next <ChevronRight size={14} />
-                      </>
-                    ) : (
-                      '✓ Done'
-                    )}
-                  </button>
-                </div>
+                <div className="note">Dr. Raghu is a researcher; Maniram chacha mimics bird calls and knows local nature.</div>
               </div>
-            </>
-          )}
+
+              <div className="textbook-fact">
+                <div className="lab" style={{ color: 'var(--violet)' }}>Observer Duty</div>
+                <div className="v">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--violet)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                  Observe Carefully
+                </div>
+                <div className="note">Notice stem width, leaf sizes, and flower colors without breaking or plucking them.</div>
+              </div>
+
+              <div className="textbook-fact">
+                <div className="lab" style={{ color: 'var(--green)' }}>Bird Call Mimics</div>
+                <div className="v">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                  Listen &amp; Learn
+                </div>
+                <div className="note">Identify unique vocalizations. Each animal communicates differently in its environment.</div>
+              </div>
+
+              <div className="textbook-fact">
+                <div className="lab" style={{ color: 'var(--orange)' }}>Log Book</div>
+                <div className="v">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                  Tables 2.1 &amp; 2.2
+                </div>
+                <div className="note">Observe and record plants in Table 2.1, and animals in Table 2.2 separately.</div>
+              </div>
+            </div>
+
+            <div className="textbook-connect">
+              <h4>◎ Core Insights of our Nature Walk</h4>
+              <div className="lk">
+                <span className="dot"></span>
+                <span>We observe **biological variety**—an immense range of different plants and animals living in the same habitat.</span>
+              </div>
+              <div className="lk">
+                <span className="dot"></span>
+                <span>We learn **interconnection**—how insects rely on flowers for food, and plants rely on animals for seed dispersal.</span>
+              </div>
+            </div>
+
+            <div className="textbook-timeline">
+              <div className="pt"><i></i><b>1. Walk</b><span>Enter Garden</span></div>
+              <div className="pt"><i></i><b>2. Watch</b><span>Observe Plants</span></div>
+              <div className="pt"><i></i><b>3. Listen</b><span>Bird Calls</span></div>
+              <div className="pt"><i></i><b>4. Log</b><span>Fill Tables</span></div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', borderTop: '1px solid var(--cardline)', paddingTop: '0.75rem' }}>
+            <div style={{ color: 'var(--mut)', fontWeight: '600', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              Page 1 of 1
+            </div>
+            <button
+              onClick={() => { handleStopSpeech(); onBackToDashboard(true); }}
+              className="primary"
+              style={{
+                fontFamily: 'var(--geo-font)',
+                fontWeight: '700',
+                padding: '0.65rem 1.5rem',
+                borderRadius: '999px',
+                fontSize: '13px',
+                display: 'inline-flex',
+                gap: '6px',
+                alignItems: 'center',
+                boxShadow: '0 8px 20px rgba(14,53,86,0.2)'
+              }}
+            >
+              Finish Lesson <ArrowRight size={14} />
+            </button>
+          </div>
         </div>
 
-        {/* Bottom hint banner */}
-        {unlockedCount <= NODES.length && (
-          <div
-            style={{
-              padding: '0.65rem',
-              textAlign: 'center',
-              background: 'var(--page-bg)',
-              borderTop: '1.5px solid var(--border)',
-              fontSize: '0.88rem',
-              color: 'var(--text-secondary)',
-              fontWeight: '600',
-            }}
-          >
-            {unlockedCount <= NODES.length
-              ? `⭐ Explored ${unlockedCount - 1} of ${NODES.length} points. Click the bright blue circles to progress.`
-              : '🎉 You have finished exploring all the concepts! Press Done to complete.'}
-          </div>
-        )}
       </div>
-
-      {/* Styles */}
-      <style>{`
-        @keyframes beaconBlink {
-          0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.9; }
-          50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
-        }
-        @keyframes fadeInScale {
-          from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-          to { opacity: 1; }
-        }
-      `}</style>
     </div>
   );
-};
-
-export default IntroductionMindMap;
+}

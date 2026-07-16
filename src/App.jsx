@@ -71,6 +71,8 @@ const RootSystemsLab = lazy(() => import('./activities/RootSystemsLab'));
 const VenationRootCorrelationLab = lazy(() => import('./activities/VenationRootCorrelationLab'));
 const SeedDissectionLab = lazy(() => import('./activities/SeedDissectionLab'));
 const IntroductionMindMap = lazy(() => import('./activities/IntroductionMindMap'));
+const InlineSortingActivity = lazy(() => import('./activities/InlineSortingActivity'));
+const GroupingBasicsBookSpread = lazy(() => import('./activities/GroupingBasicsBookSpread'));
 import './App.css';
 import sanskritSlogan from './assets/sanskrit_slogan.png';
 
@@ -2160,6 +2162,19 @@ export default function App() {
           />
         );
       }
+      if (activeContentLesson === 'grouping_basics_concept') {
+        return (
+          <GroupingBasicsBookSpread 
+            onBackToDashboard={(completed) => {
+              handleStopSpeech();
+              if (completed) {
+                setContentLessonProgress(prev => ({ ...prev, grouping_basics_concept: true }));
+              }
+              setActiveContentLesson(null);
+            }}
+          />
+        );
+      }
       return renderFullscreenLessonView();
     }
 
@@ -2215,7 +2230,7 @@ export default function App() {
           display: 'flex',
           flexDirection: 'column',
           width: '100%',
-          maxWidth: '1020px', // increased from 940px for maximum legibility
+          maxWidth: '100%', // fully expanded to utilize entire screen width
           alignSelf: 'center',
           background: 'radial-gradient(circle at center, #523525 0%, #29180f 100%)', // heavy wooden board
           padding: '38px 30px 30px 30px',
@@ -2412,7 +2427,7 @@ export default function App() {
                   alt="Sanskrit Slogan"
                   style={{
                     width: '100%',
-                    maxHeight: '345px', // increased slogan image size
+                    maxHeight: '480px', // scaled up to match fully expanded board
                     objectFit: 'contain',
                     borderRadius: '4px',
                     boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
@@ -2609,106 +2624,6 @@ export default function App() {
                         📖 {contentLessonProgress[sec.lessonId] ? 'Review Concept Lesson' : 'Open Concept Lesson'} {contentLessonProgress[sec.lessonId] && '✓'}
                       </button>
                     </div>
-                  ) : sec.activityId === 'inline_sorting' ? (
-                    <div className="glass-panel" style={{ flex: 1, padding: '1.5rem', border: '1px solid var(--warning-border)' }}>
-                      <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--warning)', textTransform: 'uppercase' }}>
-                        Activity 2.3 (Interactive Mini-Lab)
-                      </span>
-                      <h3 style={{ margin: '0.25rem 0 0.75rem 0', fontSize: '1.25rem', color: 'var(--text-heading)' }}>
-                        Let Us Group Plants
-                      </h3>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '1rem' }}>
-                        Help sort the plants into their correct biological classes. Click a plant from the tray, then click its target class bucket.
-                      </p>
-
-                      <div style={{ background: 'var(--accent-bg)', borderRadius: '8px', padding: '1rem', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        {showSortSuccess ? (
-                          <div style={{ textAlign: 'center', padding: '1rem' }}>
-                            <span style={{ fontSize: '2rem' }}>🎉</span>
-                            <h4 style={{ color: 'var(--success)', margin: '0.5rem 0 0.25rem 0' }}>All Grouped Correctly!</h4>
-                            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0' }}>
-                              Herbs are tender and green, Shrubs branch near the base, and Trees have thick woody trunks.
-                            </p>
-                            <button onClick={handleResetSortGame} className="outline" style={{ fontSize: '0.75rem', padding: '0.4rem 0.8rem' }}>Play Again</button>
-                          </div>
-                        ) : (
-                          <>
-                            <div>
-                              <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)', display: 'block', marginBottom: '0.5rem' }}>Select a plant:</span>
-                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                {sortItems.map(item => {
-                                  const isSorted = !!sortCorrectCounts[item.id];
-                                  const isSelected = selectedSortItem?.id === item.id;
-                                  return (
-                                    <button
-                                      key={item.id}
-                                      disabled={isSorted}
-                                      onClick={() => handleSortItemClick(item)}
-                                      className={isSelected ? 'primary' : 'outline'}
-                                      style={{
-                                        fontSize: '0.75rem',
-                                        padding: '0.4rem 0.6rem',
-                                        textDecoration: isSorted ? 'line-through' : 'none',
-                                        opacity: isSorted ? 0.4 : 1,
-                                        cursor: isSorted ? 'default' : 'pointer',
-                                        borderColor: isSelected ? 'var(--accent)' : 'var(--border)'
-                                      }}
-                                    >
-                                      {item.name}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginTop: '0.5rem' }}>
-                              {['herb', 'shrub', 'tree'].map(category => {
-                                const correctInBin = Object.entries(sortCorrectCounts)
-                                  .filter(([_, cat]) => cat === category)
-                                  .map(([itemId]) => sortItems.find(i => i.id === itemId)?.name || itemId);
-
-                                return (
-                                  <button
-                                    key={category}
-                                    disabled={!selectedSortItem}
-                                    onClick={() => handleSortBinClick(category)}
-                                    className="outline"
-                                    style={{
-                                      display: 'flex',
-                                      flexDirection: 'column',
-                                      alignItems: 'center',
-                                      gap: '0.5rem',
-                                      padding: '0.75rem',
-                                      minHeight: '80px',
-                                      background: selectedSortItem ? 'var(--card-bg)' : 'rgba(0,0,0,0.02)',
-                                      border: '2px dashed var(--border)',
-                                      cursor: selectedSortItem ? 'pointer' : 'default'
-                                    }}
-                                  >
-                                    <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
-                                      {category.toUpperCase()}S
-                                    </span>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', width: '100%' }}>
-                                      {correctInBin.map((n, i) => (
-                                        <span key={i} style={{ fontSize: '0.65rem', background: 'var(--success-bg)', color: 'var(--success)', padding: '0.1rem 0.3rem', borderRadius: '4px', textAlign: 'center' }}>
-                                          {n}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  </button>
-                                );
-                              })}
-                            </div>
-
-                            {sortStatusMsg && (
-                              <div style={{ fontSize: '0.75rem', color: sortStatusMsg.startsWith('Correct') ? 'var(--success)' : 'var(--warning)', textAlign: 'center', fontWeight: '500' }}>
-                                {sortStatusMsg}
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    </div>
                   ) : (
                     <div className="glass-panel" style={{ flex: 1, padding: '1.5rem', border: '1px solid var(--success-border)', background: 'linear-gradient(to bottom right, var(--card-bg), rgba(16, 185, 129, 0.03))' }}>
                       <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--success)', textTransform: 'uppercase' }}>
@@ -2726,6 +2641,11 @@ export default function App() {
                       {sec.activityId === 'appreciating_biodiversity' && (
                         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
                           Close your eyes for 10 seconds and think of one plant and one animal. Then add your choice to the virtual class memory board and discover the amazing diversity your whole class remembers together!
+                        </p>
+                      )}
+                      {sec.activityId === 'inline_sorting' && (
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                          Activity 2.3: Help group different plants into Herbs, Shrubs, and Trees based on their heights, stem bendability, and branching patterns in this interactive classification card lab.
                         </p>
                       )}
                       {sec.activityId === 'plant_detective_stem' && (
@@ -2770,6 +2690,8 @@ export default function App() {
                             navigateTo('class6', 'virtual_biodiversity');
                           } else if (sec.activityId === 'appreciating_biodiversity') {
                             navigateTo('class6', 'appreciating_biodiversity');
+                          } else if (sec.activityId === 'inline_sorting') {
+                            navigateTo('class6', 'inline_sorting');
                           } else if (sec.activityId === 'plant_detective_stem') {
                             navigateTo('class6', 'plant_detective');
                           } else if (sec.activityId === 'leaf_venation_lab') {
@@ -3041,11 +2963,22 @@ export default function App() {
           );
         })()}
 
-        {['virtual_biodiversity', 'plant_detective', 'animal_habitat'].includes(activeActivity) && (
+        {['virtual_biodiversity', 'plant_detective', 'animal_habitat', 'inline_sorting', 'appreciating_biodiversity'].includes(activeActivity) && (
           <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, background: 'var(--page-bg)', display: 'flex', flexDirection: 'column', animation: 'slideUp 0.3s' }}>
             {activeActivity === 'virtual_biodiversity' && <VirtualBiodiversityExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />}
             {activeActivity === 'plant_detective' && <PlantDetectiveActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />}
             {activeActivity === 'animal_habitat' && <AnimalHabitatExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} initialPhase={activeActivityPhase} />}
+            {activeActivity === 'inline_sorting' && (
+              <InlineSortingActivity 
+                onBackToDashboard={(completed) => {
+                  if (completed) {
+                    setShowSortSuccess(true);
+                  }
+                  navigateTo('class6', 'chapter2');
+                }} 
+              />
+            )}
+            {activeActivity === 'appreciating_biodiversity' && <AppreciatingBiodiversityActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />}
           </div>
         )}
       </div>
@@ -4741,6 +4674,13 @@ export default function App() {
             <VirtualBiodiversityExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'appreciating_biodiversity' ? (
             <AppreciatingBiodiversityActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
+          ) : activeActivity === 'inline_sorting' ? (
+            <InlineSortingActivity 
+              onBackToDashboard={(completed) => {
+                if (completed) setShowSortSuccess(true);
+                navigateTo('class6', 'chapter2');
+              }} 
+            />
           ) : activeActivity === 'plant_detective' ? (
             <PlantDetectiveActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'leaf_venation_lab' ? (

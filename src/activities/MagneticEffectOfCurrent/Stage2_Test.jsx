@@ -38,7 +38,7 @@ export default function Stage2_Test({ onComplete }) {
   const isTestingComplete = hasTestedOn && hasTestedOff;
 
   return (
-    <div className="main-grid" style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "1rem", maxWidth: "1200px", margin: "0 auto" }}>
+    <div className="main-grid" style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "1rem", maxWidth: "1200px", margin: "0 auto", width: "100%" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
         <div>
@@ -49,7 +49,7 @@ export default function Stage2_Test({ onComplete }) {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "1rem", alignItems: "stretch", width: "100%" }}>
         {/* LEFT PANEL */}
         <div className="glass-panel" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem", height: "100%" }}>
           <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start", background: "var(--neutral-bg)", padding: "0.8rem", borderRadius: "10px", border: "1px solid var(--border)" }}>

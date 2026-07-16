@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Space+Grotesk:wght@300..700&display=swap');
 
 /* ═══════════════════════════════════════════
    THEME VARIABLES
@@ -201,7 +201,7 @@ body {
   display: block;
   min-width: 320px;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--page-bg);
   color: var(--text-primary);
   transition: background-color 0.3s, color 0.3s;
@@ -362,7 +362,7 @@ button.outline.active {
   padding: 0; 
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Global Content Wrapper - applies consistent padding without fixed widths */
@@ -748,4 +748,341 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-left:hover) .lab-sid
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════
+   TEXTBOOK & FRAME DESIGN OVERHAUL (NCERT COGNITIVE LAYOUTS)
+   ═══════════════════════════════════════════ */
+:root {
+  --navy: #1b4332;
+  --navy2: #0d2818;
+  --ink: #1c2b22;
+  --mut: #556b5e;
+  --paper1: #f4f6f0;
+  --paper2: #e5e9db;
+  --card-light: #f0f5f1;
+  --cardline: #cbdad0;
+  --amber: #ca7e2b;
+  --blue: #2a7337;
+  --violet: #785a85;
+  --green: #2e7d32;
+  --orange: #d35400;
+  
+  --serif-font: "Fraunces", "Iowan Old Style", Palatino, Georgia, serif;
+  --mono-font: "IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace;
+  --geo-font: "Space Grotesk", system-ui, -apple-system, sans-serif;
+}
+
+/* ── Two-Page Book Spread (Lessons/Texts) ── */
+.book-container {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  padding: 1rem 0;
+  box-sizing: border-box;
+}
+
+.book-spread {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  border: 6px solid var(--navy);
+  box-shadow: 0 30px 70px rgba(14, 42, 69, 0.35);
+  min-height: 580px;
+}
+
+.book-spread::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 4;
+  background: linear-gradient(90deg, transparent, rgba(20, 40, 69, 0.12) 46%, rgba(20, 40, 69, 0.14) 50%, rgba(20, 40, 69, 0.12) 54%, transparent);
+}
+
+.book-page-left {
+  background: linear-gradient(160deg, var(--paper1), var(--paper2));
+  padding: 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.book-page-right {
+  background: #ffffff;
+  padding: 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ── Split-Pane Frame (Activities) ── */
+.split-frame {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 1.5rem;
+  width: 100%;
+  flex: 1;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+.frame-page-left {
+  background: linear-gradient(160deg, var(--paper1), var(--paper2));
+  border-radius: 16px;
+  padding: 2rem;
+  overflow-y: auto;
+  box-shadow: 0 16px 40px rgba(14, 42, 69, 0.12);
+  border: 1px solid rgba(14, 53, 86, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.frame-page-left::-webkit-scrollbar {
+  width: 6px;
+}
+.frame-page-left::-webkit-scrollbar-thumb {
+  background: #d8c8a4;
+  border-radius: 3px;
+}
+
+.frame-page-right {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-shadow: 0 16px 40px rgba(14, 42, 69, 0.12);
+  border: 1px solid var(--cardline);
+}
+
+/* ── Custom Cards and Subcomponents ── */
+.textbook-eyebrow {
+  font-family: var(--mono-font);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.textbook-title {
+  font-family: var(--serif-font);
+  font-weight: 900;
+  color: var(--navy);
+  font-size: clamp(24px, 3vw, 42px);
+  line-height: 1.05;
+  margin: 4px 0 12px 0;
+}
+
+.textbook-quote {
+  background: #ffffff;
+  border-left: 4px solid var(--amber);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 8px 22px rgba(14, 42, 69, 0.08);
+  margin-top: auto;
+}
+.textbook-quote p {
+  font-family: var(--serif-font);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+}
+.textbook-quote .by {
+  display: block;
+  text-align: right;
+  margin-top: 8px;
+  font-family: var(--geo-font);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--navy);
+}
+
+.textbook-hero {
+  background: linear-gradient(180deg, #f4f8ff, #eef4fd);
+  border: 1px solid var(--cardline);
+  border-left: 5px solid var(--blue);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.textbook-hero h3 {
+  font-family: var(--serif-font);
+  font-weight: 600;
+  color: var(--navy);
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+.textbook-hero p {
+  color: var(--mut);
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.textbook-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.textbook-fact {
+  background: var(--card-light);
+  border: 1px solid var(--cardline);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}
+.textbook-fact .lab {
+  font-family: var(--mono-font);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.textbook-fact .v {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.3;
+}
+.textbook-fact .note {
+  color: var(--mut);
+  font-size: 11.5px;
+  margin-top: 4px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.textbook-connect {
+  background: #fff8ec;
+  border: 1px solid #f5e2bf;
+  border-left: 5px solid var(--amber);
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.textbook-connect h4 {
+  color: #b4761c;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.textbook-connect .lk {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 12.5px;
+  color: var(--ink);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.textbook-connect .lk:last-child {
+  margin-bottom: 0;
+}
+.textbook-connect .lk b {
+  color: var(--navy);
+}
+.textbook-connect .lk .dot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  margin-top: 6px;
+}
+
+.textbook-explore {
+  background: #e6f4fb;
+  border: 1px solid #bfe0f0;
+  border-radius: 11px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #25607e;
+  line-height: 1.5;
+  margin-top: 1rem;
+}
+.textbook-explore b {
+  color: #1877a8;
+}
+
+.textbook-timeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 1rem 0.5rem 0.5rem 0.5rem;
+  border-top: 1px solid var(--cardline);
+  margin-top: auto;
+}
+.textbook-timeline .pt {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+.textbook-timeline .pt::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #dbe4ef;
+}
+.textbook-timeline .pt:first-child::before { left: 50%; }
+.textbook-timeline .pt:last-child::before { right: 50%; }
+.textbook-timeline .pt i {
+  position: relative;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber);
+  margin: 0 auto 6px auto;
+  z-index: 1;
+  box-shadow: 0 0 0 3px #ffffff;
+}
+.textbook-timeline .pt b {
+  display: block;
+  font-family: var(--mono-font);
+  font-size: 10px;
+  color: var(--navy);
+}
+.textbook-timeline .pt span {
+  display: block;
+  font-size: 9px;
+  color: var(--mut);
+  line-height: 1.2;
+}
+
+/* ── Responsive Adjustment ── */
+@media (max-width: 920px) {
+  .book-spread {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .book-spread::after {
+    display: none;
+  }
+  .split-frame {
+    grid-template-columns: 1fr;
+  }
+}
+
 

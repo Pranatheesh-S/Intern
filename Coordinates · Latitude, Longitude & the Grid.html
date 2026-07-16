@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)file:///C:/Users/Hp/Downloads/coordinates_landscape_1.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coordinates · Latitude, Longitude &amp; the Grid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./Coordinates · Latitude, Longitude &amp; the Grid_files/css2" rel="stylesheet">
+<style>
+:root{
+  --navy:#0E3556; --ink:#1a2634; --mut:#5c6b7a; --card:#f4f7fb; --cardline:#e4ebf3;
+  --amber:#F5A623; --green:#12a15f; --blue:#2f6df0; --violet:#7c5cff; --red:#d94a3d;
+  --paper1:#F7F1E2; --paper2:#EFE6D2; --gm:#c79a3e;
+  --serif:"Fraunces",Georgia,serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; --geo:"Space Grotesk",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--geo);background:#dfe4ee;color:var(--ink);overflow:hidden}
+.app{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;padding:clamp(10px,1.5vw,20px);display:flex;flex-direction:column;gap:clamp(8px,1.2vw,14px)}
+.tabbar{display:flex;gap:6px;background:#fff;border-radius:14px;padding:6px;box-shadow:0 8px 24px rgba(14,42,69,.1);flex:0 0 auto}
+.tabbar button{flex:1;font-family:var(--geo);font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--mut);border-radius:10px;padding:11px 8px;font-size:clamp(12px,1.3vw,14.5px);transition:all .2s;display:flex;flex-direction:column;gap:1px;align-items:center}
+.tabbar button small{font-weight:400;font-size:10.5px;opacity:.7}
+.tabbar button.on{background:var(--navy);color:#fff}
+.tabbar button.on small{opacity:.85}
+.frame{flex:1;min-height:0;display:grid;grid-template-columns:0.82fr 1.18fr;gap:clamp(10px,1.4vw,18px)}
+.left{background:linear-gradient(160deg,var(--paper1),var(--paper2));border-radius:16px;padding:clamp(18px,2.4vw,38px);overflow:auto;box-shadow:0 16px 40px rgba(14,42,69,.12)}
+.left::-webkit-scrollbar{width:6px}.left::-webkit-scrollbar-thumb{background:#d8c8a4;border-radius:3px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);font-weight:600}
+.h1{font-family:var(--serif);font-weight:900;color:var(--navy);font-size:clamp(26px,3.2vw,44px);line-height:1.02;margin:4px 0 12px}
+.left p{font-size:clamp(13px,1.4vw,16px);line-height:1.55;margin-bottom:10px}
+.left p b{color:var(--navy)}
+.kbox{background:#fbf5e6;border-left:4px solid var(--amber);border-radius:9px;padding:11px 13px;margin:10px 0;font-size:13px;line-height:1.5;color:#7a5a2a}
+.kbox b{color:var(--navy)}
+.right{background:#fff;border-radius:16px;padding:clamp(16px,2vw,30px);display:flex;flex-direction:column;min-height:0;box-shadow:0 16px 40px rgba(14,42,69,.12)}
+.pane{display:none;flex-direction:column;min-height:0;flex:1}
+.pane.on{display:flex}
+svg{display:block}
+.stage{flex:1;min-height:0;display:grid;place-items:center;padding:6px}
+.stage svg{max-width:100%;max-height:52vh;width:auto;height:auto}
+.readout{background:var(--card);border:1px solid var(--cardline);border-radius:12px;padding:12px 15px;margin-top:10px}
+.readout .big{font-size:clamp(18px,2.2vw,26px);font-weight:800;color:var(--navy)}
+.readout .big span{color:var(--amber)}
+.readout .work{font-family:var(--mono);font-size:12px;color:var(--mut);margin-top:5px;line-height:1.5}
+.controls{display:flex;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.controls .sl{flex:1;min-width:180px}
+.controls label{font-size:11px;color:var(--mut);font-weight:600;display:block;margin-bottom:4px}
+input[type=range]{width:100%;accent-color:var(--violet)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.chips span{font-size:11.5px;color:var(--mut)}
+.chip{font-family:var(--geo);font-weight:600;cursor:pointer;border:1px solid #d6e0ec;background:#fff;color:var(--navy);border-radius:8px;padding:6px 11px;font-size:12px;transition:all .15s}
+.chip:hover{border-color:var(--violet);background:#f5f2ff}
+.badge{display:inline-block;font-weight:700;font-size:12.5px;padding:6px 12px;border-radius:9px;margin-right:6px}
+.b-torrid{background:#fdeee2;color:#d2691e}.b-temperate{background:#eafaf1;color:var(--green)}.b-frigid{background:#e7f1fb;color:var(--blue)}
+.b-hemi{background:#f1ecff;color:var(--violet)}
+input[type=text]{background:#f7f9fc;border:1px solid #d6e0ec;border-radius:9px;padding:9px 12px;font-size:14px;font-family:var(--geo);max-width:170px}
+input[type=text]:focus{outline:none;border-color:var(--violet)}
+.explore{background:#e6f4fb;border:1px solid #bfe0f0;border-radius:11px;padding:12px 14px;margin-top:10px;font-size:12.5px;color:#25607e;line-height:1.5}
+.explore b{color:#1877a8}
+@media (max-aspect-ratio:1/1), (max-width:920px){
+  .app{position:absolute;height:auto;min-height:100dvh}
+  .frame{grid-template-columns:1fr}
+  .tabbar button small{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="tabbar" id="tabs">
+    <button class="" data-t="co" onclick="tab(&#39;co&#39;,this)">Coordinates<small>Chess &amp; market</small></button>
+    <button data-t="lat" onclick="tab(&#39;lat&#39;,this)" class="">Latitudes<small>Distance from Equator</small></button>
+    <button data-t="lon" onclick="tab(&#39;lon&#39;,this)" class="">Longitudes<small>Prime Meridian</small></button>
+    <button data-t="grid" onclick="tab(&#39;grid&#39;,this)" class="on">Grid &amp; Hemispheres<small>Locate any place</small></button>
+  </div>
+
+  <div class="frame">
+    <div class="left" id="concept"><div class="eyebrow">Big Question 2 · together</div><h1>The grid &amp; hemispheres</h1>
+   <p>Latitude and longitude together are a place's two <b>coordinates</b>. With them you can locate anywhere — for example, <b>Delhi lies at ~29°N, 77°E</b>.</p>
+   <p>All the parallels and meridians together form a <b>grid</b> (grid lines) over the globe.</p>
+   <p>The <b>Prime Meridian</b> splits Earth into the <b>Western</b> and <b>Eastern</b> hemispheres; the <b>Equator</b> splits it into the <b>Northern</b> and <b>Southern</b> hemispheres.</p>
+   <div class="explore">✏️ <b>Let's explore:</b> use a globe or atlas to note the latitude and longitude of Mumbai, Kolkata, Singapore and Paris — then check them with the buttons.</div></div>
+    <div class="right">
+
+      <!-- COORDINATES -->
+      <div class="pane" id="p-co">
+        <div class="stage"><svg id="chess" viewBox="0 0 380 420"><rect x="22" y="22" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;a8&#39;)"></rect><text x="13" y="47" font-size="11" fill="#5c6b7a" text-anchor="middle">8</text><rect x="64" y="22" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;b8&#39;)"></rect><rect x="106" y="22" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;c8&#39;)"></rect><rect x="148" y="22" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;d8&#39;)"></rect><rect x="190" y="22" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;e8&#39;)"></rect><rect x="232" y="22" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;f8&#39;)"></rect><rect x="274" y="22" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;g8&#39;)"></rect><rect x="316" y="22" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;h8&#39;)"></rect><rect x="22" y="64" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;a7&#39;)"></rect><text x="13" y="89" font-size="11" fill="#5c6b7a" text-anchor="middle">7</text><rect x="64" y="64" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;b7&#39;)"></rect><rect x="106" y="64" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;c7&#39;)"></rect><rect x="148" y="64" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;d7&#39;)"></rect><rect x="190" y="64" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;e7&#39;)"></rect><rect x="232" y="64" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;f7&#39;)"></rect><rect x="274" y="64" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;g7&#39;)"></rect><rect x="316" y="64" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;h7&#39;)"></rect><rect x="22" y="106" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;a6&#39;)"></rect><text x="13" y="131" font-size="11" fill="#5c6b7a" text-anchor="middle">6</text><rect x="64" y="106" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;b6&#39;)"></rect><rect x="106" y="106" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;c6&#39;)"></rect><rect x="148" y="106" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;d6&#39;)"></rect><rect x="190" y="106" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;e6&#39;)"></rect><rect x="232" y="106" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;f6&#39;)"></rect><rect x="274" y="106" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;g6&#39;)"></rect><rect x="316" y="106" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;h6&#39;)"></rect><rect x="22" y="148" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;a5&#39;)"></rect><text x="13" y="173" font-size="11" fill="#5c6b7a" text-anchor="middle">5</text><rect x="64" y="148" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;b5&#39;)"></rect><rect x="106" y="148" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;c5&#39;)"></rect><rect x="148" y="148" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;d5&#39;)"></rect><rect x="190" y="148" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;e5&#39;)"></rect><rect x="232" y="148" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;f5&#39;)"></rect><rect x="274" y="148" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;g5&#39;)"></rect><rect x="316" y="148" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;h5&#39;)"></rect><rect x="22" y="190" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;a4&#39;)"></rect><text x="13" y="215" font-size="11" fill="#5c6b7a" text-anchor="middle">4</text><rect x="64" y="190" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;b4&#39;)"></rect><rect x="106" y="190" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;c4&#39;)"></rect><rect x="148" y="190" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;d4&#39;)"></rect><rect x="190" y="190" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;e4&#39;)"></rect><rect x="232" y="190" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;f4&#39;)"></rect><rect x="274" y="190" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;g4&#39;)"></rect><rect x="316" y="190" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;h4&#39;)"></rect><rect x="22" y="232" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;a3&#39;)"></rect><text x="13" y="257" font-size="11" fill="#5c6b7a" text-anchor="middle">3</text><rect x="64" y="232" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;b3&#39;)"></rect><rect x="106" y="232" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;c3&#39;)"></rect><rect x="148" y="232" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;d3&#39;)"></rect><rect x="190" y="232" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;e3&#39;)"></rect><rect x="232" y="232" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;f3&#39;)"></rect><rect x="274" y="232" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;g3&#39;)"></rect><rect x="316" y="232" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;h3&#39;)"></rect><rect x="22" y="274" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;a2&#39;)"></rect><text x="13" y="299" font-size="11" fill="#5c6b7a" text-anchor="middle">2</text><rect x="64" y="274" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;b2&#39;)"></rect><rect x="106" y="274" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;c2&#39;)"></rect><rect x="148" y="274" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;d2&#39;)"></rect><rect x="190" y="274" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;e2&#39;)"></rect><rect x="232" y="274" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;f2&#39;)"></rect><rect x="274" y="274" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;g2&#39;)"></rect><rect x="316" y="274" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;h2&#39;)"></rect><rect x="22" y="316" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;a1&#39;)"></rect><text x="13" y="341" font-size="11" fill="#5c6b7a" text-anchor="middle">1</text><text x="43" y="374" font-size="11" fill="#5c6b7a" text-anchor="middle">a</text><rect x="64" y="316" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;b1&#39;)"></rect><text x="85" y="374" font-size="11" fill="#5c6b7a" text-anchor="middle">b</text><rect x="106" y="316" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;c1&#39;)"></rect><text x="127" y="374" font-size="11" fill="#5c6b7a" text-anchor="middle">c</text><rect x="148" y="316" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;d1&#39;)"></rect><text x="169" y="374" font-size="11" fill="#5c6b7a" text-anchor="middle">d</text><rect x="190" y="316" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;e1&#39;)"></rect><text x="211" y="374" font-size="11" fill="#5c6b7a" text-anchor="middle">e</text><rect x="232" y="316" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;f1&#39;)"></rect><text x="253" y="374" font-size="11" fill="#5c6b7a" text-anchor="middle">f</text><rect x="274" y="316" width="42" height="42" fill="#3a94a3" style="cursor:pointer" onclick="pickSq(&#39;g1&#39;)"></rect><text x="295" y="374" font-size="11" fill="#5c6b7a" text-anchor="middle">g</text><rect x="316" y="316" width="42" height="42" fill="#bfe6ec" style="cursor:pointer" onclick="pickSq(&#39;h1&#39;)"></rect><text x="337" y="374" font-size="11" fill="#5c6b7a" text-anchor="middle">h</text><circle cx="169" cy="295" r="13" fill="#eef4fb"></circle><text x="169" y="299" font-size="10" font-weight="700" text-anchor="middle" fill="#0d1017">d2</text><circle cx="169" cy="211" r="13" fill="#F5A623"></circle><text x="169" y="215" font-size="10" font-weight="700" text-anchor="middle" fill="#0d1017">d4</text></svg></div>
+        <div class="readout" id="chessOut"><div class="big">Square <span>b2</span></div><div class="work">file <b>b</b> + rank <b>2</b> — two coordinates, one exact square. (White's opening: d2 → d4.)</div></div>
+        <div class="chips"><span>♟ Your move (play Black):</span><input type="text" id="blk" placeholder="e.g. d7 d5"><button class="chip" onclick="checkBlk()">Check</button><span id="blkFb" style="color: var(--green);">c1 → c7 — valid ✓</span></div>
+      </div>
+
+      <!-- LATITUDE -->
+      <div class="pane" id="p-lat">
+        <div class="stage"><svg id="latG" viewBox="0 0 360 360"><circle cx="180" cy="180" r="150" fill="#dcefff" stroke="#5b7fa6" stroke-width="1.4"></circle><line x1="104.99999999999999" y1="309.9038105676658" x2="255" y2="309.9038105676658" stroke="#7fa8c8" stroke-width="1" opacity="0.6"></line><line x1="50.0961894323342" y1="255" x2="309.9038105676658" y2="255" stroke="#7fa8c8" stroke-width="1" opacity="0.6"></line><line x1="30" y1="180" x2="330" y2="180" stroke="#d94a3d" stroke-width="2" opacity="1"></line><line x1="50.0961894323342" y1="105.00000000000001" x2="309.9038105676658" y2="105.00000000000001" stroke="#7fa8c8" stroke-width="1" opacity="0.6"></line><line x1="104.99999999999999" y1="50.0961894323342" x2="255" y2="50.0961894323342" stroke="#7fa8c8" stroke-width="1" opacity="0.6"></line>
+    <line x1="180" y1="30" x2="180" y2="330" stroke="#5b7fa6" stroke-dasharray="3 3" opacity=".5"></line>
+    <circle cx="180" cy="30" r="3" fill="#12a15f"></circle><text x="188" y="34" font-size="10" fill="#12a15f">90°N</text>
+    <circle cx="180" cy="330" r="3" fill="#2f6df0"></circle><text x="188" y="330" font-size="10" fill="#2f6df0">90°S</text>
+    <text x="328" y="175" font-size="10" fill="#d94a3d" text-anchor="end">0° Equator</text>
+    <line x1="30.022845726541306" y1="182.6178609655925" x2="329.9771542734587" y2="182.6178609655925" stroke="#F5A623" stroke-width="3.5"></line>
+    <circle cx="180" cy="182.6178609655925" r="6" fill="#F5A623" stroke="#0d1017" stroke-width="1.5"></circle></svg></div>
+        <div class="controls"><div class="sl"><label>Latitude (drag)</label><input type="range" id="latR" min="-90" max="90" value="0" oninput="drawLat()"></div></div>
+        <div class="readout" id="latOut"><div class="big">Latitude <span>1°S</span></div>
+    <div style="margin-top:8px"><span class="badge b-torrid">Torrid (hot)</span><span class="badge b-hemi">Southern Hemisphere</span></div>
+    <div class="work">The parallel of latitude is a circle; it shrinks as you move toward a pole (width = R·cos 1°).</div></div>
+      </div>
+
+      <!-- LONGITUDE -->
+      <div class="pane" id="p-lon">
+        <div class="stage"><svg id="lonG" viewBox="0 0 360 360"><circle cx="180" cy="180" r="150" fill="#dcefff" stroke="#5b7fa6" stroke-width="1.4"></circle>
+    <line x1="30" y1="180" x2="330" y2="180" stroke="#d94a3d" stroke-width="1.4"></line><ellipse cx="180" cy="180" rx="150" ry="150" fill="none" stroke="#7fa8c8" stroke-width="1" opacity="0.55"></ellipse><ellipse cx="180" cy="180" rx="129.9038105676658" ry="150" fill="none" stroke="#7fa8c8" stroke-width="1" opacity="0.55"></ellipse><ellipse cx="180" cy="180" rx="74.99999999999999" ry="150" fill="none" stroke="#7fa8c8" stroke-width="1" opacity="0.55"></ellipse><ellipse cx="180" cy="180" rx="0" ry="150" fill="none" stroke="#c79a3e" stroke-width="2" opacity="1"></ellipse><ellipse cx="180" cy="180" rx="74.99999999999999" ry="150" fill="none" stroke="#7fa8c8" stroke-width="1" opacity="0.55"></ellipse><ellipse cx="180" cy="180" rx="129.9038105676658" ry="150" fill="none" stroke="#7fa8c8" stroke-width="1" opacity="0.55"></ellipse><ellipse cx="180" cy="180" rx="150" ry="150" fill="none" stroke="#7fa8c8" stroke-width="1" opacity="0.55"></ellipse>
+    <ellipse cx="180" cy="180" rx="150" ry="150" fill="none" stroke="#F5A623" stroke-width="3.5"></ellipse>
+    <text x="180" y="24" font-size="10" fill="#c79a3e" text-anchor="middle">Prime Meridian 0°</text></svg></div>
+        <div class="controls"><div class="sl"><label>Longitude (drag)</label><input type="range" id="lonR" min="-180" max="180" value="0" oninput="drawLon()"></div></div>
+        <div class="chips"><span>Round figures:</span>
+          <button class="chip" onclick="setLon(-74,&#39;New York&#39;)">New York 74°W</button>
+          <button class="chip" onclick="setLon(77,&#39;Delhi&#39;)">Delhi 77°E</button>
+          <button class="chip" onclick="setLon(140,&#39;Tokyo&#39;)">Tokyo 140°E</button></div>
+        <div class="readout" id="lonOut"><div class="big">Longitude <span>180°</span></div>
+    <div style="margin-top:8px"><span class="badge b-hemi">Eastern Hemisphere</span></div>
+    <div class="work">Measured from the Prime Meridian (0°) along the Equator, up to 180°. West or East add the W/E tag; 180°W and 180°E are the same line.</div></div>
+      </div>
+
+      <!-- GRID & HEMISPHERES -->
+      <div class="pane on" id="p-grid">
+        <div class="stage"><svg id="gridG" viewBox="0 0 420 300"><rect x="10" y="10" width="400" height="200" fill="#eaf3fb" stroke="#9fbdd8"></rect><line x1="10" y1="43.333333333333336" x2="410" y2="43.333333333333336" stroke="#cbdcec"></line><line x1="10" y1="76.66666666666667" x2="410" y2="76.66666666666667" stroke="#cbdcec"></line><line x1="10" y1="110" x2="410" y2="110" stroke="#cbdcec"></line><line x1="10" y1="143.33333333333334" x2="410" y2="143.33333333333334" stroke="#cbdcec"></line><line x1="10" y1="176.66666666666666" x2="410" y2="176.66666666666666" stroke="#cbdcec"></line><line x1="43.333333333333336" y1="10" x2="43.333333333333336" y2="210" stroke="#cbdcec"></line><line x1="76.66666666666667" y1="10" x2="76.66666666666667" y2="210" stroke="#cbdcec"></line><line x1="110" y1="10" x2="110" y2="210" stroke="#cbdcec"></line><line x1="143.33333333333334" y1="10" x2="143.33333333333334" y2="210" stroke="#cbdcec"></line><line x1="176.66666666666666" y1="10" x2="176.66666666666666" y2="210" stroke="#cbdcec"></line><line x1="210" y1="10" x2="210" y2="210" stroke="#cbdcec"></line><line x1="243.33333333333334" y1="10" x2="243.33333333333334" y2="210" stroke="#cbdcec"></line><line x1="276.6666666666667" y1="10" x2="276.6666666666667" y2="210" stroke="#cbdcec"></line><line x1="310" y1="10" x2="310" y2="210" stroke="#cbdcec"></line><line x1="343.3333333333333" y1="10" x2="343.3333333333333" y2="210" stroke="#cbdcec"></line><line x1="376.6666666666667" y1="10" x2="376.6666666666667" y2="210" stroke="#cbdcec"></line>
+    <line x1="10" y1="110" x2="410" y2="110" stroke="#d94a3d" stroke-width="1.6"></line>
+    <line x1="210" y1="10" x2="210" y2="210" stroke="#c79a3e" stroke-width="1.6"></line>
+    <text x="14" y="106" font-size="9" fill="#d94a3d">Equator 0°</text>
+    <text x="213" y="22" font-size="9" fill="#c79a3e">Prime Meridian</text>
+    <text x="16" y="26" font-size="9" fill="#5c6b7a">NW · Northern+Western</text>
+    <text x="404" y="204" font-size="9" fill="#5c6b7a" text-anchor="end">SE · Southern+Eastern</text>
+    <line x1="295.55555555555554" y1="10" x2="295.55555555555554" y2="210" stroke="#7c5cff" stroke-dasharray="3 3" opacity=".7"></line>
+    <line x1="10" y1="77.77777777777779" x2="410" y2="77.77777777777779" stroke="#7c5cff" stroke-dasharray="3 3" opacity=".7"></line>
+    <circle cx="295.55555555555554" cy="77.77777777777779" r="6" fill="#7c5cff" stroke="#fff" stroke-width="2"></circle>
+    <text x="295.55555555555554" y="65.77777777777779" font-size="11" font-weight="700" fill="#0E3556" text-anchor="middle">Delhi</text></svg></div>
+        <div class="controls">
+          <div class="sl"><label>Latitude</label><input type="range" id="gLat" min="-90" max="90" value="29" oninput="drawGrid()"></div>
+          <div class="sl"><label>Longitude</label><input type="range" id="gLon" min="-180" max="180" value="77" oninput="drawGrid()"></div>
+        </div>
+        <div class="chips"><span>Let's explore — find these cities:</span>
+          <button class="chip" onclick="setCity(29,77,&#39;Delhi&#39;)">Delhi</button>
+          <button class="chip" onclick="setCity(19,73,&#39;Mumbai&#39;)">Mumbai</button>
+          <button class="chip" onclick="setCity(22,88,&#39;Kolkata&#39;)">Kolkata</button>
+          <button class="chip" onclick="setCity(1,104,&#39;Singapore&#39;)">Singapore</button>
+          <button class="chip" onclick="setCity(49,2,&#39;Paris&#39;)">Paris</button></div>
+        <div class="readout" id="gridOut"><div class="big"><span>29°N, 77°E</span> · Delhi</div>
+    <div style="margin-top:8px"><span class="badge b-hemi">Northern Hemisphere</span><span class="badge b-hemi">Eastern Hemisphere</span><span class="badge b-temperate">Temperate (moderate)</span></div>
+    <div class="work">Two coordinates pin the spot on the grid. Latitude sign → N/S hemisphere; longitude sign → E/W hemisphere.</div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== CONCEPT TEXT ===== */
+const CONCEPT={
+ co:`<div class="eyebrow">Big Question 2 · (a)</div><h1>Understanding coordinates</h1>
+   <p>Imagine a big market with neat rows of identical shops. To meet a friend you'd say: <b>"the 7th shop in the 5th row from the entrance."</b> Two numbers pin the exact spot.</p>
+   <p>A <b>chessboard</b> works the same way — letters <b>a–h</b> along one side, numbers <b>1–8</b> along the other. Every square has an address, so moves can be recorded: the queen's pawn opening is written <b>d2 → d4</b>.</p>
+   <div class="kbox">This pair of values is a system of <b>coordinates</b>. Maps use the very same idea to locate any place on Earth — with <b>latitude</b> and <b>longitude</b>.</div>`,
+ lat:`<div class="eyebrow">Big Question 2 · (b)</div><h1>Latitudes</h1>
+   <p>On a globe, the fixed top and bottom points are the <b>North Pole</b> and <b>South Pole</b>; halfway between is the <b>Equator</b>.</p>
+   <p><b>Latitude</b> measures how far you are from the Equator. A line running east–west, parallel to the Equator, is a <b>parallel of latitude</b> — it draws a circle around the Earth. The Equator is the largest circle; parallels grow smaller toward the poles.</p>
+   <p>In degrees: the Equator is <b>0°</b>, and the poles are <b>90°N</b> and <b>90°S</b>.</p>
+   <div class="kbox">Latitude links to climate: near the Equator it's hot (<b>torrid</b>), further out it's moderate (<b>temperate</b>), and near the poles it's cold (<b>frigid</b>).</div>`,
+ lon:`<div class="eyebrow">Big Question 2 · (c)</div><h1>Longitudes</h1>
+   <p>Travel pole to pole by the shortest line and you trace a <b>meridian of longitude</b> — a half-circle from one pole to the other.</p>
+   <p>The reference is the <b>Prime Meridian</b>, also called the <b>Greenwich Meridian</b>: in <b>1884</b>, nations agreed the meridian through Greenwich (London) would be the standard <b>0° longitude</b>.</p>
+   <p>Longitude measures distance from the Prime Meridian, from <b>0° to 180°</b>, tagged <b>W</b> or <b>E</b>. New York is 74°W, Delhi 77°E, Tokyo 140°E.</p>
+   <div class="kbox">Because the Earth spins on its axis, <b>longitude also marks the time</b> — that's the next big idea. And 180°W = 180°E = simply <b>180°</b>.</div>`,
+ grid:`<div class="eyebrow">Big Question 2 · together</div><h1>The grid &amp; hemispheres</h1>
+   <p>Latitude and longitude together are a place's two <b>coordinates</b>. With them you can locate anywhere — for example, <b>Delhi lies at ~29°N, 77°E</b>.</p>
+   <p>All the parallels and meridians together form a <b>grid</b> (grid lines) over the globe.</p>
+   <p>The <b>Prime Meridian</b> splits Earth into the <b>Western</b> and <b>Eastern</b> hemispheres; the <b>Equator</b> splits it into the <b>Northern</b> and <b>Southern</b> hemispheres.</p>
+   <div class="explore">✏️ <b>Let's explore:</b> use a globe or atlas to note the latitude and longitude of Mumbai, Kolkata, Singapore and Paris — then check them with the buttons.</div>`
+};
+
+/* ===== TABS ===== */
+function tab(t,btn){
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  document.getElementById('concept').innerHTML=CONCEPT[t];
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p-'+t).classList.add('on');
+  if(t==='lat')drawLat();if(t==='lon')drawLon();if(t==='grid')drawGrid();
+}
+
+/* ===== COORDINATES · chessboard ===== */
+(function(){
+  const s=document.getElementById('chess'),sz=42,ox=22,oy=22;let c='';
+  for(let r=0;r<8;r++)for(let f=0;f<8;f++){const light=(r+f)%2===0;const file='abcdefgh'[f],rank=8-r;
+    c+=`<rect x="${ox+f*sz}" y="${oy+r*sz}" width="${sz}" height="${sz}" fill="${light?'#bfe6ec':'#3a94a3'}" style="cursor:pointer" onclick="pickSq('${file}${rank}')"/>`;
+    if(f===0)c+=`<text x="${ox-9}" y="${oy+r*sz+sz/2+4}" font-size="11" fill="#5c6b7a" text-anchor="middle">${rank}</text>`;
+    if(rank===1)c+=`<text x="${ox+f*sz+sz/2}" y="${oy+8*sz+16}" font-size="11" fill="#5c6b7a" text-anchor="middle">${file}</text>`;}
+  const mk=(file,rank,col,t)=>{const f='abcdefgh'.indexOf(file),r=8-rank;return`<circle cx="${ox+f*sz+sz/2}" cy="${oy+r*sz+sz/2}" r="13" fill="${col}"/><text x="${ox+f*sz+sz/2}" y="${oy+r*sz+sz/2+4}" font-size="10" font-weight="700" text-anchor="middle" fill="#0d1017">${t}</text>`;};
+  s.innerHTML=c+mk('d',2,'#eef4fb','d2')+mk('d',4,'#F5A623','d4');
+})();
+function pickSq(sq){document.getElementById('chessOut').innerHTML=`<div class="big">Square <span>${sq}</span></div><div class="work">file <b>${sq[0]}</b> + rank <b>${sq[1]}</b> — two coordinates, one exact square. (White's opening: d2 → d4.)</div>`;}
+function checkBlk(){const v=document.getElementById('blk').value.trim().toLowerCase().replace(/[^a-h1-8]/g,'');const fb=document.getElementById('blkFb');
+  if(/^[a-h][1-8][a-h][1-8]$/.test(v)){fb.textContent=v.slice(0,2)+' → '+v.slice(2)+(v==='d7d5'?' — the classic mirror! ✓':' — valid ✓');fb.style.color='var(--green)';}
+  else{fb.textContent='use file+rank, e.g. d7 d5';fb.style.color='var(--red)';}}
+
+/* ===== helpers ===== */
+function climate(lat){const a=Math.abs(lat);return a<=23.5?['Torrid (hot)','b-torrid']:a<=66.5?['Temperate (moderate)','b-temperate']:['Frigid (cold)','b-frigid'];}
+
+/* ===== LATITUDE globe (orthographic, equatorial aspect) ===== */
+function drawLat(){
+  const lat=+document.getElementById('latR').value;const s=document.getElementById('latG');
+  const cx=180,cy=180,R=150;const rad=Math.PI/180;
+  let par='';[-60,-30,0,30,60].forEach(f=>{const y=cy-R*Math.sin(f*rad),w=R*Math.cos(f*rad);
+    par+=`<line x1="${cx-w}" y1="${y}" x2="${cx+w}" y2="${y}" stroke="${f===0?'#d94a3d':'#7fa8c8'}" stroke-width="${f===0?2:1}" opacity="${f===0?1:.6}"/>`;});
+  const y=cy-R*Math.sin(lat*rad),w=R*Math.cos(lat*rad);
+  s.innerHTML=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="#dcefff" stroke="#5b7fa6" stroke-width="1.4"/>${par}
+    <line x1="${cx}" y1="${cy-R}" x2="${cx}" y2="${cy+R}" stroke="#5b7fa6" stroke-dasharray="3 3" opacity=".5"/>
+    <circle cx="${cx}" cy="${cy-R}" r="3" fill="#12a15f"/><text x="${cx+8}" y="${cy-R+4}" font-size="10" fill="#12a15f">90°N</text>
+    <circle cx="${cx}" cy="${cy+R}" r="3" fill="#2f6df0"/><text x="${cx+8}" y="${cy+R}" font-size="10" fill="#2f6df0">90°S</text>
+    <text x="${cx+R-2}" y="${cy-5}" font-size="10" fill="#d94a3d" text-anchor="end">0° Equator</text>
+    <line x1="${cx-w}" y1="${y}" x2="${cx+w}" y2="${y}" stroke="#F5A623" stroke-width="3.5"/>
+    <circle cx="${cx}" cy="${y}" r="6" fill="#F5A623" stroke="#0d1017" stroke-width="1.5"/>`;
+  const [cz,cc]=climate(lat);const hemi=lat>0?'Northern':lat<0?'Southern':'on the Equator';
+  document.getElementById('latOut').innerHTML=`<div class="big">Latitude <span>${Math.abs(lat)}°${lat>0?'N':lat<0?'S':''}</span></div>
+    <div style="margin-top:8px"><span class="badge ${cc}">${cz}</span><span class="badge b-hemi">${hemi} Hemisphere</span></div>
+    <div class="work">The parallel of latitude is a circle; it shrinks as you move toward a pole (width = R·cos ${Math.abs(lat)}°).</div>`;
+}
+
+/* ===== LONGITUDE globe ===== */
+function setLon(v,name){document.getElementById('lonR').value=v;drawLon(name);}
+function drawLon(name){
+  const lon=+document.getElementById('lonR').value;const s=document.getElementById('lonG');
+  const cx=180,cy=180,R=150;const rad=Math.PI/180;
+  let mer='';[-90,-60,-30,0,30,60,90].forEach(l=>{const rx=Math.abs(R*Math.sin(l*rad));
+    mer+=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${R}" fill="none" stroke="${l===0?'#c79a3e':'#7fa8c8'}" stroke-width="${l===0?2:1}" opacity="${l===0?1:.55}"/>`;});
+  // chosen meridian (front if within ±90 of 0 view; else show at edge)
+  const shown=Math.max(-90,Math.min(90,lon));const rx=Math.abs(R*Math.sin(shown*rad));
+  s.innerHTML=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="#dcefff" stroke="#5b7fa6" stroke-width="1.4"/>
+    <line x1="${cx-R}" y1="${cy}" x2="${cx+R}" y2="${cy}" stroke="#d94a3d" stroke-width="1.4"/>${mer}
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${R}" fill="none" stroke="#F5A623" stroke-width="3.5"/>
+    <text x="${cx}" y="${cy-R-6}" font-size="10" fill="#c79a3e" text-anchor="middle">Prime Meridian 0°</text>`;
+  const hemi=lon>0?'Eastern':lon<0?'Western':'on the Prime Meridian';const disp=Math.abs(lon)===180?'180°':`${Math.abs(lon)}°${lon>0?'E':lon<0?'W':''}`;
+  document.getElementById('lonOut').innerHTML=`<div class="big">Longitude <span>${disp}</span>${name?` · ${name}`:''}</div>
+    <div style="margin-top:8px"><span class="badge b-hemi">${hemi} Hemisphere</span></div>
+    <div class="work">Measured from the Prime Meridian (0°) along the Equator, up to 180°. West or East add the W/E tag; 180°W and 180°E are the same line.</div>`;
+}
+
+/* ===== GRID & HEMISPHERES ===== */
+function setCity(la,lo,name){document.getElementById('gLat').value=la;document.getElementById('gLon').value=lo;drawGrid(name);}
+function drawGrid(name){
+  const lat=+document.getElementById('gLat').value,lon=+document.getElementById('gLon').value;
+  const s=document.getElementById('gridG');const X=10,Y=10,W=400,H=200; // world rect
+  const px=X+((lon+180)/360)*W, py=Y+((90-lat)/180)*H;
+  let g='';for(let i=1;i<6;i++)g+=`<line x1="${X}" y1="${Y+i*H/6}" x2="${X+W}" y2="${Y+i*H/6}" stroke="#cbdcec"/>`;
+  for(let i=1;i<12;i++)g+=`<line x1="${X+i*W/12}" y1="${Y}" x2="${X+i*W/12}" y2="${Y+H}" stroke="#cbdcec"/>`;
+  s.innerHTML=`<rect x="${X}" y="${Y}" width="${W}" height="${H}" fill="#eaf3fb" stroke="#9fbdd8"/>${g}
+    <line x1="${X}" y1="${Y+H/2}" x2="${X+W}" y2="${Y+H/2}" stroke="#d94a3d" stroke-width="1.6"/>
+    <line x1="${X+W/2}" y1="${Y}" x2="${X+W/2}" y2="${Y+H}" stroke="#c79a3e" stroke-width="1.6"/>
+    <text x="${X+4}" y="${Y+H/2-4}" font-size="9" fill="#d94a3d">Equator 0°</text>
+    <text x="${X+W/2+3}" y="${Y+12}" font-size="9" fill="#c79a3e">Prime Meridian</text>
+    <text x="${X+6}" y="${Y+16}" font-size="9" fill="#5c6b7a">NW · Northern+Western</text>
+    <text x="${X+W-6}" y="${Y+H-6}" font-size="9" fill="#5c6b7a" text-anchor="end">SE · Southern+Eastern</text>
+    <line x1="${px}" y1="${Y}" x2="${px}" y2="${Y+H}" stroke="#7c5cff" stroke-dasharray="3 3" opacity=".7"/>
+    <line x1="${X}" y1="${py}" x2="${X+W}" y2="${py}" stroke="#7c5cff" stroke-dasharray="3 3" opacity=".7"/>
+    <circle cx="${px}" cy="${py}" r="6" fill="#7c5cff" stroke="#fff" stroke-width="2"/>
+    <text x="${px}" y="${py-12}" font-size="11" font-weight="700" fill="#0E3556" text-anchor="middle">${name||''}</text>`;
+  const ns=lat>0?'Northern':lat<0?'Southern':'Equator';const ew=lon>0?'Eastern':lon<0?'Western':'Prime Meridian';
+  const [cz,cc]=climate(lat);
+  document.getElementById('gridOut').innerHTML=`<div class="big"><span>${Math.abs(lat)}°${lat>=0?'N':'S'}, ${Math.abs(lon)}°${lon>=0?'E':'W'}</span>${name?` · ${name}`:''}</div>
+    <div style="margin-top:8px"><span class="badge b-hemi">${ns} Hemisphere</span><span class="badge b-hemi">${ew} Hemisphere</span><span class="badge ${cc}">${cz}</span></div>
+    <div class="work">Two coordinates pin the spot on the grid. Latitude sign → N/S hemisphere; longitude sign → E/W hemisphere.</div>`;
+}
+
+/* boot */
+document.getElementById('concept').innerHTML=CONCEPT.co;
+</script>
+
+
+</body></html>
