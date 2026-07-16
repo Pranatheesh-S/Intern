@@ -22,18 +22,18 @@ export default function AtlasIntroduction({ onNextActivity }) {
             else { setIsOpen(false); setCurrentPage(1); }
           }}
           style={{ 
-            position: 'absolute', 
-            top: '-3rem', 
-            left: 0, 
-            display: 'flex', 
+            display: 'inline-flex', 
             alignItems: 'center', 
             gap: '0.5rem', 
             background: 'transparent', 
             border: 'none', 
             color: 'var(--text-secondary)', 
             cursor: 'pointer', 
-            fontSize: '0.9rem', 
-            fontWeight: 'bold' 
+            fontSize: '0.95rem', 
+            fontWeight: 'bold',
+            marginBottom: '1rem',
+            alignSelf: 'flex-start',
+            padding: '0.5rem 0'
           }}
         >
           <ArrowLeft size={16} /> {isCompleted ? 'Back to Atlas' : 'Back to Intro'}
@@ -42,9 +42,8 @@ export default function AtlasIntroduction({ onNextActivity }) {
 
       <div style={{
         width: '100%', 
-        aspectRatio: '16/9',
-        minHeight: '700px',
-        maxHeight: '85vh',
+        height: 'calc(100vh - 120px)',
+        minHeight: '600px',
         display: 'flex', 
         background: 'var(--bg-primary)', 
         overflow: 'hidden', 

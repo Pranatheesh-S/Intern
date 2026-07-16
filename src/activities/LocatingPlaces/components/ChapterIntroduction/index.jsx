@@ -1,50 +1,61 @@
 import React, { useState } from 'react';
-import IntroBook from './IntroBook';
+import AryabhataPage from './AryabhataPage';
+import BigQuestionsPage from './BigQuestionsPage';
 
 export default function ChapterIntroduction({ onNextActivity }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const handleBeginChapter = () => {
-    // Move immediately to the next tab without the closing animation
-    onNextActivity();
-  };
-
-  const handleNext = () => {
-    if (currentPage < 2) setCurrentPage(currentPage + 1);
-  };
-
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
 
   return (
     <div style={{
       width: '100%',
-      minHeight: '700px',
-      height: '85vh',
+      flex: 1,
+      minHeight: 0,
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'var(--surface-secondary)',
-      borderRadius: '24px',
-      padding: '2rem',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      background: 'var(--surface, #ffffff)',
+      borderRadius: '16px',
+      boxShadow: '0 10px 40px rgba(0,0,0,0.05)'
     }}>
-      {/* Decorative background elements */}
-      <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: '300px', height: '300px', borderRadius: '50%', background: 'var(--primary)', opacity: 0.05, filter: 'blur(40px)' }}></div>
-      <div style={{ position: 'absolute', bottom: '-10%', right: '-5%', width: '400px', height: '400px', borderRadius: '50%', background: 'var(--accent)', opacity: 0.05, filter: 'blur(60px)' }}></div>
-
-      <IntroBook 
-        isOpen={isOpen} 
-        currentPage={currentPage}
-        onNext={handleNext}
-        onPrev={handlePrev}
-        onBeginChapter={handleBeginChapter}
-        onOpenBook={() => setIsOpen(true)}
-      />
+      {currentPage === 1 && (
+        <AryabhataPage 
+          onNext={() => setCurrentPage(2)} 
+          isNextEnabled={true} 
+        />
+      )}
+      {currentPage === 2 && (
+        <div style={{ display: 'flex', width: '100%', height: '100%', position: 'relative' }}>
+          <button 
+            onClick={() => setCurrentPage(1)} 
+            style={{ 
+              position: 'absolute', 
+              top: '16px', 
+              left: '16px', 
+              background: '#fff', 
+              border: '1px solid #e2e8f0', 
+              padding: '8px 16px', 
+              borderRadius: '20px', 
+              cursor: 'pointer', 
+              fontWeight: 600, 
+              color: '#334155', 
+              zIndex: 10,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg> Back
+          </button>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <BigQuestionsPage 
+              onBeginChapter={onNextActivity} 
+              onMissionUnlock={() => {}} 
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

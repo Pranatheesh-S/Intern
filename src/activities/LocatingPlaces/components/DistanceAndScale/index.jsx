@@ -1,334 +1,362 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Ruler, Map, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 export default function DistanceAndScale({ onComplete }) {
-  const [step, setStep] = useState(1);
-  const [q1Answered, setQ1Answered] = useState(null); // 'yes', 'no'
-  const [q1ShowNotebook, setQ1ShowNotebook] = useState(false);
-  const [q2Answer, setQ2Answer] = useState(null);
-  const [q5Answer, setQ5Answer] = useState(null);
-  const [q6Answer, setQ6Answer] = useState(null);
+  // State for Tool 1
+  const [sVal, setSVal] = useState(500);
+  const [sUnit, setSUnit] = useState('m');
+  const [sCm, setSCm] = useState(4);
 
-  const handleNext = () => setStep((s) => s + 1);
+  // State for Tool 2
+  const [pL, setPL] = useState(40);
+  const [pW, setPW] = useState(30);
+  const [pS, setPS] = useState(10);
 
-  // Reusable vector scene (the "2km road")
-  const renderRoadScene = (scale = 1, showNotebook = false) => (
-    <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '350px', background: '#dcfce7', borderRadius: '16px', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-      
-      {/* Background Grid */}
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.2, backgroundImage: 'linear-gradient(#22c55e 1px, transparent 1px), linear-gradient(90deg, #22c55e 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+  // State for components & navigation
+  const [comps, setComps] = useState({ distance: false, direction: false, symbols: true });
+  const [activeTool, setActiveTool] = useState(1);
 
-      <motion.div 
-        animate={{ scale }} 
-        transition={{ duration: 0.8, ease: 'easeInOut' }}
-        style={{ width: '80%', position: 'relative', display: 'flex', alignItems: 'center' }}
-      >
-        {/* The Road */}
-        <div style={{ width: '100%', height: '40px', background: '#475569', borderRadius: '4px', position: 'relative', display: 'flex', alignItems: 'center' }}>
-          <div style={{ width: '100%', height: '2px', background: 'white', borderStyle: 'dashed', borderWidth: '2px', borderColor: 'white', opacity: 0.5 }} />
-        </div>
+  const realDist = sVal * sCm;
 
-        {/* Buildings */}
-        <div style={{ position: 'absolute', left: '10%', bottom: '50px', width: '60px', height: '60px', background: '#ef4444', borderRadius: '8px', boxShadow: '0 4px 0 #b91c1c' }}><div style={{textAlign:'center', color:'white', fontWeight:'bold', marginTop:'15px', fontSize:'0.8rem'}}>School</div></div>
-        <div style={{ position: 'absolute', left: '45%', top: '50px', width: '50px', height: '40px', background: '#10b981', borderRadius: '25px', boxShadow: '0 4px 0 #047857' }}><div style={{textAlign:'center', color:'white', fontWeight:'bold', marginTop:'10px', fontSize:'0.8rem'}}>Park</div></div>
-        <div style={{ position: 'absolute', right: '10%', bottom: '50px', width: '70px', height: '50px', background: '#3b82f6', borderRadius: '8px', boxShadow: '0 4px 0 #1d4ed8' }}><div style={{textAlign:'center', color:'white', fontWeight:'bold', marginTop:'15px', fontSize:'0.8rem'}}>Hospital</div></div>
-      </motion.div>
-      
-      <motion.div animate={{ scale }} transition={{ duration: 0.8, ease: 'easeInOut' }} style={{ marginTop: '2rem', padding: '0.5rem 1rem', background: '#ffffff', borderRadius: '20px', fontWeight: 'bold', color: '#334155', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-        Actual Distance: 2 kilometres
-      </motion.div>
+  const drawL = pL / pS;
+  const drawW = pW / pS;
+  const diagCm = Math.hypot(drawL, drawW);
+  const diagReal = diagCm * pS;
+  const pad = 40, availW = 400 - 2 * pad, availH = 260 - 2 * pad;
+  const pxPerCm = Math.max(6, Math.min(availW / Math.max(drawL, 0.1), availH / Math.max(drawW, 0.1)));
+  const w = drawL * pxPerCm;
+  const h = drawW * pxPerCm;
+  const ox = pad;
+  const oy = 260 - pad;
 
-      {/* Notebook Overlay for Step 1 */}
-      <AnimatePresence>
-        {showNotebook && (
-          <motion.div
-            initial={{ opacity: 0, scale: 1.5, y: -50 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ type: 'spring', damping: 20 }}
-            style={{ position: 'absolute', top: '10%', bottom: '10%', left: '25%', right: '25%', background: 'rgba(255,255,255,0.75)', border: '4px solid #94a3b8', borderRadius: '8px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', pointerEvents: 'none', display: 'flex', flexDirection: 'column' }}
-          >
-            <div style={{ width: '100%', height: '30px', borderBottom: '2px solid #ef4444', opacity: 0.3 }} />
-            {Array.from({length: 8}).map((_, i) => (
-               <div key={i} style={{ width: '100%', height: '30px', borderBottom: '1px solid #3b82f6', opacity: 0.2 }} />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
+  const ticks = [];
+  for (let c = 0; c <= Math.ceil(drawL); c++) {
+    ticks.push(ox + c * pxPerCm);
+  }
+
+  const toggleComp = (key) => {
+    setComps({ ...comps, [key]: !comps[key] });
+  };
+
+  const preset = (v, u, cm) => {
+    setSVal(v);
+    setSUnit(u);
+    setSCm(cm);
+  };
 
   return (
-    <div style={{ width: '100%', height: '750px', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', overflow: 'hidden', borderRadius: '24px', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
-      
-      {/* Top Bar for Back Button */}
-      {step > 1 && (
-        <div style={{ padding: '1rem 2rem', borderBottom: '1px solid var(--border)', background: 'var(--card-bg)' }}>
-          <button 
-            onClick={() => setStep(s => Math.max(1, s - 1))}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
-            onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
-            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
-          >
-            <ArrowLeft size={16} /> Back
-          </button>
-        </div>
-      )}
-
-      {/* Two Column Layout */}
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+    <div className="distance-scale-container">
+      <style>{`
+        .distance-scale-container {
+          --navy: #0E3556; --ink: #20303f; --mut: #5c6b7a; --card: #F3F7FC; --cardline: #e4ebf3;
+          --amber: #F5A623; --blue: #2f6df0; --green: #12a15f; --violet: #7c5cff;
+          --paper1: #F7F1E2; --paper2: #EFE6D2;
+          --serif: "Fraunces", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; --geo: "Space Grotesk", system-ui, sans-serif;
+          
+          font-family: var(--geo);
+          color: var(--ink);
+          height: calc(100vh - 120px);
+          min-height: 650px;
+          display: flex;
+          flex-direction: column;
+          box-sizing: border-box;
+          border-radius: 16px;
+        }
         
-        {/* LEFT: Interactive Learning Area */}
-        <div style={{ flex: '1 1 70%', padding: '2rem', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-          <AnimatePresence mode="wait">
-            
-            {/* Step 1 & 2 Visual */}
-            {(step === 1 || step === 2) && (
-              <motion.div key="scene1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} style={{ width: '100%', height: '100%' }}>
-                {renderRoadScene(step === 2 && q2Answer === 'Shrink the Road' ? 0.3 : 1, q1ShowNotebook)}
-              </motion.div>
-            )}
+        .distance-scale-container * {
+          box-sizing: border-box;
+        }
 
-            {/* Step 3 Visual (Split Comparison) */}
-            {step === 3 && (
-              <motion.div key="scene3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} style={{ width: '100%', height: '100%', display: 'flex', gap: '2rem' }}>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  <h3 style={{ margin: 0, color: '#475569' }}>Real World</h3>
-                  {renderRoadScene(1)}
-                </div>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  <h3 style={{ margin: 0, color: '#475569' }}>Map</h3>
-                  {renderRoadScene(0.4)}
-                  <div style={{ marginTop: '-40px', padding: '0.4rem 1rem', background: '#4f46e5', color: 'white', borderRadius: '12px', fontWeight: 'bold', zIndex: 10 }}>4 centimetres</div>
-                </div>
-              </motion.div>
-            )}
+        .ds-spread {
+          flex: 1; display: grid; grid-template-columns: 0.92fr 1.08fr; border-radius: 16px; overflow: hidden; position: relative;
+          border: 6px solid var(--navy); box-shadow: 0 10px 40px rgba(14,42,69,.2);
+          background: #d9dfe8;
+        }
+        .ds-spread::after { content:""; position:absolute; left:47%; top:0; bottom:0; width:3px; background:rgba(20,40,69,.14); z-index:3; }
+        .ds-ribbon { position:absolute; top:-6px; left:44%; width:20px; height:64px; background:#c0392b; z-index:4; border-radius:0 0 3px 3px; }
+        
+        .ds-left { background:linear-gradient(160deg,var(--paper1),var(--paper2)); padding:clamp(20px,2.8vw,46px); display:flex; flex-direction:column; min-height:0; }
+        .ds-eyebrow { font-family:var(--mono); font-size:clamp(10px,1vw,12px); letter-spacing:.22em; text-transform:uppercase; color:var(--amber); font-weight:600; margin-bottom: 0; }
+        .ds-h1 { font-family:var(--serif); font-weight:900; color:var(--navy); font-size:clamp(30px,3.8vw,54px); line-height:1; margin:4px 0 2px; }
+        .ds-sub { font-family:var(--serif); font-style:italic; color:#8a6a3a; font-size:clamp(15px,1.7vw,21px); margin-bottom:clamp(12px,1.6vw,18px); }
+        .ds-left p { font-size:clamp(13px,1.45vw,16.5px); line-height:1.55; color:var(--ink); margin-bottom:11px; margin-top:0; }
+        .ds-left p b { color:var(--navy); }
+        
+        .ds-comp { display:flex; gap:8px; margin:4px 0 14px; flex-wrap:wrap; }
+        .ds-comp span { cursor: pointer; font-family:var(--mono); font-size:11.5px; font-weight:600; padding:6px 12px; border-radius:8px; border:1px solid #d8c8a4; background:#fbf5e6; color:#8a6a3a; user-select: none; }
+        .ds-comp span.ds-on { background:var(--navy); color:#fff; border-color:var(--navy); }
+        
+        .ds-scaleex { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0 14px; }
+        .ds-scaleex .ds-e { background:#fbf5e6; border:1px solid #e0d3b0; border-radius:10px; padding:11px 13px; }
+        .ds-scaleex .ds-e .ds-k { font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:#8a6a3a; text-transform:uppercase; margin-bottom:0; }
+        .ds-scaleex .ds-e .ds-v { font-weight:700; color:var(--navy); font-size:clamp(14px,1.6vw,18px); margin-top:3px; margin-bottom:0; }
+        .ds-scaleex .ds-e small { color:var(--mut); font-size:11.5px; }
+        
+        .ds-dyk { margin-top:auto; background:#fcf0cf; border-left:5px solid var(--amber); border-radius:10px; padding:clamp(12px,1.6vw,18px); }
+        .ds-dyk h4 { display:flex; gap:7px; align-items:center; color:#b4761c; font-weight:700; font-size:14px; margin-bottom:5px; margin-top:0; }
+        .ds-dyk p { color:#8a5a12; font-size:13px; line-height:1.5; margin:0; }
+        
+        .ds-right { background:#fbfdff; padding:clamp(18px,2.4vw,36px); display:flex; flex-direction:column; min-height:0; }
+        .ds-rlabel { display:flex; align-items:center; gap:8px; color:var(--navy); font-family:var(--serif); font-weight:600; font-size:clamp(18px,2vw,24px); margin-bottom: 0; }
+        
+        .ds-scroll { flex:1; min-height:0; overflow-y:auto; margin-top:14px; padding-right:6px; display:flex; flex-direction:column; gap:14px; }
+        .ds-scroll::-webkit-scrollbar { width:6px; }
+        .ds-scroll::-webkit-scrollbar-thumb { background:#d4deea; border-radius:3px; }
+        
+        .ds-tool { background:#fff; border:1px solid var(--cardline); border-radius:14px; padding:clamp(14px,1.7vw,20px); box-shadow:0 6px 16px rgba(14,42,69,.05); }
+        .ds-tool h3 { font-size:clamp(15px,1.6vw,18px); font-weight:700; color:var(--navy); margin-bottom:4px; margin-top:0; display:flex; align-items:center; gap:8px; }
+        .ds-tool .ds-hint { color:var(--mut); font-size:12.5px; margin-bottom:12px; }
+        
+        .ds-fields { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+        .ds-fields .ds-fld { display:flex; flex-direction:column; gap:4px; }
+        .ds-fields label { font-size:11px; color:var(--mut); font-weight:600; margin-bottom:0; }
+        .ds-fields input[type=number], .ds-fields select { width:100%; background:#f7f9fc; border:1px solid #d6e0ec; border-radius:9px; color:var(--ink); padding:9px 11px; font-size:14px; font-family:var(--geo); margin: 0; }
+        .ds-fields input:focus, .ds-fields select:focus { outline:none; border-color:var(--violet); }
+        
+        .ds-presets { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; align-items:center; }
+        .ds-presets span { font-size:11.5px; color:var(--mut); }
+        
+        .ds-chip { font-family:var(--geo); font-weight:600; cursor:pointer; border:1px solid #d6e0ec; background:#fff; color:var(--navy); border-radius:8px; padding:6px 11px; font-size:12px; transition:all .15s; }
+        .ds-chip:hover { border-color:var(--violet); background:#f5f2ff; }
+        
+        .ds-out { margin-top:12px; background:#f4f8ff; border:1px solid #dbe6f7; border-radius:11px; padding:13px 15px; animation:ds-fade .3s; }
+        .ds-out .ds-big { font-size:clamp(20px,2.4vw,30px); font-weight:800; color:var(--amber); }
+        .ds-out .ds-work { font-family:var(--mono); font-size:12px; color:var(--mut); margin-top:6px; line-height:1.5; }
+        
+        @keyframes ds-fade { from {opacity:0; transform:translateY(6px);} to {opacity:1; transform:none;} }
+        
+        .ds-stage { background:#0d1330; border-radius:10px; margin-top:12px; padding:8px; }
+        .ds-stage svg { width:100%; height:auto; max-height:34vh; display:block; }
+        
+        .ds-result-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
+        .ds-result-grid .ds-r { background:#f4f8ff; border:1px solid #dbe6f7; border-radius:10px; padding:10px; text-align:center; }
+        .ds-result-grid .ds-r .ds-k { font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mut); margin-bottom:0; }
+        .ds-result-grid .ds-r .ds-v { font-weight:800; font-size:clamp(16px,1.9vw,22px); color:var(--navy); margin-top:2px; margin-bottom:0; }
+        .ds-result-grid .ds-r.ds-hl .ds-v { color:var(--amber); }
+        
+        .ds-pfoot { display:flex; align-items:center; justify-content:space-between; padding-top:12px; margin-top:10px; border-top:1px solid var(--cardline); }
+        .ds-pageind { display:flex; align-items:center; gap:8px; color:var(--mut); font-weight:600; font-size:13px; margin: 0; }
+        
+        .ds-nav-btn {
+          font-family: var(--geo); font-weight: 700; border: none; cursor: pointer;
+          background: var(--amber); color: #fff; padding: 12px 24px; border-radius: 999px; font-size: 15px; transition: all .2s;
+          box-shadow: 0 4px 15px rgba(245, 166, 35, 0.4);
+        }
+        .ds-nav-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(245, 166, 35, 0.5);
+        }
+        .ds-complete-btn {
+          font-family: var(--geo); font-weight: 700; border: none; cursor: pointer;
+          background: var(--green); color: #fff; padding: 12px 24px; border-radius: 999px; font-size: 15px; transition: all .2s;
+          box-shadow: 0 4px 15px rgba(18, 161, 95, 0.4);
+        }
+        .ds-complete-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(18, 161, 95, 0.5);
+        }
 
-            {/* Step 4 Visual (Textbook Example) */}
-            {step === 4 && (
-              <motion.div key="scene4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2rem' }}>
-                <div style={{ width: '300px', height: '60px', background: '#fcd34d', border: '2px solid #fbbf24', borderRadius: '8px', display: 'flex', alignItems: 'flex-start', padding: '0 10px', boxShadow: '0 10px 25px rgba(251, 191, 36, 0.2)' }}>
-                   {Array.from({length: 10}).map((_, i) => (
-                     <div key={i} style={{ flex: 1, height: i % 5 === 0 ? '20px' : '10px', borderLeft: '2px solid #b45309' }} />
-                   ))}
-                </div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>1 cm</div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: '#64748b' }}>
-                  <div style={{ width: '2px', height: '40px', background: 'currentColor' }} />
-                  <span>represents</span>
-                  <div style={{ width: '2px', height: '40px', background: 'currentColor' }} />
-                </div>
-                <div style={{ padding: '1.5rem 3rem', background: '#10b981', color: 'white', borderRadius: '24px', fontSize: '2rem', fontWeight: 'bold', boxShadow: '0 15px 30px rgba(16, 185, 129, 0.3)' }}>
-                  500 metres
-                </div>
-              </motion.div>
-            )}
+        @media (max-aspect-ratio:1/1), (max-width:900px) {
+          .ds-spread { grid-template-columns:1fr; }
+          .ds-spread::after { display:none; }
+          .ds-left { min-height:auto; }
+        }
+      `}</style>
 
-            {/* Step 5 Visual */}
-            {step === 5 && (
-              <motion.div key="scene5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} style={{ width: '100%', height: '100%', display: 'flex', gap: '2rem', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ padding: '2rem', background: 'white', color: '#1e293b', borderRadius: '20px', boxShadow: 'var(--card-shadow)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', border: q5Answer === '500 metres' ? '4px solid #10b981' : '4px solid transparent' }}>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Illustration A</div>
-                  <div style={{ fontSize: '2rem' }}>📏 1 cm</div>
-                  <div style={{ color: '#94a3b8' }}>↓</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#10b981' }}>500 metres</div>
-                </div>
-                <div style={{ padding: '2rem', background: 'white', color: '#1e293b', borderRadius: '20px', boxShadow: 'var(--card-shadow)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', border: q5Answer === '500 kilometres' ? '4px solid #ef4444' : '4px solid transparent' }}>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Illustration B</div>
-                  <div style={{ fontSize: '2rem' }}>📏 1 cm</div>
-                  <div style={{ color: '#94a3b8' }}>↓</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#ef4444' }}>500 kilometres</div>
-                </div>
-              </motion.div>
-            )}
+      <div className="ds-spread">
+        <div className="ds-ribbon"></div>
 
-            {/* Step 6 Visual */}
-            {step === 6 && (
-              <motion.div key="scene6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '3rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-                  <div style={{ width: '80px', height: '80px', background: '#ef4444', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>School</div>
-                  <div style={{ position: 'relative', width: '200px', height: '10px', background: '#475569', borderRadius: '5px' }}>
-                    <div style={{ position: 'absolute', top: '-30px', left: '0', width: '100%', textAlign: 'center', fontWeight: 'bold', color: '#334155' }}>Distance on map: 2 cm</div>
-                  </div>
-                  <div style={{ width: '80px', height: '80px', background: '#8b5cf6', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>Library</div>
-                </div>
-                <div style={{ padding: '1rem 2rem', background: 'white', borderRadius: '16px', boxShadow: 'var(--card-shadow)', fontWeight: 'bold', fontSize: '1.5rem', color: '#4f46e5' }}>
-                  Scale: 1 cm = 500 m
-                </div>
-              </motion.div>
-            )}
-            
-          </AnimatePresence>
+        {/* LEFT · concept */}
+        <div className="ds-left">
+          <div className="ds-eyebrow">Chapter 1 · Distance &amp; Scale</div>
+          <h1 className="ds-h1">Shrinking the World</h1>
+          <div className="ds-sub">How a huge place fits on paper</div>
+
+          <p>Every map has three important components — tap to recall the two you already used in the town map:</p>
+          <div className="ds-comp">
+            <span className={comps.distance ? 'ds-on' : ''} onClick={() => toggleComp('distance')}>📏 Distance</span>
+            <span className={comps.direction ? 'ds-on' : ''} onClick={() => toggleComp('direction')}>🧭 Direction</span>
+            <span className={comps.symbols ? 'ds-on' : ''} onClick={() => toggleComp('symbols')}>🔣 Symbols</span>
+          </div>
+
+          <p>A map's <b>scale</b> is the secret to squeezing a huge area onto a small sheet. Each centimetre on the map stands for a fixed distance on the ground.</p>
+
+          <div className="ds-scaleex">
+            <div className="ds-e">
+              <div className="ds-k">Small-city map</div>
+              <div className="ds-v">1 cm = 500 m</div>
+              <small>Fig. 1.1 town</small>
+            </div>
+            <div className="ds-e">
+              <div className="ds-k">Map of India</div>
+              <div className="ds-v">2.5 cm = 500 km</div>
+              <small>Fig. 5.2 ruler</small>
+            </div>
+          </div>
+
+          <p>So the <b>real distance</b> between two points on a map depends entirely on the <b>scale</b> the map is using — the same drawn length can mean 500 metres or 500 kilometres.</p>
+
+          <div className="ds-dyk">
+            <h4>💡 Did You Know?</h4>
+            <p>A "larger" scale like 1 cm = 10 m shows a small area in great detail; a "smaller" scale like 1 cm = 500 km fits a whole country — but shows far less detail.</p>
+          </div>
         </div>
 
-        {/* RIGHT: Explanation Panel */}
-        <div style={{ flex: '0 0 40%', minWidth: '400px', background: 'var(--card-bg)', padding: '2.5rem', borderLeft: '1px solid var(--border)', overflowY: 'auto' }}>
-          <AnimatePresence mode="wait">
-            
-            {/* Step 1 Content */}
-            {step === 1 && (
-              <motion.div key="panel1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <div style={{ background: 'var(--surface)', padding: '1.5rem', borderRadius: '16px', marginBottom: '2rem', border: '1px solid var(--border)' }}>
-                  <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)' }}>Observation</h3>
-                  <p style={{ color: 'var(--text-primary)', fontSize: '1.1rem', margin: '0 0 1rem 0' }}>The school is about 2 kilometres from the park.</p>
-                  <p style={{ color: 'var(--text-secondary)', margin: 0 }}>Can we draw such a huge distance on a notebook page?</p>
+        {/* RIGHT · interactive */}
+        <div className="ds-right">
+          <div className="ds-rlabel">🧮 Let's explore — scale in action</div>
+          <div className="ds-scroll">
+
+            {activeTool === 1 && (
+              <div className="ds-tool-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Tool 1: scale calculator */}
+                <div className="ds-tool">
+                  <h3>1 · Scale calculator</h3>
+                  <div className="ds-hint">Set a scale, enter a map measurement, and the real distance is computed live.</div>
+                  <div className="ds-fields">
+                    <div className="ds-fld">
+                      <label>1 cm on map =</label>
+                      <input type="number" value={sVal} min="0.1" step="any" onChange={(e) => setSVal(parseFloat(e.target.value) || 0)} />
+                    </div>
+                    <div className="ds-fld">
+                      <label>unit</label>
+                      <select value={sUnit} onChange={(e) => setSUnit(e.target.value)}>
+                        <option value="m">m</option>
+                        <option value="km">km</option>
+                      </select>
+                    </div>
+                    <div className="ds-fld">
+                      <label>Map length (cm)</label>
+                      <input type="number" value={sCm} min="0" step="any" onChange={(e) => setSCm(parseFloat(e.target.value) || 0)} />
+                    </div>
+                  </div>
+                  
+                  <div className="ds-presets">
+                    <span>Book examples:</span>
+                    <button className="ds-chip" onClick={() => preset(500, 'm', 4)}>1 cm = 500 m</button>
+                    <button className="ds-chip" onClick={() => preset(200, 'km', 2.5)}>2.5 cm = 500 km</button>
+                  </div>
+                  
+                  <div className="ds-out">
+                    <div className="ds-big">{sCm} cm = {realDist.toLocaleString()} {sUnit}</div>
+                    <div className="ds-work">
+                      real distance = map length × scale = {sCm} × {sVal} {sUnit} = {realDist.toLocaleString()} {sUnit}. Change the scale and the same {sCm} cm means a different real distance.
+                    </div>
+                  </div>
+                </div>
+
+                {/* Educational Content for Tool 1 */}
+                <div style={{ background: '#fff', borderRadius: '14px', padding: '16px', border: '1px solid var(--cardline)', boxShadow: '0 4px 12px rgba(14,42,69,.04)' }}>
+                  <h4 style={{ color: 'var(--navy)', marginTop: 0, marginBottom: '8px', fontSize: '15.5px' }}>✨ What is happening here?</h4>
+                  <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'var(--ink)', margin: 0 }}>
+                    Imagine you have a magic shrinking machine! If our scale is <b>1 cm = 500 m</b>, it means every single centimetre you measure on this map represents exactly 500 metres out in the real world. 
+                    <br/><br/>
+                    So, if a road is 4 cm long on the paper, the real road is 4 times 500 metres, which is <b>2,000 metres</b> long! Try changing the scale above and see how the real distance changes even if the map measurement stays exactly the same.
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '4px' }}>
+                  <button onClick={() => setActiveTool(2)} className="ds-nav-btn">
+                    Next Activity →
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {activeTool === 2 && (
+              <div className="ds-tool-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Tool 2: playground diagonal */}
+                <div className="ds-tool">
+                  <h3>2 · The playground diagonal</h3>
+                  <div className="ds-hint">Draw a school playground to scale, then let the ruler measure its diagonal — computed with Pythagoras, never hard-coded.</div>
+                  <div className="ds-fields">
+                    <div className="ds-fld">
+                      <label>Length (m)</label>
+                      <input type="number" value={pL} onChange={(e) => setPL(parseFloat(e.target.value) || 0)} />
+                    </div>
+                    <div className="ds-fld">
+                      <label>Width (m)</label>
+                      <input type="number" value={pW} onChange={(e) => setPW(parseFloat(e.target.value) || 0)} />
+                    </div>
+                    <div className="ds-fld">
+                      <label>Scale · 1 cm =</label>
+                      <input type="number" value={pS} onChange={(e) => setPS(parseFloat(e.target.value) || 1)} />
+                    </div>
+                  </div>
+                  
+                  <div className="ds-stage">
+                    <svg viewBox="0 0 400 260">
+                      <rect x={ox} y={oy - h} width={w} height={h} fill="rgba(92,225,185,.14)" stroke="#5CE1B9" strokeWidth="2" />
+                      <line x1={ox} y1={oy} x2={ox + w} y2={oy - h} stroke="#FFC24D" strokeWidth="2.4" strokeDasharray="6 4" />
+                      <line x1={ox} y1={oy} x2={ox + Math.min(w, availW)} y2={oy} stroke="#5b6b8a" />
+                      
+                      {ticks.map((tx, i) => (
+                        <line key={i} x1={tx} y1={oy} x2={tx} y2={oy + 5} stroke="#5b6b8a" strokeWidth="1" />
+                      ))}
+                      
+                      <text x={ox + w / 2} y={oy + 22} fill="#9fb0d0" fontSize="12" textAnchor="middle" fontFamily="Space Grotesk">{drawL.toFixed(2)} cm ( = {pL} m )</text>
+                      <text x={ox - 10} y={oy - h / 2} fill="#9fb0d0" fontSize="12" textAnchor="end" fontFamily="Space Grotesk">{drawW.toFixed(2)} cm</text>
+                      <text x={ox + w / 2 + 6} y={oy - h / 2 - 6} fill="#FFC24D" fontSize="12" textAnchor="middle" fontFamily="IBM Plex Mono" transform={`rotate(${-Math.atan2(h, w) * 180 / Math.PI} ${ox + w / 2} ${oy - h / 2})`}>diagonal {diagCm.toFixed(2)} cm</text>
+                    </svg>
+                  </div>
+                  
+                  <div className="ds-result-grid">
+                    <div className="ds-r">
+                      <div className="ds-k">Drawing</div>
+                      <div className="ds-v">{drawL.toFixed(2)} × {drawW.toFixed(2)} cm</div>
+                    </div>
+                    <div className="ds-r">
+                      <div className="ds-k">Diagonal (cm)</div>
+                      <div className="ds-v">{diagCm.toFixed(2)} cm</div>
+                    </div>
+                    <div className="ds-r ds-hl">
+                      <div className="ds-k">Real diagonal</div>
+                      <div className="ds-v">{diagReal.toFixed(1)} m</div>
+                    </div>
+                  </div>
+                  
+                  <div className="ds-out" style={{ marginTop: '10px' }}>
+                    <div className="ds-work">
+                      Drawing = {pL}÷{pS} by {pW}÷{pS} = <b>{drawL.toFixed(2)} × {drawW.toFixed(2)} cm</b>.<br/>
+                      Diagonal = √({drawL.toFixed(2)}² + {drawW.toFixed(2)}²) = <b>{diagCm.toFixed(2)} cm</b>.<br/>
+                      Real diagonal = {diagCm.toFixed(2)} × {pS} = <b>{diagReal.toFixed(1)} m</b>.
+                    </div>
+                  </div>
                 </div>
                 
-                {!q1ShowNotebook ? (
-                  <button className="primary" onClick={() => setQ1ShowNotebook(true)} style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold' }}>
-                    Let's Find Out
+                {/* Educational Content for Tool 2 */}
+                <div style={{ background: '#fff', borderRadius: '14px', padding: '16px', border: '1px solid var(--cardline)', boxShadow: '0 4px 12px rgba(14,42,69,.04)' }}>
+                  <h4 style={{ color: 'var(--navy)', marginTop: 0, marginBottom: '8px', fontSize: '15.5px' }}>📏 Why draw to scale?</h4>
+                  <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'var(--ink)', margin: 0 }}>
+                    Have you ever wondered how far it is from one corner of a playground straight across to the opposite corner? Instead of measuring it outside with a giant tape measure, we can just draw the playground on paper using a scale!
+                    <br/><br/>
+                    By drawing the length and width exactly to scale, the diagonal line on our paper will also be perfectly to scale. We just measure it with a ruler and multiply by our scale to find the real-world distance!
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px', alignItems: 'center' }}>
+                  <button onClick={() => setActiveTool(1)} style={{ background: 'transparent', border: 'none', color: 'var(--mut)', cursor: 'pointer', fontWeight: 600, fontSize: '14px', fontFamily: 'var(--geo)' }}>
+                    ← Back to Calculator
                   </button>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <p style={{ color: 'var(--text-heading)', fontWeight: 'bold', fontSize: '1.1rem', margin: 0 }}>Can this entire road fit on this page?</p>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                      <button onClick={() => setQ1Answered('yes')} style={{ flex: 1, padding: '1rem', borderRadius: '12px', border: q1Answered === 'yes' ? '2px solid #ef4444' : '2px solid var(--border)', background: q1Answered === 'yes' ? 'rgba(239, 68, 68, 0.1)' : 'var(--surface)', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>Yes</button>
-                      <button onClick={() => setQ1Answered('no')} style={{ flex: 1, padding: '1rem', borderRadius: '12px', border: q1Answered === 'no' ? '2px solid #10b981' : '2px solid var(--border)', background: q1Answered === 'no' ? 'rgba(16, 185, 129, 0.1)' : 'var(--surface)', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>No</button>
-                    </div>
-                    {q1Answered === 'yes' && <p style={{ color: '#ef4444', margin: 0 }}>Try looking carefully. The road is much longer than the page.</p>}
-                    {q1Answered === 'no' && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                        <p style={{ color: '#10b981', fontWeight: 'bold', margin: '0 0 1.5rem 0' }}>Exactly! Real places are much larger than paper.</p>
-                        <button className="primary" onClick={handleNext} style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold' }}>Next</button>
-                      </motion.div>
-                    )}
-                  </div>
-                )}
-              </motion.div>
-            )}
-
-            {/* Step 2 Content */}
-            {step === 2 && (
-              <motion.div key="panel2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 style={{ color: 'var(--text-heading)', margin: '0 0 2rem 0' }}>How do maps solve this problem?</h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {['Fold the Road', 'Shrink the Road', 'Remove the Road'].map(opt => {
-                    const isSelected = q2Answer === opt;
-                    const isCorrect = opt === 'Shrink the Road';
-                    return (
-                      <button 
-                        key={opt}
-                        onClick={() => setQ2Answer(opt)}
-                        style={{ padding: '1.25rem', borderRadius: '12px', textAlign: 'left', fontWeight: 'bold', fontSize: '1.1rem', border: isSelected ? (isCorrect ? '2px solid #10b981' : '2px solid #ef4444') : '2px solid var(--border)', background: isSelected ? (isCorrect ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)') : 'var(--surface)', cursor: 'pointer', transition: 'all 0.2s' }}
-                      >
-                        {opt}
-                      </button>
-                    )
-                  })}
+                  <button onClick={onComplete} className="ds-complete-btn">
+                    Complete Activity
+                  </button>
                 </div>
-                {q2Answer && q2Answer !== 'Shrink the Road' && <p style={{ color: '#ef4444', marginTop: '1.5rem', fontWeight: 'bold' }}>That wouldn't help us create a useful map.</p>}
-                {q2Answer === 'Shrink the Road' && (
-                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ marginTop: '2rem' }}>
-                     <h3 style={{ color: '#10b981', margin: '0 0 0.5rem 0' }}>Excellent!</h3>
-                     <p style={{ color: 'var(--text-secondary)', margin: '0 0 1.5rem 0', lineHeight: 1.5 }}>Maps reduce the size of everything while keeping their positions correct.</p>
-                     <button className="primary" onClick={handleNext} style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold' }}>Next</button>
-                   </motion.div>
-                )}
-              </motion.div>
+              </div>
             )}
 
-            {/* Step 3 Content */}
-            {step === 3 && (
-              <motion.div key="panel3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <div style={{ background: 'var(--surface)', padding: '1.5rem', borderRadius: '16px', marginBottom: '1.5rem', border: '1px solid var(--border)' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                    <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>Real Distance</div>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>2 km</div>
-                    <div style={{ color: 'var(--border)', fontSize: '1.5rem', margin: '0.5rem 0' }}>↓</div>
-                    <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>Map Distance</div>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--accent)' }}>4 cm</div>
-                  </div>
-                </div>
-                <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Map Scale</h3>
-                <p style={{ color: 'var(--text-primary)', fontSize: '1rem', lineHeight: 1.5, margin: '0 0 1.5rem 0' }}>This relationship is called the Map Scale. It tells us how much real distance is represented on the map.</p>
-                <button className="primary" onClick={handleNext} style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold' }}>See an Example</button>
-              </motion.div>
-            )}
-
-            {/* Step 4 Content */}
-            {step === 4 && (
-              <motion.div key="panel4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h2 style={{ margin: '0 0 2rem 0', color: 'var(--text-heading)' }}>Example</h2>
-                <div style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
-                  <p style={{ color: 'var(--text-primary)', fontSize: '1.2rem', lineHeight: 1.6, margin: '0 0 2rem 0' }}>Every <strong style={{ color: 'var(--text-heading)' }}>1 centimetre</strong> on this map represents <strong style={{ color: '#10b981' }}>500 metres</strong> in the real world.</p>
-                  <button className="primary" onClick={handleNext} style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold' }}>Check Understanding</button>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Step 5 Content */}
-            {step === 5 && (
-              <motion.div key="panel5" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <h3 style={{ margin: '0 0 1.5rem 0', color: 'var(--text-heading)' }}>Which scale belongs to our city map?</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {['500 metres', '500 kilometres'].map(opt => {
-                    const isSelected = q5Answer === opt;
-                    const isCorrect = opt === '500 metres';
-                    return (
-                      <button 
-                        key={opt}
-                        onClick={() => setQ5Answer(opt)}
-                        style={{ padding: '1.25rem', borderRadius: '12px', textAlign: 'left', fontWeight: 'bold', fontSize: '1.1rem', border: isSelected ? (isCorrect ? '2px solid #10b981' : '2px solid #ef4444') : '2px solid var(--border)', background: isSelected ? (isCorrect ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)') : 'var(--surface)', cursor: 'pointer', transition: 'all 0.2s' }}
-                      >
-                        {opt}
-                      </button>
-                    )
-                  })}
-                </div>
-                {q5Answer === '500 kilometres' && <p style={{ color: '#ef4444', marginTop: '1.5rem', fontWeight: 'bold' }}>Think about the size of a city. Kilometres are too huge for this scale!</p>}
-                {q5Answer === '500 metres' && (
-                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ marginTop: '2rem' }}>
-                     <h3 style={{ color: '#10b981', margin: '0 0 0.5rem 0' }}>Great!</h3>
-                     <p style={{ color: 'var(--text-secondary)', margin: '0 0 1.5rem 0', lineHeight: 1.5 }}>Small city maps usually use smaller real distances like metres.</p>
-                     <button className="primary" onClick={handleNext} style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold' }}>Final Activity</button>
-                   </motion.div>
-                )}
-              </motion.div>
-            )}
-
-            {/* Step 6 Content */}
-            {step === 6 && (
-              <motion.div key="panel6" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                {q6Answer !== '1000 metres' ? (
-                  <>
-                    <h3 style={{ margin: '0 0 1.5rem 0', color: 'var(--text-heading)' }}>How far are they in real life?</h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      {['500 metres', '1000 metres', '1500 metres'].map(opt => {
-                        const isSelected = q6Answer === opt;
-                        const isCorrect = opt === '1000 metres';
-                        return (
-                          <button 
-                            key={opt}
-                            onClick={() => setQ6Answer(opt)}
-                            style={{ padding: '1.25rem', borderRadius: '12px', textAlign: 'left', fontWeight: 'bold', fontSize: '1.1rem', border: isSelected && !isCorrect ? '2px solid #ef4444' : '2px solid var(--border)', background: isSelected && !isCorrect ? 'rgba(239, 68, 68, 0.1)' : 'var(--surface)', cursor: 'pointer', transition: 'all 0.2s' }}
-                          >
-                            {opt}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </>
-                ) : (
-                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', background: 'var(--surface)', padding: '3rem 2rem', borderRadius: '24px', border: '1px solid var(--border)' }}>
-                     <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', boxShadow: '0 10px 25px rgba(16, 185, 129, 0.2)' }}>
-                       <Map size={32} color="#10b981" />
-                     </div>
-                     <h2 style={{ margin: '0 0 1rem 0', color: 'var(--text-heading)' }}>Excellent!</h2>
-                     <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '2rem' }}>You discovered why maps use a scale. 2 cm means 2 × 500 = 1000 metres.</p>
-                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.25rem', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--accent)', borderRadius: '20px', fontWeight: 'bold', marginBottom: '2rem' }}>
-                       🌟 Scale Explorer
-                     </div>
-                     <button className="primary" onClick={onComplete} style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                       Continue to Directions <ArrowRight size={20} />
-                     </button>
-                  </motion.div>
-                )}
-              </motion.div>
-            )}
-
-          </AnimatePresence>
+            <div className="ds-pfoot">
+              <div className="ds-pageind">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9" stroke="#5c6b7a" strokeWidth="1.6" />
+                  <path d="M12 7v5l3 2" stroke="#5c6b7a" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+                Distance &amp; Scale · Step 4 of 5
+              </div>
+              <span style={{ fontFamily: 'var(--mono)', fontSize: '11px', color: 'var(--mut)' }}>real = cm × scale</span>
+            </div>
+            
+          </div>
         </div>
-
       </div>
     </div>
   );
