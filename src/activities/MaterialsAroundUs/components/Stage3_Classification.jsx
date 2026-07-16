@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, Check, Award, ArrowRight, BookOpen, Home, Utensils, AlertCircle } from 'lucide-react';
 
@@ -16,6 +16,18 @@ const TextbookIcon = ({ size = 45 }) => (
   </svg>
 );
 
+const PencilIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 60 20" preserveAspectRatio="xMidYMid meet" style={{ transform: 'rotate(-45deg)' }}>
+    <polygon points="5,10 15,5 15,15" fill="#fcd34d" />
+    <polygon points="5,10 8,8 8,12" fill="#1e293b" />
+    <rect x="15" y="5" width="30" height="10" fill="#fbbf24" />
+    <line x1="15" y1="8.3" x2="45" y2="8.3" stroke="#f59e0b" strokeWidth="1" />
+    <line x1="15" y1="11.6" x2="45" y2="11.6" stroke="#f59e0b" strokeWidth="1" />
+    <rect x="45" y="5" width="5" height="10" fill="#94a3b8" />
+    <rect x="50" y="5" width="8" height="10" fill="#f87171" rx="2" />
+  </svg>
+);
+
 const RulerIcon = ({ size = 45 }) => (
   <svg width={size} height={size} viewBox="0 0 100 30" preserveAspectRatio="xMidYMid meet">
     <rect x="5" y="5" width="90" height="20" rx="2" fill="rgba(167, 139, 250, 0.4)" stroke="#8b5cf6" strokeWidth="2" />
@@ -30,18 +42,29 @@ const RulerIcon = ({ size = 45 }) => (
   </svg>
 );
 
-const GeometryBoxIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 80 40" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="5" width="70" height="30" rx="4" fill="#94a3b8" stroke="#475569" strokeWidth="2" />
-    <rect x="5" y="18" width="70" height="4" fill="#475569" />
-    <circle cx="40" cy="18" r="4" fill="#cbd5e1" stroke="#475569" strokeWidth="2" />
+const RemoteIcon = ({ size = 40 }) => (
+  <svg width={size} height={size} viewBox="0 0 30 60" preserveAspectRatio="xMidYMid meet">
+    <rect x="5" y="2" width="20" height="56" rx="4" fill="#334155" />
+    <circle cx="15" cy="10" r="3" fill="#ef4444" />
+    <circle cx="15" cy="20" r="5" fill="#1e293b" />
+    <rect x="10" y="30" width="10" height="4" rx="1" fill="#94a3b8" />
+    <rect x="10" y="38" width="10" height="4" rx="1" fill="#94a3b8" />
+    <rect x="10" y="46" width="10" height="4" rx="1" fill="#94a3b8" />
   </svg>
 );
 
-const TumblerIcon = ({ size = 35 }) => (
-  <svg width={size} height={size} viewBox="0 0 40 60" preserveAspectRatio="xMidYMid meet">
-    <polygon points="5,5 35,5 30,55 10,55" fill="rgba(56, 189, 248, 0.2)" stroke="#0ea5e9" strokeWidth="2" />
-    <line x1="12" y1="15" x2="16" y2="45" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+const TShirtIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
+    <path d="M 15,10 Q 25,20 35,10 L 45,15 L 40,25 L 35,22 L 35,45 L 15,45 L 15,22 L 10,25 L 5,15 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="2" strokeLinejoin="round" />
+    <path d="M 15,10 Q 25,20 35,10" fill="none" stroke="#f87171" strokeWidth="2" />
+  </svg>
+);
+
+const BallIcon = ({ size = 40 }) => (
+  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
+    <circle cx="25" cy="25" r="20" fill="#dc2626" stroke="#991b1b" strokeWidth="2" />
+    <path d="M15,10 Q25,25 15,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
+    <path d="M35,10 Q25,25 35,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
   </svg>
 );
 
@@ -59,42 +82,33 @@ const SpoonIcon = ({ size = 40 }) => (
   </svg>
 );
 
-const CandleIcon = ({ size = 30 }) => (
-  <svg width={size} height={size} viewBox="0 0 30 60" preserveAspectRatio="xMidYMid meet">
-    <rect x="10" y="20" width="10" height="35" fill="#fef3c7" stroke="#fbbf24" strokeWidth="1.5" />
-    <path d="M15,10 Q20,15 15,20 Q10,15 15,10 Z" fill="#f97316" />
-    <path d="M15,12 Q17,16 15,19 Q13,16 15,12 Z" fill="#fbbf24" />
-    <line x1="15" y1="20" x2="15" y2="25" stroke="#000" strokeWidth="1" />
+const TumblerIcon = ({ size = 35 }) => (
+  <svg width={size} height={size} viewBox="0 0 40 60" preserveAspectRatio="xMidYMid meet">
+    <polygon points="5,5 35,5 30,55 10,55" fill="rgba(56, 189, 248, 0.2)" stroke="#0ea5e9" strokeWidth="2" />
+    <line x1="12" y1="15" x2="16" y2="45" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
   </svg>
 );
 
-const BallIcon = ({ size = 40 }) => (
-  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
-    <circle cx="25" cy="25" r="20" fill="#dc2626" stroke="#991b1b" strokeWidth="2" />
-    <path d="M15,10 Q25,25 15,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
-    <path d="M35,10 Q25,25 35,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
-  </svg>
-);
-
-export default function Stage3_Classification({ onComplete, addXp }) {
-  const [phase, setPhase] = useState('briefing'); // 'briefing', 'use', 'material', 'demo'
+export default function Stage3_Classification({ defaultPhase = 'use', onComplete, addXp }) {
+  const phase = defaultPhase; // controlled externally via props
   const [usePlacements, setUsePlacements] = useState({});
   const [materialPlacements, setMaterialPlacements] = useState({});
   const [inspectedItems, setInspectedItems] = useState({});
-  const [activeDemoId, setActiveDemoId] = useState('textbook');
+  const [activeDemoId, setActiveDemoId] = useState('register');
   const [draggingOverShelf, setDraggingOverShelf] = useState(null);
   const [draggingOverBasket, setDraggingOverBasket] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
 
   const items = [
-    { id: 'textbook', name: 'Textbook', icon: TextbookIcon, correctUse: 'School Shelf', correctMaterial: 'Paper' },
-    { id: 'ruler', name: 'Ruler', icon: RulerIcon, correctUse: 'School Shelf', correctMaterial: 'Plastic' },
-    { id: 'geometry', name: 'Geometry Box', icon: GeometryBoxIcon, correctUse: 'School Shelf', correctMaterial: 'Metal' },
-    { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass' },
-    { id: 'plate', name: 'Plate', icon: PlateIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Ceramic' },
-    { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal' },
-    { id: 'candle', name: 'Candle', icon: CandleIcon, correctUse: 'Home Shelf', correctMaterial: 'Wax' },
-    { id: 'cricket_ball', name: 'Cricket Ball', icon: BallIcon, correctUse: 'Home Shelf', correctMaterial: 'Leather' }
+    { id: 'textbook', name: 'Textbook', icon: TextbookIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where you use it for learning.', materialHint: 'Think about what pages are made from.' },
+    { id: 'pencil', name: 'Pencil', icon: PencilIcon, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where you write and draw.', materialHint: 'Think about what the main body of a pencil is carved from.' },
+    { id: 'ruler', name: 'Ruler', icon: RulerIcon, correctUse: 'School Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you measure and draw lines.', materialHint: 'Think about what light, synthetic material is often used for school tools.' },
+    { id: 'remote', name: 'TV Remote', icon: RemoteIcon, correctUse: 'Home Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you watch TV.', materialHint: 'Think about what hard, light material electronic casings are made of.' },
+    { id: 'tshirt', name: 'T-Shirt', icon: TShirtIcon, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about where you keep your clothes.', materialHint: 'Think about what soft, woven material clothes are made from.' },
+    { id: 'cricket_ball', name: 'Cricket Ball', icon: BallIcon, correctUse: 'Home Shelf', correctMaterial: 'Leather', useHint: 'Think about where you store your sports equipment to play with at home.', materialHint: 'Think about what tough, stitched material is used for this ball.' },
+    { id: 'plate', name: 'Plate', icon: PlateIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Ceramic', useHint: 'Think about where food is served.', materialHint: 'Think about what hard, baked material is used for dishware.' },
+    { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard material is used for cutlery.' },
+    { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' }
   ];
 
   const handleUseSort = (itemId, targetShelf) => {
@@ -105,7 +119,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
       setErrorMessage('');
       addXp(5);
     } else {
-      setErrorMessage(`"${item.name}" belongs on the ${item.correctUse}, not the ${targetShelf}!`);
+      setErrorMessage(`"${item.name}" doesn't belong here. ${item.useHint}`);
       setTimeout(() => setErrorMessage(''), 4000);
     }
   };
@@ -118,7 +132,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
       setErrorMessage('');
       addXp(5);
     } else {
-      setErrorMessage(`"${item.name}" is made of ${item.correctMaterial}, not ${targetMaterial}!`);
+      setErrorMessage(`Incorrect material. ${item.materialHint}`);
       setTimeout(() => setErrorMessage(''), 4000);
     }
   };
@@ -133,6 +147,16 @@ export default function Stage3_Classification({ onComplete, addXp }) {
     setInspectedItems(prev => ({ ...prev, [id]: true }));
   };
 
+  useEffect(() => {
+    if (phase === 'use' && allUseSorted) {
+      onComplete();
+    } else if (phase === 'material' && allMaterialSorted) {
+      onComplete();
+    } else if (phase === 'demo' && canFinishDemo) {
+      onComplete();
+    }
+  }, [phase, allUseSorted, allMaterialSorted, canFinishDemo, onComplete]);
+
   const getDemoProperties = (id) => {
     switch (id) {
       case 'textbook':
@@ -142,6 +166,13 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           { label: 'Surface Texture', value: 'Smooth & Flexible ☁️' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
+      case 'pencil':
+        return [
+          { label: 'Primary Use', value: 'School Item 🎒' },
+          { label: 'Base Material', value: 'Wood 🪵' },
+          { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
+        ];
       case 'ruler':
         return [
           { label: 'Primary Use', value: 'School Item 🎒' },
@@ -149,19 +180,26 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
           { label: 'Transparency', value: 'Transparent/Translucent 🔍' }
         ];
-      case 'geometry':
+      case 'remote':
         return [
-          { label: 'Primary Use', value: 'School Item 🎒' },
-          { label: 'Base Material', value: 'Metal 🦾' },
-          { label: 'Surface Texture', value: 'Hard & Cold 🧊' },
+          { label: 'Primary Use', value: 'Home Item 🏠' },
+          { label: 'Base Material', value: 'Plastic 🧪' },
+          { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
-      case 'glass':
+      case 'tshirt':
         return [
-          { label: 'Primary Use', value: 'Kitchen Item 🍳' },
-          { label: 'Base Material', value: 'Glass 💎' },
-          { label: 'Surface Texture', value: 'Hard & Smooth ✨' },
-          { label: 'Transparency', value: 'Transparent 🔍' }
+          { label: 'Primary Use', value: 'Home Item 🏠' },
+          { label: 'Base Material', value: 'Cloth 🧶' },
+          { label: 'Surface Texture', value: 'Soft & Flexible 👕' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
+        ];
+      case 'cricket_ball':
+        return [
+          { label: 'Primary Use', value: 'Home Item 🏠' },
+          { label: 'Base Material', value: 'Leather 🏏' },
+          { label: 'Surface Texture', value: 'Hard & Stitched 🧵' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
         ];
       case 'plate':
         return [
@@ -177,19 +215,12 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           { label: 'Surface Texture', value: 'Hard & Lustrous ✨' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
-      case 'candle':
+      case 'glass':
         return [
-          { label: 'Primary Use', value: 'Home Item 🏠' },
-          { label: 'Base Material', value: 'Wax 🕯️' },
-          { label: 'Surface Texture', value: 'Soft & Waxy ☁️' },
-          { label: 'Transparency', value: 'Translucent 🌫️' }
-        ];
-      case 'cricket_ball':
-        return [
-          { label: 'Primary Use', value: 'Home Item 🏠' },
-          { label: 'Base Material', value: 'Leather 🏏' },
-          { label: 'Surface Texture', value: 'Hard & Stitched 🧵' },
-          { label: 'Transparency', value: 'Opaque 🌑' }
+          { label: 'Primary Use', value: 'Kitchen Item 🍳' },
+          { label: 'Base Material', value: 'Glass 💎' },
+          { label: 'Surface Texture', value: 'Hard & Smooth ✨' },
+          { label: 'Transparency', value: 'Transparent 🔍' }
         ];
       default:
         return [];
@@ -200,14 +231,14 @@ export default function Stage3_Classification({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
       {/* Dynamic phase header */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.35rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <LayoutGrid size={22} style={{ color: 'var(--accent)' }} /> 
           {phase === 'briefing' && 'Case Briefing: Stage 1 Report'}
           {phase === 'use' && 'Case File 02 – Organizing by Purpose'}
           {phase === 'material' && 'Case File 02 – Scientific Classification'}
           {phase === 'demo' && 'Case File 02 – Multi-Property Insights'}
         </h3>
-        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
           {phase === 'briefing' && 'Review your findings from the classroom scan before analyzing them.'}
           {phase === 'use' && 'Drag collected items to shelves, or select them based on how they are used.'}
           {phase === 'material' && 'Drag items to their material baskets, or select the correct material.'}
@@ -237,8 +268,8 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           >
             <div style={{ fontSize: '3rem' }}>🕵️‍♂️</div>
             <div>
-              <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.5rem' }}>Investigation Report: Stage 1</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.5rem' }}>
+              <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.75rem' }}>Investigation Report: Stage 1</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginTop: '0.5rem' }}>
                 You have successfully identified the base materials of all classroom evidence.
               </p>
             </div>
@@ -247,15 +278,15 @@ export default function Stage3_Classification({ onComplete, addXp }) {
               width: '100%', 
               background: 'var(--surface)', 
               borderRadius: '12px', 
-              padding: '1.25rem', 
+              padding: '1.5rem', 
               border: '1px solid var(--border)',
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
-              gap: '0.75rem',
+              gap: '1rem',
               textAlign: 'left'
             }}>
               {items.slice(0, 6).map((item) => (
-                <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--text-primary)' }}>
+                <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', color: 'var(--text-primary)' }}>
                   <span style={{ color: 'var(--success)' }}>✓</span>
                   <strong>{item.name}:</strong> 
                   <span style={{ color: 'var(--accent)' }}>{item.correctMaterial}</span>
@@ -263,7 +294,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
               ))}
             </div>
 
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontStyle: 'italic', maxWidth: '480px' }}>
+            <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontStyle: 'italic', maxWidth: '520px', lineHeight: '1.5' }}>
               "Excellent work, Detective! Now that we know what these objects are made of, we must analyze and organize them to reveal scientific property patterns."
             </div>
 
@@ -288,7 +319,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           >
             {/* Left Drawer */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '620px' }}>
-              <h4 style={{ margin: 0, fontSize: '0.95rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
+              <h4 style={{ margin: 0, fontSize: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1, overflowY: 'auto', alignContent: 'start', paddingRight: '0.25rem' }}>
                 {items.map((item) => {
                   const isSorted = usePlacements[item.id] !== undefined;
@@ -335,14 +366,14 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                       }}>
                         <IconComponent size={32} />
                       </div>
-                      <span style={{ fontWeight: '600', fontSize: '0.85rem', lineHeight: '1.2' }}>{item.name}</span>
+                      <span style={{ fontWeight: '600', fontSize: '1rem', lineHeight: '1.2' }}>{item.name}</span>
 
                       {!isSorted ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.25rem' }}>
                           <select
                             value=""
                             onChange={(e) => handleUseSort(item.id, e.target.value)}
-                            style={{ fontSize: '0.7rem', padding: '0.3rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '90px' }}
+                            style={{ fontSize: '0.9rem', padding: '0.4rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%' }}
                           >
                             <option value="" disabled>Shelf</option>
                             <option value="School Shelf">School</option>
@@ -413,7 +444,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                         boxShadow: 'inset 0 -25px 25px -25px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.05)'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: shelf.color, fontWeight: 'bold', fontSize: '0.95rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: shelf.color, fontWeight: 'bold', fontSize: '1.15rem' }}>
                         {shelf.icon}
                         <span>{shelf.name}</span>
                       </div>
@@ -432,7 +463,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                               filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.15))'
                             }}
                           >
-                              <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: 'var(--text-secondary)', background: 'var(--surface)', padding: '0.15rem 0.5rem', borderRadius: '4px', border: '1px solid var(--border)', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                              <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', background: 'var(--surface)', padding: '0.2rem 0.6rem', borderRadius: '4px', border: '1px solid var(--border)', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
                                 {item.name}
                               </span>
                               <div style={{ transform: 'translateY(1px)' }}>
@@ -441,7 +472,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                           </motion.div>
                         ))}
                         {sortedHere.length === 0 && (
-                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '1rem' }}>Empty Shelf</span>
+                          <span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '1rem' }}>Empty Shelf</span>
                         )}
                       </div>
                     </div>
@@ -472,22 +503,15 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                     gap: '0.75rem'
                   }}
                 >
-                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--success)', lineHeight: '1.5' }}>
+                  <p style={{ margin: 0, fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}>
                     👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects according to their purpose or everyday use. Let's see how a scientist might analyze them differently."
                   </p>
-                  <button
-                    className="primary"
-                    onClick={() => {
-                      setErrorMessage('');
-                      setPhase('material');
-                    }}
-                    style={{ selfAlign: 'flex-end', display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', fontSize: '0.8rem', width: 'fit-content' }}
-                  >
-                    Proceed to Scientific Material Grouping <ArrowRight size={14} />
-                  </button>
+                  <div style={{ background: 'rgba(255,255,255,0.5)', padding: '0.75rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem', alignSelf: 'flex-start' }}>
+                    Tests Complete! Click "Proceed to next" in the top right.
+                  </div>
                 </motion.div>
               ) : (
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
+                <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
                   💡 Tip: Drag items directly into the shelves, or use the drop-downs on the left.
                 </div>
               )}
@@ -506,7 +530,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           >
             {/* Left Drawer */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '620px' }}>
-              <h4 style={{ margin: 0, fontSize: '0.95rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
+              <h4 style={{ margin: 0, fontSize: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1, overflowY: 'auto', alignContent: 'start', paddingRight: '0.25rem' }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
@@ -553,14 +577,14 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                       }}>
                         <IconComponent size={32} />
                       </div>
-                      <span style={{ fontWeight: '600', fontSize: '0.85rem', lineHeight: '1.2' }}>{item.name}</span>
+                      <span style={{ fontWeight: '600', fontSize: '1rem', lineHeight: '1.2' }}>{item.name}</span>
 
                       {!isSorted ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.25rem' }}>
                           <select
                             value=""
                             onChange={(e) => handleMaterialSort(item.id, e.target.value)}
-                            style={{ fontSize: '0.7rem', padding: '0.3rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '90px' }}
+                            style={{ fontSize: '0.9rem', padding: '0.4rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%' }}
                           >
                             <option value="" disabled>Material</option>
                             <option value="Paper">Paper</option>
@@ -568,9 +592,8 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                             <option value="Plastic">Plastic</option>
                             <option value="Glass">Glass</option>
                             <option value="Metal">Metal</option>
-                            <option value="Fabric">Fabric</option>
+                            <option value="Cloth">Cloth</option>
                             <option value="Ceramic">Ceramic</option>
-                            <option value="Wax">Wax</option>
                             <option value="Leather">Leather</option>
                           </select>
                         </div>
@@ -607,9 +630,8 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                   { name: 'Plastic', color: '#a78bfa' },
                   { name: 'Glass', color: '#38bdf8' },
                   { name: 'Metal', color: '#94a3b8' },
-                  { name: 'Fabric', color: '#f43f5e' },
+                  { name: 'Cloth', color: '#f43f5e' },
                   { name: 'Ceramic', color: '#fb7185' },
-                  { name: 'Wax', color: '#fcd34d' },
                   { name: 'Leather', color: '#a16207' }
                 ].map((basket) => {
                   const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
@@ -640,8 +662,8 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                         transition: 'all 0.2s'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'bold', fontSize: '0.8rem', color: 'var(--text-heading)' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: basket.color }} />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'bold', fontSize: '1rem', color: 'var(--text-heading)' }}>
+                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: basket.color }} />
                         <span>{basket.name} Basket</span>
                       </div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
@@ -649,11 +671,11 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                           <div
                             key={item.id}
                             style={{
-                              padding: '0.2rem 0.5rem',
+                              padding: '0.3rem 0.6rem',
                               background: 'var(--card-bg)',
                               border: '1px solid var(--border)',
                               borderRadius: '6px',
-                              fontSize: '0.7rem',
+                              fontSize: '0.85rem',
                               display: 'flex',
                               alignItems: 'center',
                               gap: '0.25rem'
@@ -694,22 +716,15 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                     gap: '0.75rem'
                   }}
                 >
-                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--success)', lineHeight: '1.5' }}>
-                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects by material. Notice how the same <strong>Notebook</strong> that belonged to the School Shelf now belongs to the <strong>Paper Basket</strong>. This shows that the same object can belong to different groups depending on the property we look at!"
+                  <p style={{ margin: 0, fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}>
+                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects by material. Notice how the same <strong>Textbook</strong> that belonged to the School Shelf now belongs to the <strong>Paper Basket</strong>. This shows that the same object can belong to different groups depending on the property we look at!"
                   </p>
-                  <button
-                    className="primary"
-                    onClick={() => {
-                      setErrorMessage('');
-                      setPhase('demo');
-                    }}
-                    style={{ selfAlign: 'flex-end', display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', fontSize: '0.8rem', width: 'fit-content' }}
-                  >
-                    Analyze Multi-Property Connections <ArrowRight size={14} />
-                  </button>
+                  <div style={{ background: 'rgba(255,255,255,0.5)', padding: '0.75rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem', alignSelf: 'flex-start' }}>
+                    Tests Complete! Click "Proceed to next" in the top right.
+                  </div>
                 </motion.div>
               ) : (
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
+                <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
                   💡 Tip: Drag items to their correct material basket, or select from the dropdown.
                 </div>
               )}
@@ -728,7 +743,7 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           >
             {/* Left list of items */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '480px' }}>
-              <h4 style={{ margin: 0, fontSize: '0.9' , borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Select Object to Inspect</h4>
+              <h4 style={{ margin: 0, fontSize: '1.1rem' , borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Select Object to Inspect</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', flex: 1, overflowY: 'auto' }}>
                 {items.map((item) => {
                   const isInspected = inspectedItems[item.id];
@@ -740,12 +755,12 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                       className={isActive ? 'primary' : 'outline'}
                       style={{
                         width: '100%',
-                        padding: '0.5rem 0.75rem',
+                        padding: '0.75rem 1rem',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         borderRadius: '8px',
-                        fontSize: '0.8rem',
+                        fontSize: '0.95rem',
                         textAlign: 'left'
                       }}
                     >
@@ -755,12 +770,12 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                         </div>
                         {item.name}
                       </span>
-                      {isInspected && <span style={{ fontSize: '0.7rem', color: isActive ? '#fff' : 'var(--success)' }}>✓ Seen</span>}
+                      {isInspected && <span style={{ fontSize: '0.85rem', color: isActive ? '#fff' : 'var(--success)' }}>✓ Seen</span>}
                     </button>
                   );
                 })}
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border)', paddingTop: '0.5rem' }}>
+              <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border)', paddingTop: '0.5rem' }}>
                 Objects Inspected: <strong>{inspectedCount} / 3</strong> (Need 3)
               </div>
             </div>
@@ -774,20 +789,20 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                     {React.createElement(items.find(i => i.id === activeDemoId)?.icon || TextbookIcon, { size: 40 })}
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.25rem' }}>
+                    <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.5rem' }}>
                       {items.find(i => i.id === activeDemoId)?.name}
                     </h3>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Multi-Property Classification Profile</span>
+                    <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>Multi-Property Classification Profile</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   {getDemoProperties(activeDemoId).map((prop, idx) => (
-                    <div key={idx} style={{ background: 'var(--surface)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                      <span style={{ display: 'block', fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    <div key={idx} style={{ background: 'var(--surface)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                      <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
                         {prop.label}
                       </span>
-                      <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-primary)', marginTop: '0.15rem', display: 'block' }}>
+                      <span style={{ fontSize: '1.05rem', fontWeight: 'bold', color: 'var(--text-primary)', marginTop: '0.3rem', display: 'block' }}>
                         {prop.value}
                       </span>
                     </div>
@@ -810,10 +825,10 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                     gap: '0.75rem'
                   }}
                 >
-                  <h4 style={{ margin: 0, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem' }}>
-                    <Award size={18} /> Lesson Outcomes Confirmed!
+                  <h4 style={{ margin: 0, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem' }}>
+                    <Award size={22} /> Lesson Outcomes Confirmed!
                   </h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
                       <span style={{ color: 'var(--success)' }}>✔</span>
                       <span>Classification depends entirely on the property selected.</span>
@@ -831,17 +846,13 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                       <span>Scientists choose properties based on their study goals.</span>
                     </div>
                   </div>
-                  <button
-                    className="primary"
-                    onClick={onComplete}
-                    style={{ selfAlign: 'flex-end', marginTop: '0.5rem', padding: '0.6rem 2rem', fontWeight: 'bold' }}
-                  >
-                    Complete Evidence Analysis Case
-                  </button>
+                  <p style={{ marginTop: '0.75rem', fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--text-primary)', textAlign: 'right' }}>
+                    Click "Proceed to next" in the top right!
+                  </p>
                 </motion.div>
               ) : (
-                <div className="glass-panel" style={{ padding: '1rem', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--border)' }}>
+                  <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>
                     🕵️‍♂️ <strong>Detective Mission:</strong> Click on at least <strong>{3 - inspectedCount} more</strong> objects in the left panel to examine how different criteria classify them.
                   </span>
                 </div>

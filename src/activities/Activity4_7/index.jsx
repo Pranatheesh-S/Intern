@@ -4,8 +4,9 @@ import { ArrowLeft, BookOpen, Compass, TestTube2, Trophy } from 'lucide-react';
 import Simulation from './Simulation';
 import Questions from './Questions';
 import ChallengeMode from './ChallengeMode';
+import DidYouKnow from './DidYouKnow';
 
-export default function Activity4_7({ onBackToDashboard }) {
+export default function Activity4_7({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('simulation');
   const [simCompleted, setSimCompleted] = useState(false);
   const [questionsCompleted, setQuestionsCompleted] = useState(false);
@@ -77,7 +78,8 @@ export default function Activity4_7({ onBackToDashboard }) {
       </header>
 
       {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '2rem', maxWidth: '1800px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', padding: '2rem', maxWidth: '1800px', margin: '0 auto', width: '100%' }}>
+        <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <AnimatePresence mode="wait">
           {activeTab === 'simulation' && (
             <motion.div
@@ -114,11 +116,17 @@ export default function Activity4_7({ onBackToDashboard }) {
               transition={{ duration: 0.3 }}
               style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
             >
-              <ChallengeMode onComplete={() => console.log('Activity completed!')} />
+              <ChallengeMode onComplete={onComplete} />
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
+        </main>
+        
+        {/* Right Sidebar (Educational Tip) */}
+        <aside style={{ width: '280px', flexShrink: 0 }}>
+          <DidYouKnow />
+        </aside>
+      </div>
     </div>
   );
 }

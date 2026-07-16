@@ -3,12 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Magnet, Compass, ArrowLeft, Info, CheckCircle } from 'lucide-react';
 import Stage1_Magnetize from './components/Stage1_Magnetize';
 import Stage2_Floating from './components/Stage2_Floating';
+import Quiz from './Quiz';
+import DidYouKnow from './DidYouKnow';
+import { HelpCircle } from 'lucide-react';
 
-export default function MagneticCompassActivity({ onBackToDashboard }) {
+export default function MagneticCompassActivity({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('magnetize');
   const [progress, setProgress] = useState({
     magnetize: false,
-    floating: false
+    floating: false,
+    quiz: false
   });
 
   const handleStage1Complete = () => {
@@ -19,11 +23,18 @@ export default function MagneticCompassActivity({ onBackToDashboard }) {
 
   const handleStage2Complete = () => {
     setProgress(prev => ({ ...prev, floating: true }));
+    setActiveTab('quiz');
+  };
+
+  const handleQuizComplete = () => {
+    setProgress(prev => ({ ...prev, quiz: true }));
+    if (onComplete) onComplete();
   };
 
   const tabs = [
     { id: 'magnetize', name: '1. Magnetize', icon: Magnet, component: <Stage1_Magnetize onComplete={handleStage1Complete} /> },
-    { id: 'floating', name: '2. Make a Compass', icon: Compass, component: <Stage2_Floating onComplete={handleStage2Complete} />, locked: !progress.magnetize }
+    { id: 'floating', name: '2. Make a Compass', icon: Compass, component: <Stage2_Floating onComplete={handleStage2Complete} />, locked: !progress.magnetize },
+    { id: 'quiz', name: '3. Quiz', icon: HelpCircle, component: <Quiz onComplete={handleQuizComplete} />, locked: !progress.floating }
   ];
 
   return (
@@ -109,22 +120,7 @@ export default function MagneticCompassActivity({ onBackToDashboard }) {
 
         {/* Right Sidebar (Educational Tip) */}
         <aside style={{ width: '280px', flexShrink: 0 }}>
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Did you know?
-                </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-                  Science Insights
-                </div>
-                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  We can magnetize an iron object, like a sewing needle, by rubbing it with a permanent magnet in the same direction repeatedly. Once magnetized, it behaves like a bar magnet and aligns North-South when floating freely!
-                </p>
-              </div>
-            </div>
-          </div>
+          <DidYouKnow />
         </aside>
       </div>
     </div>

@@ -3,12 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MousePointer2, AlertCircle, CheckCircle, Hand, RotateCcw, Shapes, Flag } from 'lucide-react';
 
 const generateFilings = (count) => {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    x: Math.random() * 400 - 200,
-    y: Math.random() * 200 - 100,
-    rotation: Math.random() * 360,
-  }));
+  return Array.from({ length: count }, (_, i) => {
+    const width = 6 + Math.random() * 18;
+    const color = Math.random() > 0.5 ? 'rgba(30, 41, 59, 0.65)' : 'rgba(51, 65, 85, 0.65)';
+    return {
+      id: i,
+      x: Math.random() * 600 - 300,
+      y: Math.random() * 400 - 200,
+      rotation: Math.random() * 360,
+      width,
+      color
+    };
+  });
 };
 
 export default function Stage3_Sandbox({ onComplete }) {
@@ -22,40 +28,82 @@ export default function Stage3_Sandbox({ onComplete }) {
   };
 
   const handleScatter = () => {
-    setFilings(generateFilings(150));
+    setFilings(generateFilings(2500));
     setStep('scattered');
   };
 
   const handleTap = () => {
     const clusteredFilings = filings.map(f => {
-      let poleX = 0;
-      let poleY = 0;
-      let isMiddle = Math.random() > 0.9;
+      let nx = f.x;
+      let ny = f.y;
+      
+      let poleNx, poleNy, poleSx, poleSy;
 
       if (shape === 'horseshoe') {
-        const isLeft = Math.random() > 0.5;
-        poleX = isLeft ? -50 : 50;
-        poleY = 60; // Tips of the horseshoe
+        poleNx = -40; poleNy = 60;
+        poleSx = 40; poleSy = 60;
       } else if (shape === 'ring') {
-        // For a ring magnet, poles are often on the faces, so filings stick around the rim or halves.
-        // Let's simulate left/right halves as poles for simplicity in 2D
-        const isLeft = Math.random() > 0.5;
-        poleX = isLeft ? -60 : 60;
-        poleY = (Math.random() - 0.5) * 40;
-      } else if (shape === 'bar') {
-        const isLeft = Math.random() > 0.5;
-        poleX = isLeft ? -100 : 100;
-        poleY = 0;
+        poleNx = -60; poleNy = 0;
+        poleSx = 60; poleSy = 0;
+      } else {
+        // bar
+        poleNx = -90; poleNy = 0;
+        poleSx = 90; poleSy = 0;
       }
+
+      // Pull towards poles
+      const distN = Math.hypot(nx - poleNx, ny - poleNy);
+      const distS = Math.hypot(nx - poleSx, ny - poleSy);
       
-      const clusterSpreadX = (Math.random() - 0.5) * 40;
-      const clusterSpreadY = (Math.random() - 0.5) * 60;
+      const minDist = Math.min(distN, distS);
+      const isNorth = distN < distS;
+      const targetX = isNorth ? poleNx : poleSx;
+      const targetY = isNorth ? poleNy : poleSy;
+
+      const pullFactor = Math.pow(Math.E, -minDist / 120) * 0.3;
+      
+      if (shape === 'bar') {
+        if (Math.abs(nx) < 90 && Math.abs(ny) < 60) {
+           const bodyPull = Math.pow(Math.E, -Math.abs(ny) / 40);
+           ny = ny - ny * bodyPull * 0.4;
+        }
+      } else {
+        if (Math.hypot(nx, ny) < 80) {
+           nx = nx * 0.8 + (Math.random() - 0.5) * 5;
+           ny = ny * 0.8 + (Math.random() - 0.5) * 5;
+        }
+      }
+
+      nx = nx + (targetX - nx) * pullFactor;
+      ny = ny + (targetY - ny) * pullFactor;
+
+      // Physics: Calculate magnetic field vector B
+      const dxN = nx - poleNx;
+      const dyN = ny - poleNy;
+      const dN3 = Math.pow(dxN*dxN + dyN*dyN, 1.5) || 1;
+      const bxN = dxN / dN3;
+      const byN = dyN / dN3;
+
+      const dxS = nx - poleSx;
+      const dyS = ny - poleSy;
+      const dS3 = Math.pow(dxS*dxS + dyS*dyS, 1.5) || 1;
+      const bxS = -dxS / dS3;
+      const byS = -dyS / dS3;
+
+      const bx = bxN + bxS;
+      const by = byN + byS;
+
+      let angle = Math.atan2(by, bx) * (180 / Math.PI);
+      angle += (Math.random() - 0.5) * 4; // noise
+
+      nx += (Math.random() - 0.5) * 5;
+      ny += (Math.random() - 0.5) * 5;
 
       return {
         ...f,
-        x: isMiddle ? (Math.random() - 0.5) * 50 : poleX + clusterSpreadX,
-        y: isMiddle ? (Math.random() - 0.5) * 20 : poleY + clusterSpreadY,
-        rotation: isMiddle ? f.rotation : (Math.random() * 40 - 20), 
+        x: nx,
+        y: ny,
+        rotation: angle, 
       };
     });
 
@@ -152,13 +200,18 @@ export default function Stage3_Sandbox({ onComplete }) {
           )}
 
           {filings.map(f => (
-            <motion.div
+            <div
               key={f.id}
-              animate={{ x: f.x, y: f.y, rotate: f.rotation }}
-              transition={{ type: 'spring', stiffness: 50, damping: 10 }}
               style={{
-                position: 'absolute', width: '6px', height: '2px', background: '#1e293b',
-                borderRadius: '1px', opacity: 0.8, zIndex: 20
+                position: 'absolute',
+                width: `${f.width}px`,
+                height: '1px',
+                background: f.color,
+                borderRadius: '1px',
+                transform: `translate(${f.x}px, ${f.y}px) rotate(${f.rotation}deg)`,
+                opacity: step === 'initial' ? 0 : 1,
+                transition: step === 'scattered' ? 'opacity 0.2s' : 'transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                zIndex: 20
               }}
             />
           ))}

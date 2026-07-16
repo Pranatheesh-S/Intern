@@ -4,12 +4,18 @@ import { MousePointer2, AlertCircle, CheckCircle, Hand, RotateCcw, ArrowRight } 
 
 // Generates random filing positions
 const generateFilings = (count) => {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    x: Math.random() * 400 - 200, // random x between -200 and 200
-    y: Math.random() * 200 - 100, // random y between -100 and 100
-    rotation: Math.random() * 360,
-  }));
+  return Array.from({ length: count }, (_, i) => {
+    const width = 6 + Math.random() * 18; // Much longer to form continuous strings
+    const color = Math.random() > 0.5 ? 'rgba(30, 41, 59, 0.65)' : 'rgba(51, 65, 85, 0.65)'; // Semi-transparent
+    return {
+      id: i,
+      x: Math.random() * 600 - 300, // wider spread to cover whole paper
+      y: Math.random() * 400 - 200,
+      rotation: Math.random() * 360,
+      width,
+      color
+    };
+  });
 };
 
 export default function Stage1_Investigate({ onComplete }) {
@@ -18,30 +24,72 @@ export default function Stage1_Investigate({ onComplete }) {
   const [quizAnswer, setQuizAnswer] = useState(null);
 
   const handleScatter = () => {
-    setFilings(generateFilings(150));
+    setFilings(generateFilings(2500));
     setStep('scattered');
   };
 
   const handleTap = () => {
-    // Animate filings to poles
-    // Poles are at roughly x: -100 and x: 100
+    // Animate filings to poles and align with magnetic field
+    const poleDist = 90; // Magnet poles are roughly at x = -90 and x = 90
+    
     const clusteredFilings = filings.map(f => {
-      const isLeft = Math.random() > 0.5;
-      const poleX = isLeft ? -100 : 100;
+      let nx = f.x;
+      let ny = f.y;
       
-      // Add some random spread around the pole
-      const clusterSpreadX = (Math.random() - 0.5) * 40;
-      const clusterSpreadY = (Math.random() - 0.5) * 60;
+      // Pull towards poles if they are somewhat close
+      const distN = Math.hypot(nx - (-poleDist), ny - 0);
+      const distS = Math.hypot(nx - poleDist, ny - 0);
+      
+      const minDist = Math.min(distN, distS);
+      const isNorth = distN < distS;
+      const targetX = isNorth ? -poleDist : poleDist;
 
-      // Make a few stick to the middle just to be realistic
-      const isMiddle = Math.random() > 0.9;
+      // Very gentle pull to maintain uniform coverage while creating slight density at poles
+      const pullFactor = Math.pow(Math.E, -minDist / 120) * 0.3;
       
+      // Pull onto the magnet body slightly if between poles
+      if (Math.abs(nx) < poleDist && Math.abs(ny) < 60) {
+         const bodyPull = Math.pow(Math.E, -Math.abs(ny) / 40);
+         ny = ny - ny * bodyPull * 0.4;
+      }
+
+      // Smooth translation
+      nx = nx + (targetX - nx) * pullFactor;
+      ny = ny + (0 - ny) * pullFactor;
+
+      // Physics: Calculate magnetic field vector B at (nx, ny) from a dipole
+      // N pole at (-poleDist, 0) -> B points AWAY
+      const dxN = nx - (-poleDist);
+      const dyN = ny - 0;
+      const dN3 = Math.pow(dxN*dxN + dyN*dyN, 1.5) || 1;
+      const bxN = dxN / dN3;
+      const byN = dyN / dN3;
+
+      // S pole at (poleDist, 0) -> B points TOWARDS
+      const dxS = nx - poleDist;
+      const dyS = ny - 0;
+      const dS3 = Math.pow(dxS*dxS + dyS*dyS, 1.5) || 1;
+      const bxS = -dxS / dS3;
+      const byS = -dyS / dS3;
+
+      const bx = bxN + bxS;
+      const by = byN + byS;
+
+      // Calculate angle of the B vector
+      let angle = Math.atan2(by, bx) * (180 / Math.PI);
+      
+      // Minimal noise to keep continuous chains
+      angle += (Math.random() - 0.5) * 4;
+
+      // Add a tiny bit of spatial noise
+      nx += (Math.random() - 0.5) * 5;
+      ny += (Math.random() - 0.5) * 5;
+
       return {
         ...f,
-        x: isMiddle ? (Math.random() - 0.5) * 50 : poleX + clusterSpreadX,
-        y: isMiddle ? (Math.random() - 0.5) * 20 : clusterSpreadY,
-        rotation: isMiddle ? f.rotation : (isLeft ? (Math.random() * 40 - 20) : (Math.random() * 40 - 20)), 
-        // filings align roughly with the magnetic field (horizontal near poles)
+        x: nx,
+        y: ny,
+        rotation: angle, 
       };
     });
 
@@ -112,19 +160,19 @@ export default function Stage1_Investigate({ onComplete }) {
             <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>S</div>
           </div>
 
-          {/* Iron Filings */}
+          {/* Iron Filings (Optimized rendering for 4000 items) */}
           {filings.map(f => (
-            <motion.div
+            <div
               key={f.id}
-              animate={{ x: f.x, y: f.y, rotate: f.rotation }}
-              transition={{ type: 'spring', stiffness: 50, damping: 10 }}
               style={{
                 position: 'absolute',
-                width: '6px',
-                height: '2px',
-                background: '#1e293b',
+                width: `${f.width}px`,
+                height: '1px',
+                background: f.color,
                 borderRadius: '1px',
-                opacity: 0.8,
+                transform: `translate(${f.x}px, ${f.y}px) rotate(${f.rotation}deg)`,
+                opacity: step === 'initial' ? 0 : 1,
+                transition: step === 'scattered' ? 'opacity 0.2s' : 'transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1)',
                 zIndex: 20
               }}
             />

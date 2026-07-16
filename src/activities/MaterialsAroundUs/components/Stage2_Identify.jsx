@@ -217,6 +217,10 @@ export default function Stage2_Identify({ onComplete, addXp }) {
       setScannedObjects(newScanned);
       addXp(15);
       
+      if (Object.keys(newScanned).length === objectsToScan.length) {
+        onComplete();
+      }
+      
       // Auto-reset the scanner back to idle after giving them time to read the explanation
       setTimeout(() => {
         setSelectedObj((prev) => prev?.id === selectedObj.id ? null : prev);
@@ -259,10 +263,10 @@ export default function Stage2_Identify({ onComplete, addXp }) {
 
       {/* Introduction */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.35rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Search size={22} style={{ color: 'var(--accent)' }} /> Case File: Table 6.1 (Identify Materials)
         </h3>
-        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)' }}>
           To understand materials, detectives first list items they observe and identify the substances they are made of. Drag items to the Scanner Pad or click them to test!
         </p>
       </div>
@@ -270,7 +274,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
       <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr 280px', gap: '1.5rem' }}>
         {/* Left: Tray of items */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '580px' }}>
-          <h4 style={{ margin: 0, fontSize: '0.95rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
+          <h4 style={{ margin: 0, fontSize: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1, overflowY: 'auto', alignContent: 'start', paddingRight: '0.25rem' }}>
             {objectsToScan.map((obj) => {
               const isScanned = scannedObjects[obj.id];
@@ -320,7 +324,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   }}>
                     <IconComponent size={32} />
                   </div>
-                  <span style={{ fontWeight: isSelected ? 'bold' : '600', fontSize: '0.85rem', lineHeight: '1.2' }}>{obj.name}</span>
+                  <span style={{ fontWeight: isSelected ? 'bold' : '600', fontSize: '1rem', lineHeight: '1.2' }}>{obj.name}</span>
                   
                   {isScanned && (
                     <div style={{ 
@@ -397,32 +401,17 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 <Award size={40} style={{ color: '#10b981' }} />
               </div>
               <div>
-                <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.5rem' }}>Scan Complete!</h3>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.5rem', maxWidth: '280px' }}>
-                  You have successfully scanned and identified materials for all objects.
+                <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.75rem' }}>Scan Complete!</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.5rem', maxWidth: '320px', lineHeight: '1.5' }}>
+                  You have successfully scanned and identified materials for all objects. Click <strong>"Proceed to next"</strong> in the top right!
                 </p>
               </div>
-              <button
-                onClick={onComplete}
-                className="success"
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  fontSize: '0.9rem',
-                  fontWeight: 'bold',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  boxShadow: '0 0 15px rgba(16, 185, 129, 0.4)'
-                }}
-              >
-                Proceed to Stage 3
-              </button>
             </div>
           ) : selectedObj ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', width: '100%', zIndex: 2 }}>
               <div style={{ textAlign: 'center' }}>
-                <span style={{ color: 'var(--scanner-subtext)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Scanning Subject</span>
-                <h3 style={{ margin: '0.25rem 0 0 0', color: 'var(--scanner-subject-color)', fontSize: '1.5rem' }}>{selectedObj.name}</h3>
+                <span style={{ color: 'var(--scanner-subtext)', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold' }}>Scanning Subject</span>
+                <h3 style={{ margin: '0.25rem 0 0 0', color: 'var(--scanner-subject-color)', fontSize: '1.6rem' }}>{selectedObj.name}</h3>
               </div>
 
               {/* Scanning visual circle */}
@@ -514,7 +503,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
               {/* Selection Options */}
               {scanState !== 'scanning' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '85%', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--scanner-subtext)', fontSize: '0.75rem' }}>Select Identified Material:</span>
+                  <span style={{ color: 'var(--scanner-subtext)', fontSize: '0.95rem', fontWeight: 'bold' }}>Select Identified Material:</span>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', width: '100%' }}>
                     {selectedObj.options.map((option) => {
                       const isOptionSelected = selectedMaterialOption === option;
@@ -522,8 +511,8 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                       const hasScannedThis = scannedObjects[selectedObj.id];
 
                         let btnStyle = {
-                          padding: '0.75rem 0.5rem',
-                          fontSize: '0.9rem',
+                          padding: '0.85rem 0.5rem',
+                          fontSize: '1rem',
                           background: 'var(--surface)',
                           color: 'var(--text-primary)',
                           borderColor: 'var(--border)',
@@ -563,10 +552,10 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                       initial={{ opacity: 0, y: 5 }} 
                       animate={{ opacity: 1, y: 0 }} 
                       style={{ 
-                        fontSize: '0.75rem', 
+                        fontSize: '0.95rem', 
                         textAlign: 'center', 
                         marginTop: '0.5rem', 
-                        lineHeight: '1.4',
+                        lineHeight: '1.5',
                         padding: '0.5rem 0.75rem',
                         borderRadius: '8px',
                         width: '100%',
@@ -585,8 +574,8 @@ export default function Stage2_Identify({ onComplete, addXp }) {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', color: 'var(--scanner-subtext)', textAlign: 'center', padding: '1.5rem' }}>
               <Search size={48} />
-              <span style={{ fontWeight: '500' }}>Scanner Active</span>
-              <span style={{ fontSize: '0.8rem', opacity: 0.8, maxWidth: '220px' }}>
+              <span style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>Scanner Active</span>
+              <span style={{ fontSize: '1rem', opacity: 0.8, maxWidth: '280px', lineHeight: '1.5' }}>
                 Drag an object from the Evidence Tray and drop it here to scan it!
               </span>
             </div>
@@ -595,53 +584,25 @@ export default function Stage2_Identify({ onComplete, addXp }) {
 
         {/* Right: History Did You Know panel */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '580px', background: 'var(--card-bg)' }}>
-          {allCompleted && (
-            <>
-              <button
-                onClick={onComplete}
-                className="primary"
-                style={{ width: '100%', gap: '0.5rem', padding: '0.75rem', fontSize: '0.9rem' }}
-              >
-                <span>Proceed to Grouping</span>
-              </button>
-              <div style={{ height: '1px', width: '100%', background: 'var(--border)' }} />
-            </>
-          )}
 
           <div style={{ background: 'var(--warning-bg)', border: '1px solid var(--warning-border)', padding: '0.8rem', borderRadius: '10px' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--warning)', fontWeight: 'bold', fontSize: '0.8rem' }}>
-              <Info size={14} /> Did you know?
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--warning)', fontWeight: 'bold', fontSize: '1rem' }}>
+              <Info size={16} /> Did you know?
             </span>
-            <h4 style={{ margin: '0.2rem 0 0 0', fontSize: '0.9rem', color: 'var(--text-heading)' }}>Earliest Indian Pottery</h4>
+            <h4 style={{ margin: '0.4rem 0 0 0', fontSize: '1.15rem', color: 'var(--text-heading)' }}>Earliest Indian Pottery</h4>
           </div>
 
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0 }}>
-            Pottery found in the Indian subcontinent dates back to <strong>7,000 to 8,000 years</strong> in Ganga plains (Lahuradewa) and Baluchistan (Mehrgarh). 
-            Clay, a natural material, is kneaded, wheel-turned, and baked in kilns into hard **terracotta**.
-          </p>
-
-          <button 
-            onClick={() => setShowHistoryReveal(!showHistoryReveal)} 
-            className="outline" 
-            style={{ width: '100%', padding: '0.4rem', fontSize: '0.75rem' }}
-          >
-            {showHistoryReveal ? 'Hide Details' : 'Read Ancient Ayurveda Link'}
-          </button>
-
-          <AnimatePresence>
-            {showHistoryReveal && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                style={{ overflow: 'hidden', background: 'var(--surface)', padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--border)' }}
-              >
-                <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                  The clay used for making pots was sieved, turned over a wheel and sieved carefully. Large storage jars from the Harappan Civilisation are exhibited at the National Museum, New Delhi.
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '0 0.25rem' }}>
+            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0 }}>
+              Indian pottery dates back <strong>7,000–8,000 years</strong> to early sites like Lahuradewa and Mehrgarh. 
+            </p>
+            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0 }}>
+              Natural clay is kneaded, shaped on a wheel, and baked in hot kilns to form hard <strong>terracotta</strong>.
+            </p>
+            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0 }}>
+              Large ancient Harappan storage jars made this way are exhibited at the National Museum in New Delhi.
+            </p>
+          </div>
 
           <div style={{ flex: 1 }} />
         </div>

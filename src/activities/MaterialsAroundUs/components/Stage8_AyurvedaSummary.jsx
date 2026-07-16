@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Check, Award, Compass } from 'lucide-react';
 
@@ -26,6 +26,12 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
   };
 
   const gunasCompleted = Object.keys(gunaMatches).length === gunasData.length;
+
+  useEffect(() => {
+    if (gunasCompleted) {
+      onComplete();
+    }
+  }, [gunasCompleted, onComplete]);
 
   const concepts = {
     matter: {
@@ -59,10 +65,10 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.35rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Compass size={22} style={{ color: 'var(--accent)' }} /> 6.4: Ancient India Classification & Summary
         </h3>
-        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
           Ayurveda (ancient Indian medical system) classified physical matter using 20 properties (*guna*—10 pairs of opposites). Let's review these pairs!
         </p>
       </div>
@@ -81,10 +87,10 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
           }}
         >
           <div style={{ borderBottom: '1px solid var(--warning-border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '0.95rem', color: 'var(--warning)' }}>Ancient Wisdom scroll (Ashtanga Hridaya)</span>
+            <span style={{ fontWeight: 'bold', fontSize: '1.15rem', color: 'var(--warning)' }}>Ancient Wisdom scroll (Ashtanga Hridaya)</span>
           </div>
 
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0 }}>
+          <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
             Match the Sanskrit Ayurvedic properties (Gunas) to their correct English opposites:
           </p>
 
@@ -98,8 +104,8 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
                   className={selectedGuna === g.sanskrit ? 'outline active' : 'outline'}
                   disabled={isMatched}
                   style={{
-                    fontSize: '0.75rem',
-                    padding: '0.4rem 0.6rem',
+                    fontSize: '0.95rem',
+                    padding: '0.5rem 0.8rem',
                     borderColor: 'var(--warning-border)',
                     textTransform: 'capitalize',
                     background: isMatched ? 'var(--success-bg)' : 'transparent',
@@ -114,15 +120,15 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
 
           {/* Target Match selectors */}
           {selectedGuna && (
-            <div style={{ background: 'var(--surface)', padding: '0.5rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Match <strong>{selectedGuna}</strong> with:</span>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem', width: '100%' }}>
+            <div style={{ background: 'var(--surface)', padding: '0.75rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>Match <strong>{selectedGuna}</strong> with:</span>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', width: '100%' }}>
                 {gunasData.map((g) => (
                   <button
                     key={g.english}
                     onClick={() => { handleMatch(selectedGuna, g.english); setSelectedGuna(null); }}
                     className="outline"
-                    style={{ padding: '0.25rem', fontSize: '0.7rem' }}
+                    style={{ padding: '0.5rem', fontSize: '0.95rem' }}
                   >
                     {g.english}
                   </button>
@@ -135,7 +141,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
             <motion.div 
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
-              style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem', borderRadius: '8px', fontSize: '0.75rem', color: 'var(--success)' }}
+              style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem', borderRadius: '8px', fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}
             >
               <strong>Match complete!</strong> Ancient India categorized food and minerals based on: <br/>
               • Guru (Heavy) vs Laghu (Light) <br/>
@@ -148,7 +154,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
         {/* Interactive Concept Map */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>Interactive Concept Map</span>
+            <span style={{ fontWeight: 'bold', fontSize: '1.15rem' }}>Interactive Concept Map</span>
           </div>
 
           {/* Node buttons */}
@@ -158,7 +164,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
                 key={key}
                 onClick={() => setActiveConcept(key)}
                 className={activeConcept === key ? 'primary' : 'outline'}
-                style={{ fontSize: '0.7rem', padding: '0.35rem 0.6rem' }}
+                style={{ fontSize: '0.95rem', padding: '0.5rem 0.8rem' }}
               >
                 {concepts[key].title}
               </button>
@@ -166,12 +172,12 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
           </div>
 
           {/* Concept Detail */}
-          <div style={{ flex: 1, background: 'var(--surface)', borderRadius: '8px', padding: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-heading)' }}>{concepts[activeConcept].title}</h4>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+          <div style={{ flex: 1, background: 'var(--surface)', borderRadius: '8px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <h4 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>{concepts[activeConcept].title}</h4>
+            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
               {concepts[activeConcept].desc}
             </p>
-            <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '0.5rem', marginTop: '0.5rem', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+            <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '0.75rem', marginTop: '0.75rem', fontSize: '0.95rem', color: 'var(--text-muted)' }}>
               <strong>Did You Know?</strong> {concepts[activeConcept].didYouKnow}
             </div>
           </div>
@@ -179,15 +185,12 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
       </div>
 
       {/* Footer */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-        <button
-          disabled={!gunasCompleted}
-          onClick={onComplete}
-          className="primary"
-          style={{ padding: '0.75rem 2rem' }}
-        >
-          Take Final Chapter Quiz
-        </button>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
+        {gunasCompleted && (
+          <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}>
+            Review Complete! Click "Proceed to next" in the top right.
+          </div>
+        )}
       </div>
     </div>
   );
