@@ -22,6 +22,12 @@ export default function Stage1_Investigate({ onComplete }) {
   const [step, setStep] = useState('initial'); // initial, scattered, tapped, quiz, complete
   const [filings, setFilings] = useState([]);
   const [quizAnswer, setQuizAnswer] = useState(null);
+  const [shape, setShape] = useState('bar'); // 'bar', 'horseshoe', or 'ring'
+
+  const handleShapeChange = (newShape) => {
+    setShape(newShape);
+    handleReset();
+  };
 
   const handleScatter = () => {
     setFilings(generateFilings(2500));
@@ -29,45 +35,90 @@ export default function Stage1_Investigate({ onComplete }) {
   };
 
   const handleTap = () => {
-    // Animate filings to poles and align with magnetic field
-    const poleDist = 90; // Magnet poles are roughly at x = -90 and x = 90
-    
     const clusteredFilings = filings.map(f => {
       let nx = f.x;
       let ny = f.y;
       
-      // Pull towards poles if they are somewhat close
-      const distN = Math.hypot(nx - (-poleDist), ny - 0);
-      const distS = Math.hypot(nx - poleDist, ny - 0);
+      let poleNx, poleNy, poleSx, poleSy;
+
+      if (shape === 'ring') {
+        // Ring magnet has poles on top/bottom faces. In 2D, field radiates perfectly outward from the center.
+        const dist = Math.hypot(nx, ny) || 1;
+        const targetRadius = 60; // Outer edge of ring
+        
+        const targetX = (nx / dist) * targetRadius;
+        const targetY = (ny / dist) * targetRadius;
+        
+        // Strong pull towards the magnet edge to form the thick dark fuzz
+        const distFromEdge = Math.abs(dist - targetRadius);
+        let pullFactor = Math.pow(Math.E, -distFromEdge / 120) * 0.3;
+        if (distFromEdge < 50) {
+           pullFactor = Math.max(pullFactor, Math.pow(Math.E, -distFromEdge / 30) * 0.7);
+        }
+        
+        nx = nx + (targetX - nx) * pullFactor;
+        ny = ny + (targetY - ny) * pullFactor;
+
+        // Perfectly radial angle
+        let angle = Math.atan2(ny, nx) * (180 / Math.PI);
+        angle += (Math.random() - 0.5) * 4; // Tiny noise
+
+        nx += (Math.random() - 0.5) * 5;
+        ny += (Math.random() - 0.5) * 5;
+
+        // If it got pulled perfectly to 0,0, fix it
+        if (nx === 0 && ny === 0) nx = 1;
+
+        return { ...f, x: nx, y: ny, rotation: angle };
+      }
+
+      if (shape === 'horseshoe') {
+        poleNx = -40; poleNy = 60;
+        poleSx = 40; poleSy = 60;
+      } else {
+        poleNx = -90; poleNy = 0;
+        poleSx = 90; poleSy = 0;
+      }
+      
+      const distN = Math.hypot(nx - poleNx, ny - poleNy);
+      const distS = Math.hypot(nx - poleSx, ny - poleSy);
       
       const minDist = Math.min(distN, distS);
       const isNorth = distN < distS;
-      const targetX = isNorth ? -poleDist : poleDist;
+      const targetX = isNorth ? poleNx : poleSx;
+      const targetY = isNorth ? poleNy : poleSy;
 
-      // Very gentle pull to maintain uniform coverage while creating slight density at poles
-      const pullFactor = Math.pow(Math.E, -minDist / 120) * 0.3;
+      // Base pull for continuous strings
+      let pullFactor = Math.pow(Math.E, -minDist / 120) * 0.3;
       
-      // Pull onto the magnet body slightly if between poles
-      if (Math.abs(nx) < poleDist && Math.abs(ny) < 60) {
-         const bodyPull = Math.pow(Math.E, -Math.abs(ny) / 40);
-         ny = ny - ny * bodyPull * 0.4;
+      // Increased pull near poles to simulate thick fuzzy clumps (as seen in image)
+      if (minDist < 60) {
+         pullFactor = Math.max(pullFactor, Math.pow(Math.E, -minDist / 40) * 0.7);
+      }
+      
+      if (shape === 'bar') {
+        if (Math.abs(nx) < 90 && Math.abs(ny) < 60) {
+           const bodyPull = Math.pow(Math.E, -Math.abs(ny) / 40);
+           ny = ny - ny * bodyPull * 0.4;
+        }
+      } else if (shape === 'horseshoe') {
+        if (Math.hypot(nx, ny) < 80) {
+           nx = nx * 0.8 + (Math.random() - 0.5) * 5;
+           ny = ny * 0.8 + (Math.random() - 0.5) * 5;
+        }
       }
 
-      // Smooth translation
       nx = nx + (targetX - nx) * pullFactor;
-      ny = ny + (0 - ny) * pullFactor;
+      ny = ny + (targetY - ny) * pullFactor;
 
-      // Physics: Calculate magnetic field vector B at (nx, ny) from a dipole
-      // N pole at (-poleDist, 0) -> B points AWAY
-      const dxN = nx - (-poleDist);
-      const dyN = ny - 0;
+      const dxN = nx - poleNx;
+      const dyN = ny - poleNy;
       const dN3 = Math.pow(dxN*dxN + dyN*dyN, 1.5) || 1;
       const bxN = dxN / dN3;
       const byN = dyN / dN3;
 
-      // S pole at (poleDist, 0) -> B points TOWARDS
-      const dxS = nx - poleDist;
-      const dyS = ny - 0;
+      const dxS = nx - poleSx;
+      const dyS = ny - poleSy;
       const dS3 = Math.pow(dxS*dxS + dyS*dyS, 1.5) || 1;
       const bxS = -dxS / dS3;
       const byS = -dyS / dS3;
@@ -130,7 +181,30 @@ export default function Stage1_Investigate({ onComplete }) {
           </p>
         </div>
 
-        {/* Paper / Canvas */}
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+          <button 
+            onClick={() => handleShapeChange('bar')}
+            className={shape === 'bar' ? 'primary' : 'outline'}
+            style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
+          >
+            Bar Magnet
+          </button>
+          <button 
+            onClick={() => handleShapeChange('horseshoe')}
+            className={shape === 'horseshoe' ? 'primary' : 'outline'}
+            style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
+          >
+            Horseshoe Magnet
+          </button>
+          <button 
+            onClick={() => handleShapeChange('ring')}
+            className={shape === 'ring' ? 'primary' : 'outline'}
+            style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
+          >
+            Ring Magnet
+          </button>
+        </div>
+
         <div style={{ 
           position: 'relative', 
           width: '100%', 
@@ -146,19 +220,44 @@ export default function Stage1_Investigate({ onComplete }) {
           boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
         }}>
           {/* Bar Magnet */}
-          <div style={{
-            position: 'absolute',
-            width: '200px',
-            height: '40px',
-            display: 'flex',
-            borderRadius: '4px',
-            overflow: 'hidden',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
-            zIndex: 10
-          }}>
-            <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>N</div>
-            <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>S</div>
-          </div>
+          {shape === 'bar' && (
+            <div style={{
+              position: 'absolute',
+              width: '200px',
+              height: '40px',
+              display: 'flex',
+              borderRadius: '4px',
+              overflow: 'hidden',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
+              zIndex: 10
+            }}>
+              <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>N</div>
+              <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>S</div>
+            </div>
+          )}
+
+          {/* Horseshoe Magnet */}
+          {shape === 'horseshoe' && (
+            <div style={{
+              position: 'absolute', width: '120px', height: '140px',
+              border: '25px solid #1e293b', borderBottom: 'none', borderRadius: '60px 60px 0 0',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', zIndex: 10
+            }}>
+              <div style={{ width: '25px', height: '40px', background: '#ef4444', marginLeft: '-25px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.8rem' }}>N</div>
+              <div style={{ width: '25px', height: '40px', background: '#3b82f6', marginRight: '-25px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.8rem' }}>S</div>
+            </div>
+          )}
+
+          {/* Ring Magnet (Dark grey ferrite look to match image) */}
+          {shape === 'ring' && (
+            <div style={{
+              position: 'absolute', width: '120px', height: '120px',
+              borderRadius: '50%', background: '#334155',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.4)', zIndex: 10
+            }}>
+              <div style={{ width: '70px', height: '70px', borderRadius: '50%', background: '#f8fafc', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3)' }} />
+            </div>
+          )}
 
           {/* Iron Filings (Optimized rendering for 4000 items) */}
           {filings.map(f => (
