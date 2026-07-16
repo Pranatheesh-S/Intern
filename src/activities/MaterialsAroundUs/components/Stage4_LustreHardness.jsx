@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, HelpCircle, Check } from 'lucide-react';
 
-export default function Stage4_LustreHardness({ onComplete, addXp }) {
+export default function Stage4_LustreHardness({ onComplete, addXp, mode = 'both' }) {
   // Lustre state
   const [lustreProgress, setLustreProgress] = useState({ iron: 0, copper: 0, wood: 0 });
   const [activeScrubTarget, setActiveScrubTarget] = useState(null);
@@ -115,32 +115,43 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
     }
   };
 
-  const allLustrePolished = lustreProgress.iron === 100 && lustreProgress.copper === 100 && lustreProgress.wood === 100; // Require fully scrubbing wood too
+  const allLustrePolished = lustreProgress.iron === 100 && lustreProgress.copper === 100 && lustreProgress.wood === 100;
   
   const correctHardnessCount = hardnessObjects.filter(obj => hardnessTests[obj.id] === obj.correct).length;
   const allHardnessTested = correctHardnessCount === hardnessObjects.length;
 
   useEffect(() => {
-    if (allLustrePolished && allHardnessTested) {
+    let isComplete = false;
+    if (mode === 'lustre_only') isComplete = allLustrePolished;
+    else if (mode === 'hardness_only') isComplete = allHardnessTested;
+    else isComplete = allLustrePolished && allHardnessTested;
+
+    if (isComplete) {
       onComplete();
     }
-  }, [allLustrePolished, allHardnessTested, onComplete]);
+  }, [allLustrePolished, allHardnessTested, onComplete, mode]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
         <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Sparkles size={22} style={{ color: 'var(--accent)' }} /> 6.3.1 & 6.3.2: Lustre & Hardness Testing Lab
+          <Sparkles size={22} style={{ color: 'var(--accent)' }} /> 
+          {mode === 'lustre_only' ? 'Lustre Testing Lab' : mode === 'hardness_only' ? 'Hardness Scratch Investigation' : '6.3.1 & 6.3.2: Lustre & Hardness Testing Lab'}
         </h3>
         <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-          Metals are shiny (lustrous) when polished, but can look dull if exposed to air. 
-          Materials can also be classified as <strong>hard</strong> (difficult to scratch/compress) or <strong>soft</strong> (easy to scratch/compress).
+          {mode === 'lustre_only' ? 
+            'Metals are shiny (lustrous) when polished, but can look dull if exposed to air and moisture. Scrub them to see!' : 
+           mode === 'hardness_only' ? 
+            'Materials can be classified as hard (difficult to scratch) or soft (easy to scratch). Run the physical tests.' : 
+            'Metals are shiny (lustrous) when polished, but can look dull if exposed to air. Materials can also be classified as hard (difficult to scratch/compress) or soft (easy to scratch/compress).'
+          }
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mode === 'both' ? '1fr 1fr' : '1fr', gap: '1.5rem', maxWidth: mode === 'both' ? '100%' : '700px', margin: mode === 'both' ? '0' : '0 auto' }}>
         {/* Lustre Polish Workbench */}
+        {(mode === 'lustre_only' || mode === 'both') && (
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
             <span style={{ fontWeight: 'bold', fontSize: '1.15rem' }}>1. Sandpaper Lustre Scrape</span>
@@ -306,8 +317,10 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
             )}
           </div>
         </div>
+        )}
 
         {/* Hardness compression/scratch test */}
+        {(mode === 'hardness_only' || mode === 'both') && (
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
             <span style={{ fontWeight: 'bold', fontSize: '1.15rem' }}>2. Compression & Scratch Test</span>
@@ -429,11 +442,14 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
             )}
           </div>
         </div>
+        )}
       </div>
 
       {/* Footer */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
-        {allLustrePolished && allHardnessTested && (
+        {((mode === 'lustre_only' && allLustrePolished) || 
+          (mode === 'hardness_only' && allHardnessTested) || 
+          (mode === 'both' && allLustrePolished && allHardnessTested)) && (
           <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}>
             Tests Complete! Click "Proceed to next" in the top right.
           </div>

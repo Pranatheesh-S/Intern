@@ -3,42 +3,28 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, Check, Award, ArrowRight, BookOpen, Home, Utensils, AlertCircle } from 'lucide-react';
 
 // Custom Item SVGs
-const TextbookIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 40 35" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="2" width="30" height="30" rx="3" fill="#3b82f6" />
-    <path d="M5,2 L8,2 L8,32 L5,32 Z" fill="#2563eb" />
-    <line x1="10" y1="7" x2="30" y2="7" stroke="#fff" strokeWidth="1.5" />
-    <line x1="10" y1="12" x2="30" y2="12" stroke="#fff" strokeWidth="1.5" />
-    <line x1="10" y1="17" x2="30" y2="17" stroke="#fff" strokeWidth="1.5" />
-    <circle cx="4" cy="6" r="1.2" fill="#94a3b8" />
-    <circle cx="4" cy="12" r="1.2" fill="#94a3b8" />
-    <circle cx="4" cy="18" r="1.2" fill="#94a3b8" />
+const RegisterIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 40 45" preserveAspectRatio="xMidYMid meet">
+    <rect x="5" y="2" width="30" height="40" rx="2" fill="#e2e8f0" stroke="#64748b" strokeWidth="2" />
+    <rect x="5" y="2" width="6" height="40" fill="#3b82f6" />
+    <line x1="15" y1="10" x2="30" y2="10" stroke="#94a3b8" strokeWidth="2" />
+    <line x1="15" y1="16" x2="30" y2="16" stroke="#94a3b8" strokeWidth="2" />
+    <line x1="15" y1="22" x2="30" y2="22" stroke="#94a3b8" strokeWidth="2" />
+    <line x1="15" y1="28" x2="30" y2="28" stroke="#94a3b8" strokeWidth="2" />
   </svg>
 );
 
-const PencilIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 60 20" preserveAspectRatio="xMidYMid meet" style={{ transform: 'rotate(-45deg)' }}>
-    <polygon points="5,10 15,5 15,15" fill="#fcd34d" />
-    <polygon points="5,10 8,8 8,12" fill="#1e293b" />
-    <rect x="15" y="5" width="30" height="10" fill="#fbbf24" />
-    <line x1="15" y1="8.3" x2="45" y2="8.3" stroke="#f59e0b" strokeWidth="1" />
-    <line x1="15" y1="11.6" x2="45" y2="11.6" stroke="#f59e0b" strokeWidth="1" />
-    <rect x="45" y="5" width="5" height="10" fill="#94a3b8" />
-    <rect x="50" y="5" width="8" height="10" fill="#f87171" rx="2" />
+const DusterIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 50 30" preserveAspectRatio="xMidYMid meet">
+    <rect x="5" y="15" width="40" height="10" rx="2" fill="#475569" />
+    <rect x="5" y="5" width="40" height="10" rx="2" fill="#b45309" />
   </svg>
 );
 
-const RulerIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 100 30" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="5" width="90" height="20" rx="2" fill="rgba(167, 139, 250, 0.4)" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="15" y1="5" x2="15" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="25" y1="5" x2="25" y2="10" stroke="#8b5cf6" strokeWidth="1" />
-    <line x1="35" y1="5" x2="35" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="45" y1="5" x2="45" y2="10" stroke="#8b5cf6" strokeWidth="1" />
-    <line x1="55" y1="5" x2="55" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="65" y1="5" x2="65" y2="10" stroke="#8b5cf6" strokeWidth="1" />
-    <line x1="75" y1="5" x2="75" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="85" y1="5" x2="85" y2="10" stroke="#8b5cf6" strokeWidth="1" />
+const ChalkIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 20 50" preserveAspectRatio="xMidYMid meet">
+    <rect x="5" y="5" width="10" height="40" rx="3" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
+    <path d="M5,10 Q10,15 15,10" fill="none" stroke="#e2e8f0" strokeWidth="1" />
   </svg>
 );
 
@@ -94,15 +80,15 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
   const [usePlacements, setUsePlacements] = useState({});
   const [materialPlacements, setMaterialPlacements] = useState({});
   const [inspectedItems, setInspectedItems] = useState({});
-  const [activeDemoId, setActiveDemoId] = useState('register');
+  const [activeDemoId, setActiveDemoId] = useState('remote');
   const [draggingOverShelf, setDraggingOverShelf] = useState(null);
   const [draggingOverBasket, setDraggingOverBasket] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const items = [
-    { id: 'textbook', name: 'Textbook', icon: TextbookIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where you use it for learning.', materialHint: 'Think about what pages are made from.' },
-    { id: 'pencil', name: 'Pencil', icon: PencilIcon, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where you write and draw.', materialHint: 'Think about what the main body of a pencil is carved from.' },
-    { id: 'ruler', name: 'Ruler', icon: RulerIcon, correctUse: 'School Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you measure and draw lines.', materialHint: 'Think about what light, synthetic material is often used for school tools.' },
+  const allItems = [
+    { id: 'register', name: 'Attendance Register', icon: RegisterIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where teachers take attendance.', materialHint: 'Think about what the pages are made of.' },
+    { id: 'duster', name: 'Blackboard Duster', icon: DusterIcon, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where this is used to erase a chalkboard.', materialHint: 'Think about what the hard back part is usually made of.' },
+    { id: 'chalk', name: 'Chalk', icon: ChalkIcon, correctUse: 'School Shelf', correctMaterial: 'Chalk', useHint: 'Think about where teachers write on a board.', materialHint: 'Think about the dusty, white material.' },
     { id: 'remote', name: 'TV Remote', icon: RemoteIcon, correctUse: 'Home Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you watch TV.', materialHint: 'Think about what hard, light material electronic casings are made of.' },
     { id: 'tshirt', name: 'T-Shirt', icon: TShirtIcon, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about where you keep your clothes.', materialHint: 'Think about what soft, woven material clothes are made from.' },
     { id: 'cricket_ball', name: 'Cricket Ball', icon: BallIcon, correctUse: 'Home Shelf', correctMaterial: 'Leather', useHint: 'Think about where you store your sports equipment to play with at home.', materialHint: 'Think about what tough, stitched material is used for this ball.' },
@@ -110,6 +96,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
     { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard material is used for cutlery.' },
     { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' }
   ];
+
+  const items = phase === 'use' 
+    ? allItems 
+    : allItems.filter(i => !['register', 'duster', 'chalk'].includes(i.id));
 
   const handleUseSort = (itemId, targetShelf) => {
     const item = items.find(i => i.id === itemId);
@@ -137,7 +127,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
     }
   };
 
-  const allUseSorted = Object.keys(usePlacements).length === items.length;
+  const allUseSorted = Object.keys(usePlacements).length === allItems.length;
   const allMaterialSorted = Object.keys(materialPlacements).length === items.length;
   const inspectedCount = Object.keys(inspectedItems).length;
   const canFinishDemo = inspectedCount >= 3;
@@ -159,26 +149,26 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
   const getDemoProperties = (id) => {
     switch (id) {
-      case 'textbook':
+      case 'register':
         return [
           { label: 'Primary Use', value: 'School Item 🎒' },
           { label: 'Base Material', value: 'Paper 📄' },
           { label: 'Surface Texture', value: 'Smooth & Flexible ☁️' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
-      case 'pencil':
+      case 'duster':
         return [
           { label: 'Primary Use', value: 'School Item 🎒' },
           { label: 'Base Material', value: 'Wood 🪵' },
-          { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
+          { label: 'Surface Texture', value: 'Hard back, soft front ☁️' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
-      case 'ruler':
+      case 'chalk':
         return [
           { label: 'Primary Use', value: 'School Item 🎒' },
-          { label: 'Base Material', value: 'Plastic 🧪' },
-          { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
-          { label: 'Transparency', value: 'Transparent/Translucent 🔍' }
+          { label: 'Base Material', value: 'Chalk 🏔️' },
+          { label: 'Surface Texture', value: 'Dusty & Brittle 🌫️' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
         ];
       case 'remote':
         return [
@@ -587,8 +577,6 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                             style={{ fontSize: '0.9rem', padding: '0.4rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%' }}
                           >
                             <option value="" disabled>Material</option>
-                            <option value="Paper">Paper</option>
-                            <option value="Wood">Wood</option>
                             <option value="Plastic">Plastic</option>
                             <option value="Glass">Glass</option>
                             <option value="Metal">Metal</option>
@@ -625,8 +613,6 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 {[
-                  { name: 'Paper', color: '#60a5fa' },
-                  { name: 'Wood', color: '#f59e0b' },
                   { name: 'Plastic', color: '#a78bfa' },
                   { name: 'Glass', color: '#38bdf8' },
                   { name: 'Metal', color: '#94a3b8' },
@@ -717,7 +703,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                   }}
                 >
                   <p style={{ margin: 0, fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}>
-                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects by material. Notice how the same <strong>Textbook</strong> that belonged to the School Shelf now belongs to the <strong>Paper Basket</strong>. This shows that the same object can belong to different groups depending on the property we look at!"
+                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects by material. Notice how the TV Remote and T-Shirt were both on the <strong>Home Shelf</strong>, but belong to different material baskets (<strong>Plastic</strong> and <strong>Cloth</strong>). This shows that objects can be grouped differently depending on the property we look at!"
                   </p>
                   <div style={{ background: 'rgba(255,255,255,0.5)', padding: '0.75rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem', alignSelf: 'flex-start' }}>
                     Tests Complete! Click "Proceed to next" in the top right.
@@ -786,7 +772,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               <div className="glass-panel" style={{ background: 'var(--card-bg)', border: '1px solid var(--accent)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
                   <div style={{ width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                    {React.createElement(items.find(i => i.id === activeDemoId)?.icon || TextbookIcon, { size: 40 })}
+                    {React.createElement(items.find(i => i.id === activeDemoId)?.icon || RemoteIcon, { size: 40 })}
                   </div>
                   <div>
                     <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.5rem' }}>

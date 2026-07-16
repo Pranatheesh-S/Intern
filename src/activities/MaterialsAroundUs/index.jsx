@@ -4,6 +4,9 @@ import useSound from 'use-sound';
 import { useTheme } from '../../ThemeContext.jsx';
 import { chapterFlow } from './storyEngine';
 import ChiefDetective from './components/ChiefDetective/ChiefDetective';
+import InvestigationHandbook from './components/Educational/InvestigationHandbook';
+import DetectiveCheckpoint from './components/Educational/DetectiveCheckpoint';
+import EvidenceSummary from './components/Educational/EvidenceSummary';
 
 export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [currentFlowIndex, setCurrentFlowIndex] = useState(0);
@@ -42,7 +45,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   };
 
   const handleDebriefContinue = () => {
-    if (currentNode.rewardXP && currentNode.type === 'debrief') {
+    if (currentNode.rewardXP && (currentNode.type === 'debrief' || currentNode.type === 'summary')) {
       addXp(currentNode.rewardXP);
     }
     if (currentNode.isFinal) {
@@ -185,7 +188,9 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 
                 let icon = '🎯';
                 if (node.type === 'activity') icon = '🧪';
-                if (node.type === 'debrief') icon = '📝';
+                if (node.type === 'debrief' || node.type === 'summary') icon = '📝';
+                if (node.type === 'handbook') icon = '📖';
+                if (node.type === 'checkpoint') icon = '✅';
                 
                 return (
                   <button 
@@ -248,6 +253,66 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               addXp={addXp} 
             />
           )}
+
+          {currentNode.type === 'handbook' && (() => {
+            const nextNode = chapterFlow[currentFlowIndex + 1];
+            return (
+              <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+                {nextNode && nextNode.type === 'activity' && (
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, filter: 'blur(12px)', pointerEvents: 'none', overflow: 'hidden' }}>
+                    <nextNode.component {...(nextNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                  </div>
+                )}
+                <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <InvestigationHandbook data={currentNode} onComplete={handleNext} />
+                </div>
+              </div>
+            );
+          })()}
+
+          {currentNode.type === 'checkpoint' && (() => {
+            let lastActivityNode = null;
+            for (let i = currentFlowIndex - 1; i >= 0; i--) {
+              if (chapterFlow[i].type === 'activity') {
+                lastActivityNode = chapterFlow[i];
+                break;
+              }
+            }
+            return (
+              <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+                {lastActivityNode && (
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, filter: 'blur(12px)', pointerEvents: 'none', overflow: 'hidden' }}>
+                    <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                  </div>
+                )}
+                <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <DetectiveCheckpoint data={currentNode} onComplete={handleNext} addXp={addXp} />
+                </div>
+              </div>
+            );
+          })()}
+
+          {currentNode.type === 'summary' && (() => {
+            let lastActivityNode = null;
+            for (let i = currentFlowIndex - 1; i >= 0; i--) {
+              if (chapterFlow[i].type === 'activity') {
+                lastActivityNode = chapterFlow[i];
+                break;
+              }
+            }
+            return (
+              <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+                {lastActivityNode && (
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, filter: 'blur(12px)', pointerEvents: 'none', overflow: 'hidden' }}>
+                    <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                  </div>
+                )}
+                <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <EvidenceSummary data={currentNode} onComplete={handleDebriefContinue} />
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>

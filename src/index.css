@@ -560,6 +560,10 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-left:hover) .lab-sid
 .activity-workspace {
   padding-top: calc(60px + var(--space-xl));
   width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* internal header is kept visible in focus mode to ensure tabs and back button are always accessible */
