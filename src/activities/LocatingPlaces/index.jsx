@@ -5,9 +5,11 @@ import AtlasIntroduction from './components/AtlasIntroduction';
 import DistanceAndScale from './components/DistanceAndScale';
 import Directions from './components/Directions';
 import ChapterIntroduction from './components/ChapterIntroduction';
+import BlueprintIntro from './components/BlueprintIntro';
 
 export default function LocatingPlacesActivity({ onBackToDashboard }) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [showIntro, setShowIntro] = useState(true);
   const navRef = useRef(null);
 
   const tabs = [
@@ -22,10 +24,22 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentStep]);
 
+  if (showIntro) {
+    return <BlueprintIntro onExplore={() => setShowIntro(false)} />;
+  }
+
   return (
-    <div style={{ width: '100%', minHeight: '100vh', padding: '1rem 2rem', boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ 
+      width: '100vw', 
+      marginLeft: 'calc(50% - 50vw)', 
+      height: '100vh', 
+      padding: 'clamp(10px, 1.5vh, 20px) clamp(20px, 3.2vw, 52px)', 
+      boxSizing: 'border-box', 
+      display: 'flex', 
+      flexDirection: 'column' 
+    }}>
       {/* Workflow Header / Tabs */}
-      <nav ref={navRef} style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '1.5rem', scrollbarWidth: 'none' }}>
+      <nav ref={navRef} style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '0.5rem', scrollbarWidth: 'none' }}>
         <button onClick={onBackToDashboard} className="outline" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: '12px', background: 'transparent', cursor: 'pointer', marginRight: '0.5rem', flexShrink: 0 }}>
           <ArrowLeft size={16} /> Dashboard
         </button>
@@ -72,8 +86,9 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
         width: '100%',
         margin: '0 auto',
         display: 'flex', 
+        flex: 1,
         flexDirection: 'column',
-        gap: '3rem'
+        minHeight: 0
       }}>
         {currentStep === 1 && (
           <ChapterIntroduction onNextActivity={() => setCurrentStep(2)} />
