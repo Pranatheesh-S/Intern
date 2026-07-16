@@ -13,7 +13,8 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
     { img: '/scene-3.jpeg', subtitle: 'Scene 3: The Storm', text: 'Suddenly, in her story, the ship was caught in a fierce storm. Thick clouds covered the sky, and the stars disappeared. Reshma wondered how the sailors could continue their journey without seeing the stars.' },
     { img: '/scene-4.jpeg', subtitle: 'Scene 4: Searching for an Answer', text: 'Unable to continue her story, Reshma searched the internet and visited her school library. She discovered that sailors used a magnetic compass to find directions even when the stars were hidden.' },
     { img: '/scene-5.jpeg', subtitle: 'Scene 5: Discovering Magnets', text: 'This made Reshma curious about magnets. She remembered the magnets in her pencil box, purse, and the whiteboard duster at school. She realized that magnets were used in many everyday objects.' },
-    { img: '/scene-6.jpeg', subtitle: 'Scene 6: A Story Completed', text: 'After learning how a magnetic compass works, Reshma completed her story. In her story, the sailors safely navigated through the storm using the compass. Her grandmother loved the story, and Reshma developed a new interest in learning about magnets and magnetism.' }
+    { img: '/scene-6.jpeg', subtitle: 'Scene 6: A Story Completed', text: 'After learning how a magnetic compass works, Reshma completed her story. In her story, the sailors safely navigated through the storm using the compass. Her grandmother loved the story, and Reshma developed a new interest in learning about magnets and magnetism.' },
+    { img: '/h_magnets.jpg', subtitle: 'Scene 7: Fun with Magnets', text: 'Reshma\'s curiosity grew as she started exploring different types of magnets, fascinated by the invisible magnetic fields they created.' }
   ];
 
   const handleNext = () => setCurrentPage(p => Math.min(scenes.length, p + 1));
