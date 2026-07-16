@@ -16,6 +16,18 @@ const TextbookIcon = ({ size = 45 }) => (
   </svg>
 );
 
+const PencilIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 60 20" preserveAspectRatio="xMidYMid meet" style={{ transform: 'rotate(-45deg)' }}>
+    <polygon points="5,10 15,5 15,15" fill="#fcd34d" />
+    <polygon points="5,10 8,8 8,12" fill="#1e293b" />
+    <rect x="15" y="5" width="30" height="10" fill="#fbbf24" />
+    <line x1="15" y1="8.3" x2="45" y2="8.3" stroke="#f59e0b" strokeWidth="1" />
+    <line x1="15" y1="11.6" x2="45" y2="11.6" stroke="#f59e0b" strokeWidth="1" />
+    <rect x="45" y="5" width="5" height="10" fill="#94a3b8" />
+    <rect x="50" y="5" width="8" height="10" fill="#f87171" rx="2" />
+  </svg>
+);
+
 const RulerIcon = ({ size = 45 }) => (
   <svg width={size} height={size} viewBox="0 0 100 30" preserveAspectRatio="xMidYMid meet">
     <rect x="5" y="5" width="90" height="20" rx="2" fill="rgba(167, 139, 250, 0.4)" stroke="#8b5cf6" strokeWidth="2" />
@@ -30,18 +42,29 @@ const RulerIcon = ({ size = 45 }) => (
   </svg>
 );
 
-const GeometryBoxIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 80 40" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="5" width="70" height="30" rx="4" fill="#94a3b8" stroke="#475569" strokeWidth="2" />
-    <rect x="5" y="18" width="70" height="4" fill="#475569" />
-    <circle cx="40" cy="18" r="4" fill="#cbd5e1" stroke="#475569" strokeWidth="2" />
+const RemoteIcon = ({ size = 40 }) => (
+  <svg width={size} height={size} viewBox="0 0 30 60" preserveAspectRatio="xMidYMid meet">
+    <rect x="5" y="2" width="20" height="56" rx="4" fill="#334155" />
+    <circle cx="15" cy="10" r="3" fill="#ef4444" />
+    <circle cx="15" cy="20" r="5" fill="#1e293b" />
+    <rect x="10" y="30" width="10" height="4" rx="1" fill="#94a3b8" />
+    <rect x="10" y="38" width="10" height="4" rx="1" fill="#94a3b8" />
+    <rect x="10" y="46" width="10" height="4" rx="1" fill="#94a3b8" />
   </svg>
 );
 
-const TumblerIcon = ({ size = 35 }) => (
-  <svg width={size} height={size} viewBox="0 0 40 60" preserveAspectRatio="xMidYMid meet">
-    <polygon points="5,5 35,5 30,55 10,55" fill="rgba(56, 189, 248, 0.2)" stroke="#0ea5e9" strokeWidth="2" />
-    <line x1="12" y1="15" x2="16" y2="45" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+const TShirtIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
+    <path d="M 15,10 Q 25,20 35,10 L 45,15 L 40,25 L 35,22 L 35,45 L 15,45 L 15,22 L 10,25 L 5,15 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="2" strokeLinejoin="round" />
+    <path d="M 15,10 Q 25,20 35,10" fill="none" stroke="#f87171" strokeWidth="2" />
+  </svg>
+);
+
+const BallIcon = ({ size = 40 }) => (
+  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
+    <circle cx="25" cy="25" r="20" fill="#dc2626" stroke="#991b1b" strokeWidth="2" />
+    <path d="M15,10 Q25,25 15,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
+    <path d="M35,10 Q25,25 35,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
   </svg>
 );
 
@@ -59,42 +82,33 @@ const SpoonIcon = ({ size = 40 }) => (
   </svg>
 );
 
-const CandleIcon = ({ size = 30 }) => (
-  <svg width={size} height={size} viewBox="0 0 30 60" preserveAspectRatio="xMidYMid meet">
-    <rect x="10" y="20" width="10" height="35" fill="#fef3c7" stroke="#fbbf24" strokeWidth="1.5" />
-    <path d="M15,10 Q20,15 15,20 Q10,15 15,10 Z" fill="#f97316" />
-    <path d="M15,12 Q17,16 15,19 Q13,16 15,12 Z" fill="#fbbf24" />
-    <line x1="15" y1="20" x2="15" y2="25" stroke="#000" strokeWidth="1" />
+const TumblerIcon = ({ size = 35 }) => (
+  <svg width={size} height={size} viewBox="0 0 40 60" preserveAspectRatio="xMidYMid meet">
+    <polygon points="5,5 35,5 30,55 10,55" fill="rgba(56, 189, 248, 0.2)" stroke="#0ea5e9" strokeWidth="2" />
+    <line x1="12" y1="15" x2="16" y2="45" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
   </svg>
 );
 
-const BallIcon = ({ size = 40 }) => (
-  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
-    <circle cx="25" cy="25" r="20" fill="#dc2626" stroke="#991b1b" strokeWidth="2" />
-    <path d="M15,10 Q25,25 15,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
-    <path d="M35,10 Q25,25 35,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
-  </svg>
-);
-
-export default function Stage3_Classification({ onComplete, addXp }) {
-  const [phase, setPhase] = useState('briefing'); // 'briefing', 'use', 'material', 'demo'
+export default function Stage3_Classification({ defaultPhase = 'use', onComplete, addXp }) {
+  const phase = defaultPhase; // controlled externally via props
   const [usePlacements, setUsePlacements] = useState({});
   const [materialPlacements, setMaterialPlacements] = useState({});
   const [inspectedItems, setInspectedItems] = useState({});
-  const [activeDemoId, setActiveDemoId] = useState('textbook');
+  const [activeDemoId, setActiveDemoId] = useState('register');
   const [draggingOverShelf, setDraggingOverShelf] = useState(null);
   const [draggingOverBasket, setDraggingOverBasket] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
 
   const items = [
     { id: 'textbook', name: 'Textbook', icon: TextbookIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where you use it for learning.', materialHint: 'Think about what pages are made from.' },
+    { id: 'pencil', name: 'Pencil', icon: PencilIcon, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where you write and draw.', materialHint: 'Think about what the main body of a pencil is carved from.' },
     { id: 'ruler', name: 'Ruler', icon: RulerIcon, correctUse: 'School Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you measure and draw lines.', materialHint: 'Think about what light, synthetic material is often used for school tools.' },
-    { id: 'geometry', name: 'Geometry Box', icon: GeometryBoxIcon, correctUse: 'School Shelf', correctMaterial: 'Metal', useHint: 'Think about where you use drawing tools.', materialHint: 'Think about what strong, cold-to-the-touch material is used for durable boxes.' },
-    { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' },
+    { id: 'remote', name: 'TV Remote', icon: RemoteIcon, correctUse: 'Home Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you watch TV.', materialHint: 'Think about what hard, light material electronic casings are made of.' },
+    { id: 'tshirt', name: 'T-Shirt', icon: TShirtIcon, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about where you keep your clothes.', materialHint: 'Think about what soft, woven material clothes are made from.' },
+    { id: 'cricket_ball', name: 'Cricket Ball', icon: BallIcon, correctUse: 'Home Shelf', correctMaterial: 'Leather', useHint: 'Think about where you store your sports equipment to play with at home.', materialHint: 'Think about what tough, stitched material is used for this ball.' },
     { id: 'plate', name: 'Plate', icon: PlateIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Ceramic', useHint: 'Think about where food is served.', materialHint: 'Think about what hard, baked material is used for dishware.' },
     { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard material is used for cutlery.' },
-    { id: 'candle', name: 'Candle', icon: CandleIcon, correctUse: 'Home Shelf', correctMaterial: 'Wax', useHint: 'Think about where you use it for light during a power cut.', materialHint: 'Think about what melts easily when heated.' },
-    { id: 'cricket_ball', name: 'Cricket Ball', icon: BallIcon, correctUse: 'Home Shelf', correctMaterial: 'Leather', useHint: 'Think about where you store your sports equipment to play with at home.', materialHint: 'Think about what tough, stitched material is used for this ball.' }
+    { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' }
   ];
 
   const handleUseSort = (itemId, targetShelf) => {
@@ -134,10 +148,14 @@ export default function Stage3_Classification({ onComplete, addXp }) {
   };
 
   useEffect(() => {
-    if (canFinishDemo) {
+    if (phase === 'use' && allUseSorted) {
+      onComplete();
+    } else if (phase === 'material' && allMaterialSorted) {
+      onComplete();
+    } else if (phase === 'demo' && canFinishDemo) {
       onComplete();
     }
-  }, [canFinishDemo, onComplete]);
+  }, [phase, allUseSorted, allMaterialSorted, canFinishDemo, onComplete]);
 
   const getDemoProperties = (id) => {
     switch (id) {
@@ -148,6 +166,13 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           { label: 'Surface Texture', value: 'Smooth & Flexible ☁️' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
+      case 'pencil':
+        return [
+          { label: 'Primary Use', value: 'School Item 🎒' },
+          { label: 'Base Material', value: 'Wood 🪵' },
+          { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
+        ];
       case 'ruler':
         return [
           { label: 'Primary Use', value: 'School Item 🎒' },
@@ -155,19 +180,26 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
           { label: 'Transparency', value: 'Transparent/Translucent 🔍' }
         ];
-      case 'geometry':
+      case 'remote':
         return [
-          { label: 'Primary Use', value: 'School Item 🎒' },
-          { label: 'Base Material', value: 'Metal 🦾' },
-          { label: 'Surface Texture', value: 'Hard & Cold 🧊' },
+          { label: 'Primary Use', value: 'Home Item 🏠' },
+          { label: 'Base Material', value: 'Plastic 🧪' },
+          { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
-      case 'glass':
+      case 'tshirt':
         return [
-          { label: 'Primary Use', value: 'Kitchen Item 🍳' },
-          { label: 'Base Material', value: 'Glass 💎' },
-          { label: 'Surface Texture', value: 'Hard & Smooth ✨' },
-          { label: 'Transparency', value: 'Transparent 🔍' }
+          { label: 'Primary Use', value: 'Home Item 🏠' },
+          { label: 'Base Material', value: 'Cloth 🧶' },
+          { label: 'Surface Texture', value: 'Soft & Flexible 👕' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
+        ];
+      case 'cricket_ball':
+        return [
+          { label: 'Primary Use', value: 'Home Item 🏠' },
+          { label: 'Base Material', value: 'Leather 🏏' },
+          { label: 'Surface Texture', value: 'Hard & Stitched 🧵' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
         ];
       case 'plate':
         return [
@@ -183,19 +215,12 @@ export default function Stage3_Classification({ onComplete, addXp }) {
           { label: 'Surface Texture', value: 'Hard & Lustrous ✨' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
-      case 'candle':
+      case 'glass':
         return [
-          { label: 'Primary Use', value: 'Home Item 🏠' },
-          { label: 'Base Material', value: 'Wax 🕯️' },
-          { label: 'Surface Texture', value: 'Soft & Waxy ☁️' },
-          { label: 'Transparency', value: 'Translucent 🌫️' }
-        ];
-      case 'cricket_ball':
-        return [
-          { label: 'Primary Use', value: 'Home Item 🏠' },
-          { label: 'Base Material', value: 'Leather 🏏' },
-          { label: 'Surface Texture', value: 'Hard & Stitched 🧵' },
-          { label: 'Transparency', value: 'Opaque 🌑' }
+          { label: 'Primary Use', value: 'Kitchen Item 🍳' },
+          { label: 'Base Material', value: 'Glass 💎' },
+          { label: 'Surface Texture', value: 'Hard & Smooth ✨' },
+          { label: 'Transparency', value: 'Transparent 🔍' }
         ];
       default:
         return [];
@@ -481,16 +506,9 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                   <p style={{ margin: 0, fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}>
                     👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects according to their purpose or everyday use. Let's see how a scientist might analyze them differently."
                   </p>
-                  <button
-                    className="primary"
-                    onClick={() => {
-                      setErrorMessage('');
-                      setPhase('material');
-                    }}
-                    style={{ selfAlign: 'flex-end', display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.75rem 1.5rem', fontSize: '1rem', width: 'fit-content', fontWeight: 'bold' }}
-                  >
-                    Proceed to Scientific Material Grouping <ArrowRight size={14} />
-                  </button>
+                  <div style={{ background: 'rgba(255,255,255,0.5)', padding: '0.75rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem', alignSelf: 'flex-start' }}>
+                    Tests Complete! Click "Proceed to next" in the top right.
+                  </div>
                 </motion.div>
               ) : (
                 <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
@@ -574,9 +592,8 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                             <option value="Plastic">Plastic</option>
                             <option value="Glass">Glass</option>
                             <option value="Metal">Metal</option>
-                            <option value="Fabric">Fabric</option>
+                            <option value="Cloth">Cloth</option>
                             <option value="Ceramic">Ceramic</option>
-                            <option value="Wax">Wax</option>
                             <option value="Leather">Leather</option>
                           </select>
                         </div>
@@ -613,9 +630,8 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                   { name: 'Plastic', color: '#a78bfa' },
                   { name: 'Glass', color: '#38bdf8' },
                   { name: 'Metal', color: '#94a3b8' },
-                  { name: 'Fabric', color: '#f43f5e' },
+                  { name: 'Cloth', color: '#f43f5e' },
                   { name: 'Ceramic', color: '#fb7185' },
-                  { name: 'Wax', color: '#fcd34d' },
                   { name: 'Leather', color: '#a16207' }
                 ].map((basket) => {
                   const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
@@ -701,18 +717,11 @@ export default function Stage3_Classification({ onComplete, addXp }) {
                   }}
                 >
                   <p style={{ margin: 0, fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}>
-                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects by material. Notice how the same <strong>Notebook</strong> that belonged to the School Shelf now belongs to the <strong>Paper Basket</strong>. This shows that the same object can belong to different groups depending on the property we look at!"
+                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects by material. Notice how the same <strong>Textbook</strong> that belonged to the School Shelf now belongs to the <strong>Paper Basket</strong>. This shows that the same object can belong to different groups depending on the property we look at!"
                   </p>
-                  <button
-                    className="primary"
-                    onClick={() => {
-                      setErrorMessage('');
-                      setPhase('demo');
-                    }}
-                    style={{ selfAlign: 'flex-end', display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.75rem 1.5rem', fontSize: '1rem', width: 'fit-content', fontWeight: 'bold' }}
-                  >
-                    Analyze Multi-Property Connections <ArrowRight size={14} />
-                  </button>
+                  <div style={{ background: 'rgba(255,255,255,0.5)', padding: '0.75rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem', alignSelf: 'flex-start' }}>
+                    Tests Complete! Click "Proceed to next" in the top right.
+                  </div>
                 </motion.div>
               ) : (
                 <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>

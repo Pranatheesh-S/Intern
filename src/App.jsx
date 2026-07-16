@@ -3988,7 +3988,7 @@ export default function App() {
         padding: '3rem 2rem',
         gap: '1rem',
         border: '1px dashed var(--border)'
-      }}>
+      }}> 
         <div style={{
           width: '70px',
           height: '70px',
