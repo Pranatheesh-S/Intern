@@ -1,202 +1,60 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, CheckCircle, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
 import useSound from 'use-sound';
 import { useTheme } from '../../ThemeContext.jsx';
-
-// Stages and Components
-import IntroBriefing from './components/IntroBriefing';
-import Stage1_Intro from './components/Stage1_Intro';
-import Stage2_Identify from './components/Stage2_Identify';
-import Stage3_Classification from './components/Stage3_Classification';
-import Stage4_LustreHardness from './components/Stage4_LustreHardness';
-import Stage5_Suitability from './components/Stage5_Suitability';
-import Stage_SportsBall from './components/Stage_SportsBall';
-import Stage6_Transparency from './components/Stage6_Transparency';
-import Stage7_SolubilityMatter from './components/Stage7_SolubilityMatter';
-import Stage8_AyurvedaSummary from './components/Stage8_AyurvedaSummary';
-import Stage9_Quiz from './components/Stage9_Quiz';
+import { chapterFlow } from './storyEngine';
+import ChiefDetective from './components/ChiefDetective/ChiefDetective';
 
 export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
-  const [activeTab, setActiveTab] = useState('intro');
-  const [progress, setProgress] = useState({
-    intro: false,
-    stage1: false,
-    stage2: false,
-    stage3: false,
-    stage5: false,
-    sportsball: false,
-    stage4: false,
-    stage6: false,
-    stage7_sol: false,
-    stage7_mat: false,
-    summary: false,
-    quiz: false
-  });
+  const [currentFlowIndex, setCurrentFlowIndex] = useState(0);
+  const [highestUnlockedIndex, setHighestUnlockedIndex] = useState(0);
+  const [isTimelineHovered, setIsTimelineHovered] = useState(false);
+  const [stageCompleted, setStageCompleted] = useState(false);
   const [xp, setXp] = useState(0);
-  const [resetKeys, setResetKeys] = useState({
-    intro: 0,
-    stage1: 0,
-    stage2: 0,
-    stage3: 0,
-    stage5: 0,
-    sportsball: 0,
-    stage4: 0,
-    stage6: 0,
-    stage7_sol: 0,
-    stage7_mat: 0,
-    summary: 0,
-    quiz: 0
-  });
-  const [congratsMessage, setCongratsMessage] = useState(null);
-
-  const navRef = useRef(null);
-
-  useEffect(() => {
-    if (navRef.current) {
-      const activeEl = navRef.current.querySelector('[data-active="true"]');
-      if (activeEl) {
-        activeEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      }
-    }
-  }, [activeTab]);
-
+  const [resetKey, setResetKey] = useState(0);
+  
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
-  const [playClick] = useSound('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', { volume: 0.5 });
-
+  
   const addXp = (amount) => {
     setXp(prev => prev + amount);
-    try {
-      playSuccess();
-    } catch (e) {
-      console.log('Audio playback error', e);
-    }
+    try { playSuccess(); } catch (e) {}
   };
 
-  const handleStageComplete = (stageId, autoAdvanceTo = null) => {
-    setProgress(prev => {
-      const nextProgress = { ...prev, [stageId]: true };
-      
-      if (stageId === 'intro') {
-        setCongratsMessage({
-          title: "Mission Accepted! 🕵️‍♂️",
-          text: "Let's head straight into the classroom and begin finding the evidence.",
-          icon: "🔍",
-          buttonText: "Dismiss"
-        });
-      } else if (stageId === 'stage2') {
-        setCongratsMessage({
-          title: "Barrier 1 Cleared! 🌟",
-          text: "Outstanding work! You've successfully scanned all evidence and identified the base materials. Let's group them now.",
-          icon: "🔓",
-          buttonText: "Dismiss"
-        });
-      } else if (stageId === 'sportsball') {
-        setCongratsMessage({
-          title: "Barrier 2 Cleared! 🏆",
-          text: "You successfully designed the sports product and grouped materials! Next, let's test specific properties.",
-          icon: "🔓",
-          buttonText: "Dismiss"
-        });
-      } else if (stageId === 'stage7_sol') {
-        setCongratsMessage({
-          title: "Barrier 3 Cleared! 🧪",
-          text: "Brilliant analysis! You have categorized materials by lustre, hardness, transparency, and solubility. Now let's explore matter itself.",
-          icon: "🔓",
-          buttonText: "Dismiss"
-        });
-      } else if (stageId === 'quiz') {
-        setCongratsMessage({
-          title: "Case Closed! 🏆",
-          text: "Congratulations, Master Investigator! You have solved all experimental barriers, successfully analyzed the materials, and completed the chapter.",
-          icon: "🎉",
-          buttonText: "Dismiss"
-        });
+  const handleNext = () => {
+    setStageCompleted(false);
+    if (currentFlowIndex < chapterFlow.length - 1) {
+      const nextIndex = currentFlowIndex + 1;
+      setCurrentFlowIndex(nextIndex);
+      if (nextIndex > highestUnlockedIndex) {
+        setHighestUnlockedIndex(nextIndex);
       }
-      
-      return nextProgress;
-    });
-
-    if (autoAdvanceTo) {
-      setActiveTab(autoAdvanceTo);
     }
   };
-
-  const handleResetCurrentStage = () => {
-    setResetKeys(prev => ({
-      ...prev,
-      [activeTab]: prev[activeTab] + 1
-    }));
-  };
-
-  const tabs = [
-    {
-      id: 'intro', num: 1, title: 'Introduction', subtitle: 'Mission Briefing',
-      component: <IntroBriefing key={`intro-${resetKeys.intro}`} onComplete={() => handleStageComplete('intro', 'stage1')} addXp={addXp} />
-    },
-    {
-      id: 'stage1', num: 2, title: 'Barrier 1: 6.1 Observing Objects Around Us', subtitle: 'Phase 1: Find Objects',
-      component: <Stage1_Intro key={`stage1-${resetKeys.stage1}`} onComplete={() => handleStageComplete('stage1')} addXp={addXp} />,
-      locked: !progress.intro
-    },
-    {
-      id: 'stage2', num: 3, title: 'Barrier 1: 6.1 Observing Objects Around Us', subtitle: 'Phase 2: Scan Evidence',
-      component: <Stage2_Identify key={`stage2-${resetKeys.stage2}`} onComplete={() => handleStageComplete('stage2')} addXp={addXp} />,
-      locked: !progress.stage1
-    },
-    {
-      id: 'stage3', num: 4, title: 'Barrier 2: 6.2 How to Group Materials?', subtitle: 'Phase 1: Classification',
-      component: <Stage3_Classification key={`stage3-${resetKeys.stage3}`} onComplete={() => handleStageComplete('stage3')} addXp={addXp} />,
-      locked: !progress.stage2
-    },
-    {
-      id: 'stage5', num: 5, title: 'Barrier 2: 6.2 How to Group Materials?', subtitle: 'Phase 2: Suitability',
-      component: <Stage5_Suitability key={`stage5-${resetKeys.stage5}`} onComplete={() => handleStageComplete('stage5')} addXp={addXp} />,
-      locked: !progress.stage3
-    },
-    {
-      id: 'sportsball', num: 6, title: 'Barrier 2: 6.2 How to Group Materials?', subtitle: 'Phase 3: Product Design',
-      component: <Stage_SportsBall key={`sportsball-${resetKeys.sportsball}`} onComplete={() => handleStageComplete('sportsball')} addXp={addXp} />,
-      locked: !progress.stage5
-    },
-    {
-      id: 'stage4', num: 7, title: 'Barrier 3: 6.3 Properties of Materials', subtitle: 'Stage 6.3.1 & 6.3.2: Appearance & Hardness',
-      component: <Stage4_LustreHardness key={`stage4-${resetKeys.stage4}`} onComplete={() => handleStageComplete('stage4')} addXp={addXp} />,
-      locked: !progress.sportsball
-    },
-    {
-      id: 'stage6', num: 8, title: 'Barrier 3: 6.3 Properties of Materials', subtitle: 'Stage 6.3.3: Transparency',
-      component: <Stage6_Transparency key={`stage6-${resetKeys.stage6}`} onComplete={() => handleStageComplete('stage6')} addXp={addXp} />,
-      locked: !progress.stage4
-    },
-    {
-      id: 'stage7_sol', num: 9, title: 'Barrier 3: 6.3 Properties of Materials', subtitle: 'Stage 6.3.4: Solubility',
-      component: <Stage7_SolubilityMatter mode="solubility" key={`stage7_sol-${resetKeys.stage7_sol}`} onComplete={() => handleStageComplete('stage7_sol')} addXp={addXp} />,
-      locked: !progress.stage6
-    },
-    {
-      id: 'stage7_mat', num: 10, title: 'Barrier 4: 6.4 What is Matter?', subtitle: 'Mass and Space',
-      component: <Stage7_SolubilityMatter mode="matter" key={`stage7_mat-${resetKeys.stage7_mat}`} onComplete={() => handleStageComplete('stage7_mat')} addXp={addXp} />,
-      locked: !progress.stage7_sol
-    },
-    {
-      id: 'summary', num: 11, title: 'Summary', subtitle: 'Concept Map',
-      component: <Stage8_AyurvedaSummary key={`summary-${resetKeys.summary}`} onComplete={() => handleStageComplete('summary')} addXp={addXp} />,
-      locked: !progress.stage7_mat
-    },
-    {
-      id: 'quiz', num: 12, title: 'Final Quiz', subtitle: 'Master Investigator',
-      component: <Stage9_Quiz key={`quiz-${resetKeys.quiz}`} onComplete={() => handleStageComplete('quiz')} addXp={addXp} />,
-      locked: !progress.summary
-    }
-  ];
-
-  const activeTabData = tabs.find(t => t.id === activeTab);
   
-  // Navigation Next Logic
-  const activeTabIdx = tabs.findIndex(t => t.id === activeTab);
-  const nextTab = activeTabIdx >= 0 && activeTabIdx < tabs.length - 1 ? tabs[activeTabIdx + 1] : null;
-  const canProceed = nextTab && !nextTab.locked;
+  const currentNode = chapterFlow[currentFlowIndex];
+  
+  // Handlers for Mission / Debrief
+  const handleMissionAccept = () => {
+    if (currentNode.rewardXP && currentNode.type === 'mission') {
+      addXp(currentNode.rewardXP);
+    }
+    handleNext();
+  };
+
+  const handleDebriefContinue = () => {
+    if (currentNode.rewardXP && currentNode.type === 'debrief') {
+      addXp(currentNode.rewardXP);
+    }
+    if (currentNode.isFinal) {
+      onBackToDashboard();
+    } else {
+      handleNext();
+    }
+  };
+
+  const handleStageComplete = () => {
+    setStageCompleted(true);
+  };
 
   // Global Theme Hook
   const { theme, toggleTheme } = useTheme();
@@ -213,19 +71,16 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             className="outline" 
             style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px' }}
           >
-            <ArrowLeft size={16} /> Back
+            <ArrowLeft size={16} /> Dashboard
           </button>
         </div>
 
         <div className="global-action-bar-center">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', padding: '0.4rem 1rem', borderRadius: '20px', border: '1px solid var(--border)' }}>
-            <span style={{ fontSize: '1.2rem' }}>
-              {progress.quiz ? '🏆' : progress.barrier3 ? '🎖️' : progress.barrier1 ? '🕵️‍♂️' : '🔍'}
-            </span>
+            <span style={{ fontSize: '1.2rem' }}>🕵️‍♂️</span>
             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-              <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Rank</span>
-              <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
-                {progress.quiz ? 'Master Investigator' : progress.barrier3 ? 'Senior Analyst' : progress.barrier1 ? 'Active Investigator' : 'Novice Detective'}
+              <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                Science Detective
               </span>
             </div>
           </div>
@@ -242,213 +97,159 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           </button>
 
           <button 
-            onClick={handleResetCurrentStage}
+            onClick={() => setResetKey(prev => prev + 1)}
             className="outline"
-            style={{
-              padding: '0.45rem 1rem',
-              fontSize: '0.85rem',
-              gap: '0.5rem',
-              borderColor: 'var(--danger-border)',
-              color: 'var(--danger)',
-              background: 'var(--danger-bg)',
-              fontWeight: 'bold',
-              borderRadius: '8px'
-            }}
+            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--danger)', borderColor: 'var(--danger-border)' }}
           >
-            <RefreshCw size={14} /> Reset Lab
+            <RefreshCw size={14} /> Reset Activity
           </button>
 
-          <button 
-            onClick={() => {
-              if (canProceed) setActiveTab(nextTab.id);
-            }}
-            className={canProceed ? "primary" : "outline"}
-            disabled={!canProceed}
-            style={{ 
-              padding: '0.45rem 1rem', 
-              fontSize: '0.85rem', 
-              gap: '0.5rem', 
-              borderRadius: '8px',
-              opacity: canProceed ? 1 : 0.5,
-              cursor: canProceed ? 'pointer' : 'not-allowed'
-            }}
-          >
-            Proceed to next <ArrowRight size={16} />
-          </button>
-        </div>
-      </div>
-
-      <div className="main-grid">
-        
-        {/* Left Sidebar: Timeline Progress */}
-        <div className="lab-sidebar">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border)', color: 'var(--text-heading)', fontWeight: 'bold' }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-            Timeline Progress
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-            {tabs.map((tab) => {
-              const isActive = activeTab === tab.id;
-              const isCompleted = progress[tab.id];
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    if (!tab.locked) {
-                      try { playClick(); } catch (e) {}
-                      setActiveTab(tab.id);
-                    }
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '0.75rem',
-                    padding: '0.75rem',
-                    background: 'transparent',
-                    border: 'none',
-                    textAlign: 'left',
-                    color: isActive ? 'var(--text-heading)' : 'var(--text-primary)',
-                    opacity: tab.locked ? 0.5 : 1,
-                    borderLeft: isActive ? '3px solid var(--accent)' : '3px solid transparent',
-                    cursor: tab.locked ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.2s',
-                    borderRadius: '0 8px 8px 0'
-                  }}
-                >
-                  <div style={{ marginTop: '0.1rem' }}>
-                    {isCompleted ? (
-                      <CheckCircle size={14} style={{ color: '#10b981' }} />
-                    ) : (
-                      <div style={{ width: '14px', height: '14px', background: isActive ? 'var(--accent)' : 'var(--text-muted)', borderRadius: '2px' }} />
-                    )}
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: isActive ? 'bold' : 'normal' }}>
-                      {tab.title}
-                    </span>
-                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
-                      {tab.subtitle}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Right Content */}
-        <div style={{ display: 'flex', gap: '1.5rem', width: '100%' }}>
-          
-          {/* Vertical Timeline Node */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ 
-              width: '28px', 
-              height: '28px', 
-              borderRadius: '50%', 
-              background: 'var(--accent-bg)', 
-              border: '2px solid var(--accent)',
-              color: 'var(--accent)', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              fontWeight: 'bold', 
-              fontSize: '0.85rem',
-              zIndex: 2 
-            }}>
-              {activeTabData?.num}
-            </div>
-            <div style={{ width: '2px', flex: 1, background: 'var(--border)', marginTop: '0.5rem', opacity: 0.5 }} />
-          </div>
-
-          {/* Active Component Area */}
-          <div style={{ flex: 1, minWidth: 0, paddingBottom: '4rem' }}>
-            <div style={{ marginBottom: '1.5rem' }}>
-              <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent)', fontWeight: 'bold' }}>
-                {activeTabData?.title}
-              </span>
-              <h2 style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', color: 'var(--text-heading)' }}>
-                {activeTabData?.subtitle}
-              </h2>
-            </div>
-            
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                style={{ width: '100%' }}
-              >
-                {activeTabData?.component}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
-
-      {/* Congrats Overlay Modal */}
-      <AnimatePresence>
-        {congratsMessage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(15, 23, 42, 0.75)',
-              backdropFilter: 'blur(4px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 9999,
-              padding: '1.5rem'
-            }}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="glass-panel"
-              style={{
-                maxWidth: '450px',
-                width: '100%',
-                background: 'var(--card-bg)',
-                border: '2px solid var(--accent)',
-                borderRadius: '16px',
-                padding: '2rem',
-                textAlign: 'center',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '1.25rem'
+          {currentNode.type === 'activity' && (
+            <button 
+              onClick={handleNext}
+              disabled={!stageCompleted}
+              className={stageCompleted ? 'primary' : 'outline'}
+              style={{ 
+                padding: '0.45rem 1rem', 
+                fontSize: '0.9rem', 
+                gap: '0.5rem', 
+                borderRadius: '8px',
+                opacity: stageCompleted ? 1 : 0.5,
+                cursor: stageCompleted ? 'pointer' : 'not-allowed',
+                transition: 'all 0.3s'
               }}
             >
-              <div style={{ fontSize: '3rem' }}>{congratsMessage.icon || '🎉'}</div>
-              <div>
-                <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)' }}>
-                  {congratsMessage.title}
-                </h3>
-                <p style={{ margin: '0.75rem 0 0 0', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                  {congratsMessage.text}
-                </p>
-              </div>
-              <button
-                className="primary"
-                onClick={() => {
-                  setCongratsMessage(null);
-                }}
-                style={{ padding: '0.6rem 2rem', fontSize: '0.9rem', fontWeight: 'bold' }}
-              >
-                {congratsMessage.buttonText || 'Continue Mission'}
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              Proceed to next <ArrowRight size={16} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
+        {/* Unified Hover Container to prevent flickering */}
+        <div
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: isTimelineHovered ? '320px' : '40px',
+            zIndex: 50,
+            display: 'flex',
+            alignItems: 'center'
+          }}
+          onMouseEnter={() => setIsTimelineHovered(true)}
+          onMouseLeave={() => setIsTimelineHovered(false)}
+        >
+          {/* Subtle Visual Indicator when closed */}
+          <div style={{
+            position: 'absolute',
+            left: 0,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '6px',
+            height: '80px',
+            background: 'var(--accent)',
+            opacity: isTimelineHovered ? 0 : 0.4,
+            borderTopRightRadius: '6px',
+            borderBottomRightRadius: '6px',
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none',
+            zIndex: 1
+          }} />
+
+          {/* Hover-to-reveal Timeline Sidebar */}
+          <div 
+            className="timeline-flyout"
+            style={{ 
+              position: 'absolute', 
+              left: 0,
+              top: 0, bottom: 0, zIndex: 50, 
+              background: 'var(--surface)', borderRight: '1px solid var(--border)', 
+              display: 'flex', flexDirection: 'column', 
+              overflow: 'hidden', boxShadow: isTimelineHovered ? '4px 0 20px rgba(0,0,0,0.2)' : 'none',
+              width: '320px', 
+              transform: isTimelineHovered ? 'translateX(0)' : 'translateX(-100%)',
+              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
+            }}
+          >
+          <div style={{ width: '320px', padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '0.9rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              Investigation Progress
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', overflowY: 'auto', paddingRight: '0.5rem' }}>
+              {chapterFlow.map((node, idx) => {
+                const isActive = currentFlowIndex === idx || (node.type === 'mission' && currentFlowIndex > idx && chapterFlow[currentFlowIndex].type === 'activity' && chapterFlow.findIndex((n, i) => i > idx && n.type !== 'activity') > currentFlowIndex);
+                const isLocked = idx > highestUnlockedIndex;
+                const isPast = idx <= highestUnlockedIndex && !isActive;
+                
+                let icon = '🎯';
+                if (node.type === 'activity') icon = '🧪';
+                if (node.type === 'debrief') icon = '📝';
+                
+                return (
+                  <button 
+                    key={idx} 
+                    disabled={isLocked}
+                    onClick={() => {
+                      if (!isLocked) {
+                        try { playSuccess(); } catch (e) {}
+                        setCurrentFlowIndex(idx);
+                        setIsTimelineHovered(false);
+                      }
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '0.75rem',
+                      padding: '0.75rem',
+                      borderRadius: '8px',
+                      background: isActive ? 'var(--accent-bg)' : 'transparent',
+                      border: `1px solid ${isActive ? 'var(--accent-border)' : 'transparent'}`,
+                      color: isPast ? 'var(--text-muted)' : isActive ? 'var(--accent)' : 'var(--text-primary)',
+                      transition: 'all 0.2s',
+                      opacity: isLocked ? 0.4 : 1,
+                      cursor: isLocked ? 'not-allowed' : 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{icon}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', minWidth: 0 }}>
+                      <span style={{ fontSize: '0.85rem', fontWeight: isActive ? 'bold' : 'normal', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {node.title}
+                      </span>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                        {node.type === 'mission' ? 'Mission Briefing' : node.type === 'activity' ? node.subtitle : 'Evidence Review'}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        </div>
+
+        {/* Main Content Area - Full Width */}
+        <div className="activity-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: 'auto' }}>
+          {currentNode.type === 'mission' && (
+            <ChiefDetective mode="mission" data={currentNode} onContinue={handleMissionAccept} />
+          )}
+          
+          {currentNode.type === 'debrief' && (
+            <ChiefDetective mode="debrief" data={currentNode} onContinue={handleDebriefContinue} />
+          )}
+          
+          {currentNode.type === 'activity' && (
+            <currentNode.component 
+              key={`${currentNode.id}-${resetKey}`}
+              {...(currentNode.props || {})} 
+              onComplete={handleStageComplete} 
+              addXp={addXp} 
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
