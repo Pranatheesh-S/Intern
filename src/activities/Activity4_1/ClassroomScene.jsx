@@ -13,7 +13,7 @@ export default function ClassroomScene({ onComplete, addXp = () => {} }) {
       material: 'Iron', 
       isMagnetic: true,
       desc: 'Used to open locks, made of iron.',
-      pos: { bottom: '140px', left: '110px' }
+      pos: { bottom: '140px', left: '260px' }
     },
     { 
       id: 'eraser', 
@@ -21,7 +21,7 @@ export default function ClassroomScene({ onComplete, addXp = () => {} }) {
       material: 'Rubber', 
       isMagnetic: false,
       desc: 'Used for erasing pencil marks, made of rubber.',
-      pos: { bottom: '135px', left: '160px' }
+      pos: { bottom: '135px', left: '310px' }
     },
     { 
       id: 'desk', 
@@ -29,7 +29,7 @@ export default function ClassroomScene({ onComplete, addXp = () => {} }) {
       material: 'Wood', 
       isMagnetic: false,
       desc: 'Provides a sturdy writing surface, made of wood.',
-      pos: { bottom: '40px', left: '60px' }
+      pos: { bottom: '40px', left: '210px' }
     },
 
     { 
@@ -38,7 +38,7 @@ export default function ClassroomScene({ onComplete, addXp = () => {} }) {
       material: 'Plastic', 
       isMagnetic: false,
       desc: 'Keeps water safe, made of plastic.',
-      pos: { bottom: '130px', left: '210px' }
+      pos: { bottom: '130px', left: '360px' }
     },
     { 
       id: 'spoon', 
@@ -46,7 +46,7 @@ export default function ClassroomScene({ onComplete, addXp = () => {} }) {
       material: 'Steel', 
       isMagnetic: true,
       desc: 'Used for eating, made of steel.',
-      pos: { bottom: '45px', left: '330px' }
+      pos: { bottom: '45px', left: '480px' }
     },
     { 
       id: 'paperclip', 
@@ -54,7 +54,7 @@ export default function ClassroomScene({ onComplete, addXp = () => {} }) {
       material: 'Steel', 
       isMagnetic: true,
       desc: 'Used to hold papers together, made of steel.',
-      pos: { bottom: '145px', left: '270px' }
+      pos: { bottom: '145px', left: '420px' }
     },
     { 
       id: 'alum_can', 
@@ -62,7 +62,7 @@ export default function ClassroomScene({ onComplete, addXp = () => {} }) {
       material: 'Aluminium', 
       isMagnetic: false,
       desc: 'Used for drinks, made of aluminium.',
-      pos: { bottom: '20px', left: '240px' }
+      pos: { bottom: '20px', left: '390px' }
     }
   ];
 
@@ -120,7 +120,7 @@ export default function ClassroomScene({ onComplete, addXp = () => {} }) {
         <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', height: '480px', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', background: 'var(--classroom-bg)' }}>
           
           {/* Classroom Chalkboard */}
-          <div style={{ position: 'absolute', top: '30px', left: '40px', width: '270px', height: '140px', border: '6px solid #4b5563', background: '#064e3b', borderRadius: '6px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', boxShadow: 'inset 0 4px 10px rgba(0,0,0,0.6)', zIndex: 15 }}>
+          <div style={{ position: 'absolute', top: '30px', left: '190px', width: '270px', height: '140px', border: '6px solid #4b5563', background: '#064e3b', borderRadius: '6px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', boxShadow: 'inset 0 4px 10px rgba(0,0,0,0.6)', zIndex: 15 }}>
             {completed ? (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                 <span style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif', color: '#6ee7b7', fontSize: '0.85rem', fontWeight: 'bold', textAlign: 'center' }}>

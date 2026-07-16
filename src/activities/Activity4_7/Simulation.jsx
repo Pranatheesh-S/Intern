@@ -13,25 +13,25 @@ const calculateAngle = (cx, cy, px, py) => {
 };
 
 // Compass component
-const CompassNeedle = ({ rotation }) => (
-  <div style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '50%', background: '#fff', border: '4px solid #94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', userSelect: 'none' }}>
-    <div style={{ position: 'absolute', top: '5px', fontWeight: 'bold', color: '#ef4444', fontSize: '10px' }}>N</div>
-    <div style={{ position: 'absolute', bottom: '5px', fontWeight: 'bold', color: '#3b82f6', fontSize: '10px' }}>S</div>
-    <div style={{ position: 'absolute', left: '5px', fontWeight: 'bold', color: '#94a3b8', fontSize: '10px' }}>W</div>
-    <div style={{ position: 'absolute', right: '5px', fontWeight: 'bold', color: '#94a3b8', fontSize: '10px' }}>E</div>
+const CompassNeedle = ({ rotation, scale = 1 }) => (
+  <div style={{ transform: `scale(${scale})`, transformOrigin: 'center', position: 'relative', width: '180px', height: '180px', flexShrink: 0, borderRadius: '50%', background: '#fff', border: '6px solid #94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 12px rgba(0,0,0,0.15)', userSelect: 'none' }}>
+    <div style={{ position: 'absolute', top: '10px', fontWeight: 'bold', color: '#ef4444', fontSize: '18px' }}>N</div>
+    <div style={{ position: 'absolute', bottom: '10px', fontWeight: 'bold', color: '#3b82f6', fontSize: '18px' }}>S</div>
+    <div style={{ position: 'absolute', left: '10px', fontWeight: 'bold', color: '#94a3b8', fontSize: '18px' }}>W</div>
+    <div style={{ position: 'absolute', right: '10px', fontWeight: 'bold', color: '#94a3b8', fontSize: '18px' }}>E</div>
     
     <motion.div
       animate={{ rotate: rotation }}
       transition={{ type: "spring", stiffness: 40, damping: 10 }}
-      style={{ position: 'absolute', width: '4px', height: '80px', display: 'flex', flexDirection: 'column' }}
+      style={{ position: 'absolute', width: '8px', height: '140px', display: 'flex', flexDirection: 'column' }}
     >
       {/* North pointing part (Red) */}
-      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '40px solid #ef4444', transform: 'translateX(-4px)' }} />
+      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '12px solid transparent', borderRight: '12px solid transparent', borderBottom: '70px solid #ef4444', transform: 'translateX(-8px)' }} />
       {/* South pointing part (Blue) */}
-      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: '40px solid #3b82f6', transform: 'translateX(-4px)' }} />
+      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '12px solid transparent', borderRight: '12px solid transparent', borderTop: '70px solid #3b82f6', transform: 'translateX(-8px)' }} />
     </motion.div>
     
-    <div style={{ position: 'absolute', width: '10px', height: '10px', background: '#334155', borderRadius: '50%' }} />
+    <div style={{ position: 'absolute', width: '18px', height: '18px', background: '#334155', borderRadius: '50%' }} />
   </div>
 );
 
@@ -102,7 +102,7 @@ const SidebarDraggableCompass = () => {
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-       <CompassNeedle rotation={0} />
+       <CompassNeedle rotation={0} scale={100/180} />
     </div>
   );
 };
@@ -256,7 +256,7 @@ export default function Simulation({ onComplete, onNext }) {
   const distanceModifier = ({ transform, active }) => {
     if (!active || (active.id !== 'bar_magnet' && active.id !== 'compass')) return transform;
 
-    const minDist = activeMaterial ? 160 + (24 + thickness * 20) : 130; 
+    const minDist = activeMaterial ? 170 + (24 + thickness * 20) : 170; 
 
     let newX = active.id === 'bar_magnet' ? magnetPos.x + transform.x : compassPos.x + transform.x;
     let newY = active.id === 'bar_magnet' ? magnetPos.y + transform.y : compassPos.y + transform.y;
@@ -294,7 +294,10 @@ export default function Simulation({ onComplete, onNext }) {
 
     const minDist = Math.min(distN, distS);
 
-    if (minDist > 400) return 0;
+    // The max center-to-center distance at thickness 5 is 294 (80 + 124 + 90).
+    // The pole is 40px from the center, so pole-to-center distance is 254.
+    // We set the absolute limit of the magnetic field reach to 255.
+    if (minDist > 255) return 0;
 
     const angleToN = calculateAngle(cX, cY, nPoleX, poleY);
     const angleToS = calculateAngle(cX, cY, sPoleX, poleY);
@@ -304,8 +307,8 @@ export default function Simulation({ onComplete, onNext }) {
     while (targetAngle > 180) targetAngle -= 360;
     while (targetAngle < -180) targetAngle += 360;
 
-    // Deflection depends entirely on the physical distance
-    const deflectionFactor = Math.max(0, Math.min(1, 1 - (minDist - 150) / 250));
+    // Deflection drops to 0 at exactly 255. Starts dropping from 120.
+    const deflectionFactor = Math.max(0, Math.min(1, 1 - (minDist - 120) / 135));
     
     return targetAngle * deflectionFactor;
   };
@@ -703,7 +706,7 @@ export default function Simulation({ onComplete, onNext }) {
       <DragOverlay zIndex={2000}>
         {activeDragId === 'sidebar_compass' ? (
           <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CompassNeedle rotation={0} />
+            <CompassNeedle rotation={0} scale={100/180} />
           </div>
         ) : null}
         {activeDragId === 'sidebar_magnet' ? (
