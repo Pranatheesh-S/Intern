@@ -53,7 +53,7 @@ export default function ActivityTemplate({ onBackToDashboard }) {
   return (
     <div>
       {/* Subheader Navigation with Back Button */}
-      <div style={{ 
+      <div className="lab-internal-header" style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 

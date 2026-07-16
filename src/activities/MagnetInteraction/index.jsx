@@ -5,8 +5,9 @@ import Stage1_Build from './components/Stage1_Build';
 import Stage2_Predict from './components/Stage2_Predict';
 import Stage3_Explore from './components/Stage3_Explore';
 import Stage4_Quiz from './components/Stage4_Quiz';
+import DidYouKnow from './DidYouKnow';
 
-export default function MagnetInteractionActivity({ onBackToDashboard }) {
+export default function MagnetInteractionActivity({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('build');
   const [progress, setProgress] = useState({
     build: false,
@@ -29,6 +30,7 @@ export default function MagnetInteractionActivity({ onBackToDashboard }) {
 
   const handleStage4Complete = () => {
     setProgress(prev => ({ ...prev, quiz: true }));
+    if (onComplete) onComplete();
   };
 
   const tabs = [
@@ -118,23 +120,7 @@ export default function MagnetInteractionActivity({ onBackToDashboard }) {
 
         {/* Right Sidebar (Educational Tip) */}
         <aside style={{ width: '280px', flexShrink: 0 }}>
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Did you know?
-                </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-                  Science Insights
-                </div>
-                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  Unlike poles (North and South) attract each other, while like poles (North-North or South-South) repel each other. 
-              Placing a magnet on round pencils reduces friction, making it easy to observe the repulsion or attraction!
-                </p>
-              </div>
-            </div>
-          </div>
+          <DidYouKnow />
         </aside>
       </div>
     </div>

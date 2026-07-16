@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, ArrowRight, Sunrise, Sunset, Navigation, CheckCircle2 } from 'lucide-react';
+import { Compass, ArrowRight, Sunrise, Sunset, Navigation, CheckCircle2, ArrowLeft } from 'lucide-react';
+import MapSymbols from '../MapSymbols';
 
 const DIRECTIONS = [
   { id: 'N', label: 'North', type: 'Main Direction', angle: 0, description: 'North is one of the four main directions. Most maps show a small arrow pointing towards North.', icon: <Navigation size={48} color="#ef4444" style={{ transform: 'rotate(0deg)' }}/> },
@@ -17,6 +18,8 @@ export default function Directions({ onComplete }) {
   const [activeDir, setActiveDir] = useState(null);
   const [viewedDirs, setViewedDirs] = useState(new Set());
   const [hoveredDir, setHoveredDir] = useState(null);
+  const [showSymbols, setShowSymbols] = useState(false);
+  const symbolsRef = useRef(null);
 
   const isAllViewed = viewedDirs.size === 8;
 
@@ -49,16 +52,26 @@ export default function Directions({ onComplete }) {
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', overflow: 'hidden', borderRadius: '24px', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
       
-      {/* Header */}
-      <div style={{ padding: '2rem 3rem', borderBottom: '1px solid var(--border)', background: 'var(--card-bg)', zIndex: 10 }}>
-        <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>UNDERSTANDING MAPS</div>
-        <h1 style={{ fontSize: '2.5rem', color: 'var(--text-heading)', margin: '0 0 0.5rem 0', lineHeight: 1.1 }}>
-          Directions
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', margin: 0, maxWidth: '800px' }}>
-          Maps help us know which way to go. The four main directions are North, East, South and West. Between them are four more directions called intermediate directions.
-        </p>
-      </div>
+      {/* Top Bar for Back Button */}
+      {(viewedDirs.size > 0 || showSymbols) && (
+        <div style={{ padding: '1rem 2rem', borderBottom: '1px solid var(--border)', background: 'var(--card-bg)' }}>
+          <button 
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              if (showSymbols) {
+                setShowSymbols(false);
+              } else {
+                setActiveDir(null);
+              }
+            }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+          >
+            <ArrowLeft size={16} /> Back
+          </button>
+        </div>
+      )}
 
       {/* Two Column Layout */}
       <div style={{ display: 'flex', flex: 1, minHeight: '650px', flexWrap: 'wrap' }}>
@@ -70,7 +83,7 @@ export default function Directions({ onComplete }) {
           <div style={{ position: 'absolute', width: '80%', height: '80%', background: 'radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
           {/* Realistic Compass */}
-          <div style={{ position: 'relative', width: '380px', height: '380px', borderRadius: '50%', background: 'linear-gradient(135deg, #e2e8f0 0%, #94a3b8 50%, #475569 100%)', boxShadow: '0 30px 60px rgba(0,0,0,0.5), inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -2px 10px rgba(0,0,0,0.4)', padding: '20px' }}>
+          <div style={{ position: 'relative', width: '500px', height: '500px', borderRadius: '50%', background: 'linear-gradient(135deg, #e2e8f0 0%, #94a3b8 50%, #475569 100%)', boxShadow: '0 30px 60px rgba(0,0,0,0.5), inset 0 2px 10px rgba(255,255,255,0.8), inset 0 -2px 10px rgba(0,0,0,0.4)', padding: '24px' }}>
             
             {/* Inner Dark Dial */}
             <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', background: 'radial-gradient(circle at 30% 30%, #1e293b 0%, #020617 80%)', boxShadow: 'inset 0 10px 20px rgba(0,0,0,0.8), 0 2px 5px rgba(255,255,255,0.2)' }}>
@@ -89,14 +102,14 @@ export default function Directions({ onComplete }) {
                 style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', filter: 'drop-shadow(0 10px 10px rgba(0,0,0,0.5))', zIndex: 10 }}
               >
                 {/* North Half */}
-                <svg width="24" height="200" viewBox="0 0 24 200" style={{ position: 'absolute' }}>
-                   <path d="M 12 10 L 24 100 L 12 100 Z" fill="#ef4444" />
-                   <path d="M 12 10 L 0 100 L 12 100 Z" fill="#dc2626" />
+                <svg width="30" height="240" viewBox="0 0 30 240" style={{ position: 'absolute' }}>
+                   <path d="M 15 12 L 30 120 L 15 120 Z" fill="#ef4444" />
+                   <path d="M 15 12 L 0 120 L 15 120 Z" fill="#dc2626" />
                 </svg>
                 {/* South Half */}
-                <svg width="24" height="200" viewBox="0 0 24 200" style={{ position: 'absolute', transform: 'rotate(180deg)' }}>
-                   <path d="M 12 10 L 24 100 L 12 100 Z" fill="#e2e8f0" />
-                   <path d="M 12 10 L 0 100 L 12 100 Z" fill="#cbd5e1" />
+                <svg width="30" height="240" viewBox="0 0 30 240" style={{ position: 'absolute', transform: 'rotate(180deg)' }}>
+                   <path d="M 15 12 L 30 120 L 15 120 Z" fill="#e2e8f0" />
+                   <path d="M 15 12 L 0 120 L 15 120 Z" fill="#cbd5e1" />
                 </svg>
                 {/* Center Pin */}
                 <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'linear-gradient(135deg, #fcd34d 0%, #b45309 100%)', boxShadow: '0 2px 5px rgba(0,0,0,0.5)', zIndex: 15 }} />
@@ -137,7 +150,7 @@ export default function Directions({ onComplete }) {
                         transform: `rotate(-${dir.angle}deg)`, // keep text upright
                         color: isActive ? '#38bdf8' : (isHovered ? '#fff' : '#94a3b8'),
                         fontWeight: 'bold',
-                        fontSize: dir.id.length === 1 ? '1.5rem' : '1.1rem',
+                        fontSize: dir.id.length === 1 ? '1.8rem' : '1.3rem',
                         textShadow: isActive ? '0 0 10px rgba(56, 189, 248, 0.8)' : 'none',
                         transition: 'all 0.2s',
                         fontFamily: 'serif'
@@ -246,8 +259,13 @@ export default function Directions({ onComplete }) {
                        🧭 Compass Explorer
                      </div>
 
-                     <button onClick={onComplete} className="primary" style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                       Continue to Symbols <ArrowRight size={20} />
+                     <button onClick={() => {
+                       setShowSymbols(true);
+                       setTimeout(() => {
+                         symbolsRef.current?.scrollIntoView({ behavior: 'smooth' });
+                       }, 100);
+                     }} className="primary" style={{ width: '100%', padding: '1rem', borderRadius: '12px', fontSize: '1.1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                       Explore Map Symbols <ArrowRight size={20} />
                      </button>
                   </div>
                 </motion.div>
@@ -257,6 +275,12 @@ export default function Directions({ onComplete }) {
           </div>
         </div>
 
+      </div>
+
+      <div ref={symbolsRef}>
+        {showSymbols && (
+          <MapSymbols onComplete={onComplete} />
+        )}
       </div>
     </div>
   );

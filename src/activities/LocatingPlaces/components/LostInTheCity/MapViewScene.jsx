@@ -1,123 +1,276 @@
 import React, { useState } from 'react';
-import { Map, Compass, Navigation } from 'lucide-react';
+import { Compass, Navigation, CheckCircle2, User, AlertCircle, ArrowRight } from 'lucide-react';
 import mapBg from './assets/Map.png';
+import { MAP_NODES, MAP_EDGES, isBankReachable } from './MapGraph';
 
 export default function MapViewScene({ onComplete }) {
-  const [showRoute, setShowRoute] = useState(false);
+  const [phase, setPhase] = useState('idle'); // idle, walking, junction, wrong, success
+  const [currentNode, setCurrentNode] = useState('Start');
+  const [visitedNodes, setVisitedNodes] = useState(['Start']);
+  const [journeyLog, setJourneyLog] = useState(['✓ Started at Railway Station']);
+  const [showError, setShowError] = useState(false);
+
+  // Boy animation state
+  const [boyPos, setBoyPos] = useState({ x: MAP_NODES.Start.x, y: MAP_NODES.Start.y });
+  
+  const handleStart = () => {
+    setPhase('junction');
+  };
+
+  const walkTo = (nextId, direction) => {
+    const isCorrect = isBankReachable(nextId, visitedNodes);
+    setPhase('walking');
+    
+    if (isCorrect) {
+      setBoyPos({ x: MAP_NODES[nextId].x, y: MAP_NODES[nextId].y });
+      setTimeout(() => {
+        setVisitedNodes(prev => [...prev, nextId]);
+        setCurrentNode(nextId);
+        setJourneyLog(prev => [...prev, `✓ Travelled ${direction}`]);
+        
+        if (nextId === 'Bank') {
+          setPhase('success');
+        } else {
+          setPhase('junction');
+        }
+      }, 2000); // 2 seconds walking
+    } else {
+      // Wrong path - walk 30% of the way
+      const start = MAP_NODES[currentNode];
+      const end = MAP_NODES[nextId];
+      const wrongX = start.x + (end.x - start.x) * 0.3;
+      const wrongY = start.y + (end.y - start.y) * 0.3;
+      setBoyPos({ x: wrongX, y: wrongY });
+      
+      setTimeout(() => {
+        setPhase('wrong');
+        setShowError(true);
+      }, 800); // faster stop
+    }
+  };
+
+  const handleWrongClose = () => {
+    setShowError(false);
+    // Return boy to current node
+    setBoyPos({ x: MAP_NODES[currentNode].x, y: MAP_NODES[currentNode].y });
+    setPhase('junction');
+  };
+
+  const isWalking = phase === 'walking' || phase === 'wrong';
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#f8fafc', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <>
+      <style>{`
+        @keyframes breathe {
+          0% { transform: scale(1); }
+          100% { transform: scale(1.08); }
+        }
+        @keyframes walkBounce {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-6px); }
+        }
+      `}</style>
       
-      {/* Background Map Image Container */}
-      <div style={{ position: 'relative', width: '100%', height: '100%', maxWidth: '1200px' }}>
-        <img 
-          src={mapBg} 
-          alt="Town Map" 
-          style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
-        />
-
-        {/* Animated Path Overlay */}
-        {showRoute && (
-          <svg 
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }} 
-            viewBox="0 0 100 100" 
-            preserveAspectRatio="none"
-          >
-            {/* Accurate path from Railway Station to School */}
-            <path 
-              d="M 16 38 L 16 42 L 83 42 L 83 34" 
-              fill="none" 
-              stroke="#2563eb" 
-              strokeWidth="0.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray="1.5 2.5"
-              style={{ 
-                animation: 'march 1s linear infinite, fadeIn 0.8s ease-out forwards',
-                filter: 'drop-shadow(0 0 1px rgba(37, 99, 235, 0.8))',
-                opacity: 0
-              }}
-            />
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'stretch' }}>
+        
+        {/* LEFT COLUMN: Map View */}
+        <div style={{ 
+          flex: '1 1 65%', 
+          position: 'relative', 
+          minWidth: '350px', 
+          borderRadius: '24px', 
+          overflow: 'hidden', 
+          border: '1px solid var(--border)', 
+          background: '#eef2f6',
+          boxShadow: 'var(--card-shadow)'
+        }}>
+          <img src={mapBg} alt="Town Map" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          
+          {/* SVG Overlay for Path Highlighting */}
+          <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 10, pointerEvents: 'none' }}>
+            {visitedNodes.map((nodeId, idx) => {
+              if (idx === 0) return null;
+              const prev = MAP_NODES[visitedNodes[idx - 1]];
+              const curr = MAP_NODES[nodeId];
+              return (
+                <line 
+                  key={idx}
+                  x1={`${prev.x}%`} y1={`${prev.y}%`}
+                  x2={`${curr.x}%`} y2={`${curr.y}%`}
+                  stroke="rgba(147, 51, 234, 0.6)"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  style={{ filter: 'drop-shadow(0 0 4px rgba(147, 51, 234, 0.8))' }}
+                />
+              );
+            })}
           </svg>
+
+          {/* Boy Character */}
+          <div style={{
+            position: 'absolute',
+            left: `${boyPos.x}%`,
+            top: `${boyPos.y}%`,
+            transform: 'translate(-50%, -75%)',
+            transition: isWalking ? 'left 2s linear, top 2s linear' : 'left 0.8s ease, top 0.8s ease',
+            zIndex: 20
+          }}>
+            <div style={{
+              animation: isWalking ? 'walkBounce 0.3s infinite alternate' : 'breathe 1.5s infinite alternate',
+              width: '36px',
+              height: '36px',
+              background: 'white',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+              border: '2px solid var(--accent)'
+            }}>
+              <User size={20} color="var(--accent)" />
+            </div>
+          </div>
+
+          {/* Decision Arrows */}
+          {phase === 'junction' && currentNode !== 'Bank' && (
+            <div style={{
+              position: 'absolute',
+              left: `${MAP_NODES[currentNode].x}%`,
+              top: `${MAP_NODES[currentNode].y}%`,
+              transform: 'translate(-50%, -50%)',
+              zIndex: 30,
+            }}>
+              {Object.entries(MAP_EDGES[currentNode] || {}).map(([direction, nextId]) => {
+                let dx = 0, dy = 0;
+                if (direction === 'North') dy = -45;
+                if (direction === 'South') dy = 45;
+                if (direction === 'East') dx = 45;
+                if (direction === 'West') dx = -45;
+                
+                return (
+                  <button
+                    key={direction}
+                    onClick={() => walkTo(nextId, direction)}
+                    style={{
+                      position: 'absolute',
+                      left: dx,
+                      top: dy,
+                      transform: 'translate(-50%, -50%)',
+                      background: 'rgba(147, 51, 234, 0.95)',
+                      color: 'white',
+                      border: '2px solid white',
+                      borderRadius: '20px',
+                      padding: '6px 14px',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 12px rgba(147,51,234,0.5)',
+                      fontWeight: 'bold',
+                      fontSize: '0.85rem',
+                      transition: 'transform 0.2s'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1.1)'}
+                    onMouseOut={(e) => e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1)'}
+                  >
+                    {direction}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        
+        {/* RIGHT COLUMN: Mission Panel */}
+        <div style={{ 
+          flex: '1 1 30%', 
+          minWidth: '280px', 
+          background: 'var(--surface)', 
+          padding: '2rem', 
+          borderRadius: '24px', 
+          border: '1px solid var(--border)', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '2rem',
+          boxShadow: 'var(--card-shadow)'
+        }}>
+          <div>
+            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textTransform: 'uppercase', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', letterSpacing: '1px' }}>
+              <Compass size={18} /> Mission
+            </h3>
+            <p style={{ fontSize: '1.15rem', fontWeight: 'bold', color: 'var(--text-primary)', lineHeight: 1.4 }}>
+              Help the boy reach the Bank.
+            </p>
+            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginTop: '0.5rem', lineHeight: 1.4 }}>
+              There may be more than one correct path. Choose the correct road whenever you reach a junction.
+            </p>
+          </div>
+
+          {phase === 'idle' && (
+            <button 
+              onClick={handleStart}
+              className="primary" 
+              style={{ padding: '1.25rem', fontSize: '1.1rem', borderRadius: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', border: 'none', background: 'var(--accent)', color: 'white', fontWeight: 'bold' }}
+            >
+              <Navigation size={20} /> Let's Go
+            </button>
+          )}
+
+          {phase !== 'idle' && (
+            <>
+              {/* Progress */}
+              <div style={{ background: 'var(--bg-primary)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                <h4 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.5px' }}>Progress</h4>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                  <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>Railway Station</div>
+                  <ArrowRight size={16} color="var(--text-muted)" />
+                  <div style={{ color: 'var(--accent)', fontWeight: 'bold', fontSize: '0.95rem' }}>{MAP_NODES[currentNode]?.name}</div>
+                  <ArrowRight size={16} color="var(--text-muted)" />
+                  <div style={{ opacity: 0.5, fontSize: '0.95rem' }}>Bank</div>
+                </div>
+              </div>
+
+              {/* Journey Log */}
+              <div style={{ flex: 1 }}>
+                 <h4 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.5px' }}>Journey Log</h4>
+                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                   {journeyLog.map((log, i) => (
+                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+                       <CheckCircle2 size={16} color="var(--success, #22c55e)" /> {log}
+                     </div>
+                   ))}
+                 </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* ERROR POPUP */}
+        {showError && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
+             <div style={{ background: 'var(--surface)', padding: '2.5rem', borderRadius: '24px', textAlign: 'center', maxWidth: '350px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+               <AlertCircle size={56} color="#ef4444" style={{ margin: '0 auto 1.5rem' }} />
+               <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Oops!</h3>
+               <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>This road doesn't lead to the Bank. Try another direction.</p>
+               <button onClick={handleWrongClose} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '12px', fontSize: '1.05rem', fontWeight: 'bold', cursor: 'pointer', width: '100%' }}>Choose Again</button>
+             </div>
+          </div>
+        )}
+
+        {/* SUCCESS POPUP */}
+        {phase === 'success' && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
+             <div style={{ background: 'var(--surface)', padding: '3rem', borderRadius: '24px', textAlign: 'center', maxWidth: '420px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+               <CheckCircle2 size={72} color="var(--success, #22c55e)" style={{ margin: '0 auto 1.5rem' }} />
+               <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Congratulations!</h2>
+               <p style={{ marginBottom: '2.5rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1.1rem' }}>
+                 You helped the boy reach the Bank using the town map. 
+                 Maps help us choose the correct route and reach places easily.
+               </p>
+               <button onClick={() => { setPhase('completed'); onComplete(); }} style={{ background: 'var(--accent)', color: 'white', border: 'none', padding: '1.25rem 2rem', borderRadius: '14px', fontSize: '1.15rem', fontWeight: 'bold', cursor: 'pointer', width: '100%', boxShadow: '0 4px 12px rgba(147,51,234,0.3)' }}>
+                 Continue to Quiz
+               </button>
+             </div>
+          </div>
         )}
       </div>
-
-      {/* UI OVERLAYS */}
-
-
-      {/* Find Route Button */}
-      {!showRoute && (
-        <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', zIndex: 30 }}>
-          <button 
-            onClick={() => setShowRoute(true)}
-            style={{
-              background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-              color: 'white',
-              border: 'none',
-              padding: '1rem 2rem',
-              borderRadius: '30px',
-              fontSize: '1.1rem',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              cursor: 'pointer',
-              boxShadow: '0 10px 25px rgba(37, 99, 235, 0.4), 0 0 0 4px rgba(255,255,255,0.8)',
-              transition: 'transform 0.2s',
-            }}
-            onMouseOver={(e) => e.currentTarget.style.transform = 'translateX(-50%) scale(1.05)'}
-            onMouseOut={(e) => e.currentTarget.style.transform = 'translateX(-50%) scale(1)'}
-          >
-            <Navigation size={20} />
-            Find Route
-          </button>
-        </div>
-      )}
-
-      {/* Continue Button (appears after route is found) */}
-      {showRoute && (
-        <div style={{ position: 'absolute', bottom: '2rem', right: '2rem', zIndex: 30, animation: 'fadeInDelay 1s ease-out forwards', opacity: 0 }}>
-          <button 
-            onClick={onComplete}
-            style={{
-              background: '#16a34a', // Green for continuation
-              color: 'white',
-              border: 'none',
-              padding: '1rem 2rem',
-              borderRadius: '30px',
-              fontSize: '1.1rem',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              cursor: 'pointer',
-              boxShadow: '0 10px 25px rgba(22, 163, 74, 0.4), 0 0 0 4px rgba(255,255,255,0.8)',
-              transition: 'transform 0.2s',
-            }}
-            onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-            onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            Continue with quiz
-          </button>
-        </div>
-      )}
-
-      <style>
-        {`
-          @keyframes march {
-            from { stroke-dashoffset: 4; }
-            to { stroke-dashoffset: 0; }
-          }
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
-          @keyframes fadeInDelay {
-            0%, 50% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-          }
-        `}
-      </style>
-    </div>
+    </>
   );
 }

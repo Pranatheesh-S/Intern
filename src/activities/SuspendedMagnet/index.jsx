@@ -3,12 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, RotateCw, ArrowLeft, Info, CheckCircle } from 'lucide-react';
 import Stage1_Experiment from './components/Stage1_Experiment';
 import Stage2_Conclusion from './components/Stage2_Conclusion';
+import Quiz from './Quiz';
+import DidYouKnow from './DidYouKnow';
+import { HelpCircle } from 'lucide-react';
 
-export default function SuspendedMagnetActivity({ onBackToDashboard }) {
+export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('experiment');
   const [progress, setProgress] = useState({
     experiment: false,
-    conclusion: false
+    conclusion: false,
+    quiz: false
   });
 
   const handleStage1Complete = () => {
@@ -19,11 +23,18 @@ export default function SuspendedMagnetActivity({ onBackToDashboard }) {
 
   const handleStage2Complete = () => {
     setProgress(prev => ({ ...prev, conclusion: true }));
+    setActiveTab('quiz');
+  };
+
+  const handleQuizComplete = () => {
+    setProgress(prev => ({ ...prev, quiz: true }));
+    if (onComplete) onComplete();
   };
 
   const tabs = [
     { id: 'experiment', name: '1. Let us Experiment', icon: RotateCw, component: <Stage1_Experiment onComplete={handleStage1Complete} /> },
-    { id: 'conclusion', name: '2. Conclusion', icon: Compass, component: <Stage2_Conclusion onComplete={handleStage2Complete} />, locked: !progress.experiment }
+    { id: 'conclusion', name: '2. Conclusion', icon: Compass, component: <Stage2_Conclusion onComplete={handleStage2Complete} />, locked: !progress.experiment },
+    { id: 'quiz', name: '3. Quiz', icon: HelpCircle, component: <Quiz onComplete={handleQuizComplete} />, locked: !progress.conclusion }
   ];
 
   return (
@@ -109,22 +120,7 @@ export default function SuspendedMagnetActivity({ onBackToDashboard }) {
 
         {/* Right Sidebar (Educational Tip) */}
         <aside style={{ width: '280px', flexShrink: 0 }}>
-          <div className="glass-panel" style={{ padding: '1.25rem', position: 'sticky', top: '2rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }}>🧠</span>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                  Did you know?
-                </h4>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginTop: '0.4rem' }}>
-                  Science Insights
-                </div>
-                <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.825rem', color: 'var(--text-faint)', lineHeight: '1.5' }}>
-                  A freely suspended magnet always aligns itself in a specific direction, which is the North-South direction. This property has been used by travelers for centuries to find directions!
-                </p>
-              </div>
-            </div>
-          </div>
+          <DidYouKnow />
         </aside>
       </div>
     </div>

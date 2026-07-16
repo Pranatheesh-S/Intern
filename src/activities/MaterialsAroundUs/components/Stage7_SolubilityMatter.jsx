@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Beaker, HelpCircle, Check, Award, Weight } from 'lucide-react';
 
@@ -59,15 +59,21 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
 
   const isCompleted = mode === 'solubility' ? (allSolubilityTested && orsCompleted) : mode === 'matter' ? (massTested && volumeTested) : (allSolubilityTested && orsCompleted && massTested && volumeTested);
 
+  useEffect(() => {
+    if (isCompleted) {
+      onComplete();
+    }
+  }, [isCompleted, onComplete]);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.35rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Beaker size={22} style={{ color: 'var(--accent)' }} /> 
           {mode === 'solubility' ? 'Solubility in Water' : mode === 'matter' ? 'What is Matter?' : '6.3.4 - 6.4: Solubility, Mass, Volume & Matter'}
         </h3>
-        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
           {mode === 'solubility' ? 'Let\'s explore solubility by testing if different substances dissolve in water.' : mode === 'matter' ? 'Let\'s explore mass (how heavy it is) and volume (space occupied).' : 'Let\'s explore chemical and physical properties: solubility in water, mass, and volume.'}
         </p>
       </div>
@@ -77,7 +83,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
         {(mode === 'solubility' || mode === 'both') && (
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
             <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
-              <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>1. Beaker Solubility Tester</span>
+              <span style={{ fontWeight: 'bold', fontSize: '1.15rem' }}>1. Beaker Solubility Tester</span>
             </div>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center' }}>
@@ -86,7 +92,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                   key={sub.id}
                   onClick={() => { setSelectedSubstance(sub); setStirState('idle'); }}
                   className={selectedSubstance?.id === sub.id ? 'outline active' : 'outline'}
-                  style={{ padding: '0.35rem 0.6rem', fontSize: '0.7rem' }}
+                  style={{ padding: '0.5rem 0.8rem', fontSize: '0.9rem' }}
                 >
                   {sub.name} {solubilityResults[sub.id] ? '✓' : ''}
                 </button>
@@ -131,14 +137,14 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                     <button 
                       onClick={handleStir} 
                       className="primary" 
-                      style={{ position: 'absolute', bottom: '10px', padding: '0.25rem 0.75rem', fontSize: '0.7rem' }}
+                      style={{ position: 'absolute', bottom: '10px', padding: '0.4rem 0.9rem', fontSize: '0.9rem' }}
                     >
                       Stir Solution
                     </button>
                   )}
 
                   {stirState === 'resolved' && (
-                    <div style={{ position: 'absolute', bottom: '5px', textAlign: 'center', fontSize: '0.75rem', color: '#fff', padding: '0 0.5rem', lineHeight: '1.3' }}>
+                    <div style={{ position: 'absolute', bottom: '5px', textAlign: 'center', fontSize: '0.9rem', color: '#fff', padding: '0 0.5rem', lineHeight: '1.3' }}>
                       <strong style={{ color: selectedSubstance.correct === 'Soluble' ? '#34d399' : '#fbbf24' }}>
                         {selectedSubstance.correct}!
                       </strong> {selectedSubstance.desc}
@@ -146,27 +152,27 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                   )}
                 </div>
               ) : (
-                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Select a substance to mix</span>
+                <span style={{ fontSize: '1rem', color: '#64748b' }}>Select a substance to mix</span>
               )}
             </div>
 
             {/* ORS Mini challenge */}
-            <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-              <strong style={{ fontSize: '0.8rem', color: 'var(--success)' }}>Make ORS (Oral Rehydration Solution)</strong>
+            <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <strong style={{ fontSize: '1rem', color: 'var(--success)' }}>Make ORS (Oral Rehydration Solution)</strong>
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
                   Sugar: <strong>{orsIngredients.sugar} tsp</strong> (Needs 6) <br/>
                   Salt: <strong>{orsIngredients.salt} tsp</strong> (Needs 1)
                 </div>
-                <div style={{ display: 'flex', gap: '0.25rem' }}>
-                  <button onClick={() => setOrsIngredients(prev => ({ ...prev, sugar: Math.min(prev.sugar + 1, 8) }))} className="outline" style={{ padding: '0.2rem', fontSize: '0.65rem' }}>+Sugar</button>
-                  <button onClick={() => setOrsIngredients(prev => ({ ...prev, salt: Math.min(prev.salt + 1, 3) }))} className="outline" style={{ padding: '0.2rem', fontSize: '0.65rem' }}>+Salt</button>
-                  <button onClick={() => setOrsIngredients({ sugar: 0, salt: 0 })} className="outline" style={{ padding: '0.2rem', fontSize: '0.65rem' }}>Clear</button>
+                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                  <button onClick={() => setOrsIngredients(prev => ({ ...prev, sugar: Math.min(prev.sugar + 8, 8) }))} className="outline" style={{ padding: '0.4rem', fontSize: '0.9rem' }}>+Sugar</button>
+                  <button onClick={() => setOrsIngredients(prev => ({ ...prev, salt: Math.min(prev.salt + 1, 3) }))} className="outline" style={{ padding: '0.4rem', fontSize: '0.9rem' }}>+Salt</button>
+                  <button onClick={() => setOrsIngredients({ sugar: 0, salt: 0 })} className="outline" style={{ padding: '0.4rem', fontSize: '0.9rem' }}>Clear</button>
                 </div>
               </div>
-              <button onClick={handleMixOrs} className="success" style={{ padding: '0.35rem', fontSize: '0.75rem' }}>Prepare & Stir ORS</button>
-              {orsResult === 'perfect' && <span style={{ fontSize: '0.7rem', color: 'var(--success)', fontWeight: 'bold' }}>✓ Perfect! 6 sugar + 1 salt in water forms life-saving ORS!</span>}
-              {orsResult === 'incorrect' && <span style={{ fontSize: '0.7rem', color: 'var(--danger)' }}>Incorrect proportions, read the book instructions: 6 sugar, 1/2 salt!</span>}
+              <button onClick={handleMixOrs} className="success" style={{ padding: '0.5rem', fontSize: '0.95rem' }}>Prepare & Stir ORS</button>
+              {orsResult === 'perfect' && <span style={{ fontSize: '0.95rem', color: 'var(--success)', fontWeight: 'bold' }}>✓ Perfect! 6 sugar + 1 salt in water forms life-saving ORS!</span>}
+              {orsResult === 'incorrect' && <span style={{ fontSize: '0.95rem', color: 'var(--danger)' }}>Incorrect proportions, read the book instructions: 6 sugar, 1 salt!</span>}
             </div>
           </div>
         )}
@@ -175,13 +181,13 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
         {(mode === 'matter' || mode === 'both') && (
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
             <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
-              <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>{mode === 'both' ? '2. Mass, Volume & Matter' : 'Mass, Volume & Matter'}</span>
+              <span style={{ fontWeight: 'bold', fontSize: '1.15rem' }}>{mode === 'both' ? '2. Mass, Volume & Matter' : 'Mass, Volume & Matter'}</span>
             </div>
 
             {/* Weighing scale */}
-            <div style={{ background: 'var(--surface)', padding: '0.5rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                <Weight size={14} /> Weighing Cup (Measure Mass)
+            <div style={{ background: 'var(--surface)', padding: '0.75rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <span style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <Weight size={18} /> Weighing Cup (Measure Mass)
               </span>
               <div style={{ display: 'flex', gap: '0.4rem' }}>
                 {cups.map((c) => (
@@ -189,30 +195,30 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                     key={c.id} 
                     onClick={() => setWeighedCup(c)} 
                     className={weighedCup?.id === c.id ? 'outline active' : 'outline'}
-                    style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', flex: 1 }}
+                    style={{ padding: '0.5rem', fontSize: '0.9rem', flex: 1 }}
                   >
                     {c.name}
                   </button>
                 ))}
               </div>
               {weighedCup && (
-                <div style={{ background: '#0b1329', padding: '0.5rem', borderRadius: '4px', textAlign: 'center', color: '#10b981', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                <div style={{ background: '#0b1329', padding: '0.75rem', borderRadius: '4px', textAlign: 'center', color: '#10b981', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '1rem' }}>
                   Digital Balance: {weighedCup.mass} (Mass = quantity of matter)
                 </div>
               )}
             </div>
 
             {/* Volume selection */}
-            <div style={{ background: 'var(--surface)', padding: '0.5rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
+            <div style={{ background: 'var(--surface)', padding: '0.75rem', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <span style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
                 Occupied Space (Volume)
               </span>
-              <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', margin: 0 }}>
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
                 A half-filled glass tumbler contains less space representation of water than a fully-filled one. What is this occupied space?
               </p>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button onClick={() => setVolumeSelect('wrong')} className={volumeSelect === 'wrong' ? 'danger' : 'outline'} style={{ flex: 1, padding: '0.35rem', fontSize: '0.75rem' }}>Mass</button>
-                <button onClick={() => setVolumeSelect('correct')} className={volumeSelect === 'correct' ? 'success' : 'outline'} style={{ flex: 1, padding: '0.35rem', fontSize: '0.75rem' }}>Volume</button>
+                <button onClick={() => setVolumeSelect('wrong')} className={volumeSelect === 'wrong' ? 'danger' : 'outline'} style={{ flex: 1, padding: '0.5rem', fontSize: '0.95rem' }}>Mass</button>
+                <button onClick={() => setVolumeSelect('correct')} className={volumeSelect === 'correct' ? 'success' : 'outline'} style={{ flex: 1, padding: '0.5rem', fontSize: '0.95rem' }}>Volume</button>
               </div>
             </div>
 
@@ -221,10 +227,10 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                style={{ background: 'var(--accent-bg)', border: '1px solid var(--accent-border)', padding: '0.8rem', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}
+                style={{ background: 'var(--accent-bg)', border: '1px solid var(--accent-border)', padding: '1rem', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
               >
-                <strong style={{ fontSize: '0.85rem', color: 'var(--accent-text)' }}>Unified Definition of Matter:</strong>
-                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                <strong style={{ fontSize: '1rem', color: 'var(--accent-text)' }}>Unified Definition of Matter:</strong>
+                <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
                   Everything that has <strong>mass</strong> (weighs something) and occupies <strong>space</strong> (volume) is called <strong>Matter</strong>. 
                   Gases (like oxygen in water) are also matter!
                 </p>
@@ -235,15 +241,12 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
       </div>
 
       {/* Footer */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-        <button
-          disabled={!isCompleted}
-          onClick={onComplete}
-          className="primary"
-          style={{ padding: '0.75rem 2rem' }}
-        >
-          Proceed to Chapter Summary
-        </button>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
+        {isCompleted && (
+          <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}>
+            Lab Complete! Click "Proceed to next" in the top right.
+          </div>
+        )}
       </div>
     </div>
   );

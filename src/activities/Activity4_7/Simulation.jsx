@@ -13,25 +13,25 @@ const calculateAngle = (cx, cy, px, py) => {
 };
 
 // Compass component
-const CompassNeedle = ({ rotation }) => (
-  <div style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '50%', background: '#fff', border: '4px solid #94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', userSelect: 'none' }}>
-    <div style={{ position: 'absolute', top: '5px', fontWeight: 'bold', color: '#ef4444', fontSize: '10px' }}>N</div>
-    <div style={{ position: 'absolute', bottom: '5px', fontWeight: 'bold', color: '#3b82f6', fontSize: '10px' }}>S</div>
-    <div style={{ position: 'absolute', left: '5px', fontWeight: 'bold', color: '#94a3b8', fontSize: '10px' }}>W</div>
-    <div style={{ position: 'absolute', right: '5px', fontWeight: 'bold', color: '#94a3b8', fontSize: '10px' }}>E</div>
+const CompassNeedle = ({ rotation, scale = 1 }) => (
+  <div style={{ transform: `scale(${scale})`, transformOrigin: 'center', position: 'relative', width: '180px', height: '180px', flexShrink: 0, borderRadius: '50%', background: '#fff', border: '6px solid #94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 12px rgba(0,0,0,0.15)', userSelect: 'none' }}>
+    <div style={{ position: 'absolute', top: '10px', fontWeight: 'bold', color: '#ef4444', fontSize: '18px' }}>N</div>
+    <div style={{ position: 'absolute', bottom: '10px', fontWeight: 'bold', color: '#3b82f6', fontSize: '18px' }}>S</div>
+    <div style={{ position: 'absolute', left: '10px', fontWeight: 'bold', color: '#94a3b8', fontSize: '18px' }}>W</div>
+    <div style={{ position: 'absolute', right: '10px', fontWeight: 'bold', color: '#94a3b8', fontSize: '18px' }}>E</div>
     
     <motion.div
       animate={{ rotate: rotation }}
       transition={{ type: "spring", stiffness: 40, damping: 10 }}
-      style={{ position: 'absolute', width: '4px', height: '80px', display: 'flex', flexDirection: 'column' }}
+      style={{ position: 'absolute', width: '8px', height: '140px', display: 'flex', flexDirection: 'column' }}
     >
       {/* North pointing part (Red) */}
-      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '40px solid #ef4444', transform: 'translateX(-4px)' }} />
+      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '12px solid transparent', borderRight: '12px solid transparent', borderBottom: '70px solid #ef4444', transform: 'translateX(-8px)' }} />
       {/* South pointing part (Blue) */}
-      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: '40px solid #3b82f6', transform: 'translateX(-4px)' }} />
+      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '12px solid transparent', borderRight: '12px solid transparent', borderTop: '70px solid #3b82f6', transform: 'translateX(-8px)' }} />
     </motion.div>
     
-    <div style={{ position: 'absolute', width: '10px', height: '10px', background: '#334155', borderRadius: '50%' }} />
+    <div style={{ position: 'absolute', width: '18px', height: '18px', background: '#334155', borderRadius: '50%' }} />
   </div>
 );
 
@@ -102,7 +102,7 @@ const SidebarDraggableCompass = () => {
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-       <CompassNeedle rotation={0} />
+       <CompassNeedle rotation={0} scale={100/180} />
     </div>
   );
 };
@@ -126,10 +126,11 @@ const SidebarDraggableMagnet = () => {
   );
 };
 
-const MaterialBlock3D = ({ type }) => {
+const MaterialBlock3D = ({ type, thickness = 1 }) => {
   const getStyle = () => {
+    const baseWidth = 24 + thickness * 20;
     const base = {
-      width: '44px',
+      width: `${baseWidth}px`,
       height: '240px',
       borderRadius: '2px',
       display: 'flex',
@@ -217,6 +218,7 @@ export default function Simulation({ onComplete, onNext }) {
   const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 });
   const [activeDragId, setActiveDragId] = useState(null);
   const [activeMaterial, setActiveMaterial] = useState(null);
+  const [thickness, setThickness] = useState(1);
   const [observations, setObservations] = useState({
     wood: null,
     cardboard: null,
@@ -254,7 +256,7 @@ export default function Simulation({ onComplete, onNext }) {
   const distanceModifier = ({ transform, active }) => {
     if (!active || (active.id !== 'bar_magnet' && active.id !== 'compass')) return transform;
 
-    const minDist = activeMaterial ? 220 : 130; 
+    const minDist = activeMaterial ? 170 + (24 + thickness * 20) : 170; 
 
     let newX = active.id === 'bar_magnet' ? magnetPos.x + transform.x : compassPos.x + transform.x;
     let newY = active.id === 'bar_magnet' ? magnetPos.y + transform.y : compassPos.y + transform.y;
@@ -281,7 +283,7 @@ export default function Simulation({ onComplete, onNext }) {
     return transform;
   };
 
-  const getNeedleRotation = (mX, mY, cX, cY, flipped) => {
+  const getNeedleRotation = (mX, mY, cX, cY, flipped, material, thick) => {
     const magnetWidth = 160;
     const nPoleX = flipped ? mX + magnetWidth / 4 : mX - magnetWidth / 4;
     const sPoleX = flipped ? mX - magnetWidth / 4 : mX + magnetWidth / 4;
@@ -290,16 +292,25 @@ export default function Simulation({ onComplete, onNext }) {
     const distN = Math.sqrt((nPoleX - cX) ** 2 + (poleY - cY) ** 2);
     const distS = Math.sqrt((sPoleX - cX) ** 2 + (poleY - cY) ** 2);
 
-    if (distN > 250 && distS > 250) return 0;
+    const minDist = Math.min(distN, distS);
+
+    // The max center-to-center distance at thickness 5 is 294 (80 + 124 + 90).
+    // The pole is 40px from the center, so pole-to-center distance is 254.
+    // We set the absolute limit of the magnetic field reach to 255.
+    if (minDist > 255) return 0;
 
     const angleToN = calculateAngle(cX, cY, nPoleX, poleY);
     const angleToS = calculateAngle(cX, cY, sPoleX, poleY);
 
-    if (distN < distS) {
-      return angleToN + 90;
-    } else {
-      return angleToS - 90;
-    }
+    let targetAngle = distN < distS ? angleToN + 90 : angleToS - 90;
+    
+    while (targetAngle > 180) targetAngle -= 360;
+    while (targetAngle < -180) targetAngle += 360;
+
+    // Deflection drops to 0 at exactly 255. Starts dropping from 120.
+    const deflectionFactor = Math.max(0, Math.min(1, 1 - (minDist - 120) / 135));
+    
+    return targetAngle * deflectionFactor;
   };
 
   const checkStepCompletion = (mX, mY, cX, cY, flipped) => {
@@ -327,7 +338,7 @@ export default function Simulation({ onComplete, onNext }) {
       cY += delta.y;
     }
     
-    setNeedleRotation(getNeedleRotation(mX, mY, cX, cY, isFlipped));
+    setNeedleRotation(getNeedleRotation(mX, mY, cX, cY, isFlipped, activeMaterial, thickness));
   };
 
   const handleDragEnd = (event) => {
@@ -389,14 +400,14 @@ export default function Simulation({ onComplete, onNext }) {
       setCompassPos({ x: newCX, y: newCY });
     }
     
-    setNeedleRotation(getNeedleRotation(newMX, newMY, newCX, newCY, isFlipped));
+    setNeedleRotation(getNeedleRotation(newMX, newMY, newCX, newCY, isFlipped, activeMaterial, thickness));
     checkStepCompletion(newMX, newMY, newCX, newCY, isFlipped);
   };
 
   const flipMagnet = () => {
     const newFlipped = !isFlipped;
     setIsFlipped(newFlipped);
-    setNeedleRotation(getNeedleRotation(magnetPos.x, magnetPos.y, compassPos.x, compassPos.y, newFlipped));
+    setNeedleRotation(getNeedleRotation(magnetPos.x, magnetPos.y, compassPos.x, compassPos.y, newFlipped, activeMaterial, thickness));
     checkStepCompletion(magnetPos.x, magnetPos.y, compassPos.x, compassPos.y, newFlipped);
   };
 
@@ -407,6 +418,7 @@ export default function Simulation({ onComplete, onNext }) {
     setNeedleRotation(0);
     setFeedback(null);
     setActiveMaterial(null);
+    setThickness(1);
     setObservations({ wood: null, cardboard: null, plastic: null, glass: null });
     setStep(1);
   };
@@ -417,14 +429,15 @@ export default function Simulation({ onComplete, onNext }) {
     }
   }, [step, onComplete]);
 
-  // Handle magnetic field animation overlay
   const renderMagneticFields = () => {
     if (step < 3) return null;
     const currentMX = magnetPos.x + (activeDragId === 'bar_magnet' ? dragDelta.x : 0);
     const currentMY = magnetPos.y + (activeDragId === 'bar_magnet' ? dragDelta.y : 0);
     
+    const fieldOpacity = Math.max(0.05, 0.3 - (activeMaterial ? thickness * 0.04 : 0));
+
     return (
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', opacity: 0.3 }}>
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', opacity: fieldOpacity }}>
         <svg width="100%" height="100%">
           <defs>
             <linearGradient id="fieldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -458,6 +471,7 @@ export default function Simulation({ onComplete, onNext }) {
       
       <div style={{ display: "grid", gridTemplateColumns: "350px 1fr", gap: "1.5rem" }}>
         
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Left Panel: Instructions */}
         <div className="glass-panel" style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem", background: "var(--surface)" }}>
           <h3 style={{ margin: 0, color: "var(--text-heading)", borderBottom: "1px solid var(--border)", paddingBottom: "0.5rem" }}>Instructions</h3>
@@ -500,7 +514,28 @@ export default function Simulation({ onComplete, onNext }) {
                     {['wood', 'cardboard', 'plastic', 'glass'].map(mat => (
                       <button 
                         key={mat}
-                        onClick={() => setActiveMaterial(activeMaterial === mat ? null : mat)}
+                        onClick={() => {
+                          const newMat = activeMaterial === mat ? null : mat;
+                          setActiveMaterial(newMat);
+                          
+                          let finalMX = magnetPos.x;
+                          let finalMY = magnetPos.y;
+                          
+                          if (newMat) {
+                            const reqDist = 160 + (24 + thickness * 20);
+                            const dx = magnetPos.x - compassPos.x;
+                            const dy = magnetPos.y - compassPos.y;
+                            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                            if (dist < reqDist) {
+                              const angle = Math.atan2(dy, dx);
+                              finalMX = Math.max(80, Math.min(compassPos.x + Math.cos(angle) * reqDist, 1220));
+                              finalMY = Math.max(20, Math.min(compassPos.y + Math.sin(angle) * reqDist, 680));
+                              setMagnetPos({ x: finalMX, y: finalMY });
+                            }
+                          }
+                          
+                          setNeedleRotation(getNeedleRotation(finalMX, finalMY, compassPos.x, compassPos.y, isFlipped, newMat, thickness));
+                        }}
                         className={activeMaterial === mat ? 'primary' : 'outline'}
                         style={{ padding: '0.4rem', fontSize: '0.8rem', textTransform: 'capitalize' }}
                       >
@@ -508,6 +543,41 @@ export default function Simulation({ onComplete, onNext }) {
                       </button>
                     ))}
                   </div>
+
+                  {activeMaterial && (
+                    <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', background: 'rgba(0,0,0,0.02)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+                        Material Thickness: {thickness}
+                      </label>
+                      <input 
+                        type="range" 
+                        min="1" max="5" 
+                        value={thickness} 
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setThickness(val);
+                          
+                          let finalMX = magnetPos.x;
+                          let finalMY = magnetPos.y;
+                          
+                          const reqDist = 160 + (24 + val * 20);
+                          const dx = magnetPos.x - compassPos.x;
+                          const dy = magnetPos.y - compassPos.y;
+                          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                          
+                          if (dist < reqDist) {
+                            const angle = Math.atan2(dy, dx);
+                            finalMX = Math.max(80, Math.min(compassPos.x + Math.cos(angle) * reqDist, 1220));
+                            finalMY = Math.max(20, Math.min(compassPos.y + Math.sin(angle) * reqDist, 680));
+                            setMagnetPos({ x: finalMX, y: finalMY });
+                          }
+                          
+                          setNeedleRotation(getNeedleRotation(finalMX, finalMY, compassPos.x, compassPos.y, isFlipped, activeMaterial, val));
+                        }} 
+                        style={{ width: '100%', cursor: 'pointer' }} 
+                      />
+                    </div>
+                  )}
 
                   {/* Observation Table */}
                   <div style={{ background: 'var(--bg-color)', borderRadius: '8px', border: '1px solid var(--border)', overflow: 'hidden' }}>
@@ -552,7 +622,8 @@ export default function Simulation({ onComplete, onNext }) {
               )}
             </div>
 
-          </div>
+        </div>
+        </div>
         </div>
 
         {/* Right Panel: Workspace */}
@@ -581,13 +652,13 @@ export default function Simulation({ onComplete, onNext }) {
                   animate={{ opacity: 1, scale: 1 }}
                   style={{ 
                     position: 'absolute', 
-                    left: (compassPos.x + magnetPos.x) / 2 - 22,
+                    left: (compassPos.x + magnetPos.x) / 2 - (12 + thickness * 10),
                     top: (compassPos.y + magnetPos.y) / 2 - 120,
                     zIndex: 5,
                     pointerEvents: 'none'
                   }}
                 >
-                  <MaterialBlock3D type={activeMaterial} />
+                  <MaterialBlock3D type={activeMaterial} thickness={thickness} />
                 </motion.div>
               )}
               {step >= 2 && (
@@ -635,7 +706,7 @@ export default function Simulation({ onComplete, onNext }) {
       <DragOverlay zIndex={2000}>
         {activeDragId === 'sidebar_compass' ? (
           <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CompassNeedle rotation={0} />
+            <CompassNeedle rotation={0} scale={100/180} />
           </div>
         ) : null}
         {activeDragId === 'sidebar_magnet' ? (
