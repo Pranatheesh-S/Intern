@@ -4,15 +4,17 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
   const [bookPage, setBookPage] = useState(1);
   const [isHandbookRead, setIsHandbookRead] = useState(false);
   const [isHandbookRead2, setIsHandbookRead2] = useState(false);
+  const [isHandbookRead3, setIsHandbookRead3] = useState(false);
 
   // Determine which barrier we are in
-  // currentFlowIndex 5 is Mission 2. index >= 5 is Barrier 2.
-  const isBarrier2 = currentFlowIndex >= 5;
+  // currentFlowIndex 13 is Mission 3. index >= 13 is Barrier 3.
+  const isBarrier3 = currentFlowIndex >= 13;
+  const isBarrier2 = currentFlowIndex >= 5 && currentFlowIndex < 13;
 
   // Reset page to 1 when changing barriers
   useEffect(() => {
     setBookPage(1);
-  }, [isBarrier2]);
+  }, [isBarrier2, isBarrier3]);
 
   // Barrier 1 logic
   const isPhase1Done = highestUnlockedIndex > 1 || (currentFlowIndex === 1 && stageCompleted);
@@ -24,6 +26,12 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
   const isB2Phase3Done = highestUnlockedIndex > 8 || (currentFlowIndex === 8 && stageCompleted);
   const isB2Phase4Done = highestUnlockedIndex > 9 || (currentFlowIndex === 9 && stageCompleted);
   const isB2Phase5Done = highestUnlockedIndex > 10 || (currentFlowIndex === 10 && stageCompleted);
+
+  // Barrier 3 logic
+  const isB3Phase1Done = highestUnlockedIndex > 14 || (currentFlowIndex === 14 && stageCompleted);
+  const isB3Phase2Done = highestUnlockedIndex > 15 || (currentFlowIndex === 15 && stageCompleted);
+  const isB3Phase3Done = highestUnlockedIndex > 17 || (currentFlowIndex === 17 && stageCompleted);
+  const isB3Phase4Done = highestUnlockedIndex > 19 || (currentFlowIndex === 19 && stageCompleted);
 
   return (
     <div style={{
@@ -40,7 +48,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
       <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '30px', background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.1))', pointerEvents: 'none', zIndex: 10 }} />
       <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '2px', background: 'rgba(0,0,0,0.1)', zIndex: 10 }} />
 
-      {!isBarrier2 ? (
+      {!isBarrier2 && !isBarrier3 ? (
         // ================= BARRIER 1 CONTENT =================
         bookPage === 1 ? (
           <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
@@ -220,7 +228,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
             </div>
           </div>
         )
-      ) : (
+      ) : isBarrier2 ? (
         // ================= BARRIER 2 CONTENT =================
         bookPage === 1 ? (
           <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
@@ -348,6 +356,133 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 alt="Detective" 
                 style={{ position: 'absolute', bottom: '10px', right: '10px', width: '80px', height: '80px' }} 
               />
+            </div>
+
+            {/* Page navigation */}
+            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
+              <button 
+                onClick={() => setBookPage(1)}
+                style={{ background: 'white', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: '16px', fontWeight: 'bold' }}
+                onMouseOver={(e) => e.target.style.background = '#f8fafc'}
+                onMouseOut={(e) => e.target.style.background = 'white'}
+              >
+                <span style={{ fontSize: '19px' }}>←</span> Previous
+              </button>
+              <div style={{ color: '#94a3b8', fontSize: '16px' }}>Page 2</div>
+            </div>
+          </div>
+        )
+      ) : (
+        // ================= BARRIER 3 CONTENT =================
+        bookPage === 1 ? (
+          <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            {/* ================= LEFT PAGE B3 ================= */}
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '32px', color: '#1e3a8a', fontWeight: 'bold', borderBottom: '4px solid #3b82f6', paddingBottom: '8px', display: 'inline-block' }}>
+              Choosing the Right Material
+            </h2>
+
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#f8fafc', padding: '24px', borderRadius: '12px', marginBottom: '24px', position: 'relative' }}>
+              <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ width: '120px', height: '120px', zIndex: 2 }} />
+              <div style={{ position: 'absolute', display: 'flex', gap: '40px', bottom: '20px' }}>
+                 <div style={{ fontSize: '30px', filter: 'drop-shadow(0px 4px 2px rgba(0,0,0,0.2))' }}>🖋️</div>
+                 <div style={{ fontSize: '30px', marginLeft: '90px', filter: 'drop-shadow(0px 4px 2px rgba(0,0,0,0.2))' }}>✒️</div>
+              </div>
+            </div>
+
+            <div style={{ fontSize: '24px', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
+              <p style={{ margin: '0 0 16px 0' }}>Different objects are made for different purposes.</p>
+              <p style={{ margin: '0 0 16px 0' }}>The material used to make an object depends on its <strong style={{ color: '#1e3a8a' }}>properties</strong> and how the object will be used.</p>
+              <p style={{ margin: '0 0 16px 0' }}>For example, a pen is made of different materials such as plastic, metal and ink. Each material is chosen because it performs a specific job.</p>
+              <p style={{ margin: '0' }}>Choosing the right material helps us make objects that are <strong style={{ color: '#1e3a8a' }}>safe</strong>, <strong style={{ color: '#1e3a8a' }}>useful</strong> and <strong style={{ color: '#1e3a8a' }}>long-lasting</strong>.</p>
+            </div>
+
+            <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <div style={{ fontSize: '22px' }}>💡</div>
+              <div style={{ fontSize: '20px', color: '#b45309', lineHeight: '1.4' }}>
+                <strong>Remember</strong><br/>
+                The properties of a material help us decide where and how it should be used.
+              </div>
+            </div>
+
+            {/* Page navigation */}
+            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
+              <div style={{ color: '#94a3b8', fontSize: '16px' }}>Page 1</div>
+              <button 
+                onClick={() => { setBookPage(2); setIsHandbookRead3(true); }}
+                style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)' }}
+                onMouseOver={(e) => e.target.style.background = '#2563eb'}
+                onMouseOut={(e) => e.target.style.background = '#3b82f6'}
+              >
+                Next Page ➔
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            {/* ================= RIGHT PAGE B3 ================= */}
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '32px', color: '#1e3a8a', fontWeight: 'bold' }}>
+              Case File 03: Choosing the Right Material
+            </h2>
+
+            <div style={{ fontSize: '24px', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
+              <p style={{ margin: '0 0 16px 0' }}>As a Science Detective, your next challenge is to decide which material is the <strong style={{ color: '#16a34a' }}>best choice</strong> for making an object.</p>
+              <p style={{ margin: '0' }}>Sometimes an object can be made from different materials, but only some materials are <strong style={{ color: '#3b82f6' }}>suitable</strong> for its purpose.</p>
+            </div>
+
+            <div style={{ border: '2px dashed #c4b5fd', borderRadius: '12px', padding: '16px', marginBottom: '16px', background: '#f5f3ff', position: 'relative' }}>
+              <h4 style={{ margin: '0 0 12px 0', color: '#6d28d9', fontSize: '21px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🧠 Think Like a Scientist
+              </h4>
+              <p style={{ margin: '0 0 12px 0', fontSize: '20px', color: '#334155' }}>Before making a choice, ask yourself:</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '20px', color: '#334155' }}>
+                <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: '#6d28d9', fontWeight: 'bold' }}>✔</span> Is this material strong enough?</div>
+                <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: '#6d28d9', fontWeight: 'bold' }}>✔</span> Is it safe to use?</div>
+                <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: '#6d28d9', fontWeight: 'bold' }}>✔</span> Will it work well for this purpose?</div>
+              </div>
+              <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ position: 'absolute', bottom: '10px', right: '10px', width: '80px', height: '80px' }} />
+            </div>
+
+            <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ flex: 1 }}>
+                <h4 style={{ margin: '0 0 6px 0', color: '#d97706', fontSize: '21px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  ⭐ Example
+                </h4>
+                <p style={{ margin: 0, fontSize: '20px', color: '#451a03' }}>
+                  A shopping bag can be made from cloth or paper, but each material is suitable for different situations.
+                </p>
+              </div>
+              <div style={{ fontSize: '40px', display: 'flex', gap: '8px' }}>🛍️ 🛍️</div>
+            </div>
+
+            <div style={{ border: '2px solid #10b981', borderRadius: '12px', padding: '16px', background: '#f0fdf4', display: 'flex', position: 'relative' }}>
+              <div style={{ flex: 1, paddingRight: '80px' }}>
+                <h4 style={{ margin: '0 0 12px 0', color: '#047857', fontSize: '19px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  🎯 MISSION
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b' }}>
+                    <input type="checkbox" checked={isHandbookRead3} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    Read the Handbook
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b' }}>
+                    <input type="checkbox" checked={isB3Phase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    Observe carefully.
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b' }}>
+                    <input type="checkbox" checked={isB3Phase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    Compare different materials.
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b' }}>
+                    <input type="checkbox" checked={isB3Phase3Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    Think about their properties.
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b' }}>
+                    <input type="checkbox" checked={isB3Phase4Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    Find the most suitable material for each object.
+                  </label>
+                </div>
+              </div>
+              <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ position: 'absolute', bottom: '10px', right: '10px', width: '80px', height: '80px' }} />
             </div>
 
             {/* Page navigation */}

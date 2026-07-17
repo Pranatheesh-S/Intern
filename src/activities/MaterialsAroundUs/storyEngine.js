@@ -113,21 +113,22 @@ export const chapterFlow = [
   // 9: Mission 3
   {
     type: 'mission',
-    title: 'Properties of Materials',
-    dialogue: 'We have another mystery to solve. Why do some materials shine while others do not? Why are some transparent? Investigate these properties.',
-    description: 'Scientists use specific tests to determine the properties of different materials. You will now conduct tests for lustre, hardness, transparency, and solubility in water.',
-    objective: 'Test lustre, hardness, transparency, and solubility.',
-    difficulty: 3,
-    estimatedTime: '7 minutes',
+    title: 'Properties of Materials (Barrier 3)',
+    dialogue: 'Detective, Barrier 3 is massive! It contains 6 distinct properties to investigate. To keep our evidence organized, Headquarters has issued a separate handbook for each of the 6 stages. Pay close attention to each one!',
+    description: 'Scientists use specific tests to determine the properties of different materials. You will now conduct tests across multiple stages including Appearance, Hardness, Solubility, Floating/Sinking, and Transparency.',
+    objective: 'Complete all 6 stages of Barrier 3 and fill out their respective handbooks.',
+    difficulty: 4,
+    estimatedTime: '15 minutes',
     rewardXP: 200
   },
   // 10: Activities
-  { type: 'activity', id: 'stage4_1', title: 'Barrier 3: Appearance', subtitle: 'Phase 1: Observation Notebook', component: Stage4a_Appearance_Observe },
-  { type: 'activity', id: 'stage4_2', title: 'Barrier 3: Appearance', subtitle: 'Phase 2: Group by Appearance', component: Stage4b_Appearance_Group },
+  // 10: Activities
+  { type: 'activity', id: 'stage4_1', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 1: Observation Notebook', component: Stage4a_Appearance_Observe },
+  { type: 'activity', id: 'stage4_2', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 2: Group by Appearance', component: Stage4b_Appearance_Group },
   {
     type: 'debrief',
     barrier: 3,
-    title: 'Detective Debrief',
+    title: '6.3.1: Appearance Debrief',
     dialogue: 'Materials with shiny surfaces are called Lustrous. Usually metals. BUT... Are all lustrous materials metals? No! Things like plastic spoons or wax can be shiny without being metals.',
     observations: [
       { object: 'Iron / Copper', finding: 'Shiny = Lustrous' },
@@ -136,13 +137,14 @@ export const chapterFlow = [
     rewardReason: 'Appearance Observations',
     rewardXP: 100
   },
-  { type: 'activity', id: 'stage4_3', title: 'Barrier 3: Properties', subtitle: 'Phase 3: Lustre Testing', component: Stage4_LustreHardness, props: { mode: 'lustre_only' } },
-  { type: 'activity', id: 'stage4_4', title: 'Barrier 3: Properties', subtitle: 'Phase 4: Observe Hardness', component: Stage4c_Hardness_Observe },
-  { type: 'activity', id: 'stage4_5', title: 'Barrier 3: Properties', subtitle: 'Phase 5: Scratch Investigation', component: Stage4_LustreHardness, props: { mode: 'hardness_only' } },
+  { type: 'activity', id: 'stage4_3', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 3: Lustre Testing', component: Stage4_LustreHardness, props: { mode: 'lustre_only' } },
+  
+  { type: 'activity', id: 'stage4_4', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 1: Observe Hardness', component: Stage4c_Hardness_Observe },
+  { type: 'activity', id: 'stage4_5', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 2: Scratch Investigation', component: Stage4_LustreHardness, props: { mode: 'hardness_only' } },
   {
     type: 'debrief',
     barrier: 3,
-    title: 'Hardness Conclusion',
+    title: '6.3.2: Hardness Conclusion',
     dialogue: 'Excellent! Materials which can be compressed or scratched easily are soft, while those difficult to compress or scratch are hard. But remember: Hardness is relative! Rubber is harder than sponge but softer than iron.',
     observations: [
       { object: 'Sponge', finding: 'Compresses = Soft' },
@@ -151,8 +153,10 @@ export const chapterFlow = [
     rewardReason: 'Hardness Observations',
     rewardXP: 100
   },
-  { type: 'activity', id: 'stage6', title: 'Barrier 3: Properties', subtitle: 'Phase 2: Transparency', component: Stage6_Transparency },
-  { type: 'activity', id: 'stage7_sol', title: 'Barrier 3: Properties', subtitle: 'Phase 3: Solubility', component: Stage7_SolubilityMatter, props: { mode: 'solubility' } },
+  
+  { type: 'activity', id: 'stage7_sol', title: 'Stage 6.3.3: Solubility', subtitle: 'Phase 1: Soluble or Insoluble?', component: Stage7_SolubilityMatter, props: { mode: 'solubility' } },
+  // Float/Sink (6.3.4) and Transparency (6.3.5) will follow here
+  { type: 'activity', id: 'stage6', title: 'Stage 6.3.5: Transparency', subtitle: 'Phase 1: Light passing through', component: Stage6_Transparency },
   // 13: Debrief 3
   {
     type: 'debrief',
