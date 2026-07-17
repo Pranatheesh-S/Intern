@@ -1,255 +1,370 @@
-import React, { useState } from 'react';
-import { BookOpen, ArrowRight, ArrowLeft, CheckCircle, Globe, Compass, MapPin } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
 
-export default function InvestigationHandbook({ data, onComplete }) {
-  const [view, setView] = useState('cover'); // 'cover' or 'spread'
-  const [currentSpread, setCurrentSpread] = useState(0);
+export default function InvestigationHandbook({ highestUnlockedIndex = 0, currentFlowIndex = 0, stageCompleted = false }) {
+  const [bookPage, setBookPage] = useState(1);
+  const [isHandbookRead, setIsHandbookRead] = useState(false);
+  const [isHandbookRead2, setIsHandbookRead2] = useState(false);
 
-  const totalSpreads = Math.ceil(data.content.length / 2);
+  // Determine which barrier we are in
+  // currentFlowIndex 5 is Mission 2. index >= 5 is Barrier 2.
+  const isBarrier2 = currentFlowIndex >= 5;
 
-  const handleNextSpread = () => {
-    if (currentSpread < totalSpreads - 1) {
-      setCurrentSpread(prev => prev + 1);
-    } else {
-      onComplete();
-    }
-  };
+  // Reset page to 1 when changing barriers
+  useEffect(() => {
+    setBookPage(1);
+  }, [isBarrier2]);
 
-  const handlePrevSpread = () => {
-    if (currentSpread > 0) {
-      setCurrentSpread(prev => prev - 1);
-    } else {
-      setView('cover');
-    }
-  };
+  // Barrier 1 logic
+  const isPhase1Done = highestUnlockedIndex > 1 || (currentFlowIndex === 1 && stageCompleted);
+  const isPhase2Done = highestUnlockedIndex > 2 || (currentFlowIndex === 2 && stageCompleted);
 
-  const BLAKE_IMG_URL = '/images/chief_detective_blake.png';
-
-  const SpeechBubble = ({ text }) => (
-    <motion.div 
-      initial={{ opacity: 0, scale: 0.9, y: 10 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-      style={{
-        position: 'absolute',
-        bottom: '30px',
-        left: '-20px',
-        right: '-20px',
-        background: 'white', 
-        padding: '1.25rem 1.5rem', 
-        borderRadius: '12px',
-        boxShadow: '0 10px 25px rgba(0,0,0,0.3)', 
-        zIndex: 20
-      }}
-    >
-      {/* Name Badge */}
-      <div style={{
-        position: 'absolute',
-        top: '-14px',
-        left: '24px',
-        background: '#64748b',
-        color: 'white',
-        padding: '4px 12px',
-        borderRadius: '6px',
-        fontSize: '0.8rem',
-        fontWeight: 'bold',
-        letterSpacing: '1px',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-      }}>
-        CHIEF BLAKE
-      </div>
-      
-      {/* Pointer Triangle */}
-      <div style={{
-        position: 'absolute',
-        top: '-12px',
-        left: '12px',
-        width: 0,
-        height: 0,
-        borderLeft: '10px solid transparent',
-        borderRight: '10px solid transparent',
-        borderBottom: '12px solid white',
-        zIndex: -1
-      }} />
-
-      <p style={{ margin: 0, fontSize: '1.05rem', color: '#1e293b', lineHeight: '1.5', fontWeight: '500' }}>{text}</p>
-    </motion.div>
-  );
-
-  if (view === 'cover') {
-    return (
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem', gap: '4rem' }}>
-        <motion.div 
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          style={{
-            width: '100%', maxWidth: '500px', height: '700px', maxHeight: '80vh',
-            background: '#1e3a8a',
-            borderRadius: '4px 16px 16px 4px',
-            boxShadow: '-10px 0 20px rgba(0,0,0,0.5), inset 4px 0 10px rgba(0,0,0,0.2)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            color: 'white', padding: '3rem', position: 'relative', border: '1px solid #172554'
-          }}
-        >
-          {/* Subtle spine line */}
-          <div style={{ position: 'absolute', left: '20px', top: 0, bottom: 0, width: '2px', background: 'rgba(255,255,255,0.1)' }} />
-
-          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '0.5rem 1.5rem', borderRadius: '20px', fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '3rem' }}>
-            Class 6
-          </div>
-
-          <Globe size={64} style={{ opacity: 0.8, marginBottom: '2rem' }} />
-
-          <h1 style={{ fontSize: '2.5rem', margin: '0 0 2rem 0', fontFamily: 'serif', fontWeight: 'bold' }}>
-            Secret Book
-          </h1>
-
-          <div style={{ width: '100%', height: '1px', background: 'rgba(255,255,255,0.2)', marginBottom: '2rem' }} />
-
-          <h2 style={{ fontSize: '1.2rem', margin: '0 0 0.5rem 0', fontWeight: 'normal', opacity: 0.9 }}>
-            Investigation
-          </h2>
-          <h3 style={{ fontSize: '1.4rem', margin: 0, textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>
-            {data.title.replace('Investigation Handbook: ', '')}
-          </h3>
-
-          <button 
-            onClick={() => setView('spread')}
-            style={{ 
-              marginTop: 'auto', background: 'white', color: '#1e3a8a', padding: '1rem 3rem', 
-              borderRadius: '30px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer',
-              border: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', transition: 'transform 0.2s'
-            }}
-            onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-            onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            Open Book
-          </button>
-        </motion.div>
-
-        <div style={{ position: 'relative', height: '450px', width: '320px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-          <img 
-            src={BLAKE_IMG_URL} 
-            alt="Chief Detective" 
-            style={{ height: '450px', objectFit: 'contain', transform: 'scaleX(-1)' }} 
-            onError={(e) => { e.target.src = 'https://via.placeholder.com/200x450.png?text=Blake'; }}
-          />
-          <SpeechBubble text="Study this Secret Book carefully before proceeding. The clues you need are inside!" />
-        </div>
-      </div>
-    );
-  }
-
-  const leftPage = data.content[currentSpread * 2];
-  const rightPage = data.content[currentSpread * 2 + 1];
-
-  const renderPageContent = (page) => {
-    if (!page) return null;
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '1.5rem' }}>
-        <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#1e3a8a', fontFamily: 'serif' }}>{page.heading}</h3>
-        
-        {page.image && (
-          <div style={{ fontSize: '6rem', textAlign: 'center', padding: '2rem', background: '#f8fafc', borderRadius: '12px' }}>
-            {page.image}
-          </div>
-        )}
-        
-        <p style={{ fontSize: '1.1rem', lineHeight: '1.7', color: '#334155' }}>
-          {page.text}
-        </p>
-        
-        {page.highlights && (
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
-            {page.highlights.map((hl, i) => (
-              <div key={i} style={{ background: '#e0e7ff', color: '#3730a3', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.9rem' }}>
-                {hl}
-              </div>
-            ))}
-          </div>
-        )}
-        
-        {page.example && (
-          <div style={{ marginTop: 'auto', background: '#fef3c7', padding: '1.5rem', borderRadius: '12px', borderLeft: '4px solid #d97706' }}>
-            <strong style={{ color: '#b45309', display: 'block', marginBottom: '0.5rem' }}>Example:</strong> 
-            <span style={{ color: '#78350f' }}>{page.example}</span>
-          </div>
-        )}
-      </div>
-    );
-  };
+  // Barrier 2 logic
+  const isB2Phase1Done = highestUnlockedIndex > 6 || (currentFlowIndex === 6 && stageCompleted);
+  const isB2Phase2Done = highestUnlockedIndex > 7 || (currentFlowIndex === 7 && stageCompleted);
+  const isB2Phase3Done = highestUnlockedIndex > 8 || (currentFlowIndex === 8 && stageCompleted);
+  const isB2Phase4Done = highestUnlockedIndex > 9 || (currentFlowIndex === 9 && stageCompleted);
+  const isB2Phase5Done = highestUnlockedIndex > 10 || (currentFlowIndex === 10 && stageCompleted);
 
   return (
-    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem' }}>
-      <motion.div 
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        style={{
-          width: '100%', maxWidth: '1200px', height: '80vh', minHeight: '600px',
-          background: 'white', borderRadius: '8px',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
-          display: 'flex', border: '12px solid #1e3a8a',
-          position: 'relative'
-        }}
-      >
-        {/* Book Spine (Center Line) */}
-        <div style={{ position: 'absolute', top: 0, bottom: 0, left: '50%', width: '4px', background: 'linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.05), transparent)', transform: 'translateX(-50%)', zIndex: 10 }} />
-        <div style={{ position: 'absolute', top: 0, bottom: 0, left: '50%', width: '1px', background: '#cbd5e1', transform: 'translateX(-50%)', zIndex: 10 }} />
+    <div style={{
+        minHeight: 0, boxSizing: 'border-box', height: '100%',
+        background: 'white', borderRadius: '8px',
+        boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+        display: 'flex', flexDirection: 'column', 
+        border: '12px solid #1b2a4a',
+        position: 'relative',
+        fontFamily: 'Arial, Helvetica, sans-serif',
+        overflow: 'hidden'
+    }}>
+      {/* Book Spine (Right Edge) */}
+      <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '30px', background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.1))', pointerEvents: 'none', zIndex: 10 }} />
+      <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '2px', background: 'rgba(0,0,0,0.1)', zIndex: 10 }} />
 
-        {/* Left Page */}
-        <div style={{ flex: 1, padding: '3rem', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ flex: 1 }}>
-            {renderPageContent(leftPage)}
-          </div>
-          <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <button 
-              onClick={handlePrevSpread}
-              style={{ background: 'transparent', border: '1px solid #cbd5e1', padding: '0.5rem 1rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: '#64748b' }}
-            >
-              <ArrowLeft size={16} /> Previous
-            </button>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Page {currentSpread * 2 + 1}</div>
-          </div>
-        </div>
+      {!isBarrier2 ? (
+        // ================= BARRIER 1 CONTENT =================
+        bookPage === 1 ? (
+          <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            {/* ================= LEFT PAGE ================= */}
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '32px', color: '#1b2a4a', fontWeight: 'bold', borderBottom: '4px solid #3b4ea0', paddingBottom: '8px', display: 'inline-block' }}>
+              What are Objects Made Of?
+            </h2>
 
-        {/* Right Page */}
-        <div style={{ flex: 1, padding: '3rem', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ flex: 1 }}>
-            {renderPageContent(rightPage)}
-            
-            {/* If it's the last page, show the Mission box */}
-            {currentSpread === totalSpreads - 1 && (
-              <div style={{ marginTop: '3rem', background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '1.5rem', borderRadius: '12px' }}>
-                <h4 style={{ margin: '0 0 0.5rem 0', color: '#166534', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Mission</h4>
-                <p style={{ margin: 0, color: '#15803d', fontSize: '1rem', lineHeight: '1.5' }}>
-                  By the end of this investigation, you will be able to observe objects and identify the materials they are made of. Close the book to unlock your mission!
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', background: '#f8fafc', padding: '16px', borderRadius: '12px', marginBottom: '16px', gap: '16px' }}>
+              <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ width: '90px', height: '90px' }} />
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
+                <div style={{ fontSize: '32px' }}>📕</div>
+                <div style={{ marginBottom: '2px', display: 'flex', alignItems: 'center', height: '32px' }}>
+                  <svg width="32" height="32" viewBox="0 0 50 50" style={{ verticalAlign: 'middle', transform: 'translateY(-2px)' }}>
+                    <rect x="15" y="15" width="20" height="32" rx="3" fill="#38bdf8" />
+                    <rect x="17" y="17" width="3" height="28" fill="rgba(255,255,255,0.6)" rx="1" />
+                    <rect x="18.5" y="8" width="13" height="7" fill="#0ea5e9" />
+                    <rect x="20.5" y="2" width="9" height="6" rx="1" fill="#0284c7" />
+                  </svg>
+                </div>
+                <div style={{ fontSize: '32px' }}>✏️</div>
+                <div style={{ fontSize: '32px' }}>🪑</div>
+              </div>
+            </div>
+
+            <div style={{ fontSize: '24px', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
+              <p style={{ margin: '0 0 12px 0' }}>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</p>
+              <p style={{ margin: '0 0 16px 0' }}>These are all <strong style={{ color: '#1b2a4a' }}>objects.</strong></p>
+              <p style={{ margin: '0' }}>Even though they look different, each object is made of some <strong style={{ color: '#1b2a4a' }}>material.</strong></p>
+            </div>
+
+            <div style={{ border: '2px dashed #93c5fd', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                <div style={{ background: '#e0e7ff', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '19px', flexShrink: 0 }}>🧱</div>
+                <div style={{ fontSize: '20px', color: '#1e293b' }}><strong style={{ color: '#1b2a4a' }}>Material:</strong> The substance used to make an object.</div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ background: '#dcfce7', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '19px', flexShrink: 0 }}>📦</div>
+                <div style={{ fontSize: '20px', color: '#1e293b' }}><strong style={{ color: '#1b2a4a' }}>Object:</strong> Anything we can see or use around us.</div>
+              </div>
+            </div>
+
+            <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+              <h4 style={{ margin: '0 0 8px 0', color: '#d97706', fontSize: '21px' }}>Examples:</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '20px', color: '#451a03' }}>
+                <div style={{ display: 'flex', gap: '8px' }}><span>🪑</span> Chair can be made of wood, plastic or steel.</div>
+                <div style={{ display: 'flex', gap: '8px' }}><span>🍽️</span> A plate can be made of steel, glass or plastic.</div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <span>
+                    <svg width="16" height="16" viewBox="0 0 50 50" style={{ verticalAlign: 'middle', transform: 'translateY(-2px)' }}>
+                      <rect x="15" y="15" width="20" height="32" rx="3" fill="#38bdf8" />
+                      <rect x="17" y="17" width="3" height="28" fill="rgba(255,255,255,0.6)" rx="1" />
+                      <rect x="18.5" y="8" width="13" height="7" fill="#0ea5e9" />
+                      <rect x="20.5" y="2" width="9" height="6" rx="1" fill="#0284c7" />
+                    </svg>
+                  </span> 
+                  A bottle can be made of plastic, glass or steel.
+                </div>
+              </div>
+            </div>
+
+            <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <div style={{ fontSize: '22px' }}>💡</div>
+              <div style={{ fontSize: '20px', color: '#1e3a8a', lineHeight: '1.4' }}>
+                <strong>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
+              </div>
+            </div>
+
+            {/* Page navigation */}
+            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
+              <div style={{ color: '#94a3b8', fontSize: '16px' }}>Page 1</div>
+              <button 
+                onClick={() => { setBookPage(2); setIsHandbookRead(true); }}
+                style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)' }}
+                onMouseOver={(e) => e.target.style.background = '#2563eb'}
+                onMouseOut={(e) => e.target.style.background = '#3b82f6'}
+              >
+                Next Page ➔
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            {/* ================= RIGHT PAGE ================= */}
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '32px', color: '#1b2a4a', fontWeight: 'bold' }}>
+              Materials Investigation
+            </h2>
+
+            <div style={{ fontSize: '24px', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
+              <p style={{ margin: '0 0 12px 0' }}>Everything around us is an object.</p>
+              <p style={{ margin: '0 0 12px 0' }}>But can you identify the material used to make it?</p>
+              <p style={{ margin: '0' }}>Let's become a <strong style={{ color: '#16a34a' }}>Science Detective</strong> and find out!</p>
+            </div>
+
+            <div style={{ border: '2px dashed #c4b5fd', borderRadius: '12px', padding: '16px', marginBottom: '16px', textAlign: 'center' }}>
+              <h4 style={{ margin: '0 0 16px 0', color: '#6d28d9', fontSize: '21px' }}>Some Objects and Their Materials</h4>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '36px', marginBottom: '2px' }}>📓</div>
+                  <div style={{ fontSize: '19px', fontWeight: 'bold', color: '#1e293b' }}>Notebook</div>
+                  <div style={{ background: '#ede9fe', color: '#6d28d9', padding: '4px 12px', borderRadius: '20px', fontSize: '16px', fontWeight: 'bold' }}>Paper</div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '36px', marginBottom: '2px' }}>🥄</div>
+                  <div style={{ fontSize: '19px', fontWeight: 'bold', color: '#1e293b' }}>Spoon</div>
+                  <div style={{ background: '#ede9fe', color: '#6d28d9', padding: '4px 12px', borderRadius: '20px', fontSize: '16px', fontWeight: 'bold' }}>Steel</div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ marginBottom: '2px', display: 'flex', alignItems: 'center', height: '36px' }}>
+                    <svg width="36" height="36" viewBox="0 0 50 50" style={{ verticalAlign: 'middle' }}>
+                      <rect x="15" y="15" width="20" height="32" rx="3" fill="#38bdf8" />
+                      <rect x="17" y="17" width="3" height="28" fill="rgba(255,255,255,0.6)" rx="1" />
+                      <rect x="18.5" y="8" width="13" height="7" fill="#0ea5e9" />
+                      <rect x="20.5" y="2" width="9" height="6" rx="1" fill="#0284c7" />
+                    </svg>
+                  </div>
+                  <div style={{ fontSize: '19px', fontWeight: 'bold', color: '#1e293b' }}>Water Bottle</div>
+                  <div style={{ background: '#ede9fe', color: '#6d28d9', padding: '4px 12px', borderRadius: '20px', fontSize: '16px', fontWeight: 'bold' }}>Plastic</div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ fontSize: '36px', marginBottom: '2px' }}>🪟</div>
+                  <div style={{ fontSize: '19px', fontWeight: 'bold', color: '#1e293b' }}>Window</div>
+                  <div style={{ background: '#ede9fe', color: '#6d28d9', padding: '4px 12px', borderRadius: '20px', fontSize: '16px', fontWeight: 'bold' }}>Glass</div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ fontSize: '24px', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
+              <p style={{ margin: '0 0 12px 0' }}>Some objects are made of only one material.</p>
+              <p style={{ margin: '0 0 12px 0' }}>Some objects are made of more than one material.</p>
+              <p style={{ margin: '0' }}>Look carefully and think before you answer!</p>
+            </div>
+
+            <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ flex: 1 }}>
+                <h4 style={{ margin: '0 0 6px 0', color: '#d97706', fontSize: '19px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  ⭐ Example
+                </h4>
+                <p style={{ margin: 0, fontSize: '20px', color: '#451a03' }}>
+                  A <strong>Plate</strong> can be made of steel, glass, or plastic!
                 </p>
               </div>
-            )}
-          </div>
-          <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Page {currentSpread * 2 + 2}</div>
-            
-            {currentSpread === totalSpreads - 1 ? (
-              <button 
-                onClick={handleNextSpread}
-                style={{ background: '#1e3a8a', color: 'white', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '30px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 'bold' }}
-              >
-                Start Investigation <CheckCircle size={18} />
-              </button>
-            ) : (
-              <button 
-                onClick={handleNextSpread}
-                style={{ background: 'transparent', border: '1px solid #cbd5e1', padding: '0.5rem 1rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: '#64748b' }}
-              >
-                Next <ArrowRight size={16} />
-              </button>
-            )}
-          </div>
-        </div>
+              <div style={{ fontSize: '40px' }}>🍽️</div>
+            </div>
 
-      </motion.div>
+            <div style={{ border: '2px solid #ef4444', borderRadius: '12px', padding: '16px', background: '#fef2f2' }}>
+              <h4 style={{ margin: '0 0 12px 0', color: '#b91c1c', fontSize: '19px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🎯 MISSION
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '20px', color: '#7f1d1d' }}>
+                  <input type="checkbox" checked={isHandbookRead} readOnly style={{ width: '18px', height: '18px', accentColor: '#ef4444' }} />
+                  Read the Handbook
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '20px', color: '#7f1d1d' }}>
+                  <input type="checkbox" checked={isPhase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#ef4444' }} />
+                  Find objects in the classroom
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '20px', color: '#7f1d1d' }}>
+                  <input type="checkbox" checked={isPhase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#ef4444' }} />
+                  Scan the object
+                </label>
+              </div>
+            </div>
+
+            {/* Page navigation */}
+            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
+              <button 
+                onClick={() => setBookPage(1)}
+                style={{ background: 'white', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: '16px', fontWeight: 'bold' }}
+                onMouseOver={(e) => e.target.style.background = '#f8fafc'}
+                onMouseOut={(e) => e.target.style.background = 'white'}
+              >
+                <span style={{ fontSize: '19px' }}>←</span> Previous
+              </button>
+              <div style={{ color: '#94a3b8', fontSize: '16px' }}>Page 2</div>
+            </div>
+          </div>
+        )
+      ) : (
+        // ================= BARRIER 2 CONTENT =================
+        bookPage === 1 ? (
+          <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            {/* ================= LEFT PAGE B2 ================= */}
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '32px', color: '#1e3a8a', fontWeight: 'bold', borderBottom: '4px solid #3b82f6', paddingBottom: '8px', display: 'inline-block' }}>
+              How Can We Group Objects?
+            </h2>
+
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', background: '#f8fafc', padding: '16px', borderRadius: '12px', marginBottom: '16px', gap: '16px' }}>
+              <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end', borderBottom: '8px solid #b45309', paddingBottom: '4px', width: '85%', justifyContent: 'center' }}>
+                <div style={{ fontSize: '48px', filter: 'drop-shadow(0px 4px 2px rgba(0,0,0,0.2))' }}>📕</div>
+                <div style={{ filter: 'drop-shadow(0px 4px 2px rgba(0,0,0,0.2))' }}>
+                  <svg width="48" height="48" viewBox="0 0 50 50" style={{ verticalAlign: 'middle' }}>
+                    <rect x="15" y="15" width="20" height="32" rx="3" fill="#38bdf8" />
+                    <rect x="17" y="17" width="3" height="28" fill="rgba(255,255,255,0.6)" rx="1" />
+                    <rect x="18.5" y="8" width="13" height="7" fill="#0ea5e9" />
+                    <rect x="20.5" y="2" width="9" height="6" rx="1" fill="#0284c7" />
+                  </svg>
+                </div>
+                <div style={{ fontSize: '48px', filter: 'drop-shadow(0px 4px 2px rgba(0,0,0,0.2))' }}>⚽</div>
+                <div style={{ fontSize: '48px', filter: 'drop-shadow(0px 4px 2px rgba(0,0,0,0.2))' }}>🥄</div>
+                <div style={{ fontSize: '48px', filter: 'drop-shadow(0px 4px 2px rgba(0,0,0,0.2))' }}>📏</div>
+              </div>
+            </div>
+
+            <div style={{ fontSize: '24px', color: '#334155', lineHeight: '1.6', marginBottom: '32px' }}>
+              <p style={{ margin: '0 0 18px 0' }}>We see many objects around us every day, such as books, bottles, spoons and toys.</p>
+              <p style={{ margin: '0 0 18px 0' }}>These objects may differ in their shape, size, colour and material.</p>
+              <p style={{ margin: '0 0 18px 0' }}>To make it easier to study and compare them, we group objects that share a <strong style={{ color: '#1e3a8a' }}>common property</strong>.</p>
+              <p style={{ margin: '0 0 18px 0' }}>This process is called <strong style={{ color: '#1e3a8a' }}>classification</strong>.</p>
+              <p style={{ margin: '0 0 18px 0' }}>Objects can be grouped based on their material, colour, shape, hardness, softness or shine.</p>
+              <p style={{ margin: '0' }}>The same object can also be grouped in different ways depending on the property we choose.</p>
+            </div>
+
+            <div style={{ background: '#eff6ff', border: '2px dashed #bfdbfe', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <div style={{ fontSize: '22px' }}>💡</div>
+              <div style={{ fontSize: '19px', color: '#1e3a8a', lineHeight: '1.4' }}>
+                <strong>Remember</strong><br/>
+                Classification means arranging objects into groups based on a <strong style={{ color: '#1e3a8a' }}>common property</strong>.
+              </div>
+            </div>
+
+            {/* Page navigation */}
+            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
+              <div style={{ color: '#94a3b8', fontSize: '16px' }}>Page 1</div>
+              <button 
+                onClick={() => { setBookPage(2); setIsHandbookRead2(true); }}
+                style={{ background: '#1e3a8a', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(30, 58, 138, 0.3)' }}
+                onMouseOver={(e) => e.target.style.background = '#1e40af'}
+                onMouseOut={(e) => e.target.style.background = '#1e3a8a'}
+              >
+                Next Page ➔
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            {/* ================= RIGHT PAGE B2 ================= */}
+            <h2 style={{ margin: '0 0 16px 0', fontSize: '32px', color: '#1e3a8a', fontWeight: 'bold' }}>
+              Case File 02: Scientific Classification
+            </h2>
+
+            <div style={{ fontSize: '24px', color: '#334155', lineHeight: '1.6', marginBottom: '32px' }}>
+              <p style={{ margin: '0 0 16px 0' }}>Your next case is ready!</p>
+              <p style={{ margin: '0 0 16px 0' }}>Observe each object carefully and identify the material it is made of.</p>
+              <p style={{ margin: '0' }}>Once you identify the material, place the object into the correct material group.</p>
+            </div>
+
+            <div style={{ border: '2px solid #ddd6fe', background: '#f5f3ff', borderRadius: '12px', padding: '16px', marginBottom: '24px', textAlign: 'center' }}>
+              <h4 style={{ margin: '0 0 16px 0', color: '#6d28d9', fontSize: '21px' }}>Examples</h4>
+              <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ fontSize: '56px' }}>🪑</div>
+                  <div style={{ background: '#ede9fe', color: '#6d28d9', padding: '6px 20px', borderRadius: '24px', fontSize: '18px', fontWeight: 'bold' }}>Chair ➔ Wood</div>
+                </div>
+                <div style={{ width: '2px', height: '60px', background: '#ddd6fe' }}></div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ height: '56px', display: 'flex', alignItems: 'center' }}>
+                    <svg width="56" height="56" viewBox="0 0 50 50" style={{ verticalAlign: 'middle' }}>
+                      <rect x="15" y="15" width="20" height="32" rx="3" fill="#38bdf8" />
+                      <rect x="17" y="17" width="3" height="28" fill="rgba(255,255,255,0.6)" rx="1" />
+                      <rect x="18.5" y="8" width="13" height="7" fill="#0ea5e9" />
+                      <rect x="20.5" y="2" width="9" height="6" rx="1" fill="#0284c7" />
+                    </svg>
+                  </div>
+                  <div style={{ background: '#ede9fe', color: '#6d28d9', padding: '6px 20px', borderRadius: '24px', fontSize: '18px', fontWeight: 'bold' }}>Water Bottle ➔ Plastic</div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ border: '2px solid #10b981', borderRadius: '12px', padding: '16px', background: '#f0fdf4', display: 'flex', position: 'relative' }}>
+              <div style={{ flex: 1, paddingRight: '80px' }}>
+                <h4 style={{ margin: '0 0 12px 0', color: '#047857', fontSize: '19px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  🎯 MISSION
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b' }}>
+                    <input type="checkbox" checked={isHandbookRead2} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    Read the Handbook
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b' }}>
+                    <input type="checkbox" checked={isB2Phase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    Organize objects by purpose
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b' }}>
+                    <input type="checkbox" checked={isB2Phase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    Group objects by material
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b' }}>
+                    <input type="checkbox" checked={isB2Phase3Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    <span><strong>Multi-Property Insights</strong> - Inspect how the same objects fit into different groups depending on the property we look at.</span>
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b', lineHeight: '1.4' }}>
+                    <input type="checkbox" checked={isB2Phase4Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    <span><strong>Activity 6.3: Let Us Think (Material Suitability)</strong><br/><span style={{fontSize: '15px', color: '#047857'}}>Why is a window made of glass and not wood? Why is a cooking pot made of metal and not paper? We choose materials based on their properties and the purpose of the object.</span></span>
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '18px', color: '#064e3b', lineHeight: '1.4' }}>
+                    <input type="checkbox" checked={isB2Phase5Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    <span><strong>Investigation: Sports Equipment Properties</strong><br/><span style={{fontSize: '15px', color: '#047857'}}>Why aren't all balls made of the same material? Click each ball to analyze its properties and discover how its material matches its purpose.</span></span>
+                  </label>
+                </div>
+              </div>
+              <img 
+                src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" 
+                alt="Detective" 
+                style={{ position: 'absolute', bottom: '10px', right: '10px', width: '80px', height: '80px' }} 
+              />
+            </div>
+
+            {/* Page navigation */}
+            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
+              <button 
+                onClick={() => setBookPage(1)}
+                style={{ background: 'white', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: '16px', fontWeight: 'bold' }}
+                onMouseOver={(e) => e.target.style.background = '#f8fafc'}
+                onMouseOut={(e) => e.target.style.background = 'white'}
+              >
+                <span style={{ fontSize: '19px' }}>←</span> Previous
+              </button>
+              <div style={{ color: '#94a3b8', fontSize: '16px' }}>Page 2</div>
+            </div>
+          </div>
+        )
+      )}
     </div>
   );
 }

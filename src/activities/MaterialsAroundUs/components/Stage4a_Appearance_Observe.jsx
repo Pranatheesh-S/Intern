@@ -1,31 +1,106 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Sparkles, Check, FileText, Lightbulb, LightbulbOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
+import * as THREE from 'three';
+
+const MaterialModel = ({ activeObject, lightOn }) => {
+  const shinyMaterialProps = {
+    metalness: lightOn ? 0.9 : 0.2,
+    roughness: lightOn ? 0.1 : 0.8,
+    envMapIntensity: lightOn ? 2 : 0,
+  };
+  const dullMaterialProps = {
+    metalness: 0.1,
+    roughness: 0.9,
+    envMapIntensity: 0,
+  };
+
+  const getModel = () => {
+    switch (activeObject) {
+      case 'paper':
+        return (
+          <mesh>
+            <boxGeometry args={[3, 4, 0.05]} />
+            <meshStandardMaterial color="#ffffff" {...dullMaterialProps} />
+          </mesh>
+        );
+      case 'cardboard':
+        return (
+          <group>
+            <mesh>
+              <boxGeometry args={[2.5, 2.5, 2.5]} />
+              <meshStandardMaterial color="#c49c71" {...dullMaterialProps} />
+            </mesh>
+            {/* Tape on top */}
+            <mesh position={[0, 1.26, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+               <planeGeometry args={[0.8, 2.5]} />
+               <meshStandardMaterial color="#a07b55" {...dullMaterialProps} />
+            </mesh>
+          </group>
+        );
+      case 'wood':
+        return (
+          <mesh rotation={[Math.PI / 4, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[1, 1, 3.5, 32]} />
+            <meshStandardMaterial color="#8b5a2b" {...dullMaterialProps} />
+          </mesh>
+        );
+      case 'copper':
+        return (
+          <mesh>
+            <torusKnotGeometry args={[1.2, 0.3, 128, 32]} />
+            <meshStandardMaterial color="#b87333" {...shinyMaterialProps} />
+          </mesh>
+        );
+      case 'aluminium':
+        return (
+          <mesh rotation={[Math.PI / 4, 0, Math.PI / 4]}>
+            <cylinderGeometry args={[0.6, 0.6, 4, 32]} />
+            <meshStandardMaterial color="#e0e0e0" {...shinyMaterialProps} />
+          </mesh>
+        );
+      case 'steel':
+        return (
+          <group rotation={[Math.PI / 6, 0, -Math.PI / 6]}>
+            {/* Handle */}
+            <mesh position={[0, -1.2, 0]}>
+              <cylinderGeometry args={[0.15, 0.1, 2.5, 16]} />
+              <meshStandardMaterial color="#d1d5db" {...shinyMaterialProps} />
+            </mesh>
+            {/* Bowl */}
+            <mesh position={[0, 0.4, 0]} rotation={[Math.PI, 0, 0]}>
+              <sphereGeometry args={[0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2.2]} />
+              <meshStandardMaterial color="#d1d5db" side={THREE.DoubleSide} {...shinyMaterialProps} />
+            </mesh>
+          </group>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return <group>{getModel()}</group>;
+};
 
 export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
   const [inspectedObjects, setInspectedObjects] = useState({});
   const [activeObject, setActiveObject] = useState(null);
   const [lightOn, setLightOn] = useState(false);
-  
-  // Manual Rotation State
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const lastPos = useRef({ x: 0, y: 0 });
 
   const objects = [
     { id: 'paper', name: 'Paper', icon: '📄', isShiny: false, propColour: 'White', propTexture: 'Smooth' },
     { id: 'cardboard', name: 'Cardboard', icon: '📦', isShiny: false, propColour: 'Brown', propTexture: 'Rough' },
     { id: 'wood', name: 'Wood', icon: '🪵', isShiny: false, propColour: 'Brown', propTexture: 'Rough' },
-    { id: 'chalk', name: 'Chalk', icon: '🖍️', isShiny: false, propColour: 'White', propTexture: 'Rough' },
     { id: 'copper', name: 'Copper Wire', icon: '🪢', isShiny: true, propColour: 'Reddish', propTexture: 'Smooth' },
-    { id: 'aluminium', name: 'Aluminium Foil', icon: '🪙', isShiny: true, propColour: 'Silver', propTexture: 'Smooth' },
+    { id: 'aluminium', name: 'Aluminium Foil', icon: '🗞️', isShiny: true, propColour: 'Silver', propTexture: 'Smooth' },
     { id: 'steel', name: 'Steel Spoon', icon: '🥄', isShiny: true, propColour: 'Silver', propTexture: 'Smooth' }
   ];
 
   const handleSelect = (objId) => {
     setActiveObject(objId);
     setLightOn(false);
-    setRotation({ x: 0, y: 0 }); // Reset rotation
   };
 
   const handleTurnOnLight = () => {
@@ -42,29 +117,6 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
     }
   };
 
-  // Pointer Events for Dragging to Rotate
-  const handlePointerDown = (e) => {
-    setIsDragging(true);
-    lastPos.current = { x: e.clientX, y: e.clientY };
-    e.target.setPointerCapture(e.pointerId);
-  };
-
-  const handlePointerMove = (e) => {
-    if (!isDragging) return;
-    const dx = e.clientX - lastPos.current.x;
-    const dy = e.clientY - lastPos.current.y;
-    setRotation(prev => ({
-      x: Math.max(-60, Math.min(60, prev.x - dy * 0.6)), // Clamp x rotation to avoid flipping upside down
-      y: prev.y + dx * 0.6
-    }));
-    lastPos.current = { x: e.clientX, y: e.clientY };
-  };
-
-  const handlePointerUp = (e) => {
-    setIsDragging(false);
-    e.target.releasePointerCapture(e.pointerId);
-  };
-
   const activeObjDetails = objects.find(o => o.id === activeObject);
 
   return (
@@ -78,9 +130,11 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '1rem', flex: 1, minHeight: 0 }}>
-        {/* Left: Evidence Box */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '1rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: 0 }}>
+        {/* Top Row: Materials & Viewer */}
+        <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '1rem', flex: 2, minHeight: 0 }}>
+          {/* Left: Evidence Box */}
+          <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '1rem' }}>
           <h4 style={{ margin: '0 0 1rem 0', fontSize: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', textAlign: 'center' }}>
             Materials to Test
           </h4>
@@ -104,11 +158,6 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                   position: 'relative'
                 }}>
                   {obj.icon}
-                  {inspectedObjects[obj.id] && (
-                    <div style={{ position: 'absolute', bottom: 0, right: -5, background: 'var(--success)', borderRadius: '50%', padding: '2px' }}>
-                      <Check size={14} color="white" />
-                    </div>
-                  )}
                 </div>
                 <span style={{ fontSize: '0.85rem', fontWeight: activeObject === obj.id ? '600' : '400', color: 'var(--text-primary)', textAlign: 'center' }}>
                   {obj.name}
@@ -118,23 +167,15 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
           </div>
         </div>
 
-        {/* Right: 3D Viewer & Log */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: 0 }}>
-          
-          {/* 3D Viewer Area */}
+          {/* Right: 3D Viewer Area */}
           <div 
             className="glass-panel" 
             style={{ 
-              flex: 2, position: 'relative', display: 'flex', flexDirection: 'column', 
+              flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', 
               background: 'radial-gradient(circle at center, var(--surface), var(--card-bg))', 
               border: '2px solid var(--border)', borderRadius: '16px', overflow: 'hidden',
-              boxShadow: 'inset 0 0 30px rgba(0,0,0,0.05)',
-              touchAction: 'none' // Prevent scrolling while dragging
+              boxShadow: 'inset 0 0 30px rgba(0,0,0,0.05)'
             }}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
           >
             {activeObject ? (
               <>
@@ -149,7 +190,8 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                       background: lightOn ? 'var(--surface-hover)' : 'var(--accent)',
                       color: lightOn ? 'var(--text-muted)' : 'white', border: lightOn ? '1px solid var(--border)' : 'none',
                       boxShadow: lightOn ? 'none' : '0 0 15px rgba(99, 102, 241, 0.6)',
-                      pointerEvents: 'all'
+                      pointerEvents: 'all',
+                      cursor: lightOn ? 'not-allowed' : 'pointer'
                     }}
                   >
                     {lightOn ? <Lightbulb size={18} color="var(--warning)" /> : <LightbulbOff size={18} />}
@@ -162,45 +204,27 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                 </div>
 
                 {/* The 3D Stage */}
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: '800px', pointerEvents: 'none' }}>
-                  
-                  {/* Spotlight Background Effect */}
-                  {lightOn && (
-                    <div style={{
-                      position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
-                      width: '400px', height: '600px',
-                      background: 'radial-gradient(ellipse at top, rgba(251, 191, 36, 0.15) 0%, transparent 70%)',
-                      pointerEvents: 'none'
-                    }} />
-                  )}
-
-                  {/* The Object */}
-                  <motion.div 
-                    animate={{ rotateX: rotation.x, rotateY: rotation.y }}
-                    transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-                    style={{
-                      fontSize: '8rem',
-                      lineHeight: 1,
-                      filter: lightOn ? 'drop-shadow(0 20px 30px rgba(0,0,0,0.3))' : 'brightness(0.6) drop-shadow(0 10px 10px rgba(0,0,0,0.4))',
-                      transformStyle: 'preserve-3d',
-                      userSelect: 'none'
-                    }}
-                  >
-                    {activeObjDetails.icon}
-
-                    {/* Specular Reflection for Shiny Objects */}
-                    {lightOn && activeObjDetails.isShiny && (
-                      <div style={{
-                        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                        background: 'linear-gradient(135deg, transparent 20%, rgba(255,255,255,0.9) 50%, transparent 80%)',
-                        backgroundSize: '200% 200%',
-                        backgroundPosition: `${(rotation.y % 180) / 180 * 100}% ${(rotation.x % 180) / 180 * 100}%`,
-                        mixBlendMode: 'overlay',
-                        borderRadius: '50%',
-                        pointerEvents: 'none'
-                      }} />
+                <div style={{ flex: 1, position: 'relative', cursor: 'grab' }}>
+                  <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+                    <ambientLight intensity={lightOn ? 1.5 : 1.5} />
+                    {lightOn ? (
+                      <>
+                        <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} intensity={4} castShadow />
+                        <spotLight position={[-10, 0, 10]} angle={0.3} penumbra={1} intensity={2} />
+                        <Environment preset="studio" />
+                      </>
+                    ) : (
+                      <>
+                        <directionalLight position={[5, 5, 5]} intensity={1.5} />
+                        <directionalLight position={[-5, 5, -5]} intensity={1} />
+                        <directionalLight position={[0, -5, 0]} intensity={0.5} />
+                      </>
                     )}
-                  </motion.div>
+                    
+                    <MaterialModel activeObject={activeObject} lightOn={lightOn} />
+                    <OrbitControls enableZoom={false} enablePan={false} autoRotate={true} autoRotateSpeed={2} />
+                    <ContactShadows position={[0, -2.5, 0]} opacity={lightOn ? 0.4 : 0.1} scale={10} blur={2} far={4} />
+                  </Canvas>
                 </div>
 
                 {/* Info overlay when light is on */}
@@ -213,7 +237,8 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                       padding: '0.75rem 1.5rem', borderRadius: '20px', border: '1px solid var(--border)',
                       boxShadow: 'var(--card-shadow)',
                       color: 'var(--text-primary)', display: 'flex', gap: '1.5rem', fontSize: '0.95rem',
-                      pointerEvents: 'none'
+                      pointerEvents: 'none',
+                      zIndex: 10
                     }}
                   >
                     <span><strong>Colour:</strong> {activeObjDetails.propColour}</span>
@@ -230,9 +255,10 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
               </div>
             )}
           </div>
+        </div>
 
-          {/* Detective Log (Bottom half) */}
-          <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {/* Detective Log (Bottom half) */}
+        <div className="glass-panel" style={{ flex: 1.5, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: '220px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px dashed var(--accent)', paddingBottom: '0.5rem', marginBottom: '0.75rem' }}>
               <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--accent)' }}>
                 🕵️ Detective Log
@@ -283,8 +309,6 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
               )}
             </div>
           </div>
-
-        </div>
       </div>
     </div>
   );

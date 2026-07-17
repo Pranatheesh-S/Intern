@@ -7,6 +7,9 @@ import ChiefDetective from './components/ChiefDetective/ChiefDetective';
 import InvestigationHandbook from './components/Educational/InvestigationHandbook';
 import DetectiveCheckpoint from './components/Educational/DetectiveCheckpoint';
 import EvidenceSummary from './components/Educational/EvidenceSummary';
+import ChapterCover from './components/Educational/ChapterCover';
+import ChapterIntroSpread from './components/Educational/ChapterIntroSpread';
+import MissionBriefingSpread from './components/Educational/MissionBriefingSpread';
 
 export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [currentFlowIndex, setCurrentFlowIndex] = useState(0);
@@ -15,6 +18,8 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [stageCompleted, setStageCompleted] = useState(false);
   const [xp, setXp] = useState(0);
   const [resetKey, setResetKey] = useState(0);
+  const [showCover, setShowCover] = useState(true);
+  const [showIntroSpread, setShowIntroSpread] = useState(false);
   
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
   
@@ -62,8 +67,16 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   // Global Theme Hook
   const { theme, toggleTheme } = useTheme();
 
+  if (showCover) {
+    return <ChapterCover onOpenBook={() => { setShowCover(false); setShowIntroSpread(true); }} onBack={onBackToDashboard} />;
+  }
+
+  if (showIntroSpread) {
+    return <ChapterIntroSpread onContinue={() => setShowIntroSpread(false)} onBack={() => { setShowIntroSpread(false); setShowCover(true); }} />;
+  }
+
   return (
-    <div className="activity-workspace">
+    <div className="activity-workspace flex h-screen bg-[#eaf6fb] overflow-hidden font-geo" style={{ paddingTop: '60px' }}>
       {/* ═══════════════════════════════════════════
           GLOBAL ACTION BAR (WINDOW CHROME)
           ═══════════════════════════════════════════ */}
@@ -90,6 +103,20 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         </div>
         
         <div className="global-action-bar-right">
+          <button 
+            onClick={() => {
+              if (currentFlowIndex > 0) {
+                setCurrentFlowIndex(prev => prev - 1);
+              } else {
+                setShowIntroSpread(true);
+              }
+            }}
+            className="outline"
+            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
+          >
+            <ArrowLeft size={14} /> Back
+          </button>
+
           <button 
             className="outline" 
             onClick={toggleTheme}
@@ -236,9 +263,19 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         </div>
 
         {/* Main Content Area - Full Width */}
-        <div className="activity-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: 'auto' }}>
+        <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: currentNode.type === 'activity' ? 'hidden' : 'auto' }}>
           {currentNode.type === 'mission' && (
-            <ChiefDetective mode="mission" data={currentNode} onContinue={handleMissionAccept} />
+            <MissionBriefingSpread 
+              data={currentNode} 
+              onContinue={handleMissionAccept} 
+              onBack={() => {
+                if (currentFlowIndex > 0) {
+                  setCurrentFlowIndex(prev => prev - 1);
+                } else {
+                  setShowIntroSpread(true);
+                }
+              }} 
+            />
           )}
           
           {currentNode.type === 'debrief' && (
@@ -246,12 +283,33 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           )}
           
           {currentNode.type === 'activity' && (
-            <currentNode.component 
-              key={`${currentNode.id}-${resetKey}`}
-              {...(currentNode.props || {})} 
-              onComplete={handleStageComplete} 
-              addXp={addXp} 
-            />
+            ['quiz', 'summary'].includes(currentNode.id) ? (
+              <currentNode.component 
+                key={`${currentNode.id}-${resetKey}`}
+                {...(currentNode.props || {})} 
+                onComplete={handleStageComplete} 
+                addXp={addXp} 
+              />
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
+                {/* Left Side: Handbook */}
+                <InvestigationHandbook 
+                  highestUnlockedIndex={highestUnlockedIndex} 
+                  currentFlowIndex={currentFlowIndex} 
+                  stageCompleted={stageCompleted} 
+                />
+                
+                {/* Right Side: Activity */}
+                <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
+                  <currentNode.component 
+                    key={`${currentNode.id}-${resetKey}`}
+                    {...(currentNode.props || {})} 
+                    onComplete={handleStageComplete} 
+                    addXp={addXp} 
+                  />
+                </div>
+              </div>
+            )
           )}
 
           {currentNode.type === 'handbook' && (() => {
@@ -259,8 +317,10 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             return (
               <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
                 {nextNode && nextNode.type === 'activity' && (
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, filter: 'blur(12px)', pointerEvents: 'none', overflow: 'hidden' }}>
-                    <nextNode.component {...(nextNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
+                      <nextNode.component {...(nextNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                    </div>
                   </div>
                 )}
                 <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
@@ -281,8 +341,10 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             return (
               <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
                 {lastActivityNode && (
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, filter: 'blur(12px)', pointerEvents: 'none', overflow: 'hidden' }}>
-                    <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
+                      <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                    </div>
                   </div>
                 )}
                 <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
@@ -303,8 +365,10 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             return (
               <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
                 {lastActivityNode && (
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, filter: 'blur(12px)', pointerEvents: 'none', overflow: 'hidden' }}>
-                    <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
+                      <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                    </div>
                   </div>
                 )}
                 <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>

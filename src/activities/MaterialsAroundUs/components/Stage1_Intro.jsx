@@ -5,6 +5,7 @@ import { BookOpen, User, GraduationCap, Check, RefreshCw } from 'lucide-react';
 export default function Stage1_Intro({ onComplete, addXp }) {
   const [clickedObjects, setClickedObjects] = useState({});
   const [completed, setCompleted] = useState(false);
+  const [bookPage, setBookPage] = useState(1);
 
   const classroomObjects = [
     { 
@@ -71,7 +72,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%', height: '100%' }}>
       <style>{`
         :root {
           --classroom-bg: linear-gradient(to bottom, #e2e8f0 0%, #f1f5f9 100%);
@@ -95,66 +96,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
         }
       `}</style>
 
-      {/* Palm Leaf Manuscript Quote Card */}
-      <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '0.5rem' }}>
-        <div style={{
-          position: 'relative',
-          width: '90%',
-          background: 'linear-gradient(to right, #dca850 0%, #e8bc6c 15%, #e0b460 50%, #e8bc6c 85%, #dca850 100%)',
-          borderRadius: '2px',
-          boxShadow: '2px 4px 10px rgba(0,0,0,0.15), inset 0 0 15px rgba(100, 50, 10, 0.1)',
-          padding: '1.5rem 2.5rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '0.75rem',
-          overflow: 'hidden',
-          borderTop: '1px solid #f1ce86',
-          borderBottom: '2px solid #b88530',
-          borderLeft: '2px dashed #c08d35',
-          borderRight: '2px dashed #c08d35'
-        }}>
-          {/* Palm leaf texture lines */}
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.12, background: 'repeating-linear-gradient(to bottom, transparent, transparent 10px, #4a2810 11px, #4a2810 12px)', pointerEvents: 'none' }} />
-          
-          {/* Binding Holes */}
-          <div style={{ position: 'absolute', left: '8%', top: '50%', transform: 'translateY(-50%)', width: '12px', height: '12px', background: '#3e200c', borderRadius: '50%', boxShadow: 'inset 1px 2px 3px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.4)' }} />
-          <div style={{ position: 'absolute', right: '8%', top: '50%', transform: 'translateY(-50%)', width: '12px', height: '12px', background: '#3e200c', borderRadius: '50%', boxShadow: 'inset 1px 2px 3px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.4)' }} />
-
-          <div style={{ textAlign: 'center', color: '#4a2511', zIndex: 1, padding: '0.5rem', maxWidth: '85%' }}>
-            <p style={{ margin: '0 0 0.5rem 0', fontSize: '1.6rem', fontWeight: 'bold', fontFamily: 'serif', letterSpacing: '0.5px' }}>
-              उपादानं भवेत्तस्या (मूषाया:) मृत्तिका लोहमेव च ।
-            </p>
-            <p style={{ margin: '0 0 1.25rem 0', fontSize: '1.1rem', color: '#6e3c1b', fontFamily: 'serif' }}>
-              (रसरत्नसमुच्चय—१०.३)
-            </p>
-            <p style={{ margin: '0 0 0.5rem 0', fontSize: '1.35rem', fontStyle: 'italic', fontWeight: '500' }}>
-              "The materials used to make the crucible (a vessel used to melt substances) are clay and iron."
-            </p>
-            <p style={{ margin: 0, fontSize: '1.05rem', color: '#6e3c1b' }}>
-              (Rasaratnasamuchchaya–10.3)
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Introduction Card */}
-      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--accent-border)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <BookOpen size={24} style={{ color: 'var(--accent)' }} />
-          <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>Observing Objects Around Us</h2>
-        </div>
-        
-        <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-          <strong>You</strong> are excited to go to your new class after the summer break. 
-          You look at your new school supplies and start talking. 
-          The <strong>Teacher</strong> enters and asks a fascinating question: <strong>"How are objects similar or different? What materials are they made of?"</strong>
-        </p>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: '1.5rem', minHeight: '480px' }}>
-        {/* Interactive Classroom Scene */}
-        <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', height: '480px', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', background: 'var(--classroom-bg)' }}>
+      {/* Interactive Classroom Scene */}
+      <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: '380px', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', background: 'var(--classroom-bg)' }}>
           
           {/* Classroom Chalkboard */}
           <div style={{ position: 'absolute', top: '30px', left: '5%', width: '460px', height: '210px', border: '10px solid #4b5563', background: '#064e3b', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', boxShadow: 'inset 0 4px 15px rgba(0,0,0,0.7)', zIndex: 15 }}>
@@ -331,7 +274,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
         </div>
 
         {/* Info panel */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', background: 'var(--card-bg)', height: '480px' }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', background: 'var(--card-bg)', height: '280px', flexShrink: 0 }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-heading)' }}>Investigation Progress</span>
             <button onClick={resetInvestigation} className="outline" style={{ padding: '0.35rem 0.75rem', fontSize: '0.85rem', gap: '0.35rem' }}>
@@ -400,7 +343,6 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             </motion.div>
           )}
         </div>
-      </div>
     </div>
   );
 }
