@@ -49,29 +49,29 @@ const MaterialModel = ({ activeObject, lightOn }) => {
         );
       case 'copper':
         return (
-          <mesh>
-            <torusKnotGeometry args={[1.2, 0.3, 128, 32]} />
+          <mesh rotation={[Math.PI / 2, Math.PI / 4, 0]}>
+            <torusGeometry args={[1.2, 0.08, 16, 100, Math.PI * 1.75]} />
             <meshStandardMaterial color="#b87333" {...shinyMaterialProps} />
           </mesh>
         );
       case 'aluminium':
         return (
           <mesh rotation={[Math.PI / 4, 0, Math.PI / 4]}>
-            <cylinderGeometry args={[0.6, 0.6, 4, 32]} />
+            <cylinderGeometry args={[0.4, 0.4, 4, 32]} />
             <meshStandardMaterial color="#e0e0e0" {...shinyMaterialProps} />
           </mesh>
         );
       case 'steel':
         return (
-          <group rotation={[Math.PI / 6, 0, -Math.PI / 6]}>
+          <group rotation={[Math.PI / 8, Math.PI / 4, -Math.PI / 6]}>
             {/* Handle */}
-            <mesh position={[0, -1.2, 0]}>
-              <cylinderGeometry args={[0.15, 0.1, 2.5, 16]} />
+            <mesh position={[0, -1.7, -0.05]}>
+              <cylinderGeometry args={[0.15, 0.08, 3, 16]} />
               <meshStandardMaterial color="#d1d5db" {...shinyMaterialProps} />
             </mesh>
             {/* Bowl */}
-            <mesh position={[0, 0.4, 0]} rotation={[Math.PI, 0, 0]}>
-              <sphereGeometry args={[0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2.2]} />
+            <mesh position={[0, 1, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[0.8, 0.2, 1.2]}>
+              <sphereGeometry args={[1, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
               <meshStandardMaterial color="#d1d5db" side={THREE.DoubleSide} {...shinyMaterialProps} />
             </mesh>
           </group>
@@ -93,8 +93,8 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
     { id: 'paper', name: 'Paper', icon: '📄', isShiny: false, propColour: 'White', propTexture: 'Smooth' },
     { id: 'cardboard', name: 'Cardboard', icon: '📦', isShiny: false, propColour: 'Brown', propTexture: 'Rough' },
     { id: 'wood', name: 'Wood', icon: '🪵', isShiny: false, propColour: 'Brown', propTexture: 'Rough' },
-    { id: 'copper', name: 'Copper Wire', icon: '🪢', isShiny: true, propColour: 'Reddish', propTexture: 'Smooth' },
-    { id: 'aluminium', name: 'Aluminium Foil', icon: '🗞️', isShiny: true, propColour: 'Silver', propTexture: 'Smooth' },
+    { id: 'copper', name: 'Copper Wire', icon: '➰', isShiny: true, propColour: 'Reddish', propTexture: 'Smooth' },
+    { id: 'aluminium', name: 'Aluminium Rod', icon: <div style={{ width: '14px', height: '42px', background: 'linear-gradient(to right, #9ca3af, #f9fafb, #6b7280)', borderRadius: '4px', transform: 'rotate(20deg)' }} />, isShiny: true, propColour: 'Silver', propTexture: 'Smooth' },
     { id: 'steel', name: 'Steel Spoon', icon: '🥄', isShiny: true, propColour: 'Silver', propTexture: 'Smooth' }
   ];
 
@@ -103,9 +103,9 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
     setLightOn(false);
   };
 
-  const handleTurnOnLight = () => {
-    setLightOn(true);
-    if (activeObject && !inspectedObjects[activeObject]) {
+  const handleToggleLight = () => {
+    setLightOn(!lightOn);
+    if (!lightOn && activeObject && !inspectedObjects[activeObject]) {
       setInspectedObjects(prev => {
         const next = { ...prev, [activeObject]: true };
         if (Object.keys(next).length === objects.length) {
@@ -155,7 +155,11 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                 <div style={{ 
                   fontSize: '3rem', 
                   filter: activeObject === obj.id ? 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))' : 'none',
-                  position: 'relative'
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '56px'
                 }}>
                   {obj.icon}
                 </div>
@@ -172,9 +176,9 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
             className="glass-panel" 
             style={{ 
               flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', 
-              background: 'radial-gradient(circle at center, var(--surface), var(--card-bg))', 
+              background: 'radial-gradient(circle at center, #334155, #0f172a)', 
               border: '2px solid var(--border)', borderRadius: '16px', overflow: 'hidden',
-              boxShadow: 'inset 0 0 30px rgba(0,0,0,0.05)'
+              boxShadow: 'inset 0 0 30px rgba(0,0,0,0.5)'
             }}
           >
             {activeObject ? (
@@ -182,35 +186,35 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                 {/* Viewer Controls */}
                 <div style={{ position: 'absolute', top: '1rem', left: '1rem', zIndex: 10 }}>
                   <button 
-                    onClick={(e) => { e.stopPropagation(); handleTurnOnLight(); }}
-                    disabled={lightOn}
+                    onClick={(e) => { e.stopPropagation(); handleToggleLight(); }}
                     className={lightOn ? 'outline' : 'primary'}
                     style={{ 
                       padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem',
-                      background: lightOn ? 'var(--surface-hover)' : 'var(--accent)',
-                      color: lightOn ? 'var(--text-muted)' : 'white', border: lightOn ? '1px solid var(--border)' : 'none',
+                      background: lightOn ? 'rgba(255, 255, 255, 0.1)' : 'var(--accent)',
+                      color: 'white', border: lightOn ? '1px solid rgba(255,255,255,0.3)' : 'none',
                       boxShadow: lightOn ? 'none' : '0 0 15px rgba(99, 102, 241, 0.6)',
                       pointerEvents: 'all',
-                      cursor: lightOn ? 'not-allowed' : 'pointer'
+                      cursor: 'pointer',
+                      backdropFilter: 'blur(4px)'
                     }}
                   >
-                    {lightOn ? <Lightbulb size={18} color="var(--warning)" /> : <LightbulbOff size={18} />}
-                    {lightOn ? 'Light is ON' : 'Turn Light ON'}
+                    {lightOn ? <LightbulbOff size={18} /> : <Lightbulb size={18} color="var(--warning)" />}
+                    {lightOn ? 'Turn Light OFF' : 'Turn Light ON'}
                   </button>
                 </div>
                 
-                <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10, color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10, color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
                   Drag to rotate
                 </div>
 
                 {/* The 3D Stage */}
                 <div style={{ flex: 1, position: 'relative', cursor: 'grab' }}>
                   <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-                    <ambientLight intensity={lightOn ? 1.5 : 1.5} />
+                    <ambientLight intensity={lightOn ? 1.0 : 1.5} />
                     {lightOn ? (
                       <>
-                        <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} intensity={4} castShadow />
-                        <spotLight position={[-10, 0, 10]} angle={0.3} penumbra={1} intensity={2} />
+                        <spotLight position={[4, 4, 2]} angle={0.4} penumbra={1} intensity={2} castShadow />
+                        <spotLight position={[-4, 0, 4]} angle={0.4} penumbra={1} intensity={1} />
                         <Environment preset="studio" />
                       </>
                     ) : (

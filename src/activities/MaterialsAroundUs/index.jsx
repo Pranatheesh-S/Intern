@@ -14,7 +14,7 @@ import MissionBriefingSpread from './components/Educational/MissionBriefingSprea
 export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [currentFlowIndex, setCurrentFlowIndex] = useState(0);
   const [highestUnlockedIndex, setHighestUnlockedIndex] = useState(0);
-  const [isTimelineHovered, setIsTimelineHovered] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [stageCompleted, setStageCompleted] = useState(false);
   const [xp, setXp] = useState(0);
   const [resetKey, setResetKey] = useState(0);
@@ -156,53 +156,49 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       </div>
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
-        {/* Unified Hover Container to prevent flickering */}
-        <div
+        {/* Toggle Button */}
+        <button
+          onClick={() => setIsTimelineOpen(!isTimelineOpen)}
           style={{
             position: 'absolute',
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: isTimelineHovered ? '320px' : '40px',
-            zIndex: 50,
-            display: 'flex',
-            alignItems: 'center'
-          }}
-          onMouseEnter={() => setIsTimelineHovered(true)}
-          onMouseLeave={() => setIsTimelineHovered(false)}
-        >
-          {/* Subtle Visual Indicator when closed */}
-          <div style={{
-            position: 'absolute',
-            left: 0,
+            left: isTimelineOpen ? '320px' : '0px',
             top: '50%',
             transform: 'translateY(-50%)',
-            width: '6px',
-            height: '80px',
-            background: 'var(--accent)',
-            opacity: isTimelineHovered ? 0 : 0.4,
-            borderTopRightRadius: '6px',
-            borderBottomRightRadius: '6px',
-            transition: 'opacity 0.3s ease',
-            pointerEvents: 'none',
-            zIndex: 1
-          }} />
+            zIndex: 51,
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderLeft: 'none',
+            borderTopRightRadius: '8px',
+            borderBottomRightRadius: '8px',
+            padding: '16px 8px',
+            cursor: 'pointer',
+            boxShadow: '2px 0 8px rgba(0,0,0,0.1)',
+            transition: 'left 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            color: 'var(--text-primary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          title="Toggle Timeline"
+        >
+          <ArrowRight size={16} style={{ transform: isTimelineOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }} />
+        </button>
 
-          {/* Hover-to-reveal Timeline Sidebar */}
-          <div 
-            className="timeline-flyout"
-            style={{ 
-              position: 'absolute', 
-              left: 0,
-              top: 0, bottom: 0, zIndex: 50, 
-              background: 'var(--surface)', borderRight: '1px solid var(--border)', 
-              display: 'flex', flexDirection: 'column', 
-              overflow: 'hidden', boxShadow: isTimelineHovered ? '4px 0 20px rgba(0,0,0,0.2)' : 'none',
-              width: '320px', 
-              transform: isTimelineHovered ? 'translateX(0)' : 'translateX(-100%)',
-              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
-            }}
-          >
+        {/* Timeline Sidebar */}
+        <div 
+          className="timeline-flyout"
+          style={{ 
+            position: 'absolute', 
+            left: 0,
+            top: 0, bottom: 0, zIndex: 50, 
+            background: 'var(--surface)', borderRight: '1px solid var(--border)', 
+            display: 'flex', flexDirection: 'column', 
+            overflow: 'hidden', boxShadow: isTimelineOpen ? '4px 0 20px rgba(0,0,0,0.2)' : 'none',
+            width: '320px', 
+            transform: isTimelineOpen ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
+          }}
+        >
           <div style={{ width: '320px', padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
             <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '0.9rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
               Investigation Progress
@@ -227,7 +223,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                       if (!isLocked) {
                         try { playSuccess(); } catch (e) {}
                         setCurrentFlowIndex(idx);
-                        setIsTimelineHovered(false);
+                        setIsTimelineOpen(false);
                       }
                     }}
                     style={{
@@ -259,7 +255,6 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               })}
             </div>
           </div>
-        </div>
         </div>
 
         {/* Main Content Area - Full Width */}
