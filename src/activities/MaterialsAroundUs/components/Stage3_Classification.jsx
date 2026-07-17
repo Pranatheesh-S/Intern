@@ -88,18 +88,13 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
   const allItems = [
     { id: 'register', name: 'Attendance Register', icon: RegisterIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where teachers take attendance.', materialHint: 'Think about what the pages are made of.' },
     { id: 'duster', name: 'Blackboard Duster', icon: DusterIcon, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where this is used to erase a chalkboard.', materialHint: 'Think about what the hard back part is usually made of.' },
-    { id: 'chalk', name: 'Chalk', icon: ChalkIcon, correctUse: 'School Shelf', correctMaterial: 'Chalk', useHint: 'Think about where teachers write on a board.', materialHint: 'Think about the dusty, white material.' },
     { id: 'remote', name: 'TV Remote', icon: RemoteIcon, correctUse: 'Home Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you watch TV.', materialHint: 'Think about what hard, light material electronic casings are made of.' },
     { id: 'tshirt', name: 'T-Shirt', icon: TShirtIcon, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about where you keep your clothes.', materialHint: 'Think about what soft, woven material clothes are made from.' },
-    { id: 'cricket_ball', name: 'Cricket Ball', icon: BallIcon, correctUse: 'Home Shelf', correctMaterial: 'Leather', useHint: 'Think about where you store your sports equipment to play with at home.', materialHint: 'Think about what tough, stitched material is used for this ball.' },
-    { id: 'plate', name: 'Plate', icon: PlateIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Ceramic', useHint: 'Think about where food is served.', materialHint: 'Think about what hard, baked material is used for dishware.' },
     { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard material is used for cutlery.' },
     { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' }
   ];
 
-  const items = phase === 'use' 
-    ? allItems 
-    : allItems.filter(i => !['register', 'duster', 'chalk'].includes(i.id));
+  const items = allItems;
 
   const handleUseSort = (itemId, targetShelf) => {
     const item = items.find(i => i.id === itemId);
@@ -480,26 +475,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
               {/* Complete state message */}
               {allUseSorted ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="glass-panel"
-                  style={{
-                    background: 'var(--success-bg)',
-                    border: '1px solid var(--success-border)',
-                    padding: '1.25rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.75rem'
-                  }}
-                >
-                  <p style={{ margin: 0, fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}>
-                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects according to their purpose or everyday use. Let's see how a scientist might analyze them differently."
-                  </p>
-                  <div style={{ background: 'rgba(255,255,255,0.5)', padding: '0.75rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem', alignSelf: 'flex-start' }}>
-                    Tests Complete! Click "Proceed to next" in the top right.
-                  </div>
-                </motion.div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem' }}>
+                  <Check size={18} />
+                  <span>All objects grouped successfully! Click "Proceed to next"</span>
+                </div>
               ) : (
                 <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
                   💡 Tip: Drag items directly into the shelves, or use the drop-downs on the left.
@@ -577,12 +556,12 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                             style={{ fontSize: '0.9rem', padding: '0.4rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%' }}
                           >
                             <option value="" disabled>Material</option>
+                            <option value="Paper">Paper</option>
+                            <option value="Wood">Wood</option>
                             <option value="Plastic">Plastic</option>
                             <option value="Glass">Glass</option>
                             <option value="Metal">Metal</option>
                             <option value="Cloth">Cloth</option>
-                            <option value="Ceramic">Ceramic</option>
-                            <option value="Leather">Leather</option>
                           </select>
                         </div>
                       ) : (
@@ -613,12 +592,12 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 {[
+                  { name: 'Paper', color: '#fcd34d' },
+                  { name: 'Wood', color: '#b45309' },
                   { name: 'Plastic', color: '#a78bfa' },
                   { name: 'Glass', color: '#38bdf8' },
                   { name: 'Metal', color: '#94a3b8' },
-                  { name: 'Cloth', color: '#f43f5e' },
-                  { name: 'Ceramic', color: '#fb7185' },
-                  { name: 'Leather', color: '#a16207' }
+                  { name: 'Cloth', color: '#f43f5e' }
                 ].map((basket) => {
                   const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
                   const isDraggingOverMe = draggingOverBasket === basket.name;
@@ -689,26 +668,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
               {/* Complete state message */}
               {allMaterialSorted ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="glass-panel"
-                  style={{
-                    background: 'var(--success-bg)',
-                    border: '1px solid var(--success-border)',
-                    padding: '1.25rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.75rem'
-                  }}
-                >
-                  <p style={{ margin: 0, fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}>
-                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects by material. Notice how the TV Remote and T-Shirt were both on the <strong>Home Shelf</strong>, but belong to different material baskets (<strong>Plastic</strong> and <strong>Cloth</strong>). This shows that objects can be grouped differently depending on the property we look at!"
-                  </p>
-                  <div style={{ background: 'rgba(255,255,255,0.5)', padding: '0.75rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem', alignSelf: 'flex-start' }}>
-                    Tests Complete! Click "Proceed to next" in the top right.
-                  </div>
-                </motion.div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem' }}>
+                  <Check size={18} />
+                  <span>All objects grouped successfully! Click "Proceed to next"</span>
+                </div>
               ) : (
                 <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
                   💡 Tip: Drag items to their correct material basket, or select from the dropdown.

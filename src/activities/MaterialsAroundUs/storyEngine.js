@@ -17,33 +17,14 @@ export const chapterFlow = [
   {
     type: 'mission',
     title: 'The Classroom Mystery',
-    dialogue: 'Good morning, Detective. Headquarters has received an unusual science case. Strange objects have appeared in the classroom. Before beginning any investigation, every detective studies the Investigation Handbook. Study today\'s handbook carefully, then begin your investigation.',
+    dialogue: 'Good morning, Detective. Headquarters has received an unusual science case. Strange objects have appeared in the classroom. Study today\'s handbook carefully, then begin your investigation.',
+    description: 'We need to classify and identify the properties of everyday objects found around the classroom. Your first task is to understand what these materials are made of.',
     objective: 'Learn about materials, then find and scan objects.',
     difficulty: 1,
     estimatedTime: '5 minutes',
     rewardXP: 100
   },
-  // 1: Handbook
-  { 
-    type: 'handbook', 
-    id: 'handbook_1', 
-    title: 'Investigation Handbook: Observing Objects', 
-    content: [
-      {
-        type: 'intro',
-        heading: 'What are Objects Made Of?',
-        text: 'Look around you. Everything you see is an object. A chair, a book, a water bottle. But what are they actually made of?',
-        image: '🕵️‍♂️'
-      },
-      {
-        type: 'interactive',
-        heading: 'Materials',
-        text: 'The "stuff" that makes up an object is called a MATERIAL. One object can be made of different materials, and one material can make many objects.',
-        highlights: ['MATERIAL', 'One Object → Many Materials'],
-        example: 'Think of a Plate: It can be made of Glass, Plastic, or Steel.'
-      }
-    ]
-  },
+
   // 2: Activity
   { type: 'activity', id: 'stage1', title: 'Barrier 1: Practical Investigation', subtitle: 'Phase 1: Find Objects', component: Stage1_Intro },
   // 3: Activity
@@ -85,6 +66,7 @@ export const chapterFlow = [
     type: 'mission',
     title: 'Grouping Materials',
     dialogue: 'Now that we know the materials, Headquarters needs to know how they are organized. Group these materials by their purpose and design a product.',
+    description: 'Objects are made from specific materials based on what they are used for. In this phase, you will group items based on their properties and see how materials match their purpose.',
     objective: 'Classify materials and design a sports product.',
     difficulty: 2,
     estimatedTime: '5 minutes',
@@ -96,16 +78,34 @@ export const chapterFlow = [
   { type: 'activity', id: 'stage3_demo', title: 'Barrier 2: Grouping Materials', subtitle: 'Phase 3: Property Insights', component: Stage3_Classification, props: { defaultPhase: 'demo' } },
   { type: 'activity', id: 'stage5', title: 'Barrier 2: Grouping Materials', subtitle: 'Phase 4: Suitability', component: Stage5_Suitability },
   { type: 'activity', id: 'sportsball', title: 'Barrier 2: Grouping Materials', subtitle: 'Phase 5: Product Design', component: Stage_SportsBall },
-  // 8: Debrief 2
+  // 11: Checkpoint 2
   {
-    type: 'debrief',
+    type: 'checkpoint',
+    id: 'checkpoint_2',
+    title: 'Detective Checkpoint',
+    questions: [
+      {
+        question: 'Why do we group objects together (Classification)?',
+        options: ['Because they look identical', 'To study their common properties', 'To make them look pretty'],
+        correct: 1
+      },
+      {
+        question: 'Why is a cooking pot made of metal instead of paper?',
+        options: ['Because metal is cheaper', 'Because metal allows heat to pass through for cooking', 'Because paper is too heavy'],
+        correct: 1
+      }
+    ]
+  },
+  // 12: Summary 2
+  {
+    type: 'summary',
     barrier: 2,
-    title: 'Materials Grouped',
-    dialogue: 'Brilliant deduction. You successfully grouped materials and designed a functional product based on material properties.',
-    observations: [
-      { object: 'Leather', finding: 'Durable & Flexible' },
-      { object: 'Rubber', finding: 'Bouncy & Grippy' },
-      { object: 'Categorization', finding: 'Purpose-driven' }
+    title: 'Classification Summary Logged',
+    dialogue: 'Brilliant deduction, Detective. You successfully grouped materials and discovered how their properties match their purpose. Let\'s log this in your handbook.',
+    discoveries: [
+      'Classification means arranging objects into groups based on common properties.',
+      'Materials are chosen for objects based on their specific properties (e.g. glass for windows).',
+      'The same object can be grouped differently based on the property being observed.'
     ],
     rewardReason: 'Barrier 2 Cleared',
     rewardXP: 250
@@ -115,6 +115,7 @@ export const chapterFlow = [
     type: 'mission',
     title: 'Properties of Materials',
     dialogue: 'We have another mystery to solve. Why do some materials shine while others do not? Why are some transparent? Investigate these properties.',
+    description: 'Scientists use specific tests to determine the properties of different materials. You will now conduct tests for lustre, hardness, transparency, and solubility in water.',
     objective: 'Test lustre, hardness, transparency, and solubility.',
     difficulty: 3,
     estimatedTime: '7 minutes',

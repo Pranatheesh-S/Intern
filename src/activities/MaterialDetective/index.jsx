@@ -85,7 +85,10 @@ export default function MaterialDetectiveActivity({ onBackToDashboard }) {
               padding: '0.4rem 0.8rem', 
               fontSize: '0.8rem', 
               gap: '0.35rem',
-              borderColor: 'var(--border)'
+              borderColor: 'var(--border)',
+              position: 'relative',
+              zIndex: 100,
+              pointerEvents: 'auto'
             }}
           >
             <ArrowLeft size={14} /> Back to Chapters
