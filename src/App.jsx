@@ -604,7 +604,18 @@ export default function App() {
   const navigateTo = (subject, activity, section = null) => {
     const params = new URLSearchParams();
     if (subject) params.set('subject', subject);
-    if (activity) params.set('activity', activity);
+    if (activity) {
+      params.set('activity', activity);
+      try {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
     if (section) params.set('section', section);
     window.location.hash = params.toString();
   };

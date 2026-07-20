@@ -99,7 +99,7 @@ export default function Quiz({ onComplete }) {
   const isFinished = currentQuestion >= quizData.length - 1 && showResult;
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
+    <div style={{ maxWidth: '100%', margin: '0 auto', padding: '1rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h3 style={{ margin: 0, color: 'var(--text-muted)' }}>Test Your Knowledge</h3>
         <div style={{ color: 'var(--text-muted)' }}>

@@ -111,7 +111,7 @@ export default function Stage4_Quiz({ onComplete }) {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '600px', padding: '2rem', background: 'var(--surface)' }}>
+      <div className="glass-panel" style={{ width: '100%', maxWidth: '100%', padding: '2rem', background: 'var(--surface)' }}>
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
           <span>Question {currentQ + 1} of {QUESTIONS.length}</span>

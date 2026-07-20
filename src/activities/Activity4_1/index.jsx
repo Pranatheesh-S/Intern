@@ -64,9 +64,11 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
           )}
         </main>
 
-        <aside style={{ width: '300px', flexShrink: 0 }}>
-          <DidYouKnow />
-        </aside>
+        {stage !== 'quiz' && (
+          <aside style={{ width: '300px', flexShrink: 0 }}>
+            <DidYouKnow />
+          </aside>
+        )}
       </div>
     </div>
   );
