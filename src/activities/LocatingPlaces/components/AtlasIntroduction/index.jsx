@@ -12,39 +12,14 @@ export default function AtlasIntroduction({ onNextActivity }) {
   const handleFinish = () => setIsCompleted(true);
 
   return (
-    <div style={{ paddingBottom: '4rem', position: 'relative' }}>
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', flex: 1, height: '100%' }}>
       
-      {/* Back Button */}
-      {(isOpen || isCompleted) && (
-        <button 
-          onClick={() => {
-            if (isCompleted) setIsCompleted(false);
-            else { setIsOpen(false); setCurrentPage(1); }
-          }}
-          style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: '0.5rem', 
-            background: 'transparent', 
-            border: 'none', 
-            color: 'var(--text-secondary)', 
-            cursor: 'pointer', 
-            fontSize: '0.95rem', 
-            fontWeight: 'bold',
-            marginBottom: '1rem',
-            alignSelf: 'flex-start',
-            padding: '0.5rem 0'
-          }}
-        >
-          <ArrowLeft size={16} /> {isCompleted ? 'Back to Atlas' : 'Back to Intro'}
-        </button>
-      )}
-
       <div style={{
         width: '100%', 
-        height: 'calc(100vh - 120px)',
+        height: '100%',
         minHeight: '600px',
         display: 'flex', 
+        flexDirection: 'column',
         background: 'var(--bg-primary)', 
         overflow: 'hidden', 
         position: 'relative',
@@ -53,13 +28,28 @@ export default function AtlasIntroduction({ onNextActivity }) {
         boxShadow: 'var(--card-shadow)'
       }}>
       
+      {/* Top Bar for Back Button */}
+      {isOpen && (
+        <div style={{ padding: '0.75rem 2rem', borderBottom: '1px solid var(--border)', background: 'var(--card-bg)', zIndex: 20 }}>
+          <button 
+            onClick={() => setIsOpen(false)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+          >
+            <ArrowLeft size={18} /> Back to Cover
+          </button>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
       {/* LEFT PANEL */}
       <div style={{ 
         flex: '0 0 32%', 
         minWidth: '350px', 
         padding: '2.5rem', 
         borderRight: '1px solid var(--border)', 
-        background: 'var(--card-bg)',
+        background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)',
         display: 'flex',
         flexDirection: 'column',
         zIndex: 10,
@@ -157,6 +147,7 @@ export default function AtlasIntroduction({ onNextActivity }) {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
     </div>

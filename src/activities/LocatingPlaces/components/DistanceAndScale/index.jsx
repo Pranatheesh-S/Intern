@@ -1,47 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Map, Target, Lightbulb, Book, MapPin, Link2, BarChart3, Building2, Compass, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
+import India from '@svg-maps/india';
+
+const IndiaMapSilhouette = () => (
+  <svg viewBox={India.viewBox} width="48" height="48" style={{ filter: 'drop-shadow(0 4px 6px rgba(124, 92, 255, 0.2))' }}>
+    {India.locations.map(location => (
+      <path key={location.id} d={location.path} fill="var(--violet)" />
+    ))}
+  </svg>
+);
+
+const SchoolVector = ({ size = 80 }) => (
+  <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="50" cy="90" rx="45" ry="8" fill="#a7d1a2" />
+    <rect x="25" y="40" width="50" height="50" fill="#e6a87c" />
+    <rect x="35" y="30" width="30" height="15" fill="#c48a60" />
+    <polygon points="50,15 25,30 75,30" fill="#cd6b5c" />
+    <rect x="42" y="65" width="16" height="25" fill="#8c5840" />
+    <rect x="30" y="50" width="10" height="10" fill="#8ed1fc" />
+    <rect x="60" y="50" width="10" height="10" fill="#8ed1fc" />
+    <circle cx="50" cy="24" r="5" fill="#f4d03f" />
+    <line x1="50" y1="15" x2="50" y2="5" stroke="#7f8c8d" strokeWidth="2" />
+    <polygon points="50,5 65,10 50,15" fill="#e74c3c" />
+  </svg>
+);
+
+const HouseVector = ({ size = 80 }) => (
+  <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="50" cy="90" rx="40" ry="8" fill="#a7d1a2" />
+    <rect x="25" y="45" width="50" height="45" fill="#f5d693" />
+    <polygon points="50,20 15,45 85,45" fill="#e07a5f" />
+    <rect x="40" y="65" width="16" height="25" fill="#a07a60" />
+    <rect x="62" y="55" width="10" height="12" fill="#8ed1fc" />
+    <rect x="28" y="55" width="10" height="12" fill="#8ed1fc" />
+  </svg>
+);
 
 export default function DistanceAndScale({ onComplete }) {
-  // State for Tool 1
-  const [sVal, setSVal] = useState(500);
-  const [sUnit, setSUnit] = useState('m');
-  const [sCm, setSCm] = useState(4);
+  // State for new guided activity
+  const [selectedDistance, setSelectedDistance] = useState(4);
+  const [isCalculated, setIsCalculated] = useState(false);
+  const [challengeAnswer, setChallengeAnswer] = useState(null); // 'correct', 'incorrect', or null
+  const step3Ref = useRef(null);
+  const resultRef = useRef(null);
 
-  // State for Tool 2
-  const [pL, setPL] = useState(40);
-  const [pW, setPW] = useState(30);
-  const [pS, setPS] = useState(10);
-
-  // State for components & navigation
-  const [comps, setComps] = useState({ distance: false, direction: false, symbols: true });
-  const [activeTool, setActiveTool] = useState(1);
-
-  const realDist = sVal * sCm;
-
-  const drawL = pL / pS;
-  const drawW = pW / pS;
-  const diagCm = Math.hypot(drawL, drawW);
-  const diagReal = diagCm * pS;
-  const pad = 40, availW = 400 - 2 * pad, availH = 260 - 2 * pad;
-  const pxPerCm = Math.max(6, Math.min(availW / Math.max(drawL, 0.1), availH / Math.max(drawW, 0.1)));
-  const w = drawL * pxPerCm;
-  const h = drawW * pxPerCm;
-  const ox = pad;
-  const oy = 260 - pad;
-
-  const ticks = [];
-  for (let c = 0; c <= Math.ceil(drawL); c++) {
-    ticks.push(ox + c * pxPerCm);
-  }
-
-  const toggleComp = (key) => {
-    setComps({ ...comps, [key]: !comps[key] });
-  };
-
-  const preset = (v, u, cm) => {
-    setSVal(v);
-    setSUnit(u);
-    setSCm(cm);
-  };
+  const realDistance = selectedDistance * 500;
 
   return (
     <div className="distance-scale-container">
@@ -54,7 +57,7 @@ export default function DistanceAndScale({ onComplete }) {
           
           font-family: var(--geo);
           color: var(--ink);
-          height: calc(100vh - 120px);
+          height: 100%;
           min-height: 650px;
           display: flex;
           flex-direction: column;
@@ -74,11 +77,11 @@ export default function DistanceAndScale({ onComplete }) {
         .ds-spread::after { content:""; position:absolute; left:47%; top:0; bottom:0; width:3px; background:rgba(20,40,69,.14); z-index:3; }
         .ds-ribbon { position:absolute; top:-6px; left:44%; width:20px; height:64px; background:#c0392b; z-index:4; border-radius:0 0 3px 3px; }
         
-        .ds-left { background:linear-gradient(160deg,var(--paper1),var(--paper2)); padding:clamp(20px,2.8vw,46px); display:flex; flex-direction:column; min-height:0; }
-        .ds-eyebrow { font-family:var(--mono); font-size:clamp(10px,1vw,12px); letter-spacing:.22em; text-transform:uppercase; color:var(--amber); font-weight:600; margin-bottom: 0; }
-        .ds-h1 { font-family:var(--serif); font-weight:900; color:var(--navy); font-size:clamp(30px,3.8vw,54px); line-height:1; margin:4px 0 2px; }
-        .ds-sub { font-family:var(--serif); font-style:italic; color:#8a6a3a; font-size:clamp(15px,1.7vw,21px); margin-bottom:clamp(12px,1.6vw,18px); }
-        .ds-left p { font-size:clamp(13px,1.45vw,16.5px); line-height:1.55; color:var(--ink); margin-bottom:11px; margin-top:0; }
+        .ds-left { background:linear-gradient(160deg,var(--paper1),var(--paper2)); padding:clamp(12px,1.5vw,20px); display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+        .ds-eyebrow { font-family:var(--mono); font-size:clamp(9px,0.9vw,11px); letter-spacing:.2em; text-transform:uppercase; color:var(--amber); font-weight:600; margin-bottom: 0; }
+        .ds-h1 { font-family:var(--serif); font-weight:900; color:var(--navy); font-size:clamp(26px,3.2vw,44px); line-height:1; margin:2px 0; }
+        .ds-sub { font-family:var(--serif); font-style:italic; color:#8a6a3a; font-size:clamp(13px,1.5vw,18px); margin-bottom:clamp(6px,1vw,10px); }
+        .ds-left p { font-size:clamp(12px,1.3vw,14px); line-height:1.4; color:var(--ink); margin-bottom:8px; margin-top:0; }
         .ds-left p b { color:var(--navy); }
         
         .ds-comp { display:flex; gap:8px; margin:4px 0 14px; flex-wrap:wrap; }
@@ -89,52 +92,291 @@ export default function DistanceAndScale({ onComplete }) {
         .ds-scaleex .ds-e { background:#fbf5e6; border:1px solid #e0d3b0; border-radius:10px; padding:11px 13px; }
         .ds-scaleex .ds-e .ds-k { font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:#8a6a3a; text-transform:uppercase; margin-bottom:0; }
         .ds-scaleex .ds-e .ds-v { font-weight:700; color:var(--navy); font-size:clamp(14px,1.6vw,18px); margin-top:3px; margin-bottom:0; }
-        .ds-scaleex .ds-e small { color:var(--mut); font-size:11.5px; }
         
         .ds-dyk { margin-top:auto; background:#fcf0cf; border-left:5px solid var(--amber); border-radius:10px; padding:clamp(12px,1.6vw,18px); }
         .ds-dyk h4 { display:flex; gap:7px; align-items:center; color:#b4761c; font-weight:700; font-size:14px; margin-bottom:5px; margin-top:0; }
         .ds-dyk p { color:#8a5a12; font-size:13px; line-height:1.5; margin:0; }
         
-        .ds-right { background:#fbfdff; padding:clamp(18px,2.4vw,36px); display:flex; flex-direction:column; min-height:0; }
-        .ds-rlabel { display:flex; align-items:center; gap:8px; color:var(--navy); font-family:var(--serif); font-weight:600; font-size:clamp(18px,2vw,24px); margin-bottom: 0; }
+        .ds-right { background:#fbfdff; padding:clamp(18px,2.4vw,36px); display:flex; flex-direction:column; min-height:0; position:relative; }
+        .ds-rlabel { display:flex; align-items:center; gap:8px; color:var(--navy); font-family:var(--serif); font-weight:900; font-size:clamp(22px,2.5vw,28px); margin-bottom: 4px; }
+        .ds-rsub { font-size: 14px; color: var(--mut); margin-bottom: 12px; font-weight: 500; }
         
-        .ds-scroll { flex:1; min-height:0; overflow-y:auto; margin-top:14px; padding-right:6px; display:flex; flex-direction:column; gap:14px; }
+        .ds-scroll { flex:1; min-height:0; overflow-y:auto; padding-right:12px; display:flex; flex-direction:column; gap:20px; position: relative; }
         .ds-scroll::-webkit-scrollbar { width:6px; }
         .ds-scroll::-webkit-scrollbar-thumb { background:#d4deea; border-radius:3px; }
+
+        .ds-step-card {
+          background: #fff;
+          border: 1px solid var(--cardline);
+          border-radius: 16px;
+          padding: 20px;
+          box-shadow: 0 4px 12px rgba(14,42,69,0.04);
+        }
         
-        .ds-tool { background:#fff; border:1px solid var(--cardline); border-radius:14px; padding:clamp(14px,1.7vw,20px); box-shadow:0 6px 16px rgba(14,42,69,.05); }
-        .ds-tool h3 { font-size:clamp(15px,1.6vw,18px); font-weight:700; color:var(--navy); margin-bottom:4px; margin-top:0; display:flex; align-items:center; gap:8px; }
-        .ds-tool .ds-hint { color:var(--mut); font-size:12.5px; margin-bottom:12px; }
+        .ds-step-title {
+          font-family: var(--geo);
+          font-weight: 800;
+          font-size: 16px;
+          color: var(--navy);
+          margin-bottom: 16px;
+          display: flex;
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .ds-step-title-num {
+          font-family: var(--mono);
+          font-size: 11px;
+          color: var(--amber);
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin-bottom: 4px;
+        }
+
+        .ds-step1-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 12px;
+        }
+        .ds-step1-badge {
+          background: var(--blue);
+          color: #fff;
+          font-family: var(--geo);
+          font-weight: 900;
+          font-size: 24px;
+          padding: 12px 32px;
+          border-radius: 999px;
+          box-shadow: 0 6px 16px rgba(47,109,240,0.25);
+        }
+        .ds-step1-desc {
+          font-size: 13px;
+          color: var(--ink);
+          line-height: 1.5;
+          max-width: 280px;
+          margin: 0;
+        }
+
+        .ds-step2-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+        }
+        .ds-seg-group {
+          display: flex;
+          gap: 12px;
+          width: 100%;
+        }
+        .ds-seg-btn {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 14px;
+          border-radius: 12px;
+          border: 2px solid var(--cardline);
+          background: #f7f9fc;
+          cursor: pointer;
+          font-family: var(--geo);
+          font-size: 16px;
+          font-weight: 700;
+          color: var(--mut);
+          transition: all 0.2s;
+        }
+        .ds-seg-btn.ds-seg-active {
+          border-color: var(--violet);
+          background: #f5f2ff;
+          color: var(--violet);
+        }
+        .ds-seg-circle {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 2px solid currentColor;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .ds-seg-btn.ds-seg-active .ds-seg-circle::after {
+          content: '';
+          width: 8px;
+          height: 8px;
+          background: currentColor;
+          border-radius: 50%;
+        }
+
+        .ds-calc-box {
+          background: #f4f8ff;
+          border: 1px solid #dbe6f7;
+          border-radius: 12px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+        .ds-calc-row {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          font-family: var(--geo);
+          font-size: 20px;
+          font-weight: 800;
+          color: var(--navy);
+        }
+        .ds-calc-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+        }
+        .ds-calc-label {
+          font-family: var(--mono);
+          font-size: 10px;
+          color: var(--mut);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+        .ds-calc-val {
+          background: #fff;
+          padding: 6px 16px;
+          border-radius: 8px;
+          border: 1px solid #dbe6f7;
+          color: var(--blue);
+        }
+        .ds-calc-val-q {
+          background: var(--amber);
+          color: #fff;
+          border: none;
+        }
+
+        .ds-primary-btn {
+          background: var(--amber);
+          color: #fff;
+          font-family: var(--geo);
+          font-weight: 800;
+          font-size: 16px;
+          padding: 14px 32px;
+          border: none;
+          border-radius: 999px;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(245,166,35,0.3);
+          transition: all 0.2s;
+          width: 100%;
+          margin-top: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+        .ds-primary-btn:hover {
+          background: var(--amber);
+          color: #fff;
+          transform: scale(1.02);
+          filter: brightness(1.05);
+        }
+        .ds-primary-btn:active {
+          transform: scale(0.98);
+        }
+
+        .ds-result-card {
+          background: #e8f5e9;
+          border: 1px solid #c8e6c9;
+          border-radius: 16px;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          animation: ds-fade 0.4s ease-out;
+        }
+        @keyframes ds-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .ds-res-title {
+          color: var(--green);
+          font-size: 22px;
+          font-weight: 900;
+          margin: 8px 0;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .ds-res-text {
+          font-size: 15px;
+          color: var(--ink);
+          margin-bottom: 12px;
+        }
+        .ds-res-big {
+          font-size: 32px;
+          font-weight: 900;
+          color: var(--green);
+          background: #fff;
+          padding: 8px 24px;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(18,161,95,0.1);
+        }
         
-        .ds-fields { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-        .ds-fields .ds-fld { display:flex; flex-direction:column; gap:4px; }
-        .ds-fields label { font-size:11px; color:var(--mut); font-weight:600; margin-bottom:0; }
-        .ds-fields input[type=number], .ds-fields select { width:100%; background:#f7f9fc; border:1px solid #d6e0ec; border-radius:9px; color:var(--ink); padding:9px 11px; font-size:14px; font-family:var(--geo); margin: 0; }
-        .ds-fields input:focus, .ds-fields select:focus { outline:none; border-color:var(--violet); }
+        .ds-res-comp {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          width: 100%;
+          margin-top: 20px;
+          padding-top: 20px;
+          border-top: 1px solid #c8e6c9;
+        }
         
-        .ds-presets { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; align-items:center; }
-        .ds-presets span { font-size:11.5px; color:var(--mut); }
+        .ds-rem-card {
+          background: #e1edfb;
+          border-radius: 12px;
+          padding: 16px;
+        }
+        .ds-rem-title {
+          font-family: var(--geo);
+          font-weight: 800;
+          font-size: 14px;
+          color: var(--blue);
+          margin-bottom: 12px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .ds-rem-list {
+          margin: 0;
+          padding-left: 20px;
+          color: var(--ink);
+          font-size: 13px;
+          line-height: 1.6;
+        }
+
+        .ds-chal-btn {
+          background: #fff;
+          border: 2px solid var(--cardline);
+          border-radius: 12px;
+          padding: 12px;
+          font-family: var(--geo);
+          font-weight: 800;
+          font-size: 16px;
+          color: var(--navy);
+          cursor: pointer;
+          flex: 1;
+          transition: all 0.2s;
+        }
+        .ds-chal-btn:hover { border-color: var(--blue); color: var(--blue); }
+        .ds-chal-correct { background: var(--green); border-color: var(--green); color: #fff; pointer-events: none; }
+        .ds-chal-incorrect { background: #fee2e2; border-color: #ef4444; color: #ef4444; pointer-events: none; }
         
-        .ds-chip { font-family:var(--geo); font-weight:600; cursor:pointer; border:1px solid #d6e0ec; background:#fff; color:var(--navy); border-radius:8px; padding:6px 11px; font-size:12px; transition:all .15s; }
-        .ds-chip:hover { border-color:var(--violet); background:#f5f2ff; }
-        
-        .ds-out { margin-top:12px; background:#f4f8ff; border:1px solid #dbe6f7; border-radius:11px; padding:13px 15px; animation:ds-fade .3s; }
-        .ds-out .ds-big { font-size:clamp(20px,2.4vw,30px); font-weight:800; color:var(--amber); }
-        .ds-out .ds-work { font-family:var(--mono); font-size:12px; color:var(--mut); margin-top:6px; line-height:1.5; }
-        
-        @keyframes ds-fade { from {opacity:0; transform:translateY(6px);} to {opacity:1; transform:none;} }
-        
-        .ds-stage { background:#0d1330; border-radius:10px; margin-top:12px; padding:8px; }
-        .ds-stage svg { width:100%; height:auto; max-height:34vh; display:block; }
-        
-        .ds-result-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
-        .ds-result-grid .ds-r { background:#f4f8ff; border:1px solid #dbe6f7; border-radius:10px; padding:10px; text-align:center; }
-        .ds-result-grid .ds-r .ds-k { font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mut); margin-bottom:0; }
-        .ds-result-grid .ds-r .ds-v { font-weight:800; font-size:clamp(16px,1.9vw,22px); color:var(--navy); margin-top:2px; margin-bottom:0; }
-        .ds-result-grid .ds-r.ds-hl .ds-v { color:var(--amber); }
-        
-        .ds-pfoot { display:flex; align-items:center; justify-content:space-between; padding-top:12px; margin-top:10px; border-top:1px solid var(--cardline); }
-        .ds-pageind { display:flex; align-items:center; gap:8px; color:var(--mut); font-weight:600; font-size:13px; margin: 0; }
+        .ds-next-act {
+          position: sticky;
+          bottom: 0;
+          display: flex;
+          justify-content: flex-end;
+          padding-top: 16px;
+          padding-bottom: 16px;
+          background: linear-gradient(to top, #fbfdff 80%, transparent);
+          z-index: 10;
+        }
         
         .ds-nav-btn {
           font-family: var(--geo); font-weight: 700; border: none; cursor: pointer;
@@ -155,10 +397,311 @@ export default function DistanceAndScale({ onComplete }) {
           box-shadow: 0 6px 20px rgba(18, 161, 95, 0.5);
         }
 
+        /* NEW LEFT PANEL STYLES */
+        .ds-left-layout {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          justify-content: space-between;
+          gap: clamp(6px, 1vh, 12px);
+        }
+
+        .ds-left-section {
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .ds-s1-header {
+          flex: 0 0 auto;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        
+        .ds-s2-what {
+          flex: 0 0 auto;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        
+        .ds-s3-visual {
+          flex: 1;
+          min-height: 0;
+          position: relative;
+          background-color: #f4f9ff;
+          background-image: 
+            linear-gradient(#e1edfb 1px, transparent 1px),
+            linear-gradient(90deg, #e1edfb 1px, transparent 1px);
+          background-size: 20px 20px;
+          border: 1px solid #d4e4f5;
+          border-radius: 12px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 20px;
+          overflow: hidden;
+        }
+        
+        .ds-s4-examples {
+          flex: 0 0 auto;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .ds-section-heading {
+          font-family: var(--geo);
+          font-weight: 800;
+          font-size: clamp(13px, 1.3vw, 15px);
+          margin: 0 0 6px 0;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        
+        .ds-h-blue { color: var(--blue); }
+        .ds-h-purple { color: var(--violet); }
+        .ds-h-green { color: var(--green); }
+        
+        /* What is Scale Blocks */
+        .ds-what-blocks {
+          display: flex;
+          gap: 10px;
+          align-items: flex-start;
+          justify-content: space-between;
+        }
+        .ds-what-block {
+          flex: 1;
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          gap: 6px;
+        }
+        .ds-what-icon {
+          color: var(--amber);
+          flex-shrink: 0;
+          margin-top: 1px;
+        }
+        .ds-what-text {
+          font-family: var(--geo);
+          font-size: clamp(10.5px, 1.1vw, 12px);
+          font-weight: 600;
+          color: var(--ink);
+          line-height: 1.3;
+          margin: 0;
+        }
+
+        /* Main Visual Redesign */
+        .ds-rw-zone {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+          z-index: 2;
+        }
+        
+        .ds-zone-badge {
+          background: var(--blue);
+          color: #fff;
+          font-family: var(--mono);
+          font-weight: 700;
+          font-size: clamp(9px, 1vw, 11px);
+          letter-spacing: 0.1em;
+          padding: 4px 12px;
+          border-radius: 999px;
+          text-transform: uppercase;
+          box-shadow: 0 4px 10px rgba(47,109,240,0.2);
+          margin-bottom: 8px;
+        }
+        
+        .ds-zone-badge-green {
+          background: var(--green);
+          box-shadow: 0 4px 10px rgba(16,185,129,0.2);
+        }
+
+        .ds-scene {
+          width: 100%;
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          position: relative;
+        }
+
+        .ds-ruler-container {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-end;
+          padding-bottom: 12px;
+          position: relative;
+        }
+
+        .ds-ruler {
+          width: 90%;
+          height: 2px;
+          background: var(--blue);
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .ds-ruler::before, .ds-ruler::after {
+          content: "";
+          position: absolute;
+          border-style: solid;
+          border-width: 4px 6px;
+          top: -3px;
+        }
+        
+        .ds-ruler::before { left: -4px; border-color: transparent var(--blue) transparent transparent; }
+        .ds-ruler::after { right: -4px; border-color: transparent transparent transparent var(--blue); }
+
+        .ds-ruler-map { background: var(--green); }
+        .ds-ruler-map::before { border-color: transparent var(--green) transparent transparent; }
+        .ds-ruler-map::after { border-color: transparent transparent transparent var(--green); }
+
+        .ds-ruler-label {
+          background: #fff;
+          border: 1.5px solid var(--blue);
+          color: var(--blue);
+          font-family: var(--geo);
+          font-weight: 800;
+          font-size: clamp(10px, 1.1vw, 12px);
+          padding: 2px 10px;
+          border-radius: 999px;
+          position: absolute;
+          top: -10px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .ds-ruler-label-map {
+          border-color: var(--green);
+          color: var(--green);
+          top: auto;
+          bottom: -14px;
+        }
+
+        .ds-scale-hero {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          margin: 6px 0;
+          z-index: 3;
+        }
+        
+        .ds-hero-badge {
+          background: var(--blue);
+          color: #fff;
+          font-family: var(--geo);
+          font-weight: 900;
+          font-size: clamp(18px, 2.5vw, 24px);
+          padding: 8px 32px;
+          border-radius: 999px;
+          box-shadow: 0 6px 20px rgba(47,109,240,0.3);
+        }
+        
+        .ds-hero-caption {
+          font-family: var(--mono);
+          font-size: 9px;
+          color: var(--mut);
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          font-weight: 600;
+        }
+
+        .ds-callout {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(4px);
+          border: 1px solid #d4e4f5;
+          border-radius: 8px;
+          padding: 6px 10px;
+          box-shadow: 0 4px 12px rgba(14,42,69,0.05);
+          max-width: 125px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          z-index: 4;
+        }
+        
+        .ds-callout-title {
+          font-size: 10px;
+          font-weight: 800;
+          color: var(--amber);
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+        
+        .ds-callout-text {
+          font-family: var(--geo);
+          font-size: 9px;
+          font-weight: 600;
+          color: var(--ink);
+          line-height: 1.25;
+          margin: 0;
+        }
+        
+        /* Examples */
+        .ds-cards-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .ds-card {
+          background: #fff;
+          border: 1px solid var(--cardline);
+          border-radius: 10px;
+          padding: 8px 12px;
+          box-shadow: 0 2px 8px rgba(14,42,69,0.03);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .ds-card-icon {
+          flex: 0 0 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .ds-card-content {
+          flex: 1;
+        }
+        .ds-card-title {
+          font-family: var(--geo);
+          font-weight: 800;
+          font-size: 11.5px;
+          color: var(--violet);
+          margin-bottom: 1px;
+        }
+        .ds-card-val {
+          font-family: var(--geo);
+          font-weight: 900;
+          font-size: clamp(13px, 1.4vw, 16px);
+          color: var(--navy);
+          margin-bottom: 1px;
+        }
+        .ds-card-cap {
+          font-size: 10.5px;
+          color: var(--mut);
+          line-height: 1.15;
+        }
+
         @media (max-aspect-ratio:1/1), (max-width:900px) {
           .ds-spread { grid-template-columns:1fr; }
           .ds-spread::after { display:none; }
           .ds-left { min-height:auto; }
+          .ds-cards-grid { grid-template-columns: 1fr; }
+          .ds-what-blocks { flex-direction: column; gap: 12px; }
+          .ds-what-block { flex-direction: row; align-items: center; }
         }
       `}</style>
 
@@ -167,194 +710,264 @@ export default function DistanceAndScale({ onComplete }) {
 
         {/* LEFT · concept */}
         <div className="ds-left">
-          <div className="ds-eyebrow">Chapter 1 · Distance &amp; Scale</div>
-          <h1 className="ds-h1">Shrinking the World</h1>
-          <div className="ds-sub">How a huge place fits on paper</div>
-
-          <p>Every map has three important components — tap to recall the two you already used in the town map:</p>
-          <div className="ds-comp">
-            <span className={comps.distance ? 'ds-on' : ''} onClick={() => toggleComp('distance')}>📏 Distance</span>
-            <span className={comps.direction ? 'ds-on' : ''} onClick={() => toggleComp('direction')}>🧭 Direction</span>
-            <span className={comps.symbols ? 'ds-on' : ''} onClick={() => toggleComp('symbols')}>🔣 Symbols</span>
-          </div>
-
-          <p>A map's <b>scale</b> is the secret to squeezing a huge area onto a small sheet. Each centimetre on the map stands for a fixed distance on the ground.</p>
-
-          <div className="ds-scaleex">
-            <div className="ds-e">
-              <div className="ds-k">Small-city map</div>
-              <div className="ds-v">1 cm = 500 m</div>
-              <small>Fig. 1.1 town</small>
+          <div className="ds-left-layout">
+            
+            {/* Section 1: Header */}
+            <div className="ds-s1-header">
+              <div className="ds-eyebrow">Chapter 1 · Distance &amp; Scale</div>
+              <h1 className="ds-h1">Shrinking the World</h1>
+              <div className="ds-sub">How a huge place fits on paper</div>
             </div>
-            <div className="ds-e">
-              <div className="ds-k">Map of India</div>
-              <div className="ds-v">2.5 cm = 500 km</div>
-              <small>Fig. 5.2 ruler</small>
+
+            {/* Section 2: What is Scale? */}
+            <div className="ds-s2-what">
+              <h3 className="ds-section-heading ds-h-blue">
+                <Map size={20} strokeWidth={2.5} /> What is Scale?
+              </h3>
+              <div className="ds-what-blocks">
+                <div className="ds-what-block">
+                  <Map className="ds-what-icon" size={24} strokeWidth={2.5} />
+                  <p className="ds-what-text">Maps are smaller than the real world.</p>
+                </div>
+                <div className="ds-what-block">
+                  <Target className="ds-what-icon" size={24} strokeWidth={2.5} />
+                  <p className="ds-what-text">Scale tells us how much the real world has been reduced.</p>
+                </div>
+                <div className="ds-what-block">
+                  <Lightbulb className="ds-what-icon" size={24} strokeWidth={2.5} />
+                  <p className="ds-what-text">The same length on two maps can represent different real distances.</p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <p>So the <b>real distance</b> between two points on a map depends entirely on the <b>scale</b> the map is using — the same drawn length can mean 500 metres or 500 kilometres.</p>
+            {/* Section 3: Main Visual Redesign */}
+            <div className="ds-s3-visual">
+              <div style={{ position: 'absolute', opacity: 0.04, right: '-30px', top: '-30px', pointerEvents: 'none' }}>
+                <Compass size={180} />
+              </div>
+              
+              <div style={{ position: 'absolute', top: '20%', bottom: '20%', width: '1px', background: 'rgba(47,109,240,0.2)', zIndex: 1, left: '50%', transform: 'translateX(-50%)' }}></div>
 
-          <div className="ds-dyk">
-            <h4>💡 Did You Know?</h4>
-            <p>A "larger" scale like 1 cm = 10 m shows a small area in great detail; a "smaller" scale like 1 cm = 500 km fits a whole country — but shows far less detail.</p>
+              {/* Zone 1: Real World */}
+              <div className="ds-rw-zone">
+                <div className="ds-zone-badge">Real World</div>
+                <div className="ds-scene">
+                  <SchoolVector size={72} />
+                  <div className="ds-ruler-container">
+                    <div className="ds-ruler">
+                      <div className="ds-ruler-label">500 metres</div>
+                    </div>
+                  </div>
+                  <HouseVector size={72} />
+                </div>
+              </div>
+
+              {/* Zone 2: Scale Badge */}
+              <div className="ds-scale-hero">
+                <div className="ds-hero-badge">1 cm = 500 m</div>
+                <div className="ds-hero-caption">Map Scale</div>
+              </div>
+
+              {/* Zone 3: Map */}
+              <div className="ds-rw-zone" style={{ width: '35%' }}>
+                <div className="ds-zone-badge ds-zone-badge-green">Map</div>
+                <div className="ds-scene">
+                  <SchoolVector size={32} />
+                  <div className="ds-ruler-container">
+                    <div className="ds-ruler ds-ruler-map">
+                      <div className="ds-ruler-label ds-ruler-label-map">1 cm</div>
+                    </div>
+                  </div>
+                  <HouseVector size={32} />
+                </div>
+              </div>
+
+              {/* Remember Callout */}
+              <div className="ds-callout">
+                <div className="ds-callout-title">
+                  <Lightbulb size={10} strokeWidth={3} /> Remember
+                </div>
+                <p className="ds-callout-text">Maps are smaller, but the scale tells us the real distance.</p>
+              </div>
+            </div>
+
+            {/* Section 4: Examples */}
+            <div className="ds-s4-examples">
+              <h3 className="ds-section-heading ds-h-purple">
+                <Book size={20} strokeWidth={2.5} /> Examples
+              </h3>
+              <div className="ds-cards-grid">
+                <div className="ds-card">
+                  <div className="ds-card-icon">
+                    <Building2 size={40} color="var(--amber)" strokeWidth={1.5} />
+                  </div>
+                  <div className="ds-card-content">
+                    <div className="ds-card-title">Town Map</div>
+                    <div className="ds-card-val">1 cm = 500 m</div>
+                    <div className="ds-card-cap">Shows a small area.</div>
+                  </div>
+                </div>
+                <div className="ds-card">
+                  <div className="ds-card-icon">
+                    <IndiaMapSilhouette />
+                  </div>
+                  <div className="ds-card-content">
+                    <div className="ds-card-title">India Map</div>
+                    <div className="ds-card-val">2.5 cm = 500 km</div>
+                    <div className="ds-card-cap">Shows a much larger area.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        {/* RIGHT · interactive */}
+        {/* RIGHT · guided activity */}
         <div className="ds-right">
-          <div className="ds-rlabel">🧮 Let's explore — scale in action</div>
+          <div className="ds-rlabel">📏 Let's Explore — Measure the Real Distance</div>
+          <div className="ds-rsub">Let's find the real distance using the map scale.</div>
+          
           <div className="ds-scroll">
-
-            {activeTool === 1 && (
-              <div className="ds-tool-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {/* Tool 1: scale calculator */}
-                <div className="ds-tool">
-                  <h3>1 · Scale calculator</h3>
-                  <div className="ds-hint">Set a scale, enter a map measurement, and the real distance is computed live.</div>
-                  <div className="ds-fields">
-                    <div className="ds-fld">
-                      <label>1 cm on map =</label>
-                      <input type="number" value={sVal} min="0.1" step="any" onChange={(e) => setSVal(parseFloat(e.target.value) || 0)} />
-                    </div>
-                    <div className="ds-fld">
-                      <label>unit</label>
-                      <select value={sUnit} onChange={(e) => setSUnit(e.target.value)}>
-                        <option value="m">m</option>
-                        <option value="km">km</option>
-                      </select>
-                    </div>
-                    <div className="ds-fld">
-                      <label>Map length (cm)</label>
-                      <input type="number" value={sCm} min="0" step="any" onChange={(e) => setSCm(parseFloat(e.target.value) || 0)} />
-                    </div>
-                  </div>
-                  
-                  <div className="ds-presets">
-                    <span>Book examples:</span>
-                    <button className="ds-chip" onClick={() => preset(500, 'm', 4)}>1 cm = 500 m</button>
-                    <button className="ds-chip" onClick={() => preset(200, 'km', 2.5)}>2.5 cm = 500 km</button>
-                  </div>
-                  
-                  <div className="ds-out">
-                    <div className="ds-big">{sCm} cm = {realDist.toLocaleString()} {sUnit}</div>
-                    <div className="ds-work">
-                      real distance = map length × scale = {sCm} × {sVal} {sUnit} = {realDist.toLocaleString()} {sUnit}. Change the scale and the same {sCm} cm means a different real distance.
-                    </div>
-                  </div>
-                </div>
-
-                {/* Educational Content for Tool 1 */}
-                <div style={{ background: '#fff', borderRadius: '14px', padding: '16px', border: '1px solid var(--cardline)', boxShadow: '0 4px 12px rgba(14,42,69,.04)' }}>
-                  <h4 style={{ color: 'var(--navy)', marginTop: 0, marginBottom: '8px', fontSize: '15.5px' }}>✨ What is happening here?</h4>
-                  <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'var(--ink)', margin: 0 }}>
-                    Imagine you have a magic shrinking machine! If our scale is <b>1 cm = 500 m</b>, it means every single centimetre you measure on this map represents exactly 500 metres out in the real world. 
-                    <br/><br/>
-                    So, if a road is 4 cm long on the paper, the real road is 4 times 500 metres, which is <b>2,000 metres</b> long! Try changing the scale above and see how the real distance changes even if the map measurement stays exactly the same.
-                  </p>
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '4px' }}>
-                  <button onClick={() => setActiveTool(2)} className="ds-nav-btn">
-                    Next Activity →
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {activeTool === 2 && (
-              <div className="ds-tool-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {/* Tool 2: playground diagonal */}
-                <div className="ds-tool">
-                  <h3>2 · The playground diagonal</h3>
-                  <div className="ds-hint">Draw a school playground to scale, then let the ruler measure its diagonal — computed with Pythagoras, never hard-coded.</div>
-                  <div className="ds-fields">
-                    <div className="ds-fld">
-                      <label>Length (m)</label>
-                      <input type="number" value={pL} onChange={(e) => setPL(parseFloat(e.target.value) || 0)} />
-                    </div>
-                    <div className="ds-fld">
-                      <label>Width (m)</label>
-                      <input type="number" value={pW} onChange={(e) => setPW(parseFloat(e.target.value) || 0)} />
-                    </div>
-                    <div className="ds-fld">
-                      <label>Scale · 1 cm =</label>
-                      <input type="number" value={pS} onChange={(e) => setPS(parseFloat(e.target.value) || 1)} />
-                    </div>
-                  </div>
-                  
-                  <div className="ds-stage">
-                    <svg viewBox="0 0 400 260">
-                      <rect x={ox} y={oy - h} width={w} height={h} fill="rgba(92,225,185,.14)" stroke="#5CE1B9" strokeWidth="2" />
-                      <line x1={ox} y1={oy} x2={ox + w} y2={oy - h} stroke="#FFC24D" strokeWidth="2.4" strokeDasharray="6 4" />
-                      <line x1={ox} y1={oy} x2={ox + Math.min(w, availW)} y2={oy} stroke="#5b6b8a" />
-                      
-                      {ticks.map((tx, i) => (
-                        <line key={i} x1={tx} y1={oy} x2={tx} y2={oy + 5} stroke="#5b6b8a" strokeWidth="1" />
-                      ))}
-                      
-                      <text x={ox + w / 2} y={oy + 22} fill="#9fb0d0" fontSize="12" textAnchor="middle" fontFamily="Space Grotesk">{drawL.toFixed(2)} cm ( = {pL} m )</text>
-                      <text x={ox - 10} y={oy - h / 2} fill="#9fb0d0" fontSize="12" textAnchor="end" fontFamily="Space Grotesk">{drawW.toFixed(2)} cm</text>
-                      <text x={ox + w / 2 + 6} y={oy - h / 2 - 6} fill="#FFC24D" fontSize="12" textAnchor="middle" fontFamily="IBM Plex Mono" transform={`rotate(${-Math.atan2(h, w) * 180 / Math.PI} ${ox + w / 2} ${oy - h / 2})`}>diagonal {diagCm.toFixed(2)} cm</text>
-                    </svg>
-                  </div>
-                  
-                  <div className="ds-result-grid">
-                    <div className="ds-r">
-                      <div className="ds-k">Drawing</div>
-                      <div className="ds-v">{drawL.toFixed(2)} × {drawW.toFixed(2)} cm</div>
-                    </div>
-                    <div className="ds-r">
-                      <div className="ds-k">Diagonal (cm)</div>
-                      <div className="ds-v">{diagCm.toFixed(2)} cm</div>
-                    </div>
-                    <div className="ds-r ds-hl">
-                      <div className="ds-k">Real diagonal</div>
-                      <div className="ds-v">{diagReal.toFixed(1)} m</div>
-                    </div>
-                  </div>
-                  
-                  <div className="ds-out" style={{ marginTop: '10px' }}>
-                    <div className="ds-work">
-                      Drawing = {pL}÷{pS} by {pW}÷{pS} = <b>{drawL.toFixed(2)} × {drawW.toFixed(2)} cm</b>.<br/>
-                      Diagonal = √({drawL.toFixed(2)}² + {drawW.toFixed(2)}²) = <b>{diagCm.toFixed(2)} cm</b>.<br/>
-                      Real diagonal = {diagCm.toFixed(2)} × {pS} = <b>{diagReal.toFixed(1)} m</b>.
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Educational Content for Tool 2 */}
-                <div style={{ background: '#fff', borderRadius: '14px', padding: '16px', border: '1px solid var(--cardline)', boxShadow: '0 4px 12px rgba(14,42,69,.04)' }}>
-                  <h4 style={{ color: 'var(--navy)', marginTop: 0, marginBottom: '8px', fontSize: '15.5px' }}>📏 Why draw to scale?</h4>
-                  <p style={{ fontSize: '14px', lineHeight: 1.6, color: 'var(--ink)', margin: 0 }}>
-                    Have you ever wondered how far it is from one corner of a playground straight across to the opposite corner? Instead of measuring it outside with a giant tape measure, we can just draw the playground on paper using a scale!
-                    <br/><br/>
-                    By drawing the length and width exactly to scale, the diagonal line on our paper will also be perfectly to scale. We just measure it with a ruler and multiply by our scale to find the real-world distance!
-                  </p>
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px', alignItems: 'center' }}>
-                  <button onClick={() => setActiveTool(1)} style={{ background: 'transparent', border: 'none', color: 'var(--mut)', cursor: 'pointer', fontWeight: 600, fontSize: '14px', fontFamily: 'var(--geo)' }}>
-                    ← Back to Calculator
-                  </button>
-                  <button onClick={onComplete} className="ds-complete-btn">
-                    Complete Activity
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="ds-pfoot">
-              <div className="ds-pageind">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="9" stroke="#5c6b7a" strokeWidth="1.6" />
-                  <path d="M12 7v5l3 2" stroke="#5c6b7a" strokeWidth="1.6" strokeLinecap="round" />
-                </svg>
-                Distance &amp; Scale · Step 4 of 5
-              </div>
-              <span style={{ fontFamily: 'var(--mono)', fontSize: '11px', color: 'var(--mut)' }}>real = cm × scale</span>
-            </div>
             
+            {/* Step 1 */}
+            <div className="ds-step-card">
+              <div className="ds-step-title">
+                <span className="ds-step-title-num">Step 1</span>
+                Know the Scale
+              </div>
+              <div className="ds-step1-content">
+                <div className="ds-step1-badge">1 cm = 500 m</div>
+                <p className="ds-step1-desc">
+                  <MapPin size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px', color: 'var(--amber)' }} />
+                  This means that every 1 cm on the map represents 500 metres in the real world.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="ds-step-card">
+              <div className="ds-step-title">
+                <div className="ds-step-title-num">Step 2</div>
+                <div>Measure the Road</div>
+              </div>
+              <div className="ds-step2-content">
+                
+                <div className="ds-scene" style={{ width: `${selectedDistance * 15}%`, minWidth: '120px', transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', margin: '0 auto', marginBottom: '8px' }}>
+                  <SchoolVector size={40} />
+                  <div className="ds-ruler-container" style={{ paddingBottom: '12px' }}>
+                    <div className="ds-ruler ds-ruler-map" style={{ width: '100%' }}>
+                      <div className="ds-ruler-label ds-ruler-label-map">{selectedDistance} cm</div>
+                    </div>
+                  </div>
+                  <HouseVector size={40} />
+                </div>
+
+                <div className="ds-seg-group">
+                  {[2, 4, 6].map(val => (
+                    <button 
+                      key={val} 
+                      className={`ds-seg-btn ${selectedDistance === val ? 'ds-seg-active' : ''}`}
+                      onClick={() => {
+                        setSelectedDistance(val);
+                        setIsCalculated(false);
+                        setTimeout(() => {
+                          if (step3Ref.current) {
+                            step3Ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }
+                        }, 100);
+                      }}
+                    >
+                      <div className="ds-seg-circle"></div>
+                      {val} cm
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="ds-step-card" ref={step3Ref}>
+              <div className="ds-step-title">
+                <span className="ds-step-title-num">Step 3</span>
+                Let's Calculate
+              </div>
+              
+              <div className="ds-calc-box">
+                <div className="ds-calc-row">
+                  <div className="ds-calc-item">
+                    <span className="ds-calc-label">Map Distance</span>
+                    <span className="ds-calc-val">{selectedDistance} cm</span>
+                  </div>
+                  <div>×</div>
+                  <div className="ds-calc-item">
+                    <span className="ds-calc-label">Scale</span>
+                    <span className="ds-calc-val">500 m</span>
+                  </div>
+                  <div>=</div>
+                  <div className="ds-calc-item">
+                    <span className="ds-calc-label">Real Distance</span>
+                    <span className="ds-calc-val ds-calc-val-q">?</span>
+                  </div>
+                </div>
+              </div>
+
+              {!isCalculated && (
+                <button 
+                  className="ds-primary-btn" 
+                  onClick={() => {
+                    setIsCalculated(true);
+                    setTimeout(() => {
+                      if (resultRef.current) {
+                        resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
+                    }, 100);
+                  }}
+                >
+                  Find the Real Distance
+                </button>
+              )}
+            </div>
+
+            {/* Result Section */}
+            {isCalculated && (
+              <>
+                <div className="ds-result-card" ref={resultRef}>
+                  <div className="ds-res-text"><b>{selectedDistance} cm</b> on the map represents</div>
+                  <div className="ds-res-big">{realDistance.toLocaleString()} metres</div>
+                  <div className="ds-res-text" style={{ marginTop: '12px', marginBottom: 0 }}>in the real world.</div>
+
+                  <div className="ds-res-comp">
+                    <div className="ds-scene">
+                      <SchoolVector size={30} />
+                      <div className="ds-ruler-container" style={{ paddingBottom: '12px' }}>
+                        <div className="ds-ruler ds-ruler-map" style={{ width: '40%' }}>
+                          <div className="ds-ruler-label ds-ruler-label-map">{selectedDistance} cm</div>
+                        </div>
+                      </div>
+                      <HouseVector size={30} />
+                    </div>
+                    <div style={{ textAlign: 'center', color: 'var(--green)', fontSize: '14px' }}>↓</div>
+                    <div className="ds-scene">
+                      <SchoolVector size={50} />
+                      <div className="ds-ruler-container" style={{ paddingBottom: '12px' }}>
+                        <div className="ds-ruler" style={{ width: '90%' }}>
+                          <div className="ds-ruler-label">{realDistance.toLocaleString()} metres</div>
+                        </div>
+                      </div>
+                      <HouseVector size={50} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="ds-next-act">
+                  <button onClick={onComplete} className="ds-primary-btn" style={{ width: 'auto', margin: 0 }}>
+                    Continue with Directions <ArrowRight size={18} />
+                  </button>
+                </div>
+              </>
+            )}
+
           </div>
         </div>
       </div>

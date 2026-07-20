@@ -6,6 +6,9 @@ import DistanceAndScale from './components/DistanceAndScale';
 import Directions from './components/Directions';
 import ChapterIntroduction from './components/ChapterIntroduction';
 import BlueprintIntro from './components/BlueprintIntro';
+import MapSymbols from './components/MapSymbols';
+import CoordinatesPage from './components/CoordinatesPage';
+import TimeZonesPage from './components/TimeZonesPage';
 
 export default function LocatingPlacesActivity({ onBackToDashboard }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -17,7 +20,10 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
     { id: 2, title: 'Finding Places with a Map', subtitle: 'Finding the Route', locked: currentStep < 2 },
     { id: 3, title: 'Atlas Introduction', subtitle: 'A Collection of Maps', locked: currentStep < 3 },
     { id: 4, title: 'Distance & Scale', subtitle: 'Shrinking the World', locked: currentStep < 4 },
-    { id: 5, title: 'Directions', subtitle: 'Using a Compass', locked: currentStep < 5 }
+    { id: 5, title: 'Directions', subtitle: 'Using a Compass', locked: currentStep < 5 },
+    { id: 6, title: 'Symbols', subtitle: 'Understanding Map Symbols', locked: currentStep < 6 },
+    { id: 7, title: 'Coordinates', subtitle: 'Latitude, Longitude & the Grid', locked: currentStep < 7 },
+    { id: 8, title: 'Time Zones', subtitle: 'Locating Places on the Earth', locked: currentStep < 8 }
   ];
 
   useEffect(() => {
@@ -30,13 +36,17 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
 
   return (
     <div style={{ 
+      position: 'fixed',
+      top: 0,
+      left: 0,
       width: '100vw', 
-      marginLeft: 'calc(50% - 50vw)', 
       height: '100vh', 
-      padding: 'clamp(10px, 1.5vh, 20px) clamp(20px, 3.2vw, 52px)', 
+      padding: 'clamp(16px, 2.5vh, 24px) clamp(16px, 2.5vw, 24px)', 
       boxSizing: 'border-box', 
       display: 'flex', 
-      flexDirection: 'column' 
+      flexDirection: 'column',
+      background: 'var(--background, #f8fafc)',
+      zIndex: 50
     }}>
       {/* Workflow Header / Tabs */}
       <nav ref={navRef} style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '0.5rem', scrollbarWidth: 'none' }}>
@@ -103,7 +113,16 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
           <DistanceAndScale onComplete={() => setCurrentStep(5)} />
         )}
         {currentStep === 5 && (
-          <Directions onComplete={() => alert("Next Step in Workflow: Next Lesson")} />
+          <Directions onComplete={() => setCurrentStep(6)} />
+        )}
+        {currentStep === 6 && (
+          <MapSymbols onComplete={() => setCurrentStep(7)} />
+        )}
+        {currentStep === 7 && (
+          <CoordinatesPage onNextActivity={() => setCurrentStep(8)} />
+        )}
+        {currentStep === 8 && (
+          <TimeZonesPage />
         )}
       </div>
     </div>

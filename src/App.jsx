@@ -4797,8 +4797,8 @@ export default function App() {
           title={theme === 'dark' ? "Switch to Light Theme" : "Switch to Dark Theme"}
           style={{
             position: 'fixed',
-            bottom: '1.5rem',
-            right: '1.5rem',
+            top: 'clamp(10px, 1.5vh, 20px)',
+            right: 'clamp(20px, 3.2vw, 52px)',
             zIndex: 9999,
             borderRadius: '50%',
             width: '45px',
