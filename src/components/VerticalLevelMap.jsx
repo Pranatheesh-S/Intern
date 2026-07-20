@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const VerticalLevelMap = ({ sections, activeSectionId }) => {
+const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode }) => {
   const containerRef = useRef(null);
 
   // Configuration for the vertical map
@@ -155,7 +155,7 @@ const VerticalLevelMap = ({ sections, activeSectionId }) => {
 
                 {/* The clickable node */}
                 <button
-                  onClick={() => document.getElementById(n.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                  onClick={() => onSelectNode ? onSelectNode(n.id) : document.getElementById(n.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
                   style={{
                     width: isActive ? '45px' : '35px',
                     height: isActive ? '45px' : '35px',

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuturaX · Class 6 · Chapter 2 — Let us enhance our learning</title>
+<style>
+  :root{
+    --bg:#0b1020;--bg-raised:#111730;--bg-card:#151c38;
+    --ink:#e8ebff;--ink-dim:#9aa3c7;--ink-faint:#5f6890;
+    --violet:#8b7cf6;--violet-soft:rgba(139,124,246,.16);--violet-glow:rgba(139,124,246,.45);
+    --teal:#3dd6c3;--amber:#f5b74e;--rose:#f07178;--green:#4ade80;--leaf:#5fd16a;
+    --border-idle:#232b4d;--border-active:#8b7cf6;--border-done:#3dd6c3;
+    --radius:14px;--font:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font);min-height:100vh;line-height:1.5;padding-bottom:60px}
+  .wrap{max-width:820px;margin:0 auto;padding:16px 14px 60px}
+
+  /* ambient bg */
+  .fx-bg{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none;background:radial-gradient(1200px 700px at 50% -10%,#141c3e,var(--bg) 60%)}
+  .fx-aurora{position:absolute;inset:-25%;background:
+    radial-gradient(38% 38% at 18% 22%,rgba(139,124,246,.26),transparent 60%),
+    radial-gradient(42% 42% at 82% 28%,rgba(61,214,195,.18),transparent 60%),
+    radial-gradient(50% 50% at 50% 96%,rgba(95,209,106,.16),transparent 60%);
+    filter:blur(28px);animation:fxk-aurora 30s ease-in-out infinite alternate}
+  @keyframes fxk-aurora{0%{transform:translate(0,0) scale(1)}50%{transform:translate(3%,-2%) scale(1.09)}100%{transform:translate(-3%,2%) scale(1.05)}}
+  .fx-grid{position:absolute;inset:0;opacity:.045;background-image:linear-gradient(#8b7cf6 1px,transparent 1px),linear-gradient(90deg,#8b7cf6 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(circle at 50% 22%,#000,transparent 78%);-webkit-mask-image:radial-gradient(circle at 50% 22%,#000,transparent 78%)}
+  .fx-particles span{position:absolute;bottom:-12px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.85),rgba(139,124,246,.35));opacity:0;animation:fxk-rise linear infinite}
+  @keyframes fxk-rise{0%{transform:translateY(0) scale(.5);opacity:0}12%{opacity:.55}100%{transform:translateY(-118vh) scale(1);opacity:0}}
+  .fx-spark{position:fixed;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle,#fff,#8b7cf6);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);animation:fxk-spark .6s ease-out forwards}
+  @keyframes fxk-spark{to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.2);opacity:0}}
+
+  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--leaf);font-weight:700}
+  h1{font-size:clamp(20px,4vw,27px);font-weight:800;margin:5px 0 3px;background:linear-gradient(92deg,#eef2ff,#8b7cf6 55%,#3dd6c3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+  .sub{color:var(--ink-dim);font-size:13.5px;margin-bottom:12px}
+
+  /* interactive hero */
+  .fx-hero{position:relative;border-radius:16px;overflow:hidden;margin:4px 0 14px;border:1px solid var(--border-idle);
+    box-shadow:0 12px 44px rgba(0,0,0,.5),inset 0 0 60px rgba(139,124,246,.06);cursor:pointer;
+    transition:transform .2s ease;animation:fxk-heroin .7s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes fxk-heroin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .fx-hero svg{display:block;width:100%;height:auto}
+  .fx-hero-cap{position:absolute;left:16px;right:16px;bottom:11px;font-size:12.5px;color:#eef2ff;text-shadow:0 2px 10px rgba(0,0,0,.8);font-weight:600;pointer-events:none}
+  .fx-hero-cap b{color:#fff}
+  .fx-float{animation:fxk-float 5s ease-in-out infinite}.fx-float.f2{animation-duration:6.6s}.fx-float.f3{animation-duration:7.4s}
+  @keyframes fxk-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .fx-spin{transform-box:fill-box;transform-origin:center;animation:fxk-spin 26s linear infinite}
+  @keyframes fxk-spin{to{transform:rotate(360deg)}}
+  .fx-pulse{transform-box:fill-box;transform-origin:center;animation:fxk-pulse 3.8s ease-in-out infinite}
+  @keyframes fxk-pulse{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.09);opacity:1}}
+  .qmark{transform-box:fill-box;transform-origin:center;animation:fxk-float 5s ease-in-out infinite}
+
+  /* sticky HUD */
+  .hud{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;
+    background:rgba(11,16,32,.92);backdrop-filter:blur(10px);border:1px solid var(--border-idle);
+    border-radius:12px;padding:9px 13px;margin-bottom:10px}
+  .hud .ring{position:relative;width:44px;height:44px;flex:0 0 auto}
+  .hud .ring svg{transform:rotate(-90deg)}
+  .hud .ring .t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--leaf)}
+  .hud .hlbl{flex:1;min-width:0}
+  .hud .hlbl b{font-size:14px}.hud .hlbl small{display:block;font-size:11px;color:var(--ink-faint)}
+  .hud .xp{font-weight:800;font-size:13px;background:var(--bg-card);border:1px solid var(--border-active);
+    box-shadow:0 0 14px var(--violet-glow);border-radius:999px;padding:5px 11px}
+  .hud .xp .b{color:var(--amber)}
+
+  /* question cards */
+  .q{background:var(--bg-card);border:1.5px solid var(--border-idle);border-radius:var(--radius);padding:16px;margin:14px 0;
+    animation:fxk-cardin .55s ease both}
+  @keyframes fxk-cardin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .q.done{border-color:var(--border-done)}
+  .qhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .qnum{width:30px;height:30px;border-radius:9px;background:var(--violet-soft);border:1px solid var(--border-active);
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:var(--ink);flex:0 0 auto}
+  .tag{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--border-idle);color:var(--ink-dim)}
+  .tag.bloom{color:var(--teal);border-color:rgba(61,214,195,.4)}
+  .tag.diff-e{color:var(--green);border-color:rgba(74,222,128,.4)}
+  .tag.diff-m{color:var(--amber);border-color:rgba(245,183,78,.4)}
+  .tag.diff-h{color:var(--rose);border-color:rgba(240,113,120,.4)}
+  .qtext{font-weight:700;font-size:14.5px;margin-bottom:10px}
+
+  /* mcq */
+  .opts{display:grid;gap:8px}
+  .opt{text-align:left;background:var(--bg-raised);border:1.5px solid var(--border-idle);border-radius:11px;padding:10px 13px;
+    font-size:13.5px;color:var(--ink);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .16s}
+  .opt:hover{border-color:var(--violet)}
+  .opt.right{border-color:var(--green);background:rgba(74,222,128,.1)}
+  .opt.wrong{border-color:var(--rose);background:rgba(240,113,120,.08)}
+  .opt:disabled{cursor:default;opacity:.9}
+
+  /* venn */
+  .venn-svg{display:block;margin:0 auto 6px;max-width:340px;width:100%}
+  .pool{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .chip{display:inline-block;padding:6px 11px;border-radius:999px;border:1.5px solid var(--border-idle);background:var(--bg-raised);
+    color:var(--ink-dim);font-size:12.5px;font-weight:700;cursor:pointer;user-select:none;transition:all .16s}
+  .chip:hover{border-color:var(--violet);color:var(--ink)}
+  .chip.sel{border-color:var(--leaf);box-shadow:0 0 10px rgba(95,209,106,.5);color:var(--ink)}
+  .chip.right{border-color:var(--green);color:var(--green);pointer-events:none}
+  .bins{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+  @media(max-width:520px){.bins{grid-template-columns:1fr}}
+  .bin{border:1.5px dashed var(--border-idle);border-radius:12px;min-height:70px;padding:9px;background:rgba(255,255,255,.02)}
+  .bin.hot{border-color:var(--leaf);background:rgba(95,209,106,.09)}
+  .bin h4{font-size:11px;color:var(--leaf);letter-spacing:.04em;text-transform:uppercase;margin-bottom:5px}
+  .bin .b-body{display:flex;flex-wrap:wrap;gap:4px}
+
+  /* compare */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+  @media(max-width:520px){.cmp{grid-template-columns:1fr}}
+  .cmpcard{border:1.5px solid var(--border-idle);border-radius:12px;padding:12px;background:var(--bg-raised);text-align:center;cursor:pointer;transition:all .2s}
+  .cmpcard:hover{border-color:var(--leaf)}.cmpcard.on{border-color:var(--border-done)}
+  .cmpcard svg{height:64px;width:auto;margin:0 auto 4px}
+  .cmpcard h4{font-size:14px;margin-bottom:4px}
+  .cmp-pts{display:none;margin-top:4px;text-align:left;font-size:12px;color:var(--ink-dim)}
+  .cmpcard.on .cmp-pts{display:block}
+  .cmp-pts li{margin:2px 0 2px 15px}
+  .cmp-tip{font-size:11px;color:var(--ink-faint);margin-top:4px}
+
+  /* flowchart */
+  .flow{display:block;margin:4px auto 8px;max-width:420px;width:100%}
+  .fx-draw{animation:fxk-flow 3s ease forwards}
+  @keyframes fxk-flow{to{stroke-dashoffset:0}}
+
+  /* open / reveal */
+  .revbtn{background:var(--bg-raised);border:1.5px solid var(--border-active);color:var(--ink);font-family:var(--font);
+    font-weight:700;font-size:13px;padding:9px 14px;border-radius:10px;cursor:pointer}
+  .revbtn:hover{background:var(--violet-soft)}
+  .model{display:none;margin-top:10px;padding:11px 13px;border-radius:11px;background:rgba(61,214,195,.08);
+    border:1px solid rgba(61,214,195,.35);font-size:13px;color:#d6fbf5}
+  .model.show{display:block;animation:fxk-cardin .4s ease}
+  .model b{color:var(--teal)}
+  .selfmark{display:none;margin-top:8px;gap:8px}
+  .selfmark.show{display:flex}
+  .selfmark .smbtn{flex:1;background:var(--bg-raised);border:1.5px solid var(--border-idle);color:var(--ink-dim);
+    font-family:var(--font);font-weight:700;font-size:12.5px;padding:8px;border-radius:9px;cursor:pointer}
+  .selfmark .smbtn:hover{border-color:var(--leaf);color:var(--ink)}
+
+  .expl{display:none;font-size:12.5px;color:var(--ink-dim);margin-top:9px;padding:8px 11px;border-left:3px solid var(--leaf);background:rgba(95,209,106,.07);border-radius:0 8px 8px 0}
+  .expl.show{display:block;animation:fxk-cardin .35s ease}
+
+  /* report */
+  .report{background:var(--bg-card);border:1.5px solid var(--border-active);border-radius:16px;padding:22px;margin:18px 0;text-align:center;
+    box-shadow:0 0 30px var(--violet-glow);display:none}
+  .report.show{display:block;animation:fxk-cardin .5s ease}
+  .report .big{font-size:44px;font-weight:900;color:var(--amber);line-height:1}
+  .report h3{font-size:18px;margin:6px 0 2px}
+  .report p{font-size:13px;color:var(--ink-dim)}
+  .rband{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:12px}
+  .rb{background:var(--bg-raised);border:1px solid var(--border-idle);border-radius:10px;padding:9px}
+  .rb b{display:block;font-size:16px;color:var(--leaf)}.rb span{font-size:11px;color:var(--ink-faint)}
+
+  .confetti span{position:fixed;top:38%;left:50%;width:9px;height:14px;pointer-events:none;z-index:9998;
+    animation:fxk-confetti 1.5s ease-out forwards}
+  @keyframes fxk-confetti{to{transform:translate(var(--cx),var(--cy)) rotate(720deg);opacity:0}}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ====== 3D model (CSS perspective + preserve-3d) ====== */
+.d3-card{background:var(--bg-card);border:1.5px solid var(--border-idle);border-radius:14px;padding:16px;margin:14px 0;text-align:center;animation:fxk-cardin .55s ease both}
+.d3-head{font-size:13px;font-weight:800;color:var(--teal);margin-bottom:8px;letter-spacing:.03em}
+.d3-wrap{perspective:780px;height:190px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}
+.d3-wrap:active{cursor:grabbing}
+.d3-cube{position:relative;width:120px;height:120px;transform-style:preserve-3d;animation:d3spin 22s linear infinite}
+.d3-cube.grabbed{animation:none}
+@keyframes d3spin{from{transform:rotateX(-18deg) rotateY(0)}to{transform:rotateX(-18deg) rotateY(360deg)}}
+.d3-face{position:absolute;width:120px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:46px;line-height:1;border:1.5px solid var(--border-active);border-radius:16px;
+  background:linear-gradient(150deg,rgba(139,124,246,.20),rgba(61,214,195,.10));
+  box-shadow:inset 0 0 26px rgba(139,124,246,.18)}
+.d3-face small{font-size:11px;color:#cfd6ff;margin-top:4px;font-weight:800;letter-spacing:.02em}
+.d3-face.f-front{transform:translateZ(60px)}
+.d3-face.f-back{transform:rotateY(180deg) translateZ(60px)}
+.d3-face.f-right{transform:rotateY(90deg) translateZ(60px)}
+.d3-face.f-left{transform:rotateY(-90deg) translateZ(60px)}
+.d3-face.f-top{transform:rotateX(90deg) translateZ(60px)}
+.d3-face.f-bottom{transform:rotateX(-90deg) translateZ(60px)}
+.d3-cap{font-size:12px;color:var(--ink-faint);margin-top:10px}
+.d3-hint{font-size:11px;color:var(--leaf);font-weight:700;margin-top:2px}
+
+.gl-card{background:var(--bg-card);border:1.5px solid var(--border-idle);border-radius:14px;padding:16px;margin:14px 0;text-align:center;animation:fxk-cardin .55s ease both}
+.gl-stage{height:250px;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 50% 32%,rgba(139,124,246,.14),transparent 70%);touch-action:none;cursor:grab}
+.gl-stage:active{cursor:grabbing}
+canvas.gl3d{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<div class="fx-bg" aria-hidden="true"><div class="fx-aurora"></div><div class="fx-grid"></div>
+  <div class="fx-particles">
+    <span style="left:8%;width:5px;height:5px;animation-duration:16s;animation-delay:0s"></span>
+    <span style="left:22%;width:6px;height:6px;animation-duration:19s;animation-delay:3s"></span>
+    <span style="left:38%;width:4px;height:4px;animation-duration:13s;animation-delay:6s"></span>
+    <span style="left:54%;width:6px;height:6px;animation-duration:21s;animation-delay:2s"></span>
+    <span style="left:69%;width:5px;height:5px;animation-duration:15s;animation-delay:8s"></span>
+    <span style="left:83%;width:7px;height:7px;animation-duration:18s;animation-delay:4s"></span>
+    <span style="left:93%;width:4px;height:4px;animation-duration:14s;animation-delay:10s"></span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">FuturaX · Class 6 · Science · Chapter 2</div>
+  <h1>Let us enhance our learning</h1>
+  <div class="sub">The chapter's own end-of-lesson challenge, rebuilt to be answered — sort, reason, compare and decide. Each question shows its thinking-skill and difficulty.</div>
+
+  <!-- interactive hero -->
+  <div class="fx-hero" id="hero" title="Tap for a question burst">
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="quiz arena">
+      <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e1a3a"/><stop offset="1" stop-color="#161a3e"/></linearGradient></defs>
+      <rect width="800" height="200" fill="url(#sky)"/>
+      <circle cx="702" cy="46" r="40" fill="#8b7cf6" opacity=".2" class="fx-pulse"/>
+      <circle cx="702" cy="46" r="22" fill="#8b7cf6" class="fx-pulse"/>
+      <g id="qmarks" fill="#e8ebff" font-weight="900" font-family="system-ui">
+        <text x="120" y="120" font-size="48" class="qmark" opacity=".9">?</text>
+        <text x="300" y="90" font-size="36" class="qmark" style="animation-duration:6.5s" opacity=".7">?</text>
+        <text x="470" y="130" font-size="42" class="qmark" style="animation-duration:5.7s" opacity=".85">?</text>
+        <text x="600" y="96" font-size="30" class="qmark" style="animation-duration:7.2s" opacity=".6">?</text>
+      </g>
+      <path d="M0 176 Q400 156 800 176 L800 200 L0 200Z" fill="#1a2246"/>
+    </svg>
+    <div class="fx-hero-cap"><b>10 questions · 100 points</b> — think it through, then check.</div>
+  </div>
+<div class="d3-card"><div class="d3-head">🧊 3D model — drag to rotate</div><div class="d3-wrap"><div class="d3-cube"><div class="d3-face f-front">🏆<small>score</small></div><div class="d3-face f-back">❓<small>quiz</small></div><div class="d3-face f-right">🧠<small>think</small></div><div class="d3-face f-left">✅<small>answer</small></div><div class="d3-face f-top">📊<small>report</small></div><div class="d3-face f-bottom">🌍<small>chapter</small></div></div></div><div class="d3-cap">A rotatable 3D model of this activity’s ideas.<span class="d3-hint"> — drag to spin, double-tap to reset</span></div></div>
+<div class="gl-card"><div class="d3-head">🧬 Fully-modelled 3D — Biodiversity globe</div><div class="gl-stage"><canvas class="gl3d" data-model="orbit"></canvas></div><div class="d3-cap">Rendered live in 3D with lighting.<span class="d3-hint"> — drag to orbit</span></div></div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="ring">
+      <svg width="44" height="44" viewBox="0 0 44 44">
+        <circle cx="22" cy="22" r="18" fill="none" stroke="#232b4d" stroke-width="5"></circle>
+        <circle id="hudRing" cx="22" cy="22" r="18" fill="none" stroke="#5fd16a" stroke-width="5" stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="113.1"></circle>
+      </svg>
+      <div class="t" id="hudPct">0%</div>
+    </div>
+    <div class="hlbl"><b id="hudScore">0 / 100 points</b><small id="hudDone">0 of 10 answered</small></div>
+    <div class="xp"><span class="b">⚡</span> <span id="xpVal">0</span> XP</div>
+  </div>
+
+  <div id="quiz"></div>
+
+  <!-- report -->
+  <div class="report" id="report">
+    <div class="big" id="rBig">0%</div>
+    <h3 id="rTitle">Chapter mastery</h3>
+    <p id="rMsg"></p>
+    <div class="rband" id="rBand"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var xp=0;
+function addXP(n){xp+=n;document.getElementById("xpVal").textContent=xp;}
+function emit(name,detail){try{window.dispatchEvent(new CustomEvent(name,{detail:detail}));}catch(e){}}
+
+// ---- SVG assets ----
+var DICOT='<svg viewBox="0 0 92 66"><ellipse cx="31" cy="36" rx="24" ry="21" fill="#f2c14b" stroke="#c99a2e" stroke-width="2"/><ellipse cx="61" cy="36" rx="24" ry="21" fill="#f2c14b" stroke="#c99a2e" stroke-width="2"/><path d="M46 18 q0 18 0 34" stroke="#7a9a3a" stroke-width="3" fill="none"/></svg>';
+var MONOCOT='<svg viewBox="0 0 60 80"><ellipse cx="30" cy="40" rx="19" ry="33" fill="#f2c14b" stroke="#c99a2e" stroke-width="2"/><line x1="30" y1="10" x2="30" y2="70" stroke="#d8a93a" stroke-width="2"/><ellipse cx="30" cy="40" rx="6" ry="19" fill="#f7e0a0"/></svg>';
+
+// ---- questions (from the chapter's own "Let us enhance our learning") ----
+var Q=[
+ {n:1,type:"compare",bloom:"Analyse",diff:"m",
+  text:"Two seeds, two plants. How do their roots and leaf venation differ?",
+  left:{title:"Wheat",svg:MONOCOT,points:["Single cotyledon (monocot)","Parallel venation","Fibrous roots"]},
+  right:{title:"Kidney bean",svg:DICOT,points:["Two cotyledons (dicot)","Reticulate venation","Taproot"]},
+  why:"Wheat is a monocot — parallel venation with fibrous roots. Kidney bean is a dicot — reticulate venation with a taproot."},
+
+ {n:2,type:"venn",bloom:"Apply",diff:"m",
+  text:"Sort each animal by where it lives: only water (A), only land (B), or both (C).",
+  zones:[{k:"A",l:"A · Only water"},{k:"B",l:"B · Only land"},{k:"C",l:"C · Both"}],
+  chips:[{l:"Horse",z:"B"},{l:"Dolphin",z:"A"},{l:"Frog",z:"C"},{l:"Sheep",z:"B"},{l:"Crocodile",z:"C"},
+         {l:"Squirrel",z:"B"},{l:"Whale",z:"A"},{l:"Earthworm",z:"B"},{l:"Pigeon",z:"B"},{l:"Tortoise",z:"B"}],
+  why:"Dolphin and whale live only in water. Frog and crocodile use both land and water. The rest are land animals."},
+
+ {n:3,type:"mcq",bloom:"Apply",diff:"e",
+  text:"Manu's mother digs up a radish. What kind of root is it, and what venation would its leaves show?",
+  opts:["Fibrous roots · parallel venation","Taproot · reticulate venation","Taproot · parallel venation","Fibrous roots · reticulate venation"],a:1,
+  why:"A radish is a swollen taproot, so it follows the taproot–reticulate pattern of dicots."},
+
+ {n:4,type:"open",bloom:"Analyse",diff:"h",
+  text:"A mountain goat and a goat of the plains — what is similar, what is different, and why?",
+  model:"<b>Similar:</b> both are goats — four legs, hooves, plant-eaters. <b>Different:</b> the mountain goat has a thicker coat and sturdy, sure-footed legs for cold, rocky slopes; the plains goat has a thinner coat suited to warm, flat ground. <b>Why:</b> each set of features is an <b>adaptation</b> to its own habitat."},
+
+ {n:5,type:"mcq",bloom:"Create",diff:"m",
+  text:"Split these into two groups by a feature NOT used in the chapter — cow, cockroach, pigeon, bat, tortoise, whale, fish, grasshopper, lizard. Which split is valid?",
+  opts:["Has wings → {cockroach, pigeon, bat, grasshopper}  vs  no wings → {cow, tortoise, whale, fish, lizard}",
+        "Herb  vs  shrub","Reticulate  vs  parallel venation","Taproot  vs  fibrous roots"],a:0,
+  why:"Wings / no-wings is a fair animal feature the chapter didn't use. Cockroach, pigeon, bat and grasshopper have wings; the others don't. (Venation, roots, herb/shrub apply to plants, not these animals.)"},
+
+ {n:6,type:"open",bloom:"Evaluate",diff:"h",
+  text:"As people want more comfort, forests are cut down. How can this affect our surroundings, and how might we respond?",
+  model:"<b>Effect:</b> clearing forests destroys habitats, so plants and animals lose homes and food and <b>biodiversity falls</b>; it can also reduce rainfall and harm air and soil. <b>Response:</b> plant and protect trees, use resources carefully, restore habitats, and support efforts like Project Tiger and community-protected sacred groves."},
+
+ {n:7,type:"flow",bloom:"Apply",diff:"m",
+  text:"In the flowchart, a plant with leaves and reticulate venation goes to A; parallel venation goes to B. Which pair fits A and B?",
+  opts:["A = mango   ·   B = grass","A = grass   ·   B = mango","A = frog   ·   B = fish","A = herb   ·   B = shrub"],a:0,
+  why:"Reticulate venation → A (a dicot such as mango). Parallel venation → B (a monocot such as grass or wheat)."},
+
+ {n:8,type:"open",bloom:"Evaluate",diff:"m",
+  text:"Raj claims the gudhal (hibiscus) is a shrub. What questions should Sanjay ask to check the claim?",
+  model:"Useful checks: <b>How tall is it?</b> <b>Is the stem woody and hard, or soft and green?</b> <b>Do several stems branch near the ground, or is there one thick trunk that branches high up?</b> A shrub is medium, woody, with several low-branching stems — so Sanjay should test the plant against each of these."},
+
+ {n:9,type:"mcq",bloom:"Understand",diff:"e",
+  text:"Group A: dicot with a taproot. Group B: monocot with fibrous roots. Which extra feature is shared inside each group?",
+  opts:["A → reticulate venation · B → parallel venation","A → parallel venation · B → reticulate venation","Both → parallel venation","Neither has veins"],a:0,
+  why:"Dicots (A) pair with reticulate venation and taproots; monocots (B) with parallel venation and fibrous roots."},
+
+ {n:10,type:"mcq",bloom:"Apply",diff:"e",
+  text:"A duck has webbed feet, unlike a pigeon. What does this let the duck do well?",
+  opts:["Grip branches tightly","Paddle and swim in water","Dig deep burrows","Fly much higher"],a:1,
+  why:"The skin between the toes works like a paddle that pushes water — a webbed-foot adaptation for swimming."}
+];
+
+var state=Q.map(function(){return {done:false,score:0};});
+var MAX=10; // per question
+
+// ---- render ----
+var host=document.getElementById("quiz");
+Q.forEach(function(q,qi){
+  var card=document.createElement("div");card.className="q";card.id="q"+qi;
+  var diffLbl={e:"Easy",m:"Medium",h:"Hard"}[q.diff], diffCls="diff-"+q.diff;
+  var head='<div class="qhead"><span class="qnum">'+q.n+'</span>'+
+    '<span class="tag bloom">'+q.bloom+'</span><span class="tag '+diffCls+'">'+diffLbl+'</span></div>'+
+    '<div class="qtext">'+q.text+'</div>';
+  card.innerHTML=head+'<div class="body"></div><div class="expl" id="expl'+qi+'">'+(q.why||"")+'</div>';
+  host.appendChild(card);
+  var body=card.querySelector(".body");
+  if(q.type==="mcq"||q.type==="flow")buildMCQ(q,qi,body,card);
+  else if(q.type==="venn")buildVenn(q,qi,body,card);
+  else if(q.type==="compare")buildCompare(q,qi,body,card);
+  else if(q.type==="open")buildOpen(q,qi,body,card);
+});
+
+function finish(qi,score){ if(state[qi].done)return; state[qi].done=true; state[qi].score=score;
+  document.getElementById("q"+qi).classList.add("done"); document.getElementById("expl"+qi).classList.add("show");
+  addXP(6+Math.round(score)); update(); }
+
+function buildMCQ(q,qi,body,card){
+  var flow = q.type==="flow" ? flowSVG() : "";
+  body.innerHTML = flow + '<div class="opts">'+q.opts.map(function(o,oi){return '<button class="opt" data-o="'+oi+'">'+o+'</button>';}).join("")+'</div>';
+  body.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){
+    if(state[qi].done)return;
+    body.querySelectorAll(".opt").forEach(function(x,k){x.disabled=true;if(k===q.a)x.classList.add("right");});
+    var ok=(+b.dataset.o===q.a); if(!ok)b.classList.add("wrong"); else burstAt(b);
+    finish(qi, ok?MAX:0);
+  });});
+}
+
+function buildVenn(q,qi,body,card){
+  var sel=null,placed=0,correct=0;
+  var venn='<svg class="venn-svg" viewBox="0 0 300 150"><circle cx="110" cy="75" r="66" fill="rgba(95,209,106,.10)" stroke="#3f8f47" stroke-width="1.5"/><circle cx="190" cy="75" r="66" fill="rgba(61,214,195,.10)" stroke="#2f8f86" stroke-width="1.5"/><text x="70" y="80" fill="#8fe39a" font-size="13" font-weight="800" text-anchor="middle">A</text><text x="150" y="80" fill="#bfe9ff" font-size="13" font-weight="800" text-anchor="middle">C</text><text x="230" y="80" fill="#7fe0d3" font-size="13" font-weight="800" text-anchor="middle">B</text></svg>';
+  var pool='<div class="pool" id="pool'+qi+'">'+q.chips.map(function(c,ci){return '<span class="chip" data-c="'+ci+'">'+c.l+'</span>';}).join("")+'</div>';
+  var bins='<div class="bins">'+q.zones.map(function(z){return '<div class="bin" data-z="'+z.k+'"><h4>'+z.l+'</h4><div class="b-body"></div></div>';}).join("")+'</div>';
+  body.innerHTML=venn+pool+bins;
+  var pool_el=document.getElementById("pool"+qi);
+  pool_el.addEventListener("click",function(e){var c=e.target.closest(".chip");if(!c||c.classList.contains("right"))return;
+    pool_el.querySelectorAll(".chip").forEach(function(x){x.classList.remove("sel");});c.classList.add("sel");sel=c;
+    body.querySelectorAll(".bin").forEach(function(b){b.classList.add("hot");});});
+  body.querySelectorAll(".bin").forEach(function(bin){bin.addEventListener("click",function(){
+    if(!sel||state[qi].done)return; var ci=+sel.dataset.c; var want=q.chips[ci].z, got=bin.dataset.z;
+    body.querySelectorAll(".bin").forEach(function(b){b.classList.remove("hot");});
+    if(want===got){sel.classList.remove("sel");sel.classList.add("right");bin.querySelector(".b-body").appendChild(sel);
+      correct++;placed++;burstAt(bin);}
+    else{ // wrong: still lock it into the chosen bin but count as incorrect placement
+      sel.classList.remove("sel");sel.style.opacity=".55";sel.style.pointerEvents="none";bin.querySelector(".b-body").appendChild(sel);placed++;}
+    sel=null;
+    if(placed===q.chips.length){ finish(qi, Math.round(correct/q.chips.length*MAX)); }
+  });});
+}
+
+function buildCompare(q,qi,body,card){
+  var seen={};
+  body.innerHTML='<div class="cmp">'+[q.left,q.right].map(function(s,idx){
+    return '<div class="cmpcard" data-idx="'+idx+'">'+s.svg+'<h4>'+s.title+'</h4><ul class="cmp-pts">'+s.points.map(function(p){return '<li>'+p+'</li>';}).join("")+'</ul><div class="cmp-tip">tap to examine</div></div>';
+  }).join("")+'</div>';
+  body.querySelectorAll(".cmpcard").forEach(function(el){el.addEventListener("click",function(){
+    if(el.classList.contains("on"))return; el.classList.add("on");seen[el.dataset.idx]=1;burstAt(el);
+    if(Object.keys(seen).length===2)finish(qi,MAX);
+  });});
+}
+
+function buildOpen(q,qi,body,card){
+  body.innerHTML='<button class="revbtn" id="rev'+qi+'">💡 Think first, then reveal a model answer</button>'+
+    '<div class="model" id="model'+qi+'">'+q.model+'</div>'+
+    '<div class="selfmark" id="sm'+qi+'"><button class="smbtn" data-v="1">I reasoned it out ✓</button><button class="smbtn" data-v="0">I need to revisit this</button></div>';
+  document.getElementById("rev"+qi).addEventListener("click",function(){
+    document.getElementById("model"+qi).classList.add("show");
+    document.getElementById("sm"+qi).classList.add("show");this.style.display="none";
+  });
+  document.getElementById("sm"+qi).querySelectorAll(".smbtn").forEach(function(b){b.addEventListener("click",function(){
+    if(state[qi].done)return; burstAt(b); finish(qi, b.dataset.v==="1"?MAX:Math.round(MAX*0.6));
+  });});
+}
+
+function flowSVG(){
+  return '<svg class="flow" viewBox="0 0 380 210" xmlns="http://www.w3.org/2000/svg">'+
+    '<defs><marker id="arw" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6Z" fill="#5fd16a"/></marker></defs>'+
+    '<g font-family="system-ui" font-size="12" fill="#e8ebff" text-anchor="middle">'+
+    '<rect x="150" y="8" width="80" height="30" rx="8" fill="#151c38" stroke="#8b7cf6"/><text x="190" y="27">Plant</text>'+
+    '<rect x="120" y="70" width="140" height="30" rx="8" fill="#151c38" stroke="#3dd6c3"/><text x="190" y="89">Has leaves?</text>'+
+    '<rect x="95" y="132" width="190" height="34" rx="8" fill="#151c38" stroke="#3dd6c3"/><text x="190" y="148">Reticulate</text><text x="190" y="161">venation?</text>'+
+    '<circle cx="190" cy="196" r="13" fill="#4ade80" opacity=".25" stroke="#4ade80"/><text x="190" y="200" font-weight="800" fill="#bff5cd">A</text>'+
+    '<circle cx="330" cy="149" r="13" fill="#f07178" opacity=".25" stroke="#f07178"/><text x="330" y="153" font-weight="800" fill="#ffd0d3">B</text>'+
+    '<path class="fx-draw" style="stroke-dasharray:26;stroke-dashoffset:26" d="M190 38 L190 68" stroke="#5fd16a" stroke-width="2" fill="none" marker-end="url(#arw)"/>'+
+    '<path class="fx-draw" style="stroke-dasharray:30;stroke-dashoffset:30;animation-delay:.4s" d="M190 100 L190 130" stroke="#5fd16a" stroke-width="2" fill="none" marker-end="url(#arw)"/>'+
+    '<path class="fx-draw" style="stroke-dasharray:30;stroke-dashoffset:30;animation-delay:.8s" d="M190 166 L190 181" stroke="#5fd16a" stroke-width="2" fill="none" marker-end="url(#arw)"/>'+
+    '<path class="fx-draw" style="stroke-dasharray:60;stroke-dashoffset:60;animation-delay:.8s" d="M285 149 L315 149" stroke="#5fd16a" stroke-width="2" fill="none" marker-end="url(#arw)"/>'+
+    '<text x="200" y="120" font-size="10" fill="#9aa3c7">Yes</text><text x="200" y="182" font-size="10" fill="#9aa3c7">Yes</text><text x="300" y="142" font-size="10" fill="#9aa3c7">No</text>'+
+    '</g></svg>';
+}
+
+// ---- HUD + report ----
+var C=2*Math.PI*18;
+function update(){
+  var score=0,done=0;
+  state.forEach(function(s){if(s.done){done++;score+=s.score;}});
+  document.getElementById("hudScore").textContent=score+" / 100 points";
+  document.getElementById("hudDone").textContent=done+" of 10 answered";
+  document.getElementById("hudPct").textContent=score+"%";
+  document.getElementById("hudRing").setAttribute("stroke-dashoffset",(C*(1-score/100)).toFixed(1));
+  if(done===10)showReport(score);
+}
+function showReport(score){
+  var r=document.getElementById("report");r.classList.add("show");
+  document.getElementById("rBig").textContent=score+"%";
+  var msg = score>=85?"Outstanding — you reason like a top-tier scientist.":
+            score>=65?"Strong work — your grip on the chapter is solid.":
+            "Good effort — revisit the flagged ideas and try again.";
+  document.getElementById("rMsg").textContent=msg;
+  // skill breakdown by Bloom family
+  var fam={"Remember/Understand":[],"Apply":[],"Analyse/Evaluate/Create":[]};
+  Q.forEach(function(q,i){var g=(q.bloom==="Remember"||q.bloom==="Understand")?"Remember/Understand":
+    q.bloom==="Apply"?"Apply":"Analyse/Evaluate/Create";fam[g].push(state[i].score);});
+  var band=document.getElementById("rBand");band.innerHTML="";
+  Object.keys(fam).forEach(function(k){var a=fam[k];var avg=a.length?Math.round(a.reduce(function(x,y){return x+y;},0)/a.length*10):0;
+    var el=document.createElement("div");el.className="rb";el.innerHTML='<b>'+avg+'%</b><span>'+k+'</span>';band.appendChild(el);});
+  emit("futurax:quizComplete",{lab:"class6-sci-ch2-challenge",score:Math.round(score/10),total:10,xp:xp});
+  confetti();r.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+// ---- effects ----
+function burstAt(el){var r=el.getBoundingClientRect();spark(r.left+r.width/2,r.top+r.height/2,10);}
+function spark(x,y,n){
+  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  for(var i=0;i<n;i++){var s=document.createElement("span");s.className="fx-spark";
+    var a=Math.random()*6.28,d=16+Math.random()*26;s.style.left=x+"px";s.style.top=y+"px";
+    s.style.setProperty("--dx",(Math.cos(a)*d)+"px");s.style.setProperty("--dy",(Math.sin(a)*d)+"px");
+    document.body.appendChild(s);(function(el){setTimeout(function(){el.remove();},640);})(s);}
+}
+function confetti(){
+  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  var cols=["#8b7cf6","#3dd6c3","#f5b74e","#5fd16a","#f07178"];var box=document.createElement("div");box.className="confetti";
+  for(var i=0;i<70;i++){var s=document.createElement("span");s.style.background=cols[i%cols.length];
+    var ang=Math.random()*6.28,dist=120+Math.random()*260;
+    s.style.setProperty("--cx",(Math.cos(ang)*dist)+"px");s.style.setProperty("--cy",(Math.sin(ang)*dist+120)+"px");
+    s.style.animationDelay=(Math.random()*.2)+"s";box.appendChild(s);}
+  document.body.appendChild(box);setTimeout(function(){box.remove();},1800);
+}
+// tap sparkle everywhere + hero burst
+document.addEventListener("click",function(e){spark(e.clientX,e.clientY,5);},{passive:true});
+document.getElementById("hero").addEventListener("click",function(e){var r=this.getBoundingClientRect();spark(e.clientX,e.clientY,16);});
+// hero parallax
+var hero=document.getElementById("hero");
+hero.addEventListener("pointermove",function(e){var r=hero.getBoundingClientRect();var x=(e.clientX-r.left)/r.width-.5;var y=(e.clientY-r.top)/r.height-.5;hero.style.transform="perspective(800px) rotateY("+(x*4)+"deg) rotateX("+(-y*3)+"deg)";});
+hero.addEventListener("pointerleave",function(){hero.style.transform="";});
+
+update();
+emit("futurax:advance",{lab:"class6-sci-ch2-challenge",step:1,totalSteps:1,xp:0});
+})();
+</script>
+<script>
+(function(){
+/* d3-init */
+document.querySelectorAll(".d3-wrap").forEach(function(wrap){
+ var cube=wrap.querySelector(".d3-cube");if(!cube)return;
+ var rx=-18,ry=0,down=false,px=0,py=0,moved=false;
+ function apply(){cube.style.transform="rotateX("+rx+"deg) rotateY("+ry+"deg)";}
+ wrap.addEventListener("pointerdown",function(e){down=true;moved=false;cube.classList.add("grabbed");apply();px=e.clientX;py=e.clientY;try{wrap.setPointerCapture(e.pointerId);}catch(_){}});
+ wrap.addEventListener("pointermove",function(e){if(!down)return;moved=true;ry+=(e.clientX-px)*0.6;rx-=(e.clientY-py)*0.6;if(rx>90)rx=90;if(rx<-90)rx=-90;px=e.clientX;py=e.clientY;apply();});
+ function up(){down=false;}
+ wrap.addEventListener("pointerup",up);wrap.addEventListener("pointercancel",up);wrap.addEventListener("pointerleave",up);
+ wrap.addEventListener("dblclick",function(){cube.classList.remove("grabbed");cube.style.transform="";});
+});
+})();
+</script>
+<script>
+/*gl-engine*/
+(function(){
+"use strict";
+var cvs=document.querySelectorAll("canvas.gl3d");
+if(!cvs.length)return;
+
+/* ---- mat4 (column-major) ---- */
+function mul(a,b){var o=new Array(16);for(var c=0;c<4;c++)for(var r=0;r<4;r++){var s=0;for(var k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s;}return o;}
+function persp(f,asp,n,fa){var t=1/Math.tan(f/2);return[t/asp,0,0,0, 0,t,0,0, 0,0,(fa+n)/(n-fa),-1, 0,0,(2*fa*n)/(n-fa),0];}
+function trans(x,y,z){return[1,0,0,0,0,1,0,0,0,0,1,0,x,y,z,1];}
+function rotX(a){var c=Math.cos(a),s=Math.sin(a);return[1,0,0,0, 0,c,s,0, 0,-s,c,0, 0,0,0,1];}
+function rotY(a){var c=Math.cos(a),s=Math.sin(a);return[c,0,-s,0, 0,1,0,0, s,0,c,0, 0,0,0,1];}
+function rotZ(a){var c=Math.cos(a),s=Math.sin(a);return[c,s,0,0, -s,c,0,0, 0,0,1,0, 0,0,0,1];}
+function tp(m,x,y,z){return[m[0]*x+m[4]*y+m[8]*z+m[12], m[1]*x+m[5]*y+m[9]*z+m[13], m[2]*x+m[6]*y+m[10]*z+m[14]];}
+function td(m,x,y,z){return[m[0]*x+m[4]*y+m[8]*z, m[1]*x+m[5]*y+m[9]*z, m[2]*x+m[6]*y+m[10]*z];}
+function hash(i){var x=Math.sin(i*127.1+3.7)*43758.5453;return x-Math.floor(x);}
+
+function Mesh(){this.p=[];this.n=[];this.c=[];}
+Mesh.prototype.tri=function(a,b,cc,na,nb,nc,ca,cb,ccl){
+ this.p.push(a[0],a[1],a[2],b[0],b[1],b[2],cc[0],cc[1],cc[2]);
+ this.n.push(na[0],na[1],na[2],nb[0],nb[1],nb[2],nc[0],nc[1],nc[2]);
+ this.c.push(ca[0],ca[1],ca[2],cb[0],cb[1],cb[2],ccl[0],ccl[1],ccl[2]);};
+
+function addSphere(m,mat,rx,ry,rz,seg,rings,cf){
+ for(var i=0;i<rings;i++){var ph0=i/rings*Math.PI,ph1=(i+1)/rings*Math.PI;
+  for(var j=0;j<seg;j++){var th0=j/seg*2*Math.PI,th1=(j+1)/seg*2*Math.PI;
+   var P=function(ph,th){var x=Math.sin(ph)*Math.cos(th),y=Math.cos(ph),z=Math.sin(ph)*Math.sin(th);
+     var pos=tp(mat,x*rx,y*ry,z*rz);var nn=td(mat,x/rx,y/ry,z/rz);var l=Math.hypot(nn[0],nn[1],nn[2])||1;
+     return{p:pos,n:[nn[0]/l,nn[1]/l,nn[2]/l],c:cf(th/(2*Math.PI),ph/Math.PI,[x,y,z])};};
+   var A=P(ph0,th0),B=P(ph1,th0),C=P(ph1,th1),D=P(ph0,th1);
+   m.tri(A.p,B.p,C.p,A.n,B.n,C.n,A.c,B.c,C.c);m.tri(A.p,C.p,D.p,A.n,C.n,D.n,A.c,C.c,D.c);}}}
+
+function addCyl(m,mat,r0,r1,h,seg,cf,caps){
+ for(var j=0;j<seg;j++){var t0=j/seg*2*Math.PI,t1=(j+1)/seg*2*Math.PI;
+  var V=function(t,y,r){var pos=tp(mat,Math.cos(t)*r,y,Math.sin(t)*r);var nn=td(mat,Math.cos(t),0,Math.sin(t));var l=Math.hypot(nn[0],nn[1],nn[2])||1;
+    return{p:pos,n:[nn[0]/l,nn[1]/l,nn[2]/l],c:cf(j/seg,y/h,[0,y,0])};};
+  var A=V(t0,0,r0),B=V(t0,h,r1),C=V(t1,h,r1),D=V(t1,0,r0);
+  m.tri(A.p,B.p,C.p,A.n,B.n,C.n,A.c,B.c,C.c);m.tri(A.p,C.p,D.p,A.n,C.n,D.n,A.c,C.c,D.c);}
+ if(caps){var c0=tp(mat,0,0,0),c1=tp(mat,0,h,0),dn=td(mat,0,-1,0),up=td(mat,0,1,0),cb=cf(0,0,[0,0,0]),ct=cf(0,1,[0,0,0]);
+  for(var k=0;k<seg;k++){var a0=k/seg*2*Math.PI,a1=(k+1)/seg*2*Math.PI;
+   var b0=tp(mat,Math.cos(a0)*r0,0,Math.sin(a0)*r0),b1=tp(mat,Math.cos(a1)*r0,0,Math.sin(a1)*r0);
+   m.tri(c0,b1,b0,dn,dn,dn,cb,cb,cb);
+   var u0=tp(mat,Math.cos(a0)*r1,h,Math.sin(a0)*r1),u1=tp(mat,Math.cos(a1)*r1,h,Math.sin(a1)*r1);
+   m.tri(c1,u0,u1,up,up,up,ct,ct,ct);}}}
+
+/* ---- procedural colours ---- */
+function seedCol(u,v,p){var s=hash(Math.floor(u*40)+Math.floor(v*40)*57);var b=[0.93,0.75,0.32];
+ if(s<0.13)b=[0.55,0.40,0.16];if(Math.abs(p[0])<0.09)b=[0.5,0.36,0.15];return b;}
+function bark(u,v){var s=hash(Math.floor(u*30)+Math.floor(v*40)*13);var d=0.55+0.14*s;return[0.40*d+0.16,0.27*d+0.09,0.14*d+0.05];}
+function leafCol(u,v,p){var s=hash(Math.floor(u*26)+Math.floor(v*26)*17);var b=[0.26+0.06*s,0.58+0.08*s,0.27+0.05*s];if(Math.abs(p[0])<0.05)b=[0.5,0.72,0.33];return b;}
+function canopy(u,v){var n=hash(Math.floor(u*20)+Math.floor(v*20)*11);return[0.20+0.09*n,0.5+0.11*n,0.22+0.06*n];}
+
+/* ---- models ---- */
+var builders={
+ seed:function(){var m=new Mesh();
+   addSphere(m,trans(-0.42,0,0),0.55,0.85,0.6,28,18,seedCol);
+   addSphere(m,trans(0.42,0,0),0.55,0.85,0.6,28,18,seedCol);
+   addCyl(m,trans(0,0.8,0),0.05,0.03,0.5,10,function(){return[0.36,0.6,0.26];},true);
+   addSphere(m,mul(trans(-0.18,1.3,0),rotZ(0.6)),0.24,0.07,0.13,14,8,function(){return[0.42,0.72,0.32];});
+   addSphere(m,mul(trans(0.18,1.3,0),rotZ(-0.6)),0.24,0.07,0.13,14,8,function(){return[0.42,0.72,0.32];});
+   return m;},
+ taproot:function(){var m=new Mesh();
+   addCyl(m,trans(0,0.0,0),0.06,0.045,0.55,10,function(){return[0.35,0.58,0.26];},true);
+   addSphere(m,mul(trans(-0.18,0.55,0),rotZ(0.7)),0.32,0.09,0.16,14,8,function(){return[0.42,0.72,0.32];});
+   addSphere(m,mul(trans(0.18,0.55,0),rotZ(-0.7)),0.32,0.09,0.16,14,8,function(){return[0.42,0.72,0.32];});
+   addCyl(m,rotX(Math.PI),0.17,0.02,1.6,16,bark,true);
+   var Ls=[{y:-0.3,a:0.4},{y:-0.55,a:1.7},{y:-0.8,a:3.0},{y:-1.0,a:4.3},{y:-0.45,a:5.4},{y:-0.7,a:2.4}];
+   Ls.forEach(function(L){var mat=mul(mul(trans(0,L.y,0),rotY(L.a)),rotZ(2.25));
+     addCyl(m,mat,0.05,0.008,0.55,8,bark,false);
+     var mat2=mul(mul(trans(0,L.y-0.06,0),rotY(L.a+0.6)),rotZ(2.5));
+     addCyl(m,mat2,0.025,0.005,0.34,6,bark,false);});
+   return m;},
+ leaf:function(){var m=new Mesh();
+   addSphere(m,mul(rotX(0.25),rotZ(0.1)),0.6,0.06,1.15,30,20,leafCol);
+   addCyl(m,mul(mul(rotX(0.25),trans(0,0.04,-1.02)),rotX(-Math.PI/2)),0.05,0.02,2.05,8,function(){return[0.5,0.72,0.34];},false);
+   return m;},
+ plant:function(){var m=new Mesh();
+   addCyl(m,trans(0,-0.95,0),0.06,0.04,1.0,10,function(){return[0.35,0.55,0.25];},true);
+   addSphere(m,trans(0,0.2,0),0.55,0.6,0.55,26,18,canopy);
+   addSphere(m,trans(0.0,0.78,0),0.16,0.16,0.16,12,8,function(){return[0.95,0.5,0.6];});
+   return m;},
+ tree:function(){var m=new Mesh();
+   addCyl(m,trans(0,-1.05,0),0.14,0.09,1.1,12,bark,true);
+   addSphere(m,trans(0,0.35,0),0.8,0.85,0.8,30,20,canopy);
+   addSphere(m,trans(-0.45,0.05,0.2),0.4,0.45,0.4,20,14,canopy);
+   addSphere(m,trans(0.45,0.1,-0.2),0.42,0.46,0.42,20,14,canopy);
+   return m;},
+ orbit:function(){var m=new Mesh();
+   addSphere(m,trans(0,0,0),0.92,0.92,0.92,38,26,function(u,v){var n=hash(Math.floor(u*16)+Math.floor(v*16)*29);
+     return n>0.52?[0.19,0.55,0.30]:[0.14,0.40,0.62];});
+   var sats=[[1.45,0.3,0,[0.95,0.76,0.32]],[-1.25,0.6,0.4,[0.55,0.82,0.42]],[0.3,-1.35,0.6,[0.92,0.52,0.42]],[0.6,0.95,-1.25,[0.72,0.72,0.96]]];
+   sats.forEach(function(s){addSphere(m,trans(s[0],s[1],s[2]),0.17,0.17,0.17,14,10,function(){return s[3];});});
+   return m;},
+ terrain:function(){var m=new Mesh();var N=22,S=2.5;
+   function H(x,z){return 0.30*Math.sin(x*3.0)*Math.cos(z*2.4)+0.13*Math.sin(x*6+z*3);}
+   function col(y){return y<-0.04?[0.80,0.66,0.36]:(y<0.20?[0.34,0.5,0.27]:[0.9,0.92,0.98]);}
+   for(var i=0;i<N;i++)for(var j=0;j<N;j++){
+     var x0=(i/N-0.5)*S,x1=((i+1)/N-0.5)*S,z0=(j/N-0.5)*S,z1=((j+1)/N-0.5)*S;
+     var A=[x0,H(x0,z0),z0],B=[x1,H(x1,z0),z0],C=[x1,H(x1,z1),z1],D=[x0,H(x0,z1),z1];
+     var nf=function(p1,p2,p3){var ux=p2[0]-p1[0],uy=p2[1]-p1[1],uz=p2[2]-p1[2],vx=p3[0]-p1[0],vy=p3[1]-p1[1],vz=p3[2]-p1[2];
+       var nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;return[nx/l,ny/l,nz/l];};
+     var n1=nf(A,B,C),n2=nf(A,C,D);
+     m.tri(A,B,C,n1,n1,n1,col(A[1]),col(B[1]),col(C[1]));
+     m.tri(A,C,D,n2,n2,n2,col(A[1]),col(C[1]),col(D[1]));}
+   addSphere(m,trans(-1.05,0.95,-0.6),0.19,0.19,0.19,12,8,function(){return[1.0,0.85,0.4];});
+   return m;}
+};
+
+var VS="attribute vec3 aPos;attribute vec3 aNorm;attribute vec3 aColor;uniform mat4 uMV;uniform mat4 uProj;"+
+ "varying vec3 vN;varying vec3 vC;varying vec3 vE;void main(){vec4 p=uMV*vec4(aPos,1.0);vE=p.xyz;vN=mat3(uMV)*aNorm;vC=aColor;gl_Position=uProj*p;}";
+var FS="precision mediump float;varying vec3 vN;varying vec3 vC;varying vec3 vE;uniform vec3 uL;"+
+ "void main(){vec3 N=normalize(vN);vec3 L=normalize(uL);float d=max(dot(N,L),0.0);vec3 V=normalize(-vE);vec3 H=normalize(L+V);"+
+ "float s=pow(max(dot(N,H),0.0),22.0)*0.35;vec3 c=vC*(0.36+0.72*d)+vec3(s);gl_FragColor=vec4(c,1.0);}";
+
+function initGL(canvas){
+ var gl=canvas.getContext("webgl",{alpha:true,antialias:true,premultipliedAlpha:false})||canvas.getContext("experimental-webgl");
+ if(!gl){var w=canvas.parentNode;if(w)w.innerHTML='<div style="color:#9aa3c7;font-size:12px;padding:26px">3D view needs WebGL.</div>';return;}
+ function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+ var prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));
+ gl.linkProgram(prog);gl.useProgram(prog);
+ var model=canvas.dataset.model||"orbit";
+ var mesh=(builders[model]||builders.orbit)();
+ function buf(data,attr,size){var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);
+   var loc=gl.getAttribLocation(prog,attr);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,0,0);}
+ buf(mesh.p,"aPos",3);buf(mesh.n,"aNorm",3);buf(mesh.c,"aColor",3);
+ var count=mesh.p.length/3;
+ var uMV=gl.getUniformLocation(prog,"uMV"),uProj=gl.getUniformLocation(prog,"uProj"),uL=gl.getUniformLocation(prog,"uL");
+ gl.enable(gl.DEPTH_TEST);
+ var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ var ry=0.6,rx=-0.35,drag=false,px=0,py=0,auto=!reduce;
+ var stage=canvas.parentNode;
+ stage.addEventListener("pointerdown",function(e){drag=true;px=e.clientX;py=e.clientY;try{stage.setPointerCapture(e.pointerId);}catch(_){}} );
+ stage.addEventListener("pointermove",function(e){if(!drag)return;ry+=(e.clientX-px)*0.01;rx+=(e.clientY-py)*0.01;if(rx>1.4)rx=1.4;if(rx<-1.4)rx=-1.4;px=e.clientX;py=e.clientY;});
+ function up(){drag=false;}stage.addEventListener("pointerup",up);stage.addEventListener("pointercancel",up);stage.addEventListener("pointerleave",up);
+ var lw=0,lh=0;
+ function frame(){
+   var dpr=Math.min(window.devicePixelRatio||1,2),w=canvas.clientWidth,h=canvas.clientHeight;
+   if(w!==lw||h!==lh){canvas.width=Math.max(1,w*dpr);canvas.height=Math.max(1,h*dpr);gl.viewport(0,0,canvas.width,canvas.height);lw=w;lh=h;}
+   if(auto&&!drag)ry+=0.008;
+   gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+   var proj=persp(0.72,(canvas.width/Math.max(1,canvas.height)),0.1,100);
+   var mv=mul(trans(0,0,-3.5),mul(rotX(rx),rotY(ry)));
+   gl.uniformMatrix4fv(uMV,false,new Float32Array(mv));
+   gl.uniformMatrix4fv(uProj,false,new Float32Array(proj));
+   gl.uniform3f(uL,0.4,0.7,0.85);
+   gl.drawArrays(gl.TRIANGLES,0,count);
+   requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+}
+for(var i=0;i<cvs.length;i++)initGL(cvs[i]);
+})();
+
+</script>
+</body>
+</html>
