@@ -2,16 +2,20 @@ import React from 'react';
 
 const facts = [
   {
-    "title": "Attract or Repel",
-    "content": "Magnets can either attract or repel each other, depending on which poles are facing one another."
+    "title": "Magnetic Fields",
+    "content": "Magnets have an invisible force around them called a magnetic field. Even when two magnets are not touching, this field can make them attract or repel each other!"
   },
   {
-    "title": "Rules of Interaction",
-    "content": "Like poles (North\u2013North or South\u2013South) repel, while unlike poles (North\u2013South) attract."
+    "title": "Electric Currents",
+    "content": "French scientist André-Marie Ampère discovered that magnetic forces are related to tiny electric currents inside materials. His work helped explain why magnets attract and repel each other."
   },
   {
-    "title": "Identifying Unknowns",
-    "content": "The poles of an unknown magnet can be identified by observing whether it attracts or repels the poles of a known magnet."
+    "title": "Everyday Uses",
+    "content": "Magnetic door locks, refrigerator magnets, and some toys work because magnets attract each other and hold objects in place without glue or tape."
+  },
+  {
+    "title": "Maglev Trains",
+    "content": "Scientists use magnetic forces in maglev trains. These trains float slightly above the tracks and move very fast because there is very little friction."
   }
 ];
 

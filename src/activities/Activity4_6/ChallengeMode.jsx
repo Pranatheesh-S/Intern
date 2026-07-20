@@ -112,7 +112,7 @@ export default function ChallengeMode({ onComplete }) {
   const c = challenges[currentChallenge];
 
   return (
-    <div className="main-grid" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="main-grid" style={{ gridTemplateColumns: '1fr', maxWidth: '100%', margin: '0 auto' }}>
       
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h2 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-heading)' }}>

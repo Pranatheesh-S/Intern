@@ -4,14 +4,22 @@ import useSound from 'use-sound';
 import { useTheme } from '../../ThemeContext.jsx';
 import { chapterFlow } from './storyEngine';
 import ChiefDetective from './components/ChiefDetective/ChiefDetective';
+import InvestigationHandbook from './components/Educational/InvestigationHandbook';
+import DetectiveCheckpoint from './components/Educational/DetectiveCheckpoint';
+import EvidenceSummary from './components/Educational/EvidenceSummary';
+import ChapterCover from './components/Educational/ChapterCover';
+import ChapterIntroSpread from './components/Educational/ChapterIntroSpread';
+import MissionBriefingSpread from './components/Educational/MissionBriefingSpread';
 
 export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [currentFlowIndex, setCurrentFlowIndex] = useState(0);
   const [highestUnlockedIndex, setHighestUnlockedIndex] = useState(0);
-  const [isTimelineHovered, setIsTimelineHovered] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const [stageCompleted, setStageCompleted] = useState(false);
   const [xp, setXp] = useState(0);
   const [resetKey, setResetKey] = useState(0);
+  const [showCover, setShowCover] = useState(true);
+  const [showIntroSpread, setShowIntroSpread] = useState(false);
   
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
   
@@ -42,7 +50,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   };
 
   const handleDebriefContinue = () => {
-    if (currentNode.rewardXP && currentNode.type === 'debrief') {
+    if (currentNode.rewardXP && (currentNode.type === 'debrief' || currentNode.type === 'summary')) {
       addXp(currentNode.rewardXP);
     }
     if (currentNode.isFinal) {
@@ -59,8 +67,16 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   // Global Theme Hook
   const { theme, toggleTheme } = useTheme();
 
+  if (showCover) {
+    return <ChapterCover onOpenBook={() => { setShowCover(false); setShowIntroSpread(true); }} onBack={onBackToDashboard} />;
+  }
+
+  if (showIntroSpread) {
+    return <ChapterIntroSpread onContinue={() => setShowIntroSpread(false)} onBack={() => { setShowIntroSpread(false); setShowCover(true); }} />;
+  }
+
   return (
-    <div className="activity-workspace">
+    <div className="activity-workspace flex h-screen bg-[#eaf6fb] overflow-hidden font-geo" style={{ paddingTop: '60px' }}>
       {/* ═══════════════════════════════════════════
           GLOBAL ACTION BAR (WINDOW CHROME)
           ═══════════════════════════════════════════ */}
@@ -87,6 +103,20 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         </div>
         
         <div className="global-action-bar-right">
+          <button 
+            onClick={() => {
+              if (currentFlowIndex > 0) {
+                setCurrentFlowIndex(prev => prev - 1);
+              } else {
+                setShowIntroSpread(true);
+              }
+            }}
+            className="outline"
+            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
+          >
+            <ArrowLeft size={14} /> Back
+          </button>
+
           <button 
             className="outline" 
             onClick={toggleTheme}
@@ -126,53 +156,49 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       </div>
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
-        {/* Unified Hover Container to prevent flickering */}
-        <div
+        {/* Toggle Button */}
+        <button
+          onClick={() => setIsTimelineOpen(!isTimelineOpen)}
           style={{
             position: 'absolute',
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: isTimelineHovered ? '320px' : '40px',
-            zIndex: 50,
-            display: 'flex',
-            alignItems: 'center'
-          }}
-          onMouseEnter={() => setIsTimelineHovered(true)}
-          onMouseLeave={() => setIsTimelineHovered(false)}
-        >
-          {/* Subtle Visual Indicator when closed */}
-          <div style={{
-            position: 'absolute',
-            left: 0,
+            left: isTimelineOpen ? '320px' : '0px',
             top: '50%',
             transform: 'translateY(-50%)',
-            width: '6px',
-            height: '80px',
-            background: 'var(--accent)',
-            opacity: isTimelineHovered ? 0 : 0.4,
-            borderTopRightRadius: '6px',
-            borderBottomRightRadius: '6px',
-            transition: 'opacity 0.3s ease',
-            pointerEvents: 'none',
-            zIndex: 1
-          }} />
+            zIndex: 51,
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderLeft: 'none',
+            borderTopRightRadius: '8px',
+            borderBottomRightRadius: '8px',
+            padding: '16px 8px',
+            cursor: 'pointer',
+            boxShadow: '2px 0 8px rgba(0,0,0,0.1)',
+            transition: 'left 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            color: 'var(--text-primary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          title="Toggle Timeline"
+        >
+          <ArrowRight size={16} style={{ transform: isTimelineOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }} />
+        </button>
 
-          {/* Hover-to-reveal Timeline Sidebar */}
-          <div 
-            className="timeline-flyout"
-            style={{ 
-              position: 'absolute', 
-              left: 0,
-              top: 0, bottom: 0, zIndex: 50, 
-              background: 'var(--surface)', borderRight: '1px solid var(--border)', 
-              display: 'flex', flexDirection: 'column', 
-              overflow: 'hidden', boxShadow: isTimelineHovered ? '4px 0 20px rgba(0,0,0,0.2)' : 'none',
-              width: '320px', 
-              transform: isTimelineHovered ? 'translateX(0)' : 'translateX(-100%)',
-              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
-            }}
-          >
+        {/* Timeline Sidebar */}
+        <div 
+          className="timeline-flyout"
+          style={{ 
+            position: 'absolute', 
+            left: 0,
+            top: 0, bottom: 0, zIndex: 50, 
+            background: 'var(--surface)', borderRight: '1px solid var(--border)', 
+            display: 'flex', flexDirection: 'column', 
+            overflow: 'hidden', boxShadow: isTimelineOpen ? '4px 0 20px rgba(0,0,0,0.2)' : 'none',
+            width: '320px', 
+            transform: isTimelineOpen ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
+          }}
+        >
           <div style={{ width: '320px', padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
             <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '0.9rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
               Investigation Progress
@@ -185,7 +211,9 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 
                 let icon = '🎯';
                 if (node.type === 'activity') icon = '🧪';
-                if (node.type === 'debrief') icon = '📝';
+                if (node.type === 'debrief' || node.type === 'summary') icon = '📝';
+                if (node.type === 'handbook') icon = '📖';
+                if (node.type === 'checkpoint') icon = '✅';
                 
                 return (
                   <button 
@@ -195,7 +223,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                       if (!isLocked) {
                         try { playSuccess(); } catch (e) {}
                         setCurrentFlowIndex(idx);
-                        setIsTimelineHovered(false);
+                        setIsTimelineOpen(false);
                       }
                     }}
                     style={{
@@ -228,12 +256,21 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             </div>
           </div>
         </div>
-        </div>
 
         {/* Main Content Area - Full Width */}
-        <div className="activity-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: 'auto' }}>
+        <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: currentNode.type === 'activity' ? 'hidden' : 'auto' }}>
           {currentNode.type === 'mission' && (
-            <ChiefDetective mode="mission" data={currentNode} onContinue={handleMissionAccept} />
+            <MissionBriefingSpread 
+              data={currentNode} 
+              onContinue={handleMissionAccept} 
+              onBack={() => {
+                if (currentFlowIndex > 0) {
+                  setCurrentFlowIndex(prev => prev - 1);
+                } else {
+                  setShowIntroSpread(true);
+                }
+              }} 
+            />
           )}
           
           {currentNode.type === 'debrief' && (
@@ -241,13 +278,108 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           )}
           
           {currentNode.type === 'activity' && (
-            <currentNode.component 
-              key={`${currentNode.id}-${resetKey}`}
-              {...(currentNode.props || {})} 
-              onComplete={handleStageComplete} 
-              addXp={addXp} 
-            />
+            ['quiz', 'summary'].includes(currentNode.id) ? (
+              <currentNode.component 
+                key={`${currentNode.id}-${resetKey}`}
+                {...(currentNode.props || {})} 
+                onComplete={handleStageComplete} 
+                addXp={addXp} 
+              />
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: currentNode.layout || '1fr 1fr', gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
+                {/* Left Side: Handbook */}
+                {currentNode.handbook ? (
+                  <currentNode.handbook 
+                    highestUnlockedIndex={highestUnlockedIndex} 
+                    currentFlowIndex={currentFlowIndex} 
+                    stageCompleted={stageCompleted} 
+                  />
+                ) : (
+                  <InvestigationHandbook 
+                    highestUnlockedIndex={highestUnlockedIndex} 
+                    currentFlowIndex={currentFlowIndex} 
+                    stageCompleted={stageCompleted} 
+                  />
+                )}
+                
+                {/* Right Side: Activity */}
+                <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
+                  <currentNode.component 
+                    key={`${currentNode.id}-${resetKey}`}
+                    {...(currentNode.props || {})} 
+                    onComplete={handleStageComplete} 
+                    addXp={addXp} 
+                  />
+                </div>
+              </div>
+            )
           )}
+
+          {currentNode.type === 'handbook' && (() => {
+            const nextNode = chapterFlow[currentFlowIndex + 1];
+            return (
+              <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+                {nextNode && nextNode.type === 'activity' && (
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
+                      <nextNode.component {...(nextNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                    </div>
+                  </div>
+                )}
+                <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <InvestigationHandbook data={currentNode} onComplete={handleNext} />
+                </div>
+              </div>
+            );
+          })()}
+
+          {currentNode.type === 'checkpoint' && (() => {
+            let lastActivityNode = null;
+            for (let i = currentFlowIndex - 1; i >= 0; i--) {
+              if (chapterFlow[i].type === 'activity') {
+                lastActivityNode = chapterFlow[i];
+                break;
+              }
+            }
+            return (
+              <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+                {lastActivityNode && (
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
+                      <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                    </div>
+                  </div>
+                )}
+                <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <DetectiveCheckpoint data={currentNode} onComplete={handleNext} addXp={addXp} />
+                </div>
+              </div>
+            );
+          })()}
+
+          {currentNode.type === 'summary' && (() => {
+            let lastActivityNode = null;
+            for (let i = currentFlowIndex - 1; i >= 0; i--) {
+              if (chapterFlow[i].type === 'activity') {
+                lastActivityNode = chapterFlow[i];
+                break;
+              }
+            }
+            return (
+              <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
+                {lastActivityNode && (
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
+                      <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                    </div>
+                  </div>
+                )}
+                <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+                  <EvidenceSummary data={currentNode} onComplete={handleDebriefContinue} />
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>

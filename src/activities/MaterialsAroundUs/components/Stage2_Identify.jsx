@@ -138,19 +138,6 @@ export default function Stage2_Identify({ onComplete, addXp }) {
       icon: TumblerIcon 
     },
     { 
-      id: 'plate', 
-      name: 'Plate', 
-      correctMaterial: 'Ceramic', 
-      options: ['Paper', 'Ceramic', 'Metal', 'Wood'], 
-      explanations: {
-        'Ceramic': 'Ceramic is smooth, hard, and perfect for dining.',
-        'Paper': 'Paper plates are flimsy and single-use.',
-        'Metal': 'Metal plates exist, but this is a thick, breakable ceramic one.',
-        'Wood': 'Wood is porous and hard to clean properly.'
-      },
-      icon: PlateIcon 
-    },
-    { 
       id: 'spoon', 
       name: 'Spoon', 
       correctMaterial: 'Metal', 
@@ -175,19 +162,6 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         'Plastic': 'Plastic releases toxic fumes when burned and melts dangerously.'
       },
       icon: CandleIcon 
-    },
-    { 
-      id: 'cricket_ball', 
-      name: 'Cricket Ball', 
-      correctMaterial: 'Leather', 
-      options: ['Glass', 'Leather', 'Metal', 'Paper'], 
-      explanations: {
-        'Leather': 'Leather is tough, flexible, and stitched to withstand heavy impacts.',
-        'Glass': 'Glass would shatter instantly when hit by a bat.',
-        'Metal': 'Metal is too hard, heavy, and dangerous for sports.',
-        'Paper': 'Paper would crumple and deform upon impact.'
-      },
-      icon: BallIcon 
     }
   ];
 
@@ -271,7 +245,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr 280px', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1.5rem' }}>
         {/* Left: Tray of items */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '580px' }}>
           <h4 style={{ margin: 0, fontSize: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
@@ -582,30 +556,6 @@ export default function Stage2_Identify({ onComplete, addXp }) {
           )}
         </div>
 
-        {/* Right: History Did You Know panel */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '580px', background: 'var(--card-bg)' }}>
-
-          <div style={{ background: 'var(--warning-bg)', border: '1px solid var(--warning-border)', padding: '0.8rem', borderRadius: '10px' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--warning)', fontWeight: 'bold', fontSize: '1rem' }}>
-              <Info size={16} /> Did you know?
-            </span>
-            <h4 style={{ margin: '0.4rem 0 0 0', fontSize: '1.15rem', color: 'var(--text-heading)' }}>Earliest Indian Pottery</h4>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '0 0.25rem' }}>
-            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0 }}>
-              Indian pottery dates back <strong>7,000–8,000 years</strong> to early sites like Lahuradewa and Mehrgarh. 
-            </p>
-            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0 }}>
-              Natural clay is kneaded, shaped on a wheel, and baked in hot kilns to form hard <strong>terracotta</strong>.
-            </p>
-            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0 }}>
-              Large ancient Harappan storage jars made this way are exhibited at the National Museum in New Delhi.
-            </p>
-          </div>
-
-          <div style={{ flex: 1 }} />
-        </div>
       </div>
     </div>
   );

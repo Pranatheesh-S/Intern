@@ -123,9 +123,11 @@ export default function Activity4_7({ onBackToDashboard, onComplete }) {
         </main>
         
         {/* Right Sidebar (Educational Tip) */}
-        <aside style={{ width: '280px', flexShrink: 0 }}>
-          <DidYouKnow />
-        </aside>
+        {!['questions', 'challenge'].includes(activeTab) && (
+          <aside style={{ width: '280px', flexShrink: 0 }}>
+            <DidYouKnow />
+          </aside>
+        )}
       </div>
     </div>
   );

@@ -646,7 +646,18 @@ export default function App() {
   const navigateTo = (subject, activity, section = null) => {
     const params = new URLSearchParams();
     if (subject) params.set('subject', subject);
-    if (activity) params.set('activity', activity);
+    if (activity) {
+      params.set('activity', activity);
+      try {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
     if (section) params.set('section', section);
     window.location.hash = params.toString();
   };
@@ -1432,32 +1443,28 @@ export default function App() {
                   </p>
 
                   <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
-                    {chapter.num === 4 ? (
-                      <>
-                        <button 
-                          onClick={() => navigateTo('class6', 'chapter4_flow')}
-                          className="outline" 
-                          style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                        >
-                          <BookOpen size={14} /> Open Chapter
-                        </button>
-                        <button 
-                          onClick={() => navigateTo('class6', 'chapter4')}
-                          className="primary" 
-                          style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                        >
-                          Activity Page <ArrowRight size={14} />
-                        </button>
-                      </>
-                    ) : (
-                      <button 
-                        onClick={() => navigateTo('class6', `chapter${chapter.num}`)}
-                        className="primary" 
-                        style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                      >
-                        Open Chapter <ArrowRight size={14} />
-                      </button>
-                    )}
+                    <button 
+                      onClick={() => {
+                        if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
+                        else if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
+                        else navigateTo('class6', `chapter${chapter.num}`);
+                      }}
+                      className="outline" 
+                      style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                    >
+                      <BookOpen size={14} /> Open Chapter
+                    </button>
+                    <button 
+                      onClick={() => {
+                        if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
+                        else if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
+                        else navigateTo('class6', `chapter${chapter.num}`);
+                      }}
+                      className="primary" 
+                      style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                    >
+                      Activity Page <ArrowRight size={14} />
+                    </button>
                   </div>
                 </div>
               );
@@ -4888,8 +4895,8 @@ export default function App() {
           title={theme === 'dark' ? "Switch to Light Theme" : "Switch to Dark Theme"}
           style={{
             position: 'fixed',
-            bottom: '1.5rem',
-            right: '1.5rem',
+            top: 'clamp(10px, 1.5vh, 20px)',
+            right: 'clamp(20px, 3.2vw, 52px)',
             zIndex: 9999,
             borderRadius: '50%',
             width: '45px',

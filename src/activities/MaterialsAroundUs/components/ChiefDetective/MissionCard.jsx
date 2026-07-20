@@ -53,9 +53,9 @@ export default function MissionCard({ mission, onAccept }) {
         <button 
           onClick={onAccept}
           className="primary"
-          style={{ width: '100%', padding: '1rem', fontSize: '1.1rem', display: 'flex', justifyContent: 'center', gap: '0.5rem' }}
+          style={{ width: '100%', padding: '1rem', fontSize: '1.1rem', display: 'flex', justifyContent: 'center', gap: '0.5rem', alignItems: 'center' }}
         >
-          Accept Mission <ChevronRight size={20} />
+          Open Secret Book <ChevronRight size={20} />
         </button>
       </div>
     </div>

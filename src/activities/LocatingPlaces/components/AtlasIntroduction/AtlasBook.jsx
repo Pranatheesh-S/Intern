@@ -14,8 +14,7 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
       <div style={{
         position: 'relative',
         width: '100%',
-        maxWidth: '100%',
-        aspectRatio: '1.4 / 1',
+        height: '100%',
         transform: isOpen ? 'translateX(0)' : 'translateX(-25%)',
         transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
         transformStyle: 'preserve-3d'

@@ -69,48 +69,19 @@ export default function Stage1_Experiment({ onComplete }) {
           overflow: 'hidden',
           boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
         }}>
-          {/* Books Stack */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '-2px', zIndex: 2 }}>
-            {/* Blue Book */}
-            <div style={{ width: '130px', height: '18px', background: '#3b82f6', border: '2px solid #1e293b', borderRadius: '4px', borderBottom: 'none', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 10px' }}>
-              <div style={{ width: '4px', height: '100%', background: '#fbbf24', borderLeft: '1px solid #1e293b', borderRight: '1px solid #1e293b' }} />
-              <div style={{ width: '4px', height: '100%', background: '#fbbf24', borderLeft: '1px solid #1e293b', borderRight: '1px solid #1e293b' }} />
-            </div>
-            {/* Green Book */}
-            <div style={{ width: '140px', height: '20px', background: '#10b981', border: '2px solid #1e293b', borderRadius: '4px', borderBottom: 'none', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fef08a', border: '1px solid #1e293b' }} />
-              <div style={{ width: '60px', height: '6px', background: '#fef08a', border: '1px solid #1e293b', borderRadius: '2px' }} />
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fef08a', border: '1px solid #1e293b' }} />
-            </div>
-            {/* Purple Book */}
-            <div style={{ width: '150px', height: '18px', background: '#8b5cf6', border: '2px solid #1e293b', borderRadius: '4px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px' }}>
-              <div style={{ width: '4px', height: '100%', background: '#fbbf24', borderLeft: '1px solid #1e293b', borderRight: '1px solid #1e293b' }} />
-              <div style={{ width: '4px', height: '100%', background: '#fbbf24', borderLeft: '1px solid #1e293b', borderRight: '1px solid #1e293b' }} />
-            </div>
-          </div>
-
-          {/* Detailed Wooden Desk */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', zIndex: 1 }}>
-            {/* Desk Top (Two halves) */}
-            <div style={{ display: 'flex', gap: '2px', width: '85%' }}>
-              <div style={{ flex: 1, height: '25px', background: '#d4a373', border: '2px solid #333', borderRadius: '2px' }} />
-              <div style={{ flex: 1, height: '25px', background: '#d4a373', border: '2px solid #333', borderRadius: '2px' }} />
-            </div>
-            {/* Desk Frame (Two halves) */}
-            <div style={{ display: 'flex', gap: '2px', width: '75%' }}>
-              <div style={{ flex: 1, height: '25px', background: '#c49a6c', border: '2px solid #333', borderTop: 'none' }} />
-              <div style={{ flex: 1, height: '25px', background: '#c49a6c', border: '2px solid #333', borderTop: 'none' }} />
-            </div>
-            
-            {/* Desk Legs */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '80%', marginTop: '-25px', zIndex: -1 }}>
-              <div style={{ width: '30px', height: '180px', background: '#b5835a', border: '2px solid #333', borderTop: 'none' }} />
-              <div style={{ width: '30px', height: '180px', background: '#b5835a', border: '2px solid #333', borderTop: 'none' }} />
-            </div>
-          </div>
+          <img src="/table2.png" alt="Experiment Setup" style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }} />
           
-          {/* String */}
-          <div style={{ width: '2px', height: '150px', background: '#1e293b', marginTop: '-180px', zIndex: 0 }} />
+          {/* Rope */}
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            bottom: '90px',
+            width: '2px',
+            height: '170px',
+            background: '#1e293b',
+            zIndex: 9
+          }} />
           
           {/* Magnet Wrapper for 3D Perspective */}
           <div style={{
@@ -171,60 +142,15 @@ export default function Stage1_Experiment({ onComplete }) {
                   }}>
                     <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.85rem' }}>{z === 10 ? 'N' : ''}</div>
                     <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.85rem' }}>{z === 10 ? 'S' : ''}</div>
+                    {/* The string band wrapping around */}
+                    <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', width: '4px', height: '100%', background: '#1e293b' }} />
                   </div>
                 ))}
                 
                 {/* Knot for the string attachment (top layer) */}
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%) translateZ(12px)', width: '6px', height: '6px', background: '#94a3b8', borderRadius: '50%' }} />
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%) translateZ(12px)', width: '6px', height: '6px', background: '#1e293b', borderRadius: '50%' }} />
               </motion.div>
             </div>
-          </div>
-
-          {/* Ground Markings (Taped Paper compass) */}
-          <div style={{
-            position: 'absolute',
-            bottom: '10px',
-            width: '240px',
-            height: '110px',
-            transform: 'rotateX(60deg)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxSizing: 'border-box',
-            zIndex: 0
-          }}>
-            {/* The paper */}
-            <div style={{
-              position: 'relative',
-              width: '100%',
-              height: '100%',
-              background: '#f8f9fa',
-              clipPath: 'polygon(15% 0, 85% 0, 100% 25%, 100% 75%, 85% 100%, 15% 100%, 0 75%, 0 25%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              {/* Vertical line */}
-              <div style={{ position: 'absolute', width: '2px', height: '65%', background: '#111' }} />
-              {/* Horizontal line */}
-              <div style={{ position: 'absolute', width: '75%', height: '2px', background: '#111' }} />
-              
-              {/* Labels */}
-              <span style={{ position: 'absolute', left: '10px', fontWeight: 'bold', fontSize: '1.2rem', color: '#000', fontFamily: 'serif' }}>N</span>
-              <span style={{ position: 'absolute', right: '10px', fontWeight: 'bold', fontSize: '1.2rem', color: '#000', fontFamily: 'serif' }}>S</span>
-              <span style={{ position: 'absolute', top: '5px', fontWeight: 'bold', fontSize: '1.1rem', color: '#000', fontFamily: 'serif' }}>W</span>
-              <span style={{ position: 'absolute', bottom: '5px', fontWeight: 'bold', fontSize: '1.1rem', color: '#000', fontFamily: 'serif' }}>E</span>
-            </div>
-
-            {/* Tape Corners */}
-            {/* Top-Left */}
-            <div style={{ position: 'absolute', top: '-2px', left: '5px', width: '45px', height: '14px', background: 'rgba(230, 224, 200, 0.9)', transform: 'rotate(-40deg)', boxShadow: '1px 1px 2px rgba(0,0,0,0.1)' }} />
-            {/* Top-Right */}
-            <div style={{ position: 'absolute', top: '-2px', right: '5px', width: '45px', height: '14px', background: 'rgba(230, 224, 200, 0.9)', transform: 'rotate(40deg)', boxShadow: '1px 1px 2px rgba(0,0,0,0.1)' }} />
-            {/* Bottom-Left */}
-            <div style={{ position: 'absolute', bottom: '-2px', left: '5px', width: '45px', height: '14px', background: 'rgba(230, 224, 200, 0.9)', transform: 'rotate(40deg)', boxShadow: '1px 1px 2px rgba(0,0,0,0.1)' }} />
-            {/* Bottom-Right */}
-            <div style={{ position: 'absolute', bottom: '-2px', right: '5px', width: '45px', height: '14px', background: 'rgba(230, 224, 200, 0.9)', transform: 'rotate(-40deg)', boxShadow: '1px 1px 2px rgba(0,0,0,0.1)' }} />
           </div>
           
           {/* Rest Line (appears after first spin) */}

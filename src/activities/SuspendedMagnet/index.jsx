@@ -55,6 +55,7 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
             onClick={onBackToDashboard} 
             className="outline" 
             style={{ 
+              position: 'relative', zIndex: 100,
               padding: '0.4rem 0.8rem', 
               fontSize: '0.8rem', 
               gap: '0.35rem',
@@ -119,9 +120,11 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
       </main>
 
         {/* Right Sidebar (Educational Tip) */}
-        <aside style={{ width: '280px', flexShrink: 0 }}>
-          <DidYouKnow />
-        </aside>
+        {activeTab !== 'quiz' && (
+          <aside style={{ width: '280px', flexShrink: 0 }}>
+            <DidYouKnow />
+          </aside>
+        )}
       </div>
     </div>
   );

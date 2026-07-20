@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Space+Grotesk:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* ═══════════════════════════════════════════
    THEME VARIABLES
@@ -201,7 +201,7 @@ body {
   display: block;
   min-width: 320px;
   min-height: 100vh;
-  overflow-x: clip;
+  overflow-x: hidden;
   background: var(--page-bg);
   color: var(--text-primary);
   transition: background-color 0.3s, color 0.3s;
@@ -362,7 +362,7 @@ button.outline.active {
   padding: 0; 
   display: flex;
   flex-direction: column;
-  overflow-x: clip;
+  overflow-x: hidden;
 }
 
 /* Global Content Wrapper - applies consistent padding without fixed widths */
@@ -415,11 +415,11 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-top:hover) .header {
   transition: transform 0.2s ease-out 0s, opacity 0.2s ease-out 0s;
 }
 
-/* 10px activation strip for easy targeting */
+/* 60px activation strip for easy targeting */
 .focus-trigger-top {
   position: fixed;
   top: 0; left: 0; right: 0;
-  height: 10px;
+  height: 60px;
   z-index: 99;
 }
 
@@ -560,9 +560,26 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-left:hover) .lab-sid
 .activity-workspace {
   padding-top: calc(60px + var(--space-xl));
   width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* internal header is kept visible in focus mode to ensure tabs and back button are always accessible */
+/* Hide internal header in focus mode */
+body.focus-mode-active .lab-internal-header {
+  opacity: 0;
+  height: 0;
+  margin-bottom: 0;
+  padding: 0;
+  pointer-events: none;
+}
+body.focus-mode-active:has(.focus-trigger-top:hover) .lab-internal-header {
+  opacity: 1;
+  height: auto;
+  margin-bottom: var(--space-xl);
+  pointer-events: all;
+}
 
 .canvas-container {
   display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -1085,5 +1102,3 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-left:hover) .lab-sid
     grid-template-columns: 1fr;
   }
 }
-
-
