@@ -7,10 +7,16 @@ import Stage4_LustreHardness from './components/Stage4_LustreHardness';
 import Stage4a_Appearance_Observe from './components/Stage4a_Appearance_Observe';
 import Stage4b_Appearance_Group from './components/Stage4b_Appearance_Group';
 import Stage4c_Hardness_Observe from './components/Stage4c_Hardness_Observe';
-import Stage6_Transparency from './components/Stage6_Transparency';
+import Stage4d_MaterialIdentification from './components/Stage4d_MaterialIdentification';
+import Stage6a_Surveillance from './components/Stage6a_Surveillance';
+import Stage6b_Classify from './components/Stage6b_Classify';
 import Stage7_SolubilityMatter from './components/Stage7_SolubilityMatter';
 import Stage8_AyurvedaSummary from './components/Stage8_AyurvedaSummary';
 import Stage9_Quiz from './components/Stage9_Quiz';
+import Handbook_Appearance from './components/Educational/Handbook_Appearance';
+import Handbook_Hardness from './components/Educational/Handbook_Hardness';
+import Handbook_GroupAppearance from './components/Educational/Handbook_GroupAppearance';
+import Handbook_Transparency from './components/Educational/Handbook_Transparency';
 
 export const chapterFlow = [
   // 0: Intro Mission
@@ -123,41 +129,108 @@ export const chapterFlow = [
   },
   // 10: Activities
   // 10: Activities
-  { type: 'activity', id: 'stage4_1', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 1: Observation Notebook', component: Stage4a_Appearance_Observe },
-  { type: 'activity', id: 'stage4_2', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 2: Group by Appearance', component: Stage4b_Appearance_Group },
-  {
-    type: 'debrief',
-    barrier: 3,
-    title: '6.3.1: Appearance Debrief',
-    dialogue: 'Materials with shiny surfaces are called Lustrous. Usually metals. BUT... Are all lustrous materials metals? No! Things like plastic spoons or wax can be shiny without being metals.',
-    observations: [
-      { object: 'Iron / Copper', finding: 'Shiny = Lustrous' },
-      { object: 'Wood / Paper', finding: 'Not shiny = Non-lustrous' }
-    ],
-    rewardReason: 'Appearance Observations',
-    rewardXP: 100
-  },
-  { type: 'activity', id: 'stage4_3', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 3: Lustre Testing', component: Stage4_LustreHardness, props: { mode: 'lustre_only' } },
+  { type: 'activity', id: 'stage4_1', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 1: Observation Notebook', component: Stage4a_Appearance_Observe, handbook: Handbook_Appearance, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage4_2', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 2: Group by Appearance', component: Stage4b_Appearance_Group, handbook: Handbook_Appearance, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage4_3', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 3: Lustre Testing', component: Stage4_LustreHardness, props: { mode: 'lustre_only' }, handbook: Handbook_Appearance },
   
-  { type: 'activity', id: 'stage4_4', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 1: Observe Hardness', component: Stage4c_Hardness_Observe },
-  { type: 'activity', id: 'stage4_5', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 2: Scratch Investigation', component: Stage4_LustreHardness, props: { mode: 'hardness_only' } },
+  // Checkpoint for 6.3.1
   {
-    type: 'debrief',
-    barrier: 3,
-    title: '6.3.2: Hardness Conclusion',
-    dialogue: 'Excellent! Materials which can be compressed or scratched easily are soft, while those difficult to compress or scratch are hard. But remember: Hardness is relative! Rubber is harder than sponge but softer than iron.',
-    observations: [
-      { object: 'Sponge', finding: 'Compresses = Soft' },
-      { object: 'Iron', finding: 'Unscratchable = Hard' }
-    ],
-    rewardReason: 'Hardness Observations',
-    rewardXP: 100
+    type: 'checkpoint',
+    id: 'checkpoint_3_1',
+    title: 'Detective Checkpoint',
+    questions: [
+      {
+        question: 'What do we call materials that have a shiny surface, like iron or gold?',
+        options: ['Lustrous', 'Dull', 'Transparent'],
+        correct: 0
+      },
+      {
+        question: 'Are all lustrous materials metals?',
+        options: ['Yes, only metals shine.', 'No, some non-metals like plastic or wax can also be shiny.'],
+        correct: 1
+      }
+    ]
   },
   
-  { type: 'activity', id: 'stage7_sol', title: 'Stage 6.3.3: Solubility', subtitle: 'Phase 1: Soluble or Insoluble?', component: Stage7_SolubilityMatter, props: { mode: 'solubility' } },
-  // Float/Sink (6.3.4) and Transparency (6.3.5) will follow here
-  { type: 'activity', id: 'stage6', title: 'Stage 6.3.5: Transparency', subtitle: 'Phase 1: Light passing through', component: Stage6_Transparency },
-  // 13: Debrief 3
+  // Summary for 6.3.1
+  {
+    type: 'summary',
+    barrier: 3,
+    title: 'Appearance Summary Logged',
+    dialogue: 'Fantastic work Detective! You proved that observing and testing for lustre helps us identify materials correctly.',
+    discoveries: [
+      'Materials with a shiny surface are called Lustrous.',
+      'Metals usually have lustre (e.g. Iron, Copper).',
+      'Not all lustrous materials are metals; some are coated or polished.'
+    ],
+    rewardReason: 'Appearance Expert Badge',
+    rewardXP: 100
+  },
+  
+  // Mission Briefing for 6.3.2 Hardness
+  {
+    type: 'mission',
+    title: 'Stage 6.3.2: Hardness',
+    dialogue: 'Brilliant work on appearance! Now, we must investigate how easy it is to scratch or compress the materials. This is the property of Hardness.',
+    description: 'Materials can be soft (easily compressed) or hard (difficult to compress). Your next mission is to physically test the hardness of various evidence items.',
+    objective: 'Test materials for hardness and categorize them.',
+    difficulty: 2,
+    estimatedTime: '5 minutes',
+    rewardXP: 100
+  },
+  
+  { type: 'activity', id: 'stage4_4', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 1: Observe Hardness', component: Stage4c_Hardness_Observe, handbook: Handbook_Hardness, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage4_5', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 2: Material Identification', component: Stage4d_MaterialIdentification, handbook: Handbook_Hardness, layout: '450px 1fr' },
+  
+  // Checkpoint for 6.3.2
+  {
+    type: 'checkpoint',
+    id: 'checkpoint_3_2',
+    title: 'Detective Checkpoint',
+    questions: [
+      {
+        question: 'What do we call materials that are difficult to compress or scratch?',
+        options: ['Soft', 'Hard', 'Lustrous'],
+        correct: 1
+      },
+      {
+        question: 'Which of the following is an example of a soft material?',
+        options: ['Iron', 'Stone', 'Sponge'],
+        correct: 2
+      }
+    ]
+  },
+  
+  // Summary for 6.3.2
+  {
+    type: 'summary',
+    barrier: 3,
+    title: 'Hardness Summary Logged',
+    dialogue: 'Excellent! You verified that hardness is determined by how easily a material can be compressed or scratched. This is vital evidence.',
+    discoveries: [
+      'Materials that can be compressed or scratched easily are soft.',
+      'Materials that are difficult to compress or scratch are hard.',
+      'Hardness is a physical property used to classify materials.'
+    ],
+    rewardReason: 'Hardness Expert Badge',
+    rewardXP: 100
+  },
+  
+  // Mission Briefing for 6.3.3 Transparency
+  {
+    type: 'mission',
+    title: 'Stage 6.3.3: Transparency',
+    dialogue: 'During a stakeout, a detective must know which materials block sight and which allow it. Let\'s investigate the property of transparency.',
+    description: 'Materials can be transparent, translucent, or opaque based on how much light passes through them. Your next mission is to analyze materials for surveillance visibility.',
+    objective: 'Test whether materials are transparent, translucent, or opaque.',
+    difficulty: 2,
+    estimatedTime: '5 minutes',
+    rewardXP: 100
+  },
+  
+  { type: 'activity', id: 'stage6_a', title: 'Stage 6.3.3: Transparency', subtitle: 'Phase 1: Surveillance Simulator', component: Stage6a_Surveillance, handbook: Handbook_Transparency, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage6_b', title: 'Stage 6.3.3: Transparency', subtitle: 'Phase 2: Activity 6.6', component: Stage6b_Classify, handbook: Handbook_Transparency, layout: '450px 1fr' },
+  // Float/Sink (6.3.4) and Solubility will follow here
   {
     type: 'debrief',
     barrier: 3,

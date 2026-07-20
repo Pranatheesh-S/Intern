@@ -286,13 +286,21 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 addXp={addXp} 
               />
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: currentNode.layout || '1fr 1fr', gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
                 {/* Left Side: Handbook */}
-                <InvestigationHandbook 
-                  highestUnlockedIndex={highestUnlockedIndex} 
-                  currentFlowIndex={currentFlowIndex} 
-                  stageCompleted={stageCompleted} 
-                />
+                {currentNode.handbook ? (
+                  <currentNode.handbook 
+                    highestUnlockedIndex={highestUnlockedIndex} 
+                    currentFlowIndex={currentFlowIndex} 
+                    stageCompleted={stageCompleted} 
+                  />
+                ) : (
+                  <InvestigationHandbook 
+                    highestUnlockedIndex={highestUnlockedIndex} 
+                    currentFlowIndex={currentFlowIndex} 
+                    stageCompleted={stageCompleted} 
+                  />
+                )}
                 
                 {/* Right Side: Activity */}
                 <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>

@@ -2,8 +2,120 @@ import React, { useState } from 'react';
 import { Sparkles, Check, FileText, Lightbulb, LightbulbOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
+import { PresentationControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
+
+const DeskLamp = ({ lightOn }) => {
+  // Lamp sits to the right of the scene, arm reaching left toward the object
+  // Base center at world origin of the group, positioned via parent group in scene
+  return (
+    <group>
+      {/* === BASE === */}
+      <mesh position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.9, 1.0, 0.18, 32]} />
+        <meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.4} />
+      </mesh>
+      {/* Base top disc */}
+      <mesh position={[0, 0.12, 0]}>
+        <cylinderGeometry args={[0.45, 0.9, 0.12, 32]} />
+        <meshStandardMaterial color="#1a1a1a" metalness={0.8} roughness={0.3} />
+      </mesh>
+
+      {/* === LOWER PIVOT / STEM === */}
+      <mesh position={[0, 0.28, 0]}>
+        <cylinderGeometry args={[0.18, 0.18, 0.25, 16]} />
+        <meshStandardMaterial color="#333" metalness={0.9} roughness={0.2} />
+      </mesh>
+
+      {/* === LOWER HINGE (horizontal cylinder) === */}
+      <mesh position={[0, 0.4, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.2, 0.2, 0.55, 16]} />
+        <meshStandardMaterial color="#111" metalness={0.9} roughness={0.2} />
+      </mesh>
+
+      {/* === LOWER ARM - goes up and slightly left === */}
+      {/* Rotation: z=0.25 tilts it slightly left from vertical */}
+      <group position={[0, 0.4, 0]} rotation={[0, 0, -0.25]}>
+        {/* Left strut */}
+        <mesh position={[-0.12, 1.5, 0]}>
+          <cylinderGeometry args={[0.055, 0.055, 3.0, 12]} />
+          <meshStandardMaterial color="#1a1a1a" metalness={0.7} roughness={0.4} />
+        </mesh>
+        {/* Right strut */}
+        <mesh position={[0.12, 1.5, 0]}>
+          <cylinderGeometry args={[0.055, 0.055, 3.0, 12]} />
+          <meshStandardMaterial color="#1a1a1a" metalness={0.7} roughness={0.4} />
+        </mesh>
+
+        {/* === MIDDLE HINGE === */}
+        <mesh position={[0, 3.05, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.22, 0.22, 0.6, 16]} />
+          <meshStandardMaterial color="#111" metalness={0.9} roughness={0.2} />
+        </mesh>
+
+        {/* === UPPER ARM - bends more to the left and slightly down === */}
+        {/* rotation z=1.1 means it swings ~63deg to the left */}
+        <group position={[0, 3.05, 0]} rotation={[0, 0, 1.1]}>
+          {/* Left strut */}
+          <mesh position={[-0.12, 1.2, 0]}>
+            <cylinderGeometry args={[0.055, 0.055, 2.4, 12]} />
+            <meshStandardMaterial color="#1a1a1a" metalness={0.7} roughness={0.4} />
+          </mesh>
+          {/* Right strut */}
+          <mesh position={[0.12, 1.2, 0]}>
+            <cylinderGeometry args={[0.055, 0.055, 2.4, 12]} />
+            <meshStandardMaterial color="#1a1a1a" metalness={0.7} roughness={0.4} />
+          </mesh>
+
+          {/* === HEAD HINGE === */}
+          <mesh position={[0, 2.45, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.18, 0.18, 0.5, 16]} />
+            <meshStandardMaterial color="#111" metalness={0.9} roughness={0.2} />
+          </mesh>
+
+          {/* === LAMP HEAD (shade pointing down-left at object) === */}
+          {/* rotation z=-1.4 tilts the shade to point left/down */}
+          <group position={[0, 2.45, 0]} rotation={[0, 0, -1.4]}>
+            {/* Shade outer shell - truncated cone open at bottom */}
+            <mesh position={[0, -0.6, 0]}>
+              <cylinderGeometry args={[0.38, 0.9, 1.4, 32, 1, true]} />
+              <meshStandardMaterial color="#252525" metalness={0.6} roughness={0.4} side={THREE.DoubleSide} />
+            </mesh>
+            {/* Shade top cap */}
+            <mesh position={[0, 0.08, 0]}>
+              <cylinderGeometry args={[0.38, 0.38, 0.14, 32]} />
+              <meshStandardMaterial color="#252525" metalness={0.6} roughness={0.4} />
+            </mesh>
+            {/* Inner reflector glow */}
+            <mesh position={[0, -0.6, 0]}>
+              <cylinderGeometry args={[0.36, 0.88, 1.38, 32, 1, true]} />
+              <meshStandardMaterial
+                color={lightOn ? '#fff8e1' : '#888'}
+                emissive={lightOn ? '#ffedcc' : '#000'}
+                emissiveIntensity={lightOn ? 1.2 : 0}
+                side={THREE.BackSide}
+              />
+            </mesh>
+            {/* Bulb */}
+            <mesh position={[0, -0.35, 0]}>
+              <sphereGeometry args={[0.28, 32, 32]} />
+              <meshStandardMaterial
+                color={lightOn ? '#ffffff' : '#666'}
+                emissive={lightOn ? '#ffe8b0' : '#000'}
+                emissiveIntensity={lightOn ? 5 : 0}
+                transparent
+                opacity={lightOn ? 1 : 0.5}
+              />
+            </mesh>
+            {/* Point light from bulb */}
+            {lightOn && <pointLight position={[0, -1, 0]} intensity={4} distance={20} color="#ffedcc" castShadow />}
+          </group>
+        </group>
+      </group>
+    </group>
+  );
+};
+
 
 const MaterialModel = ({ activeObject, lightOn }) => {
   const shinyMaterialProps = {
@@ -209,12 +321,12 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
 
                 {/* The 3D Stage */}
                 <div style={{ flex: 1, position: 'relative', cursor: 'grab' }}>
-                  <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-                    <ambientLight intensity={lightOn ? 1.0 : 1.5} />
+                  <Canvas camera={{ position: [0, 2, 9], fov: 45 }}>
+                    <ambientLight intensity={lightOn ? 0.6 : 1.5} />
+
                     {lightOn ? (
                       <>
-                        <spotLight position={[4, 4, 2]} angle={0.4} penumbra={1} intensity={2} castShadow />
-                        <spotLight position={[-4, 0, 4]} angle={0.4} penumbra={1} intensity={1} />
+                        <spotLight position={[4, 6, 3]} angle={0.4} penumbra={1} intensity={1} castShadow />
                         <Environment preset="studio" />
                       </>
                     ) : (
@@ -224,9 +336,27 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                         <directionalLight position={[0, -5, 0]} intensity={0.5} />
                       </>
                     )}
-                    
-                    <MaterialModel activeObject={activeObject} lightOn={lightOn} />
-                    <OrbitControls enableZoom={false} enablePan={false} autoRotate={true} autoRotateSpeed={2} />
+
+                    {/* Material model at center-left with PresentationControls so it rotates independently */}
+                    <PresentationControls
+                      global={false}
+                      cursor={true}
+                      snap={true}
+                      speed={1.5}
+                      zoom={1}
+                      rotation={[0, 0, 0]}
+                      polar={[-Math.PI / 4, Math.PI / 4]}
+                      azimuth={[-Math.PI / 2, Math.PI / 2]}
+                    >
+                      <group position={[-1.5, 0, 0]}>
+                        <MaterialModel activeObject={activeObject} lightOn={lightOn} />
+                      </group>
+                    </PresentationControls>
+
+                    {/* Lamp in world space, base on the right, arm reaching left */}
+                    <group position={[3.2, -2.5, 0]}>
+                      <DeskLamp lightOn={lightOn} />
+                    </group>
                     <ContactShadows position={[0, -2.5, 0]} opacity={lightOn ? 0.4 : 0.1} scale={10} blur={2} far={4} />
                   </Canvas>
                 </div>
@@ -236,20 +366,48 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                     style={{
-                      position: 'absolute', bottom: '1rem', left: '50%', transform: 'translateX(-50%)',
-                      background: 'var(--card-bg)', backdropFilter: 'blur(8px)',
-                      padding: '0.75rem 1.5rem', borderRadius: '20px', border: '1px solid var(--border)',
-                      boxShadow: 'var(--card-shadow)',
-                      color: 'var(--text-primary)', display: 'flex', gap: '1.5rem', fontSize: '0.95rem',
+                      position: 'absolute', bottom: '1.5rem', right: '1.5rem',
+                      background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(12px)',
+                      padding: '1rem 1.5rem', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.15)',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                      color: 'white', display: 'flex', gap: '2rem', fontSize: '0.9rem',
                       pointerEvents: 'none',
                       zIndex: 10
                     }}
                   >
-                    <span><strong>Colour:</strong> {activeObjDetails.propColour}</span>
-                    <span><strong>Texture:</strong> {activeObjDetails.propTexture}</span>
-                    <span style={{ color: activeObjDetails.isShiny ? 'var(--warning)' : 'var(--text-secondary)' }}>
-                      <strong>Surface:</strong> {activeObjDetails.isShiny ? 'Shiny ✨' : 'Dull 🪨'}
-                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <span style={{ color: '#94a3b8', fontWeight: '600' }}>Colour:</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <div style={{ 
+                          width: '14px', height: '14px', borderRadius: '50%', 
+                          background: activeObjDetails.propColour === 'White' ? '#ffffff' : 
+                                      activeObjDetails.propColour === 'Brown' ? '#8b4513' : 
+                                      activeObjDetails.propColour === 'Reddish' ? '#cd5c5c' : '#c0c0c0',
+                          boxShadow: '0 0 0 1px rgba(255,255,255,0.2)'
+                        }} />
+                        <span style={{ fontWeight: '500' }}>{activeObjDetails.propColour}</span>
+                      </div>
+                    </div>
+                    
+                    <div style={{ width: '1px', background: 'rgba(255,255,255,0.1)' }} />
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <span style={{ color: '#94a3b8', fontWeight: '600' }}>Texture:</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span style={{ fontWeight: '500' }}>{activeObjDetails.propTexture}</span>
+                        <span style={{ opacity: 0.7 }}>{activeObjDetails.propTexture === 'Smooth' ? '〰️' : '🌫️'}</span>
+                      </div>
+                    </div>
+                    
+                    <div style={{ width: '1px', background: 'rgba(255,255,255,0.1)' }} />
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <span style={{ color: '#94a3b8', fontWeight: '600' }}>Surface:</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span style={{ fontWeight: '500' }}>{activeObjDetails.isShiny ? 'Shiny' : 'Dull'}</span>
+                        <span>{activeObjDetails.isShiny ? '✨' : '🪨'}</span>
+                      </div>
+                    </div>
                   </motion.div>
                 )}
               </>

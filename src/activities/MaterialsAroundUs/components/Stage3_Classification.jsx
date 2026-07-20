@@ -322,7 +322,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         padding: '1rem 0.5rem',
                         borderRadius: '12px',
                         border: '1px solid var(--border)',
-                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
+                        background: 'var(--card-bg)',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -343,8 +343,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         width: '56px', 
                         height: '56px', 
                         borderRadius: '12px', 
-                        background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
-                        color: isSorted ? 'var(--success)' : 'var(--accent)',
+                        background: 'var(--surface)', 
+                        color: 'var(--accent)',
                         flexShrink: 0,
                         boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
                         border: '1px solid var(--border)'
@@ -495,12 +495,38 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '1.5rem' }}
+            style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.5rem' }}
           >
-            {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '620px' }}>
-              <h4 style={{ margin: 0, fontSize: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1, overflowY: 'auto', alignContent: 'start', paddingRight: '0.25rem' }}>
+            {/* Left: Wooden Evidence Tray */}
+            <div style={{
+              background: 'linear-gradient(160deg, #c8a96e 0%, #a07840 40%, #8b6530 100%)',
+              borderRadius: '18px',
+              padding: '1rem',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
+              border: '3px solid #6b4c20',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.75rem',
+              height: '540px'
+            }}>
+              {/* Tray Label */}
+              <div style={{
+                background: 'linear-gradient(135deg, #f5e6c8, #e8d4a0)',
+                borderRadius: '8px',
+                padding: '0.4rem 1rem',
+                textAlign: 'center',
+                border: '2px solid #b8924a',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                alignSelf: 'center',
+                minWidth: '160px'
+              }}>
+                <span style={{ fontWeight: '800', fontSize: '1rem', color: '#5c3d11', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  Evidence Tray
+                </span>
+              </div>
+
+              {/* Items Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', flex: 1, overflowY: 'auto' }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
                   const IconComponent = item.icon;
@@ -508,79 +534,71 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     <div
                       key={item.id}
                       draggable={!isSorted}
-                      onDragStart={(e) => {
-                        e.dataTransfer.setData('text/plain', item.id);
-                      }}
-                      className="interactive-tray-item"
+                      onDragStart={(e) => e.dataTransfer.setData('text/plain', item.id)}
                       style={{
-                        width: '100%',
-                        padding: '1rem 0.5rem',
+                        background: 'linear-gradient(145deg, #fdf6e3, #f5e6c8)',
                         borderRadius: '12px',
-                        border: '1px solid var(--border)',
-                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
+                        border: '1.5px solid #c9a96e',
+                        padding: '0.6rem 0.4rem 0.5rem',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.75rem',
-                        opacity: isSorted ? 0.6 : 1,
+                        gap: '0.35rem',
                         cursor: isSorted ? 'default' : 'grab',
-                        textAlign: 'center',
+                        opacity: isSorted ? 0.65 : 1,
                         transition: 'all 0.2s',
-                        userSelect: 'none',
-                        position: 'relative'
+                        position: 'relative',
+                        boxShadow: '0 3px 8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.7)'
                       }}
                     >
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        width: '56px', 
-                        height: '56px', 
-                        borderRadius: '12px', 
-                        background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
-                        color: isSorted ? 'var(--success)' : 'var(--accent)',
-                        flexShrink: 0,
-                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
-                        border: '1px solid var(--border)'
-                      }}>
-                        <IconComponent size={32} />
-                      </div>
-                      <span style={{ fontWeight: '600', fontSize: '1rem', lineHeight: '1.2' }}>{item.name}</span>
-
-                      {!isSorted ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.25rem' }}>
-                          <select
-                            value=""
-                            onChange={(e) => handleMaterialSort(item.id, e.target.value)}
-                            style={{ fontSize: '0.9rem', padding: '0.4rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%' }}
-                          >
-                            <option value="" disabled>Material</option>
-                            <option value="Paper">Paper</option>
-                            <option value="Wood">Wood</option>
-                            <option value="Plastic">Plastic</option>
-                            <option value="Glass">Glass</option>
-                            <option value="Metal">Metal</option>
-                            <option value="Cloth">Cloth</option>
-                          </select>
-                        </div>
-                      ) : (
-                        <div style={{ 
-                          position: 'absolute', 
-                          top: '6px', 
-                          right: '6px', 
-                          background: 'var(--success)', 
-                          borderRadius: '50%', 
-                          width: '20px', 
-                          height: '20px', 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center',
-                          color: 'white',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      {/* Tack / Pin */}
+                      <div style={{
+                        position: 'absolute', top: '-6px', left: '50%', transform: 'translateX(-50%)',
+                        width: '12px', height: '12px', borderRadius: '50%',
+                        background: 'radial-gradient(circle at 35% 35%, #d4a843, #a07828)',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                      }} />
+                      {isSorted && (
+                        <div style={{
+                          position: 'absolute', top: '5px', right: '5px',
+                          background: '#10b981', borderRadius: '50%',
+                          width: '18px', height: '18px',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}>
-                          <Check size={12} strokeWidth={3} />
+                          <Check size={10} strokeWidth={3} color="white" />
                         </div>
+                      )}
+
+                      {/* Icon */}
+                      <div style={{ width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <IconComponent size={38} />
+                      </div>
+
+                      {/* Name */}
+                      <span style={{ fontSize: '0.78rem', fontWeight: '700', color: '#5c3d11', textAlign: 'center', lineHeight: '1.2' }}>
+                        {item.name}
+                      </span>
+
+                      {/* Dropdown */}
+                      {!isSorted && (
+                        <select
+                          value=""
+                          onChange={(e) => handleMaterialSort(item.id, e.target.value)}
+                          style={{
+                            fontSize: '0.75rem', padding: '0.25rem 0.3rem',
+                            border: '1px solid #c9a96e', borderRadius: '6px',
+                            background: 'rgba(255,255,255,0.8)', color: '#5c3d11',
+                            outline: 'none', width: '100%', cursor: 'pointer'
+                          }}
+                        >
+                          <option value="" disabled>Material ▾</option>
+                          <option value="Paper">Paper</option>
+                          <option value="Wood">Wood</option>
+                          <option value="Plastic">Plastic</option>
+                          <option value="Glass">Glass</option>
+                          <option value="Metal">Metal</option>
+                          <option value="Cloth">Cloth</option>
+                        </select>
                       )}
                     </div>
                   );
@@ -588,98 +606,182 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               </div>
             </div>
 
-            {/* Right: Material Baskets grid */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                {[
-                  { name: 'Paper', color: '#fcd34d' },
-                  { name: 'Wood', color: '#b45309' },
-                  { name: 'Plastic', color: '#a78bfa' },
-                  { name: 'Glass', color: '#38bdf8' },
-                  { name: 'Metal', color: '#94a3b8' },
-                  { name: 'Cloth', color: '#f43f5e' }
-                ].map((basket) => {
-                  const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
-                  const isDraggingOverMe = draggingOverBasket === basket.name;
-                  return (
-                    <div
-                      key={basket.name}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        setDraggingOverBasket(basket.name);
-                      }}
-                      onDragLeave={() => setDraggingOverBasket(null)}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        setDraggingOverBasket(null);
-                        const itemId = e.dataTransfer.getData('text/plain');
-                        handleMaterialSort(itemId, basket.name);
-                      }}
-                      style={{
-                        background: isDraggingOverMe ? 'rgba(var(--accent-rgb), 0.1)' : 'var(--surface)',
-                        border: isDraggingOverMe ? '2px dashed var(--accent)' : '1.5px solid var(--border)',
-                        borderRadius: '12px',
-                        padding: '0.75rem',
-                        minHeight: '80px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.5rem',
-                        transition: 'all 0.2s'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'bold', fontSize: '1rem', color: 'var(--text-heading)' }}>
-                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: basket.color }} />
-                        <span>{basket.name} Basket</span>
+            {/* Right: Illustrated Material Baskets */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', overflowY: 'auto' }}>
+              {[
+                { name: 'Paper', color: '#2563eb', icon: '📄', emoji: '♻️', bgLight: '#eff6ff', borderColor: '#93c5fd' },
+                { name: 'Wood', color: '#92400e', icon: '🪵', emoji: '🪵', bgLight: '#fef3c7', borderColor: '#d97706' },
+                { name: 'Plastic', color: '#16a34a', icon: '🧴', emoji: '♻️', bgLight: '#f0fdf4', borderColor: '#4ade80' },
+                { name: 'Metal', color: '#64748b', icon: '🔩', emoji: '🔧', bgLight: '#f1f5f9', borderColor: '#94a3b8' },
+                { name: 'Glass', color: '#0891b2', icon: '🥛', emoji: '♻️', bgLight: '#ecfeff', borderColor: '#67e8f9' },
+                { name: 'Cloth', color: '#dc2626', icon: '👕', emoji: '👕', bgLight: '#fff1f2', borderColor: '#fca5a5' }
+              ].map((basket) => {
+                const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
+                const isDraggingOverMe = draggingOverBasket === basket.name;
+                const basketSvgs = {
+                  Paper: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#1d4ed8" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="none" stroke="#1e3a8a" strokeWidth="1.5" />
+                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#1e3a8a" strokeWidth="1" opacity="0.5"/>)}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#2563eb" />
+                      <path d="M12 8 Q27 5 42 8 L44 16 Q27 12 10 16 Z" fill="#3b82f6" opacity="0.4" />
+                    </svg>
+                  ),
+                  Wood: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#a16207" />
+                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#78350f" strokeWidth="1.5" opacity="0.6"/>)}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#b45309" />
+                    </svg>
+                  ),
+                  Plastic: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 14 L10 42 L44 42 L47 14 Z" fill="#15803d" />
+                      {Array.from({length:5},(_,r)=>Array.from({length:4},(_,c)=>(
+                        <rect key={`${r}-${c}`} x={10+c*9} y={16+r*5} width="7" height="3" rx="1" fill="none" stroke="#14532d" strokeWidth="1" opacity="0.5" />
+                      )))}
+                      <path d="M5 12 Q27 8 49 12 Q27 16 5 12Z" fill="#16a34a" />
+                    </svg>
+                  ),
+                  Metal: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#64748b" />
+                      {Array.from({length:4},(_,r)=>Array.from({length:5},(_,c)=>(
+                        <rect key={`${r}-${c}`} x={9+c*7.5} y={17+r*6} width="5" height="4" rx="1" fill="none" stroke="#334155" strokeWidth="1" opacity="0.6" />
+                      )))}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#94a3b8" />
+                    </svg>
+                  ),
+                  Glass: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="rgba(6,182,212,0.4)" stroke="#0891b2" strokeWidth="1.5" />
+                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#0e7490" strokeWidth="1" opacity="0.4"/>)}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#06b6d4" />
+                    </svg>
+                  ),
+                  Cloth: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#b45309" />
+                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#78350f" strokeWidth="1.5" opacity="0.5"/>)}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#d97706" />
+                      <rect x="14" y="10" width="8" height="8" rx="2" fill="#ef4444" opacity="0.8" />
+                      <rect x="24" y="8" width="8" height="8" rx="2" fill="#3b82f6" opacity="0.8" />
+                      <rect x="34" y="10" width="8" height="8" rx="2" fill="#10b981" opacity="0.8" />
+                    </svg>
+                  )
+                };
+
+                return (
+                  <div
+                    key={basket.name}
+                    onDragOver={(e) => { e.preventDefault(); setDraggingOverBasket(basket.name); }}
+                    onDragLeave={() => setDraggingOverBasket(null)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setDraggingOverBasket(null);
+                      handleMaterialSort(e.dataTransfer.getData('text/plain'), basket.name);
+                    }}
+                    style={{
+                      background: isDraggingOverMe ? basket.bgLight : 'white',
+                      border: isDraggingOverMe ? `2px dashed ${basket.color}` : `1.5px solid ${basket.borderColor}`,
+                      borderRadius: '12px',
+                      padding: '0.6rem 0.8rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      transition: 'all 0.2s',
+                      boxShadow: isDraggingOverMe ? `0 0 0 3px ${basket.bgLight}` : '0 1px 4px rgba(0,0,0,0.08)',
+                      minHeight: '68px'
+                    }}
+                  >
+                    {/* Basket Illustration */}
+                    <div style={{ flexShrink: 0 }}>
+                      {basketSvgs[basket.name]}
+                    </div>
+
+                    {/* Content */}
+                    <div style={{ flex: 1 }}>
+                      {/* Header */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <span style={{ fontWeight: '800', fontSize: '0.85rem', color: basket.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                          {basket.name} Basket
+                        </span>
+                        <span style={{ fontSize: '1rem' }}>{basket.emoji}</span>
                       </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-                        {sortedHere.map((item) => (
-                          <div
-                            key={item.id}
-                            style={{
-                              padding: '0.3rem 0.6rem',
-                              background: 'var(--card-bg)',
-                              border: '1px solid var(--border)',
-                              borderRadius: '6px',
-                              fontSize: '0.85rem',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.25rem'
-                            }}
-                          >
-                              <div style={{ width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <item.icon size={12} />
-                              </div>
-                              <span>{item.name}</span>
-                          </div>
-                        ))}
+
+                      {/* Drop Zone */}
+                      <div style={{
+                        border: `2px dashed ${isDraggingOverMe ? basket.color : basket.borderColor}`,
+                        borderRadius: '8px',
+                        padding: '0.3rem 0.5rem',
+                        minHeight: '28px',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        background: isDraggingOverMe ? basket.bgLight : 'transparent',
+                        transition: 'all 0.15s'
+                      }}>
+                        {sortedHere.length === 0 ? (
+                          <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic' }}>
+                            {isDraggingOverMe ? 'Drop here!' : 'Drop items here...'}
+                          </span>
+                        ) : (
+                          sortedHere.map(item => (
+                            <motion.span
+                              key={item.id}
+                              initial={{ scale: 0.8, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              style={{
+                                background: basket.bgLight,
+                                border: `1px solid ${basket.borderColor}`,
+                                borderRadius: '6px',
+                                padding: '0.15rem 0.5rem',
+                                fontSize: '0.78rem',
+                                fontWeight: '600',
+                                color: basket.color,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.25rem'
+                              }}
+                            >
+                              <Check size={10} />
+                              {item.name}
+                            </motion.span>
+                          ))
+                        )}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
 
-              {/* Error messages overlay */}
-              {errorMessage && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--danger)', fontSize: '0.8rem' }}>
-                  <AlertCircle size={16} />
+              {/* Error / tip */}
+              {errorMessage ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: '#dc2626', fontSize: '0.82rem', marginTop: '0.25rem' }}>
+                  <AlertCircle size={15} />
                   <span>{errorMessage}</span>
                 </div>
-              )}
-
-              {/* Complete state message */}
-              {allMaterialSorted ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem' }}>
-                  <Check size={18} />
-                  <span>All objects grouped successfully! Click "Proceed to next"</span>
+              ) : allMaterialSorted ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                  <Check size={16} /> All objects sorted! Click "Proceed to next"
                 </div>
               ) : (
-                <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
-                  💡 Tip: Drag items to their correct material basket, or select from the dropdown.
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.25rem' }}>
+                  💡 Tip: Drag items to baskets, or use the dropdowns on the left.
                 </div>
               )}
             </div>
           </motion.div>
         )}
+
 
         {/* Phase 3: Multi-Property Inspection Demo */}
         {phase === 'demo' && (

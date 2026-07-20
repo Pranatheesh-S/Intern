@@ -103,7 +103,8 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
             background: linear-gradient(160deg, #16233f, #101a30);
             border: 2px solid #1b2a4a;
             border-radius: 16px;
-            height: 230px;
+            flex: 1.2;
+            min-height: 230px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -135,14 +136,14 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           }
           .quote-card {
             position: relative;
-            margin-top: 16px;
+            margin-top: 24px;
             background: #ffffff;
             border: 1px solid #e7e2d3;
             border-radius: 10px;
             padding: 22px 30px 20px;
             color: #26324d;
             box-shadow: 0 4px 10px rgba(30,30,30,0.04);
-            flex: 1;
+            flex: none;
             display: flex;
             flex-direction: column;
             justify-content: center;
