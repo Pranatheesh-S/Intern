@@ -827,10 +827,11 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-left:hover) .lab-sid
 /* ── Split-Pane Frame (Activities) ── */
 .split-frame {
   display: grid;
-  grid-template-columns: 0.82fr 1.18fr;
+  grid-template-columns: 0.64fr 1.36fr;
   gap: 1.5rem;
   width: 100%;
   flex: 1;
+  min-height: 560px;
   box-sizing: border-box;
   align-items: stretch;
 }
@@ -855,14 +856,14 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-left:hover) .lab-sid
 }
 
 .frame-page-right {
-  background: #ffffff;
+  background: transparent;
   border-radius: 16px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  box-shadow: 0 16px 40px rgba(14, 42, 69, 0.12);
-  border: 1px solid var(--cardline);
+  min-height: 540px;
+  box-shadow: none;
+  border: none;
 }
 
 /* ── Custom Cards and Subcomponents ── */

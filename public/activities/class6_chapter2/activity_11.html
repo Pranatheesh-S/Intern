@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuturaX · Adaptations — Camels</title>
+<style>
+  :root{
+    --bg:#0b1020;--bg-raised:#111730;--bg-card:#151c38;
+    --ink:#e8ebff;--ink-dim:#9aa3c7;--ink-faint:#5f6890;
+    --violet:#8b7cf6;--violet-soft:rgba(139,124,246,.16);--violet-glow:rgba(139,124,246,.45);
+    --teal:#3dd6c3;--amber:#f5b74e;--rose:#f07178;--green:#4ade80;--leaf:#5fd16a;
+    --border-idle:#232b4d;--border-active:#8b7cf6;--border-done:#3dd6c3;
+    --paper:#f6f1e4;--paper-2:#efe8d4;--orange-ncert:#d98a2b;--green-ncert:#3d8b4a;
+    --radius:14px;--font:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font);min-height:100vh;line-height:1.55;padding-bottom:40px}
+  .wrap{max-width:760px;margin:0 auto;padding:16px 14px 60px}
+  .xp-pill{position:fixed;top:12px;right:12px;z-index:60;background:var(--bg-card);border:1px solid var(--border-active);
+    box-shadow:0 0 18px var(--violet-glow),0 4px 14px rgba(0,0,0,.5);border-radius:999px;padding:6px 13px;
+    font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;transition:transform .25s ease}
+  .xp-pill.bump{transform:scale(1.14)}.xp-pill .bolt{color:var(--amber)}
+  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--leaf);font-weight:700}
+  h1{font-size:clamp(19px,4vw,24px);font-weight:800;margin:5px 0 3px}
+  .sub{color:var(--ink-dim);font-size:13px;margin-bottom:12px}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:40;background:rgba(11,16,32,.92);backdrop-filter:blur(8px);padding:8px 0;margin-bottom:6px}
+  .tool{flex:1;min-width:92px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--bg-card);border:1.5px solid var(--border-idle);border-radius:11px;padding:9px 8px;font-size:13px;font-weight:700;color:var(--ink-dim);cursor:pointer;user-select:none;transition:all .18s}
+  .tool:hover{border-color:var(--violet);color:var(--ink)}.tool.on{border-color:var(--leaf);color:var(--ink);background:rgba(95,209,106,.12)}
+  .speedbar{display:none;gap:6px;margin:4px 0 8px;align-items:center}.speedbar.show{display:flex}
+  .speedbar .sl{font-size:12px;color:var(--ink-faint)}
+  .spd{padding:5px 11px;border-radius:999px;border:1.5px solid var(--border-idle);background:var(--bg-raised);color:var(--ink-dim);font-size:12px;font-weight:700;cursor:pointer}
+  .spd.on{border-color:var(--violet);color:var(--ink);background:var(--violet-soft)}
+  .page{background:var(--paper);color:#26251f;border-radius:12px;padding:18px 16px;margin:8px 0 16px;box-shadow:0 8px 34px rgba(0,0,0,.5);border:1px solid #d8cfb4}
+  .page .rib{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#7a6f4d;border:1px solid #cbbf9c;border-radius:999px;padding:2px 9px;margin-bottom:10px}
+  .page h3.sec{color:var(--orange-ncert);font-size:16px;font-weight:800;margin:2px 0}
+  .narr{font-size:13.5px;margin:7px 0;padding-left:18px;position:relative;transition:background .2s;border-radius:6px}
+  .narr::before{content:"\25C6";position:absolute;left:2px;top:1px;color:var(--orange-ncert);font-size:9px}
+  .narr.h4-narr{padding-left:0}.narr.h4-narr::before{content:""}
+  .narr.reading{background:#fff4c2;box-shadow:0 0 0 4px #fff4c2}
+  .vocab{color:#8a5a1a;font-weight:700;border-bottom:2px dotted #c79a4e;cursor:pointer}.vocab:hover{background:#f3e2bd}
+  .card{background:var(--bg-card);border:1.5px solid var(--border-idle);border-radius:var(--radius);padding:16px;margin:14px 0}
+  .card h2{font-size:16px;margin-bottom:3px}.card h2 .ic{margin-right:6px}
+  p.lead{color:var(--ink-dim);font-size:13.5px;margin-bottom:8px}b{color:var(--ink)}
+  @keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  /* regroup */
+  .criteria{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:10px 0}
+  .crit{padding:11px;border-radius:12px;cursor:pointer;border:1.5px solid var(--border-idle);background:var(--bg-raised);text-align:center;transition:all .2s;user-select:none;font-size:13px;font-weight:700;color:var(--ink-dim)}
+  .crit:hover{border-color:var(--leaf)}.crit.on{border-color:var(--leaf);background:rgba(95,209,106,.12);color:var(--ink);box-shadow:0 0 14px rgba(95,209,106,.3)}
+  .groupboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:8px;min-height:90px}
+  .groupcol{border:1.5px solid var(--border-idle);border-radius:12px;padding:10px;background:rgba(255,255,255,.02);animation:fadeUp .35s ease}
+  .groupcol h4{font-size:12px;color:var(--leaf);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;text-align:center}
+  .org{display:flex;align-items:center;gap:6px;padding:4px 7px;margin:3px 0;border-radius:8px;background:var(--bg-card);border:1px solid var(--border-idle);font-size:12.5px;font-weight:600;animation:pop .4s ease}
+  .org .oic{font-size:16px}.engine-note{text-align:center;font-size:12.5px;color:var(--ink-dim);margin-top:8px;min-height:18px}
+  /* classifier */
+  .plantlab{display:grid;grid-template-columns:170px 1fr;gap:14px;align-items:center;margin:10px 0}
+  @media(max-width:540px){.plantlab{grid-template-columns:1fr}}
+  .plant-stage{background:linear-gradient(180deg,#0e1630,#132b1e);border:1.5px solid var(--border-idle);border-radius:12px;height:200px;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+  .ctrl-row{margin:8px 0}.ctrl-row label{font-size:12px;font-weight:700;color:var(--ink-dim);display:block;margin-bottom:2px}
+  input[type=range]{width:100%;accent-color:var(--leaf);margin:4px 0}
+  .toggle-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .plant-verdict{margin-top:10px;padding:12px;border-radius:12px;background:var(--bg-raised);border:1.5px solid var(--border-done);text-align:center}
+  .plant-verdict .pv-type{font-size:20px;font-weight:900;color:var(--leaf)}
+  .plant-verdict .pv-why{font-size:12.5px;color:var(--ink-dim);margin-top:3px}
+  .plant-verdict .pv-eg{font-size:11.5px;color:var(--ink-faint);margin-top:5px}
+  /* sorter */
+  .pool{margin:10px 0;min-height:44px;display:flex;flex-wrap:wrap;gap:6px}
+  .bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
+  .bin{border:1.5px dashed var(--border-idle);border-radius:12px;min-height:110px;padding:10px;background:rgba(255,255,255,.02)}
+  .bin.hot{border-color:var(--leaf);background:rgba(95,209,106,.1)}
+  .bin h4{font-size:12px;color:var(--leaf);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+  .sortitem{display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:6px 8px;border-radius:10px;background:var(--bg-card);border:1.5px solid var(--border-idle);font-size:12px;font-weight:700;cursor:pointer;user-select:none;transition:all .18s;color:var(--ink-dim)}
+  .sortitem svg{width:42px;height:52px}.sortitem.sel{border-color:var(--leaf);box-shadow:0 0 10px rgba(95,209,106,.5)}
+  .sortitem.right{border-color:var(--green);color:var(--green)}.sortitem.wrong{border-color:var(--rose);color:var(--rose)}
+  /* ptr */
+  .ptr{border:1.5px dashed var(--border-idle);border-radius:12px;padding:12px;margin:9px 0;background:rgba(255,255,255,.02)}
+  .ptr .q{font-weight:700;font-size:13.5px;margin-bottom:6px}
+  .chip{display:inline-block;padding:7px 13px;border-radius:999px;border:1.5px solid var(--border-idle);background:var(--bg-raised);color:var(--ink-dim);font-size:13px;font-weight:700;cursor:pointer;user-select:none;margin:3px;transition:all .18s}
+  .chip:hover{border-color:var(--violet);color:var(--ink)}.chip.picked{border-color:var(--violet);background:var(--violet-soft);color:var(--ink)}
+  .chip.right{border-color:var(--green);background:rgba(74,222,128,.12);color:var(--green)}
+  .chip.wrong{border-color:var(--rose);background:rgba(240,113,120,.1);color:var(--rose)}.chip.lock{pointer-events:none}
+  .reveal{display:none;margin-top:8px;padding:9px 11px;border-radius:10px;font-size:13px}
+  .reveal.show{display:block;animation:pop .3s ease}
+  .reveal.ok{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.35);color:#c9f7d8}
+  .reveal.no{background:rgba(240,113,120,.08);border:1px solid rgba(240,113,120,.35);color:#ffd9db}
+  /* compare */
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+  @media(max-width:520px){.cmp{grid-template-columns:1fr}}
+  .cmpcard{border:1.5px solid var(--border-idle);border-radius:12px;padding:14px;background:var(--bg-raised);text-align:center;cursor:pointer;transition:all .2s}
+  .cmpcard:hover{border-color:var(--leaf)}.cmpcard.on{border-color:var(--border-done)}
+  .cmpcard svg{height:80px;width:auto;margin:0 auto 6px}
+  .cmpcard h4{font-size:15px;margin-bottom:4px}
+  .cmp-pts{display:none;margin-top:6px;text-align:left;font-size:12.5px;color:var(--ink-dim)}
+  .cmpcard.on .cmp-pts{display:block;animation:fadeUp .3s ease}
+  .cmp-pts li{margin:3px 0 3px 16px}
+  .cmp-summary{display:none;margin-top:10px;padding:12px;border-radius:12px;background:rgba(95,209,106,.08);border:1px solid rgba(95,209,106,.35);font-size:13px;color:#d6f5da}
+  .cmp-summary.show{display:block;animation:fadeUp .3s ease}
+  /* glossary */
+function buildGlossary(s){
+  var host=document.getElementById("signature");
+  host.innerHTML='<div class="criteria" id="glossGrid" style="grid-template-columns:repeat(auto-fit,minmax(118px,1fr))"></div><div class="engine-note" id="glossNote">Explored 0 / '+s.need+'</div>';
+  var seen={};var grid=document.getElementById("glossGrid");
+  s.items.forEach(function(it,i){var el=document.createElement("div");el.className="crit";el.textContent=it.term;
+    el.addEventListener("click",function(){el.classList.add("on");showPopover('<h4>'+it.term+'</h4><div class="pv-ill">'+(it.ill||'📘')+'</div><div class="pv-body">'+it.def+'</div>');
+      if(!seen[i]){seen[i]=1;addXP(3,it.term);document.getElementById("glossNote").textContent="Explored "+Object.keys(seen).length+" / "+s.need;if(Object.keys(seen).length>=s.need){document.getElementById("glossNote").innerHTML+=" <b style=\'color:var(--leaf)\'>— chapter vocabulary unlocked!</b>";sigDone();}}});
+    grid.appendChild(el);});
+}
+/* table */
+  .tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid #d8cfb4;margin:8px 0}
+  table.t{width:100%;border-collapse:collapse;font-size:12px;min-width:520px;background:#fff}
+  table.t th{background:#dbe8dd;color:#2f4a35;padding:8px;text-align:left;font-size:11px;border:1px solid #cddbcf}
+  table.t td{padding:6px;border:1px solid #e2dcc7;color:#3a3728;vertical-align:top}
+  table.t td.sn{text-align:center;font-weight:700;width:26px}table.t .nm{font-weight:700}
+  table.t select,table.t input[type=text]{width:100%;border:1px solid #cdbf9d;border-radius:6px;padding:4px 6px;font-size:12px;font-family:var(--font);background:#fbf8ee;color:#3a3728}
+  table.t tr.mine input,table.t tr.mine select{background:#fffdf3}
+  .tbl-note{font-size:11px;color:#8a6b2e;margin-top:4px;font-weight:600}
+  /* quiz */
+  .qcard{margin:12px 0}.qcard .q{font-weight:800;font-size:14.5px;margin-bottom:8px}
+  .opts{display:grid;gap:8px}
+  .opt{text-align:left;background:var(--bg-raised);border:1.5px solid var(--border-idle);border-radius:11px;padding:10px 13px;font-size:14px;color:var(--ink);cursor:pointer;font-family:var(--font);font-weight:600;transition:all .18s}
+  .opt:hover{border-color:var(--violet)}.opt.right{border-color:var(--green);background:rgba(74,222,128,.1)}
+  .opt.wrong{border-color:var(--rose);background:rgba(240,113,120,.08)}.opt:disabled{cursor:default;opacity:.85}
+  .expl{display:none;font-size:12.5px;color:var(--ink-dim);margin-top:8px;padding:8px 11px;border-left:3px solid var(--leaf);background:rgba(95,209,106,.07);border-radius:0 8px 8px 0}.expl.show{display:block}
+  /* completion */
+  .prog-line{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13px}
+  .prog-line .pl-name{min-width:104px;color:var(--ink-dim)}
+  .prog-line .bar{flex:1;height:9px;border-radius:99px;background:var(--bg-raised);overflow:hidden}
+  .prog-line .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--leaf),var(--teal));transition:width .5s}
+  .mastery{text-align:center;font-size:32px;font-weight:900;color:var(--amber);margin:10px 0 2px}
+  .skills{display:grid;gap:6px;margin-top:10px}
+  .skill{display:flex;gap:8px;font-size:12.5px;color:var(--ink-dim);padding:7px 10px;border-radius:9px;background:var(--bg-raised);border:1px solid var(--border-idle)}
+  .skill.earned{border-color:var(--border-done)}.skill .sk-ic{color:var(--ink-faint)}.skill.earned .sk-ic{color:var(--teal)}.skill b{color:var(--ink)}
+  .popover{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:75;max-width:420px;width:calc(100% - 28px);background:var(--bg-card);border:1.5px solid var(--border-active);border-radius:14px;padding:14px 16px;box-shadow:0 16px 50px rgba(0,0,0,.6);display:none}
+  .popover.show{display:block;animation:pop .2s ease}
+  .popover .pv-close{float:right;background:none;border:none;color:var(--ink-faint);font-size:18px;cursor:pointer}
+  .popover h4{font-size:15px;margin-bottom:4px}.popover .pv-body{font-size:13.5px;color:var(--ink-dim)}
+  .popover .pv-ill{font-size:34px;text-align:center;margin:4px 0}
+  .faq{display:grid;gap:6px;margin-top:8px}
+  .faqq{text-align:left;background:var(--bg-raised);border:1.5px solid var(--border-idle);border-radius:10px;padding:9px 12px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}.faqq:hover{border-color:var(--violet)}
+  .toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%) translateY(20px);background:var(--bg-card);border:1px solid var(--border-active);box-shadow:0 0 18px var(--violet-glow);color:var(--ink);border-radius:12px;padding:9px 16px;font-weight:800;font-size:13.5px;opacity:0;pointer-events:none;transition:all .3s;z-index:90}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ====== FX ENHANCE : ambient atmosphere + motion ====== */
+.fx-bg{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none;background:
+  radial-gradient(1200px 700px at 50% -10%,#141c3e 0%,var(--bg) 60%)}
+.fx-aurora{position:absolute;inset:-25%;background:
+  radial-gradient(38% 38% at 18% 22%,rgba(139,124,246,.26),transparent 60%),
+  radial-gradient(42% 42% at 82% 28%,rgba(61,214,195,.18),transparent 60%),
+  radial-gradient(50% 50% at 50% 96%,rgba(95,209,106,.16),transparent 60%);
+  filter:blur(28px);animation:fxk-aurora 30s ease-in-out infinite alternate}
+@keyframes fxk-aurora{0%{transform:translate(0,0) scale(1)}50%{transform:translate(3%,-2%) scale(1.09)}100%{transform:translate(-3%,2%) scale(1.05)}}
+.fx-grid{position:absolute;inset:0;opacity:.045;background-image:
+  linear-gradient(#8b7cf6 1px,transparent 1px),linear-gradient(90deg,#8b7cf6 1px,transparent 1px);
+  background-size:46px 46px;-webkit-mask-image:radial-gradient(circle at 50% 22%,#000,transparent 78%);
+  mask-image:radial-gradient(circle at 50% 22%,#000,transparent 78%)}
+.fx-particles{position:absolute;inset:0}
+.fx-particles span{position:absolute;bottom:-12px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.85),rgba(139,124,246,.35));opacity:.0;
+  animation:fxk-rise linear infinite}
+@keyframes fxk-rise{0%{transform:translateY(0) scale(.5);opacity:0}12%{opacity:.55}100%{transform:translateY(-118vh) scale(1);opacity:0}}
+
+/* hero banner */
+.fx-hero{position:relative;border-radius:16px;overflow:hidden;margin:4px 0 16px;
+  border:1px solid var(--border-idle);box-shadow:0 12px 44px rgba(0,0,0,.5),inset 0 0 60px rgba(139,124,246,.06);
+  animation:fxk-heroin .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes fxk-heroin{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:none}}
+.fx-hero svg{display:block;width:100%;height:auto}
+.fx-hero-cap{position:absolute;left:16px;right:16px;bottom:11px;font-size:12.5px;line-height:1.35;color:#eef2ff;
+  text-shadow:0 2px 10px rgba(0,0,0,.8);font-weight:600;pointer-events:none}
+.fx-hero-cap b{color:#fff}
+
+/* motion primitives for SVG children (reduced-motion disabled globally) */
+.fx-sway{transform-box:fill-box;transform-origin:bottom center;animation:fxk-sway 4.6s ease-in-out infinite}
+.fx-sway.s2{animation-duration:5.9s}.fx-sway.s3{animation-duration:6.7s}
+@keyframes fxk-sway{0%,100%{transform:rotate(-3.6deg)}50%{transform:rotate(3.6deg)}}
+.fx-float{animation:fxk-float 5s ease-in-out infinite}
+.fx-float.f2{animation-duration:6.6s}.fx-float.f3{animation-duration:7.4s}
+@keyframes fxk-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.fx-drift{animation:fxk-drift 15s linear infinite}
+.fx-drift.d2{animation-duration:21s}.fx-drift.d3{animation-duration:11s}
+@keyframes fxk-drift{0%{transform:translateX(-10%)}100%{transform:translateX(110%)}}
+.fx-swim{animation:fxk-swim 12s ease-in-out infinite}
+@keyframes fxk-swim{0%{transform:translateX(-8%)}48%{transform:translateX(112%)}50%{transform:translateX(112%)}100%{transform:translateX(-8%)}}
+.fx-spin{transform-box:fill-box;transform-origin:center;animation:fxk-spin 26s linear infinite}
+@keyframes fxk-spin{to{transform:rotate(360deg)}}
+.fx-pulse{transform-box:fill-box;transform-origin:center;animation:fxk-pulse 3.8s ease-in-out infinite}
+@keyframes fxk-pulse{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.09);opacity:1}}
+.fx-grow{transform-box:fill-box;transform-origin:bottom center;animation:fxk-grow 2.6s cubic-bezier(.2,.8,.2,1) forwards}
+.fx-grow.g2{animation-delay:.5s}.fx-grow.g3{animation-delay:1s}
+@keyframes fxk-grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.fx-draw{animation:fxk-draw 3.4s ease forwards}
+@keyframes fxk-draw{to{stroke-dashoffset:0}}
+.fx-blink{animation:fxk-blink 3s steps(1,end) infinite}
+@keyframes fxk-blink{0%,55%{opacity:1}56%,100%{opacity:.18}}
+.fx-wave{animation:fxk-wave 7s ease-in-out infinite}
+@keyframes fxk-wave{0%,100%{transform:translateX(0)}50%{transform:translateX(-14px)}}
+
+/* heading + card polish */
+.wrap h1{background:linear-gradient(92deg,#eef2ff,#8b7cf6 55%,#3dd6c3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.card{animation:fxk-cardin .55s ease both}
+@keyframes fxk-cardin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.card:hover{box-shadow:0 10px 34px rgba(139,124,246,.18)}
+
+
+.fx-spark{position:fixed;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle,#fff,#8b7cf6);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);animation:fxk-spark .6s ease-out forwards}
+@keyframes fxk-spark{to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.2);opacity:0}}
+
+.btagrow{margin-bottom:5px}
+.btag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid var(--border-idle);color:var(--ink-dim)}
+.btag.b-understand{color:#8fb7ff;border-color:rgba(143,183,255,.45)}
+.btag.b-apply{color:#5fd16a;border-color:rgba(95,209,106,.45)}
+.btag.b-analyse{color:#3dd6c3;border-color:rgba(61,214,195,.45)}
+.btag.b-evaluate{color:#f5b74e;border-color:rgba(245,183,78,.45)}
+.btag.b-create{color:#c9a6ff;border-color:rgba(201,166,255,.5)}
+
+/* ====== 3D model (CSS perspective + preserve-3d) ====== */
+.d3-card{background:var(--bg-card);border:1.5px solid var(--border-idle);border-radius:14px;padding:16px;margin:14px 0;text-align:center;animation:fxk-cardin .55s ease both}
+.d3-head{font-size:13px;font-weight:800;color:var(--teal);margin-bottom:8px;letter-spacing:.03em}
+.d3-wrap{perspective:780px;height:190px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}
+.d3-wrap:active{cursor:grabbing}
+.d3-cube{position:relative;width:120px;height:120px;transform-style:preserve-3d;animation:d3spin 22s linear infinite}
+.d3-cube.grabbed{animation:none}
+@keyframes d3spin{from{transform:rotateX(-18deg) rotateY(0)}to{transform:rotateX(-18deg) rotateY(360deg)}}
+.d3-face{position:absolute;width:120px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:46px;line-height:1;border:1.5px solid var(--border-active);border-radius:16px;
+  background:linear-gradient(150deg,rgba(139,124,246,.20),rgba(61,214,195,.10));
+  box-shadow:inset 0 0 26px rgba(139,124,246,.18)}
+.d3-face small{font-size:11px;color:#cfd6ff;margin-top:4px;font-weight:800;letter-spacing:.02em}
+.d3-face.f-front{transform:translateZ(60px)}
+.d3-face.f-back{transform:rotateY(180deg) translateZ(60px)}
+.d3-face.f-right{transform:rotateY(90deg) translateZ(60px)}
+.d3-face.f-left{transform:rotateY(-90deg) translateZ(60px)}
+.d3-face.f-top{transform:rotateX(90deg) translateZ(60px)}
+.d3-face.f-bottom{transform:rotateX(-90deg) translateZ(60px)}
+.d3-cap{font-size:12px;color:var(--ink-faint);margin-top:10px}
+.d3-hint{font-size:11px;color:var(--leaf);font-weight:700;margin-top:2px}
+
+.gl-card{background:var(--bg-card);border:1.5px solid var(--border-idle);border-radius:14px;padding:16px;margin:14px 0;text-align:center;animation:fxk-cardin .55s ease both}
+.gl-stage{height:250px;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 50% 32%,rgba(139,124,246,.14),transparent 70%);touch-action:none;cursor:grab}
+.gl-stage:active{cursor:grabbing}
+canvas.gl3d{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<div class="fx-bg" aria-hidden="true"><div class="fx-aurora"></div><div class="fx-grid"></div><div class="fx-particles"><span style="left:43%;width:5px;height:5px;animation-duration:17s;animation-delay:1s"></span><span style="left:11%;width:4px;height:4px;animation-duration:16s;animation-delay:1s"></span><span style="left:66%;width:5px;height:5px;animation-duration:11s;animation-delay:2s"></span><span style="left:57%;width:7px;height:7px;animation-duration:12s;animation-delay:7s"></span><span style="left:13%;width:7px;height:7px;animation-duration:11s;animation-delay:3s"></span><span style="left:30%;width:4px;height:4px;animation-duration:20s;animation-delay:12s"></span><span style="left:8%;width:5px;height:5px;animation-duration:11s;animation-delay:4s"></span><span style="left:39%;width:7px;height:7px;animation-duration:13s;animation-delay:3s"></span><span style="left:75%;width:6px;height:6px;animation-duration:19s;animation-delay:5s"></span><span style="left:15%;width:5px;height:5px;animation-duration:16s;animation-delay:3s"></span><span style="left:72%;width:4px;height:4px;animation-duration:20s;animation-delay:1s"></span><span style="left:81%;width:5px;height:5px;animation-duration:18s;animation-delay:13s"></span><span style="left:42%;width:7px;height:7px;animation-duration:20s;animation-delay:14s"></span><span style="left:48%;width:6px;height:6px;animation-duration:14s;animation-delay:5s"></span><span style="left:91%;width:5px;height:5px;animation-duration:12s;animation-delay:9s"></span><span style="left:69%;width:7px;height:7px;animation-duration:16s;animation-delay:14s"></span></div></div>
+<div class="xp-pill" id="xpPill"><span class="bolt">⚡</span><span id="xpVal">0</span> XP</div>
+<div class="wrap">
+<div class="fx-hero"><svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="decorative animated scene"><defs><linearGradient id="fxsky_p12" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2340"/><stop offset="1" stop-color="#caa15a"/></linearGradient></defs><rect width="800" height="200" fill="url(#fxsky_p12)"/><circle cx="702" cy="46" r="40" fill="#ffe08a" opacity=".25" class="fx-pulse"/><circle cx="702" cy="46" r="24" fill="#ffe08a" class="fx-pulse"/><path d="M0 150 Q160 118 340 150 T800 138 L800 200 L0 200Z" fill="#c79a52"/><path d="M0 172 Q220 150 460 176 T800 164 L800 200 L0 200Z" fill="#b9873f"/><text x="220" y="150" font-size="40" class="fx-drift d2" text-anchor="middle">🐪</text><text x="560" y="150" font-size="40" class="fx-sway" text-anchor="middle">🐫</text><text x="120" y="70" font-size="22" class="fx-float" text-anchor="middle">🌡️</text></svg><div class="fx-hero-cap"><b>Same animal, two deserts</b> — features shaped to survive.</div></div>
+<div class="d3-card"><div class="d3-head">🧊 3D model — drag to rotate</div><div class="d3-wrap"><div class="d3-cube"><div class="d3-face f-front">🐪<small>hot</small></div><div class="d3-face f-back">🐫<small>cold</small></div><div class="d3-face f-right">☀️<small>sun</small></div><div class="d3-face f-left">❄️<small>snow</small></div><div class="d3-face f-top">🏜️<small>dunes</small></div><div class="d3-face f-bottom">🏔️<small>peaks</small></div></div></div><div class="d3-cap">A rotatable 3D model of this activity’s ideas.<span class="d3-hint"> — drag to spin, double-tap to reset</span></div></div>
+<div class="gl-card"><div class="d3-head">🧬 Fully-modelled 3D — 3D desert terrain</div><div class="gl-stage"><canvas class="gl3d" data-model="terrain"></canvas></div><div class="d3-cap">Rendered live in 3D with lighting.<span class="d3-hint"> — drag to orbit</span></div></div>
+  <div class="eyebrow">FuturaX · Class 6 · Science · Curiosity</div>
+  <h1 id="pageH1">Interactive Textbook — Surviving the Region</h1>
+  <div class="sub" id="pageSub">Examine a hot-desert and a cold-desert camel — and see how features fit the place.</div>
+  <div class="toolbar">
+    <div class="tool" id="tListen">🔊 <span>Listen</span></div>
+    <div class="tool" id="tTranslate">🌐 <span id="tTransLabel">हिन्दी</span></div>
+    <div class="tool" id="tAsk">🤖 <span>Ask</span></div>
+  </div>
+  <div class="speedbar" id="speedbar"><span class="sl">Speed:</span><span class="spd" data-r="0.75">0.75×</span><span class="spd on" data-r="1">1×</span><span class="spd" data-r="1.25">1.25×</span></div>
+  <div class="page" id="pageCard">
+    <span class="rib" id="rib">📄 Textbook page · pages 25–26</span>
+    <h3 class="sec narr h4-narr" data-k="title"></h3>
+    <div id="pageBlocks"></div>
+  </div>
+  <div class="card" id="sigCard"><h2><span class="ic" id="sigIcon"></span><span id="sigTitle"></span></h2><p class="lead" id="sigLead"></p><div id="signature"></div></div>
+  <div class="card" id="tableCard" style="display:none"><h2><span class="ic">📝</span><span id="tblTitle"></span></h2><div class="tbl-wrap"><table class="t"><thead id="tblHead"></thead><tbody id="tblBody"></tbody></table></div><div class="tbl-note" id="tblNote"></div></div>
+  <div class="card"><h2><span class="ic">📝</span>Quick practice</h2><div id="quizBox"></div></div>
+  <div class="card"><h2><span class="ic">📊</span>Page completion</h2><div id="progLines"></div><div class="mastery" id="masteryPct">0%</div><div style="text-align:center;font-size:12px;color:var(--ink-faint)">page mastery</div><div class="skills" id="skills"></div></div>
+</div>
+<div class="popover" id="popover"><button class="pv-close" id="pvClose">✕</button><div id="pvContent"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+var PAGE = {"id": "class6-sci-camels-adaptation", "h1": "Interactive Textbook — Surviving the Region", "sub": "Examine a hot-desert and a cold-desert camel — and see how features fit the place.", "rib": "📄 Textbook page · pages 25–26", "title": {"en": "Surviving the region — desert, mountain and adaptation", "hi": "क्षेत्र में जीवित रहना — रेगिस्तान, पहाड़ और अनुकूलन"}, "blocks": [{"k": "b1", "en": "A desert has very little water, and it is very hot by day but cold by night. The plants and animals there can bear both, and fleshy stems store water.", "hi": "रेगिस्तान में पानी बहुत कम होता है, दिन बहुत गरम और रात ठंडी। वहां के पौधे-जानवर दोनों सहते हैं, और गूदेदार तने पानी जमा करते हैं।"}, {"k": "b2", "en": "High mountains get heavy snow. Some trees, like the deodar, have a conical shape and sloping branches so snow slides off easily.", "hi": "ऊंचे पहाड़ों पर खूब बर्फ गिरती है। देवदार जैसे पेड़ शंकु आकार और ढलवां शाखाओं से बर्फ आसानी से नीचे गिरा देते हैं।"}, {"k": "b3", "en": "Compare a camel of the hot Rajasthan desert with one of the cold Ladakh desert — what differences help each survive?", "hi": "गरम राजस्थान के ऊंट और ठंडे लद्दाख के ऊंट की तुलना करें — कौन-से अंतर हर एक को जीने में मदद करते हैं?"}, {"k": "b4", "en": "The hot-desert camel has long legs and wide hooves to walk on soft sand without sinking; the cold-desert camel has shorter legs and hooves suited to rocky mountains.", "hi": "गरम रेगिस्तान के ऊंट की टांगें लंबी और खुर चौड़े होते हैं ताकि वह नरम रेत पर धंसे बिना चल सके; ठंडे रेगिस्तान के ऊंट की टांगें छोटी होती हैं।"}, {"k": "b5", "en": "A camel keeps its food supply as fat in its humps — hot-desert camels have one, cold-desert camels two that shrink through winter; the cold-desert camel also grows long hair.", "hi": "ऊंट अपने कूबड़ में भोजन जमा करते हैं — गरम रेगिस्तान के ऊंट में एक, ठंडे में दो जो सर्दियों में सिकुड़ जाते हैं; ठंडे का ऊंट लंबे बाल भी उगाता है।"}, {"k": "b6", "en": "Even the same plant can differ by place — rhododendrons are short with small leaves on windy Nilgiri tops, but taller in Sikkim.", "hi": "एक ही पौधा भी जगह के अनुसार बदलता है — बुरांश (रोडोडेंड्रॉन) नीलगिरि की हवादार चोटियों पर छोटे होते हैं, सिक्किम में ऊंचे।"}], "vocab": {"desert": {"ill": "🏜️", "def": "A dry region with very little water — hot by day and cold by night."}, "hooves": {"ill": "🐪", "def": "The hard coverings on the feet of animals like camels and goats."}, "humps": {"ill": "🐫", "def": "The raised parts on a camel's back where it stores food as fat."}, "fleshy": {"ill": "🌵", "def": "Thick and juicy — like a cactus stem that stores water."}}, "signature": {"type": "compare", "icon": "🐪", "title": "Hot-desert vs cold-desert camel", "lead": "Tap each camel to examine its features — then see the big idea that ties them together.", "left": {"title": "Hot-desert camel (Rajasthan)", "svg": "<svg viewBox=\"0 0 64 52\"><text x=\"32\" y=\"40\" font-size=\"38\" text-anchor=\"middle\">🐪</text></svg>", "points": ["One hump to store food", "Long legs & wide hooves to cross soft sand without sinking", "Little sweat and dry dung — saves water"]}, "right": {"title": "Cold-desert camel (Ladakh)", "svg": "<svg viewBox=\"0 0 64 52\"><text x=\"32\" y=\"40\" font-size=\"38\" text-anchor=\"middle\">🐫</text></svg>", "points": ["Two humps (they shrink in winter) for scarce food", "Shorter legs & hooves for rocky mountains", "Long thick hair against the cold"]}, "summary": "🔗 <b>The big idea:</b> the same animal grows different features to survive different deserts. A feature that helps a living thing survive its surroundings is called an <b>adaptation</b>."}, "table": null, "quiz": [{"bloom": "Understand", "q": "A special feature that helps a living thing survive where it lives is an…", "opts": ["adaptation", "accident", "ornament", "error"], "a": 0, "why": "Such a survival feature is called an adaptation."}, {"bloom": "Apply", "q": "Wide hooves and long legs help a hot-desert camel to…", "opts": ["fly over dunes", "walk on soft sand without sinking", "swim across rivers", "climb tall trees"], "a": 1, "why": "Wide hooves spread the camel's weight so it does not sink into soft sand."}, {"bloom": "Analyse", "q": "A cold-desert camel has two humps and long hair, unlike the hot-desert camel. These mainly help it survive…", "opts": ["cold and scarce food", "heavy rain", "deep oceans", "city traffic"], "a": 0, "why": "Extra stored food and long hair suit the cold, food-scarce mountains."}, {"bloom": "Evaluate", "q": "Judge: 'The two camels are different species with random features.'", "opts": ["Correct", "Better said: the same kind of animal, with features adapted to each desert", "Camels have no features", "They live in oceans"], "a": 1, "why": "They share a kind but differ through adaptations to hot vs cold deserts."}, {"bloom": "Create", "q": "You design an animal for a snowy mountain. Which feature set fits best?", "opts": ["Thick fur and sure-footed short legs", "Thin skin and wide flat feet", "Gills and fins", "No body covering at all"], "a": 0, "why": "Thick fur and sturdy short legs suit cold, rocky, snowy ground."}], "faq": [{"q": "Why does the hot-desert camel have wide hooves?", "a": "Wide hooves spread its weight so it doesn't sink into soft sand as it walks."}, {"q": "Why two humps for the cold-desert camel?", "a": "Food is scarce, so it stores more; the humps shrink through winter as the stored food is used up."}, {"q": "What is an adaptation?", "a": "A feature that helps a living thing survive its surroundings — like a camel's hooves or a cactus's fleshy stem."}], "skills": [{"name": "Comparison", "ev": "Examined both camels", "need": "sig"}, {"name": "Understanding adaptation", "ev": "Linked feature to place", "need": "sig"}, {"name": "Scientific vocabulary", "ev": "Opened a key word", "need": "vocab"}, {"name": "Reasoning", "ev": "Finished the practice", "need": "quiz"}]};
+(function(){
+"use strict";
+var xp=0, prog={read:false,vocab:false,sig:false,table:false,quiz:false};
+function addXP(n,msg){xp+=n;var p=document.getElementById("xpPill");document.getElementById("xpVal").textContent=xp;p.classList.add("bump");setTimeout(function(){p.classList.remove("bump");},260);if(msg)toast("+"+n+" XP · "+msg);updateProgress();}
+var tt=null;function toast(t){var el=document.getElementById("toast");el.textContent=t;el.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){el.classList.remove("show");},1600);}
+function emit(name,detail){try{window.dispatchEvent(new CustomEvent(name,{detail:detail}));}catch(e){}}
+var lang="en";
+function sigDone(){if(!prog.sig){prog.sig=true;addXP(8,"Activity complete");}}
+/* ---- page render + vocab ---- */
+function renderPage(){
+  document.getElementById("pageH1").textContent=PAGE.h1;
+  document.querySelector('[data-k="title"]').textContent=PAGE.title[lang];
+  var host=document.getElementById("pageBlocks");host.innerHTML="";
+  PAGE.blocks.forEach(function(b){var d=document.createElement("div");d.className="narr";d.dataset.k=b.k;d.innerHTML=wrapVocab(b[lang]);host.appendChild(d);});
+}
+function wrapVocab(text){var out=text;Object.keys(PAGE.vocab).forEach(function(term){var re=new RegExp("\\b("+term+")\\b","i");out=out.replace(re,function(m){return '<span class="vocab" data-term="'+term+'">'+m+'</span>';});});return out;}
+document.getElementById("pageBlocks").addEventListener("click",function(e){var v=e.target.closest(".vocab");if(!v)return;var t=v.dataset.term.toLowerCase(),info=PAGE.vocab[t]||PAGE.vocab[v.dataset.term];if(!info)return;showPopover('<h4 style="text-transform:capitalize">'+v.dataset.term+'</h4><div class="pv-ill">'+info.ill+'</div><div class="pv-body">'+info.def+'</div>');if(!prog.vocab){prog.vocab=true;addXP(5,"Word explored");}});
+/* ---- signature dispatch ---- */
+function buildSignature(){
+  var s=PAGE.signature;
+  document.getElementById("sigIcon").textContent=s.icon||"🔬";
+  document.getElementById("sigTitle").textContent=s.title;
+  document.getElementById("sigLead").textContent=s.lead;
+  if(s.type==="regroup")buildRegroup(s);
+  else if(s.type==="classifier")buildClassifier(s);
+  else if(s.type==="sorter")buildSorter(s);
+  else if(s.type==="ptr")buildPTR(s,"signature");
+  else if(s.type==="compare")buildCompare(s);
+  else if(s.type==="glossary")buildGlossary(s);
+}
+/* regroup */
+function buildRegroup(s){
+  var host=document.getElementById("signature");
+  host.innerHTML='<div class="criteria" id="critRow"></div><div class="groupboard" id="board"></div><div class="engine-note" id="note">Tap a question above.</div>';
+  var used={};
+  var cr=document.getElementById("critRow");
+  s.criteria.forEach(function(c,ci){var el=document.createElement("div");el.className="crit";el.dataset.ci=ci;el.textContent=c.label;
+    el.addEventListener("click",function(){
+      document.querySelectorAll("#critRow .crit").forEach(function(x){x.classList.remove("on");});el.classList.add("on");
+      var board=document.getElementById("board");board.innerHTML="";
+      Object.keys(c.groups).forEach(function(gk){var members=c.items.filter(function(it){return it.g===gk;});if(!members.length)return;
+        var col=document.createElement("div");col.className="groupcol";col.innerHTML='<h4>'+c.groups[gk]+'</h4>'+members.map(function(m){return '<div class="org"><span class="oic">'+m.ic+'</span>'+m.nm+'</div>';}).join("");board.appendChild(col);});
+      document.getElementById("note").textContent="Grouped by "+c.label.toLowerCase()+". Change the question — the groups change too.";
+      if(!used[ci]){used[ci]=1;addXP(5,"Grouped by "+c.label.toLowerCase());if(Object.keys(used).length===s.criteria.length){document.getElementById("note").innerHTML+=" <b style='color:var(--leaf)'>Same living things, different groups — grouping depends on the feature you pick.</b>";sigDone();}}
+    });cr.appendChild(el);});
+}
+/* classifier (herb/shrub/tree/climber/creeper) */
+function classifyPlant(h,stem,climb,creep){
+  if(creep)return{type:"Creeper",why:"A weak stem that spreads flat along the ground.",eg:"e.g. pumpkin, watermelon"};
+  if(climb)return{type:"Climber",why:"A thin, weak stem that climbs using support.",eg:"e.g. money plant, grapevine"};
+  if(h<100&&stem<45)return{type:"Herb",why:"Short, with a soft green stem.",eg:"e.g. tomato, mint, wheat"};
+  if(h<=400&&stem>=45)return{type:"Shrub",why:"Medium height, hard woody stems branching near the base.",eg:"e.g. rose, lemon"};
+  if(h>400&&stem>=60)return{type:"Tree",why:"Tall, with a single thick, hard woody trunk.",eg:"e.g. mango, neem"};
+  if(h>=100&&stem<45)return{type:"Herb",why:"Still a soft green stem — a tall herb, not yet woody.",eg:"e.g. banana, maize"};
+  return{type:"Shrub",why:"Bushy and part-woody — between a herb and a tree.",eg:"e.g. tomato, chilli"};
+}
+var s4Found={};
+function buildClassifier(){
+  var host=document.getElementById("signature");
+  host.innerHTML='<div class="plantlab"><div class="plant-stage" id="plantStage"></div><div>'+
+    '<div class="ctrl-row"><label>Height — <span id="hLabel"></span></label><input type="range" id="hRange" min="5" max="1500" value="30" step="5"></div>'+
+    '<div class="ctrl-row"><label>Stem — <span id="sLabel"></span></label><input type="range" id="sRange" min="0" max="100" value="15" step="1"></div>'+
+    '<div class="toggle-row"><span class="chip" id="tClimb">Needs support to climb</span><span class="chip" id="tCreep">Spreads flat on ground</span></div></div></div>'+
+    '<div class="plant-verdict"><div class="pv-type" id="pvType"></div><div class="pv-why" id="pvWhy"></div><div class="pv-eg" id="pvEg"></div></div>'+
+    '<p class="lead" style="margin-top:8px">Types discovered: <b id="s4count">0</b> / 5</p>';
+  document.getElementById("hRange").addEventListener("input",updatePlant);
+  document.getElementById("sRange").addEventListener("input",updatePlant);
+  ["tClimb","tCreep"].forEach(function(id){document.getElementById(id).addEventListener("click",function(){this.classList.toggle("picked");if(this.classList.contains("picked")){var o=id==="tClimb"?"tCreep":"tClimb";document.getElementById(o).classList.remove("picked");}updatePlant();});});
+  updatePlant();
+}
+function drawPlant(h,stem,climb,creep){
+  var norm=Math.min(h/1500,1),trunkH=40+norm*140,trunkW=3+(stem/100)*15,green="#5fd16a",stemColor=stem<45?green:"#8a5a32",gY=190,svg;
+  if(creep){svg='<svg width="150" height="200" viewBox="0 0 150 200"><line x1="8" y1="'+gY+'" x2="142" y2="'+gY+'" stroke="#2a3a24" stroke-width="3"/><path d="M16 '+(gY-6)+' Q55 '+(gY-24)+' 90 '+(gY-6)+' T142 '+(gY-10)+'" stroke="'+green+'" stroke-width="5" fill="none"/><circle cx="48" cy="'+(gY-13)+'" r="8" fill="'+green+'"/><circle cx="96" cy="'+(gY-11)+'" r="8" fill="'+green+'"/></svg>';}
+  else if(climb){svg='<svg width="150" height="200" viewBox="0 0 150 200"><line x1="100" y1="26" x2="100" y2="'+gY+'" stroke="#5a6488" stroke-width="4"/><path d="M100 '+gY+' C60 '+(gY-28)+' 130 '+(gY-64)+' 100 '+(gY-100)+' C80 '+(gY-128)+' 120 '+(gY-146)+' 100 '+(gY-168)+'" stroke="'+green+'" stroke-width="5" fill="none"/><circle cx="88" cy="'+(gY-56)+'" r="7" fill="'+green+'"/><circle cx="116" cy="'+(gY-102)+'" r="7" fill="'+green+'"/></svg>';}
+  else{var topY=gY-trunkH,cR=16+norm*40+(stem/100)*8;svg='<svg width="150" height="200" viewBox="0 0 150 200"><line x1="8" y1="'+gY+'" x2="142" y2="'+gY+'" stroke="#2a3a24" stroke-width="3"/><rect x="'+(75-trunkW/2)+'" y="'+topY+'" width="'+trunkW+'" height="'+trunkH+'" rx="'+(trunkW/2)+'" fill="'+stemColor+'"/><circle cx="75" cy="'+topY+'" r="'+cR+'" fill="'+green+'" opacity="0.92"/>'+(cR>30?'<circle cx="'+(75-cR*0.6)+'" cy="'+(topY+cR*0.4)+'" r="'+(cR*0.6)+'" fill="'+green+'" opacity="0.85"/><circle cx="'+(75+cR*0.6)+'" cy="'+(topY+cR*0.4)+'" r="'+(cR*0.6)+'" fill="'+green+'" opacity="0.85"/>':'')+'</svg>';}
+  document.getElementById("plantStage").innerHTML=svg;
+}
+function updatePlant(){
+  var h=+document.getElementById("hRange").value,stem=+document.getElementById("sRange").value;
+  var climb=document.getElementById("tClimb").classList.contains("picked"),creep=document.getElementById("tCreep").classList.contains("picked");
+  document.getElementById("hLabel").textContent=h>=100?(h/100).toFixed(h%100?1:0)+" m":h+" cm";
+  document.getElementById("sLabel").textContent=stem<30?"soft & green":stem<60?"firm, part-woody":"hard & woody";
+  var r=classifyPlant(h,stem,climb,creep);
+  document.getElementById("pvType").textContent=r.type;document.getElementById("pvWhy").textContent=r.why;document.getElementById("pvEg").textContent=r.eg;
+  drawPlant(h,stem,climb,creep);
+  if(!s4Found[r.type]){s4Found[r.type]=1;document.getElementById("s4count").textContent=Object.keys(s4Found).length;addXP(4,r.type+" found");if(Object.keys(s4Found).length>=5)sigDone();}
+}
+/* sorter */
+function buildSorter(s){
+  var host=document.getElementById("signature");
+  host.innerHTML='<div class="pool" id="pool"></div><div class="bins" id="bins"></div>';
+  var pool=document.getElementById("pool");
+  s.pool.forEach(function(it,i){var el=document.createElement("div");el.className="sortitem";el.dataset.i=i;el.innerHTML=(it.svg||'')+'<span>'+it.label+'</span>';pool.appendChild(el);});
+  var bins=document.getElementById("bins");
+  s.bins.forEach(function(b){var el=document.createElement("div");el.className="bin";el.dataset.bin=b.key;el.innerHTML='<h4>'+b.label+'</h4><div class="binbody"></div>';bins.appendChild(el);});
+  var sel=null,placed=0;
+  pool.addEventListener("click",function(e){var it=e.target.closest(".sortitem");if(!it||it.classList.contains("right"))return;pool.querySelectorAll(".sortitem").forEach(function(x){x.classList.remove("sel");});it.classList.add("sel");sel=it;document.querySelectorAll("#bins .bin").forEach(function(b){b.classList.add("hot");});});
+  document.querySelectorAll("#bins .bin").forEach(function(bin){bin.addEventListener("click",function(){if(!sel)return;var i=+sel.dataset.i;var want=s.pool[i].bin,got=bin.dataset.bin;document.querySelectorAll("#bins .bin").forEach(function(b){b.classList.remove("hot");});
+    if(want===got){sel.classList.remove("sel","wrong");sel.classList.add("right");bin.querySelector(".binbody").appendChild(sel);placed++;addXP(4,"Sorted");if(placed===s.pool.length)sigDone();}
+    else{sel.classList.add("wrong");toast("Not that group — look again");(function(x){setTimeout(function(){x.classList.remove("wrong");},700);})(sel);}
+    if(sel)sel.classList.remove("sel");sel=null;});});
+}
+/* ptr */
+function buildPTR(s,hostId){
+  var g=document.getElementById(hostId);var items=s.items,done=0;
+  items.forEach(function(it,i){var box=document.createElement("div");box.className="ptr";var chips=it.opts.map(function(o){return '<span class="chip" data-i="'+i+'" data-v="'+encodeURIComponent(o)+'">'+o+'</span>';}).join("");box.innerHTML='<div class="q">'+it.q+'</div>'+chips+'<div class="reveal" id="'+hostId+'rev'+i+'"></div>';g.appendChild(box);});
+  g.addEventListener("click",function(e){var c=e.target.closest(".chip");if(!c||c.classList.contains("lock"))return;var i=+c.dataset.i,pick=decodeURIComponent(c.dataset.v),it=items[i];var box=c.closest(".ptr");var rev=document.getElementById(hostId+"rev"+i);
+    if(pick===it.ans){box.querySelectorAll(".chip").forEach(function(x){x.classList.add("lock");});c.classList.add("right");rev.className="reveal show ok";rev.textContent=it.why;addXP(7,"Correct");done++;if(done===items.length)sigDone();}
+    else{c.classList.add("wrong","lock");rev.className="reveal show no";rev.textContent="Not quite — try again.";}});
+}
+/* compare */
+function buildCompare(s){
+  var host=document.getElementById("signature");
+  host.innerHTML='<div class="cmp" id="cmp"></div><div class="cmp-summary" id="cmpSum">'+s.summary+'</div>';
+  var seen={};var cmp=document.getElementById("cmp");
+  [s.left,s.right].forEach(function(side,idx){var el=document.createElement("div");el.className="cmpcard";el.dataset.idx=idx;
+    el.innerHTML=side.svg+'<h4>'+side.title+'</h4><ul class="cmp-pts">'+side.points.map(function(p){return '<li>'+p+'</li>';}).join("")+'</ul><div style="font-size:11px;color:var(--ink-faint);margin-top:4px">tap to examine</div>';
+    el.addEventListener("click",function(){if(el.classList.contains("on"))return;el.classList.add("on");seen[idx]=1;addXP(5,side.title+" examined");if(Object.keys(seen).length===2){document.getElementById("cmpSum").classList.add("show");sigDone();}});
+    cmp.appendChild(el);});
+}
+/* table */
+function buildTable(){
+  if(!PAGE.table){return;}
+  var t=PAGE.table;document.getElementById("tableCard").style.display="";
+  document.getElementById("tblTitle").textContent=t.title;document.getElementById("tblNote").textContent=t.note||"";
+  var head='<tr><th>#</th><th>'+t.nameLabel+'</th>'+t.cols.map(function(c){return '<th>'+c.label+'</th>';}).join("")+'</tr>';
+  document.getElementById("tblHead").innerHTML=head;
+  var body=document.getElementById("tblBody");body.innerHTML="";
+  t.rows.forEach(function(r,ri){var tr=document.createElement("tr");if(r.mine)tr.className="mine";
+    var nameCell=r.mine?'<input type="text" data-r="'+ri+'" data-k="__name" placeholder="'+(t.namePlaceholder||"a plant you saw")+'" value="'+(r.name||"")+'">':'<span class="nm">'+r.name+'</span>';
+    var cells='<td class="sn">'+(ri+1)+'</td><td>'+nameCell+'</td>';
+    t.cols.forEach(function(c){var v=(r.vals&&r.vals[c.key])||"—";
+      if(c.type==="text")cells+='<td><input type="text" data-r="'+ri+'" data-k="'+c.key+'" placeholder="notes" value="'+(v==="—"?"":v)+'"></td>';
+      else cells+='<td><select data-r="'+ri+'" data-k="'+c.key+'">'+c.opts.map(function(o){return '<option'+(o===v?' selected':'')+'>'+o+'</option>';}).join("")+'</select></td>';});
+    tr.innerHTML=cells;body.appendChild(tr);});
+  body.addEventListener("change",function(e){var el=e.target.closest("[data-k]");if(!el)return;if(!prog.table){prog.table=true;addXP(6,"Table updated");}});
+}
+/* quiz */
+var answered=0,correct=0;
+function buildQuiz(){var box=document.getElementById("quizBox");
+  PAGE.quiz.forEach(function(item,qi){var card=document.createElement("div");card.className="qcard";var opts=item.opts.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o+'</button>';}).join("");card.innerHTML='<div class="btagrow"><span class="btag b-'+((item.bloom||"").toLowerCase())+'">'+(item.bloom||"")+'</span></div><div class="q">Q'+(qi+1)+'. '+item.q+'</div><div class="opts">'+opts+'</div><div class="expl" id="expl'+qi+'">'+item.why+'</div>';box.appendChild(card);});
+  box.addEventListener("click",function(e){var b=e.target.closest(".opt");if(!b||b.disabled)return;var qi=+b.dataset.q,oi=+b.dataset.o;var card=b.closest(".qcard");card.querySelectorAll(".opt").forEach(function(x,k){x.disabled=true;if(k===PAGE.quiz[qi].a)x.classList.add("right");});if(oi!==PAGE.quiz[qi].a)b.classList.add("wrong");else{addXP(10,"Correct");correct++;}document.getElementById("expl"+qi).classList.add("show");answered++;if(answered===PAGE.quiz.length){prog.quiz=true;emit("futurax:quizComplete",{lab:PAGE.id,score:correct,total:PAGE.quiz.length,xp:xp});updateProgress();}});
+}
+/* completion */
+function progGroups(){var g=[{name:"Reading",keys:["read"]},{name:"Explore",keys:["sig","vocab"]}];if(PAGE.table)g.push({name:"Recording",keys:["table"]});g.push({name:"Practice",keys:["quiz"]});return g;}
+function renderProgUI(){var host=document.getElementById("progLines");host.innerHTML="";progGroups().forEach(function(g,i){var el=document.createElement("div");el.className="prog-line";el.innerHTML='<span class="pl-name">'+g.name+'</span><span class="bar"><i id="pbar'+i+'"></i></span>';host.appendChild(el);});
+  var sk=document.getElementById("skills");sk.innerHTML="";PAGE.skills.forEach(function(s,i){var el=document.createElement("div");el.className="skill";el.id="skill"+i;el.innerHTML='<span class="sk-ic">◇</span><span><b>'+s.name+'</b> — '+s.ev+'</span>';sk.appendChild(el);});}
+function updateProgress(){var groups=progGroups(),all=0,n=0;groups.forEach(function(g,i){var t=0,d=0;g.keys.forEach(function(k){t++;d+=prog[k]?1:0;});var p=Math.round(d/t*100);var bar=document.getElementById("pbar"+i);if(bar)bar.style.width=p+"%";all+=p;n++;});document.getElementById("masteryPct").textContent=Math.round(all/n)+"%";
+  PAGE.skills.forEach(function(s,i){var el=document.getElementById("skill"+i);if(!el)return;var on=!!prog[s.need];el.classList.toggle("earned",on);el.querySelector(".sk-ic").textContent=on?"◆":"◇";});}
+/* popover + ask */
+function showPopover(html){document.getElementById("pvContent").innerHTML=html;document.getElementById("popover").classList.add("show");}
+document.getElementById("pvClose").addEventListener("click",function(){document.getElementById("popover").classList.remove("show");});
+document.getElementById("tAsk").addEventListener("click",function(){var html='<h4>🤖 Ask about this page</h4><div class="pv-body">Tap a question.</div><div class="faq" id="faqList">'+PAGE.faq.map(function(f,i){return '<button class="faqq" data-i="'+i+'">'+f.q+'</button>';}).join("")+'</div>';showPopover(html);document.getElementById("faqList").addEventListener("click",function(e){var b=e.target.closest(".faqq");if(!b)return;var f=PAGE.faq[+b.dataset.i];showPopover('<h4>'+f.q+'</h4><div class="pv-body">'+f.a+'</div>');});});
+/* translate */
+document.getElementById("tTranslate").addEventListener("click",function(){lang=(lang==="en")?"hi":"en";this.classList.toggle("on",lang==="hi");document.getElementById("tTransLabel").textContent=lang==="en"?"हिन्दी":"English";renderPage();toast(lang==="hi"?"पृष्ठ अब हिन्दी में":"Page switched to English");});
+/* listen */
+var speaking=false,rate=1,voices=[];var hasTTS=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+if(hasTTS){try{voices=speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){voices=speechSynthesis.getVoices();};}catch(e){}}
+document.getElementById("tListen").addEventListener("click",function(){if(!hasTTS){toast("Read-aloud isn't available here");return;}if(speaking){stopSpeak();return;}document.getElementById("speedbar").classList.add("show");startSpeak();});
+document.getElementById("speedbar").addEventListener("click",function(e){var s=e.target.closest(".spd");if(!s)return;document.querySelectorAll("#speedbar .spd").forEach(function(x){x.classList.remove("on");});s.classList.add("on");rate=parseFloat(s.dataset.r);if(speaking){stopSpeak();startSpeak();}});
+function narrBlocks(){return Array.prototype.slice.call(document.querySelectorAll(".narr"));}
+function textFor(el){var k=el.dataset.k;if(k==="title")return PAGE.title[lang];var b=PAGE.blocks.filter(function(x){return x.k===k;})[0];return b?b[lang]:el.textContent;}
+function startSpeak(){var blocks=narrBlocks();if(!blocks.length)return;speaking=true;document.getElementById("tListen").classList.add("on");var idx=0;
+  function next(){if(!speaking||idx>=blocks.length){stopSpeak();if(!prog.read){prog.read=true;addXP(6,"Page read aloud");}return;}var el=blocks[idx];blocks.forEach(function(b){b.classList.remove("reading");});el.classList.add("reading");el.scrollIntoView({behavior:"smooth",block:"center"});var u=new SpeechSynthesisUtterance(textFor(el));u.rate=rate;u.lang=(lang==="hi")?"hi-IN":"en-IN";var vv=voices.filter(function(v){return v.lang&&v.lang.toLowerCase().indexOf(lang==="hi"?"hi":"en")===0;});if(vv[0])u.voice=vv[0];u.onend=function(){idx++;next();};u.onerror=function(){idx++;next();};try{speechSynthesis.speak(u);}catch(e){idx++;next();}}
+  try{speechSynthesis.cancel();}catch(e){}next();}
+function stopSpeak(){speaking=false;document.getElementById("tListen").classList.remove("on");narrBlocks().forEach(function(b){b.classList.remove("reading");});try{speechSynthesis.cancel();}catch(e){}}
+/* boot */
+document.getElementById("rib").textContent=PAGE.rib;
+renderPage();buildSignature();buildTable();buildQuiz();renderProgUI();updateProgress();
+emit("futurax:advance",{lab:PAGE.id,step:1,totalSteps:1,xp:0});
+})();
+</script>
+<script>
+(function(){
+if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+function spark(x,y,n){for(var i=0;i<n;i++){var s=document.createElement("span");s.className="fx-spark";var a=Math.random()*6.28,d=16+Math.random()*24;s.style.left=x+"px";s.style.top=y+"px";s.style.setProperty("--dx",(Math.cos(a)*d)+"px");s.style.setProperty("--dy",(Math.sin(a)*d)+"px");document.body.appendChild(s);(function(el){setTimeout(function(){el.remove();},640);})(s);}}
+document.addEventListener("click",function(e){spark(e.clientX,e.clientY,5);},{passive:true});
+var hero=document.querySelector(".fx-hero");
+if(hero){hero.style.cursor="pointer";hero.addEventListener("pointermove",function(e){var r=hero.getBoundingClientRect();var x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;hero.style.transform="perspective(800px) rotateY("+(x*3.5)+"deg) rotateX("+(-y*2.5)+"deg)";});
+hero.addEventListener("pointerleave",function(){hero.style.transform="";});
+hero.addEventListener("click",function(e){spark(e.clientX,e.clientY,14);});}
+})();
+</script>
+<script>
+(function(){
+/* d3-init */
+document.querySelectorAll(".d3-wrap").forEach(function(wrap){
+ var cube=wrap.querySelector(".d3-cube");if(!cube)return;
+ var rx=-18,ry=0,down=false,px=0,py=0,moved=false;
+ function apply(){cube.style.transform="rotateX("+rx+"deg) rotateY("+ry+"deg)";}
+ wrap.addEventListener("pointerdown",function(e){down=true;moved=false;cube.classList.add("grabbed");apply();px=e.clientX;py=e.clientY;try{wrap.setPointerCapture(e.pointerId);}catch(_){}});
+ wrap.addEventListener("pointermove",function(e){if(!down)return;moved=true;ry+=(e.clientX-px)*0.6;rx-=(e.clientY-py)*0.6;if(rx>90)rx=90;if(rx<-90)rx=-90;px=e.clientX;py=e.clientY;apply();});
+ function up(){down=false;}
+ wrap.addEventListener("pointerup",up);wrap.addEventListener("pointercancel",up);wrap.addEventListener("pointerleave",up);
+ wrap.addEventListener("dblclick",function(){cube.classList.remove("grabbed");cube.style.transform="";});
+});
+})();
+</script>
+<script>
+/*gl-engine*/
+(function(){
+"use strict";
+var cvs=document.querySelectorAll("canvas.gl3d");
+if(!cvs.length)return;
+
+/* ---- mat4 (column-major) ---- */
+function mul(a,b){var o=new Array(16);for(var c=0;c<4;c++)for(var r=0;r<4;r++){var s=0;for(var k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s;}return o;}
+function persp(f,asp,n,fa){var t=1/Math.tan(f/2);return[t/asp,0,0,0, 0,t,0,0, 0,0,(fa+n)/(n-fa),-1, 0,0,(2*fa*n)/(n-fa),0];}
+function trans(x,y,z){return[1,0,0,0,0,1,0,0,0,0,1,0,x,y,z,1];}
+function rotX(a){var c=Math.cos(a),s=Math.sin(a);return[1,0,0,0, 0,c,s,0, 0,-s,c,0, 0,0,0,1];}
+function rotY(a){var c=Math.cos(a),s=Math.sin(a);return[c,0,-s,0, 0,1,0,0, s,0,c,0, 0,0,0,1];}
+function rotZ(a){var c=Math.cos(a),s=Math.sin(a);return[c,s,0,0, -s,c,0,0, 0,0,1,0, 0,0,0,1];}
+function tp(m,x,y,z){return[m[0]*x+m[4]*y+m[8]*z+m[12], m[1]*x+m[5]*y+m[9]*z+m[13], m[2]*x+m[6]*y+m[10]*z+m[14]];}
+function td(m,x,y,z){return[m[0]*x+m[4]*y+m[8]*z, m[1]*x+m[5]*y+m[9]*z, m[2]*x+m[6]*y+m[10]*z];}
+function hash(i){var x=Math.sin(i*127.1+3.7)*43758.5453;return x-Math.floor(x);}
+
+function Mesh(){this.p=[];this.n=[];this.c=[];}
+Mesh.prototype.tri=function(a,b,cc,na,nb,nc,ca,cb,ccl){
+ this.p.push(a[0],a[1],a[2],b[0],b[1],b[2],cc[0],cc[1],cc[2]);
+ this.n.push(na[0],na[1],na[2],nb[0],nb[1],nb[2],nc[0],nc[1],nc[2]);
+ this.c.push(ca[0],ca[1],ca[2],cb[0],cb[1],cb[2],ccl[0],ccl[1],ccl[2]);};
+
+function addSphere(m,mat,rx,ry,rz,seg,rings,cf){
+ for(var i=0;i<rings;i++){var ph0=i/rings*Math.PI,ph1=(i+1)/rings*Math.PI;
+  for(var j=0;j<seg;j++){var th0=j/seg*2*Math.PI,th1=(j+1)/seg*2*Math.PI;
+   var P=function(ph,th){var x=Math.sin(ph)*Math.cos(th),y=Math.cos(ph),z=Math.sin(ph)*Math.sin(th);
+     var pos=tp(mat,x*rx,y*ry,z*rz);var nn=td(mat,x/rx,y/ry,z/rz);var l=Math.hypot(nn[0],nn[1],nn[2])||1;
+     return{p:pos,n:[nn[0]/l,nn[1]/l,nn[2]/l],c:cf(th/(2*Math.PI),ph/Math.PI,[x,y,z])};};
+   var A=P(ph0,th0),B=P(ph1,th0),C=P(ph1,th1),D=P(ph0,th1);
+   m.tri(A.p,B.p,C.p,A.n,B.n,C.n,A.c,B.c,C.c);m.tri(A.p,C.p,D.p,A.n,C.n,D.n,A.c,C.c,D.c);}}}
+
+function addCyl(m,mat,r0,r1,h,seg,cf,caps){
+ for(var j=0;j<seg;j++){var t0=j/seg*2*Math.PI,t1=(j+1)/seg*2*Math.PI;
+  var V=function(t,y,r){var pos=tp(mat,Math.cos(t)*r,y,Math.sin(t)*r);var nn=td(mat,Math.cos(t),0,Math.sin(t));var l=Math.hypot(nn[0],nn[1],nn[2])||1;
+    return{p:pos,n:[nn[0]/l,nn[1]/l,nn[2]/l],c:cf(j/seg,y/h,[0,y,0])};};
+  var A=V(t0,0,r0),B=V(t0,h,r1),C=V(t1,h,r1),D=V(t1,0,r0);
+  m.tri(A.p,B.p,C.p,A.n,B.n,C.n,A.c,B.c,C.c);m.tri(A.p,C.p,D.p,A.n,C.n,D.n,A.c,C.c,D.c);}
+ if(caps){var c0=tp(mat,0,0,0),c1=tp(mat,0,h,0),dn=td(mat,0,-1,0),up=td(mat,0,1,0),cb=cf(0,0,[0,0,0]),ct=cf(0,1,[0,0,0]);
+  for(var k=0;k<seg;k++){var a0=k/seg*2*Math.PI,a1=(k+1)/seg*2*Math.PI;
+   var b0=tp(mat,Math.cos(a0)*r0,0,Math.sin(a0)*r0),b1=tp(mat,Math.cos(a1)*r0,0,Math.sin(a1)*r0);
+   m.tri(c0,b1,b0,dn,dn,dn,cb,cb,cb);
+   var u0=tp(mat,Math.cos(a0)*r1,h,Math.sin(a0)*r1),u1=tp(mat,Math.cos(a1)*r1,h,Math.sin(a1)*r1);
+   m.tri(c1,u0,u1,up,up,up,ct,ct,ct);}}}
+
+/* ---- procedural colours ---- */
+function seedCol(u,v,p){var s=hash(Math.floor(u*40)+Math.floor(v*40)*57);var b=[0.93,0.75,0.32];
+ if(s<0.13)b=[0.55,0.40,0.16];if(Math.abs(p[0])<0.09)b=[0.5,0.36,0.15];return b;}
+function bark(u,v){var s=hash(Math.floor(u*30)+Math.floor(v*40)*13);var d=0.55+0.14*s;return[0.40*d+0.16,0.27*d+0.09,0.14*d+0.05];}
+function leafCol(u,v,p){var s=hash(Math.floor(u*26)+Math.floor(v*26)*17);var b=[0.26+0.06*s,0.58+0.08*s,0.27+0.05*s];if(Math.abs(p[0])<0.05)b=[0.5,0.72,0.33];return b;}
+function canopy(u,v){var n=hash(Math.floor(u*20)+Math.floor(v*20)*11);return[0.20+0.09*n,0.5+0.11*n,0.22+0.06*n];}
+
+/* ---- models ---- */
+var builders={
+ seed:function(){var m=new Mesh();
+   addSphere(m,trans(-0.42,0,0),0.55,0.85,0.6,28,18,seedCol);
+   addSphere(m,trans(0.42,0,0),0.55,0.85,0.6,28,18,seedCol);
+   addCyl(m,trans(0,0.8,0),0.05,0.03,0.5,10,function(){return[0.36,0.6,0.26];},true);
+   addSphere(m,mul(trans(-0.18,1.3,0),rotZ(0.6)),0.24,0.07,0.13,14,8,function(){return[0.42,0.72,0.32];});
+   addSphere(m,mul(trans(0.18,1.3,0),rotZ(-0.6)),0.24,0.07,0.13,14,8,function(){return[0.42,0.72,0.32];});
+   return m;},
+ taproot:function(){var m=new Mesh();
+   addCyl(m,trans(0,0.0,0),0.06,0.045,0.55,10,function(){return[0.35,0.58,0.26];},true);
+   addSphere(m,mul(trans(-0.18,0.55,0),rotZ(0.7)),0.32,0.09,0.16,14,8,function(){return[0.42,0.72,0.32];});
+   addSphere(m,mul(trans(0.18,0.55,0),rotZ(-0.7)),0.32,0.09,0.16,14,8,function(){return[0.42,0.72,0.32];});
+   addCyl(m,rotX(Math.PI),0.17,0.02,1.6,16,bark,true);
+   var Ls=[{y:-0.3,a:0.4},{y:-0.55,a:1.7},{y:-0.8,a:3.0},{y:-1.0,a:4.3},{y:-0.45,a:5.4},{y:-0.7,a:2.4}];
+   Ls.forEach(function(L){var mat=mul(mul(trans(0,L.y,0),rotY(L.a)),rotZ(2.25));
+     addCyl(m,mat,0.05,0.008,0.55,8,bark,false);
+     var mat2=mul(mul(trans(0,L.y-0.06,0),rotY(L.a+0.6)),rotZ(2.5));
+     addCyl(m,mat2,0.025,0.005,0.34,6,bark,false);});
+   return m;},
+ leaf:function(){var m=new Mesh();
+   addSphere(m,mul(rotX(0.25),rotZ(0.1)),0.6,0.06,1.15,30,20,leafCol);
+   addCyl(m,mul(mul(rotX(0.25),trans(0,0.04,-1.02)),rotX(-Math.PI/2)),0.05,0.02,2.05,8,function(){return[0.5,0.72,0.34];},false);
+   return m;},
+ plant:function(){var m=new Mesh();
+   addCyl(m,trans(0,-0.95,0),0.06,0.04,1.0,10,function(){return[0.35,0.55,0.25];},true);
+   addSphere(m,trans(0,0.2,0),0.55,0.6,0.55,26,18,canopy);
+   addSphere(m,trans(0.0,0.78,0),0.16,0.16,0.16,12,8,function(){return[0.95,0.5,0.6];});
+   return m;},
+ tree:function(){var m=new Mesh();
+   addCyl(m,trans(0,-1.05,0),0.14,0.09,1.1,12,bark,true);
+   addSphere(m,trans(0,0.35,0),0.8,0.85,0.8,30,20,canopy);
+   addSphere(m,trans(-0.45,0.05,0.2),0.4,0.45,0.4,20,14,canopy);
+   addSphere(m,trans(0.45,0.1,-0.2),0.42,0.46,0.42,20,14,canopy);
+   return m;},
+ orbit:function(){var m=new Mesh();
+   addSphere(m,trans(0,0,0),0.92,0.92,0.92,38,26,function(u,v){var n=hash(Math.floor(u*16)+Math.floor(v*16)*29);
+     return n>0.52?[0.19,0.55,0.30]:[0.14,0.40,0.62];});
+   var sats=[[1.45,0.3,0,[0.95,0.76,0.32]],[-1.25,0.6,0.4,[0.55,0.82,0.42]],[0.3,-1.35,0.6,[0.92,0.52,0.42]],[0.6,0.95,-1.25,[0.72,0.72,0.96]]];
+   sats.forEach(function(s){addSphere(m,trans(s[0],s[1],s[2]),0.17,0.17,0.17,14,10,function(){return s[3];});});
+   return m;},
+ terrain:function(){var m=new Mesh();var N=22,S=2.5;
+   function H(x,z){return 0.30*Math.sin(x*3.0)*Math.cos(z*2.4)+0.13*Math.sin(x*6+z*3);}
+   function col(y){return y<-0.04?[0.80,0.66,0.36]:(y<0.20?[0.34,0.5,0.27]:[0.9,0.92,0.98]);}
+   for(var i=0;i<N;i++)for(var j=0;j<N;j++){
+     var x0=(i/N-0.5)*S,x1=((i+1)/N-0.5)*S,z0=(j/N-0.5)*S,z1=((j+1)/N-0.5)*S;
+     var A=[x0,H(x0,z0),z0],B=[x1,H(x1,z0),z0],C=[x1,H(x1,z1),z1],D=[x0,H(x0,z1),z1];
+     var nf=function(p1,p2,p3){var ux=p2[0]-p1[0],uy=p2[1]-p1[1],uz=p2[2]-p1[2],vx=p3[0]-p1[0],vy=p3[1]-p1[1],vz=p3[2]-p1[2];
+       var nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,l=Math.hypot(nx,ny,nz)||1;return[nx/l,ny/l,nz/l];};
+     var n1=nf(A,B,C),n2=nf(A,C,D);
+     m.tri(A,B,C,n1,n1,n1,col(A[1]),col(B[1]),col(C[1]));
+     m.tri(A,C,D,n2,n2,n2,col(A[1]),col(C[1]),col(D[1]));}
+   addSphere(m,trans(-1.05,0.95,-0.6),0.19,0.19,0.19,12,8,function(){return[1.0,0.85,0.4];});
+   return m;}
+};
+
+var VS="attribute vec3 aPos;attribute vec3 aNorm;attribute vec3 aColor;uniform mat4 uMV;uniform mat4 uProj;"+
+ "varying vec3 vN;varying vec3 vC;varying vec3 vE;void main(){vec4 p=uMV*vec4(aPos,1.0);vE=p.xyz;vN=mat3(uMV)*aNorm;vC=aColor;gl_Position=uProj*p;}";
+var FS="precision mediump float;varying vec3 vN;varying vec3 vC;varying vec3 vE;uniform vec3 uL;"+
+ "void main(){vec3 N=normalize(vN);vec3 L=normalize(uL);float d=max(dot(N,L),0.0);vec3 V=normalize(-vE);vec3 H=normalize(L+V);"+
+ "float s=pow(max(dot(N,H),0.0),22.0)*0.35;vec3 c=vC*(0.36+0.72*d)+vec3(s);gl_FragColor=vec4(c,1.0);}";
+
+function initGL(canvas){
+ var gl=canvas.getContext("webgl",{alpha:true,antialias:true,premultipliedAlpha:false})||canvas.getContext("experimental-webgl");
+ if(!gl){var w=canvas.parentNode;if(w)w.innerHTML='<div style="color:#9aa3c7;font-size:12px;padding:26px">3D view needs WebGL.</div>';return;}
+ function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+ var prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));
+ gl.linkProgram(prog);gl.useProgram(prog);
+ var model=canvas.dataset.model||"orbit";
+ var mesh=(builders[model]||builders.orbit)();
+ function buf(data,attr,size){var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);
+   var loc=gl.getAttribLocation(prog,attr);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,0,0);}
+ buf(mesh.p,"aPos",3);buf(mesh.n,"aNorm",3);buf(mesh.c,"aColor",3);
+ var count=mesh.p.length/3;
+ var uMV=gl.getUniformLocation(prog,"uMV"),uProj=gl.getUniformLocation(prog,"uProj"),uL=gl.getUniformLocation(prog,"uL");
+ gl.enable(gl.DEPTH_TEST);
+ var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ var ry=0.6,rx=-0.35,drag=false,px=0,py=0,auto=!reduce;
+ var stage=canvas.parentNode;
+ stage.addEventListener("pointerdown",function(e){drag=true;px=e.clientX;py=e.clientY;try{stage.setPointerCapture(e.pointerId);}catch(_){}} );
+ stage.addEventListener("pointermove",function(e){if(!drag)return;ry+=(e.clientX-px)*0.01;rx+=(e.clientY-py)*0.01;if(rx>1.4)rx=1.4;if(rx<-1.4)rx=-1.4;px=e.clientX;py=e.clientY;});
+ function up(){drag=false;}stage.addEventListener("pointerup",up);stage.addEventListener("pointercancel",up);stage.addEventListener("pointerleave",up);
+ var lw=0,lh=0;
+ function frame(){
+   var dpr=Math.min(window.devicePixelRatio||1,2),w=canvas.clientWidth,h=canvas.clientHeight;
+   if(w!==lw||h!==lh){canvas.width=Math.max(1,w*dpr);canvas.height=Math.max(1,h*dpr);gl.viewport(0,0,canvas.width,canvas.height);lw=w;lh=h;}
+   if(auto&&!drag)ry+=0.008;
+   gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+   var proj=persp(0.72,(canvas.width/Math.max(1,canvas.height)),0.1,100);
+   var mv=mul(trans(0,0,-3.5),mul(rotX(rx),rotY(ry)));
+   gl.uniformMatrix4fv(uMV,false,new Float32Array(mv));
+   gl.uniformMatrix4fv(uProj,false,new Float32Array(proj));
+   gl.uniform3f(uL,0.4,0.7,0.85);
+   gl.drawArrays(gl.TRIANGLES,0,count);
+   requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+}
+for(var i=0;i<cvs.length;i++)initGL(cvs[i]);
+})();
+
+</script>
+</body>
+</html>
