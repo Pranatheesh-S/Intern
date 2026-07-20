@@ -121,9 +121,12 @@ export default function Activity4_6({ onBackToDashboard, onComplete }) {
           </AnimatePresence>
         </main>
 
-        <aside style={{ width: '280px', flexShrink: 0 }}>
-          <DidYouKnow />
-        </aside>
+        {/* Right Sidebar (Educational Tip) */}
+        {!['questions', 'challenge'].includes(activeTab) && (
+          <aside style={{ width: '280px', flexShrink: 0 }}>
+            <DidYouKnow />
+          </aside>
+        )}
       </div>
     </div>
   );

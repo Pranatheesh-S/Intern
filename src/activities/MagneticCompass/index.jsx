@@ -120,9 +120,11 @@ export default function MagneticCompassActivity({ onBackToDashboard, onComplete 
       </main>
 
         {/* Right Sidebar (Educational Tip) */}
-        <aside style={{ width: '280px', flexShrink: 0 }}>
-          <DidYouKnow />
-        </aside>
+        {activeTab !== 'quiz' && (
+          <aside style={{ width: '280px', flexShrink: 0 }}>
+            <DidYouKnow />
+          </aside>
+        )}
       </div>
     </div>
   );
