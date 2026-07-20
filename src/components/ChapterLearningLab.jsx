@@ -1077,9 +1077,9 @@ export default function ChapterLearningLab({
       case "seed_dissection_lab":
         return <SeedDissectionLab onBackToDashboard={onBack} />;
       case "animal_locomotion":
-        return <AnimalHabitatExplorerActivity onBackToDashboard={onBack} initialPhase={3} />;
+        return <AnimalHabitatExplorerActivity key="animal_locomotion" onBackToDashboard={onBack} initialPhase={3} />;
       case "animal_habitat_matching":
-        return <AnimalHabitatExplorerActivity onBackToDashboard={onBack} initialPhase={1} />;
+        return <AnimalHabitatExplorerActivity key="animal_habitat_matching" onBackToDashboard={onBack} initialPhase={1} />;
       case "food_testing":
         return <FoodTestingActivity onBackToDashboard={onBack} />;
       case "fat_testing":
@@ -1526,6 +1526,567 @@ export default function ChapterLearningLab({
     );
   };
 
+  // ─── INTERACTIVE LESSON MODULES (LEVELS 2 to 7) ───
+
+  function GroupingBasicsInteractive() {
+    const [criteria, setCriteria] = useState('material');
+    const items = [
+      { name: 'Metal Spoon', material: 'Metal', edibility: 'Inedible', icon: '🥄', desc: 'Stainless steel.' },
+      { name: 'Red Apple', material: 'Organic', edibility: 'Edible', icon: '🍎', desc: 'Fresh fruit.' },
+      { name: 'Plastic Toy', material: 'Plastic', edibility: 'Inedible', icon: '🚗', desc: 'Hard polymer.' },
+      { name: 'Sourdough Bread', material: 'Organic', edibility: 'Edible', icon: '🍞', desc: 'Baked wheat.' },
+    ];
+
+    const groups = criteria === 'material' 
+      ? {
+          'Metal': items.filter(i => i.material === 'Metal'),
+          'Plastic': items.filter(i => i.material === 'Plastic'),
+          'Organic': items.filter(i => i.material === 'Organic')
+        }
+      : {
+          'Edible': items.filter(i => i.edibility === 'Edible'),
+          'Inedible': items.filter(i => i.edibility === 'Inedible')
+        };
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            🔍 Dynamic Classification Board
+          </span>
+          <div style={{ display: 'flex', gap: '0.2rem', background: 'var(--page-bg)', padding: '0.2rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+            <button
+              onClick={() => setCriteria('material')}
+              className="glass-btn"
+              style={{
+                padding: '0.25rem 0.55rem',
+                fontSize: '0.72rem',
+                borderRadius: '6px',
+                border: 'none',
+                background: criteria === 'material' ? 'var(--accent)' : 'transparent',
+                color: criteria === 'material' ? '#fff' : 'var(--text-primary)'
+              }}
+            >
+              By Material
+            </button>
+            <button
+              onClick={() => setCriteria('edibility')}
+              className="glass-btn"
+              style={{
+                padding: '0.25rem 0.55rem',
+                fontSize: '0.72rem',
+                borderRadius: '6px',
+                border: 'none',
+                background: criteria === 'edibility' ? 'var(--accent)' : 'transparent',
+                color: criteria === 'edibility' ? '#fff' : 'var(--text-primary)'
+              }}
+            >
+              By Edibility
+            </button>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {Object.keys(groups).map((groupName) => (
+            <div key={groupName} style={{ background: 'rgba(255,255,255,0.5)', border: '1px solid var(--border)', borderRadius: '12px', padding: '0.75rem' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--accent)', letterSpacing: '0.04em', display: 'block', marginBottom: '0.4rem' }}>
+                📂 Group: {groupName}
+              </span>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                {groups[groupName].map((item) => (
+                  <div
+                    key={item.name}
+                    className="glass-panel"
+                    style={{
+                      background: 'var(--page-bg)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '8px',
+                      padding: '0.4rem 0.6rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      flex: '1 1 120px'
+                    }}
+                  >
+                    <span style={{ fontSize: '1.25rem' }}>{item.icon}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{item.name}</span>
+                      <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{item.desc}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  function PlantVarietyMorpher() {
+    const [stage, setStage] = useState(0);
+    const [vineType, setVineType] = useState('creeper');
+
+    const stages = [
+      {
+        title: '🌿 Herb',
+        height: 'Short (usually < 1 meter)',
+        stem: 'Soft, tender green stem. Easy to bend.',
+        examples: 'Sadabahar, Grass, Coriander',
+        color: '#10b981',
+        bg: 'linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(52,211,153,0.01) 100%)',
+        desc: 'Short height, green stems, tender branches.',
+        graphic: (
+          <svg width="90" height="90" viewBox="0 0 100 100">
+            <path d="M50,90 Q40,60 30,50 Q45,55 50,30 Q55,55 70,50 Q60,60 50,90" fill="#34d399" stroke="#059669" strokeWidth="2" />
+            <line x1="50" y1="90" x2="50" y2="30" stroke="#059669" strokeWidth="2.5" />
+            <circle cx="50" cy="30" r="3" fill="#fb7185" />
+          </svg>
+        )
+      },
+      {
+        title: '🌺 Shrub',
+        height: 'Medium (1 to 3 meters)',
+        stem: 'Hard and thin woody stem branching near base.',
+        examples: 'Rose, Lemon, Hibiscus',
+        color: '#d97706',
+        bg: 'linear-gradient(135deg, rgba(217,119,6,0.06) 0%, rgba(251,191,36,0.01) 100%)',
+        desc: 'Branches start close to the ground; woody but thin stem.',
+        graphic: (
+          <svg width="90" height="90" viewBox="0 0 100 100">
+            <line x1="50" y1="90" x2="50" y2="60" stroke="#78350f" strokeWidth="3" />
+            <path d="M50,75 Q30,55 20,40" stroke="#78350f" strokeWidth="2" fill="none" />
+            <path d="M50,75 Q70,55 80,40" stroke="#78350f" strokeWidth="2" fill="none" />
+            <circle cx="20" cy="40" r="8" fill="#059669" fillOpacity="0.8" />
+            <circle cx="80" cy="40" r="8" fill="#059669" fillOpacity="0.8" />
+            <circle cx="50" cy="50" r="10" fill="#10b981" />
+            <circle cx="50" cy="50" r="3" fill="#f43f5e" />
+          </svg>
+        )
+      },
+      {
+        title: '🌳 Tree',
+        height: 'Tall (usually > 3 meters)',
+        stem: 'Thick, hard brown woody trunk branching high.',
+        examples: 'Neem, Mango, Banyan',
+        color: '#1e3a8a',
+        bg: 'linear-gradient(135deg, rgba(30,58,138,0.06) 0%, rgba(59,130,246,0.01) 100%)',
+        desc: 'Single solid trunk with branches starting high up.',
+        graphic: (
+          <svg width="90" height="90" viewBox="0 0 100 100">
+            <rect x="45" y="50" width="10" height="40" fill="#451a03" />
+            <circle cx="50" cy="30" r="20" fill="#047857" />
+            <circle cx="35" cy="35" r="14" fill="#065f46" />
+            <circle cx="65" cy="35" r="14" fill="#065f46" />
+          </svg>
+        )
+      }
+    ];
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
+        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            🌱 Plant Growth Form Morpher
+          </span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '0.75rem', alignItems: 'center' }}>
+          <div style={{ padding: '0.75rem', borderRadius: '12px', background: stages[stage].bg, border: `1px solid ${stages[stage].color}22` }}>
+            <h4 style={{ margin: '0 0 0.35rem 0', color: stages[stage].color, fontSize: '0.9rem' }}>
+              {stages[stage].title}
+            </h4>
+            <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
+              <b>Height:</b> {stages[stage].height}
+            </span>
+            <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
+              <b>Stem:</b> {stages[stage].stem}
+            </span>
+            <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-primary)' }}>
+              <b>Examples:</b> <i>{stages[stage].examples}</i>
+            </span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', background: '#fff', borderRadius: '12px', padding: '0.4rem', border: '1px solid var(--border)' }}>
+            {stages[stage].graphic}
+          </div>
+        </div>
+
+        {/* Morph Slider */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <input 
+            type="range" 
+            min="0" 
+            max="2" 
+            value={stage} 
+            onChange={(e) => setStage(parseInt(e.target.value))} 
+            style={{ width: '100%', accentColor: stages[stage].color, cursor: 'pointer' }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-muted)' }}>
+            <span style={{ color: stage === 0 ? 'var(--accent)' : 'inherit' }}>Herb</span>
+            <span style={{ color: stage === 1 ? 'var(--accent)' : 'inherit' }}>Shrub</span>
+            <span style={{ color: stage === 2 ? 'var(--accent)' : 'inherit' }}>Tree</span>
+          </div>
+        </div>
+
+        {/* Weak Stems panel */}
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.65rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
+              🍂 Weak Stems (Climbers vs Creepers)
+            </span>
+            <div style={{ display: 'flex', gap: '0.2rem', background: 'var(--page-bg)', padding: '0.1rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+              <button
+                onClick={() => setVineType('creeper')}
+                className="glass-btn"
+                style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem', borderRadius: '4px', background: vineType === 'creeper' ? 'var(--accent)' : 'transparent', color: vineType === 'creeper' ? '#fff' : 'var(--text-primary)' }}
+              >
+                Creeper
+              </button>
+              <button
+                onClick={() => setVineType('climber')}
+                className="glass-btn"
+                style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem', borderRadius: '4px', background: vineType === 'climber' ? 'var(--accent)' : 'transparent', color: vineType === 'climber' ? '#fff' : 'var(--text-primary)' }}
+              >
+                Climber
+              </button>
+            </div>
+          </div>
+
+          <div style={{ padding: '0.6rem 0.75rem', borderRadius: '10px', background: 'rgba(255,255,255,0.4)', border: '1px solid var(--border)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <span style={{ fontSize: '1.5rem' }}>{vineType === 'creeper' ? '🍉' : '🍇'}</span>
+            <div style={{ flex: 1 }}>
+              <strong style={{ fontSize: '0.75rem', color: 'var(--text-heading)', display: 'block' }}>
+                {vineType === 'creeper' ? 'Creepers spread on ground' : 'Climbers climb up support'}
+              </strong>
+              <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--text-secondary)', lineHeight: '1.3' }}>
+                {vineType === 'creeper' 
+                  ? 'Weak-stemmed plants that crawl horizontally. E.g., Watermelon, Pumpkin.' 
+                  : 'Weak-stemmed plants that climb walls or fences using tendrils. E.g., Pea plant, Grapes.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function VenationRootsCorrelationExplorer() {
+    const [selectedLeaf, setSelectedLeaf] = useState(null);
+    const [selectedRoot, setSelectedRoot] = useState(null);
+    const [status, setStatus] = useState('');
+    const [connections, setConnections] = useState({ reticulate: false, parallel: false });
+
+    const handleMatch = (leaf, root) => {
+      if (leaf === 'reticulate' && root === 'taproot') {
+        setConnections(prev => ({ ...prev, reticulate: true }));
+        setStatus('✅ Link Established: Reticulate leaf ⇄ Taproot system.');
+        setSelectedLeaf(null);
+        setSelectedRoot(null);
+      } else if (leaf === 'parallel' && root === 'fibrous') {
+        setConnections(prev => ({ ...prev, parallel: true }));
+        setStatus('✅ Link Established: Parallel leaf ⇄ Fibrous root system.');
+        setSelectedLeaf(null);
+        setSelectedRoot(null);
+      } else {
+        setStatus('❌ Incorrect link! Parallel leaves do not correlate with taproots.');
+      }
+    };
+
+    const selectLeaf = (id) => {
+      setSelectedLeaf(id);
+      if (selectedRoot) handleMatch(id, selectedRoot);
+      else setStatus(`Leaf "${id}" selected. Tap its corresponding root system.`);
+    };
+
+    const selectRoot = (id) => {
+      setSelectedRoot(id);
+      if (selectedLeaf) handleMatch(selectedLeaf, id);
+      else setStatus(`Root "${id}" selected. Tap its corresponding leaf venation.`);
+    };
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
+        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            🔗 Venation-Root Correlation Linker
+          </span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          {/* Leaves */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Venation</span>
+            <button
+              onClick={() => selectLeaf('reticulate')}
+              className="glass-btn"
+              style={{ padding: '0.6rem', borderRadius: '10px', border: connections.reticulate ? '1.5px solid var(--success)' : selectedLeaf === 'reticulate' ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            >
+              <span style={{ fontSize: '1.25rem' }}>🕸️</span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Reticulate</span>
+                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>Net-like veins</span>
+              </div>
+            </button>
+            <button
+              onClick={() => selectLeaf('parallel')}
+              className="glass-btn"
+              style={{ padding: '0.6rem', borderRadius: '10px', border: connections.parallel ? '1.5px solid var(--success)' : selectedLeaf === 'parallel' ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            >
+              <span style={{ fontSize: '1.25rem' }}>📏</span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Parallel</span>
+                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>Straight veins</span>
+              </div>
+            </button>
+          </div>
+
+          {/* Roots */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Root System</span>
+            <button
+              onClick={() => selectRoot('taproot')}
+              className="glass-btn"
+              style={{ padding: '0.6rem', borderRadius: '10px', border: connections.reticulate ? '1.5px solid var(--success)' : selectedRoot === 'taproot' ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            >
+              <span style={{ fontSize: '1.25rem' }}>🥕</span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Taproot</span>
+                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>One thick root</span>
+              </div>
+            </button>
+            <button
+              onClick={() => selectRoot('fibrous')}
+              className="glass-btn"
+              style={{ padding: '0.6rem', borderRadius: '10px', border: connections.parallel ? '1.5px solid var(--success)' : selectedRoot === 'fibrous' ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            >
+              <span style={{ fontSize: '1.25rem' }}>🌾</span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Fibrous</span>
+                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>Bunches of fibers</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {status && (
+          <div style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', background: 'var(--page-bg)', border: '1px solid var(--border)', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+            {status}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function SeedDissector() {
+    const [activeSeed, setActiveSeed] = useState('pea');
+    const [coatRemoved, setCoatRemoved] = useState(false);
+    const [seedSplit, setSeedSplit] = useState(false);
+    const [status, setStatus] = useState('Select a seed and click "Peel Seed Coat".');
+
+    const handleSelect = (id) => {
+      setActiveSeed(id);
+      setCoatRemoved(false);
+      setSeedSplit(false);
+      setStatus('Seed swapped. Open it up to inspect.');
+    };
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            🥜 Interactive Seed Dissector
+          </span>
+          <div style={{ display: 'flex', gap: '0.2rem', background: 'var(--page-bg)', padding: '0.1rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+            <button
+              onClick={() => handleSelect('pea')}
+              className="glass-btn"
+              style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem', borderRadius: '4px', background: activeSeed === 'pea' ? 'var(--accent)' : 'transparent', color: activeSeed === 'pea' ? '#fff' : 'var(--text-primary)' }}
+            >
+              Dicot (Gram)
+            </button>
+            <button
+              onClick={() => handleSelect('maize')}
+              className="glass-btn"
+              style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem', borderRadius: '4px', background: activeSeed === 'maize' ? 'var(--accent)' : 'transparent', color: activeSeed === 'maize' ? '#fff' : 'var(--text-primary)' }}
+            >
+              Monocot (Maize)
+            </button>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '0.75rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <button
+              disabled={coatRemoved}
+              onClick={() => { setCoatRemoved(true); setStatus('Seed coat peeled! Now click "Split Seed" to look inside.'); }}
+              className="glass-btn"
+              style={{ padding: '0.45rem', fontSize: '0.75rem', fontWeight: 'bold', background: coatRemoved ? 'rgba(0,0,0,0.04)' : 'var(--page-bg)', border: '1px solid var(--border)', cursor: coatRemoved ? 'default' : 'pointer' }}
+            >
+              🔓 Peel Seed Coat
+            </button>
+            <button
+              disabled={seedSplit}
+              onClick={() => {
+                if (!coatRemoved) {
+                  setStatus('⚠️ Remove the outer seed coat first!');
+                  return;
+                }
+                setSeedSplit(true);
+                setStatus(activeSeed === 'pea' 
+                  ? '🌱 Dicot splits cleanly into TWO food-storing cotyledons.' 
+                  : '🚫 Monocot does not split. It has a single solid cotyledon.');
+              }}
+              className="glass-btn"
+              style={{ padding: '0.45rem', fontSize: '0.75rem', fontWeight: 'bold', background: seedSplit ? 'rgba(0,0,0,0.04)' : 'var(--page-bg)', border: '1px solid var(--border)', cursor: seedSplit ? 'default' : 'pointer' }}
+            >
+              ✂️ Split Seed
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', background: '#fff', borderRadius: '12px', padding: '0.5rem', border: '1px solid var(--border)', height: '80px', alignItems: 'center' }}>
+            {activeSeed === 'pea' ? (
+              !coatRemoved ? <span style={{ fontSize: '2rem' }}>🫛</span> : !seedSplit ? <span style={{ fontSize: '2rem' }}>🧆</span> : <span style={{ fontSize: '2rem' }}>👐</span>
+            ) : (
+              !coatRemoved ? <span style={{ fontSize: '2rem' }}>🌽</span> : !seedSplit ? <span style={{ fontSize: '2rem' }}>🟡</span> : <span style={{ fontSize: '2rem' }}>☝️</span>
+            )}
+          </div>
+        </div>
+
+        <div style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', background: 'var(--page-bg)', border: '1px solid var(--border)', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+          {status}
+        </div>
+      </div>
+    );
+  }
+
+  function AnimalLocomotionGrid() {
+    const [selected, setSelected] = useState('fish');
+    const [action, setAction] = useState('');
+    const [result, setResult] = useState('Select an animal to inspect locomotion.');
+
+    const data = {
+      fish: { name: 'Fish', icon: '🐟', movement: 'swim', organ: 'Fins & tail', text: 'Uses flexible muscles & fins.' },
+      pigeon: { name: 'Pigeon', icon: '🐦', movement: 'fly', organ: 'Wings & claws', text: 'Uses flight feathers to fly.' },
+      goat: { name: 'Goat', icon: '🐐', movement: 'walk', organ: 'Four legs', text: 'Walks and runs on land.' },
+      snail: { name: 'Snail', icon: '🐌', movement: 'crawl', organ: 'Muscular foot', text: 'Crawls slowly using a slide-foot.' }
+    };
+
+    const checkLocomotion = (moveType) => {
+      setAction(moveType);
+      const target = data[selected];
+      if (target.movement === moveType) {
+        setResult(`✅ Correct! ${target.name} uses ${target.organ} to ${moveType}. (${target.text})`);
+      } else {
+        setResult(`❌ Incorrect: ${target.name} does not move by ${moveType}ing.`);
+      }
+    };
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
+        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            🏃 Locomotion Organ Mapper
+          </span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.4rem' }}>
+          {Object.keys(data).map(k => (
+            <button
+              key={k}
+              onClick={() => { setSelected(k); setAction(''); setResult(`Selected ${data[k].name}. Select how it moves.`); }}
+              className="glass-btn"
+              style={{ padding: '0.5rem', borderRadius: '10px', border: selected === k ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>{data[k].icon}</span>
+              <span style={{ fontSize: '0.7rem', fontWeight: 'bold' }}>{data[k].name}</span>
+            </button>
+          ))}
+        </div>
+
+        <div style={{ display: 'flex', gap: '0.25rem', justifyContent: 'center' }}>
+          {['walk', 'fly', 'swim', 'crawl'].map(a => (
+            <button
+              key={a}
+              onClick={() => checkLocomotion(a)}
+              className="glass-btn"
+              style={{ padding: '0.25rem 0.55rem', fontSize: '0.7rem', textTransform: 'capitalize', background: action === a ? 'rgba(99,102,241,0.06)' : 'var(--page-bg)', border: '1px solid var(--border)' }}
+            >
+              {a}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', background: 'var(--page-bg)', border: '1px solid var(--border)', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+          {result}
+        </div>
+      </div>
+    );
+  }
+
+  function AdaptationClimator() {
+    const [tab, setTab] = useState('hot');
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            🗺️ Survival Adaptations Dashboard
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', gap: '0.2rem', overflowX: 'auto' }}>
+          {['hot', 'cold', 'mountain', 'pioneers'].map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className="glass-btn"
+              style={{ padding: '0.25rem 0.45rem', borderRadius: '5px', fontSize: '0.68rem', background: tab === t ? 'var(--accent)' : 'var(--page-bg)', color: tab === t ? '#fff' : 'var(--text-primary)' }}
+            >
+              {t === 'hot' ? 'Hot Desert' : t === 'cold' ? 'Cold Desert' : t === 'mountain' ? 'Mountain' : 'Groves/Pioneers'}
+            </button>
+          ))}
+        </div>
+
+        {tab === 'hot' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.72rem' }}>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(245,158,11,0.04)', border: '1px solid rgba(245,158,11,0.1)' }}>
+              <b>🐪 Rajasthan Camel:</b> Long legs (keeps body above hot sand), wide padded hooves, stores fat in its hump.
+            </div>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.1)' }}>
+              <b>🌵 Cactus:</b> Stem becomes fleshy/green to perform photosynthesis and store water. Leaves turn to spines.
+            </div>
+          </div>
+        )}
+
+        {tab === 'cold' && (
+          <div style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(59,130,246,0.04)', border: '1px solid rgba(59,130,246,0.1)', fontSize: '0.72rem' }}>
+            <b>🐫 Ladakh Camel:</b> Two humps, short study limbs to scale mountain paths, shaggy thick woolly hair coat for sub-zero climate.
+          </div>
+        )}
+
+        {tab === 'mountain' && (
+          <div style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(99,102,241,0.04)', border: '1px solid rgba(99,102,241,0.1)', fontSize: '0.72rem' }}>
+            <b>🌲 Mountain Pine/Deodar:</b> Sloping branches let snow slide off. Conical shape and needle-thin leaves protect against frost.
+          </div>
+        )}
+
+        {tab === 'pioneers' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+            <div style={{ padding: '0.4rem', borderRadius: '6px', background: 'var(--page-bg)', border: '1px solid var(--border)' }}>
+              • <b>Dr. Salim Ali:</b> India\'s Birdman, mapped ornithological habitats.
+            </div>
+            <div style={{ padding: '0.4rem', borderRadius: '6px', background: 'var(--page-bg)', border: '1px solid var(--border)' }}>
+              • <b>Project Tiger (1973):</b> Landmark preservation scheme for national tiger populations.
+            </div>
+            <div style={{ padding: '0.4rem', borderRadius: '6px', background: 'var(--page-bg)', border: '1px solid var(--border)' }}>
+              • <b>Sacred Groves:</b> Local community forest reserves where woodcutting is banned.
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   const renderLessonPaneInline = (lessonId) => {
     const lesson = contentLessonsData[lessonId];
     if (!lesson) return (
@@ -1622,20 +2183,20 @@ export default function ChapterLearningLab({
           </div>
         </div>
 
-        {/* RIGHT COLUMN: SVGs or Quiz notices */}
+        {/* RIGHT COLUMN: Interactive Sandbox or Fallbacks */}
         <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0, justifyContent: 'center', background: 'transparent', border: 'none', padding: '0' }}>
-          {slide.isQuiz ? (
-            <div style={{ padding: '1.5rem', borderRadius: '16px', border: '1px dashed var(--accent)', background: 'rgba(99,102,241,0.04)' }}>
-              <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                🧠 Quiz Checkpoint
-              </span>
-              <h3 style={{ margin: '0.75rem 0 0.75rem 0', fontSize: '1.05rem', color: 'var(--text-heading)' }}>
-                Answer these questions in the Quiz & DYK pane.
-              </h3>
-              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-                In the Quiz & DYK pane, you can select your answers, check them, and see helpful facts related to this lesson.
-              </p>
-            </div>
+          {lessonId === 'grouping_basics_concept' ? (
+            <GroupingBasicsInteractive />
+          ) : lessonId === 'plant_variety_concept' ? (
+            <PlantVarietyMorpher />
+          ) : lessonId === 'venation_roots_concept' ? (
+            <VenationRootsCorrelationExplorer />
+          ) : lessonId === 'cotyledons_concept' ? (
+            <SeedDissector />
+          ) : lessonId === 'grouping_animals_concept' ? (
+            <AnimalLocomotionGrid />
+          ) : lessonId === 'adaptations_concept' ? (
+            <AdaptationClimator />
           ) : slide.svg ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', justifyContent: 'center', width: '100%', padding: '2rem 1.25rem', background: 'var(--card-bg)', borderRadius: '20px', boxShadow: '0 18px 40px rgba(14, 42, 69, 0.08)' }}>
               <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
