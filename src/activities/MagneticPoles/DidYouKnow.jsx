@@ -2,16 +2,20 @@ import React from 'react';
 
 const facts = [
   {
-    "title": "Strongest at the Ends",
-    "content": "The poles (ends) of a magnet are the strongest parts, so most iron filings gather there instead of the middle."
+    "title": "Earth is a Giant Magnet",
+    "content": "Earth acts like a giant magnet! It has its own magnetic field, which helps a compass point north. This invisible magnetic shield also protects our planet from harmful particles coming from the Sun."
   },
   {
-    "title": "Always Two Poles",
-    "content": "No matter whether a magnet is big or small, it always has two poles\u2014a North Pole and a South Pole."
+    "title": "William Gilbert's Discovery",
+    "content": "In 1600, English scientist William Gilbert studied magnets carefully and discovered that Earth behaves like a giant magnet. His work helped scientists understand why compass needles always point in a particular direction."
   },
   {
-    "title": "Unbreakable Pairs",
-    "content": "If a bar magnet is broken into smaller pieces, each piece becomes a new magnet with its own North Pole and South Pole. A magnet can never have just one pole."
+    "title": "Magnets in Medicine",
+    "content": "Hospitals use powerful magnets in MRI machines to take detailed pictures of organs and bones inside the human body. Doctors can see what is happening inside without performing surgery."
+  },
+  {
+    "title": "Electric Cars",
+    "content": "Many electric cars use strong magnets inside their motors. These magnets help the cars move efficiently while using less energy, making transportation cleaner and more environmentally friendly."
   }
 ];
 

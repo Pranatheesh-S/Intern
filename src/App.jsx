@@ -1398,7 +1398,11 @@ export default function App() {
                       <BookOpen size={14} /> Open Chapter
                     </button>
                     <button 
-                      onClick={() => navigateTo('class6', `chapter${chapter.num}`)}
+                      onClick={() => {
+                        if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
+                        else if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
+                        else navigateTo('class6', `chapter${chapter.num}`);
+                      }}
                       className="primary" 
                       style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
                     >

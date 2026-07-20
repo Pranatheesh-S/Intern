@@ -28,9 +28,9 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         <button 
           onClick={onBackToDashboard}
           className="outline"
-          style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', gap: '0.4rem', borderColor: 'var(--border)', display: 'flex', alignItems: 'center', cursor: 'pointer', background: 'transparent' }}
+          style={{ position: 'relative', zIndex: 100, padding: '0.4rem 0.8rem', fontSize: '0.85rem', gap: '0.4rem', borderColor: 'var(--border)', display: 'flex', alignItems: 'center', cursor: 'pointer', background: 'transparent' }}
         >
-          <ArrowLeft size={16} /> Back to Chapters
+          <ArrowLeft size={16} /> Back to Class 6 Chapter 4
         </button>
         <h1 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <Magnet style={{ color: 'var(--accent)' }} size={28} />
