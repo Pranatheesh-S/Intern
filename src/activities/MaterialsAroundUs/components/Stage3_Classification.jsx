@@ -3,42 +3,28 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, Check, Award, ArrowRight, BookOpen, Home, Utensils, AlertCircle } from 'lucide-react';
 
 // Custom Item SVGs
-const TextbookIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 40 35" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="2" width="30" height="30" rx="3" fill="#3b82f6" />
-    <path d="M5,2 L8,2 L8,32 L5,32 Z" fill="#2563eb" />
-    <line x1="10" y1="7" x2="30" y2="7" stroke="#fff" strokeWidth="1.5" />
-    <line x1="10" y1="12" x2="30" y2="12" stroke="#fff" strokeWidth="1.5" />
-    <line x1="10" y1="17" x2="30" y2="17" stroke="#fff" strokeWidth="1.5" />
-    <circle cx="4" cy="6" r="1.2" fill="#94a3b8" />
-    <circle cx="4" cy="12" r="1.2" fill="#94a3b8" />
-    <circle cx="4" cy="18" r="1.2" fill="#94a3b8" />
+const RegisterIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 40 45" preserveAspectRatio="xMidYMid meet">
+    <rect x="5" y="2" width="30" height="40" rx="2" fill="#e2e8f0" stroke="#64748b" strokeWidth="2" />
+    <rect x="5" y="2" width="6" height="40" fill="#3b82f6" />
+    <line x1="15" y1="10" x2="30" y2="10" stroke="#94a3b8" strokeWidth="2" />
+    <line x1="15" y1="16" x2="30" y2="16" stroke="#94a3b8" strokeWidth="2" />
+    <line x1="15" y1="22" x2="30" y2="22" stroke="#94a3b8" strokeWidth="2" />
+    <line x1="15" y1="28" x2="30" y2="28" stroke="#94a3b8" strokeWidth="2" />
   </svg>
 );
 
-const PencilIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 60 20" preserveAspectRatio="xMidYMid meet" style={{ transform: 'rotate(-45deg)' }}>
-    <polygon points="5,10 15,5 15,15" fill="#fcd34d" />
-    <polygon points="5,10 8,8 8,12" fill="#1e293b" />
-    <rect x="15" y="5" width="30" height="10" fill="#fbbf24" />
-    <line x1="15" y1="8.3" x2="45" y2="8.3" stroke="#f59e0b" strokeWidth="1" />
-    <line x1="15" y1="11.6" x2="45" y2="11.6" stroke="#f59e0b" strokeWidth="1" />
-    <rect x="45" y="5" width="5" height="10" fill="#94a3b8" />
-    <rect x="50" y="5" width="8" height="10" fill="#f87171" rx="2" />
+const DusterIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 50 30" preserveAspectRatio="xMidYMid meet">
+    <rect x="5" y="15" width="40" height="10" rx="2" fill="#475569" />
+    <rect x="5" y="5" width="40" height="10" rx="2" fill="#b45309" />
   </svg>
 );
 
-const RulerIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 100 30" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="5" width="90" height="20" rx="2" fill="rgba(167, 139, 250, 0.4)" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="15" y1="5" x2="15" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="25" y1="5" x2="25" y2="10" stroke="#8b5cf6" strokeWidth="1" />
-    <line x1="35" y1="5" x2="35" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="45" y1="5" x2="45" y2="10" stroke="#8b5cf6" strokeWidth="1" />
-    <line x1="55" y1="5" x2="55" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="65" y1="5" x2="65" y2="10" stroke="#8b5cf6" strokeWidth="1" />
-    <line x1="75" y1="5" x2="75" y2="12" stroke="#8b5cf6" strokeWidth="2" />
-    <line x1="85" y1="5" x2="85" y2="10" stroke="#8b5cf6" strokeWidth="1" />
+const ChalkIcon = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 20 50" preserveAspectRatio="xMidYMid meet">
+    <rect x="5" y="5" width="10" height="40" rx="3" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
+    <path d="M5,10 Q10,15 15,10" fill="none" stroke="#e2e8f0" strokeWidth="1" />
   </svg>
 );
 
@@ -94,22 +80,21 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
   const [usePlacements, setUsePlacements] = useState({});
   const [materialPlacements, setMaterialPlacements] = useState({});
   const [inspectedItems, setInspectedItems] = useState({});
-  const [activeDemoId, setActiveDemoId] = useState('register');
+  const [activeDemoId, setActiveDemoId] = useState('remote');
   const [draggingOverShelf, setDraggingOverShelf] = useState(null);
   const [draggingOverBasket, setDraggingOverBasket] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const items = [
-    { id: 'textbook', name: 'Textbook', icon: TextbookIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where you use it for learning.', materialHint: 'Think about what pages are made from.' },
-    { id: 'pencil', name: 'Pencil', icon: PencilIcon, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where you write and draw.', materialHint: 'Think about what the main body of a pencil is carved from.' },
-    { id: 'ruler', name: 'Ruler', icon: RulerIcon, correctUse: 'School Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you measure and draw lines.', materialHint: 'Think about what light, synthetic material is often used for school tools.' },
+  const allItems = [
+    { id: 'register', name: 'Attendance Register', icon: RegisterIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where teachers take attendance.', materialHint: 'Think about what the pages are made of.' },
+    { id: 'duster', name: 'Blackboard Duster', icon: DusterIcon, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where this is used to erase a chalkboard.', materialHint: 'Think about what the hard back part is usually made of.' },
     { id: 'remote', name: 'TV Remote', icon: RemoteIcon, correctUse: 'Home Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you watch TV.', materialHint: 'Think about what hard, light material electronic casings are made of.' },
     { id: 'tshirt', name: 'T-Shirt', icon: TShirtIcon, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about where you keep your clothes.', materialHint: 'Think about what soft, woven material clothes are made from.' },
-    { id: 'cricket_ball', name: 'Cricket Ball', icon: BallIcon, correctUse: 'Home Shelf', correctMaterial: 'Leather', useHint: 'Think about where you store your sports equipment to play with at home.', materialHint: 'Think about what tough, stitched material is used for this ball.' },
-    { id: 'plate', name: 'Plate', icon: PlateIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Ceramic', useHint: 'Think about where food is served.', materialHint: 'Think about what hard, baked material is used for dishware.' },
     { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard material is used for cutlery.' },
     { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' }
   ];
+
+  const items = allItems;
 
   const handleUseSort = (itemId, targetShelf) => {
     const item = items.find(i => i.id === itemId);
@@ -137,7 +122,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
     }
   };
 
-  const allUseSorted = Object.keys(usePlacements).length === items.length;
+  const allUseSorted = Object.keys(usePlacements).length === allItems.length;
   const allMaterialSorted = Object.keys(materialPlacements).length === items.length;
   const inspectedCount = Object.keys(inspectedItems).length;
   const canFinishDemo = inspectedCount >= 3;
@@ -159,26 +144,26 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
   const getDemoProperties = (id) => {
     switch (id) {
-      case 'textbook':
+      case 'register':
         return [
           { label: 'Primary Use', value: 'School Item 🎒' },
           { label: 'Base Material', value: 'Paper 📄' },
           { label: 'Surface Texture', value: 'Smooth & Flexible ☁️' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
-      case 'pencil':
+      case 'duster':
         return [
           { label: 'Primary Use', value: 'School Item 🎒' },
           { label: 'Base Material', value: 'Wood 🪵' },
-          { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
+          { label: 'Surface Texture', value: 'Hard back, soft front ☁️' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
-      case 'ruler':
+      case 'chalk':
         return [
           { label: 'Primary Use', value: 'School Item 🎒' },
-          { label: 'Base Material', value: 'Plastic 🧪' },
-          { label: 'Surface Texture', value: 'Hard & Smooth 💎' },
-          { label: 'Transparency', value: 'Transparent/Translucent 🔍' }
+          { label: 'Base Material', value: 'Chalk 🏔️' },
+          { label: 'Surface Texture', value: 'Dusty & Brittle 🌫️' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
         ];
       case 'remote':
         return [
@@ -337,7 +322,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         padding: '1rem 0.5rem',
                         borderRadius: '12px',
                         border: '1px solid var(--border)',
-                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
+                        background: 'var(--card-bg)',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -358,8 +343,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         width: '56px', 
                         height: '56px', 
                         borderRadius: '12px', 
-                        background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
-                        color: isSorted ? 'var(--success)' : 'var(--accent)',
+                        background: 'var(--surface)', 
+                        color: 'var(--accent)',
                         flexShrink: 0,
                         boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
                         border: '1px solid var(--border)'
@@ -490,26 +475,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
               {/* Complete state message */}
               {allUseSorted ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="glass-panel"
-                  style={{
-                    background: 'var(--success-bg)',
-                    border: '1px solid var(--success-border)',
-                    padding: '1.25rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.75rem'
-                  }}
-                >
-                  <p style={{ margin: 0, fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}>
-                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects according to their purpose or everyday use. Let's see how a scientist might analyze them differently."
-                  </p>
-                  <div style={{ background: 'rgba(255,255,255,0.5)', padding: '0.75rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem', alignSelf: 'flex-start' }}>
-                    Tests Complete! Click "Proceed to next" in the top right.
-                  </div>
-                </motion.div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem' }}>
+                  <Check size={18} />
+                  <span>All objects grouped successfully! Click "Proceed to next"</span>
+                </div>
               ) : (
                 <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
                   💡 Tip: Drag items directly into the shelves, or use the drop-downs on the left.
@@ -526,12 +495,38 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '1.5rem' }}
+            style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.5rem' }}
           >
-            {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '620px' }}>
-              <h4 style={{ margin: 0, fontSize: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1, overflowY: 'auto', alignContent: 'start', paddingRight: '0.25rem' }}>
+            {/* Left: Wooden Evidence Tray */}
+            <div style={{
+              background: 'linear-gradient(160deg, #c8a96e 0%, #a07840 40%, #8b6530 100%)',
+              borderRadius: '18px',
+              padding: '1rem',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
+              border: '3px solid #6b4c20',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.75rem',
+              height: '540px'
+            }}>
+              {/* Tray Label */}
+              <div style={{
+                background: 'linear-gradient(135deg, #f5e6c8, #e8d4a0)',
+                borderRadius: '8px',
+                padding: '0.4rem 1rem',
+                textAlign: 'center',
+                border: '2px solid #b8924a',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                alignSelf: 'center',
+                minWidth: '160px'
+              }}>
+                <span style={{ fontWeight: '800', fontSize: '1rem', color: '#5c3d11', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  Evidence Tray
+                </span>
+              </div>
+
+              {/* Items Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', flex: 1, overflowY: 'auto' }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
                   const IconComponent = item.icon;
@@ -539,81 +534,71 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     <div
                       key={item.id}
                       draggable={!isSorted}
-                      onDragStart={(e) => {
-                        e.dataTransfer.setData('text/plain', item.id);
-                      }}
-                      className="interactive-tray-item"
+                      onDragStart={(e) => e.dataTransfer.setData('text/plain', item.id)}
                       style={{
-                        width: '100%',
-                        padding: '1rem 0.5rem',
+                        background: 'linear-gradient(145deg, #fdf6e3, #f5e6c8)',
                         borderRadius: '12px',
-                        border: '1px solid var(--border)',
-                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
+                        border: '1.5px solid #c9a96e',
+                        padding: '0.6rem 0.4rem 0.5rem',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.75rem',
-                        opacity: isSorted ? 0.6 : 1,
+                        gap: '0.35rem',
                         cursor: isSorted ? 'default' : 'grab',
-                        textAlign: 'center',
+                        opacity: isSorted ? 0.65 : 1,
                         transition: 'all 0.2s',
-                        userSelect: 'none',
-                        position: 'relative'
+                        position: 'relative',
+                        boxShadow: '0 3px 8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.7)'
                       }}
                     >
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        width: '56px', 
-                        height: '56px', 
-                        borderRadius: '12px', 
-                        background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
-                        color: isSorted ? 'var(--success)' : 'var(--accent)',
-                        flexShrink: 0,
-                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
-                        border: '1px solid var(--border)'
-                      }}>
-                        <IconComponent size={32} />
-                      </div>
-                      <span style={{ fontWeight: '600', fontSize: '1rem', lineHeight: '1.2' }}>{item.name}</span>
-
-                      {!isSorted ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.25rem' }}>
-                          <select
-                            value=""
-                            onChange={(e) => handleMaterialSort(item.id, e.target.value)}
-                            style={{ fontSize: '0.9rem', padding: '0.4rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%' }}
-                          >
-                            <option value="" disabled>Material</option>
-                            <option value="Paper">Paper</option>
-                            <option value="Wood">Wood</option>
-                            <option value="Plastic">Plastic</option>
-                            <option value="Glass">Glass</option>
-                            <option value="Metal">Metal</option>
-                            <option value="Cloth">Cloth</option>
-                            <option value="Ceramic">Ceramic</option>
-                            <option value="Leather">Leather</option>
-                          </select>
-                        </div>
-                      ) : (
-                        <div style={{ 
-                          position: 'absolute', 
-                          top: '6px', 
-                          right: '6px', 
-                          background: 'var(--success)', 
-                          borderRadius: '50%', 
-                          width: '20px', 
-                          height: '20px', 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center',
-                          color: 'white',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      {/* Tack / Pin */}
+                      <div style={{
+                        position: 'absolute', top: '-6px', left: '50%', transform: 'translateX(-50%)',
+                        width: '12px', height: '12px', borderRadius: '50%',
+                        background: 'radial-gradient(circle at 35% 35%, #d4a843, #a07828)',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                      }} />
+                      {isSorted && (
+                        <div style={{
+                          position: 'absolute', top: '5px', right: '5px',
+                          background: '#10b981', borderRadius: '50%',
+                          width: '18px', height: '18px',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center'
                         }}>
-                          <Check size={12} strokeWidth={3} />
+                          <Check size={10} strokeWidth={3} color="white" />
                         </div>
+                      )}
+
+                      {/* Icon */}
+                      <div style={{ width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <IconComponent size={38} />
+                      </div>
+
+                      {/* Name */}
+                      <span style={{ fontSize: '0.78rem', fontWeight: '700', color: '#5c3d11', textAlign: 'center', lineHeight: '1.2' }}>
+                        {item.name}
+                      </span>
+
+                      {/* Dropdown */}
+                      {!isSorted && (
+                        <select
+                          value=""
+                          onChange={(e) => handleMaterialSort(item.id, e.target.value)}
+                          style={{
+                            fontSize: '0.75rem', padding: '0.25rem 0.3rem',
+                            border: '1px solid #c9a96e', borderRadius: '6px',
+                            background: 'rgba(255,255,255,0.8)', color: '#5c3d11',
+                            outline: 'none', width: '100%', cursor: 'pointer'
+                          }}
+                        >
+                          <option value="" disabled>Material ▾</option>
+                          <option value="Paper">Paper</option>
+                          <option value="Wood">Wood</option>
+                          <option value="Plastic">Plastic</option>
+                          <option value="Glass">Glass</option>
+                          <option value="Metal">Metal</option>
+                          <option value="Cloth">Cloth</option>
+                        </select>
                       )}
                     </div>
                   );
@@ -621,116 +606,182 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               </div>
             </div>
 
-            {/* Right: Material Baskets grid */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                {[
-                  { name: 'Paper', color: '#60a5fa' },
-                  { name: 'Wood', color: '#f59e0b' },
-                  { name: 'Plastic', color: '#a78bfa' },
-                  { name: 'Glass', color: '#38bdf8' },
-                  { name: 'Metal', color: '#94a3b8' },
-                  { name: 'Cloth', color: '#f43f5e' },
-                  { name: 'Ceramic', color: '#fb7185' },
-                  { name: 'Leather', color: '#a16207' }
-                ].map((basket) => {
-                  const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
-                  const isDraggingOverMe = draggingOverBasket === basket.name;
-                  return (
-                    <div
-                      key={basket.name}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        setDraggingOverBasket(basket.name);
-                      }}
-                      onDragLeave={() => setDraggingOverBasket(null)}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        setDraggingOverBasket(null);
-                        const itemId = e.dataTransfer.getData('text/plain');
-                        handleMaterialSort(itemId, basket.name);
-                      }}
-                      style={{
-                        background: isDraggingOverMe ? 'rgba(var(--accent-rgb), 0.1)' : 'var(--surface)',
-                        border: isDraggingOverMe ? '2px dashed var(--accent)' : '1.5px solid var(--border)',
-                        borderRadius: '12px',
-                        padding: '0.75rem',
-                        minHeight: '80px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.5rem',
-                        transition: 'all 0.2s'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 'bold', fontSize: '1rem', color: 'var(--text-heading)' }}>
-                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: basket.color }} />
-                        <span>{basket.name} Basket</span>
+            {/* Right: Illustrated Material Baskets */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', overflowY: 'auto' }}>
+              {[
+                { name: 'Paper', color: '#2563eb', icon: '📄', emoji: '♻️', bgLight: '#eff6ff', borderColor: '#93c5fd' },
+                { name: 'Wood', color: '#92400e', icon: '🪵', emoji: '🪵', bgLight: '#fef3c7', borderColor: '#d97706' },
+                { name: 'Plastic', color: '#16a34a', icon: '🧴', emoji: '♻️', bgLight: '#f0fdf4', borderColor: '#4ade80' },
+                { name: 'Metal', color: '#64748b', icon: '🔩', emoji: '🔧', bgLight: '#f1f5f9', borderColor: '#94a3b8' },
+                { name: 'Glass', color: '#0891b2', icon: '🥛', emoji: '♻️', bgLight: '#ecfeff', borderColor: '#67e8f9' },
+                { name: 'Cloth', color: '#dc2626', icon: '👕', emoji: '👕', bgLight: '#fff1f2', borderColor: '#fca5a5' }
+              ].map((basket) => {
+                const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
+                const isDraggingOverMe = draggingOverBasket === basket.name;
+                const basketSvgs = {
+                  Paper: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#1d4ed8" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="none" stroke="#1e3a8a" strokeWidth="1.5" />
+                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#1e3a8a" strokeWidth="1" opacity="0.5"/>)}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#2563eb" />
+                      <path d="M12 8 Q27 5 42 8 L44 16 Q27 12 10 16 Z" fill="#3b82f6" opacity="0.4" />
+                    </svg>
+                  ),
+                  Wood: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#a16207" />
+                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#78350f" strokeWidth="1.5" opacity="0.6"/>)}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#b45309" />
+                    </svg>
+                  ),
+                  Plastic: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 14 L10 42 L44 42 L47 14 Z" fill="#15803d" />
+                      {Array.from({length:5},(_,r)=>Array.from({length:4},(_,c)=>(
+                        <rect key={`${r}-${c}`} x={10+c*9} y={16+r*5} width="7" height="3" rx="1" fill="none" stroke="#14532d" strokeWidth="1" opacity="0.5" />
+                      )))}
+                      <path d="M5 12 Q27 8 49 12 Q27 16 5 12Z" fill="#16a34a" />
+                    </svg>
+                  ),
+                  Metal: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#64748b" />
+                      {Array.from({length:4},(_,r)=>Array.from({length:5},(_,c)=>(
+                        <rect key={`${r}-${c}`} x={9+c*7.5} y={17+r*6} width="5" height="4" rx="1" fill="none" stroke="#334155" strokeWidth="1" opacity="0.6" />
+                      )))}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#94a3b8" />
+                    </svg>
+                  ),
+                  Glass: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="rgba(6,182,212,0.4)" stroke="#0891b2" strokeWidth="1.5" />
+                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#0e7490" strokeWidth="1" opacity="0.4"/>)}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#06b6d4" />
+                    </svg>
+                  ),
+                  Cloth: (
+                    <svg width="54" height="48" viewBox="0 0 54 48">
+                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
+                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#b45309" />
+                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#78350f" strokeWidth="1.5" opacity="0.5"/>)}
+                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#d97706" />
+                      <rect x="14" y="10" width="8" height="8" rx="2" fill="#ef4444" opacity="0.8" />
+                      <rect x="24" y="8" width="8" height="8" rx="2" fill="#3b82f6" opacity="0.8" />
+                      <rect x="34" y="10" width="8" height="8" rx="2" fill="#10b981" opacity="0.8" />
+                    </svg>
+                  )
+                };
+
+                return (
+                  <div
+                    key={basket.name}
+                    onDragOver={(e) => { e.preventDefault(); setDraggingOverBasket(basket.name); }}
+                    onDragLeave={() => setDraggingOverBasket(null)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setDraggingOverBasket(null);
+                      handleMaterialSort(e.dataTransfer.getData('text/plain'), basket.name);
+                    }}
+                    style={{
+                      background: isDraggingOverMe ? basket.bgLight : 'white',
+                      border: isDraggingOverMe ? `2px dashed ${basket.color}` : `1.5px solid ${basket.borderColor}`,
+                      borderRadius: '12px',
+                      padding: '0.6rem 0.8rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      transition: 'all 0.2s',
+                      boxShadow: isDraggingOverMe ? `0 0 0 3px ${basket.bgLight}` : '0 1px 4px rgba(0,0,0,0.08)',
+                      minHeight: '68px'
+                    }}
+                  >
+                    {/* Basket Illustration */}
+                    <div style={{ flexShrink: 0 }}>
+                      {basketSvgs[basket.name]}
+                    </div>
+
+                    {/* Content */}
+                    <div style={{ flex: 1 }}>
+                      {/* Header */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <span style={{ fontWeight: '800', fontSize: '0.85rem', color: basket.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                          {basket.name} Basket
+                        </span>
+                        <span style={{ fontSize: '1rem' }}>{basket.emoji}</span>
                       </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-                        {sortedHere.map((item) => (
-                          <div
-                            key={item.id}
-                            style={{
-                              padding: '0.3rem 0.6rem',
-                              background: 'var(--card-bg)',
-                              border: '1px solid var(--border)',
-                              borderRadius: '6px',
-                              fontSize: '0.85rem',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.25rem'
-                            }}
-                          >
-                              <div style={{ width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <item.icon size={12} />
-                              </div>
-                              <span>{item.name}</span>
-                          </div>
-                        ))}
+
+                      {/* Drop Zone */}
+                      <div style={{
+                        border: `2px dashed ${isDraggingOverMe ? basket.color : basket.borderColor}`,
+                        borderRadius: '8px',
+                        padding: '0.3rem 0.5rem',
+                        minHeight: '28px',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '0.3rem',
+                        alignItems: 'center',
+                        background: isDraggingOverMe ? basket.bgLight : 'transparent',
+                        transition: 'all 0.15s'
+                      }}>
+                        {sortedHere.length === 0 ? (
+                          <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic' }}>
+                            {isDraggingOverMe ? 'Drop here!' : 'Drop items here...'}
+                          </span>
+                        ) : (
+                          sortedHere.map(item => (
+                            <motion.span
+                              key={item.id}
+                              initial={{ scale: 0.8, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              style={{
+                                background: basket.bgLight,
+                                border: `1px solid ${basket.borderColor}`,
+                                borderRadius: '6px',
+                                padding: '0.15rem 0.5rem',
+                                fontSize: '0.78rem',
+                                fontWeight: '600',
+                                color: basket.color,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.25rem'
+                              }}
+                            >
+                              <Check size={10} />
+                              {item.name}
+                            </motion.span>
+                          ))
+                        )}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
 
-              {/* Error messages overlay */}
-              {errorMessage && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--danger)', fontSize: '0.8rem' }}>
-                  <AlertCircle size={16} />
+              {/* Error / tip */}
+              {errorMessage ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: '#dc2626', fontSize: '0.82rem', marginTop: '0.25rem' }}>
+                  <AlertCircle size={15} />
                   <span>{errorMessage}</span>
                 </div>
-              )}
-
-              {/* Complete state message */}
-              {allMaterialSorted ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="glass-panel"
-                  style={{
-                    background: 'var(--success-bg)',
-                    border: '1px solid var(--success-border)',
-                    padding: '1.25rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.75rem'
-                  }}
-                >
-                  <p style={{ margin: 0, fontSize: '1rem', color: 'var(--success)', lineHeight: '1.5' }}>
-                    👨‍🏫 <strong>Teacher says:</strong> "Excellent. You classified objects by material. Notice how the same <strong>Textbook</strong> that belonged to the School Shelf now belongs to the <strong>Paper Basket</strong>. This shows that the same object can belong to different groups depending on the property we look at!"
-                  </p>
-                  <div style={{ background: 'rgba(255,255,255,0.5)', padding: '0.75rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem', alignSelf: 'flex-start' }}>
-                    Tests Complete! Click "Proceed to next" in the top right.
-                  </div>
-                </motion.div>
+              ) : allMaterialSorted ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                  <Check size={16} /> All objects sorted! Click "Proceed to next"
+                </div>
               ) : (
-                <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
-                  💡 Tip: Drag items to their correct material basket, or select from the dropdown.
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.25rem' }}>
+                  💡 Tip: Drag items to baskets, or use the dropdowns on the left.
                 </div>
               )}
             </div>
           </motion.div>
         )}
+
 
         {/* Phase 3: Multi-Property Inspection Demo */}
         {phase === 'demo' && (
@@ -786,7 +837,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               <div className="glass-panel" style={{ background: 'var(--card-bg)', border: '1px solid var(--accent)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
                   <div style={{ width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                    {React.createElement(items.find(i => i.id === activeDemoId)?.icon || TextbookIcon, { size: 40 })}
+                    {React.createElement(items.find(i => i.id === activeDemoId)?.icon || RemoteIcon, { size: 40 })}
                   </div>
                   <div>
                     <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.5rem' }}>

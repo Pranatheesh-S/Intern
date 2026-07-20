@@ -2,16 +2,20 @@ import React from 'react';
 
 const facts = [
   {
-    "title": "Finding Direction",
-    "content": "A freely suspended magnet always settles in the North\u2013South direction, making it useful for finding directions."
+    "title": "Earth acts like a giant magnet",
+    "content": "If you float a magnetized needle on a small piece of cork in water, it will slowly turn and point in the north-south direction. This simple experiment works because Earth acts like a giant magnet!"
   },
   {
-    "title": "North and South",
-    "content": "The end of a freely suspended magnet that points towards the North is called the North Pole, while the other end is called the South Pole."
+    "title": "Ancient Chinese Compasses",
+    "content": "More than 1,000 years ago, people in ancient China used magnetic compasses to find directions. These early compasses helped travelers and sailors navigate long journeys even when landmarks were not visible."
   },
   {
-    "title": "How a Compass Works",
-    "content": "A magnetic compass works because its needle is a small magnet that naturally points in the North\u2013South direction."
+    "title": "Reliability of Compasses",
+    "content": "Even today, compasses are used by hikers, trekkers, sailors, and rescue teams. Unlike GPS, a compass does not need batteries or internet, making it a reliable tool for finding directions anywhere."
+  },
+  {
+    "title": "Compasses in Space",
+    "content": "Scientists use highly sensitive magnetic compasses on spacecraft and satellites to study Earth's magnetic field. This helps researchers understand space weather, which can affect communication systems and GPS signals on Earth."
   }
 ];
 

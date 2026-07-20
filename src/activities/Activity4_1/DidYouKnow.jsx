@@ -2,16 +2,20 @@ import React from 'react';
 
 const facts = [
   {
-    "title": "Magnetic vs Non-Magnetic",
-    "content": "Not all metals stick to a magnet. Metals like iron, nickel, and cobalt are magnetic, while materials such as wood, plastic, glass, and rubber are not."
+    "title": "Not Every Metal is Magnetic",
+    "content": "A magnet does not attract every metal. Iron, nickel, and cobalt stick to magnets, but metals like aluminium, copper, silver, and gold do not. That is why some metal objects are magnetic while others are not!"
   },
   {
-    "title": "Looks Can Be Deceiving",
-    "content": "Two objects can look almost the same, but one may stick to a magnet while the other does not. The material an object is made of\u2014not its shape, size, or colour\u2014determines whether a magnet attracts it."
+    "title": "Electricity and Magnetism",
+    "content": "More than 200 years ago, scientist Hans Christian Ørsted noticed that a compass needle moved near an electric wire. This discovery showed that electricity and magnetism are connected."
   },
   {
-    "title": "A Testing Tool",
-    "content": "Scientists often use a magnet as a quick testing tool to find out whether an unknown object is made of a magnetic material like iron or steel."
+    "title": "Magnets in Recycling",
+    "content": "Magnets are used in recycling centres to separate iron and steel from other waste. This helps recycle metals faster and keeps the environment cleaner."
+  },
+  {
+    "title": "Data Storage",
+    "content": "Many modern devices, such as computers and data storage systems, use tiny magnets to store information. These magnets help keep your photos, videos, and files safe."
   }
 ];
 

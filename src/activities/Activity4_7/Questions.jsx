@@ -113,7 +113,7 @@ export default function Questions({ onComplete, onNext }) {
   const q = questions[currentQuestion];
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+    <div className="glass-panel" style={{ padding: '2rem', maxWidth: '100%', margin: '0 auto', width: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>Concept Check</h2>
         <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>

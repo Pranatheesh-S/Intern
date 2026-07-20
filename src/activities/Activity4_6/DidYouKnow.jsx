@@ -3,15 +3,19 @@ import React from 'react';
 const facts = [
   {
     "title": "Tiny Magnets",
-    "content": "A compass needle is itself a small magnet, which is why it responds when another magnet is brought nearby."
+    "content": "A compass needle is actually a tiny magnet. It turns because it responds to Earth's magnetic field, helping us find directions wherever we go."
   },
   {
-    "title": "Repulsion at Work",
-    "content": "When the North pole of a bar magnet is brought near the North-seeking end of a compass needle, the needle moves away due to repulsion."
+    "title": "Age of Exploration",
+    "content": "During the Age of Exploration, magnetic compasses helped sailors travel across vast oceans and discover new trade routes. Without compasses, long sea journeys would have been much more difficult and risky."
   },
   {
-    "title": "Opposites Attract",
-    "content": "When the South pole of a bar magnet is brought near the North-seeking end of a compass needle, the needle moves towards the magnet because unlike poles attract."
+    "title": "Built-in Compasses",
+    "content": "Animals such as sea turtles, pigeons, and some birds can sense Earth's magnetic field. This natural \"built-in compass\" helps them travel thousands of kilometers and still find their way home."
+  },
+  {
+    "title": "Electronic Compasses",
+    "content": "Many smartphones contain tiny electronic compasses called magnetometers. These sensors detect Earth's magnetic field and help map apps show the correct direction."
   }
 ];
 
