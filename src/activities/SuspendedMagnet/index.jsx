@@ -55,6 +55,7 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
             onClick={onBackToDashboard} 
             className="outline" 
             style={{ 
+              position: 'relative', zIndex: 100,
               padding: '0.4rem 0.8rem', 
               fontSize: '0.8rem', 
               gap: '0.35rem',

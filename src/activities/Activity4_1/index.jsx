@@ -33,13 +33,14 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
             onClick={onBackToDashboard} 
             className="outline" 
             style={{ 
+              position: 'relative', zIndex: 100,
               padding: '0.4rem 0.8rem', 
               fontSize: '0.8rem', 
               gap: '0.35rem',
               borderColor: 'var(--border)'
             }}
           >
-            <ArrowLeft size={14} /> Back to Chapters
+            <ArrowLeft size={14} /> Back to Class 6 Chapter 4
           </button>
           <div>
             <h2 style={{ margin: 0, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

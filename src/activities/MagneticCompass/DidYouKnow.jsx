@@ -2,16 +2,20 @@ import React from 'react';
 
 const facts = [
   {
-    "title": "DIY Magnet",
-    "content": "An ordinary iron needle can be turned into a magnet by stroking it with one pole of a bar magnet several times in the same direction."
+    "title": "Temporary Magnets",
+    "content": "A paper clip, nail, or needle can become a temporary magnet when rubbed with a magnet many times. This happens because tiny magnetic regions inside the metal line up in the same direction, making the object behave like a magnet."
   },
   {
-    "title": "Floating Compass",
-    "content": "A magnetised needle floating on a cork in water behaves like a tiny compass and points in the North\u2013South direction."
+    "title": "The First Electromagnet",
+    "content": "English scientist William Sturgeon built the first practical electromagnet in 1825. His invention showed that ordinary iron could become strongly magnetic and helped lead to many modern electrical devices."
   },
   {
-    "title": "Magnetic Power",
-    "content": "After becoming magnetic, an iron needle can attract small iron objects, such as pins, just like a magnet."
+    "title": "Industrial Sorting",
+    "content": "Factories often use magnets to separate iron objects from other materials. This helps sort waste, recycle metals, and remove unwanted iron pieces from food-processing and manufacturing machines."
+  },
+  {
+    "title": "Advanced Magnetic Materials",
+    "content": "Scientists are creating advanced magnetic materials that can store huge amounts of data in very small spaces. These materials help make modern hard drives, memory devices, and computing systems faster and more efficient."
   }
 ];
 
