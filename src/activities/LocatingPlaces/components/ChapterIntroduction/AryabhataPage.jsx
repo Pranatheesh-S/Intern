@@ -122,7 +122,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
             color: '#20303f',
             margin: 0
           }}>
-            "The globe of the Earth stands in space… and is spherical, surrounded by all creatures, terrestrial as well as aquatic."
+            "The globe of the Earth stands in space, made up of water, earth, fire and air and is spherical. ... It is surrounded by all creatures, terrestrial as well as aquatic."
           </p>
           <span style={{
             display: 'block',

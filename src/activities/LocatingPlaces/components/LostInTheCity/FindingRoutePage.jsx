@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronRight, Map, MapPin, Compass } from 'lucide-react';
+import { ChevronRight, Map, MapPin, Compass, ArrowLeft } from 'lucide-react';
+import ExploreIndiaActivity from './ExploreIndiaActivity';
 
 const N = {
   RS: {x: 150, y: 360, label: 'Railway Station', type: 'station', start: true},
   HO: {x: 350, y: 360, label: 'Hospital', type: 'hospital'},
   NP: {x: 550, y: 360, label: 'Nagar Panchayat', type: 'civic'},
-  BK: {x: 740, y: 360, label: 'Bank', type: 'bank', goal: true},
+  BK: {x: 740, y: 560, label: 'Bank', type: 'bank', goal: true},
   SC: {x: 150, y: 560, label: 'School', type: 'school'},
   MK: {x: 350, y: 560, label: 'Market', type: 'market'},
   JT: {x: 550, y: 560, label: 'Junction', type: 'junction'},
-  MU: {x: 740, y: 560, label: 'Museum', type: 'museum'},
+  MU: {x: 740, y: 360, label: 'Museum', type: 'museum'},
   AP: {x: 350, y: 165, label: 'Apartments', type: 'apartment'},
   PG: {x: 740, y: 165, label: 'Public Garden', type: 'garden'},
 };
 
 const EDGES = [
-  ['RS', 'HO'], ['HO', 'NP'], ['NP', 'BK'], ['SC', 'MK'], ['MK', 'JT'], ['JT', 'MU'],
-  ['RS', 'SC'], ['AP', 'HO'], ['HO', 'MK'], ['NP', 'JT'], ['PG', 'BK'], ['BK', 'MU']
+  ['RS', 'HO'], ['HO', 'NP'], ['NP', 'MU'], ['SC', 'MK'], ['MK', 'JT'], ['JT', 'BK'],
+  ['RS', 'SC'], ['AP', 'HO'], ['HO', 'MK'], ['NP', 'JT'], ['PG', 'MU'], ['MU', 'BK']
 ];
 
 const ADJ = {};
@@ -144,9 +145,11 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
   const [t3Ans, setT3Ans] = useState(null);
   
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showExploreIndia, setShowExploreIndia] = useState(false);
 
   const logRef = useRef(null);
   const elementsRef = useRef(null);
+
 
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
@@ -208,6 +211,18 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
     setHintDir(null);
   };
 
+  const handleUndo = () => {
+    if (path.length > 1 && !win) {
+      const newPath = [...path];
+      newPath.pop();
+      const prevLoc = newPath[newPath.length - 1];
+      setCur(prevLoc);
+      setPath(newPath);
+      setHintDir(null);
+      addLog(`Went back to <b>${N[prevLoc].label}</b>`, true);
+    }
+  };
+
   const tapBuilding = (k) => {
     if (k === 'HO') {
       setT1Done(true);
@@ -228,8 +243,12 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
   const optTook = bfs('RS', 'BK').length - 1;
   const userTook = path.length - 1;
 
+  if (showExploreIndia) {
+    return <ExploreIndiaActivity onBeginChapter={onBeginChapter} onBack={() => setShowExploreIndia(false)} />;
+  }
+
   return (
-    <div style={{ display: 'flex', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
       <style>{`
         .dpad-btn { font-family: "Space Grotesk", system-ui, sans-serif; font-weight: 700; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #0E3556; border-radius: 11px; padding: 12px 0; font-size: 14px; transition: all 0.15s; }
         .dpad-btn:hover:not(:disabled) { border-color: #7c5cff; background: #f4f1ff; }
@@ -242,8 +261,22 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
         .opts-btn.bad { border-color: #e0552f; background: #fdeee9; color: #e0552f; }
       `}</style>
       
+      {showQuiz && (
+        <div style={{ padding: '0.75rem 2rem', borderBottom: '1px solid rgba(0,0,0,0.08)', background: '#fff', zIndex: 10 }}>
+          <button 
+            onClick={() => setShowQuiz(false)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: '#5c6b7a', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#20303f'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#5c6b7a'}
+          >
+            <ArrowLeft size={18} /> Back to Map
+          </button>
+        </div>
+      )}
+      
+      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
       {/* LEFT PAGE - MAP */}
-      <div style={{ flex: 1.4, padding: '24px', display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)', position: 'relative' }}>
+      <div style={{ flex: 1.4, padding: '24px', display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)', position: 'relative', background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)' }}>
         
         <div style={{ background: '#dfeeff', border: '6px solid #0E3556', borderRadius: '18px', overflow: 'hidden', position: 'relative', flex: 1, boxShadow: '0 24px 60px rgba(14,42,69,0.1)' }}>
           <svg viewBox="0 0 880 720" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%', display: 'block' }}>
@@ -327,9 +360,9 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
                 <h3 style={{ fontFamily: '"Fraunces", serif', color: '#12a15f', fontSize: '26px', margin: '6px 0 8px' }}>You reached the Bank!</h3>
                 <p style={{ color: '#5c6b7a', fontSize: '14px', lineHeight: 1.5, marginBottom: '24px' }}>
                   {userTook === optTook ? (
-                    <span>Perfect route in <b>{userTook} roads</b> — that's the shortest possible! Railway Station → Hospital → Nagar Panchayat → Bank.</span>
+                    <span>Perfect route in <b>{userTook} roads</b> — that's the shortest possible! Railway Station → Hospital → Nagar Panchayat → Junction → Bank.</span>
                   ) : (
-                    <span>You made it in <b>{userTook} roads</b>. The shortest route is <b>{optTook}</b> (straight east: Hospital → Nagar Panchayat → Bank).</span>
+                    <span>You made it in <b>{userTook} roads</b>. The shortest route is <b>{optTook}</b> (for example: Hospital → Nagar Panchayat → Junction → Bank).</span>
                   )}
                 </p>
                 <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
@@ -379,6 +412,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
                 
                 <div style={{ display: 'flex', gap: '8px', marginTop: '12px', justifyContent: 'center' }}>
                   <button onClick={handleHint} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, cursor: 'pointer', border: '1px solid #d6e0ec', background: '#fff', color: '#5c6b7a', borderRadius: '10px', padding: '8px 14px', fontSize: '12.5px' }}>💡 Hint</button>
+                  <button onClick={handleUndo} disabled={path.length <= 1 || win} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, cursor: 'pointer', border: '1px solid #d6e0ec', background: '#fff', color: '#5c6b7a', borderRadius: '10px', padding: '8px 14px', fontSize: '12.5px', opacity: path.length <= 1 || win ? 0.5 : 1 }}>↩ Back</button>
                   <button onClick={resetGame} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, cursor: 'pointer', border: '1px solid #d6e0ec', background: '#fff', color: '#5c6b7a', borderRadius: '10px', padding: '8px 14px', fontSize: '12.5px' }}>↺ Restart</button>
                 </div>
               </div>
@@ -496,24 +530,29 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
               Interactive Map Activity
             </div>
             
-            <div style={{ opacity: (t1Done && t2Ans !== null && t3Ans !== null && win) ? 1 : 0, transition: 'opacity 0.5s', pointerEvents: (t1Done && t2Ans !== null && t3Ans !== null && win) ? 'auto' : 'none' }}>
+            <div style={{ transition: 'all 0.5s' }}>
               <button 
-                onClick={onBeginChapter} 
+                onClick={() => setShowExploreIndia(true)}
+                disabled={!(t1Done && t2Ans !== null && t3Ans !== null && win)}
                 style={{ 
-                  background: '#16a34a', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '30px', 
-                  fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 15px rgba(22, 163, 74, 0.4)', 
-                  transition: 'transform 0.2s', display: 'flex', alignItems: 'center', gap: '0.5rem' 
+                  background: (t1Done && t2Ans !== null && t3Ans !== null && win) ? '#16a34a' : '#c3cfdd', 
+                  color: 'white', border: 'none', padding: '10px 20px', borderRadius: '30px', 
+                  fontSize: '14px', fontWeight: 'bold', 
+                  cursor: (t1Done && t2Ans !== null && t3Ans !== null && win) ? 'pointer' : 'not-allowed', 
+                  boxShadow: (t1Done && t2Ans !== null && t3Ans !== null && win) ? '0 4px 15px rgba(22, 163, 74, 0.4)' : 'none', 
+                  transition: 'all 0.3s', display: 'flex', alignItems: 'center', gap: '0.5rem' 
                 }}
-                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                onMouseOver={(e) => { if (t1Done && t2Ans !== null && t3Ans !== null && win) e.currentTarget.style.transform = 'scale(1.05)' }}
+                onMouseOut={(e) => { if (t1Done && t2Ans !== null && t3Ans !== null && win) e.currentTarget.style.transform = 'scale(1)' }}
               >
-                Next Lesson <ChevronRight size={16} strokeWidth={2.5} />
+                {!(t1Done && t2Ans !== null && t3Ans !== null && win) ? 'Finish quiz to proceed' : 'Explore India with a Map'} <ChevronRight size={16} strokeWidth={2.5} />
               </button>
             </div>
           </div>
         </div>
 
       </div>
+    </div>
     </div>
   );
 }
