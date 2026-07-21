@@ -28,6 +28,7 @@ export default function CoordinatesPage({ onNextActivity }) {
   const [gridName, setGridName] = useState('Delhi');
 
   const [completedActivities, setCompletedActivities] = useState({ co: false, lat: false, lon: false, grid: false });
+  const [exploredCities, setExploredCities] = useState({ Delhi: false, Mumbai: false, Kolkata: false, Singapore: false, Paris: false });
 
   useEffect(() => {
     if (coStage === 4) setCompletedActivities(p => ({ ...p, co: true }));
@@ -42,10 +43,11 @@ export default function CoordinatesPage({ onNextActivity }) {
   }, [lonVal]);
 
   useEffect(() => {
-    if (gridLat !== 29 || gridLon !== 77) setCompletedActivities(p => ({ ...p, grid: true }));
-  }, [gridLat, gridLon]);
+    if (Object.values(exploredCities).every(Boolean)) setCompletedActivities(p => ({ ...p, grid: true }));
+  }, [exploredCities]);
 
-  const allCompleted = Object.values(completedActivities).every(Boolean);
+  // The user might skip interacting with some tabs, so we only strictly require the final grid activity to show "Next Activity"
+  const allCompleted = completedActivities.grid;
 
   const tabs = [
     { id: 'co', label: 'Coordinates', sub: 'Chess & market' },
@@ -150,7 +152,7 @@ export default function CoordinatesPage({ onNextActivity }) {
   };
 
   const renderLatGlobe = () => {
-    const cx = 180, cy = 180, R = 150;
+    const cx = 220, cy = 180, R = 150;
     const rad = Math.PI / 180;
     
     const getLatParams = (lat) => {
@@ -193,7 +195,7 @@ export default function CoordinatesPage({ onNextActivity }) {
     const highlightParams = getLatParams(latVal);
 
     return (
-      <svg viewBox="0 0 360 360" style={{ width: 'auto', height: 'auto', maxHeight: '45vh', maxWidth: '100%', display: 'block', margin: '0 auto' }}>
+      <svg viewBox="0 0 440 360" style={{ width: 'auto', height: 'auto', maxHeight: '45vh', maxWidth: '100%', display: 'block', margin: '0 auto' }}>
         <defs>
           <radialGradient id="globeShading" cx="35%" cy="35%" r="65%">
             <stop offset="0%" stopColor="#f4f9ff" />
@@ -266,26 +268,101 @@ export default function CoordinatesPage({ onNextActivity }) {
   };
 
   const renderLonGlobe = () => {
-    const cx = 180, cy = 180, R = 150;
+    const cx = 220, cy = 180, R = 150;
     const rad = Math.PI / 180;
-    const meridians = [-90, -60, -30, 0, 30, 60, 90].map(l => {
-      const rx = Math.abs(R * Math.sin(l * rad));
-      return (
-        <ellipse key={`m${l}`} cx={cx} cy={cy} rx={rx} ry={R} fill="none" 
-          stroke={l === 0 ? '#c79a3e' : '#7fa8c8'} strokeWidth={l === 0 ? 2 : 1} opacity={l === 0 ? 1 : 0.55} />
-      );
-    });
+
+    const getLonPath = (lon) => {
+      if (Math.abs(lon) < 0.1) {
+        // Use a tiny bezier curve to give the line a non-zero bounding box for SVG filters
+        return `M ${cx} ${cy - R} Q ${cx + 1} ${cy} ${cx} ${cy + R}`;
+      }
+      const rx = Math.abs(R * Math.sin(lon * rad));
+      const sweep = lon > 0 ? 1 : 0;
+      return `M ${cx} ${cy - R} A ${rx} ${R} 0 0 ${sweep} ${cx} ${cy + R}`;
+    };
+
+    const getLatParams = (lat) => {
+      const rx = R * Math.cos(lat * rad);
+      const ry = rx * 0.25; 
+      const y = cy - R * Math.sin(lat * rad);
+      return { rx, ry, y };
+    };
+
+    const eq = getLatParams(0);
+    const generateLatPath = (lat) => {
+      const { rx, ry, y } = getLatParams(lat);
+      return `M ${cx - rx} ${y} A ${rx} ${ry} 0 0 0 ${cx + rx} ${y}`;
+    };
+
+    const meridians = [-90, -60, -30, 30, 60, 90].map(l => (
+      <path key={`m${l}`} d={getLonPath(l)} fill="none" stroke="#7fa8c8" strokeWidth={1} opacity={0.5} />
+    ));
 
     const shown = Math.max(-90, Math.min(90, lonVal));
-    const rx = Math.abs(R * Math.sin(shown * rad));
+    const hlX = cx + Math.sin(shown * rad) * R;
 
     return (
-      <svg viewBox="0 0 360 360" style={{ width: 'auto', height: 'auto', maxHeight: '45vh', maxWidth: '100%', display: 'block', margin: '0 auto' }}>
-        <circle cx={cx} cy={cy} r={R} fill="#dcefff" stroke="#5b7fa6" strokeWidth="1.4" />
-        <line x1={cx - R} y1={cy} x2={cx + R} y2={cy} stroke="#d94a3d" strokeWidth="1.4" />
+      <svg viewBox="0 0 440 360" style={{ width: 'auto', height: 'auto', maxHeight: '45vh', maxWidth: '100%', display: 'block', margin: '0 auto' }}>
+        <defs>
+          <radialGradient id="globeShadingLon" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stopColor="#f4f9ff" />
+            <stop offset="40%" stopColor="#dcefff" />
+            <stop offset="90%" stopColor="#abcdec" />
+            <stop offset="100%" stopColor="#8cb4db" />
+          </radialGradient>
+          <filter id="glowLon">
+            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <clipPath id="globeClipLon">
+            <circle cx={cx} cy={cy} r={R} />
+          </clipPath>
+        </defs>
+
+        <circle cx={cx} cy={cy} r={R + 4} fill="none" stroke="#b1dbff" strokeWidth="6" opacity="0.4" filter="blur(3px)" />
+        <circle cx={cx} cy={cy} r={R + 1} fill="none" stroke="#b1dbff" strokeWidth="2" opacity="0.6" />
+
+        <circle cx={cx} cy={cy} r={R} fill="url(#globeShadingLon)" stroke="#5b7fa6" strokeWidth="1" />
+
+        <g opacity="0.15" fill="#588c5f" clipPath="url(#globeClipLon)">
+          <path d={`M ${cx-110} ${cy-50} C ${cx-80} ${cy-80}, ${cx-40} ${cy-10}, ${cx-60} ${cy+20} C ${cx-80} ${cy+60}, ${cx-40} ${cy+100}, ${cx-30} ${cy+120} C ${cx-20} ${cy+130}, ${cx-50} ${cy+90}, ${cx-50} ${cy+70} C ${cx-50} ${cy+50}, ${cx-90} ${cy}, ${cx-110} ${cy-50} Z`} />
+          <path d={`M ${cx-10} ${cy-90} C ${cx+50} ${cy-110}, ${cx+120} ${cy-60}, ${cx+110} ${cy-20} C ${cx+90} ${cy+10}, ${cx+80} ${cy+50}, ${cx+70} ${cy+80} C ${cx+50} ${cy+110}, ${cx+30} ${cy+90}, ${cx+40} ${cy+50} C ${cx+50} ${cy+10}, ${cx-10} ${cy-20}, ${cx-10} ${cy-90} Z`} />
+        </g>
+
+        {/* 3D Equator Reference */}
+        <path d={generateLatPath(0)} fill="none" stroke="#d94a3d" strokeWidth={1.5} opacity={0.4} strokeDasharray="3 3" />
+
         {meridians}
-        <ellipse cx={cx} cy={cy} rx={rx} ry={R} fill="none" stroke="#F5A623" strokeWidth="3.5" />
-        <text x={cx} y={cy - R - 6} fontSize="10" fill="#c79a3e" textAnchor="middle">Prime Meridian 0°</text>
+        
+        {/* Prime Meridian */}
+        <path d={getLonPath(0)} fill="none" stroke="#c79a3e" strokeWidth={2.5} filter="url(#glowLon)" opacity={0.8} />
+        
+        {/* Highlighted Longitude */}
+        <path d={getLonPath(shown)} fill="none" stroke="#F5A623" strokeWidth={3} filter="url(#glowLon)" style={{ transition: 'all 0.3s ease-out' }} />
+        
+        <circle cx={cx} cy={cy - R} r="3.5" fill="#fff" stroke="#12a15f" strokeWidth="2" filter="url(#glowLon)" />
+        <text x={cx} y={cy - R - 10} fontSize="11" fontWeight="900" fill="#12a15f" textAnchor="middle">North Pole</text>
+        
+        <circle cx={cx} cy={cy + R} r="3.5" fill="#fff" stroke="#2f6df0" strokeWidth="2" filter="url(#glowLon)" />
+        <text x={cx} y={cy + R + 16} fontSize="11" fontWeight="900" fill="#2f6df0" textAnchor="middle">South Pole</text>
+        
+        <text x={cx - 10} y={cy - R + 26} fontSize="11" fontWeight="900" fill="#c79a3e" textAnchor="end">0° Prime Meridian</text>
+        <text x={cx + eq.rx + 8} y={eq.y + 4} fontSize="9" fontWeight="700" fill="#d94a3d" textAnchor="start" opacity={0.6}>Equator</text>
+
+        <text 
+            x={hlX + (shown >= 0 ? 8 : -8)} 
+            y={cy + eq.ry + 12} 
+            fontSize="12" 
+            fontWeight="900" 
+            fill="#F5A623" 
+            textAnchor={shown >= 0 ? "start" : "end"}
+            style={{ transition: 'all 0.3s ease-out' }}
+          >
+            {Math.abs(shown)}° {shown === 0 ? '' : (shown > 0 ? 'E' : 'W')}
+          </text>
       </svg>
     );
   };
@@ -736,6 +813,26 @@ export default function CoordinatesPage({ onNextActivity }) {
                 </div>
                 <div className="work">The parallel of latitude is a circle; it shrinks as you move toward a pole (width = R·cos {Math.abs(latVal)}°).</div>
               </div>
+              
+              {latVal === 0 && (
+                <div style={{ background: '#fff9f0', border: '1px solid #fde68a', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#b45309', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                  <div style={{ fontSize: '24px', flexShrink: 0 }}>🌍</div>
+                  <div><b style={{ color: '#d94a3d', fontSize: '14px' }}>The Equator (0°)</b><br/>The longest parallel of latitude. It divides the Earth perfectly into the Northern and Southern Hemispheres.</div>
+                </div>
+              )}
+              {latVal === 90 && (
+                <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#166534', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                  <div style={{ fontSize: '24px', flexShrink: 0 }}>❄️</div>
+                  <div><b style={{ color: '#16a34a', fontSize: '14px' }}>The North Pole (90°N)</b><br/>The northernmost point on Earth. Here, the parallel shrinks to a single point!</div>
+                </div>
+              )}
+              {latVal === -90 && (
+                <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#1e3a8a', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                  <div style={{ fontSize: '24px', flexShrink: 0 }}>🐧</div>
+                  <div><b style={{ color: '#2563eb', fontSize: '14px' }}>The South Pole (90°S)</b><br/>The southernmost point on Earth. Like the North Pole, it is just a point, not a circle.</div>
+                </div>
+              )}
+
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
                 <button className="chip" style={{ padding: '10px 20px', fontSize: '14px', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setActiveTab('co')}>← Back to Coordinates</button>
                 <button className="chip active" style={{ padding: '10px 20px', fontSize: '14px', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setActiveTab('lon')}>Continue → Longitude</button>
@@ -765,6 +862,20 @@ export default function CoordinatesPage({ onNextActivity }) {
                 </div>
                 <div className="work">Measured from the Prime Meridian (0°) along the Equator, up to 180°. West or East add the W/E tag; 180°W and 180°E are the same line.</div>
               </div>
+
+              {lonVal === 0 && (
+                <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#991b1b', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                  <div style={{ fontSize: '24px', flexShrink: 0 }}>⏱️</div>
+                  <div><b style={{ color: '#ef4444', fontSize: '14px' }}>The Prime Meridian (0°)</b><br/>The starting point for measuring longitude and time. It passes through Greenwich, London.</div>
+                </div>
+              )}
+              {Math.abs(lonVal) === 180 && (
+                <div style={{ background: '#f4f7fb', border: '1px solid #e4ebf3', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#5c6b7a', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                  <div style={{ fontSize: '24px', flexShrink: 0 }}>📅</div>
+                  <div><b style={{ color: '#0E3556', fontSize: '14px' }}>The 180° Meridian</b><br/>Exactly opposite the Prime Meridian. The International Date Line roughly follows this path!</div>
+                </div>
+              )}
+
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
                 <button className="chip" style={{ padding: '10px 20px', fontSize: '14px', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setActiveTab('lat')}>← Back to Latitude</button>
                 <button className="chip active" style={{ padding: '10px 20px', fontSize: '14px', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setActiveTab('grid')}>Continue → Grid</button>
@@ -789,11 +900,11 @@ export default function CoordinatesPage({ onNextActivity }) {
               </div>
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '12px', alignItems: 'center' }}>
                 <span style={{ fontSize: '11.5px', color: '#5c6b7a' }}>Let's explore — find these cities:</span>
-                <button className="chip" onClick={() => { setGridLat(29); setGridLon(77); setGridName('Delhi'); }}>Delhi</button>
-                <button className="chip" onClick={() => { setGridLat(19); setGridLon(73); setGridName('Mumbai'); }}>Mumbai</button>
-                <button className="chip" onClick={() => { setGridLat(22); setGridLon(88); setGridName('Kolkata'); }}>Kolkata</button>
-                <button className="chip" onClick={() => { setGridLat(1); setGridLon(104); setGridName('Singapore'); }}>Singapore</button>
-                <button className="chip" onClick={() => { setGridLat(49); setGridLon(2); setGridName('Paris'); }}>Paris</button>
+                <button className="chip" onClick={() => { setGridLat(29); setGridLon(77); setGridName('Delhi'); setExploredCities(p => ({...p, Delhi: true})); }}>Delhi {exploredCities.Delhi && <span style={{color: '#16a34a'}}>✓</span>}</button>
+                <button className="chip" onClick={() => { setGridLat(19); setGridLon(73); setGridName('Mumbai'); setExploredCities(p => ({...p, Mumbai: true})); }}>Mumbai {exploredCities.Mumbai && <span style={{color: '#16a34a'}}>✓</span>}</button>
+                <button className="chip" onClick={() => { setGridLat(22); setGridLon(88); setGridName('Kolkata'); setExploredCities(p => ({...p, Kolkata: true})); }}>Kolkata {exploredCities.Kolkata && <span style={{color: '#16a34a'}}>✓</span>}</button>
+                <button className="chip" onClick={() => { setGridLat(1); setGridLon(104); setGridName('Singapore'); setExploredCities(p => ({...p, Singapore: true})); }}>Singapore {exploredCities.Singapore && <span style={{color: '#16a34a'}}>✓</span>}</button>
+                <button className="chip" onClick={() => { setGridLat(49); setGridLon(2); setGridName('Paris'); setExploredCities(p => ({...p, Paris: true})); }}>Paris {exploredCities.Paris && <span style={{color: '#16a34a'}}>✓</span>}</button>
               </div>
               <div className="readout">
                 <div className="big"><span>{Math.abs(gridLat)}°{gridLat >= 0 ? 'N' : 'S'}, {Math.abs(gridLon)}°{gridLon >= 0 ? 'E' : 'W'}</span>{gridName && ` · ${gridName}`}</div>
