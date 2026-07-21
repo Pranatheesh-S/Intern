@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Settings2, Info, ArrowRight, CheckCircle2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Settings2, Info, ArrowRight, CheckCircle2, RotateCw, RotateCcw } from "lucide-react";
 
 export default function Stage3_Explore({ onComplete, onNext }) {
   const [magnetAPoleRight, setMagnetAPoleRight] = useState("S"); // S or N
   const [magnetBPoleLeft, setMagnetBPoleLeft] = useState("N");   // N or S
   const [distance, setDistance] = useState(150);
   const [hasPencils, setHasPencils] = useState(true);
+  const [isAdjustingDistance, setIsAdjustingDistance] = useState(false);
 
   const polesMatch = magnetAPoleRight === magnetBPoleLeft;
   const magneticForce = distance < 180 ? (180 - distance) * 0.5 : 0; 
@@ -67,10 +68,55 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                 {[...Array(6)].map((_, i) => (
                   <motion.div 
                     key={i} 
-                    animate={{ rotate: magnetAOffset }}
-                    style={{ width: "8px", height: "120px", background: "linear-gradient(90deg, #fde047 0%, #ca8a04 100%)", borderRadius: "4px", boxShadow: "2px 2px 4px rgba(0,0,0,0.2)" }} 
-                  />
+                    style={{ width: "8px", height: "120px", filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))" }}
+                  >
+                    <svg viewBox="0 0 8 120" width="100%" height="100%">
+                      <polygon points="0,15 8,15 4,0" fill="#e6b981" />
+                      <polygon points="3,3 5,3 4,0" fill="#334155" />
+                      <rect x="0" y="15" width="8" height="90" fill="url(#pencilGrad3)" />
+                      <rect x="0" y="102" width="8" height="5" fill="#cbd5e1" />
+                      <rect x="0" y="107" width="8" height="13" rx="2" fill="#f472b6" />
+                      <defs>
+                        <linearGradient id="pencilGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#fde047" />
+                          <stop offset="100%" stopColor="#ca8a04" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </motion.div>
                 ))}
+                <AnimatePresence>
+                  {!polesMatch && magneticForce > 0 && isAdjustingDistance && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      style={{ position: "absolute", left: "50%", marginLeft: "-12px", bottom: "-30px", color: "var(--text-secondary)" }}
+                    >
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, ease: "linear", repeat: Infinity }}
+                      >
+                        <RotateCw size={24} />
+                      </motion.div>
+                    </motion.div>
+                  )}
+                  {polesMatch && magneticForce > 0 && isAdjustingDistance && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      style={{ position: "absolute", left: "50%", marginLeft: "-12px", bottom: "-30px", color: "var(--text-secondary)" }}
+                    >
+                      <motion.div
+                        animate={{ rotate: -360 }}
+                        transition={{ duration: 2, ease: "linear", repeat: Infinity }}
+                      >
+                        <RotateCcw size={24} />
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             )}
 
@@ -169,6 +215,9 @@ export default function Stage3_Explore({ onComplete, onNext }) {
               min="0" max="300" 
               value={distance} 
               onChange={(e) => setDistance(Number(e.target.value))}
+              onPointerDown={() => setIsAdjustingDistance(true)}
+              onPointerUp={() => setIsAdjustingDistance(false)}
+              onPointerLeave={() => setIsAdjustingDistance(false)}
               style={{ width: "100%", accentColor: "var(--accent)" }} 
             />
           </div>

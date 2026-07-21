@@ -121,7 +121,7 @@ export default function MagnetInteractionActivity({ onBackToDashboard, onComplet
 
         {/* Right Sidebar (Educational Tip) */}
         {activeTab !== 'quiz' && (
-          <aside style={{ width: '280px', flexShrink: 0 }}>
+          <aside style={{ width: '380px', flexShrink: 0 }}>
             <DidYouKnow />
           </aside>
         )}

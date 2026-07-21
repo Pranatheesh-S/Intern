@@ -59,28 +59,29 @@ export default function CarGame({ isPushing, onComplete }) {
       // hand magnet
       ctx.save();
       ctx.translate(handX, cy);
-      drawBar(ctx, 0, 0, 70, 20, true);
+      drawBar(ctx, 0, 0, 140, 40, true);
       ctx.restore();
       ctx.fillStyle = "#6C77A8";
-      ctx.font = "10px Segoe UI";
+      ctx.font = "14px Segoe UI";
       ctx.textAlign = "center";
-      ctx.fillText("your magnet", handX, cy + 26);
+      ctx.fillText("your magnet", handX, cy + 45);
       
       // car with magnet
       ctx.fillStyle = "#3A4680";
-      roundRect(ctx, carX - 30, cy - 8, 60, 20, 4);
+      roundRect(ctx, carX - 60, cy - 16, 120, 40, 8);
       ctx.fill();
       ctx.fillStyle = "#222A3B";
       ctx.beginPath();
-      ctx.arc(carX - 16, cy + 14, 7, 0, 7);
-      ctx.arc(carX + 16, cy + 14, 7, 0, 7);
+      ctx.arc(carX - 32, cy + 28, 14, 0, 7);
+      ctx.arc(carX + 32, cy + 28, 14, 0, 7);
       ctx.fill();
       ctx.save();
-      ctx.translate(carX, cy - 14);
-      drawBar(ctx, 0, 0, 44, 12);
+      ctx.translate(carX, cy - 28);
+      drawBar(ctx, 0, 0, 88, 24);
       ctx.restore();
       ctx.fillStyle = "#6C77A8";
-      ctx.fillText("toy car", carX, cy + 30);
+      ctx.font = "14px Segoe UI";
+      ctx.fillText("toy car", carX, cy + 60);
     }
 
     if (!isPushing) {
@@ -114,6 +115,6 @@ export default function CarGame({ isPushing, onComplete }) {
   }, [isPushing]);
 
   return (
-    <canvas ref={canvasRef} width={800} height={120} style={{ width: '100%', height: 'auto' }} />
+    <canvas ref={canvasRef} width={800} height={240} style={{ width: '100%', height: 'auto' }} />
   );
 }

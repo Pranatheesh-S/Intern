@@ -64,6 +64,7 @@ const Activity4_6 = lazy(() => import('./activities/Activity4_6'));
 const Activity4_7 = lazy(() => import('./activities/Activity4_7'));
 const FunWithMagnets = lazy(() => import('./activities/FunWithMagnets'));
 const Chapter4Flow = lazy(() => import('./activities/Chapter4Flow'));
+const Chapter5Flow = lazy(() => import('./activities/Chapter5Flow'));
 const IntroMagnets = lazy(() => import('./activities/IntroMagnets'));
 const AppreciatingBiodiversityActivity = lazy(() => import('./activities/AppreciatingBiodiversityActivity'));
 const LeafVenationLab = lazy(() => import('./activities/LeafVenationLab'));
@@ -1447,6 +1448,7 @@ export default function App() {
                       onClick={() => {
                         if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
                         else if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
+                        else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
                         else navigateTo('class6', `chapter${chapter.num}`);
                       }}
                       className="outline" 
@@ -1458,6 +1460,7 @@ export default function App() {
                       onClick={() => {
                         if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
                         else if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
+                        else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
                         else navigateTo('class6', `chapter${chapter.num}`);
                       }}
                       className="primary" 
@@ -4542,7 +4545,7 @@ export default function App() {
     </div>
   );
 
-  const isFullscreen = (activeActivity && !['chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter10', 'chapter11', 'chapter4_flow', 'chapter9'].includes(activeActivity)) || !!activeContentLesson || hideHeader;
+  const isFullscreen = (activeActivity && !['chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter10', 'chapter11', 'chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || !!activeContentLesson || hideHeader;
 
   return (
     <div className="app-container">
@@ -4813,6 +4816,11 @@ export default function App() {
               onBackToDashboard={() => navigateTo('class6', null)} 
               onLaunchActivity={(act) => navigateTo('class6', act)} 
               initialSection={activeSection}
+            />
+          ) : activeActivity === 'chapter5_flow' ? (
+            <Chapter5Flow 
+              onBackToDashboard={() => navigateTo('class6', null)}
+              onLaunchActivity={(id) => navigateTo('class6', id)}
             />
           ) : activeActivity === 'chapter5' ? (
             renderClass6Chapter5()

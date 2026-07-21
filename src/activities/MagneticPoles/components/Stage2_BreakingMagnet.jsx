@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Scissors, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
+import { Scissors, AlertCircle, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
 
 const MagnetPart = ({ isLeft, showNewPoles, width = 200 }) => {
   return (
@@ -171,7 +171,10 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                     borderColor: quizAnswer === 'yes' ? 'var(--danger)' : 'var(--border)'
                   }}
                 >
-                  Yes, we can isolate a North or South pole.
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>Yes, we can isolate a North or South pole.</span>
+                    {quizAnswer === 'yes' && <XCircle size={18} style={{ color: 'var(--danger)' }} />}
+                  </div>
                 </button>
                 <button
                   onClick={() => handleQuizAnswer('no')}
