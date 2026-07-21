@@ -1046,17 +1046,13 @@ export default function ChapterLearningLab({
                   activityPaneEl.scrollIntoView({ behavior: 'smooth' });
                 }
               } else {
-                const totalLevels = CHAPTER_2_LEVELS.length;
-                const activeLevelIdx = CHAPTER_2_LEVELS.findIndex(l => l.id === activeLevelId);
-                if (activeLevelIdx < totalLevels - 1) {
-                  setActiveLevelId(CHAPTER_2_LEVELS[activeLevelIdx + 1].id);
-                  setActiveActivityIdx(0);
-                  setActiveSlide(0);
-                  setQuizAnswers({});
-                  setQuizChecked(false);
-                } else {
-                  onBack();
-                }
+                setActivityFocused(null);
+                setTimeout(() => {
+                  const quizPaneEl = document.getElementById("pane-quiz-window");
+                  if (quizPaneEl) {
+                    quizPaneEl.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }, 100);
               }
             }}
           />
@@ -2444,16 +2440,7 @@ export default function ChapterLearningLab({
     };
 
     const isNextDisabled = () => {
-      if (activeLevelIdx === totalLevels - 1 && activeActivityIdx === activeLevel.activities.length - 1) {
-        return true;
-      }
-      if (activeActivity && activityStatus[activeActivity.id] !== 'done') {
-        return true;
-      }
-      const hasQuiz = LEVEL_QUIZZES[activeLevel.lessonId];
-      if (hasQuiz && !quizChecked) {
-        return true;
-      }
+      // Never disable next button so we can guide users with custom alerts when clicked
       return false;
     };
 
@@ -2469,31 +2456,65 @@ export default function ChapterLearningLab({
         }
         return;
       }
+      
       const lesson = contentLessonsData[activeLevel.lessonId];
       const totalSlides = lesson ? lesson.slides.length : 1;
       
+      // 1. Browse lesson slides first
       if (activeSlide < totalSlides - 1) {
         setActiveSlide(prev => prev + 1);
         setQuizAnswers({});
         setQuizChecked(false);
-      } else if (activeActivityIdx === 0 && activeLevel.activities.length > 0 && !activityFocused) {
-        const activityPaneEl = document.getElementById("pane-activity-window");
-        if (activityPaneEl) {
-          activityPaneEl.scrollIntoView({ behavior: 'smooth' });
-        }
+        return;
+      }
+      
+      // 2. Focus activity if it isn't focused yet and we just completed slides
+      if (activeLevel.activities.length > 0 && !activityFocused && activeActivityIdx === 0 && activityStatus[activeActivity.id] !== 'done') {
         setActivityFocused(true);
         setActiveActivityIdx(0);
-      } else if (activeActivityIdx < activeLevel.activities.length - 1) {
+        return;
+      }
+      
+      // 3. Advance activities if there are multiple for this level
+      if (activeActivityIdx < activeLevel.activities.length - 1) {
         setActiveActivityIdx(prev => prev + 1);
-      } else if (activeLevelIdx < totalLevels - 1) {
-        // Safety validation before jumping to next level
-        if (activeActivity) {
-          const isCurrentCompleted = activityStatus[activeActivity.id] === 'done';
-          if (!isCurrentCompleted) {
-            alert("Please complete the current activity and mark it as Done before proceeding to the next level!");
-            return;
+        setActivityFocused(true);
+        return;
+      }
+      
+      // 4. If current activity is not marked as Done, prompt user to do so
+      if (activeActivity && activityStatus[activeActivity.id] !== 'done') {
+        alert("Please complete the current activity and mark it as Done before proceeding!");
+        return;
+      }
+      
+      // 5. If we are still focusing the activity (and it's marked done), return to Show All to reveal the quiz
+      if (activityFocused) {
+        setActivityFocused(null);
+        setTimeout(() => {
+          const quizPaneEl = document.getElementById("pane-quiz-window");
+          if (quizPaneEl) {
+            quizPaneEl.scrollIntoView({ behavior: 'smooth' });
           }
-        }
+        }, 100);
+        return;
+      }
+      
+      // 6. Check if subheading quiz exists and is completed
+      const hasQuiz = LEVEL_QUIZZES[activeLevel.lessonId];
+      if (hasQuiz && !quizChecked) {
+        alert("Please complete the Checkpoint Quiz and check your answers first!");
+        setTimeout(() => {
+          const quizPaneEl = document.getElementById("pane-quiz-window");
+          if (quizPaneEl) {
+            quizPaneEl.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+        return;
+      }
+      
+      // 7. Proceed to next subheading level
+      if (activeLevelIdx < totalLevels - 1) {
         setActivityFocused(null);
         setActiveLevelId(CHAPTER_2_LEVELS[activeLevelIdx + 1].id);
         setActiveActivityIdx(0);
@@ -2652,10 +2673,19 @@ export default function ChapterLearningLab({
                 {activeActivity && (
                   <button
                     onClick={() => {
-                      setActivityStatus(prev => ({
-                        ...prev,
-                        [activeActivity.id]: prev[activeActivity.id] === 'done' ? 'none' : 'done'
-                      }));
+                      setActivityStatus(prev => {
+                        const newStatus = prev[activeActivity.id] === 'done' ? 'none' : 'done';
+                        if (newStatus === 'done') {
+                          setActivityFocused(null);
+                          setTimeout(() => {
+                            const quizPaneEl = document.getElementById("pane-quiz-window");
+                            if (quizPaneEl) {
+                              quizPaneEl.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }, 300);
+                        }
+                        return { ...prev, [activeActivity.id]: newStatus };
+                      });
                     }}
                     className="glass-btn"
                     style={{ color: isCompleted ? 'var(--success)' : 'inherit', borderColor: isCompleted ? 'var(--success)' : 'var(--border)' }}
@@ -2710,10 +2740,19 @@ export default function ChapterLearningLab({
             {activeActivity && (
               <button
                 onClick={() => {
-                  setActivityStatus(prev => ({
-                    ...prev,
-                    [activeActivity.id]: prev[activeActivity.id] === 'done' ? 'none' : 'done'
-                  }));
+                  setActivityStatus(prev => {
+                    const newStatus = prev[activeActivity.id] === 'done' ? 'none' : 'done';
+                    if (newStatus === 'done') {
+                      setActivityFocused(null);
+                      setTimeout(() => {
+                        const quizPaneEl = document.getElementById("pane-quiz-window");
+                        if (quizPaneEl) {
+                          quizPaneEl.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }, 300);
+                    }
+                    return { ...prev, [activeActivity.id]: newStatus };
+                  });
                 }}
                 className="glass-btn"
                 style={{ color: isCompleted ? 'var(--success)' : 'inherit', borderColor: isCompleted ? 'var(--success)' : 'var(--border)' }}
@@ -2770,7 +2809,7 @@ export default function ChapterLearningLab({
                       className="glass-btn"
                       style={{ whiteSpace: 'nowrap' }}
                     >
-                      {activityFocused === true ? 'Show Both' : 'Focus Activity'}
+                      {activityFocused === true ? 'Show All' : 'Focus Activity'}
                     </button>
                   )}
                 </div>
