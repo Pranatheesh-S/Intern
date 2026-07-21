@@ -1,54 +1,360 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, CheckCircle, MapPin, Award } from 'lucide-react';
+import { ChevronRight, CheckCircle, MapPin, Award, Navigation, Map as MapIcon, Train } from 'lucide-react';
 import IndiaSVGMap from './IndiaSVGMap';
 
-const JOURNEY = [
-  { id: 'tn', stateName: 'Tamil Nadu' },
-  { id: 'ka', stateName: 'Karnataka', fact: 'Bengaluru is known as India\'s Silicon Valley.' },
-  { id: 'mh', stateName: 'Maharashtra', fact: 'Mumbai is India\'s financial hub.' },
-  { id: 'mp', stateName: 'Madhya Pradesh', fact: 'Known as the heart of India.' },
-  { id: 'up', stateName: 'Uttar Pradesh', fact: 'The most populous state in India.' },
-  { id: 'dl', stateName: 'Delhi', fact: 'Delhi is India\'s capital city.' },
+const MISSIONS = [
+  {
+    id: 'ka',
+    stateName: 'Karnataka',
+    destination: 'Bengaluru',
+    fact: 'Garden City of India.',
+    type: 'direction',
+    story: 'We are starting from Chennai, Tamil Nadu.\nOur friend has invited us to Bengaluru.',
+    question: 'Which direction should we begin travelling?',
+    options: ['North', 'South', 'West', 'East'],
+    correct: 'West',
+    feedbackWrong: 'Good try!\nLook carefully at where Bengaluru is compared to Chennai.\nTry another direction.',
+    feedbackSuccess: 'Excellent!\nBengaluru lies almost exactly west of Chennai.\nMaps help us choose the correct direction while travelling.',
+    learning: '🧭 Maps help us choose directions.',
+    direction: 'West',
+    distance: 'Short'
+  },
+  {
+    id: 'mh',
+    stateName: 'Maharashtra',
+    destination: 'Mumbai',
+    fact: 'India\'s financial capital.',
+    type: 'distance',
+    story: 'Now we are travelling farther.',
+    question: 'Which city is farther from Chennai?',
+    options: ['Bengaluru', 'Mumbai'],
+    correct: 'Mumbai',
+    feedbackWrong: 'Look at the map. Mumbai is much further away than Bengaluru. Try again!',
+    feedbackSuccess: 'Maps help us compare distances.\nSome journeys are longer than others.',
+    learning: '📏 Maps help us compare distances.',
+    distance: 'Long'
+  },
+  {
+    id: 'ap',
+    stateName: 'Andhra Pradesh',
+    destination: 'Amaravati',
+    fact: 'Known as the Rice Bowl of India.',
+    type: 'direction',
+    story: 'Let\'s visit our neighbouring state.',
+    question: 'Which direction should we travel?',
+    options: ['North', 'South', 'East', 'West'],
+    correct: 'North',
+    feedbackWrong: 'Andhra Pradesh is just above Tamil Nadu on the map. Try another direction.',
+    feedbackSuccess: 'Excellent! Andhra Pradesh is directly north of Tamil Nadu.',
+    learning: '🧭 Maps help us find neighbouring states.',
+    direction: 'North'
+  },
+  {
+    id: 'wb',
+    stateName: 'West Bengal',
+    destination: 'Kolkata',
+    fact: 'Known as the City of Joy.',
+    type: 'direction',
+    story: 'Our next adventure is to West Bengal.',
+    question: 'Which direction should we travel?',
+    options: ['East', 'West', 'South', 'North-East'],
+    correct: 'North-East',
+    feedbackWrong: 'Kolkata is towards the upper right side of India. Try again!',
+    feedbackSuccess: 'Correct! Kolkata is in the north-east direction from Tamil Nadu.',
+    learning: '🗺 Maps help us plan travel before starting.',
+    direction: 'North-East'
+  },
+  {
+    id: 'rj',
+    stateName: 'Rajasthan',
+    destination: 'Jaipur',
+    fact: 'Famous as the Pink City.',
+    type: 'direction',
+    story: 'Let\'s travel to the deserts of Rajasthan.',
+    question: 'Which direction should we travel?',
+    options: ['North', 'South', 'North-East', 'North-West'],
+    correct: 'North-West',
+    feedbackWrong: 'Jaipur is in the upper left part of India. What direction is that?',
+    feedbackSuccess: 'Great! Jaipur is towards the North-West.',
+    learning: '🧭 Maps help us choose directions.',
+    direction: 'North-West'
+  },
+  {
+    id: 'as',
+    stateName: 'Assam',
+    destination: 'Assam',
+    fact: 'Known for tea gardens and wildlife.',
+    type: 'direction',
+    story: 'Our final destination is far away in the east.',
+    question: 'Which direction should we travel?',
+    options: ['East', 'West', 'North-East', 'South-East'],
+    correct: 'North-East',
+    feedbackWrong: 'Assam is in the far upper right corner of India. Try again.',
+    feedbackSuccess: 'Perfect! Assam is in the far North-East.',
+    learning: '🗺 Maps are practical tools for travel.',
+    direction: 'North-East'
+  }
 ];
 
-const ADJACENCY = {
-  'tn': ['ka', 'kl', 'ap', 'py'],
-  'ka': ['mh', 'tg', 'ap', 'tn', 'kl', 'ga'],
-  'mh': ['gj', 'mp', 'ct', 'tg', 'ka', 'ga', 'dn', 'dd'],
-  'mp': ['rj', 'up', 'ct', 'mh', 'gj'],
-  'up': ['ut', 'hp', 'hr', 'dl', 'rj', 'mp', 'ct', 'jh', 'br']
-};
-
 export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [completedJourneys, setCompletedJourneys] = useState([]);
+  const [missionIndex, setMissionIndex] = useState(-1); // -1 = intro, 0-5 = missions, 6 = complete
   const [feedback, setFeedback] = useState(null);
-  const [activeState, setActiveState] = useState({ id: 'tn' });
+  const [animating, setAnimating] = useState(false);
+  const [travelDiary, setTravelDiary] = useState([]);
+  
+  // For the map animation state
+  const [activeRoute, setActiveRoute] = useState(null); // { to: 'ka', showBoth: false }
 
-  const isCompleted = currentStep >= JOURNEY.length - 1;
-  const currentTarget = JOURNEY[currentStep + 1];
+  const handleStart = () => {
+    setMissionIndex(0);
+  };
 
-  const handleStateClick = (loc) => {
-    if (isCompleted) return;
-
-    if (loc.id === currentTarget.id) {
-      setFeedback({ type: 'success', text: `Great! We have entered ${currentTarget.stateName}.` });
+  const handleAnswer = (option) => {
+    if (animating) return;
+    const mission = MISSIONS[missionIndex];
+    
+    if (option === mission.correct) {
+      setFeedback({ type: 'success', text: mission.feedbackSuccess });
+      setAnimating(true);
       
-      setCompletedJourneys([...completedJourneys, { from: activeState.id, to: loc.id }]);
-      setActiveState({ id: loc.id });
+      // Trigger map animation
+      setActiveRoute({ 
+        to: mission.id, 
+        showBoth: mission.type === 'distance' 
+      });
+
+      // After animation, allow continuing
+      setTimeout(() => {
+        setAnimating(false);
+      }, 3000); // 3 second animation
+      
     } else {
-      const neighbors = ADJACENCY[activeState.id] || [];
-      if (neighbors.includes(loc.id)) {
-        setFeedback({ type: 'error', text: 'That\'s a neighbouring state, but we need to head North towards Delhi. Try another neighbour!' });
-      } else {
-        setFeedback({ type: 'error', text: 'That state is too far away. Let\'s first travel through a neighbouring state.' });
-      }
+      setFeedback({ type: 'error', text: mission.feedbackWrong, picked: option });
     }
   };
 
   const handleNextMission = () => {
+    const mission = MISSIONS[missionIndex];
+    setTravelDiary(prev => [...prev, mission]);
     setFeedback(null);
-    setCurrentStep(prev => prev + 1);
+    setActiveRoute(null);
+    setMissionIndex(prev => prev + 1);
+  };
+
+  const renderIntro = () => (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '30px', justifyContent: 'center' }}>
+      <div style={{ background: '#fff', border: '1px solid #e4ebf3', borderRadius: '16px', padding: '40px', boxShadow: '0 8px 30px rgba(0,0,0,0.04)', textAlign: 'center' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🌍</div>
+        <h2 style={{ fontFamily: '"Fraunces", serif', color: '#0E3556', fontSize: '28px', marginBottom: '16px' }}>Travel Across India!</h2>
+        <div style={{ color: '#5c6b7a', fontSize: '16px', lineHeight: 1.6, marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <p>We have already used a map to travel inside a small town.</p>
+          <p>Now let's use a map to travel across India.</p>
+          <p>Our journey begins in Chennai, Tamil Nadu.</p>
+          <p>Help us visit different places by choosing the correct direction and learning how maps guide travellers.</p>
+        </div>
+        <button 
+          onClick={handleStart}
+          style={{ background: '#16a34a', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '30px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 15px rgba(22, 163, 74, 0.4)', transition: 'transform 0.2s' }}
+          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          Ready? Let's begin!
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderComplete = () => (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '30px', overflowY: 'auto' }}>
+      <div style={{ background: '#fff', border: '1px solid #e4ebf3', borderRadius: '16px', padding: '40px', boxShadow: '0 8px 30px rgba(0,0,0,0.04)', textAlign: 'center' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎉</div>
+        <h2 style={{ fontFamily: '"Fraunces", serif', color: '#16a34a', fontSize: '28px', marginBottom: '16px' }}>Journey Complete!</h2>
+        <p style={{ color: '#20303f', fontSize: '18px', fontWeight: 600, marginBottom: '24px' }}>Wonderful! You successfully travelled across India using a map.</p>
+        
+        <div style={{ background: '#f8fafc', padding: '24px', borderRadius: '12px', textAlign: 'left', marginBottom: '32px', display: 'inline-block' }}>
+          <p style={{ color: '#5c6b7a', fontSize: '15px', marginBottom: '16px', fontWeight: 600 }}>Today you discovered that maps help us:</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', color: '#334155', fontSize: '15px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle size={18} color="#16a34a" /> Choose directions</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle size={18} color="#16a34a" /> Compare distances</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle size={18} color="#16a34a" /> Plan journeys</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle size={18} color="#16a34a" /> Reach new places</div>
+          </div>
+        </div>
+
+        <p style={{ color: '#64748b', fontSize: '14px', fontStyle: 'italic', marginBottom: '32px' }}>
+          The next lessons will teach you how maps measure distance, show directions, and locate places precisely.
+        </p>
+
+        <button 
+          onClick={onBeginChapter}
+          style={{ background: '#7c5cff', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '30px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 15px rgba(124, 92, 255, 0.4)', transition: 'transform 0.2s', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          Continue to Next Lesson <ChevronRight size={18} />
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderMission = () => {
+    const mission = MISSIONS[missionIndex];
+
+    return (
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        
+        {/* Progress Tracker */}
+        <div style={{ padding: '20px 30px 0', display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', whiteSpace: 'nowrap', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+          <span style={{ fontSize: '13px', fontWeight: 600, color: '#16a34a', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <CheckCircle size={14} /> Tamil Nadu
+          </span>
+          {MISSIONS.map((m, idx) => {
+            const isPast = idx < missionIndex;
+            const isCur = idx === missionIndex;
+            let color = '#94a3b8';
+            if (isPast) color = '#16a34a';
+            if (isCur) color = '#3b82f6';
+            
+            return (
+              <React.Fragment key={m.id}>
+                <span style={{ color: '#cbd5e1', fontSize: '12px' }}>→</span>
+                <span style={{ fontSize: '13px', fontWeight: isCur ? 700 : 600, color, display: 'flex', alignItems: 'center', gap: '4px', background: isCur ? '#eff6ff' : 'transparent', padding: isCur ? '4px 8px' : '0', borderRadius: '6px' }}>
+                  {isPast && <CheckCircle size={14} />}
+                  {m.destination}
+                </span>
+              </React.Fragment>
+            );
+          })}
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 30px 30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          {/* Mission Card */}
+          <div style={{ background: '#fff', border: '1px solid #e4ebf3', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+              <div>
+                <div style={{ color: '#7c5cff', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
+                  Mission {missionIndex + 1} of 6
+                </div>
+                <h3 style={{ fontFamily: '"Fraunces", serif', color: '#0E3556', fontSize: '24px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  Destination: {mission.destination}
+                </h3>
+                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px', fontStyle: 'italic' }}>
+                  {mission.fact}
+                </div>
+              </div>
+              <div style={{ background: '#f1f5f9', padding: '8px 12px', borderRadius: '8px', color: '#475569' }}>
+                <MapPin size={20} />
+              </div>
+            </div>
+
+            <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', marginBottom: '24px' }}>
+              {mission.story.split('\n').map((line, i) => (
+                <p key={i} style={{ margin: '0 0 8px 0', fontSize: '15px', color: '#334155', lineHeight: 1.5 }}>{line}</p>
+              ))}
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <h4 style={{ fontSize: '18px', color: '#0f172a', marginBottom: '16px', fontWeight: 600 }}>{mission.question}</h4>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                {mission.options.map(opt => {
+                  let isSelectedCorrect = feedback?.type === 'success' && opt === mission.correct;
+                  let isSelectedWrong = feedback?.type === 'error' && feedback.picked === opt;
+                  
+                  return (
+                    <button 
+                      key={opt}
+                      onClick={() => !animating && !feedback?.type && handleAnswer(opt)}
+                      disabled={!!feedback?.type || animating}
+                      style={{
+                        padding: '16px',
+                        background: isSelectedCorrect ? '#dcfce7' : isSelectedWrong ? '#fee2e2' : '#fff',
+                        border: `2px solid ${isSelectedCorrect ? '#16a34a' : isSelectedWrong ? '#ef4444' : '#e2e8f0'}`,
+                        borderRadius: '12px',
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        color: isSelectedCorrect ? '#166534' : isSelectedWrong ? '#991b1b' : '#334155',
+                        cursor: (!!feedback?.type || animating) ? 'default' : 'pointer',
+                        transition: 'all 0.2s',
+                        textAlign: 'center'
+                      }}
+                    >
+                      {opt}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {feedback && (
+              <div style={{ 
+                background: feedback.type === 'success' ? '#f0fdf4' : '#fff1f2', 
+                border: `1px solid ${feedback.type === 'success' ? '#bbf7d0' : '#fecdd3'}`, 
+                padding: '16px', 
+                borderRadius: '12px',
+                marginTop: '20px',
+                animation: 'fadeIn 0.3s ease-out'
+              }}>
+                <div style={{ color: feedback.type === 'success' ? '#166534' : '#991b1b', fontWeight: 600, fontSize: '15px', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                  {feedback.type === 'success' ? <Award size={20} style={{ flexShrink: 0 }} /> : <Navigation size={20} style={{ flexShrink: 0, transform: 'rotate(180deg)' }} />}
+                  <div style={{ whiteSpace: 'pre-line', lineHeight: 1.5 }}>
+                    {feedback.text}
+                  </div>
+                </div>
+                
+                {feedback.type === 'error' && (
+                  <button onClick={() => setFeedback(null)} style={{ marginTop: '12px', background: 'transparent', border: '1px solid #ef4444', color: '#ef4444', padding: '8px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
+                    Try Again
+                  </button>
+                )}
+
+                {feedback.type === 'success' && !animating && (
+                  <button 
+                    onClick={handleNextMission} 
+                    style={{ marginTop: '16px', background: '#16a34a', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    Continue Journey <ChevronRight size={18} />
+                  </button>
+                )}
+              </div>
+            )}
+            
+            {/* Learning Insight */}
+            {missionIndex > 0 && !feedback?.type && (
+              <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #f1f5f9', color: '#64748b', fontSize: '14px', fontWeight: 500, fontStyle: 'italic', textAlign: 'center' }}>
+                {MISSIONS[missionIndex - 1].learning}
+              </div>
+            )}
+
+          </div>
+
+          {/* Travel Diary */}
+          {travelDiary.length > 0 && (
+            <div style={{ background: '#fff', border: '1px solid #e4ebf3', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontWeight: 700, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
+                <MapIcon size={16} /> Travel Diary
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {travelDiary.map((entry, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f8fafc', padding: '12px', borderRadius: '8px' }}>
+                    <div style={{ color: '#16a34a' }}><CheckCircle size={18} /></div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, color: '#334155', fontSize: '14px' }}>{entry.destination}</div>
+                      <div style={{ display: 'flex', gap: '12px', color: '#64748b', fontSize: '12px', marginTop: '4px' }}>
+                        {entry.direction && <span>Direction: <b>{entry.direction}</b></span>}
+                        {entry.distance && <span>Distance: <b>{entry.distance}</b></span>}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -61,6 +367,12 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
       height: '100%', 
       fontFamily: '"Space Grotesk", system-ui, sans-serif' 
     }}>
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
       <div style={{ padding: '0.75rem 2rem', borderBottom: '1px solid rgba(0,0,0,0.08)', background: '#fff', zIndex: 10 }}>
         <button 
           onClick={onBack}
@@ -75,7 +387,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
       
       {/* LEFT PANEL: Interactive Map */}
       <div style={{ 
-        flex: 1.4, 
+        flex: 1.2, 
         padding: '24px', 
         display: 'flex', 
         flexDirection: 'column', 
@@ -85,167 +397,22 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
       }}>
         <div style={{ flex: 1, background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', overflow: 'hidden', display: 'flex', padding: '16px' }}>
           <IndiaSVGMap 
-            activeState={activeState}
-            onStateClick={handleStateClick}
-            completedJourneys={completedJourneys}
+            activeRoute={activeRoute}
+            animating={animating}
+            missionIndex={missionIndex}
+            missions={MISSIONS}
           />
         </div>
-        
-        {/* Visual Legend */}
-        <div style={{ marginTop: '16px', display: 'flex', gap: '16px', fontSize: '12px', color: '#666', fontWeight: 500 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--primary)' }} />
-            Current Location
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{ width: '20px', height: '2px', borderTop: '2px dashed var(--primary)' }} />
-            Journey Route
-          </div>
-        </div>
       </div>
 
-      {/* RIGHT PANEL: Mission Info */}
-      <div style={{ flex: 1, padding: '32px', overflowY: 'auto', boxSizing: 'border-box', background: 'var(--card-bg)' }}>
-        
-        {!isCompleted ? (
-          <>
-            <div style={{ marginBottom: '24px', background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-              <h1 style={{ fontSize: '24px', color: 'var(--primary)', marginBottom: '8px', lineHeight: 1.2 }}>Explore India with a Map</h1>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.5 }}>
-                Maps help us travel not only inside a town, but also across an entire country. Let's begin our journey from Tamil Nadu and visit some famous places in India.
-              </p>
-            </div>
-
-            <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', marginBottom: '24px' }}>
-              <h2 style={{ fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px', color: '#f59e0b', marginBottom: '16px', fontWeight: 700 }}>Today's Journey</h2>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-                {JOURNEY.map((stop, index) => {
-                  const isPast = index < currentStep;
-                  const isCurrent = index === currentStep;
-                  const isFuture = index > currentStep;
-                  
-                  return (
-                    <div key={stop.id} style={{ display: 'flex', gap: '16px' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <div style={{ 
-                          width: '24px', height: '24px', borderRadius: '50%', 
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          background: isPast ? '#10b981' : (isCurrent ? 'var(--primary)' : '#f3f4f6'),
-                          color: isPast || isCurrent ? 'white' : '#9ca3af',
-                          zIndex: 2
-                        }}>
-                          {isPast ? <CheckCircle size={14} /> : <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: isCurrent ? 'white' : '#d1d5db' }} />}
-                        </div>
-                        {index < JOURNEY.length - 1 && (
-                          <div style={{ width: '2px', flex: 1, background: isPast ? '#10b981' : '#e5e7eb', margin: '4px 0' }} />
-                        )}
-                      </div>
-                      <div style={{ 
-                        fontSize: '16px', 
-                        fontWeight: isCurrent ? 700 : 500,
-                        color: isPast ? '#10b981' : (isCurrent ? 'var(--primary)' : '#9ca3af'),
-                        paddingTop: '1px',
-                        paddingBottom: index < JOURNEY.length - 1 ? '16px' : '0'
-                      }}>
-                        {stop.stateName}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {feedback?.type === 'success' ? (
-                <div style={{ background: 'var(--primary-light)', padding: '16px', borderRadius: '8px', borderLeft: '4px solid var(--primary)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary)', fontWeight: 600, marginBottom: '8px' }}>
-                    <MapPin size={18} /> Reached {currentTarget.stateName}
-                  </div>
-                  <div style={{ fontSize: '15px', color: 'var(--text-dark)', marginBottom: '16px' }}>
-                    <strong>Did you know?</strong> {currentTarget.fact}
-                  </div>
-                  <button 
-                    onClick={handleNextMission}
-                    style={{
-                      background: 'var(--primary)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px',
-                      fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px'
-                    }}
-                  >
-                    Next destination... <ChevronRight size={16} />
-                  </button>
-                </div>
-              ) : (
-                <div style={{ padding: '16px', background: 'var(--primary-light)', borderRadius: '8px', borderLeft: '4px solid var(--primary)' }}>
-                  <h2 style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Mission</h2>
-                  <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-dark)' }}>
-                    We are currently in <span style={{ color: 'var(--primary)' }}>{JOURNEY[currentStep].stateName}</span>.
-                  </div>
-                  <div style={{ fontSize: '15px', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                    Which neighbouring state should we travel to first?
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {feedback && feedback.type === 'error' && (
-              <div style={{ 
-                padding: '16px', 
-                borderRadius: '8px', 
-                background: '#fef2f2',
-                border: '1px solid #ef4444',
-                color: '#991b1b',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                animation: 'shake 0.4s cubic-bezier(.36,.07,.19,.97) both'
-              }}>
-                <div style={{ fontWeight: 500 }}>{feedback.text}</div>
-              </div>
-            )}
-          </>
-        ) : (
-          <div style={{ minHeight: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '16px', padding: '32px', textAlign: 'center', boxShadow: '0 8px 24px rgba(0,0,0,0.05)' }}>
-              <div style={{ width: '64px', height: '64px', background: '#ecfdf5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', color: '#10b981' }}>
-                <MapPin size={32} />
-              </div>
-              <h2 style={{ fontSize: '28px', color: 'var(--text-dark)', marginBottom: '16px' }}>Journey Complete!</h2>
-              <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '24px' }}>
-                Excellent! You travelled across India using a map.
-              </p>
-              <div style={{ background: 'var(--background)', padding: '24px', borderRadius: '12px', marginBottom: '32px' }}>
-                <p style={{ fontSize: '16px', color: 'var(--text-dark)', fontWeight: 500, lineHeight: 1.5, marginBottom: '16px' }}>
-                  Imagine doing this journey without a map. Would it have been easy?
-                </p>
-                <p style={{ fontSize: '15px', color: 'var(--primary)', fontWeight: 600, lineHeight: 1.5 }}>
-                  Maps become even more useful when we travel across large places.
-                </p>
-              </div>
-
-              <button 
-                onClick={onBeginChapter} 
-                style={{ 
-                  background: '#16a34a', color: 'white', border: 'none', padding: '14px 28px', borderRadius: '30px', 
-                  fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 15px rgba(22, 163, 74, 0.4)', 
-                  display: 'inline-flex', alignItems: 'center', gap: '8px', transition: 'transform 0.2s'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-              >
-                Continue Learning <ChevronRight size={20} strokeWidth={2.5} />
-              </button>
-            </div>
-          </div>
-        )}
+      {/* RIGHT PANEL: Mission Controls */}
+      <div style={{ flex: 1, backgroundColor: '#fcfdfd', color: '#20303f', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+        {missionIndex === -1 && renderIntro()}
+        {missionIndex >= 0 && missionIndex < MISSIONS.length && renderMission()}
+        {missionIndex >= MISSIONS.length && renderComplete()}
       </div>
+
       </div>
-      <style>{`
-        @keyframes shake {
-          10%, 90% { transform: translate3d(-1px, 0, 0); }
-          20%, 80% { transform: translate3d(2px, 0, 0); }
-          30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-          40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-      `}</style>
     </div>
   );
 }
