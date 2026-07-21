@@ -421,6 +421,10 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-top:hover) .header {
   top: 0; left: 0; right: 0;
   height: 60px;
   z-index: 99;
+  pointer-events: none;
+}
+body.focus-mode-active .focus-trigger-top {
+  pointer-events: all;
 }
 
 .tabs-container {
@@ -502,6 +506,10 @@ body.focus-mode-active:not(.ui-inactive):has(.focus-trigger-left:hover) .lab-sid
   top: 0; left: 0; bottom: 0;
   width: 60px;
   z-index: 99;
+  pointer-events: none;
+}
+body.focus-mode-active .focus-trigger-left {
+  pointer-events: all;
 }
 
 /* ═══════════════════════════════════════════

@@ -224,9 +224,9 @@ export default function SloganPage({
 
         .right h2.section {
           font-family: Georgia, serif;
-          font-size: clamp(24px, 2.5vw, 32px);
+          font-size: clamp(26px, 2.8vw, 36px);
           color: #0b1f3a;
-          margin: 0 0 20px 0;
+          margin: 0 0 24px 0;
           display: flex;
           align-items: center;
           gap: 10px;
@@ -237,35 +237,35 @@ export default function SloganPage({
           background: #e9edfb;
           border-left: 5px solid #3a5bbf;
           border-radius: 14px;
-          padding: clamp(22px, 2.5vw, 30px) clamp(26px, 3vw, 36px);
-          margin-bottom: 26px;
+          padding: clamp(24px, 2.8vw, 34px) clamp(28px, 3.2vw, 40px);
+          margin-bottom: 36px;
           text-align: left;
         }
         .highlight h3 {
           font-family: Georgia, serif;
           color: #0b1f3a;
-          font-size: clamp(19px, 2vw, 24px);
-          margin: 0 0 10px 0;
+          font-size: clamp(20px, 2.2vw, 26px);
+          margin: 0 0 12px 0;
           font-weight: bold;
         }
         .highlight p {
           color: #3a3a34;
-          font-size: clamp(15px, 1.3vw, 17px);
-          line-height: 1.75;
+          font-size: clamp(16px, 1.4vw, 18.5px);
+          line-height: 1.8;
           margin: 0;
         }
 
         .grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: clamp(18px, 2vw, 24px);
+          gap: clamp(20px, 2.4vw, 30px);
           width: 100%;
         }
         .card {
           background: #fff;
           border: 1px solid #ece7db;
           border-radius: 16px;
-          padding: clamp(18px, 2vw, 24px) clamp(20px, 2.2vw, 26px);
+          padding: clamp(20px, 2.2vw, 26px) clamp(22px, 2.4vw, 30px);
           box-shadow: 0 4px 14px rgba(0,0,0,0.04);
           text-align: left;
           transition: transform 0.2s, box-shadow 0.2s;
@@ -283,15 +283,15 @@ export default function SloganPage({
         }
         .card h4 {
           font-family: Georgia, serif;
-          font-size: clamp(17px, 1.8vw, 21px);
+          font-size: clamp(18px, 1.9vw, 22px);
           color: #0b1f3a;
           margin: 0 0 8px 0;
           font-weight: bold;
         }
         .card p {
-          font-size: clamp(13.5px, 1.1vw, 15.5px);
+          font-size: clamp(14px, 1.2vw, 16px);
           color: #5a584f;
-          line-height: 1.55;
+          line-height: 1.6;
           margin: 0;
         }
 
