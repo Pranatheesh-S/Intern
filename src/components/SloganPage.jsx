@@ -78,6 +78,7 @@ export default function SloganPage({
           overflow-y: auto;
           height: 100vh;
           box-sizing: border-box;
+          position: relative;
         }
         .right {
           background: #ffffff;
@@ -87,6 +88,7 @@ export default function SloganPage({
           overflow-y: auto;
           height: 100vh;
           box-sizing: border-box;
+          position: relative;
         }
 
         /* Slim green scrollbars */
@@ -133,7 +135,7 @@ export default function SloganPage({
         
         h1.title {
           font-family: Georgia, 'Times New Roman', serif;
-          font-size: clamp(26px, 3.2vw, 38px);
+          font-size: clamp(30px, 3.8vw, 44px);
           color: #0b1f3a;
           margin: 0 0 26px 0;
           line-height: 1.15;
@@ -142,7 +144,7 @@ export default function SloganPage({
 
         .hero {
           position: relative;
-          height: clamp(150px, 20vh, 260px);
+          height: clamp(180px, 24vh, 320px);
           border-radius: 18px;
           overflow: hidden;
           margin-bottom: 26px;
@@ -181,7 +183,7 @@ export default function SloganPage({
           background: #ffffff;
           border-radius: 18px;
           box-shadow: 0 8px 22px rgba(0,0,0,0.08);
-          padding: clamp(20px, 2.5vw, 30px) clamp(20px, 2.5vw, 34px);
+          padding: clamp(24px, 3vw, 36px) clamp(24px, 3vw, 40px);
           position: relative;
         }
         .quote-mark {
@@ -192,7 +194,7 @@ export default function SloganPage({
           font-family: Georgia, serif;
         }
         .sanskrit {
-          font-size: 16px;
+          font-size: clamp(16px, 1.3vw, 19px);
           color: #0b1f3a;
           font-weight: 600;
           line-height: 1.7;
@@ -208,7 +210,7 @@ export default function SloganPage({
           font-family: Georgia, serif;
           font-style: italic;
           color: #33322e;
-          font-size: clamp(16px, 1.8vw, 22px);
+          font-size: clamp(18px, 2.1vw, 25px);
           font-weight: 700;
           line-height: 1.65;
         }
@@ -222,7 +224,7 @@ export default function SloganPage({
 
         .right h2.section {
           font-family: Georgia, serif;
-          font-size: 24px;
+          font-size: clamp(24px, 2.5vw, 32px);
           color: #0b1f3a;
           margin: 0 0 20px 0;
           display: flex;
@@ -235,35 +237,35 @@ export default function SloganPage({
           background: #e9edfb;
           border-left: 5px solid #3a5bbf;
           border-radius: 14px;
-          padding: 22px 26px;
+          padding: clamp(22px, 2.5vw, 30px) clamp(26px, 3vw, 36px);
           margin-bottom: 26px;
           text-align: left;
         }
         .highlight h3 {
           font-family: Georgia, serif;
           color: #0b1f3a;
-          font-size: 19px;
+          font-size: clamp(19px, 2vw, 24px);
           margin: 0 0 10px 0;
           font-weight: bold;
         }
         .highlight p {
           color: #3a3a34;
-          font-size: 15px;
-          line-height: 1.65;
+          font-size: clamp(15px, 1.3vw, 17px);
+          line-height: 1.75;
           margin: 0;
         }
 
         .grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 18px;
+          gap: clamp(18px, 2vw, 24px);
           width: 100%;
         }
         .card {
           background: #fff;
           border: 1px solid #ece7db;
           border-radius: 16px;
-          padding: 18px 20px;
+          padding: clamp(18px, 2vw, 24px) clamp(20px, 2.2vw, 26px);
           box-shadow: 0 4px 14px rgba(0,0,0,0.04);
           text-align: left;
           transition: transform 0.2s, box-shadow 0.2s;
@@ -281,13 +283,13 @@ export default function SloganPage({
         }
         .card h4 {
           font-family: Georgia, serif;
-          font-size: 17px;
+          font-size: clamp(17px, 1.8vw, 21px);
           color: #0b1f3a;
           margin: 0 0 8px 0;
           font-weight: bold;
         }
         .card p {
-          font-size: 13.5px;
+          font-size: clamp(13.5px, 1.1vw, 15.5px);
           color: #5a584f;
           line-height: 1.55;
           margin: 0;
@@ -364,27 +366,9 @@ export default function SloganPage({
         ))}
       </div>
 
-      <button className="back-cover-btn" onClick={onBack}>
-        <ArrowLeft size={16} /> Cover Page
-      </button>
-
-      {chapterNum === 2 && (
-        <button 
-          className="enter-lab-cta animate-pop" 
-          style={{ 
-            position: 'absolute', 
-            top: 'clamp(14px, 2.5vw, 36px)', 
-            right: 'clamp(14px, 2.5vw, 36px)', 
-            zIndex: 30, 
-            animationDelay: "0.85s", 
-            margin: 0,
-            padding: '10px 20px',
-            fontSize: '14px',
-            boxShadow: '0 10px 25px rgba(16, 185, 129, 0.15)'
-          }} 
-          onClick={onEnterLab}
-        >
-          Enter Learning Lab <BookOpen size={16} />
+      {chapterNum !== 2 && (
+        <button className="back-cover-btn" onClick={onBack}>
+          <ArrowLeft size={16} /> Cover Page
         </button>
       )}
 
@@ -392,6 +376,19 @@ export default function SloganPage({
         /* EXACT FROM-HEAD-TO-TOE HTML PREVIEW SPECIFICATION FOR CHAPTER 2 */
         <div className="frame">
           <div className="left">
+            <button 
+              className="back-cover-btn" 
+              onClick={onBack} 
+              style={{ 
+                position: 'absolute',
+                top: 'clamp(14px, 2.5vw, 36px)', 
+                left: 'clamp(20px, 2.5vw, 36px)',
+                zIndex: 30
+              }}
+            >
+              <ArrowLeft size={16} /> Cover Page
+            </button>
+
             <div className="eyebrow animate-pop" style={{ animationDelay: "0.1s" }}>
               <span className="chap">CH</span>APTER 2 &nbsp;•&nbsp; CLASS 6 SCIENCE
             </div>
@@ -419,6 +416,24 @@ export default function SloganPage({
           </div>
           
           <div className="right">
+            <button 
+              className="enter-lab-cta animate-pop" 
+              style={{ 
+                position: 'absolute', 
+                top: 'clamp(14px, 2.5vw, 36px)', 
+                right: 'clamp(20px, 2.5vw, 36px)', 
+                zIndex: 30, 
+                animationDelay: "0.85s", 
+                margin: 0,
+                padding: '10px 20px',
+                fontSize: '14px',
+                boxShadow: '0 10px 25px rgba(16, 185, 129, 0.15)'
+              }} 
+              onClick={onEnterLab}
+            >
+              Enter Learning Lab <BookOpen size={16} />
+            </button>
+
             <div style={{ marginBottom: "20px", flexShrink: 0 }}>
               <h2 className="section animate-pop" style={{ animationDelay: "0.78s", margin: 0 }}>Why study this chapter?</h2>
             </div>
