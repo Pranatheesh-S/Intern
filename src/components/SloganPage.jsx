@@ -74,17 +74,19 @@ export default function SloganPage({
         /* Scrollable layout columns for full height */
         .left {
           background: #f4ecdf;
-          padding: clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px);
+          padding: clamp(75px, 8vw, 95px) clamp(20px, 2.5vw, 36px) clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px);
           overflow-y: auto;
           height: 100vh;
+          box-sizing: border-box;
         }
         .right {
           background: #ffffff;
-          padding: clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px);
+          padding: clamp(75px, 8vw, 95px) clamp(20px, 2.5vw, 36px) clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px);
           display: flex;
           flex-direction: column;
           overflow-y: auto;
           height: 100vh;
+          box-sizing: border-box;
         }
 
         /* Slim green scrollbars */
@@ -366,6 +368,26 @@ export default function SloganPage({
         <ArrowLeft size={16} /> Cover Page
       </button>
 
+      {chapterNum === 2 && (
+        <button 
+          className="enter-lab-cta animate-pop" 
+          style={{ 
+            position: 'absolute', 
+            top: 'clamp(14px, 2.5vw, 36px)', 
+            right: 'clamp(14px, 2.5vw, 36px)', 
+            zIndex: 30, 
+            animationDelay: "0.85s", 
+            margin: 0,
+            padding: '10px 20px',
+            fontSize: '14px',
+            boxShadow: '0 10px 25px rgba(16, 185, 129, 0.15)'
+          }} 
+          onClick={onEnterLab}
+        >
+          Enter Learning Lab <BookOpen size={16} />
+        </button>
+      )}
+
       {chapterNum === 2 ? (
         /* EXACT FROM-HEAD-TO-TOE HTML PREVIEW SPECIFICATION FOR CHAPTER 2 */
         <div className="frame">
@@ -397,11 +419,8 @@ export default function SloganPage({
           </div>
           
           <div className="right">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px", flexShrink: 0 }}>
+            <div style={{ marginBottom: "20px", flexShrink: 0 }}>
               <h2 className="section animate-pop" style={{ animationDelay: "0.78s", margin: 0 }}>Why study this chapter?</h2>
-              <button className="enter-lab-cta animate-pop" style={{ animationDelay: "0.85s", margin: 0 }} onClick={onEnterLab}>
-                Enter Learning Lab <BookOpen size={16} />
-              </button>
             </div>
             
             <div className="highlight animate-pop" style={{ animationDelay: "0.98s" }}>
