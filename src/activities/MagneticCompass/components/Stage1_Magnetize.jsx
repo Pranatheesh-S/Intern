@@ -1,14 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Magnet, CheckCircle, RotateCcw, ArrowRight, Activity, Beaker, MousePointer2 } from 'lucide-react';
+import { Magnet, CheckCircle, RotateCcw, ArrowRight, Activity, Beaker, MousePointer2, Play } from 'lucide-react';
 
 export default function Stage1_Magnetize({ onComplete }) {
   const [strokeCount, setStrokeCount] = useState(0);
   const [isTesting, setIsTesting] = useState(false);
   const [testComplete, setTestComplete] = useState(false);
+  const [isAutoStroking, setIsAutoStroking] = useState(false);
   
   const maxStrokes = 5;
   const isMagnetized = strokeCount >= maxStrokes;
+
+  useEffect(() => {
+    let interval;
+    if (isAutoStroking && strokeCount < maxStrokes) {
+      interval = setInterval(() => {
+        setStrokeCount(prev => {
+          if (prev + 1 >= maxStrokes) {
+            setIsAutoStroking(false);
+          }
+          return prev + 1;
+        });
+      }, 1500);
+    } else if (strokeCount >= maxStrokes) {
+      setIsAutoStroking(false);
+    }
+    return () => clearInterval(interval);
+  }, [isAutoStroking, strokeCount]);
+
+  const filings = useMemo(() => {
+    const items = [];
+    const poleNx = -110; const poleNy = 47;
+    const poleSx = 110; const poleSy = 47;
+
+    for (let i = 0; i < 1500; i++) {
+      const width = 4 + Math.random() * 12;
+      const color = Math.random() > 0.5 ? 'rgba(30, 41, 59, 0.65)' : 'rgba(51, 65, 85, 0.65)';
+      
+      const initX = Math.random() * 500 - 250;
+      const initY = Math.random() * 45 + 80;
+      const initRot = Math.random() * 360;
+
+      let targetX = initX;
+      let targetY = initY;
+
+      const distN = Math.hypot(targetX - poleNx, targetY - poleNy);
+      const distS = Math.hypot(targetX - poleSx, targetY - poleSy);
+      const minDist = Math.min(distN, distS);
+      const isNorth = distN < distS;
+      const targetPoleX = isNorth ? poleNx : poleSx;
+      const targetPoleY = isNorth ? poleNy : poleSy;
+
+      let pullFactor = Math.pow(Math.E, -minDist / 100) * 0.4;
+      if (minDist < 60) {
+         pullFactor = Math.max(pullFactor, Math.pow(Math.E, -minDist / 30) * 0.8);
+      }
+      
+      if (Math.abs(targetX) < 100 && targetY > 30 && targetY < 65) {
+         const bodyPull = Math.pow(Math.E, -Math.abs(targetY - 47) / 20);
+         targetY = targetY - (targetY - 47) * bodyPull * 0.6;
+      }
+
+      targetX = targetX + (targetPoleX - targetX) * pullFactor;
+      targetY = targetY + (targetPoleY - targetY) * pullFactor;
+
+      const dxN = targetX - poleNx;
+      const dyN = targetY - poleNy;
+      const dN3 = Math.pow(dxN*dxN + dyN*dyN, 1.5) || 1;
+      const bxN = dxN / dN3;
+      const byN = dyN / dN3;
+
+      const dxS = targetX - poleSx;
+      const dyS = targetY - poleSy;
+      const dS3 = Math.pow(dxS*dxS + dyS*dyS, 1.5) || 1;
+      const bxS = -dxS / dS3;
+      const byS = -dyS / dS3;
+
+      const bx = bxN + bxS;
+      const by = byN + byS;
+
+      let targetRot = Math.atan2(by, bx) * (180 / Math.PI);
+      targetRot += (Math.random() - 0.5) * 4;
+      targetX += (Math.random() - 0.5) * 4;
+      targetY += (Math.random() - 0.5) * 4;
+
+      items.push({
+        id: i,
+        width, color,
+        initX, initY, initRot,
+        targetX, targetY, targetRot
+      });
+    }
+    return items;
+  }, []);
+
 
   const handleTest = () => {
     setIsTesting(true);
@@ -25,6 +110,7 @@ export default function Stage1_Magnetize({ onComplete }) {
     setStrokeCount(0);
     setIsTesting(false);
     setTestComplete(false);
+    setIsAutoStroking(false);
   };
 
   return (
@@ -34,7 +120,7 @@ export default function Stage1_Magnetize({ onComplete }) {
         <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
           <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Magnetization Process</h3>
           <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            Manually drag the magnet across the iron needle from left to right.
+            Drag the magnet across the iron needle, or click Auto Magnetize.
           </p>
         </div>
 
@@ -129,52 +215,38 @@ export default function Stage1_Magnetize({ onComplete }) {
             })}
           </div>
 
-          {/* Steel Pins / Iron Filings (for testing) */}
+          {/* Iron Filings (for testing) */}
           <AnimatePresence>
             {isMagnetized && (
-              <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', width: '300px', height: '40px' }}>
-                {[...Array(40)].map((_, i) => {
-                  const pseudoX = (i * 137) % 300 - 150; // spread from -150 to +150
-                  const pseudoY = (i * 93) % 40; // spread from 0 to 40 (on the table)
-                  const rot = ((i * 71) % 360) - 180;
-                  
-                  // Target positions at the poles (needle is ~250px wide, so poles at -110 and +110 relative to center)
-                  const isLeftPole = pseudoX < 0;
-                  const targetX = isLeftPole ? -110 + ((i*17)%40 - 20) : 110 + ((i*17)%40 - 20);
-                  // Needle is at bottom: 70px. Container is at bottom: 20px. Diff is 50px up (y = -50).
-                  const targetY = -50 + ((i*23)%20 - 10);
-                  const targetRot = isLeftPole ? -90 + ((i*11)%180) : 90 + ((i*11)%180);
-                  
-                  return (
-                    <motion.div
-                      key={`pin-${i}`}
-                      initial={{ y: pseudoY, x: pseudoX, rotate: rot }}
-                      animate={
-                        isTesting 
-                          ? { y: targetY, x: targetX, rotate: targetRot } 
-                          : { y: pseudoY, x: pseudoX, rotate: rot }
-                      }
-                      transition={{ type: 'spring', stiffness: 50, damping: 10, delay: (i % 10) * 0.02 }}
-                      style={{ 
-                        position: 'absolute', 
-                        left: '50%',
-                        bottom: '0',
-                        width: '3px', 
-                        height: '10px', 
-                        background: 'linear-gradient(135deg, #f1f5f9, #94a3b8)', // Light silver to slate
-                        borderRadius: '2px', 
-                        boxShadow: '0 0 2px rgba(255,255,255,0.4), 1px 1px 3px rgba(0,0,0,0.9)',
-                        marginLeft: '-1.5px'
-                      }}
-                    />
-                  );
-                })}
-              </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', zIndex: 3 }}
+              >
+                {filings.map(f => (
+                  <div
+                    key={`filing-${f.id}`}
+                    style={{
+                      position: 'absolute',
+                      width: `${f.width}px`,
+                      height: '1px',
+                      background: f.color,
+                      borderRadius: '1px',
+                      transform: isTesting 
+                        ? `translate(${f.targetX}px, ${f.targetY}px) rotate(${f.targetRot}deg)`
+                        : `translate(${f.initX}px, ${f.initY}px) rotate(${f.initRot}deg)`,
+                      transition: 'transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1)'
+                    }}
+                  />
+                ))}
+              </motion.div>
             )}
           </AnimatePresence>
 
           {/* Drag Indicator */}
-          {!isMagnetized && strokeCount === 0 && (
+          {!isMagnetized && strokeCount === 0 && !isAutoStroking && (
             <motion.div
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 0.6, x: -50 }}
@@ -189,9 +261,19 @@ export default function Stage1_Magnetize({ onComplete }) {
           <AnimatePresence>
             {!isTesting && (
               <motion.div
-                initial={{ x: -125, y: -60, rotate: 10 }}
-                animate={{ x: -125, y: -60, rotate: 10 }}
-                drag={!isMagnetized}
+                initial={{ x: -125, y: -22, rotate: 10 }}
+                animate={isAutoStroking ? {
+                  x: [-125, 125, 125, -125, -125],
+                  y: [-22, -22, -80, -80, -22],
+                  rotate: [10, 10, 10, 10, 10]
+                } : { x: -125, y: -22, rotate: 10 }}
+                transition={isAutoStroking ? {
+                  duration: 1.5,
+                  repeat: Infinity,
+                  times: [0, 0.4, 0.5, 0.9, 1],
+                  ease: "easeInOut"
+                } : {}}
+                drag={!isMagnetized && !isAutoStroking}
                 dragSnapToOrigin={true}
                 dragElastic={0.1}
                 onDragEnd={(event, info) => {
@@ -237,7 +319,18 @@ export default function Stage1_Magnetize({ onComplete }) {
         </div>
 
         {/* Controls */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          {!isMagnetized && (
+            <button 
+              onClick={() => setIsAutoStroking(true)} 
+              disabled={isAutoStroking}
+              className="primary"
+              style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <Play size={18} /> {isAutoStroking ? 'Magnetizing...' : 'Auto Magnetize'}
+            </button>
+          )}
+
           {isMagnetized && (
             <button 
               onClick={handleTest} 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HelpCircle, ArrowRight, Play, CheckCircle2, RotateCcw } from "lucide-react";
+import { HelpCircle, ArrowRight, Play, CheckCircle2, RotateCcw, RotateCw, XCircle } from "lucide-react";
 
 export default function Stage2_Predict({ onComplete, onNext }) {
   const [step, setStep] = useState(0); 
@@ -48,16 +48,60 @@ export default function Stage2_Predict({ onComplete, onNext }) {
               x: step === 1 ? 40 : step === 3 ? -60 : 0 
             }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
-            style={{ position: "absolute", display: "flex", gap: "8px", top: "180px" }}
+            style={{ position: "absolute", left: "106px", display: "flex", gap: "8px", top: "180px" }}
           >
             {[...Array(6)].map((_, i) => (
               <motion.div 
                 key={i} 
-                animate={{ rotate: step === 1 ? 180 : step === 3 ? -270 : 0 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
-                style={{ width: "8px", height: "120px", background: "linear-gradient(90deg, #fde047 0%, #ca8a04 100%)", borderRadius: "4px", boxShadow: "2px 2px 4px rgba(0,0,0,0.2)" }} 
-              />
+                style={{ width: "8px", height: "120px", filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))" }}
+              >
+                <svg viewBox="0 0 8 120" width="100%" height="100%">
+                  <polygon points="0,15 8,15 4,0" fill="#e6b981" />
+                  <polygon points="3,3 5,3 4,0" fill="#334155" />
+                  <rect x="0" y="15" width="8" height="90" fill="url(#pencilGrad2)" />
+                  <rect x="0" y="102" width="8" height="5" fill="#cbd5e1" />
+                  <rect x="0" y="107" width="8" height="13" rx="2" fill="#f472b6" />
+                  <defs>
+                    <linearGradient id="pencilGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#fde047" />
+                      <stop offset="100%" stopColor="#ca8a04" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </motion.div>
             ))}
+            <AnimatePresence>
+              {step === 1 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  style={{ position: "absolute", left: "50%", marginLeft: "-12px", bottom: "-30px", color: "var(--text-secondary)" }}
+                >
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, ease: "linear", repeat: Infinity }}
+                  >
+                    <RotateCw size={24} />
+                  </motion.div>
+                </motion.div>
+              )}
+              {step === 3 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  style={{ position: "absolute", left: "50%", marginLeft: "-12px", bottom: "-30px", color: "var(--text-secondary)" }}
+                >
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 2, ease: "linear", repeat: Infinity }}
+                  >
+                    <RotateCcw size={24} />
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
 
           <motion.div
@@ -66,7 +110,7 @@ export default function Stage2_Predict({ onComplete, onNext }) {
               x: step === 1 ? 40 : step === 3 ? -60 : 0 
             }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
-            style={{ position: "absolute", top: "150px", width: "200px", height: "40px", zIndex: 10 }}
+            style={{ position: "absolute", left: "50px", top: "150px", width: "200px", height: "40px", zIndex: 10 }}
           >
             <div style={{ position: "absolute", top: "-25px", left: "50%", transform: "translateX(-50%)", fontSize: "0.85rem", fontWeight: "bold", color: "var(--text-secondary)", whiteSpace: "nowrap" }}>Magnet A</div>
             <div style={{ width: "100%", height: "100%", display: "flex", borderRadius: "4px", overflow: "hidden", boxShadow: "0 8px 16px rgba(0,0,0,0.3)" }}>
@@ -85,13 +129,13 @@ export default function Stage2_Predict({ onComplete, onNext }) {
           </motion.div>
 
           <motion.div
-            initial={{ x: 200, opacity: 1 }}
+            initial={{ x: 0, opacity: 1 }}
             animate={{ 
-              x: (step === 1 || step === 3) ? 140 : 200,
+              x: (step === 1 || step === 3) ? -60 : 0,
               opacity: 1
             }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
-            style={{ position: "absolute", top: "150px", width: "120px", height: "40px", zIndex: 11 }}
+            style={{ position: "absolute", left: "350px", top: "150px", width: "120px", height: "40px", zIndex: 11 }}
           >
             <div style={{ position: "absolute", top: "-25px", left: "50%", transform: "translateX(-50%)", fontSize: "0.85rem", fontWeight: "bold", color: "var(--text-secondary)", whiteSpace: "nowrap" }}>Magnet B</div>
             <div style={{ width: "100%", height: "100%", display: "flex", borderRadius: "4px", overflow: "hidden", boxShadow: "0 4px 8px rgba(0,0,0,0.2)" }}>
@@ -113,22 +157,30 @@ export default function Stage2_Predict({ onComplete, onNext }) {
               What do you think will happen if the <strong>North</strong> pole of Magnet B approaches the <strong>South</strong> pole of Magnet A?
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              {["Magnet A moves toward Magnet B", "Magnet A moves away", "Nothing happens"].map((opt) => (
-                <button
-                  key={opt}
-                  onClick={() => handleOptionSelect(opt)}
-                  className="outline"
-                  style={{
-                    padding: "1rem",
-                    textAlign: "left",
-                    background: selectedOption === opt ? "var(--accent-bg)" : "transparent",
-                    borderColor: selectedOption === opt ? "var(--accent)" : "var(--border)",
-                    color: selectedOption === opt ? "var(--accent-text)" : "inherit"
-                  }}
-                >
-                  {opt}
-                </button>
-              ))}
+              {["Magnet A moves toward Magnet B", "Magnet A moves away", "Nothing happens"].map((opt) => {
+                const isSelected = selectedOption === opt;
+                const isCorrect = opt === "Magnet A moves toward Magnet B";
+                const isWrongSelected = isSelected && !isCorrect;
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => handleOptionSelect(opt)}
+                    className="outline"
+                    style={{
+                      padding: "1rem",
+                      textAlign: "left",
+                      background: isWrongSelected ? "var(--danger-bg)" : isSelected ? "var(--accent-bg)" : "transparent",
+                      borderColor: isWrongSelected ? "var(--danger)" : isSelected ? "var(--accent)" : "var(--border)",
+                      color: isWrongSelected ? "var(--danger)" : isSelected ? "var(--accent-text)" : "inherit"
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span>{opt}</span>
+                      {isWrongSelected && <XCircle size={18} style={{ color: 'var(--danger)' }} />}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
         )}
@@ -156,22 +208,30 @@ export default function Stage2_Predict({ onComplete, onNext }) {
               Now, we flipped Magnet A. What happens when the <strong>North</strong> pole of Magnet B approaches the <strong>North</strong> pole of Magnet A?
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              {["Magnet A moves toward Magnet B", "Magnet A moves away", "Nothing happens"].map((opt) => (
-                <button
-                  key={opt}
-                  onClick={() => handleOptionSelect(opt)}
-                  className="outline"
-                  style={{
-                    padding: "1rem",
-                    textAlign: "left",
-                    background: selectedOption === opt ? "var(--accent-bg)" : "transparent",
-                    borderColor: selectedOption === opt ? "var(--accent)" : "var(--border)",
-                    color: selectedOption === opt ? "var(--accent-text)" : "inherit"
-                  }}
-                >
-                  {opt}
-                </button>
-              ))}
+              {["Magnet A moves toward Magnet B", "Magnet A moves away", "Nothing happens"].map((opt) => {
+                const isSelected = selectedOption === opt;
+                const isCorrect = opt === "Magnet A moves away";
+                const isWrongSelected = isSelected && !isCorrect;
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => handleOptionSelect(opt)}
+                    className="outline"
+                    style={{
+                      padding: "1rem",
+                      textAlign: "left",
+                      background: isWrongSelected ? "var(--danger-bg)" : isSelected ? "var(--accent-bg)" : "transparent",
+                      borderColor: isWrongSelected ? "var(--danger)" : isSelected ? "var(--accent)" : "var(--border)",
+                      color: isWrongSelected ? "var(--danger)" : isSelected ? "var(--accent-text)" : "inherit"
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span>{opt}</span>
+                      {isWrongSelected && <XCircle size={18} style={{ color: 'var(--danger)' }} />}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
         )}

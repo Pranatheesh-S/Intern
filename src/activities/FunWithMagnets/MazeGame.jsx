@@ -56,13 +56,46 @@ export default function MazeGame({ onSolve, isSolved }) {
     let mzDrag = false;
     let animFrame = null;
 
-    let mzBall = { x: 40, y: 40, vx: 0, vy: 0 };
-    let mzMag = { x: W * 0.5, y: H - 30 };
-    const mzExit = { x: W - 46, y: H - 44, r: 22 };
+    const wallThick = 20;
+    let mzBall = { x: 100, y: 120, vx: 0, vy: 0 };
+    let mzMag = { x: 100, y: 120 };
+    const mzExit = { x: 700, y: 750, r: 22 };
     const mzWalls = [
-      { x: 0, y: H * 0.42, w: W * 0.62, h: 12 },
-      { x: W * 0.72, y: 0, w: 12, h: H * 0.7 },
-      { x: W * 0.30, y: H * 0.7, w: W * 0.5, h: 12 }
+      { x: 60, y: 60, w: 540, h: wallThick },
+      { x: 60, y: 60, w: wallThick, h: 680 },
+      { x: 60, y: 720, w: 220, h: wallThick },
+      { x: 340, y: 720, w: 280, h: wallThick },
+      { x: 720, y: 60, w: wallThick, h: 280 },
+      { x: 660, y: 200, w: wallThick, h: 280 },
+      { x: 720, y: 440, w: wallThick, h: 300 },
+      { x: 560, y: 60, w: wallThick, h: 100 },
+      { x: 380, y: 140, w: 180, h: wallThick },
+      { x: 480, y: 140, w: wallThick, h: 140 },
+      { x: 580, y: 180, w: 120, h: wallThick },
+      { x: 580, y: 180, w: wallThick, h: 140 },
+      { x: 140, y: 160, w: wallThick, h: 120 },
+      { x: 140, y: 260, w: 200, h: wallThick },
+      { x: 240, y: 260, w: wallThick, h: 100 },
+      { x: 240, y: 340, w: 160, h: wallThick },
+      { x: 200, y: 400, w: 340, h: wallThick },
+      { x: 200, y: 400, w: wallThick, h: 140 },
+      { x: 260, y: 520, w: wallThick, h: 160 },
+      { x: 340, y: 480, w: 160, h: wallThick },
+      { x: 420, y: 480, w: wallThick, h: 120 },
+      { x: 420, y: 580, w: 160, h: wallThick },
+      { x: 540, y: 380, w: 100, h: wallThick },
+      { x: 540, y: 380, w: wallThick, h: 100 },
+      { x: 640, y: 380, w: wallThick, h: 160 },
+      { x: 540, y: 520, w: 120, h: wallThick },
+      { x: 600, y: 580, w: wallThick, h: 140 },
+      { x: 600, y: 660, w: 140, h: wallThick },
+      { x: 60, y: 500, w: 80, h: wallThick },
+      { x: 120, y: 500, w: wallThick, h: 120 },
+      { x: 60, y: 600, w: 80, h: wallThick },
+      { x: 260, y: 640, w: 280, h: wallThick },
+      { x: 400, y: 720, w: wallThick, h: 80 },
+      { x: 660, y: 720, w: wallThick, h: 80 },
+      { x: 660, y: 780, w: 80, h: wallThick }
     ];
 
     const mzDown = (e) => {
@@ -113,10 +146,10 @@ export default function MazeGame({ onSolve, isSolved }) {
       if (!mzBlocked(mzBall.x, ny)) mzBall.y = Math.max(10, Math.min(H - 10, ny)); else mzBall.vy *= -0.3;
       
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = "#12183A";
+      ctx.fillStyle = "#24252A";
       roundRect(ctx, 4, 4, W - 8, H - 8, 10);
       ctx.fill();
-      ctx.fillStyle = "#E86FB0";
+      ctx.fillStyle = "#A350D1";
       for (const w of mzWalls) {
         roundRect(ctx, w.x, w.y, w.w, w.h, 5);
         ctx.fill();
@@ -175,6 +208,6 @@ export default function MazeGame({ onSolve, isSolved }) {
   }, []);
 
   return (
-    <canvas ref={canvasRef} width={800} height={240} style={{ width: '100%', height: 'auto', touchAction: 'none' }} />
+    <canvas ref={canvasRef} width={800} height={800} style={{ width: '100%', height: 'auto', touchAction: 'none' }} />
   );
 }

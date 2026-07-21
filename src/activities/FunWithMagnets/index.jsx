@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './FunWithMagnets.css';
 import MazeGame from './MazeGame';
 import CarGame from './CarGame';
@@ -19,6 +20,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
   const [score, setScore] = useState(0);
   const [ext, setExt] = useState({});
   const [toast, setToast] = useState({ text: '', show: false });
+  const [showMazeModal, setShowMazeModal] = useState(false);
 
   // Handle XP
   const addXP = (n, label) => {
@@ -72,8 +74,8 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
         return (
           <div className="card">
             <div className="kicker">PAGES 71-73 · SECTION 4.5 · FUN WITH MAGNETS</div>
-            <h1>Magnets can move things without touching them.</h1>
-            <p className="lead">Now that you know magnetism passes through non-magnetic materials, you can build toys and tricks. Predict: in a "magnetic maze," you move a magnet <b>under</b> a cardboard tray to guide a steel ball on top. What makes the ball move?</p>
+            <h1 style={{ fontSize: "2rem" }}>Magnets can move things without touching them.</h1>
+            <p className="lead" style={{ fontSize: "1.5rem", lineHeight: "1.6" }}>Now that you know magnetism passes through non-magnetic materials, you can build toys and tricks. Predict: in a "magnetic maze," you move a magnet <b>under</b> a cardboard tray to guide a steel ball on top. What makes the ball move?</p>
             <div className="choices">
               {[
                 { label: "You tilt the tray", ok: false, xp: 0, l: '' },
@@ -113,6 +115,9 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                 if (!ext.maze) {
                   setExt(prev => ({...prev, maze: true}));
                   addXP(16, "maze solved!");
+                  setTimeout(() => {
+                    setShowMazeModal(true);
+                  }, 500);
                 }
               }} />
               <div className="hint" style={{ marginTop: '10px', fontSize: '13px', color: 'var(--mut-local)', textAlign: 'center' }}>
@@ -305,7 +310,6 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                     if (c.ok) {
                       setScore(prev => prev + 1);
                       addXP(20, 'correct');
-                      handleComplete();
                     }
                   }}
                 >
@@ -334,6 +338,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                       </div>
                       <p className="note">You've now explored every activity in Chapter 4. Reshma has her story - and you have the science behind it.</p>
                       <div className="btnrow">
+                        <button className="btn" onClick={() => { if(onComplete) onComplete(); else onBackToDashboard(); }}>Finish Activity</button>
                         <button className="btn ghost" onClick={() => window.location.reload()}>Play again</button>
                       </div>
                     </div>
@@ -371,6 +376,42 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             
             <main>
               {renderContent()}
+              <AnimatePresence>
+                {showMazeModal && (
+                  <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
+                    <motion.div
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      style={{ background: 'var(--panel-local)', padding: '2rem', borderRadius: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', maxWidth: '400px', textAlign: 'center', border: '1px solid var(--line-local)' }}
+                    >
+                      <h3 style={{ marginTop: 0, color: 'var(--ink-local)', fontSize: '1.5rem', marginBottom: '1rem' }}>🎉 Great Job!</h3>
+                      <p style={{ color: 'var(--mut-local)', marginBottom: '2rem', lineHeight: 1.5, fontSize: '1.1rem' }}>
+                        You successfully navigated the magnetic maze! Ready to move to the next trick?
+                      </p>
+                      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                        <button 
+                          className="btn ghost" 
+                          onClick={() => setShowMazeModal(false)}
+                          style={{ flex: 1 }}
+                        >
+                          Stay Here
+                        </button>
+                        <button 
+                          className="btn" 
+                          onClick={() => {
+                            setShowMazeModal(false);
+                            go(2);
+                          }}
+                          style={{ flex: 1 }}
+                        >
+                          Next Trick
+                        </button>
+                      </div>
+                    </motion.div>
+                  </div>
+                )}
+              </AnimatePresence>
             </main>
           </div>
 

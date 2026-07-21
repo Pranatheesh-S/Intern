@@ -319,7 +319,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="main-grid" style={{ gridTemplateColumns: "1fr", gap: "1rem", padding: "1rem", maxWidth: "900px", margin: "0 auto" }}>
+      <div className="main-grid" style={{ gridTemplateColumns: "1fr", gap: "1rem", padding: "1rem", maxWidth: "100%", margin: "0 auto" }}>
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
           <div>
@@ -363,7 +363,14 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     case "pencils": return (
                       <svg viewBox="-5 -5 60 50" width="24" height="24">
                         <g transform="translate(0, 5)">
-                          {[...Array(6)].map((_, i) => <rect key={i} x={i * 8} y={0} width="4" height="30" rx="2" fill="#fde047" />)}
+                          {[...Array(6)].map((_, i) => (
+                            <g key={i} transform={`translate(${i * 8}, 0)`}>
+                              <polygon points="0,5 4,5 2,0" fill="#e6b981" />
+                              <polygon points="1.5,1.5 2.5,1.5 2,0" fill="#334155" />
+                              <rect x="0" y="5" width="4" height="22" fill="#fde047" />
+                              <rect x="0" y="27" width="4" height="4" fill="#f472b6" rx="1" />
+                            </g>
+                          ))}
                         </g>
                       </svg>
                     );
@@ -435,9 +442,28 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     {activeStep.id === "pencils" && (
                       <group position={[0, -0.5, 0]}>
                         {[...Array(6)].map((_, i) => (
-                          <Cylinder key={i} args={[0.1, 0.1, 3, 16]} rotation={[0, 0, Math.PI / 2]} position={[0, 0, (i - 2.5) * 0.25]}>
-                            <meshStandardMaterial color="#fde047" />
-                          </Cylinder>
+                          <group key={i} position={[0, 0, (i - 2.5) * 0.25]} rotation={[0, 0, Math.PI / 2]}>
+                            {/* Body */}
+                            <Cylinder args={[0.1, 0.1, 2.2, 16]} position={[0, 0, 0]}>
+                              <meshStandardMaterial color="#fde047" />
+                            </Cylinder>
+                            {/* Wood Tip */}
+                            <Cylinder args={[0.03, 0.1, 0.4, 16]} position={[0, 1.3, 0]}>
+                              <meshStandardMaterial color="#e6b981" />
+                            </Cylinder>
+                            {/* Lead Tip */}
+                            <Cylinder args={[0, 0.03, 0.15, 16]} position={[0, 1.575, 0]}>
+                              <meshStandardMaterial color="#334155" />
+                            </Cylinder>
+                            {/* Ferrule (Metal) */}
+                            <Cylinder args={[0.105, 0.105, 0.15, 16]} position={[0, -1.175, 0]}>
+                              <meshStandardMaterial color="#cbd5e1" metalness={0.8} roughness={0.3} />
+                            </Cylinder>
+                            {/* Eraser */}
+                            <Cylinder args={[0.1, 0.1, 0.2, 16]} position={[0, -1.35, 0]}>
+                              <meshStandardMaterial color="#f472b6" />
+                            </Cylinder>
+                          </group>
                         ))}
                       </group>
                     )}
@@ -515,9 +541,15 @@ export default function Stage1_Build({ onComplete, onNext }) {
                   {/* Pencils SVG */}
                   {placed.pencils && (
                     <DraggableSVGGroup id="pencils" isDraggable={true}>
-                      <g transform={`translate(${positions.pencils.x - 40}, ${positions.pencils.y - 60})`}>
+                      <g transform={`translate(${positions.pencils.x - 40}, ${positions.pencils.y - 60})`} filter="drop-shadow(2px 2px 2px rgba(0,0,0,0.3))">
                         {[...Array(6)].map((_, i) => (
-                          <rect key={i} x={i * 14} y={0} width="8" height="120" rx="4" fill="url(#pencilGrad)" filter="drop-shadow(2px 2px 2px rgba(0,0,0,0.3))" />
+                          <g key={i} transform={`translate(${i * 14}, 0)`}>
+                            <polygon points="0,15 8,15 4,0" fill="#e6b981" />
+                            <polygon points="3,3 5,3 4,0" fill="#334155" />
+                            <rect x="0" y="15" width="8" height="90" fill="url(#pencilGrad)" />
+                            <rect x="0" y="102" width="8" height="5" fill="#cbd5e1" />
+                            <rect x="0" y="107" width="8" height="13" rx="2" fill="#f472b6" />
+                          </g>
                         ))}
                       </g>
                     </DraggableSVGGroup>

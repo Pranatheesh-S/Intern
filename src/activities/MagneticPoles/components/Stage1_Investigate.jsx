@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MousePointer2, AlertCircle, CheckCircle, Hand, RotateCcw, ArrowRight } from 'lucide-react';
+import { MousePointer2, AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight } from 'lucide-react';
 
 // Generates random filing positions
 const generateFilings = (count) => {
@@ -189,7 +189,7 @@ export default function Stage1_Investigate({ onComplete }) {
           >
             Bar Magnet
           </button>
-          <button 
+          {/* <button 
             onClick={() => handleShapeChange('horseshoe')}
             className={shape === 'horseshoe' ? 'primary' : 'outline'}
             style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
@@ -202,7 +202,7 @@ export default function Stage1_Investigate({ onComplete }) {
             style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}
           >
             Ring Magnet
-          </button>
+          </button> */}
         </div>
 
         <div style={{ 
@@ -353,7 +353,10 @@ export default function Stage1_Investigate({ onComplete }) {
                     borderColor: quizAnswer === 'uniformly' ? 'var(--danger)' : 'var(--border)'
                   }}
                 >
-                  They stick uniformly all over the magnet
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>They stick uniformly all over the magnet</span>
+                    {quizAnswer === 'uniformly' && <XCircle size={18} style={{ color: 'var(--danger)' }} />}
+                  </div>
                 </button>
                 <button
                   onClick={() => handleQuizAnswer('middle')}
@@ -365,7 +368,10 @@ export default function Stage1_Investigate({ onComplete }) {
                     borderColor: quizAnswer === 'middle' ? 'var(--danger)' : 'var(--border)'
                   }}
                 >
-                  They stick mostly in the middle
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>They stick mostly in the middle</span>
+                    {quizAnswer === 'middle' && <XCircle size={18} style={{ color: 'var(--danger)' }} />}
+                  </div>
                 </button>
                 <button
                   onClick={() => handleQuizAnswer('ends')}
