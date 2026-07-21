@@ -35,7 +35,8 @@ const LEVEL_QUIZZES = {
         'The school Principal',
         'A forest ranger'
       ],
-      correct: 0
+      correct: 0,
+      explanation: 'Dr. Raghu (their teacher) and Maniram chacha (the school gardener) guided the kids during the nature walk.'
     },
     {
       q: 'What tables are used to record observations of plants and animals respectively?',
@@ -44,7 +45,8 @@ const LEVEL_QUIZZES = {
         'Table 2.1 and 2.2',
         'Table 3.1 and 3.2'
       ],
-      correct: 1
+      correct: 1,
+      explanation: 'According to the textbook chapter activity, Table 2.1 is used for recording plants and Table 2.2 is used for recording animals.'
     }
   ],
   'grouping_basics_concept': [
@@ -55,7 +57,8 @@ const LEVEL_QUIZZES = {
         'To make it easier to study their similarities and differences.',
         'To calculate the exact number of leaves on each tree.'
       ],
-      correct: 1
+      correct: 1,
+      explanation: 'Classification groups organisms by shared traits to help scientists study them systematically.'
     },
     {
       q: 'Which of these is a valid scientific basis for grouping plants?',
@@ -64,7 +67,8 @@ const LEVEL_QUIZZES = {
         'The names given to them by gardeners.',
         'The total amount of shade they cast at noon.'
       ],
-      correct: 0
+      correct: 0,
+      explanation: 'Scientific categorization groups plants into Herbs, Shrubs, and Trees based on their stem woody nature and branching height.'
     }
   ],
   'plant_variety_concept': [
@@ -75,7 +79,8 @@ const LEVEL_QUIZZES = {
         'Herbs',
         'Shrubs'
       ],
-      correct: 2
+      correct: 2,
+      explanation: 'Shrubs are medium-sized plants with hard, thin woody stems branching out close to the base.'
     },
     {
       q: 'Watermelon plants spread horizontally along the soil. They are classified as:',
@@ -84,7 +89,8 @@ const LEVEL_QUIZZES = {
         'Creepers',
         'Trees'
       ],
-      correct: 1
+      correct: 1,
+      explanation: 'Creepers have weak stems and cannot stand upright, so they crawl/spread horizontally along the ground.'
     }
   ],
   'venation_roots_concept': [
@@ -95,7 +101,8 @@ const LEVEL_QUIZZES = {
         'Taproot System',
         'Adventitious Root System'
       ],
-      correct: 1
+      correct: 1,
+      explanation: 'Reticulate leaf venation (net-like veins) is universally correlated with the taproot system (single main root).'
     },
     {
       q: 'Which of the following leaf-root pairs matches Grass?',
@@ -104,7 +111,8 @@ const LEVEL_QUIZZES = {
         'Reticulate Venation and Taproots',
         'Parallel Venation and Taproots'
       ],
-      correct: 0
+      correct: 0,
+      explanation: 'Monocots like grass have parallel leaf venation and a fibrous root system (bunch of equal-sized roots).'
     }
   ],
   'cotyledons_concept': [
@@ -115,7 +123,8 @@ const LEVEL_QUIZZES = {
         'Two (Dicot)',
         'Three'
       ],
-      correct: 1
+      correct: 1,
+      explanation: 'Chickpea seeds can easily be split into two equal halves (cotyledons), making them dicotyledonous (dicot).'
     },
     {
       q: 'A plant with parallel leaf venation and fibrous roots is expected to have seeds with:',
@@ -124,7 +133,8 @@ const LEVEL_QUIZZES = {
         'Two cotyledons (Dicot)',
         'No cotyledons'
       ],
-      correct: 0
+      correct: 0,
+      explanation: 'Parallel venation and fibrous roots correlate with monocotyledonous seeds (containing exactly one cotyledon).'
     }
   ],
   'grouping_animals_concept': [
@@ -135,7 +145,8 @@ const LEVEL_QUIZZES = {
         'Muscular legs',
         'Fins and streamlined tail'
       ],
-      correct: 2
+      correct: 2,
+      explanation: 'Fins help keep balance, and a streamlined body shape and muscular tail allow smooth swimming in water.'
     },
     {
       q: 'Pigeons can move by:',
@@ -144,7 +155,8 @@ const LEVEL_QUIZZES = {
         'Both walking on legs and flying with wings',
         'Swimming and hopping'
       ],
-      correct: 1
+      correct: 1,
+      explanation: 'Pigeons walk on ground using claws and fly in the air using wings, showing multiple modes of locomotion.'
     }
   ],
   'adaptations_concept': [
@@ -155,7 +167,8 @@ const LEVEL_QUIZZES = {
         'It has two humps and a thick shaggy hair coat.',
         'It has gills to breathe underwater.'
       ],
-      correct: 1
+      correct: 1,
+      explanation: 'Ladakh double-humped camels have shaggy thick coats to insulate against sub-zero mountain cold.'
     },
     {
       q: 'What is a "Sacred Grove" in NCERT terminology?',
@@ -164,7 +177,8 @@ const LEVEL_QUIZZES = {
         'A forest area traditionally protected by local communities.',
         'A desert area where camels gather.'
       ],
-      correct: 1
+      correct: 1,
+      explanation: 'Sacred Groves are community forest reserves preserved due to religious and environmental traditions.'
     }
   ]
 };
@@ -866,6 +880,7 @@ export default function ChapterLearningLab({
   const [activeSlide, setActiveSlide] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizChecked, setQuizChecked] = useState(false);
+  const [activeQuizQuestionIdx, setActiveQuizQuestionIdx] = useState(0);
 
   // Progress tracking states
   const [contentLessonProgress, setContentLessonProgress] = useState({});
@@ -881,12 +896,10 @@ export default function ChapterLearningLab({
 
   useEffect(() => {
     if (chapterNum !== 2 || stage !== 'lab') return;
-    const lesson = contentLessonsData[activeLevel.lessonId];
-    if (lesson && activeSlide >= lesson.slides.length) {
-      setActiveSlide(0);
-      setQuizAnswers({});
-      setQuizChecked(false);
-    }
+    setActiveSlide(0);
+    setQuizAnswers({});
+    setQuizChecked(false);
+    setActiveQuizQuestionIdx(0);
   }, [activeLevelId, chapterNum, stage]);
 
   useEffect(() => {
@@ -1365,89 +1378,50 @@ export default function ChapterLearningLab({
     const showQuiz = lessonDone && activityDone && levelQuiz;
 
     return (
-      <div id="pane-quiz-window" className="glass-panel" style={{ display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none', flexDirection: 'column', gap: '1rem', borderTop: '1px dashed var(--border)', paddingTop: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      <div id="pane-quiz-window" className="glass-panel" style={{ display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none', flexDirection: 'column', gap: '1.25rem', borderTop: '1px dashed var(--border)', paddingTop: '2.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+          <span style={{ fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             {showQuiz ? '📝 CHECKPOINT QUIZ' : '💡 DID YOU KNOW?'}
           </span>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-            {showQuiz ? 'Test your knowledge on this concept' : 'Fascinating science facts'}
+          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            {showQuiz ? `Question ${activeQuizQuestionIdx + 1} of ${levelQuiz.length}` : 'Fascinating science facts'}
           </span>
         </div>
 
         {showQuiz ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            {/* 2-Column Side-by-Side Question Layout */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
-              {levelQuiz.map((qObj, qIdx) => {
-                const selectedOpt = quizAnswers[qIdx];
-                const isCorrect = selectedOpt === qObj.correct;
-                return (
-                  <div key={qIdx} className="glass-panel" style={{ padding: '1.25rem', border: '1px solid var(--border)', borderRadius: '16px', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(8px)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
-                    <p style={{ margin: '0 0 0.85rem 0', fontWeight: 'bold', fontSize: '1rem', color: 'var(--text-heading)', lineHeight: '1.4' }}>
-                      Q{qIdx + 1}: {qObj.q}
-                    </p>
-                    <div style={{ display: 'grid', gap: '0.65rem' }}>
-                      {qObj.opts.map((opt, oIdx) => {
-                        const isSelected = selectedOpt === oIdx;
-                        return (
-                          <button
-                            key={oIdx}
-                            disabled={quizChecked}
-                            onClick={() => setQuizAnswers(prev => ({ ...prev, [qIdx]: oIdx }))}
-                            style={{
-                              textAlign: 'left',
-                              padding: '0.85rem 1.15rem',
-                              borderRadius: '12px',
-                              border: isSelected ? '2px solid var(--accent)' : '1px solid var(--border)',
-                              background: isSelected ? 'rgba(99,102,241,0.08)' : 'var(--page-bg)',
-                              color: 'var(--text-primary)',
-                              cursor: quizChecked ? 'default' : 'pointer',
-                              fontSize: '0.92rem',
-                              width: '100%',
-                              transition: 'all 0.15s ease'
-                            }}
-                          >
-                            {opt}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {quizChecked && (
-                      <div style={{ marginTop: '0.85rem', color: isCorrect ? 'var(--success)' : 'var(--danger)', fontWeight: 'bold', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        {isCorrect ? '✅ Correct!' : `❌ Incorrect (Correct: ${qObj.opts[qObj.correct]})`}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {!quizChecked ? (
-              <button
-                onClick={() => setQuizChecked(true)}
-                className="glass-btn primary"
-                style={{ alignSelf: 'flex-start', padding: '0.6rem 1.5rem', fontSize: '0.9rem' }}
-              >
-                Check Answers
-              </button>
-            ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {quizChecked ? (
               // Quiz completed: show score summary + Did You Know again below
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                <div style={{ padding: '1rem 1.25rem', borderRadius: '16px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontWeight: 'bold', fontSize: '1rem', color: 'var(--text-heading)' }}>
-                    Your Score: {levelQuiz.filter((qObj, qIdx) => quizAnswers[qIdx] === qObj.correct).length} / {levelQuiz.length} Correct
-                  </span>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--success)', fontWeight: 'bold' }}>
-                    {levelQuiz.filter((qObj, qIdx) => quizAnswers[qIdx] === qObj.correct).length === levelQuiz.length ? '🏆 Perfect Score! Proceed to next section.' : '👍 Good job! Review the facts below.'}
-                  </span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+                <div style={{ padding: '1.5rem', borderRadius: '18px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-heading)' }}>
+                      🎉 Quiz Completed!
+                    </span>
+                    <span style={{ fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
+                      Your Score: <b>{levelQuiz.filter((qObj, qIdx) => quizAnswers[qIdx] === qObj.correct).length} / {levelQuiz.length}</b> Correct
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                    <button
+                      onClick={() => {
+                        setQuizAnswers({});
+                        setQuizChecked(false);
+                        setActiveQuizQuestionIdx(0);
+                      }}
+                      className="glass-btn"
+                      style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
+                    >
+                      🔄 Retry Quiz
+                    </button>
+                  </div>
                 </div>
 
-                <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '1.25rem' }}>
-                  <h4 style={{ margin: '0 0 1rem 0', fontSize: '0.9rem', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
+                <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '1.5rem' }}>
+                  <h4 style={{ margin: '0 0 1.25rem 0', fontSize: '0.95rem', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
                     💡 Reinforce Your Learning
                   </h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                     {dykList.slice(0, 3).map((fact, idx) => {
                       const colors = [
                         { bg: 'linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(129,140,248,0.02) 100%)', border: 'rgba(99,102,241,0.2)', icon: '💡', accent: 'var(--accent)' },
@@ -1472,6 +1446,116 @@ export default function ChapterLearningLab({
                   </div>
                 </div>
               </div>
+            ) : (
+              // Active question view (one-at-a-time)
+              (() => {
+                const qIdx = activeQuizQuestionIdx;
+                const qObj = levelQuiz[qIdx];
+                const selectedOpt = quizAnswers[qIdx];
+                const isAnswered = selectedOpt !== undefined;
+                const isCorrect = selectedOpt === qObj.correct;
+
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    <div className="glass-panel" style={{ padding: '1.75rem', border: '1px solid var(--border)', borderRadius: '20px', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(8px)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
+                      <p style={{ margin: '0 0 1.5rem 0', fontWeight: 'bold', fontSize: '1.25rem', color: 'var(--text-heading)', lineHeight: '1.4' }}>
+                        Q{qIdx + 1}: {qObj.q}
+                      </p>
+                      
+                      <div style={{ display: 'grid', gap: '1.2rem' }}>
+                        {qObj.opts.map((opt, oIdx) => {
+                          const isSelected = selectedOpt === oIdx;
+                          const isCorrectOption = qObj.correct === oIdx;
+
+                          // Visual state calculations
+                          let borderStyle = '1px solid var(--border)';
+                          let bgStyle = 'var(--page-bg)';
+                          let colorStyle = 'var(--text-primary)';
+                          let opacityVal = 1;
+
+                          if (isAnswered) {
+                            if (isCorrectOption) {
+                              borderStyle = '2.5px solid var(--success)';
+                              bgStyle = 'rgba(16, 185, 129, 0.1)';
+                              colorStyle = 'var(--success)';
+                            } else if (isSelected) {
+                              borderStyle = '2.5px solid var(--danger)';
+                              bgStyle = 'rgba(239, 68, 68, 0.1)';
+                              colorStyle = 'var(--danger)';
+                            } else {
+                              opacityVal = 0.55;
+                            }
+                          }
+
+                          return (
+                            <button
+                              key={oIdx}
+                              disabled={isAnswered}
+                              onClick={() => setQuizAnswers(prev => ({ ...prev, [qIdx]: oIdx }))}
+                              style={{
+                                textAlign: 'left',
+                                padding: '1.1rem 1.4rem',
+                                borderRadius: '14px',
+                                border: borderStyle,
+                                background: bgStyle,
+                                color: colorStyle,
+                                opacity: opacityVal,
+                                cursor: isAnswered ? 'default' : 'pointer',
+                                fontSize: '1.05rem',
+                                fontWeight: isSelected || (isAnswered && isCorrectOption) ? 'bold' : 'normal',
+                                width: '100%',
+                                transition: 'all 0.15s ease'
+                              }}
+                            >
+                              {opt}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {isAnswered && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem', borderTop: '1px dashed var(--border)', paddingTop: '1.25rem' }}>
+                          <div style={{ color: isCorrect ? 'var(--success)' : 'var(--danger)', fontWeight: 'bold', fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            {isCorrect ? '🎉 Correct Answer!' : '❌ Incorrect Answer.'}
+                          </div>
+
+                          <div style={{ padding: '1.1rem 1.4rem', borderRadius: '14px', background: 'rgba(99, 102, 241, 0.04)', borderLeft: '5px solid var(--accent)' }}>
+                            <strong style={{ fontSize: '0.85rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.4rem' }}>
+                              💡 Why this is the answer (Reasoning):
+                            </strong>
+                            <p style={{ margin: 0, fontSize: '0.96rem', color: 'var(--text-secondary)', lineHeight: '1.65' }}>
+                              {qObj.explanation}
+                            </p>
+                          </div>
+
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+                            {qIdx < levelQuiz.length - 1 ? (
+                              <button
+                                onClick={() => setActiveQuizQuestionIdx(prev => prev + 1)}
+                                className="glass-btn primary"
+                                style={{ padding: '0.65rem 1.5rem', fontSize: '0.95rem' }}
+                              >
+                                Next Question ➔
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setQuizChecked(true);
+                                  confetti({ particleCount: 80, spread: 80, origin: { y: 0.8 } });
+                                }}
+                                className="glass-btn primary"
+                                style={{ padding: '0.65rem 1.5rem', fontSize: '0.95rem', background: 'var(--success)', borderColor: 'var(--success)' }}
+                              >
+                                Finish Quiz ➔
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()
             )}
           </div>
         ) : (
