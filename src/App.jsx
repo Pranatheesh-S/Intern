@@ -4895,32 +4895,6 @@ export default function App() {
         </Suspense>
       </main>
 
-      {/* Floating Theme Toggle for Focus Mode */}
-      {activeActivity && (
-        <button
-          className="outline"
-          onClick={toggleTheme}
-          title={theme === 'dark' ? "Switch to Light Theme" : "Switch to Dark Theme"}
-          style={{
-            position: 'fixed',
-            top: 'clamp(10px, 1.5vh, 20px)',
-            right: 'clamp(20px, 3.2vw, 52px)',
-            zIndex: 9999,
-            borderRadius: '50%',
-            width: '45px',
-            height: '45px',
-            padding: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'var(--card-bg)',
-            boxShadow: 'var(--card-shadow)',
-            borderColor: 'var(--border)'
-          }}
-        >
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-      )}
     </div>
   );
 }

@@ -118,15 +118,6 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           </button>
 
           <button 
-            className="outline" 
-            onClick={toggleTheme}
-            title="Toggle Theme"
-            style={{ padding: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
-          >
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
-
-          <button 
             onClick={() => setResetKey(prev => prev + 1)}
             className="outline"
             style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--danger)', borderColor: 'var(--danger-border)' }}

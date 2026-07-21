@@ -12,20 +12,22 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       name: 'Behind a Wall',
       type: 'Opaque',
       view: 'No View',
-      icon: <EyeOff size={24} color="#ef4444" />,
+      icon: <EyeOff size={24} color="#dc2626" />,
       desc: 'The suspect is completely hidden behind the solid brick wall. No light passes through.',
       conclusion: 'Materials through which you cannot see at all are Opaque.',
       renderScene: () => (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#1e293b' }}>
-          {/* Brick Wall foreground blocking everything */}
+        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#64748b', overflow: 'hidden' }}>
+          {/* Brick Wall foreground */}
           <div style={{
             position: 'absolute', inset: 0, zIndex: 10,
-            background: 'linear-gradient(335deg, #7f1d1d 23px, transparent 23px), linear-gradient(155deg, #991b1b 23px, transparent 23px), linear-gradient(335deg, #7f1d1d 23px, transparent 23px), linear-gradient(155deg, #991b1b 23px, transparent 23px)',
+            background: 'linear-gradient(335deg, #b91c1c 23px, transparent 23px), linear-gradient(155deg, #dc2626 23px, transparent 23px), linear-gradient(335deg, #b91c1c 23px, transparent 23px), linear-gradient(155deg, #dc2626 23px, transparent 23px)',
             backgroundSize: '58px 58px',
-            backgroundColor: '#450a0a',
+            backgroundColor: '#991b1b',
             backgroundPosition: '0px 2px, 4px 35px, 29px 31px, 34px 6px',
-            boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8)'
+            boxShadow: 'inset 0 0 20px rgba(0,0,0,0.3)'
           }} />
+          {/* Grass at bottom */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30px', background: '#22c55e', zIndex: 11, borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }} />
         </div>
       )
     },
@@ -34,24 +36,25 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       name: 'Frosted Glass Door',
       type: 'Translucent',
       view: 'Blurry View',
-      icon: <ShieldAlert size={24} color="#eab308" />,
+      icon: <ShieldAlert size={24} color="#ca8a04" />,
       desc: 'You can see a blurry silhouette of the suspect. Some light passes through, but not enough for a clear image.',
       conclusion: 'Materials through which objects can be seen, but not clearly, are Translucent.',
       renderScene: () => (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#fffbeb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {/* Room Background */}
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, #fef3c7 0%, #d97706 100%)' }} />
+          <div style={{ position: 'absolute', inset: 0, background: '#e2e8f0' }} />
           {/* Suspect Silhouette */}
-          <User size={120} color="#1c1917" style={{ zIndex: 1 }} />
+          <User size={140} color="#64748b" style={{ zIndex: 1 }} />
           {/* Frosted Glass overlay */}
           <div style={{
-            position: 'absolute', inset: 0, zIndex: 10,
-            backdropFilter: 'blur(12px)',
-            background: 'rgba(255, 255, 255, 0.4)',
-            border: '8px solid #94a3b8',
-            boxShadow: 'inset 0 0 20px rgba(255,255,255,0.5)'
+            position: 'absolute', inset: 15, zIndex: 10,
+            backdropFilter: 'blur(10px)',
+            background: 'rgba(255, 255, 255, 0.7)',
+            border: '12px solid #94a3b8',
+            borderRadius: '4px',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
           }} />
-          <div style={{ position: 'absolute', right: '15px', top: '50%', width: '10px', height: '40px', background: '#cbd5e1', borderRadius: '4px', zIndex: 11 }} />
+          <div style={{ position: 'absolute', right: '35px', top: '50%', width: '8px', height: '50px', background: '#cbd5e1', borderRadius: '4px', zIndex: 11 }} />
         </div>
       )
     },
@@ -60,24 +63,29 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       name: 'Big Tree',
       type: 'Opaque',
       view: 'No View',
-      icon: <EyeOff size={24} color="#ef4444" />,
+      icon: <EyeOff size={24} color="#dc2626" />,
       desc: 'The suspect is hiding behind a thick wooden tree trunk. Wood blocks all light from passing through.',
       conclusion: 'Wood is an Opaque material.',
       renderScene: () => (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#020617', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden' }}>
-          {/* Night Outdoor Background */}
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, #0f172a, #064e3b)' }} />
+        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#e0f2fe', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden' }}>
+          {/* Sky and clouds */}
+          <div style={{ position: 'absolute', top: '10%', left: '20%', width: '60px', height: '20px', background: 'white', borderRadius: '20px', filter: 'opacity(0.8)' }} />
+          <div style={{ position: 'absolute', top: '15%', right: '15%', width: '80px', height: '25px', background: 'white', borderRadius: '20px', filter: 'opacity(0.8)' }} />
+          {/* Hills */}
+          <div style={{ position: 'absolute', bottom: '20px', left: '-10%', right: '-10%', height: '100px', background: '#86efac', borderRadius: '50% 50% 0 0' }} />
+          <div style={{ position: 'absolute', bottom: '0', left: 0, right: 0, height: '40px', background: '#4ade80' }} />
+          
           {/* Suspect Silhouette */}
-          <User size={120} color="#000000" style={{ zIndex: 1, marginBottom: '20px' }} />
-          {/* Tree Trunk overlay */}
+          <User size={120} color="#1e293b" style={{ zIndex: 2, marginBottom: '30px' }} />
+          
+          {/* Tree Trunk */}
           <div style={{
-            position: 'absolute', bottom: 0, width: '140px', height: '100%', zIndex: 10,
-            background: 'linear-gradient(to right, #451a03, #78350f, #451a03)',
-            borderTopLeftRadius: '20px', borderTopRightRadius: '20px',
-            boxShadow: '0 0 30px rgba(0,0,0,0.8)'
+            position: 'absolute', bottom: 0, width: '120px', height: '80%', zIndex: 10,
+            background: 'linear-gradient(to right, #78350f, #b45309, #78350f)'
           }} />
           {/* Leaves */}
-          <div style={{ position: 'absolute', top: '-20px', width: '200px', height: '100px', background: '#064e3b', borderRadius: '50%', zIndex: 11, filter: 'blur(5px)' }} />
+          <div style={{ position: 'absolute', top: '-10px', width: '220px', height: '140px', background: '#15803d', borderRadius: '50%', zIndex: 11, boxShadow: 'inset -10px -10px 20px rgba(0,0,0,0.2)' }} />
+          <div style={{ position: 'absolute', top: '30px', left: '10%', width: '120px', height: '100px', background: '#16a34a', borderRadius: '50%', zIndex: 11 }} />
         </div>
       )
     },
@@ -86,25 +94,26 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       name: 'Clear Glass Window',
       type: 'Transparent',
       view: 'Clear View',
-      icon: <Eye size={24} color="#22c55e" />,
+      icon: <Eye size={24} color="#16a34a" />,
       desc: 'You have a perfect view of the suspect through the window. Light passes through completely.',
       conclusion: 'Materials through which things can be seen clearly are Transparent.',
       renderScene: () => (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#fffbeb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#fffbeb', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden' }}>
           {/* Room Background */}
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, #fef08a 0%, #ca8a04 100%)' }} />
-          {/* Suspect Silhouette */}
-          <User size={120} color="#1c1917" style={{ zIndex: 1 }} />
+          <div style={{ position: 'absolute', inset: 0, background: '#fef3c7' }} />
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30%', background: '#fde68a' }} /> {/* Floor */}
+          {/* Suspect */}
+          <User size={130} color="#0f172a" style={{ zIndex: 1, marginBottom: '20px' }} />
           {/* Clear Glass overlay (Frame only) */}
           <div style={{
-            position: 'absolute', inset: 0, zIndex: 10,
+            position: 'absolute', inset: 15, zIndex: 10,
             background: 'rgba(255, 255, 255, 0.1)',
-            border: '12px solid #334155',
-            boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)'
+            border: '14px solid #ffffff',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
           }} />
           {/* Window mullions */}
-          <div style={{ position: 'absolute', top: 0, bottom: 0, left: '50%', width: '8px', background: '#334155', zIndex: 11 }} />
-          <div style={{ position: 'absolute', left: 0, right: 0, top: '50%', height: '8px', background: '#334155', zIndex: 11 }} />
+          <div style={{ position: 'absolute', top: 15, bottom: 15, left: '50%', width: '12px', background: '#ffffff', zIndex: 11 }} />
+          <div style={{ position: 'absolute', left: 15, right: 15, top: '50%', height: '12px', background: '#ffffff', zIndex: 11 }} />
         </div>
       )
     }
@@ -121,66 +130,83 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
   const obsCount = Object.keys(observations).length;
   const isComplete = obsCount === spots.length;
 
+  useEffect(() => {
+    if (isComplete) {
+      onComplete();
+    }
+  }, [isComplete, onComplete]);
+
   return (
     <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', color: '#1e293b' }}>
       
       {/* Header */}
-      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <Search size={24} color="#3b82f6" /> Phase 1: Surveillance Simulator
+            <Search size={24} color="#4f46e5" /> Phase 1: Surveillance Simulator
           </h3>
           <p style={{ margin: 0, fontSize: '0.95rem', color: '#475569' }}>
             Chief Blake is running a surveillance simulation! Click on each location to see if the suspect is visible through the material.
           </p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Observe carefully, detective!</div>
-            <div style={{ fontSize: '0.85rem', color: '#64748b' }}>Not all materials reveal the truth.</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 15px', position: 'relative' }}>
+            <div style={{ fontSize: '0.85rem', color: '#334155', fontWeight: '500' }}>Observe carefully, detective!</div>
+            <div style={{ fontSize: '0.85rem', color: '#334155', fontWeight: '500' }}>Not all materials reveal the truth.</div>
+            {/* Speech bubble arrow */}
+            <div style={{ position: 'absolute', right: '-8px', top: '20px', width: '16px', height: '16px', background: '#f8fafc', borderRight: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', transform: 'rotate(-45deg)' }} />
           </div>
-          <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+          <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '70px', height: '70px', objectFit: 'contain' }} />
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '1.5rem', flex: 1, minHeight: 0 }}>
+      <div style={{ display: 'flex', gap: '1.25rem', flex: 1, minHeight: 0 }}>
         
-        {/* Main Surveillance Scene (2x2 Grid) */}
-        <div style={{ flex: 2, background: '#e2e8f0', borderRadius: '16px', border: '4px solid #cbd5e1', overflow: 'hidden', display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', position: 'relative' }}>
+        {/* Main Surveillance Scene (2x2 Grid of CSS Cards) */}
+        <div style={{ flex: 1.8, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '12px' }}>
           
-          {spots.map((spot, index) => (
-            <motion.div
-              key={spot.id}
-              layoutId={`spot-${spot.id}`}
-              onClick={() => handleSpotClick(spot)}
-              style={{
-                position: 'relative',
-                borderRight: index % 2 === 0 ? '4px solid #cbd5e1' : 'none',
-                borderBottom: index < 2 ? '4px solid #cbd5e1' : 'none',
-                cursor: 'pointer',
-                overflow: 'hidden'
-              }}
-              whileHover={{ scale: 1.02, zIndex: 5, boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' }}
-            >
-              {spot.renderScene()}
-              
-              {/* Overlay Label & Magnifying Glass */}
-              <div style={{ position: 'absolute', top: '15px', left: '15px', background: 'rgba(255, 255, 255, 0.9)', border: '1px solid #3b82f6', color: '#1e293b', padding: '6px 12px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', zIndex: 20 }}>
-                <div style={{ background: '#3b82f6', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>{index + 1}</div>
-                {spot.name}
-              </div>
-
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(4px)', border: '2px solid #3b82f6', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, pointerEvents: 'none', boxShadow: '0 0 15px rgba(59,130,246,0.3)' }}>
-                <Search size={30} color="#3b82f6" />
-              </div>
-
-              {observations[spot.id] && (
-                <div style={{ position: 'absolute', bottom: '15px', right: '15px', background: '#22c55e', color: 'white', padding: '4px 8px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold', zIndex: 20 }}>
-                  Observed
+          {spots.map((spot, index) => {
+            const isSelected = selectedSpot?.id === spot.id;
+            
+            return (
+              <motion.div
+                key={spot.id}
+                onClick={() => handleSpotClick(spot)}
+                style={{
+                  position: 'relative',
+                  borderRadius: '16px',
+                  border: isSelected ? '4px solid #4f46e5' : '2px solid #cbd5e1',
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  background: 'white',
+                  boxShadow: isSelected ? '0 0 20px rgba(79, 70, 229, 0.3)' : '0 4px 6px rgba(0,0,0,0.05)',
+                  transition: 'border 0.2s, box-shadow 0.2s'
+                }}
+                whileHover={{ scale: 1.02, zIndex: 5, boxShadow: '0 10px 25px rgba(59, 130, 246, 0.2)' }}
+              >
+                {spot.renderScene()}
+                
+                {/* Overlay Label */}
+                <div style={{ position: 'absolute', top: '15px', left: '15px', background: '#1e3a8a', color: 'white', padding: '6px 12px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', zIndex: 20, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
+                  <div style={{ background: '#3b82f6', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px' }}>{index + 1}</div>
+                  {spot.name}
                 </div>
-              )}
-            </motion.div>
-          ))}
+
+                {/* Glowing Magnifying Glass (hidden when selected so they can see the view clearly) */}
+                {!isSelected && (
+                  <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(6px)', border: '2px solid rgba(255,255,255,0.8)', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, pointerEvents: 'none', boxShadow: '0 0 20px rgba(255,255,255,0.6)' }}>
+                    <Search size={28} color="#ffffff" style={{ filter: 'drop-shadow(0 0 5px rgba(0,0,0,0.3))' }} />
+                  </div>
+                )}
+
+                {observations[spot.id] && (
+                  <div style={{ position: 'absolute', bottom: '15px', right: '15px', background: '#16a34a', color: 'white', padding: '4px 10px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold', zIndex: 20 }}>
+                    Observed
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
           
         </div>
 
@@ -188,8 +214,8 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           
           <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <h4 style={{ margin: '0 0 1rem 0', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.75rem' }}>
-              <Camera size={20} color="#64748b" /> Observation Console
+            <h4 style={{ margin: '0 0 1rem 0', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem', fontSize: '1.1rem' }}>
+              <Camera size={20} color="#4f46e5" /> Observation Console
             </h4>
             
             <AnimatePresence mode="wait">
@@ -201,14 +227,14 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                   exit={{ opacity: 0, y: -10 }}
                   style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}
                 >
-                  <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <div style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Target Location</div>
-                    <div style={{ fontSize: '1.2rem', color: '#2563eb', fontWeight: 'bold' }}>{selectedSpot.name}</div>
+                    <div style={{ fontSize: '1.2rem', color: '#1e3a8a', fontWeight: 'bold' }}>{selectedSpot.name}</div>
                   </div>
 
                   <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <div style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Visibility</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', fontWeight: 'bold', color: '#1e293b' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', fontWeight: 'bold', color: '#0f172a' }}>
                       {selectedSpot.icon} {selectedSpot.view}
                     </div>
                     <div style={{ color: '#475569', fontSize: '0.95rem', lineHeight: '1.5' }}>
@@ -216,36 +242,38 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                     </div>
                   </div>
 
-                  <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '1rem', border: '1px solid #bfdbfe', marginTop: 'auto' }}>
-                    <div style={{ color: '#2563eb', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
-                    <div style={{ color: '#1e3a8a', fontSize: '1rem', lineHeight: '1.5', fontWeight: 'bold' }}>
+                  <div style={{ background: '#f0fdfa', borderRadius: '12px', padding: '1rem', border: '1px solid #ccfbf1', marginTop: 'auto' }}>
+                    <div style={{ color: '#0d9488', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
+                    <div style={{ color: '#115e59', fontSize: '1rem', lineHeight: '1.5', fontWeight: 'bold' }}>
                       {selectedSpot.conclusion}
                     </div>
                   </div>
                 </motion.div>
               ) : (
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: '#94a3b8', textAlign: 'center' }}>
-                  <Camera size={48} opacity={0.3} />
-                  <span>Select a location on the left to begin observation.</span>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: '#94a3b8', textAlign: 'center', border: '2px dashed #e2e8f0', borderRadius: '12px', padding: '2rem' }}>
+                  <div style={{ background: '#f1f5f9', padding: '15px', borderRadius: '50%' }}>
+                    <Camera size={40} color="#cbd5e1" />
+                  </div>
+                  <span style={{ fontSize: '0.95rem' }}>Select a location on the left to begin observation.</span>
                 </div>
               )}
             </AnimatePresence>
           </div>
 
-          <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.25rem' }}>
-            <div style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 'bold', marginBottom: '0.75rem' }}>What does this mean?</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Eye size={18} color="#16a34a" />
-                <span style={{ color: '#334155', fontSize: '0.9rem' }}><strong>Clear View:</strong> Suspect is visible clearly.</span>
+          <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem' }}>
+            <div style={{ color: '#1e3a8a', fontSize: '1rem', fontWeight: 'bold', marginBottom: '1rem' }}>What does this mean?</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ background: '#f0fdf4', padding: '6px', borderRadius: '50%', color: '#16a34a' }}><Eye size={18} /></div>
+                <span style={{ color: '#334155', fontSize: '0.95rem' }}><strong style={{ color: '#16a34a' }}>Clear View:</strong> Suspect is visible clearly.</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <ShieldAlert size={18} color="#d97706" />
-                <span style={{ color: '#334155', fontSize: '0.9rem' }}><strong>Blurry View:</strong> Suspect is visible but not clearly.</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ background: '#fefce8', padding: '6px', borderRadius: '50%', color: '#ca8a04' }}><ShieldAlert size={18} /></div>
+                <span style={{ color: '#334155', fontSize: '0.95rem' }}><strong style={{ color: '#ca8a04' }}>Blurry View:</strong> Suspect is visible but not clearly.</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <EyeOff size={18} color="#dc2626" />
-                <span style={{ color: '#334155', fontSize: '0.9rem' }}><strong>No View:</strong> Suspect is not visible at all.</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ background: '#fef2f2', padding: '6px', borderRadius: '50%', color: '#dc2626' }}><EyeOff size={18} /></div>
+                <span style={{ color: '#334155', fontSize: '0.95rem' }}><strong style={{ color: '#dc2626' }}>No View:</strong> Suspect is not visible at all.</span>
               </div>
             </div>
           </div>
@@ -255,56 +283,20 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       </div>
 
       {/* Footer Progress */}
-      <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#d97706' }}>
-          <Target size={20} />
-          <span style={{ color: '#475569', fontSize: '0.95rem' }}>Click on each location (1-4) to check if the suspect is visible through the material.</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ fontWeight: 'bold', color: '#1e293b' }}>
-            Observations: <span style={{ color: isComplete ? '#16a34a' : '#2563eb' }}>{obsCount} / 4</span>
+      <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#d97706' }}>
+          <div style={{ background: '#fefce8', padding: '8px', borderRadius: '50%' }}>
+            <Target size={20} />
           </div>
-          {isComplete && (
-            <button onClick={onComplete} style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-              Proceed to Phase 2
-            </button>
-          )}
+          <span style={{ color: '#475569', fontSize: '1rem' }}>Click on each location (1-4) to check if the suspect is visible through the material.</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={{ fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px', background: '#f8fafc', padding: '8px 16px', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
+            <img src="/images/chief_detective_blake.png" alt="Hat" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
+            Observations: <span style={{ color: isComplete ? '#16a34a' : '#1e3a8a', fontSize: '1.1rem' }}>{obsCount} / 4</span>
+          </div>
         </div>
       </div>
-
-      {/* Zoomed Overlay */}
-      <AnimatePresence>
-        {selectedSpot && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ position: 'absolute', inset: 0, zIndex: 100, background: 'rgba(2, 6, 23, 0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}
-            onClick={() => setSelectedSpot(null)}
-          >
-            <motion.div
-              layoutId={`spot-${selectedSpot.id}`}
-              style={{ width: '80%', height: '80%', borderRadius: '24px', overflow: 'hidden', position: 'relative', border: '4px solid #3b82f6', boxShadow: '0 0 50px rgba(59, 130, 246, 0.5)' }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {selectedSpot.renderScene()}
-              
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)', padding: '40px 20px 20px', zIndex: 50, color: 'white', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.5rem', fontWeight: 'bold' }}>
-                  {selectedSpot.icon} {selectedSpot.view}
-                </div>
-                <div style={{ fontSize: '1.1rem', color: '#cbd5e1' }}>{selectedSpot.desc}</div>
-                <button 
-                  onClick={() => setSelectedSpot(null)}
-                  style={{ alignSelf: 'flex-start', background: '#3b82f6', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', fontWeight: 'bold', marginTop: '10px', cursor: 'pointer' }}
-                >
-                  Close Observation
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
     </div>
   );

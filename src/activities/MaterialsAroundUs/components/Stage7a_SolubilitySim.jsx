@@ -1,0 +1,282 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Beaker, Search, Droplets, Target, Camera } from 'lucide-react';
+
+export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
+  const [selectedSubstance, setSelectedSubstance] = useState(null);
+  const [stirState, setStirState] = useState('idle'); // idle, stirring, resolved
+  const [observations, setObservations] = useState({});
+
+  const substances = [
+    { 
+      id: 'sugar', name: 'Sugar', type: 'Soluble', icon: '🧂',
+      desc: 'Sugar completely disappears when stirred into water.',
+      conclusion: 'Materials that dissolve in water are called Soluble.',
+      waterColor: '#38bdf8', turbidity: 0, solidVisible: false
+    },
+    { 
+      id: 'salt', name: 'Salt', type: 'Soluble', icon: '🧂',
+      desc: 'Salt completely disappears when stirred into water.',
+      conclusion: 'Materials that dissolve in water are called Soluble.',
+      waterColor: '#38bdf8', turbidity: 0, solidVisible: false
+    },
+    { 
+      id: 'chalk', name: 'Chalk Powder', type: 'Insoluble', icon: '🌫️',
+      desc: 'The water turns cloudy and chalk powder does not disappear.',
+      conclusion: 'Materials that do not dissolve in water are Insoluble.',
+      waterColor: '#e2e8f0', turbidity: 0.8, solidVisible: true, solidColor: '#f8fafc', settle: false
+    },
+    { 
+      id: 'sand', name: 'Sand', type: 'Insoluble', icon: '🏜️',
+      desc: 'Sand settles down at the bottom of the beaker.',
+      conclusion: 'Sand is Insoluble in water.',
+      waterColor: '#38bdf8', turbidity: 0.2, solidVisible: true, solidColor: '#b45309', settle: true
+    },
+    { 
+      id: 'sawdust', name: 'Sawdust', type: 'Insoluble', icon: '🪵',
+      desc: 'Sawdust floats on the surface of the water.',
+      conclusion: 'Sawdust is Insoluble in water.',
+      waterColor: '#38bdf8', turbidity: 0.1, solidVisible: true, solidColor: '#d97706', float: true
+    }
+  ];
+
+  const handleSelect = (sub) => {
+    setSelectedSubstance(sub);
+    setStirState('idle');
+  };
+
+  const handleStir = () => {
+    if (!selectedSubstance) return;
+    setStirState('stirring');
+
+    setTimeout(() => {
+      setStirState('resolved');
+      if (!observations[selectedSubstance.id]) {
+        setObservations(prev => ({ ...prev, [selectedSubstance.id]: true }));
+        addXp(15);
+      }
+    }, 1500);
+  };
+
+  const obsCount = Object.keys(observations).length;
+  const isComplete = obsCount === substances.length;
+
+  useEffect(() => {
+    if (isComplete) {
+      onComplete();
+    }
+  }, [isComplete, onComplete]);
+
+  return (
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', color: '#1e293b' }}>
+      
+      {/* Header */}
+      <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <Search size={24} color="#4f46e5" /> Phase 1: Solubility Simulator
+          </h3>
+          <p style={{ margin: 0, fontSize: '0.95rem', color: '#475569' }}>
+            Activity 6.7: Let us explore how different materials behave when we mix them in water.
+          </p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 15px', position: 'relative' }}>
+            <div style={{ fontSize: '0.85rem', color: '#334155', fontWeight: '500' }}>Does everything dissolve?</div>
+            <div style={{ fontSize: '0.85rem', color: '#334155', fontWeight: '500' }}>Add to water, then stir!</div>
+            <div style={{ position: 'absolute', right: '-8px', top: '20px', width: '16px', height: '16px', background: '#f8fafc', borderRight: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', transform: 'rotate(-45deg)' }} />
+          </div>
+          <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '70px', height: '70px', objectFit: 'contain' }} />
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '1.25rem', flex: 1, minHeight: 0 }}>
+        
+        {/* Main Lab Area */}
+        <div style={{ flex: 1.8, background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem', marginBottom: '1rem' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: '#1e3a8a' }}>Materials to Test</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }}>
+              {substances.map((sub) => {
+                const isSelected = selectedSubstance?.id === sub.id;
+                const isObserved = observations[sub.id];
+                return (
+                  <button
+                    key={sub.id}
+                    onClick={() => handleSelect(sub)}
+                    style={{
+                      background: isSelected ? '#eff6ff' : 'white',
+                      border: `1px solid ${isSelected ? '#3b82f6' : '#cbd5e1'}`,
+                      color: isSelected ? '#1d4ed8' : '#334155',
+                      padding: '0.6rem 1rem',
+                      borderRadius: '8px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s',
+                      boxShadow: isSelected ? '0 2px 4px rgba(59, 130, 246, 0.1)' : 'none'
+                    }}
+                  >
+                    <span>{sub.icon}</span> {sub.name} {isObserved && <span style={{ color: '#16a34a' }}>✓</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            {/* The Beaker */}
+            <div style={{ position: 'relative', width: '200px', height: '240px', display: 'flex', justifyContent: 'center' }}>
+              
+              {/* Back of glass */}
+              <div style={{ position: 'absolute', bottom: 0, width: '160px', height: '200px', background: 'rgba(255,255,255,0.8)', border: '2px solid #cbd5e1', borderTop: 'none', borderRadius: '0 0 16px 16px' }} />
+              
+              {/* Liquid inside */}
+              <div style={{ 
+                position: 'absolute', bottom: '2px', width: '156px', height: '140px', 
+                background: stirState === 'resolved' ? selectedSubstance?.waterColor || '#38bdf8' : '#38bdf8', 
+                opacity: stirState === 'resolved' && selectedSubstance?.turbidity ? 1 : 0.4,
+                borderRadius: '0 0 14px 14px',
+                transition: 'all 1s ease-in-out'
+              }}>
+                {/* Floating solid */}
+                {stirState === 'resolved' && selectedSubstance?.solidVisible && selectedSubstance?.float && (
+                  <div style={{ position: 'absolute', top: 0, left: '10px', right: '10px', height: '12px', background: selectedSubstance.solidColor, opacity: 0.8, borderRadius: '4px' }} />
+                )}
+                {/* Settled solid */}
+                {stirState === 'resolved' && selectedSubstance?.solidVisible && selectedSubstance?.settle && (
+                  <div style={{ position: 'absolute', bottom: 0, left: '10px', right: '10px', height: '15px', background: selectedSubstance.solidColor, opacity: 0.9, borderRadius: '0 0 12px 12px' }} />
+                )}
+                {/* Turbid solid particles */}
+                {stirState === 'resolved' && selectedSubstance?.solidVisible && !selectedSubstance?.float && !selectedSubstance?.settle && (
+                  <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle, ${selectedSubstance.solidColor} 2px, transparent 2px)`, backgroundSize: '10px 10px', opacity: 0.4 }} />
+                )}
+                
+                {/* Unstirred solid */}
+                {stirState === 'idle' && selectedSubstance && (
+                  <div style={{ position: 'absolute', bottom: 0, left: '50px', width: '56px', height: '15px', background: '#94a3b8', borderRadius: '50% 50% 0 0' }} />
+                )}
+              </div>
+
+              {/* Spoon */}
+              <AnimatePresence>
+                {stirState === 'stirring' && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ 
+                      opacity: 1, 
+                      rotate: [-10, 10, -10],
+                      x: [-10, 10, -10]
+                    }}
+                    transition={{ repeat: Infinity, duration: 0.6 }}
+                    style={{ position: 'absolute', top: '10px', width: '8px', height: '200px', background: 'linear-gradient(to right, #cbd5e1, #94a3b8)', borderRadius: '4px', transformOrigin: 'top center' }}
+                  >
+                    <div style={{ position: 'absolute', bottom: 0, left: '-8px', width: '24px', height: '30px', background: '#94a3b8', borderRadius: '50% 50% 12px 12px' }} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Front of glass reflection */}
+              <div style={{ position: 'absolute', bottom: 0, width: '160px', height: '200px', borderLeft: '4px solid rgba(255,255,255,0.7)', borderRadius: '0 0 0 16px', pointerEvents: 'none' }} />
+            </div>
+
+            {selectedSubstance && stirState === 'idle' && (
+              <button 
+                onClick={handleStir}
+                style={{ marginTop: '20px', background: '#4f46e5', color: 'white', border: 'none', padding: '10px 24px', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 6px rgba(79, 70, 229, 0.2)' }}
+              >
+                Stir Well
+              </button>
+            )}
+
+            {!selectedSubstance && (
+              <div style={{ marginTop: '20px', color: '#64748b', fontSize: '0.95rem' }}>
+                Select a material to add to the water.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Observation Console */}
+        <div style={{ flex: 1, background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+          <h4 style={{ margin: '0 0 1rem 0', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem', fontSize: '1.1rem' }}>
+            <Camera size={20} color="#4f46e5" /> Observation Console
+          </h4>
+          
+          <AnimatePresence mode="wait">
+            {selectedSubstance && (stirState === 'resolved' || stirState === 'idle') ? (
+              <motion.div
+                key={selectedSubstance.id + stirState}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Material</div>
+                  <div style={{ fontSize: '1.2rem', color: '#1e3a8a', fontWeight: 'bold' }}>{selectedSubstance.name}</div>
+                </div>
+
+                {stirState === 'idle' ? (
+                  <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px dashed #cbd5e1' }}>
+                    <div style={{ color: '#475569', fontSize: '0.95rem' }}>Added to water. Click 'Stir Well' to observe what happens.</div>
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      <div style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Observation</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', fontWeight: 'bold', color: selectedSubstance.type === 'Soluble' ? '#16a34a' : '#dc2626' }}>
+                        {selectedSubstance.type === 'Soluble' ? 'Disappears in water' : 'Does not disappear'}
+                      </div>
+                      <div style={{ color: '#475569', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                        {selectedSubstance.desc}
+                      </div>
+                    </div>
+
+                    <div style={{ background: selectedSubstance.type === 'Soluble' ? '#f0fdf4' : '#fef2f2', borderRadius: '12px', padding: '1rem', border: `1px solid ${selectedSubstance.type === 'Soluble' ? '#bbf7d0' : '#fecaca'}`, marginTop: 'auto' }}>
+                      <div style={{ color: selectedSubstance.type === 'Soluble' ? '#0d9488' : '#b91c1c', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Conclusion</div>
+                      <div style={{ color: selectedSubstance.type === 'Soluble' ? '#115e59' : '#991b1b', fontSize: '1rem', lineHeight: '1.5', fontWeight: 'bold' }}>
+                        {selectedSubstance.conclusion}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </motion.div>
+            ) : selectedSubstance && stirState === 'stirring' ? (
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#4f46e5', fontWeight: 'bold' }}>
+                Stirring...
+              </div>
+            ) : (
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: '#94a3b8', textAlign: 'center', border: '2px dashed #e2e8f0', borderRadius: '12px', padding: '2rem' }}>
+                <div style={{ background: '#f1f5f9', padding: '15px', borderRadius: '50%' }}>
+                  <Droplets size={40} color="#cbd5e1" />
+                </div>
+                <span style={{ fontSize: '0.95rem' }}>Select a material and stir to observe its solubility.</span>
+              </div>
+            )}
+          </AnimatePresence>
+        </div>
+
+      </div>
+
+      {/* Footer Progress */}
+      <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#d97706' }}>
+          <div style={{ background: '#fefce8', padding: '8px', borderRadius: '50%' }}>
+            <Target size={20} />
+          </div>
+          <span style={{ color: '#475569', fontSize: '1rem' }}>Test all 5 materials to see if they are soluble or insoluble.</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={{ fontWeight: 'bold', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px', background: '#f8fafc', padding: '8px 16px', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
+            <img src="/images/chief_detective_blake.png" alt="Hat" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
+            Tested: <span style={{ color: isComplete ? '#16a34a' : '#1e3a8a', fontSize: '1.1rem' }}>{obsCount} / 5</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  );
+}
