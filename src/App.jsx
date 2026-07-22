@@ -65,6 +65,7 @@ const Activity4_7 = lazy(() => import('./science/class6/chapter4/Activity4_7'));
 const FunWithMagnets = lazy(() => import('./science/class6/chapter4/FunWithMagnets'));
 const Chapter4Flow = lazy(() => import('./science/class6/chapter4/Chapter4Flow'));
 const Chapter5Flow = lazy(() => import('./science/class6/chapter5/Chapter5Flow'));
+const Chapter4Quiz = lazy(() => import('./science/class6/chapter4/Chapter4Flow/Chapter4Quiz'));
 const IntroMagnets = lazy(() => import('./science/class6/chapter4/IntroMagnets'));
 const AppreciatingBiodiversityActivity = lazy(() => import('./science/class6/chapter2/AppreciatingBiodiversityActivity'));
 const LeafVenationLab = lazy(() => import('./science/class6/chapter2/LeafVenationLab'));
@@ -2972,6 +2973,18 @@ export default function App() {
             <Activity4_7 onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow')} />
           ) : activeActivity === 'sci6-ch4-sec45-fun-with-magnets' ? (
             <FunWithMagnets onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow')} />
+          ) : activeActivity === 'chapter_4_quiz' ? (
+            <div style={{ height: '100vh', width: '100vw', overflowY: 'auto', background: 'var(--bg)' }}>
+              <button 
+                onClick={() => navigateTo('class6', 'chapter4_flow')} 
+                style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', zIndex: 10, background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.5rem 1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}
+              >
+                Back to Flow
+              </button>
+              <div style={{ paddingTop: '5rem' }}>
+                <Chapter4Quiz onComplete={() => navigateTo('class6', 'chapter4_flow')} />
+              </div>
+            </div>
           ) : activeActivity === 'linear_motion' ? (
             <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5_flow')} />
           ) : activeActivity === 'circular_motion' ? (

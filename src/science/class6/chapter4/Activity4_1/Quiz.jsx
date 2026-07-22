@@ -74,6 +74,7 @@ export default function Quiz({ onComplete, onBack }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
+  const [quizFinished, setQuizFinished] = useState(false);
 
   const handleOptionSelect = (index) => {
     if (showResult) return;
@@ -91,12 +92,41 @@ export default function Quiz({ onComplete, onBack }) {
       setSelectedOption(null);
       setShowResult(false);
     } else {
-      if (onComplete) onComplete(score);
+      setQuizFinished(true);
     }
   };
 
   const currentQ = quizData[currentQuestion];
   const isFinished = currentQuestion >= quizData.length - 1 && showResult;
+
+  if (quizFinished) {
+    return (
+      <div style={{ maxWidth: '100%', margin: '0 auto', padding: '1rem' }}>
+        <div className="glass-panel" style={{ background: 'var(--surface)', padding: '3rem', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', textAlign: 'center' }}>
+          <h2 style={{ color: 'var(--accent)', marginBottom: '1rem' }}>Quiz Completed!</h2>
+          <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>You scored {score} out of {quizData.length}</p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+            <button
+              onClick={() => { if (onComplete) onComplete(score); }}
+              style={{
+                padding: '0.75rem 2rem',
+                background: 'var(--accent)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+              }}
+            >
+              Finish Activity
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ maxWidth: '100%', margin: '0 auto', padding: '2rem' }}>
