@@ -293,7 +293,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               transition={{ delay: 0.4 }}
             >
               <div className="speech-speaker">CHIEF BLAKE</div>
-              <p style={{ margin: 0, fontSize: '20px', color: '#1e293b', lineHeight: '1.6' }}>
+              <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: '#1e293b', lineHeight: '1.6' }}>
                 {data.dialogue || "Good morning, Detective. Headquarters has received an unusual science case. Study your investigation brief carefully before proceeding!"}
               </p>
             </motion.div>

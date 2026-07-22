@@ -140,8 +140,8 @@ export const chapterFlow = [
   },
   // 10: Activities
   // 10: Activities
-  { type: 'activity', id: 'stage4_1', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 1: Observation Notebook', component: Stage4a_Appearance_Observe, handbook: Handbook_Appearance, layout: '450px 1fr' },
-  { type: 'activity', id: 'stage4_2', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 2: Group by Appearance', component: Stage4b_Appearance_Group, handbook: Handbook_Appearance, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage4_1', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 1: Observation Notebook', component: Stage4a_Appearance_Observe, handbook: Handbook_Appearance, layout: '3fr 7fr' },
+  { type: 'activity', id: 'stage4_2', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 2: Group by Appearance', component: Stage4b_Appearance_Group, handbook: Handbook_Appearance, layout: '3fr 7fr' },
   { type: 'activity', id: 'stage4_3', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 3: Lustre Testing', component: Stage4_LustreHardness, props: { mode: 'lustre_only' }, handbook: Handbook_Appearance },
   
   // Checkpoint for 6.3.1
@@ -190,8 +190,8 @@ export const chapterFlow = [
     rewardXP: 100
   },
   
-  { type: 'activity', id: 'stage4_4', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 1: Observe Hardness', component: Stage4c_Hardness_Observe, handbook: Handbook_Hardness, layout: '450px 1fr' },
-  { type: 'activity', id: 'stage4_5', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 2: Material Identification', component: Stage4d_MaterialIdentification, handbook: Handbook_Hardness, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage4_4', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 1: Observe Hardness', component: Stage4c_Hardness_Observe, handbook: Handbook_Hardness, layout: '3fr 7fr' },
+  { type: 'activity', id: 'stage4_5', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 2: Material Identification', component: Stage4d_MaterialIdentification, handbook: Handbook_Hardness, layout: '3fr 7fr' },
   
   // Checkpoint for 6.3.2
   {
@@ -239,8 +239,8 @@ export const chapterFlow = [
     rewardXP: 100
   },
   
-  { type: 'activity', id: 'stage6_a', title: 'Stage 6.3.3: Transparency', subtitle: 'Phase 1: Surveillance Simulator', component: Stage6a_Surveillance, handbook: Handbook_Transparency, layout: '450px 1fr' },
-  { type: 'activity', id: 'stage6_b', title: 'Stage 6.3.3: Transparency', subtitle: 'Phase 2: Activity 6.6', component: Stage6b_Classify, handbook: Handbook_Transparency, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage6_a', title: 'Stage 6.3.3: Transparency', subtitle: 'Phase 1: Surveillance Simulator', component: Stage6a_Surveillance, handbook: Handbook_Transparency, layout: '3fr 7fr' },
+  { type: 'activity', id: 'stage6_b', title: 'Stage 6.3.3: Transparency', subtitle: 'Phase 2: Activity 6.6', component: Stage6b_Classify, handbook: Handbook_Transparency, layout: '3fr 7fr' },
   
   // Checkpoint for 6.3.3
   {
@@ -288,8 +288,8 @@ export const chapterFlow = [
     rewardXP: 100
   },
   
-  { type: 'activity', id: 'stage7_a', title: 'Stage 6.3.4: Solubility', subtitle: 'Phase 1: Solubility Simulator', component: Stage7a_SolubilitySim, handbook: Handbook_Solubility, layout: '450px 1fr' },
-  { type: 'activity', id: 'stage7_b', title: 'Stage 6.3.4: Solubility', subtitle: 'Phase 2: Classification', component: Stage7b_SolubilityClassify, handbook: Handbook_Solubility, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage7_a', title: 'Stage 6.3.4: Solubility', subtitle: 'Phase 1: Solubility Simulator', component: Stage7a_SolubilitySim, handbook: Handbook_Solubility, layout: '3fr 7fr' },
+  { type: 'activity', id: 'stage7_b', title: 'Stage 6.3.4: Solubility', subtitle: 'Phase 2: Classification', component: Stage7b_SolubilityClassify, handbook: Handbook_Solubility, layout: '3fr 7fr' },
   
   // Checkpoint for 6.3.4
   {
@@ -336,7 +336,7 @@ export const chapterFlow = [
     rewardXP: 100
   },
   // Activities for Mass
-  { type: 'activity', id: 'stage8_a', title: 'Stage 6.3.5: Mass', subtitle: 'How heavy or light?', component: Stage8a_Mass, handbook: Handbook_Mass, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage8_a', title: 'Stage 6.3.5: Mass', subtitle: 'How heavy or light?', component: Stage8a_Mass, handbook: Handbook_Mass, layout: '3fr 7fr' },
   
   // Checkpoint for Mass
   {
@@ -383,8 +383,8 @@ export const chapterFlow = [
     rewardXP: 100
   },
   // Activities for Volume
-  { type: 'activity', id: 'stage8_b', title: 'Stage 6.3.6: Space and Volume', subtitle: 'Phase 1: Tumbler Experiment', component: Stage8b_Volume, handbook: Handbook_Volume, layout: '450px 1fr' },
-  { type: 'activity', id: 'stage8_c', title: 'Stage 6.3.6: Space and Volume', subtitle: 'Phase 2: Understanding Volume', component: Stage8c_VolumeConcept, handbook: Handbook_Volume, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage8_b', title: 'Stage 6.3.6: Space and Volume', subtitle: 'Phase 1: Tumbler Experiment', component: Stage8b_Volume, handbook: Handbook_Volume, layout: '3fr 7fr' },
+  { type: 'activity', id: 'stage8_c', title: 'Stage 6.3.6: Space and Volume', subtitle: 'Phase 2: Understanding Volume', component: Stage8c_VolumeConcept, handbook: Handbook_Volume, layout: '3fr 7fr' },
   
   // Checkpoint for Volume
   {
@@ -421,7 +421,7 @@ export const chapterFlow = [
   },
 
   // Barrier 4
-  { type: 'activity', id: 'stage9_a', title: 'Barrier 4: What is Matter?', subtitle: 'Mass & Volume', component: Stage9a_WhatIsMatter, handbook: Handbook_Matter, layout: '450px 1fr' },
+  { type: 'activity', id: 'stage9_a', title: 'Barrier 4: What is Matter?', subtitle: 'Mass & Volume', component: Stage9a_WhatIsMatter, handbook: Handbook_Matter, layout: '3fr 7fr' },
 
   // Barrier 4's Quiz
   {

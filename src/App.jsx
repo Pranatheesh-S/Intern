@@ -1091,32 +1091,18 @@ export default function App() {
                                 : "Includes Activity 11.1: Nature's treasures & resource conservation."}
                   </p>
 
-                  <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
-                    <button 
-                      onClick={() => {
-                        if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
-                        else if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
-                        else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
-                        else navigateTo('class6', `chapter${chapter.num}`);
-                      }}
-                      className="outline" 
-                      style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                    >
-                      <BookOpen size={14} /> Open Chapter
-                    </button>
-                    <button 
-                      onClick={() => {
-                        if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
-                        else if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
-                        else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
-                        else navigateTo('class6', `chapter${chapter.num}`);
-                      }}
-                      className="primary" 
-                      style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                    >
-                      Activity Page <ArrowRight size={14} />
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => {
+                      if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
+                      else if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
+                      else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
+                      else navigateTo('class6', `chapter${chapter.num}`);
+                    }}
+                    className="primary" 
+                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                  >
+                    Open Chapter <ArrowRight size={14} />
+                  </button>
                 </div>
               );
             }

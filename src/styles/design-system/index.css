@@ -1,0 +1,5 @@
+/* src/styles/design-system/index.css */
+@import './variables.css';
+@import './typography.css';
+@import './layout.css';
+@import './components.css';

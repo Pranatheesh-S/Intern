@@ -9,7 +9,7 @@ export default function Handbook_Transparency({ stageCompleted }) {
         height: '100%',
         background: '#ffffff', 
         borderRadius: '16px',
-        border: '12px solid #1b2a4a',
+        border: 'clamp(6px, 1.5vw, 18px) solid #1b2a4a',
         display: 'flex', flexDirection: 'column', 
         color: '#1e293b',
         fontFamily: 'Inter, system-ui, sans-serif',
@@ -25,7 +25,7 @@ export default function Handbook_Transparency({ stageCompleted }) {
               6.3.3 Transparency
             </h2>
           </div>
-          <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '45px', height: '45px', objectFit: 'contain' }} />
+          <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: 'clamp(31.499999999999996px, 4.5vw, 67.5px)', height: 'clamp(31.499999999999996px, 4.5vw, 67.5px)', objectFit: 'contain' }} />
         </div>
 
         <div style={{ fontSize: '0.9rem', color: '#475569', lineHeight: '1.5', marginBottom: '24px' }}>
@@ -70,14 +70,14 @@ export default function Handbook_Transparency({ stageCompleted }) {
       <div style={{ padding: '16px 24px', borderTop: '1px solid #f1f5f9', background: '#ffffff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button 
           disabled
-          style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: '#94a3b8', fontSize: '14px', fontWeight: 'bold' }}
+          style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: '#94a3b8', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           <span>←</span> Previous
         </button>
-        <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}>Page 1</div>
+        <div style={{ color: '#64748b', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>Page 1</div>
         <button 
           disabled
-          style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: '#94a3b8', fontSize: '14px', fontWeight: 'bold' }}
+          style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: '#94a3b8', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           Next <span>→</span>
         </button>

@@ -85,12 +85,12 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                   }}
                 >
                   <div style={{ 
-                    position: 'relative', width: '80px', height: '100px', 
-                    background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: '4px 4px 20px 20px',
+                    position: 'relative', width: '5rem', height: '6.25rem', 
+                    background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: '0.25rem 0.25rem 1.25rem 1.25rem',
                     display: 'flex', justifyContent: 'center', alignItems: 'flex-end', overflow: 'hidden'
                   }}>
                     <div style={{ position: 'absolute', bottom: 0, width: '100%', height: '50%', background: cup.color, opacity: 0.8 }} />
-                    <div style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '1.5rem' }}>{cup.icon}</div>
+                    <div style={{ position: 'absolute', top: '0.6rem', right: '0.6rem', fontSize: '1.5rem' }}>{cup.icon}</div>
                   </div>
                   <div style={{ fontWeight: 'bold', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <GripHorizontal size={14} color="#94a3b8" /> {cup.label}
@@ -139,14 +139,14 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                   exit={{ y: -20, opacity: 0 }}
                   onClick={handleRemoveFromScale}
                   style={{ 
-                    position: 'absolute', bottom: '155px', zIndex: 10, cursor: 'pointer',
+                    position: 'absolute', bottom: '9.6875rem', zIndex: 10, cursor: 'pointer',
                     display: 'flex', flexDirection: 'column', alignItems: 'center'
                   }}
                   title="Click to remove"
                 >
                   <div style={{ 
-                    position: 'relative', width: '80px', height: '100px', 
-                    background: '#ffffff', border: '2px solid #cbd5e1', borderRadius: '4px 4px 20px 20px',
+                    position: 'relative', width: '5rem', height: '6.25rem', 
+                    background: '#ffffff', border: '2px solid #cbd5e1', borderRadius: '0.25rem 0.25rem 1.25rem 1.25rem',
                     display: 'flex', justifyContent: 'center', alignItems: 'flex-end', overflow: 'hidden',
                     boxShadow: '0 6px 12px rgba(0,0,0,0.1)'
                   }}>
@@ -161,9 +161,9 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 2, marginBottom: '20px' }}>
               {/* Silver Pan */}
               <div style={{ 
-                width: '240px', height: '25px', 
+                width: '15rem', height: '1.5rem', 
                 background: 'linear-gradient(to bottom, #f1f5f9, #94a3b8)', 
-                borderRadius: '8px 8px 4px 4px', 
+                borderRadius: '0.5rem 0.5rem 0.25rem 0.25rem', 
                 border: '1px solid #64748b', 
                 borderBottom: 'none',
                 boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.9), 0 4px 6px -1px rgba(0,0,0,0.2)',
@@ -172,9 +172,9 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
               
               {/* Main Body */}
               <div style={{ 
-                width: '260px', height: '100px', 
+                width: '16.25rem', height: '6.25rem', 
                 background: 'linear-gradient(to bottom, #e2e8f0, #cbd5e1)', 
-                borderRadius: '8px 8px 24px 24px', 
+                borderRadius: '0.5rem 0.5rem 1.5rem 1.5rem', 
                 border: '1px solid #94a3b8', 
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.2), inset 0 -4px 6px rgba(255,255,255,0.4)',
                 display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '12px 20px',
@@ -184,36 +184,28 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                 <div style={{
                   width: '100%', height: '100%',
                   background: '#1e293b',
-                  borderRadius: '16px',
+                  borderRadius: '1rem',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '8px 12px',
+                  padding: '0.5rem 0.75rem',
                   boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)'
                 }}>
                   {/* Screen */}
                   <div style={{ 
-                    width: '140px', height: '36px',
-                    background: '#dcfce7', border: '2px inset #4ade80', borderRadius: '4px', 
+                    width: '8.75rem', height: '2.25rem',
+                    background: '#dcfce7', border: '2px inset #4ade80', borderRadius: '0.25rem', 
                     display: 'flex', justifyContent: 'flex-end', alignItems: 'center', 
-                    padding: '0 10px', fontFamily: 'monospace', fontSize: '1.4rem', color: '#064e3b',
+                    padding: '0 0.5rem', fontFamily: 'monospace', fontSize: '1.4rem', color: '#064e3b',
                     boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)'
                   }}>
                     {currentOnScale ? `${currentOnScale.mass.toFixed(2)} g` : '0.00 g'}
                   </div>
                   {/* Buttons */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '180px', marginTop: 'auto' }}>
-                    <button style={{ background: '#3b82f6', border: 'none', borderRadius: '16px', padding: '4px 16px', color: 'white', fontSize: '0.65rem', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>ON/TARE</button>
-                    <button style={{ background: '#3b82f6', border: 'none', borderRadius: '16px', padding: '4px 16px', color: 'white', fontSize: '0.65rem', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>UNIT</button>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '11.25rem', marginTop: 'auto' }}>
+                    <button style={{ background: '#3b82f6', border: 'none', borderRadius: '1rem', padding: '0.25rem 1rem', color: 'white', fontSize: '0.65rem', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>ON/TARE</button>
+                    <button style={{ background: '#3b82f6', border: 'none', borderRadius: '1rem', padding: '0.25rem 1rem', color: 'white', fontSize: '0.65rem', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>UNIT</button>
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Instruction Banner */}
-            <div style={{ position: 'absolute', bottom: '15px', width: '90%', background: '#eff6ff', borderRadius: '8px', padding: '8px', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid #bfdbfe' }}>
-              <Info size={16} color="#3b82f6" style={{ flexShrink: 0 }} />
-              <span style={{ fontSize: '0.8rem', color: '#1e40af' }}>
-                Click ON/TARE to reset the balance to 0.00 g before weighing a new cup.
-              </span>
             </div>
           </div>
         </div>

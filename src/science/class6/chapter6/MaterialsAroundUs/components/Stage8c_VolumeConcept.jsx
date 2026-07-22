@@ -106,9 +106,9 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                   <div style={{ width: '70px', height: '140px', background: '#e0f2fe', border: '3px solid #bae6fd', borderRadius: '16px 16px 6px 6px', position: 'relative' }}>
                     <div style={{ position: 'absolute', top: '-10px', left: '15px', width: '34px', height: '10px', background: '#94a3b8', borderRadius: '4px' }}></div>
                     <div style={{ position: 'absolute', top: '45px', left: '-3px', right: '-3px', height: '50px', background: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '2px solid #e2e8f0' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 'bold', lineHeight: '1.2' }}>Drinking</span>
-                      <span style={{ fontSize: '11px', fontWeight: 'bold', lineHeight: '1.2' }}>Water</span>
-                      <span style={{ fontSize: '12px', fontWeight: '900', color: '#0284c7', marginTop: '2px' }}>500 mL</span>
+                      <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'bold', lineHeight: '1.2' }}>Drinking</span>
+                      <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'bold', lineHeight: '1.2' }}>Water</span>
+                      <span style={{ fontSize: 'var(--text-xs)', fontWeight: '900', color: '#0284c7', marginTop: '2px' }}>500 mL</span>
                     </div>
                   </div>
                 </div>
@@ -117,8 +117,8 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                   <div style={{ width: '70px', height: '140px', background: 'white', border: '3px solid #e2e8f0', borderRadius: '16px 16px 6px 6px', position: 'relative' }}>
                     <div style={{ position: 'absolute', top: '-10px', left: '15px', width: '34px', height: '10px', background: '#94a3b8', borderRadius: '4px' }}></div>
                     <div style={{ position: 'absolute', top: '45px', left: '-3px', right: '-3px', height: '50px', background: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '2px solid #e2e8f0' }}>
-                      <span style={{ fontSize: '13px', fontWeight: 'bold' }}>Milk</span>
-                      <span style={{ fontSize: '12px', fontWeight: '900', color: '#475569', marginTop: '4px' }}>500 mL</span>
+                      <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>Milk</span>
+                      <span style={{ fontSize: 'var(--text-xs)', fontWeight: '900', color: '#475569', marginTop: '4px' }}>500 mL</span>
                     </div>
                   </div>
                 </div>
