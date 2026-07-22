@@ -121,7 +121,60 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
             <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
               <div style={{ color: '#94a3b8', fontSize: 'var(--text-base)' }}>Page 1</div>
               <button 
-                onClick={() => { setBookPage(2); setIsHandbookRead(true); }}
+                onClick={() => setBookPage(2)}
+                style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: 'var(--text-base)', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)' }}
+                onMouseOver={(e) => e.target.style.background = '#2563eb'}
+                onMouseOut={(e) => e.target.style.background = '#3b82f6'}
+              >
+                Next Page ➔
+              </button>
+            </div>
+          </div>
+        ) : bookPage === 2 ? (
+          <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            {/* ================= RIGHT PAGE B1 (New Page 2) ================= */}
+            <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1b2a4a', fontWeight: 'bold', borderBottom: '4px solid #3b4ea0', paddingBottom: '8px', display: 'inline-block' }}>
+              Historical Spotlight: Pottery
+            </h2>
+
+            <div style={{ background: '#fdf6e3', border: '2px solid #eab308', borderRadius: '12px', padding: '16px', marginBottom: '16px', position: 'relative' }}>
+              <div style={{ position: 'absolute', top: '-15px', right: '20px', background: '#eab308', color: 'white', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>Do you know?</div>
+              <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#451a03', lineHeight: '1.5' }}>
+                The earliest pottery found in the Indian subcontinent dates back to <strong>7,000 to 8,000 years</strong> in the Ganga plains (Lahuradewa) and in Baluchistan (Mehrgarh). 
+              </p>
+              <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#451a03', lineHeight: '1.5' }}>
+                About <strong>4000 BCE onwards</strong>, Sindhu-Sarasvati developed techniques of wheel-turned pottery production, pigmentation, application of protective or decorative coats (called 'slips') of multiple colours, decorative painting, etc. 
+              </p>
+              <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#451a03', lineHeight: '1.5' }}>
+                These techniques became further sophisticated during the <strong>Sindhu-Sarasvati (also known as 'Harappan') Civilisation (2600-1900 BCE)</strong>, with a bright red surface painted with black-coloured designs displaying geometric patterns, and aquatic and terrestrial animals.
+              </p>
+            </div>
+
+            <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+              <h4 style={{ margin: '0 0 8px 0', color: '#334155', fontSize: 'var(--text-lg)' }}>How Pottery is Made</h4>
+              <p style={{ margin: '0', fontSize: 'var(--text-lg)', color: '#475569', lineHeight: '1.5' }}>
+                The clay used for making pots, dishes, bowls and other items was carefully selected and cleaned, sieved, kneaded, turned over a wheel and finally baked in kilns (baked clay is called <strong>'terracotta'</strong>).
+              </p>
+            </div>
+
+            <div style={{ fontSize: 'var(--text-lg)', color: '#334155', lineHeight: '1.5' }}>
+              <p style={{ margin: '0 0 8px 0' }}>Pots were used for various purposes, from cooking to storage of food grains, oil, ghee, and so on.</p>
+              <p style={{ margin: '0' }}>Some very large storage jars and other pottery items are exhibited at the <strong>National Museum, New Delhi</strong>.</p>
+            </div>
+
+            {/* Page navigation */}
+            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
+              <button 
+                onClick={() => setBookPage(1)}
+                style={{ background: 'white', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: 'var(--text-base)', fontWeight: 'bold' }}
+                onMouseOver={(e) => e.target.style.background = '#f8fafc'}
+                onMouseOut={(e) => e.target.style.background = 'white'}
+              >
+                <span style={{ fontSize: 'var(--text-lg)' }}>←</span> Previous
+              </button>
+              <div style={{ color: '#94a3b8', fontSize: 'var(--text-base)' }}>Page 2</div>
+              <button 
+                onClick={() => { setBookPage(3); setIsHandbookRead(true); }}
                 style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: 'var(--text-base)', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3)' }}
                 onMouseOver={(e) => e.target.style.background = '#2563eb'}
                 onMouseOut={(e) => e.target.style.background = '#3b82f6'}
@@ -132,7 +185,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           </div>
         ) : (
           <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-            {/* ================= RIGHT PAGE ================= */}
+            {/* ================= RIGHT PAGE B1 (New Page 3) ================= */}
             <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1b2a4a', fontWeight: 'bold' }}>
               Materials Investigation
             </h2>
@@ -217,14 +270,14 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
             {/* Page navigation */}
             <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
               <button 
-                onClick={() => setBookPage(1)}
+                onClick={() => setBookPage(2)}
                 style={{ background: 'white', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: 'var(--text-base)', fontWeight: 'bold' }}
                 onMouseOver={(e) => e.target.style.background = '#f8fafc'}
                 onMouseOut={(e) => e.target.style.background = 'white'}
               >
                 <span style={{ fontSize: 'var(--text-lg)' }}>←</span> Previous
               </button>
-              <div style={{ color: '#94a3b8', fontSize: 'var(--text-base)' }}>Page 2</div>
+              <div style={{ color: '#94a3b8', fontSize: 'var(--text-base)' }}>Page 3</div>
             </div>
           </div>
         )

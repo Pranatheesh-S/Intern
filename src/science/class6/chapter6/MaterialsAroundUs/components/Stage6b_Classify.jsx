@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Info, GripHorizontal, Eye, EyeOff, Lightbulb, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Stage6b_Classify({ onComplete, addXp }) {
   const [classifications, setClassifications] = useState({});
 
+  const [feedback, setFeedback] = useState(null);
+
   const items = [
-    { id: 'tumbler', name: 'Glass tumbler', correct: 'Transparent', icon: '🥛', color: '#1e293b' },
-    { id: 'butter', name: 'Butter paper', correct: 'Translucent', icon: '🗞️', color: '#1e293b' },
-    { id: 'eraser', name: 'Eraser', correct: 'Opaque', icon: '🖍️', color: '#1e293b' },
-    { id: 'frosted', name: 'Frosted glass', correct: 'Translucent', icon: '🌫️', color: '#1e293b' },
-    { id: 'wood', name: 'Wooden board', correct: 'Opaque', icon: '🪵', color: '#1e293b' },
-    { id: 'window', name: 'Window glass', correct: 'Transparent', icon: '🪟', color: '#1e293b' }
+    { id: 'tumbler', name: 'Glass tumbler', correct: 'Transparent', icon: '🥛', color: '#1e293b', reason: 'You can see clearly through a glass tumbler.' },
+    { id: 'butter', name: 'Butter paper', correct: 'Translucent', icon: '🗞️', color: '#1e293b', reason: 'Butter paper allows some light to pass, but you cannot see clearly through it.' },
+    { id: 'eraser', name: 'Eraser', correct: 'Opaque', icon: (
+      <svg width="40" height="40" viewBox="0 0 50 50">
+        <g transform="rotate(-15 25 25)">
+          <rect x="6" y="16" width="38" height="18" rx="4" fill="#fda4af" />
+          <rect x="6" y="16" width="38" height="12" rx="4" fill="#fecdd3" />
+          <rect x="16" y="16" width="18" height="18" fill="#38bdf8" />
+          <rect x="16" y="16" width="18" height="12" fill="#7dd3fc" />
+        </g>
+      </svg>
+    ), color: '#1e293b', reason: 'An eraser completely blocks light, you cannot see through it at all.' },
+    { id: 'frosted', name: 'Frosted glass', correct: 'Translucent', icon: '🌫️', color: '#1e293b', reason: 'Frosted glass obscures the view, making things look blurry.' },
+    { id: 'wood', name: 'Wooden board', correct: 'Opaque', icon: '🪵', color: '#1e293b', reason: 'Wood completely blocks light.' },
+    { id: 'window', name: 'Window glass', correct: 'Transparent', icon: '🪟', color: '#1e293b', reason: 'Clear window glass allows you to see perfectly through it.' }
   ];
 
   const handleDragStart = (e, id) => {
@@ -29,9 +41,13 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
         addXp(10);
       }
       setClassifications(prev => ({ ...prev, [id]: category }));
+      setFeedback(null);
     } else {
-      // Optional: Handle incorrect drop (shake animation or toast)
-      // For now, it just won't drop
+      setFeedback({ 
+        message: `Incorrect! ${obj.reason} Therefore, it is ${obj.correct}.`,
+        type: 'error'
+      });
+      setTimeout(() => setFeedback(null), 5000);
     }
   };
 
@@ -122,6 +138,25 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
             );
           })}
         </div>
+
+        {/* Feedback Message */}
+        <AnimatePresence>
+          {feedback && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              style={{
+                background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', 
+                padding: '0.75rem 1rem', borderRadius: '8px', fontSize: '0.9rem', 
+                fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px',
+                marginTop: '0.5rem'
+              }}
+            >
+              <span>❌</span> {feedback.message}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Drop Zones */}
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>

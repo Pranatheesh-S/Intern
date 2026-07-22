@@ -6,7 +6,16 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
   const items = [
     { id: 'cotton', name: 'Cotton Ball', type: 'soft', resultText: 'It got compressed easily.', icon: <div style={{ width: '50px', height: '50px', background: 'radial-gradient(circle at 30% 30%, #ffffff, #e2e8f0)', borderRadius: '50%', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />, color: '#22c55e', bg: '#dcfce7', blockBg: '#bbf7d0', blockRadius: '20px' },
     { id: 'sponge', name: 'Washing Sponge', type: 'soft', resultText: 'It was pressed down. It is soft.', icon: '🧽', color: '#22c55e', bg: '#dcfce7', blockBg: '#86efac', blockRadius: '8px' },
-    { id: 'eraser', name: 'Eraser', type: 'soft', resultText: 'It changed shape slightly.', icon: '🖍️', color: '#22c55e', bg: '#dcfce7', blockBg: '#e2e8f0', blockRadius: '4px' },
+    { id: 'eraser', name: 'Eraser', type: 'soft', resultText: 'It changed shape slightly.', icon: (
+      <svg width="50" height="50" viewBox="0 0 50 50">
+        <g transform="rotate(-15 25 25)">
+          <rect x="6" y="16" width="38" height="18" rx="4" fill="#fda4af" />
+          <rect x="6" y="16" width="38" height="12" rx="4" fill="#fecdd3" />
+          <rect x="16" y="16" width="18" height="18" fill="#38bdf8" />
+          <rect x="16" y="16" width="18" height="12" fill="#7dd3fc" />
+        </g>
+      </svg>
+    ), color: '#22c55e', bg: '#dcfce7', blockBg: '#e2e8f0', blockRadius: '4px' },
     { id: 'stone', name: 'River Stone', type: 'hard', resultText: 'It did not change shape.', icon: '🪨', color: '#ef4444', bg: '#fee2e2', blockBg: '#94a3b8', blockRadius: '12px' },
     { id: 'iron', name: 'Iron Rod', type: 'hard', resultText: 'It did not change shape at all.', icon: <div style={{ width: '55px', height: '18px', background: 'linear-gradient(180deg, #cbd5e1, #f8fafc, #64748b)', borderRadius: '4px', transform: 'rotate(20deg)', boxShadow: '0 4px 6px rgba(0,0,0,0.2)' }} />, color: '#ef4444', bg: '#fee2e2', blockBg: '#64748b', blockRadius: '0px' }
   ];

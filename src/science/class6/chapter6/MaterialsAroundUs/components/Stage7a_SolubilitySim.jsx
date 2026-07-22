@@ -9,31 +9,31 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
 
   const substances = [
     { 
-      id: 'sugar', name: 'Sugar', type: 'Soluble', icon: '🧂',
+      id: 'sugar', name: 'Sugar', type: 'Soluble', image: '/images/solubility_sugar.png',
       desc: 'Sugar completely disappears when stirred into water.',
       conclusion: 'Materials that dissolve in water are called Soluble.',
       waterColor: '#38bdf8', turbidity: 0, solidVisible: false
     },
     { 
-      id: 'salt', name: 'Salt', type: 'Soluble', icon: '🧂',
+      id: 'salt', name: 'Salt', type: 'Soluble', image: '/images/solubility_salt.png',
       desc: 'Salt completely disappears when stirred into water.',
       conclusion: 'Materials that dissolve in water are called Soluble.',
       waterColor: '#38bdf8', turbidity: 0, solidVisible: false
     },
     { 
-      id: 'chalk', name: 'Chalk Powder', type: 'Insoluble', icon: '🌫️',
+      id: 'chalk', name: 'Chalk Powder', type: 'Insoluble', image: '/images/solubility_chalk.png',
       desc: 'The water turns cloudy and chalk powder does not disappear.',
       conclusion: 'Materials that do not dissolve in water are Insoluble.',
       waterColor: '#e2e8f0', turbidity: 0.8, solidVisible: true, solidColor: '#f8fafc', settle: false
     },
     { 
-      id: 'sand', name: 'Sand', type: 'Insoluble', icon: '🏜️',
+      id: 'sand', name: 'Sand', type: 'Insoluble', image: '/images/solubility_sand.png',
       desc: 'Sand settles down at the bottom of the beaker.',
       conclusion: 'Sand is Insoluble in water.',
       waterColor: '#38bdf8', turbidity: 0.2, solidVisible: true, solidColor: '#b45309', settle: true
     },
     { 
-      id: 'sawdust', name: 'Sawdust', type: 'Insoluble', icon: '🪵',
+      id: 'sawdust', name: 'Sawdust', type: 'Insoluble', image: '/images/solubility_sawdust.png',
       desc: 'Sawdust floats on the surface of the water.',
       conclusion: 'Sawdust is Insoluble in water.',
       waterColor: '#38bdf8', turbidity: 0.1, solidVisible: true, solidColor: '#d97706', float: true
@@ -96,7 +96,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
         <div style={{ flex: 1.8, background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem', marginBottom: '1rem' }}>
             <div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: '#1e3a8a' }}>Materials to Test</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
               {substances.map((sub) => {
                 const isSelected = selectedSubstance?.id === sub.id;
                 const isObserved = observations[sub.id];
@@ -106,20 +106,30 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                     onClick={() => handleSelect(sub)}
                     style={{
                       background: isSelected ? '#eff6ff' : 'white',
-                      border: `1px solid ${isSelected ? '#3b82f6' : '#cbd5e1'}`,
-                      color: isSelected ? '#1d4ed8' : '#334155',
-                      padding: '0.6rem 1rem',
-                      borderRadius: '8px',
+                      border: `2px solid ${isSelected ? '#3b82f6' : '#cbd5e1'}`,
+                      color: isSelected ? '#1e3a8a' : '#334155',
+                      padding: '1rem 0.5rem',
+                      borderRadius: '16px',
                       fontWeight: 'bold',
                       cursor: 'pointer',
                       display: 'flex',
+                      flexDirection: 'column',
                       alignItems: 'center',
-                      gap: '6px',
+                      gap: '0.75rem',
                       transition: 'all 0.2s',
-                      boxShadow: isSelected ? '0 2px 4px rgba(59, 130, 246, 0.1)' : 'none'
+                      boxShadow: isSelected ? '0 4px 15px rgba(59, 130, 246, 0.2)' : '0 2px 4px rgba(0,0,0,0.05)',
+                      transform: isSelected ? 'scale(1.02)' : 'scale(1)'
                     }}
                   >
-                    <span>{sub.icon}</span> {sub.name} {isObserved && <span style={{ color: '#16a34a' }}>✓</span>}
+                    <div style={{ position: 'relative' }}>
+                      <div style={{ background: '#f8fafc', borderRadius: '50%', padding: '5px', border: '1px solid #e2e8f0' }}>
+                        <img src={sub.image} alt={sub.name} style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '50%', mixBlendMode: 'multiply' }} />
+                      </div>
+                      {isObserved && (
+                        <div style={{ position: 'absolute', top: -5, right: -5, background: '#16a34a', color: 'white', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', border: '2px solid white', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>✓</div>
+                      )}
+                    </div>
+                    <span style={{ fontSize: '0.95rem', textAlign: 'center', lineHeight: '1.2' }}>{sub.name}</span>
                   </button>
                 );
               })}
@@ -136,28 +146,58 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
               {/* Liquid inside */}
               <div style={{ 
                 position: 'absolute', bottom: '2px', width: '156px', height: '140px', 
-                background: stirState === 'resolved' ? selectedSubstance?.waterColor || '#38bdf8' : '#38bdf8', 
-                opacity: stirState === 'resolved' && selectedSubstance?.turbidity ? 1 : 0.4,
+                background: stirState === 'resolved' && selectedSubstance?.waterColor !== '#38bdf8' 
+                  ? selectedSubstance.waterColor 
+                  : 'linear-gradient(180deg, rgba(56,189,248,0.3) 0%, rgba(14,165,233,0.6) 100%)', 
+                opacity: stirState === 'resolved' && selectedSubstance?.turbidity ? 0.9 : 1,
                 borderRadius: '0 0 14px 14px',
-                transition: 'all 1s ease-in-out'
+                transition: 'all 1s ease-in-out',
+                overflow: 'hidden'
               }}>
                 {/* Floating solid */}
                 {stirState === 'resolved' && selectedSubstance?.solidVisible && selectedSubstance?.float && (
-                  <div style={{ position: 'absolute', top: 0, left: '10px', right: '10px', height: '12px', background: selectedSubstance.solidColor, opacity: 0.8, borderRadius: '4px' }} />
+                  <div style={{ position: 'absolute', top: 0, left: '50%', marginLeft: '-32px' }}>
+                    <img src={selectedSubstance.image} alt="floating" style={{ width: '64px', height: '64px', mixBlendMode: 'multiply', opacity: 0.8 }} />
+                  </div>
                 )}
                 {/* Settled solid */}
                 {stirState === 'resolved' && selectedSubstance?.solidVisible && selectedSubstance?.settle && (
-                  <div style={{ position: 'absolute', bottom: 0, left: '10px', right: '10px', height: '15px', background: selectedSubstance.solidColor, opacity: 0.9, borderRadius: '0 0 12px 12px' }} />
+                  <div style={{ position: 'absolute', bottom: -10, left: '50%', marginLeft: '-40px' }}>
+                    <img src={selectedSubstance.image} alt="settled" style={{ width: '80px', height: '80px', mixBlendMode: 'multiply', opacity: 0.9, transform: 'scaleY(0.5)' }} />
+                  </div>
                 )}
                 {/* Turbid solid particles */}
                 {stirState === 'resolved' && selectedSubstance?.solidVisible && !selectedSubstance?.float && !selectedSubstance?.settle && (
-                  <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle, ${selectedSubstance.solidColor} 2px, transparent 2px)`, backgroundSize: '10px 10px', opacity: 0.4 }} />
+                  <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle, ${selectedSubstance.solidColor} 2px, transparent 2px)`, backgroundSize: '10px 10px', opacity: 0.5 }} />
                 )}
                 
-                {/* Unstirred solid */}
-                {stirState === 'idle' && selectedSubstance && (
-                  <div style={{ position: 'absolute', bottom: 0, left: '50px', width: '56px', height: '15px', background: '#94a3b8', borderRadius: '50% 50% 0 0' }} />
-                )}
+                {/* Unstirred solid falling in */}
+                <AnimatePresence>
+                  {stirState === 'idle' && selectedSubstance && (
+                    <motion.div
+                      initial={{ y: -100, opacity: 0, rotate: -20 }}
+                      animate={{ y: selectedSubstance.float ? 0 : 80, opacity: 1, rotate: 0 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ type: 'spring', damping: 12 }}
+                      style={{ position: 'absolute', left: '50%', marginLeft: '-32px' }}
+                    >
+                      <img src={selectedSubstance.image} alt="dropped" style={{ width: '64px', height: '64px', mixBlendMode: 'multiply', opacity: 0.9 }} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Whirlpool effect */}
+                <AnimatePresence>
+                  {stirState === 'stirring' && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 0.6, scale: 1, rotate: 720 }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ duration: 1.5 }}
+                      style={{ position: 'absolute', top: '10px', bottom: '10px', left: '20px', right: '20px', borderRadius: '50%', border: '4px dashed rgba(255,255,255,0.7)', borderTopColor: 'transparent', borderBottomColor: 'transparent' }}
+                    />
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Spoon */}

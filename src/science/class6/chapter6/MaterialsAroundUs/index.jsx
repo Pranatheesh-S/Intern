@@ -11,6 +11,46 @@ import ChapterCover from './components/Educational/ChapterCover';
 import ChapterIntroSpread from './components/Educational/ChapterIntroSpread';
 import MissionBriefingSpread from './components/Educational/MissionBriefingSpread';
 
+const timelineTree = (() => {
+  const tree = [];
+  let currentBarrier = null;
+  let currentStage = null;
+
+  chapterFlow.forEach((node, index) => {
+    const item = { ...node, originalIndex: index };
+    let barrierId = null;
+    
+    if (node.title.includes('Barrier 1') || node.title.includes('Stage 6.1')) barrierId = 'Barrier 6.1';
+    else if (node.title.includes('Barrier 2') || node.title.includes('Stage 6.2')) barrierId = 'Barrier 6.2';
+    else if (node.title.includes('Barrier 3') || node.title.includes('Stage 6.3')) barrierId = 'Barrier 6.3';
+    else if (node.title.includes('Barrier 4') || node.title.includes('Do You Know?') || node.title.includes('Concept Map')) barrierId = 'Barrier 6.4';
+    else barrierId = 'Final Wrap-up';
+
+    if (!currentBarrier || currentBarrier.id !== barrierId) {
+      currentBarrier = { id: barrierId, title: barrierId, type: 'barrier', children: [] };
+      tree.push(currentBarrier);
+      currentStage = null;
+    }
+
+    if (barrierId === 'Barrier 6.3') {
+      const stageMatch = node.title.match(/(Stage 6\.3\.\d+)/);
+      if (stageMatch) {
+        const stageName = stageMatch[1];
+        if (!currentStage || currentStage.id !== stageName) {
+          currentStage = { id: stageName, title: stageName, type: 'stage', children: [] };
+          currentBarrier.children.push(currentStage);
+        }
+        currentStage.children.push(item);
+      } else {
+        currentBarrier.children.push(item);
+      }
+    } else {
+      currentBarrier.children.push(item);
+    }
+  });
+  return tree;
+})();
+
 export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [currentFlowIndex, setCurrentFlowIndex] = useState(0);
   const [highestUnlockedIndex, setHighestUnlockedIndex] = useState(0);
@@ -20,7 +60,13 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [resetKey, setResetKey] = useState(0);
   const [showCover, setShowCover] = useState(true);
   const [showIntroSpread, setShowIntroSpread] = useState(false);
+  const [expandedNodes, setExpandedNodes] = useState({ 
+    'Barrier 6.1': true, 'Barrier 6.2': true, 'Barrier 6.3': true, 'Barrier 6.4': true, 'Final Wrap-up': true,
+    'Stage 6.3.1': true, 'Stage 6.3.2': true, 'Stage 6.3.3': true, 'Stage 6.3.4': true, 'Stage 6.3.5': true, 'Stage 6.3.6': true
+  });
   
+  const toggleNode = (id) => setExpandedNodes(prev => ({ ...prev, [id]: !prev[id] }));
+
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
   
   const addXp = (amount) => {
@@ -125,7 +171,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             <RefreshCw size={14} /> Reset Activity
           </button>
 
-          {currentNode.type === 'activity' && (
+          {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
             <button 
               onClick={handleNext}
               disabled={!stageCompleted}
@@ -155,7 +201,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             left: isTimelineOpen ? '320px' : '0px',
             top: '50%',
             transform: 'translateY(-50%)',
-            zIndex: 51,
+            zIndex: 101,
             background: 'var(--surface)',
             border: '1px solid var(--border)',
             borderLeft: 'none',
@@ -181,7 +227,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           style={{ 
             position: 'absolute', 
             left: 0,
-            top: 0, bottom: 0, zIndex: 50, 
+            top: 0, bottom: 0, zIndex: 100, 
             background: 'var(--surface)', borderRight: '1px solid var(--border)', 
             display: 'flex', flexDirection: 'column', 
             overflow: 'hidden', boxShadow: isTimelineOpen ? '4px 0 20px rgba(0,0,0,0.2)' : 'none',
@@ -195,55 +241,112 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               Investigation Progress
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', overflowY: 'auto', paddingRight: '0.5rem' }}>
-              {chapterFlow.map((node, idx) => {
-                const isActive = currentFlowIndex === idx || (node.type === 'mission' && currentFlowIndex > idx && chapterFlow[currentFlowIndex].type === 'activity' && chapterFlow.findIndex((n, i) => i > idx && n.type !== 'activity') > currentFlowIndex);
-                const isLocked = idx > highestUnlockedIndex;
-                const isPast = idx <= highestUnlockedIndex && !isActive;
-                
-                let icon = '🎯';
-                if (node.type === 'activity') icon = '🧪';
-                if (node.type === 'debrief' || node.type === 'summary') icon = '📝';
-                if (node.type === 'handbook') icon = '📖';
-                if (node.type === 'checkpoint') icon = '✅';
-                
-                return (
-                  <button 
-                    key={idx} 
-                    disabled={isLocked}
-                    onClick={() => {
-                      if (!isLocked) {
-                        try { playSuccess(); } catch (e) {}
-                        setCurrentFlowIndex(idx);
-                        setIsTimelineOpen(false);
-                      }
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '0.75rem',
-                      padding: '0.75rem',
-                      borderRadius: '8px',
-                      background: isActive ? 'var(--accent-bg)' : 'transparent',
-                      border: `1px solid ${isActive ? 'var(--accent-border)' : 'transparent'}`,
-                      color: isPast ? 'var(--text-muted)' : isActive ? 'var(--accent)' : 'var(--text-primary)',
-                      transition: 'all 0.2s',
-                      opacity: isLocked ? 0.4 : 1,
-                      cursor: isLocked ? 'not-allowed' : 'pointer',
-                      textAlign: 'left'
-                    }}
-                  >
-                    <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{icon}</span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', minWidth: 0 }}>
-                      <span style={{ fontSize: '0.85rem', fontWeight: isActive ? 'bold' : 'normal', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {node.title}
-                      </span>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                        {node.type === 'mission' ? 'Mission Briefing' : node.type === 'activity' ? node.subtitle : 'Evidence Review'}
-                      </span>
+              {(() => {
+                const renderTimelineItem = (item, indentLevel = 0) => {
+                  const idx = item.originalIndex;
+                  const isActive = currentFlowIndex === idx || (item.type === 'mission' && currentFlowIndex > idx && chapterFlow[currentFlowIndex].type === 'activity' && chapterFlow.findIndex((n, i) => i > idx && n.type !== 'activity') > currentFlowIndex);
+                  const isLocked = idx > highestUnlockedIndex;
+                  const isPast = idx <= highestUnlockedIndex && !isActive;
+                  
+                  let icon = '🎯';
+                  if (item.type === 'activity') icon = '🧪';
+                  if (item.type === 'debrief' || item.type === 'summary') icon = '📝';
+                  if (item.type === 'handbook') icon = '📖';
+                  if (item.type === 'checkpoint') icon = '✅';
+                  
+                  return (
+                    <button 
+                      key={`item-${idx}`} 
+                      disabled={isLocked}
+                      onClick={() => {
+                        if (!isLocked) {
+                          try { playSuccess(); } catch (e) {}
+                          setCurrentFlowIndex(idx);
+                          setIsTimelineOpen(false);
+                        }
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.75rem',
+                        padding: '0.75rem',
+                        marginLeft: `${indentLevel * 1}rem`,
+                        borderRadius: '8px',
+                        background: isActive ? 'var(--accent-bg)' : 'transparent',
+                        border: `1px solid ${isActive ? 'var(--accent-border)' : 'transparent'}`,
+                        color: isPast ? 'var(--text-muted)' : isActive ? 'var(--accent)' : 'var(--text-primary)',
+                        transition: 'all 0.2s',
+                        opacity: isLocked ? 0.4 : 1,
+                        cursor: isLocked ? 'not-allowed' : 'pointer',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{icon}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', minWidth: 0 }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: isActive ? 'bold' : 'normal', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {item.title}
+                        </span>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                          {item.type === 'mission' ? 'Mission Briefing' : item.type === 'activity' ? item.subtitle : 'Evidence Review'}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                };
+
+                const renderTimelineGroup = (group, indentLevel = 0) => {
+                  const isExpanded = expandedNodes[group.id];
+                  
+                  const getFirstIndex = (node) => {
+                    if (node.originalIndex !== undefined) return node.originalIndex;
+                    if (node.children && node.children.length > 0) return getFirstIndex(node.children[0]);
+                    return 999;
+                  };
+                  const firstIndex = getFirstIndex(group);
+                  const isLocked = firstIndex > highestUnlockedIndex;
+
+                  return (
+                    <div key={group.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <button
+                        disabled={isLocked}
+                        onClick={() => toggleNode(group.id)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '0.75rem',
+                          padding: '0.6rem 0.75rem',
+                          marginLeft: `${indentLevel * 1}rem`,
+                          borderRadius: '8px',
+                          background: 'rgba(0,0,0,0.03)',
+                          border: 'none',
+                          color: isLocked ? 'var(--text-muted)' : 'var(--text-primary)',
+                          fontWeight: 'bold',
+                          cursor: isLocked ? 'not-allowed' : 'pointer',
+                          textAlign: 'left',
+                          opacity: isLocked ? 0.6 : 1
+                        }}
+                      >
+                        <span style={{ fontSize: '0.9rem', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{group.title}</span>
+                        <span style={{ fontSize: '0.8rem', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: 'var(--text-muted)' }}>▶</span>
+                      </button>
+                      {isExpanded && !isLocked && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginTop: '0.25rem' }}>
+                          {group.children.map(child => {
+                            if (child.type === 'stage' || child.type === 'barrier') {
+                              return renderTimelineGroup(child, indentLevel + 0.5);
+                            } else {
+                              return renderTimelineItem(child, indentLevel + 0.5);
+                            }
+                          })}
+                        </div>
+                      )}
                     </div>
-                  </button>
-                );
-              })}
+                  );
+                };
+
+                return timelineTree.map(group => renderTimelineGroup(group, 0));
+              })()}
             </div>
           </div>
         </div>
@@ -324,29 +427,11 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             );
           })()}
 
-          {currentNode.type === 'checkpoint' && (() => {
-            let lastActivityNode = null;
-            for (let i = currentFlowIndex - 1; i >= 0; i--) {
-              if (chapterFlow[i].type === 'activity') {
-                lastActivityNode = chapterFlow[i];
-                break;
-              }
-            }
-            return (
-              <div style={{ position: 'relative', flex: 1, display: 'flex' }}>
-                {lastActivityNode && (
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-                    <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
-                      <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
-                    </div>
-                  </div>
-                )}
-                <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-                  <DetectiveCheckpoint data={currentNode} onComplete={handleNext} addXp={addXp} />
-                </div>
-              </div>
-            );
-          })()}
+          {currentNode.type === 'checkpoint' && (
+            <div style={{ flex: 1, display: 'flex', background: 'var(--bg-color)', overflow: 'hidden' }}>
+              <DetectiveCheckpoint data={currentNode} onComplete={handleStageComplete} addXp={addXp} />
+            </div>
+          )}
 
           {currentNode.type === 'summary' && (() => {
             let lastActivityNode = null;

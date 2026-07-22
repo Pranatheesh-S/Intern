@@ -2901,7 +2901,7 @@ export default function App() {
       )}
 
       {/* Main Workspace content */}
-      <main className="content-wrapper">
+      <main className="content-wrapper" style={{ padding: isFullscreen ? 0 : undefined }}>
         <Suspense fallback={
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', color: 'var(--text-muted)' }}>
             Loading activity...
