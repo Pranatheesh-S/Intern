@@ -22,9 +22,9 @@ import RootSystemsLab from "../science/class6/chapter2/RootSystemsLab";
 import VenationRootCorrelationLab from "../science/class6/chapter2/VenationRootCorrelationLab";
 import SeedDissectionLab from "../science/class6/chapter2/SeedDissectionLab";
 import AnimalHabitatExplorerActivity from "../science/class6/chapter2/AnimalHabitatExplorer";
-import FoodTestingActivity from "../activities/FoodTesting";
-import FatTestingActivity from "../activities/FatTesting";
-import ProteinTestingActivity from "../activities/ProteinTesting";
+import FoodTestingActivity from "../science/class6/chapter3/FoodTesting";
+import FatTestingActivity from "../science/class6/chapter3/FatTesting";
+import ProteinTestingActivity from "../science/class6/chapter3/ProteinTesting";
 
 const LEVEL_QUIZZES = {
   'biodiversity_concept': [
