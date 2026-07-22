@@ -77,9 +77,9 @@ export default function MagnetBook({ isOpen, currentPage, totalPages, onNext, on
                      />
                    </div>
                    {/* Right side: Text */}
-                   <div style={{ width: '50%', height: '100%', padding: '3rem 3rem 5rem 3rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                     <h3 style={{ color: '#4338ca', fontSize: '1.8rem', marginBottom: '1.5rem', fontFamily: 'serif' }}>{scene.subtitle}</h3>
-                     <p style={{ color: '#334155', fontSize: '1.1rem', lineHeight: '1.8' }}>{scene.text}</p>
+                   <div style={{ width: '50%', height: '100%', padding: '3rem 3rem 5rem 3rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', overflowY: 'auto' }}>
+                     <h3 style={{ color: '#4338ca', fontSize: '1.8rem', marginTop: 0, marginBottom: '1.5rem', fontFamily: 'serif' }}>{scene.subtitle}</h3>
+                     <p style={{ color: '#334155', fontSize: '1.1rem', lineHeight: '1.8', margin: 0 }}>{scene.text}</p>
                    </div>
                  </>
               )}
