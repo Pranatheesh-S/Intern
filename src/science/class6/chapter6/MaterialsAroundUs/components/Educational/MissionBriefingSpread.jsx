@@ -313,8 +313,18 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             </div>
             
             <div className="mission-box">
-              <h3><Check size={16} color="#ef4444" /> OBJECTIVE</h3>
-              <p>{data.objective || "Complete the investigation."}</p>
+              <h3><Check size={16} color="#ef4444" /> OBJECTIVES</h3>
+              {Array.isArray(data.objective) ? (
+                <ul style={{ margin: 0, paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {data.objective.map((obj, i) => (
+                    <li key={i} style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '20px', color: '#1e293b', lineHeight: '1.5' }}>
+                      {obj}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{data.objective || "Complete the investigation."}</p>
+              )}
             </div>
             
             <div className="mission-meta">

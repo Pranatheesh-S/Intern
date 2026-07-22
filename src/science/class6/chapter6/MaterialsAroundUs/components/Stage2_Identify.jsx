@@ -209,7 +209,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
   const allCompleted = Object.keys(scannedObjects).length === objectsToScan.length;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
       <style>{`
         :root {
           --scanner-bg: linear-gradient(to bottom, #e2e8f0 0%, #f1f5f9 100%);
@@ -245,11 +245,11 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(180px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}>
         {/* Left: Tray of items */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '580px' }}>
-          <h4 style={{ margin: 0, fontSize: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1, overflowY: 'auto', alignContent: 'start', paddingRight: '0.25rem' }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
+          <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
             {objectsToScan.map((obj) => {
               const isScanned = scannedObjects[obj.id];
               const isSelected = selectedObj?.id === obj.id;
@@ -265,18 +265,17 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   className="interactive-tray-item"
                   style={{
                     width: '100%',
-                    padding: '1rem 0.5rem',
+                    padding: '0.85rem 1rem',
                     borderRadius: '12px',
                     border: isSelected ? '2px solid var(--accent)' : '1px solid var(--border)',
                     background: isScanned ? 'var(--success-bg)' : isSelected ? 'var(--accent-bg)' : 'var(--card-bg)',
                     color: isScanned ? 'var(--success)' : 'var(--text-primary)',
                     display: 'flex',
-                    flexDirection: 'column',
+                    flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.75rem',
+                    gap: '1rem',
                     cursor: isScanned ? 'default' : 'grab',
-                    textAlign: 'center',
+                    textAlign: 'left',
                     transition: 'all 0.2s',
                     userSelect: 'none',
                     position: 'relative',
@@ -287,8 +286,8 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     display: 'flex', 
                     alignItems: 'center', 
                     justifyContent: 'center', 
-                    width: '56px', 
-                    height: '56px', 
+                    width: '52px', 
+                    height: '52px', 
                     borderRadius: '12px', 
                     background: isScanned ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
                     color: isScanned ? 'var(--success)' : 'var(--accent)',
@@ -296,9 +295,9 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
                     border: '1px solid var(--border)'
                   }}>
-                    <IconComponent size={32} />
+                    <IconComponent size={30} />
                   </div>
-                  <span style={{ fontWeight: isSelected ? 'bold' : '600', fontSize: '1rem', lineHeight: '1.2' }}>{obj.name}</span>
+                  <span style={{ fontWeight: isSelected ? 'bold' : '600', fontSize: '1rem', lineHeight: '1.2', flex: 1 }}>{obj.name}</span>
                   
                   {isScanned && (
                     <div style={{ 
@@ -344,7 +343,8 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             flexDirection: 'column', 
             alignItems: 'center', 
             justifyContent: 'center', 
-            height: '580px', 
+            flex: 1,
+            minHeight: 'clamp(350px, 50vh, 600px)',
             position: 'relative', 
             background: isDraggingOver ? 'var(--accent-bg)' : 'var(--scanner-bg)', 
             border: isDraggingOver ? '3px dashed var(--accent)' : 'var(--scanner-border)',
@@ -391,8 +391,8 @@ export default function Stage2_Identify({ onComplete, addXp }) {
               {/* Scanning visual circle */}
               <div 
                 style={{ 
-                  width: '200px', 
-                  height: '200px', 
+                  width: 'clamp(130px, 15vw, 160px)', 
+                  height: 'clamp(130px, 15vw, 160px)', 
                   borderRadius: '50%', 
                   border: `4px solid ${scanState === 'scanning' ? '#6366f1' : scanState === 'correct' ? '#10b981' : scanState === 'incorrect' ? '#ef4444' : 'var(--scanner-circle-border)'}`, 
                   display: 'flex', 
@@ -414,7 +414,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   transition: 'transform 0.3s',
                   zIndex: 2
                 }}>
-                  <selectedObj.icon size={90} />
+                  <selectedObj.icon size={65} />
                 </div>
 
                 {/* Scanning overlay effect */}

@@ -213,7 +213,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
       {/* Dynamic phase header */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
         <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -300,12 +300,12 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '1.5rem' }}
+            style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}
           >
             {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '620px' }}>
-              <h4 style={{ margin: 0, fontSize: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Evidence Tray</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1, overflowY: 'auto', alignContent: 'start', paddingRight: '0.25rem' }}>
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
+              <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
                 {items.map((item) => {
                   const isSorted = usePlacements[item.id] !== undefined;
                   const IconComponent = item.icon;
@@ -319,70 +319,65 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       className="interactive-tray-item"
                       style={{
                         width: '100%',
-                        padding: '1rem 0.5rem',
+                        padding: '0.65rem 0.9rem',
                         borderRadius: '12px',
                         border: '1px solid var(--border)',
-                        background: 'var(--card-bg)',
+                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.75rem',
-                        opacity: isSorted ? 0.6 : 1,
+                        gap: '0.4rem',
+                        opacity: isSorted ? 0.7 : 1,
                         cursor: isSorted ? 'default' : 'grab',
-                        textAlign: 'center',
                         transition: 'all 0.2s',
                         userSelect: 'none',
                         position: 'relative'
                       }}
                     >
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        width: '56px', 
-                        height: '56px', 
-                        borderRadius: '12px', 
-                        background: 'var(--surface)', 
-                        color: 'var(--accent)',
-                        flexShrink: 0,
-                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
-                        border: '1px solid var(--border)'
-                      }}>
-                        <IconComponent size={32} />
-                      </div>
-                      <span style={{ fontWeight: '600', fontSize: '1rem', lineHeight: '1.2' }}>{item.name}</span>
-
-                      {!isSorted ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.25rem' }}>
-                          <select
-                            value=""
-                            onChange={(e) => handleUseSort(item.id, e.target.value)}
-                            style={{ fontSize: '0.9rem', padding: '0.4rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%' }}
-                          >
-                            <option value="" disabled>Shelf</option>
-                            <option value="School Shelf">School</option>
-                            <option value="Home Shelf">Home</option>
-                            <option value="Kitchen Shelf">Kitchen</option>
-                          </select>
-                        </div>
-                      ) : (
+                      {/* Top row: icon + name + check */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                         <div style={{ 
-                          position: 'absolute', 
-                          top: '6px', 
-                          right: '6px', 
-                          background: 'var(--success)', 
-                          borderRadius: '50%', 
-                          width: '20px', 
-                          height: '20px', 
                           display: 'flex', 
                           alignItems: 'center', 
-                          justifyContent: 'center',
-                          color: 'white',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                          justifyContent: 'center', 
+                          width: '40px', 
+                          height: '40px', 
+                          borderRadius: '10px', 
+                          background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
+                          color: isSorted ? 'var(--success)' : 'var(--accent)',
+                          flexShrink: 0,
+                          border: '1px solid var(--border)'
                         }}>
-                          <Check size={12} strokeWidth={3} />
+                          <IconComponent size={24} />
                         </div>
+                        <span style={{ fontWeight: '600', fontSize: '0.95rem', lineHeight: '1.2', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
+                        {isSorted && (
+                          <div style={{ 
+                            background: 'var(--success)', 
+                            borderRadius: '50%', 
+                            width: '20px', 
+                            height: '20px', 
+                            flexShrink: 0,
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            color: 'white'
+                          }}>
+                            <Check size={12} strokeWidth={3} />
+                          </div>
+                        )}
+                      </div>
+                      {/* Bottom row: dropdown (only when not sorted) */}
+                      {!isSorted && (
+                        <select
+                          value=""
+                          onChange={(e) => handleUseSort(item.id, e.target.value)}
+                          style={{ fontSize: '0.85rem', padding: '0.3rem 0.5rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%', cursor: 'pointer' }}
+                        >
+                          <option value="" disabled>Select Shelf ▾</option>
+                          <option value="School Shelf">School</option>
+                          <option value="Home Shelf">Home</option>
+                          <option value="Kitchen Shelf">Kitchen</option>
+                        </select>
                       )}
                     </div>
                   );
@@ -440,20 +435,17 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             key={item.id}
+                            title={item.name}
                             style={{
                               display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                              gap: '0.4rem',
-                              filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.15))'
+                              alignItems: 'flex-end',
+                              filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.15))',
+                              cursor: 'default'
                             }}
                           >
-                              <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', background: 'var(--surface)', padding: '0.2rem 0.6rem', borderRadius: '4px', border: '1px solid var(--border)', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-                                {item.name}
-                              </span>
-                              <div style={{ transform: 'translateY(1px)' }}>
-                                <item.icon size={55} />
-                              </div>
+                            <div style={{ transform: 'translateY(1px)' }}>
+                              <item.icon size={55} />
+                            </div>
                           </motion.div>
                         ))}
                         {sortedHere.length === 0 && (
@@ -495,38 +487,12 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.5rem' }}
+            style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}
           >
-            {/* Left: Wooden Evidence Tray */}
-            <div style={{
-              background: 'linear-gradient(160deg, #c8a96e 0%, #a07840 40%, #8b6530 100%)',
-              borderRadius: '18px',
-              padding: '1rem',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
-              border: '3px solid #6b4c20',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.75rem',
-              height: '540px'
-            }}>
-              {/* Tray Label */}
-              <div style={{
-                background: 'linear-gradient(135deg, #f5e6c8, #e8d4a0)',
-                borderRadius: '8px',
-                padding: '0.4rem 1rem',
-                textAlign: 'center',
-                border: '2px solid #b8924a',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-                alignSelf: 'center',
-                minWidth: '160px'
-              }}>
-                <span style={{ fontWeight: '800', fontSize: '1rem', color: '#5c3d11', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                  Evidence Tray
-                </span>
-              </div>
-
-              {/* Items Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', flex: 1, overflowY: 'auto' }}>
+            {/* Left Drawer */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
+              <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
                   const IconComponent = item.icon;
@@ -534,64 +500,67 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     <div
                       key={item.id}
                       draggable={!isSorted}
-                      onDragStart={(e) => e.dataTransfer.setData('text/plain', item.id)}
+                      onDragStart={(e) => {
+                        e.dataTransfer.setData('text/plain', item.id);
+                      }}
+                      className="interactive-tray-item"
                       style={{
-                        background: 'linear-gradient(145deg, #fdf6e3, #f5e6c8)',
+                        width: '100%',
+                        padding: '0.65rem 0.9rem',
                         borderRadius: '12px',
-                        border: '1.5px solid #c9a96e',
-                        padding: '0.6rem 0.4rem 0.5rem',
+                        border: '1px solid var(--border)',
+                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '0.35rem',
+                        gap: '0.4rem',
+                        opacity: isSorted ? 0.7 : 1,
                         cursor: isSorted ? 'default' : 'grab',
-                        opacity: isSorted ? 0.65 : 1,
                         transition: 'all 0.2s',
-                        position: 'relative',
-                        boxShadow: '0 3px 8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.7)'
+                        userSelect: 'none',
+                        position: 'relative'
                       }}
                     >
-                      {/* Tack / Pin */}
-                      <div style={{
-                        position: 'absolute', top: '-6px', left: '50%', transform: 'translateX(-50%)',
-                        width: '12px', height: '12px', borderRadius: '50%',
-                        background: 'radial-gradient(circle at 35% 35%, #d4a843, #a07828)',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                      }} />
-                      {isSorted && (
-                        <div style={{
-                          position: 'absolute', top: '5px', right: '5px',
-                          background: '#10b981', borderRadius: '50%',
-                          width: '18px', height: '18px',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      {/* Top row: icon + name + check */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center', 
+                          width: '40px', 
+                          height: '40px', 
+                          borderRadius: '10px', 
+                          background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
+                          color: isSorted ? 'var(--success)' : 'var(--accent)',
+                          flexShrink: 0,
+                          border: '1px solid var(--border)'
                         }}>
-                          <Check size={10} strokeWidth={3} color="white" />
+                          <IconComponent size={24} />
                         </div>
-                      )}
-
-                      {/* Icon */}
-                      <div style={{ width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <IconComponent size={38} />
+                        <span style={{ fontWeight: '600', fontSize: '0.95rem', lineHeight: '1.2', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
+                        {isSorted && (
+                          <div style={{ 
+                            background: 'var(--success)', 
+                            borderRadius: '50%', 
+                            width: '20px', 
+                            height: '20px', 
+                            flexShrink: 0,
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            color: 'white'
+                          }}>
+                            <Check size={12} strokeWidth={3} />
+                          </div>
+                        )}
                       </div>
-
-                      {/* Name */}
-                      <span style={{ fontSize: '0.78rem', fontWeight: '700', color: '#5c3d11', textAlign: 'center', lineHeight: '1.2' }}>
-                        {item.name}
-                      </span>
-
-                      {/* Dropdown */}
+                      {/* Bottom row: dropdown (only when not sorted) */}
                       {!isSorted && (
                         <select
                           value=""
                           onChange={(e) => handleMaterialSort(item.id, e.target.value)}
-                          style={{
-                            fontSize: '0.75rem', padding: '0.25rem 0.3rem',
-                            border: '1px solid #c9a96e', borderRadius: '6px',
-                            background: 'rgba(255,255,255,0.8)', color: '#5c3d11',
-                            outline: 'none', width: '100%', cursor: 'pointer'
-                          }}
+                          style={{ fontSize: '0.85rem', padding: '0.3rem 0.5rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%', cursor: 'pointer' }}
                         >
-                          <option value="" disabled>Material ▾</option>
+                          <option value="" disabled>Select Material ▾</option>
                           <option value="Paper">Paper</option>
                           <option value="Wood">Wood</option>
                           <option value="Plastic">Plastic</option>
@@ -790,11 +759,11 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1.5rem' }}
+            style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 220px) 1fr', gap: '1.5rem', flex: 1, minHeight: 0 }}
           >
             {/* Left list of items */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '480px' }}>
-              <h4 style={{ margin: 0, fontSize: '1.1rem' , borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Select Object to Inspect</h4>
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 'clamp(250px, 40vh, 500px)', minWidth: 0 }}>
+              <h4 style={{ margin: 0, fontSize: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Select Object to Inspect</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', flex: 1, overflowY: 'auto' }}>
                 {items.map((item) => {
                   const isInspected = inspectedItems[item.id];
@@ -806,28 +775,34 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       className={isActive ? 'primary' : 'outline'}
                       style={{
                         width: '100%',
-                        padding: '0.75rem 1rem',
+                        padding: '0.6rem 0.75rem',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        gap: '0.2rem',
                         borderRadius: '8px',
-                        fontSize: '0.95rem',
-                        textAlign: 'left'
+                        fontSize: '0.9rem',
+                        textAlign: 'left',
+                        overflow: 'hidden'
                       }}
                     >
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: isActive ? 'rgba(255,255,255,0.2)' : 'var(--surface)', borderRadius: '4px' }}>
-                          <item.icon size={16} />
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', width: '100%', overflow: 'hidden' }}>
+                        <div style={{ width: '20px', height: '20px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isActive ? 'rgba(255,255,255,0.2)' : 'var(--surface)', borderRadius: '4px' }}>
+                          <item.icon size={13} />
                         </div>
-                        {item.name}
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{item.name}</span>
                       </span>
-                      {isInspected && <span style={{ fontSize: '0.85rem', color: isActive ? '#fff' : 'var(--success)' }}>✓ Seen</span>}
+                      {isInspected && (
+                        <span style={{ fontSize: '0.78rem', color: isActive ? 'rgba(255,255,255,0.85)' : 'var(--success)', paddingLeft: '24px', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                          ✓ Seen
+                        </span>
+                      )}
                     </button>
                   );
                 })}
               </div>
-              <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border)', paddingTop: '0.5rem' }}>
-                Objects Inspected: <strong>{inspectedCount} / 3</strong> (Need 3)
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border)', paddingTop: '0.5rem', flexShrink: 0 }}>
+                Objects Inspected: <strong>{inspectedCount} / 3</strong>
               </div>
             </div>
 

@@ -182,7 +182,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp, mode = 'both'
           {/* Active target visualization */}
           <div 
             style={{ 
-              height: '160px', 
+              minHeight: '220px', 
               background: 'var(--surface)', 
               borderRadius: '12px', 
               display: 'flex', 

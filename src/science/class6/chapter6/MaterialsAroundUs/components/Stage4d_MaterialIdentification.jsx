@@ -273,29 +273,7 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
         </div>
       </div>
 
-      {/* Footer Banner */}
-      {matchedCount > 0 && (
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ fontSize: '2.5rem' }}>🕵️</div>
-            <div>
-              <div style={{ fontSize: '1rem', color: '#92400e', fontWeight: 'bold' }}>
-                {allMatched ? 'Case Closed!' : 'Great start, detective!'}
-              </div>
-              <div style={{ fontSize: '0.9rem', color: '#b45309' }}>
-                {allMatched ? "You've successfully identified all the materials for your evidence board." : "Keep going! Identify all objects to reveal the full evidence."}
-              </div>
-            </div>
-          </div>
-          <button style={{ background: 'white', border: '1px solid #c7d2fe', padding: '0.5rem 1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', color: '#4f46e5', fontWeight: 'bold', fontSize: '0.9rem', cursor: 'pointer' }}>
-            <BookOpen size={18} /> View Detective Notebook
-          </button>
-        </motion.div>
-      )}
+
 
     </div>
   );

@@ -15,21 +15,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       icon: <EyeOff size={24} color="#dc2626" />,
       desc: 'The suspect is completely hidden behind the solid brick wall. No light passes through.',
       conclusion: 'Materials through which you cannot see at all are Opaque.',
-      renderScene: () => (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#64748b', overflow: 'hidden' }}>
-          {/* Brick Wall foreground */}
-          <div style={{
-            position: 'absolute', inset: 0, zIndex: 10,
-            background: 'linear-gradient(335deg, #b91c1c 23px, transparent 23px), linear-gradient(155deg, #dc2626 23px, transparent 23px), linear-gradient(335deg, #b91c1c 23px, transparent 23px), linear-gradient(155deg, #dc2626 23px, transparent 23px)',
-            backgroundSize: '58px 58px',
-            backgroundColor: '#991b1b',
-            backgroundPosition: '0px 2px, 4px 35px, 29px 31px, 34px 6px',
-            boxShadow: 'inset 0 0 20px rgba(0,0,0,0.3)'
-          }} />
-          {/* Grass at bottom */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30px', background: '#22c55e', zIndex: 11, borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }} />
-        </div>
-      )
+      image: '/images/surveillance_wall.png'
     },
     {
       id: 'frosted',
@@ -39,24 +25,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       icon: <ShieldAlert size={24} color="#ca8a04" />,
       desc: 'You can see a blurry silhouette of the suspect. Some light passes through, but not enough for a clear image.',
       conclusion: 'Materials through which objects can be seen, but not clearly, are Translucent.',
-      renderScene: () => (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {/* Room Background */}
-          <div style={{ position: 'absolute', inset: 0, background: '#e2e8f0' }} />
-          {/* Suspect Silhouette */}
-          <User size={140} color="#64748b" style={{ zIndex: 1 }} />
-          {/* Frosted Glass overlay */}
-          <div style={{
-            position: 'absolute', inset: 15, zIndex: 10,
-            backdropFilter: 'blur(10px)',
-            background: 'rgba(255, 255, 255, 0.7)',
-            border: '12px solid #94a3b8',
-            borderRadius: '4px',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
-          }} />
-          <div style={{ position: 'absolute', right: '35px', top: '50%', width: '8px', height: '50px', background: '#cbd5e1', borderRadius: '4px', zIndex: 11 }} />
-        </div>
-      )
+      image: '/images/surveillance_frosted.png'
     },
     {
       id: 'tree',
@@ -66,28 +35,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       icon: <EyeOff size={24} color="#dc2626" />,
       desc: 'The suspect is hiding behind a thick wooden tree trunk. Wood blocks all light from passing through.',
       conclusion: 'Wood is an Opaque material.',
-      renderScene: () => (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#e0f2fe', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden' }}>
-          {/* Sky and clouds */}
-          <div style={{ position: 'absolute', top: '10%', left: '20%', width: '60px', height: '20px', background: 'white', borderRadius: '20px', filter: 'opacity(0.8)' }} />
-          <div style={{ position: 'absolute', top: '15%', right: '15%', width: '80px', height: '25px', background: 'white', borderRadius: '20px', filter: 'opacity(0.8)' }} />
-          {/* Hills */}
-          <div style={{ position: 'absolute', bottom: '20px', left: '-10%', right: '-10%', height: '100px', background: '#86efac', borderRadius: '50% 50% 0 0' }} />
-          <div style={{ position: 'absolute', bottom: '0', left: 0, right: 0, height: '40px', background: '#4ade80' }} />
-          
-          {/* Suspect Silhouette */}
-          <User size={120} color="#1e293b" style={{ zIndex: 2, marginBottom: '30px' }} />
-          
-          {/* Tree Trunk */}
-          <div style={{
-            position: 'absolute', bottom: 0, width: '120px', height: '80%', zIndex: 10,
-            background: 'linear-gradient(to right, #78350f, #b45309, #78350f)'
-          }} />
-          {/* Leaves */}
-          <div style={{ position: 'absolute', top: '-10px', width: '220px', height: '140px', background: '#15803d', borderRadius: '50%', zIndex: 11, boxShadow: 'inset -10px -10px 20px rgba(0,0,0,0.2)' }} />
-          <div style={{ position: 'absolute', top: '30px', left: '10%', width: '120px', height: '100px', background: '#16a34a', borderRadius: '50%', zIndex: 11 }} />
-        </div>
-      )
+      image: '/images/surveillance_tree.png'
     },
     {
       id: 'window',
@@ -97,25 +45,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
       icon: <Eye size={24} color="#16a34a" />,
       desc: 'You have a perfect view of the suspect through the window. Light passes through completely.',
       conclusion: 'Materials through which things can be seen clearly are Transparent.',
-      renderScene: () => (
-        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#fffbeb', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', overflow: 'hidden' }}>
-          {/* Room Background */}
-          <div style={{ position: 'absolute', inset: 0, background: '#fef3c7' }} />
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30%', background: '#fde68a' }} /> {/* Floor */}
-          {/* Suspect */}
-          <User size={130} color="#0f172a" style={{ zIndex: 1, marginBottom: '20px' }} />
-          {/* Clear Glass overlay (Frame only) */}
-          <div style={{
-            position: 'absolute', inset: 15, zIndex: 10,
-            background: 'rgba(255, 255, 255, 0.1)',
-            border: '14px solid #ffffff',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-          }} />
-          {/* Window mullions */}
-          <div style={{ position: 'absolute', top: 15, bottom: 15, left: '50%', width: '12px', background: '#ffffff', zIndex: 11 }} />
-          <div style={{ position: 'absolute', left: 15, right: 15, top: '50%', height: '12px', background: '#ffffff', zIndex: 11 }} />
-        </div>
-      )
+      image: '/images/surveillance_window.png'
     }
   ];
 
@@ -184,20 +114,48 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                 }}
                 whileHover={{ scale: 1.02, zIndex: 5, boxShadow: '0 10px 25px rgba(59, 130, 246, 0.2)' }}
               >
-                {spot.renderScene()}
+                {/* Scene Content */}
+                <AnimatePresence mode="wait">
+                  {!observations[spot.id] ? (
+                    <motion.div 
+                      key="unobserved"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      style={{ width: '100%', height: '100%', backgroundColor: '#0f172a', backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '20px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <svg width="80" height="80" viewBox="0 0 100 100">
+                        <defs>
+                          <radialGradient id="glassGrad" cx="30%" cy="30%" r="70%">
+                            <stop offset="0%" stopColor="#ffffff" />
+                            <stop offset="100%" stopColor="#bae6fd" />
+                          </radialGradient>
+                        </defs>
+                        <circle cx="60" cy="40" r="30" fill="url(#glassGrad)" stroke="#cbd5e1" strokeWidth="6" filter="drop-shadow(0 0 10px rgba(56,189,248,0.3))" />
+                        <line x1="38" y1="62" x2="15" y2="85" stroke="#334155" strokeWidth="12" strokeLinecap="round" />
+                        <line x1="38" y1="62" x2="25" y2="75" stroke="#94a3b8" strokeWidth="12" strokeLinecap="round" />
+                      </svg>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="observed"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ width: '100%', height: '100%' }}
+                    >
+                      <img src={spot.image} alt={spot.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 
                 {/* Overlay Label */}
                 <div style={{ position: 'absolute', top: '15px', left: '15px', background: '#1e3a8a', color: 'white', padding: '6px 12px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', zIndex: 20, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
                   <div style={{ background: '#3b82f6', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 'var(--text-xs)' }}>{index + 1}</div>
-                  {spot.name}
+                  {!observations[spot.id] ? 'Unknown Target' : spot.name}
                 </div>
 
-                {/* Glowing Magnifying Glass (hidden when selected so they can see the view clearly) */}
-                {!isSelected && (
-                  <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(6px)', border: '2px solid rgba(255,255,255,0.8)', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20, pointerEvents: 'none', boxShadow: '0 0 20px rgba(255,255,255,0.6)' }}>
-                    <Search size={28} color="#ffffff" style={{ filter: 'drop-shadow(0 0 5px rgba(0,0,0,0.3))' }} />
-                  </div>
-                )}
+
 
                 {observations[spot.id] && (
                   <div style={{ position: 'absolute', bottom: '15px', right: '15px', background: '#16a34a', color: 'white', padding: '4px 10px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold', zIndex: 20 }}>
@@ -260,23 +218,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
             </AnimatePresence>
           </div>
 
-          <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem' }}>
-            <div style={{ color: '#1e3a8a', fontSize: '1rem', fontWeight: 'bold', marginBottom: '1rem' }}>What does this mean?</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ background: '#f0fdf4', padding: '6px', borderRadius: '50%', color: '#16a34a' }}><Eye size={18} /></div>
-                <span style={{ color: '#334155', fontSize: '0.95rem' }}><strong style={{ color: '#16a34a' }}>Clear View:</strong> Suspect is visible clearly.</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ background: '#fefce8', padding: '6px', borderRadius: '50%', color: '#ca8a04' }}><ShieldAlert size={18} /></div>
-                <span style={{ color: '#334155', fontSize: '0.95rem' }}><strong style={{ color: '#ca8a04' }}>Blurry View:</strong> Suspect is visible but not clearly.</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ background: '#fef2f2', padding: '6px', borderRadius: '50%', color: '#dc2626' }}><EyeOff size={18} /></div>
-                <span style={{ color: '#334155', fontSize: '0.95rem' }}><strong style={{ color: '#dc2626' }}>No View:</strong> Suspect is not visible at all.</span>
-              </div>
-            </div>
-          </div>
+
 
         </div>
 

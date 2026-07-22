@@ -108,7 +108,7 @@ const DeskLamp = ({ lightOn }) => {
               />
             </mesh>
             {/* Point light from bulb */}
-            {lightOn && <pointLight position={[0, -1, 0]} intensity={4} distance={20} color="#ffedcc" castShadow />}
+            <pointLight position={[0, -1, 0]} intensity={lightOn ? 4 : 0} distance={20} color="#ffedcc" castShadow />
           </group>
         </group>
       </group>
@@ -324,18 +324,13 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                   <Canvas camera={{ position: [0, 2, 9], fov: 45 }}>
                     <ambientLight intensity={lightOn ? 0.6 : 1.5} />
 
-                    {lightOn ? (
-                      <>
-                        <spotLight position={[4, 6, 3]} angle={0.4} penumbra={1} intensity={1} castShadow />
-                        <Environment preset="studio" />
-                      </>
-                    ) : (
-                      <>
-                        <directionalLight position={[5, 5, 5]} intensity={1.5} />
-                        <directionalLight position={[-5, 5, -5]} intensity={1} />
-                        <directionalLight position={[0, -5, 0]} intensity={0.5} />
-                      </>
-                    )}
+                    {/* Always render all lights, but toggle intensity to prevent shader recompilation flash */}
+                    <spotLight position={[4, 6, 3]} angle={0.4} penumbra={1} intensity={lightOn ? 1 : 0} castShadow />
+                    <Environment preset="studio" />
+
+                    <directionalLight position={[5, 5, 5]} intensity={lightOn ? 0 : 1.5} />
+                    <directionalLight position={[-5, 5, -5]} intensity={lightOn ? 0 : 1} />
+                    <directionalLight position={[0, -5, 0]} intensity={lightOn ? 0 : 0.5} />
 
                     {/* Material model at center-left with PresentationControls so it rotates independently */}
                     <PresentationControls

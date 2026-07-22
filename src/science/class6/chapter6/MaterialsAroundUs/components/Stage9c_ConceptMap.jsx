@@ -16,8 +16,8 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
       desc: 'Anything that occupies space (volume) and has mass is called matter.',
       prefix: 'Matter',
       summary: 'is everything around us that has mass and occupies space.',
-      x: 320, y: 30, w: 240, h: 140,
-      path: "M 500 350 C 500 250, 440 200, 440 170"
+      x: 350, y: 10, w: 300, h: 160,
+      path: "M 500 350 C 500 270, 500 220, 500 170"
     },
     lustre: {
       id: 'lustre',
@@ -28,8 +28,8 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
       desc: "The way a material's surface reflects light. Examples: Gold, Silver, Plastic",
       prefix: 'Lustre',
       summary: 'helps us identify how a material looks by its shine.',
-      x: 40, y: 160, w: 240, h: 150,
-      path: "M 500 350 C 400 350, 300 230, 280 230"
+      x: 20, y: 170, w: 300, h: 160,
+      path: "M 500 350 C 400 350, 360 250, 320 250"
     },
     hardness: {
       id: 'hardness',
@@ -40,8 +40,8 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
       desc: 'The ability of a material to resist scratching or pressure. Examples: Iron (hard), Chalk (soft)',
       prefix: 'Hardness & softness',
       summary: 'tell us how strong or weak a material is when pressed or scratched.',
-      x: 720, y: 160, w: 240, h: 160,
-      path: "M 500 350 C 600 350, 700 240, 720 240"
+      x: 680, y: 170, w: 300, h: 160,
+      path: "M 500 350 C 600 350, 640 250, 680 250"
     },
     transparency: {
       id: 'transparency',
@@ -52,8 +52,8 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
       desc: 'How much light can pass through a material. Examples: Glass (transparent), Wood (opaque)',
       prefix: 'Transparency',
       summary: 'helps us know whether we can see through a material or not.',
-      x: 60, y: 400, w: 250, h: 160,
-      path: "M 500 350 C 400 350, 320 480, 310 480"
+      x: 40, y: 400, w: 300, h: 160,
+      path: "M 500 350 C 400 350, 360 480, 340 480"
     },
     solubility: {
       id: 'solubility',
@@ -64,8 +64,8 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
       desc: 'The ability of a material to dissolve in water. Examples: Salt (soluble), Sand (insoluble)',
       prefix: 'Solubility',
       summary: 'helps us know whether a material dissolves in water or not.',
-      x: 680, y: 400, w: 250, h: 150,
-      path: "M 500 350 C 600 350, 680 470, 680 470"
+      x: 660, y: 400, w: 300, h: 160,
+      path: "M 500 350 C 600 350, 640 480, 660 480"
     }
   };
 
@@ -111,15 +111,15 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
         <div style={{ flex: 2, background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           
           {/* Navigation Buttons */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center', marginBottom: '1.5rem', zIndex: 10 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', justifyContent: 'center', marginBottom: '1.2rem', zIndex: 10 }}>
             {Object.values(concepts).map(c => (
               <button
                 key={c.id}
                 onClick={() => handleConceptClick(c.id)}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: '6px',
-                  padding: '8px 16px', borderRadius: '8px', cursor: 'pointer',
-                  fontWeight: 'bold', fontSize: '0.95rem',
+                  display: 'flex', alignItems: 'center', gap: '5px',
+                  padding: '5px 12px', borderRadius: '6px', cursor: 'pointer',
+                  fontWeight: '600', fontSize: '0.85rem',
                   background: activeConcept === c.id ? c.color : 'white',
                   color: activeConcept === c.id ? 'white' : c.color,
                   border: `2px solid ${c.color}`,
@@ -128,7 +128,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                   filter: explored.includes(c.id) ? 'none' : 'grayscale(100%) opacity(0.6)'
                 }}
               >
-                {React.cloneElement(c.icon, { color: activeConcept === c.id ? 'white' : c.color, size: 18 })}
+                {React.cloneElement(c.icon, { color: activeConcept === c.id ? 'white' : c.color, size: 16 })}
                 {c.title}
               </button>
             ))}
@@ -191,12 +191,12 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{ background: 'white', padding: '8px', borderRadius: '50%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                        {c.icon}
+                      <div style={{ background: 'white', padding: '10px', borderRadius: '50%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                        {React.cloneElement(c.icon, { size: 28 })}
                       </div>
-                      <div style={{ color: c.color, fontWeight: 'bold', fontSize: '18px' }}>{c.title}</div>
+                      <div style={{ color: c.color, fontWeight: 'bold', fontSize: '20px' }}>{c.title}</div>
                     </div>
-                    <div style={{ color: '#475569', fontSize: '14px', lineHeight: '1.5' }}>
+                    <div style={{ color: '#475569', fontSize: '15px', lineHeight: '1.5' }}>
                       {c.desc}
                     </div>
                   </div>
