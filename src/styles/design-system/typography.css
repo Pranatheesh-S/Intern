@@ -9,10 +9,11 @@ html {
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color: var(--text-main);
+  /* color is handled by the global theme system in index.css via var(--text-primary) */
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
+
 
 /* 
   Fluid typography scale using rem. 
