@@ -4723,9 +4723,9 @@ export default function App() {
           ) : activeActivity === 'sci6-ch4-sec45-fun-with-magnets' ? (
             <FunWithMagnets onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} onComplete={() => navigateTo('class6', 'chapter4_flow')} />
           ) : activeActivity === 'linear_motion' ? (
-            <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
+            <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5_flow')} />
           ) : activeActivity === 'circular_motion' ? (
-            <CircularMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5')} />
+            <CircularMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5_flow')} />
           ) : activeActivity === 'virtual_biodiversity' ? (
             <VirtualBiodiversityExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'appreciating_biodiversity' ? (

@@ -46,13 +46,13 @@ const quizData = [
     title: "Quiz 4",
     question: "Which instrument is based on the property of a freely suspended magnet?",
     options: [
-      "Thermometer",
+      "Barometer",
       "Compass",
-      "Balance",
-      "Magnifying glass"
+      "Stopwatch",
+      "Spring Balance"
     ],
     correctIndex: 1,
-    explanation: "A magnetic compass works because its needle is a small freely suspended magnet."
+    explanation: "A magnetic compass works because its needle is a small freely suspended magnet that aligns itself in the North–South direction."
   },
   {
     id: 5,
