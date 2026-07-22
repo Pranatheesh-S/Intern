@@ -435,13 +435,14 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
   return (
     <div style={{
       width: '100%',
-      minHeight: 'calc(100vh - 3rem)',
+      height: 'calc(100vh - 3rem)',
       background: 'var(--page-bg)',
       fontFamily: 'var(--geo-font)',
       color: 'var(--ink)',
       display: 'flex',
       flexDirection: 'column',
       boxSizing: 'border-box',
+      overflow: 'hidden',
     }}>
       {/* SVG Wave filter for scanner lens distortion */}
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>
@@ -453,7 +454,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
         </defs>
       </svg>
 
-      <div className="split-frame" style={{ flex: 1, minHeight: 0 }}>
+      <div className="split-frame" style={{ flex: 1, height: 0 }}>
         {/* ============ LEFT COLUMN: LESSON & JOURNAL ============ */}
         <div className="frame-page-left">
           <div className="textbook-eyebrow">Activity 2.1 · {typeFilter === 'plant' ? 'Plants Walk' : 'Animals Walk'}</div>
