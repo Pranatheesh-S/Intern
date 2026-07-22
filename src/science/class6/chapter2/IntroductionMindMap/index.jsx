@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BookOpen, HelpCircle, Check, Award, ArrowLeft, Volume2, VolumeX, ArrowRight, Play } from 'lucide-react';
-import sanskritSlogan from '../../assets/sanskrit_slogan.png';
-import { useTheme } from '../../ThemeContext.jsx';
+import sanskritSlogan from '../../../../assets/sanskrit_slogan.png';
+import { useTheme } from '../../../../ThemeContext.jsx';
 
 export default function IntroductionMindMap({ onBackToDashboard }) {
   const { theme } = useTheme();

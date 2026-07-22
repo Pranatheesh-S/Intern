@@ -1110,3 +1110,21 @@ body.focus-mode-active:has(.focus-trigger-top:hover) .lab-internal-header {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Progressively Animated Keyframes for Quiz Explanation ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.explanation-point-animated {
+  opacity: 0;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

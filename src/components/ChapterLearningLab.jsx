@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Play, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Play, X, ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import CoverPage from "./CoverPage";
 import SloganPage from "./SloganPage";
 import VerticalLevelMap from "./VerticalLevelMap";
@@ -9,19 +9,19 @@ import confetti from "canvas-confetti";
 import { useTheme } from "../ThemeContext";
 
 // Content Lessons (Class 6 Chapter 2)
-import IntroductionMindMap from "../activities/IntroductionMindMap";
-import GroupingBasicsBookSpread from "../activities/GroupingBasicsBookSpread";
+import IntroductionMindMap from "../science/class6/chapter2/IntroductionMindMap";
+import GroupingBasicsBookSpread from "../science/class6/chapter2/GroupingBasicsBookSpread";
 
 // Activities (Class 6 Chapter 2 & 3)
-import VirtualBiodiversityExplorerActivity from "../activities/VirtualBiodiversityExplorer";
-import AppreciatingBiodiversityActivity from "../activities/AppreciatingBiodiversityActivity";
-import InlineSortingActivity from "../activities/InlineSortingActivity";
-import PlantDetectiveActivity from "../activities/PlantDetective";
-import LeafVenationLab from "../activities/LeafVenationLab";
-import RootSystemsLab from "../activities/RootSystemsLab";
-import VenationRootCorrelationLab from "../activities/VenationRootCorrelationLab";
-import SeedDissectionLab from "../activities/SeedDissectionLab";
-import AnimalHabitatExplorerActivity from "../activities/AnimalHabitatExplorer";
+import VirtualBiodiversityExplorerActivity from "../science/class6/chapter2/VirtualBiodiversityExplorer";
+import AppreciatingBiodiversityActivity from "../science/class6/chapter2/AppreciatingBiodiversityActivity";
+import InlineSortingActivity from "../science/class6/chapter2/InlineSortingActivity";
+import PlantDetectiveActivity from "../science/class6/chapter2/PlantDetective";
+import LeafVenationLab from "../science/class6/chapter2/LeafVenationLab";
+import RootSystemsLab from "../science/class6/chapter2/RootSystemsLab";
+import VenationRootCorrelationLab from "../science/class6/chapter2/VenationRootCorrelationLab";
+import SeedDissectionLab from "../science/class6/chapter2/SeedDissectionLab";
+import AnimalHabitatExplorerActivity from "../science/class6/chapter2/AnimalHabitatExplorer";
 import FoodTestingActivity from "../activities/FoodTesting";
 import FatTestingActivity from "../activities/FatTesting";
 import ProteinTestingActivity from "../activities/ProteinTesting";
@@ -36,7 +36,7 @@ const LEVEL_QUIZZES = {
         'A forest ranger'
       ],
       correct: 0,
-      explanation: 'Dr. Raghu (their teacher) and Maniram chacha (the school gardener) guided the kids during the nature walk.'
+      explanation: '• During the nature walk described in the textbook, the students were accompanied by their science teacher, Dr. Raghu.\n• They were also accompanied by the school gardener, Maniram chacha.\n• Maniram chacha helped guide the students by mimicking various bird calls and showing them the plant life.'
     },
     {
       q: 'What tables are used to record observations of plants and animals respectively?',
@@ -46,7 +46,7 @@ const LEVEL_QUIZZES = {
         'Table 3.1 and 3.2'
       ],
       correct: 1,
-      explanation: 'According to the textbook chapter activity, Table 2.1 is used for recording plants and Table 2.2 is used for recording animals.'
+      explanation: '• According to the textbook activities for Chapter 2, the observations are organized into specific tables.\n• Table 2.1 is designated for recording observations of plants (stems, leaves, etc.).\n• Table 2.2 is designated for recording observations of animals (where they are found, how they move).'
     }
   ],
   'grouping_basics_concept': [
@@ -58,7 +58,7 @@ const LEVEL_QUIZZES = {
         'To calculate the exact number of leaves on each tree.'
       ],
       correct: 1,
-      explanation: 'Classification groups organisms by shared traits to help scientists study them systematically.'
+      explanation: '• Classification is the process of sorting objects or living things into categories based on shared properties.\n• It helps scientists systematically understand the massive variety of life on Earth.\n• By grouping, it becomes easier to identify patterns, compare structures, and study evolutionary relationships.'
     },
     {
       q: 'Which of these is a valid scientific basis for grouping plants?',
@@ -68,7 +68,7 @@ const LEVEL_QUIZZES = {
         'The total amount of shade they cast at noon.'
       ],
       correct: 0,
-      explanation: 'Scientific categorization groups plants into Herbs, Shrubs, and Trees based on their stem woody nature and branching height.'
+      explanation: '• Scientific classification of plants relies on observable, stable physical characteristics.\n• Height, stem thickness, woody nature, and where branching starts are the standard criteria.\n• Using these traits, plants are categorized into Herbs, Shrubs, Trees, Climbers, and Creepers.'
     }
   ],
   'plant_variety_concept': [
@@ -80,7 +80,7 @@ const LEVEL_QUIZZES = {
         'Shrubs'
       ],
       correct: 2,
-      explanation: 'Shrubs are medium-sized plants with hard, thin woody stems branching out close to the base.'
+      explanation: '• Shrubs are medium-sized woody plants that typically branch out near the soil level.\n• Their stems are hard but relatively thin compared to the trunks of large trees.\n• Common textbook examples of shrubs include Rose, Hibiscus, and Lemon plants.'
     },
     {
       q: 'Watermelon plants spread horizontally along the soil. They are classified as:',
@@ -90,7 +90,7 @@ const LEVEL_QUIZZES = {
         'Trees'
       ],
       correct: 1,
-      explanation: 'Creepers have weak stems and cannot stand upright, so they crawl/spread horizontally along the ground.'
+      explanation: '• Watermelon plants have very weak, soft green stems that cannot support the weight of the plant or its heavy fruit upright.\n• As a result, they spread horizontally across the ground and are classified as Creepers.\n• Unlike Climbers, they do not wrap around supports to climb upward.'
     }
   ],
   'venation_roots_concept': [
@@ -102,7 +102,7 @@ const LEVEL_QUIZZES = {
         'Adventitious Root System'
       ],
       correct: 1,
-      explanation: 'Reticulate leaf venation (net-like veins) is universally correlated with the taproot system (single main root).'
+      explanation: '• Reticulate venation features a net-like vein structure branching on both sides of a central midrib.\n• In nature, plants with reticulate venation are strongly correlated with the Taproot system.\n• A Taproot system consists of one thick main root growing deep vertically, with smaller side branches.'
     },
     {
       q: 'Which of the following leaf-root pairs matches Grass?',
@@ -112,7 +112,7 @@ const LEVEL_QUIZZES = {
         'Parallel Venation and Taproots'
       ],
       correct: 0,
-      explanation: 'Monocots like grass have parallel leaf venation and a fibrous root system (bunch of equal-sized roots).'
+      explanation: '• Grass is a monocot plant with long, narrow leaves whose veins run parallel from base to tip (Parallel Venation).\n• Grass roots form a dense cluster of thin, equal-sized roots arising from the base of the stem (Fibrous Roots).\n• This venation-root correlation is a universal rule for grass and related monocot species.'
     }
   ],
   'cotyledons_concept': [
@@ -124,7 +124,7 @@ const LEVEL_QUIZZES = {
         'Three'
       ],
       correct: 1,
-      explanation: 'Chickpea seeds can easily be split into two equal halves (cotyledons), making them dicotyledonous (dicot).'
+      explanation: '• Chickpea seeds can easily be split apart into two equal halves, which are the seed leaves or cotyledons.\n• Plants with two cotyledons are called dicotyledonous or Dicots.\n• Dicots typically have reticulate leaf venation and taproots.'
     },
     {
       q: 'A plant with parallel leaf venation and fibrous roots is expected to have seeds with:',
@@ -134,7 +134,7 @@ const LEVEL_QUIZZES = {
         'No cotyledons'
       ],
       correct: 0,
-      explanation: 'Parallel venation and fibrous roots correlate with monocotyledonous seeds (containing exactly one cotyledon).'
+      explanation: '• Monocotyledonous plants (Monocots) possess exactly one cotyledon in their seeds.\n• This cotyledon count is universally correlated with parallel leaf venation and fibrous root systems.\n• Examples include wheat, maize, rice, and grass.'
     }
   ],
   'grouping_animals_concept': [
@@ -146,7 +146,7 @@ const LEVEL_QUIZZES = {
         'Fins and streamlined tail'
       ],
       correct: 2,
-      explanation: 'Fins help keep balance, and a streamlined body shape and muscular tail allow smooth swimming in water.'
+      explanation: '• Fish have a streamlined body shape that reduces friction and drag while moving through water.\n• Their flat fins provide stability, balance, and steer direction.\n• The powerful muscular tail drives locomotion, pushing the fish forward.'
     },
     {
       q: 'Pigeons can move by:',
@@ -156,7 +156,7 @@ const LEVEL_QUIZZES = {
         'Swimming and hopping'
       ],
       correct: 1,
-      explanation: 'Pigeons walk on ground using claws and fly in the air using wings, showing multiple modes of locomotion.'
+      explanation: '• Pigeons possess forelimbs modified into wings covered with feathers, which allow them to fly efficiently.\n• They also have strong hind limbs (legs) with claws that enable them to walk, run, and perch on branches.\n• This dual mode of locomotion helps them feed and escape predators.'
     }
   ],
   'adaptations_concept': [
@@ -168,7 +168,7 @@ const LEVEL_QUIZZES = {
         'It has gills to breathe underwater.'
       ],
       correct: 1,
-      explanation: 'Ladakh double-humped camels have shaggy thick coats to insulate against sub-zero mountain cold.'
+      explanation: '• Camels native to the cold deserts of Ladakh (Bactrian camels) have two humps instead of one.\n• They grow a very thick, shaggy coat of hair to insulate themselves against the sub-zero temperatures of high altitudes.\n• This adaptation protects them during harsh winters.'
     },
     {
       q: 'What is a "Sacred Grove" in NCERT terminology?',
@@ -178,7 +178,7 @@ const LEVEL_QUIZZES = {
         'A desert area where camels gather.'
       ],
       correct: 1,
-      explanation: 'Sacred Groves are community forest reserves preserved due to religious and environmental traditions.'
+      explanation: '• Sacred Groves are patches of forest reserves set aside and strictly protected by indigenous and local communities.\n• These areas are associated with religious taboos, local deities, or traditional conservation rules.\n• They serve as crucial refuges for rare plants and wildlife, preserving biodiversity.'
     }
   ]
 };
@@ -808,34 +808,538 @@ function VocabularyGlossary({ onMatchComplete }) {
   );
 }
 
-function ChapterChallengeOverview() {
-  return (
-    <div className="split-frame" style={{ width: '100%', minHeight: '360px' }}>
-      {/* LEFT COLUMN: Info */}
-      <div className="frame-page-left">
-        <div className="textbook-eyebrow">Class 6 Science · Chapter 2 Evaluation</div>
-        <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: '1.6rem' }}>
-          Chapter Challenge
-        </h1>
-        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6', margin: '0 0 1.25rem 0' }}>
-          This final interactive console compiles everything you have learned in Chapter 2. You will be evaluated on your understanding of:
-        </p>
-        <ul style={{ paddingLeft: '1.25rem', margin: '0 0 1.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-          <li>🌱 Plant Classification (Herbs, Shrubs, Trees, Climbers, Creepers)</li>
-          <li>🕸️ Leaf Venation and Root Systems Correlation</li>
-          <li>🐫 Animal Movements and Habitat Adaptations</li>
+function SummaryPane({ lessonId }) {
+    const summaries = {
+    vocabulary_glossary: [
+        "Classification is the process of sorting living things into groups based on shared properties, making them easier to study.",
+        "Plants are primarily classified by their stems into Herbs (soft, green), Shrubs (thin, woody, branching at base), and Trees (thick, woody trunk).",
+        "There is a strong correlation between a plant's leaf vein pattern (venation) and its root structure.",
+        "Reticulate (net-like) venation is typically paired with a Taproot system (one main root).",
+        "Parallel (straight line) venation is typically paired with a Fibrous root system (a bundle of thin roots)."
+    ],
+    chapter_challenge_overview: [
+        "Seeds are classified by their number of seed leaves (cotyledons): Monocots (one) and Dicots (two).",
+        "The Monocot/Dicot classification links directly to venation and root type, forming a complete predictive model for plant traits.",
+        "Animals are grouped based on their mode of movement (locomotion) like walking, flying, or swimming, and their natural home (habitat).",
+        "Adaptation refers to special features that help organisms survive in their specific environment, such as a camel's hump or a polar bear's thick fur.",
+        "Conserving biodiversity through methods like protecting Sacred Groves is vital for ecological balance."
+    ]
+    };
+
+    const summaryPoints = summaries[lessonId] || [];
+
+    return (
+    <div id="pane-summary-window" className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', borderTop: '1px dashed var(--border)', paddingTop: '2.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+        <span style={{ fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Key Takeaways
+        </span>
+        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            Chapter Summary
+        </span>
+        </div>
+        <ul style={{ margin: 0, paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {summaryPoints.map((point, i) => (
+            <li key={i} style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+            {point}
+            </li>
+        ))}
         </ul>
+    </div>
+    );
+}
+
+function ChapterChallengeOverview() {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isAnswered, setIsAnswered] = useState(false);
+
+  const chapterChallengeQuestions = [
+    {
+        id: 1,
+        bloomLevel: 'Analyse',
+        difficulty: 'Medium',
+        concept: 'Biodiversity, Nature Walk',
+        question: "During a nature walk, four students made the following observations about two parks.\n• Student A: Park X has many kinds of plants, birds, butterflies, and insects.\n• Student B: Park Y has mostly one type of grass and only crows.\n• Student C: Park X has plants of different heights and flowering seasons.\n• Student D: Park Y has more benches and walking paths.\nWhich observation BEST supports the idea that Park X has greater biodiversity?",
+        options: [ "Student A's observation", "Student B's observation", "Student D's observation", "Both Student B and Student D" ],
+        answerIndex: 0,
+        explanation: [
+            "A place has greater biodiversity when it contains many different kinds of living organisms.",
+            "Student A observed different plants, birds, butterflies, and insects, showing a rich variety of life.",
+            "Student C also supports biodiversity, but Student A directly highlights the diversity of living organisms.",
+            "Benches and walking paths do not indicate biodiversity."
+        ]
+    },
+      {
+        id: 2,
+        bloomLevel: 'Apply',
+        difficulty: 'Medium',
+        concept: 'Nature Walk (Activity 2.1)',
+        question: "While exploring a school garden, Riya plucks several flowers to examine them closely.\nAman observes the flowers without touching them and writes notes in his notebook.\nWho is following the objective of the nature walk correctly?",
+        options: [ "Only Riya", "Only Aman", "Both Riya and Aman", "Neither of them" ],
+        answerIndex: 1,
+        explanation: [
+            "The purpose of a nature walk is to observe nature carefully without disturbing plants or animals.",
+            "Aman records his observations while respecting nature.",
+            "Riya damages the plants by plucking flowers unnecessarily.",
+            "Respecting living organisms is an important scientific attitude and also supports biodiversity conservation."
+        ]
+    },
+    {
+        id: 3,
+        bloomLevel: 'Analyse',
+        difficulty: 'Challenging',
+        concept: 'Grouping of Plants',
+        question: "Four students grouped the same set of plants differently.\n• Student A: Based on flower colour\n• Student B: Based on stem hardness\n• Student C: Based on leaf arrangement\n• Student D: Based on plant height\nThey argued that only one grouping method was correct.\nWhich statement is scientifically correct?",
+        options: [ "Only Student D is correct.", "Only Student A is correct.", "All four grouping methods can be correct if the chosen feature is used consistently.", "Plants can be grouped only by their names." ],
+        answerIndex: 2,
+        explanation: [
+            "Plants can be grouped using different observable characteristics such as height, stem type, leaf arrangement, or flower colour.",
+            "The purpose of grouping is to organise plants based on similarities.",
+            "There is no single correct method of grouping; what matters is using one feature consistently."
+        ]
+    },
+    {
+        id: 4,
+        bloomLevel: 'Apply',
+        difficulty: 'Easy',
+        concept: 'Herbs, Shrubs and Trees',
+        question: "A plant is shorter than a child. It has a soft, green stem and no woody branches.\nWhich group does it most likely belong to?",
+        options: [ "Tree", "Shrub", "Herb", "Climber" ],
+        answerIndex: 2,
+        explanation: [
+            "Herbs are usually small plants with soft, green, and tender stems.",
+            "They do not have thick woody trunks like trees or hard woody stems like shrubs.",
+            "The description matches the characteristics of a herb."
+        ]
+    },
+    {
+        id: 5,
+        bloomLevel: 'Evaluate',
+        difficulty: 'Challenging',
+        concept: 'Biodiversity and Interdependence',
+        question: "A village cuts down almost all its large fruit trees.\nWhich change is MOST likely to happen first?",
+        options: [ "Birds that depend on those trees for food and shelter may decrease.", "Fish in a nearby pond will immediately disappear.", "The number of mountains in the area will reduce.", "All insects in the village will become extinct." ],
+        answerIndex: 0,
+        explanation: [
+            "Plants and animals depend on one another in many ways.",
+            "Fruit trees provide food, nesting places, and shelter for many birds.",
+            "If these trees are removed, the bird population may decline due to loss of resources.",
+            "This demonstrates the interdependence of living organisms."
+        ]
+    },
+    {
+        id: 6,
+        bloomLevel: 'Analyse',
+        difficulty: 'Medium',
+        concept: 'Climbers and Creepers',
+        question: "Two plants are growing in a garden.\n• Plant P has a weak stem and grows upward by wrapping around a pole.\n• Plant Q has a weak stem and spreads along the ground without any support.\nWhich statement correctly identifies these plants?",
+        options: [ "Plant P is a creeper and Plant Q is a climber.", "Plant P is a climber and Plant Q is a creeper.", "Both are herbs.", "Both are shrubs." ],
+        answerIndex: 1,
+        explanation: [
+            "Climbers have weak stems and need support to grow upward.",
+            "Creepers also have weak stems but spread along the ground.",
+            "Plant P uses a pole, so it's a climber; Plant Q grows on the ground, so it's a creeper."
+        ]
+    },
+    {
+        id: 7,
+        bloomLevel: 'Apply',
+        difficulty: 'Medium',
+        concept: 'Leaf Venation',
+        question: "A student observes a leaf with many veins forming a net-like pattern around a thick middle vein.\nWhat type of venation does this leaf have?",
+        options: [ "Parallel venation", "Fibrous venation", "Reticulate venation", "Circular venation" ],
+        answerIndex: 2,
+        explanation: [
+            "In reticulate venation, the veins form a network around the main vein of the leaf.",
+            "This pattern is commonly seen in plants such as hibiscus and mango.",
+            "Recognising venation helps in grouping plants and is related to the root system type."
+        ]
+    },
+    {
+        id: 8,
+        bloomLevel: 'Analyse',
+        difficulty: 'Challenging',
+        concept: 'Relationship between Leaf Venation and Root System',
+        question: "A student finds an unknown plant with parallel venation in its leaves.\nWithout digging up the plant, which prediction is MOST reasonable?",
+        options: [ "It is likely to have a fibrous root system.", "It must have a taproot.", "It cannot have roots.", "The type of root cannot be related to leaf venation." ],
+        answerIndex: 0,
+        explanation: [
+            "Most plants with parallel venation also have fibrous roots.",
+            "This relationship is a general rule taught in the Grade 6 curriculum.",
+            "Therefore, predicting a fibrous root system is scientifically reasonable based on this observed pattern."
+        ]
+    },
+    {
+        id: 9,
+        bloomLevel: 'Apply',
+        difficulty: 'Medium',
+        concept: 'Monocots and Dicots',
+        question: "A student soaks a seed, removes its seed coat, and notices that it has two cotyledons.\nWhich additional feature is MOST likely to be present in the mature plant?",
+        options: [ "Parallel venation and fibrous roots", "Reticulate venation and taproot", "No leaves", "Weak stem that always creeps on the ground" ],
+        answerIndex: 1,
+        explanation: [
+            "Seeds with two cotyledons belong to dicot plants.",
+            "Most dicots have reticulate venation in their leaves and a taproot system.",
+            "Observing one feature (cotyledons) often helps predict the others (venation, root type)."
+        ]
+    },
+    {
+        id: 10,
+        bloomLevel: 'Evaluate',
+        difficulty: 'Challenging',
+        concept: 'Importance of Grouping',
+        question: "A science club collected photographs of 150 different plants.\nOne student suggested arranging them randomly, while another suggested grouping them based on stem type, leaf venation, and plant height.\nWhy is the second suggestion better?",
+        options: [ "It makes studying similarities and differences easier.", "It changes the plants into new species.", "It increases the number of plants collected.", "It helps plants grow faster." ],
+        answerIndex: 0,
+        explanation: [
+            "Grouping helps organise information in a meaningful way.",
+            "When plants are grouped by common characteristics, comparing them becomes easier.",
+            "It is an important scientific method used in biology to study biodiversity efficiently."
+        ]
+    },
+    {
+        id: 11,
+        bloomLevel: 'Analyse',
+        difficulty: 'Medium',
+        concept: 'Grouping Animals Based on Movement',
+        question: "A group of students prepared the following table after observing animals.\nAnimal\tBody Part Used for Movement\nFish\tFins\nGoat\tLegs\nPigeon\tLegs and Wings\nHousefly\tLegs and Wings\nWhich conclusion is MOST appropriate?",
+        options: [ "All animals use the same body parts for movement.", "Animals use different body parts depending on how they move.", "Only birds can move from one place to another.", "Fish use wings for swimming." ],
+        answerIndex: 1,
+        explanation: [
+            "Different animals move in different ways depending on their body structure.",
+            "The table clearly shows that fish use fins, goats use legs, and birds use both legs and wings.",
+            "Observing movement is one way to group animals scientifically."
+        ]
+    },
+    {
+        id: 12,
+        bloomLevel: 'Apply',
+        difficulty: 'Medium',
+        concept: 'Adaptation',
+        question: "A farmer brings a fish out of water and keeps it on dry land.\nWhat is the BEST explanation for why the fish cannot survive for long?",
+        options: [ "Fish need water because their bodies are adapted to live in water.", "Fish become smaller outside water.", "Fish forget how to swim on land.", "Fish only eat food found in ponds." ],
+        answerIndex: 0,
+        explanation: [
+            "Fish are adapted to aquatic habitats.",
+            "Their gills are specialized to take oxygen from water, not air.",
+            "Adaptations help organisms survive only in their suitable habitats."
+        ]
+    },
+    {
+        id: 13,
+        bloomLevel: 'Analyse',
+        difficulty: 'Challenging',
+        concept: 'Desert Adaptations (Camel)',
+        question: "A camel living in the hot desert has long legs and wide hooves.\nWhy are these features useful?",
+        options: [ "They help the camel walk on loose sand without sinking easily.", "They help the camel climb tall trees.", "They allow the camel to swim faster.", "They help the camel catch birds." ],
+        answerIndex: 0,
+        explanation: [
+            "Camels have special adaptations for desert life.",
+            "Long legs keep their bodies away from the hot sand.",
+            "Wide hooves spread their weight over a larger area, preventing sinking."
+        ]
+    },
+    {
+        id: 14,
+        bloomLevel: 'Evaluate',
+        difficulty: 'Challenging',
+        concept: 'Habitat',
+        question: "Assertion (A): A habitat provides food, water, air and shelter to living organisms.\nReason (R): Every plant and animal can survive equally well in any habitat.\nChoose the correct answer.",
+        options: [ "Both A and R are true, and R explains A.", "Both A and R are true, but R does not explain A.", "A is true, but R is false.", "A is false, but R is true." ],
+        answerIndex: 2,
+        explanation: [
+            "Assertion (A) is true: A habitat provides the essential resources for survival.",
+            "Reason (R) is false: Different organisms are adapted to different habitats and cannot survive equally well everywhere.",
+            "A fish cannot survive in a desert, and a camel cannot survive underwater."
+        ]
+    },
+    {
+        id: 15,
+        bloomLevel: 'Analyse',
+        difficulty: 'Challenging',
+        concept: 'Biodiversity Conservation',
+        question: "A town plans to cut down a forest to build a large shopping complex.\nWhich students have made scientifically correct statements?\n• Student P: Many animals may lose their homes.\n• Student Q: Biodiversity may decrease.\n• Student R: Habitat destruction can affect food chains.\n• Student S: Trees will immediately turn into grass.",
+        options: [ "Only P and Q", "P, Q and R", "Only S", "Q and S only" ],
+        answerIndex: 1,
+        explanation: [
+            "Statements P, Q, and R are all correct ecological effects of deforestation.",
+            "Forests provide habitats (P), so their destruction reduces biodiversity (Q) and disturbs food chains (R).",
+            "Statement S is incorrect as trees do not turn into grass."
+        ]
+    },
+    {
+        id: 16,
+        bloomLevel: 'Apply',
+        difficulty: 'Medium',
+        concept: 'Terrestrial, Aquatic and Amphibians',
+        question: "A teacher asks students to group the following animals based on their habitats:\nFish, Frog, Camel, Whale\nWhich option correctly groups them?",
+        options: [ "Terrestrial – Camel; Aquatic – Fish, Whale; Amphibian – Frog", "Terrestrial – Camel, Frog; Aquatic – Fish; Amphibian – Whale", "Terrestrial – Camel; Aquatic – Fish, Frog; Amphibian – Whale", "Terrestrial – Whale; Aquatic – Camel; Amphibian – Fish" ],
+        answerIndex: 0,
+        explanation: [
+            "Terrestrial animals like camels live on land.",
+            "Aquatic animals like fish and whales live in water.",
+            "Amphibians like frogs can live both on land and in water."
+        ]
+    },
+    {
+        id: 17,
+        bloomLevel: 'Analyse',
+        difficulty: 'Challenging',
+        concept: 'Adaptations of Deodar Tree',
+        question: "A deodar tree grows in snowy mountains. It has a conical shape with sloping branches.\nWhat is the BEST reason for these features?",
+        options: [ "They help snow slide off easily, preventing damage to the branches.", "They help the tree store more fruits.", "They make the tree grow faster than all other plants.", "They help insects climb the tree." ],
+        answerIndex: 0,
+        explanation: [
+            "Deodar trees are adapted to regions with heavy snowfall.",
+            "Their conical shape and sloping branches allow snow to slide off easily.",
+            "This prevents branches from breaking under the weight of the snow."
+        ]
+    },
+    {
+        id: 18,
+        bloomLevel: 'Evaluate',
+        difficulty: 'Challenging',
+        concept: 'Scientists – Janaki Ammal & Salim Ali',
+        question: "Two students prepared reports on famous Indian scientists.\n• Student A: Janaki Ammal worked to document and conserve India's plant biodiversity.\n• Student B: Salim Ali studied birds, their habitats and migration.\nWhich statement is correct?",
+        options: [ "Only Student A is correct.", "Only Student B is correct.", "Both students are correct.", "Neither student is correct." ],
+        answerIndex: 2,
+        explanation: [
+            "Both statements are correct.",
+            "Janaki Ammal was a renowned Indian botanist.",
+            "Salim Ali, the 'Birdman of India,' was a famous ornithologist."
+        ]
+    },
+    {
+        id: 19,
+        bloomLevel: 'Analyse',
+        difficulty: 'Medium',
+        concept: 'Habitat Destruction and Conservation',
+        question: "A wetland is filled with soil to construct buildings.\nWhich change is MOST likely to happen?",
+        options: [ "Aquatic plants and animals may lose their habitat.", "Desert plants will immediately grow there.", "Fish will become land animals.", "The biodiversity of the wetland will increase automatically." ],
+        answerIndex: 0,
+        explanation: [
+            "Wetlands are habitats for many aquatic plants and animals.",
+            "Destroying a wetland means these organisms lose their homes, food sources, and breeding places.",
+            "This leads to a decrease in biodiversity."
+        ]
+    },
+    {
+        id: 20,
+        bloomLevel: 'Evaluate',
+        difficulty: 'Challenging',
+        concept: 'Conservation',
+        question: "Which action BEST supports the conservation of biodiversity?",
+        options: [ "Protecting sacred groves, conserving tiger habitats and restoring cheetah populations.", "Cutting forests to build more roads through wildlife habitats.", "Hunting endangered animals to reduce competition.", "Removing all wild plants from forests." ],
+        answerIndex: 0,
+        explanation: [
+            "Conservation aims to protect plants, animals, and their habitats.",
+            "Actions like protecting sacred groves, Project Tiger, and the Cheetah Reintroduction Project are real conservation efforts.",
+            "The other options all lead to biodiversity loss."
+        ]
+    },
+    {
+        id: 21,
+        bloomLevel: 'Analyse',
+        difficulty: 'Challenging',
+        concept: 'Adaptations of Rhododendron',
+        question: "Two rhododendron plants are observed in different mountain regions.\n• Plant A: Short with small leaves, growing on windy mountain tops.\n• Plant B: Taller with larger leaves, growing in a less windy mountain area.\nWhich conclusion is the BEST?",
+        options: [ "Both plants are different species.", "Plant features can vary as adaptations to different environmental conditions.", "Plant A is unhealthy because it is shorter.", "Leaf size is not related to the environment." ],
+        answerIndex: 1,
+        explanation: [
+            "Plants in different environments often develop different features to survive.",
+            "Shorter plants with smaller leaves are better adapted to windy conditions.",
+            "These differences are adaptations, not necessarily signs of different species or poor health."
+        ]
+    },
+    {
+        id: 22,
+        bloomLevel: 'Apply',
+        difficulty: 'Medium',
+        concept: 'Adaptations of Duck',
+        question: "A duck has webbed feet, while a pigeon does not.\nWhich activity do the duck's webbed feet help it perform most efficiently?",
+        options: [ "Climbing trees", "Swimming in water", "Digging deep burrows", "Running very fast on land" ],
+        answerIndex: 1,
+        explanation: [
+            "Webbed feet have skin stretched between the toes, creating a broad surface.",
+            "This structure is an adaptation that helps ducks push against water and swim efficiently.",
+            "Body part structures are closely related to an animal's habitat and lifestyle."
+        ]
+    },
+    {
+        id: 23,
+        bloomLevel: 'Evaluate',
+        difficulty: 'Challenging',
+        concept: 'Activity 2.3 – Grouping Organisms',
+        question: "During Activity 2.3, four groups classified the same set of animals using different features.\n• Group A: Habitat\n• Group B: Food habits\n• Group C: Body colour\n• Group D: Type of movement\nThe teacher said that all four groups had valid classifications.\nWhy did the teacher say this?",
+        options: [ "Animals can be grouped using different observable characteristics.", "There is only one correct way to classify animals.", "Classification depends only on the names of animals.", "Colour is the only scientific basis for grouping." ],
+        answerIndex: 0,
+        explanation: [
+            "Scientific grouping can be based on many different observable features.",
+            "As long as the chosen feature is used consistently, the grouping is scientifically valid.",
+            "Different classification methods help us study biodiversity from different perspectives."
+        ]
+    },
+    {
+        id: 24,
+        bloomLevel: 'Analyse',
+        difficulty: 'Medium',
+        concept: 'Biodiversity and Interdependence',
+        question: "A forest has many flowering plants. Due to excessive pesticide use, most butterflies disappear.\nWhich effect is MOST likely?",
+        options: [ "Pollination of many flowering plants may decrease.", "Trees will immediately stop producing oxygen.", "Rivers in the forest will dry up overnight.", "All birds will disappear at once." ],
+        answerIndex: 0,
+        explanation: [
+            "Butterflies are important pollinators, carrying pollen from one flower to another.",
+            "If their population decreases, many flowering plants may produce fewer seeds and fruits.",
+            "This demonstrates the interdependence between plants and animals in an ecosystem."
+        ]
+    },
+    {
+        id: 25,
+        bloomLevel: 'Create / Evaluate',
+        difficulty: 'Challenging',
+        concept: 'Biodiversity Conservation',
+        question: "Your school wants to improve biodiversity on its campus.\nWhich plan would be MOST effective?",
+        options: [ "Plant only one type of ornamental plant throughout the campus.", "Plant a variety of native trees, shrubs and herbs, provide water for birds, and avoid disturbing nests.", "Remove all insects because they look unpleasant.", "Cut old trees every year to make the campus look cleaner." ],
+        answerIndex: 1,
+        explanation: [
+            "A healthy ecosystem contains a variety of plants and animals.",
+            "Planting a variety of native species provides food and shelter for local wildlife.",
+            "Conserving biodiversity requires protecting and creating suitable habitats."
+        ]
+    }
+  ];
+
+  const handleAnswerSelect = (optionIndex) => {
+    if (isAnswered) return;
+    setSelectedAnswer(optionIndex);
+    setIsAnswered(true);
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < chapterChallengeQuestions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedAnswer(null);
+      setIsAnswered(false);
+    } else {
+      // Handle quiz completion
+      setCurrentQuestionIndex(0);
+      setSelectedAnswer(null);
+      setIsAnswered(false);
+       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
+  };
+
+  const currentQuestion = chapterChallengeQuestions[currentQuestionIndex];
+
+  return (
+    <div className="split-frame" style={{ width: '100%', minHeight: '480px', background: 'var(--card-bg)' }}>
+      {/* LEFT PANE: Question, Metadata */}
+      <div className="frame-page-left" style={{ background: 'rgba(85, 62, 51, 0.25)', padding: '2rem', display: 'flex', flexDirection: 'column' }}>
+        <div className="textbook-eyebrow" style={{ color: 'var(--accent-text)'}}>Chapter Challenge - Question {currentQuestion.id} of {chapterChallengeQuestions.length}</div>
+        <h2 style={{ fontFamily: 'var(--serif-font)', margin: '0.5rem 0 1rem 0', fontSize: '0.95rem', color: 'var(--text-heading)', whiteSpace: 'pre-line', fontWeight: '500', lineHeight: '1.7' }}>
+          {currentQuestion.question}
+        </h2>
+        
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', fontSize: '0.7rem', marginBottom: '1.5rem' }}>
+            <span style={{background: 'rgba(0,0,0,0.1)', padding: '0.2rem 0.5rem', borderRadius: '10px'}}><b>Difficulty:</b> {currentQuestion.difficulty}</span>
+            <span style={{background: 'rgba(0,0,0,0.1)', padding: '0.2rem 0.5rem', borderRadius: '10px'}}><b>Concept:</b> {currentQuestion.concept}</span>
+        </div>
       </div>
 
-      {/* RIGHT COLUMN: Action Invitation */}
-      <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0, justifyContent: 'center', border: '1px solid var(--border)' }}>
-        <div style={{ textAlign: 'center', padding: '2rem', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px' }}>
-          <span style={{ fontSize: '3rem', display: 'block', marginBottom: '0.75rem' }}>🏆</span>
-          <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>Scored Evaluation Ready</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 1.25rem 0' }}>
-            Scroll down to the bottom pane to run the scored Venn sorting and flowchart logic interactive console!
-          </p>
+      {/* RIGHT PANE: Options + Explanation */}
+      <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1rem', padding: '2rem', transition: 'all 0.3s ease-in-out' }}>
+        {/* Options container that moves up altogether when answered */}
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '0.75rem', 
+          transform: isAnswered ? 'translateY(-10px)' : 'none', 
+          transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)' 
+        }}>
+          {currentQuestion.options.map((option, index) => {
+            const isCorrect = index === currentQuestion.answerIndex;
+            const isSelected = index === selectedAnswer;
+            let buttonStyle = {
+              display: 'block',
+              width: '100%',
+              padding: '1rem 1.25rem',
+              border: '2px solid var(--border)',
+              borderRadius: '12px',
+              textAlign: 'left',
+              background: 'var(--page-bg)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              fontSize: '0.9rem'
+            };
+
+            if (isAnswered) {
+              if (isCorrect) {
+                buttonStyle.background = 'rgba(16, 185, 129, 0.1)';
+                buttonStyle.borderColor = 'var(--success)';
+              } else if (isSelected) {
+                buttonStyle.background = 'rgba(239, 68, 68, 0.1)';
+                buttonStyle.borderColor = 'var(--danger)';
+              } else {
+                 buttonStyle.opacity = 0.6;
+              }
+            }
+
+            return (
+              <button key={index} onClick={() => handleAnswerSelect(index)} disabled={isAnswered} style={buttonStyle}>
+                {option}
+              </button>
+            );
+          })}
         </div>
+
+        {/* Explanation appears below, sliding/opening down */}
+        {isAnswered && (
+          <div style={{ 
+            background: 'rgba(0,0,0,0.04)', 
+            borderRadius: '12px', 
+            padding: '1rem', 
+            maxHeight: '260px', 
+            overflowY: 'auto',
+            border: '1px solid var(--border-light)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+            animation: 'fadeIn 0.3s ease-out'
+          }}>
+            <h4 style={{ margin: 0, color: 'var(--accent-text)', fontSize: '0.9rem' }}>Explanation</h4>
+            <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {currentQuestion.explanation.map((point, i) => (
+                <li 
+                  key={i} 
+                  className="explanation-point-animated"
+                  style={{ 
+                    fontSize: '0.82rem', 
+                    color: 'var(--text-secondary)', 
+                    lineHeight: '1.5',
+                    animationDelay: `${i * 0.25}s` 
+                  }}
+                >
+                  {point}
+                </li>
+              ))}
+            </ul>
+
+            <button 
+              onClick={handleNextQuestion} 
+              className="primary" 
+              style={{ 
+                marginTop: '0.75rem', 
+                padding: '0.6rem 1.25rem', 
+                borderRadius: '20px', 
+                fontSize: '0.8rem',
+                alignSelf: 'flex-end'
+              }}
+            >
+              {currentQuestionIndex < chapterChallengeQuestions.length - 1 ? 'Next Question →' : 'Finish Quiz'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -908,7 +1412,8 @@ export default function ChapterLearningLab({
         const isFullscreenActive = isFullscreen || !!activeContentLesson || !!activeActivitySectionId;
         onHeaderVisibilityChange(!isFullscreenActive);
       } else {
-        onHeaderVisibilityChange(true);
+        // Hide header on Cover and Slogan stages
+        onHeaderVisibilityChange(false);
       }
     }
   }, [stage, activeContentLesson, activeActivitySectionId, isFullscreen, onHeaderVisibilityChange]);
@@ -934,14 +1439,24 @@ export default function ChapterLearningLab({
     }
   };
 
+  const [isReading, setIsReading] = useState(false);
+
   const handleReadAloud = (text) => {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
+    utterance.onend = () => {
+      setIsReading(false);
+    };
+    utterance.onerror = () => {
+      setIsReading(false);
+    };
     window.speechSynthesis.speak(utterance);
+    setIsReading(true);
   };
 
   const handleStopSpeech = () => {
     window.speechSynthesis.cancel();
+    setIsReading(false);
   };
 
   // Build the sections list dynamically based on chapterNum
@@ -1457,7 +1972,7 @@ export default function ChapterLearningLab({
 
                 return (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                    <div className="glass-panel" style={{ padding: '1.75rem', border: '1px solid var(--border)', borderRadius: '20px', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(8px)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
+                    <div className="glass-panel" style={{ padding: '1.75rem', border: '1px solid var(--border)', borderRadius: '20px', background: 'var(--card-bg)', backdropFilter: 'blur(8px)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
                       <p style={{ margin: '0 0 1.5rem 0', fontWeight: 'bold', fontSize: '1.25rem', color: 'var(--text-heading)', lineHeight: '1.4' }}>
                         Q{qIdx + 1}: {qObj.q}
                       </p>
@@ -1523,7 +2038,7 @@ export default function ChapterLearningLab({
                             <strong style={{ fontSize: '0.85rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.4rem' }}>
                               💡 Why this is the answer (Reasoning):
                             </strong>
-                            <p style={{ margin: 0, fontSize: '0.96rem', color: 'var(--text-secondary)', lineHeight: '1.65' }}>
+                            <p style={{ margin: 0, fontSize: '0.96rem', color: 'var(--text-secondary)', lineHeight: '1.65', whiteSpace: 'pre-line' }}>
                               {qObj.explanation}
                             </p>
                           </div>
@@ -1610,37 +2125,94 @@ export default function ChapterLearningLab({
 
   function GroupingBasicsInteractive() {
     const [criteria, setCriteria] = useState('material');
+    const [placedItems, setPlacedItems] = useState({}); // { itemName: group }
+    const [draggedItem, setDraggedItem] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [feedback, setFeedback] = useState('');
+
     const items = [
       { name: 'Metal Spoon', material: 'Metal', edibility: 'Inedible', icon: '🥄', desc: 'Stainless steel.' },
       { name: 'Red Apple', material: 'Organic', edibility: 'Edible', icon: '🍎', desc: 'Fresh fruit.' },
       { name: 'Plastic Toy', material: 'Plastic', edibility: 'Inedible', icon: '🚗', desc: 'Hard polymer.' },
-      { name: 'Sourdough Bread', material: 'Organic', edibility: 'Edible', icon: '🍞', desc: 'Baked wheat.' },
+      { name: 'Sourdough Bread', material: 'Organic', edibility: 'Edible', icon: '🍞', desc: 'Baked wheat.' }
     ];
 
-    const groups = criteria === 'material' 
-      ? {
-          'Metal': items.filter(i => i.material === 'Metal'),
-          'Plastic': items.filter(i => i.material === 'Plastic'),
-          'Organic': items.filter(i => i.material === 'Organic')
+    useEffect(() => {
+      setPlacedItems({});
+      setFeedback('');
+      setSelectedItem(null);
+    }, [criteria]);
+
+    const handleClassify = (item, group) => {
+      const correctGroup = criteria === 'material' ? item.material : item.edibility;
+      if (group === correctGroup) {
+        setPlacedItems(prev => ({ ...prev, [item.name]: group }));
+        setFeedback(`✅ Correct! ${item.name} classified under ${group}.`);
+        setSelectedItem(null);
+        
+        const nextPlaced = { ...placedItems, [item.name]: group };
+        const allDone = items.every(it => {
+          const corr = criteria === 'material' ? it.material : it.edibility;
+          return nextPlaced[it.name] === corr;
+        });
+        if (allDone) {
+          confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
         }
-      : {
-          'Edible': items.filter(i => i.edibility === 'Edible'),
-          'Inedible': items.filter(i => i.edibility === 'Inedible')
-        };
+      } else {
+        setFeedback(`❌ Incorrect! ${item.name} does not belong in ${group}. Try again!`);
+      }
+    };
+
+    const handleDragStart = (e, item) => {
+      setDraggedItem(item);
+    };
+
+    const handleDrop = (e, group) => {
+      e.preventDefault();
+      if (draggedItem) {
+        handleClassify(draggedItem, group);
+        setDraggedItem(null);
+      }
+    };
+
+    const handleReset = () => {
+      setPlacedItems({});
+      setFeedback('');
+      setSelectedItem(null);
+      setDraggedItem(null);
+    };
+
+    const groups = criteria === 'material' ? ['Metal', 'Plastic', 'Organic'] : ['Edible', 'Inedible'];
+    const unplacedItems = items.filter(it => !placedItems[it.name]);
+    const isAllSorted = items.every(it => {
+      const corr = criteria === 'material' ? it.material : it.edibility;
+      return placedItems[it.name] === corr;
+    });
+
+    const getBinStyle = (g) => {
+      switch (g) {
+        case 'Metal': return { bg: 'rgba(148, 163, 184, 0.04)', border: '#94a3b8', color: '#475569' };
+        case 'Plastic': return { bg: 'rgba(245, 158, 11, 0.04)', border: '#f59e0b', color: '#d97706' };
+        case 'Organic': return { bg: 'rgba(16, 185, 129, 0.04)', border: '#10b981', color: '#059669' };
+        case 'Edible': return { bg: 'rgba(16, 185, 129, 0.04)', border: '#10b981', color: '#059669' };
+        case 'Inedible': return { bg: 'rgba(239, 68, 68, 0.04)', border: '#ef4444', color: '#b91c1c' };
+        default: return { bg: '#f8fafc', border: '#e2e8f0', color: 'var(--navy)' };
+      }
+    };
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'var(--card-bg)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             🔍 Dynamic Classification Board
           </span>
-          <div style={{ display: 'flex', gap: '0.2rem', background: 'var(--page-bg)', padding: '0.2rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', gap: '0.2rem', background: 'var(--page-bg)', padding: '0.15rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
             <button
               onClick={() => setCriteria('material')}
               className="glass-btn"
               style={{
-                padding: '0.25rem 0.55rem',
-                fontSize: '0.72rem',
+                padding: '0.2rem 0.5rem',
+                fontSize: '0.7rem',
                 borderRadius: '6px',
                 border: 'none',
                 background: criteria === 'material' ? 'var(--accent)' : 'transparent',
@@ -1653,8 +2225,8 @@ export default function ChapterLearningLab({
               onClick={() => setCriteria('edibility')}
               className="glass-btn"
               style={{
-                padding: '0.25rem 0.55rem',
-                fontSize: '0.72rem',
+                padding: '0.2rem 0.5rem',
+                fontSize: '0.7rem',
                 borderRadius: '6px',
                 border: 'none',
                 background: criteria === 'edibility' ? 'var(--accent)' : 'transparent',
@@ -1666,183 +2238,349 @@ export default function ChapterLearningLab({
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {Object.keys(groups).map((groupName) => (
-            <div key={groupName} style={{ background: 'rgba(255,255,255,0.5)', border: '1px solid var(--border)', borderRadius: '12px', padding: '0.75rem' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--accent)', letterSpacing: '0.04em', display: 'block', marginBottom: '0.4rem' }}>
-                📂 Group: {groupName}
-              </span>
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                {groups[groupName].map((item) => (
+        {/* 1. Item pool */}
+        {!isAllSorted ? (
+          <div>
+            <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--navy)', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
+              Drag specimens into correct bins:
+            </span>
+            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+              {unplacedItems.map(item => {
+                const isSelected = selectedItem?.name === item.name;
+                return (
                   <div
                     key={item.name}
-                    className="glass-panel"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onClick={() => { setSelectedItem(item); setFeedback(''); }}
                     style={{
-                      background: 'var(--page-bg)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '8px',
+                      background: isSelected ? 'rgba(99,102,241,0.06)' : '#fff',
+                      border: isSelected ? '2px solid var(--accent)' : '1px solid var(--border)',
+                      borderRadius: '10px',
                       padding: '0.4rem 0.6rem',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.4rem',
-                      flex: '1 1 120px'
+                      cursor: 'grab',
+                      transition: 'all 0.15s ease',
+                      boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
                     }}
                   >
-                    <span style={{ fontSize: '1.25rem' }}>{item.icon}</span>
+                    <span style={{ fontSize: '1.2rem' }}>{item.icon}</span>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{item.name}</span>
-                      <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{item.desc}</span>
+                      <span style={{ fontSize: '0.78rem', fontWeight: 'bold' }}>{item.name}</span>
+                      <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>{item.desc}</span>
                     </div>
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          ))}
+          </div>
+        ) : (
+          <div style={{ padding: '0.5rem', background: '#ecfdf5', borderRadius: '10px', border: '1px solid rgba(16,185,129,0.2)', textAlign: 'center' }}>
+            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#16a34a', display: 'block' }}>
+              🎉 Perfect! All items sorted correctly by {criteria === 'material' ? 'Material' : 'Edibility'}.
+            </span>
+            <button onClick={handleReset} className="outline" style={{ fontSize: '11px', padding: '0.2rem 0.6rem', borderRadius: '15px', marginTop: '0.4rem' }}>
+              Reset Board
+            </button>
+          </div>
+        )}
+
+        {/* 2. Trays grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${groups.length}, 1fr)`, gap: '0.6rem', marginTop: '0.25rem' }}>
+          {groups.map(groupName => {
+            const sortedHere = items.filter(it => placedItems[it.name] === groupName);
+            const styleProps = getBinStyle(groupName);
+            const canDrop = !!selectedItem;
+            
+            return (
+              <div
+                key={groupName}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => handleDrop(e, groupName)}
+                onClick={() => handleBinClick(groupName)}
+                style={{
+                  background: styleProps.bg,
+                  border: `2px dashed ${styleProps.border}`,
+                  borderRadius: '14px',
+                  padding: '0.65rem',
+                  minHeight: '130px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  cursor: canDrop ? 'pointer' : 'default',
+                  transition: 'all 0.2s ease',
+                  boxShadow: canDrop ? '0 4px 12px rgba(0,0,0,0.03)' : 'none'
+                }}
+              >
+                <span style={{ fontSize: '11px', fontWeight: 'bold', color: styleProps.color, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '0.5rem' }}>
+                  📁 {groupName} Bin
+                </span>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginTop: 'auto', width: '100%' }}>
+                  {sortedHere.map(item => (
+                    <div
+                      key={item.name}
+                      style={{
+                        background: '#ffffff',
+                        border: `1px solid ${styleProps.border}33`,
+                        borderRadius: '8px',
+                        padding: '0.35rem 0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.01)'
+                      }}
+                    >
+                      <span style={{ fontSize: '1rem' }}>{item.icon}</span>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--navy)' }}>
+                        {item.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
+
+        {/* 3. Feedback alerts */}
+        {feedback && (
+          <div style={{
+            fontSize: '12px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            color: feedback.startsWith('✅') ? '#10b981' : '#ef4444',
+            background: feedback.startsWith('✅') ? '#ecfdf5' : '#fef2f2',
+            padding: '0.4rem',
+            borderRadius: '8px',
+            border: `1px solid ${feedback.startsWith('✅') ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`
+          }}>
+            {feedback}
+          </div>
+        )}
       </div>
     );
   }
 
   function PlantVarietyMorpher() {
     const [stage, setStage] = useState(0);
-    const [vineType, setVineType] = useState('creeper');
+    const [activeHotspot, setActiveHotspot] = useState(null);
 
     const stages = [
       {
         title: '🌿 Herb',
-        height: 'Short (usually < 1 meter)',
-        stem: 'Soft, tender green stem. Easy to bend.',
-        examples: 'Sadabahar, Grass, Coriander',
+        height: 'Short (usually less than 1 meter)',
+        stem: 'Soft, green, and tender stem. Very easy to bend without breaking.',
+        examples: 'Tomato, Basil, Wheat, Grass',
         color: '#10b981',
-        bg: 'linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(52,211,153,0.01) 100%)',
-        desc: 'Short height, green stems, tender branches.',
-        graphic: (
-          <svg width="90" height="90" viewBox="0 0 100 100">
-            <path d="M50,90 Q40,60 30,50 Q45,55 50,30 Q55,55 70,50 Q60,60 50,90" fill="#34d399" stroke="#059669" strokeWidth="2" />
-            <line x1="50" y1="90" x2="50" y2="30" stroke="#059669" strokeWidth="2.5" />
-            <circle cx="50" cy="30" r="3" fill="#fb7185" />
+        bg: 'linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(52,211,153,0.02) 100%)',
+        desc: 'Herbs are small plants with soft, non-woody stems. They contain a high water concentration in their cells.',
+        imgSrc: '/herb_plant.png',
+        anatomy: (
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            {/* Epidermis */}
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#10b981" strokeWidth="3" />
+            {/* Soft Cortex */}
+            <circle cx="50" cy="50" r="36" fill="#e8f5e9" opacity="0.6" />
+            {/* Capillaries / Vascular Bundles (Interactive Hotspots) */}
+            {[
+              { cx: 50, cy: 22, id: 'capillary', name: '💧 Vascular Capillaries' },
+              { cx: 50, cy: 78, id: 'capillary', name: '💧 Vascular Capillaries' },
+              { cx: 22, cy: 50, id: 'capillary', name: '💧 Vascular Capillaries' },
+              { cx: 78, cy: 50, id: 'capillary', name: '💧 Vascular Capillaries' },
+              { cx: 30, cy: 30, id: 'capillary', name: '💧 Vascular Capillaries' },
+              { cx: 70, cy: 30, id: 'capillary', name: '💧 Vascular Capillaries' },
+              { cx: 30, cy: 70, id: 'capillary', name: '💧 Vascular Capillaries' },
+              { cx: 70, cy: 70, id: 'capillary', name: '💧 Vascular Capillaries' }
+            ].map((pt, i) => (
+              <g key={i} cursor="pointer" onClick={() => setActiveHotspot({
+                title: pt.name,
+                text: '• In herbs, water and mineral transport is handled by ring-arranged vascular capillaries (xylem/phloem).\n• Since there is no thick wood or bark, the surrounding tissues are soft, green parenchyma cells, making the stem highly flexible.'
+              })}>
+                <circle cx={pt.cx} cy={pt.cy} r="6" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5" />
+                <circle cx={pt.cx} cy={pt.cy} r="2.5" fill="#3b82f6" />
+              </g>
+            ))}
+            {/* Center Pith */}
+            <circle cx="50" cy="50" r="14" fill="#c8e6c9" stroke="#81c784" strokeWidth="1" />
+            <text x="50" y="52" textAnchor="middle" fill="#059669" fontSize="6" fontWeight="bold">PITH</text>
           </svg>
         )
       },
       {
         title: '🌺 Shrub',
-        height: 'Medium (1 to 3 meters)',
-        stem: 'Hard and thin woody stem branching near base.',
-        examples: 'Rose, Lemon, Hibiscus',
+        height: 'Medium height (typically 1 to 3 meters)',
+        stem: 'Hard, thin, woody stem. Branches emerge close to the soil level.',
+        examples: 'Rose, Hibiscus, Lemon, Henna',
         color: '#d97706',
-        bg: 'linear-gradient(135deg, rgba(217,119,6,0.06) 0%, rgba(251,191,36,0.01) 100%)',
-        desc: 'Branches start close to the ground; woody but thin stem.',
-        graphic: (
-          <svg width="90" height="90" viewBox="0 0 100 100">
-            <line x1="50" y1="90" x2="50" y2="60" stroke="#78350f" strokeWidth="3" />
-            <path d="M50,75 Q30,55 20,40" stroke="#78350f" strokeWidth="2" fill="none" />
-            <path d="M50,75 Q70,55 80,40" stroke="#78350f" strokeWidth="2" fill="none" />
-            <circle cx="20" cy="40" r="8" fill="#059669" fillOpacity="0.8" />
-            <circle cx="80" cy="40" r="8" fill="#059669" fillOpacity="0.8" />
-            <circle cx="50" cy="50" r="10" fill="#10b981" />
-            <circle cx="50" cy="50" r="3" fill="#f43f5e" />
+        bg: 'linear-gradient(135deg, rgba(217,119,6,0.06) 0%, rgba(251,191,36,0.02) 100%)',
+        desc: 'Shrubs are medium-sized plants with hard stems branching near the ground. They lack a single clear trunk.',
+        imgSrc: '/shrub_plant.png',
+        anatomy: (
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            {/* Woody branch cross section */}
+            <circle cx="50" cy="50" r="36" fill="#fcf8f2" stroke="#b45309" strokeWidth="2" />
+            {/* Thin Wood Core (Hotspot) */}
+            <circle 
+              cx="50" cy="50" r="28" 
+              fill="#fed7aa" stroke="#ea580c" strokeWidth="1.5" cursor="pointer"
+              onClick={() => setActiveHotspot({
+                title: '🪵 Thin Wood Core',
+                text: '• Shrubs develop a thin core of lignified woody xylem tissue.\n• This wood provides rigid structural support allowing them to stand upright, but it remains thin compared to trees, keeping stems slender and slightly bendable.'
+              })}
+            />
+            {/* Thorns */}
+            {[
+              { x1: 50, y1: 14, x2: 50, y2: 6, label: 'Thorn' },
+              { x1: 50, y1: 86, x2: 50, y2: 94, label: 'Thorn' },
+              { x1: 14, y1: 50, x2: 6, y2: 50, label: 'Thorn' },
+              { x1: 86, y1: 50, x2: 94, y2: 50, label: 'Thorn' }
+            ].map((th, i) => (
+              <path 
+                key={i} 
+                d={`M ${th.x1} ${th.y1} L ${th.x2} ${th.y2}`} 
+                stroke="#dc2626" strokeWidth="3" strokeLinecap="round" cursor="pointer"
+                onClick={() => setActiveHotspot({
+                  title: '🌵 Protective Thorns / Prickles',
+                  text: '• Many shrubs, like Wild Rose, develop thorns directly from their epidermal stem layer.\n• These sharp extensions act as a mechanical defense mechanism to deter herbivores from eating their leaves and stems.'
+                })}
+              />
+            ))}
+            <circle cx="50" cy="50" r="10" fill="#fdba74" />
+            <text x="50" y="52" textAnchor="middle" fill="#7c2d12" fontSize="5" fontWeight="bold">HEART</text>
           </svg>
         )
       },
       {
         title: '🌳 Tree',
-        height: 'Tall (usually > 3 meters)',
-        stem: 'Thick, hard brown woody trunk branching high.',
-        examples: 'Neem, Mango, Banyan',
+        height: 'Tall (usually exceeding 3 meters)',
+        stem: 'Thick, hard, brown woody trunk. Branches start high up.',
+        examples: 'Neem, Mango, Banyan, Coconut',
         color: '#1e3a8a',
-        bg: 'linear-gradient(135deg, rgba(30,58,138,0.06) 0%, rgba(59,130,246,0.01) 100%)',
-        desc: 'Single solid trunk with branches starting high up.',
-        graphic: (
-          <svg width="90" height="90" viewBox="0 0 100 100">
-            <rect x="45" y="50" width="10" height="40" fill="#451a03" />
-            <circle cx="50" cy="30" r="20" fill="#047857" />
-            <circle cx="35" cy="35" r="14" fill="#065f46" />
-            <circle cx="65" cy="35" r="14" fill="#065f46" />
+        bg: 'linear-gradient(135deg, rgba(30,58,138,0.06) 0%, rgba(59,130,246,0.02) 100%)',
+        desc: 'Trees are tall woody plants with a single main supporting trunk. They grow continuously for many years.',
+        imgSrc: '/tree_plant.png',
+        anatomy: (
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            {/* Trunk Cross Section with Rings (Hotspot) */}
+            <circle 
+              cx="50" cy="50" r="38" fill="#d97706" stroke="#451a03" strokeWidth="4" cursor="pointer"
+              onClick={() => setActiveHotspot({
+                title: '🟫 Outer Cork Bark',
+                text: '• The outer bark is a thick layer of dead cork cells.\n• It serves as a rugged shield protecting the tree trunk against physical damage, fires, insects, water loss, and freezing mountain cold.'
+              })}
+            />
+            {/* Annual Rings */}
+            {[30, 24, 18, 12].map((r, i) => (
+              <circle 
+                key={i} cx="50" cy="50" r={r} 
+                fill="none" stroke="#78350f" strokeWidth="1.5" cursor="pointer"
+                onClick={() => setActiveHotspot({
+                  title: '⭕ Annual Growth Rings',
+                  text: '• Concentric rings formed by secondary growth xylem divisions each season.\n• Fast spring growth creates wide light rings; slow summer growth creates thin dark rings. Counting them estimates trunk age!'
+                })}
+              />
+            ))}
+            <circle cx="50" cy="50" r="6" fill="#451a03" />
           </svg>
         )
       }
     ];
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
-        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            🌱 Plant Growth Form Morpher
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', padding: '1.5rem', background: 'var(--card-bg)', backdropFilter: 'blur(10px)', borderRadius: '24px', border: '1px solid var(--border)', boxShadow: '0 10px 40px rgba(0,0,0,0.03)' }}>
+        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.65rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            🔬 Plant Growth Form Morpher
           </span>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Tap rings/spots to magnifying cellular details!</span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '0.75rem', alignItems: 'center' }}>
-          <div style={{ padding: '0.75rem', borderRadius: '12px', background: stages[stage].bg, border: `1px solid ${stages[stage].color}22` }}>
-            <h4 style={{ margin: '0 0 0.35rem 0', color: stages[stage].color, fontSize: '0.9rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 100px 100px', gap: '1rem', alignItems: 'center' }}>
+          <div style={{ padding: '0.85rem', borderRadius: '14px', background: stages[stage].bg, border: `1px solid ${stages[stage].color}33`, minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: stages[stage].color, fontSize: '1.1rem', fontWeight: 'bold' }}>
               {stages[stage].title}
             </h4>
-            <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
-              <b>Height:</b> {stages[stage].height}
-            </span>
-            <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
-              <b>Stem:</b> {stages[stage].stem}
-            </span>
-            <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-primary)' }}>
-              <b>Examples:</b> <i>{stages[stage].examples}</i>
-            </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.4' }}>
+              <span><b>Average Height:</b> {stages[stage].height}</span>
+              <span><b>Stem Character:</b> {stages[stage].stem}</span>
+              <span><b>NCERT Examples:</b> <i>{stages[stage].examples}</i></span>
+            </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', background: '#fff', borderRadius: '12px', padding: '0.4rem', border: '1px solid var(--border)' }}>
-            {stages[stage].graphic}
+          {/* Realistic View */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffffff', borderRadius: '16px', padding: '0.25rem', width: '100px', height: '100px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+              <img src={stages[stage].imgSrc} alt={stages[stage].title} style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} />
+            </div>
+            <span style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: '600' }}>Realistic View</span>
+          </div>
+          {/* Anatomy View */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffffff', borderRadius: '16px', padding: '0.25rem', width: '100px', height: '100px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+              {stages[stage].anatomy}
+            </div>
+            <span style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: '600' }}>Cellular Anatomy</span>
           </div>
         </div>
 
         {/* Morph Slider */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', background: '#f8fafc', padding: '0.85rem 1.25rem', borderRadius: '14px', border: '1px solid var(--cardline)' }}>
           <input 
             type="range" 
             min="0" 
             max="2" 
             value={stage} 
-            onChange={(e) => setStage(parseInt(e.target.value))} 
-            style={{ width: '100%', accentColor: stages[stage].color, cursor: 'pointer' }}
+            onChange={(e) => { setStage(parseInt(e.target.value)); setActiveHotspot(null); }} 
+            style={{ width: '100%', accentColor: stages[stage].color, cursor: 'pointer', height: '6px', borderRadius: '3px' }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-muted)' }}>
-            <span style={{ color: stage === 0 ? 'var(--accent)' : 'inherit' }}>Herb</span>
-            <span style={{ color: stage === 1 ? 'var(--accent)' : 'inherit' }}>Shrub</span>
-            <span style={{ color: stage === 2 ? 'var(--accent)' : 'inherit' }}>Tree</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: 'bold', color: 'var(--text-muted)' }}>
+            <span style={{ color: stage === 0 ? 'var(--accent)' : 'inherit', transition: 'color 0.2s' }}>Herb</span>
+            <span style={{ color: stage === 1 ? 'var(--accent)' : 'inherit', transition: 'color 0.2s' }}>Shrub</span>
+            <span style={{ color: stage === 2 ? 'var(--accent)' : 'inherit', transition: 'color 0.2s' }}>Tree</span>
           </div>
         </div>
 
-        {/* Weak Stems panel */}
-        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.65rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
-              🍂 Weak Stems (Climbers vs Creepers)
-            </span>
-            <div style={{ display: 'flex', gap: '0.2rem', background: 'var(--page-bg)', padding: '0.1rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
-              <button
-                onClick={() => setVineType('creeper')}
-                className="glass-btn"
-                style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem', borderRadius: '4px', background: vineType === 'creeper' ? 'var(--accent)' : 'transparent', color: vineType === 'creeper' ? '#fff' : 'var(--text-primary)' }}
-              >
-                Creeper
-              </button>
-              <button
-                onClick={() => setVineType('climber')}
-                className="glass-btn"
-                style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem', borderRadius: '4px', background: vineType === 'climber' ? 'var(--accent)' : 'transparent', color: vineType === 'climber' ? '#fff' : 'var(--text-primary)' }}
-              >
-                Climber
-              </button>
+        {/* Hotspot details panel */}
+        {activeHotspot && (
+          <div style={{
+            background: 'rgba(99,102,241,0.04)',
+            borderLeft: '4px solid var(--accent)',
+            borderRadius: '8px',
+            padding: '0.85rem 1.1rem',
+            fontSize: '13px',
+            lineHeight: '1.5',
+            animation: 'fadeIn 0.25s ease-out'
+          }}>
+            <strong style={{ color: 'var(--navy)', display: 'block', marginBottom: '0.25rem' }}>{activeHotspot.title}</strong>
+            <p style={{ margin: 0, color: 'var(--text-secondary)', whiteSpace: 'pre-line' }}>{activeHotspot.text}</p>
+          </div>
+        )}
+
+        {/* Climbers vs Creepers comparative panel (Upgraded for high visual visibility) */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', borderTop: '1px solid var(--border)', paddingTop: '1.25rem' }}>
+          {/* Creeper Card */}
+          <div style={{ background: 'rgba(245, 158, 11, 0.03)', border: '1px solid rgba(245, 158, 11, 0.15)', borderRadius: '16px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(245, 158, 11, 0.1)', paddingBottom: '0.4rem' }}>
+              <span style={{ fontSize: '1.5rem' }}>🍉</span>
+              <strong style={{ fontSize: '15px', color: '#b45309' }}>Creepers (Spread on Ground)</strong>
+            </div>
+            <div style={{ margin: 0, fontSize: '14px', lineHeight: '1.6', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <span>🌱 <b>Growth Habit:</b> They creep horizontally along the ground and spread out on the surface of the soil.</span>
+              <span>⚠️ <b>Stem Weakness:</b> Their stems are so thin and fragile that they <b>cannot grow vertically</b> at all, even with external supports.</span>
+              <span>🍉 <b>Fruits:</b> Frequently produce large, heavy fruits (like Watermelon or Pumpkin) that must rest on the ground.</span>
             </div>
           </div>
-
-          <div style={{ padding: '0.6rem 0.75rem', borderRadius: '10px', background: 'rgba(255,255,255,0.4)', border: '1px solid var(--border)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            <span style={{ fontSize: '1.5rem' }}>{vineType === 'creeper' ? '🍉' : '🍇'}</span>
-            <div style={{ flex: 1 }}>
-              <strong style={{ fontSize: '0.75rem', color: 'var(--text-heading)', display: 'block' }}>
-                {vineType === 'creeper' ? 'Creepers spread on ground' : 'Climbers climb up support'}
-              </strong>
-              <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--text-secondary)', lineHeight: '1.3' }}>
-                {vineType === 'creeper' 
-                  ? 'Weak-stemmed plants that crawl horizontally. E.g., Watermelon, Pumpkin.' 
-                  : 'Weak-stemmed plants that climb walls or fences using tendrils. E.g., Pea plant, Grapes.'}
-              </p>
+          {/* Climber Card */}
+          <div style={{ background: 'rgba(59, 130, 246, 0.03)', border: '1px solid rgba(59, 130, 246, 0.15)', borderRadius: '16px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(59, 130, 246, 0.1)', paddingBottom: '0.4rem' }}>
+              <span style={{ fontSize: '1.5rem' }}>🍇</span>
+              <strong style={{ fontSize: '15px', color: '#1e3a8a' }}>Climbers (Climb Up Support)</strong>
+            </div>
+            <div style={{ margin: 0, fontSize: '14px', lineHeight: '1.6', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <span>🎋 <b>Growth Habit:</b> They grow vertically by clasping onto nearby supports (sticks, trees, or walls).</span>
+              <span>🔗 <b>Adaptation:</b> They develop special climbing organs called coiled <b>Tendrils</b> or sticky roots to latch and pull themselves up.</span>
+              <span>☀️ <b>Goal:</b> Climbing allows their leaves to reach higher areas with direct sunlight (e.g., Pea, Grapevine, Money Plant).</span>
             </div>
           </div>
         </div>
@@ -2202,33 +2940,46 @@ export default function ChapterLearningLab({
             </ul>
           )}
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
             <div style={{ display: 'flex', gap: '0.35rem' }}>
               <button
-                onClick={() => handleReadAloud(`${slide.title}. ${slide.content || ''}. ${slide.bullets ? slide.bullets.join('. ') : ''}`)}
+                onClick={() => {
+                  if (isReading) {
+                    handleStopSpeech();
+                  } else {
+                    handleReadAloud(`${slide.title}. ${slide.content || ''}. ${slide.bullets ? slide.bullets.join('. ') : ''}`);
+                  }
+                }}
                 className="outline"
-                style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem', borderRadius: '6px' }}
+                style={{
+                  fontSize: '0.75rem',
+                  padding: '0.35rem 0.65rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  borderRadius: '20px',
+                  background: isReading ? 'rgba(99,102,241,0.08)' : 'transparent',
+                  borderColor: isReading ? 'var(--accent)' : 'var(--border)',
+                  color: isReading ? 'var(--accent)' : 'var(--text-primary)',
+                  fontWeight: '600',
+                  transition: 'all 0.2s ease'
+                }}
+                title={isReading ? "Stop Reading" : "Read Aloud"}
               >
-                🔊 Read
-              </button>
-              <button
-                onClick={handleStopSpeech}
-                className="outline"
-                style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem', borderRadius: '6px' }}
-              >
-                Stop
+                {isReading ? <VolumeX size={13} /> : <Volume2 size={13} />}
+                <span>{isReading ? 'Stop' : 'Read'}</span>
               </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginRight: '0.25rem' }}>
+            <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginRight: '0.2rem' }}>
                 Slide {currentSlideIndex + 1} of {totalSlides}
               </span>
               {currentSlideIndex > 0 && (
                 <button
                   onClick={() => { handleStopSpeech(); setActiveSlide(prev => Math.max(0, prev - 1)); }}
                   className="outline"
-                  style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem', borderRadius: '6px' }}
+                  style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', borderRadius: '20px' }}
                 >
                   Prev
                 </button>
@@ -2245,7 +2996,7 @@ export default function ChapterLearningLab({
                     setActivityFocused(true);
                   }}
                   className="primary"
-                  style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem', borderRadius: '6px' }}
+                  style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', borderRadius: '20px' }}
                 >
                   Activity ➔
                 </button>
@@ -2254,7 +3005,7 @@ export default function ChapterLearningLab({
                   disabled={slide.isQuiz && !quizChecked}
                   onClick={() => { handleStopSpeech(); setActiveSlide(prev => prev + 1); }}
                   className="primary"
-                  style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem', borderRadius: '6px' }}
+                  style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', borderRadius: '20px' }}
                 >
                   Next
                 </button>
@@ -2936,7 +3687,7 @@ export default function ChapterLearningLab({
             </div>
 
             {/* 2. MIDDLE PANE: Full Interactive Activity Window */}
-            {activeLevel.activities && activeLevel.activities.length > 0 && (
+            {activeLevel.activities && activeLevel.activities.length > 0 && activeLevel.lessonId !== 'vocabulary_glossary' && activeLevel.lessonId !== 'chapter_challenge_overview' && (
               <div id="pane-activity-window" className="glass-panel" style={{ display: (!isFullscreen || activityFocused !== false) ? 'flex' : 'none', flexDirection: 'column', gap: '0.75rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: isCompleted ? 'var(--success)' : 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -2993,9 +3744,23 @@ export default function ChapterLearningLab({
 
                   <div style={{ width: '100%', borderRadius: '12px', overflow: 'hidden', background: 'var(--surface)', position: 'relative' }}>
                     {activeActivity.activityId ? (
-                      renderCustomSandbox(activeActivity.activityId, (completed) => {
+                      renderCustomSandbox(activeActivity.activityId, (action) => {
                         setActivityStatus(prev => ({ ...prev, [activeActivity.id]: 'done' }));
                         confetti({ particleCount: 60, spread: 60, origin: { y: 0.75 } });
+                        if (action === 'next_activity') {
+                          setActiveActivityIdx(1);
+                          setActivityFocused(true);
+                        } else if (action === 'go_to_quiz') {
+                          setActivityFocused(null);
+                          setTimeout(() => {
+                            const quizPaneEl = document.getElementById("pane-quiz-window");
+                            if (quizPaneEl) {
+                              quizPaneEl.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }, 300);
+                        } else {
+                          setActivityFocused(null);
+                        }
                       })
                     ) : (
                       <iframe 
@@ -3016,7 +3781,10 @@ export default function ChapterLearningLab({
 
             {/* 3. BOTTOM PANE: Quiz & DYK Pane */}
             <div style={{ display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none', flexDirection: 'column', gap: '0.75rem' }}>
-              {renderQuizAndDykPane(activeLevel.lessonId)}
+              {(activeLevel.lessonId === 'vocabulary_glossary' || activeLevel.lessonId === 'chapter_challenge_overview')
+                  ? <SummaryPane lessonId={activeLevel.lessonId} />
+                  : renderQuizAndDykPane(activeLevel.lessonId)
+              }
             </div>
           </div>
         </div>
