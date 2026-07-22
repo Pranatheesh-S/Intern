@@ -1,20 +1,11 @@
 /* src/styles/design-system/components.css */
 
 /* 
-  Glass Panel Component
-  Scales padding and borders responsively.
+  Note: .glass-panel styling is defined globally in index.css
+  using CSS custom properties that adapt to the active theme.
+  Do not re-define it here to avoid breaking dark mode.
 */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-}
+
 
 /* 
   Responsive Buttons 
