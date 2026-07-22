@@ -9,8 +9,7 @@ const ITEMS = [
   { id: 'glass', name: 'Glass tumbler', material: 'Glass', isMagnetic: false, icon: '🥤' },
   { id: 'key', name: 'Iron key', material: 'Iron', isMagnetic: true, icon: '🔑' },
   { id: 'ruler', name: 'Plastic ruler', material: 'Plastic', isMagnetic: false, icon: '📏' },
-  { id: 'scissors', name: 'Steel scissors', material: 'Steel', isMagnetic: true, icon: '✂️' },
-  { id: 'duster', name: 'Cloth duster', material: 'Cloth', isMagnetic: false, icon: '🧵' }
+  { id: 'scissors', name: 'Steel scissors', material: 'Steel', isMagnetic: true, icon: '✂️' }
 ];
 
 function MagnetIcon() {
@@ -125,7 +124,7 @@ function TableRow({ item, index, prediction, observation, onPredict, onTest }) {
           isMatched ? (
             <span style={{ color: '#10b981' }}>✓ matched</span>
           ) : (
-            <span style={{ color: '#f59e0b' }}>X surprise!</span>
+            <span style={{ color: '#ef4444' }}>X wrong prediction</span>
           )
         ) : (
           <span style={{ color: 'var(--text-muted)' }}>-</span>
