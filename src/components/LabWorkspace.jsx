@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ChevronLeft, ChevronRight, Pin, PinOff, CheckCircle2, RotateCcw, Play } from "lucide-react";
-import VirtualBiodiversityExplorerActivity from "../activities/VirtualBiodiversityExplorer";
-import AppreciatingBiodiversityActivity from "../activities/AppreciatingBiodiversityActivity";
-import InlineSortingActivity from "../activities/InlineSortingActivity";
-import PlantDetectiveActivity from "../activities/PlantDetective";
-import LeafVenationLab from "../activities/LeafVenationLab";
-import RootSystemsLab from "../activities/RootSystemsLab";
-import VenationRootCorrelationLab from "../activities/VenationRootCorrelationLab";
-import SeedDissectionLab from "../activities/SeedDissectionLab";
-import AnimalHabitatExplorerActivity from "../activities/AnimalHabitatExplorer";
+import VirtualBiodiversityExplorerActivity from "../science/class6/chapter2/VirtualBiodiversityExplorer";
+import AppreciatingBiodiversityActivity from "../science/class6/chapter2/AppreciatingBiodiversityActivity";
+import InlineSortingActivity from "../science/class6/chapter2/InlineSortingActivity";
+import PlantDetectiveActivity from "../science/class6/chapter2/PlantDetective";
+import LeafVenationLab from "../science/class6/chapter2/LeafVenationLab";
+import RootSystemsLab from "../science/class6/chapter2/RootSystemsLab";
+import VenationRootCorrelationLab from "../science/class6/chapter2/VenationRootCorrelationLab";
+import SeedDissectionLab from "../science/class6/chapter2/SeedDissectionLab";
+import AnimalHabitatExplorerActivity from "../science/class6/chapter2/AnimalHabitatExplorer";
 import { useTheme } from "../ThemeContext";
 
 export default function LabWorkspace({

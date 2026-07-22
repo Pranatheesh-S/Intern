@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, ChevronRight, Award, Volume2, VolumeX, ArrowRight, HelpCircle } from 'lucide-react';
-import { useTheme } from '../../ThemeContext.jsx';
+import { useTheme } from '../../../../ThemeContext.jsx';
 
 export default function GroupingBasicsBookSpread({ onBackToDashboard }) {
   const { theme } = useTheme();

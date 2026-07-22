@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, RefreshCw, X, CheckCircle2, ChevronRight, Award, Compass, Volume2, Eye, Check, Star, Lock, BookOpen, Play, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { useTheme } from '../../ThemeContext.jsx';
+import { useTheme } from '../../../../ThemeContext.jsx';
 
 const PLANTS = ['Tulsi', 'Neem', 'Rose', 'Sunflower', 'Mango', 'Banana', 'Bamboo', 'Marigold', 'Peepal', 'Lotus', 'Hibiscus', 'Grass', 'Cactus', 'Jasmine', 'Coconut'];
 const ANIMALS = ['Crow', 'Butterfly', 'Ant', 'Frog', 'Pigeon', 'Sparrow', 'Dog', 'Cow', 'Squirrel', 'Peacock', 'Dragonfly', 'Snail', 'Fish', 'Bee', 'Rabbit'];
@@ -310,8 +310,8 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                 <span style={{ fontSize: '12px', color: 'var(--mut)' }}>
                   You got {Object.values(quizAnswers).filter(Boolean).length} / 8 questions correct on the Interdependence checkup!
                 </span>
-                <button onClick={onBackToDashboard} className="primary" style={{ background: '#16a34a', width: '100%', fontSize: '12.5px', padding: '0.55rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '0.5rem' }}>
-                  Back to Timeline <ArrowRight size={14} />
+                <button onClick={() => onBackToDashboard('next_activity')} className="primary" style={{ background: 'var(--accent)', borderColor: 'var(--accent)', width: '100%', fontSize: '13.5px', padding: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '0.5rem' }}>
+                  Proceed to Activity 2.3: Let Us Group ➔
                 </button>
               </div>
             </div>
@@ -392,33 +392,57 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
               
               {/* Submission panel (if not logged yet) */}
               {boardCards.length === 0 && (
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.25rem', padding: '2rem', textAlign: 'center' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', padding: '2rem', textAlign: 'center', width: '100%' }}>
                   {phase === 'timer' && (
                     <>
-                      <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: timerRunning ? 'rgba(245,166,35,0.1)' : 'rgba(99,102,241,0.1)', border: '2.5px solid var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--navy)' }}>
-                        {timer}s
+                      <div style={{ position: 'relative', width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="100" height="100" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
+                          <circle
+                            cx="50"
+                            cy="50"
+                            r="40"
+                            fill="transparent"
+                            stroke="rgba(99,102,241,0.08)"
+                            strokeWidth="6"
+                          />
+                          <circle
+                            cx="50"
+                            cy="50"
+                            r="40"
+                            fill="transparent"
+                            stroke="var(--accent)"
+                            strokeWidth="6"
+                            strokeDasharray={2 * Math.PI * 40}
+                            strokeDashoffset={(2 * Math.PI * 40) - (timer / 10) * (2 * Math.PI * 40)}
+                            strokeLinecap="round"
+                            style={{ transition: timerRunning ? 'stroke-dashoffset 1s linear' : 'none' }}
+                          />
+                        </svg>
+                        <div style={{ position: 'absolute', fontSize: '1.6rem', fontWeight: 'bold', color: 'var(--navy)' }}>
+                          {timer}s
+                        </div>
                       </div>
                       <div>
-                        <h3 style={{ fontFamily: 'var(--serif-font)', color: 'var(--navy)', margin: '0 0 0.5rem 0' }}>10-Second Reflection</h3>
-                        <p style={{ fontSize: '13px', color: 'var(--mut)', maxWidth: '340px', margin: 0 }}>
+                        <h3 style={{ fontFamily: 'var(--serif-font)', color: 'var(--navy)', margin: '0 0 0.5rem 0', fontSize: '1.5rem' }}>10-Second Reflection</h3>
+                        <p style={{ fontSize: '14.5px', color: 'var(--mut)', maxWidth: '380px', margin: 0, lineHeight: '1.5' }}>
                           Close your eyes and reflect on the plants and animals you saw on the nature walk.
                         </p>
                       </div>
                       {!timerRunning && (
-                        <button onClick={handleStartTimer} className="primary" style={{ padding: '0.6rem 1.75rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <Play size={14} fill="#fff" /> Start Reflection
+                        <button onClick={handleStartTimer} className="primary" style={{ padding: '0.75rem 2rem', borderRadius: '24px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 'bold' }}>
+                          <Play size={15} fill="#fff" /> Start Reflection
                         </button>
                       )}
                     </>
                   )}
 
                   {phase === 'pick' && (
-                    <div style={{ width: '100%', maxWidth: '520px', background: '#f8fafc', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--cardline)', display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left' }}>
-                      <h4 style={{ margin: 0, fontFamily: 'var(--serif-font)', color: 'var(--navy)', fontSize: '16px' }}>What did you observe?</h4>
+                    <div style={{ width: '100%', maxWidth: '820px', background: '#f8fafc', padding: '2rem 2.5rem', borderRadius: '16px', border: '1px solid var(--cardline)', display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'left', boxShadow: '0 8px 30px rgba(0,0,0,0.02)' }}>
+                      <h4 style={{ margin: 0, fontFamily: 'var(--serif-font)', color: 'var(--navy)', fontSize: '20px', fontWeight: 'bold' }}>What did you observe?</h4>
                       
                       <div>
-                        <label style={{ fontSize: '11px', color: 'var(--navy)', fontWeight: 'bold', display: 'block', marginBottom: '6px', letterSpacing: '0.04em' }}>SELECT A PLANT</label>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', maxHeight: '120px', overflowY: 'auto', padding: '4px', border: '1px solid var(--cardline)', borderRadius: '8px', background: '#fff' }}>
+                        <label style={{ fontSize: '12px', color: 'var(--navy)', fontWeight: 'bold', display: 'block', marginBottom: '8px', letterSpacing: '0.05em' }}>SELECT A PLANT</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem', maxHeight: '180px', overflowY: 'auto', padding: '8px', border: '1px solid var(--cardline)', borderRadius: '10px', background: '#fff' }}>
                           {PLANTS.map(p => {
                             const isSelected = selectedPlant === p;
                             return (
@@ -428,11 +452,11 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                                 style={{
                                   display: 'flex',
                                   alignItems: 'center',
-                                  gap: '4px',
-                                  padding: '0.4rem 0.5rem',
-                                  fontSize: '12px',
-                                  borderRadius: '6px',
-                                  border: isSelected ? '1px solid var(--green)' : '1px solid #e2e8f0',
+                                  gap: '6px',
+                                  padding: '0.6rem 0.8rem',
+                                  fontSize: '13.5px',
+                                  borderRadius: '8px',
+                                  border: isSelected ? '1.5px solid var(--green)' : '1px solid #e2e8f0',
                                   background: isSelected ? '#e8f5e9' : '#f8fafc',
                                   color: isSelected ? '#1b5e20' : 'var(--ink)',
                                   cursor: 'pointer',
@@ -449,8 +473,8 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                       </div>
 
                       <div>
-                        <label style={{ fontSize: '11px', color: 'var(--navy)', fontWeight: 'bold', display: 'block', marginBottom: '6px', letterSpacing: '0.04em' }}>SELECT AN ANIMAL</label>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', maxHeight: '120px', overflowY: 'auto', padding: '4px', border: '1px solid var(--cardline)', borderRadius: '8px', background: '#fff' }}>
+                        <label style={{ fontSize: '12px', color: 'var(--navy)', fontWeight: 'bold', display: 'block', marginBottom: '8px', letterSpacing: '0.05em' }}>SELECT AN ANIMAL</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem', maxHeight: '180px', overflowY: 'auto', padding: '8px', border: '1px solid var(--cardline)', borderRadius: '10px', background: '#fff' }}>
                           {ANIMALS.map(a => {
                             const isSelected = selectedAnimal === a;
                             return (
@@ -460,11 +484,11 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                                 style={{
                                   display: 'flex',
                                   alignItems: 'center',
-                                  gap: '4px',
-                                  padding: '0.4rem 0.5rem',
-                                  fontSize: '12px',
-                                  borderRadius: '6px',
-                                  border: isSelected ? '1px solid var(--amber)' : '1px solid #e2e8f0',
+                                  gap: '6px',
+                                  padding: '0.6rem 0.8rem',
+                                  fontSize: '13.5px',
+                                  borderRadius: '8px',
+                                  border: isSelected ? '1.5px solid var(--amber)' : '1px solid #e2e8f0',
                                   background: isSelected ? '#fffbeb' : '#f8fafc',
                                   color: isSelected ? '#b45309' : 'var(--ink)',
                                   cursor: 'pointer',
@@ -484,9 +508,9 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                         disabled={!selectedPlant || !selectedAnimal}
                         onClick={handleAddToBoard} 
                         className="primary" 
-                        style={{ width: '100%', padding: '0.65rem', borderRadius: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', opacity: (!selectedPlant || !selectedAnimal) ? 0.5 : 1 }}
+                        style={{ width: '100%', padding: '0.85rem', borderRadius: '10px', fontSize: '14.5px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', opacity: (!selectedPlant || !selectedAnimal) ? 0.5 : 1 }}
                       >
-                        Add to Class Board <ChevronRight size={14} />
+                        Add to Class Board <ChevronRight size={15} />
                       </button>
                     </div>
                   )}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X, RefreshCw, Volume2, CheckCircle, ChevronRight, Award, ArrowLeft, BookOpen, Target, Eye, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import natureWalkScene from '../../assets/nature_walk_scene.png';
-import { useTheme } from '../../ThemeContext.jsx';
+import natureWalkScene from '../../../../assets/nature_walk_scene.png';
+import { useTheme } from '../../../../ThemeContext.jsx';
 
 /* ─────────────────────────────────────────────
    TARGET ORGANISMS (8 required species)
