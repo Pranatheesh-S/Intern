@@ -188,7 +188,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
                 
                 {/* Overlay Label */}
                 <div style={{ position: 'absolute', top: '15px', left: '15px', background: '#1e3a8a', color: 'white', padding: '6px 12px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', zIndex: 20, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
-                  <div style={{ background: '#3b82f6', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12px' }}>{index + 1}</div>
+                  <div style={{ background: '#3b82f6', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 'var(--text-xs)' }}>{index + 1}</div>
                   {spot.name}
                 </div>
 

@@ -145,7 +145,7 @@ export default function ChapterCover({ onOpenBook, onBack }) {
           alignItems: 'center',
           gap: '8px',
           fontFamily: 'sans-serif',
-          fontSize: '14px',
+          fontSize: 'var(--text-sm)',
           cursor: 'pointer',
           backdropFilter: 'blur(4px)',
           transition: 'all 0.2s'

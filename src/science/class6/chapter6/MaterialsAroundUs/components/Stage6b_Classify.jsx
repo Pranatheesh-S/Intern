@@ -82,7 +82,7 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ background: '#3b82f6', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold' }}>1</div>
+            <div style={{ background: '#3b82f6', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-xs)', fontWeight: 'bold' }}>1</div>
             Let us classify
           </h4>
           <div style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: '500' }}>Table 6.4: Classification of objects</div>
@@ -116,7 +116,7 @@ export default function Stage6b_Classify({ onComplete, addXp }) {
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
                   <GripHorizontal size={14} color="#94a3b8" />
                 </div>
-                <div style={{ fontSize: '32px' }}>{item.icon}</div>
+                <div style={{ fontSize: 'var(--text-2xl)' }}>{item.icon}</div>
                 <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: item.color, textAlign: 'center' }}>{item.name}</div>
               </div>
             );
