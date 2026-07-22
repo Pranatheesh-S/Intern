@@ -56,7 +56,7 @@ export default function LinearMotionActivity({ onBackToDashboard }) {
             <ArrowLeft size={14} /> Back to Class 6 Chapter 5
           </button>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Activity 5.3: Linear Motion</h2>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Activity 5.6: Linear Motion</h2>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Observing moving objects</span>
           </div>
         </div>

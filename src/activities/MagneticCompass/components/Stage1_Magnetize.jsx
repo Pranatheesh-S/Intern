@@ -38,7 +38,8 @@ export default function Stage1_Magnetize({ onComplete }) {
       const color = Math.random() > 0.5 ? 'rgba(30, 41, 59, 0.65)' : 'rgba(51, 65, 85, 0.65)';
       
       const initX = Math.random() * 500 - 250;
-      const initY = Math.random() * 45 + 80;
+      const isAbove = Math.random() > 0.5;
+      const initY = isAbove ? (Math.random() * 45 - 20) : (Math.random() * 45 + 80);
       const initRot = Math.random() * 360;
 
       let targetX = initX;
