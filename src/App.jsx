@@ -71,9 +71,7 @@ const LeafVenationLab = lazy(() => import('./science/class6/chapter2/LeafVenatio
 const RootSystemsLab = lazy(() => import('./science/class6/chapter2/RootSystemsLab'));
 const VenationRootCorrelationLab = lazy(() => import('./science/class6/chapter2/VenationRootCorrelationLab'));
 const SeedDissectionLab = lazy(() => import('./science/class6/chapter2/SeedDissectionLab'));
-const IntroductionMindMap = lazy(() => import('./science/class6/chapter2/IntroductionMindMap'));
-const InlineSortingActivity = lazy(() => import('./science/class6/chapter2/InlineSortingActivity'));
-const GroupingBasicsBookSpread = lazy(() => import('./science/class6/chapter2/GroupingBasicsBookSpread'));
+
 import './App.css';
 const Chapter2LearningLab = lazy(() => import('./science/class6/chapter2/Chapter2LearningLab'));
 const Chapter3LearningLab = lazy(() => import('./science/class6/chapter3/Chapter3LearningLab'));
@@ -94,16 +92,7 @@ export default function App() {
     const params = new URLSearchParams(window.location.hash.replace('#', '?'));
     return params.get('section') || null;
   });
-  const [activeActivityPhase, setActiveActivityPhase] = useState(1);
-  const [sortCorrectCounts, setSortCorrectCounts] = useState({});
-  const [selectedSortItem, setSelectedSortItem] = useState(null);
-  const [sortStatusMsg, setSortStatusMsg] = useState('');
-  const [showSortSuccess, setShowSortSuccess] = useState(false);
-  const [activeContentLesson, setActiveContentLesson] = useState(null);
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [quizAnswers, setQuizAnswers] = useState({});
-  const [quizChecked, setQuizChecked] = useState(false);
-  const [contentLessonProgress, setContentLessonProgress] = useState({});
+
   const [hideHeader, setHideHeader] = useState(false);
 
   useEffect(() => {
@@ -184,7 +173,7 @@ export default function App() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [activeSubject, activeActivity, activeContentLesson]);
+  }, [activeSubject, activeActivity]);
 
   useEffect(() => {
     if (activeSectionId && sidebarItemRefs.current[activeSectionId]) {
@@ -2890,7 +2879,7 @@ export default function App() {
     </div>
   );
 
-  const isFullscreen = (activeActivity && !['chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter10', 'chapter11', 'chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || !!activeContentLesson || hideHeader;
+  const isFullscreen = (activeActivity && !['chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter10', 'chapter11', 'chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || hideHeader;
 
   return (
     <div className="app-container">
@@ -3076,12 +3065,7 @@ export default function App() {
           ) : activeActivity === 'appreciating_biodiversity' ? (
             <AppreciatingBiodiversityActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'inline_sorting' ? (
-            <InlineSortingActivity 
-              onBackToDashboard={(completed) => {
-                if (completed) setShowSortSuccess(true);
-                navigateTo('class6', 'chapter2');
-              }} 
-            />
+            <InlineSortingActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'plant_detective' ? (
             <PlantDetectiveActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'leaf_venation_lab' ? (
