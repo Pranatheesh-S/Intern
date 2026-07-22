@@ -89,6 +89,30 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
           ))}
         </div>
 
+        <div className="sechead" style={{ marginTop: '4rem' }}>
+          <h2>Test Your Knowledge</h2>
+          <div className="line"></div>
+        </div>
+
+        <div className="grid">
+          <div 
+            className="card" 
+            onClick={() => onLaunchActivity('chapter_4_quiz')}
+            style={{ '--accent': '#9C27B0' }}
+          >
+            <div className="accentbar" style={{ background: '#9C27B0' }}></div>
+            <div className="tagchip">Assessment</div>
+            <div className="top">
+              <div className="ico">🧠</div>
+              <div>
+                <div className="nchip" style={{ background: '#9C27B0' }}>Quiz</div>
+                <h3>Test Your Knowledge</h3>
+                <div className="sub">20 Questions on Magnets</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
