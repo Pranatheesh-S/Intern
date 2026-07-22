@@ -881,6 +881,26 @@ body.focus-mode-active:has(.focus-trigger-top:hover) .lab-internal-header {
   border-radius: 3px;
 }
 
+/*
+  The .frame-page-left uses a cream paper background (--paper1/--paper2) that
+  is intentionally static and does NOT change with the dark theme. However, text
+  inside it can use global theme vars like --text-heading, --text-primary,
+  --text-secondary, --text-muted which go WHITE in dark mode — making them
+  invisible on the light cream background.
+
+  This block pins all those text colour vars to the dark textbook palette
+  (--ink, --mut, --navy) so the panel is always readable regardless of theme.
+*/
+[data-theme="dark"] .frame-page-left {
+  --text-heading:   var(--navy);
+  --text-primary:   var(--ink);
+  --text-secondary: var(--mut);
+  --text-muted:     var(--mut);
+  --text-faint:     var(--mut);
+  color:            var(--ink);
+}
+
+
 .frame-page-right {
   background: transparent;
   border-radius: 16px;
