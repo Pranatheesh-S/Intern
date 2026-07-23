@@ -30,50 +30,53 @@ export default function Stage1_Magnetize({ onComplete }) {
 
   const filings = useMemo(() => {
     const items = [];
-    const poleNx = -110; const poleNy = 47;
-    const poleSx = 110; const poleSy = 47;
+    // Adjust y to align with visual needle
+    const poleNx = -115; const poleNy = 27;
+    const poleSx = 115; const poleSy = 27;
 
-    for (let i = 0; i < 1500; i++) {
-      const width = 4 + Math.random() * 12;
-      const color = Math.random() > 0.5 ? 'rgba(30, 41, 59, 0.65)' : 'rgba(51, 65, 85, 0.65)';
-      
-      const initX = Math.random() * 500 - 250;
-      const isAbove = Math.random() > 0.5;
-      const initY = isAbove ? (Math.random() * 45 - 20) : (Math.random() * 45 + 80);
+    for (let i = 0; i < 3000; i++) { // Increased count for denser clumps
+      // Uniform random initial scatter for testing view
+      const initX = (Math.random() - 0.5) * 480;
+      const initY = (Math.random() - 0.5) * 230;
       const initRot = Math.random() * 360;
 
-      let targetX = initX;
-      let targetY = initY;
+      // Start target at random position
+      let targetX = (Math.random() - 0.5) * 480;
+      let targetY = (Math.random() - 0.5) * 230;
 
       const distN = Math.hypot(targetX - poleNx, targetY - poleNy);
       const distS = Math.hypot(targetX - poleSx, targetY - poleSy);
-      const minDist = Math.min(distN, distS);
-      const isNorth = distN < distS;
-      const targetPoleX = isNorth ? poleNx : poleSx;
-      const targetPoleY = isNorth ? poleNy : poleSy;
-
-      let pullFactor = Math.pow(Math.E, -minDist / 100) * 0.4;
-      if (minDist < 60) {
-         pullFactor = Math.max(pullFactor, Math.pow(Math.E, -minDist / 30) * 0.8);
-      }
       
-      if (Math.abs(targetX) < 100 && targetY > 30 && targetY < 65) {
-         const bodyPull = Math.pow(Math.E, -Math.abs(targetY - 47) / 20);
-         targetY = targetY - (targetY - 47) * bodyPull * 0.6;
+      // Pull towards poles for realistic clustering
+      let pullN = Math.exp(-distN / 45) * 0.8;
+      let pullS = Math.exp(-distS / 45) * 0.8;
+      
+      // EXTREME pull to create dense accumulation at the edges
+      if (distN < 40) pullN += Math.exp(-distN / 15) * 0.8;
+      if (distS < 40) pullS += Math.exp(-distS / 15) * 0.8;
+
+      targetX += (poleNx - targetX) * pullN;
+      targetY += (poleNy - targetY) * pullN;
+      
+      targetX += (poleSx - targetX) * pullS;
+      targetY += (poleSy - targetY) * pullS;
+
+      // Add slight pull towards the needle body (between the poles)
+      if (targetX > poleNx && targetX < poleSx) {
+        const bodyPull = Math.exp(-Math.abs(targetY - poleNy) / 10) * 0.4;
+        targetY += (poleNy - targetY) * bodyPull;
       }
 
-      targetX = targetX + (targetPoleX - targetX) * pullFactor;
-      targetY = targetY + (targetPoleY - targetY) * pullFactor;
-
+      // Calculate magnetic field direction at target position
       const dxN = targetX - poleNx;
       const dyN = targetY - poleNy;
-      const dN3 = Math.pow(dxN*dxN + dyN*dyN, 1.5) || 1;
+      const dN3 = Math.pow(dxN * dxN + dyN * dyN, 1.5) || 1;
       const bxN = dxN / dN3;
       const byN = dyN / dN3;
 
       const dxS = targetX - poleSx;
       const dyS = targetY - poleSy;
-      const dS3 = Math.pow(dxS*dxS + dyS*dyS, 1.5) || 1;
+      const dS3 = Math.pow(dxS * dxS + dyS * dyS, 1.5) || 1;
       const bxS = -dxS / dS3;
       const byS = -dyS / dS3;
 
@@ -81,15 +84,25 @@ export default function Stage1_Magnetize({ onComplete }) {
       const by = byN + byS;
 
       let targetRot = Math.atan2(by, bx) * (180 / Math.PI);
-      targetRot += (Math.random() - 0.5) * 4;
-      targetX += (Math.random() - 0.5) * 4;
-      targetY += (Math.random() - 0.5) * 4;
+      
+      // Add slight randomness to rotation and position for realism
+      targetRot += (Math.random() - 0.5) * 15;
+      targetX += (Math.random() - 0.5) * 6;
+      targetY += (Math.random() - 0.5) * 6;
+
+      const width = 4 + Math.random() * 8;
+      const color = Math.random() > 0.5 ? 'rgba(30, 41, 59, 0.85)' : 'rgba(51, 65, 85, 0.85)';
 
       items.push({
         id: i,
-        width, color,
-        initX, initY, initRot,
-        targetX, targetY, targetRot
+        width,
+        color,
+        initX,
+        initY,
+        initRot,
+        targetX,
+        targetY,
+        targetRot
       });
     }
     return items;
@@ -143,78 +156,20 @@ export default function Stage1_Magnetize({ onComplete }) {
           userSelect: 'none',
           WebkitUserSelect: 'none'
         }}>
-          {/* Iron Needle Container */}
-          <div style={{
-            position: 'absolute',
-            bottom: '70px',
-            width: '250px',
-            height: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))',
-            zIndex: 2
-          }}>
-            {/* Needle Body */}
-            <div style={{
-              flex: 1,
-              height: '100%',
-              background: 'linear-gradient(to bottom, #f8fafc 0%, #94a3b8 50%, #64748b 100%)',
-              borderTopLeftRadius: '8px',
-              borderBottomLeftRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: '6px'
-            }}>
-              {/* Needle Eye */}
-              <div style={{ width: '12px', height: '4px', background: 'var(--surface)', borderRadius: '2px', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5)' }} />
-            </div>
-            {/* Needle Point */}
-            <div style={{
-              width: '40px',
-              height: '100%',
-              background: 'linear-gradient(to bottom, #f8fafc 0%, #94a3b8 50%, #64748b 100%)',
-              clipPath: 'polygon(0 0, 100% 50%, 0 100%)'
-            }} />
-          </div>
-
-          {/* Magnetic domains inside needle */}
-          <div style={{
-            position: 'absolute',
-            bottom: '74px',
-            width: '210px',
-            height: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-around',
-            pointerEvents: 'none',
-            zIndex: 5
-          }}>
-            {Array.from({ length: 7 }).map((_, i) => {
-              const progressRatio = Math.min(strokeCount / maxStrokes, 1);
-              const initialRot = i % 2 === 0 ? 55 + (i * 5) : -45 - (i * 5);
-              const currentRot = initialRot * (1 - progressRatio);
-              
-              return (
-                <motion.div
-                  key={i}
-                  animate={{ rotate: currentRot }}
-                  transition={{ type: 'spring', stiffness: 80, damping: 15 }}
-                  style={{ 
-                    width: '14px', 
-                    height: '6px', 
-                    display: 'flex', 
-                    borderRadius: '2px', 
-                    overflow: 'hidden',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                    opacity: 0.9
-                  }}
-                >
-                  <div style={{ flex: 1, background: '#ef4444' }} /> {/* North */}
-                  <div style={{ flex: 1, background: '#3b82f6' }} /> {/* South */}
-                </motion.div>
-              );
-            })}
-          </div>
+          {/* Iron Needle Image */}
+          <img 
+            src="/magnetic_needle.png" 
+            alt="Magnetic Needle"
+            draggable="false"
+            style={{
+              position: 'absolute',
+              bottom: '55px',
+              width: '250px',
+              filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))',
+              zIndex: 2,
+              pointerEvents: 'none'
+            }}
+          />
 
           {/* Iron Filings (for testing) */}
           <AnimatePresence>
@@ -290,16 +245,23 @@ export default function Stage1_Magnetize({ onComplete }) {
                   height: '90px',
                   display: 'flex',
                   flexDirection: 'column',
-                  borderRadius: '4px',
-                  overflow: 'hidden',
-                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.3)',
                   zIndex: 10,
                   cursor: isMagnetized ? 'default' : 'grab'
                 }}
                 whileTap={{ cursor: 'grabbing', scale: 1.05 }}
               >
-                <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.9rem' }}>N</div>
-                <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.9rem' }}>S</div>
+                <img 
+                  src="/bar_magnet.png" 
+                  alt="Bar Magnet"
+                  draggable="false"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    pointerEvents: 'none',
+                    filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3))'
+                  }}
+                />
               </motion.div>
             )}
           </AnimatePresence>

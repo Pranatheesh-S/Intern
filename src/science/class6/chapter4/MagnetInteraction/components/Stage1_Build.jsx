@@ -376,18 +376,12 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     );
                     case "magnetA": return (
                       <svg viewBox="0 0 100 40" width="24" height="24">
-                        <rect x="0" y="0" width="50" height="40" fill="#ef4444" />
-                        <rect x="50" y="0" width="50" height="40" fill="#3b82f6" />
-                        <text x="25" y="26" fill="white" fontSize="20" fontWeight="bold" textAnchor="middle">N</text>
-                        <text x="75" y="26" fill="white" fontSize="20" fontWeight="bold" textAnchor="middle">S</text>
+                        <image href="/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(-90 50 20)" />
                       </svg>
                     );
                     case "magnetB": return (
                       <svg viewBox="0 0 100 40" width="24" height="24">
-                        <rect x="0" y="0" width="50" height="40" fill="#3b82f6" />
-                        <rect x="50" y="0" width="50" height="40" fill="#ef4444" />
-                        <text x="25" y="26" fill="white" fontSize="20" fontWeight="bold" textAnchor="middle">S</text>
-                        <text x="75" y="26" fill="white" fontSize="20" fontWeight="bold" textAnchor="middle">N</text>
+                        <image href="/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(90 50 20)" />
                       </svg>
                     );
                     default: return null;
@@ -558,12 +552,9 @@ export default function Stage1_Build({ onComplete, onNext }) {
                   {/* Magnet A SVG */}
                   {placed.magnetA && (
                     <DraggableSVGGroup id="magnetA" isDraggable={true}>
-                      <g transform={`translate(${positions.magnetA.x - 100}, ${positions.magnetA.y - 20})`} filter="drop-shadow(0px 8px 10px rgba(0,0,0,0.4))">
-                        <text x="100" y="-10" fill="var(--text-secondary)" fontSize="14" fontWeight="bold" textAnchor="middle">Magnet A</text>
-                        <rect x="0" y="0" width="100" height="40" fill="#ef4444" />
-                        <rect x="100" y="0" width="100" height="40" fill="#3b82f6" />
-                        <text x="50" y="25" fill="white" fontSize="16" fontWeight="bold" textAnchor="middle">N</text>
-                        <text x="150" y="25" fill="white" fontSize="16" fontWeight="bold" textAnchor="middle">S</text>
+                      <g transform={`translate(${positions.magnetA.x - 60}, ${positions.magnetA.y - 20})`} filter="drop-shadow(0px 8px 10px rgba(0,0,0,0.4))">
+                        <text x="60" y="-10" fill="var(--text-secondary)" fontSize="14" fontWeight="bold" textAnchor="middle">Magnet A</text>
+                        <image href="/bar_magnet.png" x="40" y="-40" width="40" height="120" transform="rotate(-90 60 20)" preserveAspectRatio="none" />
                       </g>
                     </DraggableSVGGroup>
                   )}
@@ -573,10 +564,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     <DraggableSVGGroup id="magnetB" isDraggable={true}>
                       <g transform={`translate(${positions.magnetB.x - 60}, ${positions.magnetB.y - 20})`} filter="drop-shadow(0px 4px 6px rgba(0,0,0,0.3))">
                         <text x="60" y="-10" fill="var(--text-secondary)" fontSize="14" fontWeight="bold" textAnchor="middle">Magnet B</text>
-                        <rect x="0" y="0" width="60" height="40" fill="#3b82f6" />
-                        <rect x="60" y="0" width="60" height="40" fill="#ef4444" />
-                        <text x="30" y="25" fill="white" fontSize="16" fontWeight="bold" textAnchor="middle">S</text>
-                        <text x="90" y="25" fill="white" fontSize="16" fontWeight="bold" textAnchor="middle">N</text>
+                        <image href="/bar_magnet.png" x="40" y="-40" width="40" height="120" transform="rotate(90 60 20)" preserveAspectRatio="none" />
                       </g>
                     </DraggableSVGGroup>
                   )}
@@ -634,15 +622,13 @@ export default function Stage1_Build({ onComplete, onNext }) {
               </div>
             )}
             {activeDraggingId === "magnetA" && (
-              <div style={{ width: "120px", height: "24px", display: "flex", borderRadius: "4px", overflow: "hidden" }}>
-                <div style={{ flex: 1, background: "#ef4444" }} />
-                <div style={{ flex: 1, background: "#3b82f6" }} />
+              <div style={{ width: "120px", height: "24px", position: "relative" }}>
+                <img src="/bar_magnet.png" style={{ position: "absolute", top: "50%", left: "50%", width: "24px", height: "120px", transform: "translate(-50%, -50%) rotate(-90deg)", objectFit: "fill", borderRadius: "4px" }} alt="" />
               </div>
             )}
             {activeDraggingId === "magnetB" && (
-              <div style={{ width: "80px", height: "24px", display: "flex", borderRadius: "4px", overflow: "hidden" }}>
-                <div style={{ flex: 1, background: "#3b82f6" }} />
-                <div style={{ flex: 1, background: "#ef4444" }} />
+              <div style={{ width: "80px", height: "24px", position: "relative" }}>
+                <img src="/bar_magnet.png" style={{ position: "absolute", top: "50%", left: "50%", width: "24px", height: "80px", transform: "translate(-50%, -50%) rotate(90deg)", objectFit: "fill", borderRadius: "4px" }} alt="" />
               </div>
             )}
           </div>

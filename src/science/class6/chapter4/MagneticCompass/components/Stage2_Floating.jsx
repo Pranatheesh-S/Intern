@@ -94,13 +94,20 @@ export default function Stage2_Floating({ onComplete }) {
                   transform: `translateZ(${i}px)` 
                 }} />
               ))}
-              <div style={{ 
-                position: 'absolute', width: 6, height: 180, left: 37, top: -50, 
-                background: 'linear-gradient(to bottom, #ef4444 0%, #ef4444 48%, #cbd5e1 48%, #cbd5e1 52%, #3b82f6 52%, #3b82f6 100%)', 
-                transform: 'translateZ(15px)', borderRadius: '3px', boxShadow: '2px 2px 5px rgba(0,0,0,0.4)'
-              }}>
-                <div style={{ position: 'absolute', left: '1px', top: '4px', width: '4px', height: '4px', background: 'white', borderRadius: '50%', boxShadow: '0 0 2px rgba(0,0,0,0.5)' }} />
-              </div>
+              <img 
+                src="/magnetic_needle.png"
+                alt="Magnetic Needle"
+                draggable="false"
+                style={{
+                  position: 'absolute',
+                  width: '180px',
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translateZ(15px) translate(-50%, -50%) rotate(-90deg)',
+                  filter: 'drop-shadow(2px 2px 5px rgba(0,0,0,0.4))',
+                  pointerEvents: 'none'
+                }}
+              />
             </div>
           </motion.div>
         </motion.div>

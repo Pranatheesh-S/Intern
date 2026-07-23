@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Scissors, AlertCircle, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
 
-const MagnetPart = ({ isLeft, showNewPoles, width = 200 }) => {
+const MagnetPart = ({ isLeft, isFull = false, showNewPoles, width = 200 }) => {
+  const bgSize = isFull ? '100% 100%' : '200% 100%';
+  const bgPos = isFull ? 'center' : (isLeft ? 'left center' : 'right center');
+
   return (
     <div style={{
       width: `${width}px`,
@@ -11,12 +14,17 @@ const MagnetPart = ({ isLeft, showNewPoles, width = 200 }) => {
       borderRadius: '4px',
       overflow: 'hidden',
       boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
+      backgroundImage: 'url(/horizontal_magnet.png)',
+      backgroundSize: bgSize,
+      backgroundPosition: bgPos,
+      backgroundRepeat: 'no-repeat',
+      position: 'relative'
     }}>
-      <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.25rem' }}>
-        {isLeft ? 'N' : (showNewPoles ? 'N' : '')}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.25rem', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+        {isFull || isLeft ? 'N' : (showNewPoles ? 'N' : '')}
       </div>
-      <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.25rem' }}>
-        {!isLeft ? 'S' : (showNewPoles ? 'S' : '')}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.25rem', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+        {isFull || !isLeft ? 'S' : (showNewPoles ? 'S' : '')}
       </div>
     </div>
   );
@@ -71,7 +79,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         }}>
           {!broken ? (
             <motion.div exit={{ opacity: 0, scale: 0.9 }}>
-              <MagnetPart isLeft={true} showNewPoles={false} width={400} />
+              <MagnetPart isLeft={true} isFull={true} showNewPoles={false} width={400} />
             </motion.div>
           ) : (
             <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'center' }}>
@@ -80,7 +88,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 animate={{ x: -10 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 20 }}
               >
-                <MagnetPart isLeft={true} showNewPoles={showPoles} width={180} />
+                <MagnetPart isLeft={true} isFull={false} showNewPoles={showPoles} width={180} />
               </motion.div>
 
               <motion.div
@@ -88,7 +96,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 animate={{ x: 10 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 20 }}
               >
-                <MagnetPart isLeft={false} showNewPoles={showPoles} width={180} />
+                <MagnetPart isLeft={false} isFull={false} showNewPoles={showPoles} width={180} />
               </motion.div>
             </div>
           )}

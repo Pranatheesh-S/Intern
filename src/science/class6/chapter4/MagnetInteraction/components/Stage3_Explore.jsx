@@ -61,7 +61,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
             
             {hasPencils && (
               <motion.div
-                animate={{ x: magnetAOffset - 100 }}
+                animate={{ x: magnetAOffset - 44 }}
                 transition={{ type: "spring", stiffness: 100, damping: 15 }}
                 style={{ position: "absolute", display: "flex", gap: "8px", bottom: "82px", zIndex: 1 }}
               >
@@ -121,18 +121,13 @@ export default function Stage3_Explore({ onComplete, onNext }) {
             )}
 
             <motion.div
-              animate={{ x: magnetAOffset - 100, y: hasPencils ? 0 : 5 }}
+              animate={{ x: magnetAOffset - 60, y: hasPencils ? 0 : 5 }}
               transition={{ type: "spring", stiffness: 80, damping: 12 }}
-              style={{ position: "absolute", bottom: hasPencils ? "110px" : "82px", width: "200px", height: "40px", zIndex: 10 }}
+              style={{ position: "absolute", bottom: hasPencils ? "110px" : "82px", width: "120px", height: "40px", zIndex: 10 }}
             >
               <div style={{ position: "absolute", top: "-25px", left: "50%", transform: "translateX(-50%)", fontSize: "0.85rem", fontWeight: "bold", color: "var(--text-secondary)", whiteSpace: "nowrap" }}>Magnet A</div>
-              <div style={{ width: "100%", height: "100%", display: "flex", borderRadius: "4px", overflow: "hidden", boxShadow: "0 8px 16px rgba(0,0,0,0.3)" }}>
-                <div style={{ flex: 1, background: magnetAPoleRight === "S" ? "#ef4444" : "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "bold" }}>
-                  {magnetAPoleRight === "S" ? "N" : "S"}
-                </div>
-                <div style={{ flex: 1, background: magnetAPoleRight === "S" ? "#3b82f6" : "#ef4444", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "bold" }}>
-                  {magnetAPoleRight}
-                </div>
+              <div style={{ position: "absolute", top: "50%", left: "50%", width: "40px", height: "120px", transform: `translate(-50%, -50%) rotate(${magnetAPoleRight === "S" ? "-90deg" : "90deg"})` }}>
+                <img src="/bar_magnet.png" style={{ width: "100%", height: "100%", objectFit: "fill", filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.3))" }} draggable="false" alt="Magnet A" />
               </div>
             </motion.div>
 
@@ -142,13 +137,8 @@ export default function Stage3_Explore({ onComplete, onNext }) {
               style={{ position: "absolute", bottom: "110px", width: "120px", height: "40px", zIndex: 11 }}
             >
               <div style={{ position: "absolute", top: "-25px", left: "50%", transform: "translateX(-50%)", fontSize: "0.85rem", fontWeight: "bold", color: "var(--text-secondary)", whiteSpace: "nowrap" }}>Magnet B</div>
-              <div style={{ width: "100%", height: "100%", display: "flex", borderRadius: "4px", overflow: "hidden", boxShadow: "0 4px 8px rgba(0,0,0,0.2)" }}>
-                <div style={{ flex: 1, background: magnetBPoleLeft === "N" ? "#ef4444" : "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "bold" }}>
-                  {magnetBPoleLeft}
-                </div>
-                <div style={{ flex: 1, background: magnetBPoleLeft === "N" ? "#3b82f6" : "#ef4444", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "bold" }}>
-                  {magnetBPoleLeft === "N" ? "S" : "N"}
-                </div>
+              <div style={{ position: "absolute", top: "50%", left: "50%", width: "40px", height: "120px", transform: `translate(-50%, -50%) rotate(${magnetBPoleLeft === "N" ? "-90deg" : "90deg"})` }}>
+                <img src="/bar_magnet.png" style={{ width: "100%", height: "100%", objectFit: "fill", filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))" }} draggable="false" alt="Magnet B" />
               </div>
             </motion.div>
 

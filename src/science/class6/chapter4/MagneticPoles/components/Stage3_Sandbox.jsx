@@ -169,34 +169,45 @@ export default function Stage3_Sandbox({ onComplete }) {
           boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
         }}>
           {shape === 'bar' && (
-            <div style={{
-              position: 'absolute', width: '200px', height: '40px', display: 'flex',
-              borderRadius: '4px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.2)', zIndex: 10
-            }}>
-              <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>N</div>
-              <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>S</div>
-            </div>
+            <img 
+              src="/horizontal_magnet.png" 
+              alt="Bar Magnet"
+              style={{
+                position: 'absolute',
+                width: '200px',
+                zIndex: 10,
+                pointerEvents: 'none',
+                filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))'
+              }}
+            />
           )}
 
           {shape === 'horseshoe' && (
-            <div style={{
-              position: 'absolute', width: '120px', height: '140px',
-              border: '25px solid #1e293b', borderBottom: 'none', borderRadius: '60px 60px 0 0',
-              display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', zIndex: 10
-            }}>
-              <div style={{ width: '25px', height: '40px', background: '#ef4444', marginLeft: '-25px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.8rem' }}>N</div>
-              <div style={{ width: '25px', height: '40px', background: '#3b82f6', marginRight: '-25px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.8rem' }}>S</div>
-            </div>
+            <img 
+              src="/horse-magnet.png" 
+              alt="Horseshoe Magnet"
+              style={{
+                position: 'absolute', 
+                width: '140px', 
+                zIndex: 10,
+                pointerEvents: 'none',
+                filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))'
+              }}
+            />
           )}
 
           {shape === 'ring' && (
-            <div style={{
-              position: 'absolute', width: '120px', height: '120px',
-              borderRadius: '50%', background: 'linear-gradient(90deg, #ef4444 50%, #3b82f6 50%)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.2)', zIndex: 10
-            }}>
-              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#f8fafc', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)' }} />
-            </div>
+            <img 
+              src="/ring_magnet.png" 
+              alt="Ring Magnet"
+              style={{
+                position: 'absolute', 
+                width: '120px', 
+                zIndex: 10,
+                pointerEvents: 'none',
+                filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))'
+              }}
+            />
           )}
 
           {filings.map(f => (

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Hammer, HelpCircle, Compass, CheckSquare, ArrowLeft, Info, CheckCircle } from 'lucide-react';
 import Stage1_Build from './components/Stage1_Build';
-import Stage2_Predict from './components/Stage2_Predict';
 import Stage3_Explore from './components/Stage3_Explore';
 import Stage4_Quiz from './components/Stage4_Quiz';
 import DidYouKnow from './DidYouKnow';
@@ -11,17 +10,12 @@ export default function MagnetInteractionActivity({ onBackToDashboard, onComplet
   const [activeTab, setActiveTab] = useState('build');
   const [progress, setProgress] = useState({
     build: false,
-    predict: false,
     explore: false,
     quiz: false
   });
 
   const handleStage1Complete = () => {
     setProgress(prev => ({ ...prev, build: true }));
-  };
-
-  const handleStage2Complete = () => {
-    setProgress(prev => ({ ...prev, predict: true }));
   };
 
   const handleStage3Complete = () => {
@@ -34,10 +28,9 @@ export default function MagnetInteractionActivity({ onBackToDashboard, onComplet
   };
 
   const tabs = [
-    { id: 'build', name: '1. Build', icon: Hammer, component: <Stage1_Build onComplete={handleStage1Complete} onNext={() => setActiveTab('predict')} /> },
-    { id: 'predict', name: '2. Predict', icon: HelpCircle, component: <Stage2_Predict onComplete={handleStage2Complete} onNext={() => setActiveTab('explore')} />, locked: !progress.build },
-    { id: 'explore', name: '3. Explore', icon: Compass, component: <Stage3_Explore onComplete={handleStage3Complete} onNext={() => setActiveTab('quiz')} />, locked: !progress.predict },
-    { id: 'quiz', name: '4. Quiz', icon: CheckSquare, component: <Stage4_Quiz onComplete={handleStage4Complete} />, locked: !progress.explore }
+    { id: 'build', name: '1. Build', icon: Hammer, component: <Stage1_Build onComplete={handleStage1Complete} onNext={() => setActiveTab('explore')} /> },
+    { id: 'explore', name: '2. Explore', icon: Compass, component: <Stage3_Explore onComplete={handleStage3Complete} onNext={() => setActiveTab('quiz')} />, locked: !progress.build },
+    { id: 'quiz', name: '3. Quiz', icon: CheckSquare, component: <Stage4_Quiz onComplete={handleStage4Complete} />, locked: !progress.explore }
   ];
 
   return (
