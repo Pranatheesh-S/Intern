@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Map, Target, Lightbulb, Book, MapPin, Link2, BarChart3, Building2, Compass, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 import India from '@svg-maps/india';
 
@@ -705,274 +706,274 @@ export default function DistanceAndScale({ onComplete }) {
           .ds-what-block { flex-direction: row; align-items: center; }
         }
       `}</style>
-      
+
       {subpage === 'measure' ? (
         <div className="ds-spread">
           <div className="ds-ribbon"></div>
 
-        {/* LEFT · concept */}
-        <div className="ds-left">
-          <div className="ds-left-layout">
-            
-            {/* Section 1: Header */}
-            <div className="ds-s1-header">
-              <div className="ds-eyebrow">Chapter 1 · Distance &amp; Scale</div>
-              <h1 className="ds-h1">Shrinking the World</h1>
-              <div className="ds-sub">How a huge place fits on paper</div>
-            </div>
+          {/* LEFT · concept */}
+          <div className="ds-left">
+            <div className="ds-left-layout">
 
-            {/* Section 2: What is Scale? */}
-            <div className="ds-s2-what">
-              <h3 className="ds-section-heading ds-h-blue">
-                <Map size={20} strokeWidth={2.5} /> What is Scale?
-              </h3>
-              <div className="ds-what-blocks">
-                <div className="ds-what-block">
-                  <Map className="ds-what-icon" size={24} strokeWidth={2.5} />
-                  <p className="ds-what-text">Maps are smaller than the real world.</p>
-                </div>
-                <div className="ds-what-block">
-                  <Target className="ds-what-icon" size={24} strokeWidth={2.5} />
-                  <p className="ds-what-text">Scale tells us how much the real world has been reduced.</p>
-                </div>
-                <div className="ds-what-block">
-                  <Lightbulb className="ds-what-icon" size={24} strokeWidth={2.5} />
-                  <p className="ds-what-text">The same length on two maps can represent different real distances.</p>
+              {/* Section 1: Header */}
+              <div className="ds-s1-header">
+                <div className="ds-eyebrow">Chapter 1 · Distance &amp; Scale</div>
+                <h1 className="ds-h1">Shrinking the World</h1>
+                <div className="ds-sub">How a huge place fits on paper</div>
+              </div>
+
+              {/* Section 2: What is Scale? */}
+              <div className="ds-s2-what">
+                <h3 className="ds-section-heading ds-h-blue">
+                  <Map size={20} strokeWidth={2.5} /> What is Scale?
+                </h3>
+                <div className="ds-what-blocks">
+                  <div className="ds-what-block">
+                    <Map className="ds-what-icon" size={24} strokeWidth={2.5} />
+                    <p className="ds-what-text">Maps are smaller than the real world.</p>
+                  </div>
+                  <div className="ds-what-block">
+                    <Target className="ds-what-icon" size={24} strokeWidth={2.5} />
+                    <p className="ds-what-text">Scale tells us how much the real world has been reduced.</p>
+                  </div>
+                  <div className="ds-what-block">
+                    <Lightbulb className="ds-what-icon" size={24} strokeWidth={2.5} />
+                    <p className="ds-what-text">The same length on two maps can represent different real distances.</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Section 3: Main Visual Redesign */}
-            <div className="ds-s3-visual">
-              <div style={{ position: 'absolute', opacity: 0.04, right: '-30px', top: '-30px', pointerEvents: 'none' }}>
-                <Compass size={180} />
+              {/* Section 3: Main Visual Redesign */}
+              <div className="ds-s3-visual">
+                <div style={{ position: 'absolute', opacity: 0.04, right: '-30px', top: '-30px', pointerEvents: 'none' }}>
+                  <Compass size={180} />
+                </div>
+
+                <div style={{ position: 'absolute', top: '20%', bottom: '20%', width: '1px', background: 'rgba(47,109,240,0.2)', zIndex: 1, left: '50%', transform: 'translateX(-50%)' }}></div>
+
+                {/* Zone 1: Real World */}
+                <div className="ds-rw-zone">
+                  <div className="ds-zone-badge">Real World</div>
+                  <div className="ds-scene">
+                    <SchoolVector size={72} />
+                    <div className="ds-ruler-container">
+                      <div className="ds-ruler">
+                        <div className="ds-ruler-label">500 metres</div>
+                      </div>
+                    </div>
+                    <HouseVector size={72} />
+                  </div>
+                </div>
+
+                {/* Zone 2: Scale Badge */}
+                <div className="ds-scale-hero">
+                  <div className="ds-hero-badge">1 cm = 500 m</div>
+                  <div className="ds-hero-caption">Map Scale</div>
+                </div>
+
+                {/* Zone 3: Map */}
+                <div className="ds-rw-zone" style={{ width: '35%' }}>
+                  <div className="ds-zone-badge ds-zone-badge-green">Map</div>
+                  <div className="ds-scene">
+                    <SchoolVector size={32} />
+                    <div className="ds-ruler-container">
+                      <div className="ds-ruler ds-ruler-map">
+                        <div className="ds-ruler-label ds-ruler-label-map">1 cm</div>
+                      </div>
+                    </div>
+                    <HouseVector size={32} />
+                  </div>
+                </div>
+
+                {/* Remember Callout */}
+                <div className="ds-callout">
+                  <div className="ds-callout-title">
+                    <Lightbulb size={10} strokeWidth={3} /> Remember
+                  </div>
+                  <p className="ds-callout-text">Maps are smaller, but the scale tells us the real distance.</p>
+                </div>
               </div>
-              
-              <div style={{ position: 'absolute', top: '20%', bottom: '20%', width: '1px', background: 'rgba(47,109,240,0.2)', zIndex: 1, left: '50%', transform: 'translateX(-50%)' }}></div>
 
-              {/* Zone 1: Real World */}
-              <div className="ds-rw-zone">
-                <div className="ds-zone-badge">Real World</div>
-                <div className="ds-scene">
-                  <SchoolVector size={72} />
-                  <div className="ds-ruler-container">
-                    <div className="ds-ruler">
-                      <div className="ds-ruler-label">500 metres</div>
+              {/* Section 4: Examples */}
+              <div className="ds-s4-examples">
+                <h3 className="ds-section-heading ds-h-purple">
+                  <Book size={20} strokeWidth={2.5} /> Examples
+                </h3>
+                <div className="ds-cards-grid">
+                  <div className="ds-card">
+                    <div className="ds-card-icon">
+                      <Building2 size={40} color="var(--amber)" strokeWidth={1.5} />
+                    </div>
+                    <div className="ds-card-content">
+                      <div className="ds-card-title">Town Map</div>
+                      <div className="ds-card-val">1 cm = 500 m</div>
+                      <div className="ds-card-cap">Shows a small area.</div>
                     </div>
                   </div>
-                  <HouseVector size={72} />
-                </div>
-              </div>
-
-              {/* Zone 2: Scale Badge */}
-              <div className="ds-scale-hero">
-                <div className="ds-hero-badge">1 cm = 500 m</div>
-                <div className="ds-hero-caption">Map Scale</div>
-              </div>
-
-              {/* Zone 3: Map */}
-              <div className="ds-rw-zone" style={{ width: '35%' }}>
-                <div className="ds-zone-badge ds-zone-badge-green">Map</div>
-                <div className="ds-scene">
-                  <SchoolVector size={32} />
-                  <div className="ds-ruler-container">
-                    <div className="ds-ruler ds-ruler-map">
-                      <div className="ds-ruler-label ds-ruler-label-map">1 cm</div>
+                  <div className="ds-card">
+                    <div className="ds-card-icon">
+                      <IndiaMapSilhouette />
+                    </div>
+                    <div className="ds-card-content">
+                      <div className="ds-card-title">India Map</div>
+                      <div className="ds-card-val">2.5 cm = 500 km</div>
+                      <div className="ds-card-cap">Shows a much larger area.</div>
                     </div>
                   </div>
-                  <HouseVector size={32} />
                 </div>
               </div>
 
-              {/* Remember Callout */}
-              <div className="ds-callout">
-                <div className="ds-callout-title">
-                  <Lightbulb size={10} strokeWidth={3} /> Remember
-                </div>
-                <p className="ds-callout-text">Maps are smaller, but the scale tells us the real distance.</p>
-              </div>
             </div>
-
-            {/* Section 4: Examples */}
-            <div className="ds-s4-examples">
-              <h3 className="ds-section-heading ds-h-purple">
-                <Book size={20} strokeWidth={2.5} /> Examples
-              </h3>
-              <div className="ds-cards-grid">
-                <div className="ds-card">
-                  <div className="ds-card-icon">
-                    <Building2 size={40} color="var(--amber)" strokeWidth={1.5} />
-                  </div>
-                  <div className="ds-card-content">
-                    <div className="ds-card-title">Town Map</div>
-                    <div className="ds-card-val">1 cm = 500 m</div>
-                    <div className="ds-card-cap">Shows a small area.</div>
-                  </div>
-                </div>
-                <div className="ds-card">
-                  <div className="ds-card-icon">
-                    <IndiaMapSilhouette />
-                  </div>
-                  <div className="ds-card-content">
-                    <div className="ds-card-title">India Map</div>
-                    <div className="ds-card-val">2.5 cm = 500 km</div>
-                    <div className="ds-card-cap">Shows a much larger area.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div>
-        </div>
 
-        {/* RIGHT · guided activity */}
-        <div className="ds-right">
-          <div className="ds-rlabel">📏 Let's Explore — Measure the Real Distance</div>
-          <div className="ds-rsub">Let's find the real distance using the map scale.</div>
-          
-          <div className="ds-scroll">
-            
-            {/* Step 1 */}
-            <div className="ds-step-card">
-              <div className="ds-step-title">
-                <span className="ds-step-title-num">Step 1</span>
-                Know the Scale
-              </div>
-              <div className="ds-step1-content">
-                <div className="ds-step1-badge">1 cm = 500 m</div>
-                <p className="ds-step1-desc">
-                  <MapPin size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px', color: 'var(--amber)' }} />
-                  This means that every 1 cm on the map represents 500 metres in the real world.
-                </p>
-              </div>
-            </div>
+          {/* RIGHT · guided activity */}
+          <div className="ds-right">
+            <div className="ds-rlabel">📏 Let's Explore — Measure the Real Distance</div>
+            <div className="ds-rsub">Let's find the real distance using the map scale.</div>
 
-            {/* Step 2 */}
-            <div className="ds-step-card">
-              <div className="ds-step-title">
-                <div className="ds-step-title-num">Step 2</div>
-                <div>Measure the Road</div>
-              </div>
-              <div className="ds-step2-content">
-                
-                <div className="ds-scene" style={{ width: `${selectedDistance * 15}%`, minWidth: '120px', transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', margin: '0 auto', marginBottom: '8px' }}>
-                  <SchoolVector size={40} />
-                  <div className="ds-ruler-container" style={{ paddingBottom: '12px' }}>
-                    <div className="ds-ruler ds-ruler-map" style={{ width: '100%' }}>
-                      <div className="ds-ruler-label ds-ruler-label-map">{selectedDistance} cm</div>
-                    </div>
-                  </div>
-                  <HouseVector size={40} />
+            <div className="ds-scroll">
+
+              {/* Step 1 */}
+              <div className="ds-step-card">
+                <div className="ds-step-title">
+                  <span className="ds-step-title-num">Step 1</span>
+                  Know the Scale
                 </div>
-
-                <div className="ds-seg-group">
-                  {[2, 4, 6].map(val => (
-                    <button 
-                      key={val} 
-                      className={`ds-seg-btn ${selectedDistance === val ? 'ds-seg-active' : ''}`}
-                      onClick={() => {
-                        setSelectedDistance(val);
-                        setIsCalculated(false);
-                        setTimeout(() => {
-                          if (step3Ref.current) {
-                            step3Ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                          }
-                        }, 100);
-                      }}
-                    >
-                      <div className="ds-seg-circle"></div>
-                      {val} cm
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="ds-step-card" ref={step3Ref}>
-              <div className="ds-step-title">
-                <span className="ds-step-title-num">Step 3</span>
-                Let's Calculate
-              </div>
-              
-              <div className="ds-calc-box">
-                <div className="ds-calc-row">
-                  <div className="ds-calc-item">
-                    <span className="ds-calc-label">Map Distance</span>
-                    <span className="ds-calc-val">{selectedDistance} cm</span>
-                  </div>
-                  <div>×</div>
-                  <div className="ds-calc-item">
-                    <span className="ds-calc-label">Scale</span>
-                    <span className="ds-calc-val">500 m</span>
-                  </div>
-                  <div>=</div>
-                  <div className="ds-calc-item">
-                    <span className="ds-calc-label">Real Distance</span>
-                    <span className="ds-calc-val ds-calc-val-q">?</span>
-                  </div>
+                <div className="ds-step1-content">
+                  <div className="ds-step1-badge">1 cm = 500 m</div>
+                  <p className="ds-step1-desc">
+                    <MapPin size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px', color: 'var(--amber)' }} />
+                    This means that every 1 cm on the map represents 500 metres in the real world.
+                  </p>
                 </div>
               </div>
 
-              {!isCalculated && (
-                <button 
-                  className="ds-primary-btn" 
-                  onClick={() => {
-                    setIsCalculated(true);
-                    setTimeout(() => {
-                      if (resultRef.current) {
-                        resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }
-                    }, 100);
-                  }}
-                >
-                  Find the Real Distance
-                </button>
-              )}
-            </div>
+              {/* Step 2 */}
+              <div className="ds-step-card">
+                <div className="ds-step-title">
+                  <div className="ds-step-title-num">Step 2</div>
+                  <div>Measure the Road</div>
+                </div>
+                <div className="ds-step2-content">
 
-            {/* Result Section */}
-            {isCalculated && (
-              <>
-                <div className="ds-result-card" ref={resultRef}>
-                  <div className="ds-res-text"><b>{selectedDistance} cm</b> on the map represents</div>
-                  <div className="ds-res-big">{realDistance.toLocaleString()} metres</div>
-                  <div className="ds-res-text" style={{ marginTop: '12px', marginBottom: 0 }}>in the real world.</div>
-
-                  <div className="ds-res-comp">
-                    <div className="ds-scene">
-                      <SchoolVector size={30} />
-                      <div className="ds-ruler-container" style={{ paddingBottom: '12px' }}>
-                        <div className="ds-ruler ds-ruler-map" style={{ width: '40%' }}>
-                          <div className="ds-ruler-label ds-ruler-label-map">{selectedDistance} cm</div>
-                        </div>
+                  <div className="ds-scene" style={{ width: `${selectedDistance * 15}%`, minWidth: '120px', transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)', margin: '0 auto', marginBottom: '8px' }}>
+                    <SchoolVector size={40} />
+                    <div className="ds-ruler-container" style={{ paddingBottom: '12px' }}>
+                      <div className="ds-ruler ds-ruler-map" style={{ width: '100%' }}>
+                        <div className="ds-ruler-label ds-ruler-label-map">{selectedDistance} cm</div>
                       </div>
-                      <HouseVector size={30} />
                     </div>
-                    <div style={{ textAlign: 'center', color: 'var(--green)', fontSize: '14px' }}>↓</div>
-                    <div className="ds-scene">
-                      <SchoolVector size={50} />
-                      <div className="ds-ruler-container" style={{ paddingBottom: '12px' }}>
-                        <div className="ds-ruler" style={{ width: '90%' }}>
-                          <div className="ds-ruler-label">{realDistance.toLocaleString()} metres</div>
-                        </div>
-                      </div>
-                      <HouseVector size={50} />
+                    <HouseVector size={40} />
+                  </div>
+
+                  <div className="ds-seg-group">
+                    {[2, 4, 6].map(val => (
+                      <button
+                        key={val}
+                        className={`ds-seg-btn ${selectedDistance === val ? 'ds-seg-active' : ''}`}
+                        onClick={() => {
+                          setSelectedDistance(val);
+                          setIsCalculated(false);
+                          setTimeout(() => {
+                            if (step3Ref.current) {
+                              step3Ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                          }, 100);
+                        }}
+                      >
+                        <div className="ds-seg-circle"></div>
+                        {val} cm
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="ds-step-card" ref={step3Ref}>
+                <div className="ds-step-title">
+                  <span className="ds-step-title-num">Step 3</span>
+                  Let's Calculate
+                </div>
+
+                <div className="ds-calc-box">
+                  <div className="ds-calc-row">
+                    <div className="ds-calc-item">
+                      <span className="ds-calc-label">Map Distance</span>
+                      <span className="ds-calc-val">{selectedDistance} cm</span>
+                    </div>
+                    <div>×</div>
+                    <div className="ds-calc-item">
+                      <span className="ds-calc-label">Scale</span>
+                      <span className="ds-calc-val">500 m</span>
+                    </div>
+                    <div>=</div>
+                    <div className="ds-calc-item">
+                      <span className="ds-calc-label">Real Distance</span>
+                      <span className="ds-calc-val ds-calc-val-q">?</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="ds-next-act">
-                  <button onClick={() => setSubpage('tamil-nadu')} className="ds-primary-btn" style={{ width: 'auto', margin: 0 }}>
-                    Real-Life Example <ArrowRight size={18} />
+                {!isCalculated && (
+                  <button
+                    className="ds-primary-btn"
+                    onClick={() => {
+                      setIsCalculated(true);
+                      setTimeout(() => {
+                        if (resultRef.current) {
+                          resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                      }, 100);
+                    }}
+                  >
+                    Find the Real Distance
                   </button>
-                </div>
-              </>
-            )}
+                )}
+              </div>
 
+              {/* Result Section */}
+              {isCalculated && (
+                <>
+                  <div className="ds-result-card" ref={resultRef}>
+                    <div className="ds-res-text"><b>{selectedDistance} cm</b> on the map represents</div>
+                    <div className="ds-res-big">{realDistance.toLocaleString()} metres</div>
+                    <div className="ds-res-text" style={{ marginTop: '12px', marginBottom: 0 }}>in the real world.</div>
+
+                    <div className="ds-res-comp">
+                      <div className="ds-scene">
+                        <SchoolVector size={30} />
+                        <div className="ds-ruler-container" style={{ paddingBottom: '12px' }}>
+                          <div className="ds-ruler ds-ruler-map" style={{ width: '40%' }}>
+                            <div className="ds-ruler-label ds-ruler-label-map">{selectedDistance} cm</div>
+                          </div>
+                        </div>
+                        <HouseVector size={30} />
+                      </div>
+                      <div style={{ textAlign: 'center', color: 'var(--green)', fontSize: '14px' }}>↓</div>
+                      <div className="ds-scene">
+                        <SchoolVector size={50} />
+                        <div className="ds-ruler-container" style={{ paddingBottom: '12px' }}>
+                          <div className="ds-ruler" style={{ width: '90%' }}>
+                            <div className="ds-ruler-label">{realDistance.toLocaleString()} metres</div>
+                          </div>
+                        </div>
+                        <HouseVector size={50} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="ds-next-act">
+                    <button onClick={() => setSubpage('tamil-nadu')} className="ds-primary-btn" style={{ width: 'auto', margin: 0 }}>
+                      Real-Life Example <ArrowRight size={18} />
+                    </button>
+                  </div>
+                </>
+              )}
+
+            </div>
           </div>
         </div>
-      </div>
       ) : (
         <TamilNaduSubpage onComplete={onComplete} />
       )}
@@ -982,106 +983,195 @@ export default function DistanceAndScale({ onComplete }) {
 
 const TamilNaduSubpage = ({ onComplete }) => {
   const [scaleFactor, setScaleFactor] = useState(1);
+  const [isDetailedView, setIsDetailedView] = useState(false);
 
   return (
     <div className="ds-spread">
       <div className="ds-ribbon"></div>
-      
+
       {/* LEFT SIDE (Book) */}
       <div className="ds-left" style={{ padding: 'clamp(20px, 3vw, 40px)' }}>
         <div className="ds-eyebrow">Chapter 1 • Distance & Scale</div>
         <h2 className="ds-h1" style={{ fontSize: 'clamp(24px, 2.8vw, 36px)', marginTop: '4px' }}>Maps Represent Real Places</h2>
         <div className="ds-sub" style={{ marginBottom: '1.5rem', lineHeight: 1.3 }}>A small map can represent a very large place.</div>
-        
-        <p style={{ fontSize: '15px' }}>
-          Imagine looking at the whole state of Tamil Nadu on an atlas.
-        </p>
-        <p style={{ fontSize: '15px', marginBottom: '20px' }}>
-          The state is hundreds of kilometres wide in real life, but on the map it only takes a few centimetres. That is possible because maps use a <b>scale</b>.
-        </p>
 
-        {/* India Map Illustration */}
-        <div style={{ flex: 1, minHeight: '0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#eaf2f8', borderRadius: '16px', position: 'relative', overflow: 'visible', border: '1px solid #d5e3ef', padding: '20px' }}>
-          <div style={{ position: 'relative', width: '100%', maxWidth: '320px', margin: '0 auto' }}>
-            <svg viewBox={India.viewBox} style={{ width: '100%', height: 'auto', filter: 'drop-shadow(0 8px 16px rgba(14,42,69,0.15))' }}>
-              {India.locations.map(location => (
-                <path 
-                  key={location.id} 
-                  d={location.path} 
-                  fill={location.id === 'tn' ? '#84cc16' : '#ffffff'} 
-                  stroke={location.id === 'tn' ? '#4d7c0f' : '#c3d2e0'}
-                  strokeWidth={location.id === 'tn' ? "2" : "1.5"}
-                />
-              ))}
-            </svg>
-            
-            {/* Tamil Nadu Label */}
-            <div style={{ position: 'absolute', bottom: '15%', left: '30%', display: 'flex', alignItems: 'center', gap: '6px', background: 'white', padding: '4px 8px', borderRadius: '12px', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', border: '1px solid #d9e2ec' }}>
-              <MapPin size={14} color="#4d7c0f" />
-              <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#0E3556' }}>Tamil Nadu</span>
-            </div>
-            
-            {/* Vertical Bracket alongside Tamil Nadu */}
-            <div style={{ position: 'absolute', bottom: '5%', right: '35%', height: '22%', borderRight: '2px solid #5c6b7a', borderTop: '2px solid #5c6b7a', borderBottom: '2px solid #5c6b7a', width: '6px' }} />
-            <div style={{ position: 'absolute', bottom: '14%', right: '12%', width: '22%', textAlign: 'left', fontSize: '11px', fontWeight: 'bold', color: '#5c6b7a' }}>≈ 1076 km</div>
+
+
+        {/* India Map Illustration / Detailed View */}
+        <div style={{ flex: 1, minHeight: '0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '16px 0 0 0', width: '100%' }}>
+          <div style={{ background: '#eaf2f8', borderRadius: '16px', border: '1px solid #d5e3ef', padding: '40px', boxSizing: 'border-box', boxShadow: '0 4px 15px rgba(0,0,0,0.03)', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+
+            <AnimatePresence mode="wait">
+              {!isDetailedView ? (
+                <motion.div
+                  key="india-map"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.05 }}
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                  style={{ position: 'absolute', height: '100%', aspectRatio: '612 / 696', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                >
+                  {/* Ocean Labels */}
+                  <div style={{ position: 'absolute', top: '58%', left: '-4%', transform: 'rotate(-8deg)', textTransform: 'uppercase', color: '#0ea5e9', opacity: 0.75, letterSpacing: '3px', fontWeight: 700, fontSize: '13px', zIndex: 0 }}>Arabian<br />Sea</div>
+                  <div style={{ position: 'absolute', top: '64%', left: '84%', textTransform: 'uppercase', color: '#0ea5e9', opacity: 0.75, letterSpacing: '3px', fontWeight: 700, fontSize: '13px', textAlign: 'center', zIndex: 0 }}>Bay of<br />Bengal</div>
+                  <div style={{ position: 'absolute', top: '94%', left: '55%', transform: 'translateX(-50%)', textTransform: 'uppercase', color: '#0ea5e9', opacity: 0.65, letterSpacing: '4px', fontWeight: 700, fontSize: '15px', zIndex: 0 }}>Indian Ocean</div>
+
+                  {/* Blinking Pointer to TN */}
+                  <motion.div
+                    animate={{ x: [0, -8, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                    style={{ position: 'absolute', top: '82%', left: '46%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '6px', zIndex: 10, pointerEvents: 'none' }}
+                  >
+                    <svg width="28" height="12" viewBox="0 0 28 12" fill="none">
+                      <path d="M28 6L4 6" stroke="#e11d48" strokeWidth="2.5" strokeDasharray="4 3" />
+                      <path d="M10 2L4 6L10 10" stroke="#e11d48" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <div style={{ background: '#e11d48', color: 'white', padding: '6px 12px', borderRadius: '16px', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', boxShadow: '0 6px 12px rgba(225,29,72,0.3)', whiteSpace: 'nowrap' }}>
+                      Click to Explore
+                    </div>
+                  </motion.div>
+
+                  {/* Map SVG */}
+                  <svg viewBox={India.viewBox} style={{ width: '100%', height: '100%', filter: 'drop-shadow(0 10px 20px rgba(14,42,69,0.12))', zIndex: 1, position: 'relative' }}>
+                    {India.locations.map(location => (
+                      <motion.path
+                        key={location.id}
+                        d={location.path}
+                        fill={location.id === 'tn' ? '#84cc16' : '#ffffff'}
+                        stroke={location.id === 'tn' ? '#4d7c0f' : '#cbd5e1'}
+                        strokeWidth={location.id === 'tn' ? "2" : "1.2"}
+                        style={location.id === 'tn' ? { filter: 'drop-shadow(0 0 8px rgba(132, 204, 22, 0.45))', cursor: 'pointer' } : {}}
+                        whileHover={location.id === 'tn' ? { filter: 'brightness(1.08) drop-shadow(0 4px 12px rgba(132, 204, 22, 0.6))' } : {}}
+                        onClick={() => location.id === 'tn' && setIsDetailedView(true)}
+                      />
+                    ))}
+                  </svg>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="tn-map"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                  style={{ position: 'absolute', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}
+                >
+                  {/* Back Button */}
+                  <button
+                    onClick={() => setIsDetailedView(false)}
+                    style={{ position: 'absolute', top: '20px', left: '20px', display: 'flex', alignItems: 'center', gap: '6px', background: 'white', border: '1px solid #d5e3ef', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, color: '#0f172a', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', zIndex: 10 }}
+                  >
+                    <span>←</span> Back to India Map
+                  </button>
+
+                  <div style={{ position: 'relative', height: '65%', aspectRatio: '87 / 117', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <svg viewBox="168 551 87 117" style={{ width: '100%', height: '100%', filter: 'drop-shadow(0 4px 12px rgba(14,42,69,0.08))', zIndex: 1, position: 'relative' }}>
+                      {India.locations.map(location => location.id === 'tn' && (
+                        <path
+                          key={location.id}
+                          d={location.path}
+                          fill="#ffffff"
+                          stroke="#3b82f6"
+                          strokeWidth="0.5"
+                        />
+                      ))}
+                    </svg>
+
+                    {/* Chennai Connector Line */}
+                    <div style={{ position: 'absolute', top: '12%', left: '83%', width: '5%', height: '1px', borderTop: '1.5px dashed #64748b', zIndex: 2 }} />
+                    {/* Kanyakumari Connector Line */}
+                    <div style={{ position: 'absolute', top: '98%', left: '35%', width: '53%', height: '1px', borderTop: '1.5px dashed #64748b', zIndex: 2 }} />
+
+                    {/* Measurement Bracket */}
+                    <div style={{ position: 'absolute', top: '12%', left: '90%', height: '86%', width: '2px', background: '#3b82f6', zIndex: 3 }} />
+                    <div style={{ position: 'absolute', top: '12%', left: '88%', width: '4%', height: '2px', background: '#3b82f6', zIndex: 3 }} />
+                    <div style={{ position: 'absolute', top: '98%', left: '88%', width: '4%', height: '2px', background: '#3b82f6', zIndex: 3 }} />
+
+                    {/* Distance Label */}
+                    <div style={{ position: 'absolute', top: '55%', left: '90%', transform: 'translate(-50%, -50%)', background: '#ffffff', padding: '8px 24px', borderRadius: '30px', fontSize: '15px', fontWeight: '900', color: '#1d4ed8', border: '2px solid #3b82f6', zIndex: 5, whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(37,99,235,0.15)' }}>
+                      ≈ 625 km
+                    </div>
+
+                    {/* Chennai Marker & Label */}
+                    <div style={{ position: 'absolute', top: '12%', left: '81%', transform: 'translate(-50%, -100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 4 }}>
+                      <div style={{ background: 'white', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '11px', fontWeight: '800', color: '#0f172a', marginBottom: '6px', whiteSpace: 'nowrap', boxShadow: '0 4px 10px rgba(0,0,0,0.08)' }}>Chennai</div>
+                      <MapPin size={22} color="#e11d48" fill="#fff" strokeWidth={2.5} style={{ filter: 'drop-shadow(0 3px 6px rgba(225,29,72,0.35))' }} />
+                    </div>
+
+                    {/* Kanyakumari Marker & Label */}
+                    <div style={{ position: 'absolute', top: '98%', left: '33%', transform: 'translate(-50%, -100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 4 }}>
+                      <div style={{ background: 'white', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '11px', fontWeight: '800', color: '#0f172a', marginBottom: '6px', whiteSpace: 'nowrap', boxShadow: '0 4px 10px rgba(0,0,0,0.08)' }}>Kanyakumari</div>
+                      <MapPin size={22} color="#e11d48" fill="#fff" strokeWidth={2.5} style={{ filter: 'drop-shadow(0 3px 6px rgba(225,29,72,0.35))' }} />
+                    </div>
+                  </div>
+
+                  <div style={{ background: 'white', border: '1px solid #d5e3ef', borderRadius: '12px', padding: '16px', width: '90%', maxWidth: '400px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', zIndex: 10, marginTop: '24px' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#0284c7', textTransform: 'uppercase', marginBottom: '4px' }}>Real-Life Example</div>
+                    <div style={{ fontSize: '12px', color: '#475569', lineHeight: 1.4 }}>
+                      The straight-line distance between Chennai and Kanyakumari is about 625 km. On a map, this large real-world distance is represented using only a few centimetres because maps are drawn to scale.
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
 
       {/* RIGHT SIDE (Interactive) */}
-      <div className="ds-right" style={{ padding: 'clamp(20px, 3vw, 40px)', display: 'flex', flexDirection: 'column' }}>
-        <h2 className="ds-h1" style={{ fontSize: 'clamp(24px, 2.6vw, 32px)', marginBottom: '4px' }}>Let's Explore — Tamil Nadu on a Map</h2>
-        <div style={{ fontSize: '15px', color: '#5c6b7a', marginBottom: '24px' }}>See how a large place becomes small on a map.</div>
+      <div className="ds-right" style={{ padding: 'clamp(16px, 2vw, 32px)', display: 'flex', flexDirection: 'column' }}>
+        <h2 className="ds-h1" style={{ fontSize: 'clamp(24px, 3vw, 36px)', marginBottom: '4px' }}>Let's Explore — Tamil Nadu on a Map</h2>
+        <div style={{ fontSize: '16px', color: '#5c6b7a', marginBottom: '16px' }}>See how a real-world distance becomes much smaller on a map using a scale.</div>
 
         {/* Example Block */}
-        <div style={{ background: '#fff', padding: '24px', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-            <span style={{ background: '#2f6df0', color: '#fff', padding: '4px 10px', borderRadius: '8px', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Example</span>
-            <h3 style={{ margin: 0, fontSize: '18px', color: '#0E3556' }}>Tamil Nadu's Length</h3>
+        <div style={{ background: '#fff', padding: '20px', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+            <span style={{ background: '#2f6df0', color: '#fff', padding: '4px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Example</span>
+            <h3 style={{ margin: 0, fontSize: '20px', color: '#0E3556' }}>Chennai to Kanyakumari</h3>
           </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#f8fafc', padding: '12px 16px', borderRadius: '16px', border: '1px solid #e2e8f0', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ fontSize: '24px' }}>🌍</div>
+                <div style={{ fontSize: '28px' }}>🌍</div>
                 <div>
-                  <div style={{ fontSize: '12px', color: '#5c6b7a', fontWeight: 600, textTransform: 'uppercase' }}>Original Length (Real Life)</div>
-                  <div style={{ fontSize: '13px', color: '#5c6b7a', marginTop: '2px' }}>Travelling across takes many hours.</div>
+                  <div style={{ fontSize: '13px', color: '#5c6b7a', fontWeight: 700, textTransform: 'uppercase' }}>Real-world Distance</div>
+                  <div style={{ fontSize: '14px', color: '#475569', marginTop: '2px', lineHeight: 1.3 }}>The approximate straight-line distance between Chennai and Kanyakumari is about 625 km.</div>
                 </div>
               </div>
-              <div style={{ fontSize: '20px', fontWeight: 900, color: '#1e3a8a' }}>1076 km</div>
+              <div style={{ fontSize: '24px', fontWeight: 900, color: '#1e3a8a', whiteSpace: 'nowrap', flexShrink: 0 }}>≈ 625 km</div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', color: '#2f6df0' }}>
               <ArrowRight size={20} />
-              <div style={{ fontSize: '12px', fontWeight: 700, background: '#e0e7ff', padding: '4px 12px', borderRadius: '12px' }}>Map Scale: 1 cm = 200 km</div>
+              <div style={{ fontSize: '14px', fontWeight: 800, background: '#e0e7ff', padding: '6px 16px', borderRadius: '12px' }}>Example Map Scale: 1 cm = 125 km</div>
               <ArrowRight size={20} />
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#f0f9ff', padding: '16px', borderRadius: '12px', border: '1px solid #bae6fd' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#f0f9ff', padding: '12px 16px', borderRadius: '16px', border: '1px solid #bae6fd', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ fontSize: '24px' }}>🗺️</div>
+                <div style={{ fontSize: '28px' }}>🗺️</div>
                 <div>
-                  <div style={{ fontSize: '12px', color: '#0369a1', fontWeight: 600, textTransform: 'uppercase' }}>Length on the Atlas</div>
-                  <div style={{ fontSize: '13px', color: '#0369a1', marginTop: '2px' }}>The distance is reduced by the scale.</div>
+                  <div style={{ fontSize: '13px', color: '#0369a1', fontWeight: 700, textTransform: 'uppercase' }}>Distance on the Map</div>
+                  <div style={{ fontSize: '14px', color: '#0369a1', marginTop: '2px', lineHeight: 1.3 }}>Using the given scale, the real-world distance is represented by a shorter distance on the map.</div>
                 </div>
               </div>
-              <div style={{ fontSize: '20px', fontWeight: 900, color: '#0284c7' }}>5.38 cm</div>
+              <div style={{ fontSize: '24px', fontWeight: 900, color: '#0284c7', whiteSpace: 'nowrap', flexShrink: 0 }}>5 cm</div>
             </div>
           </div>
         </div>
 
         {/* Remember Block */}
-        <div style={{ background: '#ecfdf5', padding: '20px 24px', borderRadius: '16px', border: '1px solid #a7f3d0', flexShrink: 0 }}>
-          <h4 style={{ margin: '0 0 8px 0', color: '#059669', fontSize: '16px' }}>Remember</h4>
-          <p style={{ margin: 0, fontSize: '14px', color: '#065f46', lineHeight: 1.5 }}>
-            Large places become small on maps, but the distances still represent the real world accurately using a scale.
+        <div style={{ background: '#ecfdf5', padding: '16px 20px', borderRadius: '16px', border: '1px solid #a7f3d0', flexShrink: 0 }}>
+          <h4 style={{ margin: '0 0 6px 0', color: '#059669', fontSize: '16px', fontWeight: 800 }}>Remember</h4>
+          <p style={{ margin: 0, fontSize: '15px', color: '#065f46', lineHeight: 1.5 }}>
+            Maps reduce real-world distances using a scale. Although the map is much smaller than the real world, the distances remain proportional and accurately represent actual locations.
           </p>
         </div>
 
-        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end', paddingTop: '20px' }}>
-          <button onClick={onComplete} className="ds-primary-btn" style={{ margin: 0, padding: '10px 20px', background: '#1e3a8a', fontSize: '14px' }}>
-            Continue to Directions <ArrowRight size={16} />
+        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end', paddingTop: '16px' }}>
+          <button onClick={onComplete} className="ds-primary-btn" style={{ margin: 0, padding: '12px 24px', background: '#1e3a8a', fontSize: '15px', borderRadius: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', border: 'none', color: '#fff' }}>
+            Continue to Directions <ArrowRight size={18} />
           </button>
         </div>
       </div>

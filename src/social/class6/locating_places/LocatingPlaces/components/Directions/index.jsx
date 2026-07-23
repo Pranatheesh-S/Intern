@@ -341,7 +341,7 @@ export default function Directions({ onComplete }) {
               {isAllViewed && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{ overflow: 'hidden' }}>
                   <button onClick={onComplete} className="primary" style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: '#3b82f6', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)' }}>
-                    Next Activity <ArrowRight size={18} />
+                    Explore Directions using India Map <ArrowRight size={18} />
                   </button>
                 </motion.div>
               )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import aryabhataImg from './assets/aryabhata.jpg';
+import earthImg from './assets/Earth.png';
 import { ChevronRight } from 'lucide-react';
 
 export default function AryabhataPage({ onNext, isNextEnabled }) {
@@ -10,142 +11,13 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
         flex: 1,
         height: '100%',
         boxSizing: 'border-box',
-        background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)',
-        padding: 'clamp(20px, 2.6vw, 42px) clamp(20px, 2.6vw, 42px) 16px clamp(20px, 2.6vw, 42px)',
+        background: '#000',
         display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-        borderRight: '1px solid rgba(0,0,0,0.08)' // added subtle divider just in case
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden'
       }}>
-        <div style={{
-          fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace',
-          fontSize: 'clamp(10px, 1vw, 12px)',
-          letterSpacing: '.24em',
-          textTransform: 'uppercase',
-          color: '#F5A623',
-          fontWeight: 600
-        }}>
-          Chapter 1 · Class 6 Social Science
-        </div>
-        
-        <h1 style={{
-          fontFamily: '"Fraunces", "Iowan Old Style", Palatino, Georgia, serif',
-          fontWeight: 900,
-          color: '#0E3556',
-          fontSize: 'clamp(28px, 3.6vw, 50px)',
-          lineHeight: 1.02,
-          margin: '6px 0 0',
-          letterSpacing: '-.01em'
-        }}>
-          Locating Places<br/>on the Earth
-        </h1>
-
-        <div style={{
-          position: 'relative',
-          flex: 1,
-          minHeight: 0,
-          margin: 'clamp(14px, 2vw, 26px) 0',
-          borderRadius: '14px',
-          overflow: 'hidden',
-          background: 'radial-gradient(120% 100% at 30% 20%, #123c60, #08213a)',
-          border: '1px solid rgba(14,53,86,.25)',
-          display: 'grid',
-          placeItems: 'center',
-          boxShadow: 'inset 0 0 60px rgba(0,0,0,.35)'
-        }}>
-          <span style={{
-            position: 'absolute',
-            right: '12px',
-            top: '12px',
-            fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace',
-            fontSize: '9.5px',
-            letterSpacing: '.12em',
-            color: '#0a2a45',
-            background: '#F5A623',
-            padding: '5px 10px',
-            borderRadius: '999px',
-            fontWeight: 600,
-            zIndex: 10
-          }}>
-            ANCIENT INDIAN ASTRONOMER
-          </span>
-          
-          <svg style={{ width: '82%', height: '82%' }} viewBox="0 0 400 400" aria-label="Armillary sphere over a night sky">
-            {/* stars */}
-            <g fill="#cfe6f6">
-              <circle cx="60" cy="60" r="1.5"></circle><circle cx="120" cy="40" r="1"></circle><circle cx="330" cy="70" r="1.6"></circle>
-              <circle cx="360" cy="150" r="1"></circle><circle cx="40" cy="180" r="1.2"></circle><circle cx="300" cy="330" r="1.4"></circle>
-              <circle cx="90" cy="330" r="1"></circle><circle cx="200" cy="30" r="1.2"></circle><circle cx="370" cy="280" r="1"></circle>
-              <circle cx="30" cy="300" r="1.3"></circle><circle cx="250" cy="360" r="1"></circle><circle cx="150" cy="360" r="1.1"></circle>
-            </g>
-            {/* armillary sphere */}
-            <g fill="none" stroke="#7FD0F0" strokeWidth="1.4" strokeOpacity=".85">
-              <circle cx="200" cy="200" r="140" strokeOpacity=".5" style={{ transformOrigin: '200px 200px', animation: 'spin 40s linear infinite' }}></circle>
-              <ellipse cx="200" cy="200" rx="140" ry="52" transform="rotate(-22 200 200)"></ellipse>
-              <ellipse cx="200" cy="200" rx="52" ry="140"></ellipse>
-              <line x1="200" y1="44" x2="200" y2="356" stroke="#9fd8f2" strokeOpacity=".6"></line>
-              <line x1="60" y1="200" x2="340" y2="200" stroke="#F5A623" strokeOpacity=".8" strokeWidth="1.6"></line>
-            </g>
-            {/* earth */}
-            <circle cx="200" cy="200" r="20" fill="#123c60" stroke="#F5A623" strokeWidth="1.6"></circle>
-            <path d="M188 196 q7 -6 14 0 t10 4" fill="none" stroke="#7FD0F0" strokeWidth="1.2" strokeOpacity=".8"></path>
-            <circle cx="200" cy="200" r="20" fill="none" stroke="#7FD0F0" strokeWidth=".8" strokeOpacity=".5"></circle>
-          </svg>
-          
-          <span style={{
-            position: 'absolute',
-            left: '14px',
-            bottom: '12px',
-            fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace',
-            fontSize: '10px',
-            letterSpacing: '.1em',
-            color: '#9fd0ea',
-            opacity: .85
-          }}>
-            Armillary sphere · a tool to model the heavens
-          </span>
-        </div>
-
-        <blockquote style={{
-          background: '#fff',
-          borderLeft: '4px solid #F5A623',
-          borderRadius: '12px',
-          padding: 'clamp(14px, 1.7vw, 22px)',
-          boxShadow: '0 8px 22px rgba(14,42,69,.08)',
-          margin: 0
-        }}>
-          <p style={{
-            fontFamily: '"Fraunces", "Iowan Old Style", Palatino, Georgia, serif',
-            fontStyle: 'italic',
-            fontSize: 'clamp(14px, 1.5vw, 19px)',
-            lineHeight: 1.5,
-            color: '#20303f',
-            margin: 0
-          }}>
-            "The globe of the Earth stands in space, made up of water, earth, fire and air and is spherical. ... It is surrounded by all creatures, terrestrial as well as aquatic."
-          </p>
-          <span style={{
-            display: 'block',
-            textAlign: 'right',
-            marginTop: '10px',
-            fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif',
-            fontWeight: 700,
-            fontSize: '13px',
-            color: '#0E3556'
-          }}>
-            — Āryabhaṭa
-            <small style={{
-              display: 'block',
-              fontWeight: 400,
-              fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace',
-              fontSize: '10px',
-              color: '#5c6b7a',
-              letterSpacing: '.06em'
-            }}>
-              Āryabhaṭīya · about 500 CE
-            </small>
-          </span>
-        </blockquote>
+        <img src={earthImg} alt="Earth" style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(1.35)' }} />
       </div>
 
       {/* ============ RIGHT PAGE ============ */}
@@ -160,58 +32,125 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
         minHeight: 0
       }}>
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          color: '#0E3556',
-          fontWeight: 700,
-          fontSize: 'clamp(17px, 2vw, 24px)'
+          fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace',
+          fontSize: 'clamp(10px, 1vw, 12px)',
+          letterSpacing: '.24em',
+          textTransform: 'uppercase',
+          color: '#F5A623',
+          fontWeight: 600,
+          marginBottom: '6px'
         }}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ flex: '0 0 auto' }}>
-            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v16H6.5A2.5 2.5 0 0 0 4 21.5z" stroke="#0E3556" strokeWidth="1.6"></path>
-            <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v16h5.5A2.5 2.5 0 0 1 20 21.5z" stroke="#0E3556" strokeWidth="1.6"></path>
-          </svg>
-          Historical Facts — Who was Āryabhaṭa?
+          Chapter 1 · Class 6 Social Science
         </div>
+        
+        <h1 style={{
+          fontFamily: '"Fraunces", "Iowan Old Style", Palatino, Georgia, serif',
+          fontWeight: 900,
+          color: '#0E3556',
+          fontSize: 'clamp(28px, 3.2vw, 42px)',
+          lineHeight: 1.05,
+          margin: '0 0 16px 0',
+          letterSpacing: '-.01em'
+        }}>
+          Locating Places on the Earth
+        </h1>
 
         <div style={{
           flex: 1,
           minHeight: 0,
           overflow: 'auto',
-          paddingRight: '6px',
-          marginTop: 'clamp(12px, 1.6vw, 18px)',
+          paddingRight: '12px',
           display: 'flex',
           flexDirection: 'column',
-          gap: 'clamp(10px, 1.3vw, 14px)',
+          gap: 'clamp(16px, 1.8vw, 24px)',
           scrollbarWidth: 'thin',
           scrollbarColor: '#d4deea transparent'
         }}>
           
-          <div style={{
-            background: 'linear-gradient(180deg, #f4f8ff, #eef4fd)',
-            border: '1px solid #e4ebf3',
-            borderLeft: '5px solid #2f6df0',
-            borderRadius: '14px',
-            padding: 'clamp(14px, 1.7vw, 20px)'
+          <blockquote style={{
+            background: '#f8fafc',
+            borderLeft: '4px solid #F5A623',
+            borderRadius: '12px',
+            padding: 'clamp(14px, 1.7vw, 22px)',
+            boxShadow: '0 4px 12px rgba(14,42,69,.04)',
+            margin: 0
           }}>
-            <h3 style={{
-              fontFamily: '"Fraunces", "Iowan Old Style", Palatino, Georgia, serif',
-              fontWeight: 600,
-              color: '#0E3556',
-              fontSize: 'clamp(19px, 2.1vw, 26px)',
-              marginBottom: '6px',
-              marginTop: 0
-            }}>
-              A pioneer of Indian astronomy &amp; mathematics
-            </h3>
             <p style={{
-              color: '#5c6b7a',
-              fontSize: 'clamp(13px, 1.35vw, 15px)',
+              fontFamily: '"Fraunces", "Iowan Old Style", Palatino, Georgia, serif',
+              fontStyle: 'italic',
+              fontSize: 'clamp(14px, 1.5vw, 18px)',
               lineHeight: 1.5,
+              color: '#20303f',
               margin: 0
             }}>
-              Working around 500 CE, Āryabhaṭa asked the same questions this chapter asks — what shape is the Earth, why do the stars appear to move, and how do we measure our planet? His answers were centuries ahead of their time.
+              "The globe of the Earth stands in space, made up of water, earth, fire and air and is spherical. ... It is surrounded by all creatures, terrestrial as well as aquatic."
             </p>
+            <span style={{
+              display: 'block',
+              textAlign: 'right',
+              marginTop: '10px',
+              fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif',
+              fontWeight: 700,
+              fontSize: '13px',
+              color: '#0E3556'
+            }}>
+              — Āryabhaṭa
+              <small style={{
+                display: 'block',
+                fontWeight: 400,
+                fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace',
+                fontSize: '10px',
+                color: '#5c6b7a',
+                letterSpacing: '.06em'
+              }}>
+                Āryabhaṭīya · about 500 CE
+              </small>
+            </span>
+          </blockquote>
+
+          <div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#0E3556',
+              fontWeight: 700,
+              fontSize: 'clamp(17px, 2vw, 22px)',
+              marginBottom: '12px'
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ flex: '0 0 auto' }}>
+                <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v16H6.5A2.5 2.5 0 0 0 4 21.5z" stroke="#0E3556" strokeWidth="1.6"></path>
+                <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v16h5.5A2.5 2.5 0 0 1 20 21.5z" stroke="#0E3556" strokeWidth="1.6"></path>
+              </svg>
+              Historical Facts — Who was Āryabhaṭa?
+            </div>
+
+            <div style={{
+              background: 'linear-gradient(180deg, #f4f8ff, #eef4fd)',
+              border: '1px solid #e4ebf3',
+              borderLeft: '5px solid #2f6df0',
+              borderRadius: '14px',
+              padding: 'clamp(14px, 1.7vw, 20px)'
+            }}>
+              <h3 style={{
+                fontFamily: '"Fraunces", "Iowan Old Style", Palatino, Georgia, serif',
+                fontWeight: 600,
+                color: '#0E3556',
+                fontSize: 'clamp(18px, 2vw, 24px)',
+                marginBottom: '6px',
+                marginTop: 0
+              }}>
+                A pioneer of Indian astronomy &amp; mathematics
+              </h3>
+              <p style={{
+                color: '#5c6b7a',
+                fontSize: 'clamp(13px, 1.35vw, 15px)',
+                lineHeight: 1.5,
+                margin: 0
+              }}>
+                Working around 500 CE, Āryabhaṭa asked the same questions this chapter asks — what shape is the Earth, why do the stars appear to move, and how do we measure our planet? His answers were centuries ahead of their time.
+              </p>
+            </div>
           </div>
 
           <div style={{
@@ -313,8 +252,8 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          paddingTop: '10px',
-          marginTop: '0',
+          paddingTop: '16px',
+          marginTop: '12px',
           borderTop: '1px solid #e4ebf3'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: '13px' }}>
@@ -349,10 +288,6 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
           )}
         </div>
       </div>
-      
-      <style>{`
-        @keyframes spin { to { transform: rotate(360deg) } }
-      `}</style>
     </div>
   );
 }
