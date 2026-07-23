@@ -122,7 +122,6 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
   const [t3Ans, setT3Ans] = useState(null);
   
   const [showQuiz, setShowQuiz] = useState(false);
-  const [showExploreIndia, setShowExploreIndia] = useState(false);
 
   const logRef = useRef(null);
   const elementsRef = useRef(null);
@@ -220,9 +219,6 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
   const optTook = bfs('RS', 'BK').length - 1;
   const userTook = path.length - 1;
 
-  if (showExploreIndia) {
-    return <ExploreIndiaActivity onBeginChapter={onBeginChapter} onBack={() => setShowExploreIndia(false)} />;
-  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
@@ -504,7 +500,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
             
             <div style={{ transition: 'all 0.5s' }}>
               <button 
-                onClick={() => setShowExploreIndia(true)}
+                onClick={() => onBeginChapter()}
                 disabled={!(t1Done && t2Ans !== null && t3Ans !== null && win)}
                 style={{ 
                   background: (t1Done && t2Ans !== null && t3Ans !== null && win) ? '#16a34a' : '#c3cfdd', 
@@ -517,7 +513,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
                 onMouseOver={(e) => { if (t1Done && t2Ans !== null && t3Ans !== null && win) e.currentTarget.style.transform = 'scale(1.05)' }}
                 onMouseOut={(e) => { if (t1Done && t2Ans !== null && t3Ans !== null && win) e.currentTarget.style.transform = 'scale(1)' }}
               >
-                {!(t1Done && t2Ans !== null && t3Ans !== null && win) ? 'Finish quiz to proceed' : 'Explore India with a Map'} <ChevronRight size={16} strokeWidth={2.5} />
+                {!(t1Done && t2Ans !== null && t3Ans !== null && win) ? 'Finish quiz to proceed' : 'Next Activity'} <ChevronRight size={16} strokeWidth={2.5} />
               </button>
             </div>
           </div>
