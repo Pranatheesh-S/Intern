@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle2, XCircle, ArrowRight, Ticket } from 'lucide-react';
 import worldMapUrl from './world-map.jpg';
+import { WorldMapPath } from './WorldMapPath';
 
 function getClimate(lat) {
   const a = Math.abs(lat);
@@ -9,12 +12,13 @@ function getClimate(lat) {
 export default function CoordinatesPage({ onNextActivity }) {
   const [activeTab, setActiveTab] = useState('co');
   
-  // Chess state
-  const [blkInput, setBlkInput] = useState('');
-  const [chessFb, setChessFb] = useState({ text: '', ok: true });
-  const [coStage, setCoStage] = useState(1);
-  const [missionStep, setMissionStep] = useState(0);
-  const [missionFb, setMissionFb] = useState(null);
+  // Theatre state
+  const [theatreStep, setTheatreStep] = useState(0);
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [clickedSeat, setClickedSeat] = useState(null);
+  const [seatFeedback, setSeatFeedback] = useState(null); // 'success' or 'error'
+  const targetSeats = ['C5', 'E2']; // 2 tickets
+  const currentTarget = targetSeats[theatreStep] || null;
 
   // Lat state
   const [latVal, setLatVal] = useState(0);
@@ -32,8 +36,8 @@ export default function CoordinatesPage({ onNextActivity }) {
   const [exploredCities, setExploredCities] = useState({ Delhi: false, Mumbai: false, Kolkata: false, Singapore: false, Paris: false });
 
   useEffect(() => {
-    if (coStage === 4) setCompletedActivities(p => ({ ...p, co: true }));
-  }, [coStage]);
+    if (theatreStep === 2) setCompletedActivities(p => ({ ...p, co: true }));
+  }, [theatreStep]);
 
   useEffect(() => {
     if (latVal !== 0) setCompletedActivities(p => ({ ...p, lat: true }));
@@ -100,6 +104,21 @@ export default function CoordinatesPage({ onNextActivity }) {
               if (interactive && onSquareClick) onSquareClick(sqName);
             }} />
         );
+
+        if (isTarget) {
+          squares.push(
+            <g key={`${sqName}-target`} style={{ pointerEvents: 'none' }}>
+              <rect x={ox + f * sz} y={oy + r * sz} width={sz} height={sz} fill="none" stroke="#fff" strokeWidth="2" />
+              <rect x={ox + f * sz + 1} y={oy + r * sz + 1} width={sz - 2} height={sz - 2} fill="none" stroke="#d94a3d" strokeWidth="2" />
+              <circle cx={ox + f * sz + sz/2} cy={oy + r * sz + sz/2} r="12" fill="#d94a3d">
+                <animate attributeName="r" values="10;15;10" dur="1.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite" />
+              </circle>
+              <circle cx={ox + f * sz + sz/2} cy={oy + r * sz + sz/2} r="5" fill="#fff" />
+              <circle cx={ox + f * sz + sz/2} cy={oy + r * sz + sz/2} r="2" fill="#d94a3d" />
+            </g>
+          );
+        }
         if (f === 0) {
           squares.push(<text key={`r${rank}`} x={ox - 9} y={oy + r * sz + sz / 2 + 4} fontSize="11" fill={isRow ? '#F5A623' : '#5c6b7a'} fontWeight={isRow ? 'bold' : 'normal'} textAnchor="middle">{rank}</text>);
         }
@@ -153,7 +172,7 @@ export default function CoordinatesPage({ onNextActivity }) {
   };
 
   const renderLatGlobe = () => {
-    const cx = 220, cy = 180, R = 150;
+    const cx = 300, cy = 300, R = 250;
     const rad = Math.PI / 180;
     
     const getLatParams = (lat) => {
@@ -163,123 +182,154 @@ export default function CoordinatesPage({ onNextActivity }) {
       return { rx, ry, y };
     };
 
-    const generateLatPath = (lat) => {
+    const generateLatPath = (lat, front=true) => {
       const { rx, ry, y } = getLatParams(lat);
       if (rx < 0.1) return ''; 
-      return `M ${cx - rx} ${y} A ${rx} ${ry} 0 0 0 ${cx + rx} ${y}`;
+      return front 
+        ? `M ${cx - rx} ${y} A ${rx} ${ry} 0 0 0 ${cx + rx} ${y}`
+        : `M ${cx + rx} ${y} A ${rx} ${ry} 0 0 0 ${cx - rx} ${y}`;
     };
 
-    const generateZonePath = (latTop, latBot) => {
-      const top = getLatParams(latTop);
-      const bot = getLatParams(latBot);
-      return `
-        M ${cx - top.rx} ${top.y}
-        A ${top.rx} ${top.ry} 0 0 0 ${cx + top.rx} ${top.y}
-        L ${cx + R + 10} ${top.y}
-        L ${cx + R + 10} ${bot.y}
-        L ${cx + bot.rx} ${bot.y}
-        A ${bot.rx} ${bot.ry} 0 0 1 ${cx - bot.rx} ${bot.y}
-        L ${cx - R - 10} ${bot.y}
-        L ${cx - R - 10} ${top.y}
-        Z
-      `;
-    };
-
-    const parallels = [-60, -30, 30, 60].map(f => {
-      return (
-        <path key={`p${f}`} d={generateLatPath(f)} 
-          fill="none" stroke="#7fa8c8" strokeWidth={1} opacity={0.5} />
-      );
-    });
+    const parallelsFront = [-60, -30, 30, 60].map(f => (
+      <path key={`pf${f}`} d={generateLatPath(f, true)} fill="none" stroke="#7dd3fc" strokeWidth={1.5} opacity={0.8} filter="url(#glowLight)" />
+    ));
+    const parallelsBack = [-60, -30, 30, 60].map(f => (
+      <path key={`pb${f}`} d={generateLatPath(f, false)} fill="none" stroke="#7dd3fc" strokeWidth={1} opacity={0.3} strokeDasharray="4 6" />
+    ));
 
     const eq = getLatParams(0);
     const highlightParams = getLatParams(latVal);
 
     return (
-      <svg viewBox="0 0 440 360" style={{ width: 'auto', height: 'auto', maxHeight: '45vh', maxWidth: '100%', display: 'block', margin: '0 auto' }}>
-        <defs>
-          <radialGradient id="globeShading" cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stopColor="#f4f9ff" />
-            <stop offset="40%" stopColor="#dcefff" />
-            <stop offset="90%" stopColor="#abcdec" />
-            <stop offset="100%" stopColor="#8cb4db" />
-          </radialGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <clipPath id="globeClip">
-            <circle cx={cx} cy={cy} r={R} />
-          </clipPath>
-        </defs>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', marginTop: '20px', marginBottom: '40px' }}>
+        <style>{`
+          @keyframes earthSpin {
+            from { transform: translateX(0px); }
+            to { transform: translateX(-1000px); }
+          }
+        `}</style>
+        <svg viewBox="0 0 600 660" style={{ width: '100%', height: 'auto', maxHeight: '70vh' }}>
+          <defs>
+            <radialGradient id="oceanGradLat" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#4189d9" />
+              <stop offset="50%" stopColor="#1a5b9e" />
+              <stop offset="85%" stopColor="#0a2a52" />
+              <stop offset="100%" stopColor="#031024" />
+            </radialGradient>
+            
+            <radialGradient id="specularLight" cx="25%" cy="25%" r="45%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            </radialGradient>
 
-        <circle cx={cx} cy={cy} r={R + 4} fill="none" stroke="#b1dbff" strokeWidth="6" opacity="0.4" filter="blur(3px)" />
-        <circle cx={cx} cy={cy} r={R + 1} fill="none" stroke="#b1dbff" strokeWidth="2" opacity="0.6" />
+            <filter id="glowLight">
+              <feGaussianBlur stdDeviation="1.5" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+            
+            <filter id="atmosGlowLat">
+              <feGaussianBlur stdDeviation="5"/>
+            </filter>
 
-        <circle cx={cx} cy={cy} r={R} fill="url(#globeShading)" stroke="#5b7fa6" strokeWidth="1" />
+            <filter id="dropShadowFilter">
+              <feGaussianBlur stdDeviation="12"/>
+            </filter>
 
-        <g opacity="0.15" fill="#588c5f" clipPath="url(#globeClip)">
-          <path d={`M ${cx-110} ${cy-50} C ${cx-80} ${cy-80}, ${cx-40} ${cy-10}, ${cx-60} ${cy+20} C ${cx-80} ${cy+60}, ${cx-40} ${cy+100}, ${cx-30} ${cy+120} C ${cx-20} ${cy+130}, ${cx-50} ${cy+90}, ${cx-50} ${cy+70} C ${cx-50} ${cy+50}, ${cx-90} ${cy}, ${cx-110} ${cy-50} Z`} />
-          <path d={`M ${cx-10} ${cy-90} C ${cx+50} ${cy-110}, ${cx+120} ${cy-60}, ${cx+110} ${cy-20} C ${cx+90} ${cy+10}, ${cx+80} ${cy+50}, ${cx+70} ${cy+80} C ${cx+50} ${cy+110}, ${cx+30} ${cy+90}, ${cx+40} ${cy+50} C ${cx+50} ${cy+10}, ${cx-10} ${cy-20}, ${cx-10} ${cy-90} Z`} />
-        </g>
+            <clipPath id="globeClipLat">
+              <circle cx={cx} cy={cy} r={R} />
+            </clipPath>
+          </defs>
 
-        <g clipPath="url(#globeClip)">
-          <path d={generateZonePath(90, 66.5)} fill="#2f6df0" opacity="0.08" />
-          <path d={generateZonePath(66.5, 23.5)} fill="#12a15f" opacity="0.08" />
-          <path d={generateZonePath(23.5, -23.5)} fill="#d94a3d" opacity="0.08" />
-          <path d={generateZonePath(-23.5, -66.5)} fill="#12a15f" opacity="0.08" />
-          <path d={generateZonePath(-66.5, -90)} fill="#2f6df0" opacity="0.08" />
-        </g>
+          {/* Soft Shadow */}
+          <ellipse cx={cx} cy={cy + R + 35} rx={R * 0.8} ry="18" fill="#000000" opacity="0.25" filter="url(#dropShadowFilter)" />
 
-        {parallels}
-        
-        <path d={generateLatPath(0)} fill="none" stroke="#F5A623" strokeWidth={3} filter="url(#glow)" opacity="0.6" />
-        <path d={generateLatPath(0)} fill="none" stroke="#d94a3d" strokeWidth={1.5} />
-        
-        {Math.abs(latVal) !== 0 && (
-          <path d={generateLatPath(latVal)} fill="none" stroke="#F5A623" strokeWidth={3} filter="url(#glow)" style={{ transition: 'all 0.3s ease-out' }} />
-        )}
-        
-        <circle cx={cx} cy={cy - R} r="3.5" fill="#fff" stroke="#12a15f" strokeWidth="2" filter="url(#glow)" />
-        <text x={cx} y={cy - R - 10} fontSize="11" fontWeight="900" fill="#12a15f" textAnchor="middle">90°N</text>
-        
-        <circle cx={cx} cy={cy + R} r="3.5" fill="#fff" stroke="#2f6df0" strokeWidth="2" filter="url(#glow)" />
-        <text x={cx} y={cy + R + 16} fontSize="11" fontWeight="900" fill="#2f6df0" textAnchor="middle">90°S</text>
-        
-        <text x={cx + eq.rx + 8} y={eq.y + 12} fontSize="11" fontWeight="900" fill="#d94a3d" textAnchor="start">0° Equator</text>
+          {/* Atmosphere Bloom */}
+          <circle cx={cx} cy={cy} r={R + 8} fill="none" stroke="#7dd3fc" strokeWidth="8" opacity="0.3" filter="url(#atmosGlowLat)" />
+          <circle cx={cx} cy={cy} r={R + 1} fill="none" stroke="#e0f2fe" strokeWidth="2" opacity="0.5" />
 
-        {Math.abs(latVal) !== 0 && (
-          <text 
-            x={cx - highlightParams.rx - 12} 
-            y={highlightParams.y + highlightParams.ry + 4} 
-            fontSize="12" 
-            fontWeight="900" 
-            fill="#F5A623" 
-            textAnchor="end"
-            style={{ transition: 'all 0.3s ease-out' }}
-          >
-            {Math.abs(latVal)}° {latVal > 0 ? 'N' : 'S'}
-          </text>
-        )}
-      </svg>
+          {/* Base Ocean */}
+          <circle cx={cx} cy={cy} r={R} fill="url(#oceanGradLat)" />
+
+          {/* Continents */}
+          <g clipPath="url(#globeClipLat)">
+            <g transform="translate(-200, 50)">
+              <g style={{ animation: 'earthSpin 40s linear infinite' }}>
+                <path d={WorldMapPath} fill="#2ea85c" opacity="0.25" stroke="#1c6b39" strokeWidth="0.8" />
+                <path d={WorldMapPath} fill="#2ea85c" opacity="0.25" stroke="#1c6b39" strokeWidth="0.8" transform="translate(1000, 0)" />
+              </g>
+            </g>
+          </g>
+
+          {/* Back Parallels */}
+          {parallelsBack}
+          <path d={generateLatPath(0, false)} fill="none" stroke="#ef4444" strokeWidth={1.5} opacity={0.3} strokeDasharray="4 6" />
+
+          {/* Front Parallels */}
+          {parallelsFront}
+          
+          {/* Equator */}
+          <path d={generateLatPath(0, true)} fill="none" stroke="#ff5c5c" strokeWidth={3} filter="url(#glowLight)" />
+          <path d={generateLatPath(0, true)} fill="none" stroke="#ffb3b3" strokeWidth={1} />
+          
+          {/* Highlighted Latitude */}
+          {Math.abs(latVal) !== 0 && (
+            <>
+              <path d={generateLatPath(latVal, false)} fill="none" stroke="#F5A623" strokeWidth={1.5} opacity={0.4} strokeDasharray="4 6" style={{ transition: 'all 0.3s ease-out' }} />
+              <path d={generateLatPath(latVal, true)} fill="none" stroke="#F5A623" strokeWidth={3.5} filter="url(#glowLight)" style={{ transition: 'all 0.3s ease-out' }} />
+              <path d={generateLatPath(latVal, true)} fill="none" stroke="#fef08a" strokeWidth={1.5} style={{ transition: 'all 0.3s ease-out' }} />
+            </>
+          )}
+
+          {/* Specular Lighting Overlay (adds volume above continents and lines) */}
+          <circle cx={cx} cy={cy} r={R} fill="url(#specularLight)" style={{ pointerEvents: 'none' }} />
+          
+          {/* North Pole */}
+          <circle cx={cx} cy={cy - R} r="5" fill="#fff" stroke="#12a15f" strokeWidth="2.5" filter="url(#glowLight)" />
+          <text x={cx} y={cy - R - 14} fontSize="14" fontWeight="900" fill="#12a15f" textAnchor="middle">90°N</text>
+          
+          {/* South Pole */}
+          <circle cx={cx} cy={cy + R} r="5" fill="#fff" stroke="#2f6df0" strokeWidth="2.5" filter="url(#glowLight)" />
+          <text x={cx} y={cy + R + 22} fontSize="14" fontWeight="900" fill="#2f6df0" textAnchor="middle">90°S</text>
+          
+          {/* Equator Label */}
+          <text x={cx + eq.rx + 12} y={eq.y + 14} fontSize="15" fontWeight="900" fill="#ef4444" textAnchor="start" filter="url(#glowLight)">0° Equator</text>
+
+          {/* Highlight Label */}
+          {Math.abs(latVal) !== 0 && (
+            <text 
+              x={cx - highlightParams.rx - 16} 
+              y={highlightParams.y + highlightParams.ry + 8} 
+              fontSize="16" 
+              fontWeight="900" 
+              fill="#F5A623" 
+              textAnchor="end"
+              filter="url(#glowLight)"
+              style={{ transition: 'all 0.3s ease-out' }}
+            >
+              {Math.abs(latVal)}° {latVal > 0 ? 'N' : 'S'}
+            </text>
+          )}
+        </svg>
+      </div>
     );
   };
 
   const renderLonGlobe = () => {
-    const cx = 220, cy = 180, R = 150;
+    const cx = 300, cy = 300, R = 250;
     const rad = Math.PI / 180;
 
-    const getLonPath = (lon) => {
-      if (Math.abs(lon) < 0.1) {
-        // Use a tiny bezier curve to give the line a non-zero bounding box for SVG filters
-        return `M ${cx} ${cy - R} Q ${cx + 1} ${cy} ${cx} ${cy + R}`;
-      }
+    const getLonPath = (lon, isFront=true) => {
       const rx = Math.abs(R * Math.sin(lon * rad));
+      if (rx < 0.1) {
+        return isFront ? `M ${cx} ${cy - R} L ${cx} ${cy + R}` : `M ${cx} ${cy - R} L ${cx} ${cy + R}`;
+      }
       const sweep = lon > 0 ? 1 : 0;
-      return `M ${cx} ${cy - R} A ${rx} ${R} 0 0 ${sweep} ${cx} ${cy + R}`;
+      return isFront 
+        ? `M ${cx} ${cy - R} A ${rx} ${R} 0 0 ${sweep} ${cx} ${cy + R}`
+        : `M ${cx} ${cy + R} A ${rx} ${R} 0 0 ${sweep} ${cx} ${cy - R}`;
     };
 
     const getLatParams = (lat) => {
@@ -290,83 +340,136 @@ export default function CoordinatesPage({ onNextActivity }) {
     };
 
     const eq = getLatParams(0);
-    const generateLatPath = (lat) => {
+    const generateLatPath = (lat, front=true) => {
       const { rx, ry, y } = getLatParams(lat);
-      return `M ${cx - rx} ${y} A ${rx} ${ry} 0 0 0 ${cx + rx} ${y}`;
+      return front 
+        ? `M ${cx - rx} ${y} A ${rx} ${ry} 0 0 0 ${cx + rx} ${y}`
+        : `M ${cx + rx} ${y} A ${rx} ${ry} 0 0 0 ${cx - rx} ${y}`;
     };
 
-    const meridians = [-90, -60, -30, 30, 60, 90].map(l => (
-      <path key={`m${l}`} d={getLonPath(l)} fill="none" stroke="#7fa8c8" strokeWidth={1} opacity={0.5} />
+    const meridiansFront = [-90, -60, -30, 30, 60, 90].map(l => (
+      <path key={`mf${l}`} d={getLonPath(l, true)} fill="none" stroke="#7dd3fc" strokeWidth={1.5} opacity={0.8} filter="url(#glowLightLon)" />
+    ));
+    const meridiansBack = [-60, -30, 30, 60].map(l => (
+      <path key={`mb${l}`} d={getLonPath(l, false)} fill="none" stroke="#7dd3fc" strokeWidth={1} opacity={0.3} strokeDasharray="4 6" />
     ));
 
     const shown = Math.max(-90, Math.min(90, lonVal));
     const hlX = cx + Math.sin(shown * rad) * R;
 
     return (
-      <svg viewBox="0 0 440 360" style={{ width: 'auto', height: 'auto', maxHeight: '45vh', maxWidth: '100%', display: 'block', margin: '0 auto' }}>
-        <defs>
-          <radialGradient id="globeShadingLon" cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stopColor="#f4f9ff" />
-            <stop offset="40%" stopColor="#dcefff" />
-            <stop offset="90%" stopColor="#abcdec" />
-            <stop offset="100%" stopColor="#8cb4db" />
-          </radialGradient>
-          <filter id="glowLon">
-            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <clipPath id="globeClipLon">
-            <circle cx={cx} cy={cy} r={R} />
-          </clipPath>
-        </defs>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', marginTop: '20px', marginBottom: '40px' }}>
+        <style>{`
+          @keyframes earthSpinLon {
+            from { transform: translateX(0px); }
+            to { transform: translateX(-1000px); }
+          }
+        `}</style>
+        <svg viewBox="0 0 600 660" style={{ width: '100%', height: 'auto', maxHeight: '70vh' }}>
+          <defs>
+            <radialGradient id="oceanGradLon" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#4189d9" />
+              <stop offset="50%" stopColor="#1a5b9e" />
+              <stop offset="85%" stopColor="#0a2a52" />
+              <stop offset="100%" stopColor="#031024" />
+            </radialGradient>
 
-        <circle cx={cx} cy={cy} r={R + 4} fill="none" stroke="#b1dbff" strokeWidth="6" opacity="0.4" filter="blur(3px)" />
-        <circle cx={cx} cy={cy} r={R + 1} fill="none" stroke="#b1dbff" strokeWidth="2" opacity="0.6" />
+            <radialGradient id="specularLightLon" cx="25%" cy="25%" r="45%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            </radialGradient>
 
-        <circle cx={cx} cy={cy} r={R} fill="url(#globeShadingLon)" stroke="#5b7fa6" strokeWidth="1" />
+            <filter id="glowLightLon">
+              <feGaussianBlur stdDeviation="1.5" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+            
+            <filter id="atmosGlowLon">
+              <feGaussianBlur stdDeviation="5"/>
+            </filter>
 
-        <g opacity="0.15" fill="#588c5f" clipPath="url(#globeClipLon)">
-          <path d={`M ${cx-110} ${cy-50} C ${cx-80} ${cy-80}, ${cx-40} ${cy-10}, ${cx-60} ${cy+20} C ${cx-80} ${cy+60}, ${cx-40} ${cy+100}, ${cx-30} ${cy+120} C ${cx-20} ${cy+130}, ${cx-50} ${cy+90}, ${cx-50} ${cy+70} C ${cx-50} ${cy+50}, ${cx-90} ${cy}, ${cx-110} ${cy-50} Z`} />
-          <path d={`M ${cx-10} ${cy-90} C ${cx+50} ${cy-110}, ${cx+120} ${cy-60}, ${cx+110} ${cy-20} C ${cx+90} ${cy+10}, ${cx+80} ${cy+50}, ${cx+70} ${cy+80} C ${cx+50} ${cy+110}, ${cx+30} ${cy+90}, ${cx+40} ${cy+50} C ${cx+50} ${cy+10}, ${cx-10} ${cy-20}, ${cx-10} ${cy-90} Z`} />
-        </g>
+            <filter id="dropShadowFilterLon">
+              <feGaussianBlur stdDeviation="12"/>
+            </filter>
 
-        {/* 3D Equator Reference */}
-        <path d={generateLatPath(0)} fill="none" stroke="#d94a3d" strokeWidth={1.5} opacity={0.4} strokeDasharray="3 3" />
+            <clipPath id="globeClipLon">
+              <circle cx={cx} cy={cy} r={R} />
+            </clipPath>
+          </defs>
 
-        {meridians}
-        
-        {/* Prime Meridian */}
-        <path d={getLonPath(0)} fill="none" stroke="#c79a3e" strokeWidth={2.5} filter="url(#glowLon)" opacity={0.8} />
-        
-        {/* Highlighted Longitude */}
-        <path d={getLonPath(shown)} fill="none" stroke="#F5A623" strokeWidth={3} filter="url(#glowLon)" style={{ transition: 'all 0.3s ease-out' }} />
-        
-        <circle cx={cx} cy={cy - R} r="3.5" fill="#fff" stroke="#12a15f" strokeWidth="2" filter="url(#glowLon)" />
-        <text x={cx} y={cy - R - 10} fontSize="11" fontWeight="900" fill="#12a15f" textAnchor="middle">North Pole</text>
-        
-        <circle cx={cx} cy={cy + R} r="3.5" fill="#fff" stroke="#2f6df0" strokeWidth="2" filter="url(#glowLon)" />
-        <text x={cx} y={cy + R + 16} fontSize="11" fontWeight="900" fill="#2f6df0" textAnchor="middle">South Pole</text>
-        
-        <text x={cx - 10} y={cy - R + 26} fontSize="11" fontWeight="900" fill="#c79a3e" textAnchor="end">0° Prime Meridian</text>
-        <text x={cx + eq.rx + 8} y={eq.y + 4} fontSize="9" fontWeight="700" fill="#d94a3d" textAnchor="start" opacity={0.6}>Equator</text>
+          {/* Soft Shadow */}
+          <ellipse cx={cx} cy={cy + R + 35} rx={R * 0.8} ry="18" fill="#000000" opacity="0.25" filter="url(#dropShadowFilterLon)" />
 
-        <text 
-            x={hlX + (shown >= 0 ? 8 : -8)} 
-            y={cy + eq.ry + 12} 
-            fontSize="12" 
+          {/* Atmosphere Bloom */}
+          <circle cx={cx} cy={cy} r={R + 8} fill="none" stroke="#7dd3fc" strokeWidth="8" opacity="0.3" filter="url(#atmosGlowLon)" />
+          <circle cx={cx} cy={cy} r={R + 1} fill="none" stroke="#e0f2fe" strokeWidth="2" opacity="0.5" />
+
+          {/* Base Ocean */}
+          <circle cx={cx} cy={cy} r={R} fill="url(#oceanGradLon)" />
+
+          {/* Continents */}
+          <g clipPath="url(#globeClipLon)">
+            <g transform="translate(-200, 50)">
+              <g style={{ animation: 'earthSpinLon 40s linear infinite' }}>
+                <path d={WorldMapPath} fill="#2ea85c" opacity="0.25" stroke="#1c6b39" strokeWidth="0.8" />
+                <path d={WorldMapPath} fill="#2ea85c" opacity="0.25" stroke="#1c6b39" strokeWidth="0.8" transform="translate(1000, 0)" />
+              </g>
+            </g>
+          </g>
+
+          {/* Back Equator */}
+          <path d={generateLatPath(0, false)} fill="none" stroke="#ef4444" strokeWidth={1.5} opacity={0.3} strokeDasharray="4 6" />
+          <path d={generateLatPath(0, true)} fill="none" stroke="#ef4444" strokeWidth={2} opacity={0.5} />
+
+          {meridiansBack}
+          {meridiansFront}
+          
+          {/* Prime Meridian */}
+          <path d={getLonPath(0, false)} fill="none" stroke="#fcd34d" strokeWidth={1.5} opacity={0.4} strokeDasharray="4 6" />
+          <path d={getLonPath(0, true)} fill="none" stroke="#fbbf24" strokeWidth={3.5} filter="url(#glowLightLon)" />
+          <path d={getLonPath(0, true)} fill="none" stroke="#fef3c7" strokeWidth={1.5} />
+          
+          {/* Highlighted Longitude */}
+          <path d={getLonPath(shown, false)} fill="none" stroke="#F5A623" strokeWidth={1.5} opacity={0.4} strokeDasharray="4 6" style={{ transition: 'all 0.3s ease-out' }} />
+          <path d={getLonPath(shown, true)} fill="none" stroke="#F5A623" strokeWidth={3.5} filter="url(#glowLightLon)" style={{ transition: 'all 0.3s ease-out' }} />
+          <path d={getLonPath(shown, true)} fill="none" stroke="#fef08a" strokeWidth={1.5} style={{ transition: 'all 0.3s ease-out' }} />
+
+          {/* Specular Lighting */}
+          <circle cx={cx} cy={cy} r={R} fill="url(#specularLightLon)" style={{ pointerEvents: 'none' }} />
+          
+          {/* North Pole */}
+          <circle cx={cx} cy={cy - R} r="5" fill="#fff" stroke="#12a15f" strokeWidth="2.5" filter="url(#glowLightLon)" />
+          <text x={cx} y={cy - R - 14} fontSize="14" fontWeight="900" fill="#12a15f" textAnchor="middle">90°N</text>
+          
+          {/* South Pole */}
+          <circle cx={cx} cy={cy + R} r="5" fill="#fff" stroke="#2f6df0" strokeWidth="2.5" filter="url(#glowLightLon)" />
+          <text x={cx} y={cy + R + 22} fontSize="14" fontWeight="900" fill="#2f6df0" textAnchor="middle">90°S</text>
+          
+          {/* Prime Meridian Label */}
+          <text x={cx - 16} y={cy - R + 28} fontSize="15" fontWeight="900" fill="#fbbf24" textAnchor="end" filter="url(#glowLightLon)">0° Prime Meridian</text>
+          <text x={cx + eq.rx + 12} y={eq.y + 6} fontSize="14" fontWeight="900" fill="#ef4444" textAnchor="start" opacity={0.7}>Equator</text>
+
+          {/* Highlight Label */}
+          <text 
+            x={hlX + (shown >= 0 ? 14 : -14)} 
+            y={cy + eq.ry + 24} 
+            fontSize="16" 
             fontWeight="900" 
             fill="#F5A623" 
             textAnchor={shown >= 0 ? "start" : "end"}
+            filter="url(#glowLightLon)"
             style={{ transition: 'all 0.3s ease-out' }}
           >
             {Math.abs(shown)}° {shown === 0 ? '' : (shown > 0 ? 'E' : 'W')}
           </text>
-      </svg>
+        </svg>
+      </div>
     );
   };
+
 
   const renderGrid = () => {
     const X = 10, Y = 10, W = 400, H = 200;
@@ -448,129 +551,35 @@ export default function CoordinatesPage({ onNextActivity }) {
             <>
               <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · (a)</div>
               <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '32px', margin: '8px 0 16px' }}>Understanding coordinates</h1>
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '12px' }}>Imagine you are watching a movie in a large theatre.</p>
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '12px' }}>Hundreds of seats look exactly the same.</p>
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '12px' }}>If your friend asks, <b style={{ color: '#0E3556' }}>"Where are you sitting?"</b> Simply saying, <b style={{ color: '#0E3556' }}>"Near the middle"</b> is not enough.</p>
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '16px' }}>Instead, you say, <b style={{ color: '#0E3556' }}>"Row E, Seat 7."</b> Now your friend can find your exact seat easily.</p>
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '20px' }}>Just like this, two values together identify one exact location.</p>
-
-              {/* Theatre Illustration */}
-              <div style={{ background: '#fff', padding: '24px 16px', borderRadius: '12px', border: '1px solid #d6e0ec', marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
-                <style>
-                  {`
-                    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-                    @keyframes dropIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-                    @keyframes stretchLeft { from { width: 0; opacity: 0; } to { width: 245px; opacity: 0.8; } }
-                    @keyframes stretchUp { from { height: 0; opacity: 0; } to { height: 165px; opacity: 0.8; } }
-                    @keyframes glowPulse { 0% { box-shadow: 0 4px 12px rgba(245, 166, 35, 0.4), 0 0 0 0 rgba(245, 166, 35, 0.4); } 70% { box-shadow: 0 4px 12px rgba(245, 166, 35, 0.4), 0 0 0 8px rgba(245, 166, 35, 0); } 100% { box-shadow: 0 4px 12px rgba(245, 166, 35, 0.4), 0 0 0 0 rgba(245, 166, 35, 0); } }
-                    
-                    .animate-screen { animation: fadeIn 0.8s ease forwards; opacity: 0; }
-                    .animate-guide-x { animation: stretchLeft 0.5s ease forwards 1.6s; opacity: 0; }
-                    .animate-guide-y { animation: stretchUp 0.5s ease forwards 1.6s; opacity: 0; }
-                    .animate-ticket { animation: dropIn 0.5s ease forwards 2s; opacity: 0; }
-                  `}
-                </style>
-
-                {/* Screen */}
-                <div className="animate-screen" style={{ width: '80%', height: '24px', background: '#334155', borderRadius: '50% / 100% 100% 0 0', border: '2px solid #cbd5e1', borderBottom: 'none', boxShadow: '0 -4px 10px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '30px' }}>
-                  <span style={{ color: '#94a3b8', fontSize: '10px', letterSpacing: '0.3em', fontWeight: 'bold' }}>SCREEN</span>
-                </div>
-
-                <div style={{ position: 'relative', padding: '10px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'auto repeat(8, 28px)', gap: '10px 10px', alignItems: 'center', justifyItems: 'center' }}>
-                    {/* Top Header Row */}
-                    <div />
-                    {[1,2,3,4,5,6,7,8].map((n, i) => (
-                      <div key={`c${n}`} style={{ fontSize: '11px', fontWeight: 'bold', color: n === 7 ? '#F5A623' : '#9fbdd8', width: '28px', textAlign: 'center', animation: `dropIn 0.5s ease forwards ${(i*0.05) + 0.6}s`, opacity: 0 }}>{n}</div>
-                    ))}
-                    
-                    {/* Grid Rows */}
-                    {['A','B','C','D','E','F'].map((row, r) => (
-                      <React.Fragment key={`r${row}`}>
-                        <div style={{ fontSize: '11px', fontWeight: 'bold', color: row === 'E' ? '#F5A623' : '#9fbdd8', paddingRight: '8px', animation: `dropIn 0.5s ease forwards ${(r*0.05) + 0.3}s`, opacity: 0 }}>{row}</div>
-                        {Array.from({ length: 8 }).map((_, c) => {
-                          const col = c + 1;
-                          const isTarget = row === 'E' && col === 7;
-                          
-                          return (
-                            <div key={`s${row}-${col}`} style={{
-                              position: 'relative',
-                              width: '28px', height: '28px',
-                              transform: isTarget ? 'scale(1.2)' : 'scale(1) perspective(200px) rotateX(15deg)',
-                              zIndex: isTarget ? 10 : 1,
-                              animation: isTarget ? 'fadeIn 0.5s ease forwards 1s, glowPulse 2s infinite 1.5s' : `fadeIn 0.5s ease forwards ${(r*0.05 + c*0.05) + 0.3}s`,
-                              opacity: 0
-                            }}>
-                              {/* Chair shape */}
-                              <div style={{
-                                position: 'absolute', top: 0, left: '10%', width: '80%', height: '60%',
-                                background: isTarget ? '#F5A623' : '#475569',
-                                borderRadius: '6px 6px 2px 2px',
-                                border: `1px solid ${isTarget ? '#d98b12' : '#334155'}`,
-                                boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.2)'
-                              }} />
-                              <div style={{
-                                position: 'absolute', bottom: '10%', left: 0, width: '100%', height: '40%',
-                                background: isTarget ? '#ffbc4f' : '#64748b',
-                                borderRadius: '4px',
-                                border: `1px solid ${isTarget ? '#d98b12' : '#334155'}`,
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                              }} />
-                              
-                              {/* Ticket icon for target */}
-                              {isTarget && (
-                                <div style={{ position: 'absolute', top: '-12px', right: '-14px', background: '#fff', border: '1px solid #d98b12', borderRadius: '4px', padding: '2px 4px', fontSize: '9px', color: '#d98b12', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', transform: 'rotate(15deg)', zIndex: 11 }}>🎫</div>
-                              )}
-
-                              {/* Guide Lines from Target */}
-                              {isTarget && (
-                                <>
-                                  {/* Line pointing left to Row E */}
-                                  <div className="animate-guide-x" style={{ position: 'absolute', top: '50%', right: '100%', height: '2px', borderTop: '2px dashed #F5A623', zIndex: -1, pointerEvents: 'none' }} />
-                                  {/* Line pointing up to Col 7 */}
-                                  <div className="animate-guide-y" style={{ position: 'absolute', bottom: '100%', left: '50%', width: '2px', borderLeft: '2px dashed #F5A623', zIndex: -1, pointerEvents: 'none' }} />
-                                </>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </React.Fragment>
-                    ))}
+              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '12px' }}>Imagine you are playing a game of chess.</p>
+              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '12px' }}>Every square on the chessboard has its own address.</p>
+              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '12px' }}>Instead of saying, <b style={{ color: '#0E3556' }}>"Move to the middle,"</b> players use a letter and a number, like <b style={{ color: '#0E3556' }}>d2</b> or <b style={{ color: '#0E3556' }}>e4</b>.</p>
+              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '16px' }}>This tells everyone the exact square.</p>
+              
+              <div style={{ background: '#fff', padding: '24px 16px', borderRadius: '12px', border: '1px solid #d6e0ec', marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {renderChessboard({ highlightSquare: 'd2', highlightCol: 'd', highlightRow: '2' })}
+                
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: '#f4f7fb', padding: '12px 20px', borderRadius: '12px', border: '1px solid #e4ebf3', marginTop: '20px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Column</span>
+                    <span style={{ fontSize: '24px', fontWeight: 900, color: '#F5A623' }}>d</span>
+                  </div>
+                  <div style={{ fontSize: '20px', color: '#9fbdd8', fontWeight: 'bold' }}>+</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Row</span>
+                    <span style={{ fontSize: '24px', fontWeight: 900, color: '#F5A623' }}>2</span>
+                  </div>
+                  <div style={{ fontSize: '20px', color: '#9fbdd8', fontWeight: 'bold' }}>=</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <span style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Address</span>
+                    <span style={{ fontSize: '24px', fontWeight: 900, color: '#0E3556' }}>d2</span>
                   </div>
                 </div>
               </div>
 
-              {/* Ticket and Explanation Strip */}
-              <div className="animate-ticket" style={{ display: 'flex', alignItems: 'center', gap: '20px', background: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #d6e0ec', marginBottom: '24px', boxShadow: '0 4px 12px rgba(14,42,69,.05)' }}>
-                {/* Movie Ticket */}
-                <div style={{ position: 'relative', width: '110px', height: '54px', background: '#fff', border: '2px solid #F5A623', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', left: '-6px', top: '50%', transform: 'translateY(-50%)', width: '10px', height: '10px', background: '#fff', borderRadius: '50%', borderRight: '2px solid #F5A623' }} />
-                  <div style={{ position: 'absolute', right: '-6px', top: '50%', transform: 'translateY(-50%)', width: '10px', height: '10px', background: '#fff', borderRadius: '50%', borderLeft: '2px solid #F5A623' }} />
-                  <div style={{ fontSize: '7px', letterSpacing: '1px', color: '#64748b', fontWeight: 'bold', marginBottom: '4px' }}>MOVIE TICKET</div>
-                  <div style={{ display: 'flex', gap: '8px', color: '#F5A623', fontWeight: 900, fontSize: '13px' }}>
-                    <span>ROW: E</span>
-                    <span>SEAT: 7</span>
-                  </div>
-                </div>
-
-                <div style={{ color: '#F5A623', flexShrink: 0 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </div>
-
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '14.5px', fontWeight: 'bold', color: '#0E3556', marginBottom: '4px' }}>One exact seat inside the theatre.</div>
-                  <div style={{ fontSize: '13px', color: '#64748b', lineHeight: 1.5 }}>Just like a theatre seat uses <b>Row + Seat Number</b>, maps use two coordinates to locate one exact place.</div>
-                </div>
-              </div>
-
-              {/* Educational Connection Box */}
-              <div style={{ background: '#fbf5e6', borderLeft: '4px solid #F5A623', borderRadius: '9px', padding: '16px', fontSize: '14.5px', lineHeight: 1.6, color: '#7a5a2a', marginBottom: '20px' }}>
-                <b style={{ display: 'block', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px', color: '#d98b12' }}>Remember</b>
-                <ul style={{ margin: 0, paddingLeft: '20px' }}>
-                  <li style={{ marginBottom: '4px' }}>A theatre seat is found using <b>Row + Seat Number</b>.</li>
-                  <li style={{ marginBottom: '4px' }}>A place on a map is found using <b>Coordinates</b>.</li>
-                  <li>In both cases, <b>two values together identify one exact location</b>.</li>
-                </ul>
+              <div style={{ background: '#ffeccb', borderLeft: '6px solid #F5A623', borderRadius: '12px', padding: '20px', fontSize: '18px', lineHeight: 1.6, color: '#7a5a2a', marginBottom: '20px' }}>
+                Maps use the same idea.<br/><br/>
+                <b>Latitude</b> and <b>longitude</b> also work as two coordinates that identify one exact place.
               </div>
             </>
           )}
@@ -699,132 +708,215 @@ export default function CoordinatesPage({ onNextActivity }) {
           {activeTab === 'co' && (
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, position: 'relative' }}>
               
-              {/* STAGE 1 */}
-              {coStage === 1 && (
-                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, animation: 'fadeIn 0.3s', minHeight: 0 }}>
-                  <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: '6px', minHeight: 0 }}>
-                    {renderChessboard({ highlightSquare: 'd2', highlightCol: 'd', highlightRow: '2' })}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 900, color: '#0E3556', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+                  <Ticket size={24} color="#F5A623" />
+                  Let's Explore — Find Your Seat
+                </h2>
+                {theatreStep < 2 && (
+                  <div style={{ background: '#f4f7fb', padding: '6px 16px', borderRadius: '20px', fontSize: '13px', fontWeight: 700, color: '#5c6b7a', border: '1px solid #d6e0ec' }}>
+                    Progress: {theatreStep} / 2
                   </div>
-                  <div className="readout" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#0E3556', marginBottom: '8px' }}>Every Square Has an Address</div>
-                    <div style={{ fontSize: '14px', color: '#5c6b7a', marginBottom: '16px' }}>A chessboard uses <b style={{color: '#0E3556'}}>letters</b> and <b style={{color: '#0E3556'}}>numbers</b> to identify every square.</div>
-                    
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: '#fff', padding: '12px 20px', borderRadius: '12px', border: '1px solid #d6e0ec' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <span style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Column</span>
-                        <span style={{ fontSize: '24px', fontWeight: 900, color: '#F5A623' }}>d</span>
-                      </div>
-                      <div style={{ fontSize: '20px', color: '#9fbdd8', fontWeight: 'bold' }}>+</div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <span style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Row</span>
-                        <span style={{ fontSize: '24px', fontWeight: 900, color: '#F5A623' }}>2</span>
-                      </div>
-                      <div style={{ fontSize: '20px', color: '#9fbdd8', fontWeight: 'bold' }}>=</div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <span style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Address</span>
-                        <span style={{ fontSize: '24px', fontWeight: 900, color: '#0E3556' }}>d2</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-                    <button className="chip active" style={{ padding: '10px 20px', fontSize: '14px', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setCoStage(2)}>Next →</button>
-                  </div>
+                )}
+              </div>
+
+              {theatreStep < 2 && (
+                <div style={{ fontSize: '15px', color: '#5c6b7a', marginBottom: '24px' }}>
+                  Use the seat ticket below to find the correct seat in the theatre.
                 </div>
               )}
 
-              {/* STAGE 2 */}
-              {coStage === 2 && (
-                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, animation: 'fadeIn 0.3s', minHeight: 0 }}>
-                  <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: '6px', minHeight: 0 }}>
-                    {renderChessboard({ 
-                      interactive: true,
-                      highlightSquare: missionFb === 'success' ? (missionStep === 0 ? 'd2' : missionStep === 1 ? 'h6' : 'b4') : null,
-                      highlightCol: missionFb === 'success' ? (missionStep === 0 ? 'd' : missionStep === 1 ? 'h' : 'b') : null,
-                      highlightRow: missionFb === 'success' ? (missionStep === 0 ? '2' : missionStep === 1 ? '6' : '4') : null,
-                      onSquareClick: (sq) => {
-                        const target = missionStep === 0 ? 'd2' : missionStep === 1 ? 'h6' : 'b4';
-                        if (sq === target) {
-                          setMissionFb('success');
-                          setTimeout(() => {
-                            setMissionFb(null);
-                            if (missionStep < 2) {
-                              setMissionStep(s => s + 1);
-                            } else {
-                              setCoStage(3);
+              {/* Theatre Illustration */}
+              {theatreStep < 2 && (
+                <div style={{ flex: 1, background: '#f8fafc', borderRadius: '16px', padding: '24px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+                  {/* Screen */}
+                  <div style={{ width: '70%', height: '30px', background: '#334155', borderRadius: '50% / 100% 100% 0 0', border: '3px solid #cbd5e1', borderBottom: 'none', boxShadow: '0 -4px 12px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '40px' }}>
+                    <span style={{ color: '#94a3b8', fontSize: '12px', letterSpacing: '0.4em', fontWeight: 800 }}>SCREEN</span>
+                  </div>
+
+                  {/* Seat Grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'auto repeat(8, 40px)', gap: '12px 14px', alignItems: 'center', justifyItems: 'center' }}>
+                    {/* Columns */}
+                    <div />
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(c => (
+                      <div key={`col-${c}`} style={{ fontSize: '13px', fontWeight: 'bold', color: '#94a3b8' }}>{c}</div>
+                    ))}
+                    
+                    {/* Rows */}
+                    {['A', 'B', 'C', 'D', 'E', 'F'].map(r => {
+                      const showRowHint = failedAttempts >= 2 && currentTarget?.startsWith(r);
+                      
+                      return (
+                        <React.Fragment key={`row-${r}`}>
+                          <div style={{ fontSize: '13px', fontWeight: 'bold', color: showRowHint ? '#F5A623' : '#94a3b8', paddingRight: '8px', transition: 'color 0.3s' }}>
+                            {r}
+                          </div>
+                          
+                          {[1, 2, 3, 4, 5, 6, 7, 8].map(c => {
+                            const seatId = `${r}${c}`;
+                            const isTarget = seatId === currentTarget;
+                            const isClicked = seatId === clickedSeat;
+                            const showSeatHint = failedAttempts >= 4 && isTarget;
+                            
+                            let seatBg = '#475569';
+                            let seatBottomBg = '#64748b';
+                            let borderCol = '#334155';
+                            let anim = '';
+                            
+                            if (isClicked && seatFeedback === 'success') {
+                              seatBg = '#10b981';
+                              seatBottomBg = '#34d399';
+                              borderCol = '#059669';
+                              anim = 'pulse';
+                            } else if (isClicked && seatFeedback === 'error') {
+                              seatBg = '#ef4444';
+                              seatBottomBg = '#f87171';
+                              borderCol = '#b91c1c';
+                              anim = 'shake';
+                            } else if (showRowHint) {
+                              seatBg = '#cbd5e1';
+                              seatBottomBg = '#e2e8f0';
                             }
-                          }, 1500);
-                        }
-                      }
+                            
+                            return (
+                              <motion.div
+                                key={seatId}
+                                whileHover={{ scale: 1.1, y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => {
+                                  if (seatFeedback) return;
+                                  setClickedSeat(seatId);
+                                  if (seatId === currentTarget) {
+                                    setSeatFeedback('success');
+                                    setFailedAttempts(0);
+                                    setTimeout(() => {
+                                      setSeatFeedback(null);
+                                      setClickedSeat(null);
+                                      setTheatreStep(s => s + 1);
+                                    }, 2000);
+                                  } else {
+                                    setSeatFeedback('error');
+                                    setFailedAttempts(f => f + 1);
+                                    setTimeout(() => {
+                                      setSeatFeedback(null);
+                                      setClickedSeat(null);
+                                    }, 800);
+                                  }
+                                }}
+                                style={{
+                                  position: 'relative',
+                                  width: '36px', height: '36px',
+                                  cursor: 'pointer',
+                                  transform: 'perspective(300px) rotateX(15deg)',
+                                }}
+                                animate={
+                                  anim === 'shake' ? { x: [-4, 4, -4, 4, 0] } :
+                                  anim === 'pulse' ? { scale: [1, 1.15, 1], boxShadow: '0 0 16px rgba(16, 185, 129, 0.6)' } : {}
+                                }
+                                transition={{ duration: anim === 'shake' ? 0.3 : 0.5 }}
+                              >
+                                {showSeatHint && !seatFeedback && (
+                                  <motion.div 
+                                    animate={{ opacity: [0.3, 1, 0.3] }}
+                                    transition={{ repeat: Infinity, duration: 1.5 }}
+                                    style={{ position: 'absolute', inset: -4, borderRadius: '8px', border: '2px solid #F5A623', pointerEvents: 'none' }}
+                                  />
+                                )}
+                                <div style={{
+                                  position: 'absolute', top: 0, left: '10%', width: '80%', height: '60%',
+                                  background: seatBg, borderRadius: '6px 6px 2px 2px',
+                                  border: `1px solid ${borderCol}`, boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.2)'
+                                }} />
+                                <div style={{
+                                  position: 'absolute', bottom: '10%', left: 0, width: '100%', height: '40%',
+                                  background: seatBottomBg, borderRadius: '4px',
+                                  border: `1px solid ${borderCol}`, boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                }} />
+                              </motion.div>
+                            );
+                          })}
+                        </React.Fragment>
+                      );
                     })}
                   </div>
-                  <div className="readout" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#0E3556', marginBottom: '8px' }}>Let's Find Some Squares</div>
+                </div>
+              )}
+
+              {/* Feedback and Ticket Panel */}
+              {theatreStep < 2 && (
+                <div style={{ marginTop: '24px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+                  {/* Current Ticket */}
+                  <motion.div 
+                    key={currentTarget}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    style={{ position: 'relative', width: '160px', height: '80px', background: '#fff', border: `3px solid ${seatFeedback === 'success' ? '#10b981' : '#F5A623'}`, borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', boxShadow: '0 8px 16px rgba(0,0,0,0.06)' }}
+                  >
+                    <div style={{ position: 'absolute', left: '-8px', top: '50%', transform: 'translateY(-50%)', width: '14px', height: '14px', background: '#fff', borderRadius: '50%', borderRight: `3px solid ${seatFeedback === 'success' ? '#10b981' : '#F5A623'}`, zIndex: 2 }} />
+                    <div style={{ position: 'absolute', right: '-8px', top: '50%', transform: 'translateY(-50%)', width: '14px', height: '14px', background: '#fff', borderRadius: '50%', borderLeft: `3px solid ${seatFeedback === 'success' ? '#10b981' : '#F5A623'}`, zIndex: 2 }} />
                     
-                    {!missionFb && (
-                      <div style={{ fontSize: '16px', color: '#5c6b7a' }}>
-                        Mission {missionStep + 1} of 3: Find <b style={{ fontSize: '20px', color: '#0E3556' }}>{missionStep === 0 ? 'd2' : missionStep === 1 ? 'h6' : 'b4'}</b>
-                      </div>
+                    <div style={{ fontSize: '10px', letterSpacing: '2px', color: '#64748b', fontWeight: 800, marginBottom: '6px' }}>YOUR TICKET</div>
+                    <div style={{ display: 'flex', gap: '12px', color: seatFeedback === 'success' ? '#10b981' : '#F5A623', fontWeight: 900, fontSize: '18px' }}>
+                      <span>ROW {currentTarget?.[0]}</span>
+                      <span>SEAT {currentTarget?.[1]}</span>
+                    </div>
+                  </motion.div>
+
+                  {/* Feedback Message */}
+                  <div style={{ flex: 1, background: seatFeedback === 'success' ? '#ecfdf5' : seatFeedback === 'error' ? '#fef2f2' : '#f8fafc', border: `1px solid ${seatFeedback === 'success' ? '#a7f3d0' : seatFeedback === 'error' ? '#fecaca' : '#e2e8f0'}`, borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '16px', transition: 'all 0.3s' }}>
+                    {seatFeedback === 'success' ? (
+                      <>
+                        <CheckCircle2 size={32} color="#10b981" />
+                        <div>
+                          <div style={{ fontSize: '16px', fontWeight: 800, color: '#065f46', marginBottom: '4px' }}>Excellent!</div>
+                          <div style={{ fontSize: '14px', color: '#047857' }}>You found <b>Row {currentTarget?.[0]}, Seat {currentTarget?.[1]}</b>. The row and seat number together identify one exact location.</div>
+                        </div>
+                      </>
+                    ) : seatFeedback === 'error' ? (
+                      <>
+                        <XCircle size={32} color="#ef4444" />
+                        <div>
+                          <div style={{ fontSize: '16px', fontWeight: 800, color: '#991b1b', marginBottom: '4px' }}>Not quite.</div>
+                          <div style={{ fontSize: '14px', color: '#b91c1c' }}>Look carefully. First find the correct row, then count the seat number.</div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <span style={{ fontSize: '16px' }}>👆</span>
+                        </div>
+                        <div style={{ fontSize: '15px', fontWeight: 600, color: '#334155' }}>
+                          Click the correct seat inside the theatre.
+                        </div>
+                      </>
                     )}
-                    {missionFb === 'success' && (
-                      <div style={{ fontSize: '16px', color: '#12a15f', fontWeight: 'bold' }}>
-                        Great! {missionStep === 0 ? 'd2' : missionStep === 1 ? 'h6' : 'b4'} means Column {missionStep === 0 ? 'd' : missionStep === 1 ? 'h' : 'b'}, Row {missionStep === 0 ? '2' : missionStep === 1 ? '6' : '4'}
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px', gap: '8px' }}>
-                    <button className="chip" style={{ padding: '10px 20px', fontSize: '14px', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => { if (missionStep > 0) setMissionStep(s => s - 1); else setCoStage(1); }}>← Back</button>
                   </div>
                 </div>
               )}
 
-              {/* STAGE 3 */}
-              {coStage === 3 && (
-                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, animation: 'fadeIn 0.3s', minHeight: 0 }}>
-                  <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: '6px', minHeight: 0 }}>
-                    {renderChessboard({ showPieces: true, arrow: { from: 'd2', to: 'd4' } })}
-                  </div>
-                  <div className="readout" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#0E3556', marginBottom: '12px' }}>How Do Chess Players Write Their Moves?</div>
-                    
-                    <div style={{ fontSize: '15px', color: '#5c6b7a', lineHeight: 1.5, marginBottom: '12px' }}>
-                      Instead of drawing the move, players simply write <b style={{ color: '#0E3556' }}>d2 → d4</b>.
-                    </div>
-                    <div style={{ fontSize: '14px', color: '#5c6b7a', lineHeight: 1.5 }}>
-                      This tells us exactly <b>where the piece started</b> and <b>where it moved</b>.
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px', gap: '8px' }}>
-                    <button className="chip" style={{ padding: '10px 20px', fontSize: '14px', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setCoStage(2)}>← Back</button>
-                    <button className="chip active" style={{ padding: '10px 20px', fontSize: '14px', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setCoStage(4)}>How Does This Help Us Read Maps? →</button>
-                  </div>
-                </div>
-              )}
-
-
-
-              {/* STAGE 4 */}
-              {coStage === 4 && (
+              {/* STAGE 3 (Completion) */}
+              {theatreStep === 2 && (
                 <div style={{ display: 'flex', flexDirection: 'column', flex: 1, animation: 'fadeIn 0.3s', minHeight: 0, justifyContent: 'center' }}>
                   <div style={{ fontSize: '20px', fontWeight: 900, color: '#0E3556', textAlign: 'center', marginTop: '10px', marginBottom: '16px' }}>How Does This Help Us Read Maps?</div>
                   
                   <div style={{ display: 'flex', gap: '16px', flex: 1, minHeight: 0 }}>
                     <div style={{ flex: 1, background: '#f4f7fb', borderRadius: '16px', border: '1px solid #e4ebf3', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                      <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#0E3556', marginBottom: '16px' }}>Chess</div>
+                      <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#0E3556', marginBottom: '16px' }}>Theatre</div>
                       <div style={{ display: 'flex', gap: '12px', alignItems: 'center', fontWeight: 'bold', color: '#5c6b7a', fontSize: '14px' }}>
-                        <span>Column</span>
-                        <span style={{ color: '#9fbdd8' }}>+</span>
                         <span>Row</span>
+                        <span style={{ color: '#9fbdd8' }}>+</span>
+                        <span>Seat No.</span>
                       </div>
                       <div style={{ fontSize: '20px', color: '#9fbdd8', margin: '8px 0' }}>↓</div>
-                      <div style={{ fontSize: '24px', fontWeight: 900, color: '#F5A623' }}>d4</div>
+                      <div style={{ fontSize: '24px', fontWeight: 900, color: '#F5A623' }}>Seat</div>
                     </div>
 
                     <div style={{ flex: 1, background: '#f4f7fb', borderRadius: '16px', border: '1px solid #e4ebf3', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                       <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#0E3556', marginBottom: '16px' }}>Maps</div>
                       <div style={{ display: 'flex', gap: '12px', alignItems: 'center', fontWeight: 'bold', color: '#5c6b7a', fontSize: '14px' }}>
-                        <span>Longitude</span>
-                        <span style={{ color: '#9fbdd8' }}>+</span>
                         <span>Latitude</span>
+                        <span style={{ color: '#9fbdd8' }}>+</span>
+                        <span>Longitude</span>
                       </div>
                       <div style={{ fontSize: '20px', color: '#9fbdd8', margin: '8px 0' }}>↓</div>
                       <div style={{ fontSize: '24px', fontWeight: 900, color: '#1877a8' }}>Location</div>
@@ -833,7 +925,7 @@ export default function CoordinatesPage({ onNextActivity }) {
 
                   <div className="readout" style={{ marginTop: '16px', textAlign: 'center', padding: '12px 16px' }}>
                     <div style={{ fontSize: '15px', color: '#0E3556', lineHeight: 1.5 }}>
-                      Chess uses <b>letters and numbers</b> to locate a square.<br/>
+                      Theatres use <b>rows and seat numbers</b> to locate a seat.<br/>
                       Maps use <b>latitude and longitude</b> to locate places on Earth.<br/>
                       <span style={{ color: '#1877a8', fontWeight: 'bold', display: 'block', marginTop: '8px', fontSize: '16px' }}>Both use coordinates to find an exact location.</span>
                     </div>
@@ -849,7 +941,7 @@ export default function CoordinatesPage({ onNextActivity }) {
                     </div>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px', gap: '8px' }}>
-                    <button className="chip" style={{ padding: '12px 24px', fontSize: '16px', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setCoStage(3)}>← Back</button>
+                    <button className="chip" style={{ padding: '12px 24px', fontSize: '16px', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setTheatreStep(1)}>← Back</button>
                     <button className="chip active" style={{ padding: '12px 24px', fontSize: '16px', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setActiveTab('lat')}>
                       Continue → Latitude & Longitude
                     </button>

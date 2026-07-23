@@ -10,7 +10,9 @@ const PageLayout = ({
   featuresTitle, features, 
   colorsTitle, colors, 
   whyUseTitle, whyUse, 
-  remember, funFact 
+  remember, funFact,
+  imageAspectRatio = '1/1',
+  imageScale = 1
 }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
 
@@ -19,32 +21,31 @@ const PageLayout = ({
       <div style={{ display: 'flex', width: '100%', height: '100%', padding: '0', boxSizing: 'border-box' }}>
       
       {/* Left Page (Text & New Sections) */}
-      <div className="left-page-scroll" style={{ flex: 1, padding: '2rem 3rem 2rem 3rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', borderRight: '1px solid rgba(0,0,0,0.08)', overflowY: 'auto', overflowX: 'hidden' }}>
+      <div className="left-page-scroll" style={{ flex: 1, padding: '1.5rem 2rem 1.5rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', borderRight: '1px solid rgba(0,0,0,0.08)', overflowY: 'auto', overflowX: 'hidden' }}>
         
         {/* Header */}
-        <div style={{ fontSize: '11px', color: '#7c5cff', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', marginBottom: '8px', fontFamily: '"IBM Plex Mono", monospace' }}>
+        <div style={{ fontSize: '10px', color: '#7c5cff', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', marginBottom: '6px', fontFamily: '"IBM Plex Mono", monospace' }}>
           Chapter 1 • Atlas Introduction
         </div>
-        <h2 style={{ fontSize: '2.8rem', color: '#1e3a8a', margin: '0 0 0.5rem 0', fontFamily: 'serif' }}>{title}</h2>
-        <div style={{ fontSize: '1.2rem', color: '#64748b', marginBottom: '1.8rem', fontWeight: 500 }}>{subtitle}</div>
-
+        <h2 style={{ fontSize: '2.2rem', color: '#1e3a8a', margin: '0 0 0.3rem 0', fontFamily: 'serif' }}>{title}</h2>
+        <div style={{ fontSize: '1rem', color: '#64748b', marginBottom: '1.2rem', fontWeight: 500 }}>{subtitle}</div>
 
         {/* What is it? */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.5rem', color: '#1e3a8a', marginBottom: '0.8rem', fontFamily: 'serif', marginTop: 0 }}>{whatIsTitle}</h3>
-          {whatIs.map((p, i) => <p key={i} style={{ margin: '0 0 0.8rem 0', color: '#334155', fontSize: '1.1rem', lineHeight: 1.6 }}>{p}</p>)}
+        <div style={{ marginBottom: '1.2rem' }}>
+          <h3 style={{ fontSize: '1.2rem', color: '#1e3a8a', marginBottom: '0.5rem', fontFamily: 'serif', marginTop: 0 }}>{whatIsTitle}</h3>
+          {whatIs.map((p, i) => <p key={i} style={{ margin: '0 0 0.5rem 0', color: '#334155', fontSize: '0.95rem', lineHeight: 1.5 }}>{p}</p>)}
         </div>
 
         {/* Natural Features */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '14px', padding: '1.5rem', marginBottom: '2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-          <h3 style={{ fontSize: '1.3rem', color: '#0f172a', marginBottom: '1.2rem', marginTop: 0 }}>{featuresTitle}</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.2rem' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1.2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+          <h3 style={{ fontSize: '1.1rem', color: '#0f172a', marginBottom: '0.8rem', marginTop: 0 }}>{featuresTitle}</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
             {features.map((f, i) => (
-              <div key={i} style={{ display: 'flex', gap: '10px' }}>
-                <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>{f.icon}</div>
+              <div key={i} style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ fontSize: '1.2rem', lineHeight: 1 }}>{f.icon}</div>
                 <div>
-                  <div style={{ fontWeight: 'bold', color: '#1e3a8a', fontSize: '1rem', marginBottom: '2px' }}>{f.title}</div>
-                  <div style={{ fontSize: '0.9rem', color: '#475569', lineHeight: 1.3 }}>{f.desc}</div>
+                  <div style={{ fontWeight: 'bold', color: '#1e3a8a', fontSize: '0.9rem', marginBottom: '2px' }}>{f.title}</div>
+                  <div style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.2 }}>{f.desc}</div>
                 </div>
               </div>
             ))}
@@ -52,56 +53,56 @@ const PageLayout = ({
         </div>
 
         {/* Colors */}
-        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '14px', padding: '1.5rem', marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.3rem', color: '#0f172a', marginBottom: '1.2rem', marginTop: 0 }}>{colorsTitle}</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1.2rem' }}>
+          <h3 style={{ fontSize: '1.1rem', color: '#0f172a', marginBottom: '0.8rem', marginTop: 0 }}>{colorsTitle}</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {colors.map((c, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '1.2rem' }}>{c.color}</span>
-                <span style={{ fontSize: '1rem', color: '#334155', fontWeight: 500 }}>{c.desc}</span>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1rem' }}>{c.color}</span>
+                <span style={{ fontSize: '0.9rem', color: '#334155', fontWeight: 500 }}>{c.desc}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Why Use */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.5rem', color: '#1e3a8a', marginBottom: '1.2rem', fontFamily: 'serif', marginTop: 0 }}>{whyUseTitle}</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+        <div style={{ marginBottom: '1.2rem' }}>
+          <h3 style={{ fontSize: '1.2rem', color: '#1e3a8a', marginBottom: '0.8rem', fontFamily: 'serif', marginTop: 0 }}>{whyUseTitle}</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {whyUse.map((w, i) => (
-              <div key={i} style={{ background: '#f1f5f9', padding: '12px 16px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '1.2rem' }}>{w.icon}</span>
-                <span style={{ fontSize: '1rem', color: '#1e293b', fontWeight: 500 }}>{w.desc}</span>
+              <div key={i} style={{ background: '#f1f5f9', padding: '8px 12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '1rem' }}>{w.icon}</span>
+                <span style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: 500 }}>{w.desc}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Remember */}
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', padding: '1.5rem', borderRadius: '14px', marginBottom: '1.5rem' }}>
-          <h4 style={{ color: '#059669', margin: '0 0 10px 0', fontSize: '1.2rem' }}>Remember</h4>
-          {remember.map((r, i) => <p key={i} style={{ margin: '0 0 6px 0', color: '#064e3b', fontSize: '1.05rem', fontWeight: 500 }}>{r}</p>)}
+        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', padding: '1rem', borderRadius: '10px', marginBottom: '1.2rem' }}>
+          <h4 style={{ color: '#059669', margin: '0 0 6px 0', fontSize: '1rem' }}>Remember</h4>
+          {remember.map((r, i) => <p key={i} style={{ margin: '0 0 4px 0', color: '#064e3b', fontSize: '0.9rem', fontWeight: 500 }}>{r}</p>)}
         </div>
 
         {/* Fun Fact */}
-        <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '1.25rem 1.5rem', borderRadius: '14px' }}>
-          <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#2563eb', margin: '0 0 8px 0', fontSize: '1.05rem' }}>
-            <Lightbulb size={18} /> Did You Know?
+        <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '1rem', borderRadius: '10px', marginBottom: '1rem' }}>
+          <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#2563eb', margin: '0 0 6px 0', fontSize: '0.95rem' }}>
+            <Lightbulb size={16} /> Did You Know?
           </h4>
-          <p style={{ margin: 0, color: '#1e3a8a', fontSize: '1rem', lineHeight: 1.5 }}>{funFact}</p>
+          <p style={{ margin: 0, color: '#1e3a8a', fontSize: '0.85rem', lineHeight: 1.4 }}>{funFact}</p>
         </div>
 
       </div>
 
       {/* Right Page (Image Activity) */}
-      <div style={{ flex: 1, padding: '2rem 3rem 4.5rem 3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ flex: 1, padding: '1.5rem 2rem 1.5rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <div 
           onClick={() => setIsImageOpen(true)}
-          style={{ cursor: 'pointer', width: '100%', aspectRatio: '1/1', position: 'relative', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', transition: 'transform 0.2s' }}
+          style={{ cursor: 'pointer', width: '100%', aspectRatio: imageAspectRatio, position: 'relative', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', transition: 'transform 0.2s' }}
           onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
           onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
-           <img src={imageSrc} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+           <img src={imageSrc} alt={title} style={{ width: '100%', height: '100%', objectFit: 'contain', transform: `scale(${imageScale})` }} />
         </div>
         <span style={{ marginTop: '0.75rem', color: '#64748b', fontSize: '0.85rem', fontStyle: 'italic' }}>
           Click the image to expand

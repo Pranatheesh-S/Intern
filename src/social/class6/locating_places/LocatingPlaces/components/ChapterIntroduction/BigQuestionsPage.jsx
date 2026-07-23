@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Map, MapPin, Clock, Compass, Globe2, ChevronDown, ChevronRight } from 'lucide-react';
-import bigQuestionsImg from './assets/big-questions.png';
+import bigQuestionsImg from './assets/big-questions-new.png';
 
 export default function BigQuestionsPage({ onMissionUnlock, onBeginChapter }) {
   const [discoveredCards, setDiscoveredCards] = useState([]);
@@ -68,24 +68,24 @@ export default function BigQuestionsPage({ onMissionUnlock, onBeginChapter }) {
   return (
     <div style={{ display: 'flex', width: '100%', height: '100%' }}>
       {/* LEFT PAGE */}
-      <div style={{ flex: 1, padding: 'clamp(20px, 2.6vw, 42px) clamp(20px, 2.6vw, 42px) 16px clamp(20px, 2.6vw, 42px)', display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)', position: 'relative' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)', position: 'relative' }}>
         
         {/* Subtle decorative elements */}
         <Compass size={120} color="#cbd5e1" style={{ position: 'absolute', top: '10%', right: '5%', opacity: 0.15, pointerEvents: 'none' }} />
         <Globe2 size={150} color="#cbd5e1" style={{ position: 'absolute', bottom: '5%', left: '-5%', opacity: 0.15, pointerEvents: 'none' }} />
 
-        <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 3.2rem)', color: '#1e3a8a', marginBottom: 'clamp(0.5rem, 1vh, 0.5rem)', fontFamily: 'serif', fontWeight: 'bold' }}>
-          Big Questions
-        </h2>
+        <div style={{ padding: 'clamp(20px, 2.6vw, 42px) clamp(20px, 2.6vw, 42px) 16px clamp(20px, 2.6vw, 42px)', zIndex: 1 }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 3.2rem)', color: '#1e3a8a', marginBottom: 'clamp(0.5rem, 1vh, 0.5rem)', fontFamily: 'serif', fontWeight: 'bold' }}>
+            Big Questions
+          </h2>
+          
+          <p style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)', color: '#334155', lineHeight: 1.5, margin: 0 }}>
+            Every journey begins with a few important questions. In this chapter, you will explore how maps help us locate places, understand coordinates, and explain time across the Earth.
+          </p>
+        </div>
         
-        <p style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)', color: '#334155', lineHeight: 1.5, marginBottom: 'clamp(1rem, 2vh, 1.5rem)', zIndex: 1 }}>
-          Every journey begins with a few important questions. In this chapter, you will explore how maps help us locate places, understand coordinates, and explain time across the Earth.
-        </p>
-        
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, minHeight: 0 }}>
-          <div style={{ background: '#f8fafc', padding: 'clamp(1rem, 2vh, 2rem)', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', width: '90%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <img src={bigQuestionsImg} alt="Big Questions Illustration" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '8px' }} />
-          </div>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, minHeight: 0, padding: '0 16px 24px 16px', width: '100%', boxSizing: 'border-box' }}>
+          <img src={bigQuestionsImg} alt="Big Questions Illustration" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 12px 30px rgba(0,0,0,0.15))' }} />
         </div>
       </div>
 
