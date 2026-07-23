@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnetic Compass Simulation</title>
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --text-color: #f8fafc;
+    --bowl-border: rgba(255, 255, 255, 0.2);
+    --water-top: rgba(56, 189, 248, 0.6);
+    --water-bottom: rgba(37, 99, 235, 0.8);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top, #1e293b, var(--bg-color));
+    color: var(--text-color);
+    font-family: 'Inter', -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  header {
+    text-align: center;
+    margin-top: 40px;
+    z-index: 100;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    background: linear-gradient(to right, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+  }
+
+  p.subtitle {
+    color: #94a3b8;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 10px auto 20px;
+    line-height: 1.5;
+  }
+
+  .interaction-hint {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 24px;
+    border-radius: 30px;
+    backdrop-filter: blur(4px);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    animation: pulse-glow 2s infinite;
+  }
+  
+  .interaction-hint:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(56, 189, 248, 0.6); }
+  }
+
+  .icon-click {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  .simulation-area {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .scene {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+  }
+
+  /* 2D background part of the bowl (Glass Body) */
+  .bowl-body-2d {
+    position: absolute;
+    top: 250px;
+    left: 50px;
+    width: 400px;
+    height: 200px;
+    border-radius: 0 0 200px 200px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+    box-shadow: 
+      inset -10px -20px 40px rgba(0,0,0,0.6), 
+      inset 10px 0 30px rgba(255,255,255,0.1),
+      0 40px 50px rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid var(--bowl-border);
+    border-top: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  /* Glass reflection */
+  .bowl-body-2d::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0) 100%);
+    transform: rotate(20deg) translateX(-20%);
+    pointer-events: none;
+  }
+
+  /* 3D World plane */
+  .world {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 400px;
+    height: 400px;
+    transform-style: preserve-3d;
+    transform: rotateX(60deg); /* Isometric tilt */
+    z-index: 2;
+  }
+
+  /* Water in the bowl */
+  .water {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.6) 0%, rgba(37, 99, 235, 0.8) 70%, rgba(30, 64, 175, 0.9) 100%);
+    box-shadow: 
+      inset 0 0 30px rgba(255,255,255,0.4),
+      inset -10px -10px 50px rgba(0,0,0,0.4);
+    transform: translateZ(-15px); /* slightly below rim */
+    transform-style: preserve-3d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .water::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+  }
+
+  /* Water reflections / ripples container */
+  .water-surface {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    transform: translateZ(0);
+  }
+
+  .ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.6);
+    transform: translate(-50%, -50%);
+    animation: ripple-anim 2.5s ease-out forwards;
+    pointer-events: none;
+  }
+  
+  @keyframes ripple-anim {
+    0% {
+      width: 120px;
+      height: 120px;
+      opacity: 0.8;
+      border-width: 4px;
+    }
+    100% {
+      width: 380px;
+      height: 380px;
+      opacity: 0;
+      border-width: 1px;
+    }
+  }
+
+  /* Bobbing animation wrapper */
+  .bobbing {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform-style: preserve-3d;
+    animation: bob 4s ease-in-out infinite;
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateZ(-15px); }
+    50% { transform: translateZ(-11px); }
+  }
+
+  /* Floating object assembly (cork + needle) */
+  .floating-assembly {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-style: preserve-3d;
+    transform: rotateZ(0deg); /* Initial rotation */
+    transition: transform 2.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+  }
+  
+  .floating-assembly:hover .cork-slice:last-child {
+    filter: brightness(120%) !important;
+  }
+
+  /* Shadow of cork on water */
+  .cork-shadow {
+    position: absolute;
+    top: -65px;
+    left: -65px;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    filter: blur(8px);
+    transform: translateZ(-5px);
+  }
+
+  /* Slices for the 3D Cork */
+  .cork-slice {
+    position: absolute;
+    top: -60px;
+    left: -60px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #d49a6a;
+    transform-style: preserve-3d;
+    transition: filter 0.3s;
+  }
+
+  /* Texture for the top and bottom of the cork */
+  .cork-texture {
+    background-image: 
+      radial-gradient(circle at 20% 30%, #8b5329 2px, transparent 3px),
+      radial-gradient(circle at 70% 60%, #6e3d1a 1.5px, transparent 2px),
+      radial-gradient(circle at 40% 80%, #5c3010 1px, transparent 1.5px),
+      radial-gradient(circle at 80% 20%, #8b5329 2px, transparent 3px),
+      radial-gradient(circle at 50% 50%, #c98a5c 100%, transparent 100%);
+    background-color: #d49a6a;
+  }
+
+  /* Needle Base */
+  .needle-slice {
+    position: absolute;
+    top: -10px;
+    left: -140px;
+    width: 280px;
+    height: 20px;
+    background: linear-gradient(to right, #ef4444 50%, #3b82f6 50%);
+    clip-path: polygon(0% 50%, 10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%);
+    transform-style: preserve-3d;
+  }
+
+  /* Silver pivot pin in center of needle */
+  .needle-slice::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    margin-left: -4px;
+    background: radial-gradient(circle at 30% 30%, #fff, #94a3b8);
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  /* Needle markings */
+  .needle-label {
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    line-height: 20px;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  }
+  .needle-n { left: 30px; }
+  .needle-s { right: 30px; }
+
+  /* Bowl Rim (3D Circle) */
+  .rim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    border: 8px solid rgba(255, 255, 255, 0.15);
+    border-top: 8px solid rgba(255, 255, 255, 0.4);
+    border-bottom: 8px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 
+      inset 0 10px 20px rgba(255,255,255,0.4),
+      0 5px 15px rgba(0,0,0,0.3);
+    transform: translateZ(0);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Compass Directions around the bowl */
+  .cardinal {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6), 0 0 10px rgba(56, 189, 248, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateZ(1px); /* just above rim */
+  }
+  
+  /* Positions for Cardinals */
+  .cardinal-N { top: -35px; left: 185px; }
+  .cardinal-E { top: 185px; left: 405px; }
+  .cardinal-S { top: 405px; left: 185px; }
+  .cardinal-W { top: 185px; left: -35px; }
+
+</style>
+</head>
+<body>
+
+  <header>
+    <h1>Magnetic Compass Simulation</h1>
+    <p class="subtitle">Click the cork to disturb it. Watch how the magnetized needle naturally aligns itself in the North-South direction as it floats freely on the water surface.</p>
+    
+    <button class="interaction-hint" onclick="disturbCompass()" title="Click to rotate the cork">
+      <svg class="icon-click" viewBox="0 0 24 24">
+        <path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.21 0-.62-.35-1.17-.89-1.42z"/>
+      </svg>
+      Tap Cork to Disturb
+    </button>
+  </header>
+
+  <div class="simulation-area">
+    <div class="scene">
+      <div class="bowl-body-2d"></div>
+      
+      <div class="world">
+        <div class="water">
+          <div class="water-surface">
+            <!-- Ripples injected here -->
+          </div>
+        </div>
+        
+        <div class="rim"></div>
+
+        <div class="cardinal cardinal-N">N</div>
+        <div class="cardinal cardinal-E">E</div>
+        <div class="cardinal cardinal-S">S</div>
+        <div class="cardinal cardinal-W">W</div>
+
+        <div class="bobbing">
+          <div class="floating-assembly" id="assembly" onclick="disturbCompass()">
+            <div class="cork-shadow"></div>
+            <!-- Cork and needle slices injected here by JS -->
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Build the 3D Cork and Needle
+  const assembly = document.getElementById('assembly');
+  const CORK_SLICES = 40;
+  const NEEDLE_Z = 20; // Z-position of the needle inside the cork
+  
+  // 1. Bottom slices of cork
+  for(let i = 0; i < NEEDLE_Z; i++) {
+    createCorkSlice(i);
+  }
+
+  // 2. Needle slices (give it some 3D thickness)
+  for(let i = 0; i < 2; i++) {
+    const needle = document.createElement('div');
+    needle.className = 'needle-slice';
+    // Rotate needle -90deg so its left side (North) points to -Y (cardinal-N)
+    needle.style.transform = `translateZ(${NEEDLE_Z + i}px) rotateZ(-90deg)`;
+    
+    // Add N and S labels to the top slice of the needle
+    if (i === 1) {
+      const nLabel = document.createElement('div');
+      nLabel.className = 'needle-label needle-n';
+      nLabel.innerText = 'N';
+      nLabel.style.transform = 'rotateZ(90deg)'; // Counter-rotate to stay upright
+      
+      const sLabel = document.createElement('div');
+      sLabel.className = 'needle-label needle-s';
+      sLabel.innerText = 'S';
+      sLabel.style.transform = 'rotateZ(90deg)';
+      
+      needle.appendChild(nLabel);
+      needle.appendChild(sLabel);
+    }
+    
+    assembly.appendChild(needle);
+  }
+
+  // 3. Top slices of cork
+  for(let i = NEEDLE_Z + 2; i <= CORK_SLICES; i++) {
+    createCorkSlice(i);
+  }
+
+  function createCorkSlice(z) {
+    const slice = document.createElement('div');
+    slice.className = 'cork-slice';
+    
+    // Calculate lighting/shading (darker at bottom, lighter at top)
+    let brightness = 80 + (z / CORK_SLICES) * 30;
+    
+    // Top and bottom slices get the detailed cork texture
+    if (z === 0 || z === CORK_SLICES) {
+      slice.classList.add('cork-texture');
+      brightness = 110;
+      if (z === CORK_SLICES) {
+        slice.style.border = '1px solid rgba(0,0,0,0.2)';
+      }
+    }
+    
+    slice.style.transform = `translateZ(${z}px)`;
+    slice.style.filter = `brightness(${brightness}%)`;
+    assembly.appendChild(slice);
+  }
+
+  // --- Interaction Logic ---
+  let currentRotation = 0; // Natural resting state (North = 0)
+  let isDisturbed = false;
+
+  function disturbCompass() {
+    if(isDisturbed) return;
+    isDisturbed = true;
+    
+    // Create disturbance ripple
+    createRipple();
+
+    // Random rotation between 120 and 240 degrees
+    const disturbance = Math.floor(Math.random() * 120) + 120;
+    const direction = Math.random() > 0.5 ? 1 : -1;
+    const initialSpin = currentRotation + (disturbance * direction);
+    
+    // Phase 1: Fast spin away from North
+    assembly.style.transition = 'transform 1s cubic-bezier(0.2, 0.8, 0.3, 1)';
+    assembly.style.transform = `rotateZ(${initialSpin}deg)`;
+    
+    setTimeout(() => {
+      // Phase 2: Settle back to North (0) with realistic magnetic oscillation
+      assembly.style.transition = 'transform 4s cubic-bezier(0.34, 1.56, 0.2, 1)';
+      
+      // Calculate nearest multiple of 360 to smoothly return without unwinding
+      const targetRotation = Math.round(initialSpin / 360) * 360;
+      currentRotation = targetRotation;
+      
+      assembly.style.transform = `rotateZ(${currentRotation}deg)`;
+      
+      setTimeout(() => {
+        isDisturbed = false;
+      }, 4000);
+      
+    }, 1000); // Wait for spin-away to finish
+  }
+  
+  function createRipple() {
+    const surface = document.querySelector('.water-surface');
+    const ripple = document.createElement('div');
+    ripple.className = 'ripple';
+    surface.appendChild(ripple);
+    
+    // Add a secondary delayed ripple for realism
+    setTimeout(() => {
+      const ripple2 = document.createElement('div');
+      ripple2.className = 'ripple';
+      surface.appendChild(ripple2);
+      setTimeout(() => ripple2.remove(), 2500);
+    }, 400);
+
+    setTimeout(() => ripple.remove(), 2500);
+  }
+
+  // Trigger an initial small ripple on load
+  setTimeout(createRipple, 500);
+
+</script>
+</body>
+</html>
