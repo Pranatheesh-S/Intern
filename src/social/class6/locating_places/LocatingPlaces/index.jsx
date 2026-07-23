@@ -9,9 +9,11 @@ import BlueprintIntro from './components/BlueprintIntro';
 import MapSymbols from './components/MapSymbols';
 import CoordinatesPage from './components/CoordinatesPage';
 import TimeZonesPage from './components/TimeZonesPage';
+import ExploreIndiaActivity from './components/LostInTheCity/ExploreIndiaActivity';
 
 export default function LocatingPlacesActivity({ onBackToDashboard }) {
   const [currentStep, setCurrentStep] = useState(1);
+  const [subStep5, setSubStep5] = useState(0);
   const [showIntro, setShowIntro] = useState(true);
   const navRef = useRef(null);
 
@@ -61,7 +63,10 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
               key={tab.id}
               data-active={isActive}
               onClick={() => {
-                if (!tab.locked) setCurrentStep(tab.id);
+                if (!tab.locked) {
+                  setCurrentStep(tab.id);
+                  if (tab.id === 5) setSubStep5(0);
+                }
               }}
               disabled={tab.locked}
               style={{
@@ -112,8 +117,16 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
         {currentStep === 4 && (
           <DistanceAndScale onComplete={() => setCurrentStep(5)} />
         )}
-        {currentStep === 5 && (
-          <Directions onComplete={() => setCurrentStep(6)} />
+        {currentStep === 5 && subStep5 === 0 && (
+          <Directions onComplete={() => setSubStep5(1)} />
+        )}
+        {currentStep === 5 && subStep5 === 1 && (
+          <div style={{ flex: 1, height: '100%', minHeight: 0, position: 'relative' }}>
+            <ExploreIndiaActivity 
+              onBeginChapter={() => { setSubStep5(0); setCurrentStep(6); }} 
+              onBack={() => setSubStep5(0)} 
+            />
+          </div>
         )}
         {currentStep === 6 && (
           <MapSymbols onComplete={() => setCurrentStep(7)} />
