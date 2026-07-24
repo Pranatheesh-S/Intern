@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, User, GraduationCap, Check, RefreshCw } from 'lucide-react';
+import classroomBg from '../images/stage1_classroom_v2.png';
 
 export default function Stage1_Intro({ onComplete, addXp }) {
   const [clickedObjects, setClickedObjects] = useState({});
@@ -14,42 +15,42 @@ export default function Stage1_Intro({ onComplete, addXp }) {
       name: 'Notebook', 
       material: 'Paper', 
       desc: 'Used for writing, made of sheets of paper bound together.',
-      pos: { bottom: '25%', left: '48%' }
+      pos: { top: '65%', left: '38%' }
     },
     { 
       id: 'pen', 
       name: 'Pen', 
       material: 'Plastic & Metal', 
       desc: 'Used for writing, combines a plastic barrel, metal tip, and ink.',
-      pos: { bottom: '25%', left: '55%' }
+      pos: { top: '66%', left: '53%' }
     },
     { 
       id: 'desk', 
       name: 'Wooden Desk', 
       material: 'Wood', 
       desc: 'Provides a sturdy writing surface, made of processed wood.',
-      pos: { bottom: '5%', left: '40%' }
+      pos: { top: '74%', left: '65%' }
     },
     { 
       id: 'window', 
       name: 'Window Pane', 
       material: 'Glass', 
       desc: 'Allows light to enter, made of transparent glass.',
-      pos: { top: '10%', right: '8%' }
+      pos: { top: '32%', left: '15%' }
     },
     { 
       id: 'bottle', 
       name: 'Water Bottle', 
       material: 'Metal (Stainless Steel)', 
       desc: 'Keeps water cool and safe, made of durable metal.',
-      pos: { bottom: '25%', left: '60%' }
+      pos: { top: '55%', left: '69%' }
     },
     { 
       id: 'cushion', 
       name: 'Chair Cushion', 
       material: 'Cloth / Fabric', 
       desc: 'Provides comfort on seats, made of soft fabric.',
-      pos: { bottom: '5%', left: '65%' }
+      pos: { bottom: '0%', left: '40%' }
     }
   ];
 
@@ -81,12 +82,12 @@ export default function Stage1_Intro({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%', height: '100%' }}>
       <style>{`
         :root {
-          --classroom-bg: linear-gradient(to bottom, #e2e8f0 0%, #f1f5f9 100%);
-          --classroom-border: 2px dashed #94a3b8;
+          --classroom-bg: url('${classroomBg}');
+          --classroom-border: 2px solid #94a3b8;
         }
         [data-theme="dark"] {
-          --classroom-bg: linear-gradient(to bottom, #0f172a 0%, #1e293b 100%);
-          --classroom-border: 2px dashed var(--accent);
+          --classroom-bg: url('${classroomBg}');
+          --classroom-border: 2px solid var(--accent);
         }
         .interactive-container {
           position: absolute;
@@ -102,24 +103,55 @@ export default function Stage1_Intro({ onComplete, addXp }) {
           transition: opacity 0.2s ease-in-out;
           pointer-events: none;
           z-index: 30;
+          position: absolute;
+          top: -35px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0,0,0,0.85);
+          color: #fff;
+          font-size: 0.85rem;
+          font-weight: bold;
+          padding: 0.3rem 0.6rem;
+          border-radius: 6px;
+          white-space: nowrap;
         }
         .interactive-container.clicked .interactive-label {
           opacity: 1;
         }
+        .hotspot-dot {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: rgba(16, 185, 129, 0.8);
+          border: 2px solid white;
+          box-shadow: 0 0 15px rgba(16, 185, 129, 0.9);
+          animation: pulse 2s infinite;
+        }
+        .interactive-container.clicked .hotspot-dot {
+          background: rgba(245, 158, 11, 0.9);
+          border-color: #fff;
+          box-shadow: 0 0 20px rgba(245, 158, 11, 0.9);
+          animation: none;
+        }
+        @keyframes pulse {
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+          70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
       `}</style>
 
       {/* Interactive Classroom Scene */}
-      <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: '380px', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', background: 'var(--classroom-bg)' }}>
+      <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: '450px', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', backgroundImage: 'var(--classroom-bg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           
-          {/* Classroom Chalkboard */}
-          <div style={{ position: 'absolute', top: '8%', left: '5%', width: '38%', height: '50%', minHeight: '150px', border: 'clamp(4px, 0.8vw, 12px) solid #4b5563', background: '#064e3b', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', boxShadow: 'inset 0 4px 15px rgba(0,0,0,0.7)', zIndex: 15 }}>
+          {/* Classroom Chalkboard Text Overlay */}
+          <div style={{ position: 'absolute', top: '5%', right: '10%', width: '45%', height: '35%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 15 }}>
             {completed ? (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', textAlign: 'center' }}>
-                <span style={{ fontFamily: 'Arial, sans-serif', color: '#6ee7b7', fontSize: 'clamp(1rem, 1.5vw, 2.5rem)', fontWeight: 'bold' }}>All Objects Identified!</span>
-                <span style={{ fontFamily: 'Arial, sans-serif', color: '#fcd34d', fontSize: 'clamp(0.8rem, 1vw, 1.8rem)' }}>Click "Proceed to next" in the top right to continue!</span>
+                <span style={{ fontFamily: 'Georgia, serif', color: '#ffffff', fontSize: 'clamp(1rem, 1.5vw, 2.5rem)', fontWeight: 'bold' }}>All Objects Identified!</span>
+                <span style={{ fontFamily: 'Georgia, serif', color: '#fcd34d', fontSize: 'clamp(0.8rem, 1vw, 1.8rem)' }}>Click "Proceed to next" in the top right to continue!</span>
               </div>
             ) : (
-              <span style={{ fontFamily: 'Arial, sans-serif', color: '#a7f3d0', fontSize: 'clamp(0.9rem, 1.2vw, 2.2rem)', textAlign: 'center', lineHeight: '1.5' }}>
+              <span style={{ fontFamily: 'Georgia, serif', color: '#ffffff', fontSize: 'clamp(1rem, 1.3vw, 2.2rem)', textAlign: 'center', lineHeight: '1.5' }}>
                 Welcome back!<br/>
                 What is <strong style={{ color: '#fbbf24' }}>Material</strong>?<br/>
                 Click on the objects to scan.
@@ -127,145 +159,23 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             )}
           </div>
 
-          {/* Interactive Window Pane SVG */}
-          <div 
-            onClick={() => handleObjectClick('window')}
-            className={`interactive-container ${clickedObjects.window ? 'clicked' : ''}`}
-            style={{ 
-              ...classroomObjects.find(o => o.id === 'window').pos, 
-              cursor: 'pointer',
-              borderRadius: '6px',
-              border: clickedObjects.window ? '2px solid #10b981' : '2px dashed transparent',
-              boxShadow: clickedObjects.window ? '0 0 10px #10b981' : 'none',
-              transition: 'all 0.3s',
-              width: '12vw',
-              maxWidth: '180px',
-              minWidth: '80px'
-            }}
-          >
-            <svg viewBox="0 0 100 100" style={{ width: '100%', height: 'auto' }}>
-              <rect x="2" y="2" width="96" height="96" fill="rgba(56, 189, 248, 0.2)" stroke="#475569" strokeWidth="4" />
-              <line x1="50" y1="2" x2="50" y2="98" stroke="#475569" strokeWidth="4" />
-              <line x1="2" y1="50" x2="98" y2="50" stroke="#475569" strokeWidth="4" />
-              <path d="M15,10 L35,10 L10,35 L10,15 Z" fill="rgba(255,255,255,0.25)" />
-              <path d="M65,10 L85,10 L60,35 L60,15 Z" fill="rgba(255,255,255,0.25)" />
-            </svg>
-            <span className="interactive-label" style={{ position: 'absolute', top: '-28px', left: '15px', background: 'rgba(0,0,0,0.85)', color: '#fff', fontSize: '0.85rem', fontWeight: 'bold', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>Window Pane</span>
-          </div>
-
-          {/* DESK AREA CONTAINER - Groups all desk objects to scale and position proportionally */}
-          <div style={{ position: 'absolute', bottom: '2%', right: '2%', width: 'clamp(280px, 45%, 450px)', aspectRatio: '2.5', zIndex: 10 }}>
-            {/* Interactive Wooden Desk SVG */}
+          {/* Render Hotspot Dots */}
+          {classroomObjects.map(obj => (
             <div 
-              onClick={() => handleObjectClick('desk')}
-              className={`interactive-container ${clickedObjects.desk ? 'clicked' : ''}`}
+              key={obj.id}
+              onClick={() => handleObjectClick(obj.id)}
+              className={`interactive-container ${clickedObjects[obj.id] ? 'clicked' : ''}`}
               style={{ 
-                position: 'absolute', bottom: 0, left: 0, width: '75%',
+                ...obj.pos, 
                 cursor: 'pointer',
-                borderRadius: '6px',
-                border: clickedObjects.desk ? '2px solid #10b981' : '2px dashed transparent',
-                boxShadow: clickedObjects.desk ? '0 0 10px #10b981' : 'none',
-                transition: 'all 0.3s'
+                transition: 'all 0.3s',
+                zIndex: 20
               }}
             >
-              <svg viewBox="0 0 220 110" style={{ width: '100%', height: 'auto' }}>
-                <rect x="10" y="20" width="200" height="15" rx="3" fill="#78350f" stroke="#451a03" strokeWidth="1.5" />
-                <rect x="25" y="35" width="55" height="45" fill="#582007" />
-                <rect x="30" y="42" width="45" height="10" fill="#451a03" />
-                <circle cx="52" cy="47" r="2.5" fill="#f59e0b" />
-                <rect x="15" y="35" width="10" height="70" fill="#451a03" />
-                <rect x="195" y="35" width="10" height="70" fill="#451a03" />
-              </svg>
-              <span className="interactive-label" style={{ position: 'absolute', bottom: '-15px', left: '20%', background: 'rgba(0,0,0,0.85)', color: '#fff', fontSize: '0.85rem', fontWeight: 'bold', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>Wooden Desk</span>
+              <div className="hotspot-dot" />
+              <span className="interactive-label">{obj.name}</span>
             </div>
-
-            {/* Notebook (placed on Desk) */}
-            <div 
-              onClick={() => handleObjectClick('notebook')}
-              className={`interactive-container ${clickedObjects.notebook ? 'clicked' : ''}`}
-              style={{ 
-                position: 'absolute', bottom: '72%', left: '15%', width: '12%',
-                cursor: 'pointer', zIndex: 10, borderRadius: '4px',
-                border: clickedObjects.notebook ? '2px solid #10b981' : '2px dashed transparent',
-                boxShadow: clickedObjects.notebook ? '0 0 10px #10b981' : 'none',
-                transition: 'all 0.3s'
-              }}
-            >
-              <svg viewBox="0 0 40 35" style={{ width: '100%', height: 'auto' }}>
-                <rect x="5" y="2" width="30" height="30" rx="3" fill="#3b82f6" />
-                <path d="M5,2 L8,2 L8,32 L5,32 Z" fill="#2563eb" />
-                <line x1="10" y1="7" x2="30" y2="7" stroke="#fff" strokeWidth="1.5" />
-                <line x1="10" y1="12" x2="30" y2="12" stroke="#fff" strokeWidth="1.5" />
-                <line x1="10" y1="17" x2="30" y2="17" stroke="#fff" strokeWidth="1.5" />
-                <circle cx="4" cy="6" r="1.2" fill="#94a3b8" />
-                <circle cx="4" cy="12" r="1.2" fill="#94a3b8" />
-                <circle cx="4" cy="18" r="1.2" fill="#94a3b8" />
-              </svg>
-              <span className="interactive-label" style={{ position: 'absolute', top: '-30px', left: '-10px', background: 'rgba(0,0,0,0.85)', color: '#fff', fontSize: '0.85rem', fontWeight: 'bold', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>Notebook</span>
-            </div>
-
-            {/* Pen (placed on Desk) */}
-            <div 
-              onClick={() => handleObjectClick('pen')}
-              className={`interactive-container ${clickedObjects.pen ? 'clicked' : ''}`}
-              style={{ 
-                position: 'absolute', bottom: '72%', left: '32%', width: '10%',
-                cursor: 'pointer', zIndex: 11, borderRadius: '4px',
-                border: clickedObjects.pen ? '2px solid #10b981' : '2px dashed transparent',
-                boxShadow: clickedObjects.pen ? '0 0 10px #10b981' : 'none',
-                transition: 'all 0.3s'
-              }}
-            >
-              <svg viewBox="0 0 35 15" style={{ width: '100%', height: 'auto', transform: 'rotate(-10deg)' }}>
-                <rect x="2" y="5" width="22" height="5" rx="1" fill="#10b981" />
-                <polygon points="24,5 30,7.5 24,10" fill="#cbd5e1" />
-                <circle cx="30" cy="7.5" r="0.8" fill="#000" />
-              </svg>
-              <span className="interactive-label" style={{ position: 'absolute', top: '-30px', left: '0px', background: 'rgba(0,0,0,0.85)', color: '#fff', fontSize: '0.85rem', fontWeight: 'bold', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>Pen</span>
-            </div>
-
-            {/* Water Bottle (placed on Desk) */}
-            <div 
-              onClick={() => handleObjectClick('bottle')}
-              className={`interactive-container ${clickedObjects.bottle ? 'clicked' : ''}`}
-              style={{ 
-                position: 'absolute', bottom: '72%', left: '48%', width: '8%',
-                cursor: 'pointer', zIndex: 12, borderRadius: '4px',
-                border: clickedObjects.bottle ? '2px solid #10b981' : '2px dashed transparent',
-                boxShadow: clickedObjects.bottle ? '0 0 10px #10b981' : 'none',
-                transition: 'all 0.3s'
-              }}
-            >
-              <svg viewBox="0 0 25 50" style={{ width: '100%', height: 'auto' }}>
-                <rect x="3" y="15" width="19" height="32" rx="3" fill="#94a3b8" />
-                <rect x="5" y="17" width="3" height="28" fill="rgba(255,255,255,0.4)" rx="1" />
-                <rect x="6" y="8" width="13" height="7" fill="#64748b" />
-                <rect x="8" y="2" width="9" height="6" rx="1" fill="#475569" />
-              </svg>
-              <span className="interactive-label" style={{ position: 'absolute', top: '-30px', left: '-15px', background: 'rgba(0,0,0,0.85)', color: '#fff', fontSize: '0.85rem', fontWeight: 'bold', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>Water Bottle</span>
-            </div>
-
-            {/* Chair (with Cushion Seat) */}
-            <div 
-              onClick={() => handleObjectClick('cushion')}
-              className={`interactive-container ${clickedObjects.cushion ? 'clicked' : ''}`}
-              style={{ 
-                position: 'absolute', bottom: 0, right: '0%', width: '28%',
-                cursor: 'pointer', borderRadius: '6px',
-                border: clickedObjects.cushion ? '2px solid #10b981' : '2px dashed transparent',
-                boxShadow: clickedObjects.cushion ? '0 0 10px #10b981' : 'none',
-                transition: 'all 0.3s'
-              }}
-            >
-              <svg viewBox="0 0 90 120" style={{ width: '100%', height: 'auto' }}>
-                <rect x="25" y="10" width="40" height="40" rx="4" fill="#5c4033" stroke="#3d2b1f" strokeWidth="1.5" />
-                <ellipse cx="45" cy="55" rx="30" ry="12" fill="#d97706" stroke="#b45309" strokeWidth="2" />
-                <rect x="20" y="62" width="6" height="50" fill="#3d2b1f" />
-                <rect x="64" y="62" width="6" height="50" fill="#3d2b1f" />
-              </svg>
-              <span className="interactive-label" style={{ position: 'absolute', bottom: '-20px', left: '15px', background: 'rgba(0,0,0,0.85)', color: '#fff', fontSize: '0.85rem', fontWeight: 'bold', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>Chair Cushion</span>
-            </div>
-          </div>
+          ))}
 
           {/* Character Avatars */}
           <div style={{ position: 'absolute', bottom: '15px', left: '20px', zIndex: 20, display: 'flex', gap: '1rem', background: 'rgba(15,23,42,0.6)', padding: '0.4rem 0.8rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>

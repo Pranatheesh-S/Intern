@@ -59,6 +59,7 @@ const ForceExplorerActivity = lazy(() => import('./science/class8/chapter5/Force
 const MicroscopeDiscovery = lazy(() => import('./science/class6/chapter10/MicroscopeDiscovery'));
 const MaterialDetectiveActivity = lazy(() => import('./science/class6/chapter6/MaterialDetective'));
 const MaterialsAroundUsActivity = lazy(() => import('./science/class6/chapter6/MaterialsAroundUs'));
+const MaterialsAroundUsNewActivity = lazy(() => import('./science/class6/chapter6/MaterialsAroundUsNew'));
 const Activity4_1 = lazy(() => import('./science/class6/chapter4/Activity4_1'));
 const Activity4_6 = lazy(() => import('./science/class6/chapter4/Activity4_6'));
 const Activity4_7 = lazy(() => import('./science/class6/chapter4/Activity4_7'));
@@ -936,11 +937,11 @@ export default function App() {
         {/* Subheader Wing Navigation */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
           <button
-            onClick={handleBackToSubjects}
+            onClick={() => navigateTo('science_lab', null)}
             className="outline"
             style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
           >
-            <ArrowLeft size={14} /> Back to Dashboard
+            <ArrowLeft size={14} /> Back to Science Lab
           </button>
           <div>
             <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 6th Wing</h2>
@@ -997,18 +998,36 @@ export default function App() {
                                 : "Includes Activity 11.1: Nature's treasures & resource conservation."}
                   </p>
 
-                  <button 
-                    onClick={() => {
-                      if (chapter.num === 6) navigateTo('class6', 'materials_around_us');
-                      else if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
-                      else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
-                      else navigateTo('class6', `chapter${chapter.num}`);
-                    }}
-                    className="primary" 
-                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
-                  >
-                    Open Chapter <ArrowRight size={14} />
-                  </button>
+                  {chapter.num === 6 ? (
+                    <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
+                      <button 
+                        onClick={() => navigateTo('class6', 'materials_around_us')}
+                        className="outline" 
+                        style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                      >
+                        Old <ArrowRight size={14} />
+                      </button>
+                      <button 
+                        onClick={() => navigateTo('class6', 'materials_around_us_new')}
+                        className="primary" 
+                        style={{ flex: 1, gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                      >
+                        New <ArrowRight size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => {
+                        if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
+                        else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
+                        else navigateTo('class6', `chapter${chapter.num}`);
+                      }}
+                      className="primary" 
+                      style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                    >
+                      Open Chapter <ArrowRight size={14} />
+                    </button>
+                  )}
                 </div>
               );
             }
@@ -2181,11 +2200,11 @@ export default function App() {
         {/* Subheader Wing Navigation */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
           <button
-            onClick={handleBackToSubjects}
+            onClick={() => navigateTo('science_lab', null)}
             className="outline"
             style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
           >
-            <ArrowLeft size={14} /> Back to Dashboard
+            <ArrowLeft size={14} /> Back to Science Lab
           </button>
           <div>
             <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 7th Wing</h2>
@@ -2631,11 +2650,11 @@ export default function App() {
         {/* Subheader Wing Navigation */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
           <button
-            onClick={handleBackToSubjects}
+            onClick={() => navigateTo('science_lab', null)}
             className="outline"
             style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
           >
-            <ArrowLeft size={14} /> Back to Dashboard
+            <ArrowLeft size={14} /> Back to Science Lab
           </button>
           <div>
             <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Class 8th Wing</h2>
@@ -2744,11 +2763,11 @@ export default function App() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
         <button
-          onClick={handleBackToSubjects}
+          onClick={() => navigateTo('science_lab', null)}
           className="outline"
           style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', gap: '0.35rem' }}
         >
-          <ArrowLeft size={14} /> Back to Dashboard
+          <ArrowLeft size={14} /> Back to Science Lab
         </button>
         <div>
           <h2 style={{ margin: 0, fontSize: '1.25rem' }}>{subjectName} Wing</h2>
@@ -3031,6 +3050,8 @@ export default function App() {
             <MaterialDetectiveActivity onBackToDashboard={() => navigateTo('class6', 'chapter6')} />
           ) : activeActivity === 'materials_around_us' ? (
             <MaterialsAroundUsActivity onBackToDashboard={() => navigateTo('class6', null)} />
+          ) : activeActivity === 'materials_around_us_new' ? (
+            <MaterialsAroundUsNewActivity onBackToDashboard={() => navigateTo('class6', null)} />
           ) : activeActivity === 'chapter4' ? (
             renderClass6Chapter4()
           ) : activeActivity === 'chapter4_flow' ? (

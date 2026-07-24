@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldAlert, CheckCircle, ArrowRight, BookMarked, Award } from 'lucide-react';
+import { ShieldAlert, CheckCircle, ArrowRight, ArrowLeft, BookMarked, Award } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import useSound from 'use-sound';
 
-export default function ChiefDetective({ data, onContinue }) {
+export default function ChiefDetective({ data, onContinue, onBack }) {
   const BLAKE_IMG_URL = '/images/chief_detective_blake.png';
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
   const [stampVisible, setStampVisible] = useState(false);
@@ -90,6 +90,31 @@ export default function ChiefDetective({ data, onContinue }) {
           }
           
           /* ---------- LEFT PAGE ---------- */
+          .back-button {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            color: #475569;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 50;
+            transition: all 0.2s;
+          }
+          .back-button:hover {
+            background: white;
+            color: #1e293b;
+            transform: translateX(-2px);
+          }
+          
           .speech-bubble {
             position: absolute;
             bottom: 40px;
@@ -281,6 +306,11 @@ export default function ChiefDetective({ data, onContinue }) {
         <div className="spread">
           {/* LEFT PAGE */}
           <div className="page-spread left-page">
+            {onBack && (
+              <button className="back-button" onClick={onBack}>
+                <ArrowLeft size={16} /> Back
+              </button>
+            )}
             <img 
               src={BLAKE_IMG_URL} 
               alt="Chief Detective Blake" 

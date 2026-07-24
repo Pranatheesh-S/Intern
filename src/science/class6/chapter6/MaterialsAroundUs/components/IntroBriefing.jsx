@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import deskImage from '../images/intro_briefing_desk.png';
 
 export default function IntroBriefing({ onComplete, addXp }) {
   return (
@@ -8,21 +9,35 @@ export default function IntroBriefing({ onComplete, addXp }) {
       animate={{ opacity: 1, y: 0 }} 
       style={{ 
         display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        width: '100%',
+        minHeight: '500px',
+        backgroundImage: `url(${deskImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+        position: 'relative'
+      }}
+    >
+      <div style={{
+        display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
         justifyContent: 'center', 
         gap: '1.5rem', 
         padding: '2.5rem', 
-        border: '1px solid var(--accent-border)', 
-        background: 'var(--card-bg)',
+        background: 'rgba(20, 25, 35, 0.85)',
+        backdropFilter: 'blur(8px)',
         borderRadius: '16px',
         textAlign: 'center',
         maxWidth: '650px',
-        margin: '2rem auto',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
-      }}
-    >
-      <div style={{ 
+        margin: '2rem',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+      }}>
+        <div style={{ 
         width: '80px', 
         height: '80px', 
         borderRadius: '50%', 
@@ -72,16 +87,17 @@ export default function IntroBriefing({ onComplete, addXp }) {
         </div>
       </div>
 
-      <button 
-        onClick={() => {
-          addXp(10);
-          onComplete();
-        }}
-        className="primary"
-        style={{ padding: '0.75rem 2rem', fontSize: '1rem', fontWeight: 'bold', gap: '0.5rem' }}
-      >
-        <span>Accept Case File & Begin Investigation</span>
-      </button>
+        <button 
+          onClick={() => {
+            addXp(10);
+            onComplete();
+          }}
+          className="primary"
+          style={{ padding: '0.75rem 2rem', fontSize: '1rem', fontWeight: 'bold', gap: '0.5rem', marginTop: '0.5rem' }}
+        >
+          <span>Accept Case File & Begin Investigation</span>
+        </button>
+      </div>
     </motion.div>
   );
 }

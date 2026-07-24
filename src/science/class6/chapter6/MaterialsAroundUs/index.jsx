@@ -368,7 +368,18 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           )}
           
           {currentNode.type === 'debrief' && (
-            <ChiefDetective mode="debrief" data={currentNode} onContinue={handleDebriefContinue} />
+            <ChiefDetective 
+              mode="debrief" 
+              data={currentNode} 
+              onContinue={handleDebriefContinue} 
+              onBack={() => {
+                if (currentFlowIndex > 0) {
+                  setCurrentFlowIndex(prev => prev - 1);
+                } else {
+                  setShowIntroSpread(true);
+                }
+              }}
+            />
           )}
           
           {currentNode.type === 'activity' && (
