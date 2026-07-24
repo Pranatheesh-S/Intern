@@ -20,68 +20,18 @@ export default function Stage2_Conclusion({ onComplete }) {
 
         {/* Scene */}
         <div style={{ 
-          position: 'relative', 
           width: '100%', 
-          maxWidth: '500px', 
-          height: '350px', 
-          background: 'linear-gradient(to bottom, #38bdf8 0%, #bae6fd 60%, #4ade80 60%, #22c55e 100%)', // Sky to grass
-          border: '1px solid var(--border)',
+          maxWidth: '500px',
           borderRadius: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
           overflow: 'hidden',
-          boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
+          border: '1px solid var(--border)',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}>
-          {/* Sun (East) */}
-          <motion.div 
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 2, ease: "easeOut" }}
-            style={{ position: 'absolute', top: '40px', right: '40px' }}
-          >
-            <Sun size={64} fill="#fde047" color="#eab308" />
-            <div style={{ textAlign: 'center', fontWeight: 'bold', color: '#854d0e', marginTop: '5px' }}>EAST</div>
-          </motion.div>
-
-          {/* West */}
-          <div style={{ position: 'absolute', top: '70px', left: '40px', textAlign: 'center', fontWeight: 'bold', color: '#0369a1' }}>
-            WEST
-          </div>
-
-          {/* North */}
-          <div style={{ position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', fontWeight: 'bold', color: '#1e293b' }}>
-            NORTH
-          </div>
-
-          {/* South */}
-          <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', fontWeight: 'bold', color: '#1e293b' }}>
-            SOUTH
-          </div>
-
-          {/* Suspended Magnet */}
-          <div style={{ position: 'absolute', top: '150px', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ width: '2px', height: '60px', background: '#475569' }} />
-            <motion.div 
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 90 }}
-              transition={{ duration: 2, delay: 1, type: "spring" }}
-              style={{ display: 'flex', boxShadow: '0 4px 6px rgba(0,0,0,0.3)', borderRadius: '2px', overflow: 'hidden' }}
-            >
-              <div style={{ width: '40px', height: '15px', background: '#ef4444', color: 'white', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>N</div>
-              <div style={{ width: '40px', height: '15px', background: '#3b82f6', color: 'white', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>S</div>
-            </motion.div>
-          </div>
-
-          {/* Compass overlay */}
-          <motion.div 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 2.5, type: 'spring' }}
-            style={{ position: 'absolute', bottom: '20px', left: '20px', background: 'rgba(255,255,255,0.8)', padding: '10px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Compass size={40} color="#334155" />
-          </motion.div>
+          <img 
+            src="/holding_compass.png" 
+            alt="Holding a compass" 
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
         </div>
       </div>
 

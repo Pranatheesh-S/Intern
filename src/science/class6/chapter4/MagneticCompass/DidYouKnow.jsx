@@ -8,14 +8,6 @@ const facts = [
   {
     "title": "The First Electromagnet",
     "content": "English scientist William Sturgeon built the first practical electromagnet in 1825. His invention showed that ordinary iron could become strongly magnetic and helped lead to many modern electrical devices."
-  },
-  {
-    "title": "Industrial Sorting",
-    "content": "Factories often use magnets to separate iron objects from other materials. This helps sort waste, recycle metals, and remove unwanted iron pieces from food-processing and manufacturing machines."
-  },
-  {
-    "title": "Advanced Magnetic Materials",
-    "content": "Scientists are creating advanced magnetic materials that can store huge amounts of data in very small spaces. These materials help make modern hard drives, memory devices, and computing systems faster and more efficient."
   }
 ];
 

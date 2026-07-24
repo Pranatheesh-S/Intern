@@ -1,166 +1,74 @@
-import React, { useState } from 'react';
-import { ArrowRight, Info } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { ArrowRight, Scan, Magnet, XCircle } from 'lucide-react';
 
 const ITEMS = [
-  { id: 'pencil', name: 'Pencil', material: 'Wood', isMagnetic: false, icon: '✏️' },
-  { id: 'eraser', name: 'Eraser', material: 'Rubber', isMagnetic: false, icon: '🧽' },
-  { id: 'nail', name: 'Iron nail', material: 'Iron', isMagnetic: true, icon: '🔩' },
-  { id: 'clip', name: 'Steel clip', material: 'Steel', isMagnetic: true, icon: '📎' },
-  { id: 'glass', name: 'Glass tumbler', material: 'Glass', isMagnetic: false, icon: '🥤' },
-  { id: 'key', name: 'Iron key', material: 'Iron', isMagnetic: true, icon: '🔑' },
-  { id: 'ruler', name: 'Plastic ruler', material: 'Plastic', isMagnetic: false, icon: '📏' },
-  { id: 'scissors', name: 'Steel scissors', material: 'Steel', isMagnetic: true, icon: '✂️' }
+  { id: 'pens', name: 'Pens (Plastic)', isMagnetic: false, hotspot: { x: 12.2, y: 67.6, r: 8 } },
+  { id: 'bottle', name: 'Water Bottle (Stainless Steel)', isMagnetic: false, hotspot: { x: 26.6, y: 49.2, r: 8 } },
+  { id: 'compass', name: 'Compass (Metal)', isMagnetic: true, hotspot: { x: 45.2, y: 50.9, r: 10 } }, 
+  { id: 'ruler', name: 'Ruler (Plastic)', isMagnetic: false, hotspot: { x: 10.7, y: 88.2, r: 8 } },
+  { id: 'eraser', name: 'Eraser (Rubber)', isMagnetic: false, hotspot: { x: 24.5, y: 74.7, r: 6 } },
+  { id: 'clips', name: 'Paper Clips (Metal)', isMagnetic: true, hotspot: { x: 30.8, y: 83.4, r: 6 } },
+  { id: 'coins', name: 'Coins (Metal)', isMagnetic: false, hotspot: { x: 42.1, y: 75.4, r: 6 } },
+  { id: 'pencil_case', name: 'Pencil Case (Fabric)', isMagnetic: false, hotspot: { x: 59.4, y: 76.1, r: 10 } },
+  { id: 'notebook', name: 'Notebook (Paper)', isMagnetic: false, hotspot: { x: 88.8, y: 71.7, r: 12 } },
+  { id: 'pencil', name: 'Pencil (Wood)', isMagnetic: false, hotspot: { x: 81.8, y: 91.4, r: 8 } }
 ];
 
-function MagnetIcon() {
-  return (
-    <div style={{
-      display: 'flex',
-      borderRadius: '8px',
-      overflow: 'hidden',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
-      width: '60px',
-      height: '30px',
-      fontWeight: 'bold',
-      color: 'white',
-      fontFamily: 'sans-serif'
-    }}>
-      <div style={{ flex: 1, backgroundColor: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>N</div>
-      <div style={{ flex: 1, backgroundColor: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>S</div>
-    </div>
-  );
-}
+export default function MagneticTable({ onComplete }) {
+  const [scanningItemId, setScanningItemId] = useState(null);
+  const [scanProgress, setScanProgress] = useState(0);
+  const [scannedResults, setScannedResults] = useState({});
+  const [lensPos, setLensPos] = useState(null);
+  const [lastClickedPos, setLastClickedPos] = useState(null);
+  const imageRef = useRef(null);
 
-function TableRow({ item, index, prediction, observation, onPredict, onTest }) {
-  const isMatched = prediction !== null && observation !== null && 
-    ((prediction === 'Yes' && item.isMagnetic) || (prediction === 'No' && !item.isMagnetic));
-
-  return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: '2fr 2fr 2fr 2fr',
-      alignItems: 'center',
-      padding: '0.75rem 1rem',
-      borderBottom: '1px solid var(--border)',
-      backgroundColor: index % 2 === 0 ? 'var(--surface-hover)' : 'transparent',
-      transition: 'background-color 0.2s',
-      fontSize: '0.95rem'
-    }}>
-      {/* Object Column */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <span style={{ fontSize: '1.5rem' }}>{item.icon}</span>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{item.name}</span>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{item.material}</span>
-        </div>
-      </div>
-
-      {/* Prediction Column */}
-      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-        <button 
-          onClick={() => onPredict(item.id, 'Yes')}
-          style={{
-            padding: '0.25rem 1.5rem',
-            borderRadius: '6px',
-            border: prediction === 'Yes' ? '1px solid #10b981' : '1px solid var(--border)',
-            backgroundColor: prediction === 'Yes' ? 'rgba(16, 185, 129, 0.1)' : 'transparent',
-            color: prediction === 'Yes' ? '#10b981' : 'var(--text-secondary)',
-            cursor: 'pointer',
-            fontWeight: '600',
-            transition: 'all 0.2s'
-          }}
-        >
-          Yes
-        </button>
-        <button 
-          onClick={() => onPredict(item.id, 'No')}
-          style={{
-            padding: '0.25rem 1.5rem',
-            borderRadius: '6px',
-            border: prediction === 'No' ? '1px solid #3b82f6' : '1px solid var(--border)',
-            backgroundColor: prediction === 'No' ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
-            color: prediction === 'No' ? '#3b82f6' : 'var(--text-secondary)',
-            cursor: 'pointer',
-            fontWeight: '600',
-            transition: 'all 0.2s'
-          }}
-        >
-          No
-        </button>
-      </div>
-
-      {/* Observation Column */}
-      <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-        {observation ? (
-          item.isMagnetic ? (
-            <span style={{ color: '#10b981' }}>Attracted ✓</span>
-          ) : (
-            <span style={{ color: '#ef4444' }}>No pull X</span>
-          )
-        ) : (
-          <button 
-            onClick={() => onTest(item.id)}
-            disabled={!prediction}
-            style={{
-              padding: '0.25rem 1rem',
-              borderRadius: '6px',
-              border: prediction ? '1px solid var(--accent)' : '1px solid var(--border)',
-              backgroundColor: prediction ? 'rgba(139, 92, 246, 0.2)' : 'var(--surface-hover)',
-              color: prediction ? 'var(--accent)' : 'var(--text-muted)',
-              cursor: prediction ? 'pointer' : 'not-allowed',
-              fontWeight: 'bold',
-              fontSize: '0.8rem',
-              transition: 'all 0.2s'
-            }}
-          >
-            {prediction ? 'Test Object' : 'Make Prediction'}
-          </button>
-        )}
-      </div>
-
-      {/* Match Column */}
-      <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-        {observation && prediction ? (
-          isMatched ? (
-            <span style={{ color: '#10b981' }}>✓ matched</span>
-          ) : (
-            <span style={{ color: '#ef4444' }}>X wrong prediction</span>
-          )
-        ) : (
-          <span style={{ color: 'var(--text-muted)' }}>-</span>
-        )}
-      </div>
-    </div>
-  );
-}
-
-export default function MagneticTable({ onComplete, addXp = () => {} }) {
-  const [predictions, setPredictions] = useState({});
-  const [observations, setObservations] = useState({});
-
-  const handlePredict = (id, choice) => {
-    if (observations[id]) return;
-    setPredictions(prev => ({ ...prev, [id]: choice }));
+  const handleMouseMove = (e) => {
+    if (!imageRef.current) return;
+    const rect = imageRef.current.getBoundingClientRect();
+    setLensPos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
   };
 
-  const handleTest = (id) => {
-    if (predictions[id] && !observations[id]) {
-      setObservations(prev => ({ ...prev, [id]: true }));
-      addXp(10);
-    }
+  const handleImageClick = (e) => {
+    if (scanningItemId) return;
+    
+    if (!imageRef.current) return;
+    const rect = imageRef.current.getBoundingClientRect();
+    const clickX = ((e.clientX - rect.left) / rect.width) * 100;
+    const clickY = ((e.clientY - rect.top) / rect.height) * 100;
+
+    // For calibration:
+    setLastClickedPos({ x: clickX.toFixed(1), y: clickY.toFixed(1) });
+
+    const clickedItem = ITEMS.find(item => {
+      if (item.hotspot.x === null || item.hotspot.y === null) return false;
+      if (scannedResults[item.id]) return false; // Skip already scanned items
+      const dist = Math.sqrt(Math.pow(clickX - item.hotspot.x, 2) + Math.pow(clickY - item.hotspot.y, 2));
+      return dist <= item.hotspot.r;
+    });
+
+    if (!clickedItem) return;
+
+    setScanningItemId(clickedItem.id);
+    setScanProgress(0);
+    
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 5;
+      setScanProgress(progress);
+      
+      if (progress >= 100) {
+        clearInterval(interval);
+        setScannedResults(prev => ({ ...prev, [clickedItem.id]: true }));
+        setScanningItemId(null);
+        setScanProgress(0);
+      }
+    }, 40);
   };
 
-  const attractedCount = Object.keys(observations).filter(id => ITEMS.find(i => i.id === id).isMagnetic).length;
-  const notAttractedCount = Object.keys(observations).filter(id => !ITEMS.find(i => i.id === id).isMagnetic).length;
-  const testedCount = Object.keys(observations).length;
-  
-  const rightPredictionsCount = Object.keys(observations).filter(id => {
-    const pred = predictions[id];
-    const isMag = ITEMS.find(i => i.id === id).isMagnetic;
-    return (pred === 'Yes' && isMag) || (pred === 'No' && !isMag);
-  }).length;
-
-  const isComplete = testedCount === ITEMS.length;
+  const isComplete = Object.keys(scannedResults).length === ITEMS.length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
@@ -175,30 +83,98 @@ export default function MagneticTable({ onComplete, addXp = () => {} }) {
         margin: '0 auto',
         fontFamily: 'Inter, system-ui, sans-serif'
       }}>
-        {/* Activity Image */}
-        <img src="/activity_4.1.png" alt="Activity items" style={{ width: '100%', height: 'auto', display: 'block', borderBottom: '1px solid var(--border)' }} />
+        {/* Header */}
+        <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid var(--border)' }}>
+          <h3 style={{ marginTop: 0, marginBottom: '0.5rem', color: 'var(--text-heading)', fontSize: '1.25rem' }}>Experiment: Test which items are magnetic!</h3>
+          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Hover over the image and click to scan items.</p>
+        </div>
 
-        {/* Item List */}
-        <div style={{ padding: '2rem' }}>
-          <h3 style={{ marginTop: 0, marginBottom: '1.5rem', color: 'var(--text-heading)', fontSize: '1.25rem' }}>Items in the Picture:</h3>
+        {/* Activity Image with Scanner */}
+        <div 
+          ref={imageRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setLensPos(null)}
+          onClick={handleImageClick}
+          style={{ position: 'relative', overflow: 'hidden', cursor: scanningItemId ? 'default' : 'crosshair', borderBottom: '1px solid var(--border)' }}
+        >
+          <img src="/activity_4.1.png" alt="Activity items" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          
+          {lensPos && (
+            <div style={{
+              position: 'absolute',
+              left: lensPos.x - 40,
+              top: lensPos.y - 40,
+              width: 80,
+              height: 80,
+              borderRadius: '50%',
+              border: scanningItemId ? '3px solid #10b981' : '3px solid var(--accent)',
+              boxShadow: '0 0 0 1px rgba(99,102,241,0.3), 0 0 20px rgba(99,102,241,0.2)',
+              background: scanningItemId ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.1)',
+              backdropFilter: 'brightness(1.2)',
+              pointerEvents: 'none',
+              zIndex: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'border-color 0.2s, background-color 0.2s'
+            }}>
+               {scanningItemId && <span style={{ fontWeight: 'bold', color: 'white', textShadow: '0 1px 3px rgba(0,0,0,0.8)', fontSize: '1.2rem' }}>{scanProgress}%</span>}
+            </div>
+          )}
+        </div>
+
+        {/* Item List Log */}
+        <div style={{ padding: '2rem', paddingTop: '1.5rem', position: 'relative' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
-            {[
-              "Pens (Plastic)",
-              "Water Bottle (Stainless Steel)",
-              "Compass (Metal)",
-              "Experiment: Test which items are magnetic!",
-              "Ruler (Plastic)",
-              "Eraser (Rubber)",
-              "Paper Clips (Metal)",
-              "Coins (Metal)",
-              "Pencil Case (Fabric)",
-              "Notebook (Paper)",
-              "Pencil (Wood)"
-            ].map((text, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--surface-hover)', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                <span style={{ fontWeight: '600', fontSize: '0.95rem', color: 'var(--text-primary)' }}>{text}</span>
-              </div>
-            ))}
+            {ITEMS.map(item => {
+              const isScanning = scanningItemId === item.id;
+              const isScanned = scannedResults[item.id];
+              const isMag = item.isMagnetic;
+
+              return (
+                <div 
+                  key={item.id}
+                  style={{ 
+                    position: 'relative',
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '1.5rem 1rem', 
+                    backgroundColor: isScanned ? (isMag ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)') : 'var(--surface-hover)', 
+                    borderRadius: '8px', 
+                    border: isScanned ? (isMag ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid var(--border)',
+                    opacity: (!isScanned && !isScanning) ? 0.6 : 1,
+                    transition: 'all 0.2s',
+                    overflow: 'hidden'
+                  }}
+                >
+                  {isScanning && (
+                    <div style={{ 
+                      position: 'absolute', top: 0, left: 0, bottom: 0, width: `${scanProgress}%`,
+                      backgroundColor: 'rgba(16, 185, 129, 0.2)', transition: 'width 0.1s linear'
+                    }} />
+                  )}
+
+                  <span style={{ fontWeight: '600', fontSize: '0.95rem', color: 'var(--text-primary)', zIndex: 1, marginBottom: isScanned ? '0.5rem' : 0 }}>
+                    {item.name}
+                  </span>
+
+                  {isScanned && (
+                    <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.25rem', color: isMag ? '#10b981' : '#ef4444', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                      {isMag ? <Magnet size={16} /> : <XCircle size={16} />}
+                      {isMag ? 'Magnetic' : 'Not Magnetic'}
+                    </div>
+                  )}
+
+                  {!isScanned && !isScanning && (
+                    <div style={{ zIndex: 1, color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                      Not scanned yet
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -211,6 +187,7 @@ export default function MagneticTable({ onComplete, addXp = () => {} }) {
         }}>
           <button
             onClick={onComplete}
+            disabled={!isComplete}
             className="primary"
             style={{
               padding: '0.75rem 2rem',
@@ -221,12 +198,12 @@ export default function MagneticTable({ onComplete, addXp = () => {} }) {
               alignItems: 'center',
               gap: '0.5rem',
               border: 'none',
-              cursor: 'pointer',
-              background: 'var(--accent)',
-              color: 'white'
+              cursor: isComplete ? 'pointer' : 'not-allowed',
+              background: isComplete ? 'var(--accent)' : 'var(--border)',
+              color: isComplete ? 'white' : 'var(--text-muted)'
             }}
           >
-            Continue <ArrowRight size={16} />
+            {isComplete ? 'Continue' : 'Scan all items'} <ArrowRight size={16} />
           </button>
         </div>
       </div>

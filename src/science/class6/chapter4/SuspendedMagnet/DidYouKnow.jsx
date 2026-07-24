@@ -8,14 +8,6 @@ const facts = [
   {
     "title": "Ancient Chinese Compasses",
     "content": "More than 1,000 years ago, people in ancient China used magnetic compasses to find directions. These early compasses helped travelers and sailors navigate long journeys even when landmarks were not visible."
-  },
-  {
-    "title": "Reliability of Compasses",
-    "content": "Even today, compasses are used by hikers, trekkers, sailors, and rescue teams. Unlike GPS, a compass does not need batteries or internet, making it a reliable tool for finding directions anywhere."
-  },
-  {
-    "title": "Compasses in Space",
-    "content": "Scientists use highly sensitive magnetic compasses on spacecraft and satellites to study Earth's magnetic field. This helps researchers understand space weather, which can affect communication systems and GPS signals on Earth."
   }
 ];
 

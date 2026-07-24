@@ -8,14 +8,6 @@ const facts = [
   {
     "title": "William Gilbert's Discovery",
     "content": "In 1600, English scientist William Gilbert studied magnets carefully and discovered that Earth behaves like a giant magnet. His work helped scientists understand why compass needles always point in a particular direction."
-  },
-  {
-    "title": "Magnets in Medicine",
-    "content": "Hospitals use powerful magnets in MRI machines to take detailed pictures of organs and bones inside the human body. Doctors can see what is happening inside without performing surgery."
-  },
-  {
-    "title": "Electric Cars",
-    "content": "Many electric cars use strong magnets inside their motors. These magnets help the cars move efficiently while using less energy, making transportation cleaner and more environmentally friendly."
   }
 ];
 
