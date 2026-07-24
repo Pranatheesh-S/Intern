@@ -478,7 +478,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
             <div className="illustration">
               <img 
                 style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', background: '#1b2a4a' }} 
-                src="/public/blueprint_glassware.png" 
+                src="/blueprint_glassware.png" 
                 alt="Laboratory glassware and chemical structures blueprint" 
                 onError={(e) => { e.target.src = 'https://via.placeholder.com/800x400/1b2a4a/ffffff?text=Science+Blueprint'; }}
               />
