@@ -508,93 +508,305 @@ export default function PlantDetective({ onBackToDashboard }) {
                          <div style={{ borderBottom: '1px dashed var(--accent)', width: '100%', fontSize: '9px', color: 'var(--accent)' }}>Base Clamp Alignment</div>
                        </div>
 
-                       <svg width="240" height="200" viewBox="0 0 100 90">
-                         {/* Grid overlay in SVG */}
-                         <g opacity="0.08">
-                           <line x1="10" y1="30" x2="90" y2="30" stroke="#000" strokeWidth="0.5" strokeDasharray="2,2" />
-                           <line x1="10" y1="50" x2="90" y2="50" stroke="#000" strokeWidth="0.5" strokeDasharray="2,2" />
-                           <text x="92" y="32" fontSize="4" textAnchor="start">30px</text>
-                           <text x="92" y="52" fontSize="4" textAnchor="start">50px</text>
-                         </g>
+                        <svg width="240" height="200" viewBox="0 0 100 90">
+                          <defs>
+                            <linearGradient id="clay-pot-grad" x1="0" y1="0" x2="1" y2="0">
+                              <stop offset="0%" stopColor="#7c2d12" />
+                              <stop offset="30%" stopColor="#ea580c" />
+                              <stop offset="70%" stopColor="#f97316" />
+                              <stop offset="100%" stopColor="#7c2d12" />
+                            </linearGradient>
+                            <linearGradient id="clay-rim-grad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#ea580c" />
+                              <stop offset="100%" stopColor="#9a3412" />
+                            </linearGradient>
+                            <linearGradient id="basil-stem-grad" x1="0" y1="0" x2="1" y2="0">
+                              <stop offset="0%" stopColor="#15803d" />
+                              <stop offset="50%" stopColor="#4ade80" />
+                              <stop offset="100%" stopColor="#14532d" />
+                            </linearGradient>
+                            <linearGradient id="rose-stem-grad" x1="0" y1="0" x2="1" y2="0">
+                              <stop offset="0%" stopColor="#78350f" />
+                              <stop offset="50%" stopColor="#b45309" />
+                              <stop offset="100%" stopColor="#451a03" />
+                            </linearGradient>
+                            <linearGradient id="neem-stem-grad" x1="0" y1="0" x2="1" y2="0">
+                              <stop offset="0%" stopColor="#451a03" />
+                              <stop offset="50%" stopColor="#78350f" />
+                              <stop offset="100%" stopColor="#270f02" />
+                            </linearGradient>
+                          </defs>
 
-                         {/* Specimen Pot */}
-                         <polygon points="35,84 65,84 60,71 40,71" fill="#c2410c" stroke="#7c2d12" strokeWidth="1" />
-                         <rect x="33" y="69.5" width="34" height="2.5" fill="#ea580c" stroke="#7c2d12" strokeWidth="0.8" rx="0.5" />
-                         <ellipse cx="50" cy="70.5" rx="16" ry="1.5" fill="#451a03" />
+                          {/* Grid overlay in SVG */}
+                          <g opacity="0.08">
+                            <line x1="10" y1="30" x2="90" y2="30" stroke="#000" strokeWidth="0.5" strokeDasharray="2,2" />
+                            <line x1="10" y1="50" x2="90" y2="50" stroke="#000" strokeWidth="0.5" strokeDasharray="2,2" />
+                            <text x="92" y="32" fontSize="4" textAnchor="start">30px</text>
+                            <text x="92" y="52" fontSize="4" textAnchor="start">50px</text>
+                          </g>
 
-                         {/* Bending stem path */}
-                         {selectedPlantId === 'plantA' && (
-                           <>
-                             <path
-                               d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
-                               fill="none" stroke="#22c55e" strokeWidth="3.5" strokeLinecap="round"
-                               style={{ transition: 'd 0.1s ease' }}
-                             />
-                             {/* Tulsi Leaves at top */}
-                             <g style={{ transition: 'transform 0.1s ease' }}>
-                               <path d={`M ${endX} ${endY} Q ${endX - 7} ${endY - 5} ${endX - 10} ${endY - 1} Q ${endX - 5} ${endY + 2} ${endX} ${endY}`} fill="#4ade80" stroke="#15803d" strokeWidth="0.5" />
-                               <path d={`M ${endX} ${endY} Q ${endX + 7} ${endY - 5} ${endX + 10} ${endY - 1} Q ${endX + 5} ${endY + 2} ${endX} ${endY}`} fill="#4ade80" stroke="#15803d" strokeWidth="0.5" />
-                               {/* Purple flowers apex */}
-                               <circle cx={endX} cy={endY - 2.5} r="1.5" fill="#c084fc" />
-                               <circle cx={endX - 1.5} cy={endY - 1.5} r="1" fill="#c084fc" />
-                               <circle cx={endX + 1.5} cy={endY - 1.5} r="1" fill="#c084fc" />
-                             </g>
-                             {/* Leaves at mid point */}
-                             <g>
-                               <path d={`M ${qX} ${qY} Q ${qX - 8} ${qY - 4} ${qX - 11} ${qY + 1} Q ${qX - 6} ${qY + 3} ${qX} ${qY}`} fill="#22c55e" stroke="#15803d" strokeWidth="0.5" />
-                               <path d={`M ${qX} ${qY} Q ${qX + 8} ${qY - 4} ${qX + 11} ${qY + 1} Q ${qX + 6} ${qY + 3} ${qX} ${qY}`} fill="#22c55e" stroke="#15803d" strokeWidth="0.5" />
-                             </g>
-                           </>
-                         )}
+                          {/* Specimen Clay Pot */}
+                          <polygon points="35,84 65,84 60,72 40,72" fill="url(#clay-pot-grad)" stroke="#451a03" strokeWidth="1" />
+                          <rect x="33" y="70" width="34" height="2.5" fill="url(#clay-rim-grad)" stroke="#451a03" strokeWidth="0.8" rx="0.5" />
+                          <ellipse cx="50" cy="71" rx="16" ry="2.2" fill="#271b12" stroke="#1d110a" strokeWidth="0.5" />
 
-                         {selectedPlantId === 'plantB' && (
-                           <>
-                             <path
-                               d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
-                               fill="none" stroke="#92400e" strokeWidth="5" strokeLinecap="round"
-                               style={{ transition: 'd 0.1s ease' }}
-                             />
-                             {/* Rose Bud at top */}
-                             <g>
-                               <circle cx={endX} cy={endY - 2.5} r="3.5" fill="#f43f5e" stroke="#be123c" strokeWidth="0.5" />
-                               <path d={`M ${endX - 2.5} ${endY} Q ${endX} ${endY - 3} ${endX + 2.5} ${endY} Z`} fill="#15803d" />
-                             </g>
-                             {/* Thorns along stem */}
-                             <polygon points={`${qX - 1},${qY} ${qX - 4.5},${qY + 1.5} ${qX - 1},${qY + 3.5}`} fill="#be123c" />
-                             <polygon points={`${qX + 1.2},${qY - 8} ${qX + 4.5},${qY - 6.5} ${qX + 1.2},${qY - 4.5}`} fill="#be123c" />
-                             {/* Shrub branch close to base */}
-                             <path d={`M50 71 Q 42 66 38 60`} fill="none" stroke="#78350f" strokeWidth="3" strokeLinecap="round" />
-                             <path d={`M 38 60 Q 36 57 32 58`} fill="none" stroke="#78350f" strokeWidth="2" strokeLinecap="round" />
-                             <circle cx="32" cy="58" r="1.5" fill="#f43f5e" />
-                           </>
-                         )}
+                          {/* Bending stem path */}
+                          {(() => {
+                            const getPt = (t) => {
+                              const x = (1 - t) * (1 - t) * 50 + 2 * (1 - t) * t * qX + t * t * endX;
+                              const y = (1 - t) * (1 - t) * 71 + 2 * (1 - t) * t * qY + t * t * endY;
+                              return { x, y };
+                            };
 
-                         {selectedPlantId === 'plantC' && (
-                           <>
-                             <path
-                               d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
-                               fill="none" stroke="#451a03" strokeWidth="7.5" strokeLinecap="round"
-                               style={{ transition: 'd 0.1s ease' }}
-                             />
-                             {/* Tree crown leaflets */}
-                             <g transform={`translate(${endX}, ${endY})`} style={{ transition: 'transform 0.1s ease' }}>
-                               <path d="M 0,-1 Q -9,-6 -14,-1 Q -9,3 0,0" fill="#15803d" />
-                               <path d="M 0,-1 Q 9,-6 14,-1 Q 9,3 0,0" fill="#15803d" />
-                               <path d="M 0,-1 Q -5,-11 -8,-15 Q -3,-10 0,-1" fill="#166534" />
-                               <path d="M 0,-1 Q 5,-11 8,-15 Q 3,-10 0,-1" fill="#166534" />
-                               <circle cx="0" cy="-5" r="7" fill="#166534" opacity="0.75" />
-                             </g>
-                           </>
-                         )}
+                            if (selectedPlantId === 'plantA') {
+                              const p0_5 = getPt(0.5);
+                              const p0_8 = getPt(0.8);
+                              const p1_0 = getPt(1.0);
+                              return (
+                                <>
+                                  {/* 3D cylindrical green stem shadow, midtone, and highlight layers */}
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#14532d" strokeWidth="3.5" strokeLinecap="round"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                  />
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#22c55e" strokeWidth="2.4" strokeLinecap="round"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                  />
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#a7f3d0" strokeWidth="0.8" strokeLinecap="round"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                  />
+                                  {/* Fine longitudinal ridges for square stem detail */}
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#166534" strokeWidth="0.5" strokeDasharray="5,3"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                    opacity="0.65"
+                                  />
 
-                         {/* Force arrow */}
-                         {flexLevel > 5 && (
-                           <g opacity={Math.min(flexLevel / 50, 1)}>
-                             <line x1={50 + Math.min(flexLevel * 0.35, 35)} y1="30" x2={50 + Math.min(flexLevel * 0.4, 40)} y2="30" stroke="#f59e0b" strokeWidth="1.5" />
-                             <polygon points={`${50 + Math.min(flexLevel * 0.42, 42)},30 ${50 + Math.min(flexLevel * 0.37, 37)},27 ${50 + Math.min(flexLevel * 0.37, 37)},33`} fill="#f59e0b" />
-                           </g>
-                         )}
-                       </svg>
+                                  {/* Node 1 (t = 0.5): opposite leaves with leaf veins */}
+                                  <g>
+                                    {/* Left Leaf */}
+                                    <path d={`M ${p0_5.x} ${p0_5.y} C ${p0_5.x - 5} ${p0_5.y - 4}, ${p0_5.x - 11} ${p0_5.y - 3}, ${p0_5.x - 13} ${p0_5.y + 1} C ${p0_5.x - 9} ${p0_5.y + 4}, ${p0_5.x - 4} ${p0_5.y + 3}, ${p0_5.x} ${p0_5.y} Z`} fill="#16a34a" stroke="#14532d" strokeWidth="0.5" />
+                                    <path d={`M ${p0_5.x} ${p0_5.y} Q ${p0_5.x - 6} ${p0_5.y + 0.5} ${p0_5.x - 13} ${p0_5.y + 1}`} fill="none" stroke="#14532d" strokeWidth="0.4" opacity="0.7" />
+                                    <path d={`M ${p0_5.x - 4} ${p0_5.y + 0.5} Q ${p0_5.x - 6} ${p0_5.y - 1.5} ${p0_5.x - 7} ${p0_5.y - 2.5}`} fill="none" stroke="#14532d" strokeWidth="0.3" opacity="0.5" />
+                                    <path d={`M ${p0_5.x - 7} ${p0_5.y + 1.2} Q ${p0_5.x - 9} ${p0_5.y + 0.2} ${p0_5.x - 10} ${p0_5.y - 1}`} fill="none" stroke="#14532d" strokeWidth="0.3" opacity="0.5" />
+                                    <path d={`M ${p0_5.x - 4} ${p0_5.y + 0.5} Q ${p0_5.x - 5} ${p0_5.y + 2.5} ${p0_5.x - 6} ${p0_5.y + 3.2}`} fill="none" stroke="#14532d" strokeWidth="0.3" opacity="0.5" />
+                                    
+                                    {/* Right Leaf */}
+                                    <path d={`M ${p0_5.x} ${p0_5.y} C ${p0_5.x + 5} ${p0_5.y - 4}, ${p0_5.x + 11} ${p0_5.y - 3}, ${p0_5.x + 13} ${p0_5.y + 1} C ${p0_5.x + 9} ${p0_5.y + 4}, ${p0_5.x + 4} ${p0_5.y + 3}, ${p0_5.x} ${p0_5.y} Z`} fill="#16a34a" stroke="#14532d" strokeWidth="0.5" />
+                                    <path d={`M ${p0_5.x} ${p0_5.y} Q ${p0_5.x + 6} ${p0_5.y + 0.5} ${p0_5.x + 13} ${p0_5.y + 1}`} fill="none" stroke="#14532d" strokeWidth="0.4" opacity="0.7" />
+                                    <path d={`M ${p0_5.x + 4} ${p0_5.y + 0.5} Q ${p0_5.x + 6} ${p0_5.y - 1.5} ${p0_5.x + 7} ${p0_5.y - 2.5}`} fill="none" stroke="#14532d" strokeWidth="0.3" opacity="0.5" />
+                                    <path d={`M ${p0_5.x + 7} ${p0_5.y + 1.2} Q ${p0_5.x + 9} ${p0_5.y + 0.2} ${p0_5.x + 10} ${p0_5.y - 1}`} fill="none" stroke="#14532d" strokeWidth="0.3" opacity="0.5" />
+                                    <path d={`M ${p0_5.x + 4} ${p0_5.y + 0.5} Q ${p0_5.x + 5} ${p0_5.y + 2.5} ${p0_5.x + 6} ${p0_5.y + 3.2}`} fill="none" stroke="#14532d" strokeWidth="0.3" opacity="0.5" />
+                                  </g>
+
+                                  {/* Node 2 (t = 0.8) */}
+                                  <g>
+                                    <path d={`M ${p0_8.x} ${p0_8.y} C ${p0_8.x - 4} ${p0_8.y - 3}, ${p0_8.x - 9} ${p0_8.y - 2}, ${p0_8.x - 11} ${p0_8.y + 1} C ${p0_8.x - 8} ${p0_8.y + 3}, ${p0_8.x - 3} ${p0_8.y + 2}, ${p0_8.x} ${p0_8.y} Z`} fill="#22c55e" stroke="#14532d" strokeWidth="0.5" />
+                                    <path d={`M ${p0_8.x} ${p0_8.y} C ${p0_8.x + 4} ${p0_8.y - 3}, ${p0_8.x + 9} ${p0_8.y - 2}, ${p0_8.x + 11} ${p0_8.y + 1} C ${p0_8.x + 8} ${p0_8.y + 3}, ${p0_8.x + 3} ${p0_8.y + 2}, ${p0_8.x} ${p0_8.y} Z`} fill="#22c55e" stroke="#14532d" strokeWidth="0.5" />
+                                  </g>
+
+                                  {/* Apex (t = 1.0): Leaves + Detailed Flower Spikes (Verticillasters) */}
+                                  <g>
+                                    {/* Small bract leaves */}
+                                    <path d={`M ${p1_0.x} ${p1_0.y} C ${p1_0.x - 3} ${p1_0.y - 2}, ${p1_0.x - 7} ${p1_0.y - 2}, ${p1_0.x - 8} ${p1_0.y + 0.5} Z`} fill="#4ade80" stroke="#15803d" strokeWidth="0.4" />
+                                    <path d={`M ${p1_0.x} ${p1_0.y} C ${p1_0.x + 3} ${p1_0.y - 2}, ${p1_0.x + 7} ${p1_0.y - 2}, ${p1_0.x + 8} ${p1_0.y + 0.5} Z`} fill="#4ade80" stroke="#15803d" strokeWidth="0.4" />
+                                    
+                                    {/* Central Flower spike shaft */}
+                                    <line x1={p1_0.x} y1={p1_0.y} x2={p1_0.x} y2={p1_0.y - 12} stroke="#4ade80" strokeWidth="0.8" strokeLinecap="round" />
+                                    
+                                    {/* Tier 1 - lower flower whorl */}
+                                    <circle cx={p1_0.x} cy={p1_0.y - 3} r="1.5" fill="#a855f7" />
+                                    <circle cx={p1_0.x - 1.5} cy={p1_0.y - 2.5} r="1.2" fill="#c084fc" />
+                                    <circle cx={p1_0.x + 1.5} cy={p1_0.y - 2.5} r="1.2" fill="#c084fc" />
+                                    <circle cx={p1_0.x - 2.2} cy={p1_0.y - 1.5} r="0.9" fill="#e9d5ff" />
+                                    <circle cx={p1_0.x + 2.2} cy={p1_0.y - 1.5} r="0.9" fill="#e9d5ff" />
+                                    
+                                    {/* Tier 2 - mid flower whorl */}
+                                    <circle cx={p1_0.x} cy={p1_0.y - 7} r="1.2" fill="#a855f7" />
+                                    <circle cx={p1_0.x - 1.2} cy={p1_0.y - 6.5} r="1.0" fill="#c084fc" />
+                                    <circle cx={p1_0.x + 1.2} cy={p1_0.y - 6.5} r="1.0" fill="#c084fc" />
+
+                                    {/* Tier 3 - spike tip flowers */}
+                                    <circle cx={p1_0.x} cy={p1_0.y - 11} r="0.9" fill="#d8b4fe" />
+                                    <circle cx={p1_0.x - 0.8} cy={p1_0.y - 10.5} r="0.7" fill="#c084fc" />
+                                    <circle cx={p1_0.x + 0.8} cy={p1_0.y - 10.5} r="0.7" fill="#c084fc" />
+                                  </g>
+                                </>
+                              );
+                            }
+
+                            if (selectedPlantId === 'plantB') {
+                              const p0_1 = getPt(0.1);
+                              const p0_4 = getPt(0.4);
+                              const p0_7 = getPt(0.7);
+                              const p1_0 = getPt(1.0);
+                              
+                              const getNormalAngle = (t) => {
+                                const p1 = getPt(t);
+                                const p2 = getPt(t + 0.05);
+                                const dx = p2.x - p1.x;
+                                const dy = p2.y - p1.y;
+                                return Math.atan2(dy, dx) - Math.PI / 2;
+                              };
+
+                              const a0_4 = getNormalAngle(0.4);
+                              const a0_7 = getNormalAngle(0.7);
+
+                              return (
+                                <>
+                                  {/* Woody, textured brown stem layers */}
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#451a03" strokeWidth="4.2" strokeLinecap="round"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                  />
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#78350f" strokeWidth="3.0" strokeLinecap="round"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                  />
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#d97706" strokeWidth="0.8" strokeLinecap="round"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                  />
+                                  {/* Bark textures */}
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#451a03" strokeWidth="0.8" strokeDasharray="8,6"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                    opacity="0.5"
+                                  />
+
+                                  {/* Left thorn at t = 0.4 */}
+                                  <g transform={`translate(${p0_4.x}, ${p0_4.y}) rotate(${a0_4 * 180 / Math.PI})`}>
+                                    <path d="M 0,-1.5 C -2,-1.5 -3.5,0.5 -4.5,2.5 C -3,2 -1.5,0.5 0,0.5 Z" fill="#991b1b" stroke="#451a03" strokeWidth="0.3" />
+                                  </g>
+
+                                  {/* Right thorn at t = 0.7 */}
+                                  <g transform={`translate(${p0_7.x}, ${p0_7.y}) rotate(${(a0_7 * 180 / Math.PI) + 180})`}>
+                                    <path d="M 0,-1.5 C -2,-1.5 -3.5,0.5 -4.5,2.5 C -3,2 -1.5,0.5 0,0.5 Z" fill="#991b1b" stroke="#451a03" strokeWidth="0.3" />
+                                  </g>
+
+                                  {/* Shrub branch close to base (t=0.1) */}
+                                  <g>
+                                    <path d={`M ${p0_1.x} ${p0_1.y} C ${p0_1.x - 8} ${p0_1.y - 4}, ${p0_1.x - 14} ${p0_1.y - 8}, ${p0_1.x - 16} ${p0_1.y - 13}`} fill="none" stroke="#78350f" strokeWidth="2.5" strokeLinecap="round" />
+                                    <path d={`M ${p0_1.x - 8} ${p0_1.y - 5} C ${p0_1.x - 12} ${p0_1.y - 8}, ${p0_1.x - 16} ${p0_1.y - 6}, ${p0_1.x - 15} ${p0_1.y - 3} Z`} fill="#166534" stroke="#14532d" strokeWidth="0.4" />
+                                    <path d={`M ${p0_1.x - 12} ${p0_1.y - 7} C ${p0_1.x - 16} ${p0_1.y - 11}, ${p0_1.x - 20} ${p0_1.y - 9}, ${p0_1.x - 18} ${p0_1.y - 6} Z`} fill="#166534" stroke="#14532d" strokeWidth="0.4" />
+                                    <circle cx={p0_1.x - 16} cy={p0_1.y - 13} r="1.5" fill="#be123c" />
+                                    <path d={`M ${p0_1.x - 17.5} ${p0_1.y - 13} Q ${p0_1.x - 16} ${p0_1.y - 11} ${p0_1.x - 14.5} ${p0_1.y - 13} Z`} fill="#15803d" />
+                                  </g>
+
+                                  {/* Rose Bud sepals and bloom petals at top (t = 1.0) */}
+                                  <g>
+                                    <path d={`M ${p1_0.x - 3} ${p1_0.y} C ${p1_0.x - 2} ${p1_0.y + 2.5}, ${p1_0.x + 2} ${p1_0.y + 2.5}, ${p1_0.x + 3} ${p1_0.y} C ${p1_0.x + 1} ${p1_0.y + 1}, ${p1_0.x - 1} ${p1_0.y + 1}, ${p1_0.x - 3} ${p1_0.y} Z`} fill="#15803d" stroke="#14532d" strokeWidth="0.4" />
+                                    <path d={`M ${p1_0.x - 2.5} ${p1_0.y} Q ${p1_0.x - 4} ${p1_0.y - 5} ${p1_0.x - 5} ${p1_0.y - 6} Q ${p1_0.x - 2.5} ${p1_0.y - 2} ${p1_0.x} ${p1_0.y}`} fill="#15803d" />
+                                    <path d={`M ${p1_0.x + 2.5} ${p1_0.y} Q ${p1_0.x + 4} ${p1_0.y - 5} ${p1_0.x + 5} ${p1_0.y - 6} Q ${p1_0.x + 2.5} ${p1_0.y - 2} ${p1_0.x} ${p1_0.y}`} fill="#15803d" />
+                                    
+                                    <path d={`M ${p1_0.x - 3} ${p1_0.y} C ${p1_0.x - 5} ${p1_0.y - 6}, ${p1_0.x - 2} ${p1_0.y - 9}, ${p1_0.x} ${p1_0.y - 10} C ${p1_0.x + 2} ${p1_0.y - 9}, ${p1_0.x + 5} ${p1_0.y - 6}, ${p1_0.x + 3} ${p1_0.y} Z`} fill="#be123c" stroke="#881337" strokeWidth="0.5" />
+                                    <path d={`M ${p1_0.x - 1.8} ${p1_0.y} C ${p1_0.x - 3} ${p1_0.y - 5}, ${p1_0.x - 1.5} ${p1_0.y - 8}, ${p1_0.x} ${p1_0.y - 8.5} C ${p1_0.x + 1.5} ${p1_0.y - 8}, ${p1_0.x + 3} ${p1_0.y - 5}, ${p1_0.x + 1.8} ${p1_0.y} Z`} fill="#e11d48" />
+                                    <path d={`M ${p1_0.x - 1} ${p1_0.y} C ${p1_0.x - 1.5} ${p1_0.y - 4}, ${p1_0.x} ${p1_0.y - 7}, ${p1_0.x + 1} ${p1_0.y - 6} Z`} fill="#fda4af" opacity="0.8" />
+                                  </g>
+                                </>
+                              );
+                            }
+
+                            if (selectedPlantId === 'plantC') {
+                              const p1_0 = getPt(1.0);
+                              return (
+                                <>
+                                  {/* Heavy, rough bark neem tree trunk layers */}
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#270f02" strokeWidth="7.0" strokeLinecap="round"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                  />
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#451a03" strokeWidth="5.0" strokeLinecap="round"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                  />
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#78350f" strokeWidth="1.6" strokeLinecap="round"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                  />
+                                  {/* Bark crack fissures */}
+                                  <path
+                                    d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                                    fill="none" stroke="#1c0a00" strokeWidth="0.8" strokeDasharray="14,10"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                    opacity="0.85"
+                                  />
+                                  <path
+                                    d={`M49 71 Q${qX - 1} ${qY} ${endX - 1} ${endY}`}
+                                    fill="none" stroke="#270f02" strokeWidth="0.6" strokeDasharray="6,24"
+                                    style={{ transition: 'd 0.1s ease' }}
+                                    opacity="0.7"
+                                  />
+
+                                  {/* Detailed Pinnate compound leaves on crown */}
+                                  <g transform={`translate(${p1_0.x}, ${p1_0.y})`}>
+                                    <circle cx="0" cy="-6" r="8" fill="#14532d" opacity="0.65" />
+                                    <circle cx="-5" cy="-4" r="6" fill="#166534" opacity="0.6" />
+                                    <circle cx="5" cy="-4" r="6" fill="#166534" opacity="0.6" />
+
+                                    {/* Pinnate Leaf 1: Left */}
+                                    <g transform="rotate(-45)">
+                                      <path d="M 0,0 C -2,-4 -4,-9 -5,-13" fill="none" stroke="#166534" strokeWidth="0.6" />
+                                      <path d="M -1,-3 C -3,-4 -5,-4 -6,-3 C -5,-2 -2,-2 -1,-3 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 0,-3 C 2,-4 4,-4 5,-3 C 4,-2 1,-2 0,-3 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M -2,-7 C -4,-8 -7,-8 -8,-7 C -7,-5 -4,-5 -2,-7 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 0,-7 C 2,-8 5,-8 6,-7 C 5,-5 2,-5 0,-7 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M -3,-10 C -5,-12 -8,-12 -9,-11 C -8,-9 -5,-9 -3,-10 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 0,-10 C 2,-12 5,-12 6,-11 C 5,-9 2,-9 0,-10 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M -5,-13 C -5.5,-16 -5,-18 -4.5,-19 C -4,-18 -3.5,-16 -5,-13 Z" fill="#4ade80" />
+                                    </g>
+
+                                    {/* Pinnate Leaf 2: Right */}
+                                    <g transform="rotate(45)">
+                                      <path d="M 0,0 C 2,-4 4,-9 5,-13" fill="none" stroke="#166534" strokeWidth="0.6" />
+                                      <path d="M 1,-3 C 3,-4 5,-4 6,-3 C 5,-2 2,-2 1,-3 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 0,-3 C -2,-4 -4,-4 -5,-3 C -4,-2 -1,-2 0,-3 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 2,-7 C 4,-8 7,-8 8,-7 C 7,-5 4,-5 2,-7 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 0,-7 C -2,-8 -5,-8 -6,-7 C -5,-5 -2,-5 0,-7 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 3,-10 C 5,-12 8,-12 9,-11 C 8,-9 5,-9 3,-10 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 0,-10 C -2,-12 -5,-12 -6,-11 C -5,-9 -2,-9 0,-10 Z" fill="#22c55e" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 5,-13 C 5.5,-16 5,-18 4.5,-19 C 4,-18 3.5,-16 5,-13 Z" fill="#4ade80" />
+                                    </g>
+
+                                    {/* Pinnate Leaf 3: Center */}
+                                    <g transform="rotate(0)">
+                                      <path d="M 0,0 C 0,-5 0,-11 0,-16" fill="none" stroke="#166534" strokeWidth="0.6" />
+                                      <path d="M -1,-4 C -3,-5 -6,-5 -7,-4 C -6,-3 -3,-3 -1,-4 Z" fill="#15803d" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 1,-4 C 3,-5 6,-5 7,-4 C 6,-3 3,-3 1,-4 Z" fill="#15803d" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M -1,-8 C -3.5,-9.5 -7,-9.5 -8,-8 C -7,-6.5 -3.5,-6.5 -1,-8 Z" fill="#15803d" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 1,-8 C 3.5,-9.5 7,-9.5 8,-8 C 7,-6.5 3.5,-6.5 1,-8 Z" fill="#15803d" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M -1,-12 C -3,-14 -6,-14 -7,-13 C -6,-11.5 -3,-11.5 -1,-12 Z" fill="#15803d" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 1,-12 C 3,-14 6,-14 7,-13 C 6,-11.5 3,-11.5 1,-12 Z" fill="#15803d" stroke="#14532d" strokeWidth="0.2" />
+                                      <path d="M 0,-16 C 0,-19 0,-21 0,-22 Z" fill="#4ade80" />
+                                    </g>
+                                  </g>
+                                </>
+                              );
+                            }
+                            return null;
+                          })()}
+
+                          {/* Force arrow */}
+                          {flexLevel > 5 && (
+                            <g opacity={Math.min(flexLevel / 50, 1)}>
+                              <line x1={50 + Math.min(flexLevel * 0.35, 35)} y1="30" x2={50 + Math.min(flexLevel * 0.4, 40)} y2="30" stroke="#f59e0b" strokeWidth="1.5" />
+                              <polygon points={`${50 + Math.min(flexLevel * 0.42, 42)},30 ${50 + Math.min(flexLevel * 0.37, 37)},27 ${50 + Math.min(flexLevel * 0.37, 37)},33`} fill="#f59e0b" />
+                            </g>
+                          )}
+                        </svg>
 
                        {flexLocked && (
                          <div style={{ position: 'absolute', top: 12, right: 12, background: currentFlex.color, borderRadius: '20px', padding: '4px 12px', fontSize: '12px', fontWeight: 'bold', color: '#fff' }}>
