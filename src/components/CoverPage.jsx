@@ -10,8 +10,10 @@ export default function CoverPage({
   coverGraphic,
   onBack,
   onNext,
+  bgImage,
 }) {
   const [gifFailed, setGifFailed] = React.useState(false);
+  const [isBtnHovered, setIsBtnHovered] = React.useState(false);
   const gifSrc = `/activities/cover_ch${chapterNum}.gif`;
 
   // Generate stable random bubble positions
@@ -132,7 +134,7 @@ export default function CoverPage({
       inset: 0,
       overflow: "hidden",
       color: "#e8ebff",
-      background: "radial-gradient(130% 120% at 75% 15%, #0d2015 0%, #060e0a 100%)",
+      background: bgImage ? `url(${bgImage}) no-repeat center center / cover` : "radial-gradient(130% 120% at 75% 15%, #0d2015 0%, #060e0a 100%)",
       fontFamily: "Space Grotesk, system-ui, sans-serif",
       display: "flex",
       alignItems: "center",
@@ -187,6 +189,18 @@ export default function CoverPage({
           align-items: center;
           padding: 2rem clamp(24px, 4vw, 64px);
           gap: clamp(24px, 5vw, 80px);
+          z-index: 5;
+          box-sizing: border-box;
+        }
+        
+        .layout-grid-centered {
+          width: 100%;
+          max-width: 900px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem clamp(24px, 4vw, 64px);
           z-index: 5;
           box-sizing: border-box;
         }
@@ -446,51 +460,139 @@ export default function CoverPage({
         <ArrowLeft size={16} /> Back to Chapters
       </button>
 
-      <div className="layout-grid">
-        {/* LEFT: Graphics (Autoload GIF with inline SVG fallback) */}
-        <div className="graphic-container">
-          <span className="graphic-label tl">BIOME</span>
-          <span className="graphic-label tr">LIFE ↑</span>
-          <span className="graphic-label bl">SYS·CH {chapterNum}</span>
-          <span className="graphic-label br">FUTURAX</span>
-          {!gifFailed ? (
-            <img 
-              src={gifSrc} 
-              alt="Chapter Graphic" 
-              onError={() => setGifFailed(true)} 
-              style={{ 
-                width: "100%", 
-                height: "100%", 
-                objectFit: "cover", 
-                borderRadius: "14px",
-                transform: chapterNum === 2 ? "scale(1.1)" : "none"
-              }}
-            />
-          ) : (
-            renderGraphic()
-          )}
-        </div>
+      <div className={bgImage ? "layout-grid-centered" : "layout-grid"}>
+        {!bgImage && (
+          <>
+            {/* LEFT: Graphics (Autoload GIF with inline SVG fallback) */}
+            <div className="graphic-container">
+              <span className="graphic-label tl">BIOME</span>
+              <span className="graphic-label tr">LIFE ↑</span>
+              <span className="graphic-label bl">SYS·CH {chapterNum}</span>
+              <span className="graphic-label br">FUTURAX</span>
+              {!gifFailed ? (
+                <img 
+                  src={gifSrc} 
+                  alt="Chapter Graphic" 
+                  onError={() => setGifFailed(true)} 
+                  style={{ 
+                    width: "100%", 
+                    height: "100%", 
+                    objectFit: "cover", 
+                    borderRadius: "14px",
+                    transform: chapterNum === 2 ? "scale(1.1)" : "none"
+                  }}
+                />
+              ) : (
+                renderGraphic()
+              )}
+            </div>
 
-        {/* MIDDLE: Line */}
-        <div className="meridian-divider">
-          <span>CHAPTER EXPLORER · CH 0{chapterNum}</span>
-        </div>
+            {/* MIDDLE: Line */}
+            <div className="meridian-divider">
+              <span>CHAPTER EXPLORER · CH 0{chapterNum}</span>
+            </div>
+          </>
+        )}
 
         {/* RIGHT: Metadata and Heading */}
-        <div style={{ maxWidth: "560px", zIndex: 10 }}>
-          <span className="title-badge">Class {classNum} · {subjectName}</span>
-          <div className="meta-ch-topics">◎ {topics}</div>
-          <h1 className="ch-heading">
-            Biology <em>Lab</em>
-          </h1>
-          <div className="meta-row">
-            <span className="meta-ch-num">CH 0{chapterNum}</span>
-            <span className="meta-ch-title">{title}</span>
+        {bgImage ? (
+          <>
+            {/* Top Floating Badge */}
+            <div style={{
+              position: 'absolute',
+              top: '12vh',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              textAlign: 'center',
+              zIndex: 20,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.5rem',
+              width: '100%',
+              maxWidth: '600px',
+              padding: '0 1rem'
+            }}>
+              <span className="title-badge" style={{ 
+                background: 'rgba(15, 23, 42, 0.65)', 
+                backdropFilter: 'blur(10px)', 
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                padding: '10px 28px',
+                borderRadius: '30px',
+                fontSize: '18px',
+                fontWeight: '800',
+                letterSpacing: '2.5px',
+                color: '#34d399',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+              }}>
+                Class {classNum} · {subjectName}
+              </span>
+              <div style={{ 
+                fontSize: '24px', 
+                fontWeight: '700', 
+                color: '#fff', 
+                textShadow: '0 2px 10px rgba(0,0,0,0.9)',
+                letterSpacing: '1px',
+                marginTop: '0.75rem'
+              }}>
+                ◎ {topics}
+              </div>
+            </div>
+
+            {/* Bottom Floating CTA Button */}
+            <div style={{
+              position: 'absolute',
+              bottom: '12vh',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 20,
+              textAlign: 'center'
+            }}>
+              <button 
+                className="cover-cta" 
+                onClick={onNext}
+                onMouseEnter={() => setIsBtnHovered(true)}
+                onMouseLeave={() => setIsBtnHovered(false)}
+                style={{ 
+                  marginTop: 0,
+                  padding: '14px 40px',
+                  fontSize: '18px',
+                  borderRadius: '30px',
+                  background: isBtnHovered ? '#10b981' : 'rgba(255, 255, 255, 0.12)',
+                  backdropFilter: isBtnHovered ? 'none' : 'blur(12px)',
+                  WebkitBackdropFilter: isBtnHovered ? 'none' : 'blur(12px)',
+                  border: isBtnHovered ? '2px solid #10b981' : '2px solid rgba(255, 255, 255, 0.3)',
+                  color: isBtnHovered ? '#06180f' : '#ffffff',
+                  fontWeight: '800',
+                  boxShadow: isBtnHovered ? '0 10px 30px rgba(16, 185, 129, 0.5)' : '0 8px 32px rgba(0, 0, 0, 0.25)',
+                  cursor: 'pointer',
+                  transform: isBtnHovered ? 'translateY(-2px)' : 'none',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                Begin Chapter <ArrowLeft style={{ transform: "rotate(180deg)" }} size={18} />
+              </button>
+            </div>
+          </>
+        ) : (
+          <div style={{ maxWidth: "560px", zIndex: 10 }}>
+            <span className="title-badge">Class {classNum} · {subjectName}</span>
+            <div className="meta-ch-topics">◎ {topics}</div>
+            <h1 className="ch-heading">
+              Biology <em>Lab</em>
+            </h1>
+            <div className="meta-row">
+              <span className="meta-ch-num">CH 0{chapterNum}</span>
+              <span className="meta-ch-title">{title}</span>
+            </div>
+            <button className="cover-cta" onClick={onNext}>
+              Begin Chapter <ArrowLeft style={{ transform: "rotate(180deg)" }} size={16} />
+            </button>
           </div>
-          <button className="cover-cta" onClick={onNext}>
-            Begin Chapter <ArrowLeft style={{ transform: "rotate(180deg)" }} size={16} />
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );

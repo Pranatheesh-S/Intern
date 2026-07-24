@@ -392,12 +392,13 @@ export default function PlantDetective({ onBackToDashboard }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    minHeight: '240px',
+                    height: '360px',
+                    minHeight: '360px',
                     cursor: 'crosshair',
                     overflow: 'hidden'
                   }}
                 >
-                  <img src={plantImage} alt={activePlant.displayName} style={{ height: '220px', objectFit: 'contain' }} />
+                  <img src={plantImage} alt={activePlant.displayName} style={{ height: '340px', objectFit: 'contain' }} />
 
                   {/* Magnifier lens overlay */}
                   {magnifierPos && (
@@ -461,60 +462,148 @@ export default function PlantDetective({ onBackToDashboard }) {
                   🪵 Drag the lever right to apply force to the stem. See how much it bends!
                 </div>
 
-                {/* Animated stem bending visual */}
-                <div style={{
-                  background: isLight 
-                    ? 'radial-gradient(ellipse at center, #fffbeb 0%, #fef3c7 100%)' 
-                    : 'radial-gradient(ellipse at center, #1e1a0a 0%, #0a0f0a 100%)',
-                  borderRadius: '16px',
-                  border: `1px solid ${isLight ? '#fde68a' : 'rgba(217,119,6,0.12)'}`,
-                  minHeight: '200px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                  position: 'relative'
-                }}>
-                  <svg width="200" height="180" viewBox="0 0 100 90">
-                    {/* Ground */}
-                    <rect x="0" y="75" width="100" height="15" fill="#1c1008" />
-                    <rect x="35" y="72" width="30" height="8" fill="#78350f" rx="2" />
-                    {/* Bending stem */}
-                    {selectedPlantId === 'plantA' && (
-                      <path
-                        d={`M50 72 Q${50 + Math.min(flexLevel * 0.3, 28)} ${50 - flexLevel * 0.1} ${50 + Math.min(flexLevel * 0.4, 38)} ${30 - flexLevel * 0.05}`}
-                        fill="none" stroke="#22c55e" strokeWidth="4" strokeLinecap="round"
-                        style={{ transition: 'd 0.1s ease' }}
-                      />
-                    )}
-                    {selectedPlantId === 'plantB' && (
-                      <path
-                        d={`M50 72 Q${50 + Math.min(flexLevel * 0.15, 14)} ${48} ${50 + Math.min(flexLevel * 0.18, 16)} ${28}`}
-                        fill="none" stroke="#92400e" strokeWidth="5.5" strokeLinecap="round"
-                        style={{ transition: 'd 0.1s ease' }}
-                      />
-                    )}
-                    {selectedPlantId === 'plantC' && (
-                      <path
-                        d={`M50 72 Q${50 + Math.min(flexLevel * 0.04, 3)} ${48} ${50 + Math.min(flexLevel * 0.03, 2.5)} ${25}`}
-                        fill="none" stroke="#451a03" strokeWidth="8" strokeLinecap="round"
-                        style={{ transition: 'd 0.1s ease' }}
-                      />
-                    )}
-                    {/* Force arrow */}
-                    {flexLevel > 5 && (
-                      <g opacity={Math.min(flexLevel / 50, 1)}>
-                        <line x1={50 + Math.min(flexLevel * 0.35, 35)} y1="30" x2={50 + Math.min(flexLevel * 0.4, 40)} y2="30" stroke="#f59e0b" strokeWidth="1.5" />
-                        <polygon points={`${50 + Math.min(flexLevel * 0.42, 42)},30 ${50 + Math.min(flexLevel * 0.37, 37)},27 ${50 + Math.min(flexLevel * 0.37, 37)},33`} fill="#f59e0b" />
-                      </g>
-                    )}
-                  </svg>
-                  {flexLocked && (
-                    <div style={{ position: 'absolute', top: 12, right: 12, background: currentFlex.color, borderRadius: '20px', padding: '4px 12px', fontSize: '12px', fontWeight: 'bold', color: '#fff' }}>
-                      {currentFlex.label}
-                    </div>
-                  )}
-                </div>
+                           {/* Animated stem bending visual */}
+                 {(() => {
+                   let endX = 50;
+                   let endY = 30;
+                   let qX = 50;
+                   let qY = 50;
+                   
+                   if (selectedPlantId === 'plantA') {
+                     endX = 50 + Math.min(flexLevel * 0.4, 38);
+                     endY = 30 - flexLevel * 0.05;
+                     qX = 50 + Math.min(flexLevel * 0.3, 28);
+                     qY = 50 - flexLevel * 0.1;
+                   } else if (selectedPlantId === 'plantB') {
+                     endX = 50 + Math.min(flexLevel * 0.18, 16);
+                     endY = 28;
+                     qX = 50 + Math.min(flexLevel * 0.15, 14);
+                     qY = 48;
+                   } else if (selectedPlantId === 'plantC') {
+                     endX = 50 + Math.min(flexLevel * 0.03, 2.5);
+                     endY = 25;
+                     qX = 50 + Math.min(flexLevel * 0.04, 3);
+                     qY = 48;
+                   }
+
+                   return (
+                     <div style={{
+                       background: isLight 
+                         ? 'radial-gradient(ellipse at center, #f8fafc 0%, #e2e8f0 100%)' 
+                         : 'radial-gradient(ellipse at center, #1e293b 0%, #0f172a 100%)',
+                       borderRadius: '16px',
+                       border: `1px solid var(--border)`,
+                       minHeight: '220px',
+                       display: 'flex',
+                       alignItems: 'center',
+                       justifyContent: 'center',
+                       overflow: 'hidden',
+                       position: 'relative',
+                       width: '100%'
+                     }}>
+                       {/* Laboratory background grid lines */}
+                       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '1rem 1.5rem', pointerEvents: 'none', opacity: 0.15 }}>
+                         <div style={{ borderBottom: '1px dashed var(--accent)', width: '100%', fontSize: '9px', color: 'var(--accent)' }}>30° Flex Limit</div>
+                         <div style={{ borderBottom: '1px dashed var(--accent)', width: '100%', fontSize: '9px', color: 'var(--accent)' }}>60° Flex Limit</div>
+                         <div style={{ borderBottom: '1px dashed var(--accent)', width: '100%', fontSize: '9px', color: 'var(--accent)' }}>Base Clamp Alignment</div>
+                       </div>
+
+                       <svg width="240" height="200" viewBox="0 0 100 90">
+                         {/* Grid overlay in SVG */}
+                         <g opacity="0.08">
+                           <line x1="10" y1="30" x2="90" y2="30" stroke="#000" strokeWidth="0.5" strokeDasharray="2,2" />
+                           <line x1="10" y1="50" x2="90" y2="50" stroke="#000" strokeWidth="0.5" strokeDasharray="2,2" />
+                           <text x="92" y="32" fontSize="4" textAnchor="start">30px</text>
+                           <text x="92" y="52" fontSize="4" textAnchor="start">50px</text>
+                         </g>
+
+                         {/* Specimen Pot */}
+                         <polygon points="35,84 65,84 60,71 40,71" fill="#c2410c" stroke="#7c2d12" strokeWidth="1" />
+                         <rect x="33" y="69.5" width="34" height="2.5" fill="#ea580c" stroke="#7c2d12" strokeWidth="0.8" rx="0.5" />
+                         <ellipse cx="50" cy="70.5" rx="16" ry="1.5" fill="#451a03" />
+
+                         {/* Bending stem path */}
+                         {selectedPlantId === 'plantA' && (
+                           <>
+                             <path
+                               d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                               fill="none" stroke="#22c55e" strokeWidth="3.5" strokeLinecap="round"
+                               style={{ transition: 'd 0.1s ease' }}
+                             />
+                             {/* Tulsi Leaves at top */}
+                             <g style={{ transition: 'transform 0.1s ease' }}>
+                               <path d={`M ${endX} ${endY} Q ${endX - 7} ${endY - 5} ${endX - 10} ${endY - 1} Q ${endX - 5} ${endY + 2} ${endX} ${endY}`} fill="#4ade80" stroke="#15803d" strokeWidth="0.5" />
+                               <path d={`M ${endX} ${endY} Q ${endX + 7} ${endY - 5} ${endX + 10} ${endY - 1} Q ${endX + 5} ${endY + 2} ${endX} ${endY}`} fill="#4ade80" stroke="#15803d" strokeWidth="0.5" />
+                               {/* Purple flowers apex */}
+                               <circle cx={endX} cy={endY - 2.5} r="1.5" fill="#c084fc" />
+                               <circle cx={endX - 1.5} cy={endY - 1.5} r="1" fill="#c084fc" />
+                               <circle cx={endX + 1.5} cy={endY - 1.5} r="1" fill="#c084fc" />
+                             </g>
+                             {/* Leaves at mid point */}
+                             <g>
+                               <path d={`M ${qX} ${qY} Q ${qX - 8} ${qY - 4} ${qX - 11} ${qY + 1} Q ${qX - 6} ${qY + 3} ${qX} ${qY}`} fill="#22c55e" stroke="#15803d" strokeWidth="0.5" />
+                               <path d={`M ${qX} ${qY} Q ${qX + 8} ${qY - 4} ${qX + 11} ${qY + 1} Q ${qX + 6} ${qY + 3} ${qX} ${qY}`} fill="#22c55e" stroke="#15803d" strokeWidth="0.5" />
+                             </g>
+                           </>
+                         )}
+
+                         {selectedPlantId === 'plantB' && (
+                           <>
+                             <path
+                               d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                               fill="none" stroke="#92400e" strokeWidth="5" strokeLinecap="round"
+                               style={{ transition: 'd 0.1s ease' }}
+                             />
+                             {/* Rose Bud at top */}
+                             <g>
+                               <circle cx={endX} cy={endY - 2.5} r="3.5" fill="#f43f5e" stroke="#be123c" strokeWidth="0.5" />
+                               <path d={`M ${endX - 2.5} ${endY} Q ${endX} ${endY - 3} ${endX + 2.5} ${endY} Z`} fill="#15803d" />
+                             </g>
+                             {/* Thorns along stem */}
+                             <polygon points={`${qX - 1},${qY} ${qX - 4.5},${qY + 1.5} ${qX - 1},${qY + 3.5}`} fill="#be123c" />
+                             <polygon points={`${qX + 1.2},${qY - 8} ${qX + 4.5},${qY - 6.5} ${qX + 1.2},${qY - 4.5}`} fill="#be123c" />
+                             {/* Shrub branch close to base */}
+                             <path d={`M50 71 Q 42 66 38 60`} fill="none" stroke="#78350f" strokeWidth="3" strokeLinecap="round" />
+                             <path d={`M 38 60 Q 36 57 32 58`} fill="none" stroke="#78350f" strokeWidth="2" strokeLinecap="round" />
+                             <circle cx="32" cy="58" r="1.5" fill="#f43f5e" />
+                           </>
+                         )}
+
+                         {selectedPlantId === 'plantC' && (
+                           <>
+                             <path
+                               d={`M50 71 Q${qX} ${qY} ${endX} ${endY}`}
+                               fill="none" stroke="#451a03" strokeWidth="7.5" strokeLinecap="round"
+                               style={{ transition: 'd 0.1s ease' }}
+                             />
+                             {/* Tree crown leaflets */}
+                             <g transform={`translate(${endX}, ${endY})`} style={{ transition: 'transform 0.1s ease' }}>
+                               <path d="M 0,-1 Q -9,-6 -14,-1 Q -9,3 0,0" fill="#15803d" />
+                               <path d="M 0,-1 Q 9,-6 14,-1 Q 9,3 0,0" fill="#15803d" />
+                               <path d="M 0,-1 Q -5,-11 -8,-15 Q -3,-10 0,-1" fill="#166534" />
+                               <path d="M 0,-1 Q 5,-11 8,-15 Q 3,-10 0,-1" fill="#166534" />
+                               <circle cx="0" cy="-5" r="7" fill="#166534" opacity="0.75" />
+                             </g>
+                           </>
+                         )}
+
+                         {/* Force arrow */}
+                         {flexLevel > 5 && (
+                           <g opacity={Math.min(flexLevel / 50, 1)}>
+                             <line x1={50 + Math.min(flexLevel * 0.35, 35)} y1="30" x2={50 + Math.min(flexLevel * 0.4, 40)} y2="30" stroke="#f59e0b" strokeWidth="1.5" />
+                             <polygon points={`${50 + Math.min(flexLevel * 0.42, 42)},30 ${50 + Math.min(flexLevel * 0.37, 37)},27 ${50 + Math.min(flexLevel * 0.37, 37)},33`} fill="#f59e0b" />
+                           </g>
+                         )}
+                       </svg>
+
+                       {flexLocked && (
+                         <div style={{ position: 'absolute', top: 12, right: 12, background: currentFlex.color, borderRadius: '20px', padding: '4px 12px', fontSize: '12px', fontWeight: 'bold', color: '#fff' }}>
+                           {currentFlex.label}
+                         </div>
+                       )}
+                     </div>
+                   );
+                 })()}
 
                 {/* Drag lever */}
                 <div style={{ padding: '1rem', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)' }}>
