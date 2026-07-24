@@ -53,6 +53,11 @@ export default function MazeGame({ onSolve, isSolved }) {
     const H = canvas.height;
     const ctx = canvas.getContext("2d");
 
+    const mazeImage = new Image();
+    mazeImage.src = "/maze.png";
+    const barImage = new Image();
+    barImage.src = "/mini_bar.png";
+
     let mzDrag = false;
     let animFrame = null;
 
@@ -146,13 +151,17 @@ export default function MazeGame({ onSolve, isSolved }) {
       if (!mzBlocked(mzBall.x, ny)) mzBall.y = Math.max(10, Math.min(H - 10, ny)); else mzBall.vy *= -0.3;
       
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = "#24252A";
-      roundRect(ctx, 4, 4, W - 8, H - 8, 10);
-      ctx.fill();
-      ctx.fillStyle = "#A350D1";
-      for (const w of mzWalls) {
-        roundRect(ctx, w.x, w.y, w.w, w.h, 5);
+      if (mazeImage.complete && mazeImage.naturalWidth !== 0) {
+        ctx.drawImage(mazeImage, 0, 0, W, H);
+      } else {
+        ctx.fillStyle = "#24252A";
+        roundRect(ctx, 4, 4, W - 8, H - 8, 10);
         ctx.fill();
+        ctx.fillStyle = "#A350D1";
+        for (const w of mzWalls) {
+          roundRect(ctx, w.x, w.y, w.w, w.h, 5);
+          ctx.fill();
+        }
       }
       
       ctx.fillStyle = "rgba(92,225,185,.25)";
@@ -180,7 +189,11 @@ export default function MazeGame({ onSolve, isSolved }) {
       ctx.globalAlpha = 0.6;
       ctx.save();
       ctx.translate(mzMag.x, mzMag.y);
-      drawBar(ctx, 0, 0, 70, 18);
+      if (barImage.complete && barImage.naturalWidth !== 0) {
+        ctx.drawImage(barImage, -35, -9, 70, 18);
+      } else {
+        drawBar(ctx, 0, 0, 70, 18);
+      }
       ctx.restore();
       ctx.globalAlpha = 1;
       ctx.strokeStyle = "rgba(124,158,255,.3)";

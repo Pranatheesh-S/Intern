@@ -536,15 +536,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                   {placed.pencils && (
                     <DraggableSVGGroup id="pencils" isDraggable={true}>
                       <g transform={`translate(${positions.pencils.x - 40}, ${positions.pencils.y - 60})`} filter="drop-shadow(2px 2px 2px rgba(0,0,0,0.3))">
-                        {[...Array(6)].map((_, i) => (
-                          <g key={i} transform={`translate(${i * 14}, 0)`}>
-                            <polygon points="0,15 8,15 4,0" fill="#e6b981" />
-                            <polygon points="3,3 5,3 4,0" fill="#334155" />
-                            <rect x="0" y="15" width="8" height="90" fill="url(#pencilGrad)" />
-                            <rect x="0" y="102" width="8" height="5" fill="#cbd5e1" />
-                            <rect x="0" y="107" width="8" height="13" rx="2" fill="#f472b6" />
-                          </g>
-                        ))}
+                        <image href="/pencils.png" x="0" y="0" width="84" height="120" preserveAspectRatio="xMidYMid meet" />
                       </g>
                     </DraggableSVGGroup>
                   )}

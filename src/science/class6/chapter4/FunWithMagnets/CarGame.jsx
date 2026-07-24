@@ -51,6 +51,11 @@ export default function CarGame({ isPushing, onComplete }) {
     const H = canvas.height;
 
     let carX = W * 0.42;
+
+    const barImage = new Image();
+    barImage.src = "/mini_bar.png";
+    const carImage = new Image();
+    carImage.src = "/toycar.png";
     
     function drawCars(handX) {
       const cy = H / 2;
@@ -59,7 +64,12 @@ export default function CarGame({ isPushing, onComplete }) {
       // hand magnet
       ctx.save();
       ctx.translate(handX, cy);
-      drawBar(ctx, 0, 0, 140, 40, true);
+      if (barImage.complete && barImage.naturalWidth !== 0) {
+        ctx.rotate(Math.PI);
+        ctx.drawImage(barImage, -70, -20, 140, 40);
+      } else {
+        drawBar(ctx, 0, 0, 140, 40, true);
+      }
       ctx.restore();
       ctx.fillStyle = "#6C77A8";
       ctx.font = "14px Segoe UI";
@@ -67,18 +77,29 @@ export default function CarGame({ isPushing, onComplete }) {
       ctx.fillText("your magnet", handX, cy + 45);
       
       // car with magnet
-      ctx.fillStyle = "#3A4680";
-      roundRect(ctx, carX - 60, cy - 16, 120, 40, 8);
-      ctx.fill();
-      ctx.fillStyle = "#222A3B";
-      ctx.beginPath();
-      ctx.arc(carX - 32, cy + 28, 14, 0, 7);
-      ctx.arc(carX + 32, cy + 28, 14, 0, 7);
-      ctx.fill();
-      ctx.save();
-      ctx.translate(carX, cy - 28);
-      drawBar(ctx, 0, 0, 88, 24);
-      ctx.restore();
+      if (carImage.complete && carImage.naturalWidth !== 0) {
+        // Adjust the size and position as needed to fit the original car dimensions
+        ctx.drawImage(carImage, carX - 60, cy - 25, 120, 70);
+      } else {
+        ctx.fillStyle = "#3A4680";
+        roundRect(ctx, carX - 60, cy - 16, 120, 40, 8);
+        ctx.fill();
+        ctx.fillStyle = "#222A3B";
+        ctx.beginPath();
+        ctx.arc(carX - 32, cy + 28, 14, 0, 7);
+        ctx.arc(carX + 32, cy + 28, 14, 0, 7);
+        ctx.fill();
+      }
+      if (!carImage.complete || carImage.naturalWidth === 0) {
+        ctx.save();
+        ctx.translate(carX, cy - 28);
+        if (barImage.complete && barImage.naturalWidth !== 0) {
+          ctx.drawImage(barImage, -44, -12, 88, 24);
+        } else {
+          drawBar(ctx, 0, 0, 88, 24);
+        }
+        ctx.restore();
+      }
       ctx.fillStyle = "#6C77A8";
       ctx.font = "14px Segoe UI";
       ctx.fillText("toy car", carX, cy + 60);
