@@ -8,14 +8,6 @@ const facts = [
   {
     "title": "Empty Space",
     "content": "Scientist Michael Faraday showed that magnetic forces can act through empty space. His discoveries helped scientists understand how magnetic fields work."
-  },
-  {
-    "title": "Security Systems",
-    "content": "Security systems in shops often use magnetic technology. Sensors can detect magnetic tags even when they are hidden inside bags, boxes, or clothing."
-  },
-  {
-    "title": "Magnetic Sensors",
-    "content": "Engineers use magnetic sensors hidden inside machines to detect movement and position without touching the moving parts. These sensors help make robots, automatic doors, and modern vehicles work more accurately."
   }
 ];
 
