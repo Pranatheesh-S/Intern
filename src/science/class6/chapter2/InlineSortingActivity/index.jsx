@@ -3,6 +3,22 @@ import { ArrowLeft, RefreshCw, CheckCircle, ChevronRight, Award, HelpCircle, Boo
 import confetti from 'canvas-confetti';
 import { useTheme } from '../../../../ThemeContext.jsx';
 
+import roseImg from '../../../../assets/specimens/rose.png';
+import grassImg from '../../../../assets/specimens/grass.png';
+import banyanImg from '../../../../assets/specimens/banyan.png';
+import tomatoImg from '../../../../assets/specimens/tomato.png';
+import hibiscusImg from '../../../../assets/specimens/hibiscus.png';
+import mangoImg from '../../../../assets/specimens/mango.png';
+
+const PLANT_IMAGES = {
+  rose: roseImg,
+  grass: grassImg,
+  banyan: banyanImg,
+  tomato: tomatoImg,
+  hibiscus: hibiscusImg,
+  mango: mangoImg
+};
+
 const SORT_ITEMS = [
   { id: 'rose', name: 'Rose Plant', type: 'shrub', desc: 'Medium height, thin woody stem branching near base.' },
   { id: 'grass', name: 'Grass', type: 'herb', desc: 'Short, soft green stem with no woodiness.' },
@@ -109,6 +125,15 @@ const renderPlantSVG = (id) => {
       );
     default:
       return null;
+  }
+};
+
+const getBinStyle = (key) => {
+  switch (key) {
+    case 'herb': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#16a34a', labelBg: '#faf6f0' };
+    case 'shrub': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#d97706', labelBg: '#faf6f0' };
+    case 'tree': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#1e3a8a', labelBg: '#faf6f0' };
+    default: return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: 'var(--navy)', labelBg: '#faf6f0' };
   }
 };
 
@@ -279,8 +304,23 @@ export default function InlineSortingActivity({ onBackToDashboard }) {
                           textAlign: 'center'
                         }}
                       >
-                        <div style={{ background: '#f8fafc', borderRadius: '50%', padding: '4px', border: '1px solid #f1f5f9' }}>
-                          {renderPlantSVG(item.id)}
+                        <div style={{ 
+                          width: '100%', 
+                          aspectRatio: '1.33', 
+                          borderRadius: '8px', 
+                          overflow: 'hidden', 
+                          background: '#f8fafc',
+                          border: '1px solid rgba(0,0,0,0.05)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <img 
+                            src={PLANT_IMAGES[item.id]} 
+                            alt={item.name} 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                            draggable={false}
+                          />
                         </div>
                         <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--navy)', textDecoration: isSorted ? 'line-through' : 'none' }}>
                           {item.name}
@@ -306,12 +346,13 @@ export default function InlineSortingActivity({ onBackToDashboard }) {
                 </span>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                   {[
-                    { key: 'herb', label: '🌿 Herbs Bin', bg: 'rgba(16, 185, 129, 0.03)', border: '2px dashed #10b981', activeBorder: '2px solid #10b981', color: '#1b5e20', rule: 'Soft green stems, short height.' },
-                    { key: 'shrub', label: '🌺 Shrubs Bin', bg: 'rgba(245, 158, 11, 0.03)', border: '2px dashed #f59e0b', activeBorder: '2px solid #f59e0b', color: '#b45309', rule: 'Medium height, branches near ground.' },
-                    { key: 'tree', label: '🌳 Trees Bin', bg: 'rgba(30, 58, 138, 0.03)', border: '2px dashed #3b82f6', activeBorder: '2px solid #3b82f6', color: '#1e3a8a', rule: 'Single thick woody trunk branching high.' }
+                    { key: 'herb', label: '🌿 Herbs Bin', rule: 'Soft green stems, short height.' },
+                    { key: 'shrub', label: '🌺 Shrubs Bin', rule: 'Medium height, branches near ground.' },
+                    { key: 'tree', label: '🌳 Trees Bin', rule: 'Single thick woody trunk branching high.' }
                   ].map(bin => {
                     const itemsInBin = SORT_ITEMS.filter(item => correctCounts[item.id] === bin.key);
                     const canDrop = !!selectedItem;
+                    const styleProps = getBinStyle(bin.key);
                     return (
                       <div
                         key={bin.key}
@@ -324,25 +365,44 @@ export default function InlineSortingActivity({ onBackToDashboard }) {
                           alignItems: 'center',
                           padding: '1.25rem 0.85rem',
                           minHeight: '180px',
-                          background: bin.bg,
-                          border: canDrop ? bin.activeBorder : bin.border,
+                          background: styleProps.bg,
+                          border: `2px solid ${styleProps.border}`,
                           borderRadius: '16px',
                           cursor: canDrop ? 'pointer' : 'default',
-                          transition: 'all 0.2s',
-                          boxShadow: canDrop ? '0 8px 24px rgba(0,0,0,0.04)' : 'none'
+                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                          boxShadow: 'inset 0 16px 0 #ab855f, inset 0 20px 20px rgba(0,0,0,0.12), inset 0 -8px 0 rgba(0,0,0,0.05), 0 8px 16px rgba(0,0,0,0.04)',
+                          position: 'relative'
                         }}
                       >
-                        <span style={{ fontSize: '13.5px', fontWeight: 'bold', color: bin.color, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '4px' }}>
+                        {/* Taped Postal Sticker Label */}
+                        <div style={{
+                          background: styleProps.labelBg,
+                          border: '1px solid rgba(183, 146, 110, 0.4)',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.05), inset 0 1px 0 #fff',
+                          padding: '0.25rem 0.5rem',
+                          borderRadius: '4px',
+                          fontSize: '0.68rem',
+                          fontWeight: '800',
+                          color: styleProps.color,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          alignSelf: 'center',
+                          marginBottom: '0.5rem',
+                          transform: 'rotate(-1.5deg)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}>
                           {bin.label}
-                        </span>
-                        <span style={{ fontSize: '10px', color: 'var(--mut)', textAlign: 'center', marginBottom: '1rem', lineHeight: '1.3' }}>
+                        </div>
+
+                        <span style={{ fontSize: '10px', color: '#5c4033', textAlign: 'center', marginBottom: '1rem', fontWeight: '500', lineHeight: '1.3' }}>
                           {bin.rule}
                         </span>
                         
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', width: '100%', marginTop: 'auto' }}>
                           {itemsInBin.map(i => (
-                            <div key={i.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', fontSize: '11px', background: '#ffffff', color: bin.color, border: `1px solid ${bin.color}33`, padding: '0.35rem 0.5rem', borderRadius: '8px', fontWeight: '700', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                              <span>{SORT_ITEMS.find(p => p.id === i.id)?.name.split(' ')[0]}</span>
+                            <div key={i.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', fontSize: '11px', background: '#ffffff', color: styleProps.color, border: `1px solid ${styleProps.color}33`, padding: '0.35rem 0.5rem', borderRadius: '8px', fontWeight: '700', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                               <span>{i.name}</span>
                             </div>
                           ))}

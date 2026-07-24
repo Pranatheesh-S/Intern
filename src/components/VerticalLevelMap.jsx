@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode }) => {
+const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode, bgImage, stickyTop }) => {
   const containerRef = useRef(null);
 
   // Configuration for the vertical map
@@ -51,12 +51,20 @@ const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode }) => {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
+        @keyframes pulse-leaf {
+          0%, 100% { transform: scale(1) rotate(0deg); }
+          50% { transform: scale(1.25) rotate(15deg); }
+        }
       `}</style>
-      <div className="glass-panel hide-scrollbar" style={{
+      <div className={`${bgImage ? '' : 'glass-panel'} hide-scrollbar`} style={{
         width: `${mapWidth}px`,
+        minWidth: `${mapWidth}px`,
+        maxWidth: `${mapWidth}px`,
+        flexShrink: 0,
+        flexGrow: 0,
         position: 'sticky',
-        top: '6.5rem',
-        height: 'calc(100vh - 8rem)', // Full viewport height minus some padding
+        top: stickyTop || '6.5rem',
+        height: 'calc(100vh - 8.5rem)', // Full viewport height minus some padding
         overflowY: 'hidden',
         overflowX: 'hidden',
         padding: '0',
@@ -64,21 +72,38 @@ const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode }) => {
         display: 'flex',
         flexDirection: 'column',
         borderRadius: '12px',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+        backgroundImage: bgImage ? `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.15)), url(${bgImage})` : 'none',
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        paddingTop: bgImage ? '2.5rem' : '0'
       }}>
       {/* Header */}
       <div style={{
-        position: 'sticky',
-        top: 0,
-        background: 'var(--page-bg)',
-        padding: '1rem',
-        borderBottom: '1px solid var(--border)',
+        position: 'absolute',
+        top: bgImage ? '0.65rem' : '1rem',
+        left: bgImage ? '0.65rem' : '50%',
+        transform: bgImage ? 'none' : 'translateX(-50%)',
         zIndex: 100,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: 'var(--text-heading)'
+        pointerEvents: 'none'
       }}>
-        Level Map
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          background: bgImage ? 'rgba(15, 23, 42, 0.7)' : 'var(--card-bg)',
+          backdropFilter: 'blur(12px)',
+          padding: '0.4rem 0.85rem',
+          borderRadius: '8px',
+          border: bgImage ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid var(--border)',
+          fontWeight: 'bold',
+          color: bgImage ? '#ffffff' : 'var(--text-heading)',
+          textShadow: bgImage ? '0 1px 3px rgba(0, 0, 0, 0.5)' : 'none',
+          pointerEvents: 'auto',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)'
+        }}>
+          Level Map
+        </div>
       </div>
 
       <div ref={containerRef} className="hide-scrollbar" style={{ flex: 1, position: 'relative', width: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
@@ -89,7 +114,7 @@ const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode }) => {
             <path 
               d={pathD} 
               fill="none" 
-              stroke="var(--border)" 
+              stroke={bgImage ? 'rgba(255, 255, 255, 0.35)' : 'var(--border)'} 
               strokeWidth="4" 
               strokeDasharray="8 8" 
               strokeLinecap="round" 
@@ -98,7 +123,7 @@ const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode }) => {
             <motion.path 
               d={pathD} 
               fill="none" 
-              stroke="var(--accent)" 
+              stroke={bgImage ? '#10b981' : 'var(--accent)'} 
               strokeWidth="6" 
               strokeLinecap="round" 
               initial={{ pathLength: 0 }}
@@ -143,7 +168,7 @@ const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode }) => {
                     width: '150px',
                     whiteSpace: 'normal',
                     textAlign: 'center',
-                    border: '1px solid var(--accent)',
+                    border: bgImage ? '1px solid #10b981' : '1px solid var(--accent)',
                     opacity: isActive ? 1 : 0,
                     transition: 'all 0.3s ease',
                     pointerEvents: isActive ? 'auto' : 'none',
@@ -152,6 +177,22 @@ const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode }) => {
                 >
                   {n.title}
                 </div>
+
+                {/* Candy Crush Level Badge Leaf/Flower Overlay */}
+                {bgImage && (
+                  <span style={{
+                    position: 'absolute',
+                    top: isActive ? '-10px' : '-6px',
+                    right: isActive ? '-10px' : '-6px',
+                    fontSize: isActive ? '1.2rem' : '0.9rem',
+                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))',
+                    animation: isActive ? 'pulse-leaf 2s infinite ease-in-out' : 'none',
+                    pointerEvents: 'none',
+                    zIndex: 12
+                  }}>
+                    {isActive ? '🍃' : isCompleted ? '🌸' : '🌿'}
+                  </span>
+                )}
 
                 {/* The clickable node */}
                 <button
@@ -166,10 +207,14 @@ const VerticalLevelMap = ({ sections, activeSectionId, onSelectNode }) => {
                     padding: 0,
                     flexShrink: 0,
                     borderRadius: '50%',
-                    background: isActive ? 'var(--accent)' : isCompleted ? 'var(--success)' : 'var(--page-bg)',
-                    border: `3px solid ${isActive || isCompleted ? '#fff' : 'var(--border)'}`,
-                    boxShadow: isActive ? '0 0 20px var(--accent)' : 'none',
-                    color: '#fff',
+                    background: bgImage ? 
+                      (isActive ? '#10b981' : isCompleted ? '#059669' : 'rgba(255, 255, 255, 0.35)') :
+                      (isActive ? 'var(--accent)' : isCompleted ? 'var(--success)' : 'var(--page-bg)'),
+                    border: `3px solid ${isActive || isCompleted ? '#fff' : (bgImage ? 'rgba(255,255,255,0.45)' : 'var(--border)')}`,
+                    boxShadow: isActive ? (bgImage ? '0 0 20px #10b981' : '0 0 20px var(--accent)') : 'none',
+                    backdropFilter: bgImage && !isActive && !isCompleted ? 'blur(4px)' : 'none',
+                    color: isActive || isCompleted ? '#fff' : (bgImage ? '#fff' : 'var(--text-secondary)'),
+                    textShadow: bgImage && !isActive && !isCompleted ? '0 1px 3px rgba(0,0,0,0.6)' : 'none',
                     display: 'flex', 
                     alignItems: 'center', 
                     justifyContent: 'center',

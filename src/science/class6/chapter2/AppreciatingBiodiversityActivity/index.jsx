@@ -3,11 +3,79 @@ import { ArrowLeft, RefreshCw, X, CheckCircle2, ChevronRight, Award, Compass, Vo
 import confetti from 'canvas-confetti';
 import { useTheme } from '../../../../ThemeContext.jsx';
 
+import tulsiImg from '../../../../assets/specimens/tulsi.png';
+import neemImg from '../../../../assets/specimens/neem.png';
+import roseImg from '../../../../assets/specimens/rose.png';
+import sunflowerImg from '../../../../assets/specimens/sunflower.png';
+import mangoImg from '../../../../assets/specimens/mango.png';
+import bananaImg from '../../../../assets/specimens/banana.png';
+import bambooImg from '../../../../assets/specimens/bamboo.png';
+import marigoldImg from '../../../../assets/specimens/marigold.png';
+import peepalImg from '../../../../assets/specimens/peepal.png';
+import lotusImg from '../../../../assets/specimens/lotus.png';
+import hibiscusImg from '../../../../assets/specimens/hibiscus.png';
+import grassImg from '../../../../assets/specimens/grass.png';
+import cactusImg from '../../../../assets/specimens/cactus.png';
+import jasmineImg from '../../../../assets/specimens/jasmine.png';
+import coconutImg from '../../../../assets/specimens/coconut.png';
+
+import crowImg from '../../../../assets/specimens/crow.png';
+import butterflyImg from '../../../../assets/specimens/butterfly.png';
+import antImg from '../../../../assets/specimens/ant.png';
+import frogImg from '../../../../assets/specimens/frog.png';
+import pigeonImg from '../../../../assets/specimens/pigeon.png';
+import sparrowImg from '../../../../assets/specimens/sparrow.png';
+import dogImg from '../../../../assets/specimens/dog.png';
+import cowImg from '../../../../assets/specimens/cow.png';
+import squirrelImg from '../../../../assets/specimens/squirrel.png';
+import peacockImg from '../../../../assets/specimens/peacock.png';
+import dragonflyImg from '../../../../assets/specimens/dragonfly.png';
+import snailImg from '../../../../assets/specimens/snail.png';
+import fishImg from '../../../../assets/specimens/fish.png';
+import beeImg from '../../../../assets/specimens/bee.png';
+import rabbitImg from '../../../../assets/specimens/rabbit.png';
+
 const PLANTS = ['Tulsi', 'Neem', 'Rose', 'Sunflower', 'Mango', 'Banana', 'Bamboo', 'Marigold', 'Peepal', 'Lotus', 'Hibiscus', 'Grass', 'Cactus', 'Jasmine', 'Coconut'];
 const ANIMALS = ['Crow', 'Butterfly', 'Ant', 'Frog', 'Pigeon', 'Sparrow', 'Dog', 'Cow', 'Squirrel', 'Peacock', 'Dragonfly', 'Snail', 'Fish', 'Bee', 'Rabbit'];
 
 const PLANT_EMOJIS = { Tulsi:'🌿', Neem:'🌳', Rose:'🌹', Sunflower:'🌻', Mango:'🥭', Banana:'🍌', Bamboo:'🎋', Marigold:'🌼', Peepal:'🌲', Lotus:'🪷', Hibiscus:'🌺', Grass:'🌱', Cactus:'🌵', Jasmine:'🤍', Coconut:'🥥' };
 const ANIMAL_EMOJIS = { Crow:'🐦‍⬛', Butterfly:'🦋', Ant:'🐜', Frog:'🐸', Pigeon:'🕊️', Sparrow:'🐦', Dog:'🐕', Cow:'🐄', Squirrel:'🐿️', Peacock:'🦚', Dragonfly:'🦗', Snail:'🐌', Fish:'🐟', Bee:'🐝', Rabbit:'🐇' };
+
+const PLANT_IMAGES = {
+  Tulsi: tulsiImg,
+  Neem: neemImg,
+  Rose: roseImg,
+  Sunflower: sunflowerImg,
+  Mango: mangoImg,
+  Banana: bananaImg,
+  Bamboo: bambooImg,
+  Marigold: marigoldImg,
+  Peepal: peepalImg,
+  Lotus: lotusImg,
+  Hibiscus: hibiscusImg,
+  Grass: grassImg,
+  Cactus: cactusImg,
+  Jasmine: jasmineImg,
+  Coconut: coconutImg
+};
+
+const ANIMAL_IMAGES = {
+  Crow: crowImg,
+  Butterfly: butterflyImg,
+  Ant: antImg,
+  Frog: frogImg,
+  Pigeon: pigeonImg,
+  Sparrow: sparrowImg,
+  Dog: dogImg,
+  Cow: cowImg,
+  Squirrel: squirrelImg,
+  Peacock: peacockImg,
+  Dragonfly: dragonflyImg,
+  Snail: snailImg,
+  Fish: fishImg,
+  Bee: beeImg,
+  Rabbit: rabbitImg
+};
 
 const CLASSMATES = [
   { name:'Aarav', plant:'Mango', animal:'Peacock' }, { name:'Priya', plant:'Lotus', animal:'Butterfly' },
@@ -256,70 +324,72 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
         </div>
       </div>
 
-      <div className="split-frame" style={{ flex: 1, minHeight: 0 }}>
+      <div className="split-frame" style={{ flex: 1, minHeight: 0, gridTemplateColumns: phase === 'pick' ? '1fr' : undefined }}>
         
         {/* ============ LEFT COLUMN: CONTEXT & STATS ============ */}
-        <div className="frame-page-left">
-          <div className="textbook-eyebrow">Activity 2.2 · Let Us Appreciate</div>
-          <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)' }}>
-            Ecosystem Appreciation
-          </h1>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '13.5px', color: 'var(--mut)', lineHeight: '1.5' }}>
-            <p>
-              Appreciating and conserving biodiversity is vital for our survival. Every living thing in a habitat is connected.
-            </p>
-            <p>
-              During our nature walk, different students notice and remember different plants and animals. When we compile our observations together, we discover a much richer variety of life than any single person could find alone.
-            </p>
+        {phase !== 'pick' && (
+          <div className="frame-page-left">
+            <div className="textbook-eyebrow">Activity 2.2 · Let Us Appreciate</div>
+            <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)' }}>
+              Ecosystem Appreciation
+            </h1>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '13.5px', color: 'var(--mut)', lineHeight: '1.5' }}>
+              <p>
+                Appreciating and conserving biodiversity is vital for our survival. Every living thing in a habitat is connected.
+              </p>
+              <p>
+                During our nature walk, different students notice and remember different plants and animals. When we compile our observations together, we discover a much richer variety of life than any single person could find alone.
+              </p>
+            </div>
+
+            {boardCards.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1.25rem' }}>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--navy)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  📊 Memory Board Statistics
+                </span>
+                <div className="textbook-grid" style={{ marginBottom: 0 }}>
+                  <div className="textbook-fact" style={{ background: '#fff' }}>
+                    <div className="lab" style={{ color: 'var(--blue)' }}>Total Logs</div>
+                    <div className="v">{totalCards} entries</div>
+                    <div className="note">Your card + classmates</div>
+                  </div>
+                  <div className="textbook-fact" style={{ background: '#fff' }}>
+                    <div className="lab" style={{ color: 'var(--green)' }}>Unique Species</div>
+                    <div className="v">{uniquePlants + uniqueAnimals} types</div>
+                    <div className="note">Plants: {uniquePlants}, Animals: {uniqueAnimals}</div>
+                  </div>
+                </div>
+                <div className="textbook-explore" style={{ marginTop: '0.5rem' }}>
+                  ✏️ <b>Next step:</b> Switch to the <b>Ecosystem Quiz</b> tab on the right to test your knowledge of species interdependence!
+                </div>
+              </div>
+            ) : (
+              <div className="textbook-explore" style={{ marginTop: '1.5rem' }}>
+                ✏️ <b>Reflection challenge:</b> Close your eyes for 10 seconds. Think of one plant and one animal from your walk, then add them to the virtual class board.
+              </div>
+            )}
+
+            {phase === 'completed' && (
+              <div style={{ marginTop: 'auto', paddingTop: '1.25rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                <div style={{ background: '#ecfdf5', border: '1.5px solid #10b981', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#16a34a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    🎉 Activity Completed!
+                  </span>
+                  <span style={{ fontSize: '12px', color: 'var(--mut)' }}>
+                    You got {Object.values(quizAnswers).filter(Boolean).length} / 8 questions correct on the Interdependence checkup!
+                  </span>
+                  <button onClick={() => onBackToDashboard('next_activity')} className="primary" style={{ background: 'var(--accent)', borderColor: 'var(--accent)', width: '100%', fontSize: '13.5px', padding: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '0.5rem' }}>
+                    Proceed to Activity 2.3: Let Us Group ➔
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-
-          {boardCards.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1.25rem' }}>
-              <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--navy)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                📊 Memory Board Statistics
-              </span>
-              <div className="textbook-grid" style={{ marginBottom: 0 }}>
-                <div className="textbook-fact" style={{ background: '#fff' }}>
-                  <div className="lab" style={{ color: 'var(--blue)' }}>Total Logs</div>
-                  <div className="v">{totalCards} entries</div>
-                  <div className="note">Your card + classmates</div>
-                </div>
-                <div className="textbook-fact" style={{ background: '#fff' }}>
-                  <div className="lab" style={{ color: 'var(--green)' }}>Unique Species</div>
-                  <div className="v">{uniquePlants + uniqueAnimals} types</div>
-                  <div className="note">Plants: {uniquePlants}, Animals: {uniqueAnimals}</div>
-                </div>
-              </div>
-              <div className="textbook-explore" style={{ marginTop: '0.5rem' }}>
-                ✏️ <b>Next step:</b> Switch to the <b>Ecosystem Quiz</b> tab on the right to test your knowledge of species interdependence!
-              </div>
-            </div>
-          ) : (
-            <div className="textbook-explore" style={{ marginTop: '1.5rem' }}>
-              ✏️ <b>Reflection challenge:</b> Close your eyes for 10 seconds. Think of one plant and one animal from your walk, then add them to the virtual class board.
-            </div>
-          )}
-
-          {phase === 'completed' && (
-            <div style={{ marginTop: 'auto', paddingTop: '1.25rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-              <div style={{ background: '#ecfdf5', border: '1.5px solid #10b981', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#16a34a', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  🎉 Activity Completed!
-                </span>
-                <span style={{ fontSize: '12px', color: 'var(--mut)' }}>
-                  You got {Object.values(quizAnswers).filter(Boolean).length} / 8 questions correct on the Interdependence checkup!
-                </span>
-                <button onClick={() => onBackToDashboard('next_activity')} className="primary" style={{ background: 'var(--accent)', borderColor: 'var(--accent)', width: '100%', fontSize: '13.5px', padding: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '0.5rem' }}>
-                  Proceed to Activity 2.3: Let Us Group ➔
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+        )}
 
         {/* ============ RIGHT COLUMN: WORKSPACE TABS ============ */}
-        <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0, flex: 1, width: phase === 'pick' ? '100%' : 'auto', maxWidth: phase === 'pick' ? '100%' : 'none' }}>
           
           {/* Tabs bar - Styled Sideways */}
           <div style={{ 
@@ -392,7 +462,17 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
               
               {/* Submission panel (if not logged yet) */}
               {boardCards.length === 0 && (
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', padding: '2rem', textAlign: 'center', width: '100%' }}>
+                <div style={{ 
+                  flex: 1, 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center', 
+                  justifyContent: phase === 'pick' ? 'flex-start' : 'center', 
+                  gap: '1.5rem', 
+                  padding: phase === 'pick' ? '0' : '2rem', 
+                  textAlign: 'center', 
+                  width: '100%' 
+                }}>
                   {phase === 'timer' && (
                     <>
                       <div style={{ position: 'relative', width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -437,78 +517,101 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                   )}
 
                   {phase === 'pick' && (
-                    <div style={{ width: '100%', maxWidth: '820px', background: '#f8fafc', padding: '2rem 2.5rem', borderRadius: '16px', border: '1px solid var(--cardline)', display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'left', boxShadow: '0 8px 30px rgba(0,0,0,0.02)' }}>
-                      <h4 style={{ margin: 0, fontFamily: 'var(--serif-font)', color: 'var(--navy)', fontSize: '20px', fontWeight: 'bold' }}>What did you observe?</h4>
+                    <div style={{ width: '100%', background: '#f8fafc', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--cardline)', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left', boxShadow: '0 8px 30px rgba(0,0,0,0.02)' }}>
                       
-                      <div>
-                        <label style={{ fontSize: '12px', color: 'var(--navy)', fontWeight: 'bold', display: 'block', marginBottom: '8px', letterSpacing: '0.05em' }}>SELECT A PLANT</label>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem', maxHeight: '180px', overflowY: 'auto', padding: '8px', border: '1px solid var(--cardline)', borderRadius: '10px', background: '#fff' }}>
-                          {PLANTS.map(p => {
-                            const isSelected = selectedPlant === p;
-                            return (
-                              <button
-                                key={p}
-                                onClick={() => setSelectedPlant(p)}
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '6px',
-                                  padding: '0.6rem 0.8rem',
-                                  fontSize: '13.5px',
-                                  borderRadius: '8px',
-                                  border: isSelected ? '1.5px solid var(--green)' : '1px solid #e2e8f0',
-                                  background: isSelected ? '#e8f5e9' : '#f8fafc',
-                                  color: isSelected ? '#1b5e20' : 'var(--ink)',
-                                  cursor: 'pointer',
-                                  fontWeight: isSelected ? '600' : '400',
-                                  transition: 'all 0.15s ease'
-                                }}
-                              >
-                                <span>{PLANT_EMOJIS[p]}</span>
-                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
+                      {/* Expanded header block with nice big font */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', borderBottom: '1px solid var(--cardline)', paddingBottom: '0.75rem' }}>
+                        <span style={{ fontSize: '0.72rem', fontWeight: '800', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Goal</span>
+                        <h2 style={{ margin: 0, fontFamily: 'var(--serif-font)', color: 'var(--navy)', fontSize: '24px', fontWeight: 'bold' }}>
+                          Ecosystem Reflection: Pick 1 Plant & 1 Animal
+                        </h2>
+                        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--mut)' }}>
+                          Choose the specimens you observed during your nature walk to contribute to the shared Class Board.
+                        </p>
                       </div>
 
-                      <div>
-                        <label style={{ fontSize: '12px', color: 'var(--navy)', fontWeight: 'bold', display: 'block', marginBottom: '8px', letterSpacing: '0.05em' }}>SELECT AN ANIMAL</label>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem', maxHeight: '180px', overflowY: 'auto', padding: '8px', border: '1px solid var(--cardline)', borderRadius: '10px', background: '#fff' }}>
-                          {ANIMALS.map(a => {
-                            const isSelected = selectedAnimal === a;
-                            return (
-                              <button
-                                key={a}
-                                onClick={() => setSelectedAnimal(a)}
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '6px',
-                                  padding: '0.6rem 0.8rem',
-                                  fontSize: '13.5px',
-                                  borderRadius: '8px',
-                                  border: isSelected ? '1.5px solid var(--amber)' : '1px solid #e2e8f0',
-                                  background: isSelected ? '#fffbeb' : '#f8fafc',
-                                  color: isSelected ? '#b45309' : 'var(--ink)',
-                                  cursor: 'pointer',
-                                  fontWeight: isSelected ? '600' : '400',
-                                  transition: 'all 0.15s ease'
-                                }}
-                              >
-                                <span>{ANIMAL_EMOJIS[a]}</span>
-                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a}</span>
-                              </button>
-                            );
-                          })}
+                      {/* Side-by-side Plants and Animals */}
+                      <div style={{ display: 'flex', gap: '1.5rem', width: '100%' }}>
+                        
+                        {/* Plants Column */}
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <label style={{ fontSize: '11px', color: 'var(--navy)', fontWeight: 'bold', display: 'block', letterSpacing: '0.05em' }}>SELECT A PLANT</label>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', maxHeight: '500px', overflowY: 'auto', padding: '8px', border: '1px solid var(--cardline)', borderRadius: '10px', background: '#fff' }} className="hide-scrollbar">
+                            {PLANTS.map(p => {
+                              const isSelected = selectedPlant === p;
+                              return (
+                                <button
+                                  key={p}
+                                  onClick={() => setSelectedPlant(p)}
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    padding: '0.5rem',
+                                    borderRadius: '10px',
+                                    border: isSelected ? '2px solid var(--green)' : '1px solid #e2e8f0',
+                                    background: isSelected ? '#e8f5e9' : '#f8fafc',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    boxShadow: isSelected ? '0 4px 10px rgba(74, 222, 128, 0.15)' : 'none'
+                                  }}
+                                >
+                                  <div style={{ width: '100%', aspectRatio: '1.33', borderRadius: '6px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.05)' }}>
+                                    <img src={PLANT_IMAGES[p]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p} />
+                                  </div>
+                                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: isSelected ? '#1b5e20' : 'var(--navy)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: '100%', textAlign: 'center' }}>
+                                    {PLANT_EMOJIS[p]} {p}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
+
+                        {/* Animals Column */}
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <label style={{ fontSize: '11px', color: 'var(--navy)', fontWeight: 'bold', display: 'block', letterSpacing: '0.05em' }}>SELECT AN ANIMAL</label>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', maxHeight: '500px', overflowY: 'auto', padding: '8px', border: '1px solid var(--cardline)', borderRadius: '10px', background: '#fff' }} className="hide-scrollbar">
+                            {ANIMALS.map(a => {
+                              const isSelected = selectedAnimal === a;
+                              return (
+                                <button
+                                  key={a}
+                                  onClick={() => setSelectedAnimal(a)}
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    padding: '0.5rem',
+                                    borderRadius: '10px',
+                                    border: isSelected ? '2px solid var(--amber)' : '1px solid #e2e8f0',
+                                    background: isSelected ? '#fffbeb' : '#f8fafc',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    boxShadow: isSelected ? '0 4px 10px rgba(245, 158, 11, 0.15)' : 'none'
+                                  }}
+                                >
+                                  <div style={{ width: '100%', aspectRatio: '1.33', borderRadius: '6px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.05)' }}>
+                                    <img src={ANIMAL_IMAGES[a]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={a} />
+                                  </div>
+                                  <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: isSelected ? '#b45309' : 'var(--navy)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: '100%', textAlign: 'center' }}>
+                                    {ANIMAL_EMOJIS[a]} {a}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
                       </div>
 
                       <button 
                         disabled={!selectedPlant || !selectedAnimal}
                         onClick={handleAddToBoard} 
                         className="primary" 
-                        style={{ width: '100%', padding: '0.85rem', borderRadius: '10px', fontSize: '14.5px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', opacity: (!selectedPlant || !selectedAnimal) ? 0.5 : 1 }}
+                        style={{ width: '100%', padding: '0.8rem', borderRadius: '10px', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', opacity: (!selectedPlant || !selectedAnimal) ? 0.5 : 1, transition: 'all 0.2s ease', cursor: (!selectedPlant || !selectedAnimal) ? 'not-allowed' : 'pointer' }}
                       >
                         Add to Class Board <ChevronRight size={15} />
                       </button>
@@ -523,33 +626,47 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                   <div style={{ fontSize: '12px', color: 'var(--mut)', paddingBottom: '0.5rem', borderBottom: '1px solid var(--cardline)', marginBottom: '0.75rem', fontWeight: 'bold' }}>
                     🖼️ virtual class memory wall (16 total contributions)
                   </div>
-                  <div style={{ flex: 1, overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.6rem', paddingRight: '4px' }} className="hide-scrollbar">
+                  <div style={{ flex: 1, maxHeight: '540px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingRight: '4px' }} className="hide-scrollbar">
                     {boardCards.map((card, i) => (
                       <div 
                         key={i} 
                         style={{ 
                           background: card.isMe ? 'linear-gradient(135deg, #eff6ff, #dbeafe)' : '#f8fafc',
                           border: card.isMe ? '2px solid var(--accent)' : '1px solid var(--cardline)',
-                          borderRadius: '10px',
-                          padding: '0.65rem',
+                          borderRadius: '12px',
+                          padding: '0.75rem',
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: '0.35rem',
-                          position: 'relative'
+                          gap: '0.5rem',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
                         }}
                       >
-                        <span style={{ fontSize: '10px', fontWeight: 'bold', color: card.isMe ? 'var(--accent)' : 'var(--mut)' }}>
-                          {card.name} {card.isMe && '⭐'}
-                        </span>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', marginTop: '0.15rem' }}>
-                          <span style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <span>{PLANT_EMOJIS[card.plant]}</span>
-                            <span>{card.plant}</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontSize: '11px', fontWeight: 'bold', color: card.isMe ? 'var(--accent)' : 'var(--navy)' }}>
+                            {card.name} {card.isMe && '⭐'}
                           </span>
-                          <span style={{ fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <span>{ANIMAL_EMOJIS[card.animal]}</span>
-                            <span>{card.animal}</span>
-                          </span>
+                          <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Classmate memory</span>
+                        </div>
+                        
+                        <div style={{ display: 'flex', gap: '0.75rem', width: '100%' }}>
+                          {/* Plant Image Card */}
+                          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', background: '#ffffff', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '8px', padding: '0.4rem' }}>
+                            <div style={{ width: '100%', aspectRatio: '1.5', borderRadius: '6px', overflow: 'hidden' }}>
+                              <img src={PLANT_IMAGES[card.plant]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={card.plant} />
+                            </div>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--navy)' }}>
+                              {PLANT_EMOJIS[card.plant]} {card.plant}
+                            </span>
+                          </div>
+                          {/* Animal Image Card */}
+                          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', background: '#ffffff', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '8px', padding: '0.4rem' }}>
+                            <div style={{ width: '100%', aspectRatio: '1.5', borderRadius: '6px', overflow: 'hidden' }}>
+                              <img src={ANIMAL_IMAGES[card.animal]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={card.animal} />
+                            </div>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--navy)' }}>
+                              {ANIMAL_EMOJIS[card.animal]} {card.animal}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -582,9 +699,18 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                       You have validated your comprehension of biodiversity interdependence.
                     </p>
                   </div>
-                  <button onClick={handleReset} className="outline" style={{ padding: '0.5rem 1.25rem', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}>
-                    <RefreshCw size={13} /> Reset Activity
-                  </button>
+                  <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <button onClick={handleReset} className="outline" style={{ padding: '0.5rem 1.25rem', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}>
+                      <RefreshCw size={13} /> Reset Activity
+                    </button>
+                    <button 
+                      onClick={() => onBackToDashboard('go_to_quiz')} 
+                      className="primary" 
+                      style={{ padding: '0.5rem 1.25rem', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', background: '#10b981', borderColor: '#10b981' }}
+                    >
+                      Finish Activity & Go to Quiz <ChevronRight size={13} />
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>

@@ -15,8 +15,11 @@ import {
   Battery,
   Flame,
   Search,
-  X
+  X,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
+import natureForestSound from './assets/nature_forest_sound.mp3';
 import { useTheme } from './ThemeContext.jsx';
 import VerticalLevelMap from './components/VerticalLevelMap';
 const ElectricSwitchActivity = lazy(() => import('./science/class7/chapter3/ElectricSwitch'));
@@ -100,6 +103,21 @@ export default function App() {
   useEffect(() => {
     setHideHeader(false);
   }, [activeActivity]);
+
+  const [isAudioPlaying, setIsAudioPlaying] = useState(true);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (!audioRef.current) return;
+    audioRef.current.volume = 0.15; // Ambient background sound level
+    if (activeActivity === 'chapter2' && isAudioPlaying) {
+      audioRef.current.play().catch(err => {
+        console.log("Audio autoplay blocked by browser, waiting for interaction", err);
+      });
+    } else {
+      audioRef.current.pause();
+    }
+  }, [activeActivity, isAudioPlaying]);
 
 
   useEffect(() => {
@@ -2815,7 +2833,7 @@ export default function App() {
     </div>
   );
 
-  const isFullscreen = (activeActivity && !['chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter10', 'chapter11', 'chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || hideHeader;
+  const isFullscreen = (activeActivity && !['chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || hideHeader || ['chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter10', 'chapter11'].includes(activeActivity);
 
   return (
     <div className="app-container">
@@ -2920,7 +2938,7 @@ export default function App() {
       )}
 
       {/* Main Workspace content */}
-      <main className="content-wrapper" style={{ padding: isFullscreen ? 0 : undefined }}>
+      <main className={`content-wrapper ${isFullscreen ? 'fullscreen-lab' : ''}`} style={{ padding: isFullscreen ? 0 : undefined }}>
         <Suspense fallback={
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', color: 'var(--text-muted)' }}>
             Loading activity...
@@ -3137,6 +3155,76 @@ export default function App() {
         ) : null}
         </Suspense>
       </main>
+
+      {/* Ambient background music element */}
+      <audio ref={audioRef} src={natureForestSound} loop />
+
+      {/* Floating circular controls (Theme & Music) */}
+      <div 
+        style={{ 
+          position: 'fixed', 
+          bottom: '2rem', 
+          right: '2rem', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '0.75rem', 
+          zIndex: 999999 
+        }}
+      >
+        {/* Music Toggle Control (only for Chapter 2) */}
+        {activeActivity === 'chapter2' && (
+          <button
+            onClick={() => setIsAudioPlaying(prev => !prev)}
+            style={{
+              width: '46px',
+              height: '46px',
+              borderRadius: '50%',
+              border: '1px solid var(--border)',
+              background: theme === 'dark' ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+              color: 'var(--text-primary)',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              padding: 0,
+            }}
+            title={isAudioPlaying ? 'Mute Background Nature Sounds' : 'Unmute Background Nature Sounds'}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            {isAudioPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
+          </button>
+        )}
+
+        {/* Global Circular Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          style={{
+            width: '46px',
+            height: '46px',
+            borderRadius: '50%',
+            border: '1px solid var(--border)',
+            background: theme === 'dark' ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+            color: 'var(--text-primary)',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            padding: 0,
+          }}
+          title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+        >
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+      </div>
 
     </div>
   );

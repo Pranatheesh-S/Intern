@@ -2,6 +2,10 @@ import React from 'react';
 import ChapterLearningLab from '../../../components/ChapterLearningLab';
 import sanskritSlogan from '../../../assets/sanskrit_slogan.png';
 
+import coverBgImage from '../../../assets/cover_page_ch2.png';
+import learningLabBg from '../../../assets/class_6_ch2_learning_lab_bg.png';
+import levelMapBg from '../../../assets/class_6_ch2_level_map.jpg';
+
 const CHAPTER_2_ACTIVITIES = [
   { icon: '🌿', title: 'Activity 2.1 — Plants (Table 2.1)', desc: 'Record real plants — tap the leaves, stems and flowers.', pg: 'p.11', path: '/activities/class6_chapter2/activity_0.html', sectionHeader: '2.1 — Diversity in Plants & Animals Around Us', activityId: 'virtual_biodiversity' },
   { icon: '🐾', title: 'Activity 2.1 — Animals (Table 2.2)', desc: 'Where animals live, what they eat and how they move.', pg: 'p.12', path: '/activities/class6_chapter2/activity_1.html', sectionHeader: '2.1 — Diversity in Plants & Animals Around Us', activityId: 'virtual_biodiversity' },
@@ -34,6 +38,9 @@ export default function Chapter2LearningLab({ onBack, onHeaderVisibilityChange }
       activities={CHAPTER_2_ACTIVITIES}
       onBack={onBack}
       onHeaderVisibilityChange={onHeaderVisibilityChange}
+      coverBgImage={coverBgImage}
+      learningLabBg={learningLabBg}
+      levelMapBg={levelMapBg}
     />
   );
 }

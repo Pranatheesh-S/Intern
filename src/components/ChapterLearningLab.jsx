@@ -5,6 +5,14 @@ import SloganPage from "./SloganPage";
 import VerticalLevelMap from "./VerticalLevelMap";
 import confetti from "canvas-confetti";
 
+import creeperImg from "../assets/creeper.jpeg";
+import climberImg from "../assets/climber.jpeg";
+import scientist1Img from "../assets/Scientist1.jpeg";
+import scientist2Img from "../assets/Scientist2.jpeg";
+import silentValleyImg from "../assets/silent_valley.jpeg";
+import protectWildlifeImg from "../assets/protect_wildlife.jpeg";
+import sacredGrovesImg from "../assets/sacred_groves.jpeg";
+
 // Context
 import { useTheme } from "../ThemeContext";
 
@@ -320,6 +328,26 @@ const contentLessonsData = {
           '🐦 Pigeon: Walks on legs and flies using wings.',
           '🐟 Fish: Swims in water using fins.'
         ]
+      },
+      {
+        title: 'Eminent Scientists: Dr. Salim Ali (Page 22)',
+        content: 'Dr. Salim Ali (1896–1987) was an eminent Indian ornithologist and naturalist, widely known as the "Birdman of India". He conducted systematic bird surveys across India and wrote books that popularised bird-watching.',
+        bullets: [
+          '🔍 Pioneer: He was among the first to conduct systematic bird surveys in India.',
+          '📖 Author: Wrote the landmark "Handbook of the Birds of India and Pakistan".',
+          '🌿 Advocate: Played a key role in saving Silent Valley and establishing Keoladeo National Park.'
+        ],
+        image: 'Scientist2'
+      },
+      {
+        title: 'Save Silent Valley Movement (Page 23)',
+        content: 'The Silent Valley Movement was a social movement aimed at protecting the Silent Valley tropical rainforest in Kerala from being flooded by a hydroelectric dam project.',
+        bullets: [
+          '📍 Silent Valley: A tropical rainforest in Kerala, home to many rare species like the Lion-tailed Macaque.',
+          '⚡ Hydroelectric Project: In 1973, a dam was proposed on the Kunthipuzha river, threatening the forest.',
+          '✊ Public Protest: Local communities, scientists, and environmentalists campaigned to save it, leading to the forest being declared a National Park in 1984.'
+        ],
+        image: 'silent_valley'
       }
     ]
   },
@@ -343,13 +371,34 @@ const contentLessonsData = {
         ]
       },
       {
-        title: 'Biodiversity Conservation & Pioneers',
-        content: 'Appreciating and conserving biodiversity is vital for our survival. Key NCERT highlights:',
+        title: 'Eminent Scientists: Dr. E. K. Janaki Ammal (Page 27)',
+        content: 'Dr. Edavaleth Kakkat Janaki Ammal (1897–1984) was a pioneering Indian botanist and plant cytogeneticist. She made significant contributions to genetics, sugarcane breeding, and environmental conservation.',
         bullets: [
-          '🦅 Salim Ali: India\'s famous ornithologist (Birdman of India) who documented bird habitats and led sanctuaries.',
-          '🐅 Conservation projects: "Project Tiger" (1973) and "Cheetah Reintroduction Project" (2022).',
-          '🌳 Sacred Groves: Traditionally protected forest patches (like in Western Ghats) guarded by local communities.'
-        ]
+          '🌾 Sugar Breeding: Co-developed sweet sugarcane varieties suited to Indian climates.',
+          '🌲 Save Silent Valley: Mobilised support to save the Silent Valley tropical rainforest from dam construction.',
+          '🌸 Ethnobotany: Documented valuable traditional medicinal plants across India.'
+        ],
+        image: 'Scientist1'
+      },
+      {
+        title: 'Protecting Wildlife & Ecosystems (Page 28)',
+        content: 'Protecting habitats is the key to conserving biodiversity. Governments and communities set up protected areas to protect animals and plants from hunting and habitat loss.',
+        bullets: [
+          '🐅 Project Tiger (1973): India\'s landmark conservation initiative to ensure a viable population of Bengal tigers.',
+          '🐆 Cheetah Reintroduction (2022): Relocating African cheetahs to Kuno National Park to restore grasslands.',
+          '🤝 Collective Responsibility: Conserving nature benefits human well-being and ecological balance.'
+        ],
+        image: 'protect_wildlife'
+      },
+      {
+        title: 'Sacred Groves (Page 29)',
+        content: 'Sacred groves are patches of forest reserves strictly protected by local communities due to cultural, traditional, or religious beliefs.',
+        bullets: [
+          '🏹 Local Conservation: No cutting of wood or hunting is allowed in these patches.',
+          '🌱 Biodiversity Refuges: Save rare and endangered plants, animals, and soil microorganisms.',
+          '📍 Distribution: Widely found in Western Ghats (Maharashtra, Karnataka, Kerala), Meghalaya, and Rajasthan.'
+        ],
+        image: 'sacred_groves'
       }
     ]
   }
@@ -483,107 +532,359 @@ const CHAPTER_2_LEVELS = [
   }
 ];
 
-// Custom Subcomponents for Grouped Levels
 function IntroStoryteller({ onComplete }) {
   const [currentScene, setCurrentScene] = useState(0);
-  
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [narrationVisible, setNarrationVisible] = useState(false);
+  const [typedChars, setTypedChars] = useState(0);
+  const [isDialogueDone, setIsDialogueDone] = useState(false);
+  const [dialogueStep, setDialogueStep] = useState(0);
+  const [isTypingDone, setIsTypingDone] = useState(false);
+  const typeTimerRef = useRef(null);
+  const narrationTimerRef = useRef(null);
+  const dialogueTimerRef = useRef(null);
+  const { theme = 'dark' } = useTheme() || {};
+
   const scenes = [
     {
-      img: "/IntroPicture1.png",
+      img: "/Scene0_realistic.png",
+      title: "🌿 Welcome to the Living World",
+      text: "Welcome to Chapter 2: Diversity in the Living World! Step outside and look around — every tree, flower, bird, and insect is a unique living being. In this chapter, we embark on a nature walk to discover the incredible variety of life on Earth.",
+      dialogues: []
+    },
+    {
+      img: "/Scene1_realistic.png",
       title: "🌱 The Nature Walk Begins",
-      text: "Dr Raghu and Maniram chacha lead the students out of the classroom into a nearby patch of forest. The air is fresh and filled with the scent of wet soil and leaves. The kids are excited to discover what secrets the nature walk holds!"
+      text: "Dr Raghu and Maniram chacha lead the students out of the classroom into a nearby patch of forest. The air is fresh and filled with the scent of wet soil and leaves. The kids are excited to discover what secrets the nature walk holds!",
+      dialogues: [
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!", top: '22%', left: '22%', side: 'right' },
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!", top: '18%', left: '50%', side: 'left' }
+      ]
     },
     {
-      img: "/IntroPicture2.png",
+      img: "/Scene2_realistic.png",
       title: "🌿 Observing Diverse Plants",
-      text: "As they walk, they observe different kinds of plants. Some are small herbs growing close to the ground, others are bushy shrubs, and some are grand trees with thick trunks. Dr Raghu reminds them to observe gently without plucking any leaves or flowers."
+      text: "As they walk, they observe different kinds of plants. Some are small herbs growing close to the ground, others are bushy shrubs, and some are grand trees with thick trunks. Dr Raghu reminds them to observe gently without plucking any leaves or flowers.",
+      dialogues: [
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '25%', left: '30%', side: 'left' }
+      ]
     },
     {
-      img: "/IntroPicture3.png",
+      img: "/Scene3_realistic.png",
       title: "🐦 Listening to Bird Calls",
-      text: "Hush! Maniram chacha stops and cups his ear. He mimics a bird song, and suddenly, a beautiful response is heard from the tree canopy! The students learn to listen to the unique calls of birds and respect their home."
+      text: "Hush! Maniram chacha stops and cups his ear. He mimics a bird song, and suddenly, a beautiful response is heard from the tree canopy! The students learn to listen to the unique calls of birds and respect their home.",
+      dialogues: [
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵", top: '18%', left: '38%', side: 'left' },
+        { character: "Priya", avatar: "👧", text: "It replied! The bird actually replied to chacha!", top: '30%', left: '60%', side: 'right' }
+      ]
     },
     {
-      img: "/IntroPicture4.png",
+      img: "/Scene4_realistic.png",
       title: "🦋 Fluttering Insects & Butterflies",
-      text: "Near a cluster of wildflowers, butterflies and bees are busy gathering nectar. The students watch closely as a butterfly unfolds its delicate wings. They notice how insects play a vital role in helping flowers grow."
+      text: "Near a cluster of wildflowers, butterflies and bees are busy gathering nectar. The students watch closely as a butterfly unfolds its delicate wings. They notice how insects play a vital role in helping flowers grow.",
+      dialogues: [
+        { character: "Arjun", avatar: "👦", text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '32%', left: '58%', side: 'right' },
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.", top: '18%', left: '26%', side: 'left' }
+      ]
     },
     {
-      img: "/IntroPicture5.png",
+      img: "/Scene5_realistic.png",
       title: "🐒 Animals in the Canopy",
-      text: "A rustle in the branches reveals monkeys jumping from limb to limb, and a tiny squirrel scurrying down a trunk. The forest is alive with creatures of all sizes, each adapted to live in their part of the woods."
+      text: "A rustle in the branches reveals monkeys jumping from limb to limb, and a tiny squirrel scurrying down a trunk. The forest is alive with creatures of all sizes, each adapted to live in their part of the woods.",
+      dialogues: [
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '20%', left: '42%', side: 'left' }
+      ]
     },
     {
-      img: "/IntroPicture6.png",
+      img: "/Scene6_realistic.png",
       title: "📋 Recording in the Table",
-      text: "The students take out their notebooks to record their observations in Tables 2.1 and 2.2. They separate their findings into plants and animals, marveling at the incredible diversity of life surrounding them!"
+      text: "The students take out their notebooks to record their observations in Tables 2.1 and 2.2. They separate their findings into plants and animals, marveling at the incredible diversity of life surrounding them!",
+      dialogues: [
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '22%', left: '35%', side: 'left' }
+      ]
     }
   ];
 
-  const handleNext = () => {
-    if (currentScene < scenes.length - 1) {
-      setCurrentScene(prev => prev + 1);
+  const totalScenes = scenes.length;
+  const scene = scenes[currentScene];
+
+  useEffect(() => {
+    clearTimeout(narrationTimerRef.current);
+    clearTimeout(typeTimerRef.current);
+    clearTimeout(dialogueTimerRef.current);
+    setNarrationVisible(false);
+    setTypedChars(0);
+    setIsDialogueDone(false);
+    setIsTypingDone(false);
+    setDialogueStep(0);
+    setImgLoaded(false);
+    return () => {
+      clearTimeout(narrationTimerRef.current);
+      clearTimeout(typeTimerRef.current);
+      clearTimeout(dialogueTimerRef.current);
+    };
+  }, [currentScene]);
+
+  useEffect(() => {
+    if (!isDialogueDone) return;
+    narrationTimerRef.current = setTimeout(() => setNarrationVisible(true), 250);
+    const text = scene.text;
+    let i = 0;
+    const type = () => {
+      if (i < text.length) {
+        i++;
+        setTypedChars(i);
+        typeTimerRef.current = setTimeout(type, 22);
+      } else {
+        setIsTypingDone(true);
+      }
+    };
+    typeTimerRef.current = setTimeout(type, 450);
+    return () => clearTimeout(typeTimerRef.current);
+  }, [isDialogueDone, currentScene]);
+
+  useEffect(() => {
+    if (dialogueStep < scene.dialogues.length) {
+      dialogueTimerRef.current = setTimeout(() => {
+        setDialogueStep(p => p + 1);
+      }, 1200);
+    } else if (scene.dialogues.length > 0) {
+      dialogueTimerRef.current = setTimeout(() => {
+        setIsDialogueDone(true);
+      }, 250);
     } else {
-      if (onComplete) onComplete();
+      setIsDialogueDone(true);
     }
+    return () => clearTimeout(dialogueTimerRef.current);
+  }, [dialogueStep, currentScene]);
+
+  const skipTyping = () => {
+    clearTimeout(typeTimerRef.current);
+    clearTimeout(dialogueTimerRef.current);
+    setDialogueStep(scene.dialogues.length);
+    setIsDialogueDone(true);
+    setNarrationVisible(true);
+    setTypedChars(scene.text.length);
+    setIsTypingDone(true);
   };
 
-  const handlePrev = () => {
-    if (currentScene > 0) {
-      setCurrentScene(prev => prev - 1);
-    }
-  };
+  const handleNext = () => { if (currentScene < totalScenes - 1) setCurrentScene(prev => prev + 1); else if (onComplete) onComplete(); };
+  const handlePrev = () => { if (currentScene > 0) setCurrentScene(prev => prev - 1); };
 
   return (
-    <div className="split-frame" style={{ width: '100%', minHeight: '480px' }}>
-      {/* LEFT COLUMN: Narrative & Controls */}
-      <div className="frame-page-left">
-        <div className="textbook-eyebrow">Class 6 Science · Introduction</div>
-        <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: '1.6rem' }}>
-          Virtual Nature Walk
-        </h1>
-        
-        <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: '1.65', flex: 1, margin: 0 }}>
-          {scenes[currentScene].text}
-        </p>
+    <div
+      onClick={!isTypingDone ? skipTyping : undefined}
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: 'clamp(700px, 90vh, 920px)',
+        borderRadius: '14px',
+        overflow: 'hidden',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.28)',
+        background: '#0a1220',
+        cursor: !isTypingDone ? 'pointer' : 'default',
+        border: '4px solid white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+      
+      <div style={{
+        position: 'relative',
+        height: '100%',
+        aspectRatio: '16/9',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 'auto',
+        maxWidth: '100%',
+        maxHeight: '100%'
+      }}>
+        <img
+          key={scene.img}
+          src={scene.img}
+          alt={scene.title}
+          onLoad={() => setImgLoaded(true)}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            transition: 'opacity 0.5s ease',
+            opacity: imgLoaded ? 1 : 0
+          }}
+        />
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-          <button 
-            onClick={handlePrev} 
-            disabled={currentScene === 0}
-            className="outline" 
-            style={{ padding: '0.35rem 0.75rem', fontSize: '0.78rem', borderRadius: '8px' }}
-          >
-            Previous
-          </button>
-          <span style={{ fontSize: '0.78rem', alignSelf: 'center', color: 'var(--text-muted)' }}>
-            Scene {currentScene + 1} of 6
-          </span>
-          <button 
-            onClick={handleNext} 
-            className="primary" 
-            style={{ padding: '0.35rem 0.9rem', fontSize: '0.78rem', borderRadius: '8px' }}
-          >
-            {currentScene === scenes.length - 1 ? "Finish Story ➔" : "Next Scene"}
-          </button>
-        </div>
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 25%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.65) 78%, rgba(0,0,0,0.82) 100%)',
+          pointerEvents: 'none',
+          zIndex: 1
+        }} />
+
+        {scene.dialogues.map((dlg, idx) => {
+          const isVisible = dialogueStep > idx;
+          return (
+            <div key={idx} style={{
+              position: 'absolute',
+              top: dlg.top,
+              left: dlg.left,
+              right: dlg.right,
+              zIndex: 13,
+              width: '240px',
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(14px) scale(0.92)',
+              transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              pointerEvents: 'none'
+            }}>
+              <div style={{
+                position: 'relative',
+                background: theme === 'light' ? 'rgba(255, 255, 255, 0.96)' : 'rgba(10, 22, 40, 0.88)',
+                backdropFilter: 'blur(16px)',
+                border: theme === 'light' ? '1.5px solid rgba(5, 150, 105, 0.35)' : '1.5px solid rgba(52, 211, 153, 0.28)',
+                borderRadius: dlg.side === 'left' ? '4px 16px 16px 16px' : '16px 4px 16px 16px',
+                padding: '0.6rem 0.85rem',
+                boxShadow: theme === 'light' ? '0 10px 30px rgba(0,0,0,0.1)' : '0 10px 30px rgba(0,0,0,0.4)',
+                color: theme === 'light' ? '#0f172a' : '#ffffff'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.28rem' }}>
+                  <span style={{ fontSize: '1rem' }}>{dlg.avatar}</span>
+                  <span style={{
+                    fontSize: '0.68rem',
+                    fontWeight: '800',
+                    color: theme === 'light' ? '#059669' : '#34d399',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em'
+                  }}>
+                    {dlg.character}
+                  </span>
+                </div>
+                <p style={{
+                  margin: 0,
+                  fontSize: '0.78rem',
+                  color: theme === 'light' ? '#334155' : 'rgba(255,255,255,0.92)',
+                  lineHeight: '1.45',
+                  fontStyle: 'italic',
+                  fontWeight: '550'
+                }}>
+                  "{dlg.text}"
+                </p>
+
+                <div style={{
+                  position: 'absolute',
+                  bottom: '-8px',
+                  left: dlg.side === 'left' ? '20px' : 'auto',
+                  right: dlg.side === 'right' ? '20px' : 'auto',
+                  width: 0,
+                  height: 0,
+                  borderStyle: 'solid',
+                  borderWidth: '8px 8px 0 8px',
+                  borderColor: `${theme === 'light' ? 'rgba(255, 255, 255, 0.96)' : 'rgba(10, 22, 40, 0.88)'} transparent transparent transparent`,
+                }} />
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {/* RIGHT COLUMN: Scene Visual */}
-      <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0, justifyContent: 'center', alignItems: 'stretch', border: '1px solid var(--border)', background: 'transparent' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '0.75rem' }}>
-          <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-muted)' }}>
-            {scenes[currentScene].title}
-          </span>
-        </div>
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '12px', background: 'transparent' }}>
-          <img 
-            src={scenes[currentScene].img} 
-            alt={scenes[currentScene].title} 
-            style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: '360px', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}
+      <div style={{ position: 'absolute', top: '0.9rem', right: '0.9rem', display: 'flex', gap: '5px', zIndex: 12 }}>
+        {scenes.map((_, i) => (
+          <button key={i}
+            onClick={(e) => { e.stopPropagation(); setCurrentScene(i); }}
+            style={{
+              width: i === currentScene ? '20px' : '7px', height: '7px',
+              borderRadius: '4px', border: 'none', cursor: 'pointer', padding: 0,
+              background: i === currentScene ? '#34d399' : 'rgba(255,255,255,0.4)',
+              transition: 'all 0.3s ease'
+            }}
           />
+        ))}
+      </div>
+
+      <div style={{
+        position: 'absolute', top: '0.9rem', left: '0.9rem', zIndex: 12,
+        background: 'rgba(0,0,0,0.52)', backdropFilter: 'blur(10px)',
+        borderRadius: '8px', padding: '0.28rem 0.7rem',
+        fontSize: '0.64rem', fontWeight: '700', color: '#34d399',
+        textTransform: 'uppercase', letterSpacing: '0.1em'
+      }}>
+        Class 6 · Scene {currentScene + 1} of {totalScenes}
+      </div>
+
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        display: 'flex', justifyContent: 'center',
+        padding: '0 1rem 1.1rem',
+        zIndex: 14,
+        transform: narrationVisible ? 'translateY(0)' : 'translateY(110%)',
+        transition: 'transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1)'
+      }}>
+        <div style={{
+          width: '100%', maxWidth: '680px',
+          background: '#E6BF83', 
+          color: '#000000',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(160, 82, 45, 0.5)', 
+          borderRadius: '16px',
+          padding: '1.1rem 1.4rem 0.9rem',
+          boxShadow: '0 -2px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(230, 191, 131, 0.18)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.95rem', fontWeight: '800', color: '#5C4033', letterSpacing: '-0.01em' }}>
+              {scene.title}
+            </span>
+            {!isTypingDone && (
+              <button onClick={(e) => { e.stopPropagation(); skipTyping(); }} style={{
+                fontSize: '0.68rem', fontWeight: '600', padding: '0.2rem 0.6rem',
+                borderRadius: '6px', border: '1px solid rgba(139, 69, 19, 0.4)',
+                background: 'rgba(0,0,0,0.07)', color: '#5C4033',
+                cursor: 'pointer', transition: 'all 0.2s'
+              }}>Skip ▶▶</button>
+            )}
+          </div>
+
+          <p style={{
+            margin: '0 0 0.85rem 0', fontSize: '0.855rem',
+            color: '#654321', lineHeight: '1.62',
+            minHeight: '3.2em', fontFamily: "'Georgia', 'Times New Roman', serif"
+          }}>
+            {scene.text.slice(0, typedChars)}
+            {!isTypingDone && (
+              <span style={{ opacity: 0.8, animation: 'intro-blink 0.65s steps(1) infinite' }}>|</span>
+            )}
+          </p>
+
+          <div style={{ display: 'flex', gap: '0.55rem', alignItems: 'center', justifyContent: 'center' }}>
+            <button onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+              disabled={currentScene === 0}
+              style={{
+                padding: '0.42rem 1rem', fontSize: '0.78rem', fontWeight: '600',
+                borderRadius: '9px', border: '1px solid rgba(205,133,63,0.38)',
+                background: 'rgba(255,255,255,0.07)', color: 'rgba(255,228,196,0.85)',
+                cursor: currentScene === 0 ? 'not-allowed' : 'pointer',
+                opacity: currentScene === 0 ? 0.38 : 1, transition: 'all 0.2s'
+              }}>← Prev</button>
+            <button onClick={(e) => { e.stopPropagation(); handleNext(); }}
+              style={{
+                padding: '0.42rem 1.3rem', fontSize: '0.78rem', fontWeight: '700',
+                borderRadius: '9px', border: 'none',
+                background: currentScene === totalScenes - 1
+                  ? 'linear-gradient(135deg,#059669,#34d399)'
+                  : 'linear-gradient(135deg,#b45309,#d97706)',
+                color: '#fff', cursor: 'pointer',
+                boxShadow: '0 3px 12px rgba(0,0,0,0.35)', transition: 'all 0.2s'
+              }}>
+              {currentScene === totalScenes - 1 ? 'Finish Story ✓' : 'Next Scene →'}
+            </button>
+          </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes intro-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+      `}</style>
     </div>
   );
 }
@@ -1357,7 +1658,11 @@ export default function ChapterLearningLab({
   activities,
   onBack,
   onHeaderVisibilityChange,
+  coverBgImage,
+  learningLabBg,
+  levelMapBg,
 }) {
+  const { theme } = useTheme();
   const [stage, setStage] = useState("cover"); // Stages: 'cover', 'slogan', 'lab'
   
   // Dashboard states
@@ -1372,6 +1677,7 @@ export default function ChapterLearningLab({
   const [activeActivityIdx, setActiveActivityIdx] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activityFocused, setActivityFocused] = useState(null);
+  const [fsBarVisible, setFsBarVisible] = useState(false);
 
   const isLevelCompleted = (lvl) => {
     if (activityStatus[lvl.id] === 'done') return true;
@@ -1563,6 +1869,7 @@ export default function ChapterLearningLab({
           <VirtualBiodiversityExplorerActivity 
             onBackToDashboard={onBack} 
             typeFilter={typeFilter}
+            isFullscreen={isFullscreen}
             onNextSection={() => {
               if (activeActivity) {
                 setActivityStatus(prev => ({ ...prev, [activeActivity.id]: 'done' }));
@@ -2108,11 +2415,116 @@ export default function ChapterLearningLab({
               </div>
             )}
             {levelQuiz && (
-              <div style={{ padding: '1rem 1.25rem', borderRadius: '16px', background: 'rgba(59, 130, 246, 0.06)', border: '1px solid rgba(59, 130, 246, 0.2)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.92rem' }}>
-                <span>📝</span>
-                <span style={{ color: 'var(--text-secondary)' }}>
-                  <b>Checkpoint Quiz:</b> Complete the lesson pages and the activity pane above to unlock this subheading's check-point quiz.
-                </span>
+              <div style={{ 
+                padding: '1.25rem', 
+                borderRadius: '16px', 
+                background: 'rgba(59, 130, 246, 0.04)', 
+                border: '1px solid rgba(59, 130, 246, 0.15)', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '0.85rem',
+                textAlign: 'left'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--accent)' }}>
+                  <span>📝</span>
+                  <span>Checkpoint Quiz Requirements</span>
+                </div>
+                
+                <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                  This checkpoint quiz is currently locked. Complete the following required items to unlock it:
+                </p>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.25rem' }}>
+                  {/* 1. Concept Lesson Status */}
+                  {activeLevel.lessonId && (
+                    <div 
+                      onClick={() => {
+                        if (!lessonDone) {
+                          setActiveContentLesson(activeLevel.lessonId);
+                          setActiveSlide(0);
+                          setQuizAnswers({});
+                          setQuizChecked(false);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between', 
+                        padding: '0.65rem 1rem', 
+                        background: '#fff', 
+                        border: '1px solid var(--border)', 
+                        borderRadius: '10px', 
+                        cursor: !lessonDone ? 'pointer' : 'default',
+                        transition: 'all 0.2s' 
+                      }}
+                      className={!lessonDone ? "hover-scale" : ""}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
+                        <span>📖</span>
+                        <span style={{ fontWeight: '600', color: 'var(--navy)' }}>Concept Lesson</span>
+                      </div>
+                      <span style={{ 
+                        fontSize: '0.75rem', 
+                        fontWeight: 'bold', 
+                        color: lessonDone ? 'var(--success)' : 'var(--accent)',
+                        background: lessonDone ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '6px'
+                      }}>
+                        {lessonDone ? '✓ Completed' : '→ Click to Read'}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* 2. Activities Status */}
+                  {activeLevel.activities && activeLevel.activities.map(act => {
+                    const isActDone = activityStatus[act.id] === 'done';
+                    return (
+                      <div 
+                        key={act.id}
+                        onClick={() => {
+                          if (!isActDone) {
+                            const idx = activeLevel.activities.findIndex(a => a.id === act.id);
+                            if (idx !== -1) {
+                              setActiveActivityIdx(idx);
+                              setActivityFocused(true);
+                              const actPane = document.getElementById("pane-activity-window");
+                              if (actPane) actPane.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }
+                        }}
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'space-between', 
+                          padding: '0.65rem 1rem', 
+                          background: '#fff', 
+                          border: '1px solid var(--border)', 
+                          borderRadius: '10px', 
+                          cursor: !isActDone ? 'pointer' : 'default',
+                          transition: 'all 0.2s' 
+                        }}
+                        className={!isActDone ? "hover-scale" : ""}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
+                          <span>{act.icon || '🧩'}</span>
+                          <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
+                        </div>
+                        <span style={{ 
+                          fontSize: '0.75rem', 
+                          fontWeight: 'bold', 
+                          color: isActDone ? 'var(--success)' : 'var(--accent)',
+                          background: isActDone ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
+                          padding: '0.2rem 0.5rem',
+                          borderRadius: '6px'
+                        }}>
+                          {isActDone ? '✓ Completed' : '→ Click to Play'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
@@ -2131,10 +2543,10 @@ export default function ChapterLearningLab({
     const [feedback, setFeedback] = useState('');
 
     const items = [
-      { name: 'Metal Spoon', material: 'Metal', edibility: 'Inedible', icon: '🥄', desc: 'Stainless steel.' },
-      { name: 'Red Apple', material: 'Organic', edibility: 'Edible', icon: '🍎', desc: 'Fresh fruit.' },
-      { name: 'Plastic Toy', material: 'Plastic', edibility: 'Inedible', icon: '🚗', desc: 'Hard polymer.' },
-      { name: 'Sourdough Bread', material: 'Organic', edibility: 'Edible', icon: '🍞', desc: 'Baked wheat.' }
+      { name: 'Metal Spoon', material: 'Metal', edibility: 'Inedible', icon: '🥄', image: '/spoon_specimen.png', desc: 'Stainless steel.' },
+      { name: 'Red Apple', material: 'Organic', edibility: 'Edible', icon: '🍎', image: '/apple_specimen.png', desc: 'Fresh fruit.' },
+      { name: 'Plastic Toy', material: 'Plastic', edibility: 'Inedible', icon: '🚗', image: '/toy_specimen.png', desc: 'Hard polymer.' },
+      { name: 'Sourdough Bread', material: 'Organic', edibility: 'Edible', icon: '🍞', image: '/bread_specimen.png', desc: 'Baked wheat.' }
     ];
 
     useEffect(() => {
@@ -2175,6 +2587,12 @@ export default function ChapterLearningLab({
       }
     };
 
+    const handleBinClick = (group) => {
+      if (selectedItem) {
+        handleClassify(selectedItem, group);
+      }
+    };
+
     const handleReset = () => {
       setPlacedItems({});
       setFeedback('');
@@ -2191,12 +2609,12 @@ export default function ChapterLearningLab({
 
     const getBinStyle = (g) => {
       switch (g) {
-        case 'Metal': return { bg: 'rgba(148, 163, 184, 0.04)', border: '#94a3b8', color: '#475569' };
-        case 'Plastic': return { bg: 'rgba(245, 158, 11, 0.04)', border: '#f59e0b', color: '#d97706' };
-        case 'Organic': return { bg: 'rgba(16, 185, 129, 0.04)', border: '#10b981', color: '#059669' };
-        case 'Edible': return { bg: 'rgba(16, 185, 129, 0.04)', border: '#10b981', color: '#059669' };
-        case 'Inedible': return { bg: 'rgba(239, 68, 68, 0.04)', border: '#ef4444', color: '#b91c1c' };
-        default: return { bg: '#f8fafc', border: '#e2e8f0', color: 'var(--navy)' };
+        case 'Metal': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#475569', labelBg: '#faf6f0' };
+        case 'Plastic': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#d97706', labelBg: '#faf6f0' };
+        case 'Organic': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#059669', labelBg: '#faf6f0' };
+        case 'Edible': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#059669', labelBg: '#faf6f0' };
+        case 'Inedible': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#b91c1c', labelBg: '#faf6f0' };
+        default: return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: 'var(--navy)', labelBg: '#faf6f0' };
       }
     };
 
@@ -2241,10 +2659,10 @@ export default function ChapterLearningLab({
         {/* 1. Item pool */}
         {!isAllSorted ? (
           <div>
-            <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--navy)', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
+            <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--navy)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
               Drag specimens into correct bins:
             </span>
-            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', width: '100%' }}>
               {unplacedItems.map(item => {
                 const isSelected = selectedItem?.name === item.name;
                 return (
@@ -2254,22 +2672,41 @@ export default function ChapterLearningLab({
                     onDragStart={(e) => handleDragStart(e, item)}
                     onClick={() => { setSelectedItem(item); setFeedback(''); }}
                     style={{
-                      background: isSelected ? 'rgba(99,102,241,0.06)' : '#fff',
-                      border: isSelected ? '2px solid var(--accent)' : '1px solid var(--border)',
-                      borderRadius: '10px',
-                      padding: '0.4rem 0.6rem',
+                      background: isSelected ? 'rgba(99, 102, 241, 0.04)' : 'rgba(255, 255, 255, 0.65)',
+                      border: isSelected ? '2.5px solid var(--accent)' : '1px solid var(--border)',
+                      borderRadius: '12px',
+                      padding: '0.5rem',
                       display: 'flex',
+                      flexDirection: 'column',
                       alignItems: 'center',
-                      gap: '0.4rem',
+                      gap: '0.45rem',
                       cursor: 'grab',
-                      transition: 'all 0.15s ease',
-                      boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: isSelected ? '0 8px 16px rgba(99, 102, 241, 0.12)' : '0 2px 8px rgba(0, 0, 0, 0.02)',
+                      textAlign: 'center'
                     }}
                   >
-                    <span style={{ fontSize: '1.2rem' }}>{item.icon}</span>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <span style={{ fontSize: '0.78rem', fontWeight: 'bold' }}>{item.name}</span>
-                      <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>{item.desc}</span>
+                    <div style={{ 
+                      width: '100%', 
+                      aspectRatio: '1', 
+                      borderRadius: '8px', 
+                      overflow: 'hidden', 
+                      background: '#f8fafc',
+                      border: '1px solid rgba(0,0,0,0.05)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <img 
+                        src={item.image} 
+                        alt={item.name} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        draggable={false}
+                      />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem' }}>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>{item.name}</span>
+                      <span style={{ fontSize: '0.58rem', color: 'var(--text-muted)', lineHeight: '1.2' }}>{item.desc}</span>
                     </div>
                   </div>
                 );
@@ -2287,8 +2724,8 @@ export default function ChapterLearningLab({
           </div>
         )}
 
-        {/* 2. Trays grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${groups.length}, 1fr)`, gap: '0.6rem', marginTop: '0.25rem' }}>
+        {/* 2. Trays grid (Cardboard boxes design) */}
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${groups.length}, 1fr)`, gap: '0.75rem', marginTop: '0.25rem' }}>
           {groups.map(groupName => {
             const sortedHere = items.filter(it => placedItems[it.name] === groupName);
             const styleProps = getBinStyle(groupName);
@@ -2302,38 +2739,59 @@ export default function ChapterLearningLab({
                 onClick={() => handleBinClick(groupName)}
                 style={{
                   background: styleProps.bg,
-                  border: `2px dashed ${styleProps.border}`,
-                  borderRadius: '14px',
-                  padding: '0.65rem',
-                  minHeight: '130px',
+                  border: `2px solid ${styleProps.border}`,
+                  borderRadius: '16px',
+                  padding: '0.75rem',
+                  minHeight: '160px',
                   display: 'flex',
                   flexDirection: 'column',
                   cursor: canDrop ? 'pointer' : 'default',
-                  transition: 'all 0.2s ease',
-                  boxShadow: canDrop ? '0 4px 12px rgba(0,0,0,0.03)' : 'none'
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: 'inset 0 16px 0 #ab855f, inset 0 20px 20px rgba(0,0,0,0.12), inset 0 -8px 0 rgba(0,0,0,0.05), 0 8px 16px rgba(0,0,0,0.04)',
+                  position: 'relative'
                 }}
               >
-                <span style={{ fontSize: '11px', fontWeight: 'bold', color: styleProps.color, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '0.5rem' }}>
-                  📁 {groupName} Bin
-                </span>
+                {/* Taped Postal Sticker Label */}
+                <div style={{
+                  background: styleProps.labelBg,
+                  border: '1px solid rgba(183, 146, 110, 0.4)',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05), inset 0 1px 0 #fff',
+                  padding: '0.25rem 0.5rem',
+                  borderRadius: '4px',
+                  fontSize: '0.68rem',
+                  fontWeight: '800',
+                  color: styleProps.color,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  textAlign: 'center',
+                  width: 'fit-content',
+                  margin: '0 auto 0.6rem auto',
+                  position: 'relative',
+                  pointerEvents: 'none'
+                }}>
+                  {/* Taped paper sticker strip decoration */}
+                  <div style={{ position: 'absolute', top: '-2px', bottom: '-2px', left: '6px', right: '6px', borderLeft: '2px solid rgba(217, 119, 6, 0.12)', borderRight: '2px solid rgba(217, 119, 6, 0.12)' }} />
+                  {groupName} Bin
+                </div>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginTop: 'auto', width: '100%' }}>
+                {/* Items container inside cardboard box */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: 'auto', width: '100%' }}>
                   {sortedHere.map(item => (
                     <div
                       key={item.name}
                       style={{
-                        background: '#ffffff',
-                        border: `1px solid ${styleProps.border}33`,
+                        background: 'rgba(255, 255, 255, 0.9)',
+                        border: '1px solid rgba(183, 146, 110, 0.3)',
                         borderRadius: '8px',
                         padding: '0.35rem 0.5rem',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.35rem',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.01)'
+                        gap: '0.4rem',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
                       }}
                     >
-                      <span style={{ fontSize: '1rem' }}>{item.icon}</span>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--navy)' }}>
+                      <img src={item.image} style={{ width: '18px', height: '18px', borderRadius: '3px', objectFit: 'cover' }} />
+                      <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--navy)' }}>
                         {item.name}
                       </span>
                     </div>
@@ -2366,6 +2824,8 @@ export default function ChapterLearningLab({
   function PlantVarietyMorpher() {
     const [stage, setStage] = useState(0);
     const [activeHotspot, setActiveHotspot] = useState(null);
+    const [creeperFlipped, setCreeperFlipped] = useState(false);
+    const [climberFlipped, setClimberFlipped] = useState(false);
 
     const stages = [
       {
@@ -2379,10 +2839,20 @@ export default function ChapterLearningLab({
         imgSrc: '/herb_plant.png',
         anatomy: (
           <svg width="100" height="100" viewBox="0 0 100 100">
-            {/* Epidermis */}
-            <circle cx="50" cy="50" r="38" fill="none" stroke="#10b981" strokeWidth="3" />
-            {/* Soft Cortex */}
-            <circle cx="50" cy="50" r="36" fill="#e8f5e9" opacity="0.6" />
+            <defs>
+              <clipPath id="herb-clip">
+                <circle cx="50" cy="50" r="38" />
+              </clipPath>
+            </defs>
+            <circle cx="50" cy="50" r="39" fill="#10b981" />
+            <image 
+              href="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=200&q=80" 
+              x="12" y="12" width="76" height="76" 
+              clipPath="url(#herb-clip)" 
+            />
+            {/* Overlay a subtle green radial mask to blend with Pith */}
+            <circle cx="50" cy="50" r="38" fill="rgba(16, 185, 129, 0.15)" clipPath="url(#herb-clip)" pointerEvents="none" />
+            
             {/* Capillaries / Vascular Bundles (Interactive Hotspots) */}
             {[
               { cx: 50, cy: 22, id: 'capillary', name: '💧 Vascular Capillaries' },
@@ -2394,17 +2864,17 @@ export default function ChapterLearningLab({
               { cx: 30, cy: 70, id: 'capillary', name: '💧 Vascular Capillaries' },
               { cx: 70, cy: 70, id: 'capillary', name: '💧 Vascular Capillaries' }
             ].map((pt, i) => (
-              <g key={i} cursor="pointer" onClick={() => setActiveHotspot({
+              <g key={i} className="anatomy-hotspot" onClick={() => setActiveHotspot({
                 title: pt.name,
                 text: '• In herbs, water and mineral transport is handled by ring-arranged vascular capillaries (xylem/phloem).\n• Since there is no thick wood or bark, the surrounding tissues are soft, green parenchyma cells, making the stem highly flexible.'
               })}>
-                <circle cx={pt.cx} cy={pt.cy} r="6" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5" />
-                <circle cx={pt.cx} cy={pt.cy} r="2.5" fill="#3b82f6" />
+                <circle cx={pt.cx} cy={pt.cy} r="6.5" fill="rgba(59, 130, 246, 0.3)" stroke="#3b82f6" strokeWidth="1.5" style={{ filter: 'drop-shadow(0 0 2px rgba(59,130,246,0.5))' }} />
+                <circle cx={pt.cx} cy={pt.cy} r="2.5" fill="#2563eb" />
               </g>
             ))}
             {/* Center Pith */}
-            <circle cx="50" cy="50" r="14" fill="#c8e6c9" stroke="#81c784" strokeWidth="1" />
-            <text x="50" y="52" textAnchor="middle" fill="#059669" fontSize="6" fontWeight="bold">PITH</text>
+            <circle cx="50" cy="50" r="14" fill="rgba(200, 230, 201, 0.85)" stroke="#81c784" strokeWidth="1" />
+            <text x="50" y="52" textAnchor="middle" fill="#1b5e20" fontSize="6.5" fontWeight="bold">PITH</text>
           </svg>
         )
       },
@@ -2419,12 +2889,23 @@ export default function ChapterLearningLab({
         imgSrc: '/shrub_plant.png',
         anatomy: (
           <svg width="100" height="100" viewBox="0 0 100 100">
-            {/* Woody branch cross section */}
-            <circle cx="50" cy="50" r="36" fill="#fcf8f2" stroke="#b45309" strokeWidth="2" />
+            <defs>
+              <clipPath id="shrub-clip">
+                <circle cx="50" cy="50" r="35" />
+              </clipPath>
+            </defs>
+            <circle cx="50" cy="50" r="36" fill="#d97706" />
+            <image 
+              href="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=200&q=80" 
+              x="14" y="14" width="72" height="72" 
+              clipPath="url(#shrub-clip)" 
+            />
             {/* Thin Wood Core (Hotspot) */}
             <circle 
-              cx="50" cy="50" r="28" 
-              fill="#fed7aa" stroke="#ea580c" strokeWidth="1.5" cursor="pointer"
+              cx="50" cy="50" r="26" 
+              className="anatomy-hotspot pulse-ring-element"
+              fill="rgba(254, 215, 170, 0.45)" stroke="#ea580c" strokeWidth="2.5"
+              style={{ filter: 'drop-shadow(0 0 3px rgba(234,88,12,0.3))' }}
               onClick={() => setActiveHotspot({
                 title: '🪵 Thin Wood Core',
                 text: '• Shrubs develop a thin core of lignified woody xylem tissue.\n• This wood provides rigid structural support allowing them to stand upright, but it remains thin compared to trees, keeping stems slender and slightly bendable.'
@@ -2432,23 +2913,24 @@ export default function ChapterLearningLab({
             />
             {/* Thorns */}
             {[
-              { x1: 50, y1: 14, x2: 50, y2: 6, label: 'Thorn' },
-              { x1: 50, y1: 86, x2: 50, y2: 94, label: 'Thorn' },
-              { x1: 14, y1: 50, x2: 6, y2: 50, label: 'Thorn' },
-              { x1: 86, y1: 50, x2: 94, y2: 50, label: 'Thorn' }
+              { x1: 50, y1: 15, x2: 50, y2: 4, path: "M48,15 L50,4 L52,15 Z" },
+              { x1: 50, y1: 85, x2: 50, y2: 96, path: "M48,85 L50,96 L52,85 Z" },
+              { x1: 15, y1: 50, x2: 4, y2: 50, path: "M15,48 L4,50 L15,52 Z" },
+              { x1: 85, y1: 50, x2: 96, y2: 50, path: "M85,48 L96,50 L85,52 Z" }
             ].map((th, i) => (
               <path 
                 key={i} 
-                d={`M ${th.x1} ${th.y1} L ${th.x2} ${th.y2}`} 
-                stroke="#dc2626" strokeWidth="3" strokeLinecap="round" cursor="pointer"
+                d={th.path}
+                className="anatomy-hotspot"
+                fill="#9a3412" stroke="#451a03" strokeWidth="1"
                 onClick={() => setActiveHotspot({
                   title: '🌵 Protective Thorns / Prickles',
                   text: '• Many shrubs, like Wild Rose, develop thorns directly from their epidermal stem layer.\n• These sharp extensions act as a mechanical defense mechanism to deter herbivores from eating their leaves and stems.'
                 })}
               />
             ))}
-            <circle cx="50" cy="50" r="10" fill="#fdba74" />
-            <text x="50" y="52" textAnchor="middle" fill="#7c2d12" fontSize="5" fontWeight="bold">HEART</text>
+            <circle cx="50" cy="50" r="9" fill="#9a3412" opacity="0.9" />
+            <circle cx="50" cy="50" r="5" fill="#fdba74" />
           </svg>
         )
       },
@@ -2463,19 +2945,34 @@ export default function ChapterLearningLab({
         imgSrc: '/tree_plant.png',
         anatomy: (
           <svg width="100" height="100" viewBox="0 0 100 100">
-            {/* Trunk Cross Section with Rings (Hotspot) */}
+            <defs>
+              <clipPath id="tree-clip">
+                <circle cx="50" cy="50" r="38" />
+              </clipPath>
+            </defs>
+            <circle cx="50" cy="50" r="40" fill="#451a03" />
+            <image 
+              href="https://images.unsplash.com/photo-1546482502-04b017f1190f?auto=format&fit=crop&w=200&q=80" 
+              x="10" y="10" width="80" height="80" 
+              clipPath="url(#tree-clip)" 
+            />
+            {/* Semi-transparent bark cork hotspot */}
             <circle 
-              cx="50" cy="50" r="38" fill="#d97706" stroke="#451a03" strokeWidth="4" cursor="pointer"
+              cx="50" cy="50" r="38" 
+              className="anatomy-hotspot"
+              fill="rgba(69, 26, 3, 0.2)" stroke="#ffd700" strokeWidth="1.5" strokeDasharray="3,3"
               onClick={() => setActiveHotspot({
                 title: '🟫 Outer Cork Bark',
                 text: '• The outer bark is a thick layer of dead cork cells.\n• It serves as a rugged shield protecting the tree trunk against physical damage, fires, insects, water loss, and freezing mountain cold.'
               })}
             />
-            {/* Annual Rings */}
-            {[30, 24, 18, 12].map((r, i) => (
+            {/* Annual growth rings overlay */}
+            {[28, 20, 12].map((r, i) => (
               <circle 
                 key={i} cx="50" cy="50" r={r} 
-                fill="none" stroke="#78350f" strokeWidth="1.5" cursor="pointer"
+                className="anatomy-hotspot pulse-ring-element"
+                fill="none" stroke="rgba(255, 215, 0, 0.45)" strokeWidth="2"
+                style={{ filter: 'drop-shadow(0 0 3px rgba(255,215,0,0.3))' }}
                 onClick={() => setActiveHotspot({
                   title: '⭕ Annual Growth Rings',
                   text: '• Concentric rings formed by secondary growth xylem divisions each season.\n• Fast spring growth creates wide light rings; slow summer growth creates thin dark rings. Counting them estimates trunk age!'
@@ -2516,11 +3013,44 @@ export default function ChapterLearningLab({
             <span style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: '600' }}>Realistic View</span>
           </div>
           {/* Anatomy View */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffffff', borderRadius: '16px', padding: '0.25rem', width: '100px', height: '100px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', position: 'relative' }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              background: '#ffffff', 
+              borderRadius: '16px', 
+              padding: '0.25rem', 
+              width: '100px', 
+              height: '100px', 
+              border: '2px solid var(--accent)', 
+              boxShadow: '0 4px 15px rgba(99,102,241,0.15)',
+              position: 'relative'
+            }}>
               {stages[stage].anatomy}
+              
+              {/* Pulsating interactive beacon badge */}
+              <div style={{
+                position: 'absolute',
+                top: '-6px',
+                right: '-6px',
+                background: '#dc2626',
+                color: '#fff',
+                borderRadius: '50%',
+                width: '18px',
+                height: '18px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '9px',
+                fontWeight: 'bold',
+                boxShadow: '0 0 8px rgba(220,38,38,0.6)',
+                animation: 'beacon-pulse 1s infinite'
+              }}>
+                🔍
+              </div>
             </div>
-            <span style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: '600' }}>Cellular Anatomy</span>
+            <span style={{ fontSize: '9px', color: 'var(--accent)', fontWeight: 'bold' }}>Cellular Anatomy (Tap)</span>
           </div>
         </div>
 
@@ -2542,7 +3072,7 @@ export default function ChapterLearningLab({
         </div>
 
         {/* Hotspot details panel */}
-        {activeHotspot && (
+        {activeHotspot ? (
           <div style={{
             background: 'rgba(99,102,241,0.04)',
             borderLeft: '4px solid var(--accent)',
@@ -2555,34 +3085,98 @@ export default function ChapterLearningLab({
             <strong style={{ color: 'var(--navy)', display: 'block', marginBottom: '0.25rem' }}>{activeHotspot.title}</strong>
             <p style={{ margin: 0, color: 'var(--text-secondary)', whiteSpace: 'pre-line' }}>{activeHotspot.text}</p>
           </div>
+        ) : (
+          <div style={{
+            background: 'var(--page-bg)',
+            border: '1px dashed var(--border)',
+            borderRadius: '8px',
+            padding: '0.85rem 1.1rem',
+            fontSize: '12.5px',
+            color: 'var(--text-muted)',
+            textAlign: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}>
+            <span>🔍</span>
+            <span><b>Directions:</b> Tap the glowing rings or points in the <b>Cellular Anatomy</b> view above to inspect growth details!</span>
+          </div>
         )}
 
-        {/* Climbers vs Creepers comparative panel (Upgraded for high visual visibility) */}
+        {/* Climbers vs Creepers comparative panel (Upgraded for high visual visibility & interactive 3D flips) */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', borderTop: '1px solid var(--border)', paddingTop: '1.25rem' }}>
-          {/* Creeper Card */}
-          <div style={{ background: 'rgba(245, 158, 11, 0.03)', border: '1px solid rgba(245, 158, 11, 0.15)', borderRadius: '16px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(245, 158, 11, 0.1)', paddingBottom: '0.4rem' }}>
-              <span style={{ fontSize: '1.5rem' }}>🍉</span>
-              <strong style={{ fontSize: '15px', color: '#b45309' }}>Creepers (Spread on Ground)</strong>
-            </div>
-            <div style={{ margin: 0, fontSize: '14px', lineHeight: '1.6', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span>🌱 <b>Growth Habit:</b> They creep horizontally along the ground and spread out on the surface of the soil.</span>
-              <span>⚠️ <b>Stem Weakness:</b> Their stems are so thin and fragile that they <b>cannot grow vertically</b> at all, even with external supports.</span>
-              <span>🍉 <b>Fruits:</b> Frequently produce large, heavy fruits (like Watermelon or Pumpkin) that must rest on the ground.</span>
+          
+          {/* Creeper Card Flip Container */}
+          <div className="flip-card-container" onClick={() => setCreeperFlipped(f => !f)}>
+            <div className={`flip-card-inner ${creeperFlipped ? 'flipped' : ''}`}>
+              
+              {/* Front Side: Visual */}
+              <div className="flip-card-front" style={{ border: '1px solid rgba(245, 158, 11, 0.25)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
+                <img src={creeperImg} alt="Creeper" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.75))', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1rem', color: '#fff' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '1.3rem' }}>🍉</span>
+                    <strong style={{ fontSize: '15px' }}>Creepers (Spread on Ground)</strong>
+                  </div>
+                  <span style={{ fontSize: '11px', opacity: 0.85, textTransform: 'uppercase', letterSpacing: '0.05em' }}>👉 Tap to read details</span>
+                </div>
+              </div>
+
+              {/* Back Side: Details */}
+              <div className="flip-card-back" style={{ background: theme === 'dark' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(245, 158, 11, 0.03)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(245, 158, 11, 0.1)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.3rem' }}>🍉</span>
+                    <strong style={{ fontSize: '15px', color: '#b45309' }}>Creepers (Spread on Ground)</strong>
+                  </div>
+                  <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Tap to view image</span>
+                </div>
+                <div style={{ margin: 0, fontSize: '13px', lineHeight: '1.5', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <span>🌱 <b>Growth Habit:</b> They creep horizontally along the ground and spread out on the surface of the soil.</span>
+                  <span>⚠️ <b>Stem Weakness:</b> Their stems are so thin and fragile that they <b>cannot grow vertically</b> at all, even with external supports.</span>
+                  <span>🍉 <b>Fruits:</b> Frequently produce large, heavy fruits (like Watermelon or Pumpkin) that must rest on the ground.</span>
+                </div>
+              </div>
+
             </div>
           </div>
-          {/* Climber Card */}
-          <div style={{ background: 'rgba(59, 130, 246, 0.03)', border: '1px solid rgba(59, 130, 246, 0.15)', borderRadius: '16px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(59, 130, 246, 0.1)', paddingBottom: '0.4rem' }}>
-              <span style={{ fontSize: '1.5rem' }}>🍇</span>
-              <strong style={{ fontSize: '15px', color: '#1e3a8a' }}>Climbers (Climb Up Support)</strong>
-            </div>
-            <div style={{ margin: 0, fontSize: '14px', lineHeight: '1.6', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span>🎋 <b>Growth Habit:</b> They grow vertically by clasping onto nearby supports (sticks, trees, or walls).</span>
-              <span>🔗 <b>Adaptation:</b> They develop special climbing organs called coiled <b>Tendrils</b> or sticky roots to latch and pull themselves up.</span>
-              <span>☀️ <b>Goal:</b> Climbing allows their leaves to reach higher areas with direct sunlight (e.g., Pea, Grapevine, Money Plant).</span>
+
+          {/* Climber Card Flip Container */}
+          <div className="flip-card-container" onClick={() => setClimberFlipped(f => !f)}>
+            <div className={`flip-card-inner ${climberFlipped ? 'flipped' : ''}`}>
+              
+              {/* Front Side: Visual */}
+              <div className="flip-card-front" style={{ border: '1px solid rgba(59, 130, 246, 0.25)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
+                <img src={climberImg} alt="Climber" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.75))', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1rem', color: '#fff' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '1.3rem' }}>🍇</span>
+                    <strong style={{ fontSize: '15px' }}>Climbers (Climb Up Support)</strong>
+                  </div>
+                  <span style={{ fontSize: '11px', opacity: 0.85, textTransform: 'uppercase', letterSpacing: '0.05em' }}>👉 Tap to read details</span>
+                </div>
+              </div>
+
+              {/* Back Side: Details */}
+              <div className="flip-card-back" style={{ background: theme === 'dark' ? 'rgba(59, 130, 246, 0.08)' : 'rgba(59, 130, 246, 0.03)', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(59, 130, 246, 0.1)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.3rem' }}>🍇</span>
+                    <strong style={{ fontSize: '15px', color: '#1e3a8a' }}>Climbers (Climb Up Support)</strong>
+                  </div>
+                  <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Tap to view image</span>
+                </div>
+                <div style={{ margin: 0, fontSize: '13px', lineHeight: '1.5', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <span>🎋 <b>Growth Habit:</b> They grow vertically by clasping onto nearby supports (sticks, trees, or walls).</span>
+                  <span>🔗 <b>Adaptation:</b> They develop special climbing organs called coiled <b>Tendrils</b> or sticky roots to latch and pull themselves up.</span>
+                  <span>☀️ <b>Goal:</b> Climbing allows their leaves to reach higher areas with direct sunlight (e.g., Pea, Grapevine, Money Plant).</span>
+                </div>
+              </div>
+
             </div>
           </div>
+
         </div>
       </div>
     );
@@ -2624,63 +3218,326 @@ export default function ChapterLearningLab({
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
-        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
+        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
           <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             🔗 Venation-Root Correlation Linker
           </span>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)', fontWeight: '500', background: 'var(--accent-bg)', padding: '2px 8px', borderRadius: '12px', border: '1px solid var(--accent-border)' }}>
+            👉 Tap matching cards on left & right to link
+          </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2.5rem' }}>
+          {/* Connection lines and ports overlay */}
+          <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 10 }}>
+            {/* Reticulate -> Taproot line */}
+            {connections.reticulate && (
+              <>
+                <line x1="46.3%" y1="24%" x2="53.7%" y2="24%" stroke="#34d399" strokeWidth="6" strokeLinecap="round" opacity="0.4" />
+                <line x1="46.3%" y1="24%" x2="53.7%" y2="24%" stroke="#10b981" strokeWidth="3" strokeLinecap="round" />
+                <line x1="46.3%" y1="24%" x2="53.7%" y2="24%" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" />
+              </>
+            )}
+
+            {/* Parallel -> Fibrous line */}
+            {connections.parallel && (
+              <>
+                <line x1="46.3%" y1="74%" x2="53.7%" y2="74%" stroke="#34d399" strokeWidth="6" strokeLinecap="round" opacity="0.4" />
+                <line x1="46.3%" y1="74%" x2="53.7%" y2="74%" stroke="#10b981" strokeWidth="3" strokeLinecap="round" />
+                <line x1="46.3%" y1="74%" x2="53.7%" y2="74%" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" />
+              </>
+            )}
+
+            {/* Reticulate port (left, top) */}
+            <circle cx="46.3%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : 'var(--page-bg)'} stroke={connections.reticulate ? '#059669' : selectedLeaf === 'reticulate' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            {selectedLeaf === 'reticulate' && !connections.reticulate && (
+              <circle cx="46.3%" cy="24%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+                <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
+              </circle>
+            )}
+
+            {/* Parallel port (left, bottom) */}
+            <circle cx="46.3%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : 'var(--page-bg)'} stroke={connections.parallel ? '#059669' : selectedLeaf === 'parallel' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            {selectedLeaf === 'parallel' && !connections.parallel && (
+              <circle cx="46.3%" cy="74%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+                <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
+              </circle>
+            )}
+
+            {/* Taproot port (right, top) */}
+            <circle cx="53.7%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : 'var(--page-bg)'} stroke={connections.reticulate ? '#059669' : selectedRoot === 'taproot' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            {selectedRoot === 'taproot' && !connections.reticulate && (
+              <circle cx="53.7%" cy="24%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+                <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
+              </circle>
+            )}
+
+            {/* Fibrous port (right, bottom) */}
+            <circle cx="53.7%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : 'var(--page-bg)'} stroke={connections.parallel ? '#059669' : selectedRoot === 'fibrous' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            {selectedRoot === 'fibrous' && !connections.parallel && (
+              <circle cx="53.7%" cy="74%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+                <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
+              </circle>
+            )}
+          </svg>
           {/* Leaves */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Venation</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Venation</span>
+            
             <button
               onClick={() => selectLeaf('reticulate')}
               className="glass-btn"
-              style={{ padding: '0.6rem', borderRadius: '10px', border: connections.reticulate ? '1.5px solid var(--success)' : selectedLeaf === 'reticulate' ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              style={{ 
+                padding: 0, 
+                borderRadius: '12px', 
+                overflow: 'hidden',
+                border: connections.reticulate ? '2.5px solid var(--success)' : selectedLeaf === 'reticulate' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
+                background: 'var(--page-bg)', 
+                cursor: 'pointer', 
+                textAlign: 'left', 
+                display: 'flex', 
+                flexDirection: 'column',
+                transition: 'all 0.2s',
+                boxShadow: selectedLeaf === 'reticulate' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                width: '100%'
+              }}
             >
-              <span style={{ fontSize: '1.25rem' }}>🕸️</span>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Reticulate</span>
-                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>Net-like veins</span>
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
+                <svg width="100%" height="100%" viewBox="0 0 120 100" style={{ background: '#f0fdf4', display: 'block' }}>
+                  {/* Grid overlay */}
+                  <defs>
+                    <pattern id="retic-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(22, 163, 74, 0.05)" strokeWidth="0.5"/>
+                    </pattern>
+                    <linearGradient id="leaf-grad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#86efac" />
+                      <stop offset="100%" stopColor="#22c55e" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#retic-grid)" />
+                  
+                  {/* Specimen Badge */}
+                  <rect x="5" y="5" width="48" height="12" rx="4" fill="rgba(21, 128, 61, 0.1)" stroke="rgba(21, 128, 61, 0.2)" strokeWidth="0.5" />
+                  <text x="8" y="13" fontSize="5" fontWeight="bold" fill="#166534" fontFamily="monospace">REF: DICOT_LEAF</text>
+
+                  {/* Leaf Shadow */}
+                  <path d="M60 15 C35 42, 35 72, 60 88 C85 72, 85 42, 60 15 Z" fill="rgba(0,0,0,0.04)" transform="translate(2, 2)" />
+                  
+                  {/* Leaf Blade */}
+                  <path d="M60 15 C35 42, 35 72, 60 88 C85 72, 85 42, 60 15 Z" fill="url(#leaf-grad)" stroke="#166534" strokeWidth="1.2" />
+
+                  {/* Midrib */}
+                  <path d="M60 15 Q60 50 60 88" fill="none" stroke="#15803d" strokeWidth="2.5" strokeLinecap="round" />
+
+                  {/* Reticulate network of side veins */}
+                  <path d="M60 30 Q45 28 39 32" fill="none" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
+                  <path d="M60 45 Q42 42 37 49" fill="none" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
+                  <path d="M60 60 Q44 58 39 67" fill="none" stroke="#166534" strokeWidth="1.0" strokeLinecap="round" />
+                  <path d="M60 72 Q50 71 46 79" fill="none" stroke="#166534" strokeWidth="0.8" strokeLinecap="round" />
+
+                  <path d="M60 30 Q75 28 81 32" fill="none" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
+                  <path d="M60 45 Q78 42 83 49" fill="none" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
+                  <path d="M60 60 Q76 58 81 67" fill="none" stroke="#166534" strokeWidth="1.0" strokeLinecap="round" />
+                  <path d="M60 72 Q70 71 74 79" fill="none" stroke="#166534" strokeWidth="0.8" strokeLinecap="round" />
+
+                  {/* Mesh Reticulation */}
+                  <path d="M39 32 Q35 40 37 49" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
+                  <path d="M37 49 Q39 58 39 67" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
+                  <path d="M48 30 Q45 38 43 45" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
+                  <path d="M49 46 Q47 54 46 60" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
+
+                  <path d="M81 32 Q85 40 83 49" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
+                  <path d="M83 49 Q81 58 81 67" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
+                  <path d="M72 30 Q75 38 77 45" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
+                  <path d="M71 46 Q73 54 74 60" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
+                </svg>
+              </div>
+              <div style={{ padding: '0.6rem 0.75rem', display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--navy)' }}>Reticulate</span>
+                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Net-like network of veins</span>
               </div>
             </button>
+            
             <button
               onClick={() => selectLeaf('parallel')}
               className="glass-btn"
-              style={{ padding: '0.6rem', borderRadius: '10px', border: connections.parallel ? '1.5px solid var(--success)' : selectedLeaf === 'parallel' ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              style={{ 
+                padding: 0, 
+                borderRadius: '12px', 
+                overflow: 'hidden',
+                border: connections.parallel ? '2.5px solid var(--success)' : selectedLeaf === 'parallel' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
+                background: 'var(--page-bg)', 
+                cursor: 'pointer', 
+                textAlign: 'left', 
+                display: 'flex', 
+                flexDirection: 'column',
+                transition: 'all 0.2s',
+                boxShadow: selectedLeaf === 'parallel' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                width: '100%'
+              }}
             >
-              <span style={{ fontSize: '1.25rem' }}>📏</span>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Parallel</span>
-                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>Straight veins</span>
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
+                <svg width="100%" height="100%" viewBox="0 0 120 100" style={{ background: '#f0fdf4', display: 'block' }}>
+                  <rect width="100%" height="100%" fill="url(#retic-grid)" />
+                  
+                  {/* Specimen Badge */}
+                  <rect x="5" y="5" width="48" height="12" rx="4" fill="rgba(21, 128, 61, 0.1)" stroke="rgba(21, 128, 61, 0.2)" strokeWidth="0.5" />
+                  <text x="8" y="13" fontSize="5" fontWeight="bold" fill="#166534" fontFamily="monospace">REF: MONOCOT_LEAF</text>
+
+                  {/* Leaf Shadow */}
+                  <path d="M60 5 C45 35, 45 75, 60 92 C75 75, 75 35, 60 5 Z" fill="rgba(0,0,0,0.04)" transform="translate(2, 2)" />
+                  
+                  {/* Slender leaf blade */}
+                  <path d="M60 5 C45 35, 45 75, 60 92 C75 75, 75 35, 60 5 Z" fill="url(#leaf-grad-parallel)" stroke="#166534" strokeWidth="1.2" />
+                  <defs>
+                    <linearGradient id="leaf-grad-parallel" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#bbf7d0" />
+                      <stop offset="100%" stopColor="#15803d" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Parallel veins */}
+                  <path d="M60 5 C50 35, 50 75, 60 92" fill="none" stroke="#14532d" strokeWidth="1.5" />
+                  <path d="M60 5 C47 35, 48 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
+                  <path d="M60 5 C53 35, 53 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
+                  <path d="M60 5 C57 35, 57 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
+
+                  <path d="M60 5 C73 35, 72 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
+                  <path d="M60 5 C67 35, 67 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
+                  <path d="M60 5 C63 35, 63 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
+                </svg>
+              </div>
+              <div style={{ padding: '0.6rem 0.75rem', display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--navy)' }}>Parallel</span>
+                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Veins running side-by-side</span>
               </div>
             </button>
           </div>
 
           {/* Roots */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Root System</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Root System</span>
+            
             <button
               onClick={() => selectRoot('taproot')}
               className="glass-btn"
-              style={{ padding: '0.6rem', borderRadius: '10px', border: connections.reticulate ? '1.5px solid var(--success)' : selectedRoot === 'taproot' ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              style={{ 
+                padding: 0, 
+                borderRadius: '12px', 
+                overflow: 'hidden',
+                border: connections.reticulate ? '2.5px solid var(--success)' : selectedRoot === 'taproot' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
+                background: 'var(--page-bg)', 
+                cursor: 'pointer', 
+                textAlign: 'left', 
+                display: 'flex', 
+                flexDirection: 'column',
+                transition: 'all 0.2s',
+                boxShadow: selectedRoot === 'taproot' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                width: '100%'
+              }}
             >
-              <span style={{ fontSize: '1.25rem' }}>🥕</span>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Taproot</span>
-                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>One thick root</span>
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
+                <svg width="100%" height="100%" viewBox="0 0 120 100" style={{ background: '#fdf8f6', display: 'block' }}>
+                  <defs>
+                    <pattern id="tap-soil" width="10" height="10" patternUnits="userSpaceOnUse">
+                      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(120, 53, 4, 0.04)" strokeWidth="0.5"/>
+                    </pattern>
+                    <linearGradient id="taproot-grad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#f97316" />
+                      <stop offset="50%" stopColor="#ea580c" />
+                      <stop offset="100%" stopColor="#b45309" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#tap-soil)" />
+
+                  {/* Specimen Badge */}
+                  <rect x="5" y="5" width="48" height="12" rx="4" fill="rgba(120, 53, 4, 0.1)" stroke="rgba(120, 53, 4, 0.2)" strokeWidth="0.5" />
+                  <text x="8" y="13" fontSize="5" fontWeight="bold" fill="#78350f" fontFamily="monospace">REF: TAP_ROOT</text>
+
+                  {/* Ground surface */}
+                  <line x1="10" y1="20" x2="110" y2="20" stroke="#78350f" strokeWidth="1" strokeDasharray="3,1" />
+                  <path d="M57 10 L63 10 L62 20 L58 20 Z" fill="#15803d" />
+                  
+                  {/* Taproot */}
+                  <path d="M57 20 C57 35, 59 65, 60 85 C61 65, 63 35, 63 20 Z" fill="url(#taproot-grad)" stroke="#78350f" strokeWidth="1" />
+
+                  {/* Lateral roots */}
+                  <path d="M58 28 Q46 32 38 34" fill="none" stroke="#b45309" strokeWidth="1" strokeLinecap="round" />
+                  <path d="M38 34 Q34 38 30 37" fill="none" stroke="#b45309" strokeWidth="0.6" strokeLinecap="round" />
+                  
+                  <path d="M59 42 Q48 48 42 53" fill="none" stroke="#b45309" strokeWidth="1" strokeLinecap="round" />
+                  <path d="M59 56 Q50 63 46 72" fill="none" stroke="#b45309" strokeWidth="0.8" strokeLinecap="round" />
+                  <path d="M60 70 Q54 75 51 81" fill="none" stroke="#b45309" strokeWidth="0.6" strokeLinecap="round" />
+
+                  <path d="M62 28 Q74 32 82 34" fill="none" stroke="#b45309" strokeWidth="1" strokeLinecap="round" />
+                  <path d="M82 34 Q86 38 90 37" fill="none" stroke="#b45309" strokeWidth="0.6" strokeLinecap="round" />
+                  
+                  <path d="M61 42 Q72 48 78 53" fill="none" stroke="#b45309" strokeWidth="1" strokeLinecap="round" />
+                  <path d="M61 56 Q70 63 74 72" fill="none" stroke="#b45309" strokeWidth="0.8" strokeLinecap="round" />
+                  <path d="M60 70 Q66 75 69 81" fill="none" stroke="#b45309" strokeWidth="0.6" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div style={{ padding: '0.6rem 0.75rem', display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--navy)' }}>Taproot</span>
+                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>One deep central thick root</span>
               </div>
             </button>
+            
             <button
               onClick={() => selectRoot('fibrous')}
               className="glass-btn"
-              style={{ padding: '0.6rem', borderRadius: '10px', border: connections.parallel ? '1.5px solid var(--success)' : selectedRoot === 'fibrous' ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              style={{ 
+                padding: 0, 
+                borderRadius: '12px', 
+                overflow: 'hidden',
+                border: connections.parallel ? '2.5px solid var(--success)' : selectedRoot === 'fibrous' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
+                background: 'var(--page-bg)', 
+                cursor: 'pointer', 
+                textAlign: 'left', 
+                display: 'flex', 
+                flexDirection: 'column',
+                transition: 'all 0.2s',
+                boxShadow: selectedRoot === 'fibrous' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                width: '100%'
+              }}
             >
-              <span style={{ fontSize: '1.25rem' }}>🌾</span>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Fibrous</span>
-                <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>Bunches of fibers</span>
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
+                <svg width="100%" height="100%" viewBox="0 0 120 100" style={{ background: '#fdf8f6', display: 'block' }}>
+                  <rect width="100%" height="100%" fill="url(#tap-soil)" />
+
+                  {/* Specimen Badge */}
+                  <rect x="5" y="5" width="48" height="12" rx="4" fill="rgba(120, 53, 4, 0.1)" stroke="rgba(120, 53, 4, 0.2)" strokeWidth="0.5" />
+                  <text x="8" y="13" fontSize="5" fontWeight="bold" fill="#78350f" fontFamily="monospace">REF: FIBROUS_ROOT</text>
+
+                  {/* Ground surface */}
+                  <line x1="10" y1="20" x2="110" y2="20" stroke="#78350f" strokeWidth="1" strokeDasharray="3,1" />
+                  <path d="M55 10 L65 10 L65 20 L55 20 Z" fill="#166534" />
+                  
+                  {/* Fibrous roots */}
+                  <g stroke="#b45309" fill="none" strokeLinecap="round">
+                    <path d="M60 20 Q58 40 56 60 T55 85" strokeWidth="1.2" />
+                    <path d="M58 20 Q61 42 63 65 T64 88" strokeWidth="1.1" />
+                    <path d="M62 20 Q59 38 60 58 T59 82" strokeWidth="1.2" />
+                    
+                    <path d="M57 20 Q48 35 40 50 T32 75" strokeWidth="1.0" />
+                    <path d="M56 20 Q44 32 34 45 T24 68" strokeWidth="0.8" />
+                    <path d="M55 20 Q38 30 26 40 T16 58" strokeWidth="0.8" />
+                    <path d="M58 20 Q52 45 46 65 T41 84" strokeWidth="0.9" />
+
+                    <path d="M63 20 Q72 35 80 50 T88 75" strokeWidth="1.0" />
+                    <path d="M64 20 Q76 32 86 45 T96 68" strokeWidth="0.8" />
+                    <path d="M65 20 Q82 30 94 40 T104 58" strokeWidth="0.8" />
+                    <path d="M62 20 Q68 45 74 65 T79 84" strokeWidth="0.9" />
+                  </g>
+                </svg>
+              </div>
+              <div style={{ padding: '0.6rem 0.75rem', display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--navy)' }}>Fibrous</span>
+                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Cluster of thin threadlike roots</span>
               </div>
             </button>
           </div>
@@ -3016,7 +3873,37 @@ export default function ChapterLearningLab({
 
         {/* RIGHT COLUMN: Interactive Sandbox or Fallbacks */}
         <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0, justifyContent: 'center', background: 'transparent', border: 'none', padding: '0' }}>
-          {lessonId === 'grouping_basics_concept' ? (
+          {slide.image ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+              <div style={{
+                position: 'relative',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                border: '1px solid var(--border)',
+                width: '100%',
+                maxHeight: '380px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: theme === 'dark' ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(8px)'
+              }}>
+                <img 
+                  src={slide.image === 'Scientist2' ? scientist2Img :
+                       slide.image === 'silent_valley' ? silentValleyImg :
+                       slide.image === 'Scientist1' ? scientist1Img :
+                       slide.image === 'protect_wildlife' ? protectWildlifeImg :
+                       slide.image === 'sacred_groves' ? sacredGrovesImg : ''} 
+                  alt={slide.title} 
+                  style={{ width: '100%', height: 'auto', maxHeight: '360px', objectFit: 'contain', borderRadius: '12px' }} 
+                />
+              </div>
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', marginTop: '8px' }}>
+                Textbook Reference Visual (Page {slide.image === 'Scientist2' ? '22' : slide.image === 'silent_valley' ? '23' : slide.image === 'Scientist1' ? '27' : slide.image === 'protect_wildlife' ? '28' : '29'})
+              </span>
+            </div>
+          ) : lessonId === 'grouping_basics_concept' ? (
             <GroupingBasicsInteractive />
           ) : lessonId === 'plant_variety_concept' ? (
             <PlantVarietyMorpher />
@@ -3109,6 +3996,7 @@ export default function ChapterLearningLab({
         coverGraphic={coverGraphic}
         onBack={onBack}
         onNext={handleNextToSlogan}
+        bgImage={coverBgImage}
       />
     );
   }
@@ -3358,7 +4246,6 @@ export default function ChapterLearningLab({
         setQuizChecked(false);
       }
     };
-
     return (
       <div style={isFullscreen ? {
         position: 'fixed',
@@ -3367,7 +4254,12 @@ export default function ChapterLearningLab({
         height: '100vh',
         margin: 0,
         padding: 0,
-        background: 'var(--page-bg)',
+        backgroundImage: learningLabBg ? `url(${learningLabBg})` : 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat',
+        backgroundColor: 'var(--page-bg)',
         zIndex: 99999,
         overflowY: 'auto',
         overflowX: 'hidden',
@@ -3375,9 +4267,19 @@ export default function ChapterLearningLab({
       } : {
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.5rem',
         width: '100%',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        backgroundImage: learningLabBg ? `url(${learningLabBg})` : 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat',
+        padding: '0',
+        borderRadius: '0',
+        height: learningLabBg ? '100vh' : 'auto',
+        overflowY: learningLabBg ? 'auto' : 'visible',
+        overflowX: 'hidden',
+        minHeight: learningLabBg ? '100vh' : 'auto'
       }}>
         <style>{`
           .glass-btn {
@@ -3430,6 +4332,57 @@ export default function ChapterLearningLab({
             font-weight: bold;
             color: var(--success);
           }
+          
+          /* Interactive 3D Flip Card Animation Styles */
+          .flip-card-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 315px;
+            cursor: pointer;
+          }
+          .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+          }
+          .flip-card-inner.flipped {
+            transform: rotateY(180deg);
+          }
+          .flip-card-front, .flip-card-back {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            overflow: hidden;
+          }
+          .flip-card-front {
+            z-index: 2;
+            transform: rotateY(0deg);
+          }
+          .flip-card-back {
+            transform: rotateY(180deg);
+            z-index: 1;
+            overflow-y: auto;
+          }
+          
+          /* Dynamic Glassmorphic Panel styling when background image is present */
+          ${learningLabBg ? `
+            .glass-panel {
+              background: ${theme === 'dark' ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.85)'} !important;
+              backdrop-filter: blur(8px) !important;
+              border: 1px solid rgba(255, 255, 255, 0.12) !important;
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+            }
+            .frame-page-left {
+              background: ${theme === 'dark' ? 'rgba(15, 23, 42, 0.88)' : 'rgba(244, 236, 223, 0.88)'} !important;
+              backdrop-filter: blur(8px) !important;
+              border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            }
+          ` : ''}
         `}</style>
 
         {/* Master stats & control header (Sticky when not in fullscreen) */}
@@ -3438,14 +4391,18 @@ export default function ChapterLearningLab({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            borderBottom: '1px solid var(--border)',
-            paddingBottom: '1rem',
-            paddingTop: '0.5rem',
+            border: learningLabBg ? '1px solid rgba(255,255,255,0.2)' : 'none',
+            borderBottom: learningLabBg ? '1px solid rgba(255,255,255,0.2)' : '1px solid var(--border)',
+            padding: learningLabBg ? '0.85rem 1.5rem' : '0.5rem 0 1rem 0',
             flexWrap: 'wrap',
             gap: '1rem',
             position: 'sticky',
-            top: 0,
-            background: 'var(--page-bg)',
+            top: learningLabBg ? '1rem' : 0,
+            background: learningLabBg ? (theme === 'dark' ? 'rgba(15, 23, 42, 0.3)' : 'rgba(255, 255, 255, 0.3)') : 'var(--page-bg)',
+            backdropFilter: learningLabBg ? 'blur(24px)' : 'none',
+            boxShadow: learningLabBg ? '0 8px 32px rgba(0, 0, 0, 0.08)' : 'none',
+            borderRadius: learningLabBg ? '16px' : '0',
+            margin: learningLabBg ? '1.25rem clamp(0.5rem, 2vw, 1.25rem) 1.5rem clamp(0.5rem, 2vw, 1.25rem)' : '0 0 1.5rem 0',
             zIndex: 110
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -3542,70 +4499,148 @@ export default function ChapterLearningLab({
           </div>
         )}
 
-        {/* Floating controls in Fullscreen Mode */}
+        {/* Floating controls in Fullscreen Mode — auto-hide on hover */}
         {isFullscreen && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: '0.5rem',
-            padding: '0.85rem 1rem',
-            background: 'var(--page-bg)',
-            borderBottom: '1px solid var(--border)',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-            zIndex: 10000
-          }}>
-            <button 
-              onClick={handlePrevControl} 
-              disabled={activeLevelIdx === 0 && activeSlide === 0 && activeActivityIdx === 0}
-              className="glass-btn"
+          <div
+            onMouseEnter={() => setFsBarVisible(true)}
+            onMouseLeave={() => setFsBarVisible(false)}
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 10000 }}
+          >
+            {/* Peek trigger zone — always visible tiny strip */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: '16px',
+              background: 'transparent', cursor: 'pointer'
+            }} />
+
+            {/* Toggle pill button (top-right) */}
+            <button
+              onClick={() => setFsBarVisible(p => !p)}
+              title={fsBarVisible ? 'Hide controls' : 'Show controls'}
+              style={{
+                position: 'absolute',
+                top: fsBarVisible ? '3.6rem' : '0.45rem',
+                right: '1rem',
+                zIndex: 10001,
+                width: '32px', height: '22px',
+                borderRadius: '0 0 10px 10px',
+                background: 'rgba(15,23,42,0.75)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderTop: 'none',
+                color: '#fff', fontSize: '0.65rem',
+                cursor: 'pointer', display: 'flex',
+                alignItems: 'center', justifyContent: 'center',
+                transition: 'top 0.3s ease',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+              }}
             >
-              ‹ Prev
+              {fsBarVisible ? '▲' : '▼'}
             </button>
-            <button 
-              onClick={handleNextControl}
-              disabled={isNextDisabled()}
-              className="glass-btn"
-            >
-              Next ›
-            </button>
-            {activeActivity && (
-              <button
-                onClick={() => {
-                  setActivityStatus(prev => {
-                    const newStatus = prev[activeActivity.id] === 'done' ? 'none' : 'done';
-                    if (newStatus === 'done') {
-                      setActivityFocused(null);
-                      setTimeout(() => {
-                        const quizPaneEl = document.getElementById("pane-quiz-window");
-                        if (quizPaneEl) {
-                          quizPaneEl.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }, 300);
-                    }
-                    return { ...prev, [activeActivity.id]: newStatus };
-                  });
-                }}
+
+            {/* Actual controls bar */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '1rem',
+              padding: '0.75rem clamp(0.5rem, 2vw, 1.25rem)',
+              background: learningLabBg ? (theme === 'dark' ? 'rgba(10,16,30,0.82)' : 'rgba(255,255,255,0.82)') : 'var(--page-bg)',
+              backdropFilter: 'blur(24px)',
+              borderBottom: '1px solid rgba(255,255,255,0.12)',
+              boxShadow: '0 8px 28px rgba(0,0,0,0.18)',
+              transform: fsBarVisible ? 'translateY(0)' : 'translateY(-100%)',
+              transition: 'transform 0.32s cubic-bezier(0.4,0,0.2,1)',
+              pointerEvents: fsBarVisible ? 'auto' : 'none'
+            }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', textAlign: 'left' }}>
+              <div style={{ 
+                fontSize: '0.7rem', 
+                fontWeight: 'bold', 
+                color: learningLabBg ? (theme === 'dark' ? '#34d399' : '#059669') : 'var(--accent)', 
+                textTransform: 'uppercase', 
+                letterSpacing: '0.05em', 
+                lineHeight: 1 
+              }}>
+                Fullscreen Focus
+              </div>
+              <div style={{ 
+                fontSize: '0.85rem', 
+                fontWeight: '700', 
+                color: learningLabBg ? (theme === 'dark' ? '#ffffff' : '#0f172a') : 'var(--text-primary)', 
+                lineHeight: 1.2,
+                textShadow: learningLabBg ? (theme === 'dark' ? '0 1px 3px rgba(0,0,0,0.6)' : '0 1px 2px rgba(255,255,255,0.75)') : 'none'
+              }}>
+                {activeLevel.title}
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <button 
+                onClick={handlePrevControl} 
+                disabled={activeLevelIdx === 0 && activeSlide === 0 && activeActivityIdx === 0}
                 className="glass-btn"
-                style={{ color: isCompleted ? 'var(--success)' : 'inherit', borderColor: isCompleted ? 'var(--success)' : 'var(--border)' }}
               >
-                {isCompleted ? '✓ Done' : 'Mark Done'}
+                ‹ Prev
               </button>
-            )}
-            <button 
-              onClick={() => setIsFullscreen(false)}
-              className="glass-btn primary"
-            >
-              Exit Fullscreen ↙
-            </button>
+              <button 
+                onClick={handleNextControl}
+                disabled={isNextDisabled()}
+                className="glass-btn"
+              >
+                Next ›
+              </button>
+              {activeLevel.activities.length > 0 && (
+                <button
+                  onClick={() => setActivityFocused(prev => prev === true ? null : true)}
+                  className="glass-btn"
+                  style={{ whiteSpace: 'nowrap' }}
+                >
+                  {activityFocused === true ? 'Show All' : 'Focus Activity'}
+                </button>
+              )}
+              {activeActivity && (
+                <button
+                  onClick={() => {
+                    setActivityStatus(prev => {
+                      const newStatus = prev[activeActivity.id] === 'done' ? 'none' : 'done';
+                      if (newStatus === 'done') {
+                        setActivityFocused(null);
+                        setTimeout(() => {
+                          const quizPaneEl = document.getElementById("pane-quiz-window");
+                          if (quizPaneEl) {
+                            quizPaneEl.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }, 300);
+                      }
+                      return { ...prev, [activeActivity.id]: newStatus };
+                    });
+                  }}
+                  className="glass-btn"
+                  style={{ color: isCompleted ? 'var(--success)' : 'inherit', borderColor: isCompleted ? 'var(--success)' : 'var(--border)' }}
+                >
+                  {isCompleted ? '✓ Done' : 'Mark Done'}
+                </button>
+              )}
+              <button 
+                onClick={() => setIsFullscreen(false)}
+                className="glass-btn primary"
+              >
+                Exit Fullscreen ↙
+              </button>
+            </div>
           </div>
+        </div>
         )}
 
+
         {/* Side-by-side workspace split */}
-        <div style={{ display: 'flex', gap: '1.5rem', width: '100%', alignItems: 'flex-start', boxSizing: 'border-box', paddingTop: isFullscreen ? '5.2rem' : 0 }}>
+        <div style={{ 
+          display: 'flex', 
+          gap: '1.5rem', 
+          width: '100%', 
+          alignItems: 'stretch', 
+          boxSizing: 'border-box', 
+          padding: isFullscreen ? '1.5rem 1.25rem 1.5rem 1.25rem' : (learningLabBg ? '0 clamp(0.5rem, 2vw, 1.25rem) 1.5rem clamp(0.5rem, 2vw, 1.25rem)' : '0')
+        }}>
           
           {/* Level map on left (hidden in fullscreen) */}
           {!isFullscreen && (
@@ -3622,45 +4657,39 @@ export default function ChapterLearningLab({
                 setActiveSlide(0);
                 setActivityFocused(false);
               }}
+              bgImage={levelMapBg}
+              stickyTop={learningLabBg ? "5.5rem" : "6.5rem"}
             />
           )}
 
           {/* Combined Lesson & Activity Panel on right */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2rem', boxSizing: 'border-box' }}>
-            {isFullscreen && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', padding: '0 0.5rem' }}>
-                <div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Fullscreen Focus
-                  </div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                    {activeLevel.title}
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                  {activeLevel.activities.length > 0 && (
-                    <button
-                      onClick={() => setActivityFocused(prev => prev === true ? null : true)}
-                      className="glass-btn"
-                      style={{ whiteSpace: 'nowrap' }}
-                    >
-                      {activityFocused === true ? 'Show All' : 'Focus Activity'}
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
+          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2rem', boxSizing: 'border-box' }}>
             
             {/* 1. TOP PANE: Interactive Lesson Window */}
-            <div id="pane-lesson-window" className="glass-panel" style={{ display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Lesson Pane
-                </span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                  Level {activeLevelIdx + 1} of {totalLevels}
-                </span>
-              </div>
+            <div
+              id="pane-lesson-window"
+              className={activeLevel.lessonId === 'biodiversity_concept' ? '' : 'glass-panel'}
+              style={{
+                display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none',
+                flexDirection: 'column',
+                gap: activeLevel.lessonId === 'biodiversity_concept' ? '0' : '0.75rem',
+                position: 'relative',
+                ...(activeLevel.lessonId === 'biodiversity_concept' ? {
+                  background: 'transparent', border: 'none', boxShadow: 'none', padding: 0, borderRadius: '14px', overflow: 'hidden'
+                } : {})
+              }}
+            >
+              {/* Lesson pane header — overlaid on image for biodiversity, normal otherwise */}
+              {activeLevel.lessonId !== 'biodiversity_concept' && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Lesson Pane
+                  </span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    Level {activeLevelIdx + 1} of {totalLevels}
+                  </span>
+                </div>
+              )}
 
               {activeLevel.lessonId === 'biodiversity_concept' ? (
                 <IntroStoryteller 
@@ -3688,13 +4717,27 @@ export default function ChapterLearningLab({
 
             {/* 2. MIDDLE PANE: Full Interactive Activity Window */}
             {activeLevel.activities && activeLevel.activities.length > 0 && activeLevel.lessonId !== 'vocabulary_glossary' && activeLevel.lessonId !== 'chapter_challenge_overview' && (
-              <div id="pane-activity-window" className="glass-panel" style={{ display: (!isFullscreen || activityFocused !== false) ? 'flex' : 'none', flexDirection: 'column', gap: '0.75rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: isCompleted ? 'var(--success)' : 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Activity Pane {activeActivity.pg && `(${activeActivity.pg})`}
-                  </span>
+              <div id="pane-activity-window" className="glass-panel" style={{ 
+                display: (!isFullscreen || activityFocused !== false) ? 'flex' : 'none', 
+                flexDirection: 'column', 
+                gap: '0.75rem',
+                padding: '0.75rem 1rem 1rem 1rem !important',
+                border: '1px solid var(--border) !important',
+                background: 'var(--card-bg) !important',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08) !important',
+                borderRadius: '16px !important'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+                  <h4 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>{activeActivity.title}</span>
+                    {activeActivity.pg && (
+                      <span style={{ fontSize: '0.75rem', fontWeight: 'normal', color: 'var(--text-muted)', background: 'var(--border)', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>
+                        {activeActivity.pg}
+                      </span>
+                    )}
+                  </h4>
                   {activeLevel.activities.length > 1 && (
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.4rem' }}>
                       {activeLevel.activities.map((act, aIdx) => {
                         let btnLabel = `${aIdx + 1}`;
                         if (activeLevel.id === 'lvl-1') {
@@ -3717,13 +4760,13 @@ export default function ChapterLearningLab({
                             }}
                             className={`glass-btn ${activeActivityIdx === aIdx ? 'primary' : ''}`}
                             style={{ 
-                              padding: '0.5rem 1rem', 
-                              fontSize: '0.85rem', 
-                              borderRadius: '8px',
+                              padding: '0.35rem 0.75rem', 
+                              fontSize: '0.8rem', 
+                              borderRadius: '6px',
                               display: 'inline-flex',
                               alignItems: 'center',
-                              gap: '0.35rem',
-                              boxShadow: activeActivityIdx === aIdx ? '0 4px 12px rgba(99,102,241,0.25)' : 'none'
+                              gap: '0.25rem',
+                              boxShadow: activeActivityIdx === aIdx ? '0 4px 10px rgba(99,102,241,0.2)' : 'none'
                             }}
                           >
                             {btnLabel}
@@ -3734,47 +4777,43 @@ export default function ChapterLearningLab({
                   )}
                 </div>
 
-                <div style={{ padding: '1.25rem', borderRadius: '16px', background: 'var(--card-bg)' }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-                    {activeActivity.title}
-                  </h4>
-                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: '0 0 1.25rem 0' }}>
-                    {activeActivity.desc}
-                  </p>
-
-                  <div style={{ width: '100%', borderRadius: '12px', overflow: 'hidden', background: 'var(--surface)', position: 'relative' }}>
-                    {activeActivity.activityId ? (
-                      renderCustomSandbox(activeActivity.activityId, (action) => {
-                        setActivityStatus(prev => ({ ...prev, [activeActivity.id]: 'done' }));
-                        confetti({ particleCount: 60, spread: 60, origin: { y: 0.75 } });
-                        if (action === 'next_activity') {
-                          setActiveActivityIdx(1);
-                          setActivityFocused(true);
-                        } else if (action === 'go_to_quiz') {
-                          setActivityFocused(null);
-                          setTimeout(() => {
-                            const quizPaneEl = document.getElementById("pane-quiz-window");
-                            if (quizPaneEl) {
-                              quizPaneEl.scrollIntoView({ behavior: 'smooth' });
-                            }
-                          }, 300);
-                        } else {
-                          setActivityFocused(null);
-                        }
-                      })
-                    ) : (
-                      <iframe 
-                        src={activeActivity.path}
-                        title={activeActivity.title}
-                        style={{
-                          width: '100%',
-                          height: '600px',
-                          border: 'none',
-                          background: 'var(--surface)'
-                        }}
-                      />
-                    )}
-                  </div>
+                <div style={{ 
+                  width: '100%', 
+                  borderRadius: '12px', 
+                  overflow: 'hidden', 
+                  position: 'relative'
+                }}>
+                  {activeActivity.activityId ? (
+                    renderCustomSandbox(activeActivity.activityId, (action) => {
+                      setActivityStatus(prev => ({ ...prev, [activeActivity.id]: 'done' }));
+                      confetti({ particleCount: 60, spread: 60, origin: { y: 0.75 } });
+                      if (action === 'next_activity') {
+                        setActiveActivityIdx(1);
+                        setActivityFocused(true);
+                      } else if (action === 'go_to_quiz') {
+                        setActivityFocused(null);
+                        setTimeout(() => {
+                          const quizPaneEl = document.getElementById("pane-quiz-window");
+                          if (quizPaneEl) {
+                            quizPaneEl.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }, 300);
+                      } else {
+                        setActivityFocused(null);
+                      }
+                    })
+                  ) : (
+                    <iframe 
+                      src={activeActivity.path}
+                      title={activeActivity.title}
+                      style={{
+                        width: '100%',
+                        height: '600px',
+                        border: 'none',
+                        background: 'var(--surface)'
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             )}

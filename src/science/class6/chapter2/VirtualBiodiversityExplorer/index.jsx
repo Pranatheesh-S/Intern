@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X, RefreshCw, Volume2, CheckCircle, ChevronRight, Award, ArrowLeft, BookOpen, Target, Eye, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import natureWalkScene from '../../../../assets/nature_walk_scene.png';
+import activityPlantsImage from '../../../../assets/activity_plants_image.png';
+import activityAnimalsImage from '../../../../assets/activity_animals_image.png';
 import { useTheme } from '../../../../ThemeContext.jsx';
 
 /* ─────────────────────────────────────────────
@@ -13,7 +14,7 @@ const TARGET_ORGANISMS = [
     name: 'Indian Pond Frog',
     emoji: '🐸',
     type: 'animal',
-    x: 27, y: 83, w: 14, h: 14,
+    x: 22, y: 78, w: 12, h: 12,
     details: 'Lives both in the freshwater pond and on moist soil shores. Its green skin is smooth, and its feet are webbed for swimming.',
     fact: 'Frogs can breathe through their lungs on land and directly through their moist skin underwater — they are true amphibians!',
     verifyQ: { q: 'What type of habitat does an Indian Pond Frog live in?', opts: ['Only on dry land', 'Only in deep ocean', 'Both in freshwater and on moist shores', 'Only in desert sand'], correct: 2 },
@@ -24,7 +25,7 @@ const TARGET_ORGANISMS = [
     name: 'Three-Striped Palm Squirrel',
     emoji: '🐿️',
     type: 'animal',
-    x: 91, y: 63, w: 14, h: 22,
+    x: 81, y: 63, w: 12, h: 14,
     details: 'A quick terrestrial rodent found climbing tree trunks, feeding on nuts, seeds, and berries. It has three distinctive pale stripes on its back.',
     fact: 'Squirrels accidentally plant thousands of trees each year by forgetting where they buried their nut stashes!',
     verifyQ: { q: 'Where would you most likely spot a Three-Striped Palm Squirrel?', opts: ['In the ocean', 'Climbing a tree trunk', 'Flying in the sky', 'Burrowing underground'], correct: 1 },
@@ -35,7 +36,7 @@ const TARGET_ORGANISMS = [
     name: 'Monarch Butterfly',
     emoji: '🦋',
     type: 'animal',
-    x: 55, y: 75, w: 14, h: 14,
+    x: 45, y: 58, w: 12, h: 12,
     details: 'A flying insect feeding on the sweet nectar of garden flowers. Moves dynamically from bloom to bloom, helping in pollination.',
     fact: 'Butterflies taste their food using tiny sensory receptors on their feet — not their mouths!',
     verifyQ: { q: 'How does a butterfly help plants?', opts: ['It eats all the leaves', 'It digs up roots', 'It helps in pollination by carrying pollen', 'It blocks sunlight'], correct: 2 },
@@ -46,7 +47,7 @@ const TARGET_ORGANISMS = [
     name: 'Rhesus Macaque (Monkey)',
     emoji: '🐒',
     type: 'animal',
-    x: 81, y: 16, w: 16, h: 22,
+    x: 49, y: 26, w: 14, h: 20,
     details: 'A wild mammal seen perched high on tree branches, jumping between trees and grooming its group members in a social fashion.',
     fact: 'Monkeys use vocal calls, facial expressions, and body language to communicate warnings, greetings, and emotions to their group!',
     verifyQ: { q: 'Which habitat do Rhesus Macaque monkeys primarily live in?', opts: ['Underground burrows', 'Treetops in forests', 'Deep ocean', 'Arctic tundra'], correct: 1 },
@@ -57,7 +58,7 @@ const TARGET_ORGANISMS = [
     name: 'House Sparrows (Perched)',
     emoji: '🐦',
     type: 'animal',
-    x: 71, y: 38, w: 16, h: 14,
+    x: 20, y: 30, w: 18, h: 14,
     details: 'Small birds chirping and resting on tree branches. They feed on insects, small seeds, and breadcrumbs near human settlements.',
     fact: 'House Sparrows have lived alongside humans for over 10,000 years — they are one of the most widespread birds on Earth!',
     verifyQ: { q: 'What do House Sparrows primarily eat?', opts: ['Large mammals', 'Insects and small seeds', 'Big fish', 'Tree bark'], correct: 1 },
@@ -114,21 +115,18 @@ const BONUS_ORGANISMS = [
     id: 'snail',
     name: 'Garden Snail',
     emoji: '🐌',
-    x: 35, y: 86, w: 12, h: 12,
+    x: 34, y: 86, w: 10, h: 10,
     details: "A slow-moving mollusc that carries a protective spiral shell on its back and leaves a silvery slime trail.",
     fact: "Snails cannot hear at all — they rely solely on their sense of touch and smell to find their way around!",
   }
 ];
 
-export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFilter = 'plant', onNextSection }) {
+export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFilter = 'plant', onNextSection, isFullscreen = false }) {
   const { theme } = useTheme();
-  const [notebook, setNotebook] = useState([]); // logged target IDs
-  const [bonusLog, setBonusLog] = useState([]); // logged bonus IDs
-
-  // Bounding dimensions of the container
+  const [notebook, setNotebook] = useState([]);
+  const [bonusLog, setBonusLog] = useState([]);
   const [containerSize, setContainerSize] = useState({ width: 800, height: 450 });
 
-  // Dynamically filter target list
   const filteredTargets = React.useMemo(() => {
     if (typeFilter === 'plant') {
       return [
@@ -137,7 +135,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           name: 'Hibiscus & Rose Bushes',
           emoji: '🌺',
           type: 'plant',
-          x: 10, y: 62, w: 18, h: 18,
+          x: 60, y: 60, w: 30, h: 20,
           details: 'Flowering shrubs with multiple thin but woody stems branching near the ground level. Produce vibrant red and pink blooms.',
           fact: 'Shrubs are medium-sized plants with hard woody stems, but unlike trees they do not have a single thick main trunk!',
           verifyQ: { q: 'Which plant classification do Hibiscus and Rose Bushes belong to?', opts: ['Herbs (soft stem)', 'Trees (single thick trunk)', 'Shrubs (woody stems, no main trunk)', 'Aquatic plants'], correct: 2 },
@@ -148,7 +146,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           name: 'Tulsi & Grass Herbs',
           emoji: '🌿',
           type: 'plant',
-          x: 69, y: 89, w: 18, h: 16,
+          x: 68, y: 74, w: 14, h: 14,
           details: 'Small leafy green plants growing close to the ground, with soft tender stems and highly aromatic leaves.',
           fact: 'Tulsi (Holy Basil) is considered sacred in India and has been used in traditional medicine for over 3,000 years!',
           verifyQ: { q: 'What is the key feature that identifies Tulsi as an herb?', opts: ['It has a thick woody trunk', 'It lives underwater', 'It has soft green non-woody stems', 'It only grows in snow'], correct: 2 },
@@ -159,7 +157,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           name: 'Pond Water Lilies',
           emoji: '🪷',
           type: 'plant',
-          x: 17, y: 77, w: 14, h: 14,
+          x: 18, y: 88, w: 16, h: 12,
           details: 'Water lilies floating in the freshwater pond, supporting small aquatic organisms and adding biological beauty.',
           fact: 'Water lily leaves have stomata on their upper surfaces instead of their lower surfaces to breathe directly in contact with air!',
           verifyQ: { q: 'Where are the stomata located on water lily leaves?', opts: ['Under the water', 'On the upper surface facing the air', 'In the roots', 'There are no stomata'], correct: 1 },
@@ -170,7 +168,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           name: 'Grand Neem Tree',
           emoji: '🌳',
           type: 'plant',
-          x: 85, y: 35, w: 20, h: 30,
+          x: 85, y: 35, w: 20, h: 40,
           details: 'A large tree with a thick trunk and many woody branches providing shelter to birds and monkeys.',
           fact: 'Neem trees are evergreen and known for their medicinal properties, often called the village pharmacy in India.',
           verifyQ: { q: 'Which plant classification does a Neem Tree belong to?', opts: ['Herb', 'Shrub', 'Tree', 'Creeper'], correct: 2 },
@@ -184,7 +182,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           name: 'Indian Pond Frog',
           emoji: '🐸',
           type: 'animal',
-          x: 27, y: 83, w: 14, h: 14,
+          x: 22, y: 78, w: 12, h: 12,
           details: 'Lives both in the freshwater pond and on moist soil shores. Its green skin is smooth, and its feet are webbed for swimming.',
           fact: 'Frogs can breathe through their lungs on land and directly through their moist skin underwater — they are true amphibians!',
           verifyQ: { q: 'What type of habitat does an Indian Pond Frog live in?', opts: ['Only on dry land', 'Only in deep ocean', 'Both in freshwater and on moist shores', 'Only in desert sand'], correct: 2 },
@@ -195,10 +193,10 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           name: 'Three-Striped Palm Squirrel',
           emoji: '🐿️',
           type: 'animal',
-          x: 91, y: 63, w: 14, h: 22,
+          x: 81, y: 63, w: 12, h: 16,
           details: 'A quick terrestrial rodent found climbing tree trunks, feeding on nuts, seeds, and berries. It has three distinctive pale stripes on its back.',
           fact: 'Squirrels accidentally plant thousands of trees each year by forgetting where they buried their nut stashes!',
-          verifyQ: { q: 'Where would you most likely spot a Three-Striped Palm Squirrel?', opts: ['In the sky', 'Climbing a tree trunk', 'In deep ocean water', 'Only in ice caves'], correct: 1 },
+          verifyQ: { q: 'Where would you most likely spot a Three-Striped Palm Squirrel?', opts: ['In the ocean', 'Climbing a tree trunk', 'Flying in the sky', 'Burrowing underground'], correct: 1 },
           tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Runs and climbs. Lives on trees and land.' },
         },
         {
@@ -206,7 +204,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           name: 'Monarch Butterfly',
           emoji: '🦋',
           type: 'animal',
-          x: 55, y: 75, w: 14, h: 14,
+          x: 45, y: 58, w: 12, h: 12,
           details: 'A flying insect feeding on the sweet nectar of garden flowers. Moves dynamically from bloom to bloom, helping in pollination.',
           fact: 'Butterflies taste their food using tiny sensory receptors on their feet — not their mouths!',
           verifyQ: { q: 'How does a butterfly help plants?', opts: ['It eats all the leaves', 'It digs up roots', 'It helps in pollination by carrying pollen', 'It blocks sunlight'], correct: 2 },
@@ -217,7 +215,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           name: 'Rhesus Macaque (Monkey)',
           emoji: '🐒',
           type: 'animal',
-          x: 81, y: 16, w: 16, h: 22,
+          x: 49, y: 26, w: 14, h: 16,
           details: 'A wild mammal seen perched high on tree branches, jumping between trees and grooming its group members in a social fashion.',
           fact: 'Monkeys use vocal calls, facial expressions, and body language to communicate warnings, greetings, and emotions to their group!',
           verifyQ: { q: 'Which habitat do Rhesus Macaque monkeys primarily live in?', opts: ['Underground burrows', 'Treetops in forests', 'Deep ocean', 'Arctic tundra'], correct: 1 },
@@ -228,7 +226,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           name: 'House Sparrows (Perched)',
           emoji: '🐦',
           type: 'animal',
-          x: 71, y: 38, w: 16, h: 14,
+          x: 20, y: 30, w: 12, h: 12,
           details: 'Small birds chirping and resting on tree branches. They feed on insects, small seeds, and breadcrumbs near human settlements.',
           fact: 'House Sparrows have lived alongside humans for over 10,000 years — they are one of the most widespread birds on Earth!',
           verifyQ: { q: 'What do House Sparrows primarily eat?', opts: ['Large mammals', 'Insects and small seeds', 'Big fish', 'Tree bark'], correct: 1 },
@@ -247,7 +245,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           id: 'crow',
           name: 'House Crow (Flying)',
           emoji: '🐦‍⬛',
-          x: 29, y: 13, w: 16, h: 14,
+          x: 28, y: 14, w: 14, h: 12,
           details: 'A grey-necked bird flying in the clear sky. Crows are scavengers that eat scraps, small pests, and seeds.',
           fact: 'Crows are remarkably intelligent — they can recognize individual human faces and even use sticks as tools to fetch food!',
         },
@@ -255,7 +253,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           id: 'snail',
           name: 'Garden Snail',
           emoji: '🐌',
-          x: 35, y: 86, w: 12, h: 12,
+          x: 34, y: 86, w: 10, h: 10,
           details: 'A slow-moving mollusc that carries a protective spiral shell on its back and leaves a silvery slime trail.',
           fact: 'Snails cannot hear at all — they rely solely on their sense of touch and smell to find their way around!',
         }
@@ -366,6 +364,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
   const startHolding = useCallback((e) => {
     if (e.button !== 0) return; // Only left click
+    e.preventDefault(); // Prevent text selection and zoom-related drag behaviors
     const currentHover = hoveredTargetRef.current;
     if (!currentHover) {
       setMissMessage('Try searching another area!');
@@ -435,7 +434,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
   return (
     <div style={{
       width: '100%',
-      height: 'calc(100vh - 3rem)',
+      height: '660px',
       background: 'var(--page-bg)',
       fontFamily: 'var(--geo-font)',
       color: 'var(--ink)',
@@ -481,12 +480,12 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           {/* Scanned Organism Verification Pane */}
           {scannedOrganism && (
             <div style={{
-              background: '#ffffff',
+              background: 'var(--card-bg)',
               border: '1.5px solid var(--accent)',
               borderRadius: '12px',
               padding: '1.15rem',
               marginTop: '1.25rem',
-              boxShadow: '0 8px 24px rgba(14,42,69,0.08)',
+              boxShadow: 'var(--card-shadow)',
               animation: 'fadeInScale 0.25s ease'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
@@ -500,7 +499,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               </p>
               
               <div style={{
-                background: 'rgba(22,163,74,0.06)',
+                background: 'var(--success-bg)',
                 padding: '0.65rem 0.75rem',
                 borderRadius: '8px',
                 fontSize: '12px',
@@ -521,13 +520,13 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                     {scannedOrganism.verifyQ.opts.map((opt, i) => {
-                      let bg = '#fff';
+                      let bg = 'var(--surface)';
                       let border = '1px solid var(--cardline)';
                       if (verifyChecked) {
-                        if (i === scannedOrganism.verifyQ.correct) { bg = '#ecfdf5'; border = '1.5px solid #10b981'; }
-                        else if (i === verifyAnswer) { bg = '#fef2f2'; border = '1.5px solid #ef4444'; }
+                        if (i === scannedOrganism.verifyQ.correct) { bg = 'var(--success-bg)'; border = '1.5px solid #10b981'; }
+                        else if (i === verifyAnswer) { bg = 'var(--danger-bg)'; border = '1.5px solid #ef4444'; }
                       } else if (verifyAnswer === i) {
-                        bg = '#f4f8ff'; border = '1.5px solid var(--accent)';
+                        bg = 'var(--accent-bg)'; border = '1.5px solid var(--accent)';
                       }
                       return (
                         <button key={i} disabled={verifyChecked} onClick={() => setVerifyAnswer(i)}
@@ -611,7 +610,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
         {/* ============ RIGHT COLUMN: WORKSPACE ============ */}
         <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.5rem', borderBottom: '1px solid var(--cardline)', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.25rem', borderBottom: '1px solid var(--cardline)', marginBottom: '0.5rem' }}>
             <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--mut)' }}>
               🎯 neighbourhood &amp; school garden map
             </span>
@@ -640,7 +639,18 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
             </div>
           </div>
 
-          <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden', borderRadius: '12px', border: '1px solid var(--cardline)' }}>
+          <div style={{ 
+            flex: 1, 
+            minHeight: 0, 
+            position: 'relative', 
+            borderRadius: '12px', 
+            border: '1px solid var(--cardline)',
+            background: '#090d16',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden'
+          }}>
             <div
               ref={containerRef}
               onMouseMove={handleMouseMove}
@@ -648,13 +658,29 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               onMouseUp={stopHolding}
               onMouseLeave={() => { setIsInsideImage(false); stopHolding(); setHoveredTarget(null); }}
               onMouseEnter={() => setIsInsideImage(true)}
-              style={{ width: '100%', height: '100%', cursor: 'none', userSelect: 'none', position: 'relative' }}
+              style={{ 
+                width: '100%', 
+                height: 'auto',
+                aspectRatio: '3/2',
+                maxHeight: '100%',
+                maxWidth: '100%',
+                cursor: 'none', 
+                userSelect: 'none', 
+                position: 'relative' 
+              }}
             >
               {/* Nature Walk Scene Background */}
               <img
-                src={natureWalkScene}
+                src={typeFilter === 'plant' ? activityPlantsImage : activityAnimalsImage}
                 alt="Nature Walk Scene"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none', userSelect: 'none' }}
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover', 
+                  display: 'block', 
+                  pointerEvents: 'none', 
+                  userSelect: 'none' 
+                }}
                 draggable={false}
               />
 
@@ -747,8 +773,8 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           </div>
 
           {/* Readout panel inside right page */}
-          <div className="readout" style={{ marginTop: '0.85rem' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.5rem' }}>
+          <div className="readout" style={{ marginTop: '0.5rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.25rem' }}>
               {filteredTargets.map(t => {
                 const logged = notebook.includes(t.id);
                 return (
