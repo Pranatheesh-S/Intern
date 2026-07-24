@@ -65,26 +65,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                 transition={{ type: "spring", stiffness: 100, damping: 15 }}
                 style={{ position: "absolute", display: "flex", gap: "8px", bottom: "82px", zIndex: 1 }}
               >
-                {[...Array(6)].map((_, i) => (
-                  <motion.div 
-                    key={i} 
-                    style={{ width: "8px", height: "120px", filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))" }}
-                  >
-                    <svg viewBox="0 0 8 120" width="100%" height="100%">
-                      <polygon points="0,15 8,15 4,0" fill="#e6b981" />
-                      <polygon points="3,3 5,3 4,0" fill="#334155" />
-                      <rect x="0" y="15" width="8" height="90" fill="url(#pencilGrad3)" />
-                      <rect x="0" y="102" width="8" height="5" fill="#cbd5e1" />
-                      <rect x="0" y="107" width="8" height="13" rx="2" fill="#f472b6" />
-                      <defs>
-                        <linearGradient id="pencilGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#fde047" />
-                          <stop offset="100%" stopColor="#ca8a04" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                  </motion.div>
-                ))}
+                <img src="/pencils.png" style={{ width: "88px", height: "120px", objectFit: "contain", filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))" }} alt="Pencils" draggable="false" />
                 <AnimatePresence>
                   {!polesMatch && magneticForce > 0 && isAdjustingDistance && (
                     <motion.div

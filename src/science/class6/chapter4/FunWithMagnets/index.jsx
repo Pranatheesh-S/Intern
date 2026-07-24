@@ -171,13 +171,13 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             <div className="sim">
               <div style={{ display: 'grid', gap: '8px' }}>
                 <div style={{ background: 'var(--panel2-local)', border: '1px solid var(--line-local)', borderRadius: '9px', padding: '10px 12px', fontSize: '13px' }}>
-                  🚫 Don't <b>drop, hammer or heat</b> magnets - it scrambles their magnetism.
+                  Don't <b>drop, hammer or heat</b> magnets - it scrambles their magnetism.
                 </div>
                 <div style={{ background: 'var(--panel2-local)', border: '1px solid var(--line-local)', borderRadius: '9px', padding: '10px 12px', fontSize: '13px' }}>
-                  📱 Keep them away from <b>phones, cards, TVs and other devices</b>.
+                  Keep them away from <b>phones, cards, TVs and other devices</b>.
                 </div>
                 <div style={{ background: 'var(--panel2-local)', border: '1px solid var(--line-local)', borderRadius: '9px', padding: '10px 12px', fontSize: '13px' }}>
-                  🧲 <b>Store bar magnets in pairs</b>, unlike poles together, with a wooden spacer and iron "keepers" across the ends.
+                  <b>Store bar magnets in pairs</b>, unlike poles together, with a wooden spacer and iron "keepers" across the ends.
                 </div>
               </div>
             </div>
