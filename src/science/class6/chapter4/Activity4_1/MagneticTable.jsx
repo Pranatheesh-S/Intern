@@ -164,16 +164,6 @@ export default function MagneticTable({ onComplete, addXp = () => {} }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
-      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--accent-border)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Info size={24} style={{ color: 'var(--accent)' }} />
-          <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>Magnetic Property Test</h2>
-        </div>
-        <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-          First, make a <strong>Prediction (Yes/No)</strong> for each object. Then, click the <strong>Test Object</strong> button to observe the truth. Do all 9.
-        </p>
-      </div>
-
       <div style={{ 
         backgroundColor: 'var(--surface)', 
         borderRadius: '12px', 
@@ -185,83 +175,59 @@ export default function MagneticTable({ onComplete, addXp = () => {} }) {
         margin: '0 auto',
         fontFamily: 'Inter, system-ui, sans-serif'
       }}>
-        {/* Magnet Tool Area */}
-        <div style={{ 
-          padding: '1.5rem', 
-          display: 'flex', 
-          justifyContent: 'center',
-          borderBottom: '1px solid var(--border)'
-        }}>
-          <MagnetIcon />
-        </div>
+        {/* Activity Image */}
+        <img src="/activity_4.1.png" alt="Activity items" style={{ width: '100%', height: 'auto', display: 'block', borderBottom: '1px solid var(--border)' }} />
 
-          {/* Table Header */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '2fr 2fr 2fr 2fr',
-            padding: '1rem',
-            backgroundColor: 'var(--surface-hover)',
-            borderBottom: '1px solid var(--border)',
-            fontWeight: 'bold',
-            color: 'var(--text-secondary)',
-            fontSize: '0.9rem',
-            textAlign: 'center'
-          }}>
-            <div style={{ textAlign: 'left' }}>Object</div>
-            <div>Prediction (Yes/No)</div>
-            <div>Observation</div>
-            <div>Match?</div>
+        {/* Item List */}
+        <div style={{ padding: '2rem' }}>
+          <h3 style={{ marginTop: 0, marginBottom: '1.5rem', color: 'var(--text-heading)', fontSize: '1.25rem' }}>Items in the Picture:</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+            {[
+              "Pens (Plastic)",
+              "Water Bottle (Stainless Steel)",
+              "Compass (Metal)",
+              "Experiment: Test which items are magnetic!",
+              "Ruler (Plastic)",
+              "Eraser (Rubber)",
+              "Paper Clips (Metal)",
+              "Coins (Metal)",
+              "Pencil Case (Fabric)",
+              "Notebook (Paper)",
+              "Pencil (Wood)"
+            ].map((text, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '1rem', backgroundColor: 'var(--surface-hover)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                <span style={{ fontWeight: '600', fontSize: '0.95rem', color: 'var(--text-primary)' }}>{text}</span>
+              </div>
+            ))}
           </div>
-
-        {/* Table Body */}
-        <div>
-          {ITEMS.map((item, index) => (
-            <TableRow 
-              key={item.id} 
-              item={item} 
-              index={index}
-              prediction={predictions[item.id]}
-              observation={observations[item.id]}
-              onPredict={handlePredict}
-              onTest={handleTest}
-            />
-          ))}
         </div>
 
-        {/* Footer Stats */}
+        {/* Continue Action */}
         <div style={{
-          padding: '1rem 1.5rem',
+          padding: '2rem',
           display: 'flex',
-          gap: '1.5rem',
-          fontSize: '0.9rem',
+          justifyContent: 'center',
           backgroundColor: 'var(--surface-hover)',
-          borderTop: '1px solid var(--border)',
-          alignItems: 'center'
         }}>
-          <div>Attracted: <strong style={{ color: '#10b981' }}>{attractedCount}</strong></div>
-          <div>Not attracted: <strong style={{ color: '#ef4444' }}>{notAttractedCount}</strong></div>
-          <div style={{ color: 'var(--text-secondary)' }}>Tested: {testedCount}/{ITEMS.length}</div>
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span>Predictions right: <strong style={{ color: '#f59e0b' }}>{rightPredictionsCount}</strong></span>
-            
-            {isComplete && (
-              <button
-                onClick={onComplete}
-                className="primary"
-                style={{
-                  padding: '0.5rem 1rem',
-                  fontSize: '0.9rem',
-                  fontWeight: 'bold',
-                  borderRadius: '6px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem'
-                }}
-              >
-                Continue <ArrowRight size={16} />
-              </button>
-            )}
-          </div>
+          <button
+            onClick={onComplete}
+            className="primary"
+            style={{
+              padding: '0.75rem 2rem',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              borderRadius: '30px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              border: 'none',
+              cursor: 'pointer',
+              background: 'var(--accent)',
+              color: 'white'
+            }}
+          >
+            Continue <ArrowRight size={16} />
+          </button>
         </div>
       </div>
     </div>

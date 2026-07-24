@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Magnet, ArrowRight } from 'lucide-react';
-import MagnetBook from './MagnetBook';
 
 export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,14 +7,13 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const scenes = [
-    { img: '/scene-1.jpeg', subtitle: 'Reshma\'s Birthday Gift', text: 'Reshma lived in a coastal town of Kerala and loved writing short stories. Since her grandmother enjoyed listening to her stories, Reshma decided to write a special story as a birthday gift for her grandmother\'s 60th birthday.' },
-    { img: '/scene-2.jpeg', subtitle: 'The Spice Ship', text: 'Her story was about a ship carrying spices like pepper, cardamom, and cinnamon from Kerala for trade in the olden days. The sailors used the stars at night to find the right direction across the sea.' },
-    { img: '/scene_3.jpeg', subtitle: 'The Storm', text: 'Suddenly, in her story, the ship was caught in a fierce storm. Thick clouds covered the sky, and the stars disappeared. Reshma wondered how the sailors could continue their journey without seeing the stars.' },
-    { img: '/scene_4.jpeg', subtitle: 'Searching for an Answer', text: 'Unable to continue her story, Reshma searched the internet and visited her school library. She discovered that sailors used a magnetic compass to find directions even when the stars were hidden.' },
-    { img: '/scene_5.jpeg', subtitle: 'Discovering Magnets', text: 'This made Reshma curious about magnets. She remembered the magnets in her pencil box, purse, and the whiteboard duster at school. She realized that magnets were used in many everyday objects.' },
-    { img: '/scene-6.jpeg', subtitle: 'A Story Completed', text: 'After learning how a magnetic compass works, Reshma completed her story. In her story, the sailors safely navigated through the storm using the compass. Her grandmother loved the story, and Reshma developed a new interest in learning about magnets and magnetism.' },
-    { img: '/history_of_magnets.jpeg', subtitle: 'HISTORY OF MAGNET', text: <>Did you know that magnets were once mysterious rocks found in nature? Thousands of years ago, sailors used these natural magnets, called <strong>lodestones</strong>, to find their way across oceans. Later, people learned how to make stronger magnets from iron and use them in tools and machines. Today, magnets are everywhere! They help trains float above tracks, doctors look inside the human body using MRI machines, and even power devices we use every day. From guiding ancient explorers to driving modern technology, magnets have truly transformed our world!</> },
-    { img: '/scene_8.jpeg', subtitle: 'Types of Magnets', text: <>Not all magnets look the same! Some are long like <strong>bar magnets</strong>, some are curved like <strong>horseshoe magnets</strong>, and others are shaped like <strong>rings</strong>. Even though they have different shapes, all magnets have the special power to attract certain materials such as iron.<br /><br />Each type of magnet is designed for a different job. Bar magnets are often used in classroom experiments, horseshoe magnets are made to provide a stronger magnetic pull, and ring magnets are found in speakers, motors, and many electronic devices. These amazing magnets help make our everyday technology work!</> }
+    { img: '/scene_1.png', subtitle: 'Reshma\'s Birthday Gift', text: 'Reshma lived in a coastal town of Kerala and loved writing short stories. Since her grandmother enjoyed listening to her stories, Reshma decided to write a special story as a birthday gift for her grandmother\'s 60th birthday.' },
+    { img: '/scene_2.png', subtitle: 'The Spice Ship', text: 'Her story was about a ship carrying spices like pepper, cardamom, and cinnamon from Kerala for trade in the olden days. The sailors used the stars at night to find the right direction across the sea.' },
+    { img: '/scene_3.png', subtitle: 'The Storm', text: 'Suddenly, in her story, the ship was caught in a fierce storm. Thick clouds covered the sky, and the stars disappeared. Reshma wondered how the sailors could continue their journey without seeing the stars.' },
+    { img: '/scene_4.png', subtitle: 'Searching for an Answer', text: 'Unable to continue her story, Reshma searched the internet and visited her school library. She discovered that sailors used a magnetic compass to find directions even when the stars were hidden.' },
+    { img: '/scene_5.png', subtitle: 'Discovering Magnets', text: 'This made Reshma curious about magnets. She remembered the magnets in her pencil box, purse, and the whiteboard duster at school. She realized that magnets were used in many everyday objects.' },
+    { img: '/scene_7.png', subtitle: 'HISTORY OF MAGNET', text: <>Did you know that magnets were once mysterious rocks found in nature? Thousands of years ago, sailors used these natural magnets, called <strong>lodestones</strong>, to find their way across oceans. Later, people learned how to make stronger magnets from iron and use them in tools and machines. Today, magnets are everywhere! They help trains float above tracks, doctors look inside the human body using MRI machines, and even power devices we use every day. From guiding ancient explorers to driving modern technology, magnets have truly transformed our world!</> },
+    { img: '/last_scene.png' }
   ];
 
   const handleNext = () => setCurrentPage(p => Math.min(scenes.length, p + 1));
@@ -23,59 +21,51 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const handleFinish = () => setIsCompleted(true);
 
   return (
-    <div style={{ paddingBottom: '4rem' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border)' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#000' }}>
+      {/* Background Image */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundImage: `url(${scenes[currentPage - 1].img})`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }} />
+
+      {/* Bottom Left Controls */}
+      <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', display: 'flex', gap: '1rem', zIndex: 10 }}>
         <button
           onClick={onBackToDashboard}
-          className="outline"
-          style={{ position: 'relative', zIndex: 100, padding: '0.4rem 0.8rem', fontSize: '0.85rem', gap: '0.4rem', borderColor: 'var(--border)', display: 'flex', alignItems: 'center', cursor: 'pointer', background: 'transparent' }}
+          style={{ padding: '0.75rem 1.5rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', color: 'white', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          <ArrowLeft size={16} /> Back to Class 6 Chapter 4
+          <ArrowLeft size={16} /> Back
         </button>
-        <h1 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Magnet style={{ color: 'var(--accent)' }} size={28} />
-          Introduction to Magnets
-        </h1>
+        <button 
+          onClick={handlePrev}
+          disabled={currentPage === 1}
+          style={{ padding: '0.75rem 2rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', color: 'white', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', fontWeight: 'bold', opacity: currentPage === 1 ? 0.5 : 1 }}
+        >
+          Previous
+        </button>
       </div>
 
-      <div style={{
-        width: '100%',
-        aspectRatio: '16/9',
-        minHeight: '700px',
-        maxHeight: '85vh',
-        display: 'flex',
-        background: 'var(--bg-primary)',
-        overflow: 'hidden',
-        position: 'relative',
-        borderRadius: '24px',
-        border: '1px solid var(--card-border)',
-        boxShadow: 'var(--card-shadow)'
-      }}>
-
-        {/* BOOK PANEL */}
-        <div style={{ flex: 1, position: 'relative', overflow: 'hidden', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <MagnetBook
-            isOpen={isOpen}
-            currentPage={currentPage}
-            totalPages={scenes.length}
-            onNext={handleNext}
-            onPrev={handlePrev}
-            onFinish={handleFinish}
-            scenes={scenes}
-          />
-
-          {!isOpen && (
-            <button
-              className="primary"
-              onClick={() => setIsOpen(true)}
-              style={{ position: 'absolute', bottom: '3rem', padding: '1rem 2.5rem', fontSize: '1.1rem', fontWeight: 'bold', borderRadius: '30px', transition: 'transform 0.2s', cursor: 'pointer', background: 'var(--accent)', color: '#fff', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.3)', zIndex: 60 }}
-              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-            >
-              Open Storybook
-            </button>
-          )}
+      {/* Bottom Right Controls */}
+      <div style={{ position: 'absolute', bottom: '2rem', right: '2rem', display: 'flex', zIndex: 10 }}>
+        {currentPage < scenes.length ? (
+          <button 
+            onClick={handleNext}
+            style={{ padding: '0.75rem 2rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}
+          >
+            Next
+          </button>
+        ) : (
+          <button 
+            onClick={handleFinish}
+            style={{ padding: '0.75rem 2rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}
+          >
+            Finish Story
+          </button>
+        )}
+      </div>
 
           {/* COMPLETION MODAL */}
           {isCompleted && (
@@ -106,8 +96,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
               </div>
             </div>
           )}
-        </div>
-      </div>
     </div>
   );
 }
