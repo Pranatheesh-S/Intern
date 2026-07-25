@@ -81,14 +81,14 @@ export default function VenationRootCorrelationLab({ onBackToDashboard }) {
   };
 
   const CellPicker = ({ options, value, isCorrect, isWrong, onChange }) => (
-    <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
       {options.map(opt => (
-        <button key={opt.id} onClick={() => onChange(opt.id)} style={{ background: value === opt.id ? `${opt.color}25` : 'rgba(255,255,255,0.03)', border: `1.5px solid ${value === opt.id ? opt.color : 'rgba(255,255,255,0.08)'}`, color: value === opt.id ? opt.color : '#94a3b8', padding: '0.3rem 0.55rem', borderRadius: '8px', cursor: checked ? 'default' : 'pointer', fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '0.25rem', transition: 'all 0.15s' }}>
-          {opt.icon} {opt.label}
+        <button key={opt.id} onClick={() => onChange(opt.id)} style={{ background: value === opt.id ? `${opt.color}25` : optBgDefault, border: `1.5px solid ${value === opt.id ? opt.color : optBorderDefault}`, color: value === opt.id ? opt.color : optTextDefault, padding: '0.45rem 0.85rem', borderRadius: '8px', cursor: checked ? 'default' : 'pointer', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.35rem', transition: 'all 0.15s', fontWeight: value === opt.id ? '600' : 'normal' }}>
+          <span style={{ fontSize: '1.05rem' }}>{opt.icon}</span> {opt.label}
         </button>
       ))}
-      {checked && isCorrect && <span style={{ color: '#4ade80', fontSize: '0.75rem' }}>✅</span>}
-      {checked && isWrong && <span style={{ color: '#f87171', fontSize: '0.75rem' }}>❌</span>}
+      {checked && isCorrect && <span style={{ color: '#4ade80', fontSize: '1rem' }}>✅</span>}
+      {checked && isWrong && <span style={{ color: '#f87171', fontSize: '1rem' }}>❌</span>}
     </div>
   );
 
@@ -127,7 +127,7 @@ export default function VenationRootCorrelationLab({ onBackToDashboard }) {
           <thead>
             <tr>
               {['Plant Name', '#', 'Leaf Venation', 'Root System'].map((h, i) => (
-                <th key={i} style={{ background: headerBg, color: '#8b5cf6', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', padding: '0.75rem 1rem', borderBottom: `2px solid ${sidebarBorder}`, textAlign: 'left' }}>{h}</th>
+                <th key={i} style={{ background: headerBg, color: '#8b5cf6', fontSize: '0.95rem', fontWeight: 'bold', textTransform: 'uppercase', padding: '1rem 1.25rem', borderBottom: `2px solid ${sidebarBorder}`, textAlign: 'left' }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -140,23 +140,23 @@ export default function VenationRootCorrelationLab({ onBackToDashboard }) {
               return (
                 <tr key={plant.id} style={{ background: rowOk ? (isLight ? 'rgba(74,222,128,0.1)' : 'rgba(74,222,128,0.05)') : rowWrong ? (isLight ? 'rgba(248,113,113,0.1)' : 'rgba(248,113,113,0.05)') : idx % 2 === 0 ? rowOddBg : rowEvenBg, borderBottom: `1px solid ${borderCol}`, transition: 'background 0.3s' }}>
                   {/* Plant name */}
-                  <td style={{ padding: '0.85rem 1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ fontSize: '1.25rem' }}>{plant.emoji}</span>
+                  <td style={{ padding: '1.2rem 1.25rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span style={{ fontSize: '1.5rem' }}>{plant.emoji}</span>
                       <div>
-                        <div style={{ fontSize: '0.85rem', fontWeight: 600, color: textColor }}>{plant.name}</div>
-                        <div style={{ fontSize: '0.65rem', color: textMuted, fontStyle: 'italic' }}>{plant.hint}</div>
+                        <div style={{ fontSize: '1.05rem', fontWeight: 600, color: textColor }}>{plant.name}</div>
+                        <div style={{ fontSize: '0.8rem', color: textMuted, fontStyle: 'italic', marginTop: '0.15rem' }}>{plant.hint}</div>
                       </div>
                     </div>
                   </td>
                   {/* Row number */}
-                  <td style={{ padding: '0.85rem 0.5rem', textAlign: 'center', fontSize: '0.8rem', color: textMuted, fontWeight: 'bold' }}>{idx + 1}</td>
+                  <td style={{ padding: '1.2rem 0.5rem', textAlign: 'center', fontSize: '1rem', color: textMuted, fontWeight: 'bold' }}>{idx + 1}</td>
                   {/* Venation */}
-                  <td style={{ padding: '0.85rem 1rem' }}>
+                  <td style={{ padding: '1.2rem 1.25rem' }}>
                     <CellPicker options={VENATION_OPTIONS} value={ans.venation} isCorrect={res?.venation} isWrong={checked && !res?.venation} onChange={v => handleSet(plant.id, 'venation', v)} />
                   </td>
                   {/* Root */}
-                  <td style={{ padding: '0.85rem 1rem' }}>
+                  <td style={{ padding: '1.2rem 1.25rem' }}>
                     <CellPicker options={ROOT_OPTIONS} value={ans.root} isCorrect={res?.root} isWrong={checked && !res?.root} onChange={v => handleSet(plant.id, 'root', v)} />
                   </td>
                 </tr>
@@ -167,8 +167,8 @@ export default function VenationRootCorrelationLab({ onBackToDashboard }) {
 
         {/* Check button */}
         {!checked && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
-            <button onClick={handleCheck} disabled={!allFilled} style={{ background: allFilled ? '#8b5cf6' : (isLight ? '#cbd5e1' : '#1e293b'), border: 'none', color: allFilled ? '#fff' : (isLight ? '#94a3b8' : '#475569'), padding: '0.7rem 2.5rem', borderRadius: '10px', cursor: allFilled ? 'pointer' : 'not-allowed', fontSize: '0.9rem', fontWeight: 'bold', boxShadow: allFilled ? '0 4px 16px rgba(139,92,246,0.4)' : 'none', transition: 'all 0.3s' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+            <button onClick={handleCheck} disabled={!allFilled} style={{ background: allFilled ? '#8b5cf6' : (isLight ? '#cbd5e1' : '#1e293b'), border: 'none', color: allFilled ? '#fff' : (isLight ? '#94a3b8' : '#475569'), padding: '0.9rem 3.5rem', borderRadius: '10px', cursor: allFilled ? 'pointer' : 'not-allowed', fontSize: '1.05rem', fontWeight: 'bold', boxShadow: allFilled ? '0 4px 16px rgba(139,92,246,0.4)' : 'none', transition: 'all 0.3s' }}>
               {allFilled ? '🔍 Check My Table' : `Fill all rows to continue (${TABLE_PLANTS.filter(p => answers[p.id].venation && answers[p.id].root).length}/${TABLE_PLANTS.length} done)`}
             </button>
           </div>

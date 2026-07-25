@@ -460,12 +460,12 @@ export default function RootSystemsLab({ onBackToDashboard }) {
         </div>
         <div style={{ fontSize: '0.7rem', color: textFaint, fontStyle: 'italic' }}>Select a plant → dig it up → wash roots → classify!</div>
         {PLANTS.map(p => (
-          <button key={p.id} onClick={() => setSelectedPlant(p.id)} style={{ background: selectedPlant === p.id ? (isLight ? '#fed7aa' : 'rgba(180,83,9,0.2)') : (isLight ? '#ffffff' : 'rgba(255,255,255,0.03)'), border: `1px solid ${checked[p.id] === true ? 'rgba(132,204,22,0.5)' : checked[p.id] === false ? 'rgba(248,113,113,0.4)' : selectedPlant === p.id ? 'rgba(245,158,11,0.5)' : (isLight ? '#fed7aa' : 'rgba(255,255,255,0.06)')}`, borderRadius: '10px', padding: '0.6rem 0.75rem', cursor: 'pointer', color: textColor, textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.2s' }}>
-            <span style={{ fontSize: '1.2rem' }}>{p.emoji}</span>
+          <button key={p.id} onClick={() => setSelectedPlant(p.id)} style={{ background: selectedPlant === p.id ? (isLight ? '#fed7aa' : 'rgba(180,83,9,0.2)') : (isLight ? '#ffffff' : 'rgba(255,255,255,0.03)'), border: `1px solid ${checked[p.id] === true ? 'rgba(132,204,22,0.5)' : checked[p.id] === false ? 'rgba(248,113,113,0.4)' : selectedPlant === p.id ? 'rgba(245,158,11,0.5)' : (isLight ? '#fed7aa' : 'rgba(255,255,255,0.06)')}`, borderRadius: '10px', padding: '0.75rem 0.9rem', cursor: 'pointer', color: textColor, textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.6rem', transition: 'all 0.2s' }}>
+            <span style={{ fontSize: '1.4rem' }}>{p.emoji}</span>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 600 }}>{p.name}</div>
-              {checked[p.id] === true && <div style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 'bold' }}>✅ {p.rootType === 'taproot' ? 'Taproot' : 'Fibrous'}</div>}
-              {digProgress[p.id] >= 100 && !checked[p.id] && <div style={{ fontSize: '0.65rem', color: isLight ? '#ea580c' : '#f59e0b', fontWeight: 'bold' }}>⛏️ Dug up</div>}
+              <div style={{ fontSize: '0.92rem', fontWeight: 600 }}>{p.name}</div>
+              {checked[p.id] === true && <div style={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 'bold', marginTop: '0.15rem' }}>✅ {p.rootType === 'taproot' ? 'Taproot' : 'Fibrous'}</div>}
+              {digProgress[p.id] >= 100 && !checked[p.id] && <div style={{ fontSize: '0.78rem', color: isLight ? '#ea580c' : '#f59e0b', fontWeight: 'bold', marginTop: '0.15rem' }}>⛏️ Dug up</div>}
             </div>
           </button>
         ))}
@@ -548,27 +548,27 @@ export default function RootSystemsLab({ onBackToDashboard }) {
 
             {/* Classification */}
             {isWashed && (
-              <div style={{ background: cardBg, borderRadius: '12px', padding: '1rem', border: `1px solid ${sidebarBorder}` }}>
-                <div style={{ fontSize: '0.8rem', color: classificationAlertText, marginBottom: '0.75rem', fontWeight: '500' }}>
+              <div style={{ background: cardBg, borderRadius: '12px', padding: '1.25rem', border: `1px solid ${sidebarBorder}` }}>
+                <div style={{ fontSize: '0.95rem', color: classificationAlertText, marginBottom: '0.85rem', fontWeight: '600' }}>
                   Based on what you observed — classify the root system of <strong>{plant.name}</strong>:
                 </div>
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap', alignItems: 'center' }}>
                   {ROOT_LABELS.map(opt => (
-                    <button key={opt.id} onClick={() => !checked[selectedPlant] && setAnswers(a => ({ ...a, [selectedPlant]: opt.id }))} style={{ background: answers[selectedPlant] === opt.id ? `${opt.color}22` : optBg, border: `2px solid ${answers[selectedPlant] === opt.id ? opt.color : optBorder}`, color: answers[selectedPlant] === opt.id ? opt.color : optText, padding: '0.5rem 1rem', borderRadius: '10px', cursor: checked[selectedPlant] ? 'default' : 'pointer', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'all 0.2s', fontWeight: answers[selectedPlant] === opt.id ? '600' : 'normal' }}>
+                    <button key={opt.id} onClick={() => !checked[selectedPlant] && setAnswers(a => ({ ...a, [selectedPlant]: opt.id }))} style={{ background: answers[selectedPlant] === opt.id ? `${opt.color}22` : optBg, border: `2px solid ${answers[selectedPlant] === opt.id ? opt.color : optBorder}`, color: answers[selectedPlant] === opt.id ? opt.color : optText, padding: '0.6rem 1.2rem', borderRadius: '10px', cursor: checked[selectedPlant] ? 'default' : 'pointer', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.2s', fontWeight: answers[selectedPlant] === opt.id ? '600' : 'normal' }}>
                       {opt.icon} {opt.label}
-                      <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>— {opt.desc}</span>
+                      <span style={{ fontSize: '0.85rem', opacity: 0.75 }}>— {opt.desc}</span>
                     </button>
                   ))}
                   {answers[selectedPlant] && !checked[selectedPlant] && (
-                    <button onClick={() => handleCheck(selectedPlant)} style={{ background: '#f59e0b', border: 'none', color: '#1a0f05', padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 'bold' }}>
+                    <button onClick={() => handleCheck(selectedPlant)} style={{ background: '#f59e0b', border: 'none', color: '#1a0f05', padding: '0.6rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.95rem', fontWeight: 'bold' }}>
                       Verify ✓
                     </button>
                   )}
-                  {checked[selectedPlant] === true && <span style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '0.85rem' }}>✅ Correct!</span>}
+                  {checked[selectedPlant] === true && <span style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '0.95rem' }}>✅ Correct!</span>}
                   {checked[selectedPlant] === false && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '0.85rem' }}>❌ Look at the root diagram again.</span>
-                      <button onClick={() => { setAnswers(a => ({ ...a, [selectedPlant]: null })); setChecked(c => { const n = { ...c }; delete n[selectedPlant]; return n; }); }} style={{ background: 'none', border: '1px solid #dc2626', color: '#dc2626', padding: '0.2rem 0.6rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold' }}>Retry</button>
+                      <span style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '0.95rem' }}>❌ Look at the root diagram again.</span>
+                      <button onClick={() => { setAnswers(a => ({ ...a, [selectedPlant]: null })); setChecked(c => { const n = { ...c }; delete n[selectedPlant]; return n; }); }} style={{ background: 'none', border: '1px solid #dc2626', color: '#dc2626', padding: '0.3rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>Retry</button>
                     </div>
                   )}
                 </div>
