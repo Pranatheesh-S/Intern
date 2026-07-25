@@ -498,19 +498,17 @@ export default function RootSystemsLab({ onBackToDashboard }) {
                 <div style={{ fontSize: '0.75rem', color: isLight ? '#ea580c' : '#f59e0b', fontWeight: 'bold', marginBottom: '1rem', textTransform: 'uppercase' }}>⛏️ Excavation View</div>
                 <div style={{ position: 'relative', height: 200, background: excavationViewBg, borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   {/* Plant above ground */}
-                  <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '0.5rem', zIndex: 2 }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', justifyContent: 'center', paddingTop: '0.5rem', zIndex: 4 }}>
                     <PlantShootSVG plantId={selectedPlant} />
                   </div>
                   {/* Soil layers */}
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: `${100 - progress}%`, background: soilGradient, transition: 'height 0.15s', borderTop: `2px solid ${soilBorder}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: '0.25rem', fontSize: '0.65rem', color: '#ffedd5', fontWeight: 'bold' }}>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: `${100 - progress}%`, background: soilGradient, transition: 'height 0.15s', borderTop: `2px solid ${soilBorder}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: '0.25rem', fontSize: '0.65rem', color: '#ffedd5', fontWeight: 'bold', zIndex: 2 }}>
                     {progress < 100 && progress > 0 && '🪱 Soil...'}
                   </div>
                   {/* Roots revealed */}
                   {progress > 20 && (
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: `${progress}%`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'height 0.15s' }}>
-                      <div style={{ opacity: Math.min(1, (progress - 20) / 40) }}>
-                        <PlantRootSVG plantId={selectedPlant} color={plant.rootColor} isWashed={false} />
-                      </div>
+                    <div style={{ position: 'absolute', top: '108px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 1, opacity: Math.min(1, (progress - 20) / 40), transition: 'opacity 0.15s' }}>
+                      <PlantRootSVG plantId={selectedPlant} color={plant.rootColor} isWashed={false} />
                     </div>
                   )}
                 </div>
