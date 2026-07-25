@@ -3555,7 +3555,7 @@ export default function ChapterLearningLab({
   const DicotSeedSVG = ({ stage }) => {
     if (stage === 'intact') {
       return (
-        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '150px', maxHeight: '150px' }}>
+        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '200px', maxHeight: '200px' }}>
           <defs>
             <radialGradient id="gramGrad" cx="45%" cy="40%" r="60%">
               <stop offset="0%" stopColor="#d4a373" />
@@ -3573,7 +3573,7 @@ export default function ChapterLearningLab({
     }
     if (stage === 'peeled') {
       return (
-        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '150px', maxHeight: '150px' }}>
+        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '200px', maxHeight: '200px' }}>
           <defs>
             <radialGradient id="gramPeeled" cx="45%" cy="40%" r="60%">
               <stop offset="0%" stopColor="#fefae0" />
@@ -3590,7 +3590,7 @@ export default function ChapterLearningLab({
       );
     }
     return (
-      <svg width="100%" height="100%" viewBox="0 0 160 100" style={{ maxWidth: '280px', maxHeight: '160px' }}>
+      <svg width="100%" height="100%" viewBox="0 0 160 100" style={{ maxWidth: '340px', maxHeight: '220px' }}>
         <defs>
           <radialGradient id="cotyledonGrad" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#fefae0" />
@@ -3623,7 +3623,7 @@ export default function ChapterLearningLab({
   const MonocotSeedSVG = ({ stage }) => {
     if (stage === 'intact') {
       return (
-        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '150px', maxHeight: '150px' }}>
+        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '200px', maxHeight: '200px' }}>
           <defs>
             <linearGradient id="cornGrad" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#ffea00" />
@@ -3639,7 +3639,7 @@ export default function ChapterLearningLab({
     }
     if (stage === 'peeled') {
       return (
-        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '150px', maxHeight: '150px' }}>
+        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '200px', maxHeight: '200px' }}>
           <defs>
             <linearGradient id="cornPeeled" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#fff3b0" />
@@ -3655,7 +3655,7 @@ export default function ChapterLearningLab({
       );
     }
     return (
-      <svg width="100%" height="100%" viewBox="0 0 130 110" style={{ maxWidth: '220px', maxHeight: '160px' }}>
+      <svg width="100%" height="100%" viewBox="0 0 130 110" style={{ maxWidth: '260px', maxHeight: '220px' }}>
         <defs>
           <linearGradient id="endospermGrad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#ffe494" />
@@ -3720,42 +3720,42 @@ export default function ChapterLearningLab({
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '1rem', alignItems: 'stretch' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', justifyContent: 'stretch' }}>
-            <button
-              disabled={coatRemoved}
-              onClick={() => { setCoatRemoved(true); setStatus('Seed coat peeled! Now click "Split Seed" to look inside.'); }}
-              className="glass-btn"
-              style={{ padding: '0.5rem', fontSize: '0.85rem', fontWeight: 'bold', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', background: coatRemoved ? 'rgba(0,0,0,0.04)' : 'var(--page-bg)', border: '1px solid var(--border)', cursor: coatRemoved ? 'default' : 'pointer' }}
-            >
-              🔓 Peel Seed Coat
-            </button>
-            <button
-              disabled={seedSplit}
-              onClick={() => {
-                if (!coatRemoved) {
-                  setStatus('⚠️ Remove the outer seed coat first!');
-                  return;
-                }
-                setSeedSplit(true);
-                setStatus(activeSeed === 'pea' 
-                  ? '🌱 Dicot splits cleanly into TWO food-storing cotyledons.' 
-                  : '🚫 Monocot does not split. It has a single solid cotyledon.');
-              }}
-              className="glass-btn"
-              style={{ padding: '0.5rem', fontSize: '0.85rem', fontWeight: 'bold', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', background: seedSplit ? 'rgba(0,0,0,0.04)' : 'var(--page-bg)', border: '1px solid var(--border)', cursor: seedSplit ? 'default' : 'pointer' }}
-            >
-              ✂️ Split Seed
-            </button>
-          </div>
+        {/* Large Image box on Top */}
+        <div style={{ display: 'flex', justifyContent: 'center', background: '#fff', borderRadius: '12px', padding: '1rem', border: '1px solid var(--border)', height: '240px', alignItems: 'center', overflow: 'hidden', width: '100%' }}>
+          {activeSeed === 'pea' ? (
+            <DicotSeedSVG stage={!coatRemoved ? 'intact' : !seedSplit ? 'peeled' : 'split'} />
+          ) : (
+            <MonocotSeedSVG stage={!coatRemoved ? 'intact' : !seedSplit ? 'peeled' : 'split'} />
+          )}
+        </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', background: '#fff', borderRadius: '12px', padding: '0.75rem', border: '1px solid var(--border)', height: '180px', alignItems: 'center', overflow: 'hidden' }}>
-            {activeSeed === 'pea' ? (
-              <DicotSeedSVG stage={!coatRemoved ? 'intact' : !seedSplit ? 'peeled' : 'split'} />
-            ) : (
-              <MonocotSeedSVG stage={!coatRemoved ? 'intact' : !seedSplit ? 'peeled' : 'split'} />
-            )}
-          </div>
+        {/* Action Options at the Bottom (Side by Side) */}
+        <div style={{ display: 'flex', gap: '0.75rem', width: '100%' }}>
+          <button
+            disabled={coatRemoved}
+            onClick={() => { setCoatRemoved(true); setStatus('Seed coat peeled! Now click "Split Seed" to look inside.'); }}
+            className="glass-btn"
+            style={{ padding: '0.75rem', fontSize: '0.85rem', fontWeight: 'bold', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', background: coatRemoved ? 'rgba(0,0,0,0.04)' : 'var(--page-bg)', border: '1px solid var(--border)', cursor: coatRemoved ? 'default' : 'pointer' }}
+          >
+            🔓 Peel Seed Coat
+          </button>
+          <button
+            disabled={seedSplit}
+            onClick={() => {
+              if (!coatRemoved) {
+                setStatus('⚠️ Remove the outer seed coat first!');
+                return;
+              }
+              setSeedSplit(true);
+              setStatus(activeSeed === 'pea' 
+                ? '🌱 Dicot splits cleanly into TWO food-storing cotyledons.' 
+                : '🚫 Monocot does not split. It has a single solid cotyledon.');
+            }}
+            className="glass-btn"
+            style={{ padding: '0.75rem', fontSize: '0.85rem', fontWeight: 'bold', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', background: seedSplit ? 'rgba(0,0,0,0.04)' : 'var(--page-bg)', border: '1px solid var(--border)', cursor: seedSplit ? 'default' : 'pointer' }}
+          >
+            ✂️ Split Seed
+          </button>
         </div>
 
         <div style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', background: 'var(--page-bg)', border: '1px solid var(--border)', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
