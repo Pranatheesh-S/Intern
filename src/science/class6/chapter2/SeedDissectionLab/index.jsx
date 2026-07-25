@@ -117,6 +117,73 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
     setAllCorrect(false);
   };
 
+  const renderSvgAnchorBox = (seed, target, label, x, y, width = 95, height = 24) => {
+    const placed = placedLabels[seed][target];
+    const isCorrect = checked && placed === label;
+    const isWrong = checked && placed !== label;
+
+    let strokeColor = 'var(--accent)';
+    let fillColor = 'rgba(99, 102, 241, 0.03)';
+    let textColor = 'var(--accent)';
+
+    if (isCorrect) {
+      strokeColor = 'var(--success)';
+      fillColor = 'var(--success-bg)';
+      textColor = 'var(--success)';
+    } else if (isWrong) {
+      strokeColor = 'var(--danger)';
+      fillColor = 'var(--danger-bg)';
+      textColor = 'var(--danger)';
+    } else if (placed) {
+      strokeColor = 'var(--border)';
+      fillColor = 'var(--surface)';
+      textColor = 'var(--text-primary)';
+    }
+
+    return (
+      <g
+        onClick={() => {
+          if (checked) return;
+          if (placed) {
+            handleRemoveLabel(seed, target);
+          } else {
+            if (!activeLabel) return;
+            handlePlaceLabel(seed, target);
+          }
+        }}
+        style={{ cursor: checked ? 'not-allowed' : 'pointer' }}
+      >
+        <rect
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          rx={6}
+          ry={6}
+          fill={fillColor}
+          stroke={strokeColor}
+          strokeWidth={placed ? 1.5 : 1.2}
+          strokeDasharray={placed ? 'none' : '3 2'}
+        />
+        <text
+          x={x + width / 2 - (placed && !checked ? 4 : 0)}
+          y={y + height / 2 + 2.5}
+          textAnchor="middle"
+          fontSize="7"
+          fontWeight="bold"
+          fill={textColor}
+        >
+          {placed ? placed : `+ Drop ${label}`}
+        </text>
+        {placed && !checked && (
+          <g transform={`translate(${x + width - 10}, ${y + height / 2 - 3})`}>
+            <path d="M 0 0 L 6 6 M 6 0 L 0 6" stroke="var(--text-muted)" strokeWidth="1" strokeLinecap="round" />
+          </g>
+        )}
+      </g>
+    );
+  };
+
   const stepIndex = STEPS.findIndex(s => s.id === step);
   const currentStep = STEPS[stepIndex];
 
@@ -158,7 +225,7 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
             <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>🌱 Seed Dissection & Anatomy Station</div>
           </div>
         </div>
-        <button onClick={handleReset} style={{ background: 'var(--surface)', border: '1px solid var(--border-light)', color: 'var(--text-secondary)', padding: '0.35rem 0.7rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3, fontWeight: "600" --flex-inline-gap' }}>
+        <button onClick={handleReset} style={{ background: 'var(--surface)', border: '1px solid var(--border-light)', color: 'var(--text-secondary)', padding: '0.35rem 0.7rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: '600' }}>
           <RefreshCw size={12} /> Restart Lab
         </button>
       </div>
@@ -460,6 +527,7 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
             </div>
 
             {/* Bottom Proceed bar */}
+            {/* Bottom Proceed bar */}
             {peeled.chickpea && peeled.maize && (
               <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'center', marginTop: '0.5rem', paddingBottom: '1rem' }}>
                 <button className="primary" onClick={() => setStep('compare')} style={{ padding: '0.7rem 3rem', fontSize: '0.9rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', border: 'none', color: '#fff', background: 'var(--accent)', borderRadius: '8px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)' }}>
@@ -473,13 +541,18 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
 
         {/* ================= STEP 3: LABEL ANATOMY ================= */}
         {step === 'compare' && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             
+            {/* Instruction banner */}
+            <div style={{ background: 'var(--accent-bg)', border: '1px solid var(--accent-border)', borderRadius: '8px', padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Info size={16} />
+              <span><strong>How to Label:</strong> First select a label tag from the toolbar below, then click the correct dotted box on the seed diagrams to place it.</span>
+            </div>
+
             {/* Label Selector Toolbar */}
             <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--accent)' }}>Anatomical Labels</span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>— Click a label tag, then click a dotted box in the seeds to place it!</span>
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                 {LABELS.map(lbl => {
@@ -518,11 +591,11 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
               <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.85rem', position: 'relative' }}>
                 <h4 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-heading)', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem', display: 'flex', justifyContent: 'space-between' }}>
                   <span>🫘 Dicot (Chickpea Split Open)</span>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Tap dotted anchors to label</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Interactive Dissection Diagram</span>
                 </h4>
 
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: '#fff', borderRadius: '12px', border: '1px solid var(--border-light)', minHeight: '260px' }}>
-                  <svg width="280" height="220" viewBox="0 0 160 100" style={{ overflow: 'visible' }}>
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff', borderRadius: '12px', border: '1px solid var(--border-light)', minHeight: '260px' }}>
+                  <svg width="100%" height="240px" viewBox="0 0 300 130" style={{ overflow: 'visible' }}>
                     <defs>
                       <radialGradient id="dicotCot" cx="50%" cy="50%" r="50%">
                         <stop offset="0%" stopColor="#fefae0" />
@@ -530,16 +603,29 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
                         <stop offset="100%" stopColor="#e9c46a" />
                       </radialGradient>
                     </defs>
-                    <ellipse cx="45" cy="88" rx="35" ry="6" fill="rgba(0,0,0,0.08)" />
-                    <ellipse cx="115" cy="88" rx="35" ry="6" fill="rgba(0,0,0,0.08)" />
+
+                    {/* Connection Lines with terminal dots pointing to anatomical structures */}
+                    {/* Cotyledon line */}
+                    <line x1="105" y1="72" x2="100" y2="80" stroke="#d4a373" strokeWidth="1.2" strokeDasharray="3 2" />
+                    <circle cx="100" cy="80" r="3" fill="#d4a373" stroke="#fff" strokeWidth="1" />
+
+                    {/* Plumule line */}
+                    <line x1="195" y1="32" x2="147" y2="47" stroke="#2a9d8f" strokeWidth="1.2" strokeDasharray="3 2" />
+                    <circle cx="147" cy="47" r="3" fill="#2a9d8f" stroke="#fff" strokeWidth="1" />
+
+                    {/* Radicle line */}
+                    <line x1="195" y1="97" x2="148" y2="87" stroke="#e76f51" strokeWidth="1.2" strokeDasharray="3 2" />
+                    <circle cx="148" cy="87" r="3" fill="#e76f51" stroke="#fff" strokeWidth="1" />
 
                     {/* Left Cotyledon */}
-                    <g transform="translate(10, 5)">
+                    <g transform="translate(55, 15)">
+                      <ellipse cx="45" cy="88" rx="35" ry="6" fill="rgba(0,0,0,0.08)" />
                       <path d="M 35 15 Q 10 40 12 65 Q 15 80 35 80 Q 55 80 58 65 Q 60 40 35 15 Z" fill="url(#dicotCot)" stroke="#d4a373" strokeWidth="1.5" />
                     </g>
 
                     {/* Right Cotyledon */}
-                    <g transform="translate(80, 5)">
+                    <g transform="translate(125, 15)">
+                      <ellipse cx="45" cy="88" rx="35" ry="6" fill="rgba(0,0,0,0.08)" />
                       <path d="M 35 15 Q 10 40 12 65 Q 15 80 35 80 Q 55 80 58 65 Q 60 40 35 15 Z" fill="url(#dicotCot)" stroke="#d4a373" strokeWidth="1.5" />
                       
                       {/* Embryo Structure (detailed Plumule and Radicle) */}
@@ -552,32 +638,12 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
                         <circle cx="12" cy="-5" r="2.5" fill="#f4a261" />
                       </g>
                     </g>
+
+                    {/* Native SVG Label Anchors */}
+                    {renderSvgAnchorBox('chickpea', 'cotyledon', 'Cotyledon', 10, 60)}
+                    {renderSvgAnchorBox('chickpea', 'plumule', 'Plumule', 195, 20)}
+                    {renderSvgAnchorBox('chickpea', 'radicle', 'Radicle', 195, 85)}
                   </svg>
-
-                  {/* Positioned HTML Overlay anchors for clean user layout */}
-                  {/* Slot A: Plumule */}
-                  <div style={{ position: 'absolute', top: '25%', right: '15%', transform: 'translateY(-50%)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <div style={{ borderBottom: '1.5px dashed #2a9d8f', width: '25px' }} />
-                      <AnchorBox seed="chickpea" target="plumule" label="Plumule" placed={placedLabels.chickpea.plumule} onPlace={handlePlaceLabel} onRemove={handleRemoveLabel} checked={checked} />
-                    </div>
-                  </div>
-
-                  {/* Slot B: Radicle */}
-                  <div style={{ position: 'absolute', bottom: '25%', right: '15%', transform: 'translateY(50%)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <div style={{ borderBottom: '1.5px dashed #e76f51', width: '25px' }} />
-                      <AnchorBox seed="chickpea" target="radicle" label="Radicle" placed={placedLabels.chickpea.radicle} onPlace={handlePlaceLabel} onRemove={handleRemoveLabel} checked={checked} />
-                    </div>
-                  </div>
-
-                  {/* Slot C: Cotyledon */}
-                  <div style={{ position: 'absolute', top: '50%', left: '10%', transform: 'translateY(-50%)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <AnchorBox seed="chickpea" target="cotyledon" label="Cotyledon" placed={placedLabels.chickpea.cotyledon} onPlace={handlePlaceLabel} onRemove={handleRemoveLabel} checked={checked} />
-                      <div style={{ borderBottom: '1.5px dashed #d4a373', width: '25px' }} />
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -585,11 +651,11 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
               <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.85rem', position: 'relative' }}>
                 <h4 style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-heading)', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem', display: 'flex', justifyContent: 'space-between' }}>
                   <span>🌽 Monocot (Maize Slice cut)</span>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Tap dotted anchors to label</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Interactive Dissection Diagram</span>
                 </h4>
 
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: '#fff', borderRadius: '12px', border: '1px solid var(--border-light)', minHeight: '260px' }}>
-                  <svg width="240" height="220" viewBox="0 0 130 110" style={{ overflow: 'visible' }}>
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff', borderRadius: '12px', border: '1px solid var(--border-light)', minHeight: '260px' }}>
+                  <svg width="100%" height="240px" viewBox="0 0 300 130" style={{ overflow: 'visible' }}>
                     <defs>
                       <linearGradient id="endospermLabGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                         <stop offset="0%" stopColor="#ffe494" />
@@ -600,49 +666,45 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
                         <stop offset="100%" stopColor="#e9ecef" />
                       </radialGradient>
                     </defs>
-                    <ellipse cx="65" cy="98" rx="35" ry="6" fill="rgba(0,0,0,0.08)" />
 
-                    {/* Sliced Maize kernel outer wall */}
-                    <path d="M 65 95 L 38 52 Q 35 24 65 22 Q 95 24 92 52 Z" fill="none" stroke="#fca311" strokeWidth="2.5" />
-                    
-                    {/* Endosperm (large food deposit) */}
-                    <path d="M 65 23 Q 94 25 91 50 Q 75 42 65 48 Q 55 42 39 50 Q 36 25 65 23 Z" fill="url(#endospermLabGrad)" stroke="#ffd166" strokeWidth="0.8" />
+                    {/* Connection Lines with terminal dots pointing to anatomical structures */}
+                    {/* Endosperm line */}
+                    <line x1="105" y1="32" x2="170" y2="46" stroke="#ca6702" strokeWidth="1.2" strokeDasharray="3 2" />
+                    <circle cx="170" cy="46" r="3" fill="#ca6702" stroke="#fff" strokeWidth="1" />
 
-                    {/* Shield cotyledon (scutellum) */}
-                    <path d="M 39 50 L 65 94 L 91 50 Q 75 45 65 52 Q 55 45 39 50 Z" fill="url(#scutGrad)" stroke="#ced4da" strokeWidth="0.8" />
-                    
-                    {/* Embryo body */}
-                    <g transform="translate(65, 70)">
-                      <path d="M -4 -10 Q 0 -22 4 -10 Z" fill="#e9f5db" stroke="#2a9d8f" strokeWidth="0.8" />
-                      <path d="M -3 3 Q 0 14 3 3 Z" fill="#ffffff" stroke="#e76f51" strokeWidth="0.8" />
-                      <circle cx="0" cy="-3" r="2" fill="#adb5bd" />
+                    {/* Single Cotyledon line */}
+                    <line x1="105" y1="92" x2="150" y2="75" stroke="#708090" strokeWidth="1.2" strokeDasharray="3 2" />
+                    <circle cx="150" cy="75" r="3" fill="#708090" stroke="#fff" strokeWidth="1" />
+
+                    {/* Embryo line */}
+                    <line x1="195" y1="67" x2="170" y2="85" stroke="#2a9d8f" strokeWidth="1.2" strokeDasharray="3 2" />
+                    <circle cx="170" cy="85" r="3" fill="#2a9d8f" stroke="#fff" strokeWidth="1" />
+
+                    {/* Sliced Maize kernel */}
+                    <g transform="translate(105, 15)">
+                      <ellipse cx="65" cy="98" rx="35" ry="6" fill="rgba(0,0,0,0.08)" />
+                      {/* Sliced Maize kernel outer wall */}
+                      <path d="M 65 95 L 38 52 Q 35 24 65 22 Q 95 24 92 52 Z" fill="none" stroke="#fca311" strokeWidth="2.5" />
+                      
+                      {/* Endosperm (large food deposit) */}
+                      <path d="M 65 23 Q 94 25 91 50 Q 75 42 65 48 Q 55 42 39 50 Q 36 25 65 23 Z" fill="url(#endospermLabGrad)" stroke="#ffd166" strokeWidth="0.8" />
+
+                      {/* Shield cotyledon (scutellum) */}
+                      <path d="M 39 50 L 65 94 L 91 50 Q 75 45 65 52 Q 55 45 39 50 Z" fill="url(#scutGrad)" stroke="#ced4da" strokeWidth="0.8" />
+                      
+                      {/* Embryo body */}
+                      <g transform="translate(65, 70)">
+                        <path d="M -4 -10 Q 0 -22 4 -10 Z" fill="#e9f5db" stroke="#2a9d8f" strokeWidth="0.8" />
+                        <path d="M -3 3 Q 0 14 3 3 Z" fill="#ffffff" stroke="#e76f51" strokeWidth="0.8" />
+                        <circle cx="0" cy="-3" r="2" fill="#adb5bd" />
+                      </g>
                     </g>
+
+                    {/* Native SVG Label Anchors */}
+                    {renderSvgAnchorBox('maize', 'endosperm', 'Endosperm', 10, 20)}
+                    {renderSvgAnchorBox('maize', 'scutellum', 'Single Cotyledon', 10, 80)}
+                    {renderSvgAnchorBox('maize', 'embryo', 'Embryo', 195, 55)}
                   </svg>
-
-                  {/* Positioned HTML Overlay anchors for clean user layout */}
-                  {/* Slot D: Endosperm */}
-                  <div style={{ position: 'absolute', top: '15%', left: '10%' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <AnchorBox seed="maize" target="endosperm" label="Endosperm" placed={placedLabels.maize.endosperm} onPlace={handlePlaceLabel} onRemove={handleRemoveLabel} checked={checked} />
-                      <div style={{ borderBottom: '1.5px dashed #ffd166', width: '25px' }} />
-                    </div>
-                  </div>
-
-                  {/* Slot E: Scutellum / Single Cotyledon */}
-                  <div style={{ position: 'absolute', bottom: '25%', left: '5%' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <AnchorBox seed="maize" target="scutellum" label="Single Cotyledon" placed={placedLabels.maize.scutellum} onPlace={handlePlaceLabel} onRemove={handleRemoveLabel} checked={checked} />
-                      <div style={{ borderBottom: '1.5px dashed #ced4da', width: '20px' }} />
-                    </div>
-                  </div>
-
-                  {/* Slot F: Embryo */}
-                  <div style={{ position: 'absolute', top: '60%', right: '10%' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <div style={{ borderBottom: '1.5px dashed #2a9d8f', width: '25px' }} />
-                      <AnchorBox seed="maize" target="embryo" label="Embryo" placed={placedLabels.maize.embryo} onPlace={handlePlaceLabel} onRemove={handleRemoveLabel} checked={checked} />
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -781,66 +843,4 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
   );
 }
 
-// Small Anchor box component for label drops/selections
-function AnchorBox({ seed, target, label, placed, onPlace, onRemove, checked }) {
-  const isCorrect = checked && placed === label;
-  const isWrong = checked && placed !== label;
 
-  return (
-    <div
-      onClick={() => {
-        if (checked) return;
-        if (placed) {
-          onRemove(seed, target);
-        } else {
-          onPlace(seed, target);
-        }
-      }}
-      style={{
-        width: 120,
-        minHeight: 32,
-        borderRadius: '6px',
-        border: isCorrect 
-          ? '1.5px solid var(--success)' 
-          : isWrong 
-          ? '1.5px solid var(--danger)' 
-          : placed 
-          ? '1.5px solid var(--border)' 
-          : '1.5px dashed var(--accent)',
-        background: isCorrect 
-          ? 'var(--success-bg)' 
-          : isWrong 
-          ? 'var(--danger-bg)' 
-          : placed 
-          ? 'var(--surface)' 
-          : 'rgba(99, 102, 241, 0.03)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '0.25rem 0.5rem',
-        cursor: checked ? 'not-allowed' : 'pointer',
-        fontSize: '0.75rem',
-        fontWeight: 'bold',
-        color: isCorrect 
-          ? 'var(--success)' 
-          : isWrong 
-          ? 'var(--danger)' 
-          : placed 
-          ? 'var(--text-primary)' 
-          : 'var(--accent)',
-        textAlign: 'center',
-        transition: 'all 0.2s',
-        boxShadow: placed ? '0 2px 4px rgba(0,0,0,0.02)' : 'none'
-      }}
-    >
-      {placed ? (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', justifyContent: 'center', width: '100%' }}>
-          <span style={{ flex: 1 }}>{placed}</span>
-          {!checked && <span style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>✕</span>}
-        </div>
-      ) : (
-        <span style={{ opacity: 0.6 }}>+ Drop {label}</span>
-      )}
-    </div>
-  );
-}
