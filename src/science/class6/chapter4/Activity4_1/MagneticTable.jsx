@@ -4,11 +4,11 @@ import { ArrowRight, Scan, Magnet, XCircle } from 'lucide-react';
 const ITEMS = [
   { id: 'pens', name: 'Pens (Plastic)', isMagnetic: false, hotspot: { x: 12.2, y: 67.6, r: 8 } },
   { id: 'bottle', name: 'Water Bottle (Stainless Steel)', isMagnetic: false, hotspot: { x: 26.6, y: 49.2, r: 8 } },
-  { id: 'compass', name: 'Compass (Metal)', isMagnetic: true, hotspot: { x: 45.2, y: 50.9, r: 10 } }, 
+  { id: 'compass', name: 'Compass (Metal Needle)', isMagnetic: true, hotspot: { x: 45.2, y: 50.9, r: 10 } }, 
   { id: 'ruler', name: 'Ruler (Plastic)', isMagnetic: false, hotspot: { x: 10.7, y: 88.2, r: 8 } },
   { id: 'eraser', name: 'Eraser (Rubber)', isMagnetic: false, hotspot: { x: 24.5, y: 74.7, r: 6 } },
   { id: 'clips', name: 'Paper Clips (Metal)', isMagnetic: true, hotspot: { x: 30.8, y: 83.4, r: 6 } },
-  { id: 'coins', name: 'Coins (Metal)', isMagnetic: false, hotspot: { x: 42.1, y: 75.4, r: 6 } },
+  { id: 'coins', name: 'Coins (Metal)', isMagnetic: true, hotspot: { x: 42.1, y: 75.4, r: 6 } },
   { id: 'pencil_case', name: 'Pencil Case (Fabric)', isMagnetic: false, hotspot: { x: 59.4, y: 76.1, r: 10 } },
   { id: 'notebook', name: 'Notebook (Paper)', isMagnetic: false, hotspot: { x: 88.8, y: 71.7, r: 12 } },
   { id: 'pencil', name: 'Pencil (Wood)', isMagnetic: false, hotspot: { x: 81.8, y: 91.4, r: 8 } }
@@ -156,19 +156,19 @@ export default function MagneticTable({ onComplete }) {
                     }} />
                   )}
 
-                  <span style={{ fontWeight: '600', fontSize: '0.95rem', color: 'var(--text-primary)', zIndex: 1, marginBottom: isScanned ? '0.5rem' : 0 }}>
+                  <span style={{ fontWeight: '600', fontSize: '1.2rem', color: 'var(--text-primary)', zIndex: 1, marginBottom: isScanned ? '0.5rem' : 0 }}>
                     {item.name}
                   </span>
 
                   {isScanned && (
-                    <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.25rem', color: isMag ? '#10b981' : '#ef4444', fontSize: '0.85rem', fontWeight: 'bold' }}>
-                      {isMag ? <Magnet size={16} /> : <XCircle size={16} />}
+                    <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.35rem', color: isMag ? '#10b981' : '#ef4444', fontSize: '1.0rem', fontWeight: 'bold' }}>
+                      {isMag ? <img src="/horse-magnet.png" alt="Magnetic" style={{ width: '20px', height: '20px', objectFit: 'contain' }} /> : <XCircle size={20} />}
                       {isMag ? 'Magnetic' : 'Not Magnetic'}
                     </div>
                   )}
 
                   {!isScanned && !isScanning && (
-                    <div style={{ zIndex: 1, color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                    <div style={{ zIndex: 1, color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.25rem' }}>
                       Not scanned yet
                     </div>
                   )}
