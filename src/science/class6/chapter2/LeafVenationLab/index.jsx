@@ -188,18 +188,27 @@ export default function LeafVenationLab({ onBackToDashboard }) {
  
               <div style={{ position: 'relative', zIndex: 2 }}>
                 <svg width="200" height="200" viewBox="0 0 160 170" style={{ filter: lit ? 'drop-shadow(0 0 20px #fbbf24)' : 'none', transition: 'filter 0.5s' }}>
+                  <defs>
+                    <clipPath id="leaf-shape-clip">
+                      <path d={leaf.svgPath} />
+                    </clipPath>
+                  </defs>
                   {/* Leaf body */}
                   <path d={leaf.svgPath} fill={lit ? 'rgba(253,224,71,0.6)' : leaf.color + leafFillOpacity} stroke={leaf.color} strokeWidth="2" />
-                  {/* Midrib */}
-                  <path d={leaf.midribPath} stroke={lit ? '#92400e' : leaf.color + '80'} strokeWidth={lit ? 2.5 : 1.5} fill="none" />
-                  {/* Side veins */}
-                  {leaf.veinPaths.map((p, i) => (
-                    <path key={i} d={p} stroke={lit ? '#b45309' : (isLight ? leaf.color + '90' : leaf.color + '50')} strokeWidth={lit ? 1.2 : 0.8} fill="none" opacity={lit ? 1 : 0.6} />
-                  ))}
-                  {/* Inner net for reticulate */}
-                  {lit && leaf.venation === 'reticulate' && leaf.veinPaths.map((p, i) => (
-                    <path key={`net-${i}`} d={p.replace(/Q (\d+) (\d+) (\d+) (\d+)/, (m, cx, cy, ex, ey) => `Q ${parseInt(cx)+8} ${parseInt(cy)-5} ${parseInt(ex)-5} ${parseInt(ey)+5}`)} stroke="#d97706" strokeWidth="0.5" fill="none" opacity="0.5" />
-                  ))}
+                  
+                  {/* Clipped veins group */}
+                  <g clipPath="url(#leaf-shape-clip)">
+                    {/* Midrib */}
+                    <path d={leaf.midribPath} stroke={lit ? '#92400e' : leaf.color + '80'} strokeWidth={lit ? 2.5 : 1.5} fill="none" />
+                    {/* Side veins */}
+                    {leaf.veinPaths.map((p, i) => (
+                      <path key={i} d={p} stroke={lit ? '#b45309' : (isLight ? leaf.color + '90' : leaf.color + '50')} strokeWidth={lit ? 1.2 : 0.8} fill="none" opacity={lit ? 1 : 0.6} />
+                    ))}
+                    {/* Inner net for reticulate */}
+                    {lit && leaf.venation === 'reticulate' && leaf.veinPaths.map((p, i) => (
+                      <path key={`net-${i}`} d={p.replace(/Q (\d+) (\d+) (\d+) (\d+)/, (m, cx, cy, ex, ey) => `Q ${parseInt(cx)+8} ${parseInt(cy)-5} ${parseInt(ex)-5} ${parseInt(ey)+5}`)} stroke="#d97706" strokeWidth="0.5" fill="none" opacity="0.5" />
+                    ))}
+                  </g>
                 </svg>
               </div>
 
