@@ -264,7 +264,7 @@ export default function LeafVenationLab({ onBackToDashboard }) {
           </p>
           <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
             <button onClick={handleReset} style={{ background: doneRedoBg, border: 'none', color: doneRedoText, padding: '0.65rem 1.75rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600' }}>Redo Lab</button>
-            <button onClick={onBackToDashboard} style={{ background: '#0ea5e9', border: 'none', color: '#fff', padding: '0.65rem 1.75rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold', boxShadow: '0 4px 12px rgba(14,165,233,0.3)' }}>Back to Chapter</button>
+            <button onClick={() => onBackToDashboard('next_activity')} style={{ background: '#0ea5e9', border: 'none', color: '#fff', padding: '0.65rem 1.75rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold', boxShadow: '0 4px 12px rgba(14,165,233,0.3)' }}>Next: Roots Lab ➜</button>
           </div>
         </div>
       )}
