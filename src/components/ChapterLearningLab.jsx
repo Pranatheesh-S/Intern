@@ -3552,6 +3552,137 @@ export default function ChapterLearningLab({
     );
   }
 
+  const DicotSeedSVG = ({ stage }) => {
+    if (stage === 'intact') {
+      return (
+        <svg width="90" height="90" viewBox="0 0 100 100">
+          <defs>
+            <radialGradient id="gramGrad" cx="45%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#d4a373" />
+              <stop offset="60%" stopColor="#a98467" />
+              <stop offset="100%" stopColor="#6f523b" />
+            </radialGradient>
+          </defs>
+          <ellipse cx="50" cy="85" rx="35" ry="8" fill="rgba(0,0,0,0.15)" />
+          <path d="M 50 15 Q 30 50 32 70 Q 35 85 50 85 Q 65 85 68 70 Q 70 50 50 15 Z" fill="url(#gramGrad)" stroke="#5c4033" strokeWidth="1" />
+          <path d="M 48 18 Q 50 25 52 18" fill="none" stroke="#e6ccb2" strokeWidth="1.5" strokeLinecap="round" />
+          <circle cx="50" cy="32" r="3.5" fill="#3d2612" />
+          <circle cx="50" cy="31" r="1.5" fill="#f5ebe0" opacity="0.8" />
+        </svg>
+      );
+    }
+    if (stage === 'peeled') {
+      return (
+        <svg width="90" height="90" viewBox="0 0 100 100">
+          <defs>
+            <radialGradient id="gramPeeled" cx="45%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#fefae0" />
+              <stop offset="70%" stopColor="#faedcd" />
+              <stop offset="100%" stopColor="#e9d8a6" />
+            </radialGradient>
+          </defs>
+          <path d="M 12 70 Q 5 50 20 40 T 35 60" fill="none" stroke="#a98467" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+          <path d="M 88 70 Q 95 50 80 40 T 65 60" fill="none" stroke="#a98467" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+          <ellipse cx="50" cy="85" rx="32" ry="8" fill="rgba(0,0,0,0.12)" />
+          <path d="M 50 20 Q 33 50 35 70 Q 38 82 50 82 Q 62 82 65 70 Q 67 50 50 20 Z" fill="url(#gramPeeled)" stroke="#d4a373" strokeWidth="1" />
+          <path d="M 50 20 Q 51 50 50 82" fill="none" stroke="#d4a373" strokeWidth="1.5" strokeDasharray="3 2" />
+        </svg>
+      );
+    }
+    return (
+      <svg width="150" height="95" viewBox="0 0 160 100">
+        <defs>
+          <radialGradient id="cotyledonGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#fefae0" />
+            <stop offset="90%" stopColor="#faedcd" />
+            <stop offset="100%" stopColor="#e9c46a" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="45" cy="88" rx="35" ry="6" fill="rgba(0,0,0,0.1)" />
+        <ellipse cx="115" cy="88" rx="35" ry="6" fill="rgba(0,0,0,0.1)" />
+        <g transform="translate(10, 5)">
+          <path d="M 35 15 Q 10 40 12 65 Q 15 80 35 80 Q 55 80 58 65 Q 60 40 35 15 Z" fill="url(#cotyledonGrad)" stroke="#d4a373" strokeWidth="1.5" />
+          <text x="35" y="50" textAnchor="middle" fontSize="8" fill="#a98467" fontWeight="bold" opacity="0.9">Cotyledon 1</text>
+        </g>
+        <g transform="translate(80, 5)">
+          <path d="M 35 15 Q 10 40 12 65 Q 15 80 35 80 Q 55 80 58 65 Q 60 40 35 15 Z" fill="url(#cotyledonGrad)" stroke="#d4a373" strokeWidth="1.5" />
+          <text x="35" y="70" textAnchor="middle" fontSize="8" fill="#a98467" fontWeight="bold" opacity="0.9">Cotyledon 2</text>
+          <g transform="translate(12, 38)">
+            <path d="M 12 -5 Q 22 -15 15 -25 Q 10 -15 12 -5" fill="#e9f5db" stroke="#2a9d8f" strokeWidth="0.8" />
+            <path d="M 12 -5 Q 2 -15 9 -25 Q 14 -15 12 -5" fill="#e9f5db" stroke="#2a9d8f" strokeWidth="0.8" />
+            <path d="M 12 -5 Q 15 5 18 15 Q 12 10 12 -5" fill="#ffffff" stroke="#e76f51" strokeWidth="0.8" />
+            <circle cx="12" cy="-5" r="2.5" fill="#f4a261" />
+            <text x="32" y="-18" fontSize="7" fill="#2a9d8f" fontWeight="bold">← Plumule</text>
+            <text x="32" y="14" fontSize="7" fill="#e76f51" fontWeight="bold">← Radicle</text>
+          </g>
+        </g>
+      </svg>
+    );
+  };
+
+  const MonocotSeedSVG = ({ stage }) => {
+    if (stage === 'intact') {
+      return (
+        <svg width="90" height="90" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="cornGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#ffea00" />
+              <stop offset="70%" stopColor="#ffc300" />
+              <stop offset="100%" stopColor="#ffaa00" />
+            </linearGradient>
+          </defs>
+          <ellipse cx="50" cy="85" rx="30" ry="7" fill="rgba(0,0,0,0.15)" />
+          <path d="M 50 82 L 28 45 Q 26 22 50 20 Q 74 22 72 45 Z" fill="url(#cornGrad)" stroke="#e6b800" strokeWidth="1" />
+          <path d="M 50 82 L 35 56 Q 50 48 65 56 Z" fill="#ffffff" opacity="0.55" stroke="#fefae0" strokeWidth="0.5" />
+        </svg>
+      );
+    }
+    if (stage === 'peeled') {
+      return (
+        <svg width="90" height="90" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="cornPeeled" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#fff3b0" />
+              <stop offset="80%" stopColor="#fec89a" />
+              <stop offset="100%" stopColor="#fca311" />
+            </linearGradient>
+          </defs>
+          <path d="M 28 45 Q 16 30 20 18 Q 30 24 34 38" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" strokeLinecap="round" />
+          <ellipse cx="50" cy="85" rx="28" ry="7" fill="rgba(0,0,0,0.12)" />
+          <path d="M 50 82 L 28 45 Q 26 22 50 20 Q 74 22 72 45 Z" fill="url(#cornPeeled)" stroke="#fca311" strokeWidth="1" />
+          <path d="M 50 82 L 35 56 Q 50 48 65 56 Z" fill="#ffffff" opacity="0.65" />
+        </svg>
+      );
+    }
+    return (
+      <svg width="125" height="95" viewBox="0 0 130 110">
+        <defs>
+          <linearGradient id="endospermGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#ffe494" />
+            <stop offset="100%" stopColor="#ffd166" />
+          </linearGradient>
+          <radialGradient id="scutellumGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="100%" stopColor="#e9ecef" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="65" cy="98" rx="35" ry="6" fill="rgba(0,0,0,0.12)" />
+        <path d="M 65 95 L 38 52 Q 35 24 65 22 Q 95 24 92 52 Z" fill="none" stroke="#fca311" strokeWidth="2.5" />
+        <path d="M 65 23 Q 94 25 91 50 Q 75 42 65 48 Q 55 42 39 50 Q 36 25 65 23 Z" fill="url(#endospermGrad)" stroke="#ffd166" strokeWidth="0.8" />
+        <text x="65" y="36" textAnchor="middle" fontSize="7" fill="#ca6702" fontWeight="bold">Endosperm</text>
+        <path d="M 39 50 L 65 94 L 91 50 Q 75 45 65 52 Q 55 45 39 50 Z" fill="url(#scutellumGrad)" stroke="#ced4da" strokeWidth="0.8" />
+        <g transform="translate(65, 70)">
+          <path d="M -4 -10 Q 0 -22 4 -10 Z" fill="#e9f5db" stroke="#2a9d8f" strokeWidth="0.8" />
+          <path d="M -3 3 Q 0 14 3 3 Z" fill="#ffffff" stroke="#e76f51" strokeWidth="0.8" />
+          <circle cx="0" cy="-3" r="2" fill="#adb5bd" />
+          <text x="20" y="-12" fontSize="6.5" fill="#2a9d8f" fontWeight="bold">← Plumule</text>
+          <text x="20" y="8" fontSize="6.5" fill="#e76f51" fontWeight="bold">← Radicle</text>
+          <text x="-48" y="2" fontSize="6.5" fill="#495057" fontWeight="bold">Cotyledon →</text>
+        </g>
+      </svg>
+    );
+  };
+
   function SeedDissector() {
     const [activeSeed, setActiveSeed] = useState('pea');
     const [coatRemoved, setCoatRemoved] = useState(false);
@@ -3589,7 +3720,7 @@ export default function ChapterLearningLab({
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '0.75rem', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 170px', gap: '0.75rem', alignItems: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <button
               disabled={coatRemoved}
@@ -3618,11 +3749,11 @@ export default function ChapterLearningLab({
             </button>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', background: '#fff', borderRadius: '12px', padding: '0.5rem', border: '1px solid var(--border)', height: '80px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', background: '#fff', borderRadius: '12px', padding: '0.5rem', border: '1px solid var(--border)', height: '110px', alignItems: 'center', overflow: 'hidden' }}>
             {activeSeed === 'pea' ? (
-              !coatRemoved ? <span style={{ fontSize: '2rem' }}>🫛</span> : !seedSplit ? <span style={{ fontSize: '2rem' }}>🧆</span> : <span style={{ fontSize: '2rem' }}>👐</span>
+              <DicotSeedSVG stage={!coatRemoved ? 'intact' : !seedSplit ? 'peeled' : 'split'} />
             ) : (
-              !coatRemoved ? <span style={{ fontSize: '2rem' }}>🌽</span> : !seedSplit ? <span style={{ fontSize: '2rem' }}>🟡</span> : <span style={{ fontSize: '2rem' }}>☝️</span>
+              <MonocotSeedSVG stage={!coatRemoved ? 'intact' : !seedSplit ? 'peeled' : 'split'} />
             )}
           </div>
         </div>
