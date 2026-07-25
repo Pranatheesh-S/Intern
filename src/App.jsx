@@ -82,6 +82,8 @@ const Chapter2LearningLab = lazy(() => import('./science/class6/chapter2/Chapter
 const Chapter3LearningLab = lazy(() => import('./science/class6/chapter3/Chapter3LearningLab'));
 const Chapter10LearningLab = lazy(() => import('./science/class6/chapter10/Chapter10LearningLab'));
 const Chapter11LearningLab = lazy(() => import('./science/class6/chapter11/Chapter11LearningLab'));
+const MagneticDemoActivity = lazy(() => import('./science/class6/chapter13/MagneticDemo'));
+const ExploringMagnetsLab = lazy(() => import('./science/class6/chapter13/ExploringMagnetsLab'));
 
 export default function App() {
   const { theme, setTheme, toggleTheme } = useTheme();
@@ -945,7 +947,8 @@ export default function App() {
     { num: 9, title: "Methods of Separation in Everyday Life" },
     { num: 10, title: "Living Creatures: Exploring their Characteristics" },
     { num: 11, title: "Nature's Treasures" },
-    { num: 12, title: "Beyond Earth" }
+    { num: 12, title: "Beyond Earth" },
+    { num: 13, title: "Exploring Magnets" }
   ];
 
   // Renders Class 6th Activities List
@@ -973,7 +976,7 @@ export default function App() {
           gap: '1.25rem'
         }}>
           {CLASS_6_CHAPTERS.map(chapter => {
-            if (chapter.num === 2 || chapter.num === 3 || chapter.num === 4 || chapter.num === 5 || chapter.num === 6 || chapter.num === 10 || chapter.num === 11) {
+            if (chapter.num === 2 || chapter.num === 3 || chapter.num === 4 || chapter.num === 5 || chapter.num === 6 || chapter.num === 10 || chapter.num === 11 || chapter.num === 13) {
               return (
                 <div
                   key={chapter.num}
@@ -1013,7 +1016,9 @@ export default function App() {
                               ? "Includes Activities 6.1, 6.2, and 6.3: Material Detective case study."
                               : chapter.num === 10
                                 ? "Includes Activity 10.1: Living Creatures & life processes exploration."
-                                : "Includes Activity 11.1: Nature's treasures & resource conservation."}
+                                : chapter.num === 13
+                                  ? "Full interactive lab: magnetic materials, poles, compass, attraction & repulsion, and more."
+                                  : "Includes Activity 11.1: Nature's treasures & resource conservation."}
                   </p>
 
                   {chapter.num === 6 ? (
@@ -3060,10 +3065,14 @@ export default function App() {
               onHeaderVisibilityChange={(visible) => setHideHeader(!visible)}
             />
           ) : activeActivity === 'chapter11' ? (
-            <Chapter11LearningLab 
+            <Chapter11LearningLab
               onBack={() => navigateTo('class6', null)}
               onHeaderVisibilityChange={(visible) => setHideHeader(!visible)}
             />
+          ) : activeActivity === 'chapter13' ? (
+            <ExploringMagnetsLab onBackToDashboard={() => navigateTo('class6', null)} />
+          ) : activeActivity === 'magnetic_demo' ? (
+            <MagneticDemoActivity onBackToDashboard={() => navigateTo('class6', null)} />
           ) : activeActivity === 'material_detective' ? (
             <MaterialDetectiveActivity onBackToDashboard={() => navigateTo('class6', 'chapter6')} />
           ) : activeActivity === 'materials_around_us' ? (

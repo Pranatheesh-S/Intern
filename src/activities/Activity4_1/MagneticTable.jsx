@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { ArrowRight, Info } from 'lucide-react';
 
 const ITEMS = [
-  { id: 'pencil', name: 'Pencil', material: 'Wood', isMagnetic: false, icon: '✏️' },
+  { id: 'compass', name: 'Compass', material: 'Metal needle', isMagnetic: true, icon: '🧭' },
+  { id: 'clips', name: 'Paper Clips', material: 'Metal', isMagnetic: true, icon: '📎' },
+  { id: 'coins', name: 'Coins', material: 'Metal', isMagnetic: true, icon: '🪙' },
+  { id: 'pens', name: 'Pens', material: 'Plastic', isMagnetic: false, icon: '🖊️' },
+  { id: 'bottle', name: 'Water Bottle', material: 'Stainless Steel', isMagnetic: false, icon: '🚰' },
+  { id: 'ruler', name: 'Ruler', material: 'Plastic', isMagnetic: false, icon: '📏' },
   { id: 'eraser', name: 'Eraser', material: 'Rubber', isMagnetic: false, icon: '🧽' },
-  { id: 'nail', name: 'Iron nail', material: 'Iron', isMagnetic: true, icon: '🔩' },
-  { id: 'clip', name: 'Steel clip', material: 'Steel', isMagnetic: true, icon: '📎' },
-  { id: 'glass', name: 'Glass tumbler', material: 'Glass', isMagnetic: false, icon: '🥤' },
-  { id: 'key', name: 'Iron key', material: 'Iron', isMagnetic: true, icon: '🔑' },
-  { id: 'ruler', name: 'Plastic ruler', material: 'Plastic', isMagnetic: false, icon: '📏' },
-  { id: 'scissors', name: 'Steel scissors', material: 'Steel', isMagnetic: true, icon: '✂️' },
-  { id: 'duster', name: 'Cloth duster', material: 'Cloth', isMagnetic: false, icon: '🧵' }
+  { id: 'case', name: 'Pencil Case', material: 'Fabric', isMagnetic: false, icon: '👝' },
+  { id: 'notebook', name: 'Notebook', material: 'Paper', isMagnetic: false, icon: '📓' },
+  { id: 'pencil', name: 'Pencil', material: 'Wood', isMagnetic: false, icon: '✏️' }
 ];
 
 function MagnetIcon() {
@@ -171,7 +172,7 @@ export default function MagneticTable({ onComplete, addXp = () => {} }) {
           <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>Magnetic Property Test</h2>
         </div>
         <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-          First, make a <strong>Prediction (Yes/No)</strong> for each object. Then, click the <strong>Test Object</strong> button to observe the truth. Do all 9.
+          First, make a <strong>Prediction (Yes/No)</strong> for each object. Then, click the <strong>Test Object</strong> button to observe the truth. Do all 10.
         </p>
       </div>
 
