@@ -4788,7 +4788,7 @@ export default function ChapterLearningLab({
                       setActivityStatus(prev => ({ ...prev, [activeActivity.id]: 'done' }));
                       confetti({ particleCount: 60, spread: 60, origin: { y: 0.75 } });
                       if (action === 'next_activity') {
-                        setActiveActivityIdx(1);
+                        setActiveActivityIdx(prev => Math.min(activeLevel.activities.length - 1, prev + 1));
                         setActivityFocused(true);
                       } else if (action === 'go_to_quiz') {
                         setActivityFocused(null);

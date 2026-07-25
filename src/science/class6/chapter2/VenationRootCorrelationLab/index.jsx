@@ -210,9 +210,7 @@ export default function VenationRootCorrelationLab({ onBackToDashboard }) {
             <button onClick={handleReset} style={{ background: '#1e293b', border: 'none', color: '#e2e8f0', padding: '0.6rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <RefreshCw size={14} /> Redo
             </button>
-            <button onClick={onBackToDashboard} style={{ background: '#8b5cf6', border: 'none', color: '#fff', padding: '0.6rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>
-              Back to Chapter
-            </button>
+            <button onClick={() => onBackToDashboard('go_to_quiz')} style={{ background: '#8b5cf6', border: 'none', color: '#fff', padding: '0.6rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>Next: Take Quiz ➜</button>
           </div>
         </div>
       )}

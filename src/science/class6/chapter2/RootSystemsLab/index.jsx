@@ -591,7 +591,7 @@ export default function RootSystemsLab({ onBackToDashboard }) {
           </p>
           <div style={{ display: 'flex', gap: '1rem' }}>
             <button onClick={handleReset} style={{ background: doneRedoBg, border: 'none', color: doneRedoText, padding: '0.6rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600' }}>Redo</button>
-            <button onClick={onBackToDashboard} style={{ background: '#f59e0b', border: 'none', color: '#1a0f05', padding: '0.6rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>Back to Chapter</button>
+            <button onClick={() => onBackToDashboard('next_activity')} style={{ background: '#f59e0b', border: 'none', color: '#1a0f05', padding: '0.6rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>Next: Relate & Analyse ➜</button>
           </div>
         </div>
       )}
