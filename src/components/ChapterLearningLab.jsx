@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Play, X, ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
+import { ArrowLeft, Play, X, ChevronLeft, ChevronRight, Volume2, VolumeX, RefreshCw, Check } from "lucide-react";
 import CoverPage from "./CoverPage";
 import SloganPage from "./SloganPage";
 import VerticalLevelMap from "./VerticalLevelMap";
@@ -33,6 +33,11 @@ import AnimalHabitatExplorerActivity from "../science/class6/chapter2/AnimalHabi
 import FoodTestingActivity from "../science/class6/chapter3/FoodTesting";
 import FatTestingActivity from "../science/class6/chapter3/FatTesting";
 import ProteinTestingActivity from "../science/class6/chapter3/ProteinTesting";
+
+import fishImg from "../../Fish.png";
+import pigeonImg from "../../pigeon img.png";
+import snailImg from "../../Snail img.png";
+import cowImg from "../../cow img.png";
 
 const LEVEL_QUIZZES = {
   'biodiversity_concept': [
@@ -3766,65 +3771,248 @@ export default function ChapterLearningLab({
   }
 
   function AnimalLocomotionGrid() {
-    const [selected, setSelected] = useState('fish');
-    const [action, setAction] = useState('');
-    const [result, setResult] = useState('Select an animal to inspect locomotion.');
+    const [placed, setPlaced] = useState({ fish: null, pigeon: null, cow: null, snail: null });
+    const [draggingId, setDraggingId] = useState(null);
+    const [selectedAnimal, setSelectedAnimal] = useState(null); // Click fallback selection
+    const [result, setResult] = useState('Drag each animal card and drop it into its correct locomotion mode dropzone, or tap to place.');
+    const [dragOverZone, setDragOverZone] = useState(null);
 
     const data = {
-      fish: { name: 'Fish', icon: '🐟', movement: 'swim', organ: 'Fins & tail', text: 'Uses flexible muscles & fins.' },
-      pigeon: { name: 'Pigeon', icon: '🐦', movement: 'fly', organ: 'Wings & claws', text: 'Uses flight feathers to fly.' },
-      goat: { name: 'Goat', icon: '🐐', movement: 'walk', organ: 'Four legs', text: 'Walks and runs on land.' },
-      snail: { name: 'Snail', icon: '🐌', movement: 'crawl', organ: 'Muscular foot', text: 'Crawls slowly using a slide-foot.' }
+      fish: { name: 'Fish', image: fishImg, movement: 'swim', organ: 'Fins & tail', text: 'Uses flexible body muscles and fins to push through water.' },
+      pigeon: { name: 'Pigeon', image: pigeonImg, movement: 'fly', organ: 'Wings & light bones', text: 'Uses streamlined body, flight feathers, and modified forelimbs to fly.' },
+      cow: { name: 'Cow', image: cowImg, movement: 'walk', organ: 'Four legs', text: 'Walks and runs on land with stable skeletal limbs.' },
+      snail: { name: 'Snail', image: snailImg, movement: 'crawl', organ: 'Muscular foot', text: 'Crawls slowly by producing continuous muscular waves on its underbelly.' }
     };
 
-    const checkLocomotion = (moveType) => {
-      setAction(moveType);
-      const target = data[selected];
+    const dropzones = [
+      { id: 'swim', label: 'Swim 🏊', theme: { active: '#3b82f6', bg: 'rgba(59, 130, 246, 0.05)', border: 'rgba(59, 130, 246, 0.2)' } },
+      { id: 'fly', label: 'Fly 🦅', theme: { active: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.05)', border: 'rgba(139, 92, 246, 0.2)' } },
+      { id: 'walk', label: 'Walk 🚶', theme: { active: '#f59e0b', bg: 'rgba(245, 158, 11, 0.05)', border: 'rgba(245, 158, 11, 0.2)' } },
+      { id: 'crawl', label: 'Crawl 🐌', theme: { active: '#10b981', bg: 'rgba(16, 185, 129, 0.05)', border: 'rgba(16, 185, 129, 0.2)' } }
+    ];
+
+    const handleDragStart = (e, animalId) => {
+      e.dataTransfer.setData("text/plain", animalId);
+    };
+
+    const handleDrop = (animalId, moveType) => {
+      const target = data[animalId];
       if (target.movement === moveType) {
-        setResult(`✅ Correct! ${target.name} uses ${target.organ} to ${moveType}. (${target.text})`);
+        setPlaced(prev => {
+          const updated = { ...prev, [animalId]: moveType };
+          const allDone = Object.keys(data).every(k => k === animalId ? true : updated[k] !== null);
+          if (allDone) {
+            setResult(`🎉 Grand Locomotion Discovery Complete! You mapped all specimens correctly.`);
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+          } else {
+            setResult(`✅ Correct! ${target.name} uses ${target.organ} to ${moveType}. (${target.text})`);
+          }
+          return updated;
+        });
+        setSelectedAnimal(null);
       } else {
-        setResult(`❌ Incorrect: ${target.name} does not move by ${moveType}ing.`);
+        setResult(`❌ Incorrect: ${target.name} does not move by ${moveType}ing. Try another dropzone!`);
       }
     };
 
+    const handleResetGrid = () => {
+      setPlaced({ fish: null, pigeon: null, cow: null, snail: null });
+      setSelectedAnimal(null);
+      setResult('Drag each animal card and drop it into its correct locomotion mode dropzone, or tap to place.');
+    };
+
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
-        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', padding: '1.5rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '24px', border: '1px solid var(--border)', boxShadow: '0 12px 40px rgba(0,0,0,0.03)' }}>
+        
+        <style>{`
+          @keyframes scaleUp {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+          }
+        `}</style>
+
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.6rem' }}>
+          <span style={{ fontSize: '0.88rem', fontWeight: '800', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             🏃 Locomotion Organ Mapper
           </span>
+          <button 
+            onClick={handleResetGrid} 
+            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', fontWeight: 'bold' }}
+          >
+            <RefreshCw size={13} /> Reset
+          </button>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.4rem' }}>
-          {Object.keys(data).map(k => (
-            <button
-              key={k}
-              onClick={() => { setSelected(k); setAction(''); setResult(`Selected ${data[k].name}. Select how it moves.`); }}
-              className="glass-btn"
-              style={{ padding: '0.5rem', borderRadius: '10px', border: selected === k ? '1.5px solid var(--accent)' : '1px solid var(--border)', background: 'var(--page-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-            >
-              <span style={{ fontSize: '1.5rem' }}>{data[k].icon}</span>
-              <span style={{ fontSize: '0.7rem', fontWeight: 'bold' }}>{data[k].name}</span>
-            </button>
-          ))}
+        {/* SPECIMEN TRAY */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>Animal Specimen Tray</span>
+          <div style={{ display: 'flex', gap: '0.75rem', minHeight: '105px', padding: '0.6rem', background: 'rgba(0,0,0,0.02)', borderRadius: '12px', border: '1px dashed var(--border)', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+            {Object.keys(data).filter(k => !placed[k]).length === 0 ? (
+              <div style={{ fontSize: '0.78rem', color: 'var(--success)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                ✅ All animal specimens successfully placed!
+              </div>
+            ) : (
+              Object.keys(data).map(k => {
+                if (placed[k]) return null;
+                const isSelected = selectedAnimal === k;
+                return (
+                  <div
+                    key={k}
+                    draggable
+                    onDragStart={(e) => {
+                      setDraggingId(k);
+                      handleDragStart(e, k);
+                    }}
+                    onDragEnd={() => setDraggingId(null)}
+                    onClick={() => {
+                      if (selectedAnimal === k) {
+                        setSelectedAnimal(null);
+                      } else {
+                        setSelectedAnimal(k);
+                        setResult(`Selected ${data[k].name}. Tap a dropzone below to place it.`);
+                      }
+                    }}
+                    style={{
+                      width: '90px',
+                      height: '90px',
+                      borderRadius: '12px',
+                      background: 'var(--card-bg)',
+                      border: isSelected ? '2px solid var(--accent)' : draggingId === k ? '1px dashed var(--border)' : '1px solid var(--border)',
+                      boxShadow: isSelected ? '0 4px 15px rgba(99, 102, 241, 0.2)' : '0 4px 10px rgba(0,0,0,0.04)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'grab',
+                      userSelect: 'none',
+                      transition: 'all 0.2s',
+                      transform: isSelected ? 'scale(1.05)' : 'none',
+                      opacity: draggingId === k ? 0.4 : 1,
+                      position: 'relative'
+                    }}
+                  >
+                    <img 
+                      src={data[k].image} 
+                      alt={data[k].name} 
+                      style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '8px', pointerEvents: 'none' }} 
+                    />
+                    <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-primary)', marginTop: '4px' }}>
+                      {data[k].name}
+                    </span>
+                    {isSelected && (
+                      <div style={{ position: 'absolute', top: -4, right: -4, background: 'var(--accent)', color: '#fff', borderRadius: '50%', width: 14, height: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8px' }}>
+                        ✓
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.25rem', justifyContent: 'center' }}>
-          {['walk', 'fly', 'swim', 'crawl'].map(a => (
-            <button
-              key={a}
-              onClick={() => checkLocomotion(a)}
-              className="glass-btn"
-              style={{ padding: '0.25rem 0.55rem', fontSize: '0.7rem', textTransform: 'capitalize', background: action === a ? 'rgba(99,102,241,0.06)' : 'var(--page-bg)', border: '1px solid var(--border)' }}
-            >
-              {a}
-            </button>
-          ))}
+        {/* DROPZONES GRID */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1 }}>
+          {dropzones.map(zone => {
+            const placedAnimal = Object.keys(placed).find(k => placed[k] === zone.id);
+            const isHovered = dragOverZone === zone.id;
+            const borderStyle = isHovered 
+              ? `2px solid ${zone.theme.active}` 
+              : placedAnimal 
+              ? '1px solid var(--success-border)' 
+              : `1.5px dashed ${zone.theme.border}`;
+            const bgStyle = isHovered 
+              ? zone.theme.bg 
+              : placedAnimal 
+              ? 'var(--success-bg)' 
+              : 'rgba(0,0,0,0.01)';
+
+            return (
+              <div
+                key={zone.id}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  if (!isHovered) setDragOverZone(zone.id);
+                }}
+                onDragLeave={() => setDragOverZone(null)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setDragOverZone(null);
+                  const animalId = e.dataTransfer.getData("text/plain") || draggingId;
+                  if (animalId) {
+                    handleDrop(animalId, zone.id);
+                  }
+                }}
+                onClick={() => {
+                  if (selectedAnimal) {
+                    handleDrop(selectedAnimal, zone.id);
+                  }
+                }}
+                style={{
+                  minHeight: '110px',
+                  borderRadius: '16px',
+                  border: borderStyle,
+                  background: bgStyle,
+                  padding: '0.75rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.4rem',
+                  transition: 'all 0.2s',
+                  cursor: selectedAnimal ? 'pointer' : 'default',
+                  boxShadow: isHovered ? `0 4px 15px ${zone.theme.bg}` : 'none',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-heading)', display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
+                  {zone.label}
+                </div>
+
+                {placedAnimal ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', justifyContent: 'flex-start', textAlign: 'left', animation: 'scaleUp 0.3s ease-out' }}>
+                    <img 
+                      src={data[placedAnimal].image} 
+                      alt={data[placedAnimal].name} 
+                      style={{ width: '48px', height: '48px', objectFit: 'contain', background: '#fff', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '2px' }} 
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        {data[placedAnimal].name} <Check size={14} color="var(--success)" strokeWidth={3} />
+                      </span>
+                      <span style={{ fontSize: '0.68rem', color: 'var(--success)', fontWeight: '600' }}>
+                        ⚙️ {data[placedAnimal].organ}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', maxWidth: '120px', lineHeight: 1.3 }}>
+                    {selectedAnimal 
+                      ? `Tap to place ${data[selectedAnimal].name} here` 
+                      : `Drag specimen here`}
+                  </span>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        <div style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', background: 'var(--page-bg)', border: '1px solid var(--border)', fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+        {/* FEEDBACK BANNER */}
+        <div style={{ 
+          padding: '0.7rem 0.9rem', 
+          borderRadius: '12px', 
+          background: result.startsWith('❌') ? 'var(--danger-bg)' : result.startsWith('🎉') || result.startsWith('✅') ? 'var(--success-bg)' : 'var(--page-bg)', 
+          border: `1px solid ${result.startsWith('❌') ? 'var(--danger-border)' : result.startsWith('🎉') || result.startsWith('✅') ? 'var(--success-border)' : 'var(--border)'}`, 
+          fontSize: '0.78rem', 
+          color: result.startsWith('❌') ? 'var(--danger)' : result.startsWith('🎉') || result.startsWith('✅') ? 'var(--success)' : 'var(--text-secondary)', 
+          fontWeight: result.startsWith('🎉') || result.startsWith('✅') || result.startsWith('❌') ? 'bold' : 'normal',
+          lineHeight: 1.4,
+          transition: 'all 0.3s'
+        }}>
           {result}
         </div>
+
       </div>
     );
   }
