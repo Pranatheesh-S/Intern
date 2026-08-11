@@ -110,7 +110,7 @@ export const SafetyPinSVG = ({ x, y, rotation, isPlaced, isTarget, onClick }) =>
 };
 
 // Battery Bare
-export const BatteryBareSVG = () => {
+export const BatteryBareSVG = ({ isFlipped }) => {
   return (
     <g>
       <defs>
@@ -127,14 +127,16 @@ export const BatteryBareSVG = () => {
         </linearGradient>
       </defs>
       
-      <rect x={2} y={2} width={84} height={40} rx={4} fill="rgba(0,0,0,0.2)" />
-      <rect x="0" y="2" width="6" height="36" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
-      <rect x="6" y="0" width="76" height="40" rx="4" fill="url(#battery-cylinder-bare)" stroke="#b91c1c" strokeWidth="1" />
-      <rect x="82" y="8" width="6" height="24" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
-      <rect x="88" y="13" width="3" height="14" rx="1" fill="url(#metal-caps-bare)" />
+      <g transform={isFlipped ? "translate(91, 0) scale(-1, 1)" : ""}>
+        <rect x={2} y={2} width={84} height={40} rx={4} fill="rgba(0,0,0,0.2)" />
+        <rect x="0" y="2" width="6" height="36" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
+        <rect x="6" y="0" width="76" height="40" rx="4" fill="url(#battery-cylinder-bare)" stroke="#b91c1c" strokeWidth="1" />
+        <rect x="82" y="8" width="6" height="24" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
+        <rect x="88" y="13" width="3" height="14" rx="1" fill="url(#metal-caps-bare)" />
+      </g>
 
-      <text x="18" y="25" fill="#111827" fontSize="18" fontWeight="bold" textAnchor="middle">-</text>
-      <text x="70" y="25" fill="#111827" fontSize="16" fontWeight="bold" textAnchor="middle">+</text>
+      <text x={isFlipped ? 70 : 18} y="25" fill="#111827" fontSize="18" fontWeight="bold" textAnchor="middle">-</text>
+      <text x={isFlipped ? 21 : 70} y="25" fill="#111827" fontSize="16" fontWeight="bold" textAnchor="middle">+</text>
       
       <rect x="29" y="6" width="30" height="28" fill="var(--text-primary)" rx="2" opacity={0.6} />
       <text x="44" y="18" fill="#fef08a" fontSize="8" fontWeight="bold" textAnchor="middle" letterSpacing="0.05em">CELL</text>
