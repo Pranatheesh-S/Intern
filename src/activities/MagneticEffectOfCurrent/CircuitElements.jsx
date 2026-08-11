@@ -127,13 +127,19 @@ export const BatteryBareSVG = ({ isFlipped }) => {
         </linearGradient>
       </defs>
       
-      <g transform={isFlipped ? "translate(91, 0) scale(-1, 1)" : ""}>
-        <rect x={2} y={2} width={84} height={40} rx={4} fill="rgba(0,0,0,0.2)" />
-        <rect x="0" y="2" width="6" height="36" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
-        <rect x="6" y="0" width="76" height="40" rx="4" fill="url(#battery-cylinder-bare)" stroke="#b91c1c" strokeWidth="1" />
-        <rect x="82" y="8" width="6" height="24" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
-        <rect x="88" y="13" width="3" height="14" rx="1" fill="url(#metal-caps-bare)" />
-      </g>
+      <rect x={isFlipped ? 5 : 2} y={2} width={84} height={40} rx={4} fill="rgba(0,0,0,0.2)" />
+      
+      {/* Negative cap */}
+      <rect x={isFlipped ? 85 : 0} y="2" width="6" height="36" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
+      
+      {/* Cylinder */}
+      <rect x={isFlipped ? 9 : 6} y="0" width="76" height="40" rx="4" fill="url(#battery-cylinder-bare)" stroke="#b91c1c" strokeWidth="1" />
+      
+      {/* Positive cap */}
+      <rect x={isFlipped ? 3 : 82} y="8" width="6" height="24" rx="2" fill="url(#metal-caps-bare)" stroke="var(--text-secondary)" strokeWidth="0.5" />
+      
+      {/* Positive tip */}
+      <rect x={isFlipped ? 0 : 88} y="13" width="3" height="14" rx="1" fill="url(#metal-caps-bare)" />
 
       <text x={isFlipped ? 70 : 18} y="25" fill="#111827" fontSize="18" fontWeight="bold" textAnchor="middle">-</text>
       <text x={isFlipped ? 21 : 70} y="25" fill="#111827" fontSize="16" fontWeight="bold" textAnchor="middle">+</text>
