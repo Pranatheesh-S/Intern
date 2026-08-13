@@ -122,28 +122,24 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       ]
     },
     {
-      img: '/IntroMagnets/scene_7.png',
-      subtitle: "HISTORY OF MAGNETS",
+      img: '/IntroMagnets/scene_99.png',
+      subtitle: "Some Common Items with Magnets",
       lines: [
         {
           role: 'teacher',
-          text: "History of Magnets: Ancient Times to Modern Technology."
+          text: "The magnets used by sailors in the olden days were based on naturally occurring magnets, known as lodestones which were discovered in ancient times."
         },
         {
           role: 'teacher',
-          text: "Ancient Times: Natural Magnets. Ancient sailors used natural lodestones to navigate oceans."
+          text: "Later on, people found out that magnets could also be made from pieces of iron. Nowadays, we have magnets made of different materials."
         },
         {
           role: 'teacher',
-          text: "Later Era: Magnets Made from Iron. Craftspeople made stronger magnets from iron for tools and compasses."
+          text: "The magnets that you find in your school laboratory and those used in pencil boxes, stickers, and toys are all artificial magnets."
         },
         {
           role: 'teacher',
-          text: "Today: Modern Technology. Magnets power MRI machines, floating trains, and electronics!"
-        },
-        {
-          role: 'girl',
-          text: "Paati loved my story! Now I want to explore how magnets really work!"
+          text: "Fig. 4.1: Some common items that have magnets attached to them."
         }
       ]
     }
@@ -181,23 +177,74 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
     // Helper to find best voice match based on character role
     const findVoice = (role) => {
+      // Explicit list of known system male voices
+      const maleVoices = availableVoices.filter(v => 
+        v.name.includes('David') ||
+        v.name.includes('Mark') ||
+        v.name.includes('Ravi') ||
+        v.name.includes('Prabhat') ||
+        v.name.includes('Valluvar') ||
+        v.name.includes('George') ||
+        v.name.includes('James') ||
+        v.name.toLowerCase().includes('male') ||
+        (!v.name.includes('Zira') && !v.name.includes('Samantha') && !v.name.includes('Heera') && !v.name.includes('Neerja') && !v.name.includes('Jenny') && !v.name.includes('Kalpana') && !v.name.toLowerCase().includes('female'))
+      );
+
+      // Explicit list of female voices
+      const femaleVoices = availableVoices.filter(v => 
+        v.name.includes('Zira') ||
+        v.name.includes('Samantha') ||
+        v.name.includes('Heera') ||
+        v.name.includes('Neerja') ||
+        v.name.includes('Jenny') ||
+        v.name.includes('Kalpana') ||
+        v.name.toLowerCase().includes('female')
+      );
+
       if (role === 'girl') {
-        // 14-year-old Girl voice
+        // Use the articulate female teacher-style narrator voice for Reshma (Girl)
         return (
-          availableVoices.find(v => v.lang.startsWith('en') && (v.name.includes('Zira') || v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Female'))) ||
-          availableVoices.find(v => v.lang.startsWith('en')) || null
+          femaleVoices.find(v => v.name.includes('Jenny') || v.name.includes('Neerja') || (v.name.includes('Female') && !v.name.includes('Zira'))) ||
+          femaleVoices.find(v => !v.name.includes('Zira') && !v.name.includes('Samantha')) ||
+          femaleVoices[0] ||
+          availableVoices[0] || null
         );
       } else if (role === 'ancient_man') {
-        // 40-year-old Ancient Man voice
+        // Bold, clear, slow Indian voice for Ancient Man (Sailor)
+        // 1. Primary: Indian Male voice (e.g. en-IN, hi-IN, ta-IN, te-IN, kn-IN, ml-IN, Ravi, Prabhat, Valluvar, Ketan, Madhav)
+        const indianMaleVoice = availableVoices.find(v => {
+          const lang = (v.lang || '').toLowerCase();
+          const name = (v.name || '').toLowerCase();
+          const isIndian = lang.includes('in') || lang.includes('ta') || lang.includes('hi') || lang.includes('te') || lang.includes('kn') || lang.includes('ml') || name.includes('india') || name.includes('indian') || name.includes('ravi') || name.includes('prabhat') || name.includes('valluvar') || name.includes('ketan') || name.includes('madhav');
+          const isFemale = femaleVoices.includes(v) || name.includes('zira') || name.includes('samantha') || name.includes('heera') || name.includes('neerja') || name.includes('jenny') || name.includes('kalpana') || name.includes('female');
+          return isIndian && !isFemale;
+        });
+
+        if (indianMaleVoice) return indianMaleVoice;
+
+        // 2. Secondary: Any Indian voice available on system
+        const anyIndianVoice = availableVoices.find(v => {
+          const lang = (v.lang || '').toLowerCase();
+          const name = (v.name || '').toLowerCase();
+          return lang.includes('in') || lang.includes('-in') || lang.includes('_in') || name.includes('india') || name.includes('indian') || name.includes('ravi') || name.includes('prabhat') || name.includes('heera') || name.includes('neerja');
+        });
+
+        if (anyIndianVoice) return anyIndianVoice;
+
+        // 3. Fallback: Preferred male voice
         return (
-          availableVoices.find(v => v.lang.startsWith('en') && (v.name.includes('Male') || v.name.includes('David') || v.name.includes('Mark') || v.name.includes('George') || v.name.includes('UK English Male'))) ||
-          availableVoices.find(v => v.lang.startsWith('en') && !v.name.includes('Female')) || null
+          maleVoices.find(v => v.name.includes('Ravi') || v.name.includes('Prabhat') || v.name.includes('David') || v.name.includes('Mark') || v.name.includes('George') || v.name.includes('James')) ||
+          maleVoices[0] ||
+          availableVoices.find(v => !femaleVoices.includes(v)) ||
+          availableVoices[0] || null
         );
       } else {
-        // 35-year-old Lady Teacher voice
+        // Teacher voice (Lady Teacher) - Distinct female narrator
         return (
-          availableVoices.find(v => v.lang.startsWith('en') && (v.name.includes('UK English') || v.name.includes('Jenny') || v.name.includes('Google') || v.name.includes('Female'))) ||
-          availableVoices.find(v => v.lang.startsWith('en')) || null
+          femaleVoices.find(v => v.name.includes('Jenny') || v.name.includes('Neerja') || (v.name.includes('Female') && !v.name.includes('Zira'))) ||
+          femaleVoices.find(v => !v.name.includes('Zira') && !v.name.includes('Samantha')) ||
+          femaleVoices[0] ||
+          availableVoices[0] || null
         );
       }
     };
@@ -214,17 +261,20 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       const currentLine = currentScene.lines[lineIndex];
       const utterance = new SpeechSynthesisUtterance(currentLine.text);
       utterance.voice = findVoice(currentLine.role);
+      utterance.volume = 1.0; // Maximum sound level / volume boost
 
       if (currentLine.role === 'girl') {
-        // 14-year-old Girl voice (Reshma): Higher pitch (1.45), curious, energetic rate (1.05)
-        utterance.pitch = 1.45;
-        utterance.rate = 1.05;
+        // Reshma (Girl): Primary female voice (Pitch: 1.0, Rate: 0.92, Volume: 1.0)
+        utterance.pitch = 1.0;
+        utterance.rate = 0.92;
+        utterance.volume = 1.0;
       } else if (currentLine.role === 'ancient_man') {
-        // 40-year-old Ancient Man voice (Sailor): Deep pitch (0.75), steady rugged rate (0.90)
-        utterance.pitch = 0.75;
-        utterance.rate = 0.90;
+        // Ancient Man (Sailor): Bold, clear, sound Indian male voice (pitch: 0.90 for clear resonant depth, rate: 0.68 for slow & deliberate pacing, volume: 1.0)
+        utterance.pitch = 0.90;
+        utterance.rate = 0.68;
+        utterance.volume = 1.0;
       } else {
-        // 35-year-old Lady Teacher voice: Standard natural pitch (1.0), clear educational pace (0.92)
+        // Teacher: Excellent articulate narrator tone (1.0), natural pace (0.92)
         utterance.pitch = 1.0;
         utterance.rate = 0.92;
       }
@@ -244,11 +294,14 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
     speakNextLine();
   };
 
-  // Play voiceover when scene changes or when unmuted
+  // Play voiceover 2 seconds after page/scene loads or when unmuted
   useEffect(() => {
-    playSceneAudio(currentPage);
+    const timer = setTimeout(() => {
+      playSceneAudio(currentPage);
+    }, 2000);
 
     return () => {
+      clearTimeout(timer);
       stopSpeech();
     };
   }, [currentPage, isMuted, voicesLoaded]);

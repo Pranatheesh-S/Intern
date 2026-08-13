@@ -95,7 +95,7 @@ export default function Stage2_Floating({ onComplete }) {
                 }} />
               ))}
               <img 
-                src="/magnetic_needle.png"
+                src="/MagneticCompass/magnetic_needle.png"
                 alt="Magnetic Needle"
                 draggable="false"
                 style={{

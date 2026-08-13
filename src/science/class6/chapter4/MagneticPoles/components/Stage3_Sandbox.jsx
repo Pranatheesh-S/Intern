@@ -170,7 +170,7 @@ export default function Stage3_Sandbox({ onComplete }) {
         }}>
           {shape === 'bar' && (
             <img 
-              src="/horizontal_magnet.png" 
+              src="/MagneticPoles/horizontal_magnet.png" 
               alt="Bar Magnet"
               style={{
                 position: 'absolute',
@@ -184,7 +184,7 @@ export default function Stage3_Sandbox({ onComplete }) {
 
           {shape === 'horseshoe' && (
             <img 
-              src="/horse-magnet.png" 
+              src="/Shared/horse-magnet.png" 
               alt="Horseshoe Magnet"
               style={{
                 position: 'absolute', 
@@ -198,7 +198,7 @@ export default function Stage3_Sandbox({ onComplete }) {
 
           {shape === 'ring' && (
             <img 
-              src="/ring_magnet.png" 
+              src="/MagneticPoles/ring_magnet.png" 
               alt="Ring Magnet"
               style={{
                 position: 'absolute', 

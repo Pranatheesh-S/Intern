@@ -97,7 +97,7 @@ export default function MagneticTable({ onComplete }) {
           onClick={handleImageClick}
           style={{ position: 'relative', overflow: 'hidden', cursor: scanningItemId ? 'default' : 'crosshair', borderBottom: '1px solid var(--border)' }}
         >
-          <img src="/activity_4.1.png" alt="Activity items" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          <img src="/Activity4_1/activity_4.1.png" alt="Activity items" style={{ width: '100%', height: 'auto', display: 'block' }} />
           
           {lensPos && (
             <div style={{
@@ -162,7 +162,7 @@ export default function MagneticTable({ onComplete }) {
 
                   {isScanned && (
                     <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.35rem', color: isMag ? '#10b981' : '#ef4444', fontSize: '1.0rem', fontWeight: 'bold' }}>
-                      {isMag ? <img src="/horse-magnet.png" alt="Magnetic" style={{ width: '20px', height: '20px', objectFit: 'contain' }} /> : <XCircle size={20} />}
+                      {isMag ? <img src="/Shared/horse-magnet.png" alt="Magnetic" style={{ width: '20px', height: '20px', objectFit: 'contain' }} /> : <XCircle size={20} />}
                       {isMag ? 'Magnetic' : 'Not Magnetic'}
                     </div>
                   )}

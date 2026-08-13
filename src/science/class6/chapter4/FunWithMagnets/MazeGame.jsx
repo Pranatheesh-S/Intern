@@ -54,9 +54,9 @@ export default function MazeGame({ onSolve, isSolved }) {
     const ctx = canvas.getContext("2d");
 
     const mazeImage = new Image();
-    mazeImage.src = "/maze.png";
+    mazeImage.src = "/FunWithMagnets/maze.png";
     const barImage = new Image();
-    barImage.src = "/mini_bar.png";
+    barImage.src = "/FunWithMagnets/mini_bar.png";
 
     let mzDrag = false;
     let animFrame = null;

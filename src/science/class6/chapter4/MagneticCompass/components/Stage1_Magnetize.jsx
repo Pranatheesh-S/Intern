@@ -158,7 +158,7 @@ export default function Stage1_Magnetize({ onComplete }) {
         }}>
           {/* Iron Needle Image */}
           <img 
-            src="/magnetic_needle.png" 
+            src="/MagneticCompass/magnetic_needle.png" 
             alt="Magnetic Needle"
             draggable="false"
             style={{
@@ -251,7 +251,7 @@ export default function Stage1_Magnetize({ onComplete }) {
                 whileTap={{ cursor: 'grabbing', scale: 1.05 }}
               >
                 <img 
-                  src="/bar_magnet.png" 
+                  src="/Shared/bar_magnet.png" 
                   alt="Bar Magnet"
                   draggable="false"
                   style={{
