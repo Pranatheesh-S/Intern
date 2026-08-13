@@ -76,6 +76,7 @@ const LeafVenationLab = lazy(() => import('./science/class6/chapter2/LeafVenatio
 const RootSystemsLab = lazy(() => import('./science/class6/chapter2/RootSystemsLab'));
 const VenationRootCorrelationLab = lazy(() => import('./science/class6/chapter2/VenationRootCorrelationLab'));
 const SeedDissectionLab = lazy(() => import('./science/class6/chapter2/SeedDissectionLab'));
+const Activity2_1Game = lazy(() => import('./science/class6/chapter2/Activity2_1Game'));
 
 import './App.css';
 const Chapter2LearningLab = lazy(() => import('./science/class6/chapter2/Chapter2LearningLab'));
@@ -3031,6 +3032,8 @@ export default function App() {
             <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5_flow')} />
           ) : activeActivity === 'circular_motion' ? (
             <CircularMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5_flow')} />
+          ) : activeActivity === 'activity_2_1' ? (
+            <Activity2_1Game onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'virtual_biodiversity' ? (
             <VirtualBiodiversityExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'appreciating_biodiversity' ? (

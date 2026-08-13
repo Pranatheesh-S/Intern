@@ -418,6 +418,86 @@ export default function CoverPage({
           100% { transform: translateY(-105vh) scale(1.3); opacity: 0; }
         }
 
+        /* Living Ecosystem Animations */
+        @keyframes birdFly {
+          0% { transform: translateY(0) translateX(0) rotate(0deg); }
+          25% { transform: translateY(-10px) translateX(15px) rotate(2deg); }
+          50% { transform: translateY(0) translateX(30px) rotate(-1deg); }
+          75% { transform: translateY(5px) translateX(45px) rotate(1deg); }
+          100% { transform: translateY(0) translateX(60px) rotate(0deg); }
+        }
+        @keyframes birdWingFlap {
+          0%, 100% { transform: scaleY(1); }
+          50% { transform: scaleY(0.4); }
+        }
+        @keyframes branchBirdMove {
+          0%, 100% { transform: rotate(0deg) translateY(0); }
+          10% { transform: rotate(3deg) translateY(-2px); }
+          20% { transform: rotate(-1deg) translateY(0); }
+          80% { transform: rotate(0deg) translateY(0); }
+        }
+        @keyframes animalBlink {
+          0%, 96%, 100% { transform: scaleY(1); opacity: 1; }
+          98% { transform: scaleY(0.1); opacity: 0; }
+        }
+        @keyframes monkeyBreathe {
+          0%, 100% { transform: scale(1) translateY(0); }
+          50% { transform: scale(1.02) translateY(-2px); }
+        }
+        @keyframes monkeyShift {
+          0%, 100% { transform: rotate(0deg); }
+          30% { transform: rotate(2deg); }
+          40% { transform: rotate(-1deg); }
+          70% { transform: rotate(0deg); }
+        }
+        @keyframes peacockFeather {
+          0%, 100% { transform: rotate(0deg) scale(1); }
+          50% { transform: rotate(1deg) scale(1.01); }
+        }
+        @keyframes fishSwim {
+          0% { transform: translateX(0) translateY(0) rotate(0deg); }
+          33% { transform: translateX(-15px) translateY(-5px) rotate(-2deg); }
+          66% { transform: translateX(-30px) translateY(2px) rotate(1deg); }
+          100% { transform: translateX(-45px) translateY(0) rotate(0deg); }
+        }
+        @keyframes turtleSwim {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-8px) rotate(1deg); }
+        }
+        @keyframes turtleFlipper {
+          0%, 100% { transform: rotate(0deg); }
+          50% { transform: rotate(15deg); }
+        }
+        @keyframes gentleSway {
+          0%, 100% { transform: rotate(0deg) skewX(0deg); }
+          50% { transform: rotate(2deg) skewX(2deg); }
+        }
+        @keyframes waterFlow {
+          0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+          50% { transform: translateY(-2px) scale(1.02); opacity: 1; }
+        }
+        @keyframes butterflyFlutter {
+          0% { transform: translate(0, 0) rotate(0deg); }
+          20% { transform: translate(10px, -15px) rotate(10deg); }
+          40% { transform: translate(25px, -5px) rotate(-5deg); }
+          60% { transform: translate(15px, -20px) rotate(15deg); }
+          80% { transform: translate(30px, -10px) rotate(-10deg); }
+          100% { transform: translate(40px, 0) rotate(0deg); }
+        }
+
+        .anim-bird-fly { animation: birdFly 8s ease-in-out infinite alternate; }
+        .anim-bird-wing { animation: birdWingFlap 0.4s linear infinite; }
+        .anim-branch-bird { animation: branchBirdMove 6s ease-in-out infinite; }
+        .anim-blink { animation: animalBlink 4s infinite; }
+        .anim-monkey-body { animation: monkeyBreathe 4s ease-in-out infinite, monkeyShift 12s ease-in-out infinite; }
+        .anim-peacock { animation: peacockFeather 5s ease-in-out infinite; }
+        .anim-fish { animation: fishSwim 12s ease-in-out infinite alternate; }
+        .anim-turtle-body { animation: turtleSwim 10s ease-in-out infinite; }
+        .anim-turtle-flipper { animation: turtleFlipper 3s ease-in-out infinite; }
+        .anim-plant-sway { animation: gentleSway 5s ease-in-out infinite; }
+        .anim-water { animation: waterFlow 4s ease-in-out infinite; }
+        .anim-butterfly { animation: butterflyFlutter 10s ease-in-out infinite alternate; }
+
         @media (max-aspect-ratio: 1/1), (max-width: 760px) {
           .layout-grid {
             grid-template-columns: 1fr;
@@ -456,7 +536,23 @@ export default function CoverPage({
       <span className="cover-tick" style={{ bottom: "84px", left: "36px" }}>ECOSYSTEM</span>
       <span className="cover-tick" style={{ bottom: "84px", right: "84px" }}>BIOSPHERE</span>
 
-      <button className="back-dashboard-btn" onClick={onBack}>
+      <button 
+        className="back-dashboard-btn" 
+        onClick={onBack}
+        style={chapterNum === 2 ? {
+          color: '#000000',
+          background: '#fbbf24',
+          padding: '8px 16px',
+          borderRadius: '8px',
+          fontWeight: '800',
+          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(251, 191, 36, 0.4)',
+          border: '1px solid #f59e0b',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '6px',
+          textShadow: 'none'
+        } : {}}
+      >
         <ArrowLeft size={16} /> Back to Chapters
       </button>
 
@@ -527,16 +623,63 @@ export default function CoverPage({
               }}>
                 Class {classNum} · {subjectName}
               </span>
-              <div style={{ 
-                fontSize: '24px', 
-                fontWeight: '700', 
-                color: '#fff', 
-                textShadow: '0 2px 10px rgba(0,0,0,0.9)',
-                letterSpacing: '1px',
-                marginTop: '0.75rem'
-              }}>
-                ◎ {topics}
-              </div>
+              {chapterNum === 2 ? (
+                <div style={{
+                  background: 'rgba(6, 30, 20, 0.4)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  padding: '2rem 3rem',
+                  borderRadius: '16px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  marginTop: '2rem'
+                }}>
+                  <h1 style={{
+                    fontSize: 'clamp(36px, 5vw, 56px)',
+                    fontWeight: '900',
+                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                    letterSpacing: '2px',
+                    color: '#fdfbf7',
+                    textShadow: '2px 2px 0px #064e3b, 4px 4px 15px rgba(6, 78, 59, 0.9)',
+                    margin: '0',
+                    textAlign: 'center',
+                    lineHeight: '1.1'
+                  }}>
+                    {title}
+                  </h1>
+                  <div style={{ 
+                    fontSize: 'clamp(14px, 1.8vw, 18px)', 
+                    fontWeight: '700', 
+                    color: '#fbbf24', 
+                    background: 'rgba(6, 40, 25, 0.5)',
+                    backdropFilter: 'blur(6px)',
+                    padding: '8px 24px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(251, 191, 36, 0.5)',
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
+                    letterSpacing: '1px',
+                    display: 'inline-block',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {topics}
+                  </div>
+                </div>
+              ) : (
+                <div style={{ 
+                  fontSize: '24px', 
+                  fontWeight: '700', 
+                  color: '#fff', 
+                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
+                  letterSpacing: '1px',
+                  marginTop: '0.75rem'
+                }}>
+                  ◎ {topics}
+                </div>
+              )}
             </div>
 
             {/* Bottom Floating CTA Button */}
@@ -557,16 +700,16 @@ export default function CoverPage({
                   marginTop: 0,
                   padding: '14px 40px',
                   fontSize: '18px',
-                  borderRadius: '30px',
-                  background: isBtnHovered ? '#10b981' : 'rgba(255, 255, 255, 0.12)',
-                  backdropFilter: isBtnHovered ? 'none' : 'blur(12px)',
-                  WebkitBackdropFilter: isBtnHovered ? 'none' : 'blur(12px)',
-                  border: isBtnHovered ? '2px solid #10b981' : '2px solid rgba(255, 255, 255, 0.3)',
-                  color: isBtnHovered ? '#06180f' : '#ffffff',
+                  borderRadius: chapterNum === 2 ? '12px' : '30px',
+                  background: chapterNum === 2 ? (isBtnHovered ? '#f59e0b' : '#fbbf24') : (isBtnHovered ? '#10b981' : 'rgba(255, 255, 255, 0.12)'),
+                  backdropFilter: chapterNum === 2 ? 'none' : (isBtnHovered ? 'none' : 'blur(12px)'),
+                  WebkitBackdropFilter: chapterNum === 2 ? 'none' : (isBtnHovered ? 'none' : 'blur(12px)'),
+                  border: chapterNum === 2 ? '2px solid #f59e0b' : (isBtnHovered ? '2px solid #10b981' : '2px solid rgba(255, 255, 255, 0.3)'),
+                  color: chapterNum === 2 ? '#000000' : (isBtnHovered ? '#06180f' : '#ffffff'),
                   fontWeight: '800',
-                  boxShadow: isBtnHovered ? '0 10px 30px rgba(16, 185, 129, 0.5)' : '0 8px 32px rgba(0, 0, 0, 0.25)',
+                  boxShadow: chapterNum === 2 ? (isBtnHovered ? '0 10px 30px rgba(245, 158, 11, 0.4)' : '0 8px 20px rgba(0, 0, 0, 0.5)') : (isBtnHovered ? '0 10px 30px rgba(16, 185, 129, 0.6)' : '0 8px 32px rgba(0, 0, 0, 0.25)'),
                   cursor: 'pointer',
-                  transform: isBtnHovered ? 'translateY(-2px)' : 'none',
+                  transform: chapterNum === 2 ? (isBtnHovered ? 'scale(1.02) translateY(-1px)' : 'none') : (isBtnHovered ? 'translateY(-2px)' : 'none'),
                   transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                   display: 'flex',
                   alignItems: 'center',
