@@ -14,8 +14,22 @@ import ExploreIndiaActivity from './components/LostInTheCity/ExploreIndiaActivit
 export default function LocatingPlacesActivity({ onBackToDashboard }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [subStep5, setSubStep5] = useState(0);
-  const [showIntro, setShowIntro] = useState(true);
+  const [viewMode, setViewMode] = useState('cover'); // 'cover' = Open Book page, 'activity' = chapter tabs
+  const [coverKey, setCoverKey] = useState(0);
   const navRef = useRef(null);
+
+  const handleBackToMainPage = () => {
+    setViewMode('cover');
+    setCurrentStep(1);
+    setSubStep5(0);
+    setCoverKey(k => k + 1);
+    window.scrollTo(0, 0);
+  };
+
+  const handleOpenBook = () => {
+    setViewMode('activity');
+    window.scrollTo(0, 0);
+  };
 
   const tabs = [
     { id: 1, title: 'Chapter Introduction', subtitle: 'Locating Places on the Earth', locked: false },
@@ -32,28 +46,40 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentStep]);
 
-  if (showIntro) {
-    return <BlueprintIntro onExplore={() => setShowIntro(false)} />;
-  }
-
   return (
-    <div style={{ 
+    <div style={{
       position: 'fixed',
       top: 0,
       left: 0,
-      width: '100vw', 
-      height: '100vh', 
-      padding: 'clamp(16px, 2.5vh, 24px) clamp(16px, 2.5vw, 24px)', 
-      boxSizing: 'border-box', 
-      display: 'flex', 
-      flexDirection: 'column',
-      background: 'var(--background, #f8fafc)',
-      zIndex: 50
+      width: '100vw',
+      height: '100vh',
+      zIndex: 101,
+      boxSizing: 'border-box',
+      ...(viewMode === 'activity' ? {
+        padding: 'clamp(16px, 2.5vh, 24px) clamp(16px, 2.5vw, 24px)',
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'var(--background, #f8fafc)'
+      } : {})
     }}>
+      {viewMode === 'cover' && (
+        <BlueprintIntro
+          key={`locating-places-cover-${coverKey}`}
+          onExplore={handleOpenBook}
+        />
+      )}
+
+      {viewMode === 'activity' && (
+        <>
       {/* Workflow Header / Tabs */}
-      <nav ref={navRef} style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '0.5rem', scrollbarWidth: 'none' }}>
-        <button onClick={onBackToDashboard} className="outline" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: '12px', background: 'transparent', cursor: 'pointer', marginRight: '0.5rem', flexShrink: 0 }}>
-          <ArrowLeft size={16} /> Dashboard
+      <nav ref={navRef} style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '0.5rem', scrollbarWidth: 'none', position: 'relative', zIndex: 200 }}>
+        <button
+          type="button"
+          onClick={handleBackToMainPage}
+          className="outline"
+          style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: '12px', background: 'transparent', cursor: 'pointer', marginRight: '0.5rem', flexShrink: 0 }}
+        >
+          <ArrowLeft size={16} /> Back to Main Page
         </button>
         {tabs.map((tab) => {
           const isActive = currentStep === tab.id;
@@ -109,35 +135,37 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
           <ChapterIntroduction onNextActivity={() => setCurrentStep(2)} />
         )}
         {currentStep === 2 && (
-          <LostInTheCity onComplete={() => setCurrentStep(3)} />
+          <LostInTheCity onComplete={() => setCurrentStep(3)} onBack={() => setCurrentStep(1)} />
         )}
         {currentStep === 3 && (
-          <AtlasIntroduction onNextActivity={() => setCurrentStep(4)} />
+          <AtlasIntroduction onNextActivity={() => setCurrentStep(4)} onBack={() => setCurrentStep(2)} />
         )}
         {currentStep === 4 && (
-          <DistanceAndScale onComplete={() => setCurrentStep(5)} />
+          <DistanceAndScale onComplete={() => setCurrentStep(5)} onBack={() => setCurrentStep(3)} />
         )}
         {currentStep === 5 && subStep5 === 0 && (
-          <Directions onComplete={() => setSubStep5(1)} />
+          <Directions onComplete={() => setSubStep5(1)} onBack={() => setCurrentStep(4)} />
         )}
         {currentStep === 5 && subStep5 === 1 && (
           <div style={{ flex: 1, height: '100%', minHeight: 0, position: 'relative' }}>
             <ExploreIndiaActivity 
               onBeginChapter={() => { setSubStep5(0); setCurrentStep(6); }} 
-              onBack={() => setSubStep5(0)} 
+              onBack={() => setSubStep5(0)}
             />
           </div>
         )}
         {currentStep === 6 && (
-          <MapSymbols onComplete={() => setCurrentStep(7)} />
+          <MapSymbols onComplete={() => setCurrentStep(7)} onBack={() => { setSubStep5(1); setCurrentStep(5); }} />
         )}
         {currentStep === 7 && (
-          <CoordinatesPage onNextActivity={() => setCurrentStep(8)} />
+          <CoordinatesPage onNextActivity={() => setCurrentStep(8)} onBack={() => setCurrentStep(6)} />
         )}
         {currentStep === 8 && (
-          <TimeZonesPage />
+          <TimeZonesPage onBack={() => setCurrentStep(7)} />
         )}
       </div>
+        </>
+      )}
     </div>
   );
 }

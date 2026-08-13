@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, CheckCircle, MapPin, Award, Navigation, Map as MapIcon, Train } from 'lucide-react';
 import IndiaSVGMap from './IndiaSVGMap';
+import ChapterBackFooter from '../ChapterBackFooter';
 
 const MISSIONS = [
   {
@@ -184,15 +185,6 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         <p style={{ color: '#64748b', fontSize: '14px', fontStyle: 'italic', marginBottom: '32px' }}>
           The next lessons will teach you how maps measure distance, show directions, and locate places precisely.
         </p>
-
-        <button 
-          onClick={onBeginChapter}
-          style={{ background: '#7c5cff', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '30px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 15px rgba(124, 92, 255, 0.4)', transition: 'transform 0.2s', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          Continue to Next Lesson <ChevronRight size={18} />
-        </button>
       </div>
     </div>
   );
@@ -373,17 +365,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
-      <div style={{ padding: '0.75rem 2rem', borderBottom: '1px solid rgba(0,0,0,0.08)', background: '#fff', zIndex: 10 }}>
-        <button 
-          onClick={onBack}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: '#5c6b7a', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
-          onMouseOver={(e) => e.currentTarget.style.color = '#20303f'}
-          onMouseOut={(e) => e.currentTarget.style.color = '#5c6b7a'}
-        >
-          <ChevronRight style={{ transform: 'rotate(180deg)' }} size={18} /> Back to Map
-        </button>
-      </div>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'row', minHeight: 0, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, flexDirection: 'row' }}>
       
       {/* LEFT PANEL: Interactive Map */}
       <div style={{ 
@@ -413,6 +395,13 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
       </div>
 
       </div>
+
+      <ChapterBackFooter
+        onBack={onBack}
+        nextLabel={missionIndex >= MISSIONS.length ? 'Continue to Next Lesson' : undefined}
+        onNext={missionIndex >= MISSIONS.length ? onBeginChapter : undefined}
+        nextVariant="blue"
+      />
     </div>
   );
 }

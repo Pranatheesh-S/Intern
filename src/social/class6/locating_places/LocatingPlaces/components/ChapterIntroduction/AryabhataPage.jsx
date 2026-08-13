@@ -1,9 +1,15 @@
-import React from 'react';
-import aryabhataImg from './assets/aryabhata.jpg';
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
 import earthImg from './assets/Earth.png';
-import { ChevronRight } from 'lucide-react';
+
+const CONTENT_PAGE_COUNT = 3;
 
 export default function AryabhataPage({ onNext, isNextEnabled }) {
+  const [contentPage, setContentPage] = useState(0);
+
+  const canGoDown = contentPage < CONTENT_PAGE_COUNT - 1;
+  const canGoUp = contentPage > 0;
+
   return (
     <div style={{ display: 'flex', width: '100%', height: '100%' }}>
       {/* ============ LEFT PAGE ============ */}
@@ -58,15 +64,23 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
         <div style={{
           flex: 1,
           minHeight: 0,
-          overflow: 'auto',
-          paddingRight: '12px',
+          overflow: 'hidden',
+          position: 'relative',
           display: 'flex',
-          flexDirection: 'column',
-          gap: 'clamp(16px, 1.8vw, 24px)',
-          scrollbarWidth: 'thin',
-          scrollbarColor: '#d4deea transparent'
+          flexDirection: 'column'
         }}>
-          
+          <div style={{
+            flex: 1,
+            minHeight: 0,
+            overflow: 'hidden',
+            paddingRight: '12px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'clamp(16px, 1.8vw, 24px)'
+          }}>
+
+          {contentPage === 0 && (
+          <>
           <blockquote style={{
             background: '#f8fafc',
             borderLeft: '4px solid #F5A623',
@@ -152,7 +166,11 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
               </p>
             </div>
           </div>
+          </>
+          )}
 
+          {contentPage === 1 && (
+          <>
           <div style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
@@ -195,7 +213,11 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
               note="By shadows, not myth; the Moon shines by reflected sunlight. Also gave π ≈ 3.1416"
             />
           </div>
+          </>
+          )}
 
+          {contentPage === 2 && (
+          <>
           <div style={{
             background: '#fff8ec',
             border: '1px solid #f5e2bf',
@@ -246,6 +268,75 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
             <TimelinePoint year="~500 CE" desc="Earth spins" />
             <TimelinePoint year="550 CE" desc="Legacy lives on" last />
           </div>
+          </>
+          )}
+
+          </div>
+
+          <div style={{
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '16px',
+            paddingTop: '10px'
+          }}>
+            <button
+              type="button"
+              onClick={() => canGoUp && setContentPage(p => p - 1)}
+              disabled={!canGoUp}
+              aria-label="Back to top"
+              style={{
+                fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif',
+                fontWeight: 600,
+                fontSize: '13px',
+                border: 'none',
+                background: 'transparent',
+                color: canGoUp ? '#0E3556' : '#cbd5e1',
+                cursor: canGoUp ? 'pointer' : 'not-allowed',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                padding: '4px 6px',
+                transition: 'color 0.2s, transform 0.2s'
+              }}
+              onMouseOver={e => { if (canGoUp) e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; }}
+            >
+              <ChevronUp size={22} strokeWidth={2.5} />
+              Back to top
+            </button>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#5c6b7a', minWidth: '48px', textAlign: 'center' }}>
+              {contentPage + 1} / {CONTENT_PAGE_COUNT}
+            </span>
+            <button
+              type="button"
+              onClick={() => canGoDown && setContentPage(p => p + 1)}
+              disabled={!canGoDown}
+              aria-label="Go to bottom section"
+              style={{
+                fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif',
+                fontWeight: 600,
+                fontSize: '13px',
+                border: 'none',
+                background: 'transparent',
+                color: canGoDown ? '#0E3556' : '#cbd5e1',
+                cursor: canGoDown ? 'pointer' : 'not-allowed',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                padding: '4px 6px',
+                transition: 'color 0.2s, transform 0.2s'
+              }}
+              onMouseOver={e => { if (canGoDown) e.currentTarget.style.transform = 'translateY(1px)'; }}
+              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; }}
+            >
+              Bottom
+              <ChevronDown size={22} strokeWidth={2.5} />
+            </button>
+          </div>
         </div>
 
         <div style={{
@@ -254,14 +345,17 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
           justifyContent: 'space-between',
           paddingTop: '16px',
           marginTop: '12px',
-          borderTop: '1px solid #e4ebf3'
+          borderTop: '1px solid #e4ebf3',
+          flexShrink: 0,
+          background: '#ffffff'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: '13px' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v16H6.5A2.5 2.5 0 0 0 4 21.5z" stroke="#5c6b7a" strokeWidth="1.5"></path><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v16h5.5A2.5 2.5 0 0 1 20 21.5z" stroke="#5c6b7a" strokeWidth="1.5"></path></svg>
             Page 1 of 2
           </div>
           {isNextEnabled !== false && (
-            <button 
+            <button
+              type="button"
               onClick={onNext}
               style={{
                 fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif',
@@ -287,6 +381,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
             </button>
           )}
         </div>
+
       </div>
     </div>
   );

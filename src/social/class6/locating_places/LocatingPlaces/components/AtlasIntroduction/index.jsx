@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Compass, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 import AtlasBook from './AtlasBook';
+import ChapterBackFooter from '../ChapterBackFooter';
 
-export default function AtlasIntroduction({ onNextActivity }) {
+export default function AtlasIntroduction({ onNextActivity, onBack }) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -134,21 +135,21 @@ export default function AtlasIntroduction({ onNextActivity }) {
               <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '2rem' }}>
                 You explored an Atlas and discovered three different kinds of maps. Now you're ready to learn how maps work.
               </p>
-              <div style={{ background: 'var(--bg-primary)', padding: '0.8rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border)', display: 'inline-block', marginBottom: '2rem', fontWeight: 'bold', color: 'var(--accent)', fontSize: '1.1rem' }}>
+              <div style={{ background: 'var(--bg-primary)', padding: '0.8rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border)', display: 'inline-block', fontWeight: 'bold', color: 'var(--accent)', fontSize: '1.1rem' }}>
                 🏆 Atlas Explorer Badge
               </div>
-              <button 
-                className="primary" 
-                style={{ width: '100%', padding: '1rem', fontSize: '1.1rem', borderRadius: '12px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
-                onClick={onNextActivity}
-              >
-                Continue <ArrowRight size={20} />
-              </button>
             </div>
           </div>
         )}
       </div>
       </div>
+
+      <ChapterBackFooter
+        onBack={onBack}
+        nextLabel={isCompleted ? 'Continue' : undefined}
+        onNext={isCompleted ? onNextActivity : undefined}
+        nextVariant="green"
+      />
     </div>
     </div>
   );

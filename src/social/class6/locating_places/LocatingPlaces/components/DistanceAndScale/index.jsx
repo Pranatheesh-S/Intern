@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, Target, Lightbulb, Book, MapPin, Link2, BarChart3, Building2, Compass, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 import India from '@svg-maps/india';
+import ChapterBackFooter from '../ChapterBackFooter';
 
 const IndiaMapSilhouette = () => (
   <svg viewBox={India.viewBox} width="48" height="48" style={{ filter: 'drop-shadow(0 4px 6px rgba(124, 92, 255, 0.2))' }}>
@@ -37,7 +38,7 @@ const HouseVector = ({ size = 80 }) => (
   </svg>
 );
 
-export default function DistanceAndScale({ onComplete }) {
+export default function DistanceAndScale({ onComplete, onBack }) {
   // State for new guided activity
   const [selectedDistance, setSelectedDistance] = useState(4);
   const [isCalculated, setIsCalculated] = useState(false);
@@ -60,6 +61,8 @@ export default function DistanceAndScale({ onComplete }) {
           font-family: var(--geo);
           color: var(--ink);
           height: 100%;
+          display: flex;
+          flex-direction: column;
           min-height: 650px;
           display: flex;
           flex-direction: column;
@@ -374,6 +377,7 @@ export default function DistanceAndScale({ onComplete }) {
           bottom: 0;
           display: flex;
           justify-content: flex-end;
+          align-items: center;
           padding-top: 16px;
           padding-bottom: 16px;
           background: linear-gradient(to top, #fbfdff 80%, transparent);
@@ -708,7 +712,7 @@ export default function DistanceAndScale({ onComplete }) {
       `}</style>
 
       {subpage === 'measure' ? (
-        <div className="ds-spread">
+        <div className="ds-spread" style={{ flex: 1, minHeight: 0 }}>
           <div className="ds-ribbon"></div>
 
           {/* LEFT · concept */}
@@ -963,11 +967,6 @@ export default function DistanceAndScale({ onComplete }) {
                     </div>
                   </div>
 
-                  <div className="ds-next-act">
-                    <button onClick={() => setSubpage('tamil-nadu')} className="ds-primary-btn" style={{ width: 'auto', margin: 0 }}>
-                      Real-Life Example <ArrowRight size={18} />
-                    </button>
-                  </div>
                 </>
               )}
 
@@ -975,13 +974,29 @@ export default function DistanceAndScale({ onComplete }) {
           </div>
         </div>
       ) : (
-        <TamilNaduSubpage onComplete={onComplete} />
+        <div style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
+          <TamilNaduSubpage />
+        </div>
       )}
+      <ChapterBackFooter
+        onBack={onBack}
+        nextLabel={
+          subpage === 'measure'
+            ? (isCalculated ? 'Real-Life Example' : undefined)
+            : 'Continue to Directions'
+        }
+        onNext={
+          subpage === 'measure'
+            ? (isCalculated ? () => setSubpage('tamil-nadu') : undefined)
+            : onComplete
+        }
+        nextVariant={subpage === 'measure' ? 'blue' : 'navy'}
+      />
     </div>
   );
 }
 
-const TamilNaduSubpage = ({ onComplete }) => {
+const TamilNaduSubpage = () => {
   const [scaleFactor, setScaleFactor] = useState(1);
   const [isDetailedView, setIsDetailedView] = useState(false);
 
@@ -1169,11 +1184,6 @@ const TamilNaduSubpage = ({ onComplete }) => {
           </p>
         </div>
 
-        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end', paddingTop: '16px' }}>
-          <button onClick={onComplete} className="ds-primary-btn" style={{ margin: 0, padding: '12px 24px', background: '#1e3a8a', fontSize: '15px', borderRadius: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', border: 'none', color: '#fff' }}>
-            Continue to Directions <ArrowRight size={18} />
-          </button>
-        </div>
       </div>
     </div>
   );

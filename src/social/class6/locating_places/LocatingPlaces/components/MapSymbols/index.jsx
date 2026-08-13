@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lightbulb, CheckCircle2, ArrowRight, Award, Map } from 'lucide-react';
 import { ALL_SYMBOLS, SYMBOL_GROUPS } from './symbolData';
+import ChapterBackFooter from '../ChapterBackFooter';
 
 function shuffleArray(array) {
   const newArray = [...array];
@@ -46,7 +47,7 @@ const playSound = (type) => {
   }
 };
 
-export default function MapSymbols({ onComplete }) {
+export default function MapSymbols({ onComplete, onBack }) {
   const [questions, setQuestions] = useState([]);
   const [traySymbols, setTraySymbols] = useState([]);
   const [matched, setMatched] = useState({});
@@ -382,43 +383,14 @@ export default function MapSymbols({ onComplete }) {
             )}
           </AnimatePresence>
 
-          {/* Fixed Continue Button at bottom-right of the screen */}
-          <AnimatePresence>
-            {isComplete && (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                style={{ position: 'absolute', bottom: '2rem', right: '2rem', zIndex: 50 }}
-              >
-                <button 
-                  onClick={onComplete} 
-                  className="primary" 
-                  style={{ 
-                    padding: '1rem 2rem', 
-                    fontSize: '1.1rem', 
-                    fontWeight: 'bold', 
-                    borderRadius: '99px', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '0.5rem', 
-                    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)', 
-                    background: '#3b82f6', 
-                    color: 'white', 
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                  onMouseOut={(e) => e.currentTarget.style.transform = 'none'}
-                >
-                  Next Activity <ArrowRight size={20} />
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
         </div>
       </div>
+      <ChapterBackFooter
+        onBack={onBack}
+        nextLabel={isComplete ? 'Next Activity' : undefined}
+        onNext={isComplete ? onComplete : undefined}
+        nextVariant="blue"
+      />
     </div>
   );
 }

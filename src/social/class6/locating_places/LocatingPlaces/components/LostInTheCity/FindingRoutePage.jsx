@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronRight, Map, MapPin, Compass, ArrowLeft } from 'lucide-react';
 import ExploreIndiaActivity from './ExploreIndiaActivity';
+import ChapterBackFooter from '../ChapterBackFooter';
 
 const N = {
   RS: {x: 150, y: 360, label: 'Railway Station', type: 'station', start: true},
@@ -109,7 +110,7 @@ const MapBuilding = ({ id, onClick, isPulsing }) => {
   );
 };
 
-export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
+export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBack }) {
   const [cur, setCur] = useState('RS');
   const [path, setPath] = useState(['RS']);
   const [logs, setLogs] = useState([{ html: 'Started at <b>Railway Station</b>', ok: true }]);
@@ -492,35 +493,23 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter }) {
         )}
         {/* Bottom Footer Area */}
         <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #e4ebf3', paddingTop: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', borderTop: '1px solid #e4ebf3', paddingTop: '10px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: '13px' }}>
               <MapPin size={18} strokeWidth={2} />
               Interactive Map Activity
-            </div>
-            
-            <div style={{ transition: 'all 0.5s' }}>
-              <button 
-                onClick={() => onBeginChapter()}
-                disabled={!(t1Done && t2Ans !== null && t3Ans !== null && win)}
-                style={{ 
-                  background: (t1Done && t2Ans !== null && t3Ans !== null && win) ? '#16a34a' : '#c3cfdd', 
-                  color: 'white', border: 'none', padding: '10px 20px', borderRadius: '30px', 
-                  fontSize: '14px', fontWeight: 'bold', 
-                  cursor: (t1Done && t2Ans !== null && t3Ans !== null && win) ? 'pointer' : 'not-allowed', 
-                  boxShadow: (t1Done && t2Ans !== null && t3Ans !== null && win) ? '0 4px 15px rgba(22, 163, 74, 0.4)' : 'none', 
-                  transition: 'all 0.3s', display: 'flex', alignItems: 'center', gap: '0.5rem' 
-                }}
-                onMouseOver={(e) => { if (t1Done && t2Ans !== null && t3Ans !== null && win) e.currentTarget.style.transform = 'scale(1.05)' }}
-                onMouseOut={(e) => { if (t1Done && t2Ans !== null && t3Ans !== null && win) e.currentTarget.style.transform = 'scale(1)' }}
-              >
-                {!(t1Done && t2Ans !== null && t3Ans !== null && win) ? 'Finish quiz to proceed' : 'Next Activity'} <ChevronRight size={16} strokeWidth={2.5} />
-              </button>
             </div>
           </div>
         </div>
 
       </div>
     </div>
+    <ChapterBackFooter
+      onBack={onBack}
+      nextLabel={(t1Done && t2Ans !== null && t3Ans !== null && win) ? 'Next Activity' : 'Finish quiz to proceed'}
+      onNext={onBeginChapter}
+      nextDisabled={!(t1Done && t2Ans !== null && t3Ans !== null && win)}
+      nextVariant="green"
+    />
     </div>
   );
 }

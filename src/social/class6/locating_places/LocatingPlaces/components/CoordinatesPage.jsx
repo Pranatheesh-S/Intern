@@ -3,13 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, XCircle, ArrowRight, Ticket } from 'lucide-react';
 import worldMapUrl from './world-map.jpg';
 import { WorldMapPath } from './WorldMapPath';
+import ChapterBackFooter from './ChapterBackFooter';
 
 function getClimate(lat) {
   const a = Math.abs(lat);
   return a <= 23.5 ? ['Torrid (hot)', 'b-torrid'] : a <= 66.5 ? ['Temperate (moderate)', 'b-temperate'] : ['Frigid (cold)', 'b-frigid'];
 }
 
-export default function CoordinatesPage({ onNextActivity }) {
+export default function CoordinatesPage({ onNextActivity, onBack }) {
   const [activeTab, setActiveTab] = useState('co');
   
   // Theatre state
@@ -1076,16 +1077,14 @@ export default function CoordinatesPage({ onNextActivity }) {
           )}
 
           <div style={{ flexGrow: 1 }} />
-          {/* Next Activity Button */}
-          {allCompleted && (
-            <div style={{ marginTop: '16px', animation: 'fadeIn 0.4s' }}>
-              <button onClick={onNextActivity} style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: '#3b82f6', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)' }}>
-                Next Activity
-              </button>
-            </div>
-          )}
         </div>
       </div>
+      <ChapterBackFooter
+        onBack={onBack}
+        nextLabel={allCompleted ? 'Next Activity' : undefined}
+        onNext={allCompleted ? onNextActivity : undefined}
+        nextVariant="blue"
+      />
     </div>
   );
 }
