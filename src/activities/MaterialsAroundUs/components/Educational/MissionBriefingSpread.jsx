@@ -8,7 +8,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
 
   const handleStart = () => {
-    try { playSuccess(); } catch (e) {}
+    try { playSuccess(); } catch (e) { }
     onContinue();
   };
 
@@ -242,19 +242,19 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .spread-back-btn {
             position: absolute;
-            top: 24px;
+            bottom: 24px;
             left: 24px;
             z-index: 10000;
             background: #ffffff;
             border: 1px solid #e2e8f0;
             color: #1e293b;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
@@ -267,26 +267,26 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
         `}
       </style>
 
-      <button className="spread-back-btn" onClick={onBack}>
-        <ArrowLeft size={16} /> Back
-      </button>
-
-      <motion.div 
+      <motion.div
         className="book-frame"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
+        <button className="spread-back-btn" onClick={onBack}>
+          <ArrowLeft size={18} /> Back
+        </button>
+
         <div className="spread">
           {/* LEFT PAGE */}
           <div className="page-spread left-page">
-            <img 
-              src={BLAKE_IMG_URL} 
-              alt="Chief Detective Blake" 
-              style={{ height: '70%', maxHeight: '600px', objectFit: 'contain' }} 
+            <img
+              src={BLAKE_IMG_URL}
+              alt="Chief Detective Blake"
+              style={{ height: '70%', maxHeight: '600px', objectFit: 'contain' }}
               onError={(e) => { e.target.src = 'https://via.placeholder.com/400x600.png?text=Blake'; }}
             />
-            <motion.div 
+            <motion.div
               className="speech-bubble"
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -298,25 +298,25 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               </p>
             </motion.div>
           </div>
-          
+
           {/* RIGHT PAGE */}
           <div className="page-spread right-page">
             <div className="mission-header">
               <ShieldAlert size={20} />
               MISSION BRIEFING
             </div>
-            
+
             <h1 className="mission-title">{data.title || 'The Classroom Mystery'}</h1>
-            
+
             <div className="mission-content">
               <p>{data.description || "Review the handbook and proceed to the activity area to complete the required tasks for this barrier."}</p>
             </div>
-            
+
             <div className="mission-box">
               <h3><Check size={16} color="#ef4444" /> OBJECTIVE</h3>
               <p>{data.objective || "Complete the investigation."}</p>
             </div>
-            
+
             <div className="mission-meta">
               <div className="meta-item">
                 <span className="meta-label">Difficulty</span>
@@ -331,7 +331,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
                 <span className="meta-value">⏱ {data.estimatedTime || '5 minutes'}</span>
               </div>
             </div>
-            
+
             <div style={{ marginTop: '48px' }}>
               <button className="start-btn" onClick={handleStart}>
                 Acknowledge & Begin <ArrowRight size={20} />

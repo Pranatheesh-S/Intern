@@ -20,12 +20,12 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [resetKey, setResetKey] = useState(0);
   const [showCover, setShowCover] = useState(true);
   const [showIntroSpread, setShowIntroSpread] = useState(false);
-  
+
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
-  
+
   const addXp = (amount) => {
     setXp(prev => prev + amount);
-    try { playSuccess(); } catch (e) {}
+    try { playSuccess(); } catch (e) { }
   };
 
   const handleNext = () => {
@@ -38,9 +38,9 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       }
     }
   };
-  
+
   const currentNode = chapterFlow[currentFlowIndex];
-  
+
   // Handlers for Mission / Debrief
   const handleMissionAccept = () => {
     if (currentNode.rewardXP && currentNode.type === 'mission') {
@@ -80,11 +80,11 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       {/* ═══════════════════════════════════════════
           GLOBAL ACTION BAR (WINDOW CHROME)
           ═══════════════════════════════════════════ */}
-      <div className="global-action-bar">
+      <div className="global-action-bar" style={{ display: currentNode.type === 'mission' ? 'none' : 'flex' }}>
         <div className="global-action-bar-left">
-          <button 
-            onClick={onBackToDashboard} 
-            className="outline" 
+          <button
+            onClick={onBackToDashboard}
+            className="outline"
             style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px' }}
           >
             <ArrowLeft size={16} /> Dashboard
@@ -101,24 +101,37 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             </div>
           </div>
         </div>
-        
-        <div className="global-action-bar-right">
-          <button 
-            onClick={() => {
-              if (currentFlowIndex > 0) {
-                setCurrentFlowIndex(prev => prev - 1);
-              } else {
-                setShowIntroSpread(true);
-              }
-            }}
-            className="outline"
-            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
-          >
-            <ArrowLeft size={14} /> Back
-          </button>
 
-          <button 
-            className="outline" 
+        <div className="global-action-bar-right">
+          {currentNode.type !== 'mission' && (
+            <button
+              onClick={() => {
+                if (currentFlowIndex > 0) {
+                  setCurrentFlowIndex(prev => prev - 1);
+                } else {
+                  setShowIntroSpread(true);
+                }
+              }}
+              className="outline"
+              style={{
+                position: 'fixed',
+                bottom: '24px',
+                left: '24px',
+                padding: '10px 18px',
+                fontSize: '15px',
+                gap: '0.5rem',
+                borderRadius: '8px',
+                color: 'var(--text-primary)',
+                zIndex: 99999,
+                margin: 0,
+                display: 'flex'
+              }}
+            >
+              <ArrowLeft size={18} /> Back
+            </button>
+          )}
+          <button
+            className="outline"
             onClick={toggleTheme}
             title="Toggle Theme"
             style={{ padding: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
@@ -126,7 +139,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
           </button>
 
-          <button 
+          <button
             onClick={() => setResetKey(prev => prev + 1)}
             className="outline"
             style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--danger)', borderColor: 'var(--danger-border)' }}
@@ -135,14 +148,14 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           </button>
 
           {currentNode.type === 'activity' && (
-            <button 
+            <button
               onClick={handleNext}
               disabled={!stageCompleted}
               className={stageCompleted ? 'primary' : 'outline'}
-              style={{ 
-                padding: '0.45rem 1rem', 
-                fontSize: '0.9rem', 
-                gap: '0.5rem', 
+              style={{
+                padding: '0.45rem 1rem',
+                fontSize: '0.9rem',
+                gap: '0.5rem',
                 borderRadius: '8px',
                 opacity: stageCompleted ? 1 : 0.5,
                 cursor: stageCompleted ? 'pointer' : 'not-allowed',
@@ -185,16 +198,16 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         </button>
 
         {/* Timeline Sidebar */}
-        <div 
+        <div
           className="timeline-flyout"
-          style={{ 
-            position: 'absolute', 
+          style={{
+            position: 'absolute',
             left: 0,
-            top: 0, bottom: 0, zIndex: 50, 
-            background: 'var(--surface)', borderRight: '1px solid var(--border)', 
-            display: 'flex', flexDirection: 'column', 
+            top: 0, bottom: 0, zIndex: 50,
+            background: 'var(--surface)', borderRight: '1px solid var(--border)',
+            display: 'flex', flexDirection: 'column',
             overflow: 'hidden', boxShadow: isTimelineOpen ? '4px 0 20px rgba(0,0,0,0.2)' : 'none',
-            width: '320px', 
+            width: '320px',
             transform: isTimelineOpen ? 'translateX(0)' : 'translateX(-100%)',
             transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease'
           }}
@@ -208,20 +221,20 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 const isActive = currentFlowIndex === idx || (node.type === 'mission' && currentFlowIndex > idx && chapterFlow[currentFlowIndex].type === 'activity' && chapterFlow.findIndex((n, i) => i > idx && n.type !== 'activity') > currentFlowIndex);
                 const isLocked = idx > highestUnlockedIndex;
                 const isPast = idx <= highestUnlockedIndex && !isActive;
-                
+
                 let icon = '🎯';
                 if (node.type === 'activity') icon = '🧪';
                 if (node.type === 'debrief' || node.type === 'summary') icon = '📝';
                 if (node.type === 'handbook') icon = '📖';
                 if (node.type === 'checkpoint') icon = '✅';
-                
+
                 return (
-                  <button 
-                    key={idx} 
+                  <button
+                    key={idx}
                     disabled={isLocked}
                     onClick={() => {
                       if (!isLocked) {
-                        try { playSuccess(); } catch (e) {}
+                        try { playSuccess(); } catch (e) { }
                         setCurrentFlowIndex(idx);
                         setIsTimelineOpen(false);
                       }
@@ -260,55 +273,55 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         {/* Main Content Area - Full Width */}
         <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: currentNode.type === 'activity' ? 'hidden' : 'auto' }}>
           {currentNode.type === 'mission' && (
-            <MissionBriefingSpread 
-              data={currentNode} 
-              onContinue={handleMissionAccept} 
+            <MissionBriefingSpread
+              data={currentNode}
+              onContinue={handleMissionAccept}
               onBack={() => {
                 if (currentFlowIndex > 0) {
                   setCurrentFlowIndex(prev => prev - 1);
                 } else {
                   setShowIntroSpread(true);
                 }
-              }} 
+              }}
             />
           )}
-          
+
           {currentNode.type === 'debrief' && (
             <ChiefDetective mode="debrief" data={currentNode} onContinue={handleDebriefContinue} />
           )}
-          
+
           {currentNode.type === 'activity' && (
             ['quiz', 'summary'].includes(currentNode.id) ? (
-              <currentNode.component 
+              <currentNode.component
                 key={`${currentNode.id}-${resetKey}`}
-                {...(currentNode.props || {})} 
-                onComplete={handleStageComplete} 
-                addXp={addXp} 
+                {...(currentNode.props || {})}
+                onComplete={handleStageComplete}
+                addXp={addXp}
               />
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: currentNode.layout || '1fr 1fr', gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
                 {/* Left Side: Handbook */}
                 {currentNode.handbook ? (
-                  <currentNode.handbook 
-                    highestUnlockedIndex={highestUnlockedIndex} 
-                    currentFlowIndex={currentFlowIndex} 
-                    stageCompleted={stageCompleted} 
+                  <currentNode.handbook
+                    highestUnlockedIndex={highestUnlockedIndex}
+                    currentFlowIndex={currentFlowIndex}
+                    stageCompleted={stageCompleted}
                   />
                 ) : (
-                  <InvestigationHandbook 
-                    highestUnlockedIndex={highestUnlockedIndex} 
-                    currentFlowIndex={currentFlowIndex} 
-                    stageCompleted={stageCompleted} 
+                  <InvestigationHandbook
+                    highestUnlockedIndex={highestUnlockedIndex}
+                    currentFlowIndex={currentFlowIndex}
+                    stageCompleted={stageCompleted}
                   />
                 )}
-                
+
                 {/* Right Side: Activity */}
                 <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
-                  <currentNode.component 
+                  <currentNode.component
                     key={`${currentNode.id}-${resetKey}`}
-                    {...(currentNode.props || {})} 
-                    onComplete={handleStageComplete} 
-                    addXp={addXp} 
+                    {...(currentNode.props || {})}
+                    onComplete={handleStageComplete}
+                    addXp={addXp}
                   />
                 </div>
               </div>
@@ -322,7 +335,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 {nextNode && nextNode.type === 'activity' && (
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
                     <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
-                      <nextNode.component {...(nextNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                      <nextNode.component {...(nextNode.props || {})} addXp={() => { }} onComplete={() => { }} />
                     </div>
                   </div>
                 )}
@@ -346,7 +359,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 {lastActivityNode && (
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
                     <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
-                      <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                      <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={() => { }} onComplete={() => { }} />
                     </div>
                   </div>
                 )}
@@ -370,7 +383,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 {lastActivityNode && (
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', overflow: 'hidden' }}>
                     <div style={{ width: '100%', height: '100%', filter: 'blur(12px)', transform: 'scale(1.05)' }}>
-                      <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={()=>{}} onComplete={()=>{}} />
+                      <lastActivityNode.component {...(lastActivityNode.props || {})} addXp={() => { }} onComplete={() => { }} />
                     </div>
                   </div>
                 )}
