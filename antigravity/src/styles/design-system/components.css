@@ -1,0 +1,103 @@
+/* src/styles/design-system/components.css */
+
+/* 
+  Note: .glass-panel styling is defined globally in index.css
+  using CSS custom properties that adapt to the active theme.
+  Do not re-define it here to avoid breaking dark mode.
+*/
+
+
+/* 
+  Responsive Buttons 
+  The padding and fonts automatically scale using rem.
+*/
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: white;
+}
+
+/*
+  Handbook Frame Container
+  Replaces the fixed widths/borders with scalable borders and spacing.
+*/
+.handbook-container {
+  min-height: 0;
+  box-sizing: border-box;
+  height: 100%;
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  /* Thick scalable border */
+  border: clamp(8px, 1vw, 24px) solid #1b2a4a;
+  position: relative;
+  overflow: hidden;
+}
+
+/*
+  Decorative Book Spine scaling
+*/
+.handbook-spine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: clamp(20px, 2.5vw, 60px);
+  background: linear-gradient(to right, transparent, rgba(0,0,0,0.1));
+  pointer-events: none;
+  z-index: 10;
+}
+
+/*
+  Images & Assets scaling globally
+*/
+.responsive-img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.detective-avatar {
+  width: var(--size-avatar);
+  height: var(--size-avatar);
+  filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.15));
+}
