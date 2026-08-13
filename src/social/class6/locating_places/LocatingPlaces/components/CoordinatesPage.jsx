@@ -4,6 +4,7 @@ import { CheckCircle2, XCircle, ArrowRight, Ticket } from 'lucide-react';
 import worldMapUrl from './world-map.jpg';
 import { WorldMapPath } from './WorldMapPath';
 import ChapterBackFooter from './ChapterBackFooter';
+import { ScrollableWithNav } from './ContentScrollNav';
 
 function getClimate(lat) {
   const a = Math.abs(lat);
@@ -547,7 +548,8 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
 
       <div style={{ flex: 1, display: 'flex', gap: '18px', minHeight: 0 }}>
         {/* LEFT PANEL */}
-        <div style={{ flex: 0.82, background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRadius: '16px', padding: '24px', overflowY: 'auto', boxShadow: '0 16px 40px rgba(14,42,69,.12)' }}>
+        <div style={{ flex: 0.82, background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRadius: '16px', boxShadow: '0 16px 40px rgba(14,42,69,.12)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+          <ScrollableWithNav scrollStyle={{ padding: '24px' }}>
           {activeTab === 'co' && (
             <>
               <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · (a)</div>
@@ -702,10 +704,12 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
               <div className="explore-box" style={{ margin: 0 }}>✏️ <b style={{ color: '#1877a8' }}>Let's explore:</b> use a globe or atlas to note the latitude and longitude of Mumbai, Kolkata, Singapore and Paris — then check them with the buttons on the right.</div>
             </div>
           )}
+          </ScrollableWithNav>
         </div>
 
         {/* RIGHT PANEL */}
-        <div style={{ flex: 1.18, background: '#fff', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', overflowY: 'auto', boxShadow: '0 16px 40px rgba(14,42,69,.12)' }}>
+        <div style={{ flex: 1.18, background: '#fff', borderRadius: '16px', boxShadow: '0 16px 40px rgba(14,42,69,.12)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+          <ScrollableWithNav scrollStyle={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
           {activeTab === 'co' && (
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, position: 'relative' }}>
               
@@ -1076,7 +1080,7 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
             </div>
           )}
 
-          <div style={{ flexGrow: 1 }} />
+          </ScrollableWithNav>
         </div>
       </div>
       <ChapterBackFooter

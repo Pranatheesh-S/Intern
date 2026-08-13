@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, ArrowRight, Sunrise, Sunset, Navigation, CheckCircle2, ArrowLeft, ArrowUp, ArrowDown, Map, Lightbulb, MapPin } from 'lucide-react';
 import ChapterBackFooter from '../ChapterBackFooter';
+import { ScrollableWithNav } from '../ContentScrollNav';
 
 const DIRECTIONS = [
   { id: 'N', label: 'North', type: 'Main Direction', angle: 0, description: <>North is one of the four <b>cardinal directions</b>. On a compass it sits at the top. Most maps show a small arrow marked 'N' pointing towards North.</>, note: 'Maps usually print a North arrow so you can orient every other direction from it.', icon: <Navigation size={48} color="#ef4444" style={{ transform: 'rotate(0deg)' }}/> },
@@ -205,9 +206,9 @@ export default function Directions({ onComplete, onBack }) {
         </div>
 
         {/* RIGHT: Information Panel (Visually on Left) */}
-        <div style={{ flex: '1 1 50%', minWidth: '350px', background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: '1 1 50%', minWidth: '350px', minHeight: 0, background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
           
-          <div style={{ flex: 1, padding: '1rem 1.5rem', overflowY: 'auto' }}>
+          <ScrollableWithNav scrollStyle={{ padding: '1rem 1.5rem' }}>
             <AnimatePresence mode="wait">
               {!activeDir ? (
                 <motion.div key="welcome" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -313,7 +314,7 @@ export default function Directions({ onComplete, onBack }) {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </ScrollableWithNav>
           
           {/* Progress & Completion Area */}
           <div style={{ padding: '0.75rem 1.5rem', background: 'var(--surface)', borderTop: '1px solid var(--border)' }}>

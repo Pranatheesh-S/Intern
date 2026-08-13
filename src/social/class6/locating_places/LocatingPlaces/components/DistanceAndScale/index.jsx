@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Map, Target, Lightbulb, Book, MapPin, Link2, BarChart3, Building2, Compass, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 import India from '@svg-maps/india';
 import ChapterBackFooter from '../ChapterBackFooter';
+import { ScrollableWithNav } from '../ContentScrollNav';
 
 const IndiaMapSilhouette = () => (
   <svg viewBox={India.viewBox} width="48" height="48" style={{ filter: 'drop-shadow(0 4px 6px rgba(124, 92, 255, 0.2))' }}>
@@ -974,9 +975,9 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           </div>
         </div>
       ) : (
-        <div style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
+        <ScrollableWithNav containerStyle={{ flex: 1, minHeight: 0 }}>
           <TamilNaduSubpage />
-        </div>
+        </ScrollableWithNav>
       )}
       <ChapterBackFooter
         onBack={onBack}

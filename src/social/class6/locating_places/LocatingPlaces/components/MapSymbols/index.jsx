@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lightbulb, CheckCircle2, ArrowRight, Award, Map } from 'lucide-react';
-import { ALL_SYMBOLS, SYMBOL_GROUPS } from './symbolData';
+import { ALL_SYMBOLS, SYMBOL_GROUPS, SymbolDisplay } from './symbolData';
 import ChapterBackFooter from '../ChapterBackFooter';
+import { ScrollableWithNav } from '../ContentScrollNav';
 
 function shuffleArray(array) {
   const newArray = [...array];
@@ -101,26 +102,27 @@ export default function MapSymbols({ onComplete, onBack }) {
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         
         {/* LEFT PANEL: Textbook Content */}
-        <div style={{ flex: '1 1 50%', minWidth: '350px', background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRight: '1px solid var(--border)', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '2rem 2.5rem' }}>
+        <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
+          <ScrollableWithNav scrollStyle={{ padding: 'clamp(1rem, 2vw, 1.75rem) clamp(1.25rem, 2.5vw, 2.25rem)' }}>
             
             {/* Page Header */}
             <div style={{ display: 'inline-block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--amber)', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
               CHAPTER 1 • SYMBOLS
             </div>
-            <h1 style={{ fontSize: '2.5rem', color: 'var(--text-heading)', margin: '0 0 0.5rem 0', fontFamily: 'serif' }}>
+            <h1 style={{ fontSize: 'clamp(1.65rem, 2.4vw, 2.25rem)', color: 'var(--text-heading)', margin: '0 0 0.5rem 0', fontFamily: 'serif', lineHeight: 1.15, display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+              <Map size={32} color="var(--amber)" style={{ flexShrink: 0 }} />
               Understanding Map Symbols
             </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', fontStyle: 'italic', margin: '0 0 2rem 0' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(1rem, 1.2vw, 1.15rem)', fontStyle: 'italic', margin: '0 0 1.75rem 0', lineHeight: 1.5 }}>
               Small pictures that represent real places and features.
             </p>
 
             {/* Section 1: What are Map Symbols? */}
             <div style={{ marginBottom: '2.5rem' }}>
               <h2 style={{ fontSize: '1.6rem', color: 'var(--text-heading)', margin: '0 0 1rem 0' }}>What are Symbols?</h2>
-              <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative', overflow: 'hidden', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)' }}>
-                <div style={{ position: 'absolute', right: '-20px', top: '-20px', opacity: 0.05, pointerEvents: 'none' }}>
-                  <Map size={150} />
+              <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative', overflow: 'visible', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)' }}>
+                <div style={{ position: 'absolute', right: '16px', bottom: '12px', opacity: 0.07, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Map size={96} strokeWidth={1.5} />
                 </div>
                 
                 <p style={{ color: '#475569', fontSize: '1.15rem', lineHeight: 1.6, margin: 0, zIndex: 1 }}>
@@ -150,24 +152,24 @@ export default function MapSymbols({ onComplete, onBack }) {
                 <div style={{ display: 'flex', padding: '1rem', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
                   <div style={{ flex: 1, color: '#475569', fontWeight: 500 }}>A long curved river</div>
                   <div style={{ width: '40px', textAlign: 'center', color: '#94a3b8' }}>→</div>
-                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <div style={{ width: '40px', height: '20px' }}>{React.createElement(ALL_SYMBOLS.find(s => s.id === 'river').Icon)}</div>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+                    <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'river')?.Icon} width={56} height={40} />
                     <span style={{ fontSize: '0.9rem', color: '#0f172a' }}>River Line</span>
                   </div>
                 </div>
                 <div style={{ display: 'flex', padding: '1rem', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
                   <div style={{ flex: 1, color: '#475569', fontWeight: 500 }}>A real hospital building</div>
                   <div style={{ width: '40px', textAlign: 'center', color: '#94a3b8' }}>→</div>
-                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <div style={{ width: '40px', height: '20px' }}>{React.createElement(ALL_SYMBOLS.find(s => s.id === 'hospital').Icon)}</div>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+                    <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'hospital')?.Icon} width={56} height={40} />
                     <span style={{ fontSize: '0.9rem', color: '#0f172a' }}>Hospital Cross</span>
                   </div>
                 </div>
                 <div style={{ display: 'flex', padding: '1rem', alignItems: 'center' }}>
                   <div style={{ flex: 1, color: '#475569', fontWeight: 500 }}>A thick green forest</div>
                   <div style={{ width: '40px', textAlign: 'center', color: '#94a3b8' }}>→</div>
-                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <div style={{ width: '40px', height: '20px' }}>{React.createElement(ALL_SYMBOLS.find(s => s.id === 'forest').Icon)}</div>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+                    <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'forest')?.Icon} width={56} height={40} />
                     <span style={{ fontSize: '0.9rem', color: '#0f172a' }}>Forest Trees</span>
                   </div>
                 </div>
@@ -180,14 +182,12 @@ export default function MapSymbols({ onComplete, onBack }) {
               {SYMBOL_GROUPS.map((group, gIdx) => (
                 <div key={gIdx} style={{ marginBottom: '1.5rem' }}>
                   <h3 style={{ fontSize: '1.2rem', color: '#64748b', margin: '0 0 0.75rem 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{group.title}</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
                     {group.items.map((item, idx) => (
-                      <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', padding: '1.5rem', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                          <div style={{ width: '110px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <item.Icon />
-                          </div>
-                          <span style={{ fontSize: '1.1rem', color: 'var(--text-primary)', fontWeight: 'bold' }}>{item.name}</span>
+                      <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.25rem', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', minWidth: 0 }}>
+                          <SymbolDisplay Icon={item.Icon} width={96} height={52} />
+                          <span style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 'bold', lineHeight: 1.3 }}>{item.name}</span>
                         </div>
                         <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
                           {item.desc}
@@ -207,23 +207,24 @@ export default function MapSymbols({ onComplete, onBack }) {
               </p>
             </div>
 
-          </div>
+          </ScrollableWithNav>
         </div>
 
         {/* RIGHT PANEL: Interactive Activity */}
-        <div style={{ flex: '1 1 50%', minWidth: '350px', padding: '2rem', background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column', position: 'relative', overflowY: 'auto' }}>
+        <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column' }}>
+          <ScrollableWithNav scrollStyle={{ padding: 'clamp(1rem, 2vw, 1.75rem)', display: 'flex', flexDirection: 'column' }}>
           
           {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '2rem' }}>
-            <div>
-              <h2 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Map size={28} color="#38bdf8" /> Let's Explore — Match the Symbols
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.5rem', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <h2 style={{ margin: 0, fontSize: 'clamp(1.35rem, 2vw, 1.75rem)', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '12px', lineHeight: 1.2, flexWrap: 'wrap' }}>
+                <Map size={28} color="#38bdf8" style={{ flexShrink: 0 }} /> Let's Explore — Match the Symbols
               </h2>
-              <p style={{ margin: '0.5rem 0 0 0', color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
+              <p style={{ margin: '0.5rem 0 0 0', color: 'var(--text-secondary)', fontSize: 'clamp(0.95rem, 1.1vw, 1.05rem)', lineHeight: 1.5 }}>
                 Drag each symbol to the correct place.
               </p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.25rem', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.25rem', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', flexShrink: 0 }}>
               <Award size={24} color={isComplete ? '#10b981' : 'var(--text-muted)'} />
               <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
                 Progress: {correctCount} / {questions.length}
@@ -238,10 +239,10 @@ export default function MapSymbols({ onComplete, onBack }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                style={{ display: 'flex', gap: '2rem', flex: 1, minHeight: 0 }}
+                style={{ display: 'flex', gap: '1.25rem', flex: 1, minHeight: 0, flexWrap: 'wrap' }}
               >
                 {/* Left Side: Question Panel */}
-                <div style={{ flex: '1 1 60%', display: 'flex', flexDirection: 'column', gap: '0.75rem', overflowY: 'auto', paddingRight: '1rem', scrollbarWidth: 'thin' }}>
+                <div style={{ flex: '1 1 280px', display: 'flex', flexDirection: 'column', gap: '0.75rem', minHeight: 0 }}>
                   {questions.map((q, idx) => {
                     const isMatched = matched[q.id];
                     const isError = errorHighlight === q.id;
@@ -278,21 +279,23 @@ export default function MapSymbols({ onComplete, onBack }) {
                           onDragOver={handleDragOver}
                           onDrop={(e) => handleDrop(e, q)}
                           style={{ 
-                            width: '140px', 
-                            height: '70px', 
+                            width: '148px', 
+                            height: '80px', 
                             background: isMatched ? 'var(--bg-primary)' : 'rgba(0,0,0,0.05)', 
-                            border: isMatched ? 'none' : '1px dashed var(--border)',
+                            border: isMatched ? '1px solid #10b981' : '1px dashed var(--border)',
                             borderRadius: '8px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             position: 'relative',
-                            flexShrink: 0
+                            flexShrink: 0,
+                            overflow: 'visible',
+                            padding: '6px'
                           }}
                         >
                           {isMatched ? (
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', color: 'var(--text-primary)' }}>
-                              <q.Icon />
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', color: 'var(--text-primary)', position: 'relative' }}>
+                              <SymbolDisplay Icon={q.Icon} width={128} height={56} />
                               <div style={{ position: 'absolute', top: '-6px', right: '-6px', background: 'white', borderRadius: '50%', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
                                 <CheckCircle2 size={20} color="#10b981" />
                               </div>
@@ -309,7 +312,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                 </div>
 
                 {/* Right Side: Symbol Tray */}
-                <div style={{ flex: '1 1 40%', background: 'var(--surface)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
+                <div style={{ flex: '1 1 180px', background: 'var(--surface)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
                   <AnimatePresence>
                     {traySymbols.map((symbol) => (
                       <motion.div
@@ -330,15 +333,16 @@ export default function MapSymbols({ onComplete, onBack }) {
                           display: 'flex',
                           justifyContent: 'center',
                           alignItems: 'center',
-                          height: '70px',
-                          width: '140px',
+                          height: '80px',
+                          width: '148px',
                           boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                          color: 'var(--text-primary)'
+                          color: 'var(--text-primary)',
+                          overflow: 'visible'
                         }}
                         whileHover={{ scale: 1.05, borderColor: 'var(--accent)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                         whileTap={{ scale: 0.95, cursor: 'grabbing' }}
                       >
-                        <symbol.Icon />
+                        <SymbolDisplay Icon={symbol.Icon} width={128} height={56} />
                       </motion.div>
                     ))}
                   </AnimatePresence>
@@ -383,6 +387,7 @@ export default function MapSymbols({ onComplete, onBack }) {
             )}
           </AnimatePresence>
 
+          </ScrollableWithNav>
         </div>
       </div>
       <ChapterBackFooter

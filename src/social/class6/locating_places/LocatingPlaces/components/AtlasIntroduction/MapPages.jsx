@@ -1,28 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Lightbulb, X } from 'lucide-react';
 import physicalImg from './assets/physical-map-v2.jpeg';
 import politicalImg from './assets/political.png';
 import rainfallImg from './assets/thematic-map.jpeg';
+import ContentScrollNav, { useScrollNav } from '../ContentScrollNav';
 
 const PageLayout = ({ 
-  title, subtitle, imageSrc, callouts, 
+  title, subtitle, imageSrc,
   whatIsTitle, whatIs, 
   featuresTitle, features, 
   colorsTitle, colors, 
   whyUseTitle, whyUse, 
   remember, funFact,
   imageAspectRatio = '1/1',
-  imageScale = 1
+  imageScale = 1,
+  onFullyViewed
 }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
+  const scrollRef = useRef(null);
+  const nav = useScrollNav(scrollRef);
+
+  useEffect(() => {
+    if (!onFullyViewed) return;
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const checkFullyViewed = () => {
+      const { scrollHeight, clientHeight, scrollTop } = el;
+      if (scrollHeight <= clientHeight + 4) {
+        onFullyViewed();
+        return;
+      }
+      if (scrollTop + clientHeight >= scrollHeight - 12) {
+        onFullyViewed();
+      }
+    };
+
+    checkFullyViewed();
+    el.addEventListener('scroll', checkFullyViewed, { passive: true });
+    const ro = new ResizeObserver(checkFullyViewed);
+    ro.observe(el);
+    Array.from(el.children).forEach(child => ro.observe(child));
+    return () => {
+      el.removeEventListener('scroll', checkFullyViewed);
+      ro.disconnect();
+    };
+  }, [onFullyViewed]);
 
   return (
     <>
-      <div style={{ display: 'flex', width: '100%', height: '100%', padding: '0', boxSizing: 'border-box' }}>
+      <div style={{ display: 'flex', width: '100%', height: '100%', padding: 0, boxSizing: 'border-box', minHeight: 0 }}>
       
-      {/* Left Page (Text & New Sections) */}
-      <div className="left-page-scroll" style={{ flex: 1, padding: '1.5rem 2rem 1.5rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', borderRight: '1px solid rgba(0,0,0,0.08)', overflowY: 'auto', overflowX: 'hidden' }}>
-        
+      {/* Left Page (Text) — scrollable with Back to top / Bottom nav */}
+      <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)' }}>
+        <div
+          ref={scrollRef}
+          className="left-page-scroll"
+          style={{ flex: 1, minHeight: 0, padding: '1.25rem 1.5rem 0.5rem', overflowY: 'auto', overflowX: 'hidden' }}
+        >
         {/* Header */}
         <div style={{ fontSize: '10px', color: '#7c5cff', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', marginBottom: '6px', fontFamily: '"IBM Plex Mono", monospace' }}>
           Chapter 1 • Atlas Introduction
@@ -92,10 +127,22 @@ const PageLayout = ({
           <p style={{ margin: 0, color: '#1e3a8a', fontSize: '0.85rem', lineHeight: 1.4 }}>{funFact}</p>
         </div>
 
+        </div>
+
+        {nav.hasOverflow && (
+          <ContentScrollNav
+            currentPage={nav.currentPage}
+            pageCount={nav.pageCount}
+            canGoUp={nav.canGoUp}
+            canGoDown={nav.canGoDown}
+            onPageUp={nav.onPageUp}
+            onPageDown={nav.onPageDown}
+          />
+        )}
       </div>
 
       {/* Right Page (Image Activity) */}
-      <div style={{ flex: 1, padding: '1.5rem 2rem 1.5rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ flex: 1, minWidth: 0, padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <div 
           onClick={() => setIsImageOpen(true)}
           style={{ cursor: 'pointer', width: '100%', aspectRatio: imageAspectRatio, position: 'relative', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', transition: 'transform 0.2s' }}
@@ -146,8 +193,9 @@ const PageLayout = ({
   );
 };
 
-export const PhysicalMapPage = () => (
+export const PhysicalMapPage = ({ onFullyViewed }) => (
   <PageLayout 
+    onFullyViewed={onFullyViewed}
     title="Physical Maps"
     subtitle="Maps that show Earth's natural features"
     imageSrc={physicalImg}
@@ -194,8 +242,9 @@ export const PhysicalMapPage = () => (
   />
 );
 
-export const PoliticalMapPage = () => (
+export const PoliticalMapPage = ({ onFullyViewed }) => (
   <PageLayout 
+    onFullyViewed={onFullyViewed}
     title="Political Maps"
     subtitle="Maps that show countries, states and boundaries."
     imageSrc={politicalImg}
@@ -240,8 +289,9 @@ export const PoliticalMapPage = () => (
   />
 );
 
-export const ThematicMapPage = () => (
+export const ThematicMapPage = ({ onFullyViewed }) => (
   <PageLayout 
+    onFullyViewed={onFullyViewed}
     title="Thematic Maps"
     subtitle="Maps that show one special topic."
     imageSrc={rainfallImg}

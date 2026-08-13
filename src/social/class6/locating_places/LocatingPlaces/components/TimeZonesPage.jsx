@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ChapterBackFooter from './ChapterBackFooter';
+import { ScrollableWithNav } from './ContentScrollNav';
 
 const fmt = (h) => {
   h = ((h % 24) + 24) % 24;
@@ -233,7 +234,8 @@ export default function TimeZonesPage({ onBack }) {
 
       <div className="panels-container" style={{ flex: 1, display: 'flex', gap: '18px', minHeight: 0 }}>
         {/* LEFT PANEL */}
-        <div className="panel-left" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.4 : 0.82, background: activeTab === 'std' ? '#fff' : 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRadius: '16px', padding: '24px', overflowY: 'auto', boxShadow: activeTab === 'std' ? '0 4px 12px rgba(0,0,0,0.05)' : '0 16px 40px rgba(14,42,69,.12)' }}>
+        <div className="panel-left" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.4 : 0.82, background: activeTab === 'std' ? '#fff' : 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRadius: '16px', boxShadow: activeTab === 'std' ? '0 4px 12px rgba(0,0,0,0.05)' : '0 16px 40px rgba(14,42,69,.12)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+          <ScrollableWithNav scrollStyle={{ padding: '24px' }}>
           {activeTab === 'tz' && (
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 3 · (a)</div>
@@ -393,10 +395,12 @@ export default function TimeZonesPage({ onBack }) {
               </div>
             </div>
           )}
+          </ScrollableWithNav>
         </div>
 
         {/* RIGHT PANEL */}
-        <div className="panel-right" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.6 : 1.18, background: activeTab === 'std' ? '#F7FAFC' : (activeTab === 'tz' ? '#F7FAFC' : '#fff'), borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', overflowY: 'auto', boxShadow: activeTab === 'std' ? 'none' : '0 16px 40px rgba(14,42,69,.12)' }}>
+        <div className="panel-right" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.6 : 1.18, background: activeTab === 'std' ? '#F7FAFC' : (activeTab === 'tz' ? '#F7FAFC' : '#fff'), borderRadius: '16px', boxShadow: activeTab === 'std' ? 'none' : '0 16px 40px rgba(14,42,69,.12)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+          <ScrollableWithNav scrollStyle={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
           {activeTab === 'tz' && (
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
               <h2 style={{ fontSize: '22px', fontWeight: 700, color: '#0E3556', margin: '0 0 16px', textAlign: 'center' }}>Local Time Explorer</h2>
@@ -812,6 +816,7 @@ export default function TimeZonesPage({ onBack }) {
               )}
             </div>
           )}
+          </ScrollableWithNav>
         </div>
       </div>
 

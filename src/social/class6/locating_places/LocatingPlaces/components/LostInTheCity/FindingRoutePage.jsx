@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ChevronRight, Map, MapPin, Compass, ArrowLeft } from 'lucide-react';
 import ExploreIndiaActivity from './ExploreIndiaActivity';
 import ChapterBackFooter from '../ChapterBackFooter';
+import { ScrollableWithNav } from '../ContentScrollNav';
 
 const N = {
   RS: {x: 150, y: 360, label: 'Railway Station', type: 'station', start: true},
@@ -359,7 +360,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               You just got off a train at the <b>Railway Station</b>. Travel the roads to reach the <b>Bank</b>. There is more than one correct path — pick a road at each junction.
             </div>
 
-            <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', marginTop: '14px', paddingRight: '4px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <ScrollableWithNav containerStyle={{ marginTop: '14px' }} scrollStyle={{ paddingRight: '4px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               
               {/* Controls */}
               <div style={{ background: '#F3F7FC', border: '1px solid #e4ebf3', borderRadius: '14px', padding: '14px' }}>
@@ -413,12 +414,12 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                 </div>
               </div>
               
-            </div>
+            </ScrollableWithNav>
           </>
         )}
 
         {showQuiz && (
-          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <ScrollableWithNav scrollStyle={{ display: 'flex', flexDirection: 'column' }}>
             {/* Explore Tasks */}
             <div style={{ background: '#F3F7FC', border: '1px solid #e4ebf3', borderRadius: '14px', padding: '24px' }}>
               <div style={{ color: '#b45309', fontFamily: '"IBM Plex Mono", monospace', fontSize: '14px', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '20px' }}>◎ Let's explore — Fig. 1.1</div>
@@ -489,7 +490,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               </div>
             </div>
 
-          </div>
+          </ScrollableWithNav>
         )}
         {/* Bottom Footer Area */}
         <div style={{ marginTop: 'auto', paddingTop: '10px' }}>

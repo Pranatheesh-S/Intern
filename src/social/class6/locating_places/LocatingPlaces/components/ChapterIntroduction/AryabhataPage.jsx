@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import earthImg from './assets/Earth.png';
+import ContentScrollNav from '../ContentScrollNav';
 
 const CONTENT_PAGE_COUNT = 3;
 
@@ -21,9 +22,14 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        padding: '12px'
       }}>
-        <img src={earthImg} alt="Earth" style={{ width: '100%', height: '100%', objectFit: 'contain', transform: 'scale(1.35)' }} />
+        <img
+          src={earthImg}
+          alt="Earth"
+          style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+        />
       </div>
 
       {/* ============ RIGHT PAGE ============ */}
@@ -273,70 +279,15 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
 
           </div>
 
-          <div style={{
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '16px',
-            paddingTop: '10px'
-          }}>
-            <button
-              type="button"
-              onClick={() => canGoUp && setContentPage(p => p - 1)}
-              disabled={!canGoUp}
-              aria-label="Back to top"
-              style={{
-                fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif',
-                fontWeight: 600,
-                fontSize: '13px',
-                border: 'none',
-                background: 'transparent',
-                color: canGoUp ? '#0E3556' : '#cbd5e1',
-                cursor: canGoUp ? 'pointer' : 'not-allowed',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '4px',
-                padding: '4px 6px',
-                transition: 'color 0.2s, transform 0.2s'
-              }}
-              onMouseOver={e => { if (canGoUp) e.currentTarget.style.transform = 'translateY(-1px)'; }}
-              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; }}
-            >
-              <ChevronUp size={22} strokeWidth={2.5} />
-              Back to top
-            </button>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#5c6b7a', minWidth: '48px', textAlign: 'center' }}>
-              {contentPage + 1} / {CONTENT_PAGE_COUNT}
-            </span>
-            <button
-              type="button"
-              onClick={() => canGoDown && setContentPage(p => p + 1)}
-              disabled={!canGoDown}
-              aria-label="Go to bottom section"
-              style={{
-                fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif',
-                fontWeight: 600,
-                fontSize: '13px',
-                border: 'none',
-                background: 'transparent',
-                color: canGoDown ? '#0E3556' : '#cbd5e1',
-                cursor: canGoDown ? 'pointer' : 'not-allowed',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '4px',
-                padding: '4px 6px',
-                transition: 'color 0.2s, transform 0.2s'
-              }}
-              onMouseOver={e => { if (canGoDown) e.currentTarget.style.transform = 'translateY(1px)'; }}
-              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; }}
-            >
-              Bottom
-              <ChevronDown size={22} strokeWidth={2.5} />
-            </button>
-          </div>
+          <ContentScrollNav
+            currentPage={contentPage}
+            pageCount={CONTENT_PAGE_COUNT}
+            canGoUp={canGoUp}
+            canGoDown={canGoDown}
+            onPageUp={() => setContentPage(p => p - 1)}
+            onPageDown={() => setContentPage(p => p + 1)}
+            showWhenSinglePage
+          />
         </div>
 
         <div style={{

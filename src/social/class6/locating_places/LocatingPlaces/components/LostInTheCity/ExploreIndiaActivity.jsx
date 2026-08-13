@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronRight, CheckCircle, MapPin, Award, Navigation, Map as MapIcon, Train } from 'lucide-react';
 import IndiaSVGMap from './IndiaSVGMap';
 import ChapterBackFooter from '../ChapterBackFooter';
+import { ScrollableWithNav } from '../ContentScrollNav';
 
 const MISSIONS = [
   {
@@ -166,7 +167,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
   );
 
   const renderComplete = () => (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '30px', overflowY: 'auto' }}>
+    <ScrollableWithNav containerStyle={{ flex: 1, minHeight: 0 }} scrollStyle={{ padding: '30px' }}>
       <div style={{ background: '#fff', border: '1px solid #e4ebf3', borderRadius: '16px', padding: '40px', boxShadow: '0 8px 30px rgba(0,0,0,0.04)', textAlign: 'center' }}>
         <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎉</div>
         <h2 style={{ fontFamily: '"Fraunces", serif', color: '#16a34a', fontSize: '28px', marginBottom: '16px' }}>Journey Complete!</h2>
@@ -186,7 +187,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           The next lessons will teach you how maps measure distance, show directions, and locate places precisely.
         </p>
       </div>
-    </div>
+    </ScrollableWithNav>
   );
 
   const renderMission = () => {
@@ -219,7 +220,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           })}
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 30px 30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <ScrollableWithNav containerStyle={{ flex: 1, minHeight: 0 }} scrollStyle={{ padding: '20px 30px 30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           {/* Mission Card */}
           <div style={{ background: '#fff', border: '1px solid #e4ebf3', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
@@ -344,7 +345,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
             </div>
           )}
 
-        </div>
+        </ScrollableWithNav>
       </div>
     );
   };
@@ -388,7 +389,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
       </div>
 
       {/* RIGHT PANEL: Mission Controls */}
-      <div style={{ flex: 1, backgroundColor: '#fcfdfd', color: '#20303f', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      <div style={{ flex: 1, backgroundColor: '#fcfdfd', color: '#20303f', display: 'flex', flexDirection: 'column', position: 'relative', minHeight: 0 }}>
         {missionIndex === -1 && renderIntro()}
         {missionIndex >= 0 && missionIndex < MISSIONS.length && renderMission()}
         {missionIndex >= MISSIONS.length && renderComplete()}

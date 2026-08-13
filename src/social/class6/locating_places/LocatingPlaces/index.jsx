@@ -46,6 +46,14 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentStep]);
 
+  useEffect(() => {
+    if (!navRef.current) return;
+    const activeEl = navRef.current.querySelector('[data-active="true"]');
+    if (activeEl) {
+      activeEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }, [currentStep, viewMode]);
+
   return (
     <div style={{
       position: 'fixed',
@@ -72,15 +80,53 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
       {viewMode === 'activity' && (
         <>
       {/* Workflow Header / Tabs */}
-      <nav ref={navRef} style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '0.5rem', scrollbarWidth: 'none', position: 'relative', zIndex: 200 }}>
-        <button
-          type="button"
-          onClick={handleBackToMainPage}
-          className="outline"
-          style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: '12px', background: 'transparent', cursor: 'pointer', marginRight: '0.5rem', flexShrink: 0 }}
-        >
-          <ArrowLeft size={16} /> Back to Main Page
-        </button>
+      <div style={{ flexShrink: 0, width: '100%', minWidth: 0, marginBottom: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'stretch', gap: '0.5rem', width: '100%', minWidth: 0 }}>
+          <button
+            type="button"
+            onClick={handleBackToMainPage}
+            className="outline"
+            title="Back to Main Page"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.15rem',
+              padding: '0.35rem 0.4rem',
+              fontSize: '0.62rem',
+              fontWeight: 'bold',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
+              borderRadius: '10px',
+              background: 'transparent',
+              cursor: 'pointer',
+              flexShrink: 0,
+              minHeight: '64px',
+              width: '68px',
+              boxSizing: 'border-box',
+              lineHeight: 1.15,
+              textAlign: 'center'
+            }}
+          >
+            <ArrowLeft size={13} />
+            <span>Back to</span>
+            <span>Main Page</span>
+          </button>
+
+          <nav
+            ref={navRef}
+            style={{
+              flex: 1,
+              minWidth: 0,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(8, minmax(0, 1fr))',
+              gap: '0.4rem',
+              overflowX: 'auto',
+              scrollbarWidth: 'thin',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
         {tabs.map((tab) => {
           const isActive = currentStep === tab.id;
           const isCompleted = currentStep > tab.id;
@@ -98,29 +144,36 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.5rem 1rem',
+                gap: '0.5rem',
+                padding: '0.45rem 0.55rem',
                 background: isActive ? 'var(--surface)' : 'transparent',
                 border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
                 borderRadius: '12px',
-                minWidth: 'max-content',
+                width: '100%',
+                minHeight: '64px',
+                minWidth: '118px',
                 opacity: tab.locked ? 0.4 : 1,
                 cursor: tab.locked ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: isActive ? '0 4px 15px rgba(99, 102, 241, 0.15)' : 'none'
+                boxShadow: isActive ? '0 4px 15px rgba(99, 102, 241, 0.15)' : 'none',
+                textAlign: 'left',
+                boxSizing: 'border-box',
+                flexShrink: 0
               }}
             >
-              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: isActive ? 'var(--accent)' : 'var(--border)', color: isActive ? '#fff' : 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold' }}>
-                {isCompleted ? <CheckCircle size={12} /> : tab.id}
+              <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: isActive ? 'var(--accent)' : 'var(--border)', color: isActive ? '#fff' : 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 'bold', flexShrink: 0 }}>
+                {isCompleted ? <CheckCircle size={11} /> : tab.id}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: isActive ? 'var(--text-heading)' : 'var(--text-primary)' }}>{tab.title}</span>
-                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{tab.subtitle}</span>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', minWidth: 0, flex: 1 }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: isActive ? 'var(--text-heading)' : 'var(--text-primary)', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.title}</span>
+                <span style={{ fontSize: '0.56rem', color: 'var(--text-muted)', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.subtitle}</span>
               </div>
             </button>
           );
         })}
-      </nav>
+          </nav>
+        </div>
+      </div>
 
       {/* Main Content Area */}
       <div style={{ 

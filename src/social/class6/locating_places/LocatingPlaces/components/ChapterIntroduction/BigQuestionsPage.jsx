@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Map, MapPin, Clock, Compass, Globe2, ChevronRight } from 'lucide-react';
 import bigQuestionsImg from './assets/big-questions-new.png';
 import ChapterBackFooter from '../ChapterBackFooter';
+import ContentScrollNav, { useScrollNav } from '../ContentScrollNav';
 
 const PAGE_PADDING = 'clamp(20px, 2.6vw, 42px)';
 const HEADER_TITLE_STYLE = {
@@ -16,6 +17,7 @@ const HEADER_TITLE_STYLE = {
 export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapter }) {
   const [discoveredCards, setDiscoveredCards] = useState([]);
   const scrollContainerRef = useRef(null);
+  const scrollNav = useScrollNav(scrollContainerRef);
 
   const handleDiscover = (id) => {
     if (!discoveredCards.includes(id)) {
@@ -258,6 +260,17 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
                 );
               })}
             </div>
+
+            {scrollNav.hasOverflow && (
+              <ContentScrollNav
+                currentPage={scrollNav.currentPage}
+                pageCount={scrollNav.pageCount}
+                canGoUp={scrollNav.canGoUp}
+                canGoDown={scrollNav.canGoDown}
+                onPageUp={scrollNav.onPageUp}
+                onPageDown={scrollNav.onPageDown}
+              />
+            )}
 
             <div style={{ flexShrink: 0 }}>
               <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: '12px', padding: 'clamp(0.8rem, 1.5vh, 1.2rem)' }}>
