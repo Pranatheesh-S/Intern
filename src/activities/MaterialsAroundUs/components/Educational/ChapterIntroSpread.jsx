@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function ChapterIntroSpread({ onContinue, onBack }) {
   const rightPageRef = useRef(null);
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(true);
 
   // Auto-scroll to top when component mounts
   useEffect(() => {
@@ -423,20 +423,20 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
             cursor: not-allowed;
           }
           .spread-back-btn {
-            position: absolute;
-            top: 24px;
+            position: fixed;
+            bottom: 24px;
             left: 24px;
             z-index: 10000;
             background: #ffffff;
             border: 1px solid #e2e8f0;
             color: #1e293b;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
@@ -450,11 +450,11 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
       </style>
 
       <button className="spread-back-btn" onClick={onBack}>
-        <ArrowLeft size={16} /> Back
+        <ArrowLeft size={18} /> Back
       </button>
 
-      <button 
-        className="spread-next-btn" 
+      <button
+        className="spread-next-btn"
         onClick={onContinue}
         disabled={!isUnlocked}
         title={!isUnlocked ? "Scroll down to read all content first" : ""}
@@ -463,7 +463,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
         Begin Investigation <ArrowRight size={18} />
       </button>
 
-      <motion.div 
+      <motion.div
         className="book-frame"
         initial={{ opacity: 0, scale: 0.98, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -474,18 +474,18 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           <div className="page-spread left-page">
             <div className="eyebrow">CHAPTER 6 &nbsp;•&nbsp; CLASS 8 SCIENCE</div>
             <h1 className="title">Materials Around Us</h1>
-            
+
             <div className="illustration">
-              <img 
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', background: '#1b2a4a' }} 
-                src="/public/blueprint_glassware.png" 
-                alt="Laboratory glassware and chemical structures blueprint" 
+              <img
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', background: '#1b2a4a' }}
+                src="/public/blueprint_glassware.png"
+                alt="Laboratory glassware and chemical structures blueprint"
                 onError={(e) => { e.target.src = 'https://via.placeholder.com/800x400/1b2a4a/ffffff?text=Science+Blueprint'; }}
               />
               <div className="badge">Ancient Indian Materials Science</div>
               <div className="illu-caption">Blueprint sketch - laboratory glassware &amp; simple chemical structures</div>
             </div>
-            
+
             <div className="quote-card">
               <span className="quote-mark">“</span>
               <div className="quote-sanskrit">उपादानं भवेत्तस्य (मूषायाः) मृत्तिका लोहमेव च।</div>

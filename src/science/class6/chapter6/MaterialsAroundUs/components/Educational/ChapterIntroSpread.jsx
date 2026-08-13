@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function ChapterIntroSpread({ onContinue, onBack }) {
   const rightPageRef = useRef(null);
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(true);
 
   // Auto-scroll to top when component mounts
   useEffect(() => {
@@ -423,20 +423,20 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
             cursor: not-allowed;
           }
           .spread-back-btn {
-            position: absolute;
-            top: 24px;
+            position: fixed;
+            bottom: 24px;
             left: 24px;
             z-index: 10000;
             background: #ffffff;
             border: 1px solid #e2e8f0;
             color: #1e293b;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
@@ -450,7 +450,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
       </style>
 
       <button className="spread-back-btn" onClick={onBack}>
-        <ArrowLeft size={16} /> Back
+        <ArrowLeft size={18} /> Back
       </button>
 
       <button 
