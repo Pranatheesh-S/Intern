@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Lightbulb, X } from 'lucide-react';
 import physicalImg from './assets/physical-map-v2.jpeg';
 import politicalImg from './assets/political.png';
 import rainfallImg from './assets/thematic-map.jpeg';
-import ContentScrollNav, { useScrollNav } from '../ContentScrollNav';
 
 const PageLayout = ({ 
   title, subtitle, imageSrc,
@@ -13,74 +12,43 @@ const PageLayout = ({
   whyUseTitle, whyUse, 
   remember, funFact,
   imageAspectRatio = '1/1',
-  imageScale = 1,
-  onFullyViewed
+  imageScale = 1
 }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
-  const scrollRef = useRef(null);
-  const nav = useScrollNav(scrollRef);
-
-  useEffect(() => {
-    if (!onFullyViewed) return;
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const checkFullyViewed = () => {
-      const { scrollHeight, clientHeight, scrollTop } = el;
-      if (scrollHeight <= clientHeight + 4) {
-        onFullyViewed();
-        return;
-      }
-      if (scrollTop + clientHeight >= scrollHeight - 12) {
-        onFullyViewed();
-      }
-    };
-
-    checkFullyViewed();
-    el.addEventListener('scroll', checkFullyViewed, { passive: true });
-    const ro = new ResizeObserver(checkFullyViewed);
-    ro.observe(el);
-    Array.from(el.children).forEach(child => ro.observe(child));
-    return () => {
-      el.removeEventListener('scroll', checkFullyViewed);
-      ro.disconnect();
-    };
-  }, [onFullyViewed]);
 
   return (
     <>
       <div style={{ display: 'flex', width: '100%', height: '100%', padding: 0, boxSizing: 'border-box', minHeight: 0 }}>
       
-      {/* Left Page (Text) — scrollable with Back to top / Bottom nav */}
+      {/* Left Page (Text) — scrollable */}
       <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)' }}>
         <div
-          ref={scrollRef}
           className="left-page-scroll"
           style={{ flex: 1, minHeight: 0, padding: '1.25rem 1.5rem 0.5rem', overflowY: 'auto', overflowX: 'hidden' }}
         >
         {/* Header */}
-        <div style={{ fontSize: '10px', color: '#7c5cff', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', marginBottom: '6px', fontFamily: '"IBM Plex Mono", monospace' }}>
+        <div style={{ fontSize: 'clamp(11px, 1vw, 12px)', color: '#7c5cff', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', marginBottom: '8px', fontFamily: '"IBM Plex Mono", monospace' }}>
           Chapter 1 • Atlas Introduction
         </div>
-        <h2 style={{ fontSize: '2.2rem', color: '#1e3a8a', margin: '0 0 0.3rem 0', fontFamily: 'serif' }}>{title}</h2>
-        <div style={{ fontSize: '1rem', color: '#64748b', marginBottom: '1.2rem', fontWeight: 500 }}>{subtitle}</div>
+        <h2 style={{ fontSize: 'clamp(1.65rem, 2.5vw, 2.35rem)', color: '#1e3a8a', margin: '0 0 0.4rem 0', fontFamily: 'serif', lineHeight: 1.15 }}>{title}</h2>
+        <div style={{ fontSize: 'clamp(1rem, 1.15vw, 1.12rem)', color: '#64748b', marginBottom: '1rem', fontWeight: 500, lineHeight: 1.45 }}>{subtitle}</div>
 
         {/* What is it? */}
-        <div style={{ marginBottom: '1.2rem' }}>
-          <h3 style={{ fontSize: '1.2rem', color: '#1e3a8a', marginBottom: '0.5rem', fontFamily: 'serif', marginTop: 0 }}>{whatIsTitle}</h3>
-          {whatIs.map((p, i) => <p key={i} style={{ margin: '0 0 0.5rem 0', color: '#334155', fontSize: '0.95rem', lineHeight: 1.5 }}>{p}</p>)}
+        <div style={{ marginBottom: '1rem' }}>
+          <h3 style={{ fontSize: 'clamp(1.15rem, 1.3vw, 1.3rem)', color: '#1e3a8a', marginBottom: '0.5rem', fontFamily: 'serif', marginTop: 0 }}>{whatIsTitle}</h3>
+          {whatIs.map((p, i) => <p key={i} style={{ margin: '0 0 0.5rem 0', color: '#334155', fontSize: 'clamp(0.95rem, 1.1vw, 1.08rem)', lineHeight: 1.55 }}>{p}</p>)}
         </div>
 
         {/* Natural Features */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1.2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-          <h3 style={{ fontSize: '1.1rem', color: '#0f172a', marginBottom: '0.8rem', marginTop: 0 }}>{featuresTitle}</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1rem', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+          <h3 style={{ fontSize: 'clamp(1.05rem, 1.2vw, 1.2rem)', color: '#0f172a', marginBottom: '0.75rem', marginTop: 0 }}>{featuresTitle}</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
             {features.map((f, i) => (
               <div key={i} style={{ display: 'flex', gap: '8px' }}>
-                <div style={{ fontSize: '1.2rem', lineHeight: 1 }}>{f.icon}</div>
+                <div style={{ fontSize: '1.25rem', lineHeight: 1 }}>{f.icon}</div>
                 <div>
-                  <div style={{ fontWeight: 'bold', color: '#1e3a8a', fontSize: '0.9rem', marginBottom: '2px' }}>{f.title}</div>
-                  <div style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.2 }}>{f.desc}</div>
+                  <div style={{ fontWeight: 'bold', color: '#1e3a8a', fontSize: 'clamp(0.92rem, 1.05vw, 1rem)', marginBottom: '2px' }}>{f.title}</div>
+                  <div style={{ fontSize: 'clamp(0.85rem, 0.95vw, 0.92rem)', color: '#475569', lineHeight: 1.35 }}>{f.desc}</div>
                 </div>
               </div>
             ))}
@@ -88,57 +56,46 @@ const PageLayout = ({
         </div>
 
         {/* Colors */}
-        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1.2rem' }}>
-          <h3 style={{ fontSize: '1.1rem', color: '#0f172a', marginBottom: '0.8rem', marginTop: 0 }}>{colorsTitle}</h3>
+        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1rem' }}>
+          <h3 style={{ fontSize: 'clamp(1.05rem, 1.2vw, 1.2rem)', color: '#0f172a', marginBottom: '0.75rem', marginTop: 0 }}>{colorsTitle}</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {colors.map((c, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1rem' }}>{c.color}</span>
-                <span style={{ fontSize: '0.9rem', color: '#334155', fontWeight: 500 }}>{c.desc}</span>
+                <span style={{ fontSize: '1.1rem' }}>{c.color}</span>
+                <span style={{ fontSize: 'clamp(0.92rem, 1.05vw, 1rem)', color: '#334155', fontWeight: 500 }}>{c.desc}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Why Use */}
-        <div style={{ marginBottom: '1.2rem' }}>
-          <h3 style={{ fontSize: '1.2rem', color: '#1e3a8a', marginBottom: '0.8rem', fontFamily: 'serif', marginTop: 0 }}>{whyUseTitle}</h3>
+        <div style={{ marginBottom: '1rem' }}>
+          <h3 style={{ fontSize: 'clamp(1.15rem, 1.3vw, 1.3rem)', color: '#1e3a8a', marginBottom: '0.75rem', fontFamily: 'serif', marginTop: 0 }}>{whyUseTitle}</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {whyUse.map((w, i) => (
               <div key={i} style={{ background: '#f1f5f9', padding: '8px 12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '1rem' }}>{w.icon}</span>
-                <span style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: 500 }}>{w.desc}</span>
+                <span style={{ fontSize: '1.1rem' }}>{w.icon}</span>
+                <span style={{ fontSize: 'clamp(0.92rem, 1.05vw, 1rem)', color: '#1e293b', fontWeight: 500 }}>{w.desc}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Remember */}
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', padding: '1rem', borderRadius: '10px', marginBottom: '1.2rem' }}>
-          <h4 style={{ color: '#059669', margin: '0 0 6px 0', fontSize: '1rem' }}>Remember</h4>
-          {remember.map((r, i) => <p key={i} style={{ margin: '0 0 4px 0', color: '#064e3b', fontSize: '0.9rem', fontWeight: 500 }}>{r}</p>)}
+        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', padding: '1rem', borderRadius: '10px', marginBottom: '1rem' }}>
+          <h4 style={{ color: '#059669', margin: '0 0 6px 0', fontSize: 'clamp(1rem, 1.1vw, 1.08rem)' }}>Remember</h4>
+          {remember.map((r, i) => <p key={i} style={{ margin: '0 0 4px 0', color: '#064e3b', fontSize: 'clamp(0.92rem, 1.05vw, 1rem)', fontWeight: 500, lineHeight: 1.45 }}>{r}</p>)}
         </div>
 
         {/* Fun Fact */}
-        <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '1rem', borderRadius: '10px', marginBottom: '1rem' }}>
-          <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#2563eb', margin: '0 0 6px 0', fontSize: '0.95rem' }}>
-            <Lightbulb size={16} /> Did You Know?
+        <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '1rem', borderRadius: '10px', marginBottom: '0.75rem' }}>
+          <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#2563eb', margin: '0 0 6px 0', fontSize: 'clamp(0.95rem, 1.05vw, 1.05rem)' }}>
+            <Lightbulb size={18} /> Did You Know?
           </h4>
-          <p style={{ margin: 0, color: '#1e3a8a', fontSize: '0.85rem', lineHeight: 1.4 }}>{funFact}</p>
+          <p style={{ margin: 0, color: '#1e3a8a', fontSize: 'clamp(0.9rem, 1vw, 0.98rem)', lineHeight: 1.45 }}>{funFact}</p>
         </div>
 
         </div>
-
-        {nav.hasOverflow && (
-          <ContentScrollNav
-            currentPage={nav.currentPage}
-            pageCount={nav.pageCount}
-            canGoUp={nav.canGoUp}
-            canGoDown={nav.canGoDown}
-            onPageUp={nav.onPageUp}
-            onPageDown={nav.onPageDown}
-          />
-        )}
       </div>
 
       {/* Right Page (Image Activity) */}
@@ -151,7 +108,7 @@ const PageLayout = ({
         >
            <img src={imageSrc} alt={title} style={{ width: '100%', height: '100%', objectFit: 'contain', transform: `scale(${imageScale})` }} />
         </div>
-        <span style={{ marginTop: '0.75rem', color: '#64748b', fontSize: '0.85rem', fontStyle: 'italic' }}>
+        <span style={{ marginTop: '0.75rem', color: '#64748b', fontSize: 'clamp(0.9rem, 1vw, 0.98rem)', fontStyle: 'italic' }}>
           Click the image to expand
         </span>
       </div>
@@ -193,9 +150,8 @@ const PageLayout = ({
   );
 };
 
-export const PhysicalMapPage = ({ onFullyViewed }) => (
+export const PhysicalMapPage = () => (
   <PageLayout 
-    onFullyViewed={onFullyViewed}
     title="Physical Maps"
     subtitle="Maps that show Earth's natural features"
     imageSrc={physicalImg}
@@ -242,9 +198,8 @@ export const PhysicalMapPage = ({ onFullyViewed }) => (
   />
 );
 
-export const PoliticalMapPage = ({ onFullyViewed }) => (
+export const PoliticalMapPage = () => (
   <PageLayout 
-    onFullyViewed={onFullyViewed}
     title="Political Maps"
     subtitle="Maps that show countries, states and boundaries."
     imageSrc={politicalImg}
@@ -289,9 +244,8 @@ export const PoliticalMapPage = ({ onFullyViewed }) => (
   />
 );
 
-export const ThematicMapPage = ({ onFullyViewed }) => (
+export const ThematicMapPage = () => (
   <PageLayout 
-    onFullyViewed={onFullyViewed}
     title="Thematic Maps"
     subtitle="Maps that show one special topic."
     imageSrc={rainfallImg}

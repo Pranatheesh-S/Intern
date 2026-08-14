@@ -3,11 +3,12 @@ import { Compass, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { PhysicalMapPage, PoliticalMapPage, ThematicMapPage } from './MapPages';
 
 export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinish }) {
-  return (    <div style={{ 
+  return (
+    <div style={{
       width: '100%', height: '100%', 
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       perspective: '2000px',
-      padding: '1rem'
+      padding: '0.5rem'
     }}>
       <div style={{
         position: 'relative',
@@ -69,14 +70,14 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
               {currentPage === 3 && <ThematicMapPage />}
             </div>
 
-            <div style={{ position: 'absolute', bottom: '0.75rem', left: '50%', right: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1.5rem', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                <Compass size={16} style={{ flexShrink: 0 }} />
+            <div style={{ position: 'absolute', bottom: '0.5rem', left: 0, right: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1.25rem', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', fontSize: 'clamp(0.9rem, 1.1vw, 1rem)', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                <Compass size={18} style={{ flexShrink: 0 }} />
                 <span>Page {currentPage} of 3</span>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexShrink: 0 }}>
-                <button onClick={onPrev} disabled={currentPage === 1} style={{ background: 'transparent', border: '1px solid rgba(0,0,0,0.1)', padding: '0.4rem 1rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: currentPage === 1 ? 'default' : 'pointer', opacity: currentPage === 1 ? 0 : 1, transition: 'background 0.2s', color: '#334155', whiteSpace: 'nowrap' }}>
+              <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center', flexShrink: 0 }}>
+                <button onClick={onPrev} disabled={currentPage === 1} style={{ background: 'transparent', border: '1px solid rgba(0,0,0,0.12)', padding: '0.5rem 1.1rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: currentPage === 1 ? 'default' : 'pointer', opacity: currentPage === 1 ? 0 : 1, transition: 'background 0.2s', color: '#334155', whiteSpace: 'nowrap', fontSize: 'clamp(0.85rem, 1vw, 0.95rem)', fontWeight: 600 }}>
                   <ChevronLeft size={18} /> Previous
                 </button>
                 {currentPage < 3 ? (
@@ -86,14 +87,16 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
                       background: '#1e3a8a',
                       color: 'white',
                       border: 'none',
-                      padding: '0.4rem 1.2rem',
+                      padding: '0.5rem 1.25rem',
                       borderRadius: '20px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.5rem',
+                      gap: '0.4rem',
                       cursor: 'pointer',
                       boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-                      whiteSpace: 'nowrap'
+                      whiteSpace: 'nowrap',
+                      fontSize: 'clamp(0.85rem, 1vw, 0.95rem)',
+                      fontWeight: 700
                     }}
                   >
                     Next <ChevronRight size={18} />
@@ -105,14 +108,16 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
                       background: '#16a34a',
                       color: 'white',
                       border: 'none',
-                      padding: '0.4rem 1.2rem',
+                      padding: '0.5rem 1.25rem',
                       borderRadius: '20px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.5rem',
+                      gap: '0.4rem',
                       cursor: 'pointer',
                       boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-                      whiteSpace: 'nowrap'
+                      whiteSpace: 'nowrap',
+                      fontSize: 'clamp(0.85rem, 1vw, 0.95rem)',
+                      fontWeight: 700
                     }}
                   >
                     Finish <CheckCircle2 size={18} />

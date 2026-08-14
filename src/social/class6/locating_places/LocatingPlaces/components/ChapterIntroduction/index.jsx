@@ -6,18 +6,7 @@ export default function ChapterIntroduction({ onNextActivity }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
-    <div style={{
-      width: '100%',
-      flex: 1,
-      minHeight: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'relative',
-      overflow: 'hidden',
-      background: 'var(--surface, #ffffff)',
-      borderRadius: '16px',
-      boxShadow: '0 10px 40px rgba(0,0,0,0.05)'
-    }}>
+    <div className="edu-slide-surface" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
       {currentPage === 1 && (
         <AryabhataPage 
           onNext={() => setCurrentPage(2)} 

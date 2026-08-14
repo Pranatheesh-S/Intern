@@ -2,22 +2,13 @@ import React, { useState, useRef } from 'react';
 import { Map, MapPin, Clock, Compass, Globe2, ChevronRight } from 'lucide-react';
 import bigQuestionsImg from './assets/big-questions-new.png';
 import ChapterBackFooter from '../ChapterBackFooter';
-import ContentScrollNav, { useScrollNav } from '../ContentScrollNav';
 
-const PAGE_PADDING = 'clamp(20px, 2.6vw, 42px)';
-const HEADER_TITLE_STYLE = {
-  fontSize: 'clamp(1.75rem, 2.8vw, 2.6rem)',
-  color: '#1e3a8a',
-  margin: 0,
-  fontFamily: 'serif',
-  fontWeight: 'bold',
-  lineHeight: 1.15
-};
+const PAGE_PADDING = 'var(--edu-page-padding)';
+const HEADER_TITLE_CLASS = 'edu-text-section-heading';
 
 export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapter }) {
   const [discoveredCards, setDiscoveredCards] = useState([]);
   const scrollContainerRef = useRef(null);
-  const scrollNav = useScrollNav(scrollContainerRef);
 
   const handleDiscover = (id) => {
     if (!discoveredCards.includes(id)) {
@@ -138,24 +129,18 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
         `}
       </style>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        flex: 1,
-        minHeight: 0,
-        width: '100%'
-      }}>
+      <div className="edu-two-column-spread" style={{ flex: 1, minHeight: 0, width: '100%' }}>
         {/* LEFT COLUMN */}
         <div style={{ ...columnShell, borderRight: '1px solid rgba(0,0,0,0.08)', position: 'relative' }}>
           <Compass size={120} color="#cbd5e1" style={{ position: 'absolute', top: '18%', right: '5%', opacity: 0.12, pointerEvents: 'none' }} />
           <Globe2 size={150} color="#cbd5e1" style={{ position: 'absolute', bottom: '8%', left: '-4%', opacity: 0.12, pointerEvents: 'none' }} />
 
           <div style={headerShell}>
-            <h2 style={HEADER_TITLE_STYLE}>Big Questions</h2>
+            <h2 className={HEADER_TITLE_CLASS} style={{ color: '#1e3a8a', margin: 0, fontFamily: 'serif' }}>Big Questions</h2>
           </div>
 
           <div style={{ ...bodyShell, position: 'relative', zIndex: 1 }}>
-            <p style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)', color: '#334155', lineHeight: 1.5, margin: '0 0 16px 0' }}>
+            <p className="edu-text-body" style={{ color: '#334155', margin: '0 0 16px 0' }}>
               Every journey begins with a few important questions. In this chapter, you will explore how maps help us locate places, understand coordinates, and explain time across the Earth.
             </p>
 
@@ -172,7 +157,7 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
         {/* RIGHT COLUMN */}
         <div style={columnShell}>
           <div style={headerShell}>
-            <h2 style={HEADER_TITLE_STYLE}>What Will We Discover?</h2>
+            <h2 className={HEADER_TITLE_CLASS} style={{ color: '#1e3a8a', margin: 0, fontFamily: 'serif' }}>What Will We Discover?</h2>
           </div>
 
           <div style={bodyShell}>
@@ -260,17 +245,6 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
                 );
               })}
             </div>
-
-            {scrollNav.hasOverflow && (
-              <ContentScrollNav
-                currentPage={scrollNav.currentPage}
-                pageCount={scrollNav.pageCount}
-                canGoUp={scrollNav.canGoUp}
-                canGoDown={scrollNav.canGoDown}
-                onPageUp={scrollNav.onPageUp}
-                onPageDown={scrollNav.onPageDown}
-              />
-            )}
 
             <div style={{ flexShrink: 0 }}>
               <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: '12px', padding: 'clamp(0.8rem, 1.5vh, 1.2rem)' }}>
