@@ -7,6 +7,8 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const [isMuted, setIsMuted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [voicesLoaded, setVoicesLoaded] = useState(false);
+  const [activeLineIndex, setActiveLineIndex] = useState(0);
+  const [spokenCharIndex, setSpokenCharIndex] = useState(-1);
 
   const currentSpeechRef = useRef(null);
 
@@ -122,24 +124,20 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       ]
     },
     {
-      img: '/IntroMagnets/scene_99.png',
-      subtitle: "Some Common Items with Magnets",
+      img: '/lodestone_history.jpg',
+      subtitle: "Lodestones to Artificial Magnets",
       lines: [
         {
           role: 'teacher',
-          text: "The magnets used by sailors in the olden days were based on naturally occurring magnets, known as lodestones which were discovered in ancient times."
+          text: "Lodestones. Naturally occurring magnets discovered in ancient times are called lodestones."
         },
         {
           role: 'teacher',
-          text: "Later on, people found out that magnets could also be made from pieces of iron. Nowadays, we have magnets made of different materials."
+          text: "Used by Sailors. In the olden days, sailors used lodestone-based magnets to navigate and find directions at sea when stars were not visible."
         },
         {
           role: 'teacher',
-          text: "The magnets that you find in your school laboratory and those used in pencil boxes, stickers, and toys are all artificial magnets."
-        },
-        {
-          role: 'teacher',
-          text: "Fig. 4.1: Some common items that have magnets attached to them."
+          text: "Shift to Artificial Magnets. Later on, people learned how to create magnets out of pieces of iron, which eventually led to the modern artificial magnets we use today."
         }
       ]
     }
@@ -162,6 +160,61 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       window.speechSynthesis.cancel();
     }
     setIsPlaying(false);
+    setSpokenCharIndex(-1);
+  };
+
+  // Render text directly over image text locations with real-time word-by-word karaoke highlighting
+  const renderWordByWordText = (text, lineIdx, activeLineIdx, charIndex) => {
+    if (!text) return null;
+    const isThisLineActive = lineIdx === activeLineIdx && isPlaying;
+
+    const words = text.split(' ');
+    let currentPos = 0;
+
+    return words.map((word, i) => {
+      const startPos = currentPos;
+      const endPos = currentPos + word.length;
+      currentPos = endPos + 1; // +1 space
+
+      const isCurrentWord = isThisLineActive && charIndex >= startPos && charIndex <= endPos + 2;
+      const isPastWord = isThisLineActive && charIndex > endPos + 2;
+
+      let color = '#1e293b'; // Default text color matching image print
+      let fontWeight = 600;
+      let textShadow = 'none';
+      let backgroundColor = 'transparent';
+      let padding = '0.1rem 0.2rem';
+      let borderRadius = '4px';
+
+      if (isCurrentWord) {
+        color = '#0284c7'; // Vibrant glowing cyan for active spoken word
+        fontWeight = 800;
+        textShadow = '0 0 14px rgba(56, 189, 248, 1), 0 0 25px rgba(2, 132, 199, 0.8)';
+        backgroundColor = 'rgba(56, 189, 248, 0.35)';
+      } else if (isPastWord) {
+        color = '#0369a1';
+        fontWeight = 700;
+      }
+
+      return (
+        <span
+          key={i}
+          style={{
+            color,
+            fontWeight,
+            textShadow,
+            backgroundColor,
+            padding,
+            borderRadius,
+            transition: 'all 0.15s ease',
+            display: 'inline-block',
+            marginRight: '0.3rem'
+          }}
+        >
+          {word}
+        </span>
+      );
+    });
   };
 
   // Play audio lines for the current scene
@@ -202,16 +255,20 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       );
 
       if (role === 'girl') {
-        // Use the articulate female teacher-style narrator voice for Reshma (Girl)
-        return (
-          femaleVoices.find(v => v.name.includes('Jenny') || v.name.includes('Neerja') || (v.name.includes('Female') && !v.name.includes('Zira'))) ||
-          femaleVoices.find(v => !v.name.includes('Zira') && !v.name.includes('Samantha')) ||
-          femaleVoices[0] ||
-          availableVoices[0] || null
-        );
+        // Girl voice (Reshma): Microsoft Jenny, Microsoft Neerja, Google Natural Female, or Google UK English Female
+        const girlVoice = availableVoices.find(v => {
+          const name = (v.name || '').toLowerCase();
+          return name.includes('jenny') || name.includes('neerja') || name.includes('google uk english female') || name.includes('natural female');
+        }) || availableVoices.find(v => {
+          const name = (v.name || '').toLowerCase();
+          return name.includes('google us english') || name.includes('samantha') || name.includes('zira') || name.includes('female');
+        });
+
+        if (girlVoice) return girlVoice;
+
+        return femaleVoices[0] || availableVoices[0] || null;
       } else if (role === 'ancient_man') {
         // Bold, clear, slow Indian voice for Ancient Man (Sailor)
-        // 1. Primary: Indian Male voice (e.g. en-IN, hi-IN, ta-IN, te-IN, kn-IN, ml-IN, Ravi, Prabhat, Valluvar, Ketan, Madhav)
         const indianMaleVoice = availableVoices.find(v => {
           const lang = (v.lang || '').toLowerCase();
           const name = (v.name || '').toLowerCase();
@@ -222,7 +279,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
         if (indianMaleVoice) return indianMaleVoice;
 
-        // 2. Secondary: Any Indian voice available on system
         const anyIndianVoice = availableVoices.find(v => {
           const lang = (v.lang || '').toLowerCase();
           const name = (v.name || '').toLowerCase();
@@ -231,7 +287,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
         if (anyIndianVoice) return anyIndianVoice;
 
-        // 3. Fallback: Preferred male voice
         return (
           maleVoices.find(v => v.name.includes('Ravi') || v.name.includes('Prabhat') || v.name.includes('David') || v.name.includes('Mark') || v.name.includes('George') || v.name.includes('James')) ||
           maleVoices[0] ||
@@ -239,45 +294,58 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
           availableVoices[0] || null
         );
       } else {
-        // Teacher voice (Lady Teacher) - Distinct female narrator
-        return (
-          femaleVoices.find(v => v.name.includes('Jenny') || v.name.includes('Neerja') || (v.name.includes('Female') && !v.name.includes('Zira'))) ||
-          femaleVoices.find(v => !v.name.includes('Zira') && !v.name.includes('Samantha')) ||
-          femaleVoices[0] ||
-          availableVoices[0] || null
-        );
+        // Teacher voice (Lady Teacher) - Distinct mature narrator
+        const teacherVoice = availableVoices.find(v => {
+          const name = (v.name || '').toLowerCase();
+          return name.includes('neerja') || name.includes('natural female') || (name.includes('female') && !name.includes('zira'));
+        }) || availableVoices.find(v => v.name.includes('Jenny') || v.name.includes('Zira'));
+
+        return teacherVoice || femaleVoices[0] || availableVoices[0] || null;
       }
     };
 
     let lineIndex = 0;
     setIsPlaying(true);
+    setActiveLineIndex(0);
+    setSpokenCharIndex(0);
 
     const speakNextLine = () => {
       if (lineIndex >= currentScene.lines.length) {
         setIsPlaying(false);
+        setSpokenCharIndex(-1);
         return;
       }
+
+      setActiveLineIndex(lineIndex);
+      setSpokenCharIndex(0);
 
       const currentLine = currentScene.lines[lineIndex];
       const utterance = new SpeechSynthesisUtterance(currentLine.text);
       utterance.voice = findVoice(currentLine.role);
-      utterance.volume = 1.0; // Maximum sound level / volume boost
+      utterance.volume = 1.0;
 
       if (currentLine.role === 'girl') {
-        // Reshma (Girl): Primary female voice (Pitch: 1.0, Rate: 0.92, Volume: 1.0)
-        utterance.pitch = 1.0;
-        utterance.rate = 0.92;
+        // Reshma (Girl Voice): Lively, sweet, youthful tone
+        utterance.pitch = 1.20;
+        utterance.rate = 0.95;
         utterance.volume = 1.0;
       } else if (currentLine.role === 'ancient_man') {
-        // Ancient Man (Sailor): Bold, clear, sound Indian male voice (pitch: 0.90 for clear resonant depth, rate: 0.68 for slow & deliberate pacing, volume: 1.0)
-        utterance.pitch = 0.90;
-        utterance.rate = 0.68;
+        // Ancient Man (Sailor): Lower pitch, slower pace
+        utterance.pitch = 0.88;
+        utterance.rate = 0.70;
         utterance.volume = 1.0;
       } else {
-        // Teacher: Excellent articulate narrator tone (1.0), natural pace (0.92)
-        utterance.pitch = 1.0;
-        utterance.rate = 0.92;
+        // Teacher: Calm, mature, clear teacher narrator voice
+        utterance.pitch = 0.88;
+        utterance.rate = 0.88;
+        utterance.volume = 1.0;
       }
+
+      utterance.onboundary = (event) => {
+        if (event.name === 'word') {
+          setSpokenCharIndex(event.charIndex);
+        }
+      };
 
       utterance.onend = () => {
         lineIndex++;
@@ -286,6 +354,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
       utterance.onerror = () => {
         setIsPlaying(false);
+        setSpokenCharIndex(-1);
       };
 
       synth.speak(utterance);
@@ -335,12 +404,14 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
     }
   };
 
+  const currentScene = scenes[currentPage - 1];
+
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#000' }}>
       {/* Background Image */}
       <div style={{
         position: 'absolute', inset: 0,
-        backgroundImage: `url(${scenes[currentPage - 1].img})`,
+        backgroundImage: `url(${currentScene.img})`,
         backgroundSize: 'contain',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'

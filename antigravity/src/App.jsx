@@ -221,6 +221,10 @@ export default function App() {
   }, [activeSubject, activeActivity]);
 
   const navigateTo = (subject, activity, section = null) => {
+    setActiveSubject(subject || null);
+    setActiveActivity(activity || null);
+    setActiveSection(section || null);
+
     const params = new URLSearchParams();
     if (subject) params.set('subject', subject);
     if (activity) {
@@ -236,7 +240,9 @@ export default function App() {
       }
     }
     if (section) params.set('section', section);
-    window.location.hash = params.toString();
+
+    const newHash = params.toString();
+    window.location.hash = newHash;
   };
 
   const handleBackToSubjects = () => {

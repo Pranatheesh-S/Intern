@@ -16,14 +16,23 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
     if (onNext) onNext();
   };
 
+  const handleBack = () => {
+    document.body.classList.remove('focus-mode-active');
+    document.body.classList.remove('ui-inactive');
+    if (typeof onBackToDashboard === 'function') {
+      onBackToDashboard();
+    }
+    window.location.hash = 'subject=class6&activity=chapter4_flow';
+  };
+
   return (
     <div style={{
       width: '100%',
       height: '100vh',
       maxHeight: '100vh',
       overflow: 'hidden',
-      backgroundColor: '#070b19',
-      color: '#ffffff',
+      backgroundColor: '#ffffff',
+      color: '#0f172a',
       display: 'flex',
       flexDirection: 'column',
       padding: '0.75rem 1.25rem',
@@ -37,31 +46,38 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
         justifyContent: 'space-between', 
         alignItems: 'center', 
         flexShrink: 0,
-        padding: '0 0.5rem'
+        padding: '0 0.5rem',
+        position: 'relative',
+        zIndex: 200
       }}>
         <button 
-          onClick={onBackToDashboard} 
+          onClick={handleBack} 
           style={{ 
-            padding: '0.4rem 0.9rem', 
+            position: 'relative',
+            zIndex: 200,
+            pointerEvents: 'auto',
+            padding: '0.45rem 1.1rem', 
             fontSize: '0.82rem', 
             borderRadius: '20px',
-            backgroundColor: 'rgba(30, 41, 59, 0.6)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            color: '#e2e8f0',
+            backgroundColor: 'rgba(10, 15, 36, 0.9)',
+            border: '1px solid rgba(59, 130, 246, 0.4)',
+            color: '#ffffff',
             display: 'flex',
             alignItems: 'center',
             gap: '0.4rem',
             cursor: 'pointer',
+            fontWeight: 600,
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
             transition: 'all 0.2s'
           }}
-          className="hover:bg-slate-700/60"
+          className="hover:bg-slate-900"
         >
           <ArrowLeft size={14} /> Back to Class 6 Chapter 4
         </button>
 
         <div style={{ textAlign: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#ffffff' }}>
-            <Compass size={20} style={{ color: '#60a5fa' }} />
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#0f172a' }}>
+            <Compass size={20} style={{ color: '#2563eb' }} />
             Activity 4.1: Magnetic and Non-Magnetic Materials
           </h2>
         </div>
