@@ -12,7 +12,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
   const [unlockedDiscoveries, setUnlockedDiscoveries] = useState(0);
   const [quizComplete, setQuizComplete] = useState(false);
   const [showHint, setShowHint] = useState(false);
-  
+
   const BLAKE_IMG_URL = '/images/chief_detective_blake.png';
 
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
@@ -20,7 +20,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
 
   const q = data.questions[currentQ];
   const maxScore = data.questions.length * 10;
-  
+
   // Calculate how many discoveries to unlock per question
   const unlockPerQuestion = Math.ceil(data.discoveries.length / data.questions.length);
 
@@ -32,18 +32,18 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
   const handleVerify = () => {
     if (selected === null) return;
     setIsVerified(true);
-    
+
     if (selected === q.correct) {
       setIsCorrect(true);
       setScore(prev => prev + 10);
-      try { playSuccess(); } catch(e){}
+      try { playSuccess(); } catch (e) { }
       if (addXp) addXp(20);
-      
+
       // Unlock discoveries
       setUnlockedDiscoveries(prev => Math.min(prev + unlockPerQuestion, data.discoveries.length));
     } else {
       setIsCorrect(false);
-      try { playError(); } catch(e){}
+      try { playError(); } catch (e) { }
     }
   };
 
@@ -69,27 +69,29 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
 
   return (
     <div style={{ flex: 1, display: 'flex', gap: '1rem', padding: '1rem', background: '#f8fafc', overflow: 'hidden', height: '100%' }}>
-      
+
       {/* Left Column: Mission Briefing */}
       <div style={{ flex: '0 0 280px', display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
-        
+
         <div style={{ background: 'white', borderRadius: '16px', padding: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4f46e5', fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '1rem', alignSelf: 'flex-start' }}>
             <Megaphone size={20} /> Mission Briefing
           </div>
-          
+
           <p style={{ fontSize: '0.9rem', color: '#334155', lineHeight: '1.5', margin: '0 0 1.5rem 0' }}>
             {data.dialogue || "Well done, detective! You've explored the Barrier. Now let's verify your understanding and log our discoveries."}
           </p>
 
-          <img 
-            src={BLAKE_IMG_URL} 
-            alt="Chief Blake" 
-            style={{ height: '180px', objectFit: 'contain', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} 
-            onError={(e) => { e.target.src = 'https://via.placeholder.com/150x200.png?text=Blake'; }}
-          />
-          
-          <div style={{ background: '#e0e7ff', color: '#4338ca', padding: '4px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', letterSpacing: '1px', marginTop: '-10px', zIndex: 10 }}>
+          <div style={{ width: '160px', height: '160px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #e0e7ff', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+            <img
+              src={BLAKE_IMG_URL}
+              alt="Chief Blake"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+              onError={(e) => { e.target.src = 'https://via.placeholder.com/150x200.png?text=Blake'; }}
+            />
+          </div>
+
+          <div style={{ background: '#e0e7ff', color: '#4338ca', padding: '4px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', letterSpacing: '1px', marginTop: '10px' }}>
             CHIEF BLAKE
           </div>
 
@@ -102,11 +104,11 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#4f46e5', fontWeight: 'bold', fontSize: '0.95rem', marginBottom: '1rem' }}>
             <Shield size={16} /> Progress
           </div>
-          
+
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
             {data.questions.map((_, idx) => (
               <div key={idx} style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <div style={{ 
+                <div style={{
                   width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: idx < currentQ ? '#10b981' : (idx === currentQ ? '#6366f1' : '#e2e8f0'),
                   color: 'white', fontSize: '0.75rem', fontWeight: 'bold', zIndex: 2
@@ -114,7 +116,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
                   {idx < currentQ ? <Check size={14} /> : (idx + 1)}
                 </div>
                 {idx < data.questions.length - 1 && (
-                  <div style={{ 
+                  <div style={{
                     position: 'absolute', left: '24px', top: '11px', height: '2px', width: '30px',
                     background: idx < currentQ ? '#10b981' : '#e2e8f0', zIndex: 1
                   }} />
@@ -130,7 +132,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
 
       {/* Middle Column: Quiz Interface */}
       <div style={{ flex: 2, background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        
+
         {/* Header */}
         <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -170,13 +172,13 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
                 let bg = 'white';
                 let border = '1px solid #cbd5e1';
                 let iconColor = '#94a3b8';
-                
+
                 if (isSelected) {
                   bg = '#f5f3ff';
                   border = '1px solid #8b5cf6';
                   iconColor = '#8b5cf6';
                 }
-                
+
                 if (isVerified) {
                   if (idx === q.correct) {
                     bg = '#f0fdf4';
@@ -245,7 +247,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
               ) : (
                 <div style={{ flex: 1 }}>
                   {!showHint ? (
-                    <button 
+                    <button
                       onClick={() => setShowHint(true)}
                       style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0.75rem 1.25rem', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', color: '#64748b', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}
                     >
@@ -263,7 +265,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
               )}
 
               {!isVerified ? (
-                <button 
+                <button
                   onClick={handleVerify}
                   disabled={selected === null}
                   style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '1rem 2rem', borderRadius: '8px', background: selected !== null ? '#4f46e5' : '#94a3b8', color: 'white', fontWeight: 'bold', fontSize: '1rem', border: 'none', cursor: selected !== null ? 'pointer' : 'not-allowed', transition: 'background 0.2s' }}
@@ -271,7 +273,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
                   Verify Answer <ArrowRight size={18} />
                 </button>
               ) : (
-                <button 
+                <button
                   onClick={handleNext}
                   style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '1rem 2rem', borderRadius: '8px', background: '#10b981', color: 'white', fontWeight: 'bold', fontSize: '1rem', border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}
                 >
@@ -289,7 +291,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             <h2 style={{ color: '#0f172a', margin: '0 0 1rem 0' }}>Checkpoint Complete!</h2>
             <p style={{ color: '#475569', fontSize: '1.1rem', maxWidth: '400px', marginBottom: '2rem' }}>
               Excellent work! You scored {score} out of {maxScore}. All discoveries have been securely logged to the Case File.
-              <br/><br/>
+              <br /><br />
               <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Click "Proceed to next" in the top right to continue.</span>
             </p>
           </div>
@@ -298,7 +300,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
 
       {/* Right Column: Case Log */}
       <div style={{ flex: '0 0 320px', display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
-        
+
         <div style={{ background: 'white', borderRadius: '16px', padding: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4f46e5', fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.5rem' }}>
             <ClipboardList size={20} /> Today's Discoveries
@@ -310,11 +312,11 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
             {data.discoveries.map((discovery, idx) => {
               const isUnlocked = idx < unlockedDiscoveries;
-              
+
               // Split discovery if it has a bold prefix pattern (Optional, but looks nice if data has it)
               let title = `Discovery ${idx + 1}`;
               let text = discovery;
-              
+
               if (isUnlocked) {
                 return (
                   <div key={idx} style={{ padding: '1rem', borderRadius: '12px', border: '1px solid #bbf7d0', background: '#f0fdf4', display: 'flex', gap: '12px' }}>

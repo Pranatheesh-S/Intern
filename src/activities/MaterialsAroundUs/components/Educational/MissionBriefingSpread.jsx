@@ -54,11 +54,33 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             background: #f6f1e4;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: space-between;
             height: 100%;
+            overflow-y: auto;
+            padding-bottom: 80px;
+          }
+          .left-page-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 24px;
+            width: 100%;
+            min-height: 0;
+          }
+          .landscape-frame {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
             overflow: hidden;
-            position: relative;
+            line-height: 0;
+            flex-shrink: 0;
+          }
+          .landscape-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
           }
           .right-page {
             background: #ffffff;
@@ -73,22 +95,20 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           
           /* ---------- LEFT PAGE ---------- */
           .speech-bubble {
-            position: absolute;
-            bottom: 40px;
-            left: 40px;
-            right: 40px;
+            position: relative;
+            width: 100%;
             background: white;
             padding: 1.5rem 2rem;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            z-index: 20;
             border: 2px solid #e2e8f0;
           }
           .speech-bubble::after {
             content: '';
             position: absolute;
             top: -16px;
-            left: 40px;
+            left: 50%;
+            transform: translateX(-50%);
             border-width: 0 16px 16px;
             border-style: solid;
             border-color: transparent transparent white;
@@ -100,12 +120,31 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             content: '';
             position: absolute;
             top: -19px;
-            left: 38px;
+            left: 50%;
+            transform: translateX(-50%);
             border-width: 0 18px 18px;
             border-style: solid;
             border-color: transparent transparent #e2e8f0;
             display: block;
             width: 0;
+          }
+          .back-btn {
+            align-self: flex-start;
+            flex-shrink: 0;
+            margin-top: 24px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
+            padding: 14px 26px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
           }
           .speech-speaker {
             position: absolute;
@@ -240,30 +279,6 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             .spread { flex-direction: column; overflow-y: auto; }
             .right-page { border-left: none; border-top: 1px solid #ece7d8; overflow-y: visible; }
           }
-          .spread-back-btn {
-            position: absolute;
-            bottom: 24px;
-            left: 24px;
-            z-index: 10000;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            color: #1e293b;
-            padding: 10px 18px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: all 0.2s;
-          }
-          .spread-back-btn:hover {
-            background: #f8fafc;
-            transform: translateY(-1px);
-          }
         `}
       </style>
 
@@ -273,30 +288,35 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <button className="spread-back-btn" onClick={onBack}>
-          <ArrowLeft size={18} /> Back
-        </button>
+
 
         <div className="spread">
           {/* LEFT PAGE */}
           <div className="page-spread left-page">
-            <img
-              src={BLAKE_IMG_URL}
-              alt="Chief Detective Blake"
-              style={{ height: '70%', maxHeight: '600px', objectFit: 'contain' }}
-              onError={(e) => { e.target.src = 'https://via.placeholder.com/400x600.png?text=Blake'; }}
-            />
-            <motion.div
-              className="speech-bubble"
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <div className="speech-speaker">CHIEF BLAKE</div>
-              <p style={{ margin: 0, fontSize: '20px', color: '#1e293b', lineHeight: '1.6' }}>
-                {data.dialogue || "Good morning, Detective. Headquarters has received an unusual science case. Study your investigation brief carefully before proceeding!"}
-              </p>
-            </motion.div>
+            <div className="left-page-content">
+              <div className="landscape-frame">
+                <img
+                  src={BLAKE_IMG_URL}
+                  alt="Chief Detective Blake"
+                  onError={(e) => { e.target.src = 'https://via.placeholder.com/800x450.png?text=Blake'; }}
+                />
+              </div>
+              <motion.div
+                className="speech-bubble"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <div className="speech-speaker">CHIEF BLAKE</div>
+                <p style={{ margin: 0, fontSize: '20px', color: '#1e293b', lineHeight: '1.6' }}>
+                  {data.dialogue || "Good morning, Detective. Headquarters has received an unusual science case. Study your investigation brief carefully before proceeding!"}
+                </p>
+              </motion.div>
+            </div>
+
+            <button onClick={onBack} className="back-btn">
+              <ArrowLeft size={20} /> Back
+            </button>
           </div>
 
           {/* RIGHT PAGE */}
