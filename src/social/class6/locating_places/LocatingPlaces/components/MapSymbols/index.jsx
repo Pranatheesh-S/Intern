@@ -98,28 +98,28 @@ export default function MapSymbols({ onComplete, onBack }) {
   const isComplete = questions.length > 0 && correctCount === questions.length;
 
   return (
-    <div style={{ width: '100%', height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', overflow: 'hidden', borderRadius: '24px', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+    <div style={{ width: '100%', height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column', background: '#ffffff', overflow: 'hidden', borderRadius: '24px', border: '1px solid #d6e0ec', boxShadow: '0 8px 30px rgba(14,42,69,0.08)' }}>
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         
         {/* LEFT PANEL: Textbook Content */}
-        <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRight: '1px solid #d6e0ec', display: 'flex', flexDirection: 'column' }}>
           <ScrollableWithNav scrollStyle={{ padding: 'clamp(1rem, 2vw, 1.75rem) clamp(1.25rem, 2.5vw, 2.25rem)' }}>
             
             {/* Page Header */}
-            <div style={{ display: 'inline-block', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--amber)', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'inline-block', fontSize: '0.875rem', fontWeight: 'bold', color: '#F5A623', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
               CHAPTER 1 • SYMBOLS
             </div>
-            <h1 style={{ fontSize: 'clamp(1.65rem, 2.4vw, 2.25rem)', color: 'var(--text-heading)', margin: '0 0 0.5rem 0', fontFamily: 'serif', lineHeight: 1.15, display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-              <Map size={32} color="var(--amber)" style={{ flexShrink: 0 }} />
+            <h1 style={{ fontSize: 'clamp(1.65rem, 2.4vw, 2.25rem)', color: '#0E3556', margin: '0 0 0.5rem 0', fontFamily: 'serif', lineHeight: 1.15, display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+              <Map size={32} color="#F5A623" style={{ flexShrink: 0 }} />
               Understanding Map Symbols
             </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(1rem, 1.2vw, 1.15rem)', fontStyle: 'italic', margin: '0 0 1.75rem 0', lineHeight: 1.5 }}>
+            <p style={{ color: '#47586b', fontSize: 'clamp(1rem, 1.2vw, 1.15rem)', fontStyle: 'italic', margin: '0 0 1.75rem 0', lineHeight: 1.5 }}>
               Small pictures that represent real places and features.
             </p>
 
             {/* Section 1: What are Map Symbols? */}
             <div style={{ marginBottom: '2.5rem' }}>
-              <h2 style={{ fontSize: '1.6rem', color: 'var(--text-heading)', margin: '0 0 1rem 0' }}>What are Symbols?</h2>
+              <h2 style={{ fontSize: '1.6rem', color: '#0E3556', margin: '0 0 1rem 0' }}>What are Symbols?</h2>
               <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative', overflow: 'visible', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)' }}>
                 <div style={{ position: 'absolute', right: '16px', bottom: '12px', opacity: 0.07, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Map size={96} strokeWidth={1.5} />
@@ -142,14 +142,14 @@ export default function MapSymbols({ onComplete, onBack }) {
 
             {/* Section 2: Real Place → Map Symbol */}
             <div style={{ marginBottom: '2.5rem' }}>
-              <h2 style={{ fontSize: '1.6rem', color: 'var(--text-heading)', margin: '0 0 1rem 0' }}>Real Place → Map Symbol</h2>
-              <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden' }}>
-                <div style={{ display: 'flex', background: '#f1f5f9', padding: '1rem', fontWeight: 'bold', color: '#334155', borderBottom: '1px solid var(--border)' }}>
+              <h2 style={{ fontSize: '1.6rem', color: '#0E3556', margin: '0 0 1rem 0' }}>Real Place → Map Symbol</h2>
+              <div style={{ background: '#fff', border: '1px solid #d6e0ec', borderRadius: '12px', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', background: '#f1f5f9', padding: '1rem', fontWeight: 'bold', color: '#334155', borderBottom: '1px solid #d6e0ec' }}>
                   <div style={{ flex: 1 }}>Real Place</div>
                   <div style={{ width: '40px', textAlign: 'center' }}>→</div>
                   <div style={{ flex: 1 }}>Standard Symbol</div>
                 </div>
-                <div style={{ display: 'flex', padding: '1rem', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
+                <div style={{ display: 'flex', padding: '1rem', borderBottom: '1px solid #d6e0ec', alignItems: 'center' }}>
                   <div style={{ flex: 1, color: '#475569', fontWeight: 500 }}>A long curved river</div>
                   <div style={{ width: '40px', textAlign: 'center', color: '#94a3b8' }}>→</div>
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
@@ -157,7 +157,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                     <span style={{ fontSize: '0.9rem', color: '#0f172a' }}>River Line</span>
                   </div>
                 </div>
-                <div style={{ display: 'flex', padding: '1rem', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
+                <div style={{ display: 'flex', padding: '1rem', borderBottom: '1px solid #d6e0ec', alignItems: 'center' }}>
                   <div style={{ flex: 1, color: '#475569', fontWeight: 500 }}>A real hospital building</div>
                   <div style={{ width: '40px', textAlign: 'center', color: '#94a3b8' }}>→</div>
                   <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
@@ -178,18 +178,18 @@ export default function MapSymbols({ onComplete, onBack }) {
 
             {/* Section 3: Common Map Symbols */}
             <div style={{ marginBottom: '2.5rem' }}>
-              <h2 style={{ fontSize: '1.6rem', color: 'var(--text-heading)', margin: '0 0 1rem 0' }}>Common Map Symbols</h2>
+              <h2 style={{ fontSize: '1.6rem', color: '#0E3556', margin: '0 0 1rem 0' }}>Common Map Symbols</h2>
               {SYMBOL_GROUPS.map((group, gIdx) => (
                 <div key={gIdx} style={{ marginBottom: '1.5rem' }}>
                   <h3 style={{ fontSize: '1.2rem', color: '#64748b', margin: '0 0 0.75rem 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{group.title}</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
                     {group.items.map((item, idx) => (
-                      <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.25rem', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                      <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.25rem', background: '#ffffff', borderRadius: '12px', border: '1px solid #d6e0ec', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', minWidth: 0 }}>
                           <SymbolDisplay Icon={item.Icon} width={96} height={52} />
-                          <span style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 'bold', lineHeight: 1.3 }}>{item.name}</span>
+                          <span style={{ fontSize: '1rem', color: '#20303f', fontWeight: 'bold', lineHeight: 1.3 }}>{item.name}</span>
                         </div>
-                        <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+                        <p style={{ fontSize: '1rem', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
                           {item.desc}
                         </p>
                       </div>
@@ -211,22 +211,22 @@ export default function MapSymbols({ onComplete, onBack }) {
         </div>
 
         {/* RIGHT PANEL: Interactive Activity */}
-        <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, background: '#ffffff', display: 'flex', flexDirection: 'column' }}>
           <ScrollableWithNav scrollStyle={{ padding: 'clamp(1rem, 2vw, 1.75rem)', display: 'flex', flexDirection: 'column' }}>
           
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.5rem', gap: '1rem', flexWrap: 'wrap' }}>
             <div style={{ minWidth: 0, flex: 1 }}>
-              <h2 style={{ margin: 0, fontSize: 'clamp(1.35rem, 2vw, 1.75rem)', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '12px', lineHeight: 1.2, flexWrap: 'wrap' }}>
+              <h2 style={{ margin: 0, fontSize: 'clamp(1.35rem, 2vw, 1.75rem)', color: '#0E3556', display: 'flex', alignItems: 'center', gap: '12px', lineHeight: 1.2, flexWrap: 'wrap' }}>
                 <Map size={28} color="#38bdf8" style={{ flexShrink: 0 }} /> Let's Explore — Match the Symbols
               </h2>
-              <p style={{ margin: '0.5rem 0 0 0', color: 'var(--text-secondary)', fontSize: 'clamp(0.95rem, 1.1vw, 1.05rem)', lineHeight: 1.5 }}>
+              <p style={{ margin: '0.5rem 0 0 0', color: '#47586b', fontSize: 'clamp(0.95rem, 1.1vw, 1.05rem)', lineHeight: 1.5 }}>
                 Drag each symbol to the correct place.
               </p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.25rem', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', flexShrink: 0 }}>
-              <Award size={24} color={isComplete ? '#10b981' : 'var(--text-muted)'} />
-              <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.25rem', background: '#ffffff', borderRadius: '12px', border: '1px solid #d6e0ec', flexShrink: 0 }}>
+              <Award size={24} color={isComplete ? '#10b981' : '#5c6b7a'} />
+              <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#0E3556' }}>
                 Progress: {correctCount} / {questions.length}
               </span>
             </div>
@@ -257,19 +257,19 @@ export default function MapSymbols({ onComplete, onBack }) {
                           alignItems: 'center', 
                           justifyContent: 'space-between',
                           padding: '0.75rem 1.25rem', 
-                          background: isMatched ? 'rgba(16, 185, 129, 0.1)' : 'var(--surface)', 
+                          background: isMatched ? 'rgba(16, 185, 129, 0.1)' : '#ffffff', 
                           borderRadius: '12px', 
-                          border: `1px solid ${isMatched ? '#10b981' : isError ? '#ef4444' : 'var(--border)'}`,
+                          border: `1px solid ${isMatched ? '#10b981' : isError ? '#ef4444' : '#d6e0ec'}`,
                           transition: 'background-color 0.2s ease, border-color 0.2s ease',
                           boxShadow: isMatched ? '0 4px 10px rgba(16, 185, 129, 0.2)' : 'none'
                         }}
                       >
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span style={{ fontSize: '1rem', fontWeight: 'bold', color: isMatched ? '#10b981' : 'var(--text-primary)' }}>
+                          <span style={{ fontSize: '1rem', fontWeight: 'bold', color: isMatched ? '#10b981' : '#20303f' }}>
                             {q.name}
                           </span>
                           {isMatched && (
-                            <motion.span initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{ fontSize: '0.8rem', color: '#10b981', marginTop: '4px', maxWidth: '200px' }}>
+                            <motion.span initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{ fontSize: '1rem', color: '#10b981', marginTop: '4px', maxWidth: '200px' }}>
                               Correct! This is the standard map symbol for {q.name.toLowerCase()}.
                             </motion.span>
                           )}
@@ -281,8 +281,8 @@ export default function MapSymbols({ onComplete, onBack }) {
                           style={{ 
                             width: '148px', 
                             height: '80px', 
-                            background: isMatched ? 'var(--bg-primary)' : 'rgba(0,0,0,0.05)', 
-                            border: isMatched ? '1px solid #10b981' : '1px dashed var(--border)',
+                            background: isMatched ? '#ffffff' : 'rgba(0,0,0,0.05)', 
+                            border: isMatched ? '1px solid #10b981' : '1px dashed #d6e0ec',
                             borderRadius: '8px',
                             display: 'flex',
                             alignItems: 'center',
@@ -294,14 +294,14 @@ export default function MapSymbols({ onComplete, onBack }) {
                           }}
                         >
                           {isMatched ? (
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', color: 'var(--text-primary)', position: 'relative' }}>
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', color: '#20303f', position: 'relative' }}>
                               <SymbolDisplay Icon={q.Icon} width={128} height={56} />
                               <div style={{ position: 'absolute', top: '-6px', right: '-6px', background: 'white', borderRadius: '50%', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
                                 <CheckCircle2 size={20} color="#10b981" />
                               </div>
                             </motion.div>
                           ) : (
-                            <span style={{ fontSize: '0.75rem', color: isError ? '#ef4444' : 'var(--text-muted)' }}>
+                            <span style={{ fontSize: '1rem', color: isError ? '#ef4444' : '#5c6b7a' }}>
                               {isError ? 'Try again' : 'Drop Symbol'}
                             </span>
                           )}
@@ -312,7 +312,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                 </div>
 
                 {/* Right Side: Symbol Tray */}
-                <div style={{ flex: '1 1 180px', background: 'var(--surface)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
+                <div style={{ flex: '1 1 180px', background: '#ffffff', padding: '1.25rem', borderRadius: '16px', border: '1px solid #d6e0ec', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
                   <AnimatePresence>
                     {traySymbols.map((symbol) => (
                       <motion.div
@@ -325,10 +325,10 @@ export default function MapSymbols({ onComplete, onBack }) {
                         draggable
                         onDragStart={(e) => handleDragStart(e, symbol)}
                         style={{
-                          background: 'var(--card-bg)',
+                          background: '#ffffff',
                           padding: '0.75rem',
                           borderRadius: '8px',
-                          border: '1px solid var(--border)',
+                          border: '1px solid #d6e0ec',
                           cursor: 'grab',
                           display: 'flex',
                           justifyContent: 'center',
@@ -336,10 +336,10 @@ export default function MapSymbols({ onComplete, onBack }) {
                           height: '80px',
                           width: '148px',
                           boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                          color: 'var(--text-primary)',
+                          color: '#20303f',
                           overflow: 'visible'
                         }}
-                        whileHover={{ scale: 1.05, borderColor: 'var(--accent)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                        whileHover={{ scale: 1.05, borderColor: '#6366f1', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                         whileTap={{ scale: 0.95, cursor: 'grabbing' }}
                       >
                         <SymbolDisplay Icon={symbol.Icon} width={128} height={56} />
@@ -360,10 +360,10 @@ export default function MapSymbols({ onComplete, onBack }) {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'var(--surface)', 
+                  background: '#ffffff', 
                   padding: '3rem', 
                   borderRadius: '20px', 
-                  border: '1px solid var(--border)',
+                  border: '1px solid #d6e0ec',
                   textAlign: 'center',
                   gap: '1.5rem'
                 }}
@@ -374,7 +374,7 @@ export default function MapSymbols({ onComplete, onBack }) {
                 
                 <div>
                   <h3 style={{ fontSize: '2.5rem', color: '#10b981', margin: '0 0 0.5rem 0' }}>Excellent!</h3>
-                  <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '1.2rem', color: '#47586b', maxWidth: '400px', margin: '0 auto', lineHeight: 1.5 }}>
                     You now know how maps use symbols to represent places.
                   </p>
                 </div>

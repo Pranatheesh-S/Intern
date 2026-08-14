@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import earthImg from './assets/Earth.png';
-import ContentScrollNav from '../ContentScrollNav';
+import { ScrollableWithNav } from '../ContentScrollNav';
 
-const CONTENT_PAGE_COUNT = 3;
 
 export default function AryabhataPage({ onNext, isNextEnabled }) {
-  const [contentPage, setContentPage] = useState(0);
 
-  const canGoDown = contentPage < CONTENT_PAGE_COUNT - 1;
-  const canGoUp = contentPage > 0;
 
   return (
     <div style={{ display: 'flex', width: '100%', height: '100%' }}>
@@ -45,7 +41,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
       }}>
         <div style={{
           fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace',
-          fontSize: 'clamp(10px, 1vw, 12px)',
+          fontSize: 'clamp(11px, 0.8vw, 13px)',
           letterSpacing: '.24em',
           textTransform: 'uppercase',
           color: '#F5A623',
@@ -59,7 +55,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
           fontFamily: '"Fraunces", "Iowan Old Style", Palatino, Georgia, serif',
           fontWeight: 900,
           color: '#0E3556',
-          fontSize: 'clamp(28px, 3.2vw, 42px)',
+          fontSize: 'clamp(22px, 2.2vw, 32px)',
           lineHeight: 1.05,
           margin: '0 0 16px 0',
           letterSpacing: '-.01em'
@@ -75,17 +71,15 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
           display: 'flex',
           flexDirection: 'column'
         }}>
-          <div style={{
-            flex: 1,
-            minHeight: 0,
-            overflow: 'hidden',
-            paddingRight: '12px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'clamp(16px, 1.8vw, 24px)'
-          }}>
+          <ScrollableWithNav
+            scrollStyle={{
+              paddingRight: '12px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'clamp(16px, 1.8vw, 24px)'
+            }}
+          >
 
-          {contentPage === 0 && (
           <>
           <blockquote style={{
             background: '#f8fafc',
@@ -111,7 +105,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
               marginTop: '10px',
               fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif',
               fontWeight: 700,
-              fontSize: '13px',
+              fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)',
               color: '#0E3556'
             }}>
               — Āryabhaṭa
@@ -119,7 +113,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
                 display: 'block',
                 fontWeight: 400,
                 fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace',
-                fontSize: '10px',
+                fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)',
                 color: '#5c6b7a',
                 letterSpacing: '.06em'
               }}>
@@ -173,9 +167,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
             </div>
           </div>
           </>
-          )}
 
-          {contentPage === 1 && (
           <>
           <div style={{
             display: 'grid',
@@ -220,9 +212,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
             />
           </div>
           </>
-          )}
 
-          {contentPage === 2 && (
           <>
           <div style={{
             background: '#fff8ec',
@@ -275,19 +265,8 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
             <TimelinePoint year="550 CE" desc="Legacy lives on" last />
           </div>
           </>
-          )}
 
-          </div>
-
-          <ContentScrollNav
-            currentPage={contentPage}
-            pageCount={CONTENT_PAGE_COUNT}
-            canGoUp={canGoUp}
-            canGoDown={canGoDown}
-            onPageUp={() => setContentPage(p => p - 1)}
-            onPageDown={() => setContentPage(p => p + 1)}
-            showWhenSinglePage
-          />
+          </ScrollableWithNav>
         </div>
 
         <div style={{
@@ -300,7 +279,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
           flexShrink: 0,
           background: '#ffffff'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: '13px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v16H6.5A2.5 2.5 0 0 0 4 21.5z" stroke="#5c6b7a" strokeWidth="1.5"></path><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v16h5.5A2.5 2.5 0 0 1 20 21.5z" stroke="#5c6b7a" strokeWidth="1.5"></path></svg>
             Page 1 of 2
           </div>
@@ -317,7 +296,7 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
                 color: '#fff',
                 padding: '12px 24px',
                 borderRadius: '999px',
-                fontSize: '14px',
+                fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)',
                 display: 'inline-flex',
                 gap: '8px',
                 alignItems: 'center',
@@ -341,14 +320,14 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
 function FactBlock({ label, labelColor, icon, title, note }) {
   return (
     <div style={{ background: '#F3F7FC', border: '1px solid #e4ebf3', borderRadius: '12px', padding: 'clamp(12px, 1.5vw, 17px)', position: 'relative' }}>
-      <div style={{ fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '8px', color: labelColor }}>
+      <div style={{ fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '8px', color: labelColor }}>
         {label}
       </div>
       <div style={{ display: 'flex', gap: '9px', alignItems: 'flex-start', fontWeight: 700, color: '#20303f', fontSize: 'clamp(14px, 1.5vw, 17px)', lineHeight: 1.25 }}>
         <div style={{ flex: '0 0 auto', marginTop: '1px' }}>{icon}</div>
         {title}
       </div>
-      <div style={{ color: '#5c6b7a', fontSize: '12px', marginTop: '5px', fontWeight: 400, lineHeight: 1.4 }}>
+      <div style={{ color: '#5c6b7a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', marginTop: '5px', fontWeight: 400, lineHeight: 1.4 }}>
         {note}
       </div>
     </div>
@@ -377,10 +356,10 @@ function TimelinePoint({ year, desc, first, last }) {
         zIndex: 1,
         boxShadow: '0 0 0 3px #fff'
       }}></i>
-      <b style={{ display: 'block', fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace', fontSize: '11px', color: '#0E3556' }}>
+      <b style={{ display: 'block', fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#0E3556' }}>
         {year}
       </b>
-      <span style={{ display: 'block', fontSize: '10px', color: '#5c6b7a', lineHeight: 1.2 }}>
+      <span style={{ display: 'block', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', lineHeight: 1.2 }}>
         {desc}
       </span>
     </div>

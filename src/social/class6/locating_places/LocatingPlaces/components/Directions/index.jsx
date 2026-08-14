@@ -64,19 +64,19 @@ export default function Directions({ onComplete, onBack }) {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', overflow: 'hidden', borderRadius: '24px', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+    <div style={{ width: '100%', height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column', background: '#ffffff', overflow: 'hidden', borderRadius: '24px', border: '1px solid #d6e0ec', boxShadow: '0 8px 30px rgba(14,42,69,0.08)' }}>
       
       {/* Top Bar for Back Button */}
       {activeDir !== null && (
-        <div style={{ padding: '1rem 2rem', borderBottom: '1px solid var(--border)', background: 'var(--card-bg)' }}>
+        <div style={{ padding: '1rem 2rem', borderBottom: '1px solid #d6e0ec', background: '#ffffff' }}>
           <button 
             onClick={() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
               setActiveDir(null);
             }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
-            onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
-            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: '#5c6b7a', fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#20303f'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#5c6b7a'}
           >
             <ArrowLeft size={16} /> Back
           </button>
@@ -194,7 +194,7 @@ export default function Directions({ onComplete, onBack }) {
                   setTimeout(() => setPulseCompass(false), 500);
                 }}
                 style={{ 
-                  background: 'var(--amber)', color: '#fff', border: 'none', borderRadius: '99px', padding: '12px 28px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'transform 0.2s', boxShadow: '0 4px 15px rgba(245,166,35,0.3)'
+                  background: '#F5A623', color: '#fff', border: 'none', borderRadius: '99px', padding: '12px 28px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '10px', transition: 'transform 0.2s', boxShadow: '0 4px 15px rgba(245,166,35,0.3)'
                 }}
                 onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
                 onMouseOut={(e) => e.currentTarget.style.transform = 'none'}
@@ -206,7 +206,7 @@ export default function Directions({ onComplete, onBack }) {
         </div>
 
         {/* RIGHT: Information Panel (Visually on Left) */}
-        <div style={{ flex: '1 1 50%', minWidth: '350px', minHeight: 0, background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: '1 1 50%', minWidth: '350px', minHeight: 0, background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRight: '1px solid #d6e0ec', display: 'flex', flexDirection: 'column' }}>
           
           <ScrollableWithNav scrollStyle={{ padding: '1rem 1.5rem' }}>
             <AnimatePresence mode="wait">
@@ -215,50 +215,50 @@ export default function Directions({ onComplete, onBack }) {
                   
                   {/* Section 1 - Introduction */}
                   <div>
-                    <h2 style={{ fontSize: '2rem', color: 'var(--text-heading)', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <Compass size={36} color="var(--amber)" /> Finding Directions
+                    <h2 style={{ fontSize: '2rem', color: '#0E3556', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <Compass size={36} color="#F5A623" /> Finding Directions
                     </h2>
-                    <p style={{ color: 'var(--text-primary)', fontSize: '1.15rem', lineHeight: 1.5, margin: 0 }}>
+                    <p style={{ color: '#20303f', fontSize: '1.15rem', lineHeight: 1.5, margin: 0 }}>
                       Directions help us know where places are.<br/>
                       Every map uses directions to help us travel from one place to another.
                     </p>
                   </div>
 
                   {/* Section 2 - The Four Main Directions */}
-                  <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '1.25rem', border: '1px solid var(--border)' }}>
+                  <div style={{ background: '#ffffff', borderRadius: '12px', padding: '1.25rem', border: '1px solid #d6e0ec' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                       <h3 style={{ color: 'var(--text-heading)', fontSize: '1.15rem', margin: 0 }}>The Four Main Directions</h3>
-                       <span style={{ fontSize: '0.85rem', background: '#fffbeb', color: '#d97706', padding: '4px 10px', borderRadius: '12px', fontWeight: 'bold' }}>Cardinal Directions</span>
+                       <h3 style={{ color: '#0E3556', fontSize: '1.15rem', margin: 0 }}>The Four Main Directions</h3>
+                       <span style={{ fontSize: '1rem', background: '#fffbeb', color: '#d97706', padding: '4px 10px', borderRadius: '12px', fontWeight: 'bold' }}>Cardinal Directions</span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '12px' }}>
                       <div style={{ background: '#fef2f2', padding: '12px', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#ef4444', fontWeight: 800, fontSize: '0.95rem' }}><ArrowUp size={16} strokeWidth={3} /> NORTH</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>Top</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#ef4444', fontWeight: 800, fontSize: '1rem' }}><ArrowUp size={16} strokeWidth={3} /> NORTH</div>
+                        <div style={{ fontSize: '1rem', color: '#47586b', marginTop: '4px' }}>Top</div>
                       </div>
                       <div style={{ background: '#fffbeb', padding: '12px', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#f59e0b', fontWeight: 800, fontSize: '0.95rem' }}><ArrowRight size={16} strokeWidth={3} /> EAST</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>Right</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#f59e0b', fontWeight: 800, fontSize: '1rem' }}><ArrowRight size={16} strokeWidth={3} /> EAST</div>
+                        <div style={{ fontSize: '1rem', color: '#47586b', marginTop: '4px' }}>Right</div>
                       </div>
                       <div style={{ background: '#eff6ff', padding: '12px', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#3b82f6', fontWeight: 800, fontSize: '0.95rem' }}><ArrowDown size={16} strokeWidth={3} /> SOUTH</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>Bottom</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#3b82f6', fontWeight: 800, fontSize: '1rem' }}><ArrowDown size={16} strokeWidth={3} /> SOUTH</div>
+                        <div style={{ fontSize: '1rem', color: '#47586b', marginTop: '4px' }}>Bottom</div>
                       </div>
                       <div style={{ background: '#faf5ff', padding: '12px', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#a855f7', fontWeight: 800, fontSize: '0.95rem' }}><ArrowLeft size={16} strokeWidth={3} /> WEST</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>Left</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#a855f7', fontWeight: 800, fontSize: '1rem' }}><ArrowLeft size={16} strokeWidth={3} /> WEST</div>
+                        <div style={{ fontSize: '1rem', color: '#47586b', marginTop: '4px' }}>Left</div>
                       </div>
                     </div>
                   </div>
 
                   {/* Section 4 - Intermediate Directions */}
-                  <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '1.25rem', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ background: '#ffffff', borderRadius: '12px', padding: '1.25rem', border: '1px solid #d6e0ec', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                      <div>
-                        <h3 style={{ color: 'var(--text-heading)', fontSize: '1.15rem', margin: '0 0 6px 0' }}>Intermediate Directions</h3>
-                        <p style={{ color: 'var(--text-primary)', margin: 0, fontSize: '0.95rem' }}>These lie between the main directions.</p>
+                        <h3 style={{ color: '#0E3556', fontSize: '1.15rem', margin: '0 0 6px 0' }}>Intermediate Directions</h3>
+                        <p style={{ color: '#20303f', margin: 0, fontSize: '1rem' }}>These lie between the main directions.</p>
                      </div>
                      <div style={{ display: 'flex', gap: '8px' }}>
                        {['NE', 'SE', 'SW', 'NW'].map(d => (
-                         <div key={d} style={{ background: 'var(--bg-primary)', border: '1px solid var(--border)', borderRadius: '8px', padding: '6px 12px', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--amber)' }}>{d}</div>
+                         <div key={d} style={{ background: '#ffffff', border: '1px solid #d6e0ec', borderRadius: '8px', padding: '6px 12px', fontSize: '1rem', fontWeight: 'bold', color: '#F5A623' }}>{d}</div>
                        ))}
                      </div>
                   </div>
@@ -276,37 +276,37 @@ export default function Directions({ onComplete, onBack }) {
                 <motion.div key={activeDir} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                   
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', marginBottom: '1.2rem' }}>
-                    <div style={{ display: 'inline-flex', padding: '0.5rem', background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)' }}>
+                    <div style={{ display: 'inline-flex', padding: '0.5rem', background: '#ffffff', borderRadius: '16px', border: '1px solid #d6e0ec' }}>
                       {getActiveInfo()?.icon}
                     </div>
-                    <h2 style={{ fontSize: '2.2rem', margin: 0, color: 'var(--text-heading)' }}>
+                    <h2 style={{ fontSize: '2.2rem', margin: 0, color: '#0E3556' }}>
                       {getActiveInfo()?.label}
                     </h2>
                   </div>
 
                   <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-                    <div style={{ padding: '0.4rem 1rem', background: getActiveInfo()?.type === 'Main Direction' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(168, 85, 247, 0.1)', color: getActiveInfo()?.type === 'Main Direction' ? '#3b82f6' : '#a855f7', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.95rem', border: getActiveInfo()?.type === 'Main Direction' ? '1px solid rgba(59, 130, 246, 0.2)' : '1px solid rgba(168, 85, 247, 0.2)' }}>
+                    <div style={{ padding: '0.4rem 1rem', background: getActiveInfo()?.type === 'Main Direction' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(168, 85, 247, 0.1)', color: getActiveInfo()?.type === 'Main Direction' ? '#3b82f6' : '#a855f7', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', border: getActiveInfo()?.type === 'Main Direction' ? '1px solid rgba(59, 130, 246, 0.2)' : '1px solid rgba(168, 85, 247, 0.2)' }}>
                       Type: {getActiveInfo()?.type === 'Main Direction' ? 'Cardinal Point' : 'Intermediate Direction'}
                     </div>
-                    <div style={{ padding: '0.4rem 1rem', background: '#fffbeb', color: '#d97706', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.95rem', border: '1px solid #fde68a', fontFamily: 'monospace' }}>
+                    <div style={{ padding: '0.4rem 1rem', background: '#fffbeb', color: '#d97706', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', border: '1px solid #fde68a', fontFamily: 'monospace' }}>
                       Bearing {getActiveInfo()?.angle}°
                     </div>
-                    <div style={{ padding: '0.4rem 1rem', background: '#ecfdf5', color: '#10b981', borderRadius: '8px', fontWeight: 'bold', fontSize: '0.95rem', border: '1px solid #a7f3d0' }}>
+                    <div style={{ padding: '0.4rem 1rem', background: '#ecfdf5', color: '#10b981', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', border: '1px solid #a7f3d0' }}>
                       Opposite: {getOpposite(getActiveInfo()?.id)}
                     </div>
                   </div>
                   
-                  <div style={{ background: 'var(--bg-primary)', padding: '1.25rem 1.5rem', borderRadius: '12px', border: '1px solid var(--card-border)', marginBottom: '1.25rem' }}>
-                    <p style={{ color: 'var(--text-primary)', fontSize: '1.1rem', lineHeight: 1.5, margin: 0 }}>
+                  <div style={{ background: '#ffffff', padding: '1.25rem 1.5rem', borderRadius: '12px', border: '1px solid #d6e0ec', marginBottom: '1.25rem' }}>
+                    <p style={{ color: '#20303f', fontSize: '1.1rem', lineHeight: 1.5, margin: 0 }}>
                       {getActiveInfo()?.description}
                     </p>
                   </div>
 
-                  <div style={{ background: 'var(--surface)', padding: '1.25rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
+                  <div style={{ background: '#ffffff', padding: '1.25rem 1.5rem', borderRadius: '12px', border: '1px solid #d6e0ec', display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
                      <div style={{ width: '50px', height: '50px', background: 'white', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', flexShrink: 0 }}>
                        <Map size={24} color="#64748b" />
                      </div>
-                     <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', margin: 0, lineHeight: 1.4 }}>
+                     <p style={{ color: '#47586b', fontSize: '1rem', margin: 0, lineHeight: 1.4 }}>
                        {getActiveInfo()?.note}
                      </p>
                   </div>
@@ -317,14 +317,14 @@ export default function Directions({ onComplete, onBack }) {
           </ScrollableWithNav>
           
           {/* Progress & Completion Area */}
-          <div style={{ padding: '0.75rem 1.5rem', background: 'var(--surface)', borderTop: '1px solid var(--border)' }}>
+          <div style={{ padding: '0.75rem 1.5rem', background: '#ffffff', borderTop: '1px solid #d6e0ec' }}>
             
             {viewedDirs.size > 0 && (
               <div style={{ marginBottom: '0.75rem' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>Directions Explored ({viewedDirs.size}/8)</div>
+                <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#47586b', marginBottom: '0.4rem' }}>Directions Explored ({viewedDirs.size}/8)</div>
                 <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
                   {DIRECTIONS.map(d => (
-                    <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', padding: '0.2rem 0.5rem', borderRadius: '6px', background: viewedDirs.has(d.id) ? '#10b981' : 'var(--bg-primary)', color: viewedDirs.has(d.id) ? 'white' : 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 'bold', border: viewedDirs.has(d.id) ? 'none' : '1px solid var(--border)' }}>
+                    <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', padding: '0.2rem 0.5rem', borderRadius: '6px', background: viewedDirs.has(d.id) ? '#10b981' : '#ffffff', color: viewedDirs.has(d.id) ? 'white' : '#5c6b7a', fontSize: '1rem', fontWeight: 'bold', border: viewedDirs.has(d.id) ? 'none' : '1px solid #d6e0ec' }}>
                       {d.id} {viewedDirs.has(d.id) && <CheckCircle2 size={12} />}
                     </div>
                   ))}
@@ -333,8 +333,8 @@ export default function Directions({ onComplete, onBack }) {
             )}
 
             <div style={{ background: '#fffbeb', padding: '0.85rem', borderRadius: '12px', border: '1px solid #fde68a', marginBottom: isAllViewed ? '0.75rem' : '0', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <h3 style={{ margin: 0, color: '#b45309', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Lightbulb size={16} color="#d97706" /> Remember</h3>
-              <p style={{ color: '#92400e', margin: 0, fontSize: '0.85rem', lineHeight: 1.4 }}>
+              <h3 style={{ margin: 0, color: '#b45309', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '6px' }}><Lightbulb size={16} color="#d97706" /> Remember</h3>
+              <p style={{ color: '#92400e', margin: 0, fontSize: '1rem', lineHeight: 1.4 }}>
                 Most maps do not show all eight directions. Instead, they usually show only a North arrow. Once North is known, the other directions can easily be found.
               </p>
             </div>
@@ -342,7 +342,7 @@ export default function Directions({ onComplete, onBack }) {
             <AnimatePresence>
               {isAllViewed && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{ overflow: 'hidden' }}>
-                  <p style={{ margin: 0, fontSize: '0.85rem', color: '#10b981', fontWeight: 600, textAlign: 'center' }}>
+                  <p style={{ margin: 0, fontSize: '1rem', color: '#10b981', fontWeight: 600, textAlign: 'center' }}>
                     All directions explored! Use the button below to continue.
                   </p>
                 </motion.div>

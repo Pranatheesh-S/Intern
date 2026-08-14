@@ -194,26 +194,26 @@ export default function TimeZonesPage({ onBack }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
       <style>{`
-        .tab-btn { flex: 1; font-family: inherit; font-weight: 700; cursor: pointer; border: none; background: transparent; color: var(--text-muted, #5c6b7a); border-radius: 10px; padding: 11px 8px; font-size: clamp(12px, 1.3vw, 14.5px); transition: all 0.2s; display: flex; flexDirection: column; gap: 1px; align-items: center; }
+        .tab-btn { flex: 1; font-family: inherit; font-weight: 700; cursor: pointer; border: none; background: transparent; color: #5c6b7a; border-radius: 10px; padding: 11px 8px; font-size: clamp(14px, 0.5vw + 0.75vh, 16px); transition: all 0.2s; display: flex; flex-direction: column; gap: 2px; align-items: center; justify-content: center; min-width: 0; text-align: center; line-height: 1.25; }
         .tab-btn.active { background: var(--navy, #0E3556); color: #fff; }
-        .tab-btn small { font-weight: 400; font-size: 10.5px; opacity: 0.7; }
+        .tab-btn small { font-weight: 400; font-size: 14px; opacity: 0.7; display: block; white-space: normal; }
         .tab-btn.active small { opacity: 0.85; }
         
-        .hist { background: #eef3ff; border-left: 4px solid #7c5cff; border-radius: 9px; padding: 11px 13px; margin: 10px 0; font-size: 12.5px; line-height: 1.5; color: #3a3a66; }
+        .hist { background: #eef3ff; border-left: 4px solid #7c5cff; border-radius: 9px; padding: 11px 13px; margin: 10px 0; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); line-height: 1.5; color: #3a3a66; }
         .hist b { color: #7c5cff; }
-        .kbox { background: #fbf5e6; border-left: 4px solid #F5A623; border-radius: 9px; padding: 11px 13px; margin: 10px 0; font-size: 13px; line-height: 1.5; color: #7a5a2a; }
+        .kbox { background: #fbf5e6; border-left: 4px solid #F5A623; border-radius: 9px; padding: 11px 13px; margin: 10px 0; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); line-height: 1.5; color: #7a5a2a; }
         .kbox b { color: #0E3556; }
         
         .readout { background: #f4f7fb; border: 1px solid #e4ebf3; border-radius: 12px; padding: 12px 15px; margin-top: 10px; }
         .readout .big { font-size: clamp(18px, 2.2vw, 26px); font-weight: 800; color: #0E3556; }
         .readout .big span { color: #F5A623; }
-        .readout .work { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #5c6b7a; margin-top: 5px; line-height: 1.5; }
+        .readout .work { font-family: "IBM Plex Mono", monospace; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); color: #5c6b7a; margin-top: 5px; line-height: 1.5; }
         
-        .chip { font-family: inherit; font-weight: 600; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #0E3556; border-radius: 8px; padding: 6px 11px; font-size: 12px; transition: all 0.15s; }
+        .chip { font-family: inherit; font-weight: 600; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #0E3556; border-radius: 8px; padding: 6px 11px; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); transition: all 0.15s; }
         .chip:hover { border-color: #7c5cff; background: #f5f2ff; }
         .chip.active { background: #0E3556; color: #fff; border-color: #0E3556; }
         
-        .c-num { background: #f7f9fc; border: 1px solid #d6e0ec; border-radius: 9px; padding: 9px 11px; font-size: 14px; font-family: inherit; width: 100%; }
+        .c-num { background: #f7f9fc; border: 1px solid #d6e0ec; border-radius: 9px; padding: 9px 11px; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); font-family: inherit; width: 100%; }
         .c-num:focus { outline: none; border-color: #7c5cff; }
       
         @media (max-width: 768px) {
@@ -238,10 +238,10 @@ export default function TimeZonesPage({ onBack }) {
           <ScrollableWithNav scrollStyle={{ padding: '24px' }}>
           {activeTab === 'tz' && (
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 3 · (a)</div>
+              <div style={{ fontFamily: 'monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 3 · (a)</div>
               <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '32px', margin: '8px 0 16px' }}>Understanding time zones</h1>
               
-              <ul style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '24px', paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <ul style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, marginBottom: '24px', paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <li>Earth rotates once every <b style={{ color: '#0E3556' }}>24 hours</b>.</li>
                 <li>Earth has <b style={{ color: '#0E3556' }}>360°</b> of longitude.</li>
                 <li>Every <b style={{ color: '#0E3556' }}>15°</b> of longitude equals <b style={{ color: '#0E3556' }}>1 hour</b>.</li>
@@ -250,7 +250,7 @@ export default function TimeZonesPage({ onBack }) {
               </ul>
               
               <div className="kbox" style={{ marginTop: 'auto' }}>
-                <div style={{ fontWeight: 700, color: '#F5A623', fontSize: '11px', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '4px' }}>Did You Know?</div>
+                <div style={{ fontWeight: 700, color: '#F5A623', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '4px' }}>Did You Know?</div>
                 <div>India uses one Standard Time (IST) based on <b>82.5° East</b> longitude.</div>
               </div>
             </div>
@@ -266,20 +266,20 @@ export default function TimeZonesPage({ onBack }) {
                   <div style={{ fontSize: '32px', marginBottom: '8px' }}>☀️</div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '16px', marginTop: '16px' }}>
                     <div style={{ flex: 1, background: '#fff', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', position: 'relative' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>📍 Porbandar</div>
-                      <div style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic' }}>"It is still bright here!"</div>
-                      <div style={{ position: 'absolute', top: '-10px', right: '-10px', background: '#e2e8f0', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>WEST</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>📍 Porbandar</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b', fontStyle: 'italic' }}>"It is still bright here!"</div>
+                      <div style={{ position: 'absolute', top: '-10px', right: '-10px', background: '#e2e8f0', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>WEST</div>
                     </div>
                     
                     <div style={{ flex: 1, background: '#fff', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', position: 'relative' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>📍 Tinsukia</div>
-                      <div style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic' }}>"The Sun is already setting!"</div>
-                      <div style={{ position: 'absolute', top: '-10px', right: '-10px', background: '#e2e8f0', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>EAST</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>📍 Tinsukia</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b', fontStyle: 'italic' }}>"The Sun is already setting!"</div>
+                      <div style={{ position: 'absolute', top: '-10px', right: '-10px', background: '#e2e8f0', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>EAST</div>
                     </div>
                   </div>
                 </div>
                 
-                <p style={{ fontSize: '15px', lineHeight: 1.55, color: '#334155', marginTop: '16px', marginBottom: 0 }}>
+                <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, color: '#334155', marginTop: '16px', marginBottom: 0 }}>
                   Places in the east see the Sun earlier because the Earth rotates from west to east.
                 </p>
               </div>
@@ -290,7 +290,7 @@ export default function TimeZonesPage({ onBack }) {
                   <div style={{ fontSize: '20px' }}>⚠️</div>
                   <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#92400e' }}>If every city followed its own local time...</h3>
                 </div>
-                <ul style={{ margin: 0, paddingLeft: '24px', fontSize: '15px', color: '#92400e', display: 'flex', flexDirection: 'column', gap: '8px', lineHeight: 1.4 }}>
+                <ul style={{ margin: 0, paddingLeft: '24px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#92400e', display: 'flex', flexDirection: 'column', gap: '8px', lineHeight: 1.4 }}>
                   <li>School timings would be confusing.</li>
                   <li>Train timings would be different in every city.</li>
                   <li>People would find it difficult to plan meetings.</li>
@@ -305,14 +305,14 @@ export default function TimeZonesPage({ onBack }) {
                 </div>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.6)', padding: '16px', borderRadius: '12px', marginBottom: '16px' }}>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#166534', background: '#fff', padding: '6px 12px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Different Local Times</div>
-                  <div style={{ fontSize: '16px', color: '#15803d', fontWeight: 900 }}>↓</div>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#166534', background: '#fff', padding: '6px 12px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>One Common Time</div>
-                  <div style={{ fontSize: '16px', color: '#15803d', fontWeight: 900 }}>↓</div>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff', background: '#16a34a', padding: '8px 16px', borderRadius: '20px', boxShadow: '0 4px 6px rgba(22, 163, 74, 0.2)' }}>Indian Standard Time (IST)</div>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, color: '#166534', background: '#fff', padding: '6px 12px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Different Local Times</div>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#15803d', fontWeight: 900 }}>↓</div>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, color: '#166534', background: '#fff', padding: '6px 12px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>One Common Time</div>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#15803d', fontWeight: 900 }}>↓</div>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#fff', background: '#16a34a', padding: '8px 16px', borderRadius: '20px', boxShadow: '0 4px 6px rgba(22, 163, 74, 0.2)' }}>Indian Standard Time (IST)</div>
                 </div>
                 
-                <p style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#166534', textAlign: 'center', lineHeight: 1.4 }}>
+                <p style={{ margin: 0, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#166534', textAlign: 'center', lineHeight: 1.4 }}>
                   Everyone in India follows one common time called IST.
                 </p>
               </div>
@@ -321,11 +321,11 @@ export default function TimeZonesPage({ onBack }) {
               <div style={{ background: '#e0f2fe', borderRadius: '16px', padding: '20px', boxShadow: '0 4px 12px rgba(125, 211, 252, 0.3)' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
                   <div style={{ fontSize: '18px', fontWeight: 800, color: '#0369a1' }}>GMT</div>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#0284c7', background: '#fff', padding: '4px 12px', borderRadius: '20px' }}>+5 hours 30 minutes</div>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, color: '#0284c7', background: '#fff', padding: '4px 12px', borderRadius: '20px' }}>+5 hours 30 minutes</div>
                   <div style={{ fontSize: '18px', fontWeight: 800, color: '#0369a1' }}>IST</div>
                 </div>
                 
-                <p style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: '#075985', textAlign: 'center', lineHeight: 1.4 }}>
+                <p style={{ margin: 0, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, color: '#075985', textAlign: 'center', lineHeight: 1.4 }}>
                   India's Standard Time is 5 hours 30 minutes ahead of Greenwich Mean Time (GMT).
                 </p>
               </div>
@@ -334,10 +334,10 @@ export default function TimeZonesPage({ onBack }) {
           )}
           {activeTab === 'idl' && (
             <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '8px' }}>
-              <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Time zones & the date</div>
+              <div style={{ fontFamily: 'monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Time zones & the date</div>
               <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '32px', margin: '8px 0 24px', lineHeight: 1.2 }}>THE INTERNATIONAL DATE LINE</h1>
               
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '24px', color: '#334155' }}>
+              <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, marginBottom: '24px', color: '#334155' }}>
                 The Earth is divided into time zones. Countries choose one standard time for everyday life. Opposite the Prime Meridian, near <b>180° longitude</b>, lies a special imaginary line called the <b>International Date Line</b>. When people cross this line, the date changes.
               </p>
 
@@ -347,19 +347,19 @@ export default function TimeZonesPage({ onBack }) {
                 </div>
                 <div style={{ display: 'flex', gap: '16px' }}>
                   <div style={{ flex: 1, background: '#fff', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #bbf7d0' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '8px' }}>Cross East ⬅</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#15803d' }}>Subtract one day</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#166534', marginBottom: '8px' }}>Cross East ⬅</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#15803d' }}>Subtract one day</div>
                   </div>
                   <div style={{ flex: 1, background: '#fff', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #bbf7d0' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '8px' }}>Cross West ➡</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#15803d' }}>Add one day</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#166534', marginBottom: '8px' }}>Cross West ➡</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#15803d' }}>Add one day</div>
                   </div>
                 </div>
               </div>
 
               <div style={{ marginBottom: '24px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0E3556', margin: '0 0 12px' }}>Why does this happen?</h3>
-                <p style={{ fontSize: '14px', lineHeight: 1.55, color: '#475569', margin: 0 }}>
+                <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, color: '#475569', margin: 0 }}>
                   Imagine you travel around the Earth. When you reach the opposite side of the globe, the calendar needs to stay correct. So, the date changes when crossing the International Date Line.
                 </p>
               </div>
@@ -367,30 +367,30 @@ export default function TimeZonesPage({ onBack }) {
               <div style={{ background: '#fef3c7', borderRadius: '16px', padding: '20px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(253,230,138,0.3)', border: '1px solid #fde68a' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <div style={{ fontSize: '20px' }}>🌍</div>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Did You Know?</div>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Did You Know?</div>
                 </div>
-                <div style={{ fontSize: '14px', color: '#92400e', lineHeight: 1.5 }}>
+                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#92400e', lineHeight: 1.5 }}>
                   The International Date Line is not perfectly straight. It bends around some countries and islands so that one country does not have two different dates.
                 </div>
               </div>
 
               <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '16px', border: '1px solid #e2e8f0', marginBottom: '24px' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#334155', marginBottom: '12px' }}>Countries with Multiple Time Zones</div>
+                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#334155', marginBottom: '12px' }}>Countries with Multiple Time Zones</div>
                 <div style={{ display: 'flex', gap: '16px', marginBottom: '8px' }}>
-                  <div style={{ flex: 1, fontSize: '13px', color: '#475569' }}>🇷🇺 <b>Russia</b> → 11 Time Zones</div>
-                  <div style={{ flex: 1, fontSize: '13px', color: '#475569' }}>🇺🇸 <b>USA</b> → 6 Time Zones</div>
+                  <div style={{ flex: 1, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#475569' }}>🇷🇺 <b>Russia</b> → 11 Time Zones</div>
+                  <div style={{ flex: 1, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#475569' }}>🇺🇸 <b>USA</b> → 6 Time Zones</div>
                 </div>
-                <div style={{ fontSize: '13px', color: '#475569' }}>🇨🇦 <b>Canada</b> → 6 Time Zones</div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '12px', fontStyle: 'italic' }}>Large countries need more than one standard time.</div>
+                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#475569' }}>🇨🇦 <b>Canada</b> → 6 Time Zones</div>
+                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b', marginTop: '12px', fontStyle: 'italic' }}>Large countries need more than one standard time.</div>
               </div>
 
               <div style={{ marginTop: 'auto', background: '#e0f2fe', borderRadius: '12px', padding: '16px' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#0369a1', marginBottom: '12px', textTransform: 'uppercase' }}>Key Takeaways</div>
+                <div style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', fontWeight: 800, color: '#0369a1', marginBottom: '12px', textTransform: 'uppercase' }}>Key Takeaways</div>
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px', color: '#075985', fontWeight: 600 }}><span>✔</span> Time zones divide the Earth.</li>
-                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px', color: '#075985', fontWeight: 600 }}><span>✔</span> International Date Line is near 180°.</li>
-                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px', color: '#075985', fontWeight: 600 }}><span>✔</span> Crossing East → Previous Day</li>
-                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px', color: '#075985', fontWeight: 600 }}><span>✔</span> Crossing West → Next Day</li>
+                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#075985', fontWeight: 600 }}><span>✔</span> Time zones divide the Earth.</li>
+                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#075985', fontWeight: 600 }}><span>✔</span> International Date Line is near 180°.</li>
+                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#075985', fontWeight: 600 }}><span>✔</span> Crossing East → Previous Day</li>
+                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#075985', fontWeight: 600 }}><span>✔</span> Crossing West → Next Day</li>
                 </ul>
               </div>
             </div>
@@ -409,7 +409,7 @@ export default function TimeZonesPage({ onBack }) {
                 {renderTZExplorer()}
                 
                 <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                  <div style={{ fontSize: '16px', color: '#5c6b7a', marginBottom: '4px' }}>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', marginBottom: '4px' }}>
                     Selected Longitude: <b style={{ color: '#0E3556' }}>{tzLon === 0 ? '0° GMT' : (Math.abs(tzLon) + '° ' + (tzLon > 0 ? 'East' : 'West'))}</b>
                   </div>
                   <div style={{ fontSize: '24px', fontWeight: 800, color: '#F5A623' }}>
@@ -420,7 +420,7 @@ export default function TimeZonesPage({ onBack }) {
               
               <div style={{ marginBottom: '24px' }}>
                 <input type="range" style={{ width: '100%', accentColor: '#F5A623', cursor: 'pointer', height: '8px' }} min="-45" max="45" step="15" value={tzLon} onChange={e => setTzLon(Number(e.target.value))} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: 600, color: '#5c6b7a', marginTop: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, color: '#5c6b7a', marginTop: '8px' }}>
                   <span>← West (Earlier)</span>
                   <span style={{ color: '#0E3556' }}>Greenwich</span>
                   <span style={{ color: '#16a34a' }}>East (Later) →</span>
@@ -428,15 +428,15 @@ export default function TimeZonesPage({ onBack }) {
               </div>
               
               <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
-                <div style={{ fontSize: '14px', color: '#5c6b7a', fontWeight: 600, marginBottom: '8px' }}>At {Math.abs(tzLon) + '° ' + (tzLon >= 0 ? 'E' : 'W')}</div>
+                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', fontWeight: 600, marginBottom: '8px' }}>At {Math.abs(tzLon) + '° ' + (tzLon >= 0 ? 'E' : 'W')}</div>
                 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '16px', color: '#334155' }}>Time Difference</span>
+                  <span style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#334155' }}>Time Difference</span>
                   <span style={{ fontSize: '20px', fontWeight: 700, color: '#0E3556' }}>{Math.abs(tzLon)} ÷ 15 = {Math.abs(tzLon / 15)} hour{Math.abs(tzLon / 15) !== 1 ? 's' : ''}</span>
                 </div>
                 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '16px', color: '#334155' }}>Greenwich Time</span>
+                  <span style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#334155' }}>Greenwich Time</span>
                   <span style={{ fontSize: '20px', fontWeight: 700, color: '#5c6b7a' }}>12:00 pm</span>
                 </div>
                 
@@ -457,7 +457,7 @@ export default function TimeZonesPage({ onBack }) {
               
               <div style={{ marginBottom: '24px', textAlign: 'center' }}>
                 <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#0E3556', margin: '0 0 8px' }}>Let's Use Standard Time</h2>
-                <div style={{ fontSize: '16px', color: '#5c6b7a' }}>We now know why India follows one common time. Let's use IST to solve everyday situations.</div>
+                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a' }}>We now know why India follows one common time. Let's use IST to solve everyday situations.</div>
               </div>
 
               {/* SECTION 1: Everyday Examples */}
@@ -466,23 +466,23 @@ export default function TimeZonesPage({ onBack }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>🚆</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>Train Timetable</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>Everyone follows the same time.</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>Train Timetable</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b' }}>Everyone follows the same time.</div>
                   </div>
                   <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>🎓</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>School</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>Classes begin at one common time.</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>School</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b' }}>Classes begin at one common time.</div>
                   </div>
                   <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>✈️</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>Flights</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>Departure and arrival use IST.</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>Flights</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b' }}>Departure and arrival use IST.</div>
                   </div>
                   <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                     <div style={{ fontSize: '24px', marginBottom: '8px' }}>📺</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>Television</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>Programs start at the same time across India.</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>Television</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b' }}>Programs start at the same time across India.</div>
                   </div>
                 </div>
               </div>
@@ -491,9 +491,9 @@ export default function TimeZonesPage({ onBack }) {
               <div style={{ background: '#fef3c7', borderRadius: '16px', padding: '20px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(253,230,138,0.3)', border: '1px solid #fde68a' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <div style={{ fontSize: '20px' }}>💡</div>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Did You Know?</div>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Did You Know?</div>
                 </div>
-                <div style={{ fontSize: '15px', color: '#92400e', lineHeight: 1.5 }}>
+                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#92400e', lineHeight: 1.5 }}>
                   India is almost 3,000 km wide from east to west. The Sun rises much earlier in Arunachal Pradesh than in Gujarat. Yet everyone follows the same IST clock.
                 </div>
               </div>
@@ -501,7 +501,7 @@ export default function TimeZonesPage({ onBack }) {
               {/* SECTION 3: Quick Thinking */}
               <div style={{ background: '#fff', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '24px' }}>
                 <div style={{ fontSize: '18px', fontWeight: 800, color: '#0E3556', marginBottom: '16px' }}>Think Before You Calculate</div>
-                <div style={{ fontSize: '16px', color: '#334155', fontWeight: 600, marginBottom: '20px', textAlign: 'center' }}>
+                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#334155', fontWeight: 600, marginBottom: '20px', textAlign: 'center' }}>
                   If it is 12:00 noon in London, do you think it is earlier or later in India?
                 </div>
                 
@@ -519,7 +519,7 @@ export default function TimeZonesPage({ onBack }) {
                 </div>
                 
                 {quickThinkFb === 'earlier' && (
-                  <div style={{ color: '#991b1b', fontSize: '14px', fontWeight: 600, textAlign: 'center', animation: 'fadeIn 0.3s' }}>
+                  <div style={{ color: '#991b1b', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, textAlign: 'center', animation: 'fadeIn 0.3s' }}>
                     Not quite! Remember, the Earth rotates from west to east, so places in the east are ahead in time. Try again!
                     <div style={{ marginTop: '8px' }}><button onClick={() => setQuickThinkFb(null)} style={{ padding: '6px 12px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Retry</button></div>
                   </div>
@@ -528,7 +528,7 @@ export default function TimeZonesPage({ onBack }) {
                 {quickThinkFb === 'later' && (
                   <div style={{ background: '#dcfce7', color: '#166534', padding: '16px', borderRadius: '12px', textAlign: 'center', animation: 'scaleIn 0.3s' }}>
                     <div style={{ fontSize: '18px', fontWeight: 800, marginBottom: '4px' }}>Excellent! 🎉</div>
-                    <div style={{ fontSize: '15px', fontWeight: 600 }}>India is ahead of Greenwich by 5 hours 30 minutes.</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600 }}>India is ahead of Greenwich by 5 hours 30 minutes.</div>
                   </div>
                 )}
               </div>
@@ -539,26 +539,26 @@ export default function TimeZonesPage({ onBack }) {
                   <div style={{ background: '#fff', borderRadius: '24px', padding: '32px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', marginBottom: '24px', border: '1px solid #f1f5f9' }}>
                     <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                       <h3 style={{ margin: '0 0 8px', fontSize: '24px', fontWeight: 800, color: '#0E3556' }}>Try It Yourself</h3>
-                      <div style={{ fontSize: '15px', color: '#64748b', fontWeight: 500 }}>Slide the time to see what happens in India!</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b', fontWeight: 500 }}>Slide the time to see what happens in India!</div>
                     </div>
                     
                     {/* The Visual Result Box */}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '24px', marginBottom: '40px' }}>
                        {/* GMT Side */}
                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '120px' }}>
-                          <div style={{ fontSize: '14px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Greenwich</div>
+                          <div style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Greenwich</div>
                           <div style={{ fontSize: '32px', fontWeight: 900, color: '#0E3556' }}>{fmt(gmtH)}</div>
                        </div>
                        
                        {/* Connection */}
                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#f1f5f9', padding: '8px 16px', borderRadius: '20px' }}>
-                          <div style={{ fontSize: '13px', fontWeight: 800, color: '#3b82f6' }}>+ 5h 30m</div>
+                          <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#3b82f6' }}>+ 5h 30m</div>
                           <div style={{ fontSize: '20px', color: '#3b82f6', fontWeight: 900 }}>→</div>
                        </div>
 
                        {/* IST Side */}
                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '120px' }}>
-                          <div style={{ fontSize: '14px', color: '#d97706', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>India</div>
+                          <div style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', color: '#d97706', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>India</div>
                           <div style={{ fontSize: '32px', fontWeight: 900, color: '#f59e0b', background: '#fef3c7', padding: '4px 16px', borderRadius: '12px' }}>{fmt(gmtH + 5.5)}</div>
                        </div>
                     </div>
@@ -576,15 +576,15 @@ export default function TimeZonesPage({ onBack }) {
                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', padding: '0 4px' }}>
                           <div style={{ textAlign: 'center', cursor: 'pointer', opacity: gmtH === 8 ? 1 : 0.5, transition: 'opacity 0.2s' }} onClick={() => setGmtH(8)}>
                              <div style={{ fontSize: '20px' }}>🌅</div>
-                             <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>Morning</div>
+                             <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>Morning</div>
                           </div>
                           <div style={{ textAlign: 'center', cursor: 'pointer', opacity: gmtH === 12 ? 1 : 0.5, transition: 'opacity 0.2s' }} onClick={() => setGmtH(12)}>
                              <div style={{ fontSize: '20px' }}>☀️</div>
-                             <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>Noon</div>
+                             <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>Noon</div>
                           </div>
                           <div style={{ textAlign: 'center', cursor: 'pointer', opacity: gmtH === 18 ? 1 : 0.5, transition: 'opacity 0.2s' }} onClick={() => setGmtH(18)}>
                              <div style={{ fontSize: '20px' }}>🌇</div>
-                             <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>Evening</div>
+                             <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>Evening</div>
                           </div>
                        </div>
                     </div>
@@ -596,22 +596,22 @@ export default function TimeZonesPage({ onBack }) {
                     <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                       <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ color: '#16a34a', fontSize: '18px' }}>✔</div>
-                        <div style={{ fontSize: '15px', color: '#15803d', fontWeight: 600 }}>Different cities can have different local times.</div>
+                        <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#15803d', fontWeight: 600 }}>Different cities can have different local times.</div>
                       </li>
                       <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ color: '#16a34a', fontSize: '18px' }}>✔</div>
-                        <div style={{ fontSize: '15px', color: '#15803d', fontWeight: 600 }}>India avoids confusion by using IST.</div>
+                        <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#15803d', fontWeight: 600 }}>India avoids confusion by using IST.</div>
                       </li>
                       <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{ color: '#16a34a', fontSize: '18px' }}>✔</div>
-                        <div style={{ fontSize: '15px', color: '#15803d', fontWeight: 600 }}>IST is always GMT + 5 hours 30 minutes.</div>
+                        <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#15803d', fontWeight: 600 }}>IST is always GMT + 5 hours 30 minutes.</div>
                       </li>
                     </ul>
                   </div>
                   
                   <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
-                    <button onClick={() => setActiveTab('tz')} style={{ padding: '16px 24px', background: '#f1f5f9', color: '#475569', fontSize: '16px', fontWeight: 700, border: '1px solid #cbd5e1', borderRadius: '12px', cursor: 'pointer' }}>← Back to Time Zones</button>
-                    <button onClick={() => setActiveTab('idl')} style={{ flex: 1, padding: '16px', background: '#0E3556', color: '#fff', fontSize: '16px', fontWeight: 700, border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(14,53,86,0.2)' }}>
+                    <button onClick={() => setActiveTab('tz')} style={{ padding: '16px 24px', background: '#f1f5f9', color: '#475569', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, border: '1px solid #cbd5e1', borderRadius: '12px', cursor: 'pointer' }}>← Back to Time Zones</button>
+                    <button onClick={() => setActiveTab('idl')} style={{ flex: 1, padding: '16px', background: '#0E3556', color: '#fff', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(14,53,86,0.2)' }}>
                       Continue → International Date Line
                     </button>
                   </div>
@@ -625,10 +625,10 @@ export default function TimeZonesPage({ onBack }) {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                 <div>
                   <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0E3556', margin: '0 0 4px' }}>🌍 Around the World Flight</h2>
-                  <div style={{ fontSize: '14px', color: '#64748b', fontWeight: 500 }}>Help the airplane complete its journey. Watch the calendar!</div>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b', fontWeight: 500 }}>Help the airplane complete its journey. Watch the calendar!</div>
                 </div>
                 {idlMission <= 4 && (
-                  <div style={{ background: '#f1f5f9', padding: '8px 16px', borderRadius: '20px', fontSize: '14px', fontWeight: 700, color: '#334155' }}>
+                  <div style={{ background: '#f1f5f9', padding: '8px 16px', borderRadius: '20px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#334155' }}>
                     Mission {idlMission} / 4
                   </div>
                 )}
@@ -708,7 +708,7 @@ export default function TimeZonesPage({ onBack }) {
                         <div style={{ fontSize: '20px', fontWeight: 800, color: '#0E3556', marginBottom: '8px' }}>
                           Mission: {currentMission.from} ➔ {currentMission.to}
                         </div>
-                        <div style={{ fontSize: '14px', fontWeight: 600, color: '#64748b', marginBottom: '24px' }}>
+                        <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, color: '#64748b', marginBottom: '24px' }}>
                           Direction: Travel {currentMission.dir}
                         </div>
                         <button onClick={startFlight} style={{ padding: '16px 32px', fontSize: '18px', fontWeight: 700, background: '#0E3556', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 8px 16px rgba(14,53,86,0.3)', transition: 'transform 0.1s' }} onMouseDown={e=>e.target.style.transform='scale(0.95)'} onMouseUp={e=>e.target.style.transform='none'}>
@@ -722,7 +722,7 @@ export default function TimeZonesPage({ onBack }) {
                   <div style={{ display: 'flex', gap: '24px', marginTop: '24px', flex: 1 }}>
                     {/* Calendar Card */}
                     <div style={{ width: '160px', background: '#fff', borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ background: '#ef4444', padding: '12px', textAlign: 'center', color: '#fff', fontWeight: 800, fontSize: '14px', letterSpacing: '2px' }}>CALENDAR</div>
+                      <div style={{ background: '#ef4444', padding: '12px', textAlign: 'center', color: '#fff', fontWeight: 800, fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '2px' }}>CALENDAR</div>
                       <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: '24px', position: 'relative' }}>
                         
                         <div style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', transition: 'all 0.5s', transform: (idlAnimState === 'answered' && animProgress >= 0.5) ? 'rotateX(-90deg)' : 'rotateX(0)', opacity: (idlAnimState === 'answered' && animProgress >= 0.5) ? 0 : 1, position: 'absolute' }}>
@@ -757,13 +757,13 @@ export default function TimeZonesPage({ onBack }) {
                           </div>
                           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
                             {currentMission.options.map(opt => (
-                              <button key={opt} onClick={() => handleAnswer(opt)} style={{ padding: '12px 24px', background: idlAnswer === opt ? (opt === currentMission.correct ? '#16a34a' : '#dc2626') : '#fff', color: idlAnswer === opt ? '#fff' : '#334155', border: '2px solid', borderColor: idlAnswer === opt ? (opt === currentMission.correct ? '#16a34a' : '#dc2626') : '#cbd5e1', borderRadius: '12px', fontSize: '16px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>
+                              <button key={opt} onClick={() => handleAnswer(opt)} style={{ padding: '12px 24px', background: idlAnswer === opt ? (opt === currentMission.correct ? '#16a34a' : '#dc2626') : '#fff', color: idlAnswer === opt ? '#fff' : '#334155', border: '2px solid', borderColor: idlAnswer === opt ? (opt === currentMission.correct ? '#16a34a' : '#dc2626') : '#cbd5e1', borderRadius: '12px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>
                                 {opt}
                               </button>
                             ))}
                           </div>
                           {idlAnswer && idlAnswer !== currentMission.correct && (
-                            <div style={{ textAlign: 'center', color: '#dc2626', fontWeight: 600, marginTop: '12px', fontSize: '14px', animation: 'fadeIn 0.2s' }}>
+                            <div style={{ textAlign: 'center', color: '#dc2626', fontWeight: 600, marginTop: '12px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', animation: 'fadeIn 0.2s' }}>
                               Not quite! Check the rule on the left.
                             </div>
                           )}
@@ -775,7 +775,7 @@ export default function TimeZonesPage({ onBack }) {
                           <div style={{ fontSize: '20px', fontWeight: 800, color: '#16a34a', marginBottom: '8px' }}>
                             Excellent! 🎉
                           </div>
-                          <div style={{ fontSize: '15px', fontWeight: 600, color: '#334155', marginBottom: '16px' }}>
+                          <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, color: '#334155', marginBottom: '16px' }}>
                             You crossed the International Date Line. Because you travelled {currentMission.dir}, the date {currentMission.dir === 'East' ? 'moved back' : 'moved forward'} by one day.
                           </div>
                           {animProgress >= 1 && (
@@ -783,7 +783,7 @@ export default function TimeZonesPage({ onBack }) {
                               setIdlMission(m => m + 1);
                               setIdlAnimState('ready');
                               setIdlAnswer(null);
-                            }} style={{ padding: '12px 24px', background: '#0E3556', color: '#fff', fontSize: '16px', fontWeight: 700, border: 'none', borderRadius: '12px', cursor: 'pointer' }}>
+                            }} style={{ padding: '12px 24px', background: '#0E3556', color: '#fff', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, border: 'none', borderRadius: '12px', cursor: 'pointer' }}>
                               Next Mission →
                             </button>
                           )}
@@ -797,18 +797,18 @@ export default function TimeZonesPage({ onBack }) {
                 <div style={{ flex: 1, background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', animation: 'scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}>
                   <div style={{ fontSize: '64px', marginBottom: '16px' }}>🏆</div>
                   <h2 style={{ fontSize: '32px', fontWeight: 900, color: '#0E3556', margin: '0 0 16px' }}>Congratulations!</h2>
-                  <div style={{ fontSize: '16px', color: '#475569', textAlign: 'center', maxWidth: '400px', lineHeight: 1.6, marginBottom: '32px' }}>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#475569', textAlign: 'center', maxWidth: '400px', lineHeight: 1.6, marginBottom: '32px' }}>
                     You discovered one of the most interesting facts in Geography. Now you know why calendars change while travelling around the world!
                   </div>
                   
                   <div style={{ display: 'flex', gap: '24px', marginBottom: '40px' }}>
                     <div style={{ background: '#f0fdf4', border: '2px solid #86efac', borderRadius: '16px', padding: '16px 24px', textAlign: 'center' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross East ⬅</div>
-                      <div style={{ fontSize: '16px', fontWeight: 900, color: '#15803d' }}>Previous Day</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross East ⬅</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 900, color: '#15803d' }}>Previous Day</div>
                     </div>
                     <div style={{ background: '#f0fdf4', border: '2px solid #86efac', borderRadius: '16px', padding: '16px 24px', textAlign: 'center' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross West ➡</div>
-                      <div style={{ fontSize: '16px', fontWeight: 900, color: '#15803d' }}>Next Day</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross West ➡</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 900, color: '#15803d' }}>Next Day</div>
                     </div>
                   </div>
 

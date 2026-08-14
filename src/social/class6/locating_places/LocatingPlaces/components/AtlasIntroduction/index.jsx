@@ -21,22 +21,22 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
         minHeight: '600px',
         display: 'flex', 
         flexDirection: 'column',
-        background: 'var(--bg-primary)', 
+        background: '#ffffff', 
         overflow: 'hidden', 
         position: 'relative',
         borderRadius: '24px',
-        border: '1px solid var(--card-border)',
-        boxShadow: 'var(--card-shadow)'
+        border: '1px solid #d6e0ec',
+        boxShadow: '0 8px 30px rgba(14,42,69,0.08)'
       }}>
       
       {/* Top Bar for Back Button */}
       {isOpen && (
-        <div style={{ padding: '0.75rem 2rem', borderBottom: '1px solid var(--border)', background: 'var(--card-bg)', zIndex: 20 }}>
+        <div style={{ padding: '0.75rem 2rem', borderBottom: '1px solid #d6e0ec', background: '#ffffff', zIndex: 20 }}>
           <button 
             onClick={() => setIsOpen(false)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
-            onMouseOver={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
-            onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: '#5c6b7a', fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#20303f'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#5c6b7a'}
           >
             <ArrowLeft size={18} /> Back to Cover
           </button>
@@ -49,7 +49,7 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
         flex: '0 0 32%', 
         minWidth: '350px', 
         padding: 'clamp(1.5rem, 2.5vw, 2rem)',
-        borderRight: '1px solid var(--border)', 
+        borderRight: '1px solid #d6e0ec', 
         background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)',
         display: 'flex',
         flexDirection: 'column',
@@ -60,37 +60,37 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
         overflow: 'hidden'
       }}>
         <div>
-        <div style={{ display: 'inline-flex', padding: '0.4rem 1rem', background: 'var(--accent-bg)', color: 'var(--accent-text)', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>
+        <div style={{ display: 'inline-flex', padding: '0.4rem 1rem', background: '#eef2ff', color: '#4338ca', borderRadius: '20px', fontSize: '0.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>
           Understanding Maps
         </div>
 
-        <h1 style={{ fontSize: 'clamp(1.75rem, 2.2vw, 2.25rem)', color: 'var(--text-heading)', margin: '0 0 1rem 0', lineHeight: 1.15 }}>
+        <h1 style={{ fontSize: 'clamp(1.75rem, 2.2vw, 2.25rem)', color: '#0E3556', margin: '0 0 1rem 0', lineHeight: 1.15 }}>
           Atlas : A Collection of Maps
         </h1>
 
-        <div style={{ color: 'var(--text-secondary)', fontSize: 'clamp(0.95rem, 1.05vw, 1.05rem)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+        <div style={{ color: '#47586b', fontSize: 'clamp(0.95rem, 1.05vw, 1.05rem)', lineHeight: 1.5, marginBottom: '1.25rem' }}>
           <p style={{ margin: '0 0 0.5rem 0' }}>An Atlas is a special book that contains many different kinds of maps.</p>
           <p style={{ margin: 0 }}>Open the Atlas and discover how each map helps us understand the world.</p>
         </div>
         </div>
 
-        <div style={{ background: 'var(--surface)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
-          <h3 style={{ margin: '0 0 0.75rem 0', color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ background: '#ffffff', padding: '1.25rem', borderRadius: '16px', border: '1px solid #d6e0ec' }}>
+          <h3 style={{ margin: '0 0 0.75rem 0', color: '#5c6b7a', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Compass size={18} /> Mission
           </h3>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <CheckCircle2 size={20} color={isOpen ? "#10b981" : "var(--text-muted)"} />
-              <div style={{ fontSize: '1rem', color: isOpen ? 'var(--text-heading)' : 'var(--text-muted)', fontWeight: isOpen ? 'bold' : 'normal' }}>Explore the Atlas</div>
+              <CheckCircle2 size={20} color={isOpen ? "#10b981" : "#5c6b7a"} />
+              <div style={{ fontSize: '1rem', color: isOpen ? '#0E3556' : '#5c6b7a', fontWeight: isOpen ? 'bold' : 'normal' }}>Explore the Atlas</div>
             </div>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <CheckCircle2 size={20} color={currentPage === 3 ? "#10b981" : "var(--text-muted)"} />
-              <div style={{ fontSize: '1rem', color: currentPage === 3 ? 'var(--text-heading)' : 'var(--text-muted)', fontWeight: currentPage === 3 ? 'bold' : 'normal' }}>Discover 3 Types of Maps</div>
+              <CheckCircle2 size={20} color={currentPage === 3 ? "#10b981" : "#5c6b7a"} />
+              <div style={{ fontSize: '1rem', color: currentPage === 3 ? '#0E3556' : '#5c6b7a', fontWeight: currentPage === 3 ? 'bold' : 'normal' }}>Discover 3 Types of Maps</div>
             </div>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <CheckCircle2 size={20} color={isCompleted ? "#10b981" : "var(--text-muted)"} />
-              <div style={{ fontSize: '1rem', color: isCompleted ? 'var(--text-heading)' : 'var(--text-muted)', fontWeight: isCompleted ? 'bold' : 'normal' }}>Complete the Journey</div>
+              <CheckCircle2 size={20} color={isCompleted ? "#10b981" : "#5c6b7a"} />
+              <div style={{ fontSize: '1rem', color: isCompleted ? '#0E3556' : '#5c6b7a', fontWeight: isCompleted ? 'bold' : 'normal' }}>Complete the Journey</div>
             </div>
           </div>
         </div>
@@ -127,17 +127,17 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
             zIndex: 100, animation: 'fadeIn 0.3s ease-out'
           }}>
             <div style={{
-              background: 'var(--card-bg)', padding: '3rem', borderRadius: '24px',
+              background: '#ffffff', padding: '3rem', borderRadius: '24px',
               maxWidth: '450px', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
             }}>
               <div style={{ display: 'inline-flex', padding: '1.5rem', background: '#ecfdf5', borderRadius: '50%', marginBottom: '1.5rem', boxShadow: '0 10px 25px rgba(16, 185, 129, 0.2)' }}>
                 <Compass size={48} color="#10b981" />
               </div>
-              <h2 style={{ fontSize: '2.5rem', margin: '0 0 1rem 0', color: 'var(--text-heading)' }}>Excellent!</h2>
-              <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '2rem' }}>
+              <h2 style={{ fontSize: '2.5rem', margin: '0 0 1rem 0', color: '#0E3556' }}>Excellent!</h2>
+              <p style={{ fontSize: '1.15rem', color: '#47586b', lineHeight: 1.6, marginBottom: '2rem' }}>
                 You explored an Atlas and discovered three different kinds of maps. Now you're ready to learn how maps work.
               </p>
-              <div style={{ background: 'var(--bg-primary)', padding: '0.8rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border)', display: 'inline-block', fontWeight: 'bold', color: 'var(--accent)', fontSize: '1.1rem' }}>
+              <div style={{ background: '#ffffff', padding: '0.8rem 1.5rem', borderRadius: '12px', border: '1px solid #d6e0ec', display: 'inline-block', fontWeight: 'bold', color: '#6366f1', fontSize: '1.1rem' }}>
                 🏆 Atlas Explorer Badge
               </div>
             </div>

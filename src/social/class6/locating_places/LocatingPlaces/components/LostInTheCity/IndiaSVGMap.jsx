@@ -95,7 +95,7 @@ export default function IndiaSVGMap({
           y1={startNode.y}
           x2={endNode.x}
           y2={endNode.y}
-          stroke={isExtra ? "#64748b" : "var(--primary)"}
+          stroke={isExtra ? "#64748b" : "#6366f1"}
           strokeWidth="2.5"
           strokeDasharray="6 6"
           strokeDashoffset={animate ? 1000 : 0}
@@ -107,7 +107,7 @@ export default function IndiaSVGMap({
           cx={endNode.x} 
           cy={endNode.y} 
           r="4" 
-          fill={isExtra ? "#64748b" : "var(--primary)"} 
+          fill={isExtra ? "#64748b" : "#6366f1"} 
           opacity={animate ? 0 : 1}
           style={animate ? { animation: `fade-in 0.3s ease-out forwards ${delay + 1.8}s` } : {}}
         />
@@ -118,7 +118,7 @@ export default function IndiaSVGMap({
             cx={endNode.x} 
             cy={endNode.y} 
             r="4" 
-            fill="var(--primary)" 
+            fill="#6366f1" 
             style={{ animation: `pulseEnd 1.5s infinite ${delay + 1.8}s` }}
           />
         )}
@@ -150,14 +150,14 @@ export default function IndiaSVGMap({
             to { opacity: 1; }
           }
           @keyframes state-pulse {
-            0% { fill: var(--primary-light); }
+            0% { fill: #a5b4fc; }
             50% { fill: #dbeafe; }
-            100% { fill: var(--primary-light); }
+            100% { fill: #a5b4fc; }
           }
         `}</style>
 
         {/* States Layer */}
-        <g stroke="var(--border)" strokeWidth="1" strokeLinejoin="round" strokeLinecap="round">
+        <g stroke="#d6e0ec" strokeWidth="1" strokeLinejoin="round" strokeLinecap="round">
           {IndiaMapData.locations.map((loc) => {
             const isDestination = currentDestinationId === loc.id;
             const isCompleted = completedMissionIds.includes(loc.id);
@@ -173,8 +173,8 @@ export default function IndiaSVGMap({
               stroke = '#16a34a';
               strokeWidth = 1.5;
             } else if (isDestination && !animating) {
-              fill = 'var(--primary-light)';
-              stroke = 'var(--primary)';
+              fill = '#a5b4fc';
+              stroke = '#6366f1';
               strokeWidth = 1.5;
             } else if (isCompleted || (animating && isDestination)) {
               fill = '#eff6ff';
@@ -266,7 +266,7 @@ export default function IndiaSVGMap({
                   <text 
                     x={node.x + city.dx} 
                     y={node.y + city.dy}
-                    fill={isActive ? 'var(--primary)' : '#475569'}
+                    fill={isActive ? '#6366f1' : '#475569'}
                     textAnchor={city.anchor}
                   >
                     <tspan x={node.x + city.dx} dy="0">{city.name}</tspan>
@@ -288,7 +288,7 @@ export default function IndiaSVGMap({
           color: 'white',
           padding: '6px 12px',
           borderRadius: '4px',
-          fontSize: '14px',
+          fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)',
           fontWeight: 600,
           pointerEvents: 'none',
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)'

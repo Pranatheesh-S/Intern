@@ -1,36 +1,103 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronRight, Map, MapPin, Compass, ArrowLeft } from 'lucide-react';
+import { ChevronRight, Map, MapPin, Compass, ArrowLeft, Maximize2, Minimize2 } from 'lucide-react';
 import ExploreIndiaActivity from './ExploreIndiaActivity';
 import ChapterBackFooter from '../ChapterBackFooter';
 import { ScrollableWithNav } from '../ContentScrollNav';
+import townMapFig from './assets/town_map_fig1.jpg';
 
 const N = {
-  RS: {x: 150, y: 360, label: 'Railway Station', type: 'station', start: true},
-  HO: {x: 350, y: 360, label: 'Hospital', type: 'hospital'},
-  NP: {x: 550, y: 360, label: 'Nagar Panchayat', type: 'civic'},
-  BK: {x: 740, y: 560, label: 'Bank', type: 'bank', goal: true},
-  SC: {x: 150, y: 560, label: 'School', type: 'school'},
-  MK: {x: 350, y: 560, label: 'Market', type: 'market'},
-  JT: {x: 550, y: 560, label: 'Junction', type: 'junction'},
-  MU: {x: 740, y: 360, label: 'Museum', type: 'museum'},
-  AP: {x: 350, y: 165, label: 'Apartments', type: 'apartment'},
-  PG: {x: 740, y: 165, label: 'Public Garden', type: 'garden'},
+  RS: {x: 335, y: 320, label: 'Railway Station', type: 'station', start: true},
+  HO: {x: 585, y: 440, label: 'Hospital', type: 'hospital'},
+  NP: {x: 865, y: 360, label: 'Nagar Panchayat', type: 'civic'},
+  BK: {x: 1042, y: 372, label: 'Bank', type: 'bank', goal: true},
+  SC: {x: 352, y: 565, label: 'School', type: 'school'},
+  MK: {x: 690, y: 645, label: 'Market', type: 'market'},
+  JT: {x: 940, y: 470, label: 'Junction', type: 'junction'},
+  MU: {x: 1100, y: 570, label: 'Museum', type: 'museum'},
+  AP: {x: 760, y: 175, label: 'Apartments', type: 'apartment'},
+  PG: {x: 1140, y: 245, label: 'Public Garden', type: 'garden'},
 };
 
-const EDGES = [
-  ['RS', 'HO'], ['HO', 'NP'], ['NP', 'MU'], ['SC', 'MK'], ['MK', 'JT'], ['JT', 'BK'],
-  ['RS', 'SC'], ['AP', 'HO'], ['HO', 'MK'], ['NP', 'JT'], ['PG', 'MU'], ['MU', 'BK']
-];
+// Each road is traced along the actual tarmac in town_map_fig1.jpg,
+// from one place to the next. Points are in the image's own 1376 x 768 space.
+const PATHS = {
+  'RS|HO': [[335,320],[330,425],[400,427],[470,428],[522,428],[560,434],[585,440]],
+  'RS|SC': [[335,320],[330,425],[255,424],[199,434],[196,490],[196,570],[205,640],[233,686],[282,716],[313,708],[331,668],[344,615],[352,565]],
+  'SC|MK': [[352,565],[344,615],[331,668],[313,708],[380,727],[480,730],[580,730],[650,722],[688,690],[690,645]],
+  'MK|JT': [[690,645],[688,690],[760,726],[840,728],[900,716],[932,678],[940,600],[940,520],[940,470]],
+  'HO|NP': [[585,440],[585,505],[578,538],[615,545],[680,520],[745,495],[800,470],[850,455],[870,430],[866,400],[865,360]],
+  'NP|BK': [[865,360],[865,415],[900,428],[960,428],[1010,428],[1040,428],[1042,372]],
+  'NP|JT': [[865,360],[865,415],[895,432],[925,450],[940,470]],
+  'BK|PG': [[1042,372],[1040,428],[1090,428],[1140,420],[1185,395],[1210,340],[1205,280],[1180,248],[1140,245]],
+  'PG|AP': [[1140,245],[1080,240],[1010,238],[960,244],[920,228],[880,232],[820,240],[770,228],[760,175]],
+  'AP|HO': [[760,175],[762,228],[790,262],[762,298],[710,330],[665,368],[630,400],[600,420],[585,440]],
+  'JT|MU': [[940,470],[940,560],[942,640],[965,660],[1020,656],[1080,640],[1100,570]],
+};
 
-const ADJ = {};
-Object.keys(N).forEach(k => ADJ[k] = {});
-function dirOf(a, b) {
-  const dx = N[b].x - N[a].x, dy = N[b].y - N[a].y;
+const EDGES = Object.keys(PATHS).map(k => k.split('|'));
+
+// the tarmac between two adjoining places, in the direction of travel
+function roadPoints(a, b) {
+  const fwd = PATHS[`${a}|${b}`];
+  if (fwd) return fwd;
+  const back = PATHS[`${b}|${a}`];
+  if (back) return [...back].reverse();
+  return [[N[a].x, N[a].y], [N[b].x, N[b].y]];
+}
+
+const ptsAttr = pts => pts.map(([x, y]) => `${x},${y}`).join(' ');
+
+// Which way a road SETS OFF, read off the tarmac itself — not the straight
+// line between two buildings. Leaving the Hospital for the Nagar Panchayat you
+// drive south out of the gate first, so that road is 'S' even though the Nagar
+// Panchayat sits to the east.
+function pointAlong(pts, dist) {
+  let acc = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+    const seg = Math.hypot(x1 - x0, y1 - y0);
+    if (acc + seg >= dist) {
+      const t = (dist - acc) / seg;
+      return [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t];
+    }
+    acc += seg;
+  }
+  return pts[pts.length - 1];
+}
+
+function compass([x0, y0], [x1, y1]) {
+  const dx = x1 - x0, dy = y1 - y0;
   return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'E' : 'W') : (dy > 0 ? 'S' : 'N');
 }
-EDGES.forEach(([a, b]) => {
-  ADJ[a][dirOf(a, b)] = b;
-  ADJ[b][dirOf(b, a)] = a;
+
+const NEIGHBOURS = {};
+Object.keys(N).forEach(k => NEIGHBOURS[k] = []);
+EDGES.forEach(([a, b]) => { NEIGHBOURS[a].push(b); NEIGHBOURS[b].push(a); });
+
+// Roads out of a place often share the same driveway for the first stretch, so
+// read the heading far enough along that every road out of this place is
+// heading somewhere different.
+const ADJ = {};
+Object.keys(N).forEach(place => {
+  const outs = NEIGHBOURS[place];
+  let settled = null;
+  for (const reach of [80, 120, 160, 200, 250, 300, 400, 600]) {
+    const dirs = {};
+    let clash = false;
+    for (const other of outs) {
+      const pts = roadPoints(place, other);
+      const dir = compass(pts[0], pointAlong(pts, reach));
+      if (dirs[dir]) { clash = true; break; }
+      dirs[dir] = other;
+    }
+    if (!clash) { settled = dirs; break; }
+  }
+  // last resort: straight line between the two places
+  if (!settled) {
+    settled = {};
+    outs.forEach(other => { settled[compass([N[place].x, N[place].y], [N[other].x, N[other].y])] = other; });
+  }
+  ADJ[place] = settled;
 });
 
 function bfs(start, goal) {
@@ -52,59 +119,33 @@ const ROOF = {
 };
 const short = { RS: 'RS', HO: 'Hosp', NP: 'NP', BK: 'Bank', SC: 'Sch', MK: 'Mkt', JT: 'Jn', MU: 'Mus', AP: 'Apt', PG: 'PG' };
 
-const GrassGrid = () => {
-  const blocks = [];
-  for (let gx = 0; gx < 880; gx += 44) {
-    for (let gy = 0; gy < 720; gy += 44) {
-      if ((gx / 44 + gy / 44) % 2 === 0) {
-        blocks.push(<rect key={`${gx}-${gy}`} x={gx} y={gy} width={44} height={44} fill="#b6da7e" opacity={0.5} />);
-      }
-    }
-  }
-  return <g>{blocks}</g>;
-};
-
-const IMAGE_MAP = {
-  station: 'railway_station', hospital: 'hospital', civic: 'nagar_panchayat', 
-  bank: 'bank', school: 'school', market: 'market', museum: 'museum', 
-  apartment: 'apartments', garden: 'public_garden'
-};
-
 const MapBuilding = ({ id, onClick, isPulsing }) => {
   const n = N[id];
   const { x, y, type, label } = n;
-
-  let icon = null;
-  if (type === 'junction') {
-    icon = <circle cx={x} cy={y} r={7} fill="#fff" stroke="#8a94a1" strokeWidth={2} />;
-  } else {
-    const imgName = IMAGE_MAP[type];
-    const isStation = type === 'station';
-    const imgWidth = isStation ? 110 : 54;
-    const imgHeight = isStation ? 60 : 54;
-    const imgX = x - imgWidth / 2;
-    const imgY = y - (isStation ? 35 : 30);
-    icon = (
-      <image 
-        href={`/buildings/${imgName}.png?v=5`}
-        x={imgX}
-        y={imgY}
-        width={imgWidth}
-        height={imgHeight}
-        preserveAspectRatio="xMidYMid meet"
-        style={{ filter: 'drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.95)) drop-shadow(0px 4px 8px rgba(0,0,0,0.5))' }}
-      />
-    );
-  }
+  const isJunction = type === 'junction';
 
   return (
-    <g style={{ cursor: 'pointer' }} onClick={() => onClick(id)} transform={`translate(${x}, ${y}) scale(1.4) translate(-${x}, -${y})`}>
-      {icon}
-      <rect x={x - label.length * 3.4} y={y + 18} width={label.length * 6.8} height={16} rx={4} fill="#fff" opacity={0.9} />
-      <text x={x} y={y + 29} textAnchor="middle" fontFamily="Space Grotesk, system-ui, sans-serif" fontSize={10.5} fontWeight={700} fill="#20303f">{label}</text>
+    <g style={{ cursor: 'pointer' }} onClick={() => onClick(id)}>
+      {/* generous invisible hit area over the building in the photograph */}
+      <circle cx={x} cy={y} r={54} fill="transparent" />
+      <circle
+        cx={x}
+        cy={y}
+        r={isJunction ? 11 : 15}
+        fill={isJunction ? '#ffffff' : 'rgba(255,255,255,0.55)'}
+        stroke={isJunction ? '#8a94a1' : '#0E3556'}
+        strokeWidth={isJunction ? 3 : 2.5}
+        style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.35))' }}
+      />
+      {isJunction && (
+        <>
+          <rect x={x - label.length * 4.2} y={y + 18} width={label.length * 8.4} height={20} rx={5} fill="#fff" opacity={0.92} />
+          <text x={x} y={y + 32} textAnchor="middle" fontFamily="Space Grotesk, system-ui, sans-serif" fontSize={14} fontWeight={700} fill="#20303f">{label}</text>
+        </>
+      )}
       {isPulsing && (
-        <circle cx={x} cy={y} r={40} fill="none" stroke="#e74c3c" strokeWidth={3}>
-          <animate attributeName="r" from="40" to="30" dur="0.6s" repeatCount="2" />
+        <circle cx={x} cy={y} r={44} fill="none" stroke="#e74c3c" strokeWidth={4}>
+          <animate attributeName="r" from="44" to="30" dur="0.6s" repeatCount="2" />
         </circle>
       )}
     </g>
@@ -124,6 +165,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   const [t3Ans, setT3Ans] = useState(null);
   
   const [showQuiz, setShowQuiz] = useState(false);
+  const [mapFull, setMapFull] = useState(false);
 
   const logRef = useRef(null);
   const elementsRef = useRef(null);
@@ -132,6 +174,13 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [logs]);
+
+  useEffect(() => {
+    if (!mapFull) return;
+    const onKey = e => { if (e.key === 'Escape') setMapFull(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mapFull]);
 
   useEffect(() => {
     if (t1Done && t2Ans !== null && t3Ans !== null && win && onMissionUnlock) {
@@ -225,12 +274,12 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
       <style>{`
-        .dpad-btn { font-family: "Space Grotesk", system-ui, sans-serif; font-weight: 700; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #0E3556; border-radius: 11px; padding: 12px 0; font-size: 14px; transition: all 0.15s; }
+        .dpad-btn { font-family: "Space Grotesk", system-ui, sans-serif; font-weight: 700; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #0E3556; border-radius: 11px; padding: 12px 0; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); transition: all 0.15s; }
         .dpad-btn:hover:not(:disabled) { border-color: #7c5cff; background: #f4f1ff; }
         .dpad-btn:disabled { opacity: 0.28; cursor: not-allowed; }
         .dpad-btn.hint { border-color: #F5A623; background: #fff6e6; animation: pulseHint 1.2s ease-in-out infinite; }
         @keyframes pulseHint { 0%, 100% { box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.4); } 50% { box-shadow: 0 0 0 6px rgba(245, 166, 35, 0); } }
-        .opts-btn { font-family: "Space Grotesk", system-ui, sans-serif; font-weight: 600; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #20303f; border-radius: 9px; padding: 7px 12px; font-size: 12.5px; transition: all 0.15s; }
+        .opts-btn { font-family: "Space Grotesk", system-ui, sans-serif; font-weight: 600; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #20303f; border-radius: 9px; padding: 7px 12px; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); transition: all 0.15s; }
         .opts-btn:hover:not(:disabled) { border-color: #7c5cff; }
         .opts-btn.ok { border-color: #12a15f; background: #eafaf1; color: #12a15f; }
         .opts-btn.bad { border-color: #e0552f; background: #fdeee9; color: #e0552f; }
@@ -240,7 +289,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
         <div style={{ padding: '0.75rem 2rem', borderBottom: '1px solid rgba(0,0,0,0.08)', background: '#fff', zIndex: 10 }}>
           <button 
             onClick={() => setShowQuiz(false)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: '#5c6b7a', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: '#5c6b7a', fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
             onMouseOver={(e) => e.currentTarget.style.color = '#20303f'}
             onMouseOut={(e) => e.currentTarget.style.color = '#5c6b7a'}
           >
@@ -251,34 +300,43 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
       
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
       {/* LEFT PAGE - MAP */}
-      <div style={{ flex: 1.4, padding: '24px', display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)', position: 'relative', background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)' }}>
+      <div style={{ flex: 1.4, padding: '10px', display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)', position: 'relative', background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)' }}>
         
-        <div style={{ background: '#dfeeff', border: '6px solid #0E3556', borderRadius: '18px', overflow: 'hidden', position: 'relative', flex: 1, boxShadow: '0 24px 60px rgba(14,42,69,0.1)' }}>
-          <svg viewBox="50 90 790 560" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%', display: 'block' }}>
-            <image href="/buildings/background_map.jpg" x="0" y="0" width="880" height="720" preserveAspectRatio="xMidYMid slice" />
-            
-            {/* Roads */}
-            {EDGES.map(([a, b], idx) => {
-              const A = N[a], B = N[b];
-              return (
-                <g key={idx}>
-                  <line x1={A.x} y1={A.y} x2={B.x} y2={B.y} stroke="#6f7a88" strokeWidth={26} strokeLinecap="round" />
-                  <line x1={A.x} y1={A.y} x2={B.x} y2={B.y} stroke="#8a94a1" strokeWidth={22} strokeLinecap="round" />
-                  <line x1={A.x} y1={A.y} x2={B.x} y2={B.y} stroke="#e9edf1" strokeWidth={1.5} strokeDasharray="7 9" />
-                </g>
-              );
-            })}
+        <div style={mapFull
+          ? { background: '#ECE3D2', border: 'none', borderRadius: 0, overflow: 'hidden', position: 'fixed', inset: 0, zIndex: 100001, boxShadow: 'none' }
+          : { background: '#ECE3D2', border: '2px solid #0E3556', borderRadius: '14px', overflow: 'hidden', position: 'relative', flex: 1, minHeight: 0, boxShadow: '0 6px 18px rgba(14,42,69,0.08)' }}>
+
+          {/* Enlarge / restore the map */}
+          <button
+            onClick={() => setMapFull(v => !v)}
+            title={mapFull ? 'Exit full screen (Esc)' : 'View the map full screen'}
+            aria-label={mapFull ? 'Exit full screen' : 'View the map full screen'}
+            style={{ position: 'absolute', top: '14px', right: '14px', zIndex: 7, width: '44px', height: '44px', borderRadius: '12px', border: '1px solid #d6e0ec', background: 'rgba(255,255,255,0.92)', color: '#0E3556', display: 'grid', placeItems: 'center', cursor: 'pointer', boxShadow: '0 6px 16px rgba(14,42,69,0.14)', transition: 'background 0.15s' }}
+            onMouseOver={e => e.currentTarget.style.background = '#fff'}
+            onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.92)'}
+          >
+            {mapFull ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+          </button>
+
+          <svg viewBox="0 0 1376 768" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%', display: 'block' }}>
+            <image href={townMapFig} x="0" y="0" width="1376" height="768" preserveAspectRatio="xMidYMid meet" />
+
+            {/* Road links — traced along the tarmac in the photograph */}
+            {EDGES.map(([a, b], idx) => (
+              <polyline key={idx} points={ptsAttr(roadPoints(a, b))} fill="none" stroke="#0E3556"
+                        strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" strokeDasharray="7 9" opacity={0.3} />
+            ))}
             
             {/* Travelled Route */}
-            {path.length > 1 && (
+            {path.length > 1 && !showQuiz && (
               <polyline 
-                points={path.map(n => `${N[n].x},${N[n].y}`).join(' ')}
+                points={ptsAttr(path.slice(1).reduce((acc, n, i) => acc.concat(roadPoints(path[i], n).slice(1)), [[N[path[0]].x, N[path[0]].y]]))}
                 fill="none"
                 stroke="#e74c3c"
-                strokeWidth={8}
+                strokeWidth={9}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeDasharray="0 20"
+                strokeDasharray="0 22"
               />
             )}
 
@@ -287,16 +345,6 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               <MapBuilding key={k} id={k} onClick={tapBuilding} isPulsing={k === 'HO' && pulseHO} />
             ))}
 
-            {/* Compass */}
-            <g transform="translate(818,64)">
-              <circle r={26} fill="#fff" opacity={0.9} />
-              <polygon points="0,-22 5,0 0,0" fill="#c0392b" /><polygon points="0,-22 -5,0 0,0" fill="#e88b80" />
-              <polygon points="0,22 5,0 0,0" fill="#334" /><polygon points="0,22 -5,0 0,0" fill="#889" />
-              <text x={0} y={-28} textAnchor="middle" fontSize={9} fontWeight={700} fill="#0E3556">N</text>
-              <text x={0} y={36} textAnchor="middle" fontSize={9} fill="#5c6b7a">S</text>
-              <text x={-34} y={4} textAnchor="middle" fontSize={9} fill="#5c6b7a">W</text>
-              <text x={34} y={4} textAnchor="middle" fontSize={9} fill="#5c6b7a">E</text>
-            </g>
 
             {/* Player Token */}
             <g id="player" style={{ transform: `translate(${N[cur].x}px, ${N[cur].y - 20}px)`, transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
@@ -317,8 +365,8 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               <Map size={20} color="#2f6df0" />
             </div>
             <div>
-              <b style={{ fontSize: '14px', color: '#0E3556', display: 'block', lineHeight: 1.1 }}>Town Map</b>
-              <span style={{ fontSize: '11px', color: '#5c6b7a' }}>Top-down view · Fig. 1.1</span>
+              <b style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#0E3556', display: 'block', lineHeight: 1.1 }}>Town Map</b>
+              <span style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a' }}>Top-down view · Fig. 1.1</span>
             </div>
           </div>
           
@@ -328,16 +376,16 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               <div style={{ background: '#fff', borderRadius: '18px', padding: '30px 34px', textAlign: 'center', maxWidth: '380px', boxShadow: '0 30px 70px rgba(0,0,0,0.4)' }}>
                 <div style={{ fontSize: '44px' }}>🎉</div>
                 <h3 style={{ fontFamily: '"Fraunces", serif', color: '#12a15f', fontSize: '26px', margin: '6px 0 8px' }}>You reached the Bank!</h3>
-                <p style={{ color: '#5c6b7a', fontSize: '14px', lineHeight: 1.5, marginBottom: '24px' }}>
+                <p style={{ color: '#5c6b7a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.5, marginBottom: '24px' }}>
                   {userTook === optTook ? (
-                    <span>Perfect route in <b>{userTook} roads</b> — that's the shortest possible! Railway Station → Hospital → Nagar Panchayat → Junction → Bank.</span>
+                    <span>Perfect route in <b>{userTook} roads</b> — that's the shortest possible! Railway Station → Hospital → Nagar Panchayat → Bank.</span>
                   ) : (
-                    <span>You made it in <b>{userTook} roads</b>. The shortest route is <b>{optTook}</b> (for example: Hospital → Nagar Panchayat → Junction → Bank).</span>
+                    <span>You made it in <b>{userTook} roads</b>. The shortest route is <b>{optTook}</b> (for example: Hospital → Nagar Panchayat → Bank).</span>
                   )}
                 </p>
                 <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-                  <button onClick={resetGame} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, border: '1px solid #d6e0ec', cursor: 'pointer', background: '#fff', color: '#5c6b7a', padding: '12px 20px', borderRadius: '999px', fontSize: '14px' }}>Play again</button>
-                  <button onClick={() => setShowQuiz(true)} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, border: 'none', cursor: 'pointer', background: '#F5A623', color: '#fff', padding: '12px 24px', borderRadius: '999px', fontSize: '15px', boxShadow: '0 4px 15px rgba(245, 166, 35, 0.4)' }}>Proceed to Quiz →</button>
+                  <button onClick={resetGame} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, border: '1px solid #d6e0ec', cursor: 'pointer', background: '#fff', color: '#5c6b7a', padding: '12px 20px', borderRadius: '999px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>Play again</button>
+                  <button onClick={() => setShowQuiz(true)} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, border: 'none', cursor: 'pointer', background: '#F5A623', color: '#fff', padding: '12px 24px', borderRadius: '999px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', boxShadow: '0 4px 15px rgba(245, 166, 35, 0.4)' }}>Proceed to Quiz →</button>
                 </div>
               </div>
             </div>
@@ -350,28 +398,39 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
         
         {!showQuiz && (
           <>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: '"IBM Plex Mono", monospace', fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#7c5cff', fontWeight: 600 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: '"IBM Plex Mono", monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#7c5cff', fontWeight: 600 }}>
               ◎ Let's play a game
             </div>
             <div style={{ fontFamily: '"Fraunces", serif', fontWeight: 600, color: '#0E3556', fontSize: 'clamp(20px, 2.2vw, 28px)', margin: '6px 0 4px' }}>
               Reach the Bank
             </div>
-            <div style={{ color: '#5c6b7a', fontSize: '13.5px', lineHeight: 1.5 }}>
+            <div style={{ color: '#5c6b7a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.5 }}>
               You just got off a train at the <b>Railway Station</b>. Travel the roads to reach the <b>Bank</b>. There is more than one correct path — pick a road at each junction.
             </div>
 
             <ScrollableWithNav containerStyle={{ marginTop: '14px' }} scrollStyle={{ paddingRight: '4px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              
+
+              {/* Textbook passage */}
+              <div style={{ background: '#fbf5e6', borderLeft: '4px solid #F5A623', borderRadius: '12px', padding: '14px 16px' }}>
+                <p style={{ margin: 0, color: '#7a5a2a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.6 }}>
+                  Examine the map of this small city (<b>Fig. 1.1</b>). Imagine that you just got off a train at the
+                  railway station, and you want to visit the bank marked on the map. <b>Which way would you go?</b>
+                  Are there other possible ways? Can you locate the <b>public garden</b>, the <b>school</b> and the
+                  <b> museum</b>? If you want to proceed from the bank to the market, which way will you go?
+                  This is where a map comes in handy.
+                </p>
+              </div>
+
               {/* Controls */}
               <div style={{ background: '#F3F7FC', border: '1px solid #e4ebf3', borderRadius: '14px', padding: '14px' }}>
-                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#0E3556', fontWeight: 600, marginBottom: '10px', textAlign: 'center' }}>Choose a direction</div>
+                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#0E3556', fontWeight: 600, marginBottom: '10px', textAlign: 'center' }}>Choose a direction</div>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(3, auto)', gap: '7px', maxWidth: '220px', margin: '0 auto' }}>
                   <button className={`dpad-btn ${hintDir === 'N' ? 'hint' : ''}`} style={{ gridColumn: 2 }} disabled={!ADJ[cur]['N']} onClick={() => handleMove('N')}>▲ N</button>
                   <button className={`dpad-btn ${hintDir === 'W' ? 'hint' : ''}`} style={{ gridColumn: 1, gridRow: 2 }} disabled={!ADJ[cur]['W']} onClick={() => handleMove('W')}>◀ W</button>
                   
                   <div style={{ gridColumn: 2, gridRow: 2, display: 'grid', placeItems: 'center' }}>
-                    <div style={{ width: '34px', height: '34px', borderRadius: '50%', border: '2px dashed #c3cfdd', display: 'grid', placeItems: 'center', fontSize: '11px', color: '#5c6b7a', fontFamily: '"IBM Plex Mono", monospace' }}>
+                    <div style={{ width: '34px', height: '34px', borderRadius: '50%', border: '2px dashed #c3cfdd', display: 'grid', placeItems: 'center', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', fontFamily: '"IBM Plex Mono", monospace' }}>
                       {short[cur]}
                     </div>
                   </div>
@@ -381,16 +440,16 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                 </div>
                 
                 <div style={{ display: 'flex', gap: '8px', marginTop: '12px', justifyContent: 'center' }}>
-                  <button onClick={handleHint} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, cursor: 'pointer', border: '1px solid #d6e0ec', background: '#fff', color: '#5c6b7a', borderRadius: '10px', padding: '8px 14px', fontSize: '12.5px' }}>💡 Hint</button>
-                  <button onClick={handleUndo} disabled={path.length <= 1 || win} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, cursor: 'pointer', border: '1px solid #d6e0ec', background: '#fff', color: '#5c6b7a', borderRadius: '10px', padding: '8px 14px', fontSize: '12.5px', opacity: path.length <= 1 || win ? 0.5 : 1 }}>↩ Back</button>
-                  <button onClick={resetGame} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, cursor: 'pointer', border: '1px solid #d6e0ec', background: '#fff', color: '#5c6b7a', borderRadius: '10px', padding: '8px 14px', fontSize: '12.5px' }}>↺ Restart</button>
+                  <button onClick={handleHint} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, cursor: 'pointer', border: '1px solid #d6e0ec', background: '#fff', color: '#5c6b7a', borderRadius: '10px', padding: '8px 14px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>💡 Hint</button>
+                  <button onClick={handleUndo} disabled={path.length <= 1 || win} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, cursor: 'pointer', border: '1px solid #d6e0ec', background: '#fff', color: '#5c6b7a', borderRadius: '10px', padding: '8px 14px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', opacity: path.length <= 1 || win ? 0.5 : 1 }}>↩ Back</button>
+                  <button onClick={resetGame} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 600, cursor: 'pointer', border: '1px solid #d6e0ec', background: '#fff', color: '#5c6b7a', borderRadius: '10px', padding: '8px 14px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>↺ Restart</button>
                 </div>
               </div>
 
               {/* Breadcrumbs */}
               <div style={{ background: '#F3F7FC', border: '1px solid #e4ebf3', borderRadius: '14px', padding: '14px' }}>
-                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#0E3556', fontWeight: 600, marginBottom: '10px' }}>Progress</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center', fontSize: '13px' }}>
+                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#0E3556', fontWeight: 600, marginBottom: '10px' }}>Progress</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>
                   {path.map((p, i) => (
                     <React.Fragment key={i}>
                       <span style={{ fontWeight: 700, color: i === path.length - 1 ? '#7c5cff' : '#12a15f' }}>{N[p].label}</span>
@@ -403,9 +462,9 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
 
               {/* Log */}
               <div style={{ background: '#F3F7FC', border: '1px solid #e4ebf3', borderRadius: '14px', padding: '14px' }}>
-                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#0E3556', fontWeight: 600, marginBottom: '10px' }}>Journey log</div>
-                <div ref={logRef} style={{ display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '13px', maxHeight: '100px', overflowY: 'auto' }}>
-                  {logs.map((log, i) => (
+                <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#0E3556', fontWeight: 600, marginBottom: '10px' }}>Journey log</div>
+                <div ref={logRef} style={{ display: 'flex', flexDirection: 'column', gap: '7px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', overflow: 'hidden' }}>
+                  {logs.slice(-4).map((log, i) => (
                     <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', color: '#20303f' }}>
                       <span style={{ color: log.ok ? '#12a15f' : '#e0552f', flex: '0 0 auto' }}>{log.ok ? '✓' : '✗'}</span>
                       <span dangerouslySetInnerHTML={{ __html: log.html }}></span>
@@ -422,19 +481,19 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
           <ScrollableWithNav scrollStyle={{ display: 'flex', flexDirection: 'column' }}>
             {/* Explore Tasks */}
             <div style={{ background: '#F3F7FC', border: '1px solid #e4ebf3', borderRadius: '14px', padding: '24px' }}>
-              <div style={{ color: '#b45309', fontFamily: '"IBM Plex Mono", monospace', fontSize: '14px', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '20px' }}>◎ Let's explore — Fig. 1.1</div>
+              <div style={{ color: '#b45309', fontFamily: '"IBM Plex Mono", monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '20px' }}>◎ Let's explore — Fig. 1.1</div>
               
               <div style={{ marginBottom: '20px' }}>
                 <p style={{ fontSize: '14.5px', color: '#20303f', fontWeight: 600, marginBottom: '10px' }}>1 · Tap the <b>Hospital</b> on the map to mark it.</p>
-                {t1Done && <div style={{ fontSize: '13px', marginTop: '8px', color: '#12a15f' }}>✓ Marked! The hospital is near the town centre.</div>}
+                {t1Done && <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', marginTop: '8px', color: '#12a15f' }}>✓ Marked! The hospital is near the town centre.</div>}
               </div>
 
               <div style={{ marginBottom: '20px' }}>
                 <p style={{ fontSize: '14.5px', color: '#20303f', fontWeight: 600, marginBottom: '10px' }}>2 · What do the blue-coloured areas mean?</p>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  <button className={`opts-btn ${t2Ans === 1 ? 'ok' : ''}`} disabled={t2Ans !== null} onClick={() => setT2Ans(1)} style={{ fontSize: '13.5px', padding: '10px 16px' }}>Water (lake & river)</button>
-                  <button className={`opts-btn ${t2Ans === 0 ? 'bad' : ''}`} disabled={t2Ans !== null} onClick={() => setT2Ans(0)} style={{ fontSize: '13.5px', padding: '10px 16px' }}>Forests</button>
-                  <button className={`opts-btn ${t2Ans === 2 ? 'bad' : ''}`} disabled={t2Ans !== null} onClick={() => setT2Ans(2)} style={{ fontSize: '13.5px', padding: '10px 16px' }}>Roads</button>
+                  <button className={`opts-btn ${t2Ans === 1 ? 'ok' : ''}`} disabled={t2Ans !== null} onClick={() => setT2Ans(1)} style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', padding: '10px 16px' }}>Water (lake & river)</button>
+                  <button className={`opts-btn ${t2Ans === 0 ? 'bad' : ''}`} disabled={t2Ans !== null} onClick={() => setT2Ans(0)} style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', padding: '10px 16px' }}>Forests</button>
+                  <button className={`opts-btn ${t2Ans === 2 ? 'bad' : ''}`} disabled={t2Ans !== null} onClick={() => setT2Ans(2)} style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', padding: '10px 16px' }}>Roads</button>
                 </div>
               </div>
 
@@ -448,12 +507,12 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                       else if (opt === t3Ans.picked) cls = 'bad';
                     }
                     return (
-                      <button key={opt} className={`opts-btn ${cls}`} disabled={t3Ans !== null} onClick={() => checkT3(opt)} style={{ fontSize: '13.5px', padding: '10px 16px' }}>{opt}</button>
+                      <button key={opt} className={`opts-btn ${cls}`} disabled={t3Ans !== null} onClick={() => checkT3(opt)} style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', padding: '10px 16px' }}>{opt}</button>
                     );
                   })}
                 </div>
                 {t3Ans && (
-                  <div style={{ fontSize: '13px', marginTop: '10px', color: '#12a15f', lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', marginTop: '10px', color: '#12a15f', lineHeight: 1.5 }}>
                     Computed from the map: Public Garden ≈ {Math.round(t3Ans.dists['Public Garden'])}, Nagar Panchayat ≈ {Math.round(t3Ans.dists['Nagar Panchayat'])}, School ≈ {Math.round(t3Ans.dists['School'])} units → <b>{t3Ans.far}</b> is farthest.
                   </div>
                 )}
@@ -462,28 +521,28 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
 
             {/* Elements of a Map Context Box */}
             <div ref={elementsRef} style={{ marginTop: '20px', background: '#fff9f0', border: '1px solid #fce7c8', borderRadius: '14px', padding: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#d97706', fontFamily: '"IBM Plex Mono", monospace', fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#d97706', fontFamily: '"IBM Plex Mono", monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '16px' }}>
                 <Compass size={16} /> Elements of a Map
               </div>
               
               <div style={{ display: 'grid', gap: '16px' }}>
                 <div>
                   <h4 style={{ margin: '0 0 6px 0', color: '#92400e', fontSize: '14.5px' }}>Symbols</h4>
-                  <p style={{ margin: 0, fontSize: '13.5px', color: '#b45309', lineHeight: 1.5 }}>
+                  <p style={{ margin: 0, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#b45309', lineHeight: 1.5 }}>
                     Maps use symbols to show real-world features like hospitals, schools, and parks without cluttering the page.
                   </p>
                 </div>
                 
                 <div>
                   <h4 style={{ margin: '0 0 6px 0', color: '#92400e', fontSize: '14.5px' }}>Distance</h4>
-                  <p style={{ margin: 0, fontSize: '13.5px', color: '#b45309', lineHeight: 1.5 }}>
+                  <p style={{ margin: 0, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#b45309', lineHeight: 1.5 }}>
                     Maps are drawn to reduced scales. This reduction is done very carefully so that the distance between places is kept accurate.
                   </p>
                 </div>
                 
                 <div>
                   <h4 style={{ margin: '0 0 6px 0', color: '#92400e', fontSize: '14.5px' }}>Directions</h4>
-                  <p style={{ margin: 0, fontSize: '13.5px', color: '#b45309', lineHeight: 1.5 }}>
+                  <p style={{ margin: 0, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#b45309', lineHeight: 1.5 }}>
                     The compass rose on the map helps us orient ourselves. North is typically at the top, helping us navigate from place to place.
                   </p>
                 </div>
@@ -495,7 +554,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
         {/* Bottom Footer Area */}
         <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center', borderTop: '1px solid #e4ebf3', paddingTop: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: '13px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>
               <MapPin size={18} strokeWidth={2} />
               Interactive Map Activity
             </div>

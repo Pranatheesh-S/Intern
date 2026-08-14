@@ -70,7 +70,7 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
             </div>
 
             <div style={{ position: 'absolute', bottom: '0.75rem', left: '50%', right: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1.5rem', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem', whiteSpace: 'nowrap', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '1rem', whiteSpace: 'nowrap', flexShrink: 0 }}>
                 <Compass size={16} style={{ flexShrink: 0 }} />
                 <span>Page {currentPage} of 3</span>
               </div>

@@ -1,9 +1,9 @@
 /* src/styles/design-system/variables.css */
 :root {
-  /* Fluid Base Font Size - The cornerstone of proportional scaling */
-  /* Scales from 14px on small laptops to ~40px on 4K displays */
-  /* All elements using 'rem' or 'em' will automatically scale proportionally! */
-  --fluid-base: clamp(14px, 1vw + 2px, 40px);
+  /* Standard base font size — fixed at 14px everywhere (no viewport scaling),
+     so text reads the same size on every screen instead of ballooning up on
+     large/4K displays. All elements using 'rem' or 'em' scale off this. */
+  --fluid-base: 14px;
 
   /* Fluid Typography Variables */
   --text-xs: 0.75rem;

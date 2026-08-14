@@ -506,28 +506,28 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
       <style>{`
-        .tab-btn { flex: 1; font-family: inherit; font-weight: 700; cursor: pointer; border: none; background: transparent; color: var(--text-muted, #5c6b7a); border-radius: 10px; padding: 11px 8px; font-size: clamp(12px, 1.3vw, 14.5px); transition: all 0.2s; display: flex; flexDirection: column; gap: 1px; align-items: center; }
+        .tab-btn { flex: 1; font-family: inherit; font-weight: 700; cursor: pointer; border: none; background: transparent; color: #5c6b7a; border-radius: 10px; padding: 11px 8px; font-size: clamp(14px, 0.5vw + 0.75vh, 16px); transition: all 0.2s; display: flex; flex-direction: column; gap: 2px; align-items: center; justify-content: center; min-width: 0; text-align: center; line-height: 1.25; }
         .tab-btn.active { background: var(--navy, #0E3556); color: #fff; }
-        .tab-btn small { font-weight: 400; font-size: 10.5px; opacity: 0.7; }
+        .tab-btn small { font-weight: 400; font-size: 14px; opacity: 0.7; display: block; white-space: normal; }
         .tab-btn.active small { opacity: 0.85; }
         
-        .kbox { background: #fbf5e6; border-left: 4px solid #F5A623; border-radius: 9px; padding: 11px 13px; margin: 10px 0; font-size: 13px; line-height: 1.5; color: #7a5a2a; }
-        .explore-box { background: #e6f4fb; border: 1px solid #bfe0f0; border-radius: 11px; padding: 12px 14px; margin-top: 10px; font-size: 12.5px; color: #25607e; line-height: 1.5; }
+        .kbox { background: #fbf5e6; border-left: 4px solid #F5A623; border-radius: 9px; padding: 11px 13px; margin: 10px 0; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); line-height: 1.5; color: #7a5a2a; }
+        .explore-box { background: #e6f4fb; border: 1px solid #bfe0f0; border-radius: 11px; padding: 12px 14px; margin-top: 10px; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); color: #25607e; line-height: 1.5; }
         .readout { background: #f4f7fb; border: 1px solid #e4ebf3; border-radius: 12px; padding: 12px 15px; margin-top: 10px; }
         .readout .big { font-size: clamp(18px, 2.2vw, 26px); font-weight: 800; color: #0E3556; }
         .readout .big span { color: #F5A623; }
-        .readout .work { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #5c6b7a; margin-top: 5px; line-height: 1.5; }
+        .readout .work { font-family: "IBM Plex Mono", monospace; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); color: #5c6b7a; margin-top: 5px; line-height: 1.5; }
         
-        .badge { display: inline-block; font-weight: 700; font-size: 12.5px; padding: 6px 12px; border-radius: 9px; margin-right: 6px; }
+        .badge { display: inline-block; font-weight: 700; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); padding: 6px 12px; border-radius: 9px; margin-right: 6px; }
         .b-torrid { background: #fdeee2; color: #d2691e; }
         .b-temperate { background: #eafaf1; color: #12a15f; }
         .b-frigid { background: #e7f1fb; color: #2f6df0; }
         .b-hemi { background: #f1ecff; color: #7c5cff; }
         
-        .chip { font-family: inherit; font-weight: 600; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #0E3556; border-radius: 8px; padding: 6px 11px; font-size: 12px; transition: all 0.15s; }
+        .chip { font-family: inherit; font-weight: 600; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #0E3556; border-radius: 8px; padding: 6px 11px; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); transition: all 0.15s; }
         .chip:hover { border-color: #7c5cff; background: #f5f2ff; }
         
-        .c-input { background: #f7f9fc; border: 1px solid #d6e0ec; border-radius: 9px; padding: 9px 12px; font-size: 14px; font-family: inherit; max-width: 170px; }
+        .c-input { background: #f7f9fc; border: 1px solid #d6e0ec; border-radius: 9px; padding: 9px 12px; font-size: clamp(14px, 0.6vw + 0.82vh, 19px); font-family: inherit; max-width: 170px; }
         .c-input:focus { outline: none; border-color: #7c5cff; }
 
         @keyframes fadeIn {
@@ -552,29 +552,29 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
           <ScrollableWithNav scrollStyle={{ padding: '24px' }}>
           {activeTab === 'co' && (
             <>
-              <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · (a)</div>
+              <div style={{ fontFamily: 'monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · (a)</div>
               <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '32px', margin: '8px 0 16px' }}>Understanding coordinates</h1>
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '12px' }}>Imagine you are playing a game of chess.</p>
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '12px' }}>Every square on the chessboard has its own address.</p>
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '12px' }}>Instead of saying, <b style={{ color: '#0E3556' }}>"Move to the middle,"</b> players use a letter and a number, like <b style={{ color: '#0E3556' }}>d2</b> or <b style={{ color: '#0E3556' }}>e4</b>.</p>
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '16px' }}>This tells everyone the exact square.</p>
+              <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, marginBottom: '12px' }}>Imagine you are playing a game of chess.</p>
+              <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, marginBottom: '12px' }}>Every square on the chessboard has its own address.</p>
+              <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, marginBottom: '12px' }}>Instead of saying, <b style={{ color: '#0E3556' }}>"Move to the middle,"</b> players use a letter and a number, like <b style={{ color: '#0E3556' }}>d2</b> or <b style={{ color: '#0E3556' }}>e4</b>.</p>
+              <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, marginBottom: '16px' }}>This tells everyone the exact square.</p>
               
               <div style={{ background: '#fff', padding: '24px 16px', borderRadius: '12px', border: '1px solid #d6e0ec', marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 {renderChessboard({ highlightSquare: 'd2', highlightCol: 'd', highlightRow: '2' })}
                 
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', background: '#f4f7fb', padding: '12px 20px', borderRadius: '12px', border: '1px solid #e4ebf3', marginTop: '20px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Column</span>
+                    <span style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Column</span>
                     <span style={{ fontSize: '24px', fontWeight: 900, color: '#F5A623' }}>d</span>
                   </div>
                   <div style={{ fontSize: '20px', color: '#9fbdd8', fontWeight: 'bold' }}>+</div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Row</span>
+                    <span style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Row</span>
                     <span style={{ fontSize: '24px', fontWeight: 900, color: '#F5A623' }}>2</span>
                   </div>
                   <div style={{ fontSize: '20px', color: '#9fbdd8', fontWeight: 'bold' }}>=</div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Address</span>
+                    <span style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', color: '#5c6b7a', fontWeight: 'bold', textTransform: 'uppercase' }}>Address</span>
                     <span style={{ fontSize: '24px', fontWeight: 900, color: '#0E3556' }}>d2</span>
                   </div>
                 </div>
@@ -589,12 +589,12 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
           {activeTab === 'lat' && (
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
               <div>
-                <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · (b)</div>
+                <div style={{ fontFamily: 'monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · (b)</div>
                 <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '32px', margin: '8px 0 16px' }}>Latitudes</h1>
-                <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '20px' }}>On a globe, the fixed top and bottom points are the <b style={{ color: '#0E3556' }}>North Pole</b> and <b style={{ color: '#0E3556' }}>South Pole</b>; halfway between is the <b style={{ color: '#0E3556' }}>Equator</b>.</p>
+                <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, marginBottom: '20px' }}>On a globe, the fixed top and bottom points are the <b style={{ color: '#0E3556' }}>North Pole</b> and <b style={{ color: '#0E3556' }}>South Pole</b>; halfway between is the <b style={{ color: '#0E3556' }}>Equator</b>.</p>
                 
                 <div style={{ background: '#fff', borderRadius: '12px', padding: '16px', border: '1px solid rgba(0,0,0,0.05)', marginBottom: '20px', boxShadow: '0 4px 12px rgba(14,42,69,.05)' }}>
-                  <div style={{ fontSize: '15px', lineHeight: 1.55, color: '#3a3a66' }}>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, color: '#3a3a66' }}>
                     <b style={{ color: '#0E3556' }}>Latitude</b> measures how far you are from the Equator. <b style={{ color: '#0E3556' }}>Latitudes are expressed in degrees.</b> A line running east–west, parallel to the Equator, is a <b style={{ color: '#0E3556' }}>parallel of latitude</b> — it draws a circle around the Earth. Parallels grow smaller toward the poles.
                   </div>
                 </div>
@@ -604,33 +604,33 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                 <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
                   <div style={{ flex: 1, background: '#fff9f0', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #fde68a' }}>
                     <div style={{ fontSize: '24px', fontWeight: 900, color: '#d94a3d' }}>0°</div>
-                    <div style={{ fontSize: '13px', color: '#b45309', fontWeight: 'bold' }}>Equator</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#b45309', fontWeight: 'bold' }}>Equator</div>
                   </div>
                   <div style={{ flex: 1, background: '#f0fdf4', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #bbf7d0' }}>
                     <div style={{ fontSize: '24px', fontWeight: 900, color: '#16a34a' }}>90°N</div>
-                    <div style={{ fontSize: '13px', color: '#166534', fontWeight: 'bold' }}>North Pole</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#166534', fontWeight: 'bold' }}>North Pole</div>
                   </div>
                   <div style={{ flex: 1, background: '#eff6ff', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #bfdbfe' }}>
                     <div style={{ fontSize: '24px', fontWeight: 900, color: '#2563eb' }}>90°S</div>
-                    <div style={{ fontSize: '13px', color: '#1e3a8a', fontWeight: 'bold' }}>South Pole</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#1e3a8a', fontWeight: 'bold' }}>South Pole</div>
                   </div>
                 </div>
               </div>
 
               <div>
-                <div style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', color: '#0E3556', marginBottom: '12px' }}>Climate Zones</div>
+                <div style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', color: '#0E3556', marginBottom: '12px' }}>Climate Zones</div>
                 <div style={{ display: 'flex', gap: '12px' }}>
                   <div style={{ flex: 1, background: '#fef2f2', border: '1px solid #fecaca', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 900, color: '#ef4444', marginBottom: '4px' }}>Torrid</div>
-                    <div style={{ fontSize: '12px', color: '#991b1b', lineHeight: 1.4 }}>Hot<br/>(Near Equator)</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 900, color: '#ef4444', marginBottom: '4px' }}>Torrid</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#991b1b', lineHeight: 1.4 }}>Hot<br/>(Near Equator)</div>
                   </div>
                   <div style={{ flex: 1, background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 900, color: '#22c55e', marginBottom: '4px' }}>Temperate</div>
-                    <div style={{ fontSize: '12px', color: '#166534', lineHeight: 1.4 }}>Moderate<br/>(Mid-latitudes)</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 900, color: '#22c55e', marginBottom: '4px' }}>Temperate</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#166534', lineHeight: 1.4 }}>Moderate<br/>(Mid-latitudes)</div>
                   </div>
                   <div style={{ flex: 1, background: '#eff6ff', border: '1px solid #bfdbfe', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 900, color: '#3b82f6', marginBottom: '4px' }}>Frigid</div>
-                    <div style={{ fontSize: '12px', color: '#1e3a8a', lineHeight: 1.4 }}>Cold<br/>(Near Poles)</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 900, color: '#3b82f6', marginBottom: '4px' }}>Frigid</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#1e3a8a', lineHeight: 1.4 }}>Cold<br/>(Near Poles)</div>
                   </div>
                 </div>
               </div>
@@ -639,12 +639,12 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
           {activeTab === 'lon' && (
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
               <div>
-                <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · (c)</div>
+                <div style={{ fontFamily: 'monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · (c)</div>
                 <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '32px', margin: '8px 0 16px' }}>Longitudes</h1>
-                <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '20px' }}>Travel pole to pole by the shortest line and you trace a <b style={{ color: '#0E3556' }}>meridian of longitude</b> — a half-circle from one pole to the other.</p>
+                <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, marginBottom: '20px' }}>Travel pole to pole by the shortest line and you trace a <b style={{ color: '#0E3556' }}>meridian of longitude</b> — a half-circle from one pole to the other.</p>
                 
                 <div style={{ background: '#fff', borderRadius: '12px', padding: '16px', border: '1px solid rgba(0,0,0,0.05)', marginBottom: '20px', boxShadow: '0 4px 12px rgba(14,42,69,.05)' }}>
-                  <div style={{ fontSize: '15px', lineHeight: 1.55, color: '#3a3a66' }}>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, color: '#3a3a66' }}>
                     The reference is the <b style={{ color: '#0E3556' }}>Prime Meridian</b> (Greenwich Meridian). In <b style={{ color: '#0E3556' }}>1884</b>, nations agreed the meridian through Greenwich (London) would be the standard <b style={{ color: '#0E3556' }}>0° longitude</b>.
                   </div>
                 </div>
@@ -654,18 +654,18 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                 <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
                   <div style={{ flex: 1, background: '#fef2f2', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #fecaca' }}>
                     <div style={{ fontSize: '24px', fontWeight: 900, color: '#ef4444' }}>0°</div>
-                    <div style={{ fontSize: '13px', color: '#991b1b', fontWeight: 'bold' }}>Prime Meridian</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#991b1b', fontWeight: 'bold' }}>Prime Meridian</div>
                   </div>
                   <div style={{ flex: 1, background: '#f4f7fb', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #e4ebf3' }}>
                     <div style={{ fontSize: '24px', fontWeight: 900, color: '#0E3556' }}>0° to 180°</div>
-                    <div style={{ fontSize: '13px', color: '#5c6b7a', fontWeight: 'bold' }}>West or East</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', fontWeight: 'bold' }}>West or East</div>
                   </div>
                 </div>
                 
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  <div style={{ background: '#eef2ff', color: '#4f46e5', padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>New York 74°W</div>
-                  <div style={{ background: '#eef2ff', color: '#4f46e5', padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>Delhi 77°E</div>
-                  <div style={{ background: '#eef2ff', color: '#4f46e5', padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>Tokyo 140°E</div>
+                  <div style={{ background: '#eef2ff', color: '#4f46e5', padding: '6px 12px', borderRadius: '20px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600 }}>New York 74°W</div>
+                  <div style={{ background: '#eef2ff', color: '#4f46e5', padding: '6px 12px', borderRadius: '20px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600 }}>Delhi 77°E</div>
+                  <div style={{ background: '#eef2ff', color: '#4f46e5', padding: '6px 12px', borderRadius: '20px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600 }}>Tokyo 140°E</div>
                 </div>
               </div>
 
@@ -675,12 +675,12 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
           {activeTab === 'grid' && (
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
               <div>
-                <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · together</div>
+                <div style={{ fontFamily: 'monospace', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 2 · together</div>
                 <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '32px', margin: '8px 0 16px' }}>The grid & hemispheres</h1>
-                <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '20px' }}>Latitude and longitude together are a place's two <b style={{ color: '#0E3556' }}>coordinates</b>. With them you can locate anywhere — for example, <b style={{ color: '#0E3556' }}>Delhi lies at ~29°N, 77°E</b>.</p>
+                <p style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, marginBottom: '20px' }}>Latitude and longitude together are a place's two <b style={{ color: '#0E3556' }}>coordinates</b>. With them you can locate anywhere — for example, <b style={{ color: '#0E3556' }}>Delhi lies at ~29°N, 77°E</b>.</p>
                 
                 <div style={{ background: '#fff', borderRadius: '12px', padding: '16px', border: '1px solid rgba(0,0,0,0.05)', marginBottom: '20px', boxShadow: '0 4px 12px rgba(14,42,69,.05)' }}>
-                  <div style={{ fontSize: '15px', lineHeight: 1.55, color: '#3a3a66' }}>
+                  <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.55, color: '#3a3a66' }}>
                     All the parallels and meridians together form a <b style={{ color: '#0E3556' }}>grid</b> (grid lines) over the globe.
                   </div>
                 </div>
@@ -689,14 +689,14 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
                   <div style={{ flex: 1, background: '#fdf4ff', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #fbcfe8' }}>
-                    <div style={{ fontSize: '13px', color: '#9d174d', fontWeight: 'bold', marginBottom: '8px', textTransform: 'uppercase' }}>Equator Splits</div>
-                    <div style={{ fontSize: '16px', fontWeight: 900, color: '#be185d' }}>North / South</div>
-                    <div style={{ fontSize: '12px', color: '#9d174d', marginTop: '4px' }}>Hemispheres</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', color: '#9d174d', fontWeight: 'bold', marginBottom: '8px', textTransform: 'uppercase' }}>Equator Splits</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 900, color: '#be185d' }}>North / South</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#9d174d', marginTop: '4px' }}>Hemispheres</div>
                   </div>
                   <div style={{ flex: 1, background: '#f0fdfa', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #a7f3d0' }}>
-                    <div style={{ fontSize: '13px', color: '#0f766e', fontWeight: 'bold', marginBottom: '8px', textTransform: 'uppercase' }}>Prime Meridian Splits</div>
-                    <div style={{ fontSize: '16px', fontWeight: 900, color: '#0d9488' }}>West / East</div>
-                    <div style={{ fontSize: '12px', color: '#0f766e', marginTop: '4px' }}>Hemispheres</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', color: '#0f766e', fontWeight: 'bold', marginBottom: '8px', textTransform: 'uppercase' }}>Prime Meridian Splits</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 900, color: '#0d9488' }}>West / East</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#0f766e', marginTop: '4px' }}>Hemispheres</div>
                   </div>
                 </div>
               </div>
@@ -719,14 +719,14 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                   Let's Explore — Find Your Seat
                 </h2>
                 {theatreStep < 2 && (
-                  <div style={{ background: '#f4f7fb', padding: '6px 16px', borderRadius: '20px', fontSize: '13px', fontWeight: 700, color: '#5c6b7a', border: '1px solid #d6e0ec' }}>
+                  <div style={{ background: '#f4f7fb', padding: '6px 16px', borderRadius: '20px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 700, color: '#5c6b7a', border: '1px solid #d6e0ec' }}>
                     Progress: {theatreStep} / 2
                   </div>
                 )}
               </div>
 
               {theatreStep < 2 && (
-                <div style={{ fontSize: '15px', color: '#5c6b7a', marginBottom: '24px' }}>
+                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', marginBottom: '24px' }}>
                   Use the seat ticket below to find the correct seat in the theatre.
                 </div>
               )}
@@ -736,7 +736,7 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                 <div style={{ flex: 1, background: '#f8fafc', borderRadius: '16px', padding: '24px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
                   {/* Screen */}
                   <div style={{ width: '70%', height: '30px', background: '#334155', borderRadius: '50% / 100% 100% 0 0', border: '3px solid #cbd5e1', borderBottom: 'none', boxShadow: '0 -4px 12px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '40px' }}>
-                    <span style={{ color: '#94a3b8', fontSize: '12px', letterSpacing: '0.4em', fontWeight: 800 }}>SCREEN</span>
+                    <span style={{ color: '#94a3b8', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '0.4em', fontWeight: 800 }}>SCREEN</span>
                   </div>
 
                   {/* Seat Grid */}
@@ -744,7 +744,7 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                     {/* Columns */}
                     <div />
                     {[1, 2, 3, 4, 5, 6, 7, 8].map(c => (
-                      <div key={`col-${c}`} style={{ fontSize: '13px', fontWeight: 'bold', color: '#94a3b8' }}>{c}</div>
+                      <div key={`col-${c}`} style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 'bold', color: '#94a3b8' }}>{c}</div>
                     ))}
                     
                     {/* Rows */}
@@ -753,7 +753,7 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                       
                       return (
                         <React.Fragment key={`row-${r}`}>
-                          <div style={{ fontSize: '13px', fontWeight: 'bold', color: showRowHint ? '#F5A623' : '#94a3b8', paddingRight: '8px', transition: 'color 0.3s' }}>
+                          <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 'bold', color: showRowHint ? '#F5A623' : '#94a3b8', paddingRight: '8px', transition: 'color 0.3s' }}>
                             {r}
                           </div>
                           
@@ -860,7 +860,7 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                     <div style={{ position: 'absolute', left: '-8px', top: '50%', transform: 'translateY(-50%)', width: '14px', height: '14px', background: '#fff', borderRadius: '50%', borderRight: `3px solid ${seatFeedback === 'success' ? '#10b981' : '#F5A623'}`, zIndex: 2 }} />
                     <div style={{ position: 'absolute', right: '-8px', top: '50%', transform: 'translateY(-50%)', width: '14px', height: '14px', background: '#fff', borderRadius: '50%', borderLeft: `3px solid ${seatFeedback === 'success' ? '#10b981' : '#F5A623'}`, zIndex: 2 }} />
                     
-                    <div style={{ fontSize: '10px', letterSpacing: '2px', color: '#64748b', fontWeight: 800, marginBottom: '6px' }}>YOUR TICKET</div>
+                    <div style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', letterSpacing: '2px', color: '#64748b', fontWeight: 800, marginBottom: '6px' }}>YOUR TICKET</div>
                     <div style={{ display: 'flex', gap: '12px', color: seatFeedback === 'success' ? '#10b981' : '#F5A623', fontWeight: 900, fontSize: '18px' }}>
                       <span>ROW {currentTarget?.[0]}</span>
                       <span>SEAT {currentTarget?.[1]}</span>
@@ -873,24 +873,24 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                       <>
                         <CheckCircle2 size={32} color="#10b981" />
                         <div>
-                          <div style={{ fontSize: '16px', fontWeight: 800, color: '#065f46', marginBottom: '4px' }}>Excellent!</div>
-                          <div style={{ fontSize: '14px', color: '#047857' }}>You found <b>Row {currentTarget?.[0]}, Seat {currentTarget?.[1]}</b>. The row and seat number together identify one exact location.</div>
+                          <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#065f46', marginBottom: '4px' }}>Excellent!</div>
+                          <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#047857' }}>You found <b>Row {currentTarget?.[0]}, Seat {currentTarget?.[1]}</b>. The row and seat number together identify one exact location.</div>
                         </div>
                       </>
                     ) : seatFeedback === 'error' ? (
                       <>
                         <XCircle size={32} color="#ef4444" />
                         <div>
-                          <div style={{ fontSize: '16px', fontWeight: 800, color: '#991b1b', marginBottom: '4px' }}>Not quite.</div>
-                          <div style={{ fontSize: '14px', color: '#b91c1c' }}>Look carefully. First find the correct row, then count the seat number.</div>
+                          <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 800, color: '#991b1b', marginBottom: '4px' }}>Not quite.</div>
+                          <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#b91c1c' }}>Look carefully. First find the correct row, then count the seat number.</div>
                         </div>
                       </>
                     ) : (
                       <>
                         <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <span style={{ fontSize: '16px' }}>👆</span>
+                          <span style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>👆</span>
                         </div>
-                        <div style={{ fontSize: '15px', fontWeight: 600, color: '#334155' }}>
+                        <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, color: '#334155' }}>
                           Click the correct seat inside the theatre.
                         </div>
                       </>
@@ -906,8 +906,8 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                   
                   <div style={{ display: 'flex', gap: '16px', flex: 1, minHeight: 0 }}>
                     <div style={{ flex: 1, background: '#f4f7fb', borderRadius: '16px', border: '1px solid #e4ebf3', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                      <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#0E3556', marginBottom: '16px' }}>Theatre</div>
-                      <div style={{ display: 'flex', gap: '12px', alignItems: 'center', fontWeight: 'bold', color: '#5c6b7a', fontSize: '14px' }}>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 'bold', color: '#0E3556', marginBottom: '16px' }}>Theatre</div>
+                      <div style={{ display: 'flex', gap: '12px', alignItems: 'center', fontWeight: 'bold', color: '#5c6b7a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>
                         <span>Row</span>
                         <span style={{ color: '#9fbdd8' }}>+</span>
                         <span>Seat No.</span>
@@ -917,8 +917,8 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                     </div>
 
                     <div style={{ flex: 1, background: '#f4f7fb', borderRadius: '16px', border: '1px solid #e4ebf3', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                      <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#0E3556', marginBottom: '16px' }}>Maps</div>
-                      <div style={{ display: 'flex', gap: '12px', alignItems: 'center', fontWeight: 'bold', color: '#5c6b7a', fontSize: '14px' }}>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 'bold', color: '#0E3556', marginBottom: '16px' }}>Maps</div>
+                      <div style={{ display: 'flex', gap: '12px', alignItems: 'center', fontWeight: 'bold', color: '#5c6b7a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>
                         <span>Latitude</span>
                         <span style={{ color: '#9fbdd8' }}>+</span>
                         <span>Longitude</span>
@@ -929,25 +929,25 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                   </div>
 
                   <div className="readout" style={{ marginTop: '16px', textAlign: 'center', padding: '12px 16px' }}>
-                    <div style={{ fontSize: '15px', color: '#0E3556', lineHeight: 1.5 }}>
+                    <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#0E3556', lineHeight: 1.5 }}>
                       Theatres use <b>rows and seat numbers</b> to locate a seat.<br/>
                       Maps use <b>latitude and longitude</b> to locate places on Earth.<br/>
-                      <span style={{ color: '#1877a8', fontWeight: 'bold', display: 'block', marginTop: '8px', fontSize: '16px' }}>Both use coordinates to find an exact location.</span>
+                      <span style={{ color: '#1877a8', fontWeight: 'bold', display: 'block', marginTop: '8px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>Both use coordinates to find an exact location.</span>
                     </div>
                   </div>
 
                   <div style={{ background: '#eef3ff', borderRadius: '12px', padding: '12px 16px', border: '1px solid #dce4ff', marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div>
-                      <div style={{ fontSize: '12px', color: '#7c5cff', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>You discovered</div>
-                      <div style={{ fontSize: '14px', color: '#3a3a66', fontWeight: 500 }}>how coordinates help us find exact locations.</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', color: '#7c5cff', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>You discovered</div>
+                      <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#3a3a66', fontWeight: 500 }}>how coordinates help us find exact locations.</div>
                     </div>
-                    <div style={{ background: '#7c5cff', color: '#fff', fontSize: '12px', fontWeight: 'bold', padding: '6px 12px', borderRadius: '20px' }}>
+                    <div style={{ background: '#7c5cff', color: '#fff', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 'bold', padding: '6px 12px', borderRadius: '20px' }}>
                       Coordinates Explorer
                     </div>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px', gap: '8px' }}>
-                    <button className="chip" style={{ padding: '12px 24px', fontSize: '16px', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setTheatreStep(1)}>← Back</button>
-                    <button className="chip active" style={{ padding: '12px 24px', fontSize: '16px', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setActiveTab('lat')}>
+                    <button className="chip" style={{ padding: '12px 24px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setTheatreStep(1)}>← Back</button>
+                    <button className="chip active" style={{ padding: '12px 24px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setActiveTab('lat')}>
                       Continue → Latitude & Longitude
                     </button>
                   </div>
@@ -964,7 +964,7 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                 {renderLatGlobe()}
               </div>
               <div style={{ marginTop: '16px' }}>
-                <label style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Latitude (drag)</label>
+                <label style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Latitude (drag)</label>
                 <input type="range" style={{ width: '100%', accentColor: '#7c5cff' }} min="-90" max="90" value={latVal} onChange={e => setLatVal(Number(e.target.value))} />
               </div>
               <div className="readout">
@@ -977,27 +977,27 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
               </div>
               
               {latVal === 0 && (
-                <div style={{ background: '#fff9f0', border: '1px solid #fde68a', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#b45309', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                <div style={{ background: '#fff9f0', border: '1px solid #fde68a', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#b45309', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
                   <div style={{ fontSize: '24px', flexShrink: 0 }}>🌍</div>
-                  <div><b style={{ color: '#d94a3d', fontSize: '14px' }}>The Equator (0°)</b><br/>The longest parallel of latitude. It divides the Earth perfectly into the Northern and Southern Hemispheres.</div>
+                  <div><b style={{ color: '#d94a3d', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>The Equator (0°)</b><br/>The longest parallel of latitude. It divides the Earth perfectly into the Northern and Southern Hemispheres.</div>
                 </div>
               )}
               {latVal === 90 && (
-                <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#166534', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#166534', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
                   <div style={{ fontSize: '24px', flexShrink: 0 }}>❄️</div>
-                  <div><b style={{ color: '#16a34a', fontSize: '14px' }}>The North Pole (90°N)</b><br/>The northernmost point on Earth. Here, the parallel shrinks to a single point!</div>
+                  <div><b style={{ color: '#16a34a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>The North Pole (90°N)</b><br/>The northernmost point on Earth. Here, the parallel shrinks to a single point!</div>
                 </div>
               )}
               {latVal === -90 && (
-                <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#1e3a8a', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#1e3a8a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
                   <div style={{ fontSize: '24px', flexShrink: 0 }}>🐧</div>
-                  <div><b style={{ color: '#2563eb', fontSize: '14px' }}>The South Pole (90°S)</b><br/>The southernmost point on Earth. Like the North Pole, it is just a point, not a circle.</div>
+                  <div><b style={{ color: '#2563eb', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>The South Pole (90°S)</b><br/>The southernmost point on Earth. Like the North Pole, it is just a point, not a circle.</div>
                 </div>
               )}
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
-                <button className="chip" style={{ padding: '10px 20px', fontSize: '14px', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setActiveTab('co')}>← Back to Coordinates</button>
-                <button className="chip active" style={{ padding: '10px 20px', fontSize: '14px', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setActiveTab('lon')}>Continue → Longitude</button>
+                <button className="chip" style={{ padding: '10px 20px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setActiveTab('co')}>← Back to Coordinates</button>
+                <button className="chip active" style={{ padding: '10px 20px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setActiveTab('lon')}>Continue → Longitude</button>
               </div>
             </div>
           )}
@@ -1008,11 +1008,11 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                 {renderLonGlobe()}
               </div>
               <div style={{ marginTop: '16px' }}>
-                <label style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Longitude (drag)</label>
+                <label style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Longitude (drag)</label>
                 <input type="range" style={{ width: '100%', accentColor: '#7c5cff' }} min="-180" max="180" value={lonVal} onChange={e => { setLonVal(Number(e.target.value)); setLonName(''); }} />
               </div>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px', alignItems: 'center' }}>
-                <span style={{ fontSize: '12px', color: '#5c6b7a', fontWeight: 600 }}>Round figures:</span>
+                <span style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', fontWeight: 600 }}>Round figures:</span>
                 <button className="chip" onClick={() => { setLonVal(-74); setLonName('New York'); }}>New York 74°W</button>
                 <button className="chip" onClick={() => { setLonVal(77); setLonName('Delhi'); }}>Delhi 77°E</button>
                 <button className="chip" onClick={() => { setLonVal(140); setLonName('Tokyo'); }}>Tokyo 140°E</button>
@@ -1026,21 +1026,21 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
               </div>
 
               {lonVal === 0 && (
-                <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#991b1b', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#991b1b', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
                   <div style={{ fontSize: '24px', flexShrink: 0 }}>⏱️</div>
-                  <div><b style={{ color: '#ef4444', fontSize: '14px' }}>The Prime Meridian (0°)</b><br/>The starting point for measuring longitude and time. It passes through Greenwich, London.</div>
+                  <div><b style={{ color: '#ef4444', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>The Prime Meridian (0°)</b><br/>The starting point for measuring longitude and time. It passes through Greenwich, London.</div>
                 </div>
               )}
               {Math.abs(lonVal) === 180 && (
-                <div style={{ background: '#f4f7fb', border: '1px solid #e4ebf3', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#5c6b7a', fontSize: '13px', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
+                <div style={{ background: '#f4f7fb', border: '1px solid #e4ebf3', borderRadius: '12px', padding: '12px', marginTop: '12px', color: '#5c6b7a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.5, display: 'flex', alignItems: 'center', gap: '12px', animation: 'fadeIn 0.3s' }}>
                   <div style={{ fontSize: '24px', flexShrink: 0 }}>📅</div>
-                  <div><b style={{ color: '#0E3556', fontSize: '14px' }}>The 180° Meridian</b><br/>Exactly opposite the Prime Meridian. The International Date Line roughly follows this path!</div>
+                  <div><b style={{ color: '#0E3556', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>The 180° Meridian</b><br/>Exactly opposite the Prime Meridian. The International Date Line roughly follows this path!</div>
                 </div>
               )}
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
-                <button className="chip" style={{ padding: '10px 20px', fontSize: '14px', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setActiveTab('lat')}>← Back to Latitude</button>
-                <button className="chip active" style={{ padding: '10px 20px', fontSize: '14px', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setActiveTab('grid')}>Continue → Grid</button>
+                <button className="chip" style={{ padding: '10px 20px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', background: '#fff', color: '#5c6b7a', border: '1px solid #d6e0ec' }} onClick={() => setActiveTab('lat')}>← Back to Latitude</button>
+                <button className="chip active" style={{ padding: '10px 20px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', background: '#0E3556', color: '#fff', border: '1px solid #0E3556' }} onClick={() => setActiveTab('grid')}>Continue → Grid</button>
               </div>
             </div>
           )}
@@ -1052,16 +1052,16 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
               </div>
               <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
                 <div style={{ flex: 1 }}>
-                  <label style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Latitude</label>
+                  <label style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Latitude</label>
                   <input type="range" style={{ width: '100%', accentColor: '#7c5cff' }} min="-90" max="90" value={gridLat} onChange={e => { setGridLat(Number(e.target.value)); setGridName(''); }} />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <label style={{ fontSize: '11px', color: '#5c6b7a', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Longitude</label>
+                  <label style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Longitude</label>
                   <input type="range" style={{ width: '100%', accentColor: '#7c5cff' }} min="-180" max="180" value={gridLon} onChange={e => { setGridLon(Number(e.target.value)); setGridName(''); }} />
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '12px', alignItems: 'center' }}>
-                <span style={{ fontSize: '11.5px', color: '#5c6b7a' }}>Let's explore — find these cities:</span>
+                <span style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#5c6b7a' }}>Let's explore — find these cities:</span>
                 <button className="chip" onClick={() => { setGridLat(29); setGridLon(77); setGridName('Delhi'); setExploredCities(p => ({...p, Delhi: true})); }}>Delhi {exploredCities.Delhi && <span style={{color: '#16a34a'}}>✓</span>}</button>
                 <button className="chip" onClick={() => { setGridLat(19); setGridLon(73); setGridName('Mumbai'); setExploredCities(p => ({...p, Mumbai: true})); }}>Mumbai {exploredCities.Mumbai && <span style={{color: '#16a34a'}}>✓</span>}</button>
                 <button className="chip" onClick={() => { setGridLat(22); setGridLon(88); setGridName('Kolkata'); setExploredCities(p => ({...p, Kolkata: true})); }}>Kolkata {exploredCities.Kolkata && <span style={{color: '#16a34a'}}>✓</span>}</button>

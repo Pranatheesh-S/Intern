@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { Map, MapPin, Clock, Compass, Globe2, ChevronRight } from 'lucide-react';
-import bigQuestionsImg from './assets/big-questions-new.png';
+import React, { useState, useRef, useEffect } from 'react';
+import { Map, MapPin, Clock, Compass, Globe2, ChevronRight, Maximize2, X } from 'lucide-react';
+import EarthAddressArt from './EarthAddressArt';
 import ChapterBackFooter from '../ChapterBackFooter';
-import ContentScrollNav, { useScrollNav } from '../ContentScrollNav';
+import { ScrollableWithNav } from '../ContentScrollNav';
 
 const PAGE_PADDING = 'clamp(20px, 2.6vw, 42px)';
 const HEADER_TITLE_STYLE = {
@@ -16,8 +16,14 @@ const HEADER_TITLE_STYLE = {
 
 export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapter }) {
   const [discoveredCards, setDiscoveredCards] = useState([]);
-  const scrollContainerRef = useRef(null);
-  const scrollNav = useScrollNav(scrollContainerRef);
+  const [artZoomed, setArtZoomed] = useState(false);
+
+  useEffect(() => {
+    if (!artZoomed) return;
+    const onKey = e => { if (e.key === 'Escape') setArtZoomed(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [artZoomed]);
 
   const handleDiscover = (id) => {
     if (!discoveredCards.includes(id)) {
@@ -151,20 +157,27 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
           <Globe2 size={150} color="#cbd5e1" style={{ position: 'absolute', bottom: '8%', left: '-4%', opacity: 0.12, pointerEvents: 'none' }} />
 
           <div style={headerShell}>
-            <h2 style={HEADER_TITLE_STYLE}>Big Questions</h2>
+            <h2 style={HEADER_TITLE_STYLE}>Every Place Has an Address</h2>
           </div>
 
           <div style={{ ...bodyShell, position: 'relative', zIndex: 1 }}>
-            <p style={{ fontSize: 'clamp(1rem, 1.3vw, 1.2rem)', color: '#334155', lineHeight: 1.5, margin: '0 0 16px 0' }}>
-              Every journey begins with a few important questions. In this chapter, you will explore how maps help us locate places, understand coordinates, and explain time across the Earth.
+            <p style={{ flexShrink: 0, fontSize: 'clamp(1rem, 1.3vw, 1.15rem)', color: '#334155', lineHeight: 1.45, margin: '0 0 12px 0' }}>
+              Your home has an address, and so does every place on Earth. In this chapter you will learn how maps locate places, how latitude and longitude give each one an exact address, and why the time on the clock changes as you travel.
             </p>
 
-            <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img
-                src={bigQuestionsImg}
-                alt="Big Questions Illustration"
-                style={{ width: '100%', maxHeight: '100%', objectFit: 'contain', filter: 'drop-shadow(0 12px 30px rgba(0,0,0,0.12))' }}
-              />
+            <div style={{ flex: 1, minHeight: 'clamp(220px, 34vh, 460px)', display: 'flex', alignSelf: 'stretch', width: '100%' }}>
+              <button
+                type="button"
+                onClick={() => setArtZoomed(true)}
+                title="Click to see the full-size figure"
+                aria-label="Enlarge the chapter overview figure"
+                style={{ border: '1px solid #e4ebf3', borderRadius: '12px', background: '#FBF7EE', padding: '6px', cursor: 'zoom-in', width: '100%', height: '100%', display: 'block', position: 'relative', overflow: 'hidden' }}
+              >
+                <EarthAddressArt style={{ width: '100%', height: '100%' }} />
+                <span style={{ position: 'absolute', right: '6px', bottom: '6px', width: '34px', height: '34px', borderRadius: '9px', background: 'rgba(255,255,255,0.92)', border: '1px solid #d6e0ec', color: '#0E3556', display: 'grid', placeItems: 'center', boxShadow: '0 4px 12px rgba(14,42,69,0.14)' }}>
+                  <Maximize2 size={18} />
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -176,17 +189,9 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
           </div>
 
           <div style={bodyShell}>
-            <div
-              ref={scrollContainerRef}
-              style={{
-                flex: 1,
-                minHeight: 0,
-                overflowY: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'clamp(0.5rem, 1vh, 0.75rem)',
-                marginBottom: '12px'
-              }}
+            <ScrollableWithNav
+              containerStyle={{ marginBottom: '12px' }}
+              scrollStyle={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.5rem, 1vh, 0.75rem)' }}
             >
               {cards.map((card) => {
                 const isDiscovered = discoveredCards.includes(card.id);
@@ -259,18 +264,7 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
                   </div>
                 );
               })}
-            </div>
-
-            {scrollNav.hasOverflow && (
-              <ContentScrollNav
-                currentPage={scrollNav.currentPage}
-                pageCount={scrollNav.pageCount}
-                canGoUp={scrollNav.canGoUp}
-                canGoDown={scrollNav.canGoDown}
-                onPageUp={scrollNav.onPageUp}
-                onPageDown={scrollNav.onPageDown}
-              />
-            )}
+            </ScrollableWithNav>
 
             <div style={{ flexShrink: 0 }}>
               <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: '12px', padding: 'clamp(0.8rem, 1.5vh, 1.2rem)' }}>
@@ -286,13 +280,34 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
         </div>
       </div>
 
+      {artZoomed && (
+        <div
+          onClick={() => setArtZoomed(false)}
+          role="dialog"
+          aria-modal="true"
+          style={{ position: 'fixed', inset: 0, zIndex: 100002, background: 'rgba(9,26,44,0.72)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(16px, 3vw, 48px)', cursor: 'zoom-out' }}
+        >
+          <div onClick={e => e.stopPropagation()} style={{ position: 'relative', width: '100%', maxWidth: '1400px', background: '#FBF7EE', borderRadius: '18px', padding: 'clamp(12px, 1.6vw, 22px)', boxShadow: '0 30px 80px rgba(0,0,0,0.45)', cursor: 'default' }}>
+            <button
+              type="button"
+              onClick={() => setArtZoomed(false)}
+              aria-label="Close the figure (Esc)"
+              style={{ position: 'absolute', top: '12px', right: '12px', width: '40px', height: '40px', borderRadius: '10px', border: '1px solid #d6e0ec', background: '#fff', color: '#0E3556', display: 'grid', placeItems: 'center', cursor: 'pointer', zIndex: 2, boxShadow: '0 6px 16px rgba(14,42,69,0.16)' }}
+            >
+              <X size={20} />
+            </button>
+            <EarthAddressArt style={{ maxHeight: '82vh' }} />
+          </div>
+        </div>
+      )}
+
       <ChapterBackFooter
         onBack={onBack}
         nextLabel="Start Exploring"
         onNext={onBeginChapter}
         nextVariant="green"
         centerContent={
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: '13px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v16H6.5A2.5 2.5 0 0 0 4 21.5z" stroke="#5c6b7a" strokeWidth="1.5"></path><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v16h5.5A2.5 2.5 0 0 1 20 21.5z" stroke="#5c6b7a" strokeWidth="1.5"></path></svg>
             Page 2 of 2
           </div>

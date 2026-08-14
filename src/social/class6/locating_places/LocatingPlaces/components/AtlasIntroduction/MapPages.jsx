@@ -1,22 +1,63 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Lightbulb, X } from 'lucide-react';
+import { Lightbulb, X, Globe2, Image as ImageIcon, Maximize2, Minimize2 } from 'lucide-react';
 import physicalImg from './assets/physical-map-v2.jpeg';
 import politicalImg from './assets/political.png';
 import rainfallImg from './assets/thematic-map.jpeg';
 import ContentScrollNav, { useScrollNav } from '../ContentScrollNav';
 
-const PageLayout = ({ 
+// The interactive 3D globe (physical / political / thematic modes) lives as a
+// static asset so it can be dropped into an iframe from anywhere in the app.
+const GLOBE_URL = '/atlas-globe.html';
+
+const globeBtn = {
+  width: '34px', height: '34px', borderRadius: '9px',
+  background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.16)',
+  color: '#eaf0f8', cursor: 'pointer', display: 'grid', placeItems: 'center',
+  transition: 'background 0.15s'
+};
+
+const PageLayout = ({
   title, subtitle, imageSrc,
-  whatIsTitle, whatIs, 
-  featuresTitle, features, 
-  colorsTitle, colors, 
-  whyUseTitle, whyUse, 
+  whatIsTitle, whatIs,
+  featuresTitle, features,
+  colorsTitle, colors,
+  whyUseTitle, whyUse,
   remember, funFact,
   imageAspectRatio = '1/1',
   imageScale = 1,
-  onFullyViewed
+  onFullyViewed,
+  globeMode = 'physical',
+  globeTheme,
 }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
+  const [isGlobeOpen, setIsGlobeOpen] = useState(false);
+  const [isGlobeFull, setIsGlobeFull] = useState(false);
+  const globePanelRef = useRef(null);
+
+  // native full screen where it exists, with a maximise fallback where it doesn't
+  const toggleGlobeFull = () => {
+    const el = globePanelRef.current;
+    if (document.fullscreenElement) { document.exitFullscreen?.(); return; }
+    if (el?.requestFullscreen) { el.requestFullscreen().catch(() => setIsGlobeFull(v => !v)); return; }
+    setIsGlobeFull(v => !v);
+  };
+
+  useEffect(() => {
+    const sync = () => setIsGlobeFull(Boolean(document.fullscreenElement));
+    document.addEventListener('fullscreenchange', sync);
+    return () => document.removeEventListener('fullscreenchange', sync);
+  }, []);
+
+  useEffect(() => {
+    if (!isGlobeOpen) return;
+    const onKey = e => {
+      if (e.key !== 'Escape') return;
+      if (document.fullscreenElement) return;   // let full screen exit first
+      setIsGlobeOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isGlobeOpen]);
   const scrollRef = useRef(null);
   const nav = useScrollNav(scrollRef);
 
@@ -143,20 +184,34 @@ const PageLayout = ({
 
       {/* Right Page (Image Activity) */}
       <div style={{ flex: 1, minWidth: 0, padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <div 
-          onClick={() => setIsImageOpen(true)}
+        <div
+          onClick={() => setIsGlobeOpen(true)}
           style={{ cursor: 'pointer', width: '100%', aspectRatio: imageAspectRatio, position: 'relative', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', transition: 'transform 0.2s' }}
           onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
           onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
            <img src={imageSrc} alt={title} style={{ width: '100%', height: '100%', objectFit: 'contain', transform: `scale(${imageScale})` }} />
+           <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(30,58,138,0.92)', color: '#fff', padding: '0.4rem 0.9rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, boxShadow: '0 4px 12px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
+             <Globe2 size={14} /> Open interactive 3D globe
+           </div>
         </div>
-        <span style={{ marginTop: '0.75rem', color: '#64748b', fontSize: '0.85rem', fontStyle: 'italic' }}>
-          Click the image to expand
-        </span>
+        <div style={{ marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <button
+            onClick={() => setIsGlobeOpen(true)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#1e3a8a', color: '#fff', border: 'none', borderRadius: '999px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer' }}
+          >
+            <Globe2 size={15} /> View on 3D Globe
+          </button>
+          <span
+            onClick={() => setIsImageOpen(true)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#64748b', fontSize: '0.85rem', cursor: 'pointer' }}
+          >
+            <ImageIcon size={14} /> View printed map
+          </span>
+        </div>
       </div>
     </div>
-    
+
     <style>{`
       .left-page-scroll::-webkit-scrollbar { width: 6px; }
       .left-page-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -166,7 +221,7 @@ const PageLayout = ({
 
     {/* Image Modal */}
     {isImageOpen && (
-      <div 
+      <div
         onClick={() => setIsImageOpen(false)}
         style={{
           position: 'fixed', inset: 0, zIndex: 9999,
@@ -175,17 +230,88 @@ const PageLayout = ({
           cursor: 'pointer'
         }}
       >
-        <button 
+        <button
           onClick={() => setIsImageOpen(false)}
           style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(0,0,0,0.5)', border: 'none', color: 'white', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', zIndex: 10001, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           <X size={32} />
         </button>
-        <div 
-          onClick={(e) => e.stopPropagation()} 
+        <div
+          onClick={(e) => e.stopPropagation()}
           style={{ position: 'relative', background: 'white', padding: '0.5rem', borderRadius: '12px', cursor: 'default', display: 'inline-block' }}
         >
           <img src={imageSrc} alt={title} style={{ maxWidth: '70vw', maxHeight: '70vh', objectFit: 'contain', borderRadius: '8px', display: 'block' }} />
+        </div>
+      </div>
+    )}
+
+    {/* 3D Globe Modal */}
+    {isGlobeOpen && (
+      <div
+        onClick={() => setIsGlobeOpen(false)}
+        style={{
+          position: 'fixed', inset: 0, zIndex: 9999,
+          background: 'rgba(4,8,16,0.86)', backdropFilter: 'blur(5px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', padding: 'clamp(10px, 2.2vw, 28px)'
+        }}
+      >
+        <div
+          ref={globePanelRef}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'relative',
+            width: isGlobeFull ? '100%' : 'min(1400px, 100%)',
+            height: isGlobeFull ? '100%' : 'min(880px, 100%)',
+            background: '#05070d',
+            borderRadius: isGlobeFull ? 0 : '16px',
+            overflow: 'hidden',
+            cursor: 'default',
+            display: 'flex',
+            flexDirection: 'column',
+            boxShadow: isGlobeFull ? 'none' : '0 30px 80px rgba(0,0,0,0.6)',
+            border: isGlobeFull ? 'none' : '1px solid rgba(255,255,255,0.16)'
+          }}
+        >
+          {/* toolbar — the globe's own controls sit at the corners of the canvas,
+              so the window controls get their own strip rather than covering them */}
+          <div style={{
+            flexShrink: 0, height: '46px', display: 'flex', alignItems: 'center',
+            justifyContent: 'space-between', gap: '12px', padding: '0 10px 0 16px',
+            background: 'rgba(14,19,30,0.95)', borderBottom: '1px solid rgba(255,255,255,0.10)'
+          }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#eaf0f8', fontSize: '0.9rem', fontWeight: 700, minWidth: 0 }}>
+              <Globe2 size={16} color="#6fc4ff" />
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Interactive 3D Globe — {title}</span>
+            </span>
+
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+              <button
+                onClick={toggleGlobeFull}
+                title={isGlobeFull ? 'Exit full screen' : 'View full screen'}
+                aria-label={isGlobeFull ? 'Exit full screen' : 'View full screen'}
+                style={globeBtn}
+              >
+                {isGlobeFull ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+              </button>
+              <button
+                onClick={() => { if (document.fullscreenElement) document.exitFullscreen?.(); setIsGlobeOpen(false); }}
+                title="Close (Esc)"
+                aria-label="Close the globe"
+                style={globeBtn}
+              >
+                <X size={18} />
+              </button>
+            </span>
+          </div>
+
+          <iframe
+            title="Interactive 3D Globe"
+            src={`${GLOBE_URL}?mode=${globeMode}${globeTheme ? `&theme=${globeTheme}` : ''}&embed=1`}
+            style={{ flex: 1, minHeight: 0, width: '100%', border: 'none', display: 'block' }}
+            allow="fullscreen"
+            allowFullScreen
+          />
         </div>
       </div>
     )}
@@ -199,6 +325,7 @@ export const PhysicalMapPage = ({ onFullyViewed }) => (
     title="Physical Maps"
     subtitle="Maps that show Earth's natural features"
     imageSrc={physicalImg}
+    globeMode="physical"
     callouts={[
       { icon: '🏔', label: 'Mountains', top: '25%', left: '20%' },
       { icon: '🌊', label: 'River', top: '70%', left: '45%' },
@@ -248,6 +375,7 @@ export const PoliticalMapPage = ({ onFullyViewed }) => (
     title="Political Maps"
     subtitle="Maps that show countries, states and boundaries."
     imageSrc={politicalImg}
+    globeMode="political"
     callouts={[
       { icon: '📍', label: 'Capital', top: '30%', left: '50%' },
       { icon: '🏙', label: 'City', top: '60%', left: '35%' },
@@ -295,6 +423,8 @@ export const ThematicMapPage = ({ onFullyViewed }) => (
     title="Thematic Maps"
     subtitle="Maps that show one special topic."
     imageSrc={rainfallImg}
+    globeMode="thematic"
+    globeTheme="rain"
     callouts={[
       { icon: '🌧', label: 'High Rainfall', top: '35%', left: '25%' },
       { icon: '🌤', label: 'Low Rainfall', top: '65%', left: '45%' },

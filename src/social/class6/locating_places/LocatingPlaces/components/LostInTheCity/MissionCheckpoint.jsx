@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Check, ArrowRight } from 'lucide-react';
 import useSound from 'use-sound';
-import mapBg from './assets/Map.png';
+import mapBg from './assets/town_map_fig1.jpg';
 
 export default function MissionCheckpoint({ onComplete }) {
   const [playClick] = useSound('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', { volume: 0.5 });
@@ -31,14 +31,18 @@ export default function MissionCheckpoint({ onComplete }) {
     }
   }, []);
 
+  // Hot-spots are percentages of the town map image (town_map_fig1.jpg, 1376 x 769).
+  // x / y are the centre of the box; width / height are in the same percentage units.
   const buildings = [
-    { id: 'Railway Station', x: 20.5, y: 25, width: 17, height: 22 },
-    { id: 'Apartments', x: 39, y: 14, width: 20, height: 16 },
-    { id: 'Park', x: 60, y: 24.5, width: 20, height: 25 },
-    { id: 'School', x: 83.5, y: 23, width: 25, height: 28 },
-    { id: 'Hospital', x: 20.5, y: 52.5, width: 19, height: 25 },
-    { id: 'Market', x: 48, y: 52.5, width: 36, height: 25 },
-    { id: 'Bank', x: 80.5, y: 52.5, width: 29, height: 25 },
+    { id: 'Railway Station', x: 24.3, y: 42.3, width: 13.5, height: 17.0 },
+    { id: 'Apartments', x: 55.2, y: 22.4, width: 28.5, height: 15.0 },
+    { id: 'Public Garden', x: 82.8, y: 31.9, width: 12.5, height: 12.0 },
+    { id: 'Nagar Panchayat', x: 62.9, y: 46.8, width: 9.0, height: 15.5 },
+    { id: 'Bank', x: 75.7, y: 48.1, width: 8.5, height: 11.5 },
+    { id: 'Hospital', x: 42.5, y: 57.2, width: 10.5, height: 23.0 },
+    { id: 'School', x: 25.6, y: 73.7, width: 18.5, height: 21.0 },
+    { id: 'Market', x: 50.1, y: 84.1, width: 25.5, height: 15.0 },
+    { id: 'Museum', x: 79.9, y: 74.1, width: 17.0, height: 24.0 },
   ];
 
   const handleBuildingClick = (buildingId) => {
@@ -69,16 +73,16 @@ export default function MissionCheckpoint({ onComplete }) {
   const renderQuestion1 = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <div style={{ marginBottom: '0.5rem' }}>
-        <h4 style={{ margin: '0 0 0.2rem 0', color: 'var(--text-heading)', fontSize: '1.2rem' }}>Question 1</h4>
-        <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: 'bold' }}>
+        <h4 style={{ margin: '0 0 0.2rem 0', color: '#0E3556', fontSize: '1.2rem' }}>Question 1</h4>
+        <p style={{ margin: 0, color: '#20303f', fontSize: '1.1rem', fontWeight: 'bold' }}>
           Mark the Hospital on the map.
         </p>
-        <p style={{ margin: '0.25rem 0 0 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <p style={{ margin: '0.25rem 0 0 0', color: '#47586b', fontSize: '0.9rem' }}>
           Click on the building that represents the Hospital.
         </p>
       </div>
 
-      <div style={{ position: 'relative', width: '100%', maxWidth: '550px', margin: '0 auto', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: '550px', margin: '0 auto', borderRadius: '16px', overflow: 'hidden', border: '1px solid #d6e0ec' }}>
         <img src={mapBg} alt="Interactive Map" style={{ width: '100%', height: 'auto', display: 'block' }} />
         
         {/* Clickable Overlay */}
@@ -164,8 +168,8 @@ export default function MissionCheckpoint({ onComplete }) {
   const renderMCQ = (qNum, question, options, correctAnswer, explanation, state, setState) => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <div style={{ marginBottom: '0.5rem' }}>
-        <h4 style={{ margin: '0 0 0.2rem 0', color: 'var(--text-heading)', fontSize: '1.2rem' }}>Question {qNum}</h4>
-        <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: 'bold' }}>
+        <h4 style={{ margin: '0 0 0.2rem 0', color: '#0E3556', fontSize: '1.2rem' }}>Question {qNum}</h4>
+        <p style={{ margin: 0, color: '#20303f', fontSize: '1.1rem', fontWeight: 'bold' }}>
           {question}
         </p>
       </div>
@@ -175,8 +179,8 @@ export default function MissionCheckpoint({ onComplete }) {
           const isSelected = state === opt;
           const isCorrect = opt === correctAnswer;
           
-          let bg = 'var(--surface)';
-          let border = 'var(--border)';
+          let bg = '#ffffff';
+          let border = '#d6e0ec';
           let shadow = 'none';
 
           if (state !== null) {
@@ -217,10 +221,10 @@ export default function MissionCheckpoint({ onComplete }) {
                 boxShadow: shadow
               }}
             >
-              <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: `2px solid ${state !== null && (isSelected || isCorrect) ? border : 'var(--text-muted)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: `2px solid ${state !== null && (isSelected || isCorrect) ? border : '#5c6b7a'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                  {(state !== null && (isSelected || isCorrect)) && <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: border }} />}
               </div>
-              <span style={{ fontSize: '1.05rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
+              <span style={{ fontSize: '1.05rem', color: '#0E3556', fontWeight: 'bold' }}>
                 {opt}
               </span>
             </button>
@@ -233,7 +237,7 @@ export default function MissionCheckpoint({ onComplete }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: state === correctAnswer ? '#059669' : '#b91c1c', fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.5rem' }}>
             {state === correctAnswer ? 'Correct!' : `Correct Answer: ${correctAnswer}`}
           </div>
-          <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-primary)', lineHeight: '1.5' }}>
+          <p style={{ margin: 0, fontSize: '1rem', color: '#20303f', lineHeight: '1.5' }}>
             {explanation}
           </p>
         </motion.div>
@@ -260,18 +264,18 @@ export default function MissionCheckpoint({ onComplete }) {
       animate={{ opacity: 1, y: 0 }} 
       transition={{ type: 'spring', damping: 25 }}
     >
-      <div className="glass-panel" style={{ padding: '2.5rem', background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '24px' }}>
+      <div className="glass-panel" style={{ padding: '2.5rem', background: '#ffffff', border: '1px solid #d6e0ec', borderRadius: '24px' }}>
         
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--accent-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <MessageSquare size={20} color="var(--accent-text)" />
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#eef2ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <MessageSquare size={20} color="#4338ca" />
           </div>
-          <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
+          <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#0E3556', fontWeight: 'bold' }}>
             MISSION CHECKPOINT
           </h3>
         </div>
-        <p style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.6', maxWidth: '800px', marginBottom: '1.5rem' }}>
+        <p style={{ marginTop: '0.5rem', color: '#47586b', fontSize: '1.1rem', lineHeight: '1.6', maxWidth: '800px', marginBottom: '1.5rem' }}>
           Let's answer a few questions about the map.
         </p>
 
@@ -301,12 +305,12 @@ export default function MissionCheckpoint({ onComplete }) {
         {/* Completion State POPUP */}
         {showCompletionPopup && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5, type: 'spring', damping: 25 }} style={{ background: 'var(--surface)', padding: '3rem', borderRadius: '24px', textAlign: 'center', maxWidth: '450px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5, type: 'spring', damping: 25 }} style={{ background: '#ffffff', padding: '3rem', borderRadius: '24px', textAlign: 'center', maxWidth: '450px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', boxShadow: '0 0 20px rgba(251, 191, 36, 0.3)' }}>
                  <span style={{ fontSize: '2.5rem' }}>🕵️</span>
                </div>
-               <h2 style={{ fontSize: '2.2rem', marginBottom: '1rem', color: 'var(--text-primary)', marginTop: 0 }}>Mission Complete!</h2>
-               <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1.1rem' }}>
+               <h2 style={{ fontSize: '2.2rem', marginBottom: '1rem', color: '#20303f', marginTop: 0 }}>Mission Complete!</h2>
+               <p style={{ marginBottom: '2rem', color: '#47586b', lineHeight: 1.6, fontSize: '1.1rem' }}>
                  You successfully explored the city map and answered all the checkpoint questions. You are now ready to learn more about maps.
                </p>
                <div style={{ padding: '0.5rem 1rem', borderRadius: '20px', background: 'rgba(245, 158, 11, 0.1)', color: '#d97706', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '2.5rem', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
@@ -314,7 +318,7 @@ export default function MissionCheckpoint({ onComplete }) {
                </div>
                <button 
                   onClick={onComplete}
-                  style={{ background: 'var(--accent)', color: 'white', border: 'none', padding: '1.25rem 2rem', borderRadius: '14px', fontSize: '1.15rem', fontWeight: 'bold', cursor: 'pointer', width: '100%', boxShadow: '0 4px 12px rgba(147,51,234,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                  style={{ background: '#6366f1', color: 'white', border: 'none', padding: '1.25rem 2rem', borderRadius: '14px', fontSize: '1.15rem', fontWeight: 'bold', cursor: 'pointer', width: '100%', boxShadow: '0 4px 12px rgba(147,51,234,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                 >
                   Continue to Atlas <ArrowRight size={20} />
                 </button>

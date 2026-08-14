@@ -14,7 +14,7 @@ export default function ChapterIntroduction({ onNextActivity }) {
       flexDirection: 'column',
       position: 'relative',
       overflow: 'hidden',
-      background: 'var(--surface, #ffffff)',
+      background: '#ffffff',
       borderRadius: '16px',
       boxShadow: '0 10px 40px rgba(0,0,0,0.05)'
     }}>
