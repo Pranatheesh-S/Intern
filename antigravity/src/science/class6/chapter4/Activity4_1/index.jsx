@@ -17,59 +17,77 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
   };
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', flexDirection: 'column', width: '100%' }}>
+    <div style={{
+      width: '100%',
+      height: '100vh',
+      maxHeight: '100vh',
+      overflow: 'hidden',
+      backgroundColor: '#070b19',
+      color: '#ffffff',
+      display: 'flex',
+      flexDirection: 'column',
+      padding: '0.75rem 1.25rem',
+      boxSizing: 'border-box',
+      gap: '0.6rem',
+      fontFamily: 'Inter, system-ui, sans-serif'
+    }}>
+      {/* Top Header */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        marginBottom: '1rem',
-        borderBottom: '1px solid var(--border)',
-        paddingBottom: '1rem',
-        flexWrap: 'wrap',
-        gap: '1rem'
+        flexShrink: 0,
+        padding: '0 0.5rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <button 
-            onClick={onBackToDashboard} 
-            className="outline" 
-            style={{ 
-              position: 'relative', zIndex: 100,
-              padding: '0.4rem 0.8rem', 
-              fontSize: '0.8rem', 
-              gap: '0.35rem',
-              borderColor: 'var(--border)'
-            }}
-          >
-            <ArrowLeft size={14} /> Back to Class 6 Chapter 4
-          </button>
-          <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Compass size={20} style={{ color: 'var(--accent)' }} />
-              Activity 4.1: Magnetic and Non-Magnetic Materials
-            </h2>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Class 6 Science: Chapter 4 — Find and test materials</span>
-          </div>
+        <button 
+          onClick={onBackToDashboard} 
+          style={{ 
+            padding: '0.4rem 0.9rem', 
+            fontSize: '0.82rem', 
+            borderRadius: '20px',
+            backgroundColor: 'rgba(30, 41, 59, 0.6)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            color: '#e2e8f0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s'
+          }}
+          className="hover:bg-slate-700/60"
+        >
+          <ArrowLeft size={14} /> Back to Class 6 Chapter 4
+        </button>
+
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#ffffff' }}>
+            <Compass size={20} style={{ color: '#60a5fa' }} />
+            Activity 4.1: Magnetic and Non-Magnetic Materials
+          </h2>
         </div>
+
+        <div style={{ width: '160px' }} />
       </div>
 
-      <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '600px' }}>
-          {stage === 'table' ? (
-            <MagneticTable onComplete={handleTableComplete} />
-          ) : (
-            <Quiz 
-              onComplete={handleQuizComplete} 
-              onBack={() => setStage('table')} 
-            />
-          )}
-        </main>
-
-        {stage !== 'quiz' && (
-          <aside style={{ width: '300px', flexShrink: 0 }}>
-            <DidYouKnow />
-          </aside>
+      {/* Main Stage (Table or Quiz) */}
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {stage === 'table' ? (
+          <MagneticTable onComplete={handleTableComplete} />
+        ) : (
+          <Quiz 
+            onComplete={handleQuizComplete} 
+            onBack={() => setStage('table')} 
+          />
         )}
       </div>
+
+      {/* Bottom Did You Know Bar */}
+      {stage !== 'quiz' && (
+        <div style={{ flexShrink: 0, width: '100%' }}>
+          <DidYouKnow />
+        </div>
+      )}
     </div>
   );
 }
+
