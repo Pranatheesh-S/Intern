@@ -91,17 +91,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           </button>
         </div>
 
-        <div className="global-action-bar-center">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', padding: '0.4rem 1rem', borderRadius: '20px', border: '1px solid var(--border)' }}>
-            <span style={{ fontSize: '1.2rem' }}>🕵️‍♂️</span>
-            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                Science Detective
-              </span>
-            </div>
-          </div>
-        </div>
-
+        
         <div className="global-action-bar-right">
           {currentNode.type !== 'mission' && (
             <button

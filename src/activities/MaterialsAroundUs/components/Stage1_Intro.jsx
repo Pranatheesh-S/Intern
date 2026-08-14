@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { BookOpen, User, GraduationCap, Check, RefreshCw } from 'lucide-react';
+import { User, GraduationCap, RefreshCw } from 'lucide-react';
 
 export default function Stage1_Intro({ onComplete, addXp }) {
   const [clickedObjects, setClickedObjects] = useState({});
@@ -325,23 +324,6 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             })}
           </div>
 
-          {/* Divider Line below scrollable container */}
-          <div style={{ height: '1px', width: '100%', background: 'var(--border)', margin: '0.25rem 0' }} />
-
-          {completed && (
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              style={{ padding: '1rem', borderRadius: '8px', background: 'var(--success-bg)', border: '1px solid var(--success-border)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontWeight: 'bold', fontSize: '1.05rem' }}>
-                <Check size={18} /> <span>All Objects Found!</span>
-              </div>
-              <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5' }}>
-                <strong>Key Concept:</strong> A <strong>material</strong> is any substance used to make objects. Different objects can be made of the same material, or one object can be made of multiple materials!
-              </p>
-            </motion.div>
-          )}
         </div>
     </div>
   );
