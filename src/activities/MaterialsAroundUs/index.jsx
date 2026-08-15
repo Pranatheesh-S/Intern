@@ -91,7 +91,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           </button>
         </div>
 
-        
+
         <div className="global-action-bar-right">
           {currentNode.type !== 'mission' && (
             <button
