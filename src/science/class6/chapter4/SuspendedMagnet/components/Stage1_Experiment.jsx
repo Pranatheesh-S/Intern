@@ -69,7 +69,7 @@ export default function Stage1_Experiment({ onComplete }) {
           overflow: 'hidden',
           boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
         }}>
-          <img src="/hello.jpeg" alt="Experiment Setup" style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }} />
+          <img src="/SuspendedMagnet/hello.jpeg" alt="Experiment Setup" style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }} />
           
           {/* Rope */}
           <div style={{

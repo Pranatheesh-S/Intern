@@ -65,7 +65,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                 transition={{ type: "spring", stiffness: 100, damping: 15 }}
                 style={{ position: "absolute", display: "flex", gap: "8px", bottom: "82px", zIndex: 1 }}
               >
-                <img src="/pencils.png" style={{ width: "88px", height: "120px", objectFit: "contain", filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))" }} alt="Pencils" draggable="false" />
+                <img src="/MagnetInteraction/pencils.png" style={{ width: "88px", height: "120px", objectFit: "contain", filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))" }} alt="Pencils" draggable="false" />
                 <AnimatePresence>
                   {!polesMatch && magneticForce > 0 && isAdjustingDistance && (
                     <motion.div
@@ -108,7 +108,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
             >
               <div style={{ position: "absolute", top: "-25px", left: "50%", transform: "translateX(-50%)", fontSize: "0.85rem", fontWeight: "bold", color: "var(--text-secondary)", whiteSpace: "nowrap" }}>Magnet A</div>
               <div style={{ position: "absolute", top: "50%", left: "50%", width: "40px", height: "120px", transform: `translate(-50%, -50%) rotate(${magnetAPoleRight === "S" ? "-90deg" : "90deg"})` }}>
-                <img src="/bar_magnet.png" style={{ width: "100%", height: "100%", objectFit: "fill", filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.3))" }} draggable="false" alt="Magnet A" />
+                <img src="/Shared/bar_magnet.png" style={{ width: "100%", height: "100%", objectFit: "fill", filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.3))" }} draggable="false" alt="Magnet A" />
               </div>
             </motion.div>
 
@@ -119,7 +119,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
             >
               <div style={{ position: "absolute", top: "-25px", left: "50%", transform: "translateX(-50%)", fontSize: "0.85rem", fontWeight: "bold", color: "var(--text-secondary)", whiteSpace: "nowrap" }}>Magnet B</div>
               <div style={{ position: "absolute", top: "50%", left: "50%", width: "40px", height: "120px", transform: `translate(-50%, -50%) rotate(${magnetBPoleLeft === "N" ? "-90deg" : "90deg"})` }}>
-                <img src="/bar_magnet.png" style={{ width: "100%", height: "100%", objectFit: "fill", filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))" }} draggable="false" alt="Magnet B" />
+                <img src="/Shared/bar_magnet.png" style={{ width: "100%", height: "100%", objectFit: "fill", filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.2))" }} draggable="false" alt="Magnet B" />
               </div>
             </motion.div>
 

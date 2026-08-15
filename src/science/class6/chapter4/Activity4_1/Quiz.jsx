@@ -101,23 +101,42 @@ export default function Quiz({ onComplete, onBack }) {
 
   if (quizFinished) {
     return (
-      <div style={{ maxWidth: '100%', margin: '0 auto', padding: '1rem' }}>
-        <div className="glass-panel" style={{ background: 'var(--surface)', padding: '3rem', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', textAlign: 'center' }}>
-          <h2 style={{ color: 'var(--accent)', marginBottom: '1rem' }}>Quiz Completed!</h2>
-          <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>You scored {score} out of {quizData.length}</p>
+      <div style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1rem',
+        boxSizing: 'border-box'
+      }}>
+        <div style={{
+          backgroundColor: '#ffffff',
+          padding: '2.5rem 3rem',
+          borderRadius: '24px',
+          border: '2px solid #818cf8',
+          boxShadow: '0 12px 36px rgba(99, 102, 241, 0.12)',
+          textAlign: 'center',
+          maxWidth: '520px',
+          width: '100%'
+        }}>
+          <h2 style={{ color: '#4f46e5', marginBottom: '0.75rem', fontSize: '1.75rem', fontWeight: 700 }}>Quiz Completed!</h2>
+          <p style={{ fontSize: '1.35rem', marginBottom: '2rem', color: '#0f172a', fontWeight: 600 }}>
+            You scored {score} out of {quizData.length}
+          </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
             <button
               onClick={() => { if (onComplete) onComplete(score); }}
               style={{
-                padding: '0.75rem 2rem',
-                background: 'var(--accent)',
-                color: '#fff',
+                padding: '0.8rem 2.2rem',
+                backgroundColor: '#4f46e5',
+                color: '#ffffff',
                 border: 'none',
-                borderRadius: '8px',
-                fontSize: '1.1rem',
-                fontWeight: 'bold',
+                borderRadius: '25px',
+                fontSize: '1.05rem',
+                fontWeight: 700,
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                boxShadow: '0 4px 14px rgba(79, 70, 229, 0.4)'
               }}
             >
               Finish Activity
@@ -129,99 +148,184 @@ export default function Quiz({ onComplete, onBack }) {
   }
 
   return (
-    <div style={{ maxWidth: '100%', margin: '0 auto', padding: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <button 
-          onClick={onBack}
-          className="outline"
-          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: 'transparent', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer' }}
-        >
-          <ArrowLeft size={16} /> Back
-        </button>
-        <div style={{ color: 'var(--text-muted)' }}>
-          Question {currentQuestion + 1} of {quizData.length}
-        </div>
-      </div>
+    <div style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '0.5rem 1rem',
+      boxSizing: 'border-box',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        maxWidth: '960px',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.6rem'
+      }}>
+        {/* Main Question Card (Larger Quiz Box) */}
+        <div style={{
+          backgroundColor: '#ffffff',
+          border: '2.5px solid #818cf8',
+          borderRadius: '24px',
+          padding: '1.75rem 2.25rem',
+          boxShadow: '0 12px 35px rgba(99, 102, 241, 0.12)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.9rem'
+        }}>
+          {/* Header Row: Title on Left | Question X of Y on Right */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ margin: 0, color: '#4f46e5', fontSize: '1.45rem', fontWeight: 700 }}>
+              {currentQ.title}
+            </h3>
+            <span style={{
+              fontSize: '1rem',
+              fontWeight: 700,
+              color: '#334155',
+              backgroundColor: '#e2e8f0',
+              padding: '0.4rem 1rem',
+              borderRadius: '12px'
+            }}>
+              Question {currentQuestion + 1} of {quizData.length}
+            </span>
+          </div>
 
-      <div className="glass-panel" style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--accent)' }}>{currentQ.title}</h3>
-        <p style={{ fontSize: '1.25rem', marginBottom: '2rem', lineHeight: '1.5' }}>{currentQ.question}</p>
+          <p style={{ fontSize: '1.25rem', color: '#0f172a', fontWeight: 600, margin: 0, lineHeight: '1.5' }}>
+            {currentQ.question}
+          </p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {currentQ.options.map((option, index) => {
-            let bgColor = 'var(--bg)';
-            let borderColor = 'var(--border)';
-            let icon = null;
+          {/* Options List (Bigger Option Cards & Text) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {currentQ.options.map((option, index) => {
+              let bgColor = '#f8fafc';
+              let borderColor = '#cbd5e1';
+              let textColor = '#1e293b';
+              let icon = null;
 
-            if (showResult) {
-              if (index === currentQ.correctIndex) {
-                bgColor = 'rgba(16, 185, 129, 0.1)';
-                borderColor = '#10b981';
-                icon = <CheckCircle size={20} color="#10b981" />;
+              if (showResult) {
+                if (index === currentQ.correctIndex) {
+                  bgColor = 'rgba(16, 185, 129, 0.12)';
+                  borderColor = '#10b981';
+                  textColor = '#065f46';
+                  icon = <CheckCircle size={22} color="#10b981" />;
+                } else if (index === selectedOption) {
+                  bgColor = 'rgba(239, 68, 68, 0.12)';
+                  borderColor = '#ef4444';
+                  textColor = '#991b1b';
+                  icon = <XCircle size={22} color="#ef4444" />;
+                }
               } else if (index === selectedOption) {
-                bgColor = 'rgba(239, 68, 68, 0.1)';
-                borderColor = '#ef4444';
-                icon = <XCircle size={20} color="#ef4444" />;
+                borderColor = '#4f46e5';
+                bgColor = 'rgba(79, 70, 229, 0.08)';
               }
-            } else if (index === selectedOption) {
-              borderColor = 'var(--accent)';
-            }
 
-            return (
-              <button
-                key={index}
-                onClick={() => handleOptionSelect(index)}
-                disabled={showResult}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  background: bgColor,
-                  border: `2px solid ${borderColor}`,
-                  color: 'var(--text)',
-                  cursor: showResult ? 'default' : 'pointer',
-                  textAlign: 'left',
-                  fontSize: '1rem',
-                  transition: 'all 0.2s ease',
-                  opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.6 : 1
-                }}
-              >
-                <span>{option}</span>
-                {icon}
-              </button>
-            );
-          })}
-        </div>
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleOptionSelect(index)}
+                  disabled={showResult}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '0.95rem 1.4rem',
+                    borderRadius: '14px',
+                    background: bgColor,
+                    border: `2px solid ${borderColor}`,
+                    color: textColor,
+                    cursor: showResult ? 'default' : 'pointer',
+                    textAlign: 'left',
+                    fontSize: '1.15rem',
+                    fontWeight: 600,
+                    lineHeight: '1.4',
+                    transition: 'all 0.2s ease',
+                    opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.5 : 1
+                  }}
+                >
+                  <span>{option}</span>
+                  {icon}
+                </button>
+              );
+            })}
+          </div>
 
-        {showResult && (
-          <div style={{ marginTop: '2rem', animation: 'fadeIn 0.5s ease' }}>
-            <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', borderLeft: '4px solid var(--accent)' }}>
-              <h4 style={{ margin: '0 0 0.5rem 0' }}>Explanation</h4>
-              <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.5' }}>{currentQ.explanation}</p>
+          {/* Explanation Box if answered */}
+          {showResult && (
+            <div style={{
+              padding: '0.85rem 1.25rem',
+              backgroundColor: '#f8fafc',
+              borderRadius: '14px',
+              borderLeft: '5px solid #4f46e5',
+              borderTop: '1px solid #e2e8f0',
+              borderRight: '1px solid #e2e8f0',
+              borderBottom: '1px solid #e2e8f0'
+            }}>
+              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: '#4f46e5', fontWeight: 700 }}>Explanation</h4>
+              <p style={{ margin: 0, color: '#334155', fontSize: '1.02rem', lineHeight: '1.45' }}>
+                {currentQ.explanation}
+              </p>
             </div>
-            
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+          )}
+
+          {/* Bottom Bar: Back on Left | Next Question ONLY shown after answering on Right */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: '0.35rem',
+            paddingTop: '0.75rem',
+            borderTop: '1px solid #e2e8f0'
+          }}>
+            <button
+              onClick={onBack}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.7rem 1.6rem',
+                backgroundColor: '#f1f5f9',
+                color: '#0f172a',
+                border: '2px solid #cbd5e1',
+                borderRadius: '14px',
+                fontSize: '1.05rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              className="hover:bg-slate-200"
+            >
+              <ArrowLeft size={18} /> Back
+            </button>
+
+            {showResult && (
               <button
                 onClick={handleNext}
                 style={{
-                  padding: '0.75rem 2rem',
-                  background: 'var(--accent)',
-                  color: '#fff',
+                  padding: '0.75rem 2.2rem',
+                  backgroundColor: '#4f46e5',
+                  color: '#ffffff',
                   border: 'none',
-                  borderRadius: '8px',
+                  borderRadius: '25px',
                   fontSize: '1.1rem',
-                  fontWeight: 'bold',
+                  fontWeight: 700,
                   cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                  boxShadow: '0 4px 14px rgba(79, 70, 229, 0.35)',
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
                 }}
+                className="hover:bg-indigo-700"
               >
                 {isFinished ? 'Finish Quiz' : 'Next Question'}
               </button>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

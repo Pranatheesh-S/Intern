@@ -14,7 +14,7 @@ const MagnetPart = ({ isLeft, isFull = false, showNewPoles, width = 200 }) => {
       borderRadius: '4px',
       overflow: 'hidden',
       boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
-      backgroundImage: 'url(/horizontal_magnet.png)',
+      backgroundImage: 'url(/MagneticPoles/horizontal_magnet.png)',
       backgroundSize: bgSize,
       backgroundPosition: bgPos,
       backgroundRepeat: 'no-repeat',

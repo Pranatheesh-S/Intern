@@ -1,210 +1,398 @@
 import React, { useState, useRef } from 'react';
-import { ArrowRight, Scan, Magnet, XCircle } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
-const ITEMS = [
-  { id: 'pens', name: 'Pens (Plastic)', isMagnetic: false, hotspot: { x: 12.2, y: 67.6, r: 8 } },
-  { id: 'bottle', name: 'Water Bottle (Stainless Steel)', isMagnetic: false, hotspot: { x: 26.6, y: 49.2, r: 8 } },
-  { id: 'compass', name: 'Compass (Metal Needle)', isMagnetic: true, hotspot: { x: 45.2, y: 50.9, r: 10 } }, 
-  { id: 'ruler', name: 'Ruler (Plastic)', isMagnetic: false, hotspot: { x: 10.7, y: 88.2, r: 8 } },
-  { id: 'eraser', name: 'Eraser (Rubber)', isMagnetic: false, hotspot: { x: 24.5, y: 74.7, r: 6 } },
-  { id: 'clips', name: 'Paper Clips (Metal)', isMagnetic: true, hotspot: { x: 30.8, y: 83.4, r: 6 } },
-  { id: 'coins', name: 'Coins (Metal)', isMagnetic: true, hotspot: { x: 42.1, y: 75.4, r: 6 } },
-  { id: 'pencil_case', name: 'Pencil Case (Fabric)', isMagnetic: false, hotspot: { x: 59.4, y: 76.1, r: 10 } },
-  { id: 'notebook', name: 'Notebook (Paper)', isMagnetic: false, hotspot: { x: 88.8, y: 71.7, r: 12 } },
-  { id: 'pencil', name: 'Pencil (Wood)', isMagnetic: false, hotspot: { x: 81.8, y: 91.4, r: 8 } }
+const TOP_ITEMS = [
+  { id: 'ruler', name: 'Ruler', icon: '📏', isMagnetic: false, hotspot: { x: 23.5, y: 77.0 } },
+  { id: 'eraser', name: 'Eraser', icon: '🧹', isMagnetic: false, hotspot: { x: 33.5, y: 71.0 } },
+  { id: 'clips', name: 'Paper Clips', icon: '📎', isMagnetic: true, hotspot: { x: 38.0, y: 77.0 } },
+  { id: 'coins', name: 'Coins', icon: '🪙', isMagnetic: true, hotspot: { x: 44.5, y: 72.0 } },
 ];
+
+const LEFT_ITEMS = [
+  { id: 'pens', name: 'Pens', icon: '🖊️', isMagnetic: false, hotspot: { x: 23.0, y: 59.0 } },
+  { id: 'bottle', name: 'Water Bottle', icon: '🍾', isMagnetic: false, hotspot: { x: 30.5, y: 55.0 } },
+  { id: 'compass', name: 'Compass', icon: '🧭', isMagnetic: true, hotspot: { x: 46.5, y: 57.0 } },
+];
+
+const RIGHT_ITEMS = [
+  { id: 'pencil_case', name: 'Pencil Case', icon: '👝', isMagnetic: false, hotspot: { x: 55.5, y: 70.0 } },
+  { id: 'notebook', name: 'Notebook', icon: '📓', isMagnetic: false, hotspot: { x: 72.0, y: 68.0 } },
+  { id: 'pencil', name: 'Pencil', icon: '✏️', isMagnetic: false, hotspot: { x: 67.0, y: 78.0 } },
+];
+
+const ALL_ITEMS = [...TOP_ITEMS, ...LEFT_ITEMS, ...RIGHT_ITEMS];
 
 export default function MagneticTable({ onComplete }) {
   const [scanningItemId, setScanningItemId] = useState(null);
   const [scanProgress, setScanProgress] = useState(0);
   const [scannedResults, setScannedResults] = useState({});
-  const [lensPos, setLensPos] = useState(null);
-  const [lastClickedPos, setLastClickedPos] = useState(null);
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [isDragOverScanner, setIsDragOverScanner] = useState(false);
+  const [lastScannedItem, setLastScannedItem] = useState(null);
   const imageRef = useRef(null);
 
-  const handleMouseMove = (e) => {
-    if (!imageRef.current) return;
-    const rect = imageRef.current.getBoundingClientRect();
-    setLensPos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
-  };
+  const startScanForItem = (item) => {
+    if (scanningItemId || scannedResults[item.id]) return;
 
-  const handleImageClick = (e) => {
-    if (scanningItemId) return;
-    
-    if (!imageRef.current) return;
-    const rect = imageRef.current.getBoundingClientRect();
-    const clickX = ((e.clientX - rect.left) / rect.width) * 100;
-    const clickY = ((e.clientY - rect.top) / rect.height) * 100;
-
-    // For calibration:
-    setLastClickedPos({ x: clickX.toFixed(1), y: clickY.toFixed(1) });
-
-    const clickedItem = ITEMS.find(item => {
-      if (item.hotspot.x === null || item.hotspot.y === null) return false;
-      if (scannedResults[item.id]) return false; // Skip already scanned items
-      const dist = Math.sqrt(Math.pow(clickX - item.hotspot.x, 2) + Math.pow(clickY - item.hotspot.y, 2));
-      return dist <= item.hotspot.r;
-    });
-
-    if (!clickedItem) return;
-
-    setScanningItemId(clickedItem.id);
+    setScanningItemId(item.id);
     setScanProgress(0);
-    
+    setLastScannedItem(null);
+
     let progress = 0;
     const interval = setInterval(() => {
       progress += 5;
       setScanProgress(progress);
-      
+
       if (progress >= 100) {
         clearInterval(interval);
-        setScannedResults(prev => ({ ...prev, [clickedItem.id]: true }));
+        setScannedResults(prev => ({ ...prev, [item.id]: true }));
         setScanningItemId(null);
         setScanProgress(0);
+        setLastScannedItem(item);
       }
     }, 40);
   };
 
-  const isComplete = Object.keys(scannedResults).length === ITEMS.length;
+  const isComplete = Object.keys(scannedResults).length === ALL_ITEMS.length;
+  const activeScanningItem = ALL_ITEMS.find(i => i.id === scanningItemId);
+
+  const handleDropOnScanner = (e) => {
+    e.preventDefault();
+    setIsDragOverScanner(false);
+    let itemId = null;
+    try {
+      if (e.dataTransfer) {
+        itemId = e.dataTransfer.getData('text/plain');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+    if (!itemId && draggedItem) {
+      itemId = draggedItem.id;
+    }
+    const targetItem = ALL_ITEMS.find(i => i.id === itemId);
+    if (targetItem && !scannedResults[targetItem.id] && !scanningItemId) {
+      startScanForItem(targetItem);
+    }
+    setDraggedItem(null);
+  };
+
+  const renderCard = (item) => {
+    const isScanning = scanningItemId === item.id;
+    const isScanned = scannedResults[item.id];
+    const isMag = item.isMagnetic;
+
+    let borderColor = '#cbd5e1';
+    let bgColor = '#f8fafc';
+    let statusText = '';
+    let statusColor = '#2563eb';
+
+    if (isScanning) {
+      borderColor = '#3b82f6';
+      bgColor = 'rgba(59, 130, 246, 0.12)';
+      statusText = `Scanning... ${scanProgress}%`;
+      statusColor = '#2563eb';
+    } else if (isScanned) {
+      if (isMag) {
+        borderColor = '#10b981';
+        bgColor = 'rgba(16, 185, 129, 0.12)';
+        statusText = 'Magnetic ✓';
+        statusColor = '#059669';
+      } else {
+        borderColor = '#ef4444';
+        bgColor = 'rgba(239, 68, 68, 0.12)';
+        statusText = 'Not Magnetic ✗';
+        statusColor = '#dc2626';
+      }
+    }
+
+    return (
+      <div
+        key={item.id}
+        draggable={!isScanned && !scanningItemId}
+        onDragStart={(e) => {
+          if (e.dataTransfer) {
+            e.dataTransfer.setData('text/plain', item.id);
+          }
+          setDraggedItem(item);
+        }}
+        onClick={() => {
+          if (!isScanned && !scanningItemId) {
+            startScanForItem(item);
+          }
+        }}
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0.35rem 0.25rem',
+          backgroundColor: bgColor,
+          borderRadius: '12px',
+          border: `2px solid ${borderColor}`,
+          boxShadow: isScanned 
+            ? `0 0 14px ${isMag ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)'}` 
+            : '0 2px 8px rgba(0, 0, 0, 0.05)',
+          cursor: isScanned ? 'default' : 'grab',
+          transition: 'all 0.25s ease',
+          textAlign: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+          minHeight: 0,
+          userSelect: 'none'
+        }}
+        title={isScanned ? undefined : "Drag to Scanning Area or tap to scan"}
+      >
+        {isScanning && (
+          <div style={{
+            position: 'absolute', top: 0, left: 0, bottom: 0, width: `${scanProgress}%`,
+            backgroundColor: 'rgba(59, 130, 246, 0.2)', transition: 'width 0.1s linear'
+          }} />
+        )}
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+          <span style={{ fontSize: '0.95rem' }}>{item.icon}</span>
+          <span style={{ fontWeight: 600, fontSize: '0.88rem', color: '#0f172a', lineHeight: '1.1' }}>
+            {item.name}
+          </span>
+        </div>
+        {statusText !== '' && (
+          <span style={{ fontSize: '0.72rem', color: statusColor, marginTop: '0.15rem', fontWeight: isScanned ? 600 : 500, zIndex: 1 }}>
+            {statusText}
+          </span>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
-      <div style={{ 
-        backgroundColor: 'var(--surface)', 
-        borderRadius: '12px', 
-        border: '1px solid var(--border)',
-        boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+    <div style={{
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      height: '100%',
+      minHeight: 0,
+      gap: '0.75rem',
+      boxSizing: 'border-box'
+    }}>
+      {/* LEFT SIDE: EXPERIMENT TABLE IMAGE & SCANNING AREA */}
+      <div style={{
+        flex: '1.85',
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: 'rgba(10, 15, 36, 0.85)',
+        borderRadius: '18px',
+        border: '1px solid rgba(59, 130, 246, 0.4)',
+        boxShadow: '0 0 25px rgba(0, 0, 0, 0.4)',
         overflow: 'hidden',
-        color: 'var(--text-primary)',
-        width: '100%',
-        margin: '0 auto',
-        fontFamily: 'Inter, system-ui, sans-serif'
+        position: 'relative'
       }}>
         {/* Header */}
-        <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid var(--border)' }}>
-          <h3 style={{ marginTop: 0, marginBottom: '0.5rem', color: 'var(--text-heading)', fontSize: '1.25rem' }}>Experiment: Test which items are magnetic!</h3>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Hover over the image and click to scan items.</p>
-        </div>
-
-        {/* Activity Image with Scanner */}
-        <div 
-          ref={imageRef}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={() => setLensPos(null)}
-          onClick={handleImageClick}
-          style={{ position: 'relative', overflow: 'hidden', cursor: scanningItemId ? 'default' : 'crosshair', borderBottom: '1px solid var(--border)' }}
-        >
-          <img src="/activity_4.1.png" alt="Activity items" style={{ width: '100%', height: 'auto', display: 'block' }} />
-          
-          {lensPos && (
-            <div style={{
-              position: 'absolute',
-              left: lensPos.x - 40,
-              top: lensPos.y - 40,
-              width: 80,
-              height: 80,
-              borderRadius: '50%',
-              border: scanningItemId ? '3px solid #10b981' : '3px solid var(--accent)',
-              boxShadow: '0 0 0 1px rgba(99,102,241,0.3), 0 0 20px rgba(99,102,241,0.2)',
-              background: scanningItemId ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.1)',
-              backdropFilter: 'brightness(1.2)',
-              pointerEvents: 'none',
-              zIndex: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'border-color 0.2s, background-color 0.2s'
-            }}>
-               {scanningItemId && <span style={{ fontWeight: 'bold', color: 'white', textShadow: '0 1px 3px rgba(0,0,0,0.8)', fontSize: '1.2rem' }}>{scanProgress}%</span>}
-            </div>
+        <div style={{
+          padding: '0.5rem 1.25rem',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          backgroundColor: 'rgba(15, 23, 42, 0.85)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 600, color: '#f8fafc' }}>
+              Experiment: Test which items are magnetic!
+            </h3>
+            <p style={{ margin: 0, fontSize: '0.75rem', color: '#94a3b8' }}>
+              Drag an object from the image or list and drop it into the Scanning Area below.
+            </p>
+          </div>
+          {isComplete && (
+            <button
+              onClick={onComplete}
+              style={{
+                padding: '0.4rem 1rem',
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                borderRadius: '20px',
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                boxShadow: '0 0 12px rgba(59, 130, 246, 0.5)'
+              }}
+            >
+              Continue <ArrowRight size={14} />
+            </button>
           )}
         </div>
 
-        {/* Item List Log */}
-        <div style={{ padding: '2rem', paddingTop: '1.5rem', position: 'relative' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
-            {ITEMS.map(item => {
-              const isScanning = scanningItemId === item.id;
-              const isScanned = scannedResults[item.id];
-              const isMag = item.isMagnetic;
+        {/* Experiment Image Container with Interactive Draggable Badges */}
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'stretch',
+            justifyContent: 'stretch',
+            overflow: 'hidden',
+            backgroundColor: '#070b19'
+          }}
+        >
+          <img
+            ref={imageRef}
+            src="/Activity4_1/activity_4.1.png"
+            alt="Activity items table"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'fill',
+              display: 'block'
+            }}
+          />
 
-              return (
-                <div 
-                  key={item.id}
-                  style={{ 
-                    position: 'relative',
-                    display: 'flex', 
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '1.5rem 1rem', 
-                    backgroundColor: isScanned ? (isMag ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)') : 'var(--surface-hover)', 
-                    borderRadius: '8px', 
-                    border: isScanned ? (isMag ? '1px solid #10b981' : '1px solid #ef4444') : '1px solid var(--border)',
-                    opacity: (!isScanned && !isScanning) ? 0.6 : 1,
-                    transition: 'all 0.2s',
-                    overflow: 'hidden'
-                  }}
-                >
-                  {isScanning && (
-                    <div style={{ 
-                      position: 'absolute', top: 0, left: 0, bottom: 0, width: `${scanProgress}%`,
-                      backgroundColor: 'rgba(16, 185, 129, 0.2)', transition: 'width 0.1s linear'
-                    }} />
-                  )}
+          {/* Interactive Draggable Object Badges over Image (Disappears once scanned) */}
+          {ALL_ITEMS.map((item) => {
+            const isScanned = scannedResults[item.id];
+            const isScanning = scanningItemId === item.id;
 
-                  <span style={{ fontWeight: '600', fontSize: '1.2rem', color: 'var(--text-primary)', zIndex: 1, marginBottom: isScanned ? '0.5rem' : 0 }}>
-                    {item.name}
-                  </span>
+            if (isScanned) return null;
 
-                  {isScanned && (
-                    <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.35rem', color: isMag ? '#10b981' : '#ef4444', fontSize: '1.0rem', fontWeight: 'bold' }}>
-                      {isMag ? <img src="/horse-magnet.png" alt="Magnetic" style={{ width: '20px', height: '20px', objectFit: 'contain' }} /> : <XCircle size={20} />}
-                      {isMag ? 'Magnetic' : 'Not Magnetic'}
-                    </div>
-                  )}
-
-                  {!isScanned && !isScanning && (
-                    <div style={{ zIndex: 1, color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.25rem' }}>
-                      Not scanned yet
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+            return (
+              <div
+                key={item.id}
+                draggable={!isScanned && !scanningItemId}
+                onDragStart={(e) => {
+                  if (e.dataTransfer) {
+                    e.dataTransfer.setData('text/plain', item.id);
+                  }
+                  setDraggedItem(item);
+                }}
+                onClick={() => {
+                  if (!isScanned && !scanningItemId) {
+                    startScanForItem(item);
+                  }
+                }}
+                style={{
+                  position: 'absolute',
+                  left: `${item.hotspot.x}%`,
+                  top: `${item.hotspot.y}%`,
+                  transform: 'translate(-50%, -50%)',
+                  padding: '0.2rem 0.55rem',
+                  borderRadius: '16px',
+                  backgroundColor: isScanned 
+                    ? (item.isMagnetic ? 'rgba(16, 185, 129, 0.9)' : 'rgba(239, 68, 68, 0.9)')
+                    : isScanning 
+                      ? 'rgba(59, 130, 246, 0.95)' 
+                      : 'rgba(15, 23, 42, 0.88)',
+                  border: isScanned 
+                    ? (item.isMagnetic ? '2px solid #10b981' : '2px solid #ef4444')
+                    : '2px solid #38bdf8',
+                  color: 'white',
+                  fontSize: '0.75rem',
+                  fontWeight: 'bold',
+                  cursor: isScanned ? 'default' : 'grab',
+                  boxShadow: isScanned ? 'none' : '0 0 12px rgba(56, 189, 248, 0.65)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  zIndex: 20,
+                  userSelect: 'none',
+                  transition: 'all 0.25s ease'
+                }}
+                title={isScanned ? undefined : "Drag to Scanning Area below or tap to scan"}
+              >
+                <span>{item.icon}</span>
+                <span>{item.name}</span>
+                {isScanned && (item.isMagnetic ? ' ✓' : ' ✗')}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Continue Action */}
-        <div style={{
-          padding: '2rem',
-          display: 'flex',
-          justifyContent: 'center',
-          backgroundColor: 'var(--surface-hover)',
-        }}>
-          <button
-            onClick={onComplete}
-            disabled={!isComplete}
-            className="primary"
-            style={{
-              padding: '0.75rem 2rem',
-              fontSize: '1rem',
-              fontWeight: 'bold',
-              borderRadius: '30px',
+        {/* SCANNING AREA DROP ZONE BOX */}
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragOverScanner(true);
+          }}
+          onDragLeave={() => setIsDragOverScanner(false)}
+          onDrop={handleDropOnScanner}
+          style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: isDragOverScanner 
+              ? 'rgba(56, 189, 248, 0.25)' 
+              : activeScanningItem 
+                ? 'rgba(16, 185, 129, 0.18)' 
+                : 'rgba(15, 23, 42, 0.95)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '68px',
+            boxSizing: 'border-box',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          {activeScanningItem ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', width: '100%', maxWidth: '420px', justifyContent: 'center' }}>
+              <span style={{ fontSize: '1.4rem' }}>{activeScanningItem.icon}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '0.82rem', color: '#f8fafc', fontWeight: 'bold' }}>
+                  <span>Scanning {activeScanningItem.name}...</span>
+                  <span>{scanProgress}%</span>
+                </div>
+                <div style={{ width: '100%', height: '8px', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ width: `${scanProgress}%`, height: '100%', backgroundColor: '#38bdf8', borderRadius: '4px', transition: 'width 0.05s linear', boxShadow: '0 0 10px #38bdf8' }} />
+                </div>
+              </div>
+            </div>
+          ) : lastScannedItem ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: lastScannedItem.isMagnetic ? '#10b981' : '#ef4444', fontWeight: 'bold', fontSize: '0.88rem' }}>
+              <span style={{ fontSize: '1.3rem' }}>{lastScannedItem.icon}</span>
+              <span>{lastScannedItem.name}: {lastScannedItem.isMagnetic ? 'Magnetic ✓ (Attracted to magnet)' : 'Not Magnetic ✗ (Not attracted to magnet)'}</span>
+            </div>
+          ) : (
+            <div style={{
+              border: isDragOverScanner ? '2px dashed #38bdf8' : '2px dashed rgba(148, 163, 184, 0.45)',
+              borderRadius: '12px',
+              padding: '0.4rem 1.25rem',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              border: 'none',
-              cursor: isComplete ? 'pointer' : 'not-allowed',
-              background: isComplete ? 'var(--accent)' : 'var(--border)',
-              color: isComplete ? 'white' : 'var(--text-muted)'
-            }}
-          >
-            {isComplete ? 'Continue' : 'Scan all items'} <ArrowRight size={16} />
-          </button>
+              gap: '0.65rem',
+              color: isDragOverScanner ? '#38bdf8' : '#94a3b8',
+              fontWeight: 600,
+              fontSize: '0.82rem'
+            }}>
+              <span style={{ fontSize: '1.15rem' }}>📥</span>
+              <span>{isDragOverScanner ? 'Release object to scan!' : 'DRAG ANY OBJECT FROM IMAGE & DROP HERE TO SCAN'}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* RIGHT SIDE: COMPACT ITEM BARS IN 2 COLUMNS */}
+      <div style={{
+        flex: '0.85',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '0.5rem',
+        height: '100%',
+        boxSizing: 'border-box'
+      }}>
+        {/* Column 1 (5 items: Ruler, Eraser, Clips, Coins, Pens) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '100%' }}>
+          {ALL_ITEMS.slice(0, 5).map(renderCard)}
+        </div>
+
+        {/* Column 2 (5 items: Bottle, Compass, Case, Notebook, Pencil) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '100%' }}>
+          {ALL_ITEMS.slice(5, 10).map(renderCard)}
         </div>
       </div>
     </div>

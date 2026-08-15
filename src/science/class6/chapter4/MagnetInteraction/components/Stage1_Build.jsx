@@ -376,12 +376,12 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     );
                     case "magnetA": return (
                       <svg viewBox="0 0 100 40" width="24" height="24">
-                        <image href="/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(-90 50 20)" />
+                        <image href="/Shared/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(-90 50 20)" />
                       </svg>
                     );
                     case "magnetB": return (
                       <svg viewBox="0 0 100 40" width="24" height="24">
-                        <image href="/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(90 50 20)" />
+                        <image href="/Shared/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(90 50 20)" />
                       </svg>
                     );
                     default: return null;
@@ -536,7 +536,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                   {placed.pencils && (
                     <DraggableSVGGroup id="pencils" isDraggable={true}>
                       <g transform={`translate(${positions.pencils.x - 40}, ${positions.pencils.y - 60})`} filter="drop-shadow(2px 2px 2px rgba(0,0,0,0.3))">
-                        <image href="/pencils.png" x="0" y="0" width="84" height="120" preserveAspectRatio="xMidYMid meet" />
+                        <image href="/MagnetInteraction/pencils.png" x="0" y="0" width="84" height="120" preserveAspectRatio="xMidYMid meet" />
                       </g>
                     </DraggableSVGGroup>
                   )}
@@ -546,7 +546,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     <DraggableSVGGroup id="magnetA" isDraggable={true}>
                       <g transform={`translate(${positions.magnetA.x - 60}, ${positions.magnetA.y - 20})`} filter="drop-shadow(0px 8px 10px rgba(0,0,0,0.4))">
                         <text x="60" y="-10" fill="var(--text-secondary)" fontSize="14" fontWeight="bold" textAnchor="middle">Magnet A</text>
-                        <image href="/bar_magnet.png" x="40" y="-40" width="40" height="120" transform="rotate(-90 60 20)" preserveAspectRatio="none" />
+                        <image href="/Shared/bar_magnet.png" x="40" y="-40" width="40" height="120" transform="rotate(-90 60 20)" preserveAspectRatio="none" />
                       </g>
                     </DraggableSVGGroup>
                   )}
@@ -556,7 +556,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     <DraggableSVGGroup id="magnetB" isDraggable={true}>
                       <g transform={`translate(${positions.magnetB.x - 60}, ${positions.magnetB.y - 20})`} filter="drop-shadow(0px 4px 6px rgba(0,0,0,0.3))">
                         <text x="60" y="-10" fill="var(--text-secondary)" fontSize="14" fontWeight="bold" textAnchor="middle">Magnet B</text>
-                        <image href="/bar_magnet.png" x="40" y="-40" width="40" height="120" transform="rotate(90 60 20)" preserveAspectRatio="none" />
+                        <image href="/Shared/bar_magnet.png" x="40" y="-40" width="40" height="120" transform="rotate(90 60 20)" preserveAspectRatio="none" />
                       </g>
                     </DraggableSVGGroup>
                   )}
@@ -615,12 +615,12 @@ export default function Stage1_Build({ onComplete, onNext }) {
             )}
             {activeDraggingId === "magnetA" && (
               <div style={{ width: "120px", height: "24px", position: "relative" }}>
-                <img src="/bar_magnet.png" style={{ position: "absolute", top: "50%", left: "50%", width: "24px", height: "120px", transform: "translate(-50%, -50%) rotate(-90deg)", objectFit: "fill", borderRadius: "4px" }} alt="" />
+                <img src="/Shared/bar_magnet.png" style={{ position: "absolute", top: "50%", left: "50%", width: "24px", height: "120px", transform: "translate(-50%, -50%) rotate(-90deg)", objectFit: "fill", borderRadius: "4px" }} alt="" />
               </div>
             )}
             {activeDraggingId === "magnetB" && (
               <div style={{ width: "80px", height: "24px", position: "relative" }}>
-                <img src="/bar_magnet.png" style={{ position: "absolute", top: "50%", left: "50%", width: "24px", height: "80px", transform: "translate(-50%, -50%) rotate(90deg)", objectFit: "fill", borderRadius: "4px" }} alt="" />
+                <img src="/Shared/bar_magnet.png" style={{ position: "absolute", top: "50%", left: "50%", width: "24px", height: "80px", transform: "translate(-50%, -50%) rotate(90deg)", objectFit: "fill", borderRadius: "4px" }} alt="" />
               </div>
             )}
           </div>

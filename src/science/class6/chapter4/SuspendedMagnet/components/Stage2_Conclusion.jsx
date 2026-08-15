@@ -28,7 +28,7 @@ export default function Stage2_Conclusion({ onComplete }) {
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}>
           <img 
-            src="/holding_compass.png" 
+            src="/SuspendedMagnet/holding_compass.png" 
             alt="Holding a compass" 
             style={{ width: '100%', height: 'auto', display: 'block' }}
           />

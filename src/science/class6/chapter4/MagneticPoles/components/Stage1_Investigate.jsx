@@ -222,7 +222,7 @@ export default function Stage1_Investigate({ onComplete }) {
           {/* Bar Magnet */}
           {shape === 'bar' && (
             <img 
-              src="/horizontal_magnet.png" 
+              src="/MagneticPoles/horizontal_magnet.png" 
               alt="Bar Magnet"
               style={{
                 position: 'absolute',
@@ -237,7 +237,7 @@ export default function Stage1_Investigate({ onComplete }) {
           {/* Horseshoe Magnet */}
           {shape === 'horseshoe' && (
             <img 
-              src="/horse-magnet.png" 
+              src="/Shared/horse-magnet.png" 
               alt="Horseshoe Magnet"
               style={{
                 position: 'absolute', 
@@ -252,7 +252,7 @@ export default function Stage1_Investigate({ onComplete }) {
           {/* Ring Magnet */}
           {shape === 'ring' && (
             <img 
-              src="/ring_magnet.png" 
+              src="/MagneticPoles/ring_magnet.png" 
               alt="Ring Magnet"
               style={{
                 position: 'absolute', 
