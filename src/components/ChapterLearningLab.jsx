@@ -34,10 +34,10 @@ import FoodTestingActivity from "../science/class6/chapter3/FoodTesting";
 import FatTestingActivity from "../science/class6/chapter3/FatTesting";
 import ProteinTestingActivity from "../science/class6/chapter3/ProteinTesting";
 
-import fishImg from "../../Fish.png";
-import pigeonImg from "../../pigeon img.png";
-import snailImg from "../../Snail img.png";
-import cowImg from "../../cow img.png";
+import fishImg from "../assets/specimens/fish.png";
+import pigeonImg from "../assets/specimens/pigeon.png";
+import snailImg from "../assets/specimens/snail.png";
+import cowImg from "../assets/specimens/cow.png";
 
 const LEVEL_QUIZZES = {
   'biodiversity_concept': [
