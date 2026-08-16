@@ -157,7 +157,7 @@ export default function DidYouKnow() {
           padding: '1.35rem 1.75rem',
           color: '#f8fafc',
           boxShadow: '0 25px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(167, 139, 250, 0.5), inset 0 0 15px rgba(167, 139, 250, 0.15)',
-          zIndex: 100,
+          zIndex: 100000,
           pointerEvents: 'none',
           backdropFilter: 'blur(16px)',
           transition: 'all 0.25s ease'
