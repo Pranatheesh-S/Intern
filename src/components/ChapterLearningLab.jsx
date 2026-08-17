@@ -548,7 +548,7 @@ function IntroStoryteller({ onComplete }) {
   const typeTimerRef = useRef(null);
   const narrationTimerRef = useRef(null);
   const dialogueTimerRef = useRef(null);
-  const { theme = 'dark' } = useTheme() || {};
+  const { theme = 'light' } = useTheme() || {};
 
   const scenes = [
     {

@@ -1,0 +1,116 @@
+/**
+ * FuturaX Educational UI Design System
+ * Master visual reference: Materials Around Us chapter spread
+ * TV-first tokens for classroom projector presentation (primary: 1920×1080)
+ */
+
+:root {
+  /* ── Spacing scale (px) — global rhythm ── */
+  --edu-space-xs: 4px;
+  --edu-space-sm: 8px;
+  --edu-space-md: 16px;
+  --edu-space-lg: 24px;
+  --edu-space-xl: 32px;
+  --edu-space-2xl: 40px;
+  --edu-space-3xl: 48px;
+  --edu-space-4xl: 56px;
+  --edu-space-5xl: 64px;
+
+  /* ── Page padding ── */
+  --edu-page-padding: clamp(16px, 2vw, 32px);
+  --edu-page-padding-compact: clamp(14px, 1.6vw, 28px);
+  --edu-book-frame-border: clamp(6px, 0.55vw, 8px);
+  --edu-book-page-padding: clamp(28px, 2.5vw, 44px) clamp(32px, 2.8vw, 48px) clamp(24px, 2.2vw, 40px);
+
+  /* ── Typography (TV-readable clamp scale) ── */
+  --edu-text-chapter-title: clamp(38px, 3vw, 60px);
+  --edu-text-section-heading: clamp(28px, 2vw, 40px);
+  --edu-text-card-heading: clamp(21px, 1.35vw, 30px);
+  --edu-text-body: clamp(17px, 1vw, 22px);
+  --edu-text-body-sm: clamp(16px, 0.95vw, 20px);
+  --edu-text-small: clamp(14px, 0.8vw, 18px);
+  --edu-text-nav: clamp(14px, 0.75vw, 17px);
+  --edu-text-quote: clamp(18px, 1.1vw, 26px);
+  --edu-text-meta: clamp(13px, 0.7vw, 15px);
+  --edu-text-label: clamp(10px, 0.65vw, 12px);
+  --edu-text-key-idea-label: clamp(15px, 0.9vw, 17px);
+  --edu-text-key-idea-title: clamp(21px, 1.15vw, 25px);
+  --edu-text-key-idea-desc: clamp(16px, 0.92vw, 18px);
+
+  /* ── Font weights ── */
+  --edu-weight-body: 600;
+  --edu-weight-heading: 700;
+  --edu-weight-title: 800;
+
+  /* ── Line heights ── */
+  --edu-leading-body: 1.5;
+  --edu-leading-tight: 1.25;
+  --edu-leading-quote: 1.45;
+  --edu-leading-title: 1.05;
+  --edu-leading-key-idea: 1.35;
+
+  /* ── Layout ── */
+  --edu-spread-columns: 49fr 51fr;
+  --edu-spread-columns-balanced: 50fr 50fr;
+  --edu-nav-height: clamp(52px, 6vh, 64px);
+  --edu-tab-min-height: clamp(56px, 6vh, 68px);
+  --edu-tab-min-width: clamp(110px, 9vw, 150px);
+  --edu-tab-text-inactive: #707988;
+  --edu-tab-num-size: clamp(26px, 1.6vw, 28px);
+  --edu-tab-num-font: clamp(13px, 0.85vw, 15px);
+
+  /* ── Border radius ── */
+  --edu-radius-sm: 8px;
+  --edu-radius-md: 10px;
+  --edu-radius-lg: 12px;
+  --edu-radius-xl: 16px;
+  --edu-radius-pill: 999px;
+
+  /* ── Chapter brand colors (Materials Around Us palette) ── */
+  --edu-chapter-parchment: #f6f1e4;
+  --edu-chapter-navy: #1b2a4a;
+  --edu-chapter-navy-dark: #0e3556;
+  --edu-chapter-navy-deep: #16233f;
+  --edu-chapter-gold: #c8932f;
+  --edu-chapter-gold-light: #d97a2f;
+  --edu-chapter-gold-label: #a97417;
+  --edu-chapter-green: #3f7d4f;
+  --edu-chapter-blue: #3b4ea0;
+  --edu-chapter-blue-hover: #2a3a80;
+  --edu-chapter-border: #ece7d8;
+  --edu-chapter-border-soft: #e7e2d3;
+  --edu-chapter-text: #1e293b;
+  --edu-chapter-text-muted: #4b5563;
+  --edu-chapter-text-sub: #334155;
+  --edu-chapter-white: #ffffff;
+  --edu-chapter-hero-bg: #eef0fb;
+  --edu-chapter-orange-bg: #fdf1e3;
+  --edu-chapter-orange-border: #f2d9b8;
+  --edu-chapter-green-bg: #eef6ee;
+  --edu-chapter-green-border: #cfe6d3;
+  --edu-chapter-fact-bg: #fdf0d6;
+  --edu-chapter-fact-border: #f0d9a6;
+  --edu-chapter-visual-caption: #c9d2e6;
+
+  /* ── Card variants ── */
+  --edu-card-padding: clamp(18px, 1.6vh, 24px);
+  --edu-card-gap: clamp(14px, 1.4vh, 20px);
+  --edu-card-shadow: 0 4px 10px rgba(30, 30, 30, 0.04);
+  --edu-card-shadow-lg: 0 10px 24px rgba(20, 30, 60, 0.12);
+  --edu-book-shadow: 0 30px 80px rgba(0, 0, 0, 0.18);
+
+  /* ── Button variants ── */
+  --edu-btn-padding-y: clamp(10px, 1.2vh, 14px);
+  --edu-btn-padding-x: clamp(20px, 1.8vw, 28px);
+  --edu-btn-font-size: var(--edu-text-nav);
+  --edu-btn-navy-bg: var(--edu-chapter-navy-dark);
+  --edu-btn-navy-hover: #124070;
+  --edu-btn-green-bg: #16a34a;
+  --edu-btn-green-hover: #15803d;
+  --edu-btn-blue-bg: var(--edu-chapter-blue);
+  --edu-btn-blue-hover: var(--edu-chapter-blue-hover);
+
+  /* ── Key idea grid ── */
+  --edu-grid-gap-col: clamp(14px, 1.1vw, 20px);
+  --edu-grid-gap-row: clamp(14px, 1.1vh, 20px);
+}

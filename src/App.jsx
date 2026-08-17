@@ -9,8 +9,6 @@ import {
   Play,
   ArrowRight,
   Home,
-  Sun,
-  Moon,
   Hammer,
   Battery,
   Flame,
@@ -20,7 +18,6 @@ import {
   VolumeX
 } from 'lucide-react';
 import natureForestSound from './assets/nature_forest_sound.mp3';
-import { useTheme } from './ThemeContext.jsx';
 import VerticalLevelMap from './components/VerticalLevelMap';
 const ElectricSwitchActivity = lazy(() => import('./science/class7/chapter3/ElectricSwitch'));
 const ElectricCircuitActivity = lazy(() => import('./science/class7/chapter3/ElectricCircuit'));
@@ -86,7 +83,6 @@ const MagneticDemoActivity = lazy(() => import('./science/class6/chapter13/Magne
 const ExploringMagnetsLab = lazy(() => import('./science/class6/chapter13/ExploringMagnetsLab'));
 
 export default function App() {
-  const { theme, setTheme, toggleTheme } = useTheme();
   const [activeSubject, setActiveSubject] = useState(() => {
     const params = new URLSearchParams(window.location.hash.replace('#', '?'));
     return params.get('subject') || null;
@@ -2859,26 +2855,6 @@ export default function App() {
                 Active-learning simulations and concept reviews for science and social science
               </p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              {/* Theme Toggle */}
-              <button 
-                className="outline" 
-                onClick={toggleTheme}
-                style={{ 
-                  padding: '0.4rem 0.8rem', 
-                  fontSize: '0.85rem', 
-                  gap: '0.5rem', 
-                  borderRadius: '8px',
-                  borderColor: 'var(--border)'
-                }}
-              >
-                {theme === 'dark' ? (
-                  <><Sun size={14} /> <span>Light Theme</span></>
-                ) : (
-                  <><Moon size={14} /> <span>Dark Theme</span></>
-                )}
-              </button>
-            </div>
             {activeSubject && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                 <div
@@ -3189,7 +3165,7 @@ export default function App() {
               height: '46px',
               borderRadius: '50%',
               border: '1px solid var(--border)',
-              background: theme === 'dark' ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+              background: 'rgba(255, 255, 255, 0.85)',
               color: 'var(--text-primary)',
               backdropFilter: 'blur(8px)',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
@@ -3208,31 +3184,6 @@ export default function App() {
           </button>
         )}
 
-        {/* Global Circular Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          style={{
-            width: '46px',
-            height: '46px',
-            borderRadius: '50%',
-            border: '1px solid var(--border)',
-            background: theme === 'dark' ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.85)',
-            color: 'var(--text-primary)',
-            backdropFilter: 'blur(8px)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            padding: 0,
-          }}
-          title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-        >
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
       </div>
 
     </div>

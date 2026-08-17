@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { ArrowLeft, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
+import { ArrowLeft, RefreshCw, ArrowRight } from 'lucide-react';
 import useSound from 'use-sound';
-import { useTheme } from '../../ThemeContext.jsx';
 import { chapterFlow } from './storyEngine';
 import ChiefDetective from './components/ChiefDetective/ChiefDetective';
 import InvestigationHandbook from './components/Educational/InvestigationHandbook';
@@ -64,8 +63,6 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
     setStageCompleted(true);
   };
 
-  // Global Theme Hook
-  const { theme, toggleTheme } = useTheme();
 
   if (showCover) {
     return <ChapterCover onOpenBook={() => { setShowCover(false); setShowIntroSpread(true); }} onBack={onBackToDashboard} />;
@@ -115,15 +112,6 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
           >
             <ArrowLeft size={14} /> Back
-          </button>
-
-          <button 
-            className="outline" 
-            onClick={toggleTheme}
-            title="Toggle Theme"
-            style={{ padding: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
-          >
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
           </button>
 
           <button 

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { ArrowLeft, CheckCircle } from 'lucide-react';
 import LostInTheCity from './components/LostInTheCity';
 import AtlasIntroduction from './components/AtlasIntroduction';
 import DistanceAndScale from './components/DistanceAndScale';
@@ -8,20 +9,16 @@ import BlueprintIntro from './components/BlueprintIntro';
 import MapSymbols from './components/MapSymbols';
 import CoordinatesPage from './components/CoordinatesPage';
 import TimeZonesPage from './components/TimeZonesPage';
-import ExploreIndiaActivity from './components/LostInTheCity/ExploreIndiaActivity';
-import { ActivityShell, ChapterTabBar } from '../../../../components/edu';
 
 export default function LocatingPlacesActivity({ onBackToDashboard }) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [subStep5, setSubStep5] = useState(0);
-  const [viewMode, setViewMode] = useState('cover'); // 'cover' = Open Book page, 'activity' = chapter tabs
+  const [viewMode, setViewMode] = useState('cover');
   const [coverKey, setCoverKey] = useState(0);
   const navRef = useRef(null);
 
   const handleBackToMainPage = () => {
     setViewMode('cover');
     setCurrentStep(1);
-    setSubStep5(0);
     setCoverKey(k => k + 1);
     window.scrollTo(0, 0);
   };
@@ -55,9 +52,21 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
   }, [currentStep, viewMode]);
 
   return (
-    <ActivityShell
-      className={`edu-activity-shell--viewport${viewMode === 'activity' ? ' edu-activity-shell--fixed' : ''}`}
-    >
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      zIndex: 101,
+      boxSizing: 'border-box',
+      ...(viewMode === 'activity' ? {
+        padding: 'clamp(16px, 2.5vh, 24px) clamp(16px, 2.5vw, 24px)',
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'var(--background, #f8fafc)'
+      } : {})
+    }}>
       {viewMode === 'cover' && (
         <BlueprintIntro
           key={`locating-places-cover-${coverKey}`}
@@ -67,18 +76,108 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
 
       {viewMode === 'activity' && (
         <>
-      <ChapterTabBar
-        navRef={navRef}
-        tabs={tabs}
-        currentStep={currentStep}
-        onTabSelect={(id) => {
-          setCurrentStep(id);
-          if (id === 5) setSubStep5(0);
-        }}
-        onBack={handleBackToMainPage}
-      />
+      {/* Workflow Header / Tabs */}
+      <div style={{ flexShrink: 0, width: '100%', minWidth: 0, marginBottom: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'stretch', gap: '0.5rem', width: '100%', minWidth: 0 }}>
+          <button
+            type="button"
+            onClick={handleBackToMainPage}
+            className="outline"
+            title="Back to Main Page"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.15rem',
+              padding: '0.35rem 0.4rem',
+              fontSize: '0.62rem',
+              fontWeight: 'bold',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
+              borderRadius: '10px',
+              background: 'transparent',
+              cursor: 'pointer',
+              flexShrink: 0,
+              minHeight: '64px',
+              width: '68px',
+              boxSizing: 'border-box',
+              lineHeight: 1.15,
+              textAlign: 'center'
+            }}
+          >
+            <ArrowLeft size={13} />
+            <span>Back to</span>
+            <span>Main Page</span>
+          </button>
 
-      <div className="edu-activity-content">
+          <nav
+            ref={navRef}
+            style={{
+              flex: 1,
+              minWidth: 0,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(8, minmax(0, 1fr))',
+              gap: '0.4rem',
+              overflowX: 'auto',
+              scrollbarWidth: 'thin',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
+        {tabs.map((tab) => {
+          const isActive = currentStep === tab.id;
+          const isCompleted = currentStep > tab.id;
+          return (
+            <button
+              key={tab.id}
+              data-active={isActive}
+              onClick={() => {
+                if (!tab.locked) setCurrentStep(tab.id);
+              }}
+              disabled={tab.locked}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.45rem 0.55rem',
+                background: isActive ? 'var(--surface)' : 'transparent',
+                border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
+                borderRadius: '12px',
+                width: '100%',
+                minHeight: '64px',
+                minWidth: '118px',
+                opacity: tab.locked ? 0.4 : 1,
+                cursor: tab.locked ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s',
+                boxShadow: isActive ? '0 4px 15px rgba(99, 102, 241, 0.15)' : 'none',
+                textAlign: 'left',
+                boxSizing: 'border-box',
+                flexShrink: 0
+              }}
+            >
+              <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: isActive ? 'var(--accent)' : 'var(--border)', color: isActive ? '#fff' : 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 'bold', flexShrink: 0 }}>
+                {isCompleted ? <CheckCircle size={11} /> : tab.id}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', minWidth: 0, flex: 1 }}>
+                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: isActive ? 'var(--text-heading)' : 'var(--text-primary)', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.title}</span>
+                <span style={{ fontSize: '0.56rem', color: 'var(--text-muted)', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.subtitle}</span>
+              </div>
+            </button>
+          );
+        })}
+          </nav>
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div style={{ 
+        width: '100%',
+        margin: '0 auto',
+        display: 'flex', 
+        flex: 1,
+        flexDirection: 'column',
+        minHeight: 0
+      }}>
         {currentStep === 1 && (
           <ChapterIntroduction onNextActivity={() => setCurrentStep(2)} />
         )}
@@ -91,19 +190,11 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
         {currentStep === 4 && (
           <DistanceAndScale onComplete={() => setCurrentStep(5)} onBack={() => setCurrentStep(3)} />
         )}
-        {currentStep === 5 && subStep5 === 0 && (
-          <Directions onComplete={() => setSubStep5(1)} onBack={() => setCurrentStep(4)} />
-        )}
-        {currentStep === 5 && subStep5 === 1 && (
-          <div style={{ flex: 1, height: '100%', minHeight: 0, position: 'relative' }}>
-            <ExploreIndiaActivity 
-              onBeginChapter={() => { setSubStep5(0); setCurrentStep(6); }} 
-              onBack={() => setSubStep5(0)}
-            />
-          </div>
+        {currentStep === 5 && (
+          <Directions onComplete={() => setCurrentStep(6)} onBack={() => setCurrentStep(4)} />
         )}
         {currentStep === 6 && (
-          <MapSymbols onComplete={() => setCurrentStep(7)} onBack={() => { setSubStep5(1); setCurrentStep(5); }} />
+          <MapSymbols onComplete={() => setCurrentStep(7)} onBack={() => setCurrentStep(5)} />
         )}
         {currentStep === 7 && (
           <CoordinatesPage onNextActivity={() => setCurrentStep(8)} onBack={() => setCurrentStep(6)} />
@@ -114,6 +205,6 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
       </div>
         </>
       )}
-    </ActivityShell>
+    </div>
   );
 }

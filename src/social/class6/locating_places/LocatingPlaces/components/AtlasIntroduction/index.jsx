@@ -8,9 +8,11 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const handleNext = () => setCurrentPage(p => Math.min(3, p + 1));
+  const handleNext = () => setCurrentPage(p => Math.min(9, p + 1));
   const handlePrev = () => setCurrentPage(p => Math.max(1, p - 1));
   const handleFinish = () => setIsCompleted(true);
+
+  const hasDiscovered3Types = currentPage >= 7 || isCompleted;
 
   return (
     <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', flex: 1, height: '100%' }}>
@@ -85,8 +87,8 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
               <div style={{ fontSize: 'clamp(1rem, 1.1vw, 1.08rem)', color: isOpen ? 'var(--text-heading)' : 'var(--text-muted)', fontWeight: isOpen ? 'bold' : 'normal' }}>Explore the Atlas</div>
             </div>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <CheckCircle2 size={20} color={currentPage === 3 ? "#10b981" : "var(--text-muted)"} />
-              <div style={{ fontSize: 'clamp(1rem, 1.1vw, 1.08rem)', color: currentPage === 3 ? 'var(--text-heading)' : 'var(--text-muted)', fontWeight: currentPage === 3 ? 'bold' : 'normal' }}>Discover 3 Types of Maps</div>
+              <CheckCircle2 size={20} color={hasDiscovered3Types ? "#10b981" : "var(--text-muted)"} />
+              <div style={{ fontSize: 'clamp(1rem, 1.1vw, 1.08rem)', color: hasDiscovered3Types ? 'var(--text-heading)' : 'var(--text-muted)', fontWeight: hasDiscovered3Types ? 'bold' : 'normal' }}>Discover 3 Types of Maps</div>
             </div>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <CheckCircle2 size={20} color={isCompleted ? "#10b981" : "var(--text-muted)"} />

@@ -301,7 +301,14 @@ export default function AryabhataPage({ onNext, isNextEnabled }) {
             </p>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 0, padding: '4px 2px 2px' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            gap: 'clamp(6px, 1.2vw, 14px)',
+            padding: '8px 4px 4px',
+            width: '100%',
+            boxSizing: 'border-box'
+          }}>
             <TimelinePoint year="476 CE" desc="Born" first />
             <TimelinePoint year="499 CE" desc="Āryabhaṭīya" />
             <TimelinePoint year="~500 CE" desc="Earth spins" />
@@ -376,10 +383,10 @@ function FactBlock({ label, labelColor, icon, title, note }) {
 
 function TimelinePoint({ year, desc, first, last }) {
   return (
-    <div style={{ flex: 1, textAlign: 'center', position: 'relative' }}>
+    <div style={{ textAlign: 'center', position: 'relative', minWidth: 0, padding: '0 2px' }}>
       <div style={{
         position: 'absolute',
-        top: '6px',
+        top: '7px',
         left: first ? '50%' : 0,
         right: last ? '50%' : 0,
         height: '2px',
@@ -388,18 +395,34 @@ function TimelinePoint({ year, desc, first, last }) {
       <i style={{
         position: 'relative',
         display: 'block',
-        width: '11px',
-        height: '11px',
+        width: '12px',
+        height: '12px',
         borderRadius: '50%',
         background: '#F5A623',
-        margin: '0 auto 7px',
+        margin: '0 auto 8px',
         zIndex: 1,
         boxShadow: '0 0 0 3px #fff'
       }}></i>
-      <b style={{ display: 'block', fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace', fontSize: '11px', color: '#0E3556' }}>
+      <b style={{
+        display: 'block',
+        fontFamily: '"IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace',
+        fontSize: 'clamp(11px, 1.15vw, 13px)',
+        color: '#0E3556',
+        lineHeight: 1.25,
+        whiteSpace: 'nowrap'
+      }}>
         {year}
       </b>
-      <span style={{ display: 'block', fontSize: '10px', color: '#5c6b7a', lineHeight: 1.2 }}>
+      <span style={{
+        display: 'block',
+        fontSize: 'clamp(10px, 1.05vw, 12px)',
+        color: '#5c6b7a',
+        lineHeight: 1.35,
+        marginTop: '2px',
+        whiteSpace: 'normal',
+        wordBreak: 'break-word',
+        hyphens: 'auto'
+      }}>
         {desc}
       </span>
     </div>

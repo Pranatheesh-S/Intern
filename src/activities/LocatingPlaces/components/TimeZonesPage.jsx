@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ChapterBackFooter from './ChapterBackFooter';
 
 const fmt = (h) => {
   h = ((h % 24) + 24) % 24;
@@ -13,7 +14,7 @@ const fmt = (h) => {
 
 const localTime = (targetLong) => 12 + targetLong / 15;
 
-export default function TimeZonesPage() {
+export default function TimeZonesPage({ onBack }) {
   const [activeTab, setActiveTab] = useState('tz');
 
   // TZ State
@@ -807,18 +808,19 @@ export default function TimeZonesPage() {
                     </div>
                   </div>
 
-                  <button onClick={() => {
-                    // Could navigate back to start, or show a completion check.
-                    setActiveTab('tz');
-                  }} style={{ padding: '16px 32px', fontSize: '18px', fontWeight: 700, background: '#16a34a', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 8px 16px rgba(22,163,74,0.3)' }}>
-                    Finish Chapter ➔
-                  </button>
                 </div>
               )}
             </div>
           )}
         </div>
       </div>
+
+      <ChapterBackFooter
+        onBack={onBack}
+        nextLabel={activeTab === 'idl' && idlMission > 4 ? 'Finish Chapter' : undefined}
+        onNext={activeTab === 'idl' && idlMission > 4 ? () => setActiveTab('tz') : undefined}
+        nextVariant="green"
+      />
     </div>
   );
 }

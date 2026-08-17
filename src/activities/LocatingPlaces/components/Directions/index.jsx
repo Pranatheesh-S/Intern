@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, ArrowRight, Sunrise, Sunset, Navigation, CheckCircle2, ArrowLeft, ArrowUp, ArrowDown, Map, Lightbulb, MapPin } from 'lucide-react';
+import ChapterBackFooter from '../ChapterBackFooter';
 
 const DIRECTIONS = [
   { id: 'N', label: 'North', type: 'Main Direction', angle: 0, description: <>North is one of the four <b>cardinal directions</b>. On a compass it sits at the top. Most maps show a small arrow marked 'N' pointing towards North.</>, note: 'Maps usually print a North arrow so you can orient every other direction from it.', icon: <Navigation size={48} color="#ef4444" style={{ transform: 'rotate(0deg)' }}/> },
@@ -27,7 +28,7 @@ const getOpposite = (id) => {
   }
 };
 
-export default function Directions({ onComplete }) {
+export default function Directions({ onComplete, onBack }) {
   const [activeDir, setActiveDir] = useState(null);
   const [viewedDirs, setViewedDirs] = useState(new Set());
   const [hoveredDir, setHoveredDir] = useState(null);
@@ -340,9 +341,9 @@ export default function Directions({ onComplete }) {
             <AnimatePresence>
               {isAllViewed && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{ overflow: 'hidden' }}>
-                  <button onClick={onComplete} className="primary" style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', fontSize: '1rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: '#3b82f6', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)' }}>
-                    Next Activity <ArrowRight size={18} />
-                  </button>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: '#10b981', fontWeight: 600, textAlign: 'center' }}>
+                    All directions explored! Use the button below to continue.
+                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -351,6 +352,13 @@ export default function Directions({ onComplete }) {
         </div>
 
       </div>
+
+      <ChapterBackFooter
+        onBack={onBack}
+        nextLabel={isAllViewed ? 'Next Activity' : undefined}
+        onNext={isAllViewed ? onComplete : undefined}
+        nextVariant="blue"
+      />
     </div>
   );
 }

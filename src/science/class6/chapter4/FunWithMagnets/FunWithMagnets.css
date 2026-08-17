@@ -1,29 +1,4 @@
 .fun-with-magnets {
-  --bg-local: #0B1026;
-  --bg2-local: #0E1430;
-  --panel-local: #151C3D;
-  --panel2-local: #1B2350;
-  --line-local: #2A3468;
-  --ink-local: #EAF0FF;
-  --mut-local: #9AA6D6;
-  --dim-local: #6C77A8;
-  --indigo-local: #7C9EFF;
-  --gold-local: #FFC24D;
-  --mint-local: #5CE1B9;
-  --coral-local: #FF7A6E;
-  --red-local: #F0655F;
-  --blue-local: #5D9BF0;
-  --shadow-local: 0 10px 30px rgba(3,6,20,.55);
-  --r-local: 14px;
-
-  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-  color: var(--ink-local);
-  min-height: 100vh;
-  padding-bottom: 44px;
-  width: 100%;
-}
-
-[data-theme="light"] .fun-with-magnets {
   --bg-local: #F8FAFC;
   --bg2-local: #F1F5F9;
   --panel-local: #FFFFFF;
@@ -39,6 +14,13 @@
   --red-local: #DC2626;
   --blue-local: #3B82F6;
   --shadow-local: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --r-local: 14px;
+
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  color: var(--ink-local);
+  min-height: 100vh;
+  padding-bottom: 44px;
+  width: 100%;
 }
 
 .fun-with-magnets .wrap {
@@ -144,12 +126,8 @@
   font-size: 14px;
   cursor: pointer;
   background: linear-gradient(135deg, var(--indigo-local), #5A78E8);
-  color: #0B1026;
-  transition: transform .12s, filter .2s;
-}
-
-[data-theme="light"] .fun-with-magnets .btn {
   color: #FFFFFF;
+  transition: transform .12s, filter .2s;
 }
 
 .fun-with-magnets .btn:hover {
@@ -218,10 +196,6 @@
 
 .fun-with-magnets .choice.right {
   border-color: var(--mint-local);
-  background: rgba(92, 225, 185, .1);
-}
-
-[data-theme="light"] .fun-with-magnets .choice.right {
   background: #ECFDF5;
 }
 
@@ -233,10 +207,6 @@
 
 .fun-with-magnets .choice.wrong {
   border-color: var(--coral-local);
-  background: rgba(255, 122, 110, .08);
-}
-
-[data-theme="light"] .fun-with-magnets .choice.wrong {
   background: #FEF2F2;
 }
 
@@ -252,19 +222,14 @@
 
 .fun-with-magnets .reveal {
   margin-top: 12px;
-  background: rgba(92, 225, 185, .07);
-  border: 1px solid rgba(92, 225, 185, .35);
+  background: #ECFDF5;
+  border: 1px solid #10B981;
   border-radius: 11px;
   padding: 13px 15px;
   font-size: 13px;
   line-height: 1.6;
   display: none;
   animation: pop .3s;
-}
-
-[data-theme="light"] .fun-with-magnets .reveal {
-  background: #ECFDF5;
-  border-color: #10B981;
 }
 
 .fun-with-magnets .reveal.show {
@@ -276,11 +241,6 @@
 }
 
 .fun-with-magnets .reveal.warn {
-  background: rgba(255, 194, 77, .06);
-  border-color: rgba(255, 194, 77, .4);
-}
-
-[data-theme="light"] .fun-with-magnets .reveal.warn {
   background: #FEF3C7;
   border-color: #F59E0B;
 }
@@ -301,12 +261,8 @@
   display: block;
   width: 100%;
   border-radius: 10px;
-  background: #080C1E;
-  touch-action: none;
-}
-
-[data-theme="light"] .fun-with-magnets canvas {
   background: #F1F5F9;
+  touch-action: none;
 }
 
 .fun-with-magnets .barmag {

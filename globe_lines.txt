@@ -1,0 +1,200 @@
+0: <!DOCTYPE html>
+1: <html lang="en">
+2: <head>
+3: <meta charset="UTF-8">
+4: <meta name="viewport" content="width=device-width, initial-scale=1.0">
+5: <title>Interactive 3D Globe — Latitude &amp; Longitude</title>
+6: <style>
+7:   :root{
+8:     --bg1:#0a1020; --bg2:#060912;
+9:     --panel:rgba(16,24,42,0.92); --panelBorder:rgba(120,170,230,0.28);
+10:     --ink:#eaf2ff; --muted:#a9bcda; --accent:#ffd66b; --red:#ff5a5a;
+11:     --green:#57d38c; --blue:#63b8ff;
+12:   }
+13:   *{box-sizing:border-box;}
+14:   html,body{margin:0;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe
+15:   #stage{position:fixed;inset:0;}
+16:   canvas{display:block;}
+17: 
+18:   /* ---- Title ---- */
+19:   #title{position:fixed;top:12px;left:16px;text-align:left;pointer-events:none;z-index:5;max-width:4
+20:   #title h1{margin:0;font-size:16px;font-weight:700;letter-spacing:.2px;text-shadow:0 2px 10px rgba(
+21:   #title p{margin:2px 0 0;font-size:11.5px;color:var(--muted);}
+22: 
+23:   /* ---- Labels overlaid on globe ---- */
+24:   #labels{position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden;}
+25:   .lbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-weight:600;text-shad
+26:   .continent{font-size:13px;letter-spacing:1.4px;color:#1d1d1d;text-shadow:0 1px 2px rgba(255,255,25
+27:   .ocean{font-size:11.5px;font-style:italic;color:#1e6ea3;letter-spacing:.5px;text-shadow:0 1px 2px 
+28:   .coord{font-size:12px;color:#111;font-weight:700;text-shadow:0 1px 2px rgba(255,255,255,.75),0 0 3
+29:   .pole{font-size:11.5px;color:#111;font-weight:700;text-shadow:0 1px 2px rgba(255,255,255,.75),0 0 
+30:   .equator{font-size:12px;color:#111;font-weight:800;letter-spacing:2px;text-shadow:0 1px 2px rgba(2
+31:   .prime{font-size:11.5px;color:#111;font-weight:800;letter-spacing:1.5px;text-shadow:0 1px 2px rgba
+32:   .arrow{font-size:11.5px;color:#111;font-weight:700;letter-spacing:.4px;text-shadow:0 1px 2px rgba(
+33:   .city{font-size:11px;color:#fff;background:rgba(230,120,20,.85);padding:2px 7px;border-radius:10px
+34:   .city::before{content:"📍 ";}
+35:   .cityex{font-size:11px;color:#fff;background:rgba(224,110,20,.92);padding:2px 8px;border-radius:10
+36:   .cityex::before{content:"📍 ";}
+37: 
+38:   /* ---- Control dock ---- */
+39:   #dock{position:fixed;left:14px;bottom:14px;z-index:6;display:flex;flex-direction:column;gap:7px;ba
+40:   #dock .dh{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);margin:2
+41:   .tgl{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;curso
+42:   .tgl:hover{background:rgba(255,255,255,.06);}
+43:   .sw{width:34px;height:19px;border-radius:20px;background:rgba(255,255,255,.16);position:relative;f
+44:   .sw::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;
+45:   .tgl.on .sw{background:var(--green);}
+46:   .tgl.on .sw::after{left:17px;}
+47: 
+48:   /* ---- Info panel ---- */
+49:   #info{position:fixed;top:0;right:0;height:100%;width:380px;max-width:90vw;background:var(--panel);
+50:   #info.open{transform:translateX(0);}
+51:   #info header{padding:16px 18px 12px;border-bottom:1px solid var(--panelBorder);display:flex;align-
+52:   #info header h2{margin:0;font-size:16px;}
+53:   #info .body{overflow-y:auto;padding:6px 18px 26px;}
+54:   #info h3{font-size:13px;color:var(--accent);margin:18px 0 6px;letter-spacing:.3px;text-transform:u
+55:   #info p{font-size:13px;line-height:1.55;color:#d9e4f6;margin:6px 0;}
+56:   #info .chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;margin:2px 4px 
+57:   #info b{color:#fff;}
+58:   .swatch{display:inline-block;width:22px;height:0;border-top-width:3px;border-top-style:solid;verti
+59:   .legend-row{display:flex;align-items:center;font-size:12.5px;margin:5px 0;color:#d9e4f6;}
+60:   .dl{font-size:12.5px;line-height:1.5;color:#d9e4f6;margin:5px 0;}
+61:   .dl b{color:var(--accent);}
+62:   #closeInfo{cursor:pointer;background:rgba(255,255,255,.08);border:1px solid var(--panelBorder);col
+63: 
+64:   /* ---- Buttons top-right ---- */
+65:   #topbtns{position:fixed;top:14px;right:14px;z-index:7;display:flex;gap:8px;}
+66:   .btn{cursor:pointer;background:var(--panel);border:1px solid var(--panelBorder);color:#fff;border-
+67:   .btn:hover{background:rgba(40,60,95,.95);}
+68: 
+69:   #hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:5;font-size:11.5px;co
+70:   #loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direct
+71:   .spin{width:44px;height:44px;border-radius:50%;border:4px solid rgba(255,255,255,.15);border-top-c
+72:   @keyframes sp{to{transform:rotate(360deg);}}
+73:   /* ---- Guided walkthrough — side panel ---- */
+74:   #stepPanel{position:fixed;top:0;right:0;height:100%;width:372px;max-width:94vw;z-index:9;
+75:     background:var(--panel);border-left:1px solid var(--panelBorder);backdrop-filter:blur(12px);
+76:     box-shadow:-16px 0 46px rgba(0,0,0,.5);display:flex;flex-direction:column;
+77:     transition:transform .42s cubic-bezier(.4,0,.2,1);}
+78:   #stepPanel.hidden{transform:translateX(106%);}
+79:   #stepPanel .ph{padding:22px 24px 14px;border-bottom:1px solid var(--panelBorder);flex:0 0 auto;}
+80:   #stepPanel .sk{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font
+81:   #stepPanel h2{margin:6px 0 0;font-size:22px;font-weight:800;line-height:1.16;}
+82:   #stepPanel .pb{padding:16px 24px 20px;overflow-y:auto;flex:1 1 auto;}
+83:   #stepPanel .pb p{font-size:14.5px;line-height:1.62;color:#dbe6f8;margin:0 0 13px;}
+84:   #stepPanel .pb p b{color:#fff;}
+85:   #stepPanel .key{margin-top:4px;background:rgba(255,214,107,.1);border:1px solid rgba(255,214,107,.
+86:     border-radius:12px;padding:11px 14px;font-size:13px;line-height:1.52;color:#ffe7ad;}
+87:   #stepPanel .key .kl{display:block;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;col
+88:   #stepPanel .key b{color:#fff;}
+89:   #stepNav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:10;display:flex;al
+90:     background:var(--panel);border:1px solid var(--panelBorder);border-radius:40px;padding:8px 12px;
+91:     transition:left .42s cubic-bezier(.4,0,.2,1);}
+92:   body.guided #stepNav{left:calc(50% - 186px);}
+93:   .navbtn{cursor:pointer;border:1px solid var(--panelBorder);background:rgba(255,255,255,.06);color:
+94:   .navbtn.primary{background:linear-gradient(180deg,#3f7fe0,#2f66c8);border-color:#5a8fe6;}
+95:   .navbtn:hover{background:rgba(90,140,230,.35);}
+96:   .navbtn.primary:hover{background:linear-gradient(180deg,#4a8bef,#3a72d6);}
+97:   .navbtn.disabled{opacity:.3;pointer-events:none;}
+98:   #dots{display:flex;gap:5px;}
+99:   #dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.22);transition:backgro
+100:   #dots i.on{background:var(--accent);transform:scale(1.35);}
+101:   #dock,#topbtns,#hint{transition:opacity .35s;}
+102:   body.guided #dock,body.guided #topbtns,body.guided #hint{opacity:0;pointer-events:none;}
+103:   body.guided #title p{opacity:0;}
+104: 
+105:   @media (max-width:820px){
+106:     #stepPanel{top:auto;bottom:0;right:0;left:0;width:100%;height:44%;max-width:none;border-left:non
+107:       box-shadow:0 -14px 40px rgba(0,0,0,.5);}
+108:     #stepPanel.hidden{transform:translateY(106%);}
+109:     #stepPanel .ph{padding:14px 18px 8px;}
+110:     #stepPanel h2{font-size:18px;}
+111:     #stepPanel .pb{padding:12px 18px 74px;}
+112:     #stepPanel .pb p{font-size:13.5px;margin:0 0 10px;}
+113:     body.guided #stepNav{left:50%;bottom:calc(44% + 12px);}
+114:     #dock{max-width:170px;padding:8px;}
+115:     #title h1{font-size:15px;}
+116:     .btn span.t{display:none;}
+117:     .navbtn{padding:8px 14px;font-size:12.5px;}
+118:   }
+119: </style>
+120: </head>
+121: <body>
+122: <div id="stage"><div id="labels"></div></div>
+123: 
+124: <div id="title">
+125:   <h1>The Global Grid — Latitude &amp; Longitude</h1>
+126:   <p>Drag to spin · scroll to zoom · toggle layers below</p>
+127: </div>
+128: 
+129: <div id="topbtns">
+130:   <div class="btn" id="infoBtn">ℹ️ <span class="t">Learn</span></div>
+131:   <div class="btn" id="resetBtn">⟳ <span class="t">Reset</span></div>
+132: </div>
+133: 
+134: <div id="dock">
+135:   <div class="dh">Layers</div>
+136:   <div class="tgl on" data-k="grid"><span>Grid (graticule)</span><span class="sw"></span></div>
+137:   <div class="tgl on" data-k="continents"><span>Continent labels</span><span class="sw"></span></div
+138:   <div class="tgl on" data-k="oceans"><span>Ocean labels</span><span class="sw"></span></div>
+139:   <div class="tgl on" data-k="coords"><span>Degrees &amp; names</span><span class="sw"></span></div>
+140:   <div class="dh">Extras (not in textbook figure)</div>
+141:   <div class="tgl" data-k="special"><span>Tropics &amp; polar circles</span><span class="sw"></span>
+142:   <div class="tgl" data-k="city"><span>Example city pins</span><span class="sw"></span></div>
+143:   <div class="dh">Motion</div>
+144:   <div class="tgl on" data-k="spin"><span>Auto-rotate</span><span class="sw"></span></div>
+145: </div>
+146: 
+147: <div id="info">
+148:   <header><h2>Reading the Global Grid</h2><div id="closeInfo">✕ Close</div></header>
+149:   <div class="body">
+150:     <h3>Legend</h3>
+151:     <div class="legend-row"><span class="swatch" style="border-color:#ff5a5a"></span><b style="color
+152:     <div class="legend-row"><span class="swatch" style="border-color:#8fd0ff"></span>Parallels &amp;
+153:     <div class="legend-row"><span class="swatch" style="border-color:#ffd66b;border-top-style:dashed
+154:     <div class="legend-row"><span class="swatch" style="border-color:#7ad3ff;border-top-style:dashed
+155: 
+156:     <h3>Latitude — the parallels</h3>
+157:     <p><b>Latitude</b> tells you how far <b>north or south</b> of the Equator a place is. The lines 
+158: 
+159:     <h3>Longitude — the meridians</h3>
+160:     <p><b>Longitude</b> tells you how far <b>east or west</b> a place is. The lines run pole to pole
+161: 
+162:     <h3>Hemispheres</h3>
+163:     <p>The <b>Equator</b> splits Earth into the <b>Northern</b> and <b>Southern</b> hemispheres. The
+164: 
+165:     <h3>Important parallels</h3>
+166:     <p class="dl"><b>Tropic of Cancer</b> — 23½°N<br>
+167:     <b>Tropic of Capricorn</b> — 23½°S<br>
+168:     <b>Arctic Circle</b> — 66½°N<br>
+169:     <b>Antarctic Circle</b> — 66½°S<br>
+170:     The Sun is never directly overhead beyond the two tropics.</p>
+171: 
+172:     <h3>How to read a coordinate</h3>
+173:     <p>A place is written as <b>(latitude, longitude)</b> — latitude first. Example: <b>New Delhi</b
+174: 
+175:     <h3>Longitude &amp; time</h3>
+176:     <p>Earth turns 360° in 24 hours, so <b>15° of longitude = 1 hour</b>. Time is measured from the 
+177: 
+178:     <h3>Mini glossary</h3>
+179:     <p class="dl"><b>Graticule</b> — the whole network of latitude &amp; longitude lines.<br>
+180:     <b>Parallel</b> — a line of latitude.<br>
+181:     <b>Meridian</b> — a line of longitude.<br>
+182:     <b>Great circle</b> — any circle that splits the globe in half (the Equator; every pair of oppos
+183:     <b>Poles</b> — the two points, 90°N and 90°S, where all meridians meet.</p>
+184:     <p style="color:#8296b5;font-size:11px;margin-top:16px;">Based on NCERT Geography, "Globe: Latit
+185:   </div>
+186: </div>
+187: 
+188: <div id="hint">Tip: drag the globe to explore · press <b>Learn</b> for the full explanation</div>
+189: <div id="loading"><div class="spin"></div><div style="color:#9fb3d6;font-size:13px">Building the glo
+190: 
+191: <script>/**
+192:  * @license
+193:  * Copyright 2010-2021 Three.js Authors
+194:  * SPDX-License-Identifier: MIT
+195:  */
+196: !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"function"==typeof de
+197: <truncated 1618882 bytes>
+198: 
+199: NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range

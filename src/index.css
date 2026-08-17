@@ -110,76 +110,6 @@
   --outline-hover-border: #4f46e5;
 }
 
-[data-theme="dark"] {
-  --page-bg: #12102a;
-  --page-bg-gradient: #12102a;
-
-  --card-bg: rgba(30, 41, 59, 0.4);
-  --card-border: rgba(255, 255, 255, 0.12);
-  --card-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
-  --card-hover-border: rgba(99, 102, 241, 0.4);
-  --card-hover-shadow: 0 15px 50px -5px rgba(99, 102, 241, 0.2);
-
-  --text-heading: #ffffff;
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --text-faint: #64748b;
-  --map-popup-desc: rgba(255, 255, 255, 0.85);
-
-  --border: rgba(255, 255, 255, 0.06);
-  --border-light: rgba(255, 255, 255, 0.04);
-
-  --accent: #6366f1;
-  --accent-bg: rgba(99, 102, 241, 0.15);
-  --accent-border: rgba(99, 102, 241, 0.4);
-  --accent-text: #818cf8;
-
-  --success: #34d399;
-  --success-bg: rgba(16, 185, 129, 0.1);
-  --success-border: rgba(16, 185, 129, 0.2);
-
-  --danger: #f87171;
-  --danger-bg: rgba(239, 68, 68, 0.1);
-  --danger-border: rgba(239, 68, 68, 0.2);
-
-  --warning: #fbbf24;
-  --warning-bg: rgba(245, 158, 11, 0.1);
-  --warning-border: rgba(245, 158, 11, 0.2);
-
-  --neutral-bg: rgba(148, 163, 184, 0.1);
-  --neutral-text: #cbd5e1;
-  --neutral-border: rgba(148, 163, 184, 0.2);
-
-  --surface: rgba(15, 23, 42, 0.4);
-  --surface-hover: rgba(30, 41, 59, 0.6);
-
-  --canvas-bg: #0d131f;
-  --canvas-border: rgba(255, 255, 255, 0.04);
-  --canvas-grid: rgba(255,255,255,0.015);
-
-  --scrollbar-track: #0f172a;
-  --scrollbar-thumb: #334155;
-
-  --tab-bg: rgba(15, 23, 42, 0.6);
-  --tab-text: #94a3b8;
-  --tab-hover-bg: rgba(255, 255, 255, 0.03);
-  --tab-hover-text: #ffffff;
-  --tab-active-bg: #6366f1;
-  --tab-active-text: #ffffff;
-  --tab-active-shadow: 0 4px 10px rgba(99, 102, 241, 0.25);
-
-  --btn-bg: #1e293b;
-  --btn-text: #ffffff;
-  --btn-border: rgba(255, 255, 255, 0.1);
-  --btn-hover-bg: #334155;
-  --btn-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-  --outline-border: rgba(99, 102, 241, 0.4);
-  --outline-text: #818cf8;
-  --outline-hover-bg: rgba(99, 102, 241, 0.1);
-  --outline-hover-border: #6366f1;
-}
-
 /* ═══════════════════════════════════════════
    BASE STYLES
    ═══════════════════════════════════════════ */
@@ -250,10 +180,6 @@ p {
 }
 .glass-panel:hover {
   transform: translateY(-2px);
-}
-[data-theme="dark"] .glass-panel {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 /* ═══════════════════════════════════════════
@@ -881,17 +807,7 @@ body.focus-mode-active:has(.focus-trigger-top:hover) .lab-internal-header {
   border-radius: 3px;
 }
 
-/*
-  The .frame-page-left uses a cream paper background (--paper1/--paper2) that
-  is intentionally static and does NOT change with the dark theme. However, text
-  inside it can use global theme vars like --text-heading, --text-primary,
-  --text-secondary, --text-muted which go WHITE in dark mode — making them
-  invisible on the light cream background.
-
-  This block pins all those text colour vars to the dark textbook palette
-  (--ink, --mut, --navy) so the panel is always readable regardless of theme.
-*/
-[data-theme="dark"] .frame-page-left {
+.frame-page-left {
   --text-heading:   var(--navy);
   --text-primary:   var(--ink);
   --text-secondary: var(--mut);
