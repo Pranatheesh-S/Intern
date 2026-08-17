@@ -63,14 +63,14 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
           zIndex: 15, display: 'flex', opacity: isOpen ? 1 : 0, transition: 'opacity 0.8s 0.2s',
           pointerEvents: isOpen ? 'auto' : 'none'
         }}>
-            <div key={currentPage} style={{ width: '100%', height: '100%', animation: 'pageTurn 0.4s ease-out', paddingBottom: '3rem', boxSizing: 'border-box' }}>
+            <div key={currentPage} style={{ width: '100%', height: '100%', animation: 'pageTurn 0.4s ease-out', boxSizing: 'border-box' }}>
               {currentPage === 1 && <PhysicalMapPage />}
               {currentPage === 2 && <PoliticalMapPage />}
               {currentPage === 3 && <ThematicMapPage />}
             </div>
 
             <div style={{ position: 'absolute', bottom: '0.75rem', left: '50%', right: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1.5rem', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '1rem', whiteSpace: 'nowrap', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '14px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                 <Compass size={16} style={{ flexShrink: 0 }} />
                 <span>Page {currentPage} of 3</span>
               </div>

@@ -59,7 +59,7 @@ export const SVGSymbols = {
   BusStand: () => (
     <SvgIcon>
       <rect x="42" y="12" width="16" height="16" rx="2" fill="none" stroke="#424242" strokeWidth="1.5" />
-      <text x="50" y="24" fontSize="10" fill="#424242" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">B</text>
+      <text x="50" y="24" fontSize="14" fill="#424242" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">B</text>
     </SvgIcon>
   ),
 
@@ -96,7 +96,7 @@ export const SVGSymbols = {
       <g transform="translate(50 24) scale(1.2) translate(-50 -20)">
         <rect x="40" y="10" width="20" height="20" rx="2" fill="#C62828" />
         <path d="M44,14 L50,18 L56,14" fill="none" stroke="#FFF" strokeWidth="1" />
-        <text x="50" y="27" fontSize="8" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">P.O</text>
+        <text x="50" y="27" fontSize="14" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">P.O</text>
       </g>
     </SvgIcon>
   ),
@@ -105,7 +105,7 @@ export const SVGSymbols = {
       <g transform="translate(50 24) scale(1.2) translate(-50 -20)">
         <rect x="40" y="10" width="20" height="20" rx="2" fill="#1565C0" />
         <path d="M46,14 L54,14 L54,17 C54,19 50,21 50,21 C50,21 46,19 46,17 Z" fill="#FFF" />
-        <text x="50" y="27" fontSize="8" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">P.S</text>
+        <text x="50" y="27" fontSize="14" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">P.S</text>
       </g>
     </SvgIcon>
   ),
@@ -120,7 +120,7 @@ export const SVGSymbols = {
     <SvgIcon>
       <g transform="translate(50 24) scale(1.2) translate(-50 -20)">
         <rect x="40" y="10" width="20" height="20" rx="2" fill="#F9A825" />
-        <text x="50" y="25" fontSize="12" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">S</text>
+        <text x="50" y="25" fontSize="14" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">S</text>
       </g>
     </SvgIcon>
   ),

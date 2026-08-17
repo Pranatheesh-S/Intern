@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Map, MapPin, Clock, Compass, Globe2, ChevronRight, Maximize2, X } from 'lucide-react';
-import EarthAddressArt from './EarthAddressArt';
+import React, { useState, useEffect } from 'react';
+import { Map, MapPin, Clock, Compass, Globe2, ChevronRight, ChevronLeft, Maximize2, X } from 'lucide-react';
+import compassMapImg from './assets/CompassMap.jpg';
 import ChapterBackFooter from '../ChapterBackFooter';
-import { ScrollableWithNav } from '../ContentScrollNav';
 
 const PAGE_PADDING = 'clamp(20px, 2.6vw, 42px)';
 const HEADER_TITLE_STYLE = {
@@ -15,7 +14,8 @@ const HEADER_TITLE_STYLE = {
 };
 
 export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapter }) {
-  const [discoveredCards, setDiscoveredCards] = useState([]);
+  const [activeCardId, setActiveCardId] = useState('maps');
+  const [discoveredCards, setDiscoveredCards] = useState(['maps']);
   const [artZoomed, setArtZoomed] = useState(false);
 
   useEffect(() => {
@@ -25,23 +25,12 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
     return () => window.removeEventListener('keydown', onKey);
   }, [artZoomed]);
 
-  const handleDiscover = (id) => {
+  const handleCardClick = (id) => {
+    setActiveCardId(prev => prev === id ? null : id);
     if (!discoveredCards.includes(id)) {
-      const newDiscovered = [...discoveredCards, id];
-      setDiscoveredCards(newDiscovered);
-
-      const currentIndex = cards.findIndex(c => c.id === id);
-      const nextCard = cards[currentIndex + 1];
-      const targetId = nextCard ? `bq-card-${nextCard.id}` : `bq-card-${id}`;
-
-      setTimeout(() => {
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }, 150);
-
-      if (newDiscovered.length === 3 && onMissionUnlock) {
+      const nextDiscovered = [...discoveredCards, id];
+      setDiscoveredCards(nextDiscovered);
+      if (nextDiscovered.length === 3 && onMissionUnlock) {
         onMissionUnlock();
       }
     }
@@ -83,28 +72,6 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
     }
   ];
 
-  const applyCardHover = (e, card, isDiscovered) => {
-    e.currentTarget.style.transform = 'translateY(-2px)';
-    e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.08)';
-    e.currentTarget.style.borderTopColor = card.color;
-    e.currentTarget.style.borderRightColor = card.color;
-    e.currentTarget.style.borderBottomColor = card.color;
-    e.currentTarget.style.borderLeftColor = card.color;
-    if (!isDiscovered) {
-      e.currentTarget.style.background = '#f8fafc';
-    }
-  };
-
-  const resetCardHover = (e, card, isDiscovered) => {
-    e.currentTarget.style.transform = 'translateY(0)';
-    e.currentTarget.style.boxShadow = isDiscovered ? 'none' : '0 4px 6px rgba(0,0,0,0.05)';
-    e.currentTarget.style.borderTopColor = isDiscovered ? '#e2e8f0' : '#cbd5e1';
-    e.currentTarget.style.borderRightColor = isDiscovered ? '#e2e8f0' : '#cbd5e1';
-    e.currentTarget.style.borderBottomColor = isDiscovered ? '#e2e8f0' : '#cbd5e1';
-    e.currentTarget.style.borderLeftColor = isDiscovered ? card.color : '#cbd5e1';
-    e.currentTarget.style.background = isDiscovered ? '#f8fafc' : '#ffffff';
-  };
-
   const columnShell = {
     display: 'flex',
     flexDirection: 'column',
@@ -116,8 +83,7 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
 
   const headerShell = {
     flexShrink: 0,
-    minHeight: 'clamp(72px, 9vh, 96px)',
-    padding: `${PAGE_PADDING} ${PAGE_PADDING} 16px`,
+    padding: '16px 24px 12px',
     borderBottom: '1px solid #e4ebf3',
     display: 'flex',
     alignItems: 'flex-end',
@@ -129,27 +95,21 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
     minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
-    padding: `16px ${PAGE_PADDING} ${PAGE_PADDING}`,
-    boxSizing: 'border-box'
+    padding: '12px 20px 14px',
+    boxSizing: 'border-box',
+    justifyContent: 'space-between',
+    overflow: 'hidden'
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
-      <style>
-        {`
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}
-      </style>
-
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden' }}>
       <div style={{
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
         flex: 1,
         minHeight: 0,
-        width: '100%'
+        width: '100%',
+        overflow: 'hidden'
       }}>
         {/* LEFT COLUMN */}
         <div style={{ ...columnShell, borderRight: '1px solid rgba(0,0,0,0.08)', position: 'relative' }}>
@@ -161,11 +121,11 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
           </div>
 
           <div style={{ ...bodyShell, position: 'relative', zIndex: 1 }}>
-            <p style={{ flexShrink: 0, fontSize: 'clamp(1rem, 1.3vw, 1.15rem)', color: '#334155', lineHeight: 1.45, margin: '0 0 12px 0' }}>
+            <p style={{ flexShrink: 0, fontSize: '15px', color: '#334155', lineHeight: 1.4, margin: '0 0 10px 0' }}>
               Your home has an address, and so does every place on Earth. In this chapter you will learn how maps locate places, how latitude and longitude give each one an exact address, and why the time on the clock changes as you travel.
             </p>
 
-            <div style={{ flex: 1, minHeight: 'clamp(220px, 34vh, 460px)', display: 'flex', alignSelf: 'stretch', width: '100%' }}>
+            <div style={{ flex: 1, minHeight: 0, display: 'flex', alignSelf: 'stretch', width: '100%' }}>
               <button
                 type="button"
                 onClick={() => setArtZoomed(true)}
@@ -173,9 +133,13 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
                 aria-label="Enlarge the chapter overview figure"
                 style={{ border: '1px solid #e4ebf3', borderRadius: '12px', background: '#FBF7EE', padding: '6px', cursor: 'zoom-in', width: '100%', height: '100%', display: 'block', position: 'relative', overflow: 'hidden' }}
               >
-                <EarthAddressArt style={{ width: '100%', height: '100%' }} />
-                <span style={{ position: 'absolute', right: '6px', bottom: '6px', width: '34px', height: '34px', borderRadius: '9px', background: 'rgba(255,255,255,0.92)', border: '1px solid #d6e0ec', color: '#0E3556', display: 'grid', placeItems: 'center', boxShadow: '0 4px 12px rgba(14,42,69,0.14)' }}>
-                  <Maximize2 size={18} />
+                <img
+                  src={compassMapImg}
+                  alt="Authentic brass directional navigation compass on atlas map"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', display: 'block' }}
+                />
+                <span style={{ position: 'absolute', right: '6px', bottom: '6px', width: '32px', height: '32px', borderRadius: '999px', background: 'rgba(255,255,255,0.92)', border: '1px solid #d6e0ec', color: '#0E3556', display: 'grid', placeItems: 'center', boxShadow: '0 4px 12px rgba(14,42,69,0.14)' }}>
+                  <Maximize2 size={16} />
                 </span>
               </button>
             </div>
@@ -189,89 +153,80 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
           </div>
 
           <div style={bodyShell}>
-            <ScrollableWithNav
-              containerStyle={{ marginBottom: '12px' }}
-              scrollStyle={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.5rem, 1vh, 0.75rem)' }}
-            >
+            {/* Accordion Concept Cards (Click to open description) — ZERO scrollbar, ZERO overlap */}
+            <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: '8px', overflow: 'hidden' }}>
               {cards.map((card) => {
-                const isDiscovered = discoveredCards.includes(card.id);
+                const isOpen = activeCardId === card.id;
 
                 return (
                   <div
                     key={card.id}
-                    id={`bq-card-${card.id}`}
-                    onClick={() => !isDiscovered && handleDiscover(card.id)}
+                    onClick={() => handleCardClick(card.id)}
                     style={{
-                      background: isDiscovered ? '#f8fafc' : '#ffffff',
-                      borderWidth: '1px',
-                      borderStyle: 'solid',
-                      borderTopColor: isDiscovered ? '#e2e8f0' : '#cbd5e1',
-                      borderRightColor: isDiscovered ? '#e2e8f0' : '#cbd5e1',
-                      borderBottomColor: isDiscovered ? '#e2e8f0' : '#cbd5e1',
-                      borderLeftWidth: '4px',
-                      borderLeftColor: isDiscovered ? card.color : '#cbd5e1',
-                      padding: 'clamp(0.6rem, 1.2vh, 0.8rem) clamp(0.8rem, 1.5vw, 1.2rem)',
+                      background: isOpen ? '#ffffff' : '#f8fafc',
+                      border: isOpen ? `2px solid ${card.color}` : '1px solid #cbd5e1',
+                      borderLeft: `6px solid ${card.color}`,
+                      padding: '12px 16px',
                       borderRadius: '12px',
                       display: 'flex',
-                      gap: 'clamp(0.6rem, 1vw, 1rem)',
-                      cursor: isDiscovered ? 'default' : 'pointer',
-                      transition: 'all 0.3s ease',
-                      boxShadow: isDiscovered ? 'none' : '0 4px 6px rgba(0,0,0,0.05)',
-                      alignItems: isDiscovered ? 'flex-start' : 'center',
-                      flexShrink: 0,
+                      flexDirection: 'column',
+                      gap: isOpen ? '8px' : '0px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: isOpen ? '0 4px 12px rgba(0,0,0,0.06)' : '0 2px 4px rgba(0,0,0,0.03)',
                       boxSizing: 'border-box'
                     }}
-                    onMouseOver={(e) => applyCardHover(e, card, isDiscovered)}
-                    onMouseOut={(e) => resetCardHover(e, card, isDiscovered)}
                   >
-                    <div style={{
-                      background: card.bgLight,
-                      color: card.color,
-                      width: 'clamp(36px, 4vw, 48px)',
-                      height: 'clamp(36px, 4vw, 48px)',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0
-                    }}>
-                      <card.icon size={20} />
-                    </div>
-
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                        <h4 style={{ margin: isDiscovered ? '0 0 0.3rem 0' : '0', color: '#1e3a8a', fontSize: 'clamp(1rem, 1.4vw, 1.25rem)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{
+                          background: card.bgLight,
+                          color: card.color,
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '50%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0
+                        }}>
+                          <card.icon size={19} />
+                        </div>
+                        <h4 style={{ margin: 0, color: '#1e3a8a', fontSize: '18px', fontWeight: 700, lineHeight: 1.2 }}>
                           {card.title}
                         </h4>
-                        {!isDiscovered && (
-                          <span style={{ fontSize: 'clamp(0.85rem, 1vw, 1rem)', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.2rem', fontWeight: 'bold', flexShrink: 0 }}>
-                            Click to discover <ChevronRight size={18} />
-                          </span>
-                        )}
                       </div>
 
-                      {isDiscovered && (
-                        <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
-                          <p style={{ margin: '0 0 0.4rem 0', color: '#334155', fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)', lineHeight: 1.4 }}>
-                            {card.question}
-                          </p>
-                          <div style={{ background: card.hintBg, color: card.hintColor, display: 'inline-block', padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: 'clamp(0.85rem, 1vw, 0.95rem)', fontWeight: 'bold' }}>
-                            {card.hint}
-                          </div>
-                        </div>
-                      )}
+                      <span style={{ fontSize: '14px', color: isOpen ? card.color : '#64748b', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 700, flexShrink: 0 }}>
+                        {isOpen ? 'Click to collapse' : 'Click to discover'}
+                        <ChevronRight size={18} style={{ transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }} />
+                      </span>
                     </div>
+
+                    {isOpen && (
+                      <div style={{ marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <p style={{ margin: 0, color: '#334155', fontSize: '14px', lineHeight: 1.45, fontWeight: 500 }}>
+                          {card.question}
+                        </p>
+                        <div>
+                          <span style={{ background: card.hintBg, color: card.hintColor, display: 'inline-block', padding: '4px 10px', borderRadius: '6px', fontSize: '14px', fontWeight: 700 }}>
+                            {card.hint}
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
-            </ScrollableWithNav>
+            </div>
 
-            <div style={{ flexShrink: 0 }}>
-              <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: '12px', padding: 'clamp(0.8rem, 1.5vh, 1.2rem)' }}>
-                <h4 style={{ color: '#059669', fontSize: 'clamp(1rem, 1.2vw, 1.2rem)', margin: '0 0 0.3rem 0', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            {/* Mission Box */}
+            <div style={{ flexShrink: 0, marginTop: '8px' }}>
+              <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: '12px', padding: '10px 14px' }}>
+                <h4 style={{ color: '#059669', fontSize: '14px', margin: '0 0 3px 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800 }}>
                   Mission
                 </h4>
-                <p style={{ color: '#334155', fontSize: 'clamp(0.95rem, 1.1vw, 1.1rem)', lineHeight: 1.4, margin: 0 }}>
+                <p style={{ color: '#334155', fontSize: '14px', lineHeight: 1.4, margin: 0, fontWeight: 500 }}>
                   By the end of this chapter, you will be able to locate places on Earth, read maps confidently, and understand how coordinates and time help us navigate our world.
                 </p>
               </div>
@@ -296,7 +251,11 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
             >
               <X size={20} />
             </button>
-            <EarthAddressArt style={{ maxHeight: '82vh' }} />
+            <img
+              src={compassMapImg}
+              alt="Authentic brass directional navigation compass on atlas map"
+              style={{ width: '100%', maxHeight: '82vh', objectFit: 'contain', borderRadius: '12px', display: 'block', margin: '0 auto' }}
+            />
           </div>
         </div>
       )}
@@ -307,7 +266,7 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
         onNext={onBeginChapter}
         nextVariant="green"
         centerContent={
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#5c6b7a', fontWeight: 600, fontSize: '14px' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v16H6.5A2.5 2.5 0 0 0 4 21.5z" stroke="#5c6b7a" strokeWidth="1.5"></path><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v16h5.5A2.5 2.5 0 0 1 20 21.5z" stroke="#5c6b7a" strokeWidth="1.5"></path></svg>
             Page 2 of 2
           </div>

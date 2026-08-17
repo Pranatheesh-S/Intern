@@ -531,7 +531,7 @@ let labelSet = [];
 const UI_PANELS = [$("#top"), $("#legend"), $("#info"), $("#ctl")].filter(Boolean);
 function uiReservedBoxes(){
   const out = [];
-  const pad = 10;
+  const pad = 24;
   for(const el of UI_PANELS){
     if(!el || el.offsetParent === null) continue; // hidden (display:none)
     const r = el.getBoundingClientRect();
@@ -547,17 +547,17 @@ function buildLabelSet(){
   if(mode==="physical"){
     LABELS.phys.forEach(p=>{
       if(p.t==="continent") push(p,"continent", 0, 0, 9e9);
-      else if(p.t==="range")   push(p,"range",   2 + (p.r||5)*.1, 0, p.a>18?9e9:(p.a>4?330:230));
-      else if(p.t==="desert")  push(p,"desert",  2.2, 0, p.a>18?9e9:300);
-      else push(p, p.t, 4 + (p.r||5)*.1, 0, p.a>10?9e9:(p.a>2?280:200));
+      else if(p.t==="range")   push(p,"range",   2 + (p.r||5)*.1, 0, p.a>25?9e9:(p.a>8?310:210));
+      else if(p.t==="desert")  push(p,"desert",  2.2, 0, p.a>25?9e9:260);
+      else push(p, p.t, 4 + (p.r||5)*.1, 0, p.a>15?9e9:(p.a>4?260:190));
     });
     LABELS.marine.forEach(m=>{
       if(m.t==="ocean") push(m,"ocean",.5,0,9e9);
-      else push(m,"sea", m.a>25?2.4:3.6, 0, m.a>20?9e9:(m.a>4?330:240));
+      else push(m,"sea", m.a>35?2.4:3.6, 0, m.a>25?9e9:(m.a>8?310:220));
     });
-    LABELS.rivers.forEach(r=> push(r,"river", 3 + (r.r||8)*.12, 0, r.L>28?9e9:(r.L>12?300:210)));
-    LABELS.lakes.forEach(l=>  push(l,"lake",  3.4, 0, l.a>3?9e9:(l.a>.6?300:200)));
-    LABELS.peaks.filter(p=>p.e && p.e>3400).forEach(p=> push(p,"peak", 5 - Math.min(2,(p.e||0)/5000), 0, p.e>7000?9e9:(p.e>5200?280:200)));
+    LABELS.rivers.forEach(r=> push(r,"river", 3.5 + (r.r||8)*.12, 0, r.L>35?9e9:(r.L>18?280:190)));
+    LABELS.lakes.forEach(l=>  push(l,"lake",  3.8, 0, l.a>5?9e9:(l.a>1.2?270:180)));
+    LABELS.peaks.filter(p=>p.e && p.e>4200).forEach(p=> push(p,"peak", 5.5 - Math.min(2,(p.e||0)/5000), 0, p.e>7500?9e9:(p.e>6000?250:180)));
   } else if(mode==="political"){
     POL.countries.forEach(c=>{ if(c.x!=null) push(c,"country", (c.lr||5)*.5, 0, 9e9); });
     POL.caps0.forEach(c=> push(c,"cap", 2.4, 0, 9e9));
@@ -606,16 +606,22 @@ function measure(text, cls){
 }
 function heightOf(cls){ return (FONT_SPEC[cls]||DEFAULT_SPEC).size + 8; }
 
-const GAP = 5;               // minimum breathing room between two label boxes, px
+const GAP = 24;               // minimum breathing room between two label boxes, px
 let focus = null;            // the one place the user searched/clicked — always shown if visible
 const tmp = new THREE.Vector3();
 
 function project(v, camDir){
-  if(v.dot(camDir) < R*0.30) return null;
+  // Strict 3D front-hemisphere dot product (54 deg angle from camera view)
+  if(v.dot(camDir) < R*0.58) return null;
   tmp.copy(v).project(camera);
   if(tmp.z > 1) return null;
   const X = (tmp.x*0.5+0.5)*innerWidth, Y = (-tmp.y*0.5+0.5)*innerHeight;
-  if(X<40 || X>innerWidth-40 || Y<12 || Y>innerHeight-12) return null;
+  const cx = innerWidth / 2, cy = innerHeight / 2;
+  const fovRad = (camera.fov * Math.PI) / 360;
+  const screenR = (R / cam.dist) * (innerHeight / (2 * Math.tan(fovRad)));
+  // Ensure the full label stays safely within 76% of the globe screen radius
+  if(Math.hypot(X - cx, Y - cy) > screenR * 0.76) return null;
+  if(X<50 || X>innerWidth-50 || Y<20 || Y>innerHeight-20) return null;
   return [X,Y];
 }
 
@@ -664,7 +670,7 @@ function renderLabels(){
       }
     }
 
-    const budget = d>420 ? 46 : d>320 ? 70 : d>230 ? 105 : d>170 ? 150 : 210;
+    const budget = d>400 ? 26 : d>300 ? 42 : d>220 ? 70 : d>160 ? 110 : 160;
     const cx = innerWidth/2, cy = innerHeight/2;
     const maxR = Math.hypot(cx,cy);
 

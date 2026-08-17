@@ -32,6 +32,7 @@ const PageLayout = ({
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [isGlobeOpen, setIsGlobeOpen] = useState(false);
   const [isGlobeFull, setIsGlobeFull] = useState(false);
+  const [leftPage, setLeftPage] = useState(1);
   const globePanelRef = useRef(null);
 
   // native full screen where it exists, with a maximise fallback where it doesn't
@@ -58,153 +59,185 @@ const PageLayout = ({
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [isGlobeOpen]);
-  const scrollRef = useRef(null);
-  const nav = useScrollNav(scrollRef);
 
   useEffect(() => {
-    if (!onFullyViewed) return;
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const checkFullyViewed = () => {
-      const { scrollHeight, clientHeight, scrollTop } = el;
-      if (scrollHeight <= clientHeight + 4) {
-        onFullyViewed();
-        return;
-      }
-      if (scrollTop + clientHeight >= scrollHeight - 12) {
-        onFullyViewed();
-      }
-    };
-
-    checkFullyViewed();
-    el.addEventListener('scroll', checkFullyViewed, { passive: true });
-    const ro = new ResizeObserver(checkFullyViewed);
-    ro.observe(el);
-    Array.from(el.children).forEach(child => ro.observe(child));
-    return () => {
-      el.removeEventListener('scroll', checkFullyViewed);
-      ro.disconnect();
-    };
-  }, [onFullyViewed]);
+    if (leftPage === 2 && onFullyViewed) {
+      onFullyViewed();
+    }
+  }, [leftPage, onFullyViewed]);
 
   return (
     <>
       <div style={{ display: 'flex', width: '100%', height: '100%', padding: 0, boxSizing: 'border-box', minHeight: 0 }}>
       
-      {/* Left Page (Text) — scrollable with Back to top / Bottom nav */}
-      <div style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)' }}>
-        <div
-          ref={scrollRef}
-          className="left-page-scroll"
-          style={{ flex: 1, minHeight: 0, padding: '1.25rem 1.5rem 0.5rem', overflowY: 'auto', overflowX: 'hidden' }}
-        >
+      {/* Left Page (Text) — Zero-scroll, zero-overlap paged structure */}
+      <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)', padding: '1rem 1.25rem', boxSizing: 'border-box', overflow: 'hidden', justifyContent: 'space-between' }}>
+        
         {/* Header */}
-        <div style={{ fontSize: '10px', color: '#7c5cff', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', marginBottom: '6px', fontFamily: '"IBM Plex Mono", monospace' }}>
-          Chapter 1 • Atlas Introduction
-        </div>
-        <h2 style={{ fontSize: '2.2rem', color: '#1e3a8a', margin: '0 0 0.3rem 0', fontFamily: 'serif' }}>{title}</h2>
-        <div style={{ fontSize: '1rem', color: '#64748b', marginBottom: '1.2rem', fontWeight: 500 }}>{subtitle}</div>
-
-        {/* What is it? */}
-        <div style={{ marginBottom: '1.2rem' }}>
-          <h3 style={{ fontSize: '1.2rem', color: '#1e3a8a', marginBottom: '0.5rem', fontFamily: 'serif', marginTop: 0 }}>{whatIsTitle}</h3>
-          {whatIs.map((p, i) => <p key={i} style={{ margin: '0 0 0.5rem 0', color: '#334155', fontSize: '0.95rem', lineHeight: 1.5 }}>{p}</p>)}
+        <div style={{ flexShrink: 0, marginBottom: '6px' }}>
+          <div style={{ fontSize: '12px', color: '#7c5cff', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', marginBottom: '2px', fontFamily: '"IBM Plex Mono", monospace' }}>
+            Chapter 1 • Atlas Introduction
+          </div>
+          <h2 style={{ fontSize: '1.6rem', color: '#1e3a8a', margin: '0 0 0.2rem 0', fontFamily: 'serif', lineHeight: 1.15 }}>{title}</h2>
+          <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500 }}>{subtitle}</div>
         </div>
 
-        {/* Natural Features */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1.2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-          <h3 style={{ fontSize: '1.1rem', color: '#0f172a', marginBottom: '0.8rem', marginTop: 0 }}>{featuresTitle}</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
-            {features.map((f, i) => (
-              <div key={i} style={{ display: 'flex', gap: '8px' }}>
-                <div style={{ fontSize: '1.2rem', lineHeight: 1 }}>{f.icon}</div>
-                <div>
-                  <div style={{ fontWeight: 'bold', color: '#1e3a8a', fontSize: '0.9rem', marginBottom: '2px' }}>{f.title}</div>
-                  <div style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.2 }}>{f.desc}</div>
+        {/* Page Content Viewport — No scrollbars, pristine spacing */}
+        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden' }}>
+          
+          {/* PAGE 1 of 2: What is it & Features */}
+          {leftPage === 1 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, minHeight: 0, justifyContent: 'space-between', overflow: 'hidden' }}>
+              {/* What is it? */}
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 14px', flexShrink: 0 }}>
+                <h3 style={{ fontSize: '15px', color: '#1e3a8a', marginBottom: '4px', fontFamily: 'serif', marginTop: 0, fontWeight: 700 }}>{whatIsTitle}</h3>
+                {whatIs.map((p, i) => <p key={i} style={{ margin: i > 0 ? '4px 0 0 0' : 0, color: '#334155', fontSize: '13.5px', lineHeight: 1.4, fontWeight: 500 }}>{p}</p>)}
+              </div>
+
+              {/* Natural / Key Features — Larger Font, No Scrollbar */}
+              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 12px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <h3 style={{ fontSize: '15px', color: '#0f172a', marginBottom: '8px', marginTop: 0, flexShrink: 0, fontWeight: 700 }}>{featuresTitle}</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', flex: 1, minHeight: 0, overflow: 'hidden', alignContent: 'space-between' }}>
+                  {features.map((f, i) => (
+                    <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', background: '#f8fafc', padding: '7px 10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: '1.35rem', lineHeight: 1, flexShrink: 0 }}>{f.icon}</div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontWeight: 700, color: '#1e3a8a', fontSize: '13.5px', lineHeight: 1.2 }}>{f.title}</div>
+                        <div style={{ fontSize: '11.5px', color: '#475569', lineHeight: 1.25, fontWeight: 500 }}>{f.desc}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          )}
 
-        {/* Colors */}
-        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '1rem', marginBottom: '1.2rem' }}>
-          <h3 style={{ fontSize: '1.1rem', color: '#0f172a', marginBottom: '0.8rem', marginTop: 0 }}>{colorsTitle}</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {colors.map((c, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1rem' }}>{c.color}</span>
-                <span style={{ fontSize: '0.9rem', color: '#334155', fontWeight: 500 }}>{c.desc}</span>
+          {/* PAGE 2 of 2: Colors/Symbols & Why Use */}
+          {leftPage === 2 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, minHeight: 0, justifyContent: 'space-between', overflow: 'hidden' }}>
+              {/* Colors / Symbols */}
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 14px', flexShrink: 0 }}>
+                <h3 style={{ fontSize: '15px', color: '#0f172a', marginBottom: '6px', marginTop: 0, fontWeight: 700 }}>{colorsTitle}</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                  {colors.map((c, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '15px' }}>{c.color}</span>
+                      <span style={{ fontSize: '13.5px', color: '#334155', fontWeight: 600 }}>{c.desc}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Why Use */}
-        <div style={{ marginBottom: '1.2rem' }}>
-          <h3 style={{ fontSize: '1.2rem', color: '#1e3a8a', marginBottom: '0.8rem', fontFamily: 'serif', marginTop: 0 }}>{whyUseTitle}</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {whyUse.map((w, i) => (
-              <div key={i} style={{ background: '#f1f5f9', padding: '8px 12px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '1rem' }}>{w.icon}</span>
-                <span style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: 500 }}>{w.desc}</span>
+              {/* Why Use & Takeaway */}
+              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 14px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <h3 style={{ fontSize: '15px', color: '#1e3a8a', marginBottom: '6px', fontFamily: 'serif', marginTop: 0, fontWeight: 700 }}>{whyUseTitle}</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    {whyUse.map((w, i) => (
+                      <div key={i} style={{ background: '#f1f5f9', padding: '6px 10px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '15px' }}>{w.icon}</span>
+                        <span style={{ fontSize: '13.5px', color: '#1e293b', fontWeight: 600 }}>{w.desc}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px dashed #cbd5e1', color: '#1e3a8a', fontSize: '12.5px', lineHeight: 1.35, fontStyle: 'italic', fontWeight: 600 }}>
+                  💡 {funFact}
+                </div>
               </div>
-            ))}
+            </div>
+          )}
+
+        </div>
+
+        {/* Sub-Page Navigation Bar */}
+        <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #e2e8f0', paddingTop: '8px', marginTop: '6px' }}>
+          <button
+            onClick={() => setLeftPage(1)}
+            disabled={leftPage === 1}
+            style={{
+              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, fontSize: '13px',
+              background: '#0E3556', color: '#fff', border: 'none', borderRadius: '999px',
+              padding: '6px 16px', cursor: leftPage === 1 ? 'not-allowed' : 'pointer',
+              opacity: leftPage === 1 ? 0.35 : 1, transition: 'all 0.2s'
+            }}
+          >
+            ◀ Back
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 700, color: '#0E3556' }}>
+            <span>Page {leftPage} of 2</span>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 1 ? '#0E3556' : '#cbd5e1' }} />
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 2 ? '#0E3556' : '#cbd5e1' }} />
           </div>
+
+          <button
+            onClick={() => setLeftPage(2)}
+            disabled={leftPage === 2}
+            style={{
+              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, fontSize: '13px',
+              background: '#0E3556', color: '#fff', border: 'none', borderRadius: '999px',
+              padding: '6px 16px', cursor: leftPage === 2 ? 'not-allowed' : 'pointer',
+              opacity: leftPage === 2 ? 0.35 : 1, transition: 'all 0.2s'
+            }}
+          >
+            Next ▶
+          </button>
         </div>
 
-        {/* Remember */}
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', padding: '1rem', borderRadius: '10px', marginBottom: '1.2rem' }}>
-          <h4 style={{ color: '#059669', margin: '0 0 6px 0', fontSize: '1rem' }}>Remember</h4>
-          {remember.map((r, i) => <p key={i} style={{ margin: '0 0 4px 0', color: '#064e3b', fontSize: '0.9rem', fontWeight: 500 }}>{r}</p>)}
-        </div>
-
-        {/* Fun Fact */}
-        <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '1rem', borderRadius: '10px', marginBottom: '1rem' }}>
-          <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#2563eb', margin: '0 0 6px 0', fontSize: '0.95rem' }}>
-            <Lightbulb size={16} /> Did You Know?
-          </h4>
-          <p style={{ margin: 0, color: '#1e3a8a', fontSize: '0.85rem', lineHeight: 1.4 }}>{funFact}</p>
-        </div>
-
-        </div>
-
-        {nav.hasOverflow && (
-          <ContentScrollNav
-            currentPage={nav.currentPage}
-            pageCount={nav.pageCount}
-            canGoUp={nav.canGoUp}
-            canGoDown={nav.canGoDown}
-            onPageUp={nav.onPageUp}
-            onPageDown={nav.onPageDown}
-          />
-        )}
       </div>
 
-      {/* Right Page (Image Activity) */}
-      <div style={{ flex: 1, minWidth: 0, padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      {/* Right Page (Image Activity) — Bottom padding 3.8rem ensures no overlap with AtlasBook footer */}
+      <div style={{ flex: '1 1 50%', minWidth: 0, padding: '1rem 1.25rem 3.8rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 0, overflow: 'hidden', boxSizing: 'border-box' }}>
         <div
           onClick={() => setIsGlobeOpen(true)}
-          style={{ cursor: 'pointer', width: '100%', aspectRatio: imageAspectRatio, position: 'relative', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', transition: 'transform 0.2s' }}
-          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
-          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          style={{
+            cursor: 'pointer',
+            width: '100%',
+            flex: 1,
+            minHeight: 0,
+            position: 'relative',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            border: '2px solid #cbd5e1',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.06)',
+            background: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '12px',
+            boxSizing: 'border-box'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.borderColor = '#3b82f6'}
+          onMouseOut={(e) => e.currentTarget.style.borderColor = '#cbd5e1'}
         >
-           <img src={imageSrc} alt={title} style={{ width: '100%', height: '100%', objectFit: 'contain', transform: `scale(${imageScale})` }} />
-           <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(30,58,138,0.92)', color: '#fff', padding: '0.4rem 0.9rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, boxShadow: '0 4px 12px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
+           <img
+             src={imageSrc}
+             alt={title}
+             style={{
+               maxWidth: '100%',
+               maxHeight: '100%',
+               objectFit: 'contain',
+               borderRadius: '8px',
+               display: 'block'
+             }}
+           />
+           <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(14,53,86,0.92)', color: '#fff', padding: '0.4rem 1rem', borderRadius: '999px', fontSize: '13px', fontWeight: 700, boxShadow: '0 4px 12px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
              <Globe2 size={14} /> Open interactive 3D globe
            </div>
         </div>
-        <div style={{ marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+
+        <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexShrink: 0 }}>
           <button
             onClick={() => setIsGlobeOpen(true)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#1e3a8a', color: '#fff', border: 'none', borderRadius: '999px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#0E3556', color: '#fff', border: 'none', borderRadius: '999px', padding: '0.4rem 1rem', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
           >
             <Globe2 size={15} /> View on 3D Globe
           </button>
           <span
             onClick={() => setIsImageOpen(true)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#64748b', fontSize: '0.85rem', cursor: 'pointer' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#5c6b7a', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}
           >
             <ImageIcon size={14} /> View printed map
           </span>
@@ -280,7 +313,7 @@ const PageLayout = ({
             justifyContent: 'space-between', gap: '12px', padding: '0 10px 0 16px',
             background: 'rgba(14,19,30,0.95)', borderBottom: '1px solid rgba(255,255,255,0.10)'
           }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#eaf0f8', fontSize: '0.9rem', fontWeight: 700, minWidth: 0 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#eaf0f8', fontSize: '14px', fontWeight: 700, minWidth: 0 }}>
               <Globe2 size={16} color="#6fc4ff" />
               <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Interactive 3D Globe — {title}</span>
             </span>

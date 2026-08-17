@@ -77,7 +77,7 @@ export default function MissionCheckpoint({ onComplete }) {
         <p style={{ margin: 0, color: '#20303f', fontSize: '1.1rem', fontWeight: 'bold' }}>
           Mark the Hospital on the map.
         </p>
-        <p style={{ margin: '0.25rem 0 0 0', color: '#47586b', fontSize: '0.9rem' }}>
+        <p style={{ margin: '0.25rem 0 0 0', color: '#47586b', fontSize: '14px' }}>
           Click on the building that represents the Hospital.
         </p>
       </div>
@@ -134,7 +134,7 @@ export default function MissionCheckpoint({ onComplete }) {
               <Check size={20} color="#10b981" />
               <div>
                 <strong style={{ color: '#065f46', display: 'block' }}>Correct!</strong>
-                <span style={{ color: '#475569', fontSize: '0.9rem' }}>This is the Hospital.</span>
+                <span style={{ color: '#475569', fontSize: '14px' }}>This is the Hospital.</span>
               </div>
             </motion.div>
           )}
@@ -142,14 +142,14 @@ export default function MissionCheckpoint({ onComplete }) {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} style={{ position: 'absolute', bottom: '1rem', left: '50%', transform: 'translateX(-50%)', background: 'rgba(255,255,255,0.95)', padding: '0.8rem 1.5rem', borderRadius: '12px', border: '2px solid #ef4444', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 10px 25px rgba(0,0,0,0.2)' }}>
               <div>
                 <strong style={{ color: '#991b1b', display: 'block' }}>Not quite.</strong>
-                <span style={{ color: '#475569', fontSize: '0.9rem' }}>Try once more.</span>
+                <span style={{ color: '#475569', fontSize: '14px' }}>Try once more.</span>
               </div>
             </motion.div>
           )}
           {q1Status === 'revealed' && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ position: 'absolute', bottom: '1rem', left: '50%', transform: 'translateX(-50%)', background: 'rgba(255,255,255,0.95)', padding: '0.8rem 1.5rem', borderRadius: '12px', border: '2px solid #10b981', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 10px 25px rgba(0,0,0,0.2)' }}>
               <div>
-                <span style={{ color: '#475569', fontSize: '0.9rem', display: 'block' }}>The Hospital is located here.</span>
+                <span style={{ color: '#475569', fontSize: '14px', display: 'block' }}>The Hospital is located here.</span>
                 <strong style={{ color: '#065f46' }}>Keep observing the map carefully!</strong>
               </div>
             </motion.div>
@@ -224,7 +224,7 @@ export default function MissionCheckpoint({ onComplete }) {
               <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: `2px solid ${state !== null && (isSelected || isCorrect) ? border : '#5c6b7a'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                  {(state !== null && (isSelected || isCorrect)) && <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: border }} />}
               </div>
-              <span style={{ fontSize: '1.05rem', color: '#0E3556', fontWeight: 'bold' }}>
+              <span style={{ fontSize: '14px', color: '#0E3556', fontWeight: 'bold' }}>
                 {opt}
               </span>
             </button>
@@ -237,7 +237,7 @@ export default function MissionCheckpoint({ onComplete }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: state === correctAnswer ? '#059669' : '#b91c1c', fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.5rem' }}>
             {state === correctAnswer ? 'Correct!' : `Correct Answer: ${correctAnswer}`}
           </div>
-          <p style={{ margin: 0, fontSize: '1rem', color: '#20303f', lineHeight: '1.5' }}>
+          <p style={{ margin: 0, fontSize: '14px', color: '#20303f', lineHeight: '1.5' }}>
             {explanation}
           </p>
         </motion.div>
@@ -313,7 +313,7 @@ export default function MissionCheckpoint({ onComplete }) {
                <p style={{ marginBottom: '2rem', color: '#47586b', lineHeight: 1.6, fontSize: '1.1rem' }}>
                  You successfully explored the city map and answered all the checkpoint questions. You are now ready to learn more about maps.
                </p>
-               <div style={{ padding: '0.5rem 1rem', borderRadius: '20px', background: 'rgba(245, 158, 11, 0.1)', color: '#d97706', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '2.5rem', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+               <div style={{ padding: '0.5rem 1rem', borderRadius: '20px', background: 'rgba(245, 158, 11, 0.1)', color: '#d97706', fontWeight: 'bold', fontSize: '14px', marginBottom: '2.5rem', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
                  Map Observer
                </div>
                <button 

@@ -34,7 +34,7 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
         <div style={{ padding: '0.75rem 2rem', borderBottom: '1px solid #d6e0ec', background: '#ffffff', zIndex: 20 }}>
           <button 
             onClick={() => setIsOpen(false)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: '#5c6b7a', fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: '#5c6b7a', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', transition: 'color 0.2s' }}
             onMouseOver={(e) => e.currentTarget.style.color = '#20303f'}
             onMouseOut={(e) => e.currentTarget.style.color = '#5c6b7a'}
           >
@@ -82,15 +82,15 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <CheckCircle2 size={20} color={isOpen ? "#10b981" : "#5c6b7a"} />
-              <div style={{ fontSize: '1rem', color: isOpen ? '#0E3556' : '#5c6b7a', fontWeight: isOpen ? 'bold' : 'normal' }}>Explore the Atlas</div>
+              <div style={{ fontSize: '14px', color: isOpen ? '#0E3556' : '#5c6b7a', fontWeight: isOpen ? 'bold' : 'normal' }}>Explore the Atlas</div>
             </div>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <CheckCircle2 size={20} color={currentPage === 3 ? "#10b981" : "#5c6b7a"} />
-              <div style={{ fontSize: '1rem', color: currentPage === 3 ? '#0E3556' : '#5c6b7a', fontWeight: currentPage === 3 ? 'bold' : 'normal' }}>Discover 3 Types of Maps</div>
+              <div style={{ fontSize: '14px', color: currentPage === 3 ? '#0E3556' : '#5c6b7a', fontWeight: currentPage === 3 ? 'bold' : 'normal' }}>Discover 3 Types of Maps</div>
             </div>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <CheckCircle2 size={20} color={isCompleted ? "#10b981" : "#5c6b7a"} />
-              <div style={{ fontSize: '1rem', color: isCompleted ? '#0E3556' : '#5c6b7a', fontWeight: isCompleted ? 'bold' : 'normal' }}>Complete the Journey</div>
+              <div style={{ fontSize: '14px', color: isCompleted ? '#0E3556' : '#5c6b7a', fontWeight: isCompleted ? 'bold' : 'normal' }}>Complete the Journey</div>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
           <button 
             className="primary" 
             onClick={() => setIsOpen(true)}
-            style={{ width: '100%', padding: '0.9rem', fontSize: '1rem', borderRadius: '12px', transition: 'transform 0.2s', cursor: 'pointer', marginTop: '1rem' }}
+            style={{ width: '100%', padding: '0.9rem', fontSize: '14px', borderRadius: '12px', transition: 'transform 0.2s', cursor: 'pointer', marginTop: '1rem' }}
             onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
             onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
           >

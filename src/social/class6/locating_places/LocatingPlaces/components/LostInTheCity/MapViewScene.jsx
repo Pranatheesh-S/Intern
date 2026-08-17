@@ -164,7 +164,7 @@ export default function MapViewScene({ onComplete }) {
                       cursor: 'pointer',
                       boxShadow: '0 4px 12px rgba(147,51,234,0.5)',
                       fontWeight: 'bold',
-                      fontSize: '1rem',
+                      fontSize: '14px',
                       transition: 'transform 0.2s'
                     }}
                     onMouseOver={(e) => e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1.1)'}
@@ -198,7 +198,7 @@ export default function MapViewScene({ onComplete }) {
             <p style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#20303f', lineHeight: 1.4 }}>
               Help the boy reach the Bank.
             </p>
-            <p style={{ fontSize: '1rem', color: '#47586b', marginTop: '0.5rem', lineHeight: 1.4 }}>
+            <p style={{ fontSize: '14px', color: '#47586b', marginTop: '0.5rem', lineHeight: 1.4 }}>
               There may be more than one correct path. Choose the correct road whenever you reach a junction.
             </p>
           </div>
@@ -219,11 +219,11 @@ export default function MapViewScene({ onComplete }) {
               <div style={{ background: '#ffffff', padding: '1.25rem', borderRadius: '12px', border: '1px solid #d6e0ec' }}>
                 <h4 style={{ color: '#5c6b7a', fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.5px' }}>Progress</h4>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>Railway Station</div>
+                  <div style={{ fontWeight: 'bold', fontSize: '14px' }}>Railway Station</div>
                   <ArrowRight size={16} color="#5c6b7a" />
-                  <div style={{ color: '#6366f1', fontWeight: 'bold', fontSize: '1rem' }}>{MAP_NODES[currentNode]?.name}</div>
+                  <div style={{ color: '#6366f1', fontWeight: 'bold', fontSize: '14px' }}>{MAP_NODES[currentNode]?.name}</div>
                   <ArrowRight size={16} color="#5c6b7a" />
-                  <div style={{ opacity: 0.5, fontSize: '1rem' }}>Bank</div>
+                  <div style={{ opacity: 0.5, fontSize: '14px' }}>Bank</div>
                 </div>
               </div>
 
@@ -232,7 +232,7 @@ export default function MapViewScene({ onComplete }) {
                  <h4 style={{ color: '#5c6b7a', fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.5px' }}>Journey Log</h4>
                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                    {journeyLog.map((log, i) => (
-                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', color: '#47586b' }}>
+                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '14px', color: '#47586b' }}>
                        <CheckCircle2 size={16} color="#10b981" /> {log}
                      </div>
                    ))}
@@ -249,7 +249,7 @@ export default function MapViewScene({ onComplete }) {
                <AlertCircle size={56} color="#ef4444" style={{ margin: '0 auto 1.5rem' }} />
                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#20303f' }}>Oops!</h3>
                <p style={{ marginBottom: '2rem', color: '#47586b', lineHeight: 1.5 }}>This road doesn't lead to the Bank. Try another direction.</p>
-               <button onClick={handleWrongClose} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '12px', fontSize: '1.05rem', fontWeight: 'bold', cursor: 'pointer', width: '100%' }}>Choose Again</button>
+               <button onClick={handleWrongClose} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '12px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', width: '100%' }}>Choose Again</button>
              </div>
           </div>
         )}

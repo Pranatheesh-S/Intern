@@ -148,7 +148,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
       <div style={{ background: '#fff', border: '1px solid #e4ebf3', borderRadius: '16px', padding: '40px', boxShadow: '0 8px 30px rgba(0,0,0,0.04)', textAlign: 'center' }}>
         <div style={{ fontSize: '48px', marginBottom: '16px' }}>🌍</div>
         <h2 style={{ fontFamily: '"Fraunces", serif', color: '#0E3556', fontSize: '28px', marginBottom: '16px' }}>Travel Across India!</h2>
-        <div style={{ color: '#5c6b7a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', lineHeight: 1.6, marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ color: '#5c6b7a', fontSize: '14px', lineHeight: 1.6, marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <p>We have already used a map to travel inside a small town.</p>
           <p>Now let's use a map to travel across India.</p>
           <p>Our journey begins in Chennai, Tamil Nadu.</p>
@@ -156,7 +156,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         </div>
         <button 
           onClick={handleStart}
-          style={{ background: '#16a34a', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '30px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 15px rgba(22, 163, 74, 0.4)', transition: 'transform 0.2s' }}
+          style={{ background: '#16a34a', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '30px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 15px rgba(22, 163, 74, 0.4)', transition: 'transform 0.2s' }}
           onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
           onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
@@ -174,8 +174,8 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         <p style={{ color: '#20303f', fontSize: '18px', fontWeight: 600, marginBottom: '24px' }}>Wonderful! You successfully travelled across India using a map.</p>
         
         <div style={{ background: '#f8fafc', padding: '24px', borderRadius: '12px', textAlign: 'left', marginBottom: '32px', display: 'inline-block' }}>
-          <p style={{ color: '#5c6b7a', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', marginBottom: '16px', fontWeight: 600 }}>Today you discovered that maps help us:</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', color: '#334155', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>
+          <p style={{ color: '#5c6b7a', fontSize: '14px', marginBottom: '16px', fontWeight: 600 }}>Today you discovered that maps help us:</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', color: '#334155', fontSize: '14px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle size={18} color="#16a34a" /> Choose directions</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle size={18} color="#16a34a" /> Compare distances</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><CheckCircle size={18} color="#16a34a" /> Plan journeys</div>
@@ -183,7 +183,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           </div>
         </div>
 
-        <p style={{ color: '#64748b', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontStyle: 'italic', marginBottom: '32px' }}>
+        <p style={{ color: '#64748b', fontSize: '14px', fontStyle: 'italic', marginBottom: '32px' }}>
           The next lessons will teach you how maps measure distance, show directions, and locate places precisely.
         </p>
       </div>
@@ -198,7 +198,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         
         {/* Progress Tracker */}
         <div style={{ padding: '20px 30px 0', display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', whiteSpace: 'nowrap', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-          <span style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, color: '#16a34a', display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span style={{ fontSize: '14px', fontWeight: 600, color: '#16a34a', display: 'flex', alignItems: 'center', gap: '4px' }}>
             <CheckCircle size={14} /> Tamil Nadu
           </span>
           {MISSIONS.map((m, idx) => {
@@ -210,8 +210,8 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
             
             return (
               <React.Fragment key={m.id}>
-                <span style={{ color: '#cbd5e1', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>→</span>
-                <span style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: isCur ? 700 : 600, color, display: 'flex', alignItems: 'center', gap: '4px', background: isCur ? '#eff6ff' : 'transparent', padding: isCur ? '4px 8px' : '0', borderRadius: '6px' }}>
+                <span style={{ color: '#cbd5e1', fontSize: '14px' }}>→</span>
+                <span style={{ fontSize: '14px', fontWeight: isCur ? 700 : 600, color, display: 'flex', alignItems: 'center', gap: '4px', background: isCur ? '#eff6ff' : 'transparent', padding: isCur ? '4px 8px' : '0', borderRadius: '6px' }}>
                   {isPast && <CheckCircle size={14} />}
                   {m.destination}
                 </span>
@@ -226,13 +226,13 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           <div style={{ background: '#fff', border: '1px solid #e4ebf3', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
               <div>
-                <div style={{ color: '#7c5cff', fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
+                <div style={{ color: '#7c5cff', fontSize: '14px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
                   Mission {missionIndex + 1} of 6
                 </div>
                 <h3 style={{ fontFamily: '"Fraunces", serif', color: '#0E3556', fontSize: '24px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
                   Destination: {mission.destination}
                 </h3>
-                <div style={{ fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#64748b', marginTop: '4px', fontStyle: 'italic' }}>
+                <div style={{ fontSize: '14px', color: '#64748b', marginTop: '4px', fontStyle: 'italic' }}>
                   {mission.fact}
                 </div>
               </div>
@@ -243,7 +243,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
 
             <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', marginBottom: '24px' }}>
               {mission.story.split('\n').map((line, i) => (
-                <p key={i} style={{ margin: '0 0 8px 0', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', color: '#334155', lineHeight: 1.5 }}>{line}</p>
+                <p key={i} style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#334155', lineHeight: 1.5 }}>{line}</p>
               ))}
             </div>
 
@@ -265,7 +265,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                         background: isSelectedCorrect ? '#dcfce7' : isSelectedWrong ? '#fee2e2' : '#fff',
                         border: `2px solid ${isSelectedCorrect ? '#16a34a' : isSelectedWrong ? '#ef4444' : '#e2e8f0'}`,
                         borderRadius: '12px',
-                        fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)',
+                        fontSize: '14px',
                         fontWeight: 600,
                         color: isSelectedCorrect ? '#166534' : isSelectedWrong ? '#991b1b' : '#334155',
                         cursor: (!!feedback?.type || animating) ? 'default' : 'pointer',
@@ -289,7 +289,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                 marginTop: '20px',
                 animation: 'fadeIn 0.3s ease-out'
               }}>
-                <div style={{ color: feedback.type === 'success' ? '#166534' : '#991b1b', fontWeight: 600, fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                <div style={{ color: feedback.type === 'success' ? '#166534' : '#991b1b', fontWeight: 600, fontSize: '14px', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                   {feedback.type === 'success' ? <Award size={20} style={{ flexShrink: 0 }} /> : <Navigation size={20} style={{ flexShrink: 0, transform: 'rotate(180deg)' }} />}
                   <div style={{ whiteSpace: 'pre-line', lineHeight: 1.5 }}>
                     {feedback.text}
@@ -297,7 +297,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                 </div>
                 
                 {feedback.type === 'error' && (
-                  <button onClick={() => setFeedback(null)} style={{ marginTop: '12px', background: 'transparent', border: '1px solid #ef4444', color: '#ef4444', padding: '8px 16px', borderRadius: '8px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, cursor: 'pointer' }}>
+                  <button onClick={() => setFeedback(null)} style={{ marginTop: '12px', background: 'transparent', border: '1px solid #ef4444', color: '#ef4444', padding: '8px 16px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
                     Try Again
                   </button>
                 )}
@@ -305,7 +305,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                 {feedback.type === 'success' && !animating && (
                   <button 
                     onClick={handleNextMission} 
-                    style={{ marginTop: '16px', background: '#16a34a', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    style={{ marginTop: '16px', background: '#16a34a', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
                   >
                     Continue Journey <ChevronRight size={18} />
                   </button>
@@ -315,7 +315,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
             
             {/* Learning Insight */}
             {missionIndex > 0 && !feedback?.type && (
-              <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #f1f5f9', color: '#64748b', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', fontWeight: 500, fontStyle: 'italic', textAlign: 'center' }}>
+              <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #f1f5f9', color: '#64748b', fontSize: '14px', fontWeight: 500, fontStyle: 'italic', textAlign: 'center' }}>
                 {MISSIONS[missionIndex - 1].learning}
               </div>
             )}
@@ -325,7 +325,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           {/* Travel Diary */}
           {travelDiary.length > 0 && (
             <div style={{ background: '#fff', border: '1px solid #e4ebf3', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontWeight: 700, fontSize: 'clamp(14px, 0.5vw + 0.75vh, 16px)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontWeight: 700, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
                 <MapIcon size={16} /> Travel Diary
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -333,8 +333,8 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                   <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f8fafc', padding: '12px', borderRadius: '8px' }}>
                     <div style={{ color: '#16a34a' }}><CheckCircle size={18} /></div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600, color: '#334155', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)' }}>{entry.destination}</div>
-                      <div style={{ display: 'flex', gap: '12px', color: '#64748b', fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)', marginTop: '4px' }}>
+                      <div style={{ fontWeight: 600, color: '#334155', fontSize: '14px' }}>{entry.destination}</div>
+                      <div style={{ display: 'flex', gap: '12px', color: '#64748b', fontSize: '14px', marginTop: '4px' }}>
                         {entry.direction && <span>Direction: <b>{entry.direction}</b></span>}
                         {entry.distance && <span>Distance: <b>{entry.distance}</b></span>}
                       </div>
@@ -399,9 +399,21 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
 
       <ChapterBackFooter
         onBack={onBack}
-        nextLabel={missionIndex >= MISSIONS.length ? 'Continue to Next Lesson' : undefined}
-        onNext={missionIndex >= MISSIONS.length ? onBeginChapter : undefined}
-        nextVariant="blue"
+        nextLabel={
+          missionIndex === -1
+            ? 'Start Journey'
+            : missionIndex >= MISSIONS.length
+              ? 'Next Activity'
+              : 'Next'
+        }
+        onNext={
+          missionIndex === -1
+            ? () => setMissionIndex(0)
+            : missionIndex >= MISSIONS.length
+              ? onBeginChapter
+              : handleNextMission
+        }
+        nextVariant={missionIndex >= MISSIONS.length ? 'green' : 'navy'}
       />
     </div>
   );

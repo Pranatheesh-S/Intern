@@ -41,7 +41,7 @@ export default function BlueprintIntro({ onExplore }) {
           border: 1px solid rgba(255,255,255,.22); border-radius: 12px; pointer-events: none;
         }
         .etick {
-          position: absolute; font-family: var(--mono); font-size: clamp(14px, 1vw, 14px);
+          position: absolute; font-family: var(--mono); font-size: 14px;
           letter-spacing: .14em; color: var(--cyan); opacity: .75;
         }
 
@@ -83,7 +83,7 @@ export default function BlueprintIntro({ onExplore }) {
         }
         .pin .lab {
           position: absolute; left: calc(50% + 16px); top: calc(50% - 34px);
-          font-family: var(--mono); font-size: clamp(14px, 1vw, 14px);
+          font-family: var(--mono); font-size: 14px;
           letter-spacing: .08em; color: var(--amber); white-space: nowrap;
         }
         @keyframes ping {
@@ -112,7 +112,7 @@ export default function BlueprintIntro({ onExplore }) {
           background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.3); color: var(--ink);
         }
         .coord {
-          font-family: var(--mono); font-size: clamp(14px, 1.2vw, 14px);
+          font-family: var(--mono); font-size: 14px;
           letter-spacing: .13em; color: var(--cyan); margin: clamp(16px, 2.2vw, 26px) 0 6px;
         }
         .title {
@@ -127,7 +127,7 @@ export default function BlueprintIntro({ onExplore }) {
           flex-wrap: wrap;
         }
         .metae .no {
-          font-family: var(--mono); font-size: clamp(14px, 1.2vw, 14px); letter-spacing: .2em;
+          font-family: var(--mono); font-size: 14px; letter-spacing: .2em;
           color: var(--ink); border: 1px solid rgba(255,255,255,.3); padding: 6px 12px; border-radius: 8px;
         }
         .metae .ch {
@@ -135,7 +135,7 @@ export default function BlueprintIntro({ onExplore }) {
           color: #fff; letter-spacing: .02em;
         }
         .chsub {
-          font-family: var(--mono); font-size: clamp(14px, 1vw, 14px); letter-spacing: .12em; overflow-wrap: break-word;
+          font-family: var(--mono); font-size: 14px; letter-spacing: .12em; overflow-wrap: break-word;
           color: var(--cyan); text-transform: uppercase; margin-top: 10px; opacity: .8;
         }
         .cta {
@@ -153,10 +153,10 @@ export default function BlueprintIntro({ onExplore }) {
         }
         .corner-brand .logo {
           width: 26px; height: 26px; border-radius: 7px; background: var(--amber); color: var(--paper2);
-          display: grid; place-items: center; font-weight: 800; font-family: var(--geo); font-size: clamp(14px, 0.6vw + 0.82vh, 19px);
+          display: grid; place-items: center; font-weight: 800; font-family: var(--geo); font-size: 14px;
         }
-        .corner-brand b { font-size: clamp(14px, 0.6vw + 0.82vh, 19px); color: #fff; }
-        .corner-brand span { font-family: var(--mono); font-size: clamp(14px, 0.5vw + 0.75vh, 16px); letter-spacing: .1em; color: rgba(234,246,251,.6); display: block; }
+        .corner-brand b { font-size: 14px; color: #fff; }
+        .corner-brand span { font-family: var(--mono); font-size: 14px; letter-spacing: .1em; color: rgba(234,246,251,.6); display: block; }
 
         /* portrait / small: stack */
         @media (max-aspect-ratio:1/1), (max-width:760px){

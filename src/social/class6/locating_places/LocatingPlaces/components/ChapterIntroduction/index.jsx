@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AryabhataPage from './AryabhataPage';
 import BigQuestionsPage from './BigQuestionsPage';
 
-export default function ChapterIntroduction({ onNextActivity }) {
+export default function ChapterIntroduction({ onNextActivity, onBack }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
@@ -21,6 +21,7 @@ export default function ChapterIntroduction({ onNextActivity }) {
       {currentPage === 1 && (
         <AryabhataPage 
           onNext={() => setCurrentPage(2)} 
+          onBack={onBack}
           isNextEnabled={true} 
         />
       )}

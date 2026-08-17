@@ -34,7 +34,7 @@ export default function EarthAddressArt({ style }) {
 <rect x="0" y="40" width="1040" height="18" fill="#0E3556"/>
 <text x="26" y="37" fontSize="19" fontWeight="800" fill="#ffffff" letterSpacing="0.4">CHAPTER 1: LOCATING PLACES ON THE EARTH</text>
 <rect x="726" y="14" width="290" height="30" rx="15" fill="none" stroke="#F5A623" strokeWidth="1.6"/>
-<text x="871" y="33" fontSize="11.5" fontWeight="700" fill="#F5A623" textAnchor="middle" letterSpacing="0.6">GRADE 6 · SOCIAL SCIENCE (GEOGRAPHY)</text>
+<text x="871" y="33" fontSize="14" fontWeight="700" fill="#F5A623" textAnchor="middle" letterSpacing="0.6">GRADE 6 · SOCIAL SCIENCE (GEOGRAPHY)</text>
 
 {/* ============ PANEL 1 ============ */}
 <rect x="16" y="72" width="330" height="212" rx="14" fill="#ffffff" stroke="#d6e0ec" strokeWidth="1.6"/>
@@ -46,25 +46,25 @@ export default function EarthAddressArt({ style }) {
   <path d="M0 12 C0 12 -9 2 -9-5 A9 9 0 1 1 9-5 C9 2 0 12 0 12z" fill="#e11d48" stroke="#fff" strokeWidth="2"/>
   <circle cy="-5" r="3.4" fill="#fff"/>
 </g>
-<text x="44" y="133" fontSize="11" fontWeight="700" fill="#0E3556">Location Pin</text>
+<text x="44" y="133" fontSize="14" fontWeight="700" fill="#0E3556">Location Pin</text>
 
 <g transform="translate(262,158)">
   <circle r="40" fill="#F3F7FC" stroke="#c3d3e4" strokeWidth="1.4"/>
   <polygon points="0,-30 7,0 0,-4" fill="#0E3556"/><polygon points="0,-30 -7,0 0,-4" fill="#8aa6bd"/>
   <polygon points="0,30 7,0 0,4" fill="#8aa6bd"/><polygon points="0,30 -7,0 0,4" fill="#c3d3e4"/>
-  <text y="-44" fontSize="12" fontWeight="800" fill="#0E3556" textAnchor="middle">N</text>
-  <text y="56" fontSize="12" fontWeight="700" fill="#5c6b7a" textAnchor="middle">S</text>
-  <text x="-50" y="5" fontSize="12" fontWeight="700" fill="#5c6b7a" textAnchor="middle">W</text>
-  <text x="50" y="5" fontSize="12" fontWeight="700" fill="#5c6b7a" textAnchor="middle">E</text>
+  <text y="-44" fontSize="14" fontWeight="800" fill="#0E3556" textAnchor="middle">N</text>
+  <text y="56" fontSize="14" fontWeight="700" fill="#5c6b7a" textAnchor="middle">S</text>
+  <text x="-50" y="5" fontSize="14" fontWeight="700" fill="#5c6b7a" textAnchor="middle">W</text>
+  <text x="50" y="5" fontSize="14" fontWeight="700" fill="#5c6b7a" textAnchor="middle">E</text>
 </g>
 
-<text x="34" y="242" fontSize="11.5" fill="#5c6b7a">Scale Bar:</text>
+<text x="34" y="242" fontSize="14" fill="#5c6b7a">Scale Bar:</text>
 <g stroke="#0E3556" strokeWidth="2.4">
   <path d="M34 256 h178"/><path d="M34 250 v12"/><path d="M123 250 v12"/><path d="M212 250 v12"/>
 </g>
-<text x="34" y="276" fontSize="10.5" fill="#5c6b7a">0</text>
-<text x="123" y="276" fontSize="10.5" fill="#5c6b7a" textAnchor="middle">1000 km</text>
-<text x="212" y="276" fontSize="10.5" fill="#5c6b7a" textAnchor="end">2000 km</text>
+<text x="34" y="276" fontSize="14" fill="#5c6b7a">0</text>
+<text x="123" y="276" fontSize="14" fill="#5c6b7a" textAnchor="middle">1000 km</text>
+<text x="212" y="276" fontSize="14" fill="#5c6b7a" textAnchor="end">2000 km</text>
 
 {/* ============ PANEL 2 ============ */}
 <rect x="362" y="72" width="662" height="412" rx="14" fill="#ffffff" stroke="#d6e0ec" strokeWidth="1.6"/>
@@ -90,21 +90,21 @@ export default function EarthAddressArt({ style }) {
 </g>
 <circle cx="600" cy="300" r="152" fill="none" stroke="#0E3556" strokeWidth="2.6"/>
 
-<text x="600" y="134" fontSize="13" fontWeight="800" fill="#0E3556" textAnchor="middle">NORTH (+)</text>
-<text x="600" y="472" fontSize="13" fontWeight="800" fill="#0E3556" textAnchor="middle">SOUTH (−)</text>
-<text x="404" y="305" fontSize="13" fontWeight="800" fill="#0E3556" textAnchor="middle">WEST (−)</text>
-<text x="794" y="305" fontSize="13" fontWeight="800" fill="#0E3556" textAnchor="middle">EAST (+)</text>
+<text x="600" y="134" fontSize="14" fontWeight="800" fill="#0E3556" textAnchor="middle">NORTH (+)</text>
+<text x="600" y="472" fontSize="14" fontWeight="800" fill="#0E3556" textAnchor="middle">SOUTH (−)</text>
+<text x="404" y="305" fontSize="14" fontWeight="800" fill="#0E3556" textAnchor="middle">WEST (−)</text>
+<text x="794" y="305" fontSize="14" fontWeight="800" fill="#0E3556" textAnchor="middle">EAST (+)</text>
 
 <circle cx="664" cy="248" r="7" fill="#fff" stroke="#e11d48" strokeWidth="3"/>
 <g transform="translate(442,232)">
   <rect width="204" height="32" rx="9" fill="#0E3556"/>
-  <text x="14" y="21" fontSize="12.5" fontWeight="700" fill="#ffffff">Target: 28.6° N, 77.2° E</text>
+  <text x="14" y="21" fontSize="14" fontWeight="700" fill="#ffffff">Target: 28.6° N, 77.2° E</text>
   <path d="M204 16 H216" stroke="#0E3556" strokeWidth="2.4"/>
 </g>
 
 <path d="M660 248 H452" stroke="#0E3556" strokeWidth="1.6" strokeDasharray="5 5" opacity="0.55"/>
 <rect x="828" y="112" width="182" height="150" rx="10" fill="#F3F7FC" stroke="#c3d3e4" strokeWidth="1.4"/>
-<text x="842" y="132" fontSize="11.5" fontWeight="700" fill="#0E3556">2D Coordinate Grid Map</text>
+<text x="842" y="132" fontSize="14" fontWeight="700" fill="#0E3556">2D Coordinate Grid Map</text>
 <g stroke="#c3d3e4" strokeWidth="1" opacity="0.9">
   <path d="M842 152 h156"/><path d="M842 174 h156"/><path d="M842 218 h156"/><path d="M842 240 h156"/>
   <path d="M872 144 v104"/><path d="M916 144 v104"/><path d="M964 144 v104"/>
@@ -113,7 +113,7 @@ export default function EarthAddressArt({ style }) {
 <path d="M932 144 v104" stroke="#0E3556" strokeWidth="2"/>
 <circle cx="964" cy="174" r="4.5" fill="#e11d48"/>
 <g transform="translate(900,232)"><rect width="96" height="20" rx="6" fill="#F5A623"/>
-<text x="48" y="14.5" fontSize="11" fontWeight="800" fill="#0E3556" textAnchor="middle">30° N, 80° E</text></g>
+<text x="48" y="14.5" fontSize="14" fontWeight="800" fill="#0E3556" textAnchor="middle">30° N, 80° E</text></g>
 
 {/* ============ PANEL 3 ============ */}
 <rect x="16" y="500" width="1008" height="264" rx="14" fill="#ffffff" stroke="#d6e0ec" strokeWidth="1.6"/>
@@ -126,22 +126,22 @@ export default function EarthAddressArt({ style }) {
   <g transform="translate(720,584)"><circle r="34" fill="#F3F7FC" stroke="#0E3556" strokeWidth="2.2"/><path d="M0 0 v-22" stroke="#0E3556" strokeWidth="3" strokeLinecap="round" transform="rotate(120)"/><path d="M0 0 v-16" stroke="#F5A623" strokeWidth="3" strokeLinecap="round" transform="rotate(240)"/><circle r="2.6" fill="#0E3556"/></g>
   <g transform="translate(920,584)"><circle r="34" fill="#F3F7FC" stroke="#0E3556" strokeWidth="2.2"/><path d="M0 0 v-22" stroke="#0E3556" strokeWidth="3" strokeLinecap="round" transform="rotate(240)"/><path d="M0 0 v-16" stroke="#F5A623" strokeWidth="3" strokeLinecap="round" transform="rotate(60)"/><circle r="2.6" fill="#0E3556"/></g>
 </g>
-<g textAnchor="middle" fontSize="13">
-  <text x="120" y="642" fontWeight="800" fill="#0E3556">120° W</text><text x="120" y="660" fontSize="11.5" fill="#5c6b7a">Pacific Time</text><text x="120" y="680" fontWeight="800" fill="#20303f">4:00 AM</text>
-  <text x="320" y="642" fontWeight="800" fill="#0E3556">60° W</text><text x="320" y="660" fontSize="11.5" fill="#5c6b7a">Atlantic Time</text><text x="320" y="680" fontWeight="800" fill="#20303f">8:00 AM</text>
-  <text x="520" y="642" fontWeight="800" fill="#b8791a">0° GMT</text><text x="520" y="660" fontSize="11.5" fill="#5c6b7a">Greenwich (Noon)</text><text x="520" y="680" fontWeight="800" fill="#20303f">12:00 PM</text>
-  <text x="720" y="642" fontWeight="800" fill="#0E3556">60° E</text><text x="720" y="660" fontSize="11.5" fill="#5c6b7a">Middle East</text><text x="720" y="680" fontWeight="800" fill="#20303f">4:00 PM</text>
-  <text x="920" y="642" fontWeight="800" fill="#0E3556">120° E</text><text x="920" y="660" fontSize="11.5" fill="#5c6b7a">East Asia / Tokyo</text><text x="920" y="680" fontWeight="800" fill="#20303f">8:00 PM</text>
+<g textAnchor="middle" fontSize="14">
+  <text x="120" y="642" fontWeight="800" fill="#0E3556">120° W</text><text x="120" y="660" fontSize="14" fill="#5c6b7a">Pacific Time</text><text x="120" y="680" fontWeight="800" fill="#20303f">4:00 AM</text>
+  <text x="320" y="642" fontWeight="800" fill="#0E3556">60° W</text><text x="320" y="660" fontSize="14" fill="#5c6b7a">Atlantic Time</text><text x="320" y="680" fontWeight="800" fill="#20303f">8:00 AM</text>
+  <text x="520" y="642" fontWeight="800" fill="#b8791a">0° GMT</text><text x="520" y="660" fontSize="14" fill="#5c6b7a">Greenwich (Noon)</text><text x="520" y="680" fontWeight="800" fill="#20303f">12:00 PM</text>
+  <text x="720" y="642" fontWeight="800" fill="#0E3556">60° E</text><text x="720" y="660" fontSize="14" fill="#5c6b7a">Middle East</text><text x="720" y="680" fontWeight="800" fill="#20303f">4:00 PM</text>
+  <text x="920" y="642" fontWeight="800" fill="#0E3556">120° E</text><text x="920" y="660" fontSize="14" fill="#5c6b7a">East Asia / Tokyo</text><text x="920" y="680" fontWeight="800" fill="#20303f">8:00 PM</text>
 </g>
 
 <rect x="36" y="700" width="968" height="46" rx="10" fill="#F3F7FC" stroke="#c3d3e4" strokeWidth="1.4"/>
-<text x="56" y="722" fontSize="13" fontWeight="800" fill="#0E3556">WEST (Time is Earlier)</text>
-<text x="56" y="739" fontSize="10.5" fill="#5c6b7a">Every 15° West = −1 Hour</text>
+<text x="56" y="722" fontSize="14" fontWeight="800" fill="#0E3556">WEST (Time is Earlier)</text>
+<text x="56" y="739" fontSize="14" fill="#5c6b7a">Every 15° West = −1 Hour</text>
 <rect x="446" y="700" width="148" height="46" rx="10" fill="#F5A623"/>
-<text x="520" y="722" fontSize="13" fontWeight="800" fill="#0E3556" textAnchor="middle">NOON (0° GMT)</text>
-<text x="520" y="739" fontSize="10" fill="#7a5a2a" textAnchor="middle">Prime Meridian</text>
-<text x="984" y="722" fontSize="13" fontWeight="800" fill="#0E3556" textAnchor="end">EAST (Time is Later)</text>
-<text x="984" y="739" fontSize="10.5" fill="#5c6b7a" textAnchor="end">Every 15° East = +1 Hour</text>
+<text x="520" y="722" fontSize="14" fontWeight="800" fill="#0E3556" textAnchor="middle">NOON (0° GMT)</text>
+<text x="520" y="739" fontSize="14" fill="#7a5a2a" textAnchor="middle">Prime Meridian</text>
+<text x="984" y="722" fontSize="14" fontWeight="800" fill="#0E3556" textAnchor="end">EAST (Time is Later)</text>
+<text x="984" y="739" fontSize="14" fill="#5c6b7a" textAnchor="end">Every 15° East = +1 Hour</text>
     </svg>
   );
 }

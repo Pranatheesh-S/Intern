@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export function useScrollNav(scrollRef) {
   const [state, setState] = useState({ page: 0, totalPages: 1, hasOverflow: false });
@@ -64,42 +64,61 @@ export function useScrollNav(scrollRef) {
 const barBtn = {
   fontFamily: '"Space Grotesk", system-ui, -apple-system, sans-serif',
   fontWeight: 700,
-  fontSize: '16px',
+  fontSize: '14px',
   display: 'inline-flex',
   alignItems: 'center',
   borderRadius: '10px',
   transition: 'background 0.2s, transform 0.2s, opacity 0.2s'
 };
 
-export function PageBar({ currentPage = 0, pageCount = 1, onPageUp, onPageDown }) {
+export function PageBar({ currentPage = 0, pageCount = 1, onPageUp, onPageDown, showNextBtn = true }) {
   if (pageCount <= 1) return null;
-  const first = currentPage <= 0;
   const last = currentPage >= pageCount - 1;
+
   return (
-    <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', paddingTop: '12px' }}>
-      <button
-        type="button" onClick={onPageUp} disabled={first} aria-label="Previous page"
-        style={{ ...barBtn, gap: '8px', border: '1px solid #d6e0ec', background: '#fff', color: '#0E3556',
-                 cursor: 'pointer', padding: '10px 16px',
-                 opacity: first ? 0 : 1, pointerEvents: first ? 'none' : 'auto' }}
-      >
-        <ArrowLeft size={18} strokeWidth={2.5} /> Back
-      </button>
+    <div style={{
+      flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      gap: '12px', paddingTop: '12px'
+    }}>
+      {/* page indicator — dots are clickable, so going back needs no second button */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <span style={{ fontFamily: '"Space Grotesk", system-ui, sans-serif', fontWeight: 600, color: '#7c8a99', fontSize: '14px' }}>
+          Page {currentPage + 1} of {pageCount}
+        </span>
+        <span style={{ display: 'inline-flex', gap: '6px' }}>
+          {Array.from({ length: pageCount }).map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => { if (i < currentPage) onPageUp?.(i); else if (i > currentPage) onPageDown?.(i); }}
+              aria-label={`Go to page ${i + 1}`}
+              style={{
+                width: '9px', height: '9px', padding: 0, borderRadius: '50%', border: 'none',
+                cursor: 'pointer', background: i === currentPage ? '#F5A623' : '#DCE4EC',
+                transition: 'background .25s'
+              }}
+            />
+          ))}
+        </span>
+      </div>
 
-      <span style={{ fontFamily: '"Space Grotesk", system-ui, sans-serif', fontSize: '15px', fontWeight: 600, color: '#5c6b7a' }}>
-        Page {currentPage + 1} of {pageCount}
-      </span>
-
-      <button
-        type="button" onClick={onPageDown} disabled={last}
-        style={{ ...barBtn, gap: '10px', border: 'none', background: '#0E3556', color: '#fff',
-                 cursor: 'pointer', padding: '12px 22px', boxShadow: '0 6px 16px rgba(14,42,69,0.22)',
-                 opacity: last ? 0 : 1, pointerEvents: last ? 'none' : 'auto' }}
-        onMouseOver={e => { e.currentTarget.style.background = '#16466f'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-        onMouseOut={e => { e.currentTarget.style.background = '#0E3556'; e.currentTarget.style.transform = 'translateY(0)'; }}
-      >
-        Next Page <ArrowRight size={18} strokeWidth={2.5} />
-      </button>
+      {/* the single control, bottom right */}
+      {showNextBtn && (
+        <button
+          type="button"
+          onClick={onPageDown}
+          disabled={last}
+          title="Next page"
+          style={{
+            ...barBtn, gap: '10px', border: 'none', background: '#0E3556', color: '#fff',
+            cursor: 'pointer', padding: '12px 26px', borderRadius: '999px',
+            boxShadow: '0 6px 16px rgba(14,42,69,.25)',
+            opacity: last ? 0 : 1, pointerEvents: last ? 'none' : 'auto'
+          }}
+        >
+          Next <ArrowRight size={18} strokeWidth={2.5} />
+        </button>
+      )}
     </div>
   );
 }
@@ -108,11 +127,23 @@ export default function ContentScrollNav(props) {
   return <PageBar {...props} />;
 }
 
-export function ScrollableWithNav({ children, containerStyle, scrollStyle, className, showProgress = true }) {
+export function ScrollableWithNav({ children, containerStyle, scrollStyle, className, showProgress = true, showNextBtn = true }) {
   const viewportRef = React.useRef(null);
   const trackRef = React.useRef(null);
   const [pages, setPages] = React.useState([0]);
   const [page, setPage] = React.useState(0);
+  const [dir, setDir] = React.useState(1);   // 1 = turning forward, -1 = turning back
+  const sheetRef = React.useRef(null);
+  const firstPaint = React.useRef(true);
+
+  React.useLayoutEffect(() => {
+    const el = sheetRef.current;
+    if (!el) return;
+    if (firstPaint.current) { firstPaint.current = false; return; }   // don't animate on mount
+    el.style.animation = 'none';
+    void el.offsetWidth;                                             // force a reflow so it replays
+    el.style.animation = `${dir > 0 ? 'lpTurnFwd' : 'lpTurnBack'} 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both`;
+  }, [page, dir]);
 
   // Offsets are read with offsetTop, which ignores the transform we use to
   // move between pages. getBoundingClientRect would be measured mid-slide and
@@ -216,6 +247,22 @@ export function ScrollableWithNav({ children, containerStyle, scrollStyle, class
       className={className}
       style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', ...containerStyle }}
     >
+      <style>{`
+        @keyframes lpTurnFwd {
+          from { transform: translateX(14%) rotateY(-16deg) scale(.965); opacity: 0; }
+          60%  { opacity: 1; }
+          to   { transform: translateX(0) rotateY(0deg) scale(1); opacity: 1; }
+        }
+        @keyframes lpTurnBack {
+          from { transform: translateX(-14%) rotateY(16deg) scale(.965); opacity: 0; }
+          60%  { opacity: 1; }
+          to   { transform: translateX(0) rotateY(0deg) scale(1); opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          @keyframes lpTurnFwd  { from { opacity: 0; } to { opacity: 1; } }
+          @keyframes lpTurnBack { from { opacity: 0; } to { opacity: 1; } }
+        }
+      `}</style>
       {showProgress && pageCount > 1 && (
         <div style={{ flexShrink: 0, height: '4px', borderRadius: '999px', background: 'rgba(14,42,69,0.10)', overflow: 'hidden', marginBottom: '10px' }}>
           <div style={{ height: '100%', width: `${pct}%`, background: '#F5A623', borderRadius: '999px', transition: 'width 0.35s ease' }} />
@@ -224,29 +271,38 @@ export function ScrollableWithNav({ children, containerStyle, scrollStyle, class
 
       <div
         ref={viewportRef}
-        style={{ flex: 1, minHeight: 0, overflow: 'hidden', position: 'relative', ...restScroll }}
+        style={{ flex: 1, minHeight: 0, overflow: 'hidden', position: 'relative', perspective: '1600px', ...restScroll }}
       >
+        {/* the sheet turns like a page; the track inside it just holds the offset */}
         <div
-          ref={trackRef}
+          ref={sheetRef}
           style={{
-            display: display || 'block',
-            flexDirection,
-            gap,
-            padding, paddingRight, paddingLeft, paddingTop, paddingBottom,
-            transform: `translateY(${-pages[page]}px)`,
-            transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
-            willChange: 'transform'
+            height: '100%',
+            transformOrigin: dir > 0 ? 'left center' : 'right center',
+            willChange: 'transform, opacity'
           }}
         >
-          {children}
+          <div
+            ref={trackRef}
+            style={{
+              display: display || 'block',
+              flexDirection,
+              gap,
+              padding, paddingRight, paddingLeft, paddingTop, paddingBottom,
+              transform: `translateY(${-pages[page]}px)`
+            }}
+          >
+            {children}
+          </div>
         </div>
       </div>
 
       <PageBar
         currentPage={page}
         pageCount={pageCount}
-        onPageUp={() => setPage(p => Math.max(0, p - 1))}
-        onPageDown={() => setPage(p => Math.min(pageCount - 1, p + 1))}
+        showNextBtn={showNextBtn}
+        onPageUp={(to) => { setDir(-1); setPage(p => (typeof to === 'number' ? to : Math.max(0, p - 1))); }}
+        onPageDown={(to) => { setDir(1); setPage(p => (typeof to === 'number' ? to : Math.min(pageCount - 1, p + 1))); }}
       />
     </div>
   );

@@ -13,15 +13,13 @@ import ExploreIndiaActivity from './components/LostInTheCity/ExploreIndiaActivit
 
 export default function LocatingPlacesActivity({ onBackToDashboard }) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [subStep5, setSubStep5] = useState(0);
-  const [viewMode, setViewMode] = useState('cover'); // 'cover' = Open Book page, 'activity' = chapter tabs
+  const [viewMode, setViewMode] = useState('cover');
   const [coverKey, setCoverKey] = useState(0);
   const navRef = useRef(null);
 
   const handleBackToMainPage = () => {
     setViewMode('cover');
     setCurrentStep(1);
-    setSubStep5(0);
     setCoverKey(k => k + 1);
     window.scrollTo(0, 0);
   };
@@ -55,7 +53,7 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
   }, [currentStep, viewMode]);
 
   return (
-    <div data-theme="light" style={{
+    <div style={{
       position: 'fixed',
       top: 0,
       left: 0,
@@ -67,7 +65,7 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
         padding: 'clamp(16px, 2.5vh, 24px) clamp(16px, 2.5vw, 24px)',
         display: 'flex',
         flexDirection: 'column',
-        background: '#f8fafc'
+        background: 'var(--background, #f8fafc)'
       } : {})
     }}>
       {viewMode === 'cover' && (
@@ -94,16 +92,16 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
               justifyContent: 'center',
               gap: '0.15rem',
               padding: '0.35rem 0.4rem',
-              fontSize: 'clamp(14px, 0.95vw, 16px)',
-              fontWeight: 700,
-              color: '#0E3556',
-              border: '1px solid #cbd5e1',
+              fontSize: '0.62rem',
+              fontWeight: 'bold',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
               borderRadius: '10px',
               background: 'transparent',
               cursor: 'pointer',
               flexShrink: 0,
-              minHeight: 'clamp(64px, 6vh, 78px)',
-              width: 'clamp(72px, 6vw, 96px)',
+              minHeight: '64px',
+              width: '68px',
               boxSizing: 'border-box',
               lineHeight: 1.15,
               textAlign: 'center'
@@ -135,10 +133,7 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
               key={tab.id}
               data-active={isActive}
               onClick={() => {
-                if (!tab.locked) {
-                  setCurrentStep(tab.id);
-                  if (tab.id === 5) setSubStep5(0);
-                }
+                if (!tab.locked) setCurrentStep(tab.id);
               }}
               disabled={tab.locked}
               style={{
@@ -146,13 +141,13 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.45rem 0.55rem',
-                background: isActive ? '#ffffff' : 'rgba(255,255,255,0.55)',
-                border: `1px solid ${isActive ? '#6366f1' : '#cbd5e1'}`,
+                background: isActive ? 'var(--surface)' : 'transparent',
+                border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
                 borderRadius: '12px',
                 width: '100%',
-                minHeight: 'clamp(64px, 6vh, 78px)',
+                minHeight: '64px',
                 minWidth: '118px',
-                opacity: tab.locked ? 0.72 : 1,
+                opacity: tab.locked ? 0.4 : 1,
                 cursor: tab.locked ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s',
                 boxShadow: isActive ? '0 4px 15px rgba(99, 102, 241, 0.15)' : 'none',
@@ -161,65 +156,17 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
                 flexShrink: 0
               }}
             >
-              <div style={{ width: 'clamp(24px, 1.9vw, 30px)', height: 'clamp(24px, 1.9vw, 30px)', borderRadius: '7px', background: isActive ? '#6366f1' : '#cbd5e1', color: isActive ? '#fff' : '#334155', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'clamp(14px, 1.05vw, 17px)', fontWeight: 800, flexShrink: 0 }}>
+              <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: isActive ? 'var(--accent)' : 'var(--border)', color: isActive ? '#fff' : 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 'bold', flexShrink: 0 }}>
                 {isCompleted ? <CheckCircle size={11} /> : tab.id}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', minWidth: 0, flex: 1 }}>
-                <span style={{ fontSize: 'clamp(14px, 1.05vw, 18px)', fontWeight: 800, color: '#0E3556', lineHeight: 1.22, whiteSpace: 'normal', width: '100%' }}>{tab.title}</span>
-                <span style={{ fontSize: 'clamp(14px, 0.95vw, 16px)', fontWeight: 500, color: '#47586b', lineHeight: 1.25, whiteSpace: 'normal', width: '100%' }}>{tab.subtitle}</span>
+                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: isActive ? 'var(--text-heading)' : 'var(--text-primary)', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.title}</span>
+                <span style={{ fontSize: '0.56rem', color: 'var(--text-muted)', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.subtitle}</span>
               </div>
             </button>
           );
         })}
           </nav>
-        </div>
-
-        {/* Chapter progress — one notch per step, filled as the chapter is worked through */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '10px', padding: '0 2px' }}>
-          <span style={{
-            fontFamily: '"IBM Plex Mono", ui-monospace, monospace',
-            fontSize: 'clamp(11px, 0.75vw, 13px)',
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            color: '#5c6b7a',
-            whiteSpace: 'nowrap',
-            flexShrink: 0
-          }}>
-            Chapter progress
-          </span>
-
-          <div style={{ position: 'relative', flex: 1, minWidth: 0, height: '10px' }}>
-            {/* notches */}
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', gap: '4px' }}>
-              {tabs.map(t => (
-                <div
-                  key={t.id}
-                  style={{
-                    flex: 1,
-                    borderRadius: '999px',
-                    background: currentStep > t.id
-                      ? '#0E3556'
-                      : currentStep === t.id
-                        ? 'linear-gradient(90deg, #0E3556 0%, #F5A623 100%)'
-                        : 'rgba(14,42,69,0.10)',
-                    boxShadow: currentStep === t.id ? '0 0 0 2px rgba(245,166,35,0.28)' : 'none',
-                    transition: 'background 0.35s ease, box-shadow 0.35s ease'
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-
-          <span style={{
-            fontFamily: '"IBM Plex Mono", ui-monospace, monospace',
-            fontSize: 'clamp(11px, 0.75vw, 13px)',
-            fontWeight: 700,
-            color: '#0E3556',
-            whiteSpace: 'nowrap',
-            flexShrink: 0
-          }}>
-            {currentStep} / {tabs.length}
-          </span>
         </div>
       </div>
 
@@ -244,19 +191,11 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
         {currentStep === 4 && (
           <DistanceAndScale onComplete={() => setCurrentStep(5)} onBack={() => setCurrentStep(3)} />
         )}
-        {currentStep === 5 && subStep5 === 0 && (
-          <Directions onComplete={() => setSubStep5(1)} onBack={() => setCurrentStep(4)} />
-        )}
-        {currentStep === 5 && subStep5 === 1 && (
-          <div style={{ flex: 1, height: '100%', minHeight: 0, position: 'relative' }}>
-            <ExploreIndiaActivity 
-              onBeginChapter={() => { setSubStep5(0); setCurrentStep(6); }} 
-              onBack={() => setSubStep5(0)}
-            />
-          </div>
+        {currentStep === 5 && (
+          <Directions onComplete={() => setCurrentStep(6)} onBack={() => setCurrentStep(4)} />
         )}
         {currentStep === 6 && (
-          <MapSymbols onComplete={() => setCurrentStep(7)} onBack={() => { setSubStep5(1); setCurrentStep(5); }} />
+          <MapSymbols onComplete={() => setCurrentStep(7)} onBack={() => setCurrentStep(5)} />
         )}
         {currentStep === 7 && (
           <CoordinatesPage onNextActivity={() => setCurrentStep(8)} onBack={() => setCurrentStep(6)} />
@@ -270,3 +209,6 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
     </div>
   );
 }
+
+
+

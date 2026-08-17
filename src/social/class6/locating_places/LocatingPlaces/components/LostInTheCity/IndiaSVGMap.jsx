@@ -234,13 +234,13 @@ export default function IndiaSVGMap({
 
         {/* Labels Layer (Clean labels for important destinations) */}
         {missionIndex >= 0 && (
-          <g fontSize="11" fontWeight="600" fill="#334155" style={{ pointerEvents: 'none' }}>
+          <g fontSize="14" fontWeight="600" fill="#334155" style={{ pointerEvents: 'none' }}>
             {/* Start Node (Chennai) */}
             <g>
               <text x={startNode.x} y={startNode.y + 2} textAnchor="middle" fontSize="14">📍</text>
               <text x={startNode.x + cityData.tn.dx} y={startNode.y + cityData.tn.dy} fill="#166534" textAnchor={cityData.tn.anchor}>
                 <tspan x={startNode.x + cityData.tn.dx} dy="0">{cityData.tn.name}</tspan>
-                <tspan x={startNode.x + cityData.tn.dx} dy="14" fontSize="9" fill="#64748b">{cityData.tn.state}</tspan>
+                <tspan x={startNode.x + cityData.tn.dx} dy="14" fontSize="14" fill="#64748b">{cityData.tn.state}</tspan>
               </text>
             </g>
             
@@ -270,7 +270,7 @@ export default function IndiaSVGMap({
                     textAnchor={city.anchor}
                   >
                     <tspan x={node.x + city.dx} dy="0">{city.name}</tspan>
-                    <tspan x={node.x + city.dx} dy="14" fontSize="9" fill="#64748b">{city.state}</tspan>
+                    <tspan x={node.x + city.dx} dy="14" fontSize="14" fill="#64748b">{city.state}</tspan>
                   </text>
                 </g>
               );
@@ -288,7 +288,7 @@ export default function IndiaSVGMap({
           color: 'white',
           padding: '6px 12px',
           borderRadius: '4px',
-          fontSize: 'clamp(14px, 0.6vw + 0.82vh, 19px)',
+          fontSize: '14px',
           fontWeight: 600,
           pointerEvents: 'none',
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
