@@ -468,45 +468,99 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
             top: '3.5%',
             left: '4%',
             right: '4%',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '1.25rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
             zIndex: 20
           }}>
-            {currentScene.lines.map((line, idx) => {
-              const isActive = idx === activeLineIndex && isPlaying;
-              const titles = ['Lodestones:', 'Used by Sailors:', 'Shift to Artificial Magnets:'];
-              return (
-                <div
-                  key={idx}
-                  style={{
-                    background: isActive ? '#0F1926' : 'rgba(15, 25, 38, 0.92)',
-                    backdropFilter: 'blur(14px)',
-                    border: isActive ? '2px solid #F3C969' : '1.5px solid #D4AF37',
-                    borderRadius: '16px',
-                    padding: '1rem 1.2rem',
-                    boxShadow: isActive ? '0 12px 35px rgba(212, 175, 55, 0.35)' : '0 8px 24px rgba(0,0,0,0.6)',
-                    transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                    transform: isActive ? 'scale(1.02)' : 'scale(1)'
-                  }}
-                >
-                  <h3 style={{
-                    margin: '0 0 0.5rem 0',
-                    fontSize: '1.2rem',
-                    fontWeight: 800,
-                    color: '#F3C969',
-                    letterSpacing: '0.02em',
-                    borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
-                    paddingBottom: '0.35rem'
-                  }}>
-                    {titles[idx]}
-                  </h3>
-                  <p style={{ margin: 0, fontSize: '0.96rem', lineHeight: 1.55, color: '#F5EEDB' }}>
-                    {renderWordByWordText(line.text, idx, activeLineIndex, spokenCharIndex, true)}
-                  </p>
-                </div>
-              );
-            })}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '1.25rem'
+            }}>
+              {currentScene.lines.map((line, idx) => {
+                const isActive = idx === activeLineIndex && isPlaying;
+                const titles = ['Lodestones:', 'Used by Sailors:', 'Shift to Artificial Magnets:'];
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      background: isActive ? '#0F1926' : 'rgba(15, 25, 38, 0.92)',
+                      backdropFilter: 'blur(14px)',
+                      border: isActive ? '2px solid #F3C969' : '1.5px solid #D4AF37',
+                      borderRadius: '16px',
+                      padding: '1rem 1.2rem',
+                      boxShadow: isActive ? '0 12px 35px rgba(212, 175, 55, 0.35)' : '0 8px 24px rgba(0,0,0,0.6)',
+                      transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                      transform: isActive ? 'scale(1.02)' : 'scale(1)'
+                    }}
+                  >
+                    <h3 style={{
+                      margin: '0 0 0.5rem 0',
+                      fontSize: '1.2rem',
+                      fontWeight: 800,
+                      color: '#F3C969',
+                      letterSpacing: '0.02em',
+                      borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
+                      paddingBottom: '0.35rem'
+                    }}>
+                      {titles[idx]}
+                    </h3>
+                    <p style={{ margin: 0, fontSize: '0.96rem', lineHeight: 1.55, color: '#F5EEDB' }}>
+                      {renderWordByWordText(line.text, idx, activeLineIndex, spokenCharIndex, true)}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Voiceover Controls positioned under the storycards in Scene 6 */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', zIndex: 99999 }}>
+              <button
+                onClick={() => playSceneAudio(currentPage)}
+                style={{
+                  padding: '0.6rem 1.1rem',
+                  borderRadius: '30px',
+                  border: '1px solid rgba(255,255,255,0.4)',
+                  background: 'rgba(0,0,0,0.75)',
+                  backdropFilter: 'blur(8px)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  fontSize: '0.85rem',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
+                }}
+                title="Replay Voiceover"
+              >
+                <RotateCcw size={16} /> Replay Audio
+              </button>
+
+              <button
+                onClick={toggleMute}
+                style={{
+                  padding: '0.6rem 1.1rem',
+                  borderRadius: '30px',
+                  border: '1px solid rgba(255,255,255,0.4)',
+                  background: isMuted ? 'rgba(239, 68, 68, 0.85)' : 'rgba(16, 185, 129, 0.85)',
+                  backdropFilter: 'blur(8px)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  fontSize: '0.85rem',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
+                }}
+                title={isMuted ? 'Unmute Voiceover' : 'Mute Voiceover'}
+              >
+                {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                {isMuted ? 'Voice Muted' : 'Voice ON'}
+              </button>
+            </div>
           </div>
         ) : (
           /* Story Scenes 1-5 Narrative Boxes & Comic Thought Bubbles (Creamy Parchment #F5E8C7, Charcoal Brown #2C221E, Deep Antique Brown #5A3E28) */
@@ -617,53 +671,55 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         </div>
       </div>
 
-      {/* Voiceover Controls (Top Right) */}
-      <div style={{ position: 'absolute', top: '2rem', right: '2rem', display: 'flex', gap: '0.75rem', zIndex: 99999 }}>
-        <button
-          onClick={() => playSceneAudio(currentPage)}
-          style={{
-            padding: '0.6rem 1.1rem',
-            borderRadius: '30px',
-            border: '1px solid rgba(255,255,255,0.4)',
-            background: 'rgba(0,0,0,0.75)',
-            backdropFilter: 'blur(8px)',
-            color: 'white',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            fontSize: '0.85rem',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
-          }}
-          title="Replay Voiceover"
-        >
-          <RotateCcw size={16} /> Replay Audio
-        </button>
+      {/* Voiceover Controls (Top Right for Scenes 1-5) */}
+      {currentPage !== 6 && (
+        <div style={{ position: 'absolute', top: '2rem', right: '2rem', display: 'flex', gap: '0.75rem', zIndex: 99999 }}>
+          <button
+            onClick={() => playSceneAudio(currentPage)}
+            style={{
+              padding: '0.6rem 1.1rem',
+              borderRadius: '30px',
+              border: '1px solid rgba(255,255,255,0.4)',
+              background: 'rgba(0,0,0,0.75)',
+              backdropFilter: 'blur(8px)',
+              color: 'white',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              fontSize: '0.85rem',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
+            }}
+            title="Replay Voiceover"
+          >
+            <RotateCcw size={16} /> Replay Audio
+          </button>
 
-        <button
-          onClick={toggleMute}
-          style={{
-            padding: '0.6rem 1.1rem',
-            borderRadius: '30px',
-            border: '1px solid rgba(255,255,255,0.4)',
-            background: isMuted ? 'rgba(239, 68, 68, 0.85)' : 'rgba(16, 185, 129, 0.85)',
-            backdropFilter: 'blur(8px)',
-            color: 'white',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            fontSize: '0.85rem',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
-          }}
-          title={isMuted ? 'Unmute Voiceover' : 'Mute Voiceover'}
-        >
-          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-          {isMuted ? 'Voice Muted' : 'Voice ON'}
-        </button>
-      </div>
+          <button
+            onClick={toggleMute}
+            style={{
+              padding: '0.6rem 1.1rem',
+              borderRadius: '30px',
+              border: '1px solid rgba(255,255,255,0.4)',
+              background: isMuted ? 'rgba(239, 68, 68, 0.85)' : 'rgba(16, 185, 129, 0.85)',
+              backdropFilter: 'blur(8px)',
+              color: 'white',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              fontSize: '0.85rem',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
+            }}
+            title={isMuted ? 'Unmute Voiceover' : 'Mute Voiceover'}
+          >
+            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            {isMuted ? 'Voice Muted' : 'Voice ON'}
+          </button>
+        </div>
+      )}
 
       {/* Bottom Left Controls */}
       <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', display: 'flex', gap: '1rem', zIndex: 99999 }}>
