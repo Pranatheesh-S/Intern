@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, RotateCw, ArrowLeft, Info, CheckCircle } from 'lucide-react';
+import { Compass, RotateCw, ArrowLeft, CheckCircle, HelpCircle } from 'lucide-react';
 import Stage1_Experiment from './components/Stage1_Experiment';
 import Stage2_Conclusion from './components/Stage2_Conclusion';
 import Quiz from './Quiz';
 import DidYouKnow from './DidYouKnow';
-import { HelpCircle } from 'lucide-react';
 
 export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('experiment');
@@ -17,7 +16,6 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
 
   const handleStage1Complete = () => {
     setProgress(prev => ({ ...prev, experiment: true }));
-    // Manual tab transition rule: do not transition automatically
     setActiveTab('conclusion');
   };
 
@@ -38,40 +36,55 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
   ];
 
   return (
-    <div>
-      {/* Subheader Navigation with Back Button */}
+    <div style={{ 
+      width: '100%', 
+      height: 'calc(100vh - 16px)', 
+      maxHeight: '100vh', 
+      margin: '0 auto', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      overflow: 'hidden',
+      boxSizing: 'border-box',
+      padding: '0.5rem 0.75rem'
+    }}>
+      {/* Top Header Bar */}
       <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+        display: 'grid', 
+        gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
-        marginBottom: '2rem',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-        paddingBottom: '1rem',
-        flexWrap: 'wrap',
-        gap: '1rem'
+        paddingBottom: '0.4rem',
+        marginBottom: '0.4rem',
+        borderBottom: '1px solid var(--border)',
+        flexShrink: 0
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <button 
-            onClick={onBackToDashboard} 
-            className="outline" 
-            style={{ 
-              position: 'relative', zIndex: 100,
-              padding: '0.4rem 0.8rem', 
-              fontSize: '0.8rem', 
-              gap: '0.35rem',
-              borderColor: 'var(--border)'
-            }}
-          >
-            <ArrowLeft size={14} /> Back to Class 6 Chapter 4
-          </button>
-          <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Activity 4.3: Let us experiment</h2>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>A Freely Suspended Bar Magnet</span>
-          </div>
+        {/* Left: Back Button */}
+        <button 
+          onClick={onBackToDashboard} 
+          className="outline" 
+          style={{ 
+            position: 'relative', zIndex: 100,
+            padding: '0.35rem 0.75rem', 
+            fontSize: '0.78rem', 
+            gap: '0.35rem',
+            borderColor: 'var(--border)',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          <ArrowLeft size={14} /> Back to Class 6 Chapter 4
+        </button>
+
+        {/* Center: Title & Subtitle */}
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <h2 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+            <Compass size={18} style={{ color: 'var(--accent)' }} />
+            Activity 4.3: Finding Directions
+          </h2>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Class 6 Science: Chapter 4 — A Freely Suspended Bar Magnet</span>
         </div>
 
-        {/* Tabbed Navigation Bar */}
-        <nav className="tabs-container">
+        {/* Right: Tabbed Navigation Bar */}
+        <nav className="tabs-container" style={{ display: 'flex', gap: '0.35rem', margin: 0 }}>
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isCompleted = progress[tab.id];
@@ -87,15 +100,15 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
                   cursor: tab.locked ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.4rem',
-                  padding: '0.5rem 0.9rem',
-                  fontSize: '0.85rem'
+                  gap: '0.35rem',
+                  padding: '0.35rem 0.65rem',
+                  fontSize: '0.78rem'
                 }}
               >
-                <Icon size={14} />
+                <Icon size={13} />
                 <span>{tab.name}</span>
                 {isCompleted && (
-                  <CheckCircle size={12} style={{ color: 'var(--success)', marginLeft: '0.15rem' }} />
+                  <CheckCircle size={11} style={{ color: 'var(--success)', marginLeft: '0.15rem' }} />
                 )}
               </button>
             );
@@ -103,9 +116,19 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
         </nav>
       </div>
 
-      {/* Active Stage Panel */}
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '1.5rem', alignItems: 'stretch' }}>
-        <main style={{ flex: 1,  minHeight: '480px', marginBottom: '2rem' }}>
+      {/* Main Active Stage Panel (Non-scrolling flex child) */}
+      <main style={{ 
+        width: '100%', 
+        flex: 1, 
+        minHeight: 0, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden', 
+        position: 'relative', 
+        zIndex: 1 
+      }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -113,19 +136,19 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
+            style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
           >
             {tabs.find(t => t.id === activeTab)?.component}
           </motion.div>
         </AnimatePresence>
       </main>
 
-        {/* Right Sidebar (Educational Tip) */}
-        {activeTab !== 'quiz' && (
-          <aside style={{ width: '280px', flexShrink: 0 }}>
-            <DidYouKnow />
-          </aside>
-        )}
-      </div>
+      {/* Bottom Footer Bar */}
+      {activeTab !== 'quiz' && (
+        <footer style={{ marginTop: '0.4rem', width: '100%', flexShrink: 0, position: 'relative', zIndex: 99999 }}>
+          <DidYouKnow />
+        </footer>
+      )}
     </div>
   );
 }

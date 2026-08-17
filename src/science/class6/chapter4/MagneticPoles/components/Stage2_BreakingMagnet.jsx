@@ -52,7 +52,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+    <div className="glass-panel" style={{ padding: '1rem 1.5rem', display: 'flex', gap: '1.5rem', height: '100%', minHeight: 0, overflow: 'hidden', boxSizing: 'border-box' }}>
       {/* Left Side: Interactive Area */}
       <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ marginBottom: '1rem', textAlign: 'center' }}>

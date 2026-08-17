@@ -101,22 +101,18 @@ export default function DidYouKnow() {
       const isPastWord = charIndex > endPos + 2;
 
       let color = '#cbd5e1';
-      let fontWeight = 400;
+      let fontWeight = 500;
       let textShadow = 'none';
       let backgroundColor = 'transparent';
       let padding = '0';
       let borderRadius = '0';
 
       if (isCurrentWord) {
-        color = '#38bdf8'; // Glowing cyan for active spoken word
-        fontWeight = 700;
-        textShadow = '0 0 12px rgba(56, 189, 248, 0.9)';
-        backgroundColor = 'rgba(56, 189, 248, 0.22)';
-        padding = '0.1rem 0.3rem';
-        borderRadius = '5px';
+        color = '#38bdf8'; // Cyan color for active spoken word
+        fontWeight = 500;
       } else if (isPastWord) {
         color = '#f1f5f9'; // Bright read word
-        fontWeight = 600;
+        fontWeight = 500;
       }
 
       return (
@@ -129,7 +125,7 @@ export default function DidYouKnow() {
             backgroundColor,
             padding,
             borderRadius,
-            transition: 'all 0.15s ease',
+            transition: 'color 0.15s ease',
             display: 'inline-block',
             marginRight: '0.25rem'
           }}

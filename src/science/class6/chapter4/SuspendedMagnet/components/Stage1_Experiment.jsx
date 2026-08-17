@@ -5,14 +5,12 @@ import { RotateCw, AlertCircle, CheckCircle, RotateCcw, ArrowRight } from 'lucid
 export default function Stage1_Experiment({ onComplete }) {
   const [spinCount, setSpinCount] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [magnetRotation, setMagnetRotation] = useState(15); // Start slightly off
+  const [magnetRotation, setMagnetRotation] = useState(15);
   const [showObservation, setShowObservation] = useState(false);
   const [quizAnswer, setQuizAnswer] = useState(null);
 
   const handleSpin = () => {
     setIsSpinning(true);
-    // Spin it multiple times and settle exactly at 0 degrees (or 180 degrees)
-    // We can simulate physical settling by rotating it a lot, then bouncing
     const targetRotation = magnetRotation + 1080 - (magnetRotation % 360);
     
     setMagnetRotation(targetRotation);
@@ -24,7 +22,7 @@ export default function Stage1_Experiment({ onComplete }) {
       if (spinCount >= 1) {
         setShowObservation(true);
       }
-    }, 3000); // Wait for the spring animation to finish
+    }, 3000);
   };
 
   const handleQuizAnswer = (answer) => {
@@ -44,13 +42,33 @@ export default function Stage1_Experiment({ onComplete }) {
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-      {/* Left Side: Interactive Area */}
-      <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Interactive Setup</h3>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            A bar magnet is freely suspended by a thread.
+    <div className="glass-panel" style={{ 
+      padding: '1.25rem 1.75rem', 
+      display: 'flex', 
+      gap: '1.75rem', 
+      height: '100%', 
+      minHeight: 0, 
+      overflow: 'hidden', 
+      boxSizing: 'border-box',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      {/* Left Side: Interactive Setup (Centered) */}
+      <div style={{ 
+        flex: '1.15', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        textAlign: 'center', 
+        minWidth: 0 
+      }}>
+        <div style={{ marginBottom: '0.75rem', textAlign: 'center' }}>
+          <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-heading)' }}>
+            Interactive Setup
+          </h3>
+          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
+            A bar magnet is freely suspended by a thread. Rotate it and see where it settles!
           </p>
         </div>
 
@@ -58,27 +76,27 @@ export default function Stage1_Experiment({ onComplete }) {
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          maxWidth: '400px', 
-          height: '350px', 
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: '8px',
+          maxWidth: '480px', 
+          height: '330px', 
+          background: '#f8fafc',
+          border: '1.5px solid var(--border)',
+          borderRadius: '16px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           overflow: 'hidden',
           boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
         }}>
-          <img src="/SuspendedMagnet/hello.jpeg" alt="Experiment Setup" style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }} />
+          <img src="/SuspendedMagnet/hello.jpeg" alt="Experiment Setup" style={{ width: '100%', height: '100%', objectFit: 'contain', position: 'absolute', top: 0, left: 0, zIndex: 1 }} />
           
           {/* Rope */}
           <div style={{
             position: 'absolute',
             left: '50%',
             transform: 'translateX(-50%)',
-            bottom: '90px',
+            bottom: '85px',
             width: '2px',
-            height: '170px',
+            height: '165px',
             background: '#1e293b',
             zIndex: 9
           }} />
@@ -86,13 +104,12 @@ export default function Stage1_Experiment({ onComplete }) {
           {/* Magnet Wrapper for 3D Perspective */}
           <div style={{
             position: 'absolute',
-            bottom: '75px', // height above the ground
-            width: '160px',
-            height: '30px',
+            bottom: '70px',
+            width: '175px',
+            height: '32px',
             perspective: '1000px',
             zIndex: 10
           }}>
-            {/* The 60-deg tilted plane */}
             <div style={{
               width: '100%',
               height: '100%',
@@ -119,158 +136,159 @@ export default function Stage1_Experiment({ onComplete }) {
                   restDelta: 0.1 
                 }}
                 style={{
-                  position: 'absolute',
                   width: '100%',
                   height: '100%',
-                  transformStyle: 'preserve-3d',
-                  cursor: isSpinning || quizAnswer === 'yes' ? 'default' : 'grab'
+                  display: 'flex',
+                  borderRadius: '4px',
+                  overflow: 'hidden',
+                  boxShadow: '0 10px 15px rgba(0,0,0,0.4)',
+                  cursor: isSpinning ? 'wait' : 'grab'
                 }}
-                whileDrag={{ cursor: 'grabbing' }}
               >
-                {/* Stack 6 layers to give the magnet 3D thickness */}
-                {[0, 2, 4, 6, 8, 10].map(z => (
-                  <div key={z} style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    borderRadius: '2px',
-                    overflow: 'hidden',
-                    transform: `translateZ(${z}px)`,
-                    boxShadow: z === 0 ? '0 10px 15px -3px rgba(0, 0, 0, 0.5)' : 'none',
-                    filter: z < 10 ? 'brightness(0.6)' : 'none' /* darker sides */
-                  }}>
-                    <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.85rem' }}>{z === 10 ? 'N' : ''}</div>
-                    <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.85rem' }}>{z === 10 ? 'S' : ''}</div>
-                    {/* The string band wrapping around */}
-                    <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', width: '4px', height: '100%', background: '#1e293b' }} />
-                  </div>
-                ))}
-                
-                {/* Knot for the string attachment (top layer) */}
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%) translateZ(12px)', width: '6px', height: '6px', background: '#1e293b', borderRadius: '50%' }} />
+                <div style={{ flex: 1, backgroundColor: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.15rem' }}>
+                  N
+                </div>
+                <div style={{ flex: 1, backgroundColor: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.15rem' }}>
+                  S
+                </div>
               </motion.div>
             </div>
           </div>
-          
-          {/* Rest Line (appears after first spin) */}
-          <AnimatePresence>
-            {spinCount > 0 && !isSpinning && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                style={{
-                  position: 'absolute',
-                  bottom: '70px',
-                  width: '180px',
-                  height: '2px',
-                  background: 'var(--accent)',
-                  boxShadow: '0 0 8px var(--accent)'
-                }}
-              />
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Controls */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.85rem', marginTop: '1rem' }}>
           <button 
-            onClick={handleSpin} 
+            onClick={handleSpin}
             disabled={isSpinning || quizAnswer === 'yes'}
             className="primary"
-            style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ padding: '0.8rem 1.5rem', fontSize: '0.94rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
           >
-            <RotateCw size={18} /> {spinCount === 0 ? '1. Push Magnet' : '2. Push Again'}
+            <RotateCw size={18} className={isSpinning ? 'spin-animation' : ''} /> 
+            {isSpinning ? 'Spinning...' : 'Rotate Magnet'}
           </button>
           
           <button 
             onClick={handleReset}
             className="outline"
-            style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ padding: '0.8rem 1.5rem', fontSize: '0.94rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            disabled={isSpinning || spinCount === 0}
           >
-            <RotateCcw size={18} /> Reset Activity
+            <RotateCcw size={18} /> Reset
           </button>
         </div>
       </div>
 
-      {/* Right Side: Quiz & Instructions */}
-      <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--surface)' }}>
-          <h4 style={{ color: 'var(--text-heading)', margin: '0 0 1rem 0' }}>Instructions</h4>
-          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem' }}>
-            <li style={{ fontWeight: spinCount === 0 ? 'bold' : 'normal', color: spinCount === 0 ? 'var(--accent-text)' : 'inherit' }}>
-              Give the magnet a gentle push to rotate it and let it come to rest.
-            </li>
-            <li style={{ fontWeight: spinCount === 1 && !showObservation ? 'bold' : 'normal', color: spinCount === 1 && !showObservation ? 'var(--accent-text)' : 'inherit' }}>
-              Observe the line it rests on. Now, push it again.
-            </li>
-            <li style={{ fontWeight: showObservation ? 'bold' : 'normal', color: showObservation ? 'var(--accent-text)' : 'inherit' }}>
-              Answer the observation question below.
-            </li>
+      {/* Right Side: Instructions & Observation (Centered) */}
+      <div style={{ 
+        flex: '0.85', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'center', 
+        gap: '1rem', 
+        minWidth: 0, 
+        overflowY: 'auto' 
+      }}>
+        <div className="glass-panel" style={{ padding: '1.35rem 1.6rem', background: 'var(--surface)' }}>
+          <h4 style={{ color: 'var(--text-heading)', margin: '0 0 0.75rem 0', fontSize: '1.18rem', fontWeight: 700 }}>
+            Instructions
+          </h4>
+          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.98rem', lineHeight: '1.6' }}>
+            <li>Drag or click "Rotate Magnet" to disturb the freely suspended bar magnet.</li>
+            <li>Observe which direction the magnet points when it comes to rest.</li>
+            <li>Repeat 2-3 times to see if it settles in the same direction every time!</li>
           </ol>
         </div>
 
         <AnimatePresence>
           {showObservation && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               className="glass-panel"
-              style={{ padding: '1.5rem', background: 'var(--accent-bg)', border: '1px solid var(--accent-border)' }}
+              style={{ padding: '1.35rem 1.6rem', background: 'var(--accent-bg)', border: '1px solid var(--accent-border)' }}
             >
-              <h4 style={{ color: 'var(--text-heading)', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <AlertCircle size={20} style={{ color: 'var(--accent-text)' }} /> 
-                Observation
+              <h4 style={{ color: 'var(--text-heading)', margin: '0 0 0.6rem 0', fontSize: '1.18rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <AlertCircle size={22} style={{ color: 'var(--accent-text)' }} /> 
+                Observation Question
               </h4>
-              <p style={{ margin: '0 0 1rem 0', color: 'var(--text-secondary)' }}>
-                Does the magnet always come to rest along the exact same line when you spin it?
+              <p style={{ margin: '0 0 0.85rem 0', color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: 1.55 }}>
+                Does the bar magnet always come to rest in the same direction (North-South)?
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <button
-                  onClick={() => handleQuizAnswer('no')}
-                  className="outline"
-                  style={{
-                    padding: '0.75rem',
-                    textAlign: 'left',
-                    background: quizAnswer === 'no' ? 'var(--danger-bg)' : 'transparent',
-                    borderColor: quizAnswer === 'no' ? 'var(--danger)' : 'var(--border)'
-                  }}
-                >
-                  No, it rests in random directions
-                </button>
+              <div style={{ display: 'flex', gap: '0.85rem', marginBottom: '1rem' }}>
                 <button
                   onClick={() => handleQuizAnswer('yes')}
                   className="outline"
                   style={{
-                    padding: '0.75rem',
-                    textAlign: 'left',
+                    flex: 1,
+                    padding: '0.85rem 1.1rem',
+                    fontSize: '0.96rem',
+                    fontWeight: 600,
                     background: quizAnswer === 'yes' ? 'var(--success-bg)' : 'transparent',
-                    borderColor: quizAnswer === 'yes' ? 'var(--success)' : 'var(--border)'
+                    borderColor: quizAnswer === 'yes' ? 'var(--success)' : 'var(--border)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem'
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span>Yes, it rests along the same line</span>
-                    {quizAnswer === 'yes' && <CheckCircle size={18} style={{ color: 'var(--success)' }} />}
-                  </div>
+                  Yes, always N-S {quizAnswer === 'yes' && <CheckCircle size={18} style={{ color: 'var(--success)' }} />}
+                </button>
+                
+                <button
+                  onClick={() => handleQuizAnswer('no')}
+                  className="outline"
+                  style={{
+                    flex: 1,
+                    padding: '0.85rem 1.1rem',
+                    fontSize: '0.96rem',
+                    fontWeight: 600,
+                    background: quizAnswer === 'no' ? 'var(--danger-bg)' : 'transparent',
+                    borderColor: quizAnswer === 'no' ? 'var(--danger)' : 'var(--border)'
+                  }}
+                >
+                  No, random
                 </button>
               </div>
 
               {quizAnswer === 'yes' && (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  style={{ marginTop: '1rem' }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                 >
-                  <p style={{ margin: '0 0 1rem 0', color: 'var(--success)', fontSize: '0.9rem', fontWeight: '500' }}>
-                    Correct! A freely suspended bar magnet always comes to rest in the <strong>North-South</strong> direction.
+                  <p style={{ margin: '0 0 0.85rem 0', color: 'var(--success)', fontSize: '0.96rem', fontWeight: '600' }}>
+                    Correct! A freely suspended magnet always comes to rest in the North-South direction!
                   </p>
                   <button 
                     onClick={handleNextSection}
-                    className="primary"
-                    style={{ width: '100%', padding: '0.75rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
+                    style={{
+                      width: '100%',
+                      padding: '0.9rem 1.6rem',
+                      fontSize: '1.05rem',
+                      fontWeight: 800,
+                      borderRadius: '35px',
+                      backgroundColor: '#2563eb',
+                      color: '#ffffff',
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.75rem',
+                      boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                      transition: 'all 0.25s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.03)';
+                      e.currentTarget.style.backgroundColor = '#1d4ed8';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.backgroundColor = '#2563eb';
+                    }}
                   >
-                    Next Section: Conclusion <ArrowRight size={16} />
+                    Next Section: Conclusion <ArrowRight size={22} />
                   </button>
                 </motion.div>
               )}

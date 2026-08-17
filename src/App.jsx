@@ -2994,7 +2994,7 @@ export default function App() {
             <ProteinTestingActivity onBackToDashboard={() => navigateTo('class6', 'chapter3')} />
           ) : activeActivity === 'intro_magnets' ? (
             <IntroMagnets 
-              onBackToDashboard={() => navigateTo('class6', 'chapter4_cover')} 
+              onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} 
               onComplete={() => navigateTo('class6', 'chapter4_flow')}
             />
           ) : activeActivity === 'activity_4_1' ? (
@@ -3081,7 +3081,10 @@ export default function App() {
           ) : activeActivity === 'materials_around_us_new' ? (
             <MaterialsAroundUsNewActivity onBackToDashboard={() => navigateTo('class6', null)} />
           ) : activeActivity === 'chapter4_cover' || activeActivity === 'chapter4' ? (
-            <Chapter4Cover onStartJourney={() => navigateTo('class6', 'intro_magnets')} />
+            <Chapter4Cover 
+              onStartJourney={() => navigateTo('class6', 'intro_magnets')} 
+              onBack={() => navigateTo('class6', 'chapter4_flow')}
+            />
           ) : activeActivity === 'chapter4_flow' ? (
             <Chapter4Flow 
               onBackToDashboard={() => navigateTo('class6', null)} 

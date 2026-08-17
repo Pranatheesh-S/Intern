@@ -9,8 +9,10 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const [voicesLoaded, setVoicesLoaded] = useState(false);
   const [activeLineIndex, setActiveLineIndex] = useState(0);
   const [spokenCharIndex, setSpokenCharIndex] = useState(-1);
+  const [hasFinishedAudio, setHasFinishedAudio] = useState(false);
 
   const currentSpeechRef = useRef(null);
+  const delayTimerRef = useRef(null);
 
   const scenes = [
     {
@@ -20,12 +22,12 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         {
           role: 'teacher',
           text: "Reshma lived in a coastal town of Kerala and loved writing short stories. Since her grandmother enjoyed listening to her stories, Reshma decided to write a special story as a birthday gift for her grandmother's 60th birthday.",
-          pos: { top: '3.5%', left: '2%', width: '22%' }
+          pos: { top: '3%', left: '2%', width: '30%' }
         },
         {
           role: 'girl',
           text: "Paati will be so happy to hear this story...",
-          pos: { top: '29%', left: '52.5%', width: '18%', tail: 'left' }
+          pos: { top: '28%', left: '55%', width: '18%', tail: 'left' }
         }
       ]
     },
@@ -36,12 +38,12 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         {
           role: 'teacher',
           text: "The Spice Ship. Her story was about a ship carrying spices like pepper, cardamom, and cinnamon from Kerala for trade in the olden days. The sailors used the stars at night to find the right direction across the sea.",
-          pos: { top: '3.5%', left: '2%', width: '25%' }
+          pos: { top: '3%', left: '2%', width: '30%' }
         },
         {
           role: 'ancient_man',
           text: "Look, the North Star... that's our guide tonight.",
-          pos: { top: '26%', left: '23.5%', width: '17%', tail: 'right' }
+          pos: { top: '24%', left: '48%', width: '210px', tail: 'left' }
         }
       ]
     },
@@ -52,12 +54,12 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         {
           role: 'teacher',
           text: "The Storm. Suddenly, in her story, the ship was caught in a fierce storm. Thick clouds covered the sky, and the stars disappeared. Reshma wondered how the sailors could continue their journey without seeing the stars.",
-          pos: { top: '3.5%', left: '2%', width: '22%' }
+          pos: { top: '3%', left: '2%', width: '30%' }
         },
         {
           role: 'ancient_man',
           text: "The stars are hidden... how will we find our way?",
-          pos: { top: '34%', left: '19.5%', width: '17%', tail: 'right' }
+          pos: { top: '18%', left: '48%', width: '210px', tail: 'left' }
         }
       ]
     },
@@ -68,37 +70,37 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         {
           role: 'teacher',
           text: "Searching for an Answer. Unable to continue her story, Reshma searched the internet and visited her school library. She discovered that sailors used a magnetic compass to find directions even when the stars were hidden.",
-          pos: { top: '3.5%', left: '2%', width: '22%' }
+          pos: { top: '3%', left: '2%', width: '30%' }
         },
         {
           role: 'girl',
           text: "I can't leave my story here... the sailors must have found a way!",
-          pos: { top: '26%', left: '18%', width: '16%', tail: 'right' }
+          pos: { top: '38%', left: '20%', width: '17%', tail: 'right' }
         },
         {
           role: 'girl',
           text: "Let me see what the internet says.",
-          pos: { top: '10%', left: '59%', width: '14%', tail: 'bottom' }
+          pos: { top: '9%', left: '60%', width: '15%', tail: 'bottom' }
         },
         {
           role: 'girl',
           text: "A magnetic compass! That's how they found directions even when the stars were not visible.",
-          pos: { top: '36%', left: '68%', width: '17%', tail: 'left' }
+          pos: { top: '36%', left: '69%', width: '18%', tail: 'left' }
         },
         {
           role: 'girl',
           text: "So, the needle always points to the north... That's amazing!",
-          pos: { top: '54%', left: '65%', width: '16%', tail: 'left' }
+          pos: { top: '55%', left: '66%', width: '17%', tail: 'left' }
         },
         {
           role: 'girl',
           text: "This book, sea navigation techniques.",
-          pos: { top: '76%', left: '36%', width: '180px', tail: 'right' }
+          pos: { top: '77%', left: '36%', width: '190px', tail: 'right' }
         },
         {
           role: 'girl',
           text: "I've seen magnets in my pencil box and the duster on the board... I never looked at them closely.",
-          pos: { top: '54%', left: '6%', width: '18%', tail: 'right' }
+          pos: { top: '70%', left: '5%', width: '19%', tail: 'right' }
         }
       ]
     },
@@ -176,10 +178,15 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
   // Stop any active speech
   const stopSpeech = () => {
+    if (delayTimerRef.current) {
+      clearTimeout(delayTimerRef.current);
+      delayTimerRef.current = null;
+    }
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
     setIsPlaying(false);
+    setHasFinishedAudio(false);
     setSpokenCharIndex(-1);
   };
 
@@ -203,23 +210,20 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
       let color = isEduCard ? '#F5EEDB' : '#2C221E'; // Soft Ivory (#F5EEDB) vs Dark Charcoal Brown (#2C221E)
       let fontWeight = 600;
-      let fontSize = '0.94rem';
+      let fontSize = isEduCard ? '1.08rem' : '1.12rem';
       let textShadow = 'none';
       let backgroundColor = 'transparent';
-      let padding = '0.05rem 0.15rem';
-      let borderRadius = '4px';
+      let padding = '0';
+      let borderRadius = '0';
       let transform = 'scale(1)';
 
       if (isCurrentWord) {
         color = isEduCard ? '#F3C969' : '#0284C7'; // Highlight text color alone
-        fontWeight = 800;
-        fontSize = '1.22rem'; // Increased text size while highlighting
-        transform = 'scale(1.18)';
-        textShadow = isEduCard ? '0 0 12px rgba(243, 201, 105, 0.9)' : '0 0 12px rgba(56, 189, 248, 0.9)';
-        backgroundColor = 'transparent'; // No background color box
+        fontWeight = 600;
+        backgroundColor = 'transparent';
       } else if (isPastWord) {
         color = isEduCard ? '#F3C969' : '#0369A1';
-        fontWeight = 700;
+        fontWeight = 600;
       }
 
       return (
@@ -234,10 +238,10 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
             backgroundColor,
             padding,
             borderRadius,
-            transition: 'all 0.15s ease',
+            transition: 'color 0.15s ease',
             display: 'inline-block',
-            marginRight: '0.25rem',
-            lineHeight: 1.55
+            marginRight: '0.22rem',
+            lineHeight: 1.48
           }}
         >
           {word}
@@ -249,7 +253,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   // Play audio lines for the current scene
   const playSceneAudio = (sceneIndex) => {
     stopSpeech();
-    if (isMuted || !('speechSynthesis' in window)) return;
+    if (isCompleted || isMuted || !('speechSynthesis' in window)) return;
 
     const currentScene = scenes[sceneIndex - 1];
     if (!currentScene || !currentScene.lines || currentScene.lines.length === 0) return;
@@ -370,7 +374,17 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
       utterance.onend = () => {
         lineIndex++;
-        speakNextLine();
+        if (lineIndex < currentScene.lines.length) {
+          setActiveLineIndex(-1);
+          setSpokenCharIndex(-1);
+          delayTimerRef.current = setTimeout(() => {
+            speakNextLine();
+          }, 1500);
+        } else {
+          setIsPlaying(false);
+          setHasFinishedAudio(true);
+          setSpokenCharIndex(-1);
+        }
       };
 
       utterance.onerror = () => {
@@ -385,15 +399,22 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   };
 
   useEffect(() => {
+    if (isCompleted) {
+      stopSpeech();
+      return;
+    }
+
     const timer = setTimeout(() => {
-      playSceneAudio(currentPage);
+      if (!isCompleted) {
+        playSceneAudio(currentPage);
+      }
     }, 2000);
 
     return () => {
       clearTimeout(timer);
       stopSpeech();
     };
-  }, [currentPage, isMuted, voicesLoaded]);
+  }, [currentPage, isMuted, voicesLoaded, isCompleted]);
 
   const handleNext = () => {
     stopSpeech();
@@ -585,7 +606,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                       top: pos.top,
                       left: pos.left,
                       width: pos.width,
-                      maxWidth: '280px',
+                      maxWidth: '380px',
                       background: '#F5E8C7',
                       border: '1.5px solid #5A3E28',
                       borderRadius: '14px',
@@ -597,25 +618,28 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                     }}
                   >
                     <div style={{
-                      fontSize: '0.75rem',
+                      fontSize: '0.92rem',
                       fontWeight: 800,
-                      letterSpacing: '0.1em',
+                      letterSpacing: '0.08em',
                       color: '#5A3E28',
                       textTransform: 'uppercase',
-                      marginBottom: '0.3rem',
+                      marginBottom: '0.35rem',
                       borderBottom: '1px solid rgba(90, 62, 40, 0.25)',
                       paddingBottom: '0.2rem'
                     }}>
                       {currentScene.subtitle}
                     </div>
-                    <p style={{ margin: 0, fontSize: '0.94rem', lineHeight: 1.5, color: '#2C221E' }}>
+                    <p style={{ margin: 0, fontSize: '1.12rem', lineHeight: 1.5, color: '#2C221E' }}>
                       {renderWordByWordText(line.text, idx, activeLineIndex, spokenCharIndex, false)}
                     </p>
                   </div>
                 );
               }
 
-              /* Shape 2: Oval/cloud comic thought bubble (#F5E8C7) - Restored natural width without 3-word force */
+              /* Shape 2: Oval/cloud comic thought bubble (#F5E8C7) */
+              const isBubbleVisible = hasFinishedAudio || (isPlaying && idx === activeLineIndex);
+              if (!isBubbleVisible) return null;
+
               return (
                 <div
                   key={idx}
@@ -625,10 +649,10 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                     left: pos.left,
                     width: pos.width || '210px',
                     background: '#F5E8C7',
-                    border: isActive ? '2px solid #0284C7' : '1.5px solid #5A3E28',
+                    border: '1.5px solid #5A3E28',
                     borderRadius: '35px',
                     padding: '0.45rem 0.75rem',
-                    boxShadow: isActive ? '0 8px 22px rgba(2, 132, 199, 0.35)' : '0 6px 16px rgba(44, 34, 30, 0.3)',
+                    boxShadow: '0 6px 16px rgba(44, 34, 30, 0.3)',
                     transition: 'all 0.25s ease',
                     pointerEvents: 'auto',
                     zIndex: isActive ? 25 : 20
@@ -754,27 +778,58 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       {isCompleted && (
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(10px)',
+          backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(6px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           zIndex: 100000, animation: 'fadeIn 0.3s ease-out'
         }}>
           <div style={{
-            background: '#0F1926', padding: '3rem', borderRadius: '24px',
-            maxWidth: '480px', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.7)',
-            border: '1.5px solid #D4AF37', color: '#FFFFFF'
+            backgroundColor: '#ffffff',
+            border: '1px solid #cbd5e1',
+            borderRadius: '24px',
+            padding: '2rem 2.5rem',
+            maxWidth: '460px',
+            textAlign: 'center',
+            boxShadow: '0 12px 35px rgba(0, 0, 0, 0.2)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1.25rem'
           }}>
-            <div style={{ display: 'inline-flex', padding: '1.5rem', background: 'rgba(16, 185, 129, 0.2)', borderRadius: '50%', marginBottom: '1.5rem', boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)', border: '1px solid #10b981' }}>
-              <Magnet size={48} color="#10b981" />
-            </div>
-            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, margin: '0 0 1rem 0', color: '#F3C969', textShadow: '0 2px 10px rgba(243, 201, 105, 0.3)' }}>Story Completed!</h2>
-            <p style={{ fontSize: '1.18rem', color: '#F5EEDB', lineHeight: 1.6, marginBottom: '2rem', fontWeight: 500 }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 800, margin: 0, color: '#1e40af' }}>
+              Story Completed!
+            </h2>
+            <p style={{ fontSize: '1.08rem', color: '#2563eb', lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
               Reshma learned that magnets were essential for navigation. Are you ready to explore magnets yourself?
             </p>
             <button
-              style={{ width: '100%', padding: '1rem', fontSize: '1.15rem', borderRadius: '14px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, #F59E0B, #D97706)', color: '#FFFFFF', fontWeight: 'bold', border: 'none', boxShadow: '0 8px 20px rgba(245, 158, 11, 0.4)' }}
               onClick={onComplete}
+              style={{
+                width: '100%',
+                padding: '1.1rem 2.5rem',
+                fontSize: '1.25rem',
+                fontWeight: 800,
+                borderRadius: '40px',
+                backgroundColor: '#2563eb',
+                color: '#ffffff',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.75rem',
+                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
+                transition: 'all 0.25s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.04)';
+                e.currentTarget.style.backgroundColor = '#1d4ed8';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.backgroundColor = '#2563eb';
+              }}
             >
-              Continue to Activity 4.1 <ArrowRight size={20} />
+              Continue to Activity 4.1 <ArrowRight size={24} />
             </button>
           </div>
         </div>

@@ -27,8 +27,9 @@ export default function MagneticTable({ onComplete }) {
   const [scanProgress, setScanProgress] = useState(0);
   const [scannedResults, setScannedResults] = useState({});
   const [draggedItem, setDraggedItem] = useState(null);
-  const [isDragOverScanner, setIsDragOverScanner] = useState(false);
-  const [lastScannedItem, setLastScannedItem] = useState(null);
+  const [dragOverCardId, setDragOverCardId] = useState(null);
+  const [showInstructionModal, setShowInstructionModal] = useState(true);
+  const [showCompletionPopup, setShowCompletionPopup] = useState(false);
   const imageRef = useRef(null);
 
   const startScanForItem = (item) => {
@@ -36,7 +37,6 @@ export default function MagneticTable({ onComplete }) {
 
     setScanningItemId(item.id);
     setScanProgress(0);
-    setLastScannedItem(null);
 
     let progress = 0;
     const interval = setInterval(() => {
@@ -45,20 +45,27 @@ export default function MagneticTable({ onComplete }) {
 
       if (progress >= 100) {
         clearInterval(interval);
-        setScannedResults(prev => ({ ...prev, [item.id]: true }));
+        setScannedResults(prev => {
+          const updated = { ...prev, [item.id]: true };
+          if (Object.keys(updated).length === ALL_ITEMS.length) {
+            // Wait 1 second (1000ms) after scanning all objects before popping up the completion button
+            setTimeout(() => {
+              setShowCompletionPopup(true);
+            }, 1000);
+          }
+          return updated;
+        });
         setScanningItemId(null);
         setScanProgress(0);
-        setLastScannedItem(item);
       }
     }, 40);
   };
 
   const isComplete = Object.keys(scannedResults).length === ALL_ITEMS.length;
-  const activeScanningItem = ALL_ITEMS.find(i => i.id === scanningItemId);
 
-  const handleDropOnScanner = (e) => {
+  const handleDropOnCard = (e, targetItem) => {
     e.preventDefault();
-    setIsDragOverScanner(false);
+    setDragOverCardId(null);
     let itemId = null;
     try {
       if (e.dataTransfer) {
@@ -67,12 +74,13 @@ export default function MagneticTable({ onComplete }) {
     } catch (err) {
       console.warn(err);
     }
-    if (!itemId && draggedItem) {
-      itemId = draggedItem.id;
-    }
-    const targetItem = ALL_ITEMS.find(i => i.id === itemId);
-    if (targetItem && !scannedResults[targetItem.id] && !scanningItemId) {
-      startScanForItem(targetItem);
+
+    const itemToScan = ALL_ITEMS.find(i => i.id === itemId) || draggedItem;
+    // Strict check: Only scan if dragged item matches the target box!
+    if (itemToScan && itemToScan.id === targetItem.id) {
+      if (!scannedResults[targetItem.id] && !scanningItemId) {
+        startScanForItem(targetItem);
+      }
     }
     setDraggedItem(null);
   };
@@ -81,9 +89,10 @@ export default function MagneticTable({ onComplete }) {
     const isScanning = scanningItemId === item.id;
     const isScanned = scannedResults[item.id];
     const isMag = item.isMagnetic;
+    const isDragOver = dragOverCardId === item.id;
 
-    let borderColor = '#bfdbfe';
-    let bgColor = '#ffffff';
+    let borderColor = isDragOver ? '#38bdf8' : '#bfdbfe';
+    let bgColor = isDragOver ? 'rgba(56, 189, 248, 0.2)' : '#ffffff';
     let nameColor = '#1e40af';
     let statusText = '';
     let statusBg = 'transparent';
@@ -116,6 +125,14 @@ export default function MagneticTable({ onComplete }) {
     return (
       <div
         key={item.id}
+        onDragOver={(e) => {
+          e.preventDefault();
+          if (!isScanned && !scanningItemId) {
+            setDragOverCardId(item.id);
+          }
+        }}
+        onDragLeave={() => setDragOverCardId(null)}
+        onDrop={(e) => handleDropOnCard(e, item)}
         style={{
           flex: 1,
           display: 'flex',
@@ -125,11 +142,13 @@ export default function MagneticTable({ onComplete }) {
           padding: '0.4rem 0.5rem',
           backgroundColor: bgColor,
           borderRadius: '14px',
-          border: `2px solid ${borderColor}`,
+          border: isDragOver ? '2px dashed #38bdf8' : `2px solid ${borderColor}`,
           boxShadow: isScanned 
             ? `0 0 16px ${isMag ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}` 
-            : '0 2px 8px rgba(30, 64, 175, 0.08)',
-          cursor: 'default',
+            : isDragOver
+              ? '0 0 16px rgba(56, 189, 248, 0.6)'
+              : '0 2px 8px rgba(30, 64, 175, 0.08)',
+          cursor: isScanned ? 'default' : 'grab',
           transition: 'all 0.25s ease',
           textAlign: 'center',
           position: 'relative',
@@ -138,6 +157,7 @@ export default function MagneticTable({ onComplete }) {
           userSelect: 'none',
           boxSizing: 'border-box'
         }}
+        title={isScanned ? undefined : `Drag ${item.name} badge and drop here to test`}
       >
         {isScanning && (
           <div style={{
@@ -181,9 +201,10 @@ export default function MagneticTable({ onComplete }) {
       minHeight: 0,
       gap: '0.75rem',
       boxSizing: 'border-box',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      position: 'relative'
     }}>
-      {/* LEFT SIDE: LARGER REALISTIC EXPERIMENT TABLE IMAGE & SCANNING AREA */}
+      {/* LEFT SIDE: EXPERIMENT TABLE IMAGE (FULL HEIGHT) */}
       <div style={{
         flex: '2.2',
         minWidth: 0,
@@ -198,7 +219,7 @@ export default function MagneticTable({ onComplete }) {
       }}>
         {/* Header */}
         <div style={{
-          padding: '0.4rem 1rem',
+          padding: '0.5rem 1rem',
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
           backgroundColor: 'rgba(15, 23, 42, 0.85)',
           display: 'flex',
@@ -207,37 +228,13 @@ export default function MagneticTable({ onComplete }) {
           flexShrink: 0
         }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: '0.92rem', fontWeight: 600, color: '#f8fafc' }}>
+            <h3 style={{ margin: 0, fontSize: '0.94rem', fontWeight: 600, color: '#f8fafc' }}>
               Experiment: Test which items are magnetic!
             </h3>
-            <p style={{ margin: 0, fontSize: '0.72rem', color: '#94a3b8' }}>
-              Drag an object badge from the image and drop it into the Scanning Area below.
-            </p>
           </div>
-          {isComplete && (
-            <button
-              onClick={onComplete}
-              style={{
-                padding: '0.35rem 0.9rem',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                borderRadius: '20px',
-                backgroundColor: '#3b82f6',
-                color: 'white',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                boxShadow: '0 0 12px rgba(59, 130, 246, 0.5)'
-              }}
-            >
-              Continue <ArrowRight size={14} />
-            </button>
-          )}
         </div>
 
-        {/* Experiment Image Container with Full Area Fill */}
+        {/* Experiment Image Container with Full Height Area Fill */}
         <div
           style={{
             flex: 1,
@@ -281,11 +278,6 @@ export default function MagneticTable({ onComplete }) {
                   }
                   setDraggedItem(item);
                 }}
-                onClick={() => {
-                  if (!isScanned && !scanningItemId) {
-                    startScanForItem(item);
-                  }
-                }}
                 style={{
                   position: 'absolute',
                   left: `${item.hotspot.x}%`,
@@ -313,7 +305,7 @@ export default function MagneticTable({ onComplete }) {
                   userSelect: 'none',
                   transition: 'all 0.25s ease'
                 }}
-                title={isScanned ? undefined : "Drag to Scanning Area below or tap to scan"}
+                title={isScanned ? undefined : `Drag ${item.name} to its matching box on the right`}
               >
                 <span>{item.icon}</span>
                 <span>{item.name}</span>
@@ -322,67 +314,9 @@ export default function MagneticTable({ onComplete }) {
             );
           })}
         </div>
-
-        {/* SCANNING AREA DROP ZONE BOX */}
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setIsDragOverScanner(true);
-          }}
-          onDragLeave={() => setIsDragOverScanner(false)}
-          onDrop={handleDropOnScanner}
-          style={{
-            padding: '0.4rem 1rem',
-            backgroundColor: isDragOverScanner 
-              ? 'rgba(56, 189, 248, 0.25)' 
-              : activeScanningItem 
-                ? 'rgba(16, 185, 129, 0.18)' 
-                : 'rgba(15, 23, 42, 0.95)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.12)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '60px',
-            height: '60px',
-            boxSizing: 'border-box',
-            transition: 'all 0.3s ease',
-            flexShrink: 0
-          }}
-        >
-          {activeScanningItem ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', width: '100%', maxWidth: '420px', justifyContent: 'center' }}>
-              <span style={{ fontSize: '1.4rem' }}>{activeScanningItem.icon}</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '0.82rem', color: '#f8fafc', fontWeight: 'bold' }}>
-                  <span>Scanning {activeScanningItem.name}...</span>
-                  <span>{scanProgress}%</span>
-                </div>
-                <div style={{ width: '100%', height: '8px', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ width: `${scanProgress}%`, height: '100%', backgroundColor: '#38bdf8', borderRadius: '4px', transition: 'width 0.05s linear', boxShadow: '0 0 10px #38bdf8' }} />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div style={{
-              border: isDragOverScanner ? '2px dashed #38bdf8' : '2px dashed rgba(148, 163, 184, 0.45)',
-              borderRadius: '12px',
-              padding: '0.35rem 1.25rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.65rem',
-              color: isDragOverScanner ? '#38bdf8' : '#38bdf8',
-              fontWeight: 700,
-              fontSize: '0.82rem',
-              letterSpacing: '0.04em'
-            }}>
-              <span style={{ fontSize: '1.15rem' }}>🔍</span>
-              <span>{isDragOverScanner ? 'RELEASE OBJECT TO SCAN!' : 'SCAN AREA — DROP ANY OBJECT HERE TO TEST'}</span>
-            </div>
-          )}
-        </div>
       </div>
 
-      {/* RIGHT SIDE: REDUCED COMPACT ITEM BARS WITH WHITE BG AND BLUE TEXT */}
+      {/* RIGHT SIDE: ITEM BARS (DROP TARGETS & SCAN PROGRESS) */}
       <div style={{
         flex: '0.85',
         display: 'grid',
@@ -402,6 +336,124 @@ export default function MagneticTable({ onComplete }) {
           {ALL_ITEMS.slice(5, 10).map(renderCard)}
         </div>
       </div>
+
+      {/* INITIAL INSTRUCTION POP-UP MODAL */}
+      {showInstructionModal && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.6)',
+          backdropFilter: 'blur(6px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 100,
+          animation: 'fadeIn 0.3s ease-out'
+        }}>
+          <div style={{
+            backgroundColor: '#ffffff',
+            border: '1px solid #cbd5e1',
+            borderRadius: '24px',
+            padding: '2rem 2.5rem',
+            textAlign: 'center',
+            boxShadow: '0 12px 35px rgba(0, 0, 0, 0.2)',
+            maxWidth: '460px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1.25rem'
+          }}>
+            <p style={{ margin: 0, color: '#1e40af', fontSize: '1.15rem', lineHeight: 1.5, fontWeight: 700 }}>
+              Drag an object from the table image and drop it into its matching box on the right side to test!
+            </p>
+
+            <button
+              onClick={() => setShowInstructionModal(false)}
+              style={{
+                padding: '1.1rem 3rem',
+                fontSize: '1.25rem',
+                fontWeight: 800,
+                borderRadius: '40px',
+                backgroundColor: '#2563eb',
+                color: '#ffffff',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
+                transition: 'all 0.25s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.backgroundColor = '#1d4ed8';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.backgroundColor = '#2563eb';
+              }}
+            >
+              Next <ArrowRight size={24} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* CENTER POP-UP OVERLAY FOR LARGE CONTINUE BUTTON AFTER ALL ITEMS ARE SCANNED */}
+      {showCompletionPopup && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.6)',
+          backdropFilter: 'blur(6px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 100,
+          animation: 'fadeIn 0.3s ease-out'
+        }}>
+          <div style={{
+            backgroundColor: '#ffffff',
+            border: '1px solid #cbd5e1',
+            borderRadius: '24px',
+            padding: '1.75rem 2.5rem',
+            textAlign: 'center',
+            boxShadow: '0 12px 35px rgba(0, 0, 0, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <button
+              onClick={onComplete}
+              style={{
+                padding: '1.1rem 3rem',
+                fontSize: '1.35rem',
+                fontWeight: 800,
+                borderRadius: '40px',
+                backgroundColor: '#2563eb',
+                color: '#ffffff',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.85rem',
+                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
+                transition: 'all 0.25s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.backgroundColor = '#1d4ed8';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.backgroundColor = '#2563eb';
+              }}
+            >
+              Continue to Quiz <ArrowRight size={28} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

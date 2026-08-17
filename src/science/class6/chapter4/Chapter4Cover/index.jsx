@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight, Zap, ArrowLeft } from 'lucide-react';
 
-export default function Chapter4Cover({ onStartJourney }) {
+export default function Chapter4Cover({ onStartJourney, onBack }) {
   const [needleAngle, setNeedleAngle] = useState(-15);
   const plotRef = useRef(null);
 
@@ -27,6 +27,31 @@ export default function Chapter4Cover({ onStartJourney }) {
 
   return (
     <div className="chapter4-cover-wrapper">
+      {/* Back Button to Chapter 4 Flow */}
+      <button
+        onClick={onBack || onStartJourney}
+        style={{
+          position: 'absolute',
+          top: '1.5rem',
+          left: '1.5rem',
+          zIndex: 100,
+          padding: '0.5rem 1rem',
+          fontSize: '0.85rem',
+          fontWeight: 'bold',
+          borderRadius: '24px',
+          border: '1px solid rgba(212, 175, 55, 0.4)',
+          background: 'rgba(18, 9, 4, 0.85)',
+          backdropFilter: 'blur(8px)',
+          color: '#FFF6E5',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.4rem',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+        }}
+      >
+        <ArrowLeft size={16} /> Back to Chapter Flow
+      </button>
       <style>{`
         .chapter4-cover-wrapper {
           --ink: #FFF6E5;
