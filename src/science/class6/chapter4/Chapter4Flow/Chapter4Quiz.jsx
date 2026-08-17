@@ -425,35 +425,48 @@ export default function Chapter4Quiz({ onComplete }) {
                exit={{ opacity: 0, scale: 0.95, y: 20 }}
                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                style={{
-                 width: '100%', maxWidth: '500px', background: 'var(--surface)',
-                 border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px',
+                 width: '100%', maxWidth: '680px', background: 'var(--surface)',
+                 border: '2px solid var(--accent)', borderRadius: '28px',
                  overflow: 'hidden', display: 'flex', flexDirection: 'column',
-                 boxShadow: '0 25px 50px -12px rgba(0,0,0,0.6)',
-                 padding: '3rem',
+                 boxShadow: '0 30px 60px -12px rgba(0,0,0,0.7)',
+                 padding: '3.5rem 4rem',
                  textAlign: 'center'
                }}
              >
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                  <CheckCircle size={64} color="var(--accent)" style={{ filter: 'drop-shadow(0 0 10px rgba(156, 39, 176, 0.5))' }} />
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.75rem' }}>
+                  <CheckCircle size={80} color="var(--accent)" style={{ filter: 'drop-shadow(0 0 15px rgba(156, 39, 176, 0.6))' }} />
                 </div>
-                <h2 style={{ margin: '0 0 1rem 0', fontSize: '2rem', color: 'var(--text-heading)' }}>
+                <h2 style={{ margin: '0 0 1.25rem 0', fontSize: '2.8rem', fontWeight: 800, color: 'var(--text-heading)' }}>
                   Quiz Completed!
                 </h2>
-                <p style={{ margin: '0 0 2rem 0', fontSize: '1.25rem', color: 'var(--text-secondary)' }}>
-                  You scored <strong style={{ color: 'var(--accent)' }}>{score}</strong> out of {quizData.length}
-                </p>
+
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1.5px solid var(--accent)',
+                  borderRadius: '20px',
+                  padding: '2rem 2.5rem',
+                  marginBottom: '2.5rem',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+                }}>
+                  <p style={{ margin: 0, fontSize: '1.6rem', color: 'var(--text-heading)', fontWeight: '600' }}>
+                    You scored <strong style={{ color: 'var(--accent)', fontSize: '2.4rem' }}>{score}</strong> out of {quizData.length}
+                  </p>
+                  <p style={{ margin: '0.75rem 0 0 0', fontSize: '1.15rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                    {score >= 16 ? "🎉 Outstanding performance! You've mastered Magnets!" : score >= 10 ? "👍 Good effort! Keep practicing to get a perfect score!" : "💪 Keep learning! Review the chapter and try again!"}
+                  </p>
+                </div>
                 
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center' }}>
                   <button 
                     onClick={resetQuiz}
                     style={{
-                      padding: '0.8rem 1.5rem',
+                      padding: '1.1rem 2rem',
                       background: 'transparent',
                       border: '2px solid var(--border)',
                       color: 'var(--text)',
-                      borderRadius: '12px',
-                      fontSize: '1rem',
-                      fontWeight: '600',
+                      borderRadius: '14px',
+                      fontSize: '1.2rem',
+                      fontWeight: '700',
                       cursor: 'pointer',
                       flex: 1
                     }}
@@ -463,16 +476,16 @@ export default function Chapter4Quiz({ onComplete }) {
                   <button 
                     onClick={() => { if (onComplete) onComplete(score); }}
                     style={{
-                      padding: '0.8rem 1.5rem',
+                      padding: '1.1rem 2rem',
                       background: 'var(--accent)',
                       border: 'none',
                       color: '#fff',
-                      borderRadius: '12px',
-                      fontSize: '1rem',
-                      fontWeight: '600',
+                      borderRadius: '14px',
+                      fontSize: '1.2rem',
+                      fontWeight: '700',
                       cursor: 'pointer',
                       flex: 1,
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                      boxShadow: '0 6px 18px rgba(156, 39, 176, 0.4)'
                     }}
                   >
                     Finish

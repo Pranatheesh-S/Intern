@@ -79,9 +79,11 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
       </main>
 
       {/* Bottom Footer Bar */}
-      <footer style={{ marginTop: '0.4rem', width: '100%', flexShrink: 0, position: 'relative', zIndex: 99999 }}>
-        <DidYouKnow />
-      </footer>
+      {stage !== 'quiz' && (
+        <footer style={{ marginTop: '0.4rem', width: '100%', flexShrink: 0, position: 'relative', zIndex: 99999 }}>
+          <DidYouKnow />
+        </footer>
+      )}
     </div>
   );
 }

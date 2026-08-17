@@ -101,23 +101,33 @@ export default function Quiz({ onComplete }) {
 
   if (quizFinished) {
     return (
-      <div style={{ maxWidth: '100%', margin: '0 auto', padding: '1rem' }}>
-        <div className="glass-panel" style={{ background: 'var(--surface)', padding: '3rem', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', textAlign: 'center' }}>
-          <h2 style={{ color: 'var(--accent)', marginBottom: '1rem' }}>Quiz Completed!</h2>
-          <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>You scored {score} out of {quizData.length}</p>
+      <div style={{ maxWidth: '680px', margin: '2rem auto', padding: '1rem' }}>
+        <div className="glass-panel" style={{ background: 'var(--surface)', padding: '3.5rem 4rem', borderRadius: '28px', border: '2px solid var(--accent)', boxShadow: '0 20px 50px rgba(0,0,0,0.3)', textAlign: 'center' }}>
+          <h2 style={{ color: 'var(--accent)', marginBottom: '1.25rem', fontSize: '2.6rem', fontWeight: 800 }}>Quiz Completed!</h2>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1.5px solid var(--accent)',
+            borderRadius: '20px',
+            padding: '2rem 2.5rem',
+            marginBottom: '2.5rem'
+          }}>
+            <p style={{ fontSize: '1.75rem', margin: 0, fontWeight: 700 }}>
+              You scored <span style={{ color: 'var(--accent)', fontSize: '2.4rem' }}>{score}</span> out of {quizData.length}
+            </p>
+          </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
             <button
               onClick={() => { if (onComplete) onComplete(score); }}
               style={{
-                padding: '0.75rem 2rem',
+                padding: '1.1rem 3rem',
                 background: 'var(--accent)',
                 color: '#fff',
                 border: 'none',
-                borderRadius: '8px',
-                fontSize: '1.1rem',
+                borderRadius: '14px',
+                fontSize: '1.2rem',
                 fontWeight: 'bold',
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                boxShadow: '0 6px 18px rgba(0,0,0,0.3)'
               }}
             >
               Finish Activity

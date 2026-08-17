@@ -19,11 +19,13 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       lines: [
         {
           role: 'teacher',
-          text: "Reshma lived in a coastal town of Kerala and loved writing short stories. Since her grandmother enjoyed listening to her stories, Reshma decided to write a special story as a birthday gift for her grandmother's 60th birthday."
+          text: "Reshma lived in a coastal town of Kerala and loved writing short stories. Since her grandmother enjoyed listening to her stories, Reshma decided to write a special story as a birthday gift for her grandmother's 60th birthday.",
+          pos: { top: '3.5%', left: '2%', width: '22%' }
         },
         {
           role: 'girl',
-          text: "Paati will be so happy to hear this story..."
+          text: "Paati will be so happy to hear this story...",
+          pos: { top: '29%', left: '52.5%', width: '18%', tail: 'left' }
         }
       ]
     },
@@ -33,11 +35,13 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       lines: [
         {
           role: 'teacher',
-          text: "The Spice Ship. Her story was about a ship carrying spices like pepper, cardamom, and cinnamon from Kerala for trade in the olden days. The sailors used the stars at night to find the right direction across the sea."
+          text: "The Spice Ship. Her story was about a ship carrying spices like pepper, cardamom, and cinnamon from Kerala for trade in the olden days. The sailors used the stars at night to find the right direction across the sea.",
+          pos: { top: '3.5%', left: '2%', width: '25%' }
         },
         {
           role: 'ancient_man',
-          text: "Look, the North Star... that's our guide tonight."
+          text: "Look, the North Star... that's our guide tonight.",
+          pos: { top: '26%', left: '23.5%', width: '17%', tail: 'right' }
         }
       ]
     },
@@ -47,11 +51,13 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       lines: [
         {
           role: 'teacher',
-          text: "The Storm. Suddenly, in her story, the ship was caught in a fierce storm. Thick clouds covered the sky, and the stars disappeared. Reshma wondered how the sailors could continue their journey without seeing the stars."
+          text: "The Storm. Suddenly, in her story, the ship was caught in a fierce storm. Thick clouds covered the sky, and the stars disappeared. Reshma wondered how the sailors could continue their journey without seeing the stars.",
+          pos: { top: '3.5%', left: '2%', width: '22%' }
         },
         {
           role: 'ancient_man',
-          text: "The stars are hidden... how will we find our way?"
+          text: "The stars are hidden... how will we find our way?",
+          pos: { top: '34%', left: '19.5%', width: '17%', tail: 'right' }
         }
       ]
     },
@@ -61,31 +67,38 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       lines: [
         {
           role: 'teacher',
-          text: "Searching for an Answer. Unable to continue her story, Reshma searched the internet and visited her school library. She discovered that sailors used a magnetic compass to find directions even when the stars were hidden."
+          text: "Searching for an Answer. Unable to continue her story, Reshma searched the internet and visited her school library. She discovered that sailors used a magnetic compass to find directions even when the stars were hidden.",
+          pos: { top: '3.5%', left: '2%', width: '22%' }
         },
         {
           role: 'girl',
-          text: "I can't leave my story here... the sailors must have found a way!"
+          text: "I can't leave my story here... the sailors must have found a way!",
+          pos: { top: '26%', left: '18%', width: '16%', tail: 'right' }
         },
         {
           role: 'girl',
-          text: "Let me see what the internet says."
+          text: "Let me see what the internet says.",
+          pos: { top: '10%', left: '59%', width: '14%', tail: 'bottom' }
         },
         {
           role: 'girl',
-          text: "A magnetic compass! That's how they found directions even when the stars were not visible."
+          text: "A magnetic compass! That's how they found directions even when the stars were not visible.",
+          pos: { top: '36%', left: '68%', width: '17%', tail: 'left' }
         },
         {
           role: 'girl',
-          text: "So, the needle always points to the north... That's amazing!"
+          text: "So, the needle always points to the north... That's amazing!",
+          pos: { top: '54%', left: '65%', width: '16%', tail: 'left' }
         },
         {
           role: 'girl',
-          text: "This book, sea navigation techniques."
+          text: "This book, sea navigation techniques.",
+          pos: { top: '76%', left: '36%', width: '180px', tail: 'right' }
         },
         {
           role: 'girl',
-          text: "I've seen magnets in my pencil box and the duster on the board... I never looked at them closely."
+          text: "I've seen magnets in my pencil box and the duster on the board... I never looked at them closely.",
+          pos: { top: '54%', left: '6%', width: '18%', tail: 'right' }
         }
       ]
     },
@@ -95,31 +108,38 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       lines: [
         {
           role: 'girl',
-          text: "Magnets... I've seen them so many times, but never really thought about how they work."
+          text: "Magnets... I've seen them so many times, but never really thought about how they work.",
+          pos: { top: '3%', left: '42.5%', width: '200px', tail: 'left' }
         },
         {
           role: 'girl',
-          text: "Let me read more about them."
+          text: "Let me read more about them.",
+          pos: { top: '18%', left: '79%', width: '180px', tail: 'left' }
         },
         {
           role: 'girl',
-          text: "My pencil box stays closed because of a magnet!"
+          text: "My pencil box stays closed because of a magnet!",
+          pos: { top: '48%', left: '2%', width: '190px', tail: 'right' }
         },
         {
           role: 'girl',
-          text: "And the magnet keeps my purse clasp tight."
+          text: "And the magnet keeps my purse clasp tight.",
+          pos: { top: '46%', left: '37%', width: '190px', tail: 'left' }
         },
         {
           role: 'girl',
-          text: "Even the duster on our whiteboard sticks because of a magnet!"
+          text: "Even the duster on our whiteboard sticks because of a magnet!",
+          pos: { top: '48%', left: '74%', width: '190px', tail: 'left' }
         },
         {
           role: 'girl',
-          text: "Wow! Magnets have two poles - North and South!"
+          text: "Wow! Magnets have two poles - North and South!",
+          pos: { top: '74%', left: '10%', width: '200px', tail: 'right' }
         },
         {
           role: 'girl',
-          text: "No wonder sailors used a magnetic compass to find directions, even when the stars were hidden!"
+          text: "No wonder sailors used a magnetic compass to find directions, even when the stars were hidden!",
+          pos: { top: '74%', left: '67%', width: '230px', tail: 'left' }
         }
       ]
     },
@@ -163,8 +183,8 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
     setSpokenCharIndex(-1);
   };
 
-  // Render text directly over image text locations with real-time word-by-word karaoke highlighting
-  const renderWordByWordText = (text, lineIdx, activeLineIdx, charIndex) => {
+  // Render text directly over image with real-time word-by-word karaoke highlighting
+  const renderWordByWordText = (text, lineIdx, activeLineIdx, charIndex, isEduCard = false) => {
     if (!text) return null;
     const isThisLineActive = lineIdx === activeLineIdx && isPlaying;
 
@@ -174,25 +194,31 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
     return words.map((word, i) => {
       const startPos = currentPos;
       const endPos = currentPos + word.length;
-      currentPos = endPos + 1; // +1 space
+      const nextPos = endPos + 1; // start pos of next word
+      currentPos = nextPos;
 
-      const isCurrentWord = isThisLineActive && charIndex >= startPos && charIndex <= endPos + 2;
-      const isPastWord = isThisLineActive && charIndex > endPos + 2;
+      // Strict single-word active check (prevents two words highlighting at once)
+      const isCurrentWord = isThisLineActive && charIndex >= startPos && charIndex < nextPos;
+      const isPastWord = isThisLineActive && charIndex >= nextPos;
 
-      let color = '#1e293b'; // Default text color matching image print
+      let color = isEduCard ? '#F5EEDB' : '#2C221E'; // Soft Ivory (#F5EEDB) vs Dark Charcoal Brown (#2C221E)
       let fontWeight = 600;
+      let fontSize = '0.94rem';
       let textShadow = 'none';
       let backgroundColor = 'transparent';
-      let padding = '0.1rem 0.2rem';
+      let padding = '0.05rem 0.15rem';
       let borderRadius = '4px';
+      let transform = 'scale(1)';
 
       if (isCurrentWord) {
-        color = '#0284c7'; // Vibrant glowing cyan for active spoken word
+        color = isEduCard ? '#F3C969' : '#0284C7'; // Highlight text color alone
         fontWeight = 800;
-        textShadow = '0 0 14px rgba(56, 189, 248, 1), 0 0 25px rgba(2, 132, 199, 0.8)';
-        backgroundColor = 'rgba(56, 189, 248, 0.35)';
+        fontSize = '1.22rem'; // Increased text size while highlighting
+        transform = 'scale(1.18)';
+        textShadow = isEduCard ? '0 0 12px rgba(243, 201, 105, 0.9)' : '0 0 12px rgba(56, 189, 248, 0.9)';
+        backgroundColor = 'transparent'; // No background color box
       } else if (isPastWord) {
-        color = '#0369a1';
+        color = isEduCard ? '#F3C969' : '#0369A1';
         fontWeight = 700;
       }
 
@@ -202,13 +228,16 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
           style={{
             color,
             fontWeight,
+            fontSize,
+            transform,
             textShadow,
             backgroundColor,
             padding,
             borderRadius,
             transition: 'all 0.15s ease',
             display: 'inline-block',
-            marginRight: '0.3rem'
+            marginRight: '0.25rem',
+            lineHeight: 1.55
           }}
         >
           {word}
@@ -230,7 +259,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
     // Helper to find best voice match based on character role
     const findVoice = (role) => {
-      // Explicit list of known system male voices
       const maleVoices = availableVoices.filter(v => 
         v.name.includes('David') ||
         v.name.includes('Mark') ||
@@ -243,7 +271,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         (!v.name.includes('Zira') && !v.name.includes('Samantha') && !v.name.includes('Heera') && !v.name.includes('Neerja') && !v.name.includes('Jenny') && !v.name.includes('Kalpana') && !v.name.toLowerCase().includes('female'))
       );
 
-      // Explicit list of female voices
       const femaleVoices = availableVoices.filter(v => 
         v.name.includes('Zira') ||
         v.name.includes('Samantha') ||
@@ -255,7 +282,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       );
 
       if (role === 'girl') {
-        // Girl voice (Reshma): Microsoft Jenny, Microsoft Neerja, Google Natural Female, or Google UK English Female
         const girlVoice = availableVoices.find(v => {
           const name = (v.name || '').toLowerCase();
           return name.includes('jenny') || name.includes('neerja') || name.includes('google uk english female') || name.includes('natural female');
@@ -268,7 +294,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
 
         return femaleVoices[0] || availableVoices[0] || null;
       } else if (role === 'ancient_man') {
-        // Bold, clear, slow Indian voice for Ancient Man (Sailor)
         const indianMaleVoice = availableVoices.find(v => {
           const lang = (v.lang || '').toLowerCase();
           const name = (v.name || '').toLowerCase();
@@ -294,7 +319,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
           availableVoices[0] || null
         );
       } else {
-        // Teacher voice (Lady Teacher) - Distinct mature narrator
         const teacherVoice = availableVoices.find(v => {
           const name = (v.name || '').toLowerCase();
           return name.includes('neerja') || name.includes('natural female') || (name.includes('female') && !name.includes('zira'));
@@ -325,17 +349,14 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       utterance.volume = 1.0;
 
       if (currentLine.role === 'girl') {
-        // Reshma (Girl Voice): Lively, sweet, youthful tone
         utterance.pitch = 1.20;
         utterance.rate = 0.95;
         utterance.volume = 1.0;
       } else if (currentLine.role === 'ancient_man') {
-        // Ancient Man (Sailor): Lower pitch, slower pace
         utterance.pitch = 0.88;
         utterance.rate = 0.70;
         utterance.volume = 1.0;
       } else {
-        // Teacher: Calm, mature, clear teacher narrator voice
         utterance.pitch = 0.88;
         utterance.rate = 0.88;
         utterance.volume = 1.0;
@@ -363,7 +384,6 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
     speakNextLine();
   };
 
-  // Play voiceover 2 seconds after page/scene loads or when unmuted
   useEffect(() => {
     const timer = setTimeout(() => {
       playSceneAudio(currentPage);
@@ -407,17 +427,197 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const currentScene = scenes[currentPage - 1];
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#000' }}>
-      {/* Background Image */}
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#090D16', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
+      
+      {/* Background Image Container (Centered 16:9 aspect layout - 100% full image visible without top/bottom cropping) */}
       <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: `url(${currentScene.img})`,
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }} />
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        maxHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          maxHeight: '100vh',
+          aspectRatio: '16/9',
+          margin: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <img
+            src={currentScene.img}
+            alt={currentScene.subtitle}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain'
+            }}
+          />
 
-      {/* Voiceover Controls (Top Right - High z-index to guarantee visibility) */}
+        {/* Dynamic Text Overlay Layer */}
+        {currentPage === 6 ? (
+          /* Scene 6: Educational / Summary Cards (Deep Night Navy #0F1926, Muted Gold #D4AF37, Golden Amber #F3C969, Soft Ivory #F5EEDB) */
+          <div style={{
+            position: 'absolute',
+            top: '3.5%',
+            left: '4%',
+            right: '4%',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '1.25rem',
+            zIndex: 20
+          }}>
+            {currentScene.lines.map((line, idx) => {
+              const isActive = idx === activeLineIndex && isPlaying;
+              const titles = ['Lodestones:', 'Used by Sailors:', 'Shift to Artificial Magnets:'];
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    background: isActive ? '#0F1926' : 'rgba(15, 25, 38, 0.92)',
+                    backdropFilter: 'blur(14px)',
+                    border: isActive ? '2px solid #F3C969' : '1.5px solid #D4AF37',
+                    borderRadius: '16px',
+                    padding: '1rem 1.2rem',
+                    boxShadow: isActive ? '0 12px 35px rgba(212, 175, 55, 0.35)' : '0 8px 24px rgba(0,0,0,0.6)',
+                    transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                    transform: isActive ? 'scale(1.02)' : 'scale(1)'
+                  }}
+                >
+                  <h3 style={{
+                    margin: '0 0 0.5rem 0',
+                    fontSize: '1.2rem',
+                    fontWeight: 800,
+                    color: '#F3C969',
+                    letterSpacing: '0.02em',
+                    borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
+                    paddingBottom: '0.35rem'
+                  }}>
+                    {titles[idx]}
+                  </h3>
+                  <p style={{ margin: 0, fontSize: '0.96rem', lineHeight: 1.55, color: '#F5EEDB' }}>
+                    {renderWordByWordText(line.text, idx, activeLineIndex, spokenCharIndex, true)}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          /* Story Scenes 1-5 Narrative Boxes & Comic Thought Bubbles (Creamy Parchment #F5E8C7, Charcoal Brown #2C221E, Deep Antique Brown #5A3E28) */
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            zIndex: 20
+          }}>
+            {currentScene.lines.map((line, idx) => {
+              const isActive = idx === activeLineIndex && isPlaying;
+              const pos = line.pos || { top: '4%', left: '2%', width: '24%' };
+              const isTeacher = line.role === 'teacher';
+
+              if (isTeacher) {
+                /* Shape 1: Vertical rounded rectangle parchment card (#F5E8C7) */
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      position: 'absolute',
+                      top: pos.top,
+                      left: pos.left,
+                      width: pos.width,
+                      maxWidth: '280px',
+                      background: '#F5E8C7',
+                      border: '1.5px solid #5A3E28',
+                      borderRadius: '14px',
+                      padding: '0.75rem 1rem',
+                      boxShadow: '0 6px 18px rgba(44, 34, 30, 0.35)',
+                      pointerEvents: 'auto',
+                      zIndex: isActive ? 25 : 20,
+                      transition: 'all 0.25s ease'
+                    }}
+                  >
+                    <div style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.1em',
+                      color: '#5A3E28',
+                      textTransform: 'uppercase',
+                      marginBottom: '0.3rem',
+                      borderBottom: '1px solid rgba(90, 62, 40, 0.25)',
+                      paddingBottom: '0.2rem'
+                    }}>
+                      {currentScene.subtitle}
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.94rem', lineHeight: 1.5, color: '#2C221E' }}>
+                      {renderWordByWordText(line.text, idx, activeLineIndex, spokenCharIndex, false)}
+                    </p>
+                  </div>
+                );
+              }
+
+              /* Shape 2: Oval/cloud comic thought bubble (#F5E8C7) - Restored natural width without 3-word force */
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    position: 'absolute',
+                    top: pos.top,
+                    left: pos.left,
+                    width: pos.width || '210px',
+                    background: '#F5E8C7',
+                    border: isActive ? '2px solid #0284C7' : '1.5px solid #5A3E28',
+                    borderRadius: '35px',
+                    padding: '0.45rem 0.75rem',
+                    boxShadow: isActive ? '0 8px 22px rgba(2, 132, 199, 0.35)' : '0 6px 16px rgba(44, 34, 30, 0.3)',
+                    transition: 'all 0.25s ease',
+                    pointerEvents: 'auto',
+                    zIndex: isActive ? 25 : 20
+                  }}
+                >
+                  {/* Circular Thought Bubble Tail Dots */}
+                  {pos.tail === 'left' && (
+                    <div style={{ position: 'absolute', left: '-15px', bottom: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', transform: 'rotate(-40deg)' }}>
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#F5E8C7', border: '1.5px solid #5A3E28' }} />
+                      <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#F5E8C7', border: '1.5px solid #5A3E28' }} />
+                    </div>
+                  )}
+                  {pos.tail === 'right' && (
+                    <div style={{ position: 'absolute', right: '-15px', bottom: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', transform: 'rotate(40deg)' }}>
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#F5E8C7', border: '1.5px solid #5A3E28' }} />
+                      <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#F5E8C7', border: '1.5px solid #5A3E28' }} />
+                    </div>
+                  )}
+                  {pos.tail === 'bottom' && (
+                    <div style={{ position: 'absolute', bottom: '-15px', left: '45%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#F5E8C7', border: '1.5px solid #5A3E28' }} />
+                      <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#F5E8C7', border: '1.5px solid #5A3E28' }} />
+                    </div>
+                  )}
+                  {pos.tail === 'top' && (
+                    <div style={{ position: 'absolute', top: '-15px', left: '45%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                      <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#F5E8C7', border: '1.5px solid #5A3E28' }} />
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#F5E8C7', border: '1.5px solid #5A3E28' }} />
+                    </div>
+                  )}
+
+                  <p style={{ margin: 0, fontSize: '0.94rem', lineHeight: 1.5, color: '#2C221E', textAlign: 'center' }}>
+                    {renderWordByWordText(line.text, idx, activeLineIndex, spokenCharIndex, false)}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        </div>
+      </div>
+
+      {/* Voiceover Controls (Top Right) */}
       <div style={{ position: 'absolute', top: '2rem', right: '2rem', display: 'flex', gap: '0.75rem', zIndex: 99999 }}>
         <button
           onClick={() => playSceneAudio(currentPage)}
@@ -466,28 +666,28 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       </div>
 
       {/* Bottom Left Controls */}
-      <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', display: 'flex', gap: '1rem', zIndex: 10 }}>
+      <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', display: 'flex', gap: '1rem', zIndex: 99999 }}>
         <button
           onClick={handleBack}
-          style={{ padding: '0.75rem 1.5rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', color: 'white', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+          style={{ padding: '0.75rem 1.5rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', color: 'white', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
           <ArrowLeft size={16} /> Back
         </button>
       </div>
 
       {/* Bottom Right Controls */}
-      <div style={{ position: 'absolute', bottom: '2rem', right: '2rem', display: 'flex', zIndex: 10 }}>
+      <div style={{ position: 'absolute', bottom: '2rem', right: '2rem', display: 'flex', zIndex: 99999 }}>
         {currentPage < scenes.length ? (
           <button 
             onClick={handleNext}
-            style={{ padding: '0.75rem 2rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}
+            style={{ padding: '0.75rem 2rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}
           >
             Next
           </button>
         ) : (
           <button 
             onClick={handleFinish}
-            style={{ padding: '0.75rem 2rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}
+            style={{ padding: '0.75rem 2rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}
           >
             Finish Story
           </button>
@@ -498,24 +698,24 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       {isCompleted && (
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
+          background: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(10px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 100, animation: 'fadeIn 0.3s ease-out'
+          zIndex: 100000, animation: 'fadeIn 0.3s ease-out'
         }}>
           <div style={{
-            background: 'var(--card-bg)', padding: '3rem', borderRadius: '24px',
-            maxWidth: '450px', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+            background: '#0F1926', padding: '3rem', borderRadius: '24px',
+            maxWidth: '480px', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.7)',
+            border: '1.5px solid #D4AF37', color: '#FFFFFF'
           }}>
-            <div style={{ display: 'inline-flex', padding: '1.5rem', background: '#ecfdf5', borderRadius: '50%', marginBottom: '1.5rem', boxShadow: '0 10px 25px rgba(16, 185, 129, 0.2)' }}>
+            <div style={{ display: 'inline-flex', padding: '1.5rem', background: 'rgba(16, 185, 129, 0.2)', borderRadius: '50%', marginBottom: '1.5rem', boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)', border: '1px solid #10b981' }}>
               <Magnet size={48} color="#10b981" />
             </div>
-            <h2 style={{ fontSize: '2.5rem', margin: '0 0 1rem 0', color: 'var(--text-heading)' }}>Story Completed!</h2>
-            <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '2rem' }}>
+            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, margin: '0 0 1rem 0', color: '#F3C969', textShadow: '0 2px 10px rgba(243, 201, 105, 0.3)' }}>Story Completed!</h2>
+            <p style={{ fontSize: '1.18rem', color: '#F5EEDB', lineHeight: 1.6, marginBottom: '2rem', fontWeight: 500 }}>
               Reshma learned that magnets were essential for navigation. Are you ready to explore magnets yourself?
             </p>
             <button
-              className="primary"
-              style={{ width: '100%', padding: '1rem', fontSize: '1.1rem', borderRadius: '12px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', background: 'var(--accent)', color: '#fff', border: 'none' }}
+              style={{ width: '100%', padding: '1rem', fontSize: '1.15rem', borderRadius: '14px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, #F59E0B, #D97706)', color: '#FFFFFF', fontWeight: 'bold', border: 'none', boxShadow: '0 8px 20px rgba(245, 158, 11, 0.4)' }}
               onClick={onComplete}
             >
               Continue to Activity 4.1 <ArrowRight size={20} />

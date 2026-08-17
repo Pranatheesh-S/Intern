@@ -88,15 +88,15 @@ export default function Chapter4Cover({ onStartJourney }) {
         .layout-container {
           position: relative;
           width: 100%;
-          max-width: 1200px;
+          max-width: 1360px;
           height: 100%;
           max-height: calc(100vh - 80px);
           margin: 0 auto;
           padding: 0 clamp(24px, 4vw, 60px);
           display: grid;
-          grid-template-columns: minmax(0, 0.95fr) 1px minmax(0, 1.05fr);
+          grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1.1fr);
           align-items: center;
-          gap: clamp(24px, 4vw, 64px);
+          gap: clamp(32px, 5vw, 80px);
           z-index: 10;
         }
 
@@ -105,10 +105,10 @@ export default function Chapter4Cover({ onStartJourney }) {
           position: relative;
           aspect-ratio: 1;
           width: 100%;
-          max-width: min(44vh, 420px);
+          max-width: min(55vh, 540px);
           justify-self: center;
           border: 1.5px solid rgba(212, 175, 55, 0.35);
-          border-radius: 20px;
+          border-radius: 28px;
           background: rgba(18, 9, 4, 0.75);
           backdrop-filter: blur(12px);
           display: flex;
@@ -122,9 +122,9 @@ export default function Chapter4Cover({ onStartJourney }) {
         /* Magnet Bar */
         .magnet-bar {
           position: relative;
-          width: 200px;
-          height: 40px;
-          border-radius: 8px;
+          width: 260px;
+          height: 54px;
+          border-radius: 12px;
           display: flex;
           overflow: hidden;
           box-shadow: 0 0 30px rgba(239, 68, 68, 0.3), 0 0 30px rgba(245, 158, 11, 0.3);
@@ -138,7 +138,7 @@ export default function Chapter4Cover({ onStartJourney }) {
           align-items: center;
           justify-content: center;
           font-weight: 900;
-          font-size: 1.1rem;
+          font-size: 1.4rem;
           color: #FFF;
           letter-spacing: 2px;
           text-shadow: 0 2px 4px rgba(0,0,0,0.5);
@@ -150,7 +150,7 @@ export default function Chapter4Cover({ onStartJourney }) {
           align-items: center;
           justify-content: center;
           font-weight: 900;
-          font-size: 1.1rem;
+          font-size: 1.4rem;
           color: #FFF;
           letter-spacing: 2px;
           text-shadow: 0 2px 4px rgba(0,0,0,0.5);
@@ -168,7 +168,7 @@ export default function Chapter4Cover({ onStartJourney }) {
         .field-line {
           fill: none;
           stroke: url(#goldFieldGradient);
-          stroke-width: 1.5;
+          stroke-width: 2;
           stroke-dasharray: 6 6;
           animation: dashStream 12s linear infinite;
           opacity: 0.75;
@@ -181,9 +181,9 @@ export default function Chapter4Cover({ onStartJourney }) {
         /* Settling Compass Overlay */
         .compass-hud {
           position: absolute;
-          top: 20px;
-          width: 65px;
-          height: 65px;
+          top: 28px;
+          width: 85px;
+          height: 85px;
           border-radius: 50%;
           border: 2px solid var(--gold-brass);
           background: rgba(18, 9, 4, 0.9);
@@ -204,23 +204,23 @@ export default function Chapter4Cover({ onStartJourney }) {
         .needle-n {
           width: 0;
           height: 0;
-          border-left: 4px solid transparent;
-          border-right: 4px solid transparent;
-          border-bottom: 22px solid var(--red-north);
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 30px solid var(--red-north);
         }
         .needle-s {
           width: 0;
           height: 0;
-          border-left: 4px solid transparent;
-          border-right: 4px solid transparent;
-          border-top: 22px solid var(--gold-bright);
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 30px solid var(--gold-bright);
         }
 
         /* Floating Iron Filings Particles */
         .filing {
           position: absolute;
-          width: 3px;
-          height: 8px;
+          width: 4px;
+          height: 12px;
           background: var(--gold-bright);
           border-radius: 2px;
           pointer-events: none;
@@ -245,20 +245,20 @@ export default function Chapter4Cover({ onStartJourney }) {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          gap: 1.15rem;
-          max-width: 580px;
+          gap: 1.4rem;
+          max-width: 660px;
         }
 
         .pill-badge {
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 0.4rem 0.9rem;
+          padding: 0.5rem 1.1rem;
           border-radius: 30px;
           background: rgba(212, 175, 55, 0.12);
           border: 1px solid rgba(212, 175, 55, 0.35);
           font-family: var(--mono);
-          font-size: clamp(0.75rem, 0.85vw, 0.85rem);
+          font-size: clamp(0.9rem, 1.05vw, 1.05rem);
           font-weight: 700;
           letter-spacing: 0.12em;
           color: var(--gold-bright);
@@ -267,7 +267,7 @@ export default function Chapter4Cover({ onStartJourney }) {
 
         .main-title {
           font-family: var(--geo);
-          font-size: clamp(2rem, 3.5vw, 3.5rem);
+          font-size: clamp(2.6rem, 4.5vw, 4.5rem);
           font-weight: 800;
           line-height: 1.1;
           margin: 0;
@@ -279,7 +279,7 @@ export default function Chapter4Cover({ onStartJourney }) {
         }
 
         .description-text {
-          font-size: clamp(1.15rem, 1.35vw, 1.35rem);
+          font-size: clamp(1.35rem, 1.65vw, 1.65rem);
           line-height: 1.6;
           color: rgba(255, 246, 229, 0.92);
           margin: 0;
@@ -294,14 +294,14 @@ export default function Chapter4Cover({ onStartJourney }) {
           display: inline-flex;
           align-items: center;
           gap: 0.75rem;
-          padding: 0.9rem 2.2rem;
+          padding: 1.1rem 2.6rem;
           border-radius: 30px;
           background: linear-gradient(135deg, #F59E0B, #D97706);
           border: none;
           color: #120904;
           font-family: var(--geo);
           font-weight: 800;
-          font-size: 1.05rem;
+          font-size: 1.25rem;
           letter-spacing: 0.03em;
           cursor: pointer;
           transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -327,18 +327,18 @@ export default function Chapter4Cover({ onStartJourney }) {
           z-index: 10;
         }
         .brand-logo {
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
           border-radius: 8px;
           background: var(--gold-bright);
           color: #120904;
           display: grid;
           place-items: center;
           font-weight: 900;
-          font-size: 14px;
+          font-size: 16px;
         }
-        .brand-title { font-size: 12px; font-weight: 700; color: #FFF; }
-        .brand-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: rgba(255, 246, 229, 0.6); display: block; }
+        .brand-title { font-size: 14px; font-weight: 700; color: #FFF; }
+        .brand-sub { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 246, 229, 0.6); display: block; }
 
         @media (max-width: 860px) {
           .layout-container {
@@ -348,7 +348,7 @@ export default function Chapter4Cover({ onStartJourney }) {
           }
           .meridian-line { display: none; }
           .text-cartouche { align-items: center; }
-          .plot-hud { max-width: 280px; }
+          .plot-hud { max-width: 360px; }
           .corner-brand { position: static; margin-top: 0.5rem; justify-content: center; }
           .main-title { white-space: normal; }
         }
@@ -417,7 +417,7 @@ export default function Chapter4Cover({ onStartJourney }) {
         {/* Right Cartouche (FuturaX Content) */}
         <div className="text-cartouche">
           <div className="pill-badge">
-            <Zap size={14} color="#FFD700" />
+            <Zap size={18} color="#FFD700" />
             GRADE 6 · SCIENCE · CHAPTER 4
           </div>
 
@@ -433,7 +433,7 @@ export default function Chapter4Cover({ onStartJourney }) {
               onClick={onStartJourney}
             >
               Start the journey
-              <ArrowRight size={18} />
+              <ArrowRight size={22} />
             </button>
           </div>
         </div>
