@@ -78,7 +78,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%', height: '100%' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(320px, 1fr)', gap: '1rem', width: '100%', height: '100%', minHeight: 0 }}>
       <style>{`
         :root {
           --classroom-bg: url('${classroomBg}');
@@ -140,7 +140,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
       `}</style>
 
       {/* Interactive Classroom Scene */}
-      <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: '450px', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', backgroundImage: 'var(--classroom-bg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', alignItems: 'stretch' }}>
+        <div className="glass-panel" style={{ position: 'relative', display: 'flex', flexDirection: 'column', width: '100%', height: '100%', overflow: 'hidden', padding: 0, border: 'var(--classroom-border)', backgroundImage: 'var(--classroom-bg)', backgroundSize: 'cover', backgroundPosition: 'center center', backgroundRepeat: 'no-repeat' }}>
 
         {/* Classroom Chalkboard Text Overlay */}
         <div style={{ position: 'absolute', top: '5%', right: '10%', width: '45%', height: '35%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 15 }}>
@@ -191,10 +192,11 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             <span style={{ fontSize: '0.65rem', color: '#fff', fontWeight: 'bold' }}>Teacher</span>
           </div>
         </div>
+        </div>
       </div>
 
       {/* Info panel */}
-      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', background: 'var(--card-bg)', height: '280px', flexShrink: 0 }}>
+      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', border: '1px solid var(--border)', background: 'var(--card-bg)', height: '100%', minHeight: 0, flex: 1, flexShrink: 0 }}>
         <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-heading)' }}>
             Investigation Progress ({Object.keys(clickedObjects).length}/{classroomObjects.length})
@@ -205,12 +207,12 @@ export default function Stage1_Intro({ onComplete, addXp }) {
         </div>
 
         {!completed && (
-          <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+          <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
             Click on elements inside the classroom layout to reveal what material they are made of.
           </div>
         )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, paddingRight: '4px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, minHeight: 0, overflowY: 'auto', paddingRight: '4px' }}>
           {Object.keys(clickedObjects).length === 0 ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontStyle: 'italic', fontSize: '0.95rem' }}>
               No objects scanned yet. Click an item in the classroom!
@@ -233,10 +235,10 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontWeight: 'bold', fontSize: '1rem', color: 'var(--success)' }}>
+                    <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--success)' }}>
                       {obj.name}
                     </span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 'bold', background: 'var(--success)', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 'bold', background: 'var(--success)', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
                       {obj.material}
                     </span>
                   </div>
@@ -247,6 +249,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               );
             })()
           ) : null}
+        {completed && (<div style={{ padding: '0.75rem 1rem', borderRadius: '8px', background: 'var(--card-bg)', border: '1px solid var(--border)', marginTop: '0.5rem' }}><span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Objects can be classified on the basis of a common property that they have</span></div>)}
         </div>
 
       </div>

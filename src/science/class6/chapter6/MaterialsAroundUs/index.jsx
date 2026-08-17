@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
 import useSound from 'use-sound';
 import { useTheme } from '../../../../ThemeContext.jsx';
@@ -60,6 +60,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [resetKey, setResetKey] = useState(0);
   const [showCover, setShowCover] = useState(true);
   const [showIntroSpread, setShowIntroSpread] = useState(false);
+  const [activityView, setActivityView] = useState('page1');
   const [expandedNodes, setExpandedNodes] = useState({ 
     'Barrier 6.1': true, 'Barrier 6.2': true, 'Barrier 6.3': true, 'Barrier 6.4': true, 'Final Wrap-up': true,
     'Stage 6.3.1': true, 'Stage 6.3.2': true, 'Stage 6.3.3': true, 'Stage 6.3.4': true, 'Stage 6.3.5': true, 'Stage 6.3.6': true
@@ -86,7 +87,16 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   };
   
   const currentNode = chapterFlow[currentFlowIndex];
-  
+  const isStage1 = currentNode?.id === 'stage1';
+  const isStage1Page1 = isStage1 && activityView === 'page1';
+  const isStage1Page2 = isStage1 && activityView === 'page2';
+
+  useEffect(() => {
+    if (chapterFlow[currentFlowIndex]?.id === 'stage1') {
+      setActivityView('page1');
+    }
+  }, [currentFlowIndex]);
+
   // Handlers for Mission / Debrief
   const handleMissionAccept = () => {
     if (currentNode.rewardXP && currentNode.type === 'mission') {
@@ -135,49 +145,95 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           >
             <ArrowLeft size={16} /> Dashboard
           </button>
+          {isStage1Page1 && (
+            <button
+              onClick={() => {
+                if (currentFlowIndex > 0) {
+                  setCurrentFlowIndex(prev => prev - 1);
+                } else {
+                  setShowIntroSpread(true);
+                }
+              }}
+              className="outline"
+              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
+            >
+              <ArrowLeft size={14} /> Back
+            </button>
+          )}
         </div>
 
         
         <div className="global-action-bar-right">
-          <button 
-            onClick={() => {
-              if (currentFlowIndex > 0) {
-                setCurrentFlowIndex(prev => prev - 1);
-              } else {
-                setShowIntroSpread(true);
-              }
-            }}
-            className="outline"
-            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
-          >
-            <ArrowLeft size={14} /> Back
-          </button>
+          {isStage1Page2 ? (
+            <button
+              onClick={() => setActivityView('page1')}
+              className="outline"
+              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
+            >
+              <ArrowLeft size={14} /> Back
+            </button>
+          ) : !isStage1Page1 && (
+            <button
+              onClick={() => {
+                if (currentFlowIndex > 0) {
+                  setCurrentFlowIndex(prev => prev - 1);
+                } else {
+                  setShowIntroSpread(true);
+                }
+              }}
+              className="outline"
+              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
+            >
+              <ArrowLeft size={14} /> Back
+            </button>
+          )}
 
-          <button 
-            onClick={() => setResetKey(prev => prev + 1)}
-            className="outline"
-            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--danger)', borderColor: 'var(--danger-border)' }}
-          >
-            <RefreshCw size={14} /> Reset Activity
-          </button>
+          
+
+          {!isStage1Page1 && (
+            <button
+              onClick={() => setResetKey(prev => prev + 1)}
+              className="outline"
+              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--danger)', borderColor: 'var(--danger-border)' }}
+            >
+              <RefreshCw size={14} /> Reset Activity
+            </button>
+          )}
 
           {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
-            <button 
-              onClick={handleNext}
-              disabled={!stageCompleted}
-              className={stageCompleted ? 'primary' : 'outline'}
-              style={{ 
-                padding: '0.45rem 1rem', 
-                fontSize: '0.9rem', 
-                gap: '0.5rem', 
-                borderRadius: '8px',
-                opacity: stageCompleted ? 1 : 0.5,
-                cursor: stageCompleted ? 'pointer' : 'not-allowed',
-                transition: 'all 0.3s'
-              }}
-            >
-              Proceed to next <ArrowRight size={16} />
-            </button>
+            isStage1Page1 ? (
+              <button
+                onClick={() => setActivityView('page2')}
+                className="primary"
+                style={{
+                  padding: '0.45rem 1rem',
+                  fontSize: '0.9rem',
+                  gap: '0.5rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s'
+                }}
+              >
+                Proceed to next <ArrowRight size={16} />
+              </button>
+            ) : (
+              <button
+                onClick={handleNext}
+                disabled={!stageCompleted}
+                className={stageCompleted ? 'primary' : 'outline'}
+                style={{
+                  padding: '0.45rem 1rem',
+                  fontSize: '0.9rem',
+                  gap: '0.5rem',
+                  borderRadius: '8px',
+                  opacity: stageCompleted ? 1 : 0.5,
+                  cursor: stageCompleted ? 'pointer' : 'not-allowed',
+                  transition: 'all 0.3s'
+                }}
+              >
+                Proceed to next <ArrowRight size={16} />
+              </button>
+            )
           )}
         </div>
       </div>
@@ -342,7 +398,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         </div>
 
         {/* Main Content Area - Full Width */}
-        <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: currentNode.type === 'activity' ? 'hidden' : 'auto' }}>
+        <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: isStage1Page1 ? 'hidden' : (isStage1Page2 ? 'auto' : ((currentNode.type === 'activity') ? 'hidden' : 'auto')) }}>
           {currentNode.type === 'mission' && (
             <MissionBriefingSpread 
               data={currentNode} 
@@ -380,30 +436,98 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 onComplete={handleStageComplete} 
                 addXp={addXp} 
               />
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: currentNode.layout || '1fr 1fr', gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
-                {/* Left Side: Handbook */}
-                {currentNode.handbook ? (
-                  <currentNode.handbook 
-                    highestUnlockedIndex={highestUnlockedIndex} 
-                    currentFlowIndex={currentFlowIndex} 
-                    stageCompleted={stageCompleted} 
-                  />
+            ) : isStage1 ? (
+              <div style={{
+                flex: 1,
+                minHeight: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: isStage1Page2 ? 'visible' : 'hidden',
+                padding: isStage1Page1 ? '0.5rem 0.75rem' : '0.5rem 0.75rem'
+              }}>
+                {isStage1Page1 ? (
+                  <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                    {currentNode.handbook ? (
+                      <currentNode.handbook
+                        highestUnlockedIndex={highestUnlockedIndex}
+                        currentFlowIndex={currentFlowIndex}
+                        stageCompleted={stageCompleted}
+                      />
+                    ) : (
+                      <InvestigationHandbook
+                        highestUnlockedIndex={highestUnlockedIndex}
+                        currentFlowIndex={currentFlowIndex}
+                        stageCompleted={stageCompleted}
+                        page1Layout
+                      />
+                    )}
+                  </div>
                 ) : (
-                  <InvestigationHandbook 
-                    highestUnlockedIndex={highestUnlockedIndex} 
-                    currentFlowIndex={currentFlowIndex} 
-                    stageCompleted={stageCompleted} 
-                  />
+                  <div style={{
+                    flex: 1,
+                    minHeight: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    width: '100%'
+                  }}>
+                    <currentNode.component
+                      key={`${currentNode.id}-${resetKey}`}
+                      {...(currentNode.props || {})}
+                      onComplete={handleStageComplete}
+                      addXp={addXp}
+                    />
+                  </div>
                 )}
-                
+              </div>
+            ) : (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: currentNode.layout || '1fr 1fr',
+                gap: '1.5rem',
+                flex: 1,
+                minHeight: 0,
+                padding: '1.5rem',
+                overflow: 'hidden'
+              }}>
+                {/* Left Side: Handbook */}
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minHeight: 0,
+                  height: '100%',
+                  overflow: 'hidden'
+                }}>
+                  {currentNode.handbook ? (
+                    <currentNode.handbook
+                      highestUnlockedIndex={highestUnlockedIndex}
+                      currentFlowIndex={currentFlowIndex}
+                      stageCompleted={stageCompleted}
+                    />
+                  ) : (
+                    <InvestigationHandbook
+                      highestUnlockedIndex={highestUnlockedIndex}
+                      currentFlowIndex={currentFlowIndex}
+                      stageCompleted={stageCompleted}
+                    />
+                  )}
+                </div>
+
                 {/* Right Side: Activity */}
-                <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
-                  <currentNode.component 
+                <div style={{
+                  display: 'flex',
+                  flex: 1,
+                  minHeight: 0,
+                  position: 'relative',
+                  flexDirection: 'column',
+                  overflowY: 'auto',
+                  paddingRight: '4px'
+                }}>
+                  <currentNode.component
                     key={`${currentNode.id}-${resetKey}`}
-                    {...(currentNode.props || {})} 
-                    onComplete={handleStageComplete} 
-                    addXp={addXp} 
+                    {...(currentNode.props || {})}
+                    onComplete={handleStageComplete}
+                    addXp={addXp}
                   />
                 </div>
               </div>

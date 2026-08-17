@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
 import useSound from 'use-sound';
 import { useTheme } from '../../ThemeContext.jsx';
@@ -20,6 +20,13 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [resetKey, setResetKey] = useState(0);
   const [showCover, setShowCover] = useState(true);
   const [showIntroSpread, setShowIntroSpread] = useState(false);
+  const [activityView, setActivityView] = useState('page1');
+
+  useEffect(() => {
+    if (chapterFlow[currentFlowIndex]?.id === 'stage1') {
+      setActivityView('page1');
+    }
+  }, [currentFlowIndex]);
 
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
 
@@ -93,7 +100,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
 
         <div className="global-action-bar-right">
-          {currentNode.type !== 'mission' && (
+          {currentNode.type !== 'mission' && currentNode.id !== 'stage1' && (
             <button
               onClick={() => {
                 if (currentFlowIndex > 0) {
@@ -120,6 +127,17 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               <ArrowLeft size={18} /> Back
             </button>
           )}
+
+          {currentNode.id === 'stage1' && activityView === 'page2' && (
+            <button
+              onClick={() => setActivityView('page1')}
+              className="outline"
+              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px' }}
+            >
+              <ArrowLeft size={14} /> Back
+            </button>
+          )}
+
           <button
             className="outline"
             onClick={toggleTheme}
@@ -129,31 +147,51 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
           </button>
 
-          <button
-            onClick={() => setResetKey(prev => prev + 1)}
-            className="outline"
-            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--danger)', borderColor: 'var(--danger-border)' }}
-          >
-            <RefreshCw size={14} /> Reset Activity
-          </button>
+          {!(currentNode.id === 'stage1' && activityView === 'page1') && (
+            <button
+              onClick={() => setResetKey(prev => prev + 1)}
+              className="outline"
+              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--danger)', borderColor: 'var(--danger-border)' }}
+            >
+              <RefreshCw size={14} /> Reset Activity
+            </button>
+          )}
 
           {currentNode.type === 'activity' && (
-            <button
-              onClick={handleNext}
-              disabled={!stageCompleted}
-              className={stageCompleted ? 'primary' : 'outline'}
-              style={{
-                padding: '0.45rem 1rem',
-                fontSize: '0.9rem',
-                gap: '0.5rem',
-                borderRadius: '8px',
-                opacity: stageCompleted ? 1 : 0.5,
-                cursor: stageCompleted ? 'pointer' : 'not-allowed',
-                transition: 'all 0.3s'
-              }}
-            >
-              Proceed to next <ArrowRight size={16} />
-            </button>
+            (currentNode.id === 'stage1' && activityView === 'page1') ? (
+              <button
+                onClick={() => setActivityView('page2')}
+                className="primary"
+                style={{
+                  padding: '0.45rem 1rem',
+                  fontSize: '0.9rem',
+                  gap: '0.5rem',
+                  borderRadius: '8px',
+                  opacity: 1,
+                  cursor: 'pointer',
+                  transition: 'all 0.3s'
+                }}
+              >
+                Proceed to next <ArrowRight size={16} />
+              </button>
+            ) : (
+              <button
+                onClick={handleNext}
+                disabled={!stageCompleted}
+                className={stageCompleted ? 'primary' : 'outline'}
+                style={{
+                  padding: '0.45rem 1rem',
+                  fontSize: '0.9rem',
+                  gap: '0.5rem',
+                  borderRadius: '8px',
+                  opacity: stageCompleted ? 1 : 0.5,
+                  cursor: stageCompleted ? 'pointer' : 'not-allowed',
+                  transition: 'all 0.3s'
+                }}
+              >
+                Proceed to next <ArrowRight size={16} />
+              </button>
+            )
           )}
         </div>
       </div>
@@ -289,24 +327,27 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 addXp={addXp}
               />
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: currentNode.layout || '1fr 1fr', gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: currentNode.id === 'stage1' ? '1fr' : (currentNode.layout || '1fr 1fr'), gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
                 {/* Left Side: Handbook */}
-                {currentNode.handbook ? (
-                  <currentNode.handbook
-                    highestUnlockedIndex={highestUnlockedIndex}
-                    currentFlowIndex={currentFlowIndex}
-                    stageCompleted={stageCompleted}
-                  />
-                ) : (
-                  <InvestigationHandbook
-                    highestUnlockedIndex={highestUnlockedIndex}
-                    currentFlowIndex={currentFlowIndex}
-                    stageCompleted={stageCompleted}
-                  />
-                )}
+                <div style={{ display: (currentNode.id === 'stage1' && activityView === 'page2') ? 'none' : 'flex', flexDirection: 'column', minHeight: 0 }}>
+                  {currentNode.handbook ? (
+                    <currentNode.handbook
+                      highestUnlockedIndex={highestUnlockedIndex}
+                      currentFlowIndex={currentFlowIndex}
+                      stageCompleted={stageCompleted}
+                    />
+                  ) : (
+                    <InvestigationHandbook
+                      highestUnlockedIndex={highestUnlockedIndex}
+                      currentFlowIndex={currentFlowIndex}
+                      stageCompleted={stageCompleted}
+                      fullPageMode={currentNode.id === 'stage1' && activityView === 'page1'}
+                    />
+                  )}
+                </div>
 
                 {/* Right Side: Activity */}
-                <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
+                <div style={{ display: (currentNode.id === 'stage1' && activityView === 'page1') ? 'none' : 'flex', flex: 1, minHeight: 0, position: 'relative', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
                   <currentNode.component
                     key={`${currentNode.id}-${resetKey}`}
                     {...(currentNode.props || {})}
