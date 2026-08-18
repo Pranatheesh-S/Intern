@@ -3,6 +3,7 @@ import ChapterLearningLab from '../../../components/ChapterLearningLab';
 import sanskritSlogan from '../../../assets/sanskrit_slogan.png';
 
 import coverBgImage from '../../../assets/cover_page_ch2.png';
+import coverBgVideo from '../../../assets/in_this_video_just_add_those_b (1).mp4';
 import learningLabBg from '../../../assets/class_6_ch2_learning_lab_bg.png';
 import levelMapBg from '../../../assets/class_6_ch2_level_map.jpg';
 
@@ -33,11 +34,12 @@ export default function Chapter2LearningLab({ onBack, onHeaderVisibilityChange }
       topics="Plants · Animals · Habitats · Adaptation · Classification"
       coverGraphic="diversity"
       sloganImg={sanskritSlogan}
-      sloganExplanation="In this chapter, we explore Diversity in the Living World. Just like the trees in this ancient verse selflessly support all other life by offering shade and food, every living organism is interconnected. Plants, animals, and humans depend on each other, forming a beautiful, cooperative web of life. Understanding and protecting this biological diversity is not just science—it is our duty to the planet."
+      sloganExplanation="In this chapter, we explore Diversity in the Living World. Just like the trees in this ancient verse selflessly support all other life by offering shade and food, every living organism is interconnected. Plants, animals, and humans depend on each other, forming a beautiful, cooperative web of life."
       activities={CHAPTER_2_ACTIVITIES}
       onBack={onBack}
       onHeaderVisibilityChange={onHeaderVisibilityChange}
-      coverBgImage={coverBgImage}
+      coverBgImage={null}
+      coverBgVideo={coverBgVideo}
       learningLabBg={learningLabBg}
       levelMapBg={levelMapBg}
     />

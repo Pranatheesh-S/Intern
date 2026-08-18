@@ -3173,6 +3173,7 @@ export default function App() {
 
       {/* Floating circular controls (Theme & Music) */}
       <div 
+        id="global-theme-music-controls"
         style={{ 
           position: 'fixed', 
           bottom: '2rem', 

@@ -11,6 +11,7 @@ export default function CoverPage({
   onBack,
   onNext,
   bgImage,
+  bgVideo,
 }) {
   const [gifFailed, setGifFailed] = React.useState(false);
   const [isBtnHovered, setIsBtnHovered] = React.useState(false);
@@ -134,12 +135,31 @@ export default function CoverPage({
       inset: 0,
       overflow: "hidden",
       color: "#e8ebff",
-      background: bgImage ? `url(${bgImage}) no-repeat center center / cover` : "radial-gradient(130% 120% at 75% 15%, #0d2015 0%, #060e0a 100%)",
+      background: bgImage ? `url(${bgImage}) no-repeat center center / cover` : bgVideo ? "none" : "radial-gradient(130% 120% at 75% 15%, #0d2015 0%, #060e0a 100%)",
       fontFamily: "Space Grotesk, system-ui, sans-serif",
       display: "flex",
       alignItems: "center",
       justifyContent: "center"
     }}>
+      {bgVideo && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: 0,
+            opacity: 0.95
+          }}
+        >
+          <source src={bgVideo} type="video/mp4" />
+        </video>
+      )}
       {/* CSS Stylesheet Inject */}
       <style>{`
         .cover-frame {
@@ -556,8 +576,8 @@ export default function CoverPage({
         <ArrowLeft size={16} /> Back to Chapters
       </button>
 
-      <div className={bgImage ? "layout-grid-centered" : "layout-grid"}>
-        {!bgImage && (
+      <div className={(bgImage || bgVideo) ? "layout-grid-centered" : "layout-grid"}>
+        {!(bgImage || bgVideo) && (
           <>
             {/* LEFT: Graphics (Autoload GIF with inline SVG fallback) */}
             <div className="graphic-container">
@@ -591,7 +611,7 @@ export default function CoverPage({
         )}
 
         {/* RIGHT: Metadata and Heading */}
-        {bgImage ? (
+        {(bgImage || bgVideo) ? (
           <>
             {/* Top Floating Badge */}
             <div style={{
