@@ -246,9 +246,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}
           >
             {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
-              <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: '0.75rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', flex: 1, minHeight: 0, padding: '1.25rem' }}>
+              <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.85rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
                 {items.map((item) => {
                   const isSorted = usePlacements[item.id] !== undefined;
                   return (
@@ -262,22 +262,38 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       title={item.name}
                       style={{
                         width: '100%',
-                        aspectRatio: '1',
-                        borderRadius: '12px',
+                        height: '100%',
+                        borderRadius: '14px',
                         border: '2px solid var(--border)',
                         background: 'var(--card-bg)',
-                        opacity: isSorted ? 0.5 : 1,
+                        opacity: isSorted ? 0.45 : 1,
                         cursor: isSorted ? 'default' : 'grab',
                         transition: 'all 0.2s',
                         userSelect: 'none',
                         position: 'relative',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '8px',
+                        boxSizing: 'border-box',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.06)'
                       }}
                     >
-                      <img src={item.icon} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img 
+                        src={item.icon} 
+                        alt={item.name} 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'contain', 
+                          borderRadius: '8px',
+                          pointerEvents: 'none' 
+                        }} 
+                      />
                       {isSorted && (
-                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Check size={32} color="white" strokeWidth={3} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(2px)' }}>
+                          <Check size={40} color="white" strokeWidth={3.5} />
                         </div>
                       )}
                     </div>
@@ -290,8 +306,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 {[
-                  { name: 'School Shelf', icon: <BookOpen size={16} />, bgImage: bgShelfSchool },
-                  { name: 'Home Shelf', icon: <Home size={16} />, bgImage: bgShelfHome },
+                  { name: 'School Shelf', icon: <BookOpen size={16} />, bgImage: bgShelfKitchen },
+                  { name: 'Home Shelf', icon: <Home size={16} />, bgImage: bgShelfKitchen },
                   { name: 'Kitchen Shelf', icon: <Utensils size={16} />, bgImage: bgShelfKitchen }
                 ].map((shelf) => {
                   const sortedHere = items.filter(i => usePlacements[i.id] === shelf.name);
@@ -311,25 +327,27 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         handleUseSort(itemId, shelf.name);
                       }}
                       style={{
-                        background: `url(${shelf.bgImage}) center/cover`,
+                        background: `url(${shelf.bgImage}) center 60% / cover no-repeat`,
                         border: isDraggingOverMe ? '3px dashed var(--accent)' : '2px solid transparent',
-                        borderRadius: '12px',
+                        borderRadius: '14px',
                         padding: '1rem',
-                        minHeight: '160px',
+                        minHeight: '185px',
+                        height: '185px',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
-                        gap: '1rem',
+                        position: 'relative',
                         transition: 'all 0.2s',
-                        boxShadow: isDraggingOverMe ? 'inset 0 0 0 1000px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3)' : '0 4px 8px rgba(0,0,0,0.3)'
+                        overflow: 'hidden',
+                        boxShadow: isDraggingOverMe ? 'inset 0 0 0 1000px rgba(0,0,0,0.45), 0 6px 12px rgba(0,0,0,0.25)' : '0 6px 12px rgba(0,0,0,0.2)'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', background: 'rgba(0,0,0,0.65)', padding: '0.4rem 0.8rem', borderRadius: '8px', alignSelf: 'flex-start', backdropFilter: 'blur(4px)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', background: 'rgba(0,0,0,0.7)', padding: '0.4rem 0.85rem', borderRadius: '8px', alignSelf: 'flex-start', backdropFilter: 'blur(6px)', zIndex: 2 }}>
                         {shelf.icon}
                         <span>{shelf.name}</span>
                       </div>
                       
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', alignItems: 'flex-end', minHeight: '65px', paddingBottom: '0.5rem', paddingLeft: '0.5rem' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', alignItems: 'flex-end', minHeight: '65px', paddingBottom: '0.75rem', paddingLeft: '0.75rem', zIndex: 2 }}>
                         {sortedHere.map((item) => (
                           <motion.div
                             initial={{ opacity: 0, y: -10 }}
@@ -339,17 +357,28 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                             style={{
                               display: 'flex',
                               alignItems: 'flex-end',
-                              filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.15))',
+                              filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.35))',
                               cursor: 'default'
                             }}
                           >
                             <div style={{ transform: 'translateY(1px)' }}>
-                              <img src={item.icon} alt={item.name} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px', border: '2px solid rgba(255,255,255,0.8)' }} />
+                              <img 
+                                src={shelf.name === 'Kitchen Shelf' ? item.icon : (item.id === 'register' || item.id === 'remote' ? itemSpoon : itemGlass)} 
+                                alt={item.name} 
+                                style={{ 
+                                  width: '65px', 
+                                  height: '65px', 
+                                  objectFit: 'cover', 
+                                  borderRadius: '10px', 
+                                  border: '2px solid rgba(255,255,255,0.9)',
+                                  boxShadow: '0 4px 8px rgba(0,0,0,0.25)'
+                                }} 
+                              />
                             </div>
                           </motion.div>
                         ))}
                         {sortedHere.length === 0 && (
-                          <span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '1rem' }}>Empty Shelf</span>
+                          <span style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.9)', textShadow: '0 1px 3px rgba(0,0,0,0.8)', fontStyle: 'italic', marginBottom: '0.5rem', background: 'rgba(0,0,0,0.45)', padding: '0.2rem 0.65rem', borderRadius: '6px' }}>Empty Shelf</span>
                         )}
                       </div>
                     </div>
