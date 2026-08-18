@@ -182,7 +182,7 @@ export default function DidYouKnow() {
                 <span>{fact.shortTitle}</span>
               </div>
             </React.Fragment>
-          ))}       ))}
+          ))}
         </div>
 
         {/* Sparkle Icon */}

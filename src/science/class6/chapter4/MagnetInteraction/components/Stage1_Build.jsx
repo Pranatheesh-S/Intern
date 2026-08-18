@@ -1,315 +1,186 @@
-import React, { useState, useEffect } from "react";
-import {
-  DndContext,
-  useSensor,
-  useSensors,
-  PointerSensor,
-  TouchSensor,
-  useDraggable,
-  useDroppable,
-  DragOverlay
-} from "@dnd-kit/core";
-import { motion, AnimatePresence } from "framer-motion";
-import confetti from "canvas-confetti";
-import {
-  RotateCcw,
-  ArrowRight,
-  Info,
-  CheckCircle2,
-  AlertCircle,
-  Lock,
-} from "lucide-react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Box, Cylinder, Text } from "@react-three/drei";
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle2, RotateCcw, Info, ArrowRight, Lock, AlertCircle, Sparkles } from 'lucide-react';
+import { 
+  DndContext, 
+  useDraggable, 
+  useDroppable, 
+  DragOverlay, 
+  PointerSensor, 
+  useSensor, 
+  useSensors 
+} from '@dnd-kit/core';
 
 const STEPS = [
   {
     id: "pencils",
-    name: "6 Round Pencils",
-    desc: "Act as rollers to reduce friction.",
-    hint: "Drag the pencils onto the workspace.",
-    prereq: [],
+    name: "3 Pencils",
+    instruction: "Drag 3 pencils and place them parallel to each other on the table.",
+    hint: "Place the pencils horizontally on the workspace to act as rollers.",
+    dropTarget: { minX: 100, maxX: 500, minY: 150, maxY: 300 }
   },
   {
     id: "magnetA",
     name: "Magnet A",
-    desc: "The magnet that will rest on the pencils.",
-    hint: "Place Magnet A horizontally across the pencils.",
-    prereq: ["pencils"],
+    instruction: "Place one bar magnet over the pencils.",
+    hint: "Place Magnet A resting horizontally across the pencils.",
+    dropTarget: { minX: 150, maxX: 450, minY: 100, maxY: 250 }
   },
   {
     id: "magnetB",
     name: "Magnet B",
-    desc: "The magnet you will hold to test interaction.",
-    hint: "Place Magnet B beside the setup to complete the assembly.",
-    prereq: ["pencils", "magnetA"],
-  },
+    instruction: "Bring one end of Magnet B near the end of Magnet A.",
+    hint: "Place Magnet B to the right of Magnet A on the workspace.",
+    dropTarget: { minX: 350, maxX: 650, minY: 100, maxY: 250 }
+  }
 ];
 
-// Draggable wrapper for 3D Viewer
-function DraggableToken({ id, children }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({ id });
-
-  const style = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : undefined,
-    touchAction: "none",
-    cursor: isDragging ? "grabbing" : "grab",
-    zIndex: isDragging ? 1000 : 10,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      {children}
-    </div>
-  );
-}
-
-// Droppable Canvas
-
-// Draggable wrapper for Component Tray
-function TrayDraggable({ id, disabled, children }) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: id,
-    disabled: disabled,
-  });
-  return (
-    <div ref={setNodeRef} {...listeners} {...attributes} style={{ display: 'flex', flexDirection: 'column', height: '100%', touchAction: 'none', opacity: isDragging ? 0.4 : 1, cursor: disabled ? "not-allowed" : (isDragging ? "grabbing" : "grab") }}>
-      {children}
-    </div>
-  );
-}
-
 function CanvasDroppable({ children }) {
-  const { setNodeRef } = useDroppable({ id: "canvas" });
+  const { isOver, setNodeRef } = useDroppable({ id: 'canvas-droppable' });
   return (
-    <div
-      id="assembly-canvas"
+    <div 
       ref={setNodeRef}
-      className="canvas-container"
       style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        minHeight: "480px",
-        background: "var(--surface)",
-        borderRadius: "8px",
-        border: "2px solid var(--border)",
-        overflow: "hidden"
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        background: isOver ? '#f0f9ff' : '#f8fafc',
+        border: `2px dashed ${isOver ? '#2563eb' : '#cbd5e1'}`,
+        borderRadius: '16px',
+        overflow: 'hidden',
+        boxShadow: 'inset 0 0 20px rgba(0,0,0,0.04)',
+        transition: 'all 0.2s ease'
       }}
     >
-      <svg viewBox="0 0 600 480" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%' }}>
-        <defs>
-          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
+      <div style={{ position: 'absolute', bottom: '40px', width: '100%', height: '2px', background: '#cbd5e1' }} />
+      <svg style={{ width: '100%', height: '100%', overflow: 'visible' }}>
         {children}
       </svg>
     </div>
   );
 }
 
-// Draggable SVG Group for components placed on Canvas
-function DraggableSVGGroup({ id, children, isDraggable }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: id,
-      disabled: !isDraggable,
-    });
-
-  const style = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : undefined,
-    cursor: isDraggable ? (isDragging ? "grabbing" : "grab") : "default",
-    touchAction: "none",
-  };
+function TrayDraggable({ id, disabled, children }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `tray-${id}`,
+    disabled: disabled,
+    data: { source: 'tray', itemId: id }
+  });
 
   return (
-    <g ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div 
+      ref={setNodeRef} 
+      {...listeners} 
+      {...attributes}
+      style={{ opacity: isDragging ? 0.4 : 1, touchAction: 'none' }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function DraggableSVGGroup({ id, isDraggable, children }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `placed-${id}`,
+    disabled: !isDraggable,
+    data: { source: 'placed', itemId: id }
+  });
+
+  return (
+    <g 
+      ref={setNodeRef} 
+      {...listeners} 
+      {...attributes}
+      style={{ cursor: isDraggable ? 'grab' : 'default', opacity: isDragging ? 0.5 : 1 }}
+    >
       {children}
     </g>
   );
 }
 
 export default function Stage1_Build({ onComplete, onNext }) {
-  const [placed, setPlaced] = useState({
-    pencils: false,
-    magnetA: false,
-    magnetB: false,
-  });
-
+  const [placed, setPlaced] = useState({ pencils: false, magnetA: false, magnetB: false });
   const [positions, setPositions] = useState({
-    pencils: { x: 300, y: 250 },
-    magnetA: { x: 300, y: 200 },
-    magnetB: { x: 450, y: 200 },
+    pencils: { x: 260, y: 160 },
+    magnetA: { x: 260, y: 130 },
+    magnetB: { x: 440, y: 130 }
   });
-
-  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [selectedItemId, setSelectedItemId] = useState("pencils");
   const [activeDraggingId, setActiveDraggingId] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
 
-  const snapToIdeal = (id, x, y) => {
-    const ideals = {
-      pencils: { x: 300, y: 250 },
-      magnetA: { x: 300, y: 250 },
-      magnetB: { x: 480, y: 250 },
-    };
-    const ideal = ideals[id];
-    if (!ideal) return { x, y };
-
-    // Snap radius
-    const dist = Math.sqrt((x - ideal.x) ** 2 + (y - ideal.y) ** 2);
-    if (dist < 60) {
-      return ideal; // snap
-    }
-    return { x, y }; // keep free dropped pos
-  };
-
   const isStepUnlocked = (stepId) => {
-    const step = STEPS.find((s) => s.id === stepId);
-    if (!step) return false;
-    
-    if (stepId === "magnetB") {
-      const isMagnetAOnPencils = placed.magnetA && placed.pencils && 
-        Math.sqrt((positions.magnetA.x - positions.pencils.x) ** 2 + (positions.magnetA.y - positions.pencils.y) ** 2) <= 60;
-      return isMagnetAOnPencils;
-    }
-
-    return step.prereq.every((pId) => placed[pId] === true);
+    if (stepId === "pencils") return true;
+    if (stepId === "magnetA") return placed.pencils;
+    if (stepId === "magnetB") return placed.magnetA;
+    return false;
   };
 
   const handleSelectTrayItem = (stepId) => {
-    if (placed[stepId]) return;
-    const step = STEPS.find((s) => s.id === stepId);
-    if (!isStepUnlocked(stepId)) {
-      if (stepId === "magnetB" && placed.magnetA) {
-        setError("❌ Magnet B is locked! You must first place Magnet A exactly on top of the pencils.");
-        return;
-      }
-      const missingPrereqs = step.prereq.filter((pId) => !placed[pId]);
-      const missingNames = missingPrereqs
-        .map((pId) => STEPS.find((s) => s.id === pId)?.name)
-        .join(", ");
-      setError(`❌ Cannot select "${step.name}". You must place the following first: ${missingNames}`);
-      return;
+    if (!placed[stepId] && isStepUnlocked(stepId)) {
+      setSelectedItemId(stepId);
     }
-    setError("");
-    setSelectedItemId(stepId);
   };
 
   const handleDragStart = (event) => {
-    setIsDragging(true);
-    setActiveDraggingId(event.active.id);
-    setSelectedItemId(event.active.id);
-    setError("");
+    const { active } = event;
+    const itemId = active.data.current?.itemId;
+    setActiveDraggingId(itemId);
+    setError(null);
   };
 
   const handleDragEnd = (event) => {
-    setIsDragging(false);
-    const draggedId = activeDraggingId;
+    const { active, over } = event;
     setActiveDraggingId(null);
-    if (!event.active || !draggedId) return;
 
-    const canvas = document.getElementById("assembly-canvas");
-    if (canvas) {
-      const rect = canvas.getBoundingClientRect();
-      const activeRect = event.active.rect.current.translated;
-      if (activeRect) {
-        let x, y;
-        
-        // Calculate true SVG scale and offsets
-        const svgScale = Math.min(rect.width / 600, rect.height / 480);
-        const offsetX = (rect.width - 600 * svgScale) / 2;
-        const offsetY = (rect.height - 480 * svgScale) / 2;
-        
-        if (placed[draggedId]) {
-          // Move already placed component
-          const dx = event.delta.x / svgScale;
-          const dy = event.delta.y / svgScale;
-          x = positions[draggedId].x + dx;
-          y = positions[draggedId].y + dy;
-        } else {
-          // Dropped from 3D Viewer
-          const clientX = activeRect.left + activeRect.width / 2;
-          const clientY = activeRect.top + activeRect.height / 2;
-          
-          x = (clientX - rect.left - offsetX) / svgScale;
-          y = (clientY - rect.top - offsetY) / svgScale;
-        }
+    if (!over || over.id !== 'canvas-droppable') return;
 
-        const snapped = snapToIdeal(draggedId, x, y);
-        x = snapped.x;
-        y = snapped.y;
+    const itemId = active.data.current?.itemId;
+    const source = active.data.current?.source;
 
-        let currentError = "";
-
-        // --- Positional Validation ---
-        if (draggedId === "magnetA") {
-          const distToPencils = Math.sqrt((x - positions.pencils.x) ** 2 + (y - positions.pencils.y) ** 2);
-          if (distToPencils > 60) {
-            currentError = "ℹ️ You placed Magnet A. Now, drag it directly on top of the pencils so it can roll freely!";
-          }
-        }
-
-        if (draggedId === "magnetB") {
-          const distToMagnetA = Math.sqrt((x - positions.magnetA.x) ** 2 + (y - positions.magnetA.y) ** 2);
-          if (distToMagnetA < 180) {
-            setError("⚠️ Magnet B must be kept at a larger distance from Magnet A so they don't snap together yet.");
-            // Reset position if already placed but moved illegally
-            if (placed.magnetB) {
-               setPositions(prev => ({ ...prev, magnetB: { x: prev.magnetA.x + 200, y: prev.magnetA.y } }));
-            }
-            return;
-          }
-        }
-
-        setError(currentError);
-        setPositions((prev) => ({ ...prev, [draggedId]: { x, y } }));
-
-        if (!placed[draggedId]) {
-          // Initial drop bounds check
-          if (x > 0 && x < 600 && y > 0 && y < 480) {
-            setPlaced((prev) => ({ ...prev, [draggedId]: true }));
-            setSelectedItemId(null);
-            
-            // Check success logic
-            if (draggedId === "magnetB") {
-              setTimeout(() => {
-                setSuccess(true);
-                confetti({ particleCount: 100, spread: 80, origin: { y: 0.5 } });
-              }, 300);
-            } else {
-              confetti({ particleCount: 25, spread: 45, origin: { y: 0.8 } });
-            }
-          } else {
-            setError("Place the item clearly inside the assembly workspace.");
-          }
-        }
+    if (source === 'tray') {
+      if (!isStepUnlocked(itemId)) {
+        setError(`Please complete the previous step first!`);
+        return;
       }
+
+      const nextPlaced = { ...placed, [itemId]: true };
+      setPlaced(nextPlaced);
+
+      const remainingStep = STEPS.find(s => !nextPlaced[s.id] && isStepUnlocked(s.id));
+      if (remainingStep) {
+        setSelectedItemId(remainingStep.id);
+      }
+
+      if (nextPlaced.pencils && nextPlaced.magnetA && nextPlaced.magnetB) {
+        setSuccess(true);
+      }
+    } else if (source === 'placed') {
+      const delta = event.delta;
+      setPositions(prev => ({
+        ...prev,
+        [itemId]: {
+          x: prev[itemId].x + delta.x,
+          y: prev[itemId].y + delta.y
+        }
+      }));
     }
   };
 
   const handleReset = () => {
     setPlaced({ pencils: false, magnetA: false, magnetB: false });
     setPositions({
-      pencils: { x: 300, y: 250 },
-      magnetA: { x: 300, y: 200 },
-      magnetB: { x: 450, y: 200 },
+      pencils: { x: 260, y: 160 },
+      magnetA: { x: 260, y: 130 },
+      magnetB: { x: 440, y: 130 }
     });
-    setSelectedItemId(null);
-    setError("");
+    setSelectedItemId("pencils");
+    setError(null);
     setSuccess(false);
   };
 
@@ -319,39 +190,83 @@ export default function Stage1_Build({ onComplete, onNext }) {
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className="main-grid" style={{ gridTemplateColumns: "1fr", gap: "1rem", padding: "1rem", maxWidth: "100%", margin: "0 auto" }}>
+      <div style={{ 
+        padding: '1.25rem 1.75rem', 
+        display: 'flex', 
+        flexDirection: 'column',
+        gap: '1rem', 
+        height: '100%', 
+        minHeight: 0, 
+        overflow: 'hidden', 
+        boxSizing: 'border-box',
+        background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
+        border: '1.5px solid #1e40af',
+        borderRadius: '20px',
+        boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)',
+        position: 'relative'
+      }}>
         
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-          <div>
-            <h3 style={{ margin: "0 0 0.25rem 0", color: "var(--text-heading)" }}>Build the Experiment</h3>
-            <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--text-secondary)" }}>
+        {/* Top Header Row: Title & Subtitle side-by-side on left */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: "1.25rem", flexWrap: "wrap" }}>
+            <h3 style={{ margin: 0, color: "#ffffff", fontSize: "1.45rem", fontWeight: 800 }}>Build the Experiment</h3>
+            <span style={{ fontSize: "0.98rem", color: "#94a3b8", fontWeight: 600 }}>
               Assemble the setup as shown in Fig. 4.8.
-            </p>
+            </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <div style={{ width: "150px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+            <div style={{ width: "160px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem", color: "#cbd5e1", fontWeight: 700 }}>
                 <span>Progress</span>
                 <span>{Math.round(progressPercent)}%</span>
               </div>
-              <div style={{ width: "100%", height: "6px", background: "var(--border)", borderRadius: "3px", overflow: "hidden" }}>
+              <div style={{ width: "100%", height: "7px", background: "rgba(255, 255, 255, 0.15)", borderRadius: "4px", overflow: "hidden" }}>
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
-                  style={{ height: "100%", background: success ? "var(--success)" : "var(--accent)" }}
+                  style={{ height: "100%", background: success ? "linear-gradient(135deg, #10b981 0%, #059669 100%)" : "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" }}
                 />
               </div>
             </div>
-            <button onClick={handleReset} className="outline" style={{ padding: "0.5rem", borderRadius: "50%" }} title="Reset Assembly">
-              <RotateCcw size={16} />
+            <button 
+              onClick={handleReset} 
+              style={{ 
+                padding: "0.55rem", 
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)",
+                color: "#ffffff",
+                border: "none",
+                cursor: "pointer",
+                boxShadow: "0 4px 12px rgba(255, 119, 0, 0.4)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }} 
+              title="Reset Assembly"
+            >
+              <RotateCcw size={16} color="#ffffff" />
             </button>
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "250px 1fr", gap: "1.5rem" }}>
-          <div className="glass-panel" style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "1rem", background: "var(--surface)" }}>
-            <h4 style={{ margin: 0, borderBottom: "1px solid var(--border)", paddingBottom: "0.5rem" }}>🧊 3D Viewer</h4>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", alignContent: "start", flex: 1 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: "1.25rem", flex: 1, minHeight: 0 }}>
+          {/* Left Column: 3D Parts Bench (Space freed by removing 3D Inspector) */}
+          <div style={{ 
+            padding: "1.25rem", 
+            display: "flex", 
+            flexDirection: "column", 
+            gap: "1.25rem", 
+            background: "#ffffff",
+            border: "2px solid #2563eb",
+            borderRadius: "16px",
+            boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
+            overflowY: "auto"
+          }}>
+            <h4 style={{ margin: 0, borderBottom: "1.5px solid #e2e8f0", paddingBottom: "0.6rem", color: "#1e3a8a", fontWeight: 800, fontSize: "1.15rem" }}>
+              🧊 3D Parts Bench
+            </h4>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem", flex: 1 }}>
               {STEPS.map((step) => {
                 const isPlaced = placed[step.id];
                 const isUnlocked = isStepUnlocked(step.id);
@@ -361,7 +276,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                 const renderThumbnailSVG = (id) => {
                   switch (id) {
                     case "pencils": return (
-                      <svg viewBox="-5 -5 60 50" width="24" height="24">
+                      <svg viewBox="-5 -5 60 50" width="28" height="28">
                         <g transform="translate(0, 5)">
                           {[...Array(6)].map((_, i) => (
                             <g key={i} transform={`translate(${i * 8}, 0)`}>
@@ -375,12 +290,12 @@ export default function Stage1_Build({ onComplete, onNext }) {
                       </svg>
                     );
                     case "magnetA": return (
-                      <svg viewBox="0 0 100 40" width="24" height="24">
+                      <svg viewBox="0 0 100 40" width="28" height="28">
                         <image href="/Shared/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(-90 50 20)" />
                       </svg>
                     );
                     case "magnetB": return (
-                      <svg viewBox="0 0 100 40" width="24" height="24">
+                      <svg viewBox="0 0 100 40" width="28" height="28">
                         <image href="/Shared/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(90 50 20)" />
                       </svg>
                     );
@@ -392,32 +307,39 @@ export default function Stage1_Build({ onComplete, onNext }) {
                   <TrayDraggable key={step.id} id={step.id} disabled={isDisabled}>
                     <button
                       key={step.id}
-                      className="tray-btn"
                       onClick={() => handleSelectTrayItem(step.id)}
                       disabled={isDisabled}
                       style={{
-                        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0.6rem 0.4rem", borderRadius: "12px",
-                        background: isPlaced ? "var(--success-bg)" : isSelected ? "var(--accent-bg)" : isUnlocked ? "var(--surface)" : "var(--neutral-bg)",
-                        border: `1px solid ${isPlaced ? "var(--success-border)" : isSelected ? "var(--accent)" : isUnlocked ? "var(--accent-border)" : "var(--border)"}`,
-                        color: isPlaced ? "var(--success)" : isUnlocked ? "var(--text-primary)" : "var(--text-faint)",
+                        width: "100%",
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: "1rem", 
+                        padding: "0.85rem 1rem", 
+                        borderRadius: "14px",
+                        background: isPlaced ? "rgba(16, 185, 129, 0.1)" : isSelected ? "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" : isUnlocked ? "#f8fafc" : "#f1f5f9",
+                        border: `2px solid ${isPlaced ? "#10b981" : isSelected ? "#ea580c" : isUnlocked ? "#3b82f6" : "#cbd5e1"}`,
+                        color: isPlaced ? "#065f46" : isSelected ? "#ffffff" : isUnlocked ? "#1e3a8a" : "#94a3b8",
                         cursor: isDisabled ? "not-allowed" : "pointer",
                         transition: "all 0.2s ease",
                         position: "relative",
-                        minHeight: "72px",
-                        boxShadow: isSelected ? "0 0 0 2px rgba(99,102,241,0.4)" : isUnlocked && !isPlaced ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
+                        fontWeight: 700,
+                        boxShadow: isSelected ? "0 4px 14px rgba(255, 119, 0, 0.4)" : "none"
                       }}
                     >
-                      <div style={{ width: "34px", height: "34px", background: "var(--border)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "0.35rem", opacity: isUnlocked ? 1 : 0.2, transition: "opacity 0.2s" }}>
+                      <div style={{ width: "40px", height: "40px", background: "rgba(0,0,0,0.05)", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, opacity: isUnlocked ? 1 : 0.3 }}>
                         {renderThumbnailSVG(step.id)}
                       </div>
-                      <span style={{ fontSize: "0.68rem", fontWeight: "600", textAlign: "center", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden", width: "100%", opacity: isUnlocked ? 1 : 0.3 }}>
-                        {step.name}
-                      </span>
-                      <div style={{ position: "absolute", top: "5px", right: "5px" }}>
+                      <div style={{ textAlign: "left", flex: 1 }}>
+                        <div style={{ fontSize: "0.95rem", fontWeight: "800" }}>{step.name}</div>
+                        <div style={{ fontSize: "0.75rem", opacity: 0.8, fontWeight: 500 }}>
+                          {isPlaced ? "Placed" : isUnlocked ? "Ready to drag" : "Locked"}
+                        </div>
+                      </div>
+                      <div style={{ marginLeft: "auto" }}>
                         {isPlaced ? (
-                          <CheckCircle2 size={12} style={{ color: "var(--success)" }} />
+                          <CheckCircle2 size={18} style={{ color: "#10b981" }} />
                         ) : !isUnlocked ? (
-                          <Lock size={10} style={{ color: "var(--text-secondary)" }} />
+                          <Lock size={16} style={{ color: "#94a3b8" }} />
                         ) : null}
                       </div>
                     </button>
@@ -425,87 +347,22 @@ export default function Stage1_Build({ onComplete, onNext }) {
                 );
               })}
             </div>
-
-            {activeStep && (
-              <div style={{ marginTop: "auto", borderTop: "1px solid var(--border)", paddingTop: "1rem" }}>
-                <h5 style={{ margin: "0 0 0.5rem 0", fontSize: "0.8rem", color: "var(--text-secondary)" }}>Inspector</h5>
-                <div style={{ width: "100%", height: "120px", background: "#f8fafc", borderRadius: "6px", overflow: "hidden", border: "1px solid var(--border)" }}>
-                  <Canvas camera={{ position: [0, 2, 4], fov: 40 }}>
-                    <ambientLight intensity={0.5} />
-                    <directionalLight position={[5, 5, 5]} intensity={1} />
-                    {activeStep.id === "pencils" && (
-                      <group position={[0, -0.5, 0]}>
-                        {[...Array(6)].map((_, i) => (
-                          <group key={i} position={[0, 0, (i - 2.5) * 0.25]} rotation={[0, 0, Math.PI / 2]}>
-                            {/* Body */}
-                            <Cylinder args={[0.1, 0.1, 2.2, 16]} position={[0, 0, 0]}>
-                              <meshStandardMaterial color="#fde047" />
-                            </Cylinder>
-                            {/* Wood Tip */}
-                            <Cylinder args={[0.03, 0.1, 0.4, 16]} position={[0, 1.3, 0]}>
-                              <meshStandardMaterial color="#e6b981" />
-                            </Cylinder>
-                            {/* Lead Tip */}
-                            <Cylinder args={[0, 0.03, 0.15, 16]} position={[0, 1.575, 0]}>
-                              <meshStandardMaterial color="#334155" />
-                            </Cylinder>
-                            {/* Ferrule (Metal) */}
-                            <Cylinder args={[0.105, 0.105, 0.15, 16]} position={[0, -1.175, 0]}>
-                              <meshStandardMaterial color="#cbd5e1" metalness={0.8} roughness={0.3} />
-                            </Cylinder>
-                            {/* Eraser */}
-                            <Cylinder args={[0.1, 0.1, 0.2, 16]} position={[0, -1.35, 0]}>
-                              <meshStandardMaterial color="#f472b6" />
-                            </Cylinder>
-                          </group>
-                        ))}
-                      </group>
-                    )}
-                    {(activeStep.id === "magnetA") && (
-                      <group>
-                        <Box args={[1, 0.3, 0.5]} position={[-0.5, 0, 0]}>
-                          <meshStandardMaterial color="#ef4444" />
-                        </Box>
-                        <Box args={[1, 0.3, 0.5]} position={[0.5, 0, 0]}>
-                          <meshStandardMaterial color="#3b82f6" />
-                        </Box>
-                        <Text position={[-0.5, 0, 0.26]} fontSize={0.2} color="white" fontWeight="bold">N</Text>
-                        <Text position={[0.5, 0, 0.26]} fontSize={0.2} color="white" fontWeight="bold">S</Text>
-                        <Text position={[-0.5, 0.16, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.2} color="white" fontWeight="bold">N</Text>
-                        <Text position={[0.5, 0.16, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.2} color="white" fontWeight="bold">S</Text>
-                      </group>
-                    )}
-                    {(activeStep.id === "magnetB") && (
-                      <group>
-                        <Box args={[1, 0.3, 0.5]} position={[-0.5, 0, 0]}>
-                          <meshStandardMaterial color="#3b82f6" />
-                        </Box>
-                        <Box args={[1, 0.3, 0.5]} position={[0.5, 0, 0]}>
-                          <meshStandardMaterial color="#ef4444" />
-                        </Box>
-                        <Text position={[-0.5, 0, 0.26]} fontSize={0.2} color="white" fontWeight="bold">S</Text>
-                        <Text position={[0.5, 0, 0.26]} fontSize={0.2} color="white" fontWeight="bold">N</Text>
-                        <Text position={[-0.5, 0.16, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.2} color="white" fontWeight="bold">S</Text>
-                        <Text position={[0.5, 0.16, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.2} color="white" fontWeight="bold">N</Text>
-                      </group>
-                    )}
-                    <OrbitControls enableZoom={true} enablePan={false} />
-                  </Canvas>
-                </div>
-                
-                <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center" }}>
-                  
-                    <div style={{ padding: "0.5rem 1rem", background: "var(--accent)", color: "white", borderRadius: "20px", fontSize: "0.8rem", fontWeight: "bold", display: "flex", alignItems: "center", gap: "0.5rem", boxShadow: "0 4px 6px rgba(0,0,0,0.1)" }}>
-                      Drag to Workspace <ArrowRight size={14} />
-                    </div>
-                  
-                </div>
-              </div>
-            )}
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <div className="glass-panel" style={{ flex: 1, padding: "1.5rem", display: "flex", flexDirection: "column" }}>
+          {/* Right Column: Drag-and-Drop Workspace */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", minHeight: 0 }}>
+            <div style={{ 
+              flex: 1, 
+              padding: "1.1rem 1.35rem", 
+              display: "flex", 
+              flexDirection: "column",
+              background: "#ffffff",
+              border: "2px solid #2563eb",
+              borderRadius: "16px",
+              boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
+              minHeight: 0,
+              overflow: "hidden"
+            }}>
               
               <AnimatePresence mode="wait">
                 {error && (
@@ -513,9 +370,9 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    style={{ background: "var(--destructive-bg)", color: "var(--destructive)", padding: "0.75rem", borderRadius: "6px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem", fontSize: "0.85rem", border: "1px solid var(--destructive-border)" }}
+                    style={{ background: "#fee2e2", color: "#991b1b", padding: "0.6rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #f87171", fontWeight: 700 }}
                   >
-                    <AlertCircle size={16} /> {error}
+                    <AlertCircle size={18} color="#991b1b" /> {error}
                   </motion.div>
                 )}
                 {activeStep && !error && (
@@ -523,14 +380,15 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    style={{ background: "rgba(59, 130, 246, 0.1)", color: "var(--accent-text)", padding: "0.75rem", borderRadius: "6px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem", fontSize: "0.85rem", border: "1px solid rgba(59, 130, 246, 0.2)" }}
+                    style={{ background: "#eff6ff", color: "#1e40af", padding: "0.6rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #93c5fd", fontWeight: 700 }}
                   >
-                    <Info size={16} /> {activeStep.hint}
+                    <Info size={18} color="#2563eb" /> {activeStep.hint}
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <div style={{ flex: 1, position: "relative" }}>
+              {/* Full Workspace Canvas */}
+              <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
                 <CanvasDroppable>
                   {/* Pencils SVG */}
                   {placed.pencils && (
@@ -545,7 +403,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                   {placed.magnetA && (
                     <DraggableSVGGroup id="magnetA" isDraggable={true}>
                       <g transform={`translate(${positions.magnetA.x - 60}, ${positions.magnetA.y - 20})`} filter="drop-shadow(0px 8px 10px rgba(0,0,0,0.4))">
-                        <text x="60" y="-10" fill="var(--text-secondary)" fontSize="14" fontWeight="bold" textAnchor="middle">Magnet A</text>
+                        <text x="60" y="-10" fill="#1e293b" fontSize="14" fontWeight="bold" textAnchor="middle">Magnet A</text>
                         <image href="/Shared/bar_magnet.png" x="40" y="-40" width="40" height="120" transform="rotate(-90 60 20)" preserveAspectRatio="none" />
                       </g>
                     </DraggableSVGGroup>
@@ -555,57 +413,115 @@ export default function Stage1_Build({ onComplete, onNext }) {
                   {placed.magnetB && (
                     <DraggableSVGGroup id="magnetB" isDraggable={true}>
                       <g transform={`translate(${positions.magnetB.x - 60}, ${positions.magnetB.y - 20})`} filter="drop-shadow(0px 4px 6px rgba(0,0,0,0.3))">
-                        <text x="60" y="-10" fill="var(--text-secondary)" fontSize="14" fontWeight="bold" textAnchor="middle">Magnet B</text>
+                        <text x="60" y="-10" fill="#1e293b" fontSize="14" fontWeight="bold" textAnchor="middle">Magnet B</text>
                         <image href="/Shared/bar_magnet.png" x="40" y="-40" width="40" height="120" transform="rotate(90 60 20)" preserveAspectRatio="none" />
                       </g>
                     </DraggableSVGGroup>
                   )}
-
-                  <defs>
-                    <linearGradient id="pencilGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#fde047" />
-                      <stop offset="100%" stopColor="#ca8a04" />
-                    </linearGradient>
-                  </defs>
                 </CanvasDroppable>
               </div>
 
-              <AnimatePresence>
-                {success && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{ marginTop: "1.5rem", background: "var(--success-bg)", padding: "1.25rem", borderRadius: "8px", border: "1px solid var(--success-border)", display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center" }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--success)", fontWeight: "bold" }}>
-                      <CheckCircle2 size={24} />
-                      Setup Complete!
-                    </div>
-                    <p style={{ margin: 0, color: "var(--success)", fontSize: "0.9rem", textAlign: "center" }}>
-                      Excellent! Magnet A is correctly placed across the pencils, and Magnet B is ready for interaction.
-                    </p>
-                    <button 
-                      onClick={() => {
-                        onComplete();
-                        onNext();
-                      }} 
-                      className="primary" 
-                      style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 2rem" }}
-                    >
-                      Proceed to Prediction <ArrowRight size={18} />
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
           </div>
         </div>
+
+        {/* Success Modal Pop-up Overlay */}
+        <AnimatePresence>
+          {success && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(11, 19, 43, 0.75)',
+                backdropFilter: 'blur(6px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 100,
+                borderRadius: '20px',
+                padding: '1.5rem'
+              }}
+            >
+              <motion.div
+                initial={{ scale: 0.8, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.8, y: 20 }}
+                style={{
+                  background: '#ffffff',
+                  border: '3px solid #10b981',
+                  borderRadius: '24px',
+                  padding: '2rem 2.5rem',
+                  maxWidth: '480px',
+                  width: '90%',
+                  textAlign: 'center',
+                  boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '1.2rem'
+                }}
+              >
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  background: 'rgba(16, 185, 129, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <CheckCircle2 size={38} color="#10b981" />
+                </div>
+
+                <h3 style={{ margin: 0, color: '#1e3a8a', fontSize: '1.5rem', fontWeight: 800 }}>
+                  Setup Complete! 🎉
+                </h3>
+
+                <p style={{ margin: 0, color: '#065f46', fontSize: '1.02rem', lineHeight: '1.5', fontWeight: 700 }}>
+                  Excellent! Magnet A is correctly placed across the pencils, and Magnet B is ready for interaction.
+                </p>
+
+                <button 
+                  onClick={() => {
+                    onComplete();
+                    onNext();
+                  }} 
+                  style={{ 
+                    marginTop: '0.5rem',
+                    padding: '0.85rem 2.4rem', 
+                    fontSize: '1.05rem', 
+                    fontWeight: 800, 
+                    borderRadius: '30px', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.6rem',
+                    background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                    color: '#ffffff',
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 8px 25px rgba(255, 119, 0, 0.5)',
+                    transition: 'all 0.25s ease'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.04)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                >
+                  Proceed to Prediction <ArrowRight size={20} color="#ffffff" />
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <DragOverlay dropAnimation={null}>
         {activeDraggingId && !placed[activeDraggingId] ? (
-          <div style={{ opacity: 0.8, pointerEvents: "none" }}>
-            {/* Show a mini visual representation when dragging from parts bench */}
+          <div style={{ opacity: 0.85, pointerEvents: "none" }}>
             {activeDraggingId === "pencils" && (
               <div style={{ display: "flex", gap: "4px" }}>
                 {[...Array(6)].map((_, i) => (

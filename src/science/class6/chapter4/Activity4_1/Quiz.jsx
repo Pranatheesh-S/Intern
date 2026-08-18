@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 const quizData = [
   {
@@ -69,19 +69,20 @@ const quizData = [
   }
 ];
 
-export default function Quiz({ onComplete, onBack }) {
+export default function Quiz({ onComplete }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
-  const [quizFinished, setQuizFinished] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
+
+  const currentQ = quizData[currentQuestion];
 
   const handleOptionSelect = (index) => {
     if (showResult) return;
     setSelectedOption(index);
     setShowResult(true);
-    
-    if (index === quizData[currentQuestion].correctIndex) {
+    if (index === currentQ.correctIndex) {
       setScore(prev => prev + 1);
     }
   };
@@ -92,145 +93,126 @@ export default function Quiz({ onComplete, onBack }) {
       setSelectedOption(null);
       setShowResult(false);
     } else {
-      setQuizFinished(true);
+      setIsFinished(true);
     }
   };
 
-  const currentQ = quizData[currentQuestion];
-  const isFinished = currentQuestion >= quizData.length - 1 && showResult;
-
-  if (quizFinished) {
+  if (isFinished) {
     return (
-      <div style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1rem',
-        boxSizing: 'border-box'
-      }}>
-        <div style={{
-          backgroundColor: '#ffffff',
-          padding: '3.5rem 4rem',
-          borderRadius: '28px',
-          border: '3px solid #818cf8',
-          boxShadow: '0 20px 50px rgba(99, 102, 241, 0.2)',
-          textAlign: 'center',
-          maxWidth: '680px',
-          width: '100%'
+      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', overflowY: 'auto', padding: '1rem', boxSizing: 'border-box' }}>
+        <div style={{ 
+          maxWidth: '520px', 
+          width: '90%', 
+          padding: '2.5rem 3rem', 
+          textAlign: 'center', 
+          background: '#ffffff', 
+          borderRadius: '30px', 
+          border: '1px solid #cbd5e1',
+          boxShadow: '0 15px 40px rgba(0,0,0,0.18)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1.25rem'
         }}>
-          <h2 style={{ color: '#4f46e5', marginBottom: '1.25rem', fontSize: '2.6rem', fontWeight: 800 }}>Quiz Completed!</h2>
+          <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#1e293b', fontWeight: 800 }}>Quiz Completed!</h2>
           
-          <div style={{
-            backgroundColor: '#f8fafc',
-            border: '2px solid #e2e8f0',
-            borderRadius: '20px',
-            padding: '2rem 2.5rem',
-            marginBottom: '2.5rem'
-          }}>
-            <p style={{ fontSize: '1.75rem', margin: 0, color: '#0f172a', fontWeight: 700 }}>
-              You scored <span style={{ color: '#4f46e5', fontSize: '2.2rem' }}>{score}</span> out of {quizData.length}
-            </p>
-          </div>
+          <p style={{ color: '#475569', margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>
+            You scored {score} out of {quizData.length}
+          </p>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-            <button
-              onClick={() => { if (onComplete) onComplete(score); }}
-              style={{
-                padding: '1.1rem 3rem',
-                backgroundColor: '#4f46e5',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '30px',
-                fontSize: '1.2rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                boxShadow: '0 6px 20px rgba(79, 70, 229, 0.4)'
-              }}
-            >
-              Finish Activity
-            </button>
-          </div>
+          <button
+            onClick={() => { if (onComplete) onComplete(score); }}
+            style={{
+              padding: '1.1rem 3rem',
+              backgroundColor: '#2563eb',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '40px',
+              fontSize: '1.15rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+              transition: 'all 0.25s ease',
+              marginTop: '0.5rem'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+              e.currentTarget.style.backgroundColor = '#1d4ed8';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.backgroundColor = '#2563eb';
+            }}
+          >
+            Finish Activity
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{
-      width: '100%',
-      minHeight: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      padding: '1.5rem 1rem 2rem 1rem',
-      boxSizing: 'border-box',
-      overflowY: 'auto'
+    <div style={{ 
+      width: '100%', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      padding: '1rem 0.5rem', 
+      boxSizing: 'border-box' 
     }}>
-      <div style={{
-        maxWidth: '1100px',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.8rem'
-      }}>
-        {/* Main Question Card (Clean, Non-Cropped Quiz Box) */}
-        <div style={{
-          backgroundColor: '#ffffff',
-          border: '2.5px solid #818cf8',
-          borderRadius: '24px',
-          padding: '2rem 2.75rem',
-          boxShadow: '0 12px 35px rgba(99, 102, 241, 0.12)',
+      <div style={{ width: '100%', maxWidth: '1050px' }}>
+        {/* Top Bar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', padding: '0 0.5rem' }}>
+          <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 700 }}>Test Your Knowledge</h3>
+          <div style={{ color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600 }}>
+            Question {currentQuestion + 1} of {quizData.length}
+          </div>
+        </div>
+
+        {/* Main Quiz Card */}
+        <div className="glass-panel" style={{ 
+          background: 'var(--surface)', 
+          border: '2px solid #818cf8',
+          borderRadius: '20px', 
+          padding: '1.75rem 2.5rem', 
+          boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '1rem'
+          gap: '1rem',
+          width: '100%',
+          boxSizing: 'border-box'
         }}>
-          {/* Header Row: Title on Left | Question X of Y on Right */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, color: '#4f46e5', fontSize: '1.45rem', fontWeight: 800 }}>
-              {currentQ.title}
-            </h3>
-            <span style={{
-              fontSize: '1rem',
-              fontWeight: 700,
-              color: '#334155',
-              backgroundColor: '#e2e8f0',
-              padding: '0.4rem 1.1rem',
-              borderRadius: '12px'
-            }}>
-              Question {currentQuestion + 1} of {quizData.length}
-            </span>
-          </div>
+          {/* Title */}
+          <h3 style={{ margin: 0, color: '#6366f1', fontSize: '1.45rem', fontWeight: 800 }}>
+            {currentQ.title}
+          </h3>
 
-          <p style={{ fontSize: '1.2rem', color: '#0f172a', fontWeight: 600, margin: 0, lineHeight: '1.5' }}>
+          {/* Question Text */}
+          <p style={{ margin: 0, fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600, color: 'var(--text-heading)' }}>
             {currentQ.question}
           </p>
 
-          {/* Options List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {/* Option Buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {currentQ.options.map((option, index) => {
-              let bgColor = '#f8fafc';
+              let bgColor = 'var(--bg)';
               let borderColor = '#cbd5e1';
-              let textColor = '#1e293b';
               let icon = null;
 
               if (showResult) {
                 if (index === currentQ.correctIndex) {
                   bgColor = 'rgba(16, 185, 129, 0.12)';
                   borderColor = '#10b981';
-                  textColor = '#065f46';
                   icon = <CheckCircle size={22} color="#10b981" />;
                 } else if (index === selectedOption) {
                   bgColor = 'rgba(239, 68, 68, 0.12)';
                   borderColor = '#ef4444';
-                  textColor = '#991b1b';
                   icon = <XCircle size={22} color="#ef4444" />;
                 }
               } else if (index === selectedOption) {
-                borderColor = '#4f46e5';
-                bgColor = 'rgba(79, 70, 229, 0.08)';
+                borderColor = '#6366f1';
+                bgColor = 'rgba(99, 102, 241, 0.08)';
               }
 
               return (
@@ -239,21 +221,21 @@ export default function Quiz({ onComplete, onBack }) {
                   onClick={() => handleOptionSelect(index)}
                   disabled={showResult}
                   style={{
+                    width: '100%',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '0.95rem 1.4rem',
-                    borderRadius: '14px',
+                    padding: '0.9rem 1.35rem',
+                    borderRadius: '12px',
                     background: bgColor,
                     border: `2px solid ${borderColor}`,
-                    color: textColor,
+                    color: 'var(--text)',
                     cursor: showResult ? 'default' : 'pointer',
                     textAlign: 'left',
-                    fontSize: '1.12rem',
+                    fontSize: '1.1rem',
                     fontWeight: 600,
-                    lineHeight: '1.45',
-                    transition: 'all 0.2s ease',
-                    opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.5 : 1
+                    transition: 'all 0.25s ease',
+                    opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.6 : 1
                   }}
                 >
                   <span>{option}</span>
@@ -263,78 +245,41 @@ export default function Quiz({ onComplete, onBack }) {
             })}
           </div>
 
-          {/* Explanation Box if answered */}
+          {/* Explanation & Next Question Button */}
           {showResult && (
-            <div style={{
-              padding: '1rem 1.4rem',
-              backgroundColor: '#f8fafc',
-              borderRadius: '16px',
-              borderLeft: '5px solid #4f46e5',
-              borderTop: '1px solid #e2e8f0',
-              borderRight: '1px solid #e2e8f0',
-              borderBottom: '1px solid #e2e8f0'
-            }}>
-              <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '1.1rem', color: '#4f46e5', fontWeight: 800 }}>Explanation</h4>
-              <p style={{ margin: 0, color: '#334155', fontSize: '1.1rem', lineHeight: '1.5' }}>
-                {currentQ.explanation}
-              </p>
+            <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <div style={{ padding: '1rem 1.35rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '14px', borderLeft: '5px solid #6366f1' }}>
+                <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '1.1rem', fontWeight: 800, color: '#6366f1' }}>Explanation</h4>
+                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.5' }}>{currentQ.explanation}</p>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={handleNext}
+                  style={{
+                    padding: '0.75rem 2.25rem',
+                    background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '30px',
+                    fontSize: '1.15rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',
+                    transition: 'all 0.25s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.03)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  {currentQuestion === quizData.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                </button>
+              </div>
             </div>
           )}
-
-          {/* Bottom Bar: Back on Left | Next Question ONLY shown after answering on Right */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: '0.35rem',
-            paddingTop: '0.75rem',
-            borderTop: '1px solid #e2e8f0'
-          }}>
-            <button
-              onClick={onBack}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.7rem 1.6rem',
-                backgroundColor: '#f1f5f9',
-                color: '#0f172a',
-                border: '2px solid #cbd5e1',
-                borderRadius: '14px',
-                fontSize: '1.05rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              className="hover:bg-slate-200"
-            >
-              <ArrowLeft size={18} /> Back
-            </button>
-
-            {showResult && (
-              <button
-                onClick={handleNext}
-                style={{
-                  padding: '0.75rem 2.2rem',
-                  backgroundColor: '#4f46e5',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '25px',
-                  fontSize: '1.1rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(79, 70, 229, 0.35)',
-                  transition: 'all 0.2s',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem'
-                }}
-                className="hover:bg-indigo-700"
-              >
-                {isFinished ? 'Finish Quiz' : 'Next Question'}
-              </button>
-            )}
-          </div>
         </div>
       </div>
     </div>

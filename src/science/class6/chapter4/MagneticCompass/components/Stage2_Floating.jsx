@@ -116,12 +116,28 @@ export default function Stage2_Floating({ onComplete }) {
   );
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+    <div style={{ 
+      padding: '1.25rem 1.75rem', 
+      display: 'flex', 
+      gap: '1.75rem', 
+      height: '100%', 
+      minHeight: 0, 
+      overflow: 'hidden', 
+      boxSizing: 'border-box',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
+      border: '1.5px solid #1e40af',
+      borderRadius: '20px',
+      boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+    }}>
       {/* Left Side: Interactive Area */}
-      <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ flex: '1.35', display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'center' }}>
         <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Floating the Compass</h3>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
+            Floating the Compass
+          </h3>
+          <p style={{ margin: 0, color: '#94a3b8', fontSize: '1.05rem', fontWeight: 500 }}>
             {step === 'initial' 
               ? "Drag the cork into the bowl of water."
               : "Click the cork to gently rotate it and see what happens."}
@@ -132,17 +148,17 @@ export default function Stage2_Floating({ onComplete }) {
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          maxWidth: '440px', 
-          height: '260px', 
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: '8px',
+          maxWidth: '480px', 
+          height: '280px', 
+          background: '#f8fafc',
+          border: '2px solid #cbd5e1',
+          borderRadius: '20px',
           display: 'flex',
-          flexDirection: 'row', // align side by side
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
+          boxShadow: 'inset 0 0 25px rgba(0,0,0,0.05), 0 8px 25px rgba(0,0,0,0.07)'
         }}>
           
           {/* Water Bowl (2.5D Isometric) */}
@@ -235,7 +251,7 @@ export default function Stage2_Floating({ onComplete }) {
                 }}
               >
                 {renderCorkWithNeedle(false)}
-                <div style={{ position: 'absolute', bottom: '-10px', left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap', fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                <div style={{ position: 'absolute', bottom: '-10px', left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap', fontSize: '0.88rem', color: '#1e293b', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                   <Hand size={14} /> Drag me left
                 </div>
               </motion.div>
@@ -244,32 +260,52 @@ export default function Stage2_Floating({ onComplete }) {
         </div>
 
         {/* Controls */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem' }}>
           <button 
             onClick={handleReset}
-            className="outline"
-            style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            disabled={step === 'initial'}
+            style={{ 
+              padding: '0.85rem 1.75rem', 
+              fontSize: '1.02rem', 
+              fontWeight: 700, 
+              borderRadius: '14px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.6rem',
+              background: step !== 'initial' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+              color: step !== 'initial' ? '#ffffff' : '#1e3a8a',
+              border: step !== 'initial' ? 'none' : '2px solid #3b82f6',
+              cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
+              opacity: step !== 'initial' ? 1 : 0.85,
+              boxShadow: step !== 'initial' ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+            }}
           >
-            <RotateCcw size={18} /> Reset Activity
+            <RotateCcw size={18} color={step !== 'initial' ? '#ffffff' : '#1e3a8a'} /> Reset Activity
           </button>
         </div>
       </div>
 
       {/* Right Side: Instructions */}
-      <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--surface)' }}>
-          <h4 style={{ color: 'var(--text-heading)', margin: '0 0 1rem 0' }}>Instructions</h4>
-          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.9rem' }}>
-            <li style={{ fontWeight: step === 'initial' ? 'bold' : 'normal', color: step === 'initial' ? 'var(--accent-text)' : 'inherit' }}>
+      <div style={{ flex: '0.85', display: 'flex', flexDirection: 'column', gap: '1.25rem', overflowY: 'auto' }}>
+        <div style={{ 
+          padding: '1.35rem 1.6rem', 
+          background: '#ffffff', 
+          border: '2px solid #2563eb', 
+          borderRadius: '16px',
+          boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+        }}>
+          <h4 style={{ color: '#1e3a8a', margin: '0 0 0.75rem 0', fontSize: '1.2rem', fontWeight: 800 }}>Instructions</h4>
+          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: '#1e40af', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.98rem', lineHeight: '1.6', fontWeight: 600 }}>
+            <li style={{ fontWeight: step === 'initial' ? 800 : 600, color: step === 'initial' ? '#ea580c' : '#1e40af' }}>
               Insert the magnetized needle through a small piece of cork.
             </li>
-            <li style={{ fontWeight: step === 'initial' ? 'bold' : 'normal', color: step === 'initial' ? 'var(--accent-text)' : 'inherit' }}>
+            <li style={{ fontWeight: step === 'initial' ? 800 : 600, color: step === 'initial' ? '#ea580c' : '#1e40af' }}>
               <strong>Drag</strong> the cork to let it float in the bowl of water. Make sure the needle does not touch the water.
             </li>
-            <li style={{ fontWeight: step === 'settled' && spinCount === 0 ? 'bold' : 'normal', color: step === 'settled' && spinCount === 0 ? 'var(--accent-text)' : 'inherit' }}>
+            <li style={{ fontWeight: step === 'settled' && spinCount === 0 ? 800 : 600, color: step === 'settled' && spinCount === 0 ? '#ea580c' : '#1e40af' }}>
               Observe the direction in which the needle points when the cork stops rotating.
             </li>
-            <li style={{ fontWeight: step === 'settled' && spinCount > 0 ? 'bold' : 'normal', color: step === 'settled' && spinCount > 0 ? 'var(--accent-text)' : 'inherit' }}>
+            <li style={{ fontWeight: step === 'settled' && spinCount > 0 ? 800 : 600, color: step === 'settled' && spinCount > 0 ? '#ea580c' : '#1e40af' }}>
               <strong>Click the cork</strong> to gently rotate it and wait till it stops rotating. Repeat this a few more times. Do the ends always point in the same direction?
             </li>
           </ol>
@@ -280,23 +316,43 @@ export default function Stage2_Floating({ onComplete }) {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="glass-panel"
-              style={{ padding: '1.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)' }}
+              style={{ 
+                padding: '1.35rem 1.6rem', 
+                background: '#ffffff', 
+                border: '2px solid #10b981', 
+                borderRadius: '16px',
+                boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+              }}
             >
-              <h4 style={{ color: 'var(--text-heading)', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <CheckCircle size={20} style={{ color: 'var(--success)' }} /> 
+              <h4 style={{ color: '#1e3a8a', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.15rem', fontWeight: 800 }}>
+                <CheckCircle size={22} style={{ color: '#10b981' }} /> 
                 Observation
               </h4>
-              <p style={{ margin: '0 0 1rem 0', color: 'var(--success)', fontSize: '0.9rem', fontWeight: '500' }}>
+              <p style={{ margin: '0 0 1rem 0', color: '#065f46', fontSize: '0.98rem', fontWeight: '700' }}>
                 Yes! No matter how you spin it, the magnetized needle always comes to rest pointing in the <strong>North-South</strong> direction, just like a standard magnetic compass!
               </p>
               
               <button 
                 onClick={handleFinish}
-                className="primary"
-                style={{ width: '100%', padding: '0.75rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', background: '#10b981', borderColor: '#10b981' }}
+                style={{ 
+                  width: '100%', 
+                  padding: '0.9rem 1.6rem', 
+                  fontSize: '1.05rem', 
+                  fontWeight: 800, 
+                  borderRadius: '35px', 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  alignItems: 'center', 
+                  gap: '0.75rem',
+                  background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                  color: '#ffffff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',
+                  transition: 'all 0.25s ease'
+                }}
               >
-                <Flag size={16} /> Finish Activity
+                <Flag size={20} color="#ffffff" /> Finish Activity
               </button>
             </motion.div>
           )}
