@@ -93,11 +93,11 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
               gap: '0.15rem',
               padding: '0.35rem 0.4rem',
               fontSize: '0.62rem',
-              fontWeight: 'bold',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border)',
+              fontWeight: '800',
+              color: '#0f172a',
+              border: '1.5px solid #cbd5e1',
               borderRadius: '10px',
-              background: 'transparent',
+              background: '#ffffff',
               cursor: 'pointer',
               flexShrink: 0,
               minHeight: '64px',
@@ -107,9 +107,9 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
               textAlign: 'center'
             }}
           >
-            <ArrowLeft size={13} />
-            <span>Back to</span>
-            <span>Main Page</span>
+            <ArrowLeft size={14} color="#0f172a" />
+            <span style={{ color: '#0f172a', fontWeight: '800' }}>Back to</span>
+            <span style={{ color: '#0f172a', fontWeight: '800' }}>Main Page</span>
           </button>
 
           <nav
@@ -141,27 +141,27 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.45rem 0.55rem',
-                background: isActive ? 'var(--surface)' : 'transparent',
-                border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
+                background: isActive ? '#ffffff' : '#f8fafc',
+                border: `1.5px solid ${isActive ? '#F5A623' : '#cbd5e1'}`,
                 borderRadius: '12px',
                 width: '100%',
                 minHeight: '64px',
                 minWidth: '118px',
-                opacity: tab.locked ? 0.4 : 1,
+                opacity: 1,
                 cursor: tab.locked ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: isActive ? '0 4px 15px rgba(99, 102, 241, 0.15)' : 'none',
+                boxShadow: isActive ? '0 4px 15px rgba(245, 166, 35, 0.25)' : 'none',
                 textAlign: 'left',
                 boxSizing: 'border-box',
                 flexShrink: 0
               }}
             >
-              <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: isActive ? 'var(--accent)' : 'var(--border)', color: isActive ? '#fff' : 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 'bold', flexShrink: 0 }}>
-                {isCompleted ? <CheckCircle size={11} /> : tab.id}
+              <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: isActive ? '#F5A623' : (isCompleted ? '#F5A623' : '#64748b'), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0 }}>
+                {isCompleted ? <CheckCircle size={12} /> : tab.id}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', minWidth: 0, flex: 1 }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: isActive ? 'var(--text-heading)' : 'var(--text-primary)', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.title}</span>
-                <span style={{ fontSize: '0.56rem', color: 'var(--text-muted)', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.subtitle}</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#0f172a', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.title}</span>
+                <span style={{ fontSize: '0.64rem', color: isActive ? '#d97706' : '#334155', lineHeight: 1.2, whiteSpace: 'normal', width: '100%', fontWeight: '700' }}>{tab.subtitle}</span>
               </div>
             </button>
           );

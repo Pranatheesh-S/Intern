@@ -556,31 +556,31 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
                 {currentStep === 0 && (
                   <motion.div key="book0" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="coords-card">
                     <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--navy)', marginBottom: '16px' }}>Earth&apos;s Rotation</h3>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '12px' }}>The Earth is a sphere, so it has <strong>360° of longitude</strong>. It completes one full spin on its axis every <strong>24 hours</strong>.</p>
-                    <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', marginTop: '16px', borderLeft: '4px solid #3b82f6' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase' }}>The Math</div>
-                      <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#334155', marginTop: '4px' }}>360° ÷ 24 hours = 15° per hour</div>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '12px', fontWeight: 600 }}>The Earth is a sphere, so it has <strong>360° of longitude</strong>. It completes one full spin on its axis every <strong>24 hours</strong>.</p>
+                    <div style={{ background: '#FFF9F0', padding: '16px', borderRadius: '12px', marginTop: '16px', border: '1.5px solid #F2DFBC', borderLeft: '5px solid #D97706' }}>
+                      <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#92400E', textTransform: 'uppercase', letterSpacing: '0.06em' }}>The Math</div>
+                      <div style={{ fontSize: '19px', fontWeight: 900, color: 'var(--navy)', marginTop: '4px' }}>360° ÷ 24 hours = 15° per hour</div>
                     </div>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginTop: '16px' }}>This means that for every 15° you move East or West, the local time changes by exactly one hour!</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginTop: '16px', fontWeight: 600 }}>This means that for every 15° you move East or West, the local time changes by exactly one hour!</p>
                   </motion.div>
                 )}
 
                 {currentStep === 1 && (
                   <motion.div key="book1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="coords-card">
                     <div className="coords-task-header">
-                      <div className="coords-task-badge" style={{ background: '#f59e0b', color: '#fff' }}>INTERACTIVE</div>
+                      <div className="coords-task-badge" style={{ background: '#FEF3C7', color: '#92400E', border: '1px solid #FDE68A', fontWeight: 800 }}>INTERACTIVE</div>
                       <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--navy)' }}>Prove it yourself!</h3>
                     </div>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '24px' }}>Use the slider below to control the hours of the day. Watch how the Earth rotates from West to East, moving 15° of longitude into the sunlight every hour.</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '24px', fontWeight: 600 }}>Use the slider below to control the hours of the day. Watch how the Earth rotates from West to East, moving 15° of longitude into the sunlight every hour.</p>
                     
-                    <div style={{ background: '#f8fafc', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                      <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '18px', color: 'var(--navy)', marginBottom: '8px' }}>
+                    <div style={{ background: '#FFF9F0', padding: '24px', borderRadius: '14px', border: '1.5px solid #F2DFBC' }}>
+                      <div style={{ textAlign: 'center', fontWeight: 800, fontSize: '18px', color: 'var(--navy)', marginBottom: '6px' }}>
                         Hour of Day: {sunHour}:00
                       </div>
-                      <div style={{ textAlign: 'center', fontSize: '14px', color: '#64748b', marginBottom: '16px' }}>
+                      <div style={{ textAlign: 'center', fontSize: '13.5px', color: '#92400E', fontWeight: 700, marginBottom: '16px' }}>
                         Earth has rotated {sunHour * 15}°
                       </div>
-                      <input type="range" style={{ width: '100%', accentColor: '#f59e0b', cursor: 'pointer', height: '6px' }} min="1" max="24" value={sunHour} onChange={e => setSunHour(Number(e.target.value))} />
+                      <input type="range" style={{ width: '100%', accentColor: '#D97706', cursor: 'pointer', height: '6px' }} min="1" max="24" value={sunHour} onChange={e => setSunHour(Number(e.target.value))} />
                     </div>
                   </motion.div>
                 )}
@@ -588,29 +588,29 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
                 {currentStep === 2 && (
                   <motion.div key="book2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="coords-card">
                     <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--navy)', marginBottom: '16px' }}>Local Time vs Standard Time</h3>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '12px' }}>Imagine two friends calling each other in the late afternoon. One is in <strong>Porbandar (Gujarat)</strong> in the west. The other is in <strong>Tinsukia (Assam)</strong> in the east.</p>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '12px' }}>Because Tinsukia is much further east, the sun sets there almost <strong>2 hours earlier</strong> than in Porbandar!</p>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6 }}>If every city used its own local time based on the sun, train schedules and school times would be a mess.</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '12px', fontWeight: 600 }}>Imagine two friends calling each other in the late afternoon. One is in <strong>Porbandar (Gujarat)</strong> in the west. The other is in <strong>Tinsukia (Assam)</strong> in the east.</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '12px', fontWeight: 600 }}>Because Tinsukia is much further east, the sun sets there almost <strong>2 hours earlier</strong> than in Porbandar!</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, fontWeight: 600 }}>If every city used its own local time based on the sun, train schedules and school times would be a mess.</p>
                   </motion.div>
                 )}
 
                 {currentStep === 3 && (
                   <motion.div key="book3" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="coords-card">
                     <div className="coords-task-header">
-                      <div className="coords-task-badge" style={{ background: '#f59e0b', color: '#fff' }}>INTERACTIVE</div>
+                      <div className="coords-task-badge" style={{ background: '#FEF3C7', color: '#92400E', border: '1px solid #FDE68A', fontWeight: 800 }}>INTERACTIVE</div>
                       <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--navy)' }}>Indian Standard Time (IST)</h3>
                     </div>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '24px' }}>To avoid confusion, India chose the <strong>82.5° E longitude</strong> as the central meridian. Everyone follows this time, called <strong>Indian Standard Time (IST)</strong>.</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '20px', fontWeight: 600 }}>To avoid confusion, India chose the <strong>82.5° E longitude</strong> as the central meridian. Everyone follows this time, called <strong>Indian Standard Time (IST)</strong>.</p>
                     
-                    <div style={{ background: '#f8fafc', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                      <label style={{ display: 'block', marginBottom: '12px', fontSize: '14px', fontWeight: 'bold', color: 'var(--navy)', textAlign: 'center' }}>Scrub Time of Day</label>
-                      <input type="range" style={{ width: '100%', accentColor: '#ef4444', cursor: 'pointer', height: '6px', marginBottom: '24px' }} min="15" max="21" step="0.5" value={sunsetTime} onChange={e => setSunsetTime(Number(e.target.value))} />
+                    <div style={{ background: '#FFF9F0', padding: '20px', borderRadius: '14px', border: '1.5px solid #F2DFBC' }}>
+                      <label style={{ display: 'block', marginBottom: '12px', fontSize: '14px', fontWeight: 800, color: 'var(--navy)', textAlign: 'center' }}>Scrub Time of Day</label>
+                      <input type="range" style={{ width: '100%', accentColor: '#D97706', cursor: 'pointer', height: '6px', marginBottom: '20px' }} min="15" max="21" step="0.5" value={sunsetTime} onChange={e => setSunsetTime(Number(e.target.value))} />
                       
                       <button 
                         onClick={() => setUseIST(!useIST)}
-                        style={{ width: '100%', background: useIST ? 'var(--green)' : '#94a3b8', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', cursor: 'pointer', textAlign: 'center', fontWeight: 'bold', transition: 'all 0.2s' }}
+                        style={{ width: '100%', background: useIST ? 'var(--green)' : '#D97706', color: '#fff', border: 'none', padding: '12px', borderRadius: '10px', cursor: 'pointer', textAlign: 'center', fontWeight: 800, transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}
                       >
-                        {useIST ? 'Using Indian Standard Time (IST)' : 'Using Local Solar Time'}
+                        {useIST ? '✓ Using Indian Standard Time (IST)' : 'Switch to Indian Standard Time (IST)'}
                       </button>
                     </div>
                   </motion.div>
@@ -619,16 +619,16 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
                 {currentStep === 4 && (
                   <motion.div key="book4" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="coords-card">
                     <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--navy)', marginBottom: '16px' }}>Time Zones Around the World</h3>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '12px' }}>Most countries are small enough to have just one standard time. But what about massive countries that stretch across many meridians?</p>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '24px' }}>
-                      The <button onClick={() => setWcHighlight('usa')} style={{ background: 'none', border: 'none', color: '#3b82f6', fontWeight: 'bold', cursor: 'pointer', textDecoration: 'underline', padding: 0, fontSize: '16px' }}>USA</button> is so wide it has to use 6 different time zones. 
-                      <button onClick={() => setWcHighlight('russia')} style={{ background: 'none', border: 'none', color: '#22c55e', fontWeight: 'bold', cursor: 'pointer', textDecoration: 'underline', padding: 0, fontSize: '16px', marginLeft: '4px' }}>Russia</button> is even wider and uses 11 time zones!
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '12px', fontWeight: 600 }}>Most countries are small enough to have just one standard time. But what about massive countries that stretch across many meridians?</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '20px', fontWeight: 600 }}>
+                      The <button onClick={() => setWcHighlight('usa')} style={{ background: '#FEF3C7', border: '1px solid #FDE68A', color: '#92400E', fontWeight: 800, cursor: 'pointer', padding: '2px 6px', borderRadius: '6px', fontSize: '14.5px' }}>USA</button> is so wide it has to use 6 different time zones. 
+                      <button onClick={() => setWcHighlight('russia')} style={{ background: '#DCFCE7', border: '1px solid #86EFAC', color: '#166534', fontWeight: 800, cursor: 'pointer', padding: '2px 6px', borderRadius: '6px', fontSize: '14.5px', marginLeft: '6px' }}>Russia</button> is even wider and uses 11 time zones!
                     </p>
                     
-                    <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
-                      <button onClick={() => setWcHighlight('none')} style={{ flex: 1, background: wcHighlight === 'none' ? 'var(--blue)' : '#f1f5f9', color: wcHighlight === 'none' ? '#fff' : '#475569', border: '1px solid #cbd5e1', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>Global</button>
-                      <button onClick={() => setWcHighlight('usa')} style={{ flex: 1, background: wcHighlight === 'usa' ? 'var(--blue)' : '#f1f5f9', color: wcHighlight === 'usa' ? '#fff' : '#475569', border: '1px solid #cbd5e1', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>USA (6)</button>
-                      <button onClick={() => setWcHighlight('russia')} style={{ flex: 1, background: wcHighlight === 'russia' ? 'var(--blue)' : '#f1f5f9', color: wcHighlight === 'russia' ? '#fff' : '#475569', border: '1px solid #cbd5e1', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>Russia (11)</button>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
+                      <button onClick={() => setWcHighlight('none')} style={{ flex: 1, background: wcHighlight === 'none' ? '#D97706' : '#FFF9F0', color: wcHighlight === 'none' ? '#fff' : '#78350F', border: '1.5px solid #F2DFBC', padding: '12px', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}>Global</button>
+                      <button onClick={() => setWcHighlight('usa')} style={{ flex: 1, background: wcHighlight === 'usa' ? '#D97706' : '#FFF9F0', color: wcHighlight === 'usa' ? '#fff' : '#78350F', border: '1.5px solid #F2DFBC', padding: '12px', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}>USA (6)</button>
+                      <button onClick={() => setWcHighlight('russia')} style={{ flex: 1, background: wcHighlight === 'russia' ? '#D97706' : '#FFF9F0', color: wcHighlight === 'russia' ? '#fff' : '#78350F', border: '1.5px solid #F2DFBC', padding: '12px', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}>Russia (11)</button>
                     </div>
                   </motion.div>
                 )}
@@ -636,15 +636,15 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
                 {currentStep === 5 && (
                   <motion.div key="book5" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="coords-card">
                     <div className="coords-task-header">
-                      <div className="coords-task-badge" style={{ background: '#f59e0b', color: '#fff' }}>INTERACTIVE</div>
+                      <div className="coords-task-badge" style={{ background: '#FEF3C7', color: '#92400E', border: '1px solid #FDE68A', fontWeight: 800 }}>INTERACTIVE</div>
                       <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--navy)' }}>Explore the World Clock</h3>
                     </div>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '24px' }}>Highlight the USA or Russia on the globe to visualize why they need multiple standard times.</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '20px', fontWeight: 600 }}>Highlight the USA or Russia on the globe to visualize why they need multiple standard times.</p>
                     
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      <button onClick={() => setWcHighlight('none')} style={{ background: wcHighlight === 'none' ? 'var(--blue)' : '#f1f5f9', color: wcHighlight === 'none' ? '#fff' : '#475569', border: '1px solid #cbd5e1', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>Global View</button>
-                      <button onClick={() => setWcHighlight('usa')} style={{ background: wcHighlight === 'usa' ? 'var(--blue)' : '#f1f5f9', color: wcHighlight === 'usa' ? '#fff' : '#475569', border: '1px solid #cbd5e1', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>USA (6 Zones)</button>
-                      <button onClick={() => setWcHighlight('russia')} style={{ background: wcHighlight === 'russia' ? 'var(--blue)' : '#f1f5f9', color: wcHighlight === 'russia' ? '#fff' : '#475569', border: '1px solid #cbd5e1', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>Russia (11 Zones)</button>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <button onClick={() => setWcHighlight('none')} style={{ background: wcHighlight === 'none' ? '#D97706' : '#FFF9F0', color: wcHighlight === 'none' ? '#fff' : '#78350F', border: '1.5px solid #F2DFBC', padding: '12px', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}>Global View</button>
+                      <button onClick={() => setWcHighlight('usa')} style={{ background: wcHighlight === 'usa' ? '#D97706' : '#FFF9F0', color: wcHighlight === 'usa' ? '#fff' : '#78350F', border: '1.5px solid #F2DFBC', padding: '12px', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}>USA (6 Zones)</button>
+                      <button onClick={() => setWcHighlight('russia')} style={{ background: wcHighlight === 'russia' ? '#D97706' : '#FFF9F0', color: wcHighlight === 'russia' ? '#fff' : '#78350F', border: '1.5px solid #F2DFBC', padding: '12px', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}>Russia (11 Zones)</button>
                     </div>
                   </motion.div>
                 )}
@@ -652,36 +652,36 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
                 {currentStep === 6 && (
                   <motion.div key="book6" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="coords-card">
                     <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--navy)', marginBottom: '16px' }}>The International Date Line</h3>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '12px' }}>What happens when you travel halfway around the world? Opposite the Prime Meridian is the <strong>180° longitude</strong> line.</p>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6 }}>This line is called the <strong>International Date Line</strong>. Because you add hours travelling East and subtract hours travelling West, crossing this line means you must change your calendar date!</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '12px', fontWeight: 600 }}>What happens when you travel halfway around the world? Opposite the Prime Meridian is the <strong>180° longitude</strong> line.</p>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, fontWeight: 600 }}>This line is called the <strong>International Date Line</strong>. Because you add hours travelling East and subtract hours travelling West, crossing this line means you must change your calendar date!</p>
                   </motion.div>
                 )}
 
                 {currentStep === 7 && (
                   <motion.div key="book7" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="coords-card">
                     <div className="coords-task-header">
-                      <div className="coords-task-badge" style={{ background: '#ef4444', color: '#fff' }}>MISSION</div>
+                      <div className="coords-task-badge" style={{ background: '#FEF3C7', color: '#92400E', border: '1px solid #FDE68A', fontWeight: 800 }}>MISSION</div>
                       <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--navy)' }}>Pacific Flight</h3>
                     </div>
-                    <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, marginBottom: '16px' }}>You are piloting a plane across the Pacific Ocean. When you cross the International Date Line, you must adjust your calendar.</p>
-                    <ul style={{ padding: '16px', background: '#fef3c7', borderRadius: '12px', borderLeft: '4px solid #f59e0b', listStyle: 'none', margin: '0 0 24px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      <li style={{ fontSize: '15px', color: '#92400e' }}><strong>Cross East ➡:</strong> Subtract a day</li>
-                      <li style={{ fontSize: '15px', color: '#92400e' }}><strong>Cross West ⬅:</strong> Add a day</li>
+                    <p style={{ fontSize: '15px', color: 'var(--ink)', lineHeight: 1.6, marginBottom: '16px', fontWeight: 600 }}>You are piloting a plane across the Pacific Ocean. When you cross the International Date Line, you must adjust your calendar.</p>
+                    <ul style={{ padding: '16px', background: '#FEF3C7', borderRadius: '12px', border: '1.5px solid #FDE68A', borderLeft: '5px solid #D97706', listStyle: 'none', margin: '0 0 20px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <li style={{ fontSize: '14.5px', color: '#92400E', fontWeight: 700 }}><strong>Cross East ➡:</strong> Subtract a day</li>
+                      <li style={{ fontSize: '14.5px', color: '#92400E', fontWeight: 700 }}><strong>Cross West ⬅:</strong> Add a day</li>
                     </ul>
                     
                     <div style={{ display: 'flex', gap: '12px' }}>
-                      <button onClick={() => startFlight('east')} disabled={idlProgress > 0 && idlProgress < 1} style={{ flex: 1, background: 'var(--blue)', color: '#fff', border: 'none', padding: '16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>Fly East ➡</button>
-                      <button onClick={() => startFlight('west')} disabled={idlProgress > 0 && idlProgress < 1} style={{ flex: 1, background: 'var(--navy)', color: '#fff', border: 'none', padding: '16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}>⬅ Fly West</button>
+                      <button onClick={() => startFlight('east')} disabled={idlProgress > 0 && idlProgress < 1} style={{ flex: 1, background: '#D97706', color: '#fff', border: 'none', padding: '14px', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}>Fly East ➡</button>
+                      <button onClick={() => startFlight('west')} disabled={idlProgress > 0 && idlProgress < 1} style={{ flex: 1, background: 'var(--navy)', color: '#fff', border: 'none', padding: '14px', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}>⬅ Fly West</button>
                     </div>
                   </motion.div>
                 )}
 
                 {currentStep === 8 && (
                   <motion.div key="book8" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="coords-card">
-                    <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                      <CheckCircle2 size={64} color="var(--green)" style={{ margin: '0 auto 16px' }} />
-                      <h2 style={{ fontSize: '28px', color: 'var(--navy)', marginBottom: '16px' }}>Chapter Complete!</h2>
-                      <p style={{ fontSize: '18px', color: '#475569', lineHeight: 1.6 }}>You&apos;ve mastered Time Zones, the Earth&apos;s rotation, and the International Date Line!</p>
+                    <div style={{ textAlign: 'center', padding: '24px 0' }}>
+                      <CheckCircle2 size={56} color="var(--green)" style={{ margin: '0 auto 14px' }} />
+                      <h2 style={{ fontSize: '26px', color: 'var(--navy)', marginBottom: '12px' }}>Chapter Complete!</h2>
+                      <p style={{ fontSize: '16px', color: 'var(--ink)', lineHeight: 1.6, fontWeight: 600 }}>You&apos;ve mastered Time Zones, the Earth&apos;s rotation, and the International Date Line!</p>
                     </div>
                   </motion.div>
                 )}

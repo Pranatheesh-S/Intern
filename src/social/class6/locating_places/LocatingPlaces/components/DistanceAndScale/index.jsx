@@ -54,10 +54,10 @@ export default function DistanceAndScale({ onComplete, onBack }) {
     <div className="distance-scale-container">
       <style>{`
         .distance-scale-container {
-          --navy: #0E3556; --ink: #20303f; --mut: #5c6b7a; --card: #F3F7FC; --cardline: #e4ebf3;
-          --amber: #F5A623; --blue: #2f6df0; --green: #12a15f; --violet: #7c5cff;
-          --paper1: #F7F1E2; --paper2: #EFE6D2;
-          --serif: "Fraunces", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; --geo: "Space Grotesk", system-ui, sans-serif;
+          --navy: #78350F; --ink: #3D2E24; --mut: #92400E; --card: #FFF9F0; --cardline: #F2DFBC;
+          --amber: #D97706; --blue: #2563EB; --green: #16A34A; --violet: #7C3AED;
+          --paper1: #FFF9F0; --paper2: #FBF3E3;
+          --serif: "Fraunces", Georgia, serif; --mono: "Space Grotesk", sans-serif; --geo: "Space Grotesk", system-ui, sans-serif;
           
           font-family: var(--geo);
           color: var(--ink);
@@ -65,10 +65,9 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           display: flex;
           flex-direction: column;
           min-height: 650px;
-          display: flex;
-          flex-direction: column;
           box-sizing: border-box;
           border-radius: 16px;
+          background: linear-gradient(160deg, #F7F1E2 0%, #EFE6D2 100%);
         }
         
         .distance-scale-container * {
@@ -77,46 +76,46 @@ export default function DistanceAndScale({ onComplete, onBack }) {
 
         .ds-spread {
           flex: 1; display: grid; grid-template-columns: 0.92fr 1.08fr; border-radius: 16px; overflow: hidden; position: relative;
-          border: 6px solid var(--navy); box-shadow: 0 10px 40px rgba(14,42,69,.2);
-          background: #d9dfe8;
+          border: 2px solid #F2DFBC; box-shadow: 0 8px 30px rgba(60,40,20,0.06);
+          background: #EFE6D2;
         }
-        .ds-spread::after { content:""; position:absolute; left:47%; top:0; bottom:0; width:3px; background:rgba(20,40,69,.14); z-index:3; }
-        .ds-ribbon { position:absolute; top:-6px; left:44%; width:20px; height:64px; background:#c0392b; z-index:4; border-radius:0 0 3px 3px; }
+        .ds-spread::after { content:""; position:absolute; left:47%; top:0; bottom:0; width:2px; background: #F2DFBC; z-index:3; }
+        .ds-ribbon { position:absolute; top:-6px; left:44%; width:20px; height:64px; background:#D97706; z-index:4; border-radius:0 0 3px 3px; }
         
-        .ds-left { background:linear-gradient(160deg,var(--paper1),var(--paper2)); padding:clamp(12px,1.5vw,20px); display:flex; flex-direction:column; min-height:0; overflow:hidden; }
-        .ds-eyebrow { font-family:var(--mono); font-size:clamp(14px,0.9vw,14px); letter-spacing:.2em; text-transform:uppercase; color:var(--amber); font-weight:600; margin-bottom: 0; }
+        .ds-left { background:linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%); padding:clamp(12px,1.5vw,20px); display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+        .ds-eyebrow { font-family:var(--geo); font-size:clamp(12px,0.85vw,13px); letter-spacing:.1em; text-transform:uppercase; color:var(--amber); font-weight:800; margin-bottom: 0; }
         .ds-h1 { font-family:var(--serif); font-weight:900; color:var(--navy); font-size:clamp(26px,3.2vw,44px); line-height:1; margin:2px 0; }
-        .ds-sub { font-family:var(--serif); font-style:italic; color:#8a6a3a; font-size:clamp(14px,1.5vw,18px); margin-bottom:clamp(6px,1vw,10px); }
-        .ds-left p { font-size:14px; line-height:1.4; color:var(--ink); margin-bottom:8px; margin-top:0; }
-        .ds-left p b { color:var(--navy); }
+        .ds-sub { font-family:var(--serif); font-style:italic; color:#92400E; font-size:clamp(14px,1.5vw,18px); margin-bottom:clamp(6px,1vw,10px); }
+        .ds-left p { font-size:14px; line-height:1.45; color:var(--ink); margin-bottom:8px; margin-top:0; font-weight:600; }
+        .ds-left p b { color:var(--navy); font-weight:800; }
         
         .ds-comp { display:flex; gap:8px; margin:4px 0 14px; flex-wrap:wrap; }
-        .ds-comp span { cursor: pointer; font-family:var(--mono); font-size: 14px; font-weight:600; padding:6px 12px; border-radius:8px; border:1px solid #d8c8a4; background:#fbf5e6; color:#8a6a3a; user-select: none; }
-        .ds-comp span.ds-on { background:var(--navy); color:#fff; border-color:var(--navy); }
+        .ds-comp span { cursor: pointer; font-family:var(--geo); font-size: 13.5px; font-weight:700; padding:6px 14px; border-radius:8px; border:1.5px solid #F2DFBC; background:#FFF9F0; color:#92400E; user-select: none; }
+        .ds-comp span.ds-on { background:#92400E; color:#fff; border-color:#92400E; }
         
         .ds-scaleex { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0 14px; }
-        .ds-scaleex .ds-e { background:#fbf5e6; border:1px solid #e0d3b0; border-radius:10px; padding:11px 13px; }
-        .ds-scaleex .ds-e .ds-k { font-family:var(--mono); font-size: 14px; letter-spacing:.1em; color:#8a6a3a; text-transform:uppercase; margin-bottom:0; }
-        .ds-scaleex .ds-e .ds-v { font-weight:700; color:var(--navy); font-size:clamp(14px,1.6vw,18px); margin-top:3px; margin-bottom:0; }
+        .ds-scaleex .ds-e { background:#FFFFFF; border:1.5px solid #F2DFBC; border-radius:10px; padding:11px 13px; }
+        .ds-scaleex .ds-e .ds-k { font-family:var(--geo); font-size: 12px; letter-spacing:.06em; color:#92400E; text-transform:uppercase; margin-bottom:0; font-weight:800; }
+        .ds-scaleex .ds-e .ds-v { font-weight:800; color:var(--navy); font-size:clamp(14px,1.6vw,18px); margin-top:3px; margin-bottom:0; }
         
-        .ds-dyk { margin-top:auto; background:#fcf0cf; border-left:5px solid var(--amber); border-radius:10px; padding:clamp(12px,1.6vw,18px); }
-        .ds-dyk h4 { display:flex; gap:7px; align-items:center; color:#b4761c; font-weight:700; font-size: 14px; margin-bottom:5px; margin-top:0; }
-        .ds-dyk p { color:#8a5a12; font-size: 14px; line-height:1.5; margin:0; }
+        .ds-dyk { margin-top:auto; background:#FEF3C7; border:1.5px solid #FDE68A; border-left:5px solid var(--amber); border-radius:10px; padding:clamp(12px,1.6vw,18px); }
+        .ds-dyk h4 { display:flex; gap:7px; align-items:center; color:#92400E; font-weight:800; font-size: 14px; margin-bottom:5px; margin-top:0; }
+        .ds-dyk p { color:#78350F; font-size: 13.5px; line-height:1.45; margin:0; font-weight:600; }
         
-        .ds-right { background:#fbfdff; padding:clamp(18px,2.4vw,36px); display:flex; flex-direction:column; min-height:0; position:relative; }
+        .ds-right { background:linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%); padding:clamp(18px,2.4vw,36px); display:flex; flex-direction:column; min-height:0; position:relative; border-left:2px solid #F2DFBC; }
         .ds-rlabel { display:flex; align-items:center; gap:8px; color:var(--navy); font-family:var(--serif); font-weight:900; font-size:clamp(22px,2.5vw,28px); margin-bottom: 4px; }
-        .ds-rsub { font-size: 14px; color: var(--mut); margin-bottom: 12px; font-weight: 500; }
+        .ds-rsub { font-size: 13.5px; color: var(--mut); margin-bottom: 12px; font-weight: 600; }
         
         .ds-scroll { flex:1; min-height:0; overflow:hidden; padding-right:12px; display:flex; flex-direction:column; gap:20px; position: relative; }
         .ds-scroll::-webkit-scrollbar { width:6px; }
-        .ds-scroll::-webkit-scrollbar-thumb { background:#d4deea; border-radius:3px; }
+        .ds-scroll::-webkit-scrollbar-thumb { background:#F2DFBC; border-radius:3px; }
 
         .ds-step-card {
-          background: #fff;
-          border: 1px solid var(--cardline);
+          background: #FFFFFF;
+          border: 1.5px solid #F2DFBC;
           border-radius: 16px;
           padding: 20px;
-          box-shadow: 0 4px 12px rgba(14,42,69,0.04);
+          box-shadow: 0 4px 12px rgba(60,40,20,0.03);
         }
         
         .ds-step-title {
@@ -130,12 +129,13 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           flex-direction: column;
         }
         .ds-step-title-num {
-          font-family: var(--mono);
-          font-size: 14px;
+          font-family: var(--geo);
+          font-size: 12px;
           color: var(--amber);
           text-transform: uppercase;
-          letter-spacing: 0.1em;
+          letter-spacing: 0.08em;
           margin-bottom: 4px;
+          font-weight: 800;
         }
 
         .ds-step1-content {
@@ -182,19 +182,19 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           gap: 8px;
           padding: 14px;
           border-radius: 12px;
-          border: 2px solid var(--cardline);
-          background: #f7f9fc;
+          border: 1.5px solid var(--cardline);
+          background: #FFF9F0;
           cursor: pointer;
           font-family: var(--geo);
           font-size: 14px;
-          font-weight: 700;
-          color: var(--mut);
+          font-weight: 800;
+          color: #78350F;
           transition: all 0.2s;
         }
         .ds-seg-btn.ds-seg-active {
-          border-color: var(--violet);
-          background: #f5f2ff;
-          color: var(--violet);
+          border-color: var(--amber);
+          background: #FEF3C7;
+          color: #92400E;
         }
         .ds-seg-circle {
           width: 16px;
@@ -214,8 +214,8 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         }
 
         .ds-calc-box {
-          background: #f4f8ff;
-          border: 1px solid #dbe6f7;
+          background: #FFF9F0;
+          border: 1.5px solid #F2DFBC;
           border-radius: 12px;
           padding: 20px;
           display: flex;
@@ -239,23 +239,26 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           gap: 4px;
         }
         .ds-calc-label {
-          font-family: var(--mono);
-          font-size: 14px;
+          font-family: var(--geo);
+          font-size: 12px;
           color: var(--mut);
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.06em;
+          font-weight: 800;
         }
         .ds-calc-val {
-          background: #fff;
+          background: #FFFFFF;
           padding: 6px 16px;
           border-radius: 8px;
-          border: 1px solid #dbe6f7;
-          color: var(--blue);
+          border: 1.5px solid #F2DFBC;
+          color: var(--navy);
+          font-weight: 800;
         }
         .ds-calc-val-q {
           background: var(--amber);
           color: #fff;
           border: none;
+          font-weight: 800;
         }
 
         .ds-primary-btn {
@@ -268,7 +271,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           border: none;
           border-radius: 999px;
           cursor: pointer;
-          box-shadow: 0 4px 12px rgba(245,166,35,0.3);
+          box-shadow: 0 4px 14px rgba(217,119,6,0.3);
           transition: all 0.2s;
           width: 100%;
           margin-top: 16px;
@@ -278,18 +281,17 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           gap: 8px;
         }
         .ds-primary-btn:hover {
-          background: var(--amber);
+          background: #B45309;
           color: #fff;
           transform: scale(1.02);
-          filter: brightness(1.05);
         }
         .ds-primary-btn:active {
           transform: scale(0.98);
         }
 
         .ds-result-card {
-          background: #e8f5e9;
-          border: 1px solid #c8e6c9;
+          background: #DCFCE7;
+          border: 1.5px solid #86EFAC;
           border-radius: 16px;
           padding: 24px;
           display: flex;
@@ -300,7 +302,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         }
         @keyframes ds-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .ds-res-title {
-          color: var(--green);
+          color: #166534;
           font-size: 22px;
           font-weight: 900;
           margin: 8px 0;
@@ -312,15 +314,17 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           font-size: 14px;
           color: var(--ink);
           margin-bottom: 12px;
+          font-weight: 600;
         }
         .ds-res-big {
           font-size: 32px;
           font-weight: 900;
-          color: var(--green);
+          color: #166534;
           background: #fff;
           padding: 8px 24px;
           border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(18,161,95,0.1);
+          box-shadow: 0 2px 8px rgba(22,101,52,0.1);
+          border: 1.5px solid #86EFAC;
         }
         
         .ds-res-comp {
@@ -330,11 +334,12 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           width: 100%;
           margin-top: 20px;
           padding-top: 20px;
-          border-top: 1px solid #c8e6c9;
+          border-top: 1.5px solid #86EFAC;
         }
         
         .ds-rem-card {
-          background: #e1edfb;
+          background: #FEF3C7;
+          border: 1.5px solid #FDE68A;
           border-radius: 12px;
           padding: 16px;
         }
@@ -342,7 +347,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           font-family: var(--geo);
           font-weight: 800;
           font-size: 14px;
-          color: var(--blue);
+          color: #92400E;
           margin-bottom: 12px;
           display: flex;
           align-items: center;
@@ -352,8 +357,9 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           margin: 0;
           padding-left: 20px;
           color: var(--ink);
-          font-size: 14px;
-          line-height: 1.6;
+          font-size: 13.5px;
+          line-height: 1.5;
+          font-weight: 600;
         }
 
         .ds-chal-btn {
@@ -381,7 +387,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           align-items: center;
           padding-top: 16px;
           padding-bottom: 16px;
-          background: linear-gradient(to top, #fbfdff 80%, transparent);
+          background: linear-gradient(to top, #FFF9F0 80%, transparent);
           z-index: 10;
         }
         
@@ -436,12 +442,12 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           flex: 1;
           min-height: 0;
           position: relative;
-          background-color: #f4f9ff;
+          background-color: #FFF9F0;
           background-image: 
-            linear-gradient(#e1edfb 1px, transparent 1px),
-            linear-gradient(90deg, #e1edfb 1px, transparent 1px);
+            linear-gradient(#F2DFBC 1px, transparent 1px),
+            linear-gradient(90deg, #F2DFBC 1px, transparent 1px);
           background-size: 20px 20px;
-          border: 1px solid #d4e4f5;
+          border: 1.5px solid #F2DFBC;
           border-radius: 12px;
           display: flex;
           flex-direction: column;
@@ -511,22 +517,22 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         }
         
         .ds-zone-badge {
-          background: var(--blue);
+          background: var(--navy);
           color: #fff;
-          font-family: var(--mono);
-          font-weight: 700;
-          font-size: 14px;
-          letter-spacing: 0.1em;
-          padding: 4px 12px;
+          font-family: var(--geo);
+          font-weight: 800;
+          font-size: 13px;
+          letter-spacing: 0.08em;
+          padding: 4px 14px;
           border-radius: 999px;
           text-transform: uppercase;
-          box-shadow: 0 4px 10px rgba(47,109,240,0.2);
+          box-shadow: 0 4px 10px rgba(120,53,15,0.2);
           margin-bottom: 8px;
         }
         
         .ds-zone-badge-green {
           background: var(--green);
-          box-shadow: 0 4px 10px rgba(16,185,129,0.2);
+          box-shadow: 0 4px 10px rgba(22,163,74,0.2);
         }
 
         .ds-scene {
@@ -549,8 +555,8 @@ export default function DistanceAndScale({ onComplete, onBack }) {
 
         .ds-ruler {
           width: 90%;
-          height: 2px;
-          background: var(--blue);
+          height: 2.5px;
+          background: var(--amber);
           position: relative;
           display: flex;
           align-items: center;
@@ -565,20 +571,20 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           top: -3px;
         }
         
-        .ds-ruler::before { left: -4px; border-color: transparent var(--blue) transparent transparent; }
-        .ds-ruler::after { right: -4px; border-color: transparent transparent transparent var(--blue); }
+        .ds-ruler::before { left: -4px; border-color: transparent var(--amber) transparent transparent; }
+        .ds-ruler::after { right: -4px; border-color: transparent transparent transparent var(--amber); }
 
         .ds-ruler-map { background: var(--green); }
         .ds-ruler-map::before { border-color: transparent var(--green) transparent transparent; }
         .ds-ruler-map::after { border-color: transparent transparent transparent var(--green); }
 
         .ds-ruler-label {
-          background: #fff;
-          border: 1.5px solid var(--blue);
-          color: var(--blue);
+          background: #FFF9F0;
+          border: 1.5px solid var(--amber);
+          color: var(--navy);
           font-family: var(--geo);
           font-weight: 800;
-          font-size: 14px;
+          font-size: 13.5px;
           padding: 2px 10px;
           border-radius: 999px;
           position: absolute;
@@ -603,36 +609,36 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         }
         
         .ds-hero-badge {
-          background: var(--blue);
+          background: var(--amber);
           color: #fff;
           font-family: var(--geo);
           font-weight: 900;
           font-size: clamp(18px, 2.5vw, 24px);
           padding: 8px 32px;
           border-radius: 999px;
-          box-shadow: 0 6px 20px rgba(47,109,240,0.3);
+          box-shadow: 0 6px 20px rgba(217,119,6,0.3);
         }
         
         .ds-hero-caption {
-          font-family: var(--mono);
-          font-size: 14px;
+          font-family: var(--geo);
+          font-size: 13px;
           color: var(--mut);
           text-transform: uppercase;
-          letter-spacing: 0.1em;
-          font-weight: 600;
+          letter-spacing: 0.08em;
+          font-weight: 800;
         }
 
         .ds-callout {
           position: absolute;
           bottom: 10px;
           right: 10px;
-          background: rgba(255, 255, 255, 0.9);
+          background: rgba(255, 249, 240, 0.95);
           backdrop-filter: blur(4px);
-          border: 1px solid #d4e4f5;
+          border: 1.5px solid #F2DFBC;
           border-radius: 8px;
           padding: 6px 10px;
-          box-shadow: 0 4px 12px rgba(14,42,69,0.05);
-          max-width: 125px;
+          box-shadow: 0 4px 12px rgba(60,40,20,0.05);
+          max-width: 135px;
           display: flex;
           flex-direction: column;
           gap: 2px;
@@ -640,7 +646,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         }
         
         .ds-callout-title {
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 800;
           color: var(--amber);
           display: flex;
@@ -650,10 +656,10 @@ export default function DistanceAndScale({ onComplete, onBack }) {
         
         .ds-callout-text {
           font-family: var(--geo);
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 600;
           color: var(--ink);
-          line-height: 1.25;
+          line-height: 1.3;
           margin: 0;
         }
         
@@ -664,11 +670,11 @@ export default function DistanceAndScale({ onComplete, onBack }) {
           gap: 10px;
         }
         .ds-card {
-          background: #fff;
-          border: 1px solid var(--cardline);
+          background: #FFFFFF;
+          border: 1.5px solid #F2DFBC;
           border-radius: 10px;
           padding: 8px 12px;
-          box-shadow: 0 2px 8px rgba(14,42,69,0.03);
+          box-shadow: 0 2px 8px rgba(60,40,20,0.03);
           display: flex;
           align-items: center;
           gap: 10px;

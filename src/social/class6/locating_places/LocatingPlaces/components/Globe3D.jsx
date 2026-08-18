@@ -19,8 +19,8 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
   useFrame((state, delta) => {
     if (globeRef.current) {
       if (currentTask < 11) {
-        // Slow auto-rotation
-        globeRef.current.rotation.y += delta * 0.15;
+        // Gentle, slow auto-rotation
+        globeRef.current.rotation.y += delta * 0.08;
       } else {
         // Lock rotation exactly so the cuts align perfectly with the camera
         globeRef.current.rotation.set(0, Math.PI, 0);

@@ -69,22 +69,22 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
                 alignItems: 'center',
                 gap: '0.75rem',
                 padding: '0.5rem 1rem',
-                background: isActive ? 'var(--surface)' : 'transparent',
-                border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
+                background: isActive ? '#ffffff' : '#f1f5f9',
+                border: `1.5px solid ${isActive ? '#F5A623' : '#cbd5e1'}`,
                 borderRadius: '12px',
                 minWidth: 'max-content',
-                opacity: tab.locked ? 0.4 : 1,
+                opacity: 1,
                 cursor: tab.locked ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: isActive ? '0 4px 15px rgba(99, 102, 241, 0.15)' : 'none'
+                boxShadow: isActive ? '0 4px 15px rgba(245, 166, 35, 0.25)' : 'none'
               }}
             >
-              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: isActive ? 'var(--accent)' : 'var(--border)', color: isActive ? '#fff' : 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold' }}>
+              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: isActive ? '#F5A623' : (isCompleted ? '#F5A623' : '#64748b'), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold' }}>
                 {isCompleted ? <CheckCircle size={12} /> : tab.id}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: isActive ? 'var(--text-heading)' : 'var(--text-primary)' }}>{tab.title}</span>
-                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{tab.subtitle}</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '800', color: '#0f172a' }}>{tab.title}</span>
+                <span style={{ fontSize: '0.65rem', color: isActive ? '#d97706' : '#334155', fontWeight: '700' }}>{tab.subtitle}</span>
               </div>
             </button>
           );
