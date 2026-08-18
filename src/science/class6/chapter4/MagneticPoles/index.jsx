@@ -68,24 +68,29 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
         {/* Left: Back Button */}
         <button 
           onClick={onBackToDashboard} 
-          className="outline" 
           style={{ 
             position: 'relative', zIndex: 100,
-            padding: '0.35rem 0.75rem', 
-            fontSize: '0.78rem', 
+            padding: '0.4rem 0.85rem', 
+            fontSize: '0.8rem', 
             gap: '0.35rem',
-            borderColor: 'var(--border)',
+            background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '8px',
+            fontWeight: 700,
+            cursor: 'pointer',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            boxShadow: '0 4px 12px rgba(255, 119, 0, 0.35)'
           }}
         >
-          <ArrowLeft size={14} /> Back to Class 6 Chapter 4
+          <ArrowLeft size={14} color="#ffffff" /> Back to Class 6 Chapter 4
         </button>
 
         {/* Center: Title & Subtitle */}
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <h2 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-            <Compass size={18} style={{ color: 'var(--accent)' }} />
+            <Compass size={18} style={{ color: '#ff7700' }} />
             Activity 4.2: Poles of Magnet
           </h2>
           <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Class 6 Science: Chapter 4 — Observe iron filings & magnetic poles</span>
@@ -102,21 +107,27 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
                 key={tab.id}
                 onClick={() => !tab.locked && setActiveTab(tab.id)}
                 disabled={tab.locked}
-                className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
                 style={{
                   opacity: tab.locked ? 0.4 : 1,
                   cursor: tab.locked ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  padding: '0.35rem 0.65rem',
-                  fontSize: '0.78rem'
+                  padding: '0.4rem 0.75rem',
+                  fontSize: '0.8rem',
+                  fontWeight: activeTab === tab.id ? 700 : 600,
+                  borderRadius: '8px',
+                  background: activeTab === tab.id ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : 'rgba(255, 255, 255, 0.08)',
+                  color: activeTab === tab.id ? '#ffffff' : 'var(--text)',
+                  border: activeTab === tab.id ? 'none' : '1px solid var(--border)',
+                  boxShadow: activeTab === tab.id ? '0 4px 12px rgba(255, 119, 0, 0.35)' : 'none',
+                  transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={13} />
+                <Icon size={13} color={activeTab === tab.id ? '#ffffff' : 'currentColor'} />
                 <span>{tab.name}</span>
                 {isCompleted && (
-                  <CheckCircle size={11} style={{ color: 'var(--success)', marginLeft: '0.15rem' }} />
+                  <CheckCircle size={11} style={{ color: activeTab === tab.id ? '#ffffff' : 'var(--success)', marginLeft: '0.15rem' }} />
                 )}
               </button>
             );

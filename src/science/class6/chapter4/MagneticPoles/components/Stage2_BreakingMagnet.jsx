@@ -161,10 +161,23 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
           <button 
             onClick={handleBreak} 
             disabled={broken}
-            className={!broken ? 'primary' : 'outline'}
-            style={{ padding: '0.9rem 1.8rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
+            style={{ 
+              padding: '0.9rem 1.8rem', 
+              fontSize: '1.05rem', 
+              fontWeight: 700, 
+              borderRadius: '14px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.6rem',
+              background: !broken ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+              color: !broken ? '#ffffff' : '#1e3a8a',
+              border: !broken ? 'none' : '2px solid #3b82f6',
+              cursor: !broken ? 'pointer' : 'not-allowed',
+              opacity: !broken ? 1 : 0.85,
+              boxShadow: !broken ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+            }}
           >
-            <Scissors size={20} /> Break Magnet
+            <Scissors size={20} color={!broken ? '#ffffff' : '#1e3a8a'} /> Break Magnet
           </button>
         </div>
       </div>
@@ -176,11 +189,16 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="glass-panel"
-              style={{ padding: '1.5rem', background: 'rgba(15, 23, 42, 0.65)', border: '1.5px solid #3b82f6' }}
+              style={{ 
+                padding: '1.5rem', 
+                background: '#ffffff', 
+                border: '2px solid #2563eb', 
+                borderRadius: '16px',
+                boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+              }}
             >
-              <h4 style={{ color: '#38bdf8', margin: '0 0 1rem 0', fontSize: '1.1rem', fontWeight: 800 }}>Observation</h4>
-              <p style={{ margin: 0, color: '#cbd5e1', lineHeight: '1.5', fontSize: '0.95rem' }}>
+              <h4 style={{ color: '#1e3a8a', margin: '0 0 0.8rem 0', fontSize: '1.2rem', fontWeight: 800 }}>Observation</h4>
+              <p style={{ margin: 0, color: '#1e40af', lineHeight: '1.6', fontSize: '0.98rem', fontWeight: 600 }}>
                 When the magnet is broken into two pieces, each piece immediately develops a new pole at the broken end! 
                 The left piece grew a new South pole, and the right piece grew a new North pole.
               </p>
@@ -194,46 +212,67 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1 }}
-              className="glass-panel"
-              style={{ padding: '1.5rem', background: 'rgba(30, 58, 138, 0.5)', border: '1.5px solid #60a5fa' }}
+              style={{ 
+                padding: '1.5rem', 
+                background: '#ffffff', 
+                border: '2px solid #2563eb', 
+                borderRadius: '16px',
+                boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+              }}
             >
-              <h4 style={{ color: 'var(--text-heading)', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <AlertCircle size={20} style={{ color: 'var(--accent-text)' }} /> 
+              <h4 style={{ color: '#1e3a8a', margin: '0 0 0.8rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', fontWeight: 800 }}>
+                <AlertCircle size={22} style={{ color: '#2563eb' }} /> 
                 Conclusion
               </h4>
-              <p style={{ margin: '0 0 1rem 0', color: 'var(--text-secondary)' }}>
+              <p style={{ margin: '0 0 1.1rem 0', color: '#1e40af', fontSize: '0.98rem', fontWeight: 600, lineHeight: 1.5 }}>
                 Based on this, is it possible to obtain a magnet with only a single pole?
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <button
                   onClick={() => handleQuizAnswer('yes')}
-                  className="outline"
                   style={{
-                    padding: '0.75rem',
+                    padding: '0.85rem 1.1rem',
                     textAlign: 'left',
-                    background: quizAnswer === 'yes' ? 'var(--danger-bg)' : 'transparent',
-                    borderColor: quizAnswer === 'yes' ? 'var(--danger)' : 'var(--border)'
+                    borderRadius: '12px',
+                    fontSize: '0.96rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.25s ease',
+                    background: quizAnswer === 'yes' ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' : '#f8fafc',
+                    borderColor: quizAnswer === 'yes' ? '#b91c1c' : '#cbd5e1',
+                    borderStyle: 'solid',
+                    borderWidth: '2px',
+                    color: quizAnswer === 'yes' ? '#ffffff' : '#1e293b',
+                    boxShadow: quizAnswer === 'yes' ? '0 4px 15px rgba(239, 68, 68, 0.4)' : 'none'
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span>Yes, we can isolate a North or South pole.</span>
-                    {quizAnswer === 'yes' && <XCircle size={18} style={{ color: 'var(--danger)' }} />}
+                    {quizAnswer === 'yes' && <XCircle size={20} color="#ffffff" />}
                   </div>
                 </button>
                 <button
                   onClick={() => handleQuizAnswer('no')}
-                  className="outline"
                   style={{
-                    padding: '0.75rem',
+                    padding: '0.85rem 1.1rem',
                     textAlign: 'left',
-                    background: quizAnswer === 'no' ? 'var(--success-bg)' : 'transparent',
-                    borderColor: quizAnswer === 'no' ? 'var(--success)' : 'var(--border)'
+                    borderRadius: '12px',
+                    fontSize: '0.96rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.25s ease',
+                    background: quizAnswer === 'no' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : '#f8fafc',
+                    borderColor: quizAnswer === 'no' ? '#047857' : '#cbd5e1',
+                    borderStyle: 'solid',
+                    borderWidth: '2px',
+                    color: quizAnswer === 'no' ? '#ffffff' : '#1e293b',
+                    boxShadow: quizAnswer === 'no' ? '0 4px 15px rgba(16, 185, 129, 0.4)' : 'none'
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span>No, a single pole cannot exist.</span>
-                    {quizAnswer === 'no' && <CheckCircle size={18} style={{ color: 'var(--success)' }} />}
+                    {quizAnswer === 'no' && <CheckCircle size={20} color="#ffffff" />}
                   </div>
                 </button>
               </div>
@@ -244,15 +283,30 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                   animate={{ opacity: 1 }}
                   style={{ marginTop: '1rem' }}
                 >
-                  <p style={{ margin: '0 0 1rem 0', color: 'var(--success)', fontSize: '0.9rem', fontWeight: '500', lineHeight: '1.5' }}>
+                  <p style={{ margin: '0 0 1rem 0', color: '#065f46', fontSize: '1rem', fontWeight: '700', lineHeight: '1.5' }}>
                     Correct! North and South poles <strong>always exist in pairs</strong>, even in the smallest pieces of a magnet.
                   </p>
                   <button 
                     onClick={handleNextSection}
-                    className="primary"
-                    style={{ width: '100%', padding: '0.75rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
+                    style={{ 
+                      width: '100%', 
+                      padding: '0.85rem 1.5rem', 
+                      display: 'flex', 
+                      justifyContent: 'center', 
+                      alignItems: 'center', 
+                      gap: '0.75rem',
+                      fontSize: '1rem',
+                      fontWeight: 800,
+                      borderRadius: '35px',
+                      background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                      color: '#ffffff',
+                      border: 'none',
+                      cursor: 'pointer',
+                      boxShadow: '0 6px 20px rgba(255, 119, 0, 0.4)',
+                      transition: 'all 0.25s ease'
+                    }}
                   >
-                    Next Section: Other Shapes <ArrowRight size={16} />
+                    Next Section: Other Shapes <ArrowRight size={20} color="#ffffff" />
                   </button>
                 </motion.div>
               )}

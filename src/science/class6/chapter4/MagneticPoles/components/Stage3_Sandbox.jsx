@@ -157,22 +157,49 @@ export default function Stage3_Sandbox({ onComplete }) {
         <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem' }}>
           <button 
             onClick={() => handleShapeChange('horseshoe')}
-            className={shape === 'horseshoe' ? 'primary' : 'outline'}
-            style={{ padding: '0.65rem 1.75rem', fontSize: '1.02rem', fontWeight: 700, borderRadius: '12px' }}
+            style={{ 
+              padding: '0.65rem 1.75rem', 
+              fontSize: '1.02rem', 
+              fontWeight: 700, 
+              borderRadius: '12px',
+              background: shape === 'horseshoe' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+              color: shape === 'horseshoe' ? '#ffffff' : '#1e3a8a',
+              border: shape === 'horseshoe' ? 'none' : '2px solid #3b82f6',
+              cursor: 'pointer',
+              boxShadow: shape === 'horseshoe' ? '0 4px 15px rgba(255, 119, 0, 0.45)' : '0 2px 8px rgba(0,0,0,0.08)'
+            }}
           >
             Horseshoe
           </button>
           <button 
             onClick={() => handleShapeChange('ring')}
-            className={shape === 'ring' ? 'primary' : 'outline'}
-            style={{ padding: '0.65rem 1.75rem', fontSize: '1.02rem', fontWeight: 700, borderRadius: '12px' }}
+            style={{ 
+              padding: '0.65rem 1.75rem', 
+              fontSize: '1.02rem', 
+              fontWeight: 700, 
+              borderRadius: '12px',
+              background: shape === 'ring' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+              color: shape === 'ring' ? '#ffffff' : '#1e3a8a',
+              border: shape === 'ring' ? 'none' : '2px solid #3b82f6',
+              cursor: 'pointer',
+              boxShadow: shape === 'ring' ? '0 4px 15px rgba(255, 119, 0, 0.45)' : '0 2px 8px rgba(0,0,0,0.08)'
+            }}
           >
             Ring Magnet
           </button>
           <button 
             onClick={() => handleShapeChange('bar')}
-            className={shape === 'bar' ? 'primary' : 'outline'}
-            style={{ padding: '0.65rem 1.75rem', fontSize: '1.02rem', fontWeight: 700, borderRadius: '12px' }}
+            style={{ 
+              padding: '0.65rem 1.75rem', 
+              fontSize: '1.02rem', 
+              fontWeight: 700, 
+              borderRadius: '12px',
+              background: shape === 'bar' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+              color: shape === 'bar' ? '#ffffff' : '#1e3a8a',
+              border: shape === 'bar' ? 'none' : '2px solid #3b82f6',
+              cursor: 'pointer',
+              boxShadow: shape === 'bar' ? '0 4px 15px rgba(255, 119, 0, 0.45)' : '0 2px 8px rgba(0,0,0,0.08)'
+            }}
           >
             Bar Magnet
           </button>
@@ -209,7 +236,7 @@ export default function Stage3_Sandbox({ onComplete }) {
 
           {shape === 'horseshoe' && (
             <img 
-              src="/MagneticPoles/horseshoe_magnet.png" 
+              src="/horse-magnet.png" 
               alt="Horseshoe Magnet"
               style={{
                 position: 'absolute',
@@ -255,13 +282,23 @@ export default function Stage3_Sandbox({ onComplete }) {
           ))}
         </div>
 
-        {/* Action Controls (Enlarged Action Buttons) */}
+        {/* Action Controls (Enlarged Action Buttons with High Visibility) */}
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem' }}>
           <button 
             onClick={handleScatter} 
             disabled={step !== 'initial'}
-            className={step === 'initial' ? 'primary' : 'outline'}
-            style={{ padding: '0.9rem 1.75rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px' }}
+            style={{ 
+              padding: '0.9rem 1.75rem', 
+              fontSize: '1.05rem', 
+              fontWeight: 700, 
+              borderRadius: '14px',
+              background: step === 'initial' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+              color: step === 'initial' ? '#ffffff' : '#1e3a8a',
+              border: step === 'initial' ? 'none' : '2px solid #3b82f6',
+              cursor: step === 'initial' ? 'pointer' : 'not-allowed',
+              opacity: step === 'initial' ? 1 : 0.85,
+              boxShadow: step === 'initial' ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+            }}
           >
             1. Scatter Iron Filings
           </button>
@@ -269,19 +306,45 @@ export default function Stage3_Sandbox({ onComplete }) {
           <button 
             onClick={handleTap}
             disabled={step !== 'scattered'}
-            className={step === 'scattered' ? 'primary' : 'outline'}
-            style={{ padding: '0.9rem 1.75rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
+            style={{ 
+              padding: '0.9rem 1.75rem', 
+              fontSize: '1.05rem', 
+              fontWeight: 700, 
+              borderRadius: '14px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.6rem',
+              background: step === 'scattered' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+              color: step === 'scattered' ? '#ffffff' : '#1e3a8a',
+              border: step === 'scattered' ? 'none' : '2px solid #3b82f6',
+              cursor: step === 'scattered' ? 'pointer' : 'not-allowed',
+              opacity: step === 'scattered' ? 1 : 0.85,
+              boxShadow: step === 'scattered' ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+            }}
           >
-            <Hand size={20} /> 2. Tap Paper
+            <Hand size={20} color={step === 'scattered' ? '#ffffff' : '#1e3a8a'} /> 2. Tap Paper
           </button>
 
           <button 
             onClick={handleReset}
-            className="outline"
-            style={{ padding: '0.9rem 1.75rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
             disabled={step === 'initial'}
+            style={{ 
+              padding: '0.9rem 1.75rem', 
+              fontSize: '1.05rem', 
+              fontWeight: 700, 
+              borderRadius: '14px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.6rem',
+              background: step !== 'initial' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+              color: step !== 'initial' ? '#ffffff' : '#1e3a8a',
+              border: step !== 'initial' ? 'none' : '2px solid #3b82f6',
+              cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
+              opacity: step !== 'initial' ? 1 : 0.85,
+              boxShadow: step !== 'initial' ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+            }}
           >
-            <RotateCcw size={20} /> Reset Activity
+            <RotateCcw size={20} color={step !== 'initial' ? '#ffffff' : '#1e3a8a'} /> Reset Activity
           </button>
         </div>
       </div>
@@ -296,18 +359,25 @@ export default function Stage3_Sandbox({ onComplete }) {
         minWidth: 0, 
         overflowY: 'auto' 
       }}>
-        <div className="glass-panel" style={{ padding: '1.25rem 1.5rem', background: 'rgba(15, 23, 42, 0.65)', border: '1.5px solid #3b82f6' }}>
-          <h4 style={{ color: '#38bdf8', margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Shapes size={20} style={{ color: '#38bdf8' }} /> 
+        {/* Other Shapes Panel */}
+        <div style={{ 
+          padding: '1.25rem 1.5rem', 
+          background: '#ffffff', 
+          border: '2px solid #2563eb', 
+          borderRadius: '16px',
+          boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+        }}>
+          <h4 style={{ color: '#1e3a8a', margin: '0 0 0.75rem 0', fontSize: '1.2rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Shapes size={22} style={{ color: '#2563eb' }} /> 
             Other Shapes
           </h4>
-          <p style={{ margin: '0 0 0.85rem 0', color: '#cbd5e1', fontSize: '0.92rem', lineHeight: '1.5' }}>
+          <p style={{ margin: '0 0 0.85rem 0', color: '#1e40af', fontSize: '0.98rem', lineHeight: '1.6', fontWeight: 600 }}>
             If we repeat this activity with magnets of other shapes, do we get the same result?
           </p>
-          <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#cbd5e1', display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.9rem', lineHeight: '1.5' }}>
-            <li><strong style={{ color: '#ffffff' }}>Horseshoe Magnet:</strong> The poles are located at the two ends.</li>
-            <li><strong style={{ color: '#ffffff' }}>Ring Magnet:</strong> The poles are usually on opposite faces or halves.</li>
-            <li><strong style={{ color: '#ffffff' }}>Bar Magnet:</strong> The poles are located at the two ends.</li>
+          <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#1e40af', display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.95rem', lineHeight: '1.5', fontWeight: 600 }}>
+            <li><strong style={{ color: '#1e3a8a', fontWeight: 800 }}>Horseshoe Magnet:</strong> The poles are located at the two ends.</li>
+            <li><strong style={{ color: '#1e3a8a', fontWeight: 800 }}>Ring Magnet:</strong> The poles are usually on opposite faces or halves.</li>
+            <li><strong style={{ color: '#1e3a8a', fontWeight: 800 }}>Bar Magnet:</strong> The poles are located at the two ends.</li>
           </ul>
         </div>
 
@@ -316,15 +386,23 @@ export default function Stage3_Sandbox({ onComplete }) {
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="glass-panel"
-              style={{ padding: '1.35rem 1.6rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', display: 'flex', flexDirection: 'column', gap: '1rem' }}
+              style={{ 
+                padding: '1.35rem 1.6rem', 
+                background: '#ffffff', 
+                border: '2px solid #10b981', 
+                borderRadius: '16px',
+                boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '1rem' 
+              }}
             >
               <div>
-                <h4 style={{ color: 'var(--text-heading)', margin: '0 0 0.65rem 0', fontSize: '1.15rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <CheckCircle size={22} style={{ color: 'var(--success)' }} /> 
+                <h4 style={{ color: '#1e3a8a', margin: '0 0 0.65rem 0', fontSize: '1.15rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <CheckCircle size={22} style={{ color: '#10b981' }} /> 
                   Observation
                 </h4>
-                <p style={{ margin: 0, color: 'var(--success)', fontSize: '1.05rem', fontWeight: '600', lineHeight: '1.6' }}>
+                <p style={{ margin: 0, color: '#065f46', fontSize: '1.05rem', fontWeight: '700', lineHeight: '1.6' }}>
                   Yes! No matter the shape of the magnet, the iron filings always stick maximally at the regions called poles. The poles are always in pairs.
                 </p>
               </div>
@@ -337,7 +415,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                   fontSize: '1.05rem',
                   fontWeight: 800,
                   borderRadius: '35px',
-                  backgroundColor: '#10b981',
+                  background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
                   color: '#ffffff',
                   border: 'none',
                   cursor: 'pointer',
@@ -345,19 +423,17 @@ export default function Stage3_Sandbox({ onComplete }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.6rem',
-                  boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4)',
+                  boxShadow: '0 6px 20px rgba(255, 119, 0, 0.4)',
                   transition: 'all 0.25s ease'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.03)';
-                  e.currentTarget.style.backgroundColor = '#059669';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'scale(1)';
-                  e.currentTarget.style.backgroundColor = '#10b981';
                 }}
               >
-                <Flag size={20} /> Finish Activity
+                <Flag size={20} color="#ffffff" /> Finish Activity
               </button>
             </motion.div>
           )}
