@@ -3,11 +3,11 @@ import './CoordinatesMinigame.css';
 import worldMapUrl from './world-map.jpg';
 
 const cities = [
-  { name: "Delhi", lat: 29, lon: 77, desc: "Capital of India" },
-  { name: "Mumbai", lat: 19, lon: 73, desc: "Financial capital of India" },
-  { name: "Kolkata", lat: 23, lon: 88, desc: "City of Joy" },
-  { name: "Singapore", lat: 1, lon: 104, desc: "Island city-state in SE Asia" },
-  { name: "Paris", lat: 49, lon: 2, desc: "Capital of France" }
+  { name: "Delhi", lat: 28.6, lon: 77.2, desc: "Capital of India" },
+  { name: "Mumbai", lat: 19.1, lon: 72.9, desc: "Financial capital of India" },
+  { name: "Kolkata", lat: 22.6, lon: 88.4, desc: "City of Joy" },
+  { name: "Singapore", lat: 1.3, lon: 103.8, desc: "Island city-state in SE Asia" },
+  { name: "Paris", lat: 48.9, lon: 2.3, desc: "Capital of France" }
 ];
 
 export default function CoordinatesMinigame({ onComplete, onBack }) {
@@ -108,6 +108,7 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
           <button 
             className="fullscreen-btn" 
             onClick={(e) => { e.stopPropagation(); setIsFullscreen(!isFullscreen); }}
+            onPointerDown={(e) => e.stopPropagation()}
             title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
           >
             {isFullscreen ? (

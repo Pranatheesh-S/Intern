@@ -193,10 +193,10 @@ const stepsData = [
 
 export default function CoordinatesPage({ onNextActivity, onBack }) {
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
-  const totalSteps = 18;
+  const totalGlobeSteps = 18;
 
   const handleNext = () => {
-    if (currentStepIdx < totalSteps - 1) {
+    if (currentStepIdx < totalGlobeSteps) {
       setCurrentStepIdx(c => c + 1);
     } else {
       if (onNextActivity) onNextActivity();
@@ -211,21 +211,85 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
     }
   };
 
-  if (currentStepIdx === 14) {
+  if (currentStepIdx === 0) {
+    return (
+      <div className="coords-page">
+        <div className="coords-book">
+          <div className="coords-main-content">
+            {/* Left Page */}
+            <div className="coords-left">
+              <div className="coords-eyebrow">CHAPTER 1 &bull; CLASS 6 SOCIAL SCIENCE</div>
+              <h1 className="coords-chtitle">Locating Places<br/>on the Earth</h1>
+              <div className="coords-illus" style={{ background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', border: '1px solid #cbd5e1', boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)' }}>
+                <svg width="240" height="240" viewBox="0 0 4 4" style={{ border: '4px solid #64748b', borderRadius: '4px', background: '#fff' }}>
+                  <rect x="0" y="0" width="1" height="1" fill="#64748b"/>
+                  <rect x="2" y="0" width="1" height="1" fill="#64748b"/>
+                  <rect x="1" y="1" width="1" height="1" fill="#64748b"/>
+                  <rect x="3" y="1" width="1" height="1" fill="#64748b"/>
+                  <rect x="0" y="2" width="1" height="1" fill="#64748b"/>
+                  <rect x="2" y="2" width="1" height="1" fill="#64748b"/>
+                  <rect x="1" y="3" width="1" height="1" fill="#64748b"/>
+                  <rect x="3" y="3" width="1" height="1" fill="#64748b"/>
+                </svg>
+                <div style={{ marginTop: '20px', fontWeight: '800', color: '#1e293b', fontSize: '15px' }}>Grid Coordinate System</div>
+              </div>
+            </div>
+            
+            {/* Right Page */}
+            <div className="coords-right">
+              <div className="coords-rhead" style={{ fontSize: '32px' }}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                UNDERSTANDING COORDINATES
+              </div>
+              <div className="coords-content">
+                <div className="coords-task-container" style={{ justifyContent: 'flex-start', paddingTop: '10px' }}>
+                  <div className="coords-hero" style={{ padding: '32px' }}>
+                    <h3 style={{ marginBottom: '20px', fontSize: '28px' }}>Understanding Coordinates</h3>
+                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>
+                      Imagine a big market with neat rows of shops. If you tell a friend, "Meet me at the 7th shop in the 5th row," they can find you instantly.
+                    </p>
+                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>
+                      Similarly, in a game of chess, players record their moves using letters (a-h) and numbers (1-8). By saying "d4", they pinpoint one exact square on the board.
+                    </p>
+                    <p style={{ fontSize: '18px', lineHeight: '1.7' }}>
+                      To locate a place precisely, we always need <strong>two pieces of information</strong> to form a coordinate.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="coords-rfoot">
+            <div className="coords-pageind" style={{ fontSize: '16px' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              Page 1 of {totalGlobeSteps + 1}
+            </div>
+            <button className="coords-next" onClick={handleNext} style={{ fontSize: '16px', padding: '12px 26px' }}>
+              Next Page &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const activeGlobeIdx = currentStepIdx - 1;
+
+  if (activeGlobeIdx === 14) {
     return (
       <CoordinatesMinigame 
         onComplete={() => {
-          setCurrentStepIdx(15);
+          setCurrentStepIdx(16);
         }}
         onBack={handlePrev}
       />
     );
   }
 
-  const step = stepsData[currentStepIdx] || stepsData[stepsData.length - 1];
+  const step = stepsData[activeGlobeIdx] || stepsData[stepsData.length - 1];
 
   const getTopTitle = () => {
-    if (currentStepIdx >= 15) return "Hemispheres — How the Earth is Divided";
+    if (activeGlobeIdx >= 15) return "Hemispheres — How the Earth is Divided";
     return "The Global Grid — Latitude & Longitude";
   };
 
@@ -253,12 +317,12 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
               Back
             </button>
             <div className="dark-nav-dots">
-              {Array.from({ length: totalSteps }).map((_, i) => (
-                <div key={i} className={`dark-nav-dot ${i === currentStepIdx ? 'active' : ''}`} />
+              {Array.from({ length: totalGlobeSteps }).map((_, i) => (
+                <div key={i} className={`dark-nav-dot ${i === activeGlobeIdx ? 'active' : ''}`} />
               ))}
             </div>
             <button className="dark-nav-btn next" onClick={handleNext}>
-              {currentStepIdx === totalSteps - 1 ? 'Finish' : 'Next'}
+              {activeGlobeIdx === totalGlobeSteps - 1 ? 'Finish' : 'Next'}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 18l6-6-6-6" />
               </svg>
@@ -267,7 +331,7 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
         </div>
 
         <div className="dark-coords-right">
-          <div className="dark-step-eyebrow">STEP {currentStepIdx + 1} OF {totalSteps}</div>
+          <div className="dark-step-eyebrow">STEP {activeGlobeIdx + 1} OF {totalGlobeSteps}</div>
           <h2 className="dark-step-title">{step.title}</h2>
           
           {step.paragraphs.map((p, idx) => (

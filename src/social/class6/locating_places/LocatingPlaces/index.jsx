@@ -201,7 +201,7 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
           <CoordinatesPage onNextActivity={() => setCurrentStep(8)} onBack={() => setCurrentStep(6)} />
         )}
         {currentStep === 8 && (
-          <TimeZonesPage onBack={() => setCurrentStep(7)} />
+          <TimeZonesPage onNextActivity={handleBackToMainPage} onBack={() => setCurrentStep(7)} />
         )}
       </div>
         </>
