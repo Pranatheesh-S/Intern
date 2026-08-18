@@ -538,7 +538,50 @@ const CHAPTER_2_LEVELS = [
   }
 ];
 
-function IntroStoryteller({ onComplete }) {
+// ── Voice profiles for character-specific speech synthesis ───────────────────
+// Each profile uses pitch & rate to differentiate voices.
+// 'aged' = elderly (low pitch, slower), 'adultMale' = normal male,
+// 'youngster' = teen (higher pitch, slightly faster), 'child' = kid voice.
+const VOICE_PROFILES = {
+  'Dr. Raghu':      { pitch: 0.95, rate: 0.92, gender: 'adultMale'  },
+  'Maniram Chacha': { pitch: 0.72, rate: 0.82, gender: 'aged'        },
+  'Priya':          { pitch: 1.55, rate: 1.08, gender: 'child'       },
+  'Arjun':          { pitch: 1.35, rate: 1.10, gender: 'youngster'   },
+};
+
+function speakWithProfile(text, characterName, muteFlag) {
+  if (muteFlag || !('speechSynthesis' in window)) return null;
+  window.speechSynthesis.cancel();
+  const profile = VOICE_PROFILES[characterName] || { pitch: 1.0, rate: 1.0, gender: 'adultMale' };
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.pitch = profile.pitch;
+  utt.rate  = profile.rate;
+  utt.volume = 1;
+  // Try to pick a browser voice matching the gender hint
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    const lang = voices.filter(v => v.lang.startsWith('en'));
+    if (lang.length > 0) {
+      let picked = null;
+      if (profile.gender === 'aged' || profile.gender === 'adultMale') {
+        // prefer a male voice
+        picked = lang.find(v => /male/i.test(v.name)) ||
+                 lang.find(v => /david|mark|james|fred|alex|daniel/i.test(v.name)) ||
+                 lang[0];
+      } else {
+        // prefer a female voice for child/youngster
+        picked = lang.find(v => /female/i.test(v.name)) ||
+                 lang.find(v => /samantha|victoria|zira|susan|karen|moira|tessa/i.test(v.name)) ||
+                 lang[0];
+      }
+      if (picked) utt.voice = picked;
+    }
+  }
+  window.speechSynthesis.speak(utt);
+  return utt;
+}
+
+function IntroStoryteller({ onComplete, onBack }) {
   const [currentScene, setCurrentScene] = useState(0);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [narrationVisible, setNarrationVisible] = useState(false);
@@ -564,8 +607,10 @@ function IntroStoryteller({ onComplete }) {
       title: "🌱 The Nature Walk Begins",
       text: "Dr Raghu and Maniram chacha lead the students out of the classroom into a nearby patch of forest. The air is fresh and filled with the scent of wet soil and leaves. The kids are excited to discover what secrets the nature walk holds!",
       dialogues: [
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!", top: '22%', left: '22%', side: 'right' },
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!", top: '18%', left: '50%', side: 'left' }
+        // Dr. Raghu is typically on the left side — popup placed top-right area, away from face
+        { character: "Dr. Raghu",      avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!",    top: '5%',  left: '3%',  side: 'right' },
+        // Maniram Chacha on centre-right — popup placed bottom-left area, away from face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!",            top: '5%',  left: '52%', side: 'left'  }
       ]
     },
     {
@@ -573,7 +618,8 @@ function IntroStoryteller({ onComplete }) {
       title: "🌿 Observing Diverse Plants",
       text: "As they walk, they observe different kinds of plants. Some are small herbs growing close to the ground, others are bushy shrubs, and some are grand trees with thick trunks. Dr Raghu reminds them to observe gently without plucking any leaves or flowers.",
       dialogues: [
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '25%', left: '30%', side: 'left' }
+        // popup placed upper-right open sky area, away from characters
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '5%', left: '54%', side: 'left' }
       ]
     },
     {
@@ -581,8 +627,10 @@ function IntroStoryteller({ onComplete }) {
       title: "🐦 Listening to Bird Calls",
       text: "Hush! Maniram chacha stops and cups his ear. He mimics a bird song, and suddenly, a beautiful response is heard from the tree canopy! The students learn to listen to the unique calls of birds and respect their home.",
       dialogues: [
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵", top: '18%', left: '38%', side: 'left' },
-        { character: "Priya", avatar: "👧", text: "It replied! The bird actually replied to chacha!", top: '30%', left: '60%', side: 'right' }
+        // Maniram popup: upper-left open area above foliage, away from his face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵",              top: '5%',  left: '3%',  side: 'right' },
+        // Priya popup: right side open area, well below bird canopy
+        { character: "Priya",          avatar: "👧",    text: "It replied! The bird actually replied to chacha!",             top: '5%',  left: '54%', side: 'left'  }
       ]
     },
     {
@@ -590,8 +638,10 @@ function IntroStoryteller({ onComplete }) {
       title: "🦋 Fluttering Insects & Butterflies",
       text: "Near a cluster of wildflowers, butterflies and bees are busy gathering nectar. The students watch closely as a butterfly unfolds its delicate wings. They notice how insects play a vital role in helping flowers grow.",
       dialogues: [
-        { character: "Arjun", avatar: "👦", text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '32%', left: '58%', side: 'right' },
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.", top: '18%', left: '26%', side: 'left' }
+        // Arjun popup: upper-right sky area, away from his face which is lower
+        { character: "Arjun",     avatar: "👦",    text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '5%',  left: '54%', side: 'left'  },
+        // Dr. Raghu popup: upper-left open area
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.",         top: '5%',  left: '3%',  side: 'right' }
       ]
     },
     {
@@ -599,7 +649,8 @@ function IntroStoryteller({ onComplete }) {
       title: "🐒 Animals in the Canopy",
       text: "A rustle in the branches reveals monkeys jumping from limb to limb, and a tiny squirrel scurrying down a trunk. The forest is alive with creatures of all sizes, each adapted to live in their part of the woods.",
       dialogues: [
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '20%', left: '42%', side: 'left' }
+        // Maniram popup: upper-left open area away from character faces below
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '5%', left: '3%', side: 'right' }
       ]
     },
     {
@@ -607,7 +658,8 @@ function IntroStoryteller({ onComplete }) {
       title: "📋 Recording in the Table",
       text: "The students take out their notebooks to record their observations in Tables 2.1 and 2.2. They separate their findings into plants and animals, marveling at the incredible diversity of life surrounding them!",
       dialogues: [
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '22%', left: '35%', side: 'left' }
+        // popup placed in upper-right open area, away from student faces
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '5%', left: '54%', side: 'left' }
       ]
     }
   ];
@@ -659,20 +711,38 @@ function IntroStoryteller({ onComplete }) {
     if (dialogueStep < scene.dialogues.length) {
       const dlg = scene.dialogues[dialogueStep];
       const nextStep = () => { if (active) setDialogueStep(p => p + 1); };
-      
+
+      // ── Advance dialogueStep to N+1 IMMEDIATELY so popup N is visible while voice plays ──
+      // The popup for dialogue N is shown when dialogueStep >= N (i.e. when we've started it).
+      // We pre-increment BEFORE speaking so text appears simultaneously with voice.
+      // We schedule the actual voice right after the state flush (rAF).
       if (!isNarrationMuted && 'speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(dlg.text);
-        utterance.rate = 1.0;
-        utterance.onend = () => {
-          if (active) {
-            clearTimeout(dialogueTimerRef.current);
-            dialogueTimerRef.current = setTimeout(nextStep, 350);
-          }
-        };
+        // Show popup immediately by advancing to next step (popup idx < dialogueStep)
+        // We keep the current index visible via dialogueStep >= idx check in the render.
         const fallbackTime = Math.max(2000, dlg.text.length * 70 + 500);
-        dialogueTimerRef.current = setTimeout(nextStep, fallbackTime);
-        window.speechSynthesis.speak(utterance);
+        // Use voices if loaded, else defer to 'voiceschanged' event first call
+        const doSpeak = () => {
+          if (!active) return;
+          const utt = speakWithProfile(dlg.text, dlg.character, isNarrationMuted);
+          if (utt) {
+            utt.onend = () => {
+              if (active) {
+                clearTimeout(dialogueTimerRef.current);
+                dialogueTimerRef.current = setTimeout(nextStep, 350);
+              }
+            };
+          }
+          // Fallback timer in case onend doesn't fire
+          dialogueTimerRef.current = setTimeout(nextStep, fallbackTime);
+        };
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          doSpeak();
+        } else {
+          window.speechSynthesis.onvoiceschanged = () => { doSpeak(); };
+          // still set a fallback in case voices never load
+          dialogueTimerRef.current = setTimeout(nextStep, fallbackTime);
+        }
       } else {
         dialogueTimerRef.current = setTimeout(nextStep, Math.max(1500, dlg.text.length * 50));
       }
@@ -778,7 +848,9 @@ function IntroStoryteller({ onComplete }) {
         }} />
 
         {scene.dialogues.map((dlg, idx) => {
-          const isVisible = dialogueStep > idx;
+          // Show popup from the moment its voice STARTS (dialogueStep >= idx),
+          // not after it ends (dialogueStep > idx). This synchronises text + voice.
+          const isVisible = dialogueStep >= idx && imgLoaded;
           return (
             <div key={idx} style={{
               position: 'absolute',
@@ -875,6 +947,28 @@ function IntroStoryteller({ onComplete }) {
       }}>
         Class 6 · Scene {currentScene + 1} of {totalScenes}
       </div>
+
+      {onBack && (
+        <div style={{
+          position: 'absolute', bottom: '1.2rem', left: '1.2rem', zIndex: 15
+        }}>
+          <button 
+            onClick={(e) => { e.stopPropagation(); onBack(); }}
+            style={{
+              padding: '0.7rem 1.4rem', fontSize: '0.9rem', fontWeight: '700',
+              borderRadius: '8px', border: '1px solid rgba(255,255,255,0.3)',
+              background: 'rgba(0,0,0,0.65)', color: '#fff',
+              backdropFilter: 'blur(12px)', cursor: 'pointer',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.4)', transition: 'all 0.2s',
+              display: 'flex', alignItems: 'center', gap: '0.5rem'
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(16, 185, 129, 0.8)'; e.currentTarget.style.borderColor = '#34d399'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.65)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'; }}
+          >
+            ← Back to Slogan
+          </button>
+        </div>
+      )}
 
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
@@ -1816,7 +1910,26 @@ export default function ChapterLearningLab({
   };
 
   const handleEnterLab = () => {
+    // For Chapter 2, go through scenes then checkpoint before entering the lab
+    if (chapterNum === 2) {
+      setStage("scenes");
+    } else {
+      setStage("lab");
+    }
+  };
+
+  const handleEnterCheckpoint = () => {
+    setStage("checkpoint");
+  };
+
+  const handleStartLabFromCheckpoint = () => {
+    // Enter lab at Activity 2.1 Plants (lvl-1, activity index 0) with activity focused
+    setActiveLevelId("lvl-1");
+    setActiveActivityIdx(0);
+    setActivityFocused(true);
+    setShowBriefing(false);
     setStage("lab");
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
   };
 
   const handleExitLab = () => {
@@ -4331,6 +4444,107 @@ export default function ChapterLearningLab({
     );
   }
 
+  // Stage: scenes (Chapter 2 — IntroStoryteller scenes before entering lab)
+  if (stage === "scenes" && chapterNum === 2) {
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'var(--page-bg)',
+        zIndex: 9999,
+        overflowY: 'auto'
+      }}>
+        <IntroStoryteller
+          onComplete={handleEnterCheckpoint}
+          onBack={() => setStage("slogan")}
+        />
+      </div>
+    );
+  }
+
+  // Stage: checkpoint (Chapter 2 — Learning Checkpoint before Activity 2.1)
+  if (stage === "checkpoint" && chapterNum === 2) {
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'var(--page-bg)',
+        zIndex: 9999,
+        overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem',
+        boxSizing: 'border-box'
+      }}>
+        <div style={{
+          maxWidth: '680px',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem'
+        }}>
+          {/* Header */}
+          <div style={{ textAlign: 'center', background: 'var(--card-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+            <h2 style={{ fontSize: '1.8rem', color: 'var(--text-heading)', margin: 0 }}>Learning Checkpoint</h2>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Review the activity tips and requirements before proceeding.</p>
+          </div>
+
+          {/* Activity Tip */}
+          <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'flex-start', gap: '1rem', fontSize: '1rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🌱</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <span style={{ fontWeight: 'bold', color: 'var(--text-heading)', fontSize: '1.1rem' }}>Activity Tip</span>
+              <span style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                Focus on the plants and animals in the scene. Use hints if needed, then hold the scanner until it verifies the organism.
+              </span>
+            </div>
+          </div>
+
+          {/* Activities overview */}
+          <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(59, 130, 246, 0.04)', border: '1px solid rgba(59, 130, 246, 0.15)', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent)' }}>
+              <span style={{ fontSize: '1.3rem' }}>📝</span>
+              <span>Upcoming Activities</span>
+            </div>
+            {CHAPTER_2_LEVELS[0].activities.map(act => (
+              <div key={act.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1.25rem', background: '#fff', border: '1px solid var(--border)', borderRadius: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
+                  <span style={{ fontSize: '1.2rem' }}>{act.icon}</span>
+                  <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
+                </div>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{act.pg}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation buttons */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+            <button
+              onClick={() => setStage("scenes")}
+              className="glass-btn"
+              style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', fontWeight: '600' }}
+            >
+              ← Back
+            </button>
+            <button
+              onClick={handleStartLabFromCheckpoint}
+              className="glass-btn primary"
+              style={{ padding: '0.8rem 2rem', fontSize: '1rem', fontWeight: '600', background: 'var(--accent)', color: '#fff', border: 'none', boxShadow: '0 4px 12px rgba(99,102,241,0.3)' }}
+            >
+              Start Activity 2.1 →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Stage: lab
   if (activeContentLesson) {
     if (activeContentLesson === 'biodiversity_concept') {
@@ -4453,6 +4667,31 @@ export default function ChapterLearningLab({
 
     // Controls
     const handlePrevControl = () => {
+      // Exception: From lvl-2 (How to Group Plants & Animals?), "Previous" always goes specifically to Activity 2.1 Animals focused
+      if (activeLevel.id === 'lvl-2') {
+        setActiveLevelId('lvl-1');
+        setActiveActivityIdx(1);
+        setActivityFocused(true);
+        setShowBriefing(false);
+        setQuizAnswers({});
+        setQuizChecked(false);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+
+      // Exception: From lvl-1 Animals, "Previous" goes to Plants
+      if (activeLevel.id === 'lvl-1' && activityFocused === true && activeActivityIdx === 1) {
+        setActiveActivityIdx(0);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+      
+      // Exception: From lvl-1 Plants (or any lvl-1 state), "Previous" goes to Learning Checkpoint
+      if (activeLevel.id === 'lvl-1') {
+        setStage("checkpoint");
+        return;
+      }
+
       if (activityFocused === true) {
         setActivityFocused(false);
         setShowBriefing(true);
@@ -4547,13 +4786,15 @@ export default function ChapterLearningLab({
       }
       
       // 4. If current activity is not marked as Done, prompt user to do so
-      if (activeActivity && activityStatus[activeActivity.id] !== 'done') {
+      // Exception: lvl-1 (Activity 2.1 Plants/Animals) navigates freely without requiring 'done'
+      if (activeActivity && activityStatus[activeActivity.id] !== 'done' && activeLevel.id !== 'lvl-1') {
         alert("Please complete the current activity and mark it as Done before proceeding!");
         return;
       }
       
       // 5. If we are still focusing the activity (and it's marked done), return to Show All to reveal the quiz
-      if (activityFocused) {
+      // Exception: lvl-1 navigates directly without unfocusing to show quiz
+      if (activityFocused && activeLevel.id !== 'lvl-1') {
         setActivityFocused(null);
         setTimeout(() => {
           const quizPaneEl = document.getElementById("pane-quiz-window");
@@ -4565,8 +4806,10 @@ export default function ChapterLearningLab({
       }
       
       // 6. Check if subheading quiz exists and is completed
+      // Exception: Activity 2.1 → Activity 2.2 navigation must NOT be blocked by the quiz guard
+      const isActivity21ToActivity22 = activeLevel.id === 'lvl-1';
       const hasQuiz = LEVEL_QUIZZES[activeLevel.lessonId];
-      if (hasQuiz && !quizChecked) {
+      if (hasQuiz && !quizChecked && !isActivity21ToActivity22) {
         alert("Please complete the Checkpoint Quiz and check your answers first!");
         setTimeout(() => {
           const quizPaneEl = document.getElementById("pane-quiz-window");
@@ -4779,6 +5022,7 @@ export default function ChapterLearningLab({
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
               {/* Mastery ring stats */}
+              {!(chapterNum === 2 && activeLevel.id === 'lvl-1') && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <div className="ring-container">
                   <svg width="50" height="50" viewBox="0 0 64 64">
@@ -4805,6 +5049,7 @@ export default function ChapterLearningLab({
                   </span>
                 </div>
               </div>
+              )}
 
               {/* Navigation buttons */}
               <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -4826,7 +5071,7 @@ export default function ChapterLearningLab({
                     Next ›
                   </button>
                 )}
-                {activeActivity && (
+                {activeActivity && !(chapterNum === 2 && activeLevel.id === 'lvl-1') && (
                   <button
                     onClick={() => {
                       setActivityStatus(prev => {
@@ -4948,7 +5193,7 @@ export default function ChapterLearningLab({
                   {activityFocused === true ? 'Show All' : 'Focus Activity'}
                 </button>
               )}
-              {activeActivity && (
+              {activeActivity && !(chapterNum === 2 && activeLevel.id === 'lvl-1') && (
                 <button
                   onClick={() => {
                     setActivityStatus(prev => {
