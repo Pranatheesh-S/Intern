@@ -307,16 +307,16 @@ export default function Chapter4Quiz({ onComplete }) {
 
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
+    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem 3rem', width: '100%', boxSizing: 'border-box' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.5rem' }}>Test Your Knowledge</h2>
-        <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+        <h2 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.85rem', fontWeight: 800 }}>Test Your Knowledge</h2>
+        <div style={{ color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 600 }}>
           Question {currentQuestion + 1} of {quizData.length}
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div style={{ width: '100%', height: '6px', background: 'var(--border)', borderRadius: '3px', marginBottom: '2rem', overflow: 'hidden' }}>
+      <div style={{ width: '100%', height: '8px', background: 'var(--border)', borderRadius: '4px', marginBottom: '2.25rem', overflow: 'hidden' }}>
         <div style={{ 
           height: '100%', 
           background: 'var(--accent)', 
@@ -325,11 +325,11 @@ export default function Chapter4Quiz({ onComplete }) {
         }}></div>
       </div>
 
-      <div className="glass-panel" style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-        <h3 style={{ margin: '0 0 1rem 0', color: 'var(--accent)' }}>{currentQ.title}</h3>
-        <p style={{ fontSize: '1.15rem', marginBottom: '2rem', lineHeight: '1.6', color: 'var(--text)' }}>{currentQ.question}</p>
+      <div className="glass-panel" style={{ background: 'var(--surface)', padding: '2.75rem 3.5rem', borderRadius: '24px', boxShadow: '0 15px 40px rgba(0,0,0,0.15)' }}>
+        <h3 style={{ margin: '0 0 1.25rem 0', color: 'var(--accent)', fontSize: '1.65rem', fontWeight: 800 }}>{currentQ.title}</h3>
+        <p style={{ fontSize: '1.35rem', marginBottom: '2.25rem', lineHeight: '1.65', color: 'var(--text)', fontWeight: 600 }}>{currentQ.question}</p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
           {currentQ.options.map((option, index) => {
             let bgColor = 'var(--bg)';
             let borderColor = 'var(--border)';
@@ -339,11 +339,11 @@ export default function Chapter4Quiz({ onComplete }) {
               if (index === currentQ.correctIndex) {
                 bgColor = 'rgba(16, 185, 129, 0.1)';
                 borderColor = '#10b981';
-                icon = <CheckCircle size={20} color="#10b981" />;
+                icon = <CheckCircle size={24} color="#10b981" />;
               } else if (index === selectedOption) {
                 bgColor = 'rgba(239, 68, 68, 0.1)';
                 borderColor = '#ef4444';
-                icon = <XCircle size={20} color="#ef4444" />;
+                icon = <XCircle size={24} color="#ef4444" />;
               }
             } else if (index === selectedOption) {
               borderColor = 'var(--accent)';
@@ -358,20 +358,21 @@ export default function Chapter4Quiz({ onComplete }) {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '1.25rem',
-                  borderRadius: '10px',
+                  padding: '1.35rem 1.75rem',
+                  borderRadius: '14px',
                   background: bgColor,
                   border: `2px solid ${borderColor}`,
                   color: 'var(--text)',
                   cursor: showResult ? 'default' : 'pointer',
                   textAlign: 'left',
-                  fontSize: '1rem',
+                  fontSize: '1.25rem',
+                  fontWeight: 600,
                   transition: 'all 0.2s ease',
                   opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.6 : 1
                 }}
               >
-                <span style={{ paddingRight: '1rem', lineHeight: '1.4' }}>{option}</span>
-                <div style={{ minWidth: '20px' }}>{icon}</div>
+                <span style={{ paddingRight: '1rem', lineHeight: '1.5' }}>{option}</span>
+                <div style={{ minWidth: '24px' }}>{icon}</div>
               </button>
             );
           })}
@@ -379,24 +380,24 @@ export default function Chapter4Quiz({ onComplete }) {
 
         {showResult && (
           <div style={{ marginTop: '2.5rem', animation: 'fadeIn 0.5s ease' }}>
-            <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', borderLeft: '4px solid var(--accent)' }}>
-              <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Explanation</h4>
-              <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.6' }}>{currentQ.explanation}</p>
+            <div style={{ padding: '1.75rem 2rem', background: 'rgba(255,255,255,0.03)', borderRadius: '14px', borderLeft: '5px solid var(--accent)' }}>
+              <h4 style={{ margin: '0 0 0.65rem 0', color: 'var(--text-heading)', fontSize: '1.3rem', fontWeight: 800 }}>Explanation</h4>
+              <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.65', fontSize: '1.2rem' }}>{currentQ.explanation}</p>
             </div>
             
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '2.25rem' }}>
               <button
                 onClick={handleNext}
                 style={{
-                  padding: '0.75rem 2.5rem',
+                  padding: '0.9rem 3rem',
                   background: 'var(--accent)',
                   color: '#fff',
                   border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '1.1rem',
+                  borderRadius: '12px',
+                  fontSize: '1.25rem',
                   fontWeight: 'bold',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                  boxShadow: '0 6px 16px rgba(0,0,0,0.2)'
                 }}
               >
                 {isFinished ? 'Finish Quiz' : 'Next Question'}

@@ -53,39 +53,40 @@ export default function Stage1_Experiment({ onComplete }) {
       alignItems: 'center',
       justifyContent: 'center'
     }}>
-      {/* Left Side: Interactive Setup (Centered) */}
+      {/* Left Side: Interactive Setup (Enlarged & Centered to fill empty space) */}
       <div style={{ 
-        flex: '1.15', 
+        flex: '1.35', 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
         justifyContent: 'center',
         textAlign: 'center', 
-        minWidth: 0 
+        minWidth: 0,
+        height: '100%'
       }}>
-        <div style={{ marginBottom: '0.75rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-heading)' }}>
+        <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-heading)', letterSpacing: '-0.01em' }}>
             Interactive Setup
           </h3>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
+          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.05rem', fontWeight: 500 }}>
             A bar magnet is freely suspended by a thread. Rotate it and see where it settles!
           </p>
         </div>
 
-        {/* Canvas */}
+        {/* Canvas (Enlarged to 380px Height, 650px Max Width to fill empty space) */}
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          maxWidth: '480px', 
-          height: '330px', 
+          maxWidth: '650px', 
+          height: '380px', 
           background: '#f8fafc',
-          border: '1.5px solid var(--border)',
-          borderRadius: '16px',
+          border: '2px solid var(--border)',
+          borderRadius: '20px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           overflow: 'hidden',
-          boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
+          boxShadow: 'inset 0 0 25px rgba(0,0,0,0.05), 0 8px 25px rgba(0,0,0,0.07)'
         }}>
           <img src="/SuspendedMagnet/hello.jpeg" alt="Experiment Setup" style={{ width: '100%', height: '100%', objectFit: 'contain', position: 'absolute', top: 0, left: 0, zIndex: 1 }} />
           
@@ -94,9 +95,9 @@ export default function Stage1_Experiment({ onComplete }) {
             position: 'absolute',
             left: '50%',
             transform: 'translateX(-50%)',
-            bottom: '85px',
-            width: '2px',
-            height: '165px',
+            bottom: '95px',
+            width: '2.5px',
+            height: '195px',
             background: '#1e293b',
             zIndex: 9
           }} />
@@ -104,9 +105,9 @@ export default function Stage1_Experiment({ onComplete }) {
           {/* Magnet Wrapper for 3D Perspective */}
           <div style={{
             position: 'absolute',
-            bottom: '70px',
-            width: '175px',
-            height: '32px',
+            bottom: '75px',
+            width: '230px',
+            height: '42px',
             perspective: '1000px',
             zIndex: 10
           }}>
@@ -139,16 +140,16 @@ export default function Stage1_Experiment({ onComplete }) {
                   width: '100%',
                   height: '100%',
                   display: 'flex',
-                  borderRadius: '4px',
+                  borderRadius: '6px',
                   overflow: 'hidden',
-                  boxShadow: '0 10px 15px rgba(0,0,0,0.4)',
+                  boxShadow: '0 12px 20px rgba(0,0,0,0.45)',
                   cursor: isSpinning ? 'wait' : 'grab'
                 }}
               >
-                <div style={{ flex: 1, backgroundColor: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.15rem' }}>
+                <div style={{ flex: 1, backgroundColor: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1.4rem', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
                   N
                 </div>
-                <div style={{ flex: 1, backgroundColor: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.15rem' }}>
+                <div style={{ flex: 1, backgroundColor: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1.4rem', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
                   S
                 </div>
               </motion.div>
@@ -156,25 +157,25 @@ export default function Stage1_Experiment({ onComplete }) {
           </div>
         </div>
 
-        {/* Controls */}
-        <div style={{ display: 'flex', gap: '0.85rem', marginTop: '1rem' }}>
+        {/* Controls (Enlarged Action Buttons) */}
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem' }}>
           <button 
             onClick={handleSpin}
             disabled={isSpinning || quizAnswer === 'yes'}
             className="primary"
-            style={{ padding: '0.8rem 1.5rem', fontSize: '0.94rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ padding: '0.9rem 1.8rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
           >
-            <RotateCw size={18} className={isSpinning ? 'spin-animation' : ''} /> 
+            <RotateCw size={20} className={isSpinning ? 'spin-animation' : ''} /> 
             {isSpinning ? 'Spinning...' : 'Rotate Magnet'}
           </button>
           
           <button 
             onClick={handleReset}
             className="outline"
-            style={{ padding: '0.8rem 1.5rem', fontSize: '0.94rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ padding: '0.9rem 1.8rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
             disabled={isSpinning || spinCount === 0}
           >
-            <RotateCcw size={18} /> Reset
+            <RotateCcw size={20} /> Reset
           </button>
         </div>
       </div>

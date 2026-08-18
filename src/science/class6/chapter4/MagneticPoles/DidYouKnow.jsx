@@ -1,92 +1,65 @@
 import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
+import { useHybridVoice } from '../../../../hooks/useHybridVoice';
 
 const facts = [
   {
+    id: 'earth_giant_magnet',
     title: "Earth is a Giant Magnet",
     shortTitle: "Earth is a Giant Magnet",
-    content: "Earth acts like a giant magnet! It has its own magnetic field, which helps a compass point north. This invisible magnetic shield protects our planet from solar particles."
+    content: "Earth acts like a giant magnet! It has its own magnetic field, which helps a compass point north. This invisible magnetic shield protects our planet from solar particles.",
+    audioUrl: '/audio/earth_giant_magnet.mp3'
   },
   {
+    id: 'gilbert_discovery',
     title: "William Gilbert's Discovery",
     shortTitle: "Gilbert's Discovery",
-    content: "In 1600, English scientist William Gilbert studied magnets carefully and discovered that Earth behaves like a giant magnet. His work explained why compass needles point north."
+    content: "In 1600, English scientist William Gilbert studied magnets carefully and discovered that Earth behaves like a giant magnet. His work explained why compass needles point north.",
+    audioUrl: '/audio/gilbert_discovery.mp3'
   },
   {
+    id: 'poles_pairs',
     title: "Magnetic Poles Exist in Pairs",
     shortTitle: "Poles Exist in Pairs",
-    content: "Even if you break a bar magnet into smaller pieces, every piece will still have its own North and South pole! A single isolated magnetic pole cannot exist by itself."
+    content: "Even if you break a bar magnet into smaller pieces, every piece will still have its own North and South pole! A single isolated magnetic pole cannot exist by itself.",
+    audioUrl: '/audio/poles_pairs.mp3'
   },
   {
+    id: 'max_strength',
     title: "Poles Hold Maximum Strength",
     shortTitle: "Maximum Pole Strength",
-    content: "When you sprinkle iron filings over a magnet, most filings cluster heavily at the two ends. This shows that a magnet's attraction strength is strongest at its poles!"
+    content: "When you sprinkle iron filings over a magnet, most filings cluster heavily at the two ends. This shows that a magnet's attraction strength is strongest at its poles!",
+    audioUrl: '/audio/max_strength.mp3'
   }
 ];
 
 export default function DidYouKnow() {
   const [hoveredFact, setHoveredFact] = useState(null);
-  const [spokenCharIndex, setSpokenCharIndex] = useState(-1);
-
-  const speakFact = (fact) => {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    setSpokenCharIndex(0);
-
-    const synth = window.speechSynthesis;
-    const availableVoices = synth.getVoices();
-    
-    const teacherVoice = availableVoices.find(v => {
-      const name = (v.name || '').toLowerCase();
-      return name.includes('neerja') || name.includes('natural female') || (name.includes('female') && !name.includes('zira'));
-    }) || availableVoices.find(v => v.name.includes('Jenny') || v.name.includes('Zira')) || availableVoices[0];
-
-    const fullText = `${fact.title}. ${fact.content}`;
-    const utterance = new SpeechSynthesisUtterance(fullText);
-    utterance.voice = teacherVoice;
-    utterance.pitch = 0.88;
-    utterance.rate = 0.88;
-    utterance.volume = 1.0;
-
-    const titleOffset = fact.title.length + 2;
-
-    utterance.onboundary = (event) => {
-      if (event.name === 'word') {
-        const contentIndex = event.charIndex - titleOffset;
-        setSpokenCharIndex(contentIndex >= 0 ? contentIndex : 0);
-      }
-    };
-
-    utterance.onend = () => {
-      setSpokenCharIndex(fact.content.length);
-    };
-
-    utterance.onerror = () => {
-      setSpokenCharIndex(-1);
-    };
-
-    synth.speak(utterance);
-  };
+  const { speak, stop, spokenCharIndex } = useHybridVoice();
 
   const handleMouseEnter = (fact) => {
     setHoveredFact(fact);
-    speakFact(fact);
+    const fullText = `${fact.title}. ${fact.content}`;
+    speak({
+      text: fullText,
+      audioUrl: fact.audioUrl
+    });
   };
 
   const handleMouseLeave = () => {
     setHoveredFact(null);
-    setSpokenCharIndex(-1);
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+    stop();
   };
 
   // Color-only text karaoke highlighting (no background, no glow, no size changes)
-  const renderHighlightedContent = (content, charIndex) => {
+  const renderHighlightedContent = (content, title, charIndex) => {
     if (!content) return null;
     if (charIndex === undefined || charIndex === null || charIndex < 0) {
       return <span>{content}</span>;
     }
+
+    const titleOffset = title ? title.length + 2 : 0;
+    const adjustedIndex = charIndex - titleOffset;
 
     const words = content.split(' ');
     let currentPos = 0;
@@ -96,14 +69,14 @@ export default function DidYouKnow() {
       const endPos = currentPos + word.length;
       currentPos = endPos + 1;
 
-      const isCurrentWord = charIndex >= startPos && charIndex <= endPos + 2;
-      const isPastWord = charIndex > endPos + 2;
+      const isCurrentWord = adjustedIndex >= startPos && adjustedIndex <= endPos + 2;
+      const isPastWord = adjustedIndex > endPos + 2;
 
       let color = '#cbd5e1';
       let fontWeight = 500;
 
       if (isCurrentWord) {
-        color = '#38bdf8'; // Cyan active spoken word
+        color = '#ff7700'; // Bright Orange active spoken word
       } else if (isPastWord) {
         color = '#f1f5f9'; // Bright read word
       }
@@ -154,7 +127,7 @@ export default function DidYouKnow() {
             </h4>
           </div>
           <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#cbd5e1' }}>
-            {renderHighlightedContent(hoveredFact.content, spokenCharIndex)}
+            {renderHighlightedContent(hoveredFact.content, hoveredFact.title, spokenCharIndex)}
           </p>
         </div>
       )}
@@ -191,17 +164,17 @@ export default function DidYouKnow() {
                 onMouseEnter={() => handleMouseEnter(fact)}
                 onMouseLeave={handleMouseLeave}
                 style={{
-                  color: hoveredFact === fact ? '#60a5fa' : '#e2e8f0',
+                  color: hoveredFact === fact ? '#ff7700' : '#e2e8f0',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                   cursor: 'pointer',
                   fontSize: '0.88rem',
-                  fontWeight: 500,
+                  fontWeight: 600,
                   padding: '0.4rem 0.6rem',
                   borderRadius: '8px',
-                  backgroundColor: hoveredFact === fact ? 'rgba(59, 130, 246, 0.15)' : 'transparent',
-                  transition: 'all 0.2s ease',
+                  backgroundColor: 'transparent',
+                  transition: 'color 0.2s ease',
                   whiteSpace: 'nowrap'
                 }}
               >

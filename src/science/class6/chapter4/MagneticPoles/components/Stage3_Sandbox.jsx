@@ -128,65 +128,70 @@ export default function Stage3_Sandbox({ onComplete }) {
       height: '100%', 
       minHeight: 0, 
       overflow: 'hidden', 
-      boxSizing: 'border-box' 
+      boxSizing: 'border-box',
+      background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
+      border: '1.5px solid #1e40af',
+      borderRadius: '20px',
+      boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
     }}>
-      {/* Left Side: Interactive Sandbox Area */}
+      {/* Left Side: Interactive Sandbox Area (Enlarged & Centered to fill empty space) */}
       <div style={{ 
-        flex: '1.15', 
+        flex: '1.35', 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
         justifyContent: 'center',
         textAlign: 'center', 
-        minWidth: 0 
+        minWidth: 0,
+        height: '100%'
       }}>
-        <div style={{ marginBottom: '0.75rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-heading)' }}>
+        <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
             Sandbox: Magnet Shapes
           </h3>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
+          <p style={{ margin: 0, color: '#94a3b8', fontSize: '1.05rem', fontWeight: 500 }}>
             Choose a shape, scatter filings, and observe the poles.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem' }}>
           <button 
             onClick={() => handleShapeChange('horseshoe')}
             className={shape === 'horseshoe' ? 'primary' : 'outline'}
-            style={{ padding: '0.45rem 1.25rem', fontSize: '0.88rem', fontWeight: 600 }}
+            style={{ padding: '0.65rem 1.75rem', fontSize: '1.02rem', fontWeight: 700, borderRadius: '12px' }}
           >
             Horseshoe
           </button>
           <button 
             onClick={() => handleShapeChange('ring')}
             className={shape === 'ring' ? 'primary' : 'outline'}
-            style={{ padding: '0.45rem 1.25rem', fontSize: '0.88rem', fontWeight: 600 }}
+            style={{ padding: '0.65rem 1.75rem', fontSize: '1.02rem', fontWeight: 700, borderRadius: '12px' }}
           >
             Ring Magnet
           </button>
           <button 
             onClick={() => handleShapeChange('bar')}
             className={shape === 'bar' ? 'primary' : 'outline'}
-            style={{ padding: '0.45rem 1.25rem', fontSize: '0.88rem', fontWeight: 600 }}
+            style={{ padding: '0.65rem 1.75rem', fontSize: '1.02rem', fontWeight: 700, borderRadius: '12px' }}
           >
             Bar Magnet
           </button>
         </div>
 
-        {/* Paper Board (290px Height, 520px Width) */}
+        {/* Paper Board (Enlarged to 360px Height, 650px Max Width to fill empty space) */}
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          maxWidth: '520px', 
-          height: '290px', 
+          maxWidth: '650px', 
+          height: '360px', 
           background: '#f8fafc',
-          border: '1.5px solid #cbd5e1',
-          borderRadius: '16px',
+          border: '2px solid #cbd5e1',
+          borderRadius: '20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          boxShadow: 'inset 0 0 25px rgba(0,0,0,0.06), 0 4px 15px rgba(0,0,0,0.05)'
+          boxShadow: 'inset 0 0 30px rgba(0,0,0,0.06), 0 8px 25px rgba(0,0,0,0.07)'
         }}>
           {shape === 'bar' && (
             <img 
@@ -194,24 +199,24 @@ export default function Stage3_Sandbox({ onComplete }) {
               alt="Bar Magnet"
               style={{
                 position: 'absolute',
-                width: '220px',
+                width: '280px',
                 zIndex: 10,
                 pointerEvents: 'none',
-                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.25))'
+                filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.3))'
               }}
             />
           )}
 
           {shape === 'horseshoe' && (
             <img 
-              src="/Shared/horse-magnet.png" 
+              src="/MagneticPoles/horseshoe_magnet.png" 
               alt="Horseshoe Magnet"
               style={{
-                position: 'absolute', 
-                width: '150px', 
+                position: 'absolute',
+                width: '200px',
                 zIndex: 10,
                 pointerEvents: 'none',
-                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.25))'
+                filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.3))'
               }}
             />
           )}
@@ -221,16 +226,16 @@ export default function Stage3_Sandbox({ onComplete }) {
               src="/MagneticPoles/ring_magnet.png" 
               alt="Ring Magnet"
               style={{
-                position: 'absolute', 
-                width: '130px', 
+                position: 'absolute',
+                width: '190px',
                 zIndex: 10,
                 pointerEvents: 'none',
-                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.25))'
+                filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.3))'
               }}
             />
           )}
 
-          {/* Render Filings (Identical rendering to Stage1_Investigate) */}
+          {/* Render Filings */}
           {filings.map((f) => (
             <div
               key={f.id}
@@ -239,7 +244,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                 left: `calc(50% + ${f.x}px)`,
                 top: `calc(50% + ${f.y}px)`,
                 width: `${f.width}px`,
-                height: '2.5px',
+                height: '2.8px',
                 backgroundColor: f.color,
                 transform: `rotate(${f.rotation}deg)`,
                 borderRadius: '1px',
@@ -250,13 +255,13 @@ export default function Stage3_Sandbox({ onComplete }) {
           ))}
         </div>
 
-        {/* Action Controls */}
-        <div style={{ display: 'flex', gap: '0.85rem', marginTop: '1rem' }}>
+        {/* Action Controls (Enlarged Action Buttons) */}
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem' }}>
           <button 
             onClick={handleScatter} 
             disabled={step !== 'initial'}
             className={step === 'initial' ? 'primary' : 'outline'}
-            style={{ padding: '0.75rem 1.4rem', fontSize: '0.9rem', fontWeight: 600 }}
+            style={{ padding: '0.9rem 1.75rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px' }}
           >
             1. Scatter Iron Filings
           </button>
@@ -265,18 +270,18 @@ export default function Stage3_Sandbox({ onComplete }) {
             onClick={handleTap}
             disabled={step !== 'scattered'}
             className={step === 'scattered' ? 'primary' : 'outline'}
-            style={{ padding: '0.75rem 1.4rem', fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ padding: '0.9rem 1.75rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
           >
-            <Hand size={18} /> 2. Tap Paper
+            <Hand size={20} /> 2. Tap Paper
           </button>
 
           <button 
             onClick={handleReset}
             className="outline"
-            style={{ padding: '0.75rem 1.4rem', fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ padding: '0.9rem 1.75rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
             disabled={step === 'initial'}
           >
-            <RotateCcw size={18} /> Reset Activity
+            <RotateCcw size={20} /> Reset Activity
           </button>
         </div>
       </div>
@@ -291,18 +296,18 @@ export default function Stage3_Sandbox({ onComplete }) {
         minWidth: 0, 
         overflowY: 'auto' 
       }}>
-        <div className="glass-panel" style={{ padding: '1.25rem 1.5rem', background: 'var(--surface)' }}>
-          <h4 style={{ color: 'var(--text-heading)', margin: '0 0 0.75rem 0', fontSize: '1.05rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Shapes size={20} style={{ color: 'var(--accent)' }} /> 
+        <div className="glass-panel" style={{ padding: '1.25rem 1.5rem', background: 'rgba(15, 23, 42, 0.65)', border: '1.5px solid #3b82f6' }}>
+          <h4 style={{ color: '#38bdf8', margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Shapes size={20} style={{ color: '#38bdf8' }} /> 
             Other Shapes
           </h4>
-          <p style={{ margin: '0 0 0.85rem 0', color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+          <p style={{ margin: '0 0 0.85rem 0', color: '#cbd5e1', fontSize: '0.92rem', lineHeight: '1.5' }}>
             If we repeat this activity with magnets of other shapes, do we get the same result?
           </p>
-          <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.88rem', lineHeight: '1.5' }}>
-            <li><strong>Horseshoe Magnet:</strong> The poles are located at the two ends.</li>
-            <li><strong>Ring Magnet:</strong> The poles are usually on opposite faces or halves.</li>
-            <li><strong>Bar Magnet:</strong> The poles are located at the two ends.</li>
+          <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#cbd5e1', display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.9rem', lineHeight: '1.5' }}>
+            <li><strong style={{ color: '#ffffff' }}>Horseshoe Magnet:</strong> The poles are located at the two ends.</li>
+            <li><strong style={{ color: '#ffffff' }}>Ring Magnet:</strong> The poles are usually on opposite faces or halves.</li>
+            <li><strong style={{ color: '#ffffff' }}>Bar Magnet:</strong> The poles are located at the two ends.</li>
           </ul>
         </div>
 

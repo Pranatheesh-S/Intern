@@ -113,20 +113,20 @@ export default function Questions({ onComplete, onNext }) {
   const q = questions[currentQuestion];
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem', maxWidth: '100%', margin: '0 auto', width: '100%' }}>
+    <div className="glass-panel" style={{ padding: '2.5rem 3.5rem', maxWidth: '1400px', margin: '0 auto', width: '100%', borderRadius: '24px', boxSizing: 'border-box' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>Concept Check</h2>
-        <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>
+        <h2 style={{ margin: 0, fontSize: '1.85rem', color: 'var(--text-heading)', fontWeight: 800 }}>Concept Check</h2>
+        <div style={{ fontSize: '1.1rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>
           Question {currentQuestion + 1} of {questions.length}
         </div>
       </div>
 
       <div style={{ marginBottom: '2rem' }}>
-        <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', lineHeight: '1.5', margin: '0 0 1.5rem 0' }}>
+        <h3 style={{ fontSize: '1.35rem', color: 'var(--text-primary)', lineHeight: '1.6', margin: '0 0 1.75rem 0', fontWeight: 600 }}>
           {q.question}
         </h3>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
           {q.options.map((option, index) => {
             const isSelected = selectedOption === option;
             const isCorrect = option === q.correctAnswer;
@@ -158,12 +158,13 @@ export default function Questions({ onComplete, onNext }) {
                 onClick={() => handleOptionSelect(option)}
                 disabled={showFeedback}
                 style={{
-                  padding: '1rem 1.5rem',
-                  borderRadius: '12px',
+                  padding: '1.25rem 1.75rem',
+                  borderRadius: '14px',
                   background: bg,
                   border: `2px solid ${borderColor}`,
                   color: color,
-                  fontSize: '1rem',
+                  fontSize: '1.25rem',
+                  fontWeight: 600,
                   textAlign: 'left',
                   cursor: showFeedback ? 'default' : 'pointer',
                   display: 'flex',
@@ -174,8 +175,8 @@ export default function Questions({ onComplete, onNext }) {
                 }}
               >
                 {option}
-                {showFeedback && isCorrect && <CheckCircle2 size={20} />}
-                {showFeedback && isSelected && !isCorrect && <XCircle size={20} />}
+                {showFeedback && isCorrect && <CheckCircle2 size={24} />}
+                {showFeedback && isSelected && !isCorrect && <XCircle size={24} />}
               </button>
             );
           })}
@@ -188,20 +189,20 @@ export default function Questions({ onComplete, onNext }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             style={{ 
-              padding: '1.5rem', 
+              padding: '1.5rem 1.75rem', 
               background: selectedOption === q.correctAnswer ? 'var(--success-bg)' : 'var(--destructive-bg)', 
-              borderRadius: '12px',
-              border: `1px solid ${selectedOption === q.correctAnswer ? 'var(--success-border)' : 'var(--destructive-border)'}`,
-              marginBottom: '1.5rem',
+              borderRadius: '14px',
+              border: `1.5px solid ${selectedOption === q.correctAnswer ? 'var(--success-border)' : 'var(--destructive-border)'}`,
+              marginBottom: '2rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.5rem'
+              gap: '0.65rem'
             }}
           >
-            <div style={{ fontWeight: 'bold', color: selectedOption === q.correctAnswer ? 'var(--success)' : 'var(--destructive)' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: selectedOption === q.correctAnswer ? 'var(--success)' : 'var(--destructive)' }}>
               {selectedOption === q.correctAnswer ? 'Correct!' : 'Incorrect.'}
             </div>
-            <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+            <p style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
               {q.explanation}
             </p>
           </motion.div>
@@ -213,7 +214,7 @@ export default function Questions({ onComplete, onNext }) {
           onClick={handleNext}
           disabled={!showFeedback}
           className="primary"
-          style={{ opacity: showFeedback ? 1 : 0.5, padding: '0.75rem 2rem' }}
+          style={{ opacity: showFeedback ? 1 : 0.5, padding: '0.85rem 2.5rem', fontSize: '1.25rem', fontWeight: 700, borderRadius: '12px' }}
         >
           {currentQuestion < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
         </button>

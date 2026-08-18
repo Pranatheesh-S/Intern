@@ -9,21 +9,21 @@ const MagnetPart = ({ isLeft, isFull = false, showNewPoles, width = 200 }) => {
   return (
     <div style={{
       width: `${width}px`,
-      height: '60px',
+      height: '85px',
       display: 'flex',
-      borderRadius: '4px',
+      borderRadius: '8px',
       overflow: 'hidden',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.2)',
+      boxShadow: '0 6px 12px rgba(0,0,0,0.25)',
       backgroundImage: 'url(/MagneticPoles/horizontal_magnet.png)',
       backgroundSize: bgSize,
       backgroundPosition: bgPos,
       backgroundRepeat: 'no-repeat',
       position: 'relative'
     }}>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.25rem', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1.65rem', textShadow: '0 2px 5px rgba(0,0,0,0.85)' }}>
         {isFull || isLeft ? 'N' : (showNewPoles ? 'N' : '')}
       </div>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.25rem', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1.65rem', textShadow: '0 2px 5px rgba(0,0,0,0.85)' }}>
         {isFull || !isLeft ? 'S' : (showNewPoles ? 'S' : '')}
       </div>
     </div>
@@ -52,82 +52,119 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '1rem 1.5rem', display: 'flex', gap: '1.5rem', height: '100%', minHeight: 0, overflow: 'hidden', boxSizing: 'border-box' }}>
+    <div className="glass-panel" style={{ 
+      padding: '1.25rem 1.75rem', 
+      display: 'flex', 
+      gap: '1.75rem', 
+      height: '100%', 
+      minHeight: 0, 
+      overflow: 'hidden', 
+      boxSizing: 'border-box',
+      background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
+      border: '1.5px solid #1e40af',
+      borderRadius: '20px',
+      boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+    }}>
       {/* Left Side: Interactive Area */}
-      <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ flex: '1.35', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minWidth: 0 }}>
         <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Breaking a Magnet</h3>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
+            Breaking a Magnet
+          </h3>
+          <p style={{ margin: 0, color: '#94a3b8', fontSize: '1.05rem', fontWeight: 500 }}>
             What happens if we break a magnet in half? Let's try it.
           </p>
         </div>
 
-        {/* Paper / Canvas */}
+        {/* Canvas (Enlarged to 360px Height, 650px Max Width to fill empty space) */}
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          maxWidth: '500px', 
-          height: '300px', 
+          maxWidth: '650px', 
+          height: '360px', 
           background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: '8px',
+          border: '2px solid var(--border)',
+          borderRadius: '20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)'
+          boxShadow: 'inset 0 0 25px rgba(0,0,0,0.05), 0 8px 25px rgba(0,0,0,0.07)'
         }}>
           {!broken ? (
             <motion.div exit={{ opacity: 0, scale: 0.9 }}>
-              <MagnetPart isLeft={true} isFull={true} showNewPoles={false} width={400} />
+              <MagnetPart isLeft={true} isFull={true} showNewPoles={false} width={480} />
             </motion.div>
           ) : (
-            <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: '24px', alignItems: 'center', justifyContent: 'center' }}>
               <motion.div
                 initial={{ x: 100 }}
                 animate={{ x: -10 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                transition={{ type: 'spring', damping: 15 }}
               >
-                <MagnetPart isLeft={true} isFull={false} showNewPoles={showPoles} width={180} />
+                <MagnetPart isLeft={true} isFull={false} showNewPoles={showPoles} width={220} />
               </motion.div>
 
               <motion.div
                 initial={{ x: -100 }}
                 animate={{ x: 10 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                transition={{ type: 'spring', damping: 15 }}
               >
-                <MagnetPart isLeft={false} isFull={false} showNewPoles={showPoles} width={180} />
+                <MagnetPart isLeft={false} isFull={false} showNewPoles={showPoles} width={220} />
               </motion.div>
             </div>
           )}
 
-          {/* Flash Effect on Break */}
           <AnimatePresence>
-            {broken && !showPoles && (
+            {!broken && (
               <motion.div
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 style={{
                   position: 'absolute',
-                  top: 0, left: 0, right: 0, bottom: 0,
-                  background: 'white',
-                  zIndex: 20
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: 20,
+                  pointerEvents: 'none'
                 }}
-              />
+              >
+                <div style={{
+                  borderLeft: '3px dashed #ef4444',
+                  height: '110px',
+                  position: 'relative'
+                }}>
+                  <span style={{
+                    position: 'absolute',
+                    top: '-25px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: '#ef4444',
+                    color: 'white',
+                    padding: '2px 8px',
+                    borderRadius: '10px',
+                    fontSize: '0.75rem',
+                    fontWeight: 'bold',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    Cut Line
+                  </span>
+                </div>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
 
         {/* Controls */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem' }}>
           <button 
             onClick={handleBreak} 
             disabled={broken}
             className={!broken ? 'primary' : 'outline'}
-            style={{ padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ padding: '0.9rem 1.8rem', fontSize: '1.05rem', fontWeight: 700, borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
           >
-            <Scissors size={18} /> Break Magnet
+            <Scissors size={20} /> Break Magnet
           </button>
         </div>
       </div>
@@ -140,10 +177,10 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               className="glass-panel"
-              style={{ padding: '1.5rem', background: 'var(--surface)' }}
+              style={{ padding: '1.5rem', background: 'rgba(15, 23, 42, 0.65)', border: '1.5px solid #3b82f6' }}
             >
-              <h4 style={{ color: 'var(--text-heading)', margin: '0 0 1rem 0' }}>Observation</h4>
-              <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+              <h4 style={{ color: '#38bdf8', margin: '0 0 1rem 0', fontSize: '1.1rem', fontWeight: 800 }}>Observation</h4>
+              <p style={{ margin: 0, color: '#cbd5e1', lineHeight: '1.5', fontSize: '0.95rem' }}>
                 When the magnet is broken into two pieces, each piece immediately develops a new pole at the broken end! 
                 The left piece grew a new South pole, and the right piece grew a new North pole.
               </p>
@@ -158,7 +195,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1 }}
               className="glass-panel"
-              style={{ padding: '1.5rem', background: 'var(--accent-bg)', border: '1px solid var(--accent-border)' }}
+              style={{ padding: '1.5rem', background: 'rgba(30, 58, 138, 0.5)', border: '1.5px solid #60a5fa' }}
             >
               <h4 style={{ color: 'var(--text-heading)', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <AlertCircle size={20} style={{ color: 'var(--accent-text)' }} /> 

@@ -1,92 +1,65 @@
 import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
+import { useHybridVoice } from '../../../../hooks/useHybridVoice';
 
 const facts = [
   {
+    id: 'earth_magnet',
     title: "Earth acts like a giant magnet",
     shortTitle: "Earth as a Magnet",
-    content: "If you suspend a bar magnet freely, it always comes to rest pointing in the North-South direction because Earth acts like a giant magnet!"
+    content: "If you suspend a bar magnet freely, it always comes to rest pointing in the North-South direction because Earth acts like a giant magnet!",
+    audioUrl: '/audio/earth_magnet.mp3'
   },
   {
+    id: 'ancient_compass',
     title: "Ancient Chinese Travelers",
     shortTitle: "Ancient Compasses",
-    content: "More than 1,000 years ago, travelers and sailors used magnetic lodestones and suspended magnets to navigate long journeys across land and sea."
+    content: "More than 1,000 years ago, travelers and sailors used magnetic lodestones and suspended magnets to navigate long journeys across land and sea.",
+    audioUrl: '/audio/ancient_compass.mp3'
   },
   {
+    id: 'emperor_chariot',
     title: "Chariot of Emperor Hoang-Ti",
     shortTitle: "Emperor's Chariot",
-    content: "Legend says Emperor Hoang-Ti had a chariot with a wooden statue of a woman holding an extended arm that always pointed towards the South!"
+    content: "Legend says Emperor Hoang-Ti had a chariot with a wooden statue of a woman holding an extended arm that always pointed towards the South!",
+    audioUrl: '/audio/emperor_chariot.mp3'
   },
   {
+    id: 'north_seeking',
     title: "North-Seeking Pole",
     shortTitle: "North-Seeking Pole",
-    content: "The end of a magnet that points towards the geographic North is called the North-seeking pole, or simply the North Pole."
+    content: "The end of a magnet that points towards the geographic North is called the North-seeking pole, or simply the North Pole.",
+    audioUrl: '/audio/north_seeking.mp3'
   }
 ];
 
 export default function DidYouKnow() {
   const [hoveredFact, setHoveredFact] = useState(null);
-  const [spokenCharIndex, setSpokenCharIndex] = useState(-1);
-
-  const speakFact = (fact) => {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    setSpokenCharIndex(0);
-
-    const synth = window.speechSynthesis;
-    const availableVoices = synth.getVoices();
-    
-    const teacherVoice = availableVoices.find(v => {
-      const name = (v.name || '').toLowerCase();
-      return name.includes('neerja') || name.includes('natural female') || (name.includes('female') && !name.includes('zira'));
-    }) || availableVoices.find(v => v.name.includes('Jenny') || v.name.includes('Zira')) || availableVoices[0];
-
-    const fullText = `${fact.title}. ${fact.content}`;
-    const utterance = new SpeechSynthesisUtterance(fullText);
-    utterance.voice = teacherVoice;
-    utterance.pitch = 0.88;
-    utterance.rate = 0.88;
-    utterance.volume = 1.0;
-
-    const titleOffset = fact.title.length + 2;
-
-    utterance.onboundary = (event) => {
-      if (event.name === 'word') {
-        const contentIndex = event.charIndex - titleOffset;
-        setSpokenCharIndex(contentIndex >= 0 ? contentIndex : 0);
-      }
-    };
-
-    utterance.onend = () => {
-      setSpokenCharIndex(fact.content.length);
-    };
-
-    utterance.onerror = () => {
-      setSpokenCharIndex(-1);
-    };
-
-    synth.speak(utterance);
-  };
+  const { speak, stop, spokenCharIndex } = useHybridVoice();
 
   const handleMouseEnter = (fact) => {
     setHoveredFact(fact);
-    speakFact(fact);
+    const fullText = `${fact.title}. ${fact.content}`;
+    speak({
+      text: fullText,
+      audioUrl: fact.audioUrl
+    });
   };
 
   const handleMouseLeave = () => {
     setHoveredFact(null);
-    setSpokenCharIndex(-1);
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+    stop();
   };
 
   // Color-only text karaoke highlighting (no background, no glow, no size changes)
-  const renderHighlightedContent = (content, charIndex) => {
+  const renderHighlightedContent = (content, title, charIndex) => {
     if (!content) return null;
     if (charIndex === undefined || charIndex === null || charIndex < 0) {
       return <span>{content}</span>;
     }
+
+    const titleOffset = title ? title.length + 2 : 0;
+    const adjustedIndex = charIndex - titleOffset;
 
     const words = content.split(' ');
     let currentPos = 0;
@@ -96,14 +69,14 @@ export default function DidYouKnow() {
       const endPos = currentPos + word.length;
       currentPos = endPos + 1;
 
-      const isCurrentWord = charIndex >= startPos && charIndex <= endPos + 2;
-      const isPastWord = charIndex > endPos + 2;
+      const isCurrentWord = adjustedIndex >= startPos && adjustedIndex <= endPos + 2;
+      const isPastWord = adjustedIndex > endPos + 2;
 
       let color = '#cbd5e1';
       let fontWeight = 500;
 
       if (isCurrentWord) {
-        color = '#38bdf8'; // Cyan active spoken word
+        color = '#ff7700'; // Bright Orange active spoken word
       } else if (isPastWord) {
         color = '#f1f5f9'; // Bright read word
       }
@@ -154,7 +127,7 @@ export default function DidYouKnow() {
             </h4>
           </div>
           <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#cbd5e1' }}>
-            {renderHighlightedContent(hoveredFact.content, spokenCharIndex)}
+            {renderHighlightedContent(hoveredFact.content, hoveredFact.title, spokenCharIndex)}
           </p>
         </div>
       )}
@@ -191,17 +164,17 @@ export default function DidYouKnow() {
                 onMouseEnter={() => handleMouseEnter(fact)}
                 onMouseLeave={handleMouseLeave}
                 style={{
-                  color: hoveredFact === fact ? '#60a5fa' : '#e2e8f0',
+                  color: hoveredFact === fact ? '#ff7700' : '#e2e8f0',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                   cursor: 'pointer',
                   fontSize: '0.88rem',
-                  fontWeight: 500,
+                  fontWeight: 600,
                   padding: '0.4rem 0.6rem',
                   borderRadius: '8px',
-                  backgroundColor: hoveredFact === fact ? 'rgba(59, 130, 246, 0.15)' : 'transparent',
-                  transition: 'all 0.2s ease',
+                  backgroundColor: 'transparent',
+                  transition: 'color 0.2s ease',
                   whiteSpace: 'nowrap'
                 }}
               >

@@ -110,19 +110,19 @@ export default function Stage4_Quiz({ onComplete }) {
   const question = QUESTIONS[currentQ];
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '100%', padding: '2rem', background: 'var(--surface)' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem 3rem', width: '100%', maxWidth: '1400px', margin: '0 auto', boxSizing: 'border-box' }}>
+      <div className="glass-panel" style={{ width: '100%', maxWidth: '100%', padding: '2.5rem 3.5rem', background: 'var(--surface)', borderRadius: '24px' }}>
         
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
           <span>Question {currentQ + 1} of {QUESTIONS.length}</span>
           <span>Score: {score}</span>
         </div>
 
-        <h3 style={{ margin: '0 0 2rem 0', color: 'var(--text-heading)', fontSize: '1.25rem', lineHeight: '1.4' }}>
+        <h3 style={{ margin: '0 0 2.25rem 0', color: 'var(--text-heading)', fontSize: '1.65rem', fontWeight: 800, lineHeight: '1.5' }}>
           {question.question}
         </h3>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
           {question.options.map((opt) => {
             const isSelected = selectedOption === opt;
             const isCorrect = opt === question.correctAnswer;
@@ -154,23 +154,25 @@ export default function Stage4_Quiz({ onComplete }) {
                 disabled={showResult}
                 className="outline"
                 style={{
-                  padding: '1.25rem',
+                  padding: '1.35rem 1.75rem',
                   textAlign: 'left',
                   background: bg,
                   borderColor: border,
                   color: color,
                   position: 'relative',
                   overflow: 'hidden',
+                  borderRadius: '14px',
                   transition: 'all 0.2s',
-                  fontSize: '1rem'
+                  fontSize: '1.25rem',
+                  fontWeight: 600
                 }}
               >
                 {opt}
                 {showResult && isCorrect && (
-                  <CheckCircle2 size={20} style={{ position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)' }} />
+                  <CheckCircle2 size={24} style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)' }} />
                 )}
                 {showResult && isSelected && !isCorrect && (
-                  <AlertCircle size={20} style={{ position: 'absolute', right: '1.25rem', top: '50%', transform: 'translateY(-50%)' }} />
+                  <AlertCircle size={24} style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)' }} />
                 )}
               </button>
             );
@@ -182,20 +184,20 @@ export default function Stage4_Quiz({ onComplete }) {
             <motion.div
               initial={{ opacity: 0, y: 10, height: 0 }}
               animate={{ opacity: 1, y: 0, height: 'auto' }}
-              style={{ marginTop: '2rem' }}
+              style={{ marginTop: '2.5rem' }}
             >
               <div style={{ 
-                padding: '1.25rem', 
-                borderRadius: '8px', 
+                padding: '1.5rem 1.75rem', 
+                borderRadius: '14px', 
                 background: selectedOption === question.correctAnswer ? 'var(--success-bg)' : 'var(--destructive-bg)',
-                border: `1px solid ${selectedOption === question.correctAnswer ? 'var(--success-border)' : 'var(--destructive-border)'}`,
+                border: `1.5px solid ${selectedOption === question.correctAnswer ? 'var(--success-border)' : 'var(--destructive-border)'}`,
                 color: selectedOption === question.correctAnswer ? 'var(--success)' : 'var(--destructive)'
               }}>
-                <h4 style={{ margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  {selectedOption === question.correctAnswer ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+                <h4 style={{ margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', fontWeight: 800 }}>
+                  {selectedOption === question.correctAnswer ? <CheckCircle2 size={22} /> : <AlertCircle size={22} />}
                   {selectedOption === question.correctAnswer ? "Correct!" : "Incorrect"}
                 </h4>
-                <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: '1.5', opacity: 0.9 }}>
+                <p style={{ margin: 0, fontSize: '1.2rem', lineHeight: '1.6', opacity: 0.95 }}>
                   {question.explanation}
                 </p>
               </div>
@@ -203,9 +205,9 @@ export default function Stage4_Quiz({ onComplete }) {
               <button 
                 onClick={handleNextQuestion}
                 className="primary"
-                style={{ width: '100%', marginTop: '1rem', padding: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
+                style={{ width: '100%', marginTop: '1.5rem', padding: '1.1rem', fontSize: '1.25rem', fontWeight: 700, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', borderRadius: '12px' }}
               >
-                {currentQ === QUESTIONS.length - 1 ? 'View Results' : 'Next Question'} <ArrowRight size={18} />
+                {currentQ === QUESTIONS.length - 1 ? 'View Results' : 'Next Question'} <ArrowRight size={22} />
               </button>
             </motion.div>
           )}

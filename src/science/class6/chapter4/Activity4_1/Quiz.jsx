@@ -160,36 +160,36 @@ export default function Quiz({ onComplete, onBack }) {
   return (
     <div style={{
       width: '100%',
-      height: '100%',
+      minHeight: '100%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      padding: '0.5rem 1rem',
+      justifyContent: 'flex-start',
+      padding: '1.5rem 1rem 2rem 1rem',
       boxSizing: 'border-box',
-      overflow: 'hidden'
+      overflowY: 'auto'
     }}>
       <div style={{
-        maxWidth: '960px',
+        maxWidth: '1100px',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.6rem'
+        gap: '0.8rem'
       }}>
-        {/* Main Question Card (Larger Quiz Box) */}
+        {/* Main Question Card (Clean, Non-Cropped Quiz Box) */}
         <div style={{
           backgroundColor: '#ffffff',
           border: '2.5px solid #818cf8',
           borderRadius: '24px',
-          padding: '1.75rem 2.25rem',
+          padding: '2rem 2.75rem',
           boxShadow: '0 12px 35px rgba(99, 102, 241, 0.12)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.9rem'
+          gap: '1rem'
         }}>
           {/* Header Row: Title on Left | Question X of Y on Right */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, color: '#4f46e5', fontSize: '1.45rem', fontWeight: 700 }}>
+            <h3 style={{ margin: 0, color: '#4f46e5', fontSize: '1.45rem', fontWeight: 800 }}>
               {currentQ.title}
             </h3>
             <span style={{
@@ -197,18 +197,18 @@ export default function Quiz({ onComplete, onBack }) {
               fontWeight: 700,
               color: '#334155',
               backgroundColor: '#e2e8f0',
-              padding: '0.4rem 1rem',
+              padding: '0.4rem 1.1rem',
               borderRadius: '12px'
             }}>
               Question {currentQuestion + 1} of {quizData.length}
             </span>
           </div>
 
-          <p style={{ fontSize: '1.25rem', color: '#0f172a', fontWeight: 600, margin: 0, lineHeight: '1.5' }}>
+          <p style={{ fontSize: '1.2rem', color: '#0f172a', fontWeight: 600, margin: 0, lineHeight: '1.5' }}>
             {currentQ.question}
           </p>
 
-          {/* Options List (Bigger Option Cards & Text) */}
+          {/* Options List */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {currentQ.options.map((option, index) => {
               let bgColor = '#f8fafc';
@@ -249,9 +249,9 @@ export default function Quiz({ onComplete, onBack }) {
                     color: textColor,
                     cursor: showResult ? 'default' : 'pointer',
                     textAlign: 'left',
-                    fontSize: '1.15rem',
+                    fontSize: '1.12rem',
                     fontWeight: 600,
-                    lineHeight: '1.4',
+                    lineHeight: '1.45',
                     transition: 'all 0.2s ease',
                     opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.5 : 1
                   }}
@@ -266,16 +266,16 @@ export default function Quiz({ onComplete, onBack }) {
           {/* Explanation Box if answered */}
           {showResult && (
             <div style={{
-              padding: '0.85rem 1.25rem',
+              padding: '1rem 1.4rem',
               backgroundColor: '#f8fafc',
-              borderRadius: '14px',
+              borderRadius: '16px',
               borderLeft: '5px solid #4f46e5',
               borderTop: '1px solid #e2e8f0',
               borderRight: '1px solid #e2e8f0',
               borderBottom: '1px solid #e2e8f0'
             }}>
-              <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', color: '#4f46e5', fontWeight: 700 }}>Explanation</h4>
-              <p style={{ margin: 0, color: '#334155', fontSize: '1.02rem', lineHeight: '1.45' }}>
+              <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '1.1rem', color: '#4f46e5', fontWeight: 800 }}>Explanation</h4>
+              <p style={{ margin: 0, color: '#334155', fontSize: '1.1rem', lineHeight: '1.5' }}>
                 {currentQ.explanation}
               </p>
             </div>

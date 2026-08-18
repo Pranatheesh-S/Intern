@@ -128,20 +128,18 @@ export default function Quiz({ onComplete }) {
   return (
     <div style={{ 
       width: '100%', 
-      height: '100%', 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
-      justifyContent: 'flex-start', 
-      overflowY: 'auto', 
-      padding: '1.5rem 0.5rem 1rem 0.5rem', 
+      justifyContent: 'center', 
+      padding: '1rem 0.5rem', 
       boxSizing: 'border-box' 
     }}>
-      <div style={{ width: '100%', maxWidth: '950px' }}>
+      <div style={{ width: '100%', maxWidth: '1050px' }}>
         {/* Top Bar matching screenshot */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', padding: '0 0.25rem' }}>
-          <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600 }}>Test Your Knowledge</h3>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', padding: '0 0.5rem' }}>
+          <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 700 }}>Test Your Knowledge</h3>
+          <div style={{ color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600 }}>
             Question {currentQuestion + 1} of {quizData.length}
           </div>
         </div>
@@ -149,10 +147,10 @@ export default function Quiz({ onComplete }) {
         {/* Main Quiz Card matching exact screenshot design */}
         <div className="glass-panel" style={{ 
           background: 'var(--surface)', 
-          border: '1.5px solid #818cf8',
-          borderRadius: '16px', 
-          padding: '1.5rem 2rem', 
-          boxShadow: '0 10px 30px rgba(0,0,0,0.06)',
+          border: '2px solid #818cf8',
+          borderRadius: '20px', 
+          padding: '1.75rem 2.5rem', 
+          boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
@@ -160,17 +158,17 @@ export default function Quiz({ onComplete }) {
           boxSizing: 'border-box'
         }}>
           {/* Title */}
-          <h3 style={{ margin: 0, color: '#6366f1', fontSize: '1.25rem', fontWeight: 700 }}>
+          <h3 style={{ margin: 0, color: '#6366f1', fontSize: '1.45rem', fontWeight: 800 }}>
             {currentQ.title}
           </h3>
 
           {/* Question Text */}
-          <p style={{ margin: 0, fontSize: '1.05rem', lineHeight: '1.5', fontWeight: 500, color: 'var(--text-heading)' }}>
+          <p style={{ margin: 0, fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600, color: 'var(--text-heading)' }}>
             {currentQ.question}
           </p>
 
           {/* Vertical Stack Full-Width Option Buttons matching screenshot */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {currentQ.options.map((option, index) => {
               let bgColor = 'var(--bg)';
               let borderColor = '#cbd5e1';
@@ -180,11 +178,11 @@ export default function Quiz({ onComplete }) {
                 if (index === currentQ.correctIndex) {
                   bgColor = 'rgba(16, 185, 129, 0.12)';
                   borderColor = '#10b981';
-                  icon = <CheckCircle size={20} color="#10b981" />;
+                  icon = <CheckCircle size={22} color="#10b981" />;
                 } else if (index === selectedOption) {
                   bgColor = 'rgba(239, 68, 68, 0.12)';
                   borderColor = '#ef4444';
-                  icon = <XCircle size={20} color="#ef4444" />;
+                  icon = <XCircle size={22} color="#ef4444" />;
                 }
               } else if (index === selectedOption) {
                 borderColor = '#6366f1';
@@ -199,16 +197,16 @@ export default function Quiz({ onComplete }) {
                   style={{
                     width: '100%',
                     display: 'flex',
-                    justify: 'space-between',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '0.85rem 1.25rem',
+                    padding: '0.9rem 1.35rem',
                     borderRadius: '12px',
                     background: bgColor,
-                    border: `1.5px solid ${borderColor}`,
+                    border: `2px solid ${borderColor}`,
                     color: 'var(--text)',
                     cursor: showResult ? 'default' : 'pointer',
                     textAlign: 'left',
-                    fontSize: '0.95rem',
+                    fontSize: '1.1rem',
                     fontWeight: 600,
                     transition: 'all 0.25s ease',
                     opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.6 : 1
@@ -223,10 +221,10 @@ export default function Quiz({ onComplete }) {
 
           {/* Explanation & Next Question Button */}
           {showResult && (
-            <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ padding: '0.85rem 1.15rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '12px', borderLeft: '4px solid #6366f1' }}>
-                <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '0.95rem', fontWeight: 700, color: '#6366f1' }}>Explanation</h4>
-                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.45' }}>{currentQ.explanation}</p>
+            <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <div style={{ padding: '1rem 1.35rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '14px', borderLeft: '5px solid #6366f1' }}>
+                <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '1.1rem', fontWeight: 800, color: '#6366f1' }}>Explanation</h4>
+                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.5' }}>{currentQ.explanation}</p>
               </div>
               
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -238,7 +236,7 @@ export default function Quiz({ onComplete }) {
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '30px',
-                    fontSize: '1rem',
+                    fontSize: '1.15rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
