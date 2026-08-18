@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
+import { ArrowLeft, RefreshCw, ArrowRight } from 'lucide-react';
 import useSound from 'use-sound';
-import { useTheme } from '../../ThemeContext.jsx';
 import { chapterFlow } from './storyEngine';
 import ChiefDetective from './components/ChiefDetective/ChiefDetective';
 import InvestigationHandbook from './components/Educational/InvestigationHandbook';
@@ -71,8 +70,51 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
     setStageCompleted(true);
   };
 
-  // Global Theme Hook
-  const { theme, toggleTheme } = useTheme();
+  const renderBackButton = () => (
+    <div style={{ marginTop: 'auto', paddingTop: '24px', display: 'flex' }}>
+      <button
+        onClick={() => {
+          if (currentNode.id === 'stage1' && activityView === 'page2') {
+            setActivityView('page1');
+          } else if (currentFlowIndex > 0) {
+            setCurrentFlowIndex(prev => prev - 1);
+          } else {
+            setShowIntroSpread(true);
+          }
+        }}
+        className="proper-back-btn"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '12px 24px',
+          borderRadius: '8px',
+          border: '1px solid #cbd5e1',
+          background: 'white',
+          color: '#1e293b',
+          fontFamily: 'Arial, Helvetica, sans-serif',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+          transition: 'all 0.2s'
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.background = '#f8fafc';
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.1)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.background = 'white';
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
+        }}
+      >
+        <ArrowLeft size={18} /> Back
+      </button>
+    </div>
+  );
+
 
   if (showCover) {
     return <ChapterCover onOpenBook={() => { setShowCover(false); setShowIntroSpread(true); }} onBack={onBackToDashboard} />;
@@ -128,24 +170,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             </button>
           )}
 
-          {currentNode.id === 'stage1' && activityView === 'page2' && (
-            <button
-              onClick={() => setActivityView('page1')}
-              className="outline"
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px' }}
-            >
-              <ArrowLeft size={14} /> Back
-            </button>
-          )}
-
-          <button
-            className="outline"
-            onClick={toggleTheme}
-            title="Toggle Theme"
-            style={{ padding: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
-          >
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
+          
 
           {!(currentNode.id === 'stage1' && activityView === 'page1') && (
             <button
@@ -320,12 +345,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
           {currentNode.type === 'activity' && (
             ['quiz', 'summary'].includes(currentNode.id) ? (
-              <currentNode.component
+              <>
+<currentNode.component
                 key={`${currentNode.id}-${resetKey}`}
                 {...(currentNode.props || {})}
                 onComplete={handleStageComplete}
                 addXp={addXp}
               />
+              {renderBackButton()}
+</>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: currentNode.id === 'stage1' ? '1fr' : (currentNode.layout || '1fr 1fr'), gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
                 {/* Left Side: Handbook */}
@@ -337,23 +365,27 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                       stageCompleted={stageCompleted}
                     />
                   ) : (
-                    <InvestigationHandbook
+                    <>
+<InvestigationHandbook
                       highestUnlockedIndex={highestUnlockedIndex}
                       currentFlowIndex={currentFlowIndex}
                       stageCompleted={stageCompleted}
                       fullPageMode={currentNode.id === 'stage1' && activityView === 'page1'}
                     />
+                    {renderBackButton()}
+</>
                   )}
                 </div>
 
                 {/* Right Side: Activity */}
                 <div style={{ display: (currentNode.id === 'stage1' && activityView === 'page1') ? 'none' : 'flex', flex: 1, minHeight: 0, position: 'relative', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
                   <currentNode.component
-                    key={`${currentNode.id}-${resetKey}`}
-                    {...(currentNode.props || {})}
-                    onComplete={handleStageComplete}
-                    addXp={addXp}
-                  />
+                key={`${currentNode.id}-${resetKey}`}
+                {...(currentNode.props || {})}
+                onComplete={handleStageComplete}
+                addXp={addXp}
+              />
+              {renderBackButton()}
                 </div>
               </div>
             )

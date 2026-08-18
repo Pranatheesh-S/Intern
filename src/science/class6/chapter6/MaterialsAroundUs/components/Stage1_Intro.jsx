@@ -6,6 +6,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
   const [clickedObjects, setClickedObjects] = useState({});
   const [lastClickedId, setLastClickedId] = useState(null);
   const [completed, setCompleted] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [bookPage, setBookPage] = useState(1);
 
   const classroomObjects = [
@@ -66,6 +67,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
     // Check if all objects are clicked
     if (Object.keys(newClicked).length === classroomObjects.length) {
       setCompleted(true);
+      setShowPopup(true);
       addXp(30);
       onComplete();
     }
@@ -75,10 +77,11 @@ export default function Stage1_Intro({ onComplete, addXp }) {
     setClickedObjects({});
     setLastClickedId(null);
     setCompleted(false);
+    setShowPopup(false);
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(320px, 1fr)', gap: '1rem', width: '100%', height: '100%', minHeight: 0 }}>
+    <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(320px, 1fr)', gap: '1rem', width: '100%', height: '100%', minHeight: 0 }}>
       <style>{`
         :root {
           --classroom-bg: url('${classroomBg}');
@@ -249,10 +252,112 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               );
             })()
           ) : null}
-        {completed && (<div style={{ padding: '0.75rem 1rem', borderRadius: '8px', background: 'var(--card-bg)', border: '1px solid var(--border)', marginTop: '0.5rem' }}><span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Objects can be classified on the basis of a common property that they have</span></div>)}
+        {completed && (
+          <div style={{ padding: '1rem', borderRadius: '8px', background: 'var(--success-bg)', border: '1px solid var(--success-border)', marginTop: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontWeight: 'bold', marginBottom: '0.4rem' }}>
+              <span>✓</span> INVESTIGATION COMPLETE
+            </div>
+            <span style={{ fontSize: '0.95rem', color: 'var(--text-primary)' }}>
+              All classroom evidence has been identified successfully.
+            </span>
+          </div>
+        )}
         </div>
 
       </div>
+
+      {/* COMPLETION POPUP */}
+      {showPopup && (
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.7)', zIndex: 100,
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <div style={{
+            position: 'relative',
+            background: 'var(--card-bg)',
+            borderRadius: '12px', padding: '2.5rem',
+            width: '88vw', maxWidth: '800px', boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+            border: '1px solid var(--border)',
+            display: 'flex', flexDirection: 'column', gap: '2rem',
+            animation: 'fadeIn 0.3s ease-out', color: 'var(--text-primary)',
+            overflow: 'hidden'
+          }}>
+            {/* Blueprint Grid Background */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+              backgroundImage: 'radial-gradient(var(--text-secondary) 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+              opacity: 0.08,
+              pointerEvents: 'none',
+              zIndex: 0
+            }} />
+
+            {/* Corner Brackets */}
+            <div style={{ position: 'absolute', top: '10px', left: '10px', width: '15px', height: '15px', borderTop: '2px solid var(--border)', borderLeft: '2px solid var(--border)' }} />
+            <div style={{ position: 'absolute', top: '10px', right: '10px', width: '15px', height: '15px', borderTop: '2px solid var(--border)', borderRight: '2px solid var(--border)' }} />
+            <div style={{ position: 'absolute', bottom: '10px', left: '10px', width: '15px', height: '15px', borderBottom: '2px solid var(--border)', borderLeft: '2px solid var(--border)' }} />
+            <div style={{ position: 'absolute', bottom: '10px', right: '10px', width: '15px', height: '15px', borderBottom: '2px solid var(--border)', borderRight: '2px solid var(--border)' }} />
+
+            {/* Content Container */}
+            <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+              <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', letterSpacing: '2px', fontWeight: 'bold' }}>CASE FILE 06 &bull; EVIDENCE REPORT</span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
+                  <span style={{ fontSize: '1.4rem' }}>🔔</span>
+                  <span style={{ letterSpacing: '1px', fontSize: '1.3rem' }}>INVESTIGATION UPDATE</span>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.05fr) minmax(0, 0.95fr)', gap: '28px', alignItems: 'stretch' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <h3 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 'bold', margin: 0, textTransform: 'uppercase', letterSpacing: '1px', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Materials Identified</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '24px minmax(120px, 1fr) 24px minmax(120px, 1.2fr)', columnGap: '8px', rowGap: '12px', width: '100%', alignItems: 'center' }}>
+                    {classroomObjects.map(obj => (
+                      <React.Fragment key={obj.id}>
+                        <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
+                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>{obj.name}</span>
+                        <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>&rarr;</span>
+                        <strong style={{ color: 'var(--text-primary)', fontSize: '0.95rem' }}>{obj.material}</strong>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{
+                  background: 'rgba(59, 130, 246, 0.05)',
+                  border: '1px solid var(--border)',
+                  borderLeft: '4px solid #3b82f6',
+                  padding: '24px 28px',
+                  borderRadius: '0 8px 8px 0',
+                  textAlign: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  gap: '1rem',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}>
+                  <span style={{ fontWeight: 'bold', color: '#3b82f6', letterSpacing: '1.5px', fontSize: '0.85rem' }}>KEY FINDING</span>
+                  <span style={{ fontFamily: 'Georgia, serif', fontSize: '1.35rem', fontWeight: 'bold', color: 'var(--text-heading)', lineHeight: '1.4' }}>
+                    "Objects can be classified on the basis of a common property that they have."
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem' }}>
+                <button
+                  onClick={() => setShowPopup(false)}
+                  className="primary"
+                  style={{ width: '180px', padding: '0.85rem 0', fontSize: '1rem', fontWeight: 'bold', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  OK, GOT IT
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

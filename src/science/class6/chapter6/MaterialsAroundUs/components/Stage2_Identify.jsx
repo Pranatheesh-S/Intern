@@ -93,90 +93,90 @@ export default function Stage2_Identify({ onComplete, addXp }) {
   const [selectedMaterialOption, setSelectedMaterialOption] = useState(null);
 
   const objectsToScan = [
-    { 
-      id: 'textbook', 
-      name: 'Textbook', 
-      correctMaterial: 'Paper', 
-      options: ['Wood', 'Metal', 'Paper', 'Glass'], 
+    {
+      id: 'textbook',
+      name: 'Textbook',
+      correctMaterial: 'Paper',
+      options: ['Wood', 'Metal', 'Paper', 'Glass'],
       explanations: {
         'Paper': 'Paper is thin, flexible, and bound into pages for reading.',
         'Wood': 'Wood is rigid and cannot form flexible pages.',
         'Metal': 'Metal is heavy and hard.',
         'Glass': 'Glass is fragile and transparent.'
       },
-      icon: TextbookIcon 
+      icon: TextbookIcon
     },
-    { 
-      id: 'ruler', 
-      name: 'Ruler', 
-      correctMaterial: 'Plastic', 
-      options: ['Wood', 'Plastic', 'Metal', 'Glass'], 
+    {
+      id: 'ruler',
+      name: 'Ruler',
+      correctMaterial: 'Plastic',
+      options: ['Wood', 'Plastic', 'Metal', 'Glass'],
       explanations: {
         'Plastic': 'Plastic is lightweight, flexible, and can be easily molded into transparent rulers.',
         'Wood': 'A wood ruler is opaque and more rigid.',
         'Metal': 'Metal is very hard, heavy, and rigid.',
         'Glass': 'Glass is too fragile and dangerous for a school bag.'
       },
-      icon: RulerIcon 
+      icon: RulerIcon
     },
-    { 
-      id: 'lunchbox', 
-      name: 'Lunch Box', 
-      correctMaterial: 'Metal', 
-      options: ['Paper', 'Plastic', 'Glass', 'Metal'], 
+    {
+      id: 'lunchbox',
+      name: 'Lunch Box',
+      correctMaterial: 'Metal',
+      options: ['Paper', 'Plastic', 'Glass', 'Metal'],
       explanations: {
         'Metal': 'Metal is strong, durable, and protects the food inside.',
         'Paper': 'Paper would easily crush and leak.',
         'Plastic': 'Some are plastic, but this sturdy box is made of metal.',
         'Glass': 'Glass would shatter easily in a school bag.'
       },
-      icon: GeometryBoxIcon 
+      icon: GeometryBoxIcon
     },
-    { 
-      id: 'glass', 
-      name: 'Tumbler', 
-      correctMaterial: 'Glass', 
-      options: ['Paper', 'Glass', 'Metal', 'Fabric'], 
+    {
+      id: 'glass',
+      name: 'Tumbler',
+      correctMaterial: 'Glass',
+      options: ['Paper', 'Glass', 'Metal', 'Fabric'],
       explanations: {
         'Glass': 'Glass is transparent, rigid, and holds liquids perfectly.',
         'Paper': 'Paper would get soggy and collapse.',
         'Metal': 'Metal is opaque, so you cannot see the liquid inside.',
         'Fabric': 'Fabric is porous and liquids leak right through it.'
       },
-      icon: TumblerIcon 
+      icon: TumblerIcon
     },
-    { 
-      id: 'spoon', 
-      name: 'Spoon', 
-      correctMaterial: 'Metal', 
-      options: ['Fabric', 'Ceramic', 'Metal', 'Plastic'], 
+    {
+      id: 'spoon',
+      name: 'Spoon',
+      correctMaterial: 'Metal',
+      options: ['Fabric', 'Ceramic', 'Metal', 'Plastic'],
       explanations: {
         'Metal': 'Metal is extremely durable, lustrous, and safe for eating.',
         'Fabric': 'Fabric is soft and cannot hold food.',
         'Ceramic': 'Ceramic spoons exist but are very fragile.',
         'Plastic': 'Plastic can melt in hot soups.'
       },
-      icon: SpoonIcon 
+      icon: SpoonIcon
     },
-    { 
-      id: 'candle', 
-      name: 'Candle', 
-      correctMaterial: 'Wax', 
-      options: ['Ceramic', 'Wood', 'Wax', 'Plastic'], 
+    {
+      id: 'candle',
+      name: 'Candle',
+      correctMaterial: 'Wax',
+      options: ['Ceramic', 'Wood', 'Wax', 'Plastic'],
       explanations: {
         'Wax': 'Wax melts easily when heated by the wick to produce light.',
         'Ceramic': 'Ceramic does not melt to fuel a flame.',
         'Wood': 'Wood burns away completely as fuel, catching fire entirely.',
         'Plastic': 'Plastic releases toxic fumes when burned and melts dangerously.'
       },
-      icon: CandleIcon 
+      icon: CandleIcon
     }
   ];
 
   const handleScanObject = (obj) => {
     setSelectedObj(obj);
     setSelectedMaterialOption(scannedObjects[obj.id] ? obj.correctMaterial : null);
-    
+
     if (scannedObjects[obj.id]) {
       setScanState('correct');
     } else {
@@ -198,17 +198,11 @@ export default function Stage2_Identify({ onComplete, addXp }) {
       const newScanned = { ...scannedObjects, [selectedObj.id]: true };
       setScannedObjects(newScanned);
       addXp(15);
-      
+
       if (Object.keys(newScanned).length === objectsToScan.length) {
         onComplete();
       }
-      
-      // Auto-reset the scanner back to idle after giving them time to read the explanation
-      setTimeout(() => {
-        setSelectedObj((prev) => prev?.id === selectedObj.id ? null : prev);
-        setScanState((prev) => prev === 'correct' ? 'idle' : prev);
-        setSelectedMaterialOption((prev) => prev === material ? null : prev);
-      }, 3500);
+
     } else {
       setScanState('incorrect');
     }
@@ -258,7 +252,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
       `}</style>
 
       {/* Introduction */}
-      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
+      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '0.75rem 1rem', flexShrink: 0, border: '1px solid var(--accent-border)' }}>
         <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Search size={22} style={{ color: 'var(--accent)' }} /> Case File: Table 6.1 (Identify Materials)
         </h3>
@@ -267,11 +261,11 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(180px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '38% 62%', gap: '1rem', flex: 1, minHeight: 0, height: '100%', overflow: 'hidden' }}>
         {/* Left: Tray of items */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '100%', minHeight: 0, overflow: 'hidden', padding: '1rem' }}>
           <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '0.5rem', flex: 1, overflow: 'hidden', paddingRight: '0.25rem' }}>
             {objectsToScan.map((obj) => {
               const isScanned = scannedObjects[obj.id];
               const isSelected = selectedObj?.id === obj.id;
@@ -287,7 +281,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   className="interactive-tray-item"
                   style={{
                     width: '100%',
-                    padding: '0.85rem 1rem',
+                    padding: '0.4rem 0.5rem',
                     borderRadius: '12px',
                     border: isSelected ? '2px solid var(--accent)' : '1px solid var(--border)',
                     background: isScanned ? 'var(--success-bg)' : isSelected ? 'var(--accent-bg)' : 'var(--card-bg)',
@@ -295,7 +289,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    gap: '1rem',
+                    gap: '0.5rem',
                     cursor: isScanned ? 'default' : 'grab',
                     textAlign: 'left',
                     transition: 'all 0.2s',
@@ -304,34 +298,35 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     boxShadow: isSelected ? '0 4px 12px rgba(99, 102, 241, 0.15)' : 'none'
                   }}
                 >
-                  <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center', 
-                    width: '52px', 
-                    height: '52px', 
-                    borderRadius: '12px', 
-                    background: isScanned ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '12px',
+                    background: isScanned ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)',
                     color: isScanned ? 'var(--success)' : 'var(--accent)',
                     flexShrink: 0,
                     boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
-                    border: '1px solid var(--border)'
+                    border: '1px solid var(--border)',
+                    padding: '6px'
                   }}>
-                    <IconComponent size={30} />
+                    <IconComponent size="100%" />
                   </div>
                   <span style={{ fontWeight: isSelected ? 'bold' : '600', fontSize: '1rem', lineHeight: '1.2', flex: 1 }}>{obj.name}</span>
-                  
+
                   {isScanned && (
-                    <div style={{ 
-                      position: 'absolute', 
-                      top: '6px', 
-                      right: '6px', 
-                      background: 'var(--success)', 
-                      borderRadius: '50%', 
-                      width: '20px', 
-                      height: '20px', 
-                      display: 'flex', 
-                      alignItems: 'center', 
+                    <div style={{
+                      position: 'absolute',
+                      top: '6px',
+                      right: '6px',
+                      background: 'var(--success)',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
                       justifyContent: 'center',
                       color: 'white',
                       boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
@@ -346,9 +341,9 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         </div>
 
         {/* Middle: Holographic Scanner Area */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: 0 }}>
-          <div 
-            className="glass-panel" 
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '100%', minHeight: 0, overflow: 'hidden' }}>
+          <div
+            className="glass-panel"
             onDragOver={(e) => e.preventDefault()}
             onDragEnter={() => setIsDraggingOver(true)}
             onDragLeave={() => setIsDraggingOver(false)}
@@ -361,145 +356,214 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 handleScanObject(found);
               }
             }}
-            style={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
               flex: selectedObj && scanState !== 'scanning' && !allCompleted ? 0 : 1,
               minHeight: 'clamp(280px, 45vh, 480px)',
-            position: 'relative', 
-            backgroundImage: getScannerBackground(),
-            backgroundSize: 'cover',
-            backgroundPosition: 'center', 
-            border: isDraggingOver ? '3px dashed var(--accent)' : 'var(--scanner-border)',
-            transition: 'all 0.25s ease-in-out',
-            overflow: 'hidden'
-          }}
-        >
-          {/* Overlay to darken background slightly for readability (disabled during results so the realistic image shines) */}
-          {(!selectedObj || scanState === 'scanning') && (
-            <div style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.3)', zIndex: 1 }} />
-          )}
-          
-          <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-            {/* Scanning lines */}
-          {scanState === 'scanning' && (
-            <motion.div 
-              style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                height: '4px',
-                background: 'rgba(99, 102, 241, 0.8)',
-                boxShadow: '0 0 15px #6366f1, 0 0 30px #6366f1',
-                zIndex: 5
-              }}
-              animate={{ top: ['5%', '95%', '5%'] }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          )}
+              position: 'relative',
+              backgroundImage: getScannerBackground(),
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              border: isDraggingOver ? '3px dashed var(--accent)' : 'var(--scanner-border)',
+              transition: 'all 0.25s ease-in-out',
+              overflow: 'hidden'
+            }}
+          >
+            {/* Overlay to darken background slightly for readability (disabled during results so the realistic image shines) */}
+            {(!selectedObj || scanState === 'scanning') && (
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.3)', zIndex: 1 }} />
+            )}
 
-          {allCompleted ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', zIndex: 2, textAlign: 'center', padding: '1.5rem', background: 'rgba(0,0,0,0.4)', borderRadius: '16px', backdropFilter: 'blur(4px)' }}>
-              <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', border: '3px solid #10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)' }}>
-                <Award size={40} style={{ color: '#10b981' }} />
-              </div>
-              <div>
-                <h3 style={{ margin: 0, color: '#ffffff', fontSize: '2rem', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Scan Complete!</h3>
-                <p style={{ color: '#e2e8f0', fontSize: '1.1rem', marginTop: '0.75rem', maxWidth: '340px', lineHeight: '1.5', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-                  You have successfully scanned and identified materials for all objects. Click <strong style={{ color: '#ffffff' }}>"Proceed to next"</strong> in the top right!
-                </p>
-              </div>
-            </div>
-          ) : selectedObj ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', width: '100%', zIndex: 2 }}>
-
-              {/* Scanning visual circle */}
+            <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+              {/* Scanning lines */}
               {scanState === 'scanning' && (
-                <div 
-                  style={{ 
-                    width: 'clamp(130px, 15vw, 160px)', 
-                    height: 'clamp(130px, 15vw, 160px)', 
-                    borderRadius: '50%', 
-                    border: '4px solid #6366f1', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    background: 'transparent',
-                    boxShadow: '0 0 25px rgba(99,102,241,0.4)',
-                    position: 'relative'
+                <motion.div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'rgba(99, 102, 241, 0.8)',
+                    boxShadow: '0 0 15px #6366f1, 0 0 30px #6366f1',
+                    zIndex: 5
                   }}
-                >
-                  {/* Scanning overlay effect */}
-                  <motion.div 
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      borderRadius: '50%',
-                      background: 'rgba(99, 102, 241, 0.15)',
-                      border: '2px solid #6366f1',
-                      zIndex: 3
-                    }}
-                    animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                  />
-                </div>
+                  animate={{ top: ['5%', '95%', '5%'] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
               )}
 
-              {/* Status Badges */}
-              {(scanState === 'correct' || scanState === 'incorrect') && (
-                <div style={{ position: 'relative', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1rem' }}>
-                  {scanState === 'correct' && (
-                    <div style={{
-                      background: '#10b981',
-                      borderRadius: '50%',
-                      width: '45px',
-                      height: '45px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      boxShadow: '0 4px 10px rgba(16, 185, 129, 0.4)',
-                      zIndex: 5
-                    }}>
-                      <Check size={28} strokeWidth={3} />
+              {scanState === 'correct' && selectedObj && selectedMaterialOption === selectedObj.correctMaterial ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  style={{ zIndex: 10, width: '90%', maxWidth: '400px' }}
+                >
+                  <div style={{
+                    display: 'flex', flexDirection: 'column', gap: '0.75rem',
+                    background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '8px',
+                    padding: '1.25rem', color: 'var(--text-primary)', position: 'relative', overflow: 'hidden',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                  }}>
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'var(--success)' }} />
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundImage: 'radial-gradient(var(--text-secondary) 1px, transparent 1px)', backgroundSize: '16px 16px', opacity: 0.05, pointerEvents: 'none' }} />
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', position: 'relative', zIndex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: 'bold', letterSpacing: '1px' }}>
+                        <Search size={14} /> SCANNER ANALYSIS
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', letterSpacing: '1px' }}>
+                        MATERIAL: <strong style={{ color: 'var(--success)' }}>{selectedMaterialOption.toUpperCase()}</strong>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', position: 'relative', zIndex: 1 }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: '500' }}>
+                        {(() => {
+                          let text = selectedObj.explanations[selectedMaterialOption];
+                          const prefix = selectedMaterialOption + ' is ';
+                          if (text.toLowerCase().startsWith(prefix.toLowerCase())) {
+                            text = text.substring(prefix.length);
+                          }
+                          if (text.endsWith('.')) text = text.substring(0, text.length - 1);
+                          const parts = text.split(/,\s*and\s+|,\s*|\s+and\s+/).map(p => p.trim()).filter(p => p.length > 0);
+                          return parts.map((part, i) => (
+                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                              <span style={{ color: 'var(--success)' }}>✓</span> {part.charAt(0).toUpperCase() + part.slice(1)}
+                            </div>
+                          ));
+                        })()}
+                      </div>
+
+                      <div style={{ fontSize: '0.95rem', lineHeight: '1.5', color: 'var(--text-secondary)' }}>
+                        {selectedObj.explanations[selectedMaterialOption]}
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setSelectedObj((prev) => prev?.id === selectedObj.id ? null : prev);
+                          setScanState((prev) => prev === 'correct' ? 'idle' : prev);
+                          setSelectedMaterialOption((prev) => prev === selectedMaterialOption ? null : prev);
+                        }}
+                        className="primary"
+                        style={{
+                          marginTop: '0.5rem',
+                          padding: '0.75rem 1.5rem',
+                          fontSize: '0.95rem',
+                          fontWeight: 'bold',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          border: 'none',
+                          alignSelf: 'center'
+                        }}
+                      >
+                        OK, GOT IT
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : allCompleted ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', zIndex: 2, textAlign: 'center', padding: '1.5rem', background: 'rgba(0,0,0,0.4)', borderRadius: '16px', backdropFilter: 'blur(4px)' }}>
+                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', border: '3px solid #10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)' }}>
+                    <Award size={40} style={{ color: '#10b981' }} />
+                  </div>
+                  <div>
+                    <h3 style={{ margin: 0, color: '#ffffff', fontSize: '2rem', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Scan Complete!</h3>
+                    <p style={{ color: '#e2e8f0', fontSize: '1.1rem', marginTop: '0.75rem', maxWidth: '340px', lineHeight: '1.5', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
+                      You have successfully scanned and identified materials for all objects. Click <strong style={{ color: '#ffffff' }}>"Proceed to next"</strong> in the top right!
+                    </p>
+                  </div>
+                </div>
+              ) : selectedObj ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', width: '100%', zIndex: 2 }}>
+
+                  {/* Scanning visual circle */}
+                  {scanState === 'scanning' && (
+                    <div
+                      style={{
+                        width: 'clamp(130px, 15vw, 160px)',
+                        height: 'clamp(130px, 15vw, 160px)',
+                        borderRadius: '50%',
+                        border: '4px solid #6366f1',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'transparent',
+                        boxShadow: '0 0 25px rgba(99,102,241,0.4)',
+                        position: 'relative'
+                      }}
+                    >
+                      {/* Scanning overlay effect */}
+                      <motion.div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          borderRadius: '50%',
+                          background: 'rgba(99, 102, 241, 0.15)',
+                          border: '2px solid #6366f1',
+                          zIndex: 3
+                        }}
+                        animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      />
                     </div>
                   )}
-                  {scanState === 'incorrect' && (
-                    <div style={{
-                      background: '#ef4444',
-                      borderRadius: '50%',
-                      width: '45px',
-                      height: '45px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      boxShadow: '0 4px 10px rgba(239, 68, 68, 0.4)',
-                      zIndex: 5
-                    }}>
-                      <div style={{ transform: 'rotate(45deg)', fontSize: '24px', fontWeight: 'bold' }}>+</div>
+
+                  {/* Status Badges */}
+                  {(scanState === 'correct' || scanState === 'incorrect') && (
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5 }}>
+                      {scanState === 'correct' && (
+                        <div style={{
+                          background: '#10b981',
+                          borderRadius: '50%',
+                          width: '45px',
+                          height: '45px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          boxShadow: '0 4px 10px rgba(16, 185, 129, 0.4)',
+                          zIndex: 5
+                        }}>
+                          <Check size={28} strokeWidth={3} />
+                        </div>
+                      )}
+                      {scanState === 'incorrect' && (
+                        <div style={{
+                          background: '#ef4444',
+                          borderRadius: '50%',
+                          width: '45px',
+                          height: '45px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          boxShadow: '0 4px 10px rgba(239, 68, 68, 0.4)',
+                          zIndex: 5
+                        }}>
+                          <div style={{ transform: 'rotate(45deg)', fontSize: '24px', fontWeight: 'bold' }}>+</div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', minHeight: 0, overflow: 'hidden', gap: '0.75rem', position: 'relative', alignItems: 'center', justifyContent: 'center', color: 'var(--scanner-subtext)', textAlign: 'center', padding: '1.5rem', zIndex: 2 }}>
+                  <Search size={48} />
+                  <span style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>Scanner Active</span>
+                  <span style={{ fontSize: '1rem', opacity: 0.8, maxWidth: '280px', lineHeight: '1.5' }}>
+                    Drag an object from the Evidence Tray and drop it here to scan it!
+                  </span>
+                </div>
               )}
             </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', color: 'var(--scanner-subtext)', textAlign: 'center', padding: '1.5rem', zIndex: 2 }}>
-              <Search size={48} />
-              <span style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>Scanner Active</span>
-              <span style={{ fontSize: '1rem', opacity: 0.8, maxWidth: '280px', lineHeight: '1.5' }}>
-                Drag an object from the Evidence Tray and drop it here to scan it!
-              </span>
-            </div>
-          )}
-          </div>
           </div>
 
           {/* Options Panel (BELOW the image) */}
           {selectedObj && scanState !== 'scanning' && !allCompleted && (
-            <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', border: 'var(--scanner-border)' }}>
+            <div className="glass-panel" style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', border: 'var(--scanner-border)', flexShrink: 0 }}>
               <span style={{ color: 'var(--text-primary)', fontSize: '1.1rem', fontWeight: 'bold' }}>Select Identified Material for {selectedObj.name}:</span>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', width: '100%', maxWidth: '600px' }}>
                 {selectedObj.options.map((option) => {
@@ -542,28 +606,27 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   );
                 })}
               </div>
-              
-              {selectedMaterialOption && (
-                <motion.div 
+
+              {selectedMaterialOption && selectedMaterialOption !== selectedObj.correctMaterial && (
+                <motion.div
                   key={`${selectedObj.id}-${selectedMaterialOption}`}
-                  initial={{ opacity: 0, y: 5 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  style={{ 
-                    fontSize: '0.95rem', 
-                    textAlign: 'center', 
-                    marginTop: '0.5rem', 
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{ width: '100%', maxWidth: '600px', marginTop: '0.5rem' }}
+                >
+                  <div style={{
+                    fontSize: '0.95rem',
+                    textAlign: 'center',
                     lineHeight: '1.5',
                     padding: '0.75rem 1rem',
                     borderRadius: '8px',
-                    width: '100%',
-                    maxWidth: '600px',
-                    background: selectedMaterialOption === selectedObj.correctMaterial ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                    border: `1px solid ${selectedMaterialOption === selectedObj.correctMaterial ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`,
-                    color: selectedMaterialOption === selectedObj.correctMaterial ? 'var(--success)' : 'var(--danger)'
-                  }}
-                >
-                  <strong>{selectedMaterialOption === selectedObj.correctMaterial ? 'Success!' : 'Try again!'}</strong>{' '}
-                  {selectedObj.explanations[selectedMaterialOption]}
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                    color: 'var(--danger)'
+                  }}>
+                    <strong>Try again!</strong>{' '}
+                    {selectedObj.explanations[selectedMaterialOption]}
+                  </div>
                 </motion.div>
               )}
             </div>

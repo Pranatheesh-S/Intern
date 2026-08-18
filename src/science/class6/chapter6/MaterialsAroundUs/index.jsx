@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowLeft, RefreshCw, ArrowRight } from 'lucide-react';
 import useSound from 'use-sound';
-import { useTheme } from '../../../../ThemeContext.jsx';
 import { chapterFlow } from './storyEngine';
 import ChiefDetective from './components/ChiefDetective/ChiefDetective';
 import InvestigationHandbook from './components/Educational/InvestigationHandbook';
@@ -91,10 +90,18 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const isStage1Page1 = isStage1 && activityView === 'page1';
   const isStage1Page2 = isStage1 && activityView === 'page2';
 
+  const prevFlowIndexRef = useRef(currentFlowIndex);
+
   useEffect(() => {
+    const isGoingBack = currentFlowIndex < prevFlowIndexRef.current;
     if (chapterFlow[currentFlowIndex]?.id === 'stage1') {
-      setActivityView('page1');
+      if (isGoingBack) {
+        setActivityView('page2');
+      } else {
+        setActivityView('page1');
+      }
     }
+    prevFlowIndexRef.current = currentFlowIndex;
   }, [currentFlowIndex]);
 
   // Handlers for Mission / Debrief
@@ -120,8 +127,51 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
     setStageCompleted(true);
   };
 
-  // Global Theme Hook
-  const { theme, toggleTheme } = useTheme();
+  const renderBackButton = () => (
+    <div style={{ marginTop: 'auto', paddingTop: '24px', display: 'flex' }}>
+      <button
+        onClick={() => {
+          if (currentNode.id === 'stage1' && activityView === 'page2') {
+            setActivityView('page1');
+          } else if (currentFlowIndex > 0) {
+            setCurrentFlowIndex(prev => prev - 1);
+          } else {
+            setShowIntroSpread(true);
+          }
+        }}
+        className="proper-back-btn"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '12px 24px',
+          borderRadius: '8px',
+          border: '1px solid #cbd5e1',
+          background: 'white',
+          color: '#1e293b',
+          fontFamily: 'Arial, Helvetica, sans-serif',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+          transition: 'all 0.2s'
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.background = '#f8fafc';
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.1)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.background = 'white';
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
+        }}
+      >
+        <ArrowLeft size={18} /> Back
+      </button>
+    </div>
+  );
+
 
   if (showCover) {
     return <ChapterCover onOpenBook={() => { setShowCover(false); setShowIntroSpread(true); }} onBack={onBackToDashboard} />;
@@ -145,48 +195,12 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           >
             <ArrowLeft size={16} /> Dashboard
           </button>
-          {isStage1Page1 && (
-            <button
-              onClick={() => {
-                if (currentFlowIndex > 0) {
-                  setCurrentFlowIndex(prev => prev - 1);
-                } else {
-                  setShowIntroSpread(true);
-                }
-              }}
-              className="outline"
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
-            >
-              <ArrowLeft size={14} /> Back
-            </button>
-          )}
+          
         </div>
 
         
         <div className="global-action-bar-right">
-          {isStage1Page2 ? (
-            <button
-              onClick={() => setActivityView('page1')}
-              className="outline"
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
-            >
-              <ArrowLeft size={14} /> Back
-            </button>
-          ) : !isStage1Page1 && (
-            <button
-              onClick={() => {
-                if (currentFlowIndex > 0) {
-                  setCurrentFlowIndex(prev => prev - 1);
-                } else {
-                  setShowIntroSpread(true);
-                }
-              }}
-              className="outline"
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
-            >
-              <ArrowLeft size={14} /> Back
-            </button>
-          )}
+          
 
           
 
@@ -399,6 +413,8 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
         {/* Main Content Area - Full Width */}
         <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: isStage1Page1 ? 'hidden' : (isStage1Page2 ? 'auto' : ((currentNode.type === 'activity') ? 'hidden' : 'auto')) }}>
+
+          {/* 1. Mission */}
           {currentNode.type === 'mission' && (
             <MissionBriefingSpread 
               data={currentNode} 
@@ -413,6 +429,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             />
           )}
           
+          {/* 2. Debrief */}
           {currentNode.type === 'debrief' && (
             <ChiefDetective 
               mode="debrief" 
@@ -427,8 +444,33 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               }}
             />
           )}
-          
-          {currentNode.type === 'activity' && (
+
+          {/* 3. Activity (Stage 2 Special Case) */}
+          {currentNode.type === 'activity' && currentNode.id === 'stage2' && (
+            <div
+              style={{
+                flex: 1,
+                minHeight: 0,
+                minWidth: 0,
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+              }}
+            >
+              <currentNode.component 
+                key={`${currentNode.id}-${resetKey}`}
+                {...(currentNode.props || {})} 
+                onComplete={handleStageComplete} 
+                addXp={addXp} 
+              />
+              {renderBackButton()}
+            </div>
+          )}
+
+          {/* 3. Activity (Other Nodes) */}
+          {currentNode.type === 'activity' && currentNode.id !== 'stage2' && (
             ['quiz', 'summary'].includes(currentNode.id) ? (
               <currentNode.component 
                 key={`${currentNode.id}-${resetKey}`}
@@ -534,6 +576,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             )
           )}
 
+          {/* Handbook (Next Node Preview) */}
           {currentNode.type === 'handbook' && (() => {
             const nextNode = chapterFlow[currentFlowIndex + 1];
             return (
@@ -552,12 +595,14 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             );
           })()}
 
+          {/* 4. Checkpoint */}
           {currentNode.type === 'checkpoint' && (
             <div style={{ flex: 1, display: 'flex', background: 'var(--bg-color)', overflow: 'hidden' }}>
               <DetectiveCheckpoint data={currentNode} onComplete={handleStageComplete} addXp={addXp} />
             </div>
           )}
 
+          {/* 5. Summary */}
           {currentNode.type === 'summary' && (() => {
             let lastActivityNode = null;
             for (let i = currentFlowIndex - 1; i >= 0; i--) {
