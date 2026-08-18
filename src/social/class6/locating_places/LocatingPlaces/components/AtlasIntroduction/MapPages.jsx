@@ -71,15 +71,15 @@ const PageLayout = ({
       <div style={{ display: 'flex', width: '100%', height: '100%', padding: 0, boxSizing: 'border-box', minHeight: 0 }}>
       
       {/* Left Page (Text) — Zero-scroll, zero-overlap paged structure */}
-      <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(0,0,0,0.08)', padding: '1rem 1.25rem', boxSizing: 'border-box', overflow: 'hidden', justifyContent: 'space-between' }}>
+      <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', borderRight: '2px solid #F2DFBC', padding: '1rem 1.25rem', boxSizing: 'border-box', overflow: 'hidden', justifyContent: 'space-between', background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)' }}>
         
         {/* Header */}
         <div style={{ flexShrink: 0, marginBottom: '6px' }}>
-          <div style={{ fontSize: '12px', color: '#7c5cff', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 'bold', marginBottom: '2px', fontFamily: '"IBM Plex Mono", monospace' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FEF3C7', border: '1px solid #FDE68A', padding: '3px 10px', borderRadius: '999px', color: '#92400E', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>
             Chapter 1 • Atlas Introduction
           </div>
-          <h2 style={{ fontSize: '1.6rem', color: '#1e3a8a', margin: '0 0 0.2rem 0', fontFamily: 'serif', lineHeight: 1.15 }}>{title}</h2>
-          <div style={{ fontSize: '13px', color: '#64748b', fontWeight: 500 }}>{subtitle}</div>
+          <h2 style={{ fontSize: '1.6rem', color: '#78350F', margin: '0 0 0.2rem 0', fontFamily: '"Fraunces", serif', fontWeight: 900, lineHeight: 1.15 }}>{title}</h2>
+          <div style={{ fontSize: '13.5px', color: '#92400E', fontWeight: 700 }}>{subtitle}</div>
         </div>
 
         {/* Page Content Viewport — No scrollbars, pristine spacing */}
@@ -89,21 +89,21 @@ const PageLayout = ({
           {leftPage === 1 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, minHeight: 0, justifyContent: 'space-between', overflow: 'hidden' }}>
               {/* What is it? */}
-              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 14px', flexShrink: 0 }}>
-                <h3 style={{ fontSize: '15px', color: '#1e3a8a', marginBottom: '4px', fontFamily: 'serif', marginTop: 0, fontWeight: 700 }}>{whatIsTitle}</h3>
-                {whatIs.map((p, i) => <p key={i} style={{ margin: i > 0 ? '4px 0 0 0' : 0, color: '#334155', fontSize: '13.5px', lineHeight: 1.4, fontWeight: 500 }}>{p}</p>)}
+              <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '10px 14px', flexShrink: 0, boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
+                <h3 style={{ fontSize: '15px', color: '#78350F', marginBottom: '4px', fontFamily: '"Fraunces", serif', marginTop: 0, fontWeight: 900 }}>{whatIsTitle}</h3>
+                {whatIs.map((p, i) => <p key={i} style={{ margin: i > 0 ? '4px 0 0 0' : 0, color: '#3D2E24', fontSize: '13.5px', lineHeight: 1.4, fontWeight: 600 }}>{p}</p>)}
               </div>
 
               {/* Natural / Key Features — Larger Font, No Scrollbar */}
-              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 12px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                <h3 style={{ fontSize: '15px', color: '#0f172a', marginBottom: '8px', marginTop: 0, flexShrink: 0, fontWeight: 700 }}>{featuresTitle}</h3>
+              <div style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '10px 12px', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <h3 style={{ fontSize: '15px', color: '#78350F', marginBottom: '8px', marginTop: 0, flexShrink: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>{featuresTitle}</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', flex: 1, minHeight: 0, overflow: 'hidden', alignContent: 'space-between' }}>
                   {features.map((f, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', background: '#f8fafc', padding: '7px 10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                    <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', background: '#FFFFFF', padding: '7px 10px', borderRadius: '10px', border: '1.5px solid #F2DFBC' }}>
                       <div style={{ fontSize: '1.35rem', lineHeight: 1, flexShrink: 0 }}>{f.icon}</div>
                       <div style={{ minWidth: 0 }}>
-                        <div style={{ fontWeight: 700, color: '#1e3a8a', fontSize: '13.5px', lineHeight: 1.2 }}>{f.title}</div>
-                        <div style={{ fontSize: '11.5px', color: '#475569', lineHeight: 1.25, fontWeight: 500 }}>{f.desc}</div>
+                        <div style={{ fontWeight: 800, color: '#78350F', fontSize: '13.5px', lineHeight: 1.2 }}>{f.title}</div>
+                        <div style={{ fontSize: '12px', color: '#3D2E24', lineHeight: 1.25, fontWeight: 600 }}>{f.desc}</div>
                       </div>
                     </div>
                   ))}
@@ -116,33 +116,33 @@ const PageLayout = ({
           {leftPage === 2 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, minHeight: 0, justifyContent: 'space-between', overflow: 'hidden' }}>
               {/* Colors / Symbols */}
-              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 14px', flexShrink: 0 }}>
-                <h3 style={{ fontSize: '15px', color: '#0f172a', marginBottom: '6px', marginTop: 0, fontWeight: 700 }}>{colorsTitle}</h3>
+              <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '10px 14px', flexShrink: 0, boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
+                <h3 style={{ fontSize: '15px', color: '#78350F', marginBottom: '6px', marginTop: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>{colorsTitle}</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
                   {colors.map((c, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ fontSize: '15px' }}>{c.color}</span>
-                      <span style={{ fontSize: '13.5px', color: '#334155', fontWeight: 600 }}>{c.desc}</span>
+                      <span style={{ fontSize: '13.5px', color: '#3D2E24', fontWeight: 600 }}>{c.desc}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Why Use & Takeaway */}
-              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '10px 14px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '10px 14px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
                 <div>
-                  <h3 style={{ fontSize: '15px', color: '#1e3a8a', marginBottom: '6px', fontFamily: 'serif', marginTop: 0, fontWeight: 700 }}>{whyUseTitle}</h3>
+                  <h3 style={{ fontSize: '15px', color: '#78350F', marginBottom: '6px', fontFamily: '"Fraunces", serif', marginTop: 0, fontWeight: 900 }}>{whyUseTitle}</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                     {whyUse.map((w, i) => (
-                      <div key={i} style={{ background: '#f1f5f9', padding: '6px 10px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div key={i} style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', padding: '6px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{ fontSize: '15px' }}>{w.icon}</span>
-                        <span style={{ fontSize: '13.5px', color: '#1e293b', fontWeight: 600 }}>{w.desc}</span>
+                        <span style={{ fontSize: '13.5px', color: '#3D2E24', fontWeight: 600 }}>{w.desc}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px dashed #cbd5e1', color: '#1e3a8a', fontSize: '12.5px', lineHeight: 1.35, fontStyle: 'italic', fontWeight: 600 }}>
+                <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1.5px dashed #F2DFBC', color: '#92400E', fontSize: '12.5px', lineHeight: 1.35, fontWeight: 700 }}>
                   💡 {funFact}
                 </div>
               </div>
@@ -152,13 +152,13 @@ const PageLayout = ({
         </div>
 
         {/* Sub-Page Navigation Bar */}
-        <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #e2e8f0', paddingTop: '8px', marginTop: '6px' }}>
+        <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1.5px solid #F2DFBC', paddingTop: '8px', marginTop: '6px' }}>
           <button
             onClick={() => setLeftPage(1)}
             disabled={leftPage === 1}
             style={{
-              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, fontSize: '13px',
-              background: '#0E3556', color: '#fff', border: 'none', borderRadius: '999px',
+              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '13px',
+              background: leftPage === 1 ? '#F7F1E2' : '#FFF9F0', color: '#78350F', border: '1.5px solid #F2DFBC', borderRadius: '999px',
               padding: '6px 16px', cursor: leftPage === 1 ? 'not-allowed' : 'pointer',
               opacity: leftPage === 1 ? 0.35 : 1, transition: 'all 0.2s'
             }}
@@ -166,18 +166,18 @@ const PageLayout = ({
             ◀ Back
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 700, color: '#0E3556' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, color: '#78350F' }}>
             <span>Page {leftPage} of 2</span>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 1 ? '#0E3556' : '#cbd5e1' }} />
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 2 ? '#0E3556' : '#cbd5e1' }} />
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 1 ? '#D97706' : '#F2DFBC' }} />
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 2 ? '#D97706' : '#F2DFBC' }} />
           </div>
 
           <button
             onClick={() => setLeftPage(2)}
             disabled={leftPage === 2}
             style={{
-              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, fontSize: '13px',
-              background: '#0E3556', color: '#fff', border: 'none', borderRadius: '999px',
+              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '13px',
+              background: leftPage === 2 ? '#F7F1E2' : '#D97706', color: leftPage === 2 ? '#78350F' : '#FFFFFF', border: '1.5px solid #D97706', borderRadius: '999px',
               padding: '6px 16px', cursor: leftPage === 2 ? 'not-allowed' : 'pointer',
               opacity: leftPage === 2 ? 0.35 : 1, transition: 'all 0.2s'
             }}
@@ -189,7 +189,7 @@ const PageLayout = ({
       </div>
 
       {/* Right Page (Image Activity) — Bottom padding 3.8rem ensures no overlap with AtlasBook footer */}
-      <div style={{ flex: '1 1 50%', minWidth: 0, padding: '1rem 1.25rem 3.8rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 0, overflow: 'hidden', boxSizing: 'border-box' }}>
+      <div style={{ flex: '1 1 50%', minWidth: 0, padding: '1rem 1.25rem 3.8rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 0, overflow: 'hidden', boxSizing: 'border-box', background: 'linear-gradient(160deg, #F7F1E2 0%, #EFE6D2 100%)' }}>
         <div
           onClick={() => setIsGlobeOpen(true)}
           style={{
@@ -200,17 +200,17 @@ const PageLayout = ({
             position: 'relative',
             borderRadius: '16px',
             overflow: 'hidden',
-            border: '2px solid #cbd5e1',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.06)',
-            background: '#ffffff',
+            border: '2px solid #F2DFBC',
+            boxShadow: '0 8px 30px rgba(60,40,20,0.06)',
+            background: '#FFF9F0',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '12px',
             boxSizing: 'border-box'
           }}
-          onMouseOver={(e) => e.currentTarget.style.borderColor = '#3b82f6'}
-          onMouseOut={(e) => e.currentTarget.style.borderColor = '#cbd5e1'}
+          onMouseOver={(e) => e.currentTarget.style.borderColor = '#D97706'}
+          onMouseOut={(e) => e.currentTarget.style.borderColor = '#F2DFBC'}
         >
            <img
              src={imageSrc}
@@ -223,24 +223,54 @@ const PageLayout = ({
                display: 'block'
              }}
            />
-           <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(14,53,86,0.92)', color: '#fff', padding: '0.4rem 1rem', borderRadius: '999px', fontSize: '13px', fontWeight: 700, boxShadow: '0 4px 12px rgba(0,0,0,0.25)', whiteSpace: 'nowrap' }}>
-             <Globe2 size={14} /> Open interactive 3D globe
-           </div>
         </div>
 
-        <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexShrink: 0 }}>
+        <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
           <button
             onClick={() => setIsGlobeOpen(true)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#0E3556', color: '#fff', border: 'none', borderRadius: '999px', padding: '0.4rem 1rem', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: '#D97706',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '999px',
+              padding: '0.45rem 1.2rem',
+              fontSize: '13px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(217,119,6,0.3)',
+              transition: 'all 0.2s ease',
+              fontFamily: '"Space Grotesk", sans-serif'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
           >
             <Globe2 size={15} /> View on 3D Globe
           </button>
-          <span
+          <button
             onClick={() => setIsImageOpen(true)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#5c6b7a', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: '#0E3556',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '999px',
+              padding: '0.45rem 1rem',
+              fontSize: '13px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(14, 53, 86, 0.2)',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
           >
-            <ImageIcon size={14} /> View printed map
-          </span>
+            <ImageIcon size={15} /> View printed map
+          </button>
         </div>
       </div>
     </div>

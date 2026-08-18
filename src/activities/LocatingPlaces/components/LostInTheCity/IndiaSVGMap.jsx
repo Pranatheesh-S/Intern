@@ -95,19 +95,34 @@ export default function IndiaSVGMap({
           y1={startNode.y}
           x2={endNode.x}
           y2={endNode.y}
-          stroke={isExtra ? "#64748b" : "var(--primary)"}
-          strokeWidth="2.5"
+          stroke={isExtra ? "#64748b" : "#B45309"}
+          strokeWidth="3"
           strokeDasharray="6 6"
           strokeDashoffset={animate ? 1000 : 0}
-          style={animate ? { animation: `${routeAnimName} 2s linear forwards ${delay}s` } : {}}
+          style={animate ? { animation: `${routeAnimName} 1.8s ease-out forwards ${delay}s` } : {}}
         />
-        
-        {/* End Node */}
+
+        {/* Solid connection line for completed routes */}
+        {!animate && (
+          <line
+            x1={startNode.x}
+            y1={startNode.y}
+            x2={endNode.x}
+            y2={endNode.y}
+            stroke={isExtra ? "#94a3b8" : "#D97706"}
+            strokeWidth="2"
+            opacity="0.8"
+          />
+        )}
+
+        {/* Destination Node */}
         <circle 
           cx={endNode.x} 
           cy={endNode.y} 
-          r="4" 
-          fill={isExtra ? "#64748b" : "var(--primary)"} 
+          r={isExtra ? "4" : "6"} 
+          fill={isExtra ? "#64748b" : "#D97706"} 
+          stroke="#FFFFFF"
+          strokeWidth="1.5"
           opacity={animate ? 0 : 1}
           style={animate ? { animation: `fade-in 0.3s ease-out forwards ${delay + 1.8}s` } : {}}
         />
@@ -117,21 +132,20 @@ export default function IndiaSVGMap({
           <circle 
             cx={endNode.x} 
             cy={endNode.y} 
-            r="4" 
-            fill="var(--primary)" 
+            r="5" 
+            fill="#D97706" 
             style={{ animation: `pulseEnd 1.5s infinite ${delay + 1.8}s` }}
           />
         )}
 
-        {/* Moving Train Icon */}
+        {/* Moving Vehicle Icon */}
         {animate && (
           <g style={{ animation: `${trainAnimName} 2s ease-in-out forwards ${delay}s`, opacity: 0 }}>
             <g transform={`rotate(${angle + 90}) translate(-10, -10)`}>
-              {/* Simple train/bus SVG */}
-              <rect x="2" y="2" width="16" height="16" rx="4" fill="#ef4444" />
-              <rect x="4" y="4" width="12" height="6" rx="2" fill="white" />
-              <circle cx="6" cy="14" r="2" fill="#1e293b" />
-              <circle cx="14" cy="14" r="2" fill="#1e293b" />
+              <rect x="2" y="2" width="16" height="16" rx="4" fill="#D97706" />
+              <rect x="4" y="4" width="12" height="6" rx="2" fill="#FFFFFF" />
+              <circle cx="6" cy="14" r="2" fill="#1E293B" />
+              <circle cx="14" cy="14" r="2" fill="#1E293B" />
             </g>
           </g>
         )}
@@ -142,45 +156,46 @@ export default function IndiaSVGMap({
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <svg
-        viewBox={IndiaMapData.viewBox}
-        style={{ width: '100%', height: '100%', maxHeight: '600px' }}
+        viewBox="10 0 575 680"
+        style={{ width: '100%', height: '100%', maxHeight: '100%', objectFit: 'contain' }}
       >
         <style>{`
           @keyframes fade-in {
             to { opacity: 1; }
           }
           @keyframes state-pulse {
-            0% { fill: var(--primary-light); }
-            50% { fill: #dbeafe; }
-            100% { fill: var(--primary-light); }
+            0% { fill: #FEF3C7; }
+            50% { fill: #FDE68A; }
+            100% { fill: #FEF3C7; }
           }
         `}</style>
 
         {/* States Layer */}
-        <g stroke="var(--border)" strokeWidth="1" strokeLinejoin="round" strokeLinecap="round">
+        <g stroke="#CBD5E1" strokeWidth="1" strokeLinejoin="round" strokeLinecap="round">
           {IndiaMapData.locations.map((loc) => {
             const isDestination = currentDestinationId === loc.id;
             const isCompleted = completedMissionIds.includes(loc.id);
             const isStart = loc.id === 'tn';
             const isHovered = localHover === loc.id;
             
-            let fill = '#fcfcfc';
-            let stroke = '#d1d5db';
+            let fill = '#FAFAFA';
+            let stroke = '#CBD5E1';
             let strokeWidth = 1;
             
             if (isStart) {
-              fill = '#f0fdf4';
-              stroke = '#16a34a';
-              strokeWidth = 1.5;
+              fill = '#DCFCE7';
+              stroke = '#16A34A';
+              strokeWidth = 1.8;
             } else if (isDestination && !animating) {
-              fill = 'var(--primary-light)';
-              stroke = 'var(--primary)';
-              strokeWidth = 1.5;
+              fill = '#FEF3C7';
+              stroke = '#D97706';
+              strokeWidth = 2;
             } else if (isCompleted || (animating && isDestination)) {
-              fill = '#eff6ff';
-              stroke = '#94a3b8';
+              fill = '#EFF6FF';
+              stroke = '#3B82F6';
+              strokeWidth = 1.5;
             } else if (isHovered) {
-              fill = '#f3f4f6';
+              fill = '#F1F5F9';
             }
 
             return (
@@ -206,12 +221,11 @@ export default function IndiaSVGMap({
         <g>
           {/* Permanent Start Node */}
           {missionIndex >= 0 && (
-            <circle cx={startNode.x} cy={startNode.y} r="5" fill="#16a34a" />
+            <circle cx={startNode.x} cy={startNode.y} r="6" fill="#16A34A" stroke="#FFFFFF" strokeWidth="1.5" />
           )}
 
           {/* Render already completed routes statically */}
           {completedMissionIds.map(toId => {
-            // Special case for Mumbai distance mission: keep Bengaluru route as extra
             if (toId === 'mh') {
                return (
                  <React.Fragment key={`comp-mh`}>
@@ -226,21 +240,21 @@ export default function IndiaSVGMap({
           {/* Render active animation route */}
           {animating && activeRoute && (
             <>
-              {activeRoute.showBoth && drawRoute('ka', true, 0, true) /* Short route for distance comparison */}
+              {activeRoute.showBoth && drawRoute('ka', true, 0, true)}
               {drawRoute(activeRoute.to, true, 0, false)}
             </>
           )}
         </g>
 
-        {/* Labels Layer (Clean labels for important destinations) */}
+        {/* Labels Layer */}
         {missionIndex >= 0 && (
-          <g fontSize="11" fontWeight="600" fill="#334155" style={{ pointerEvents: 'none' }}>
+          <g fontSize="13.5" fontWeight="700" fontFamily="'Space Grotesk', sans-serif" style={{ pointerEvents: 'none' }}>
             {/* Start Node (Chennai) */}
             <g>
-              <text x={startNode.x} y={startNode.y + 2} textAnchor="middle" fontSize="14">📍</text>
+              <text x={startNode.x} y={startNode.y + 2} textAnchor="middle" fontSize="13">📍</text>
               <text x={startNode.x + cityData.tn.dx} y={startNode.y + cityData.tn.dy} fill="#166534" textAnchor={cityData.tn.anchor}>
-                <tspan x={startNode.x + cityData.tn.dx} dy="0">{cityData.tn.name}</tspan>
-                <tspan x={startNode.x + cityData.tn.dx} dy="14" fontSize="9" fill="#64748b">{cityData.tn.state}</tspan>
+                <tspan x={startNode.x + cityData.tn.dx} dy="0" fontWeight="900">{cityData.tn.name}</tspan>
+                <tspan x={startNode.x + cityData.tn.dx} dy="13" fontSize="11" fill="#15803D" fontWeight="700">{cityData.tn.state}</tspan>
               </text>
             </g>
             
@@ -248,29 +262,23 @@ export default function IndiaSVGMap({
             {missions.map((m) => {
               const isActive = m.id === currentDestinationId;
               const isComp = completedMissionIds.includes(m.id);
+              
               if (!isActive && !isComp) return null;
               
+              const c = cityData[m.id];
               const node = stateCentroids[m.id];
-              const city = cityData[m.id];
-              if (!node || !city) return null;
-
+              if (!c || !node) return null;
+              
               return (
-                <g 
-                  key={`label-${m.id}`}
-                  style={{ 
-                    animation: (isActive && !animating) ? 'fade-in 0.5s forwards' : 'none',
-                    opacity: isComp ? 1 : (animating ? 1 : 0)
-                  }}
-                >
-                  <text x={node.x} y={node.y + 2} textAnchor="middle" fontSize="14">📍</text>
+                <g key={m.id} style={{ transition: 'all 0.3s' }}>
                   <text 
-                    x={node.x + city.dx} 
-                    y={node.y + city.dy}
-                    fill={isActive ? 'var(--primary)' : '#475569'}
-                    textAnchor={city.anchor}
+                    x={node.x + c.dx} 
+                    y={node.y + c.dy} 
+                    fill={isActive ? "#92400E" : "#1E40AF"}
+                    textAnchor={c.anchor}
                   >
-                    <tspan x={node.x + city.dx} dy="0">{city.name}</tspan>
-                    <tspan x={node.x + city.dx} dy="14" fontSize="9" fill="#64748b">{city.state}</tspan>
+                    <tspan x={node.x + c.dx} dy="0" fontWeight="900" fontSize="13.5">{c.name}</tspan>
+                    <tspan x={node.x + c.dx} dy="13" fontSize="11" fill={isActive ? "#B45309" : "#3B82F6"} fontWeight="700">{c.state}</tspan>
                   </text>
                 </g>
               );
@@ -278,24 +286,6 @@ export default function IndiaSVGMap({
           </g>
         )}
       </svg>
-      
-      {/* Tooltip */}
-      {localHover && (
-        <div style={{
-          position: 'absolute',
-          bottom: '20px',
-          background: 'rgba(0,0,0,0.8)',
-          color: 'white',
-          padding: '6px 12px',
-          borderRadius: '4px',
-          fontSize: '14px',
-          fontWeight: 600,
-          pointerEvents: 'none',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-        }}>
-          {IndiaMapData.locations.find(l => l.id === localHover)?.name}
-        </div>
-      )}
     </div>
   );
 }

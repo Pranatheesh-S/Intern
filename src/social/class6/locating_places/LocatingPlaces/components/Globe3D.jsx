@@ -10,8 +10,8 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
 
   useFrame((state, delta) => {
     if (globeRef.current) {
-      // Slow auto-rotation
-      globeRef.current.rotation.y += delta * 0.15;
+      // Gentle, slow auto-rotation
+      globeRef.current.rotation.y += delta * 0.08;
     }
   });
 

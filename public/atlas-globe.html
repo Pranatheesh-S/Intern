@@ -49,30 +49,15 @@
     box-shadow:0 10px 40px rgba(0,0,0,.45)}
 
   /* ---- top bar ---- */
-  #top{top:14px;left:14px;padding:10px 12px;display:flex;flex-direction:column;gap:9px;max-width:min(420px,calc(100vw - 28px))}
-  #brand{display:flex;align-items:baseline;gap:8px}
-  #brand b{font-size:14px;letter-spacing:.03em}
-  #brand span{font-size:10.5px;color:var(--dim)}
-  .segs{display:flex;gap:4px;background:rgba(255,255,255,.05);padding:4px;border-radius:10px}
-  .seg{flex:1;padding:7px 10px;border-radius:7px;border:0;background:transparent;color:var(--dim);
-    font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:.16s;white-space:nowrap}
-  .seg:hover{color:#fff;background:rgba(255,255,255,.07)}
-  .seg.on{background:var(--acc);color:#04121d;box-shadow:0 2px 10px rgba(111,196,255,.35)}
-  #sub{display:none;gap:4px;flex-wrap:wrap}
-  #sub.show{display:flex}
-  .chip{padding:5px 10px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.04);
-    color:var(--dim);font-size:10.5px;cursor:pointer;font-family:inherit;transition:.16s}
-  .chip:hover{color:#fff;border-color:rgba(255,255,255,.3)}
-  .chip.on{background:#ffd45e;color:#241a00;border-color:#ffd45e;font-weight:700}
-  #hint{font-size:10.5px;color:var(--dim);line-height:1.45}
-
-  /* ---- search ---- */
-  #search{position:relative}
-  #q{width:100%;padding:8px 10px;border-radius:9px;border:1px solid var(--line);
-     background:rgba(255,255,255,.06);color:var(--txt);font-size:12px;font-family:inherit;outline:none}
-  #q:focus{border-color:var(--acc)}
-  #res{position:absolute;top:38px;left:0;right:0;max-height:260px;overflow:auto;
-    background:var(--panel2);border:1px solid var(--line);border-radius:10px;display:none;z-index:20}
+  #top{top:14px;left:14px;padding:10px 14px;display:flex;flex-direction:column;gap:8px;max-width:min(480px,calc(100vw - 28px));z-index:20}
+  .thm-header{display:flex;align-items:center;gap:8px}
+  .thm-title{font-size:11px;font-weight:800;color:#6fc4ff;letter-spacing:.1em;text-transform:uppercase}
+  .thm-buttons{display:flex;gap:6px;flex-wrap:wrap}
+  .thm-btn{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);
+    color:var(--txt);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .thm-btn:hover{color:#fff;background:rgba(111,196,255,.2);border-color:#6fc4ff;transform:translateY(-1px)}
+  .thm-btn.on{background:#6fc4ff;color:#04121d;border-color:#6fc4ff;box-shadow:0 2px 10px rgba(111,196,255,.4)}
+  #ctl{display:none!important}
   #res.show{display:block}
   .ri{padding:7px 10px;font-size:11.5px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(255,255,255,.05)}
   .ri:hover{background:rgba(111,196,255,.16)}
@@ -89,15 +74,20 @@
   #legend .src{margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:9.5px;color:var(--dim);line-height:1.45}
 
   /* ---- info card ---- */
-  #info{right:14px;bottom:14px;width:250px;padding:13px;display:none}
+  #info{right:16px;bottom:16px;width:315px;padding:16px 20px;display:none;background:rgba(10,16,28,0.96);border:1px solid rgba(255,255,255,0.22);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,0.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transform-origin:bottom right;transition:transform .18s cubic-bezier(.2,.9,.4,1.1);user-select:none;z-index:40}
   #info.show{display:block}
-  #info h4{margin:0 0 1px;font-size:14px}
-  #info .sub{font-size:10.5px;color:var(--dim);margin-bottom:9px}
-  .row{display:flex;justify-content:space-between;gap:10px;font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-  .row span:first-child{color:var(--dim)}
-  .row span:last-child{text-align:right;font-variant-numeric:tabular-nums}
-  #close{position:absolute;top:8px;right:10px;cursor:pointer;color:var(--dim);font-size:15px;line-height:1}
-  #close:hover{color:#fff}
+  .card-bar{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:8px}
+  .card-zoom-tools{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:2px 5px}
+  .card-btn{width:22px;height:22px;border-radius:50%;border:none;background:rgba(255,255,255,.1);color:#fff;font-size:13px;font-weight:bold;display:grid;place-items:center;cursor:pointer;transition:.15s;line-height:1;font-family:inherit}
+  .card-btn:hover{background:#6fc4ff;color:#04121d;transform:scale(1.12)}
+  .card-zoom-val{font-size:11px;font-weight:700;color:#6fc4ff;padding:0 4px;min-width:34px;text-align:center}
+  #close{cursor:pointer;color:#ffffff;font-size:18px;line-height:1;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;transition:0.18s;opacity:0.85;background:rgba(255,255,255,.08)}
+  #close:hover{opacity:1;background:rgba(255,255,255,0.25);transform:scale(1.08)}
+  #info h4{margin:0 0 4px;font-size:18px;font-weight:800;color:#ffffff;letter-spacing:0.02em}
+  #info .sub{font-size:13px;color:#6fc4ff;margin-bottom:12px;font-weight:700}
+  .row{display:flex;justify-content:space-between;gap:14px;font-size:13.5px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.12)}
+  .row span:first-child{color:#ffd45e;font-weight:700;letter-spacing:0.01em}
+  .row span:last-child{text-align:right;font-variant-numeric:tabular-nums;color:#ffffff;font-weight:800}
 
   /* ---- tooltip ---- */
   #tip{position:fixed;pointer-events:none;padding:5px 9px;border-radius:7px;font-size:11.5px;
@@ -148,30 +138,30 @@
 <div id="labels"></div>
 
 <div id="top" class="panel">
-  <div id="brand"><b>The Three Maps Globe</b><span>physical · political · thematic</span></div>
-  <div class="segs" id="modes">
-    <button class="seg on" data-m="physical">Physical</button>
-    <button class="seg" data-m="political">Political</button>
-    <button class="seg" data-m="thematic">Thematic</button>
+  <div class="thm-header">
+    <span class="thm-title">THEMATIC MAP</span>
   </div>
-  <div id="sub"></div>
-  <div id="search"><input id="q" placeholder="Search a country, state, capital, river, mountain…" autocomplete="off"><div id="res"></div></div>
-  <div id="hint">Drag to spin · scroll to zoom · hover for details · click to pin</div>
+  <div class="thm-buttons" id="thm-buttons">
+    <button class="thm-btn on" data-t="rain">🌧️ Rainfall</button>
+    <button class="thm-btn" data-t="pop">👥 Population Density</button>
+    <button class="thm-btn" data-t="forest">🌲 Forest Cover</button>
+  </div>
 </div>
 
 <div id="legend" class="panel"></div>
 
-<div id="info" class="panel"><div id="close">×</div><div id="ibody"></div></div>
-<div id="tip"></div>
-
-<div id="ctl" class="panel">
-  <button class="btn" id="bRot" title="Auto-rotate">⟳</button>
-  <button class="btn" id="bGrid" title="Latitude / longitude grid">⊞</button>
-  <button class="btn" id="bLab" title="Labels">A</button>
-  <button class="btn" id="bHome" title="Reset view">⌂</button>
-  <button class="btn" id="bFull" title="Full screen">⛶</button>
-  <button class="btn" id="bAbout" title="About the three kinds of map">i</button>
+<div id="info" class="panel">
+  <div class="card-bar">
+    <div class="card-zoom-tools">
+      <button id="cardZoomOut" class="card-btn" title="Zoom out card (−)">−</button>
+      <span id="cardZoomVal" class="card-zoom-val">100%</span>
+      <button id="cardZoomIn" class="card-btn" title="Zoom in card (+)">+</button>
+    </div>
+    <div id="close" title="Close">×</div>
+  </div>
+  <div id="ibody"></div>
 </div>
+<div id="tip"></div>
 
 <div id="about">
   <div class="card panel">
@@ -361,7 +351,7 @@ const GRAT_LB = [
 
 /* ===================== camera controls ===================== */
 const cam = {lon:60, lat:18, dist:300, tLon:60, tLat:18, tDist:300};
-let dragging=false, px=0, py=0, autoRot=false, anim=null;
+let dragging=false, px=0, py=0, autoRot=true, anim=null;
 function applyCam(){
   cam.lon += (cam.tLon-cam.lon)*0.14;
   cam.lat += (cam.tLat-cam.lat)*0.14;
@@ -483,12 +473,11 @@ function pickAt(cx, cy){
 
 /* ===================== modes ===================== */
 const THEMES = [
-  {k:"pop",     n:"Population density", src:"thm_pop"},
-  {k:"climate", n:"Climate zones",      src:"thm_climate"},
-  {k:"forest",  n:"Forest cover",       src:"thm_forest"},
-  {k:"rain",    n:"Rainfall",           src:"thm_rain"}
+  {k:"rain",    n:"Rainfall",           src:"thm_rain"},
+  {k:"pop",     n:"Population Density", src:"thm_pop"},
+  {k:"forest",  n:"Forest Cover",       src:"thm_forest"}
 ];
-let mode = "physical", theme = "pop", showLabels = true;
+let mode = "thematic", theme = "rain", showLabels = true;
 
 function texFor(){
   if(mode==="physical") return tex.physical;
@@ -500,14 +489,14 @@ function setMode(m, t){
   if(m===mode && (m!=="thematic" || t===theme)) return;
   mode = m; if(t) theme = t;
   uni.mapB.value = texFor(); uni.mixv.value = 0; fading = 1;
-  document.querySelectorAll('#modes .seg').forEach(b=>b.classList.toggle('on', b.dataset.m===mode));
-  $("#sub").classList.toggle('show', mode==="thematic");
-  document.querySelectorAll('.chip').forEach(b=>b.classList.toggle('on', b.dataset.t===theme));
+  const topPanel = $("#top");
+  if(topPanel){
+    topPanel.style.display = (mode === "thematic") ? "flex" : "none";
+  }
+  document.querySelectorAll('.thm-btn').forEach(b=>b.classList.toggle('on', b.dataset.t===theme));
   drawLegend(); buildLabelSet(); refreshInfo();
 }
-document.querySelectorAll('#modes .seg').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
-$("#sub").innerHTML = THEMES.map(t=>`<button class="chip${t.k===theme?' on':''}" data-t="${t.k}">${t.n}</button>`).join('');
-document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>setMode('thematic', b.dataset.t));
+document.querySelectorAll('.thm-btn').forEach(b=>b.onclick=()=>setMode('thematic', b.dataset.t));
 
 /* ===================== legend ===================== */
 function drawLegend(){
@@ -736,6 +725,30 @@ function refreshInfo(){
 }
 $("#close").onclick = ()=>{ pinned=null; focus=null; refreshInfo(); };
 
+let cardScale = 1.0;
+function applyCardScale(s){
+  cardScale = Math.max(0.75, Math.min(1.65, s));
+  const card = $("#info");
+  const valLabel = $("#cardZoomVal");
+  if(card) card.style.transform = `scale(${cardScale.toFixed(2)})`;
+  if(valLabel) valLabel.textContent = `${Math.round(cardScale * 100)}%`;
+}
+if($("#cardZoomIn")){
+  $("#cardZoomIn").onclick = (e)=>{ e.stopPropagation(); applyCardScale(cardScale + 0.15); };
+}
+if($("#cardZoomOut")){
+  $("#cardZoomOut").onclick = (e)=>{ e.stopPropagation(); applyCardScale(cardScale - 0.15); };
+}
+const infoCard = $("#info");
+if(infoCard){
+  infoCard.addEventListener('wheel', (e)=>{
+    e.stopPropagation();
+    e.preventDefault();
+    if(e.deltaY < 0) applyCardScale(cardScale + 0.08);
+    else if(e.deltaY > 0) applyCardScale(cardScale - 0.08);
+  }, { passive: false });
+}
+
 const tip = $("#tip");
 function updateHover(){
   if(!hoverDirty) return; hoverDirty=false;
@@ -787,7 +800,7 @@ LABELS.lakes.forEach(l=> INDEX.push({n:l.n, t:"Lake", x:l.x, y:l.y, d:170}));
 for(let i=INDEX.length-1;i>=0;i--){ const it=INDEX[i]; if(!it.n || it.x==null || it.y==null) INDEX.splice(i,1); }
 
 const q=$("#q"), res=$("#res");
-q.addEventListener('input', ()=>{
+if(q && res) q.addEventListener('input', ()=>{
   const s = q.value.trim().toLowerCase();
   if(s.length<2){ res.classList.remove('show'); return; }
   const hits = [];
@@ -807,18 +820,17 @@ q.addEventListener('input', ()=>{
     pinned = byA3[it.a3] ? {c:byA3[it.a3], r:null} : null; refreshInfo();
   });
 });
-q.addEventListener('blur', ()=> setTimeout(()=>res.classList.remove('show'), 180));
+if(q && res) q.addEventListener('blur', ()=> setTimeout(()=>res.classList.remove('show'), 180));
 
 /* ===================== buttons ===================== */
-$("#bRot").onclick = e=>{ autoRot=!autoRot; e.currentTarget.classList.toggle('on',autoRot); };
-$("#bGrid").onclick = e=>{ grat.visible=!grat.visible; e.currentTarget.classList.toggle('on',grat.visible); };
-$("#bLab").onclick = e=>{ showLabels=!showLabels; e.currentTarget.classList.toggle('on',showLabels); };
-$("#bLab").classList.add('on');
-$("#bHome").onclick = ()=> flyTo(60, 18, 300);
-$("#bFull").onclick = ()=>{ if(!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); };
-$("#bAbout").onclick = ()=> $("#about").classList.add('show');
-$("#aclose").onclick = ()=> $("#about").classList.remove('show');
-$("#about").onclick = e=>{ if(e.target.id==='about') $("#about").classList.remove('show'); };
+if($("#bRot")) $("#bRot").onclick = e=>{ autoRot=!autoRot; e.currentTarget.classList.toggle('on',autoRot); };
+if($("#bGrid")) $("#bGrid").onclick = e=>{ grat.visible=!grat.visible; e.currentTarget.classList.toggle('on',grat.visible); };
+if($("#bLab")) $("#bLab").onclick = e=>{ showLabels=!showLabels; e.currentTarget.classList.toggle('on',showLabels); };
+if($("#bHome")) $("#bHome").onclick = ()=> flyTo(60, 18, 300);
+if($("#bFull")) $("#bFull").onclick = ()=>{ if(!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); };
+if($("#bAbout")) $("#bAbout").onclick = ()=> $("#about")?.classList.add('show');
+if($("#aclose")) $("#aclose").onclick = ()=> $("#about")?.classList.remove('show');
+if($("#about")) $("#about").onclick = e=>{ if(e.target.id==='about') $("#about").classList.remove('show'); };
 addEventListener('resize', ()=>{
   camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
@@ -849,7 +861,7 @@ function step(){
 }
 NEED.forEach(k=>{ tex[k] = mkTex(ASSETS[k], step); });
 uni.bumpT.value = tex.bump;
-uni.mapA.value = tex.physical; uni.mapB.value = tex.physical;
+uni.mapA.value = tex.thm_rain; uni.mapB.value = tex.thm_rain;
 
 loadIdMap(ASSETS.country_id, idc, (c,w,h)=>{ idCtx=c; IW=w; IH=h; step(); });
 loadIdMap(ASSETS.adm1_id, idx2, (c)=>{ a1Ctx=c; step(); });
@@ -860,8 +872,9 @@ drawLegend(); buildLabelSet();
 (function initFromUrl(){
   try{
     const p = new URLSearchParams(location.search);
-    const m = p.get('mode');
-    if(m === 'physical' || m === 'political' || m === 'thematic') setMode(m, p.get('theme') || undefined);
+    const m = p.get('mode') || 'thematic';
+    const th = p.get('theme') || (m === 'thematic' ? 'rain' : undefined);
+    setMode(m, th);
     const lon = parseFloat(p.get('lon')), lat = parseFloat(p.get('lat')), dist = parseFloat(p.get('dist'));
     if(!isNaN(lon) && !isNaN(lat)){
       cam.lon = cam.tLon = lon; cam.lat = cam.tLat = lat;
@@ -875,7 +888,7 @@ let last=0;
 function tick(t){
   requestAnimationFrame(tick);
   if(anim) anim();
-  if(autoRot && !dragging && !anim) cam.tLon += 0.055;
+  if(autoRot && !dragging && !anim) cam.tLon += 0.09;
   applyCam();
   uni.relief.value = (mode==="physical") ? 1.0 : (mode==="political" ? 0.22 : 0.14);
   uni.camDist.value = cam.dist;

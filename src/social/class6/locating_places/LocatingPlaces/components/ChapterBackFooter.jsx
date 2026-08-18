@@ -19,6 +19,18 @@ const NEXT_VARIANTS = {
     hoverBackground: '#2563eb',
     color: '#fff',
     boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
+  },
+  amber: {
+    background: '#B45309',
+    hoverBackground: '#92400E',
+    color: '#fff',
+    boxShadow: '0 4px 15px rgba(180, 83, 9, 0.4)'
+  },
+  terracotta: {
+    background: '#B45309',
+    hoverBackground: '#92400E',
+    color: '#fff',
+    boxShadow: '0 4px 15px rgba(180, 83, 9, 0.4)'
   }
 };
 
