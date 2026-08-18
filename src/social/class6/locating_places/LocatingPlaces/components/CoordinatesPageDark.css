@@ -16,8 +16,7 @@
   margin: 0;
   padding: 0;
   display: flex;
-  background: var(--dark-app-bg);
-  background-image: radial-gradient(circle at center, #0b1836 0%, #020612 100%);
+  background: #000000;
   font-family: var(--dark-geo), -apple-system, sans-serif;
   color: var(--dark-text-main);
   overflow: hidden;

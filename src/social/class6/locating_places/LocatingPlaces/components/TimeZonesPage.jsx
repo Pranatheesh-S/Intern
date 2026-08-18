@@ -1,12 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sphere, useTexture, Line, Html } from '@react-three/drei';
+import { OrbitControls, Sphere, useTexture, Line, Html, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 import { Play, Pause, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import './CoordinatesPageBook.css';
 import './CoordinatesPageDark.css';
 import worldMapUrl from './world-map.jpg';
+import sunMapUrl from './sun-map.jpg';
+import flareMapUrl from './lens-flare.jpg';
+import TwoFriendsActivity from './TwoFriendsActivity';
 
 const getLatLonPoint = (lat, lon, r) => {
   const phi = (90 - lat) * (Math.PI / 180);
@@ -37,69 +40,47 @@ const darkStepsData = [
     ],
     keyIdea: <span key="ki">The Earth turns <strong>15° of longitude = 1 hour</strong> of time.</span>
   },
-  {
-    stepNum: 3,
-    title: "Meridians — Lines of Longitude",
-    paragraphs: [
-      <span key="1">The blue lines running from the <strong>North Pole to the South Pole</strong> are <strong>meridians</strong> — the lines of longitude.</span>,
-      <span key="2">To measure longitude we pick one meridian as the <strong>starting line</strong>, called a <strong>prime meridian</strong> (0°). Every other place is measured east or west from it.</span>
-    ],
-    keyIdea: <span key="ki">A <strong>prime meridian</strong> is the chosen <strong>0°</strong> line from which longitude is measured.</span>
-  },
-  {
-    stepNum: 4,
-    title: "India's Own Prime Meridian",
-    paragraphs: [
-      <span key="1">Long before Greenwich, <strong>India had a prime meridian of its own</strong> — the <em>madhya rekhā</em> ("middle line"), shown here in <strong>orange</strong> at about <strong>75.8°E</strong>.</span>,
-      <span key="2">It passed through <strong>Ujjayinī</strong> (today <strong>Ujjain</strong>), a great centre of astronomy. The astronomer <strong>Varāhamihira</strong> worked there around <strong>1,500 years ago</strong>.</span>
-    ],
-    keyIdea: <span key="ki">India's ancient prime meridian ran through <strong>Ujjayinī (Ujjain)</strong>, ~75.8°E.</span>
-  },
-  {
-    stepNum: 5,
-    title: "Cities on the Ujjayinī Meridian",
-    paragraphs: [
-      <span key="1">Several ancient cities lie on or near this meridian — <strong>Kurukṣetra, Rohtak, Ujjain, Maheshwar</strong> and <strong>Kanyakumari</strong>.</span>,
-      <span key="2"><strong>Gold circles</strong> mark cities named in old astronomical texts (modern name after the slash); <strong>squares</strong> are familiar modern cities. Some sit a little off the line, because measuring longitude needed very accurate clocks.</span>
-    ],
-    keyIdea: <span key="ki">Old texts placed cities like <strong>Ujjain</strong> and <strong>Kanyakumari</strong> on the Ujjayinī meridian.</span>
-  },
-  {
-    stepNum: 6,
-    title: "Compare with Greenwich",
-    paragraphs: [
-      <span key="1">Today the world measures longitude from the <strong>Greenwich Meridian</strong> (0°), agreed as the international standard in <strong>1884</strong>. It is shown here in blue.</span>,
-      <span key="2">Both the orange Ujjayinī line and the blue Greenwich line are <strong>prime meridians</strong> — chosen 0° references. India simply chose its own, many centuries earlier.</span>
-    ],
-    keyIdea: <span key="ki">A prime meridian is a <strong>chosen</strong> reference line — Greenwich (0°) is just the modern one.</span>
-  }
 ];
 
 const TimeZonesGlobe = ({ step }) => {
   const colorMap = useTexture(worldMapUrl);
+  const sunMap = useTexture(sunMapUrl);
+  const flareMap = useTexture(flareMapUrl);
   const groupRef = useRef();
   
   useFrame((state, delta) => {
     if (groupRef.current) {
       if (step === 1) {
         groupRef.current.rotation.y -= delta * 0.2;
-      } else if (step === 2 || step === 3) {
+      } else if (step === 2) {
          groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, -45 * (Math.PI / 180), 0.05);
-      } else if (step >= 4) {
-         groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, -75.8 * (Math.PI / 180), 0.05);
       }
     }
   });
 
   return (
     <>
-      <ambientLight intensity={0.1} />
+      <color attach="background" args={['#000000']} />
+      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+      <ambientLight intensity={0.35} />
       <directionalLight position={[15, 0, 0]} intensity={2.5} color="#FDB813" />
       
       <group position={[12, 0, 0]}>
-        <mesh><sphereGeometry args={[2, 32, 32]} /><meshBasicMaterial color="#fcd34d" /></mesh>
-        <mesh><sphereGeometry args={[2.5, 32, 32]} /><meshBasicMaterial color="#fbbf24" transparent opacity={0.6} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>
-        <mesh><sphereGeometry args={[3.5, 32, 32]} /><meshBasicMaterial color="#ea580c" transparent opacity={0.2} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>
+        <mesh rotation={[0, -Math.PI / 2, 0]}>
+          <sphereGeometry args={[2, 32, 32]} />
+          <meshBasicMaterial map={sunMap} color="#fef08a" />
+        </mesh>
+        {/* Cinematic Optical Lens Flare (Stable in World Space) */}
+        <group position={[0, 0, 0]}>
+          <mesh scale={[24, 24, 1]}>
+            <planeGeometry args={[1, 1]} />
+            <meshBasicMaterial map={flareMap} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} depthTest={false} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh scale={[24, 24, 1]} rotation={[Math.PI/2, 0, 0]}>
+            <planeGeometry args={[1, 1]} />
+            <meshBasicMaterial map={flareMap} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} depthTest={false} side={THREE.DoubleSide} />
+          </mesh>
+        </group>
       </group>
 
       <group ref={groupRef}>
@@ -115,68 +96,6 @@ const TimeZonesGlobe = ({ step }) => {
           }
           return <Line key={i} points={points} color="rgba(255,255,255,0.15)" lineWidth={1} transparent />;
         })}
-
-        {step >= 4 && (
-          <group>
-            <Line 
-              points={Array.from({length: 37}).map((_,i) => getLatLonPoint(90 - i*5, 75.8, 2.21))}
-              color="#ea580c"
-              lineWidth={3}
-              dashed
-            />
-            {step === 4 && (
-              <Html position={getLatLonPoint(35, 75.8, 2.25)} center zIndexRange={[100,0]}>
-                <div style={{ background: '#9a3412', color: '#fff', padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>Ujjayinī Meridian • 75.8°E</div>
-              </Html>
-            )}
-            
-            {step === 5 && (
-              <group>
-                <Html position={getLatLonPoint(40, 75.8, 2.25)} center zIndexRange={[100,0]}>
-                  <div style={{ background: '#9a3412', color: '#fff', padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>Ujjayinī Meridian • 75.8°E</div>
-                </Html>
-                
-                {[
-                  { lat: 29.97, lon: 76.88, name: "Kurukṣetra", old: true },
-                  { lat: 28.90, lon: 76.58, name: "Rohtak", old: true },
-                  { lat: 23.18, lon: 75.77, name: "Ujjayinī / Ujjain", old: true },
-                  { lat: 22.18, lon: 75.58, name: "Mahiṣmatī / Maheshwar", old: true },
-                  { lat: 8.08, lon: 77.55, name: "Kumārī / Kanyakumari", old: true },
-                  { lat: 28.6, lon: 77.2, name: "Delhi", old: false },
-                  { lat: 19.0, lon: 72.8, name: "Mumbai", old: false },
-                  { lat: 12.9, lon: 77.5, name: "Bengaluru", old: false },
-                  { lat: 22.5, lon: 88.3, name: "Kolkata", old: false }
-                ].map((city, i) => (
-                  <group key={i}>
-                    <mesh position={getLatLonPoint(city.lat, city.lon, 2.22)}>
-                      {city.old ? <sphereGeometry args={[0.03, 16, 16]} /> : <boxGeometry args={[0.04, 0.04, 0.04]} />}
-                      <meshBasicMaterial color={city.old ? "#fbbf24" : "#e2e8f0"} />
-                    </mesh>
-                    <Html position={getLatLonPoint(city.lat, city.lon, 2.22)} center zIndexRange={[100,0]}>
-                      <div style={{ color: city.old ? '#fbbf24' : '#e2e8f0', fontSize: '10px', fontWeight: 'bold', textShadow: '0 1px 3px rgba(0,0,0,0.8)', marginLeft: '14px', whiteSpace: 'nowrap' }}>{city.name}</div>
-                    </Html>
-                  </group>
-                ))}
-              </group>
-            )}
-            
-            {step === 6 && (
-              <group>
-                <Line 
-                  points={Array.from({length: 37}).map((_,i) => getLatLonPoint(90 - i*5, 0, 2.21))}
-                  color="#3b82f6"
-                  lineWidth={3}
-                />
-                <Html position={getLatLonPoint(35, 0, 2.25)} center zIndexRange={[100,0]}>
-                  <div style={{ background: '#1e3a8a', color: '#fff', padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>Greenwich Meridian • 0°</div>
-                </Html>
-                <Html position={getLatLonPoint(30, 75.8, 2.25)} center zIndexRange={[100,0]}>
-                  <div style={{ background: '#9a3412', color: '#fff', padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>Ujjayinī Meridian • 75.8°E</div>
-                </Html>
-              </group>
-            )}
-          </group>
-        )}
       </group>
 
       {(step === 1 || step === 2) && (
@@ -211,6 +130,8 @@ const TimeZonesGlobe = ({ step }) => {
 
 const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, format12, format24 }) => {
   const colorMap = useTexture(worldMapUrl);
+  const sunMap = useTexture(sunMapUrl);
+  const flareMap = useTexture(flareMapUrl);
   const groupRef = useRef();
   
   useFrame(() => {
@@ -221,14 +142,26 @@ const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, form
 
   const sunAngle = (istMins / 60 - 12) * 15 * (Math.PI / 180);
 
+  const isDaytime = (mins) => {
+    let m = Math.round(mins);
+    while (m < 0) m += 1440;
+    m = m % 1440;
+    return m >= 360 && m <= 1080; // 6:00 AM to 6:00 PM
+  };
+
+  const porbDay = isDaytime(porbMins);
+  const tinDay = isDaytime(tinMins);
+
   return (
     <>
+      <color attach="background" args={['#000000']} />
+      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
       <ambientLight intensity={0.4} />
       <directionalLight 
         position={[10 * Math.sin(sunAngle), 0, 10 * Math.cos(sunAngle)]} 
         intensity={2.5} 
       />
-      
+
       <group ref={groupRef}>
         <Sphere args={[2.2, 64, 64]}>
           <meshStandardMaterial map={colorMap} roughness={0.8} />
@@ -252,7 +185,7 @@ const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, form
           <div style={{ background: '#1e293b', color: '#fff', padding: '8px 12px', borderRadius: '12px', fontSize: '11px', border: '1px solid #475569', display: 'flex', flexDirection: 'column', alignItems: 'center', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
              <div style={{ fontWeight: 'bold' }}>Porbandar</div>
              <div style={{ color: '#94a3b8', fontSize: '9px' }}>Gujarat • west</div>
-             <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: '#fef08a' }}>☀️ {format12(porbMins)}</div>
+             <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: porbDay ? '#fef08a' : '#93c5fd' }}>{porbDay ? '☀️' : '🌙'} {format12(porbMins)}</div>
              <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
           </div>
           {istMins === 17*60 + 42 && (
@@ -266,7 +199,7 @@ const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, form
           <div style={{ background: '#1e293b', color: '#fff', padding: '8px 12px', borderRadius: '12px', fontSize: '11px', border: '1px solid #475569', display: 'flex', flexDirection: 'column', alignItems: 'center', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
              <div style={{ fontWeight: 'bold' }}>Tinsukia</div>
              <div style={{ color: '#94a3b8', fontSize: '9px' }}>Assam • east</div>
-             <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: '#93c5fd' }}>🌙 {format12(tinMins)}</div>
+             <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: tinDay ? '#fef08a' : '#93c5fd' }}>{tinDay ? '☀️' : '🌙'} {format12(tinMins)}</div>
              <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
           </div>
           {istMins === 17*60 + 42 && (
@@ -426,12 +359,8 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
             <div className="coords-left">
               <div className="coords-eyebrow">CHAPTER 1 &bull; CLASS 6 SOCIAL SCIENCE</div>
               <h1 className="coords-chtitle">Understanding<br/>Time Zones</h1>
-              <div className="coords-illus" style={{ background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', border: '1px solid #cbd5e1', boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)' }}>
-                <svg width="240" height="240" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="1.5">
-                   <circle cx="12" cy="12" r="10"></circle>
-                   <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                <div style={{ marginTop: '20px', fontWeight: '800', color: '#1e293b', fontSize: '15px' }}>Local & Standard Time</div>
+              <div className="coords-illus" style={{ position: 'relative', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', border: '1px solid #334155', boxShadow: 'inset 0 0 30px rgba(0,0,0,0.8)', overflow: 'hidden', padding: 0 }}>
+                <img src="/time_zones_illustration.jpg" alt="Time Zones Overview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             </div>
             
@@ -461,7 +390,7 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
           <div className="coords-rfoot">
             <div className="coords-pageind" style={{ fontSize: '16px' }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-              Page 1 of 8
+              Page 1 of 4
             </div>
             <button className="coords-next" onClick={handleNext} style={{ fontSize: '16px', padding: '12px 26px' }}>
               Next Page &rarr;
@@ -472,11 +401,15 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
     );
   }
 
-  if (currentStepIdx === 7) {
-    return <LocalTimeExplorer onNextActivity={onNextActivity} onBack={handlePrev} />;
+  if (currentStepIdx === 3) {
+    return <LocalTimeExplorer onNextActivity={() => setCurrentStepIdx(4)} onBack={handlePrev} />;
   }
 
-  const activeStepIdx = currentStepIdx - 1;
+  if (currentStepIdx >= 4) {
+    return <TwoFriendsActivity onNextActivity={onNextActivity} onBack={() => setCurrentStepIdx(3)} />;
+  }
+
+  const activeStepIdx = Math.min(currentStepIdx - 1, darkStepsData.length - 1);
   const step = darkStepsData[activeStepIdx];
 
   return (
@@ -497,7 +430,7 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
               <ArrowLeft size={16} /> Back
             </button>
             <div className="dark-nav-dots">
-              {Array.from({ length: 7 }).map((_, i) => (
+              {Array.from({ length: 2 }).map((_, i) => (
                 <div key={i} className={`dark-nav-dot ${i === activeStepIdx ? 'active' : ''}`} />
               ))}
             </div>
@@ -508,7 +441,7 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
         </div>
 
         <div className="dark-coords-right">
-          <div className="dark-step-eyebrow">STEP {activeStepIdx + 1} OF 7</div>
+          <div className="dark-step-eyebrow">STEP {activeStepIdx + 1} OF 2</div>
           <h2 className="dark-step-title">{step.title}</h2>
           
           {step.paragraphs.map((p, idx) => (

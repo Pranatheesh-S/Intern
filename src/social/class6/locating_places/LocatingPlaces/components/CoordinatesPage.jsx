@@ -131,7 +131,7 @@ const stepsData = [
       <span key="2">So when it is breakfast time in one country, it is lunchtime in another and people are asleep in a third. That is why a place’s <strong>longitude</strong> also tells us its <strong>time</strong>.</span>
     ],
     keyIdea: <span key="ki12">Because the Earth spins, <strong>longitude is closely linked to the time</strong> of day.</span>,
-    task: 3, gridLat: 0, gridLon: 0
+    task: 16, gridLat: 0, gridLon: 0
   },
   {
     stepNum: 13,
@@ -155,48 +155,43 @@ const stepsData = [
   },
   {
     stepNum: 15,
-    title: "Find the Place",
-    paragraphs: [],
-    task: 15
-  },
-  {
-    stepNum: 16,
     title: "Western & Eastern Hemispheres",
     paragraphs: [
       <span key="1">Cut the globe along the <strong>Prime Meridian (0&deg;)</strong> and the <strong>180&deg;</strong> line, and it falls into two halves that we can see <strong>fully</strong>.</span>,
       <span key="2">The left half (blue) is the <strong>Western Hemisphere</strong> (0&deg;&ndash;180&deg; West); the right half (orange) is the <strong>Eastern Hemisphere</strong> (0&deg;&ndash;180&deg; East). India lies in the Eastern Hemisphere.</span>
     ],
-    keyIdea: <span key="ki16">The <strong>Prime Meridian</strong> splits Earth into the <strong>Western</strong> and <strong>Eastern</strong> hemispheres.</span>,
+    keyIdea: <span key="ki15">The <strong>Prime Meridian</strong> splits Earth into the <strong>Western</strong> and <strong>Eastern</strong> hemispheres.</span>,
     task: 11
   },
   {
-    stepNum: 17,
+    stepNum: 16,
     title: "Northern & Southern Hemispheres",
     paragraphs: [
       <span key="1">Now cut the globe along the <strong>Equator (0&deg;)</strong> instead. Again it opens into two halves shown <strong>fully</strong>.</span>,
       <span key="2">The top half (green) is the <strong>Northern Hemisphere</strong>; the bottom half (purple) is the <strong>Southern Hemisphere</strong>. India lies in the Northern Hemisphere.</span>
     ],
-    keyIdea: <span key="ki17">The <strong>Equator</strong> splits Earth into the <strong>Northern</strong> and <strong>Southern</strong> hemispheres.</span>,
+    keyIdea: <span key="ki16">The <strong>Equator</strong> splits Earth into the <strong>Northern</strong> and <strong>Southern</strong> hemispheres.</span>,
     task: 12
   },
   {
-    stepNum: 18,
+    stepNum: 17,
     title: "The Four Quarters",
     paragraphs: [
       <span key="1">Use <strong>both</strong> dividing lines at once and the globe splits into <strong>four quarters</strong>: Northern-Eastern, Northern-Western, Southern-Eastern and Southern-Western.</span>,
       <span key="2">Every place on Earth sits in exactly <strong>one</strong> of these quarters.</span>
     ],
-    keyIdea: <span key="ki18">The Equator and the Prime Meridian together divide Earth into <strong>four</strong> quarters.</span>,
+    keyIdea: <span key="ki17">The Equator and the Prime Meridian together divide Earth into <strong>four</strong> quarters.</span>,
     task: 13
   }
 ];
 
 export default function CoordinatesPage({ onNextActivity, onBack }) {
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
-  const totalGlobeSteps = 18;
+  const totalGlobeSteps = 17;
+  const totalPages = totalGlobeSteps + 2; // 1 (intro) + 1 (minigame) + 17 (globe) = 19
 
   const handleNext = () => {
-    if (currentStepIdx < totalGlobeSteps) {
+    if (currentStepIdx < totalPages - 1) {
       setCurrentStepIdx(c => c + 1);
     } else {
       if (onNextActivity) onNextActivity();
@@ -220,18 +215,8 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
             <div className="coords-left">
               <div className="coords-eyebrow">CHAPTER 1 &bull; CLASS 6 SOCIAL SCIENCE</div>
               <h1 className="coords-chtitle">Locating Places<br/>on the Earth</h1>
-              <div className="coords-illus" style={{ background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', border: '1px solid #cbd5e1', boxShadow: 'inset 0 0 20px rgba(0,0,0,0.05)' }}>
-                <svg width="240" height="240" viewBox="0 0 4 4" style={{ border: '4px solid #64748b', borderRadius: '4px', background: '#fff' }}>
-                  <rect x="0" y="0" width="1" height="1" fill="#64748b"/>
-                  <rect x="2" y="0" width="1" height="1" fill="#64748b"/>
-                  <rect x="1" y="1" width="1" height="1" fill="#64748b"/>
-                  <rect x="3" y="1" width="1" height="1" fill="#64748b"/>
-                  <rect x="0" y="2" width="1" height="1" fill="#64748b"/>
-                  <rect x="2" y="2" width="1" height="1" fill="#64748b"/>
-                  <rect x="1" y="3" width="1" height="1" fill="#64748b"/>
-                  <rect x="3" y="3" width="1" height="1" fill="#64748b"/>
-                </svg>
-                <div style={{ marginTop: '20px', fontWeight: '800', color: '#1e293b', fontSize: '15px' }}>Grid Coordinate System</div>
+              <div className="coords-illus" style={{ position: 'relative', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', border: '1px solid #334155', boxShadow: 'inset 0 0 30px rgba(0,0,0,0.8)', overflow: 'hidden', padding: 0 }}>
+                <img src="/coordinate_grid_globe_wide.jpg" alt="Grid Coordinate System Globe" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             </div>
             
@@ -262,7 +247,7 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
           <div className="coords-rfoot">
             <div className="coords-pageind" style={{ fontSize: '16px' }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-              Page 1 of {totalGlobeSteps + 1}
+              Page 1 of {totalPages}
             </div>
             <button className="coords-next" onClick={handleNext} style={{ fontSize: '16px', padding: '12px 26px' }}>
               Next Page &rarr;
@@ -273,23 +258,21 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
     );
   }
 
-  const activeGlobeIdx = currentStepIdx - 1;
-
-  if (activeGlobeIdx === 14) {
+  if (currentStepIdx === 1) {
     return (
       <CoordinatesMinigame 
-        onComplete={() => {
-          setCurrentStepIdx(16);
-        }}
+        onComplete={handleNext}
         onBack={handlePrev}
       />
     );
   }
 
+  const activeGlobeIdx = currentStepIdx - 2;
+
   const step = stepsData[activeGlobeIdx] || stepsData[stepsData.length - 1];
 
   const getTopTitle = () => {
-    if (activeGlobeIdx >= 15) return "Hemispheres — How the Earth is Divided";
+    if (activeGlobeIdx >= 14) return "Hemispheres — How the Earth is Divided";
     return "The Global Grid — Latitude & Longitude";
   };
 
@@ -337,13 +320,6 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
           {step.paragraphs.map((p, idx) => (
             <div key={idx} className="dark-step-text">{p}</div>
           ))}
-
-          {step.keyIdea && (
-            <div className="dark-key-idea-box">
-              <div className="dark-key-idea-title">KEY IDEA</div>
-              <div className="dark-key-idea-text">{step.keyIdea}</div>
-            </div>
-          )}
         </div>
       </div>
     </div>

@@ -18,12 +18,12 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
 
   useFrame((state, delta) => {
     if (globeRef.current) {
-      if (currentTask < 11) {
-        // Gentle, slow auto-rotation
-        globeRef.current.rotation.y += delta * 0.08;
-      } else {
+      if (currentTask >= 11 && currentTask <= 14) {
         // Lock rotation exactly so the cuts align perfectly with the camera
         globeRef.current.rotation.set(0, Math.PI, 0);
+      } else {
+        // Gentle, slow auto-rotation
+        globeRef.current.rotation.y += delta * 0.08;
       }
     }
   });
@@ -84,19 +84,19 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
   return (
     <group ref={globeRef} rotation={[0, Math.PI, 0]}>
       {/* Base Globe */}
-      {currentTask < 11 && (
+      {(currentTask < 11 || currentTask === 16) && (
         <Sphere args={[radius, 64, 64]}>
           <meshStandardMaterial map={colorMap} roughness={0.6} metalness={0.1} />
         </Sphere>
       )}
 
       {/* Graticule - Parallels */}
-      {(currentTask === 3 || currentTask === 5 || currentTask === 6 || currentTask === 7 || currentTask === 8 || currentTask === 10) && parallels.map((points, idx) => (
+      {(currentTask === 3 || currentTask === 5 || currentTask === 6 || currentTask === 7 || currentTask === 8 || currentTask === 10 || currentTask === 16) && parallels.map((points, idx) => (
         <Line key={`lat-${idx}`} points={points} color="#ffffff" lineWidth={2.5} transparent opacity={0.7} />
       ))}
       
       {/* Graticule - Meridians */}
-      {(currentTask === 3 || currentTask === 6 || currentTask === 10) && meridians.map((points, idx) => (
+      {(currentTask === 3 || currentTask === 6 || currentTask === 10 || currentTask === 16) && meridians.map((points, idx) => (
         <Line key={`lon-${idx}`} points={points} color="#ffffff" lineWidth={2.5} transparent opacity={0.7} />
       ))}
 
@@ -106,12 +106,12 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
       ) : null}
 
       {/* Prime Meridian */}
-      {(currentTask === 2 || currentTask === 3 || currentTask === 6 || currentTask === 10) && (
+      {(currentTask === 2 || currentTask === 3 || currentTask === 6 || currentTask === 10 || currentTask === 16) && (
         <Line points={createLongitudeLine(0)} color="#fbbf24" lineWidth={7.5} />
       )}
 
       {/* 180 Degree Line */}
-      {(currentTask === 3 || currentTask === 6 || currentTask === 10) && (
+      {(currentTask === 3 || currentTask === 6 || currentTask === 10 || currentTask === 16) && (
         <Line points={createLongitudeLine(180)} color="#60a5fa" lineWidth={6} transparent opacity={0.7} />
       )}
 
@@ -161,8 +161,19 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
       {currentTask === 6 && (
         <group>
           <mesh position={getPosFromLatLng(40.7, -74)}><sphereGeometry args={[0.05, 16, 16]} /><meshBasicMaterial color="#f97316" /></mesh>
+          <Html position={getPosFromLatLng(40.7, -74)} center style={{ pointerEvents: 'none' }}>
+            <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #f97316', transform: 'translateY(-15px)', whiteSpace: 'nowrap' }}>New York (74°W)</div>
+          </Html>
+
           <mesh position={getPosFromLatLng(28.6, 77.2)}><sphereGeometry args={[0.05, 16, 16]} /><meshBasicMaterial color="#f97316" /></mesh>
+          <Html position={getPosFromLatLng(28.6, 77.2)} center style={{ pointerEvents: 'none' }}>
+            <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #f97316', transform: 'translateY(-15px)', whiteSpace: 'nowrap' }}>Delhi (77°E)</div>
+          </Html>
+
           <mesh position={getPosFromLatLng(35.6, 139.6)}><sphereGeometry args={[0.05, 16, 16]} /><meshBasicMaterial color="#f97316" /></mesh>
+          <Html position={getPosFromLatLng(35.6, 139.6)} center style={{ pointerEvents: 'none' }}>
+            <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #f97316', transform: 'translateY(-15px)', whiteSpace: 'nowrap' }}>Tokyo (140°E)</div>
+          </Html>
         </group>
       )}
 
@@ -194,9 +205,26 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
       
       {/* Target Point (Tasks that provide gridLat and gridLon) */}
       {(gridLat !== 0 || gridLon !== 0) && currentTask < 11 && (
-        <mesh position={getPosFromLatLng(gridLat, gridLon)}>
-          <sphereGeometry args={[0.06, 16, 16]} />
-          <meshBasicMaterial color="#22c55e" />
+        <group>
+          <mesh position={getPosFromLatLng(gridLat, gridLon)}>
+            <sphereGeometry args={[0.06, 16, 16]} />
+            <meshBasicMaterial color="#22c55e" />
+          </mesh>
+          {currentTask === 10 && (
+            <Html position={getPosFromLatLng(gridLat, gridLon)} center style={{ pointerEvents: 'none' }}>
+              <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #22c55e', transform: 'translateY(-15px)', whiteSpace: 'nowrap' }}>
+                New Delhi (28.6°N, 77.2°E)
+              </div>
+            </Html>
+          )}
+        </group>
+      )}
+
+      {/* Task 16: Longitude and Time (Day/Night Shadow) */}
+      {currentTask === 16 && (
+        <mesh rotation-y={Math.PI / 2}>
+          <sphereGeometry args={[radius * 1.015, 64, 64, 0, Math.PI]} />
+          <meshBasicMaterial color="#000000" transparent opacity={0.65} depthWrite={false} />
         </mesh>
       )}
 
