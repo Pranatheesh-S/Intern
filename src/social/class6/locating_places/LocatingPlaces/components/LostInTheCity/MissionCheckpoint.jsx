@@ -245,7 +245,7 @@ export default function MissionCheckpoint({ onComplete }) {
 
       {state !== null && qNum < 3 && (
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-          <button className="primary" onClick={() => setCurrentQuestion(qNum + 1)} style={{ padding: '0.8rem 1.5rem', borderRadius: '12px' }}>Next Question</button>
+          <button className="primary" onClick={() => setCurrentQuestion(qNum + 1)} style={{ padding: '0.8rem 1.5rem', borderRadius: '12px', background: '#F59E0B', color: '#fff' }}>Next Question</button>
         </div>
       )}
 

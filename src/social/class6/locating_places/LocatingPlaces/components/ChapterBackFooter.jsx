@@ -1,37 +1,21 @@
 import React from 'react';
 import { ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
 
+// Every "Next" control across the chapter shares one soft orange.
+const NEXT_ORANGE = {
+  background: '#F59E0B',
+  hoverBackground: '#D97706',
+  color: '#fff',
+  boxShadow: '0 4px 15px rgba(245, 158, 11, 0.38)'
+};
+
 const NEXT_VARIANTS = {
-  navy: {
-    background: '#0E3556',
-    hoverBackground: '#124070',
-    color: '#fff',
-    boxShadow: '0 10px 24px rgba(14,53,86,.25)'
-  },
-  green: {
-    background: '#16a34a',
-    hoverBackground: '#15803d',
-    color: '#fff',
-    boxShadow: '0 4px 15px rgba(22, 163, 74, 0.4)'
-  },
-  blue: {
-    background: '#3b82f6',
-    hoverBackground: '#2563eb',
-    color: '#fff',
-    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
-  },
-  amber: {
-    background: '#B45309',
-    hoverBackground: '#92400E',
-    color: '#fff',
-    boxShadow: '0 4px 15px rgba(180, 83, 9, 0.4)'
-  },
-  terracotta: {
-    background: '#B45309',
-    hoverBackground: '#92400E',
-    color: '#fff',
-    boxShadow: '0 4px 15px rgba(180, 83, 9, 0.4)'
-  }
+  navy: NEXT_ORANGE,
+  green: NEXT_ORANGE,
+  blue: NEXT_ORANGE,
+  amber: NEXT_ORANGE,
+  terracotta: NEXT_ORANGE,
+  orange: NEXT_ORANGE
 };
 
 export default function ChapterBackFooter({

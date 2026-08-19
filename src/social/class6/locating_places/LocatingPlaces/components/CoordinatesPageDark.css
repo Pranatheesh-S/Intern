@@ -158,12 +158,12 @@
 }
 
 .dark-nav-btn.next {
-  background: var(--dark-accent-blue);
+  background: #F59E0B;
   color: #fff;
 }
 
 .dark-nav-btn.next:hover {
-  background: #2563eb;
+  background: #D97706;
 }
 
 .dark-nav-btn:disabled {

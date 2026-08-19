@@ -228,7 +228,7 @@ export default function MapSymbols({ onComplete, onBack }) {
               disabled={leftPage === 2}
               style={{
                 fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '12.5px',
-                background: '#92400E', color: '#fff', border: 'none', borderRadius: '999px',
+                background: '#F59E0B', color: '#fff', border: 'none', borderRadius: '999px',
                 padding: '5px 12px', cursor: leftPage === 2 ? 'not-allowed' : 'pointer',
                 opacity: leftPage === 2 ? 0.35 : 1
               }}

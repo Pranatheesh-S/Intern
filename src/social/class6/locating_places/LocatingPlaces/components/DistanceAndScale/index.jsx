@@ -872,7 +872,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
                   disabled={leftPage === 2}
                   style={{
                     fontFamily: 'var(--geo)', fontWeight: 700, fontSize: '12px',
-                    background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '999px',
+                    background: '#F59E0B', color: '#fff', border: 'none', borderRadius: '999px',
                     padding: '4px 12px', cursor: leftPage === 2 ? 'not-allowed' : 'pointer',
                     opacity: leftPage === 2 ? 0.35 : 1
                   }}
@@ -1042,7 +1042,7 @@ export default function DistanceAndScale({ onComplete, onBack }) {
                   disabled={rightPage === (isCalculated ? 4 : 3)}
                   style={{
                     fontFamily: 'var(--geo)', fontWeight: 700, fontSize: '12px',
-                    background: '#0E3556', color: '#fff', border: 'none', borderRadius: '999px',
+                    background: '#F59E0B', color: '#fff', border: 'none', borderRadius: '999px',
                     padding: '5px 12px', cursor: rightPage === (isCalculated ? 4 : 3) ? 'not-allowed' : 'pointer',
                     opacity: rightPage === (isCalculated ? 4 : 3) ? 0.35 : 1
                   }}

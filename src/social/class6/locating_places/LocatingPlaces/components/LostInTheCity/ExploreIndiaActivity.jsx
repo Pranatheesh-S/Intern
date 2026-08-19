@@ -295,7 +295,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         <div>
           <button
             onClick={onBeginChapter}
-            style={{ background: '#0E3556', color: '#FFFFFF', border: 'none', padding: '11px 26px', borderRadius: '999px', fontSize: '13.5px', fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(14,53,86,0.3)' }}
+            style={{ background: '#F59E0B', color: '#FFFFFF', border: 'none', padding: '11px 26px', borderRadius: '999px', fontSize: '13.5px', fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(245,158,11,0.38)' }}
           >
             Continue to Next Lesson: Map Symbols →
           </button>
@@ -427,7 +427,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
             {feedback.type === 'success' && !animating && (
               <button 
                 onClick={handleNextMission} 
-                style={{ marginTop: '8px', background: '#16A34A', color: '#FFFFFF', border: 'none', padding: '7px 16px', borderRadius: '7px', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '5px', boxShadow: '0 2px 8px rgba(22,163,74,0.35)' }}
+                style={{ marginTop: '8px', background: missionIndex === MISSIONS.length - 1 ? '#16A34A' : '#F59E0B', color: '#FFFFFF', border: 'none', padding: '7px 16px', borderRadius: '7px', fontSize: '12.5px', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '5px', boxShadow: missionIndex === MISSIONS.length - 1 ? '0 2px 8px rgba(22,163,74,0.35)' : '0 2px 8px rgba(245,158,11,0.38)' }}
               >
                 {missionIndex === MISSIONS.length - 1 ? 'Complete Activity 🎉' : 'Next Destination →'}
               </button>

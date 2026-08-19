@@ -85,7 +85,7 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
                   <button
                     onClick={onNext}
                     style={{
-                      background: '#D97706',
+                      background: '#F59E0B',
                       color: 'white',
                       border: 'none',
                       padding: '0.45rem 1.2rem',
@@ -94,7 +94,7 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
                       alignItems: 'center',
                       gap: '0.5rem',
                       cursor: 'pointer',
-                      boxShadow: '0 4px 12px rgba(217,119,6,0.3)',
+                      boxShadow: '0 4px 12px rgba(245,158,11,0.38)',
                       whiteSpace: 'nowrap',
                       fontWeight: 800,
                       fontFamily: '"Space Grotesk", sans-serif'

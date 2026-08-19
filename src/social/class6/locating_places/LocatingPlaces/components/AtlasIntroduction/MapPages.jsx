@@ -60,11 +60,227 @@ const PageLayout = ({
     return () => window.removeEventListener('keydown', onKey);
   }, [isGlobeOpen]);
 
+  /* ── Content is packed to the measured page box ─────────────────────────
+     Blocks are filled onto a sub-page until it is full, then a new sub-page
+     starts. A tall window therefore shows fewer, fuller pages; a short or
+     narrow one simply gets more pages. Nothing scrolls, nothing overlaps and
+     no page is left half empty. */
+  const contentRef = useRef(null);
+  const innerRef = useRef(null);
+  const probeRef = useRef(null);
+  const [box, setBox] = useState({ w: 480, h: 560 });
+  const [shrink, setShrink] = useState(0);   // budget trimmed if a page still overflows
+
   useEffect(() => {
-    if (leftPage === 2 && onFullyViewed) {
+    const el = contentRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    let last = { w: 0, h: 0 };
+    const ro = new ResizeObserver(entries => {
+      const r = entries[0].contentRect;
+      if (Math.abs(last.w - r.width) < 3 && Math.abs(last.h - r.height) < 3) return;
+      last = { w: r.width, h: r.height };
+      setBox(last);
+      setShrink(0);                          // new size, start optimistic again
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  /* Block heights are measured from a hidden probe rather than guessed, so a
+     page is filled right up to the edge — no premature break, no empty half. */
+  const [m, setM] = useState(null);
+
+  useEffect(() => {
+    const el = probeRef.current;
+    if (!el) return;
+    const pick = k => el.querySelector(`[data-p="${k}"]`);
+    const featCard = pick('features');
+    const grid = featCard && featCard.querySelector('[data-grid="1"]');
+    if (!featCard || !grid) return;
+
+    const tiles = Array.from(grid.children);
+    if (!tiles.length) return;
+    const top0 = tiles[0].offsetTop;
+    const measured = {
+      gap: parseFloat(getComputedStyle(el).rowGap) || 8,
+      whatIs: pick('whatIs') ? pick('whatIs').offsetHeight : 0,
+      colors: pick('colors') ? pick('colors').offsetHeight : 0,
+      why: pick('why') ? pick('why').offsetHeight : 0,
+      cols: Math.max(1, tiles.filter(t => Math.abs(t.offsetTop - top0) < 2).length),
+      tile: Math.max(...tiles.map(t => t.offsetHeight)),
+      rowGap: parseFloat(getComputedStyle(grid).rowGap) || 0,
+      chrome: featCard.offsetHeight - grid.offsetHeight
+    };
+    setM(prev => {
+      if (prev && Object.keys(measured).every(k => Math.abs(prev[k] - measured[k]) < 1.5)) return prev;
+      return measured;
+    });
+  }, [box.w, box.h, features, colors, whyUse, whatIs, funFact]);
+
+  const packed = React.useMemo(() => {
+    const all = [{ type: 'whatIs' }, { type: 'features', list: features, continued: false }, { type: 'colors' }, { type: 'why' }];
+    if (!m) return [all];
+
+    const budget = Math.max(120, box.h - shrink - 2);
+    const featuresH = n => Math.ceil(n / m.cols) * (m.tile + m.rowGap) - m.rowGap + m.chrome;
+
+    // Fill pages up to `cap`, splitting the feature grid across pages as needed.
+    // `maxPerChunk` keeps those splits even (3 + 3 rather than 1 + 5).
+    const packWith = (cap, maxPerChunk) => {
+      const pages = [];
+      let cur = [];
+      let left = cap;
+      const flush = () => { if (cur.length) { pages.push(cur); cur = []; left = cap; } };
+      const place = (item, h) => {
+        if (cur.length && h + m.gap > left) flush();
+        left -= h + (cur.length ? m.gap : 0);
+        cur.push(item);
+      };
+
+      place({ type: 'whatIs' }, m.whatIs);
+
+      let rest = features;
+      let firstChunk = true;
+      let guard = 0;
+      while (rest.length && guard++ < 24) {
+        const avail = left - (cur.length ? m.gap : 0) - m.chrome + m.rowGap;
+        let rows = Math.floor(avail / (m.tile + m.rowGap));
+        if (rows < 1) {
+          if (cur.length) { flush(); continue; }
+          rows = 1;                                  // never loop on an empty page
+        }
+        const take = maxPerChunk ? Math.min(rows * m.cols, maxPerChunk) : rows * m.cols;
+        const chunk = rest.slice(0, take);
+        rest = rest.slice(take);
+        place({ type: 'features', list: chunk, continued: !firstChunk }, featuresH(chunk.length));
+        firstChunk = false;
+      }
+
+      place({ type: 'colors' }, m.colors);
+      place({ type: 'why' }, m.why);
+      flush();
+      return pages;
+    };
+
+    const chunkCount = pgs => pgs.reduce((n, pg) => n + pg.filter(b => b.type === 'features').length, 0);
+
+    let pages = packWith(budget);
+    if (pages.length < 2) return pages.length ? pages : [all];
+
+    // Even out the feature split across however many chunks it needs.
+    const perChunk = Math.ceil(features.length / Math.max(1, chunkCount(pages)));
+    const evened = packWith(budget, perChunk);
+    if (evened.length <= pages.length) pages = evened;
+
+    // Same page count, but spread evenly — otherwise page one is crammed and
+    // the last one is nearly empty.
+    let lo = Math.ceil((m.whatIs + m.colors + m.why) / pages.length);
+    let hi = budget;
+    let best = pages;
+    for (let i = 0; i < 18 && lo <= hi; i++) {
+      const mid = Math.floor((lo + hi) / 2);
+      const attempt = packWith(mid, perChunk);
+      if (attempt.length <= pages.length) { best = attempt; hi = mid - 1; } else { lo = mid + 1; }
+    }
+    return best;
+  }, [m, box.h, shrink, features, colors, whyUse]);
+
+  const LEFT_PAGES = Math.max(1, packed.length);
+
+  // Safety net only: once the blocks have been measured, verify the rendered
+  // page really fits and trim a little if it does not. Never runs before the
+  // measurement exists, otherwise the unmeasured first paint would starve it.
+  useEffect(() => { setShrink(0); }, [m]);
+
+  useEffect(() => {
+    if (!m) return;
+    const vp = contentRef.current;
+    const inner = innerRef.current;
+    if (!vp || !inner) return;
+    if (inner.scrollHeight > vp.clientHeight + 2 && shrink < 96) {
+      setShrink(s => s + 16);
+    }
+  });
+
+  useEffect(() => {
+    if (leftPage > LEFT_PAGES) setLeftPage(LEFT_PAGES);
+  }, [leftPage, LEFT_PAGES]);
+
+  useEffect(() => {
+    if (leftPage === LEFT_PAGES && onFullyViewed) {
       onFullyViewed();
     }
-  }, [leftPage, onFullyViewed]);
+  }, [leftPage, LEFT_PAGES, onFullyViewed]);
+
+  // shared card chrome
+  const pageCol = { display: 'flex', flexDirection: 'column', gap: 'clamp(6px, 1.4vh, 10px)', flex: 1, minHeight: 0 };
+  const cardBase = { border: '1.5px solid #F2DFBC', borderRadius: '14px', boxShadow: '0 2px 8px rgba(60,40,20,0.03)' };
+  const headStyle = { fontSize: 'clamp(14px, 2.5vh, 16.5px)', color: '#78350F', marginTop: 0, fontWeight: 900, fontFamily: '"Fraunces", serif', flexShrink: 0 };
+
+  const renderBlock = (block, i, probe) => {
+    if (block.type === 'whatIs') {
+      return (
+        <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFFFFF', padding: 'clamp(7px, 1.5vh, 11px) 14px', flexShrink: 0 }}>
+          <h3 style={{ ...headStyle, marginBottom: '4px' }}>{whatIsTitle}</h3>
+          {whatIs.map((p, k) => <p key={k} style={{ margin: k > 0 ? '4px 0 0 0' : 0, color: '#3D2E24', fontSize: 'clamp(12.5px, 2.2vh, 15px)', lineHeight: 1.45, fontWeight: 600 }}>{p}</p>)}
+        </div>
+      );
+    }
+
+    if (block.type === 'features') {
+      return (
+        <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFF9F0', padding: 'clamp(7px, 1.5vh, 11px) 12px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+          <h3 style={{ ...headStyle, marginBottom: 'clamp(5px, 1.1vh, 8px)' }}>
+            {block.continued ? `${featuresTitle} (continued)` : featuresTitle}
+          </h3>
+          <div data-grid="1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(165px, 1fr))', gap: 'clamp(4px, 0.95vh, 7px)', alignContent: 'start' }}>
+            {block.list.map((f, k) => (
+              <div key={k} style={{ display: 'flex', gap: '9px', alignItems: 'flex-start', background: '#FFFFFF', padding: 'clamp(4px, 0.95vh, 8px) 10px', borderRadius: '10px', border: '1.5px solid #F2DFBC', minWidth: 0 }}>
+                <div style={{ fontSize: 'clamp(1.05rem, 2.4vh, 1.45rem)', lineHeight: 1.15, flexShrink: 0 }}>{f.icon}</div>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontWeight: 800, color: '#78350F', fontSize: 'clamp(12.5px, 2.2vh, 15px)', lineHeight: 1.2, overflowWrap: 'anywhere' }}>{f.title}</div>
+                  <div style={{ fontSize: 'clamp(11.5px, 2vh, 13.5px)', color: '#3D2E24', lineHeight: 1.3, fontWeight: 600, overflowWrap: 'anywhere' }}>{f.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (block.type === 'colors') {
+      return (
+        <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFFFFF', padding: 'clamp(7px, 1.5vh, 11px) 14px', flexShrink: 0 }}>
+          <h3 style={{ ...headStyle, marginBottom: '6px' }}>{colorsTitle}</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(165px, 1fr))', gap: 'clamp(4px, 0.95vh, 7px)' }}>
+            {colors.map((c, k) => (
+              <div key={k} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', minWidth: 0 }}>
+                <span style={{ fontSize: 'clamp(14px, 2.5vh, 16.5px)', lineHeight: 1.3, flexShrink: 0 }}>{c.color}</span>
+                <span style={{ fontSize: 'clamp(12.5px, 2.2vh, 15px)', color: '#3D2E24', fontWeight: 600, lineHeight: 1.3, overflowWrap: 'anywhere' }}>{c.desc}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFF9F0', padding: 'clamp(7px, 1.5vh, 12px) 14px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+        <h3 style={{ ...headStyle, marginBottom: '6px' }}>{whyUseTitle}</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.9vh, 7px)' }}>
+          {whyUse.map((w, k) => (
+            <div key={k} style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', padding: 'clamp(5px, 1.1vh, 9px) 10px', borderRadius: '8px', display: 'flex', alignItems: 'flex-start', gap: '10px', minWidth: 0 }}>
+              <span style={{ fontSize: 'clamp(14px, 2.5vh, 16.5px)', lineHeight: 1.3, flexShrink: 0 }}>{w.icon}</span>
+              <span style={{ fontSize: 'clamp(12.5px, 2.2vh, 15px)', color: '#3D2E24', fontWeight: 600, lineHeight: 1.3, overflowWrap: 'anywhere' }}>{w.desc}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 'clamp(6px, 1.3vh, 10px)', paddingTop: '8px', borderTop: '1.5px dashed #F2DFBC', color: '#92400E', fontSize: 'clamp(12px, 2.05vh, 14px)', lineHeight: 1.35, fontWeight: 700, flexShrink: 0 }}>
+          💡 {funFact}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -78,113 +294,67 @@ const PageLayout = ({
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FEF3C7', border: '1px solid #FDE68A', padding: '3px 10px', borderRadius: '999px', color: '#92400E', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>
             Chapter 1 • Atlas Introduction
           </div>
-          <h2 style={{ fontSize: '1.6rem', color: '#78350F', margin: '0 0 0.2rem 0', fontFamily: '"Fraunces", serif', fontWeight: 900, lineHeight: 1.15 }}>{title}</h2>
-          <div style={{ fontSize: '13.5px', color: '#92400E', fontWeight: 700 }}>{subtitle}</div>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 3vh, 1.8rem)', color: '#78350F', margin: '0 0 0.2rem 0', fontFamily: '"Fraunces", serif', fontWeight: 900, lineHeight: 1.15 }}>{title}</h2>
+          <div style={{ fontSize: 'clamp(12.5px, 2.2vh, 15px)', color: '#92400E', fontWeight: 700, lineHeight: 1.3 }}>{subtitle}</div>
         </div>
 
-        {/* Page Content Viewport — No scrollbars, pristine spacing */}
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden' }}>
-          
-          {/* PAGE 1 of 2: What is it & Features */}
-          {leftPage === 1 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, minHeight: 0, justifyContent: 'space-between', overflow: 'hidden' }}>
-              {/* What is it? */}
-              <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '10px 14px', flexShrink: 0, boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
-                <h3 style={{ fontSize: '15px', color: '#78350F', marginBottom: '4px', fontFamily: '"Fraunces", serif', marginTop: 0, fontWeight: 900 }}>{whatIsTitle}</h3>
-                {whatIs.map((p, i) => <p key={i} style={{ margin: i > 0 ? '4px 0 0 0' : 0, color: '#3D2E24', fontSize: '13.5px', lineHeight: 1.4, fontWeight: 600 }}>{p}</p>)}
-              </div>
+        {/* Page Content Viewport — packed sub-pages, never scrolls */}
+        <div ref={contentRef} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
+          <div ref={innerRef} style={pageCol}>
+            {(packed[Math.min(leftPage, LEFT_PAGES) - 1] || []).map(renderBlock)}
+          </div>
 
-              {/* Natural / Key Features — Larger Font, No Scrollbar */}
-              <div style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '10px 12px', boxShadow: '0 2px 8px rgba(60,40,20,0.03)', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                <h3 style={{ fontSize: '15px', color: '#78350F', marginBottom: '8px', marginTop: 0, flexShrink: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>{featuresTitle}</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', flex: 1, minHeight: 0, overflow: 'hidden', alignContent: 'space-between' }}>
-                  {features.map((f, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', background: '#FFFFFF', padding: '7px 10px', borderRadius: '10px', border: '1.5px solid #F2DFBC' }}>
-                      <div style={{ fontSize: '1.35rem', lineHeight: 1, flexShrink: 0 }}>{f.icon}</div>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontWeight: 800, color: '#78350F', fontSize: '13.5px', lineHeight: 1.2 }}>{f.title}</div>
-                        <div style={{ fontSize: '12px', color: '#3D2E24', lineHeight: 1.25, fontWeight: 600 }}>{f.desc}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* PAGE 2 of 2: Colors/Symbols & Why Use */}
-          {leftPage === 2 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, minHeight: 0, justifyContent: 'space-between', overflow: 'hidden' }}>
-              {/* Colors / Symbols */}
-              <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '10px 14px', flexShrink: 0, boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
-                <h3 style={{ fontSize: '15px', color: '#78350F', marginBottom: '6px', marginTop: 0, fontWeight: 900, fontFamily: '"Fraunces", serif' }}>{colorsTitle}</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
-                  {colors.map((c, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '15px' }}>{c.color}</span>
-                      <span style={{ fontSize: '13.5px', color: '#3D2E24', fontWeight: 600 }}>{c.desc}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Why Use & Takeaway */}
-              <div style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '10px 14px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
-                <div>
-                  <h3 style={{ fontSize: '15px', color: '#78350F', marginBottom: '6px', fontFamily: '"Fraunces", serif', marginTop: 0, fontWeight: 900 }}>{whyUseTitle}</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                    {whyUse.map((w, i) => (
-                      <div key={i} style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', padding: '6px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ fontSize: '15px' }}>{w.icon}</span>
-                        <span style={{ fontSize: '13.5px', color: '#3D2E24', fontWeight: 600 }}>{w.desc}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1.5px dashed #F2DFBC', color: '#92400E', fontSize: '12.5px', lineHeight: 1.35, fontWeight: 700 }}>
-                  💡 {funFact}
-                </div>
-              </div>
-            </div>
-          )}
-
+          {/* hidden probe: same width, natural heights, used only for measuring */}
+          <div
+            ref={probeRef}
+            aria-hidden="true"
+            style={{ position: 'absolute', left: '-10000px', top: 0, width: box.w ? `${box.w}px` : '100%', display: 'flex', flexDirection: 'column', gap: 'clamp(6px, 1.4vh, 10px)', visibility: 'hidden', pointerEvents: 'none' }}
+          >
+            {renderBlock({ type: 'whatIs' }, 'p0', 'whatIs')}
+            {renderBlock({ type: 'features', list: features, continued: false }, 'p1', 'features')}
+            {renderBlock({ type: 'colors' }, 'p2', 'colors')}
+            {renderBlock({ type: 'why' }, 'p3', 'why')}
+          </div>
         </div>
 
-        {/* Sub-Page Navigation Bar */}
-        <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1.5px solid #F2DFBC', paddingTop: '8px', marginTop: '6px' }}>
+        {/* Sub-Page Navigation Bar — only when there is more than one page */}
+        {LEFT_PAGES > 1 && (
+        <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', borderTop: '1.5px solid #F2DFBC', paddingTop: '8px', marginTop: '6px' }}>
           <button
-            onClick={() => setLeftPage(1)}
+            onClick={() => setLeftPage(n => Math.max(1, n - 1))}
             disabled={leftPage === 1}
             style={{
-              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '13px',
+              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(12.5px, 2.1vh, 14px)',
               background: leftPage === 1 ? '#F7F1E2' : '#FFF9F0', color: '#78350F', border: '1.5px solid #F2DFBC', borderRadius: '999px',
               padding: '6px 16px', cursor: leftPage === 1 ? 'not-allowed' : 'pointer',
-              opacity: leftPage === 1 ? 0.35 : 1, transition: 'all 0.2s'
+              opacity: leftPage === 1 ? 0.35 : 1, transition: 'all 0.2s', whiteSpace: 'nowrap'
             }}
           >
             ◀ Back
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, color: '#78350F' }}>
-            <span>Page {leftPage} of 2</span>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 1 ? '#D97706' : '#F2DFBC' }} />
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 2 ? '#D97706' : '#F2DFBC' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 'clamp(12.5px, 2.1vh, 14px)', fontWeight: 800, color: '#78350F', whiteSpace: 'nowrap' }}>
+            <span>Page {leftPage} of {LEFT_PAGES}</span>
+            {Array.from({ length: LEFT_PAGES }).map((_, i) => (
+              <span key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === i + 1 ? '#F59E0B' : '#F2DFBC' }} />
+            ))}
           </div>
 
           <button
-            onClick={() => setLeftPage(2)}
-            disabled={leftPage === 2}
+            onClick={() => setLeftPage(n => Math.min(LEFT_PAGES, n + 1))}
+            disabled={leftPage === LEFT_PAGES}
             style={{
-              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '13px',
-              background: leftPage === 2 ? '#F7F1E2' : '#D97706', color: leftPage === 2 ? '#78350F' : '#FFFFFF', border: '1.5px solid #D97706', borderRadius: '999px',
-              padding: '6px 16px', cursor: leftPage === 2 ? 'not-allowed' : 'pointer',
-              opacity: leftPage === 2 ? 0.35 : 1, transition: 'all 0.2s'
+              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(12.5px, 2.1vh, 14px)',
+              background: leftPage === LEFT_PAGES ? '#F7F1E2' : '#F59E0B', color: leftPage === LEFT_PAGES ? '#78350F' : '#FFFFFF',
+              border: `1.5px solid ${leftPage === LEFT_PAGES ? '#F2DFBC' : '#F59E0B'}`, borderRadius: '999px',
+              padding: '6px 16px', cursor: leftPage === LEFT_PAGES ? 'not-allowed' : 'pointer',
+              opacity: leftPage === LEFT_PAGES ? 0.35 : 1, transition: 'all 0.2s', whiteSpace: 'nowrap'
             }}
           >
             Next ▶
           </button>
         </div>
+        )}
 
       </div>
 
@@ -232,7 +402,7 @@ const PageLayout = ({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
-              background: '#D97706',
+              background: '#0E3556',
               color: '#fff',
               border: 'none',
               borderRadius: '999px',
@@ -240,7 +410,7 @@ const PageLayout = ({
               fontSize: '13px',
               fontWeight: 800,
               cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(217,119,6,0.3)',
+              boxShadow: '0 2px 8px rgba(14, 53, 86, 0.2)',
               transition: 'all 0.2s ease',
               fontFamily: '"Space Grotesk", sans-serif'
             }}
@@ -274,13 +444,6 @@ const PageLayout = ({
         </div>
       </div>
     </div>
-
-    <style>{`
-      .left-page-scroll::-webkit-scrollbar { width: 6px; }
-      .left-page-scroll::-webkit-scrollbar-track { background: transparent; }
-      .left-page-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-      .left-page-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    `}</style>
 
     {/* Image Modal */}
     {isImageOpen && (

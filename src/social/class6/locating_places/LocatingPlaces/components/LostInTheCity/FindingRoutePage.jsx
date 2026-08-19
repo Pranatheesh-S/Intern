@@ -25,16 +25,16 @@ const EDGES_CLASSIC = [
 
 /* ── 2. 3D MODEL MAP CONFIG (Precision 1024 x 571 Pixel Tarmac Alignment) ── */
 const N_3D = {
-  RS: { x: 235, y: 310, label: 'Railway Station', type: 'station', start: true },
-  HO: { x: 390, y: 310, label: 'Hospital', type: 'hospital' },
-  NP: { x: 576, y: 268, label: 'Nagar Panchayat', type: 'civic' },
-  BK: { x: 718, y: 295, label: 'Bank', type: 'bank', goal: true },
-  SC: { x: 235, y: 530, label: 'School', type: 'school' },
-  MK: { x: 455, y: 530, label: 'Market', type: 'market' },
-  JT: { x: 628, y: 335, label: 'Junction', type: 'junction' },
-  MU: { x: 735, y: 485, label: 'Museum', type: 'museum' },
-  AP: { x: 500, y: 195, label: 'Apartments', type: 'apartment' },
-  PG: { x: 860, y: 235, label: 'Public Garden', type: 'garden' },
+  RS: { x: 255, y: 323, label: 'Railway Station', type: 'station', start: true },
+  HO: { x: 389, y: 320, label: 'Hospital', type: 'hospital' },
+  NP: { x: 625, y: 333, label: 'Nagar Panchayat', type: 'civic' },
+  BK: { x: 776, y: 323, label: 'Bank', type: 'bank', goal: true },
+  SC: { x: 280, y: 539, label: 'School', type: 'school' },
+  MK: { x: 455, y: 538, label: 'Market', type: 'market' },
+  JT: { x: 705, y: 399, label: 'Junction', type: 'junction' },
+  MU: { x: 770, y: 506, label: 'Museum', type: 'museum' },
+  AP: { x: 520, y: 189, label: 'Apartments', type: 'apartment' },
+  PG: { x: 918, y: 203, label: 'Public Garden', type: 'garden' },
 };
 
 // Smooth Catmull-Rom spline algorithm ensuring lines follow curves perfectly within the asphalt road
@@ -74,23 +74,20 @@ function smoothSpline(points, numOfSegments = 16) {
   return result;
 }
 
-// 100% True-to-Image Road Tarmac Coordinates in 1024 x 571 Space (Strictly on asphalt centerlines without crossing buildings)
+// Road centre-line coordinates traced from town_map_fig1.jpg (1024 x 571) - every point sits on visible tarmac
 const RAW_PATHS_3D = {
-  'RS|HO': [[235, 310], [280, 310], [335, 310], [390, 310]],
-  'RS|SC': [[235, 310], [170, 310], [130, 325], [120, 370], [120, 430], [125, 485], [155, 530], [195, 530], [235, 530]],
-  'SC|MK': [[235, 530], [290, 530], [350, 530], [405, 530], [455, 530]],
-  'MK|JT': [[455, 530], [510, 530], [560, 525], [595, 490], [615, 440], [625, 385], [628, 335]],
-  'HO|NP': [[390, 310], [440, 310], [480, 305], [515, 275], [545, 235], [565, 240], [576, 268]],
-  'NP|BK': [[576, 268], [595, 295], [628, 335], [665, 320], [718, 295]],
-  'NP|JT': [[576, 268], [595, 295], [628, 335]],
-  'JT|BK': [[628, 335], [665, 320], [718, 295]],
-  'BK|PG': [[718, 295], [765, 305], [810, 290], [850, 260], [860, 235]],
-  'PG|AP': [[860, 235], [820, 215], [760, 215], [700, 215], [640, 205], [575, 195], [500, 195]],
-  'AP|HO': [[500, 195], [450, 185], [395, 185], [340, 180], [285, 185], [240, 215], [220, 255], [220, 290], [235, 310], [310, 310], [390, 310]],
-  'HO|MK': [[390, 310], [415, 340], [415, 390], [415, 440], [415, 480], [430, 515], [455, 530]],
-  'JT|MU': [[628, 335], [628, 380], [628, 430], [635, 470], [660, 485], [700, 485], [735, 485]],
-  'MU|PG': [[735, 485], [780, 485], [830, 470], [860, 420], [865, 340], [865, 260], [860, 235]],
-  'NP|MU': [[576, 268], [595, 295], [628, 335], [628, 380], [628, 430], [635, 470], [660, 485], [700, 485], [735, 485]],
+  'RS|HO': [[255,323],[320,322],[360,322],[389,320]],
+  'RS|SC': [[255,323],[150,323],[139,386],[136,438],[140,470],[147,492],[158,512],[172,527],[200,536],[280,539]],
+  'SC|MK': [[280,539],[420,538],[455,538]],
+  'MK|JT': [[455,538],[500,538],[600,540],[645,539],[668,534],[686,524],[697,505],[700,460],[705,399]],
+  'HO|NP': [[389,320],[381,334],[377,352],[378,378],[386,392],[410,392],[432,395],[441,408],[460,412],[486,399],[512,397],[557,380],[575,368],[596,338],[625,333]],
+  'NP|JT': [[625,333],[652,344],[691,353],[703,360],[705,399]],
+  'NP|BK': [[625,333],[652,344],[691,353],[705,360],[722,346],[738,331],[752,323],[776,323]],
+  'JT|BK': [[705,399],[705,362],[722,347],[738,332],[752,323],[776,323]],
+  'JT|MU': [[705,399],[700,430],[698,470],[702,496],[712,513],[730,512],[752,511],[770,506]],
+  'MU|PG': [[770,506],[752,511],[730,512],[712,513],[702,496],[698,470],[699,430],[705,398],[705,362],[722,347],[738,332],[752,323],[776,323],[800,324],[830,327],[856,329],[874,325],[892,313],[904,296],[914,266],[920,229],[918,203]],
+  'BK|PG': [[776,323],[800,324],[830,327],[856,329],[874,325],[892,313],[904,296],[914,266],[920,229],[918,203]],
+  'PG|AP': [[918,203],[898,197],[872,201],[845,200],[818,192],[797,175],[775,174],[758,178],[742,190],[720,197],[700,197],[686,192],[672,185],[650,181],[628,177],[612,172],[598,176],[580,181],[565,184],[548,185],[532,187],[520,189]],
 };
 
 // Generate dense spline curves
@@ -101,15 +98,15 @@ Object.entries(RAW_PATHS_3D).forEach(([key, rawPts]) => {
 
 // Road name metadata placed squarely inside asphalt corridors
 const ROAD_NAMES = [
-  { id: 'station_rd', name: 'STATION ROAD', x: 310, y: 296, angle: 0, edge: 'RS|HO' },
-  { id: 'school_lane', name: 'SCHOOL LANE', x: 104, y: 410, angle: -90, edge: 'RS|SC' },
-  { id: 'market_rd_w', name: 'MARKET ROAD', x: 340, y: 546, angle: 0, edge: 'SC|MK' },
-  { id: 'market_rd_e', name: 'MARKET ROAD', x: 540, y: 546, angle: 0, edge: 'MK|JT' },
-  { id: 'panchayat_marg', name: 'NAGAR PANCHAYAT MARG', x: 505, y: 255, angle: -32, edge: 'HO|NP' },
-  { id: 'bank_road', name: 'BANK ROAD', x: 675, y: 315, angle: -24, edge: 'JT|BK' },
-  { id: 'garden_way', name: 'GARDEN WAY', x: 885, y: 340, angle: 90, edge: 'BK|PG' },
-  { id: 'apartment_dr', name: 'APARTMENT DRIVE', x: 650, y: 205, angle: 0, edge: 'PG|AP' },
-  { id: 'museum_st', name: 'MUSEUM STREET', x: 700, y: 500, angle: 0, edge: 'JT|MU' },
+  { id: 'station_rd', name: 'STATION ROAD', x: 310, y: 323, angle: 0, edge: 'RS|HO' },
+  { id: 'school_lane', name: 'SCHOOL LANE', x: 137, y: 435, angle: -90, edge: 'RS|SC' },
+  { id: 'market_rd_w', name: 'MARKET ROAD', x: 360, y: 539, angle: 0, edge: 'SC|MK' },
+  { id: 'market_rd_e', name: 'MARKET ROAD', x: 560, y: 540, angle: 0, edge: 'MK|JT' },
+  { id: 'panchayat_marg', name: 'NAGAR PANCHAYAT MARG', x: 540, y: 383, angle: -22, edge: 'HO|NP' },
+  { id: 'bank_road', name: 'BANK ROAD', x: 736, y: 334, angle: -40, edge: 'JT|BK' },
+  { id: 'garden_way', name: 'GARDEN WAY', x: 916, y: 265, angle: 90, edge: 'BK|PG' },
+  { id: 'apartment_dr', name: 'APARTMENT DRIVE', x: 700, y: 197, angle: -3, edge: 'PG|AP' },
+  { id: 'museum_st', name: 'MUSEUM STREET', x: 738, y: 512, angle: 0, edge: 'JT|MU' },
 ];
 
 function get3DRoadPoints(a, b) {
@@ -164,7 +161,6 @@ const EDGES_3D = [
   ['RS', 'SC'], // School Lane (RS <-> SC)
   ['SC', 'MK'], // Market Road West (SC <-> MK)
   ['MK', 'JT'], // Market Road East (MK <-> JT)
-  ['HO', 'MK'], // Hospital Drive (HO <-> MK)
   ['HO', 'NP'], // Nagar Panchayat Marg (HO <-> NP)
   ['NP', 'BK'], // Bank Road (NP <-> BK)
   ['NP', 'JT'], // Road down to Junction (NP <-> JT)
@@ -173,7 +169,6 @@ const EDGES_3D = [
   ['MU', 'PG'], // Garden Way (MU <-> PG)
   ['BK', 'PG'], // Garden Way (BK <-> PG)
   ['PG', 'AP'], // Apartment Drive (PG <-> AP)
-  ['AP', 'HO'], // Lake Drive across Bridge (AP <-> HO)
 ];
 
 const ADJ_3D = {};
@@ -181,14 +176,14 @@ Object.keys(N_3D).forEach(k => ADJ_3D[k] = {});
 
 // Exact nearest place direction mapping for 3D Illustrated Map
 ADJ_3D['RS'] = { E: 'HO', S: 'SC' };
-ADJ_3D['HO'] = { W: 'RS', E: 'NP', S: 'MK', N: 'AP' };
+ADJ_3D['HO'] = { W: 'RS', E: 'NP' };
 ADJ_3D['NP'] = { W: 'HO', E: 'BK', S: 'JT' };
 ADJ_3D['BK'] = { W: 'NP', S: 'JT', E: 'PG' };
 ADJ_3D['JT'] = { N: 'NP', E: 'BK', S: 'MU', W: 'MK' };
 ADJ_3D['MU'] = { W: 'JT', N: 'PG' };
 ADJ_3D['SC'] = { N: 'RS', E: 'MK' };
-ADJ_3D['MK'] = { W: 'SC', E: 'JT', N: 'HO' };
-ADJ_3D['AP'] = { W: 'HO', E: 'PG' };
+ADJ_3D['MK'] = { W: 'SC', E: 'JT' };
+ADJ_3D['AP'] = { E: 'PG' };
 ADJ_3D['PG'] = { W: 'AP', S: 'BK' };
 
 function bfs3D(start, goal) {
@@ -216,6 +211,64 @@ function bfsClassic(start, goal) {
   }
   return null;
 }
+
+/* ── MAP ACTIVITY QUESTION BANK (6 questions x 3 options) ───────── */
+const MAP_QUIZ = [
+  {
+    id: 'q1',
+    tag: 'Directions',
+    question: 'In which direction is the School located from the Railway Station along School Lane?',
+    options: ['South', 'North', 'East'],
+    answer: 'South',
+    right: 'Correct! The School is directly South (downwards) of the Railway Station.',
+    wrong: 'Check the compass: South points downwards, towards the School.'
+  },
+  {
+    id: 'q2',
+    tag: 'Landmarks',
+    question: 'Which place lies between the Railway Station and the Nagar Panchayat along Station Road?',
+    options: ['Hospital', 'Public Garden', 'Museum'],
+    answer: 'Hospital',
+    right: 'Correct! Station Road runs past the Hospital on its way to the Nagar Panchayat.',
+    wrong: 'Trace Station Road eastwards from the Railway Station — the Hospital comes first.'
+  },
+  {
+    id: 'q3',
+    tag: 'Colours',
+    question: 'What do the blue-coloured areas on the map represent?',
+    options: ['Water (Lake & River)', 'Forests & Trees', 'Roads & Tracks'],
+    answer: 'Water (Lake & River)',
+    right: 'Correct! On maps blue always shows water bodies — lakes, rivers and ponds.',
+    wrong: 'Maps use blue for water bodies such as lakes, ponds and rivers.'
+  },
+  {
+    id: 'q4',
+    tag: 'Directions',
+    question: 'In which direction is the Museum from the Junction?',
+    options: ['South', 'North', 'West'],
+    answer: 'South',
+    right: 'Correct! From the Junction the road runs downwards — South — to the Museum.',
+    wrong: 'The Museum sits below the Junction on the map, so the direction is South.'
+  },
+  {
+    id: 'q5',
+    tag: 'Roads',
+    question: 'Which road takes you from the Bank to the Public Garden?',
+    options: ['Garden Way', 'School Lane', 'Market Road'],
+    answer: 'Garden Way',
+    right: 'Correct! Garden Way curves from the Bank up to the Public Garden.',
+    wrong: 'Follow the road label east of the Bank — it reads Garden Way.'
+  },
+  {
+    id: 'q6',
+    tag: 'Symbols',
+    question: 'The fenced green patch with rows of small plants stands for which place?',
+    options: ['Public Garden', 'Market', 'Museum'],
+    answer: 'Public Garden',
+    right: 'Correct! Green with plants and a fence is the map symbol for the Public Garden.',
+    wrong: 'Green shading with plants means a garden — this is the Public Garden.'
+  }
+];
 
 const short = { RS: 'RS', HO: 'Hosp', NP: 'NP', BK: 'Bank', SC: 'Sch', MK: 'Mkt', JT: 'Jn', MU: 'Mus', AP: 'Apt', PG: 'PG' };
 
@@ -704,9 +757,10 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   const [isMovingClassic, setIsMovingClassic] = useState(false);
 
   /* ── 8C. 3-QUESTION QUIZ STATE (FOR CLASS 6 STUDENTS) ── */
-  const [q1Ans, setQ1Ans] = useState(null); // Correct: 'South'
-  const [q2Ans, setQ2Ans] = useState(null); // Correct: 'Hospital'
-  const [q3Ans, setQ3Ans] = useState(null); // Correct: 'Water (Lake & River)'
+  const [answers, setAnswers] = useState({});   // { q1: 'South', ... }
+  const [quizPage, setQuizPage] = useState(0); // question pages first, map basics last
+  const quizBodyRef = useRef(null);
+  const [quizH, setQuizH] = useState(560);      // measured height of the question area
 
   const logRef = useRef(null);
   const elementsRef = useRef(null);
@@ -829,6 +883,20 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
     setCurrentHeadingDir3D('N');
   };
 
+  useEffect(() => {
+    const el = quizBodyRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    let lastH = 0;
+    const ro = new ResizeObserver(entries => {
+      const h = entries[0].contentRect.height;
+      if (Math.abs(h - lastH) < 4) return;
+      lastH = h;
+      setQuizH(h);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [showQuiz]);
+
   const giveHint3D = () => {
     const route = bfs3D(cur3D, 'BK');
     if (!route || route.length < 2) return;
@@ -916,7 +984,19 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   const currentEdgeKey1_3D = path3D.length > 1 ? `${path3D[path3D.length - 2]}|${path3D[path3D.length - 1]}` : null;
   const currentEdgeKey2_3D = path3D.length > 1 ? `${path3D[path3D.length - 1]}|${path3D[path3D.length - 2]}` : null;
 
-  const isQuizComplete = (q1Ans === 'South' && q2Ans === 'Hospital' && q3Ans === 'Water (Lake & River)');
+  const correctCount = MAP_QUIZ.filter(q => answers[q.id] === q.answer).length;
+  const isQuizComplete = correctCount === MAP_QUIZ.length;
+
+  // Fit as many questions on a page as the panel can actually hold, so a tall
+  // screen shows fewer, fuller pages instead of half-empty ones.
+  const perQuizPage = quizH >= 700 ? 3 : 2;
+  const questionPages = Math.ceil(MAP_QUIZ.length / perQuizPage);
+  const quizPages = questionPages + 1;          // + the map-basics page
+
+  useEffect(() => {
+    if (quizPage > quizPages - 1) setQuizPage(quizPages - 1);
+  }, [quizPage, quizPages]);
+
   const hasWonAny = win3D || winClassic;
 
   // Active Map Specific Variables
@@ -952,7 +1032,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, color: isQuizComplete ? '#16A34A' : '#D97706' }}>
-            {isQuizComplete ? '🎉 All 3 Questions Correct!' : 'Solve all 3 questions to complete'}
+            {isQuizComplete ? `🎉 All ${MAP_QUIZ.length} Questions Correct!` : `${correctCount} of ${MAP_QUIZ.length} correct — solve them all to complete`}
           </div>
         </div>
       )}
@@ -1401,244 +1481,162 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
           )}
 
           {showQuiz && (
-            <ScrollableWithNav containerStyle={{ flex: 1, minHeight: 0 }} scrollStyle={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 'clamp(6px, 1.2vh, 10px)', overflow: 'hidden' }}>
 
-              {/* Header Box */}
-              <div style={{ background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)', border: '1.5px solid #F2DFBC', borderRadius: '16px', padding: '18px', boxShadow: '0 4px 14px rgba(60,40,20,0.04)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400E', fontFamily: '"Space Grotesk", sans-serif', fontSize: '11.5px', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 800, marginBottom: '4px' }}>
-                  <HelpCircle size={16} color="#D97706" /> Map Activity Questions (Class 6)
+              {/* Header — compact, never grows */}
+              <div style={{ flexShrink: 0, background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: 'clamp(8px, 1.5vh, 13px) 14px', boxShadow: '0 4px 14px rgba(60,40,20,0.04)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400E', fontFamily: '"Space Grotesk", sans-serif', fontSize: 'clamp(10px, 1.7vh, 11.5px)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 800 }}>
+                  <HelpCircle size={15} color="#D97706" /> Map Activity Questions (Class 6)
                 </div>
-                <div style={{ color: '#78350F', fontSize: '18px', fontWeight: 900, fontFamily: '"Fraunces", serif' }}>
+                <div style={{ color: '#78350F', fontSize: 'clamp(15px, 2.6vh, 18px)', fontWeight: 900, fontFamily: '"Fraunces", serif', marginTop: '2px' }}>
                   Explore the Map Features
                 </div>
-                <div style={{ color: '#3D2E24', fontSize: '13px', marginTop: '4px', fontWeight: 600 }}>
-                  Look at the map on the left and select the correct answer for each question below:
-                </div>
               </div>
 
-              {/* ── QUESTION 1: Direction Finder ── */}
-              <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '16px', padding: '16px', boxShadow: '0 4px 12px rgba(60,40,20,0.03)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <span style={{ background: '#FEF3C7', color: '#92400E', fontSize: '11px', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', border: '1px solid #FDE68A' }}>QUESTION 1</span>
-                </div>
-                <p style={{ fontSize: '14px', color: '#3D2E24', fontWeight: 700, margin: '0 0 10px 0', lineHeight: 1.45 }}>
-                  In which direction is the <b>School</b> located from the <b>Railway Station</b> along School Lane?
-                </p>
+              {/* Page body — exactly what fits, no scrolling */}
+              <div ref={quizBodyRef} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 'clamp(6px, 1.2vh, 10px)' }}>
 
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {['South', 'North', 'East'].map(opt => {
-                    const isPicked = q1Ans === opt;
-                    const isCorrect = opt === 'South';
-                    let btnBg = '#FFF9F0';
-                    let btnBorder = '#F2DFBC';
-                    let btnColor = '#3D2E24';
+                {quizPage < questionPages && MAP_QUIZ.slice(quizPage * perQuizPage, quizPage * perQuizPage + perQuizPage).map((q, idx) => {
+                  const picked = answers[q.id] || null;
+                  const number = quizPage * perQuizPage + idx + 1;
+                  return (
+                    <div key={q.id} style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: 'clamp(8px, 1.5vh, 14px)', boxShadow: '0 4px 12px rgba(60,40,20,0.03)' }}>
 
-                    if (q1Ans !== null) {
-                      if (isCorrect) {
-                        btnBg = '#DCFCE7';
-                        btnBorder = '#16A34A';
-                        btnColor = '#166534';
-                      } else if (isPicked) {
-                        btnBg = '#FEE2E2';
-                        btnBorder = '#EF4444';
-                        btnColor = '#991B1B';
-                      }
-                    }
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                        <span style={{ background: '#FEF3C7', color: '#92400E', fontSize: 'clamp(9.5px, 1.6vh, 11px)', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', border: '1px solid #FDE68A', whiteSpace: 'nowrap' }}>
+                          QUESTION {number}
+                        </span>
+                        <span style={{ color: '#92400E', fontSize: 'clamp(9.5px, 1.6vh, 11px)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{q.tag}</span>
+                        {picked === q.answer && <CheckCircle size={15} color="#16A34A" style={{ marginLeft: 'auto', flexShrink: 0 }} />}
+                      </div>
 
-                    return (
-                      <button
-                        key={opt}
-                        onClick={() => setQ1Ans(opt)}
-                        style={{
-                          flex: '1 1 110px',
-                          padding: '9px 12px',
-                          background: btnBg,
-                          border: `2px solid ${btnBorder}`,
-                          borderRadius: '10px',
-                          color: btnColor,
-                          fontSize: '13.5px',
-                          fontWeight: 800,
-                          cursor: 'pointer',
-                          transition: 'all 0.15s',
-                          fontFamily: '"Space Grotesk", sans-serif'
-                        }}
-                      >
-                        {opt}
-                      </button>
-                    );
-                  })}
-                </div>
+                      <p style={{ fontSize: 'clamp(12.5px, 2.15vh, 15px)', color: '#3D2E24', fontWeight: 700, margin: 'clamp(4px, 0.9vh, 8px) 0 clamp(5px, 1.1vh, 9px) 0', lineHeight: 1.35, overflowWrap: 'anywhere' }}>
+                        {q.question}
+                      </p>
 
-                {q1Ans && (
-                  <div style={{ fontSize: '12.5px', marginTop: '8px', color: q1Ans === 'South' ? '#166534' : '#991B1B', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    {q1Ans === 'South' ? (
-                      <>✓ Correct! The School is located directly South (downwards) of the Railway Station.</>
-                    ) : (
-                      <>✗ Look at the compass heading: South points downwards towards the School.</>
-                    )}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(104px, 1fr))', gap: 'clamp(5px, 1vh, 8px)', flexShrink: 0 }}>
+                        {q.options.map(opt => {
+                          const isPicked = picked === opt;
+                          const isCorrect = opt === q.answer;
+                          let btnBg = '#FFF9F0', btnBorder = '#F2DFBC', btnColor = '#3D2E24';
+                          if (picked !== null) {
+                            if (isCorrect) { btnBg = '#DCFCE7'; btnBorder = '#16A34A'; btnColor = '#166534'; }
+                            else if (isPicked) { btnBg = '#FEE2E2'; btnBorder = '#EF4444'; btnColor = '#991B1B'; }
+                          }
+                          return (
+                            <button
+                              key={opt}
+                              onClick={() => setAnswers(a => ({ ...a, [q.id]: opt }))}
+                              style={{
+                                padding: 'clamp(6px, 1.2vh, 10px) 8px',
+                                background: btnBg,
+                                border: `2px solid ${btnBorder}`,
+                                borderRadius: '10px',
+                                color: btnColor,
+                                fontSize: 'clamp(11.5px, 1.95vh, 13.5px)',
+                                fontWeight: 800,
+                                cursor: 'pointer',
+                                transition: 'all 0.15s',
+                                fontFamily: '"Space Grotesk", sans-serif',
+                                lineHeight: 1.2,
+                                minWidth: 0,
+                                overflowWrap: 'anywhere'
+                              }}
+                            >
+                              {opt}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* fixed-height slot so answering never shifts the layout */}
+                      <div style={{ flexShrink: 0, minHeight: 'clamp(26px, 4.4vh, 36px)', display: 'flex', alignItems: 'center', marginTop: 'clamp(3px, 0.7vh, 6px)' }}>
+                        {picked && (
+                          <div style={{ fontSize: 'clamp(10.5px, 1.8vh, 12.5px)', color: picked === q.answer ? '#166534' : '#991B1B', fontWeight: 700, lineHeight: 1.3, overflowWrap: 'anywhere' }}>
+                            {picked === q.answer ? `✓ ${q.right}` : `✗ ${q.wrong}`}
+                          </div>
+                        )}
+                      </div>
+
+                    </div>
+                  );
+                })}
+
+                {quizPage === questionPages && (
+                  <div ref={elementsRef} style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: 'clamp(10px, 1.8vh, 16px)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400E', fontFamily: '"Space Grotesk", sans-serif', fontSize: 'clamp(10px, 1.7vh, 11.5px)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 800, marginBottom: 'clamp(6px, 1.3vh, 10px)', flexShrink: 0 }}>
+                      <Compass size={15} color="#D97706" /> Key Elements of a Map
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(6px, 1.4vh, 12px)' }}>
+                      <div>
+                        <h4 style={{ margin: '0 0 3px 0', color: '#78350F', fontSize: 'clamp(12.5px, 2.1vh, 14.5px)', fontWeight: 800 }}>1. Directions &amp; Compass</h4>
+                        <p style={{ margin: 0, fontSize: 'clamp(11.5px, 1.95vh, 13px)', color: '#3D2E24', lineHeight: 1.4, fontWeight: 600 }}>
+                          The compass shows North (top), South (bottom), East (right) and West (left).
+                        </p>
+                      </div>
+                      <div>
+                        <h4 style={{ margin: '0 0 3px 0', color: '#78350F', fontSize: 'clamp(12.5px, 2.1vh, 14.5px)', fontWeight: 800 }}>2. Conventional Colours &amp; Symbols</h4>
+                        <p style={{ margin: 0, fontSize: 'clamp(11.5px, 1.95vh, 13px)', color: '#3D2E24', lineHeight: 1.4, fontWeight: 600 }}>
+                          Blue marks water bodies, green marks gardens and trees, and yellow or red marks civic landmarks.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 style={{ margin: '0 0 3px 0', color: '#78350F', fontSize: 'clamp(12.5px, 2.1vh, 14.5px)', fontWeight: 800 }}>3. Distance &amp; Road Routes</h4>
+                        <p style={{ margin: 0, fontSize: 'clamp(11.5px, 1.95vh, 13px)', color: '#3D2E24', lineHeight: 1.4, fontWeight: 600 }}>
+                          Roads connect landmarks across distances and guide travellers to their destination.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
+
               </div>
 
-              {/* ── QUESTION 2: Landmark Identification ── */}
-              <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '16px', padding: '16px', boxShadow: '0 4px 12px rgba(60,40,20,0.03)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <span style={{ background: '#FEF3C7', color: '#92400E', fontSize: '11px', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', border: '1px solid #FDE68A' }}>QUESTION 2</span>
-                </div>
-                <p style={{ fontSize: '14px', color: '#3D2E24', fontWeight: 700, margin: '0 0 10px 0', lineHeight: 1.45 }}>
-                  Which place is located between the <b>Railway Station</b> and <b>Nagar Panchayat</b> along Station Road?
-                </p>
+              {/* Pager — always pinned, never overlapped */}
+              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', borderTop: '1.5px solid #F2DFBC', paddingTop: 'clamp(5px, 1.1vh, 9px)' }}>
+                <button
+                  onClick={() => setQuizPage(p => Math.max(0, p - 1))}
+                  disabled={quizPage === 0}
+                  style={{
+                    fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.95vh, 13px)',
+                    background: '#FFF9F0', color: '#78350F', border: '1.5px solid #F2DFBC', borderRadius: '999px',
+                    padding: 'clamp(5px, 1vh, 8px) clamp(11px, 1.6vw, 16px)', cursor: quizPage === 0 ? 'not-allowed' : 'pointer',
+                    opacity: quizPage === 0 ? 0.35 : 1, whiteSpace: 'nowrap'
+                  }}
+                >
+                  ◀ Back
+                </button>
 
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {['Hospital', 'Public Garden', 'Museum'].map(opt => {
-                    const isPicked = q2Ans === opt;
-                    const isCorrect = opt === 'Hospital';
-                    let btnBg = '#FFF9F0';
-                    let btnBorder = '#F2DFBC';
-                    let btnColor = '#3D2E24';
-
-                    if (q2Ans !== null) {
-                      if (isCorrect) {
-                        btnBg = '#DCFCE7';
-                        btnBorder = '#16A34A';
-                        btnColor = '#166534';
-                      } else if (isPicked) {
-                        btnBg = '#FEE2E2';
-                        btnBorder = '#EF4444';
-                        btnColor = '#991B1B';
-                      }
-                    }
-
-                    return (
-                      <button
-                        key={opt}
-                        onClick={() => setQ2Ans(opt)}
-                        style={{
-                          flex: '1 1 110px',
-                          padding: '9px 12px',
-                          background: btnBg,
-                          border: `2px solid ${btnBorder}`,
-                          borderRadius: '10px',
-                          color: btnColor,
-                          fontSize: '13.5px',
-                          fontWeight: 800,
-                          cursor: 'pointer',
-                          transition: 'all 0.15s',
-                          fontFamily: '"Space Grotesk", sans-serif'
-                        }}
-                      >
-                        {opt}
-                      </button>
-                    );
-                  })}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#78350F', fontSize: 'clamp(11px, 1.9vh, 13px)', fontWeight: 800, minWidth: 0 }}>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {quizPage < questionPages
+                      ? `Questions ${quizPage * perQuizPage + 1}–${Math.min((quizPage + 1) * perQuizPage, MAP_QUIZ.length)} of ${MAP_QUIZ.length}`
+                      : 'Map Basics'}
+                  </span>
+                  <span style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
+                    {Array.from({ length: quizPages }).map((_, i) => (
+                      <span key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: i === quizPage ? '#F59E0B' : '#F2DFBC' }} />
+                    ))}
+                  </span>
                 </div>
 
-                {q2Ans && (
-                  <div style={{ fontSize: '12.5px', marginTop: '8px', color: q2Ans === 'Hospital' ? '#166534' : '#991B1B', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    {q2Ans === 'Hospital' ? (
-                      <>✓ Correct! The Hospital lies directly between Railway Station and Nagar Panchayat.</>
-                    ) : (
-                      <>✗ Check the road connecting Railway Station and Nagar Panchayat: Hospital stands right in between.</>
-                    )}
-                  </div>
-                )}
+                <button
+                  onClick={() => setQuizPage(p => Math.min(quizPages - 1, p + 1))}
+                  disabled={quizPage === quizPages - 1}
+                  style={{
+                    fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.95vh, 13px)',
+                    background: quizPage === quizPages - 1 ? '#F7F1E2' : '#F59E0B',
+                    color: quizPage === quizPages - 1 ? '#78350F' : '#FFFFFF',
+                    border: `1.5px solid ${quizPage === quizPages - 1 ? '#F2DFBC' : '#F59E0B'}`, borderRadius: '999px',
+                    padding: 'clamp(5px, 1vh, 8px) clamp(11px, 1.6vw, 16px)', cursor: quizPage === quizPages - 1 ? 'not-allowed' : 'pointer',
+                    opacity: quizPage === quizPages - 1 ? 0.35 : 1, whiteSpace: 'nowrap'
+                  }}
+                >
+                  Next ▶
+                </button>
               </div>
 
-              {/* ── QUESTION 3: Map Colors & Symbols ── */}
-              <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '16px', padding: '16px', boxShadow: '0 4px 12px rgba(60,40,20,0.03)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <span style={{ background: '#FEF3C7', color: '#92400E', fontSize: '11px', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', border: '1px solid #FDE68A' }}>QUESTION 3</span>
-                </div>
-                <p style={{ fontSize: '14px', color: '#3D2E24', fontWeight: 700, margin: '0 0 10px 0', lineHeight: 1.45 }}>
-                  What do the <b>blue-coloured areas</b> (water lake & river) on the map represent?
-                </p>
-
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {['Water (Lake & River)', 'Forests & Trees', 'Roads & Tracks'].map(opt => {
-                    const isPicked = q3Ans === opt;
-                    const isCorrect = opt === 'Water (Lake & River)';
-                    let btnBg = '#FFF9F0';
-                    let btnBorder = '#F2DFBC';
-                    let btnColor = '#3D2E24';
-
-                    if (q3Ans !== null) {
-                      if (isCorrect) {
-                        btnBg = '#DCFCE7';
-                        btnBorder = '#16A34A';
-                        btnColor = '#166534';
-                      } else if (isPicked) {
-                        btnBg = '#FEE2E2';
-                        btnBorder = '#EF4444';
-                        btnColor = '#991B1B';
-                      }
-                    }
-
-                    return (
-                      <button
-                        key={opt}
-                        onClick={() => setQ3Ans(opt)}
-                        style={{
-                          flex: '1 1 130px',
-                          padding: '9px 12px',
-                          background: btnBg,
-                          border: `2px solid ${btnBorder}`,
-                          borderRadius: '10px',
-                          color: btnColor,
-                          fontSize: '13.5px',
-                          fontWeight: 800,
-                          cursor: 'pointer',
-                          transition: 'all 0.15s',
-                          fontFamily: '"Space Grotesk", sans-serif'
-                        }}
-                      >
-                        {opt}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {q3Ans && (
-                  <div style={{ fontSize: '12.5px', marginTop: '8px', color: q3Ans === 'Water (Lake & River)' ? '#166534' : '#991B1B', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    {q3Ans === 'Water (Lake & River)' ? (
-                      <>✓ Correct! On standard maps, blue color always represents water bodies like lakes, rivers, and ponds.</>
-                    ) : (
-                      <>✗ Maps always use blue color to show water bodies such as lakes, ponds, and rivers.</>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Elements of a Map Context Box */}
-              <div ref={elementsRef} style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '16px', padding: '18px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400E', fontFamily: '"Space Grotesk", sans-serif', fontSize: '11.5px', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 800, marginBottom: '10px' }}>
-                  <Compass size={16} color="#D97706" /> Key Elements of a Map
-                </div>
-
-                <div style={{ display: 'grid', gap: '10px' }}>
-                  <div>
-                    <h4 style={{ margin: '0 0 3px 0', color: '#78350F', fontSize: '14px', fontWeight: 800 }}>1. Directions & Compass</h4>
-                    <p style={{ margin: 0, fontSize: '13px', color: '#3D2E24', lineHeight: 1.45, fontWeight: 600 }}>
-                      The compass indicates cardinal directions: North (top), South (bottom), East (right), and West (left).
-                    </p>
-                  </div>
-
-                  <div>
-                    <h4 style={{ margin: '0 0 3px 0', color: '#78350F', fontSize: '14px', fontWeight: 800 }}>2. Conventional Colors & Symbols</h4>
-                    <p style={{ margin: 0, fontSize: '13px', color: '#3D2E24', lineHeight: 1.45, fontWeight: 600 }}>
-                      Blue is used for water bodies, green for gardens and trees, and yellow/red for civic landmarks.
-                    </p>
-                  </div>
-
-                  <div>
-                    <h4 style={{ margin: '0 0 3px 0', color: '#78350F', fontSize: '14px', fontWeight: 800 }}>3. Distance & Road Routes</h4>
-                    <p style={{ margin: 0, fontSize: '13px', color: '#3D2E24', lineHeight: 1.45, fontWeight: 600 }}>
-                      Roads accurately connect landmarks across distances to guide travelers safely to their destinations.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-            </ScrollableWithNav>
+            </div>
           )}
           {/* Bottom Footer Area */}
           <div style={{ marginTop: 'auto', paddingTop: '8px', flexShrink: 0 }}>
@@ -1654,7 +1652,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
       </div>
       <ChapterBackFooter
         onBack={onBack}
-        nextLabel={isQuizComplete && hasWonAny ? 'Next Activity' : (hasWonAny ? 'Answer all 3 questions to proceed' : 'Reach the Bank to unlock')}
+        nextLabel={isQuizComplete && hasWonAny ? 'Next Activity' : (hasWonAny ? `Answer all ${MAP_QUIZ.length} questions to proceed` : 'Reach the Bank to unlock')}
         onNext={onBeginChapter}
         nextDisabled={!(isQuizComplete && hasWonAny)}
         nextVariant="green"
