@@ -180,7 +180,10 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
           {!isStage1Page1 && (
             <button
-              onClick={() => setResetKey(prev => prev + 1)}
+              onClick={() => {
+                setResetKey(prev => prev + 1);
+                setStageCompleted(false);
+              }}
               className="outline"
               style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--danger)', borderColor: 'var(--danger-border)' }}
             >
@@ -572,7 +575,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           {/* 4. Checkpoint */}
           {currentNode.type === 'checkpoint' && (
             <div style={{ flex: 1, display: 'flex', background: 'var(--bg-color)', overflow: 'hidden' }}>
-              <DetectiveCheckpoint data={currentNode} onComplete={handleStageComplete} addXp={addXp} />
+              <DetectiveCheckpoint key={`${currentNode.id}-${resetKey}`} data={currentNode} onComplete={handleStageComplete} addXp={addXp} />
             </div>
           )}
 
@@ -595,7 +598,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                   </div>
                 )}
                 <div style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-                  <EvidenceSummary data={currentNode} onComplete={handleDebriefContinue} />
+                  <EvidenceSummary key={`${currentNode.id}-${resetKey}`} data={currentNode} onComplete={handleDebriefContinue} addXp={addXp} />
                 </div>
               </div>
             );

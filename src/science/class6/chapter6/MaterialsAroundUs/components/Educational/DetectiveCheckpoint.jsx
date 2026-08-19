@@ -11,6 +11,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
   const [score, setScore] = useState(0);
   const [unlockedDiscoveries, setUnlockedDiscoveries] = useState(0);
   const [quizComplete, setQuizComplete] = useState(false);
+  const [showCaseLog, setShowCaseLog] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
   const BLAKE_IMG_URL = '/images/chief_detective_blake.png';
@@ -57,32 +58,33 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
     } else {
       // Quiz complete
       setQuizComplete(true);
+      setShowCaseLog(true);
       setUnlockedDiscoveries(data.discoveries.length); // Ensure all are unlocked at the end
       if (addXp) addXp(50); // Completion bonus
-      if (onComplete) onComplete();
+      onComplete(); // Tells parent the stage is complete, enabling "Proceed to next"
     }
   };
 
   const handleComplete = () => {
-    onComplete();
+    setShowCaseLog(false);
   };
 
   return (
-    <div style={{ flex: 1, display: 'flex', gap: '1rem', padding: '1rem', background: '#f8fafc', overflow: 'hidden', height: '100%' }}>
+    <div style={{ flex: 1, display: 'flex', gap: '1rem', padding: '1rem', background: '#f8fafc', overflow: 'hidden', height: '100%', position: 'relative' }}>
 
       {/* Left Column: Mission Briefing */}
-      <div style={{ flex: '0 0 280px', display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
+      <div style={{ flex: 1, minWidth: '350px', maxWidth: '450px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
-        <div style={{ background: 'white', borderRadius: '16px', padding: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4f46e5', fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '1rem', alignSelf: 'flex-start' }}>
-            <Megaphone size={20} /> Mission Briefing
+        <div style={{ height: '100%', background: 'white', borderRadius: '16px', padding: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4f46e5', fontWeight: '800', fontSize: '1.5rem', marginBottom: '1.5rem', alignSelf: 'flex-start' }}>
+            <Megaphone size={28} /> Mission Briefing
           </div>
 
-          <p style={{ fontSize: '0.9rem', color: '#334155', lineHeight: '1.5', margin: '0 0 1.5rem 0' }}>
+          <p style={{ fontSize: '1.1rem', fontWeight: '600', color: '#334155', lineHeight: '1.6', margin: '0 0 2rem 0' }}>
             {data.dialogue || "Well done, detective! You've explored the Barrier. Now let's verify your understanding and log our discoveries."}
           </p>
 
-          <div style={{ width: '160px', height: '160px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #e0e7ff', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+          <div style={{ width: '260px', height: '260px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #e0e7ff', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
             <img
               src={BLAKE_IMG_URL}
               alt="Chief Blake"
@@ -91,13 +93,14 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             />
           </div>
 
-          <div style={{ background: '#e0e7ff', color: '#4338ca', padding: '4px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', letterSpacing: '1px', marginTop: '10px' }}>
+          <div style={{ background: '#e0e7ff', color: '#4338ca', padding: '6px 16px', borderRadius: '6px', fontSize: '1rem', fontWeight: '800', letterSpacing: '1px', marginTop: '16px' }}>
             CHIEF BLAKE
           </div>
 
-          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem', marginTop: '1rem', fontSize: '0.85rem', color: '#475569', lineHeight: '1.5', textAlign: 'center' }}>
+          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', marginTop: 'auto', fontSize: '1rem', fontWeight: '700', color: '#475569', lineHeight: '1.6', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}>
             Answer each question carefully. Correct answers will be added to our Case Log.
           </div>
+
         </div>
 
       </div>
@@ -267,59 +270,67 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
         )}
       </div>
 
-      {/* Right Column: Case Log */}
-      <div style={{ flex: '0 0 320px', display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
 
-        <div style={{ background: 'white', borderRadius: '16px', padding: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4f46e5', fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.5rem' }}>
-            <ClipboardList size={20} /> Today's Discoveries
-          </div>
-          <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0 0 1.5rem 0' }}>
-            Your correct answers unlock discoveries.
-          </p>
+      {quizComplete && showCaseLog && (
+        <div style={{
+          position: 'absolute',
+          top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(255, 255, 255, 0.6)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 100
+        }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              border: '1px solid #e2e8f0',
+              borderRadius: '20px',
+              padding: '2.5rem',
+              maxWidth: '680px',
+              width: '90%',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              textAlign: 'center'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', color: '#4f46e5' }}>
+              <ClipboardList size={40} />
+            </div>
+            <h2 style={{ margin: '0 0 1.5rem 0', color: '#1e293b', fontSize: '2rem', fontWeight: 800 }}>CASE LOG</h2>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left', marginBottom: '2rem' }}>
+              {data.discoveries.map((discovery, idx) => (
+                <div key={idx} style={{ display: 'flex', gap: '12px', fontSize: '22px', fontWeight: 600, color: '#334155', lineHeight: '1.5', background: '#f8fafc', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ color: '#10b981', flexShrink: 0, marginTop: '2px' }}><CheckCircle2 size={20} /></div>
+                  <div>{discovery}</div>
+                </div>
+              ))}
+            </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
-            {data.discoveries.map((discovery, idx) => {
-              const isUnlocked = idx < unlockedDiscoveries;
-
-              // Split discovery if it has a bold prefix pattern (Optional, but looks nice if data has it)
-              let title = `Discovery ${idx + 1}`;
-              let text = discovery;
-
-              if (isUnlocked) {
-                return (
-                  <div key={idx} style={{ padding: '1rem', borderRadius: '12px', border: '1px solid #bbf7d0', background: '#f0fdf4', display: 'flex', gap: '12px' }}>
-                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#22c55e', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontWeight: 'bold', fontSize: '0.75rem' }}>
-                      {idx + 1}
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 'bold', color: '#166534', fontSize: '0.9rem', marginBottom: '6px' }}>{title}</div>
-                      <div style={{ fontSize: '0.85rem', color: '#15803d', lineHeight: '1.4' }}>{text}</div>
-                    </div>
-                    <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
-                      <CheckCircle2 size={20} color="#22c55e" />
-                    </div>
-                  </div>
-                );
-              } else {
-                // Locked state
-                return (
-                  <div key={idx} style={{ padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#f8fafc', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#cbd5e1', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontWeight: 'bold', fontSize: '0.75rem' }}>
-                      {idx + 1}
-                    </div>
-                    <div style={{ fontWeight: '500', color: '#64748b', fontSize: '0.9rem', flex: 1 }}>
-                      Discovery locked
-                    </div>
-                    <Lock size={16} color="#94a3b8" />
-                  </div>
-                );
-              }
-            })}
-          </div>
+            <button
+              onClick={handleComplete}
+              style={{
+                background: '#4f46e5',
+                color: 'white',
+                border: 'none',
+                padding: '1rem 3rem',
+                borderRadius: '10px',
+                fontSize: '22px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                transition: 'background 0.2s',
+                boxShadow: '0 4px 6px -1px rgba(79, 70, 229, 0.3)'
+              }}
+            >
+              CONTINUE
+            </button>
+          </motion.div>
         </div>
+      )}
 
-      </div>
     </div>
   );
 }
