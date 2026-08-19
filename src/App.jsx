@@ -3209,30 +3209,39 @@ export default function App() {
         )}
 
         {/* Global Circular Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          style={{
-            width: '46px',
-            height: '46px',
-            borderRadius: '50%',
-            border: '1px solid var(--border)',
-            background: theme === 'dark' ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.85)',
-            color: 'var(--text-primary)',
-            backdropFilter: 'blur(8px)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            padding: 0,
-          }}
-          title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-        >
-          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
+        {!(
+          (activeActivity && activeActivity.toLowerCase().includes('material')) ||
+          (activeActivity && activeActivity.toLowerCase().includes('chapter6')) ||
+          (activeActivity === 'materials_around_us') ||
+          (activeSection === 'chapter6') ||
+          (window.location.hash.includes('chapter6')) ||
+          (window.location.hash.includes('material'))
+        ) && (
+          <button
+            onClick={toggleTheme}
+            style={{
+              width: '46px',
+              height: '46px',
+              borderRadius: '50%',
+              border: '1px solid var(--border)',
+              background: theme === 'dark' ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+              color: 'var(--text-primary)',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              padding: 0,
+            }}
+            title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+        )}
       </div>
 
     </div>

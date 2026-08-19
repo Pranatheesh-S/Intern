@@ -303,9 +303,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}
           >
             {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, alignSelf: 'start' }}>
+              <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingRight: '0.25rem', paddingTop: '0.5rem' }}>
                 {items.map((item) => {
                   const isSorted = usePlacements[item.id] !== undefined;
                   const IconComponent = item.icon;
@@ -319,7 +320,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       className="interactive-tray-item"
                       style={{
                         width: '100%',
-                        padding: '0.65rem 0.9rem',
+                        padding: '0.6rem 0.75rem',
                         borderRadius: '12px',
                         border: '1px solid var(--border)',
                         background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
@@ -384,6 +385,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                 })}
               </div>
             </div>
+          </div>
 
             {/* Right: Shelves visual */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', justifyContent: 'space-between' }}>
@@ -490,9 +492,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}
           >
             {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, alignSelf: 'start' }}>
+              <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', paddingRight: '0.25rem' }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
                   const IconComponent = item.icon;
@@ -574,6 +577,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                 })}
               </div>
             </div>
+          </div>
 
             {/* Right: Illustrated Material Baskets */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', overflowY: 'auto' }}>

@@ -84,6 +84,42 @@ const BallIcon = ({ size = 40 }) => (
   </svg>
 );
 
+const BigTumblerVisual = () => (
+  <svg width="250" height="300" viewBox="0 0 100 130" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="rgba(255,255,255,0.05)" />
+        <stop offset="15%" stopColor="rgba(255,255,255,0.4)" />
+        <stop offset="30%" stopColor="rgba(255,255,255,0.05)" />
+        <stop offset="70%" stopColor="rgba(255,255,255,0.02)" />
+        <stop offset="85%" stopColor="rgba(255,255,255,0.3)" />
+        <stop offset="100%" stopColor="rgba(255,255,255,0.05)" />
+      </linearGradient>
+      <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor="rgba(56, 189, 248, 0.3)" />
+        <stop offset="100%" stopColor="rgba(14, 165, 233, 0.5)" />
+      </linearGradient>
+    </defs>
+    {/* Base rim (back) */}
+    <ellipse cx="50" cy="115" rx="30" ry="8" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+    {/* Liquid */}
+    <path d="M 23 60 L 21 115 A 30 8 0 0 0 79 115 L 77 60 A 34 9 0 0 1 23 60 Z" fill="url(#waterGrad)" />
+    {/* Liquid top */}
+    <ellipse cx="50" cy="60" rx="27" ry="6" fill="rgba(56, 189, 248, 0.4)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+    {/* Glass body */}
+    <path d="M 15 15 L 21 115 A 30 8 0 0 0 79 115 L 85 15 Z" fill="url(#glassGrad)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+    {/* Base rim (front) */}
+    <path d="M 21 115 A 30 8 0 0 0 79 115" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" />
+    {/* Top rim */}
+    <ellipse cx="50" cy="15" rx="35" ry="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.7)" strokeWidth="2" />
+    {/* Top rim inner reflection */}
+    <ellipse cx="50" cy="16" rx="33" ry="8" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+    {/* Side highlight */}
+    <path d="M 22 25 L 26 110" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" />
+    <path d="M 26 26 L 30 108" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeLinecap="round" />
+  </svg>
+);
+
 export default function Stage2_Identify({ onComplete, addXp }) {
   const [selectedObj, setSelectedObj] = useState(null);
   const [scannedObjects, setScannedObjects] = useState({});
@@ -217,7 +253,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         case 'textbook': return `url('${scannerResultNotebook}')`;
         case 'ruler': return `url('${scannerResultRuler}')`;
         case 'lunchbox': return `url('${scannerResultGeometry}')`; // Using the old geometry image temporarily
-        case 'glass': return `url('${scannerResultGlass}')`;
+        case 'glass': return `url('${scannerActiveBg}')`;
         case 'spoon': return `url('${scannerResultSpoon}')`;
         case 'candle': return `url('${scannerResultCandle}')`;
         default: return `url('${scannerActiveBg}')`;
@@ -263,9 +299,10 @@ export default function Stage2_Identify({ onComplete, addXp }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: '38% 62%', gap: '1rem', flex: 1, minHeight: 0, height: '100%', overflow: 'hidden' }}>
         {/* Left: Tray of items */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '100%', minHeight: 0, overflow: 'hidden', padding: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, alignSelf: 'center' }}>
+          <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem' }}>
           <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '0.5rem', flex: 1, overflow: 'hidden', paddingRight: '0.25rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: '0.75rem', paddingRight: '0.25rem', paddingTop: '0.5rem' }}>
             {objectsToScan.map((obj) => {
               const isScanned = scannedObjects[obj.id];
               const isSelected = selectedObj?.id === obj.id;
@@ -281,7 +318,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   className="interactive-tray-item"
                   style={{
                     width: '100%',
-                    padding: '0.4rem 0.5rem',
+                    padding: '0.6rem 0.75rem',
                     borderRadius: '12px',
                     border: isSelected ? '2px solid var(--accent)' : '1px solid var(--border)',
                     background: isScanned ? 'var(--success-bg)' : isSelected ? 'var(--accent-bg)' : 'var(--card-bg)',
@@ -339,6 +376,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             })}
           </div>
         </div>
+      </div>
 
         {/* Middle: Holographic Scanner Area */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', height: '100%', minHeight: 0, overflow: 'hidden' }}>
@@ -373,8 +411,14 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             }}
           >
             {/* Overlay to darken background slightly for readability (disabled during results so the realistic image shines) */}
-            {(!selectedObj || scanState === 'scanning') && (
+            {(!selectedObj || scanState === 'scanning' || selectedObj?.id === 'glass') && (
               <div style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.3)', zIndex: 1 }} />
+            )}
+            
+            {selectedObj?.id === 'glass' && (
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, pointerEvents: 'none' }}>
+                <BigTumblerVisual />
+              </div>
             )}
 
             <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>

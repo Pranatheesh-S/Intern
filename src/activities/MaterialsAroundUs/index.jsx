@@ -70,50 +70,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
     setStageCompleted(true);
   };
 
-  const renderBackButton = () => (
-    <div style={{ marginTop: 'auto', paddingTop: '24px', display: 'flex' }}>
-      <button
-        onClick={() => {
-          if (currentNode.id === 'stage1' && activityView === 'page2') {
-            setActivityView('page1');
-          } else if (currentFlowIndex > 0) {
-            setCurrentFlowIndex(prev => prev - 1);
-          } else {
-            setShowIntroSpread(true);
-          }
-        }}
-        className="proper-back-btn"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '12px 24px',
-          borderRadius: '8px',
-          border: '1px solid #cbd5e1',
-          background: 'white',
-          color: '#1e293b',
-          fontFamily: 'Arial, Helvetica, sans-serif',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
-          transition: 'all 0.2s'
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.background = '#f8fafc';
-          e.currentTarget.style.transform = 'translateY(-2px)';
-          e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.1)';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.background = 'white';
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
-        }}
-      >
-        <ArrowLeft size={18} /> Back
-      </button>
-    </div>
-  );
+
 
 
   if (showCover) {
@@ -138,37 +95,27 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           >
             <ArrowLeft size={16} /> Dashboard
           </button>
+
+          <button
+            onClick={() => {
+              if (currentNode.id === 'stage1' && activityView === 'page2') {
+                setActivityView('page1');
+              } else if (currentFlowIndex > 0) {
+                setCurrentFlowIndex(prev => prev - 1);
+              } else {
+                setShowIntroSpread(true);
+              }
+            }}
+            className="outline"
+            style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px' }}
+          >
+            <ArrowLeft size={16} /> Back
+          </button>
         </div>
 
 
         <div className="global-action-bar-right">
-          {currentNode.type !== 'mission' && currentNode.id !== 'stage1' && (
-            <button
-              onClick={() => {
-                if (currentFlowIndex > 0) {
-                  setCurrentFlowIndex(prev => prev - 1);
-                } else {
-                  setShowIntroSpread(true);
-                }
-              }}
-              className="outline"
-              style={{
-                position: 'fixed',
-                bottom: '24px',
-                left: '24px',
-                padding: '10px 18px',
-                fontSize: '15px',
-                gap: '0.5rem',
-                borderRadius: '8px',
-                color: 'var(--text-primary)',
-                zIndex: 99999,
-                margin: 0,
-                display: 'flex'
-              }}
-            >
-              <ArrowLeft size={18} /> Back
-            </button>
-          )}
+
 
           
 
@@ -345,15 +292,12 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
           {currentNode.type === 'activity' && (
             ['quiz', 'summary'].includes(currentNode.id) ? (
-              <>
-<currentNode.component
+              <currentNode.component
                 key={`${currentNode.id}-${resetKey}`}
                 {...(currentNode.props || {})}
                 onComplete={handleStageComplete}
                 addXp={addXp}
               />
-              {renderBackButton()}
-</>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: currentNode.id === 'stage1' ? '1fr' : (currentNode.layout || '1fr 1fr'), gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
                 {/* Left Side: Handbook */}
@@ -365,27 +309,23 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                       stageCompleted={stageCompleted}
                     />
                   ) : (
-                    <>
-<InvestigationHandbook
+                    <InvestigationHandbook
                       highestUnlockedIndex={highestUnlockedIndex}
                       currentFlowIndex={currentFlowIndex}
                       stageCompleted={stageCompleted}
                       fullPageMode={currentNode.id === 'stage1' && activityView === 'page1'}
                     />
-                    {renderBackButton()}
-</>
                   )}
                 </div>
 
                 {/* Right Side: Activity */}
                 <div style={{ display: (currentNode.id === 'stage1' && activityView === 'page1') ? 'none' : 'flex', flex: 1, minHeight: 0, position: 'relative', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
                   <currentNode.component
-                key={`${currentNode.id}-${resetKey}`}
-                {...(currentNode.props || {})}
-                onComplete={handleStageComplete}
-                addXp={addXp}
-              />
-              {renderBackButton()}
+                    key={`${currentNode.id}-${resetKey}`}
+                    {...(currentNode.props || {})}
+                    onComplete={handleStageComplete}
+                    addXp={addXp}
+                  />
                 </div>
               </div>
             )

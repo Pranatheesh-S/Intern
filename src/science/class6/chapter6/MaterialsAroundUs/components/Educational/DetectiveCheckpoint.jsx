@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, ShieldAlert, Check, X, ArrowRight, CheckCircle2, Megaphone, Lock, Unlock, ClipboardList, Lightbulb, Star } from 'lucide-react';
+import { ShieldAlert, Check, X, ArrowRight, CheckCircle2, Megaphone, Lock, Unlock, ClipboardList, Lightbulb } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSound from 'use-sound';
 
@@ -100,34 +100,6 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
           </div>
         </div>
 
-        <div style={{ background: 'white', borderRadius: '16px', padding: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#4f46e5', fontWeight: 'bold', fontSize: '0.95rem', marginBottom: '1rem' }}>
-            <Shield size={16} /> Progress
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            {data.questions.map((_, idx) => (
-              <div key={idx} style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <div style={{
-                  width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: idx < currentQ ? '#10b981' : (idx === currentQ ? '#6366f1' : '#e2e8f0'),
-                  color: 'white', fontSize: '0.75rem', fontWeight: 'bold', zIndex: 2
-                }}>
-                  {idx < currentQ ? <Check size={14} /> : (idx + 1)}
-                </div>
-                {idx < data.questions.length - 1 && (
-                  <div style={{
-                    position: 'absolute', left: '24px', top: '11px', height: '2px', width: '30px',
-                    background: idx < currentQ ? '#10b981' : '#e2e8f0', zIndex: 1
-                  }} />
-                )}
-              </div>
-            ))}
-          </div>
-          <div style={{ textAlign: 'center', fontSize: '0.8rem', color: '#64748b', marginTop: '0.5rem' }}>
-            {currentQ} of {data.questions.length} completed
-          </div>
-        </div>
       </div>
 
       {/* Middle Column: Quiz Interface */}
@@ -143,9 +115,6 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
               <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#1e293b' }}>{data.title || "Detective Checkpoint"}</h2>
               <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b' }}>Verify your understanding to record our findings.</p>
             </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1.1rem', fontWeight: 'bold', color: '#4f46e5' }}>
-            Score: {score} / {maxScore} <Star size={20} fill="#eab308" color="#eab308" />
           </div>
         </div>
 
@@ -290,7 +259,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             </div>
             <h2 style={{ color: '#0f172a', margin: '0 0 1rem 0' }}>Checkpoint Complete!</h2>
             <p style={{ color: '#475569', fontSize: '1.1rem', maxWidth: '400px', marginBottom: '2rem' }}>
-              Excellent work! You scored {score} out of {maxScore}. All discoveries have been securely logged to the Case File.
+              Excellent work! All discoveries have been securely logged to the Case File.
               <br /><br />
               <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Click "Proceed to next" in the top right to continue.</span>
             </p>
