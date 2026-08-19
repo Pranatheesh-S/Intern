@@ -10,6 +10,7 @@ import EvidenceSummary from './components/Educational/EvidenceSummary';
 import ChapterCover from './components/Educational/ChapterCover';
 import ChapterIntroSpread from './components/Educational/ChapterIntroSpread';
 import MissionBriefingSpread from './components/Educational/MissionBriefingSpread';
+import FullscreenButton from './components/Common/FullscreenButton';
 
 const timelineTree = (() => {
   const tree = [];
@@ -123,16 +124,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   // Global Theme Hook
   const { theme, toggleTheme } = useTheme();
 
-  if (showCover) {
-    return <ChapterCover onOpenBook={() => { setShowCover(false); setShowIntroSpread(true); }} onBack={onBackToDashboard} />;
-  }
-
-  if (showIntroSpread) {
-    return <ChapterIntroSpread onContinue={() => setShowIntroSpread(false)} onBack={() => { setShowIntroSpread(false); setShowCover(true); }} />;
-  }
-
   return (
-    <div className="activity-workspace flex h-screen bg-[#eaf6fb] overflow-hidden font-geo" style={{ paddingTop: 0, paddingBottom: '72px' }}>
+    <>
+      <FullscreenButton />
+      {showCover ? (
+        <ChapterCover onOpenBook={() => { setShowCover(false); setShowIntroSpread(true); }} onBack={onBackToDashboard} />
+      ) : showIntroSpread ? (
+        <ChapterIntroSpread onContinue={() => setShowIntroSpread(false)} onBack={() => { setShowIntroSpread(false); setShowCover(true); }} />
+      ) : (
+        <div className="activity-workspace flex h-screen bg-[#eaf6fb] overflow-hidden font-geo" style={{ paddingTop: 0, paddingBottom: '72px' }}>
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
         {/* Toggle Button */}
         <button
@@ -422,6 +422,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
           <button 
             onClick={() => {
+              if (currentNode.id === 'stage3_material') {
+                const prevIndex = chapterFlow.findIndex(node => node.id === 'stage3_use');
+                if (prevIndex !== -1) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
               if (!showHandbook && currentNode.type === 'activity') {
                 setShowHandbook(true);
               } else if (currentFlowIndex > 0) {
@@ -491,5 +500,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         </div>
       </div>
     </div>
+    )}
+  </>
   );
 }

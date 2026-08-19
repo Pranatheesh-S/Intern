@@ -421,7 +421,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             {/* Left Drawer */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
               <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: '0.75rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.85rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
                   return (
@@ -435,22 +435,38 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       title={item.name}
                       style={{
                         width: '100%',
-                        aspectRatio: '1',
-                        borderRadius: '12px',
+                        height: '100%',
+                        borderRadius: '14px',
                         border: '2px solid var(--border)',
                         background: 'var(--card-bg)',
-                        opacity: isSorted ? 0.5 : 1,
+                        opacity: isSorted ? 0.45 : 1,
                         cursor: isSorted ? 'default' : 'grab',
                         transition: 'all 0.2s',
                         userSelect: 'none',
                         position: 'relative',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '8px',
+                        boxSizing: 'border-box',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.06)'
                       }}
                     >
-                      <img src={item.icon} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img 
+                        src={item.icon} 
+                        alt={item.name} 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'contain', 
+                          borderRadius: '8px',
+                          pointerEvents: 'none' 
+                        }} 
+                      />
                       {isSorted && (
-                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Check size={32} color="white" strokeWidth={3} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(2px)' }}>
+                          <Check size={40} color="white" strokeWidth={3.5} />
                         </div>
                       )}
                     </div>
