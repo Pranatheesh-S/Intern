@@ -48,10 +48,10 @@ export default function MagneticTable({ onComplete }) {
         setScannedResults(prev => {
           const updated = { ...prev, [item.id]: true };
           if (Object.keys(updated).length === ALL_ITEMS.length) {
-            // Wait 1 second (1000ms) after scanning all objects before popping up the completion button
+            // Wait 1.5 seconds (1500ms) after scanning all objects before popping up the completion button
             setTimeout(() => {
               setShowCompletionPopup(true);
-            }, 1000);
+            }, 1500);
           }
           return updated;
         });
@@ -375,24 +375,23 @@ export default function MagneticTable({ onComplete }) {
                 fontSize: '1.15rem',
                 fontWeight: 800,
                 borderRadius: '40px',
-                backgroundColor: '#2563eb',
+                backgroundColor: '#0D9488',
+                background: 'linear-gradient(135deg, #0D9488 0%, #0F766E 100%)',
                 color: '#ffffff',
                 border: 'none',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.75rem',
-                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                boxShadow: '0 6px 20px rgba(13, 148, 136, 0.4)',
                 transition: 'all 0.25s ease',
                 marginTop: '0.5rem'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'scale(1.03)';
-                e.currentTarget.style.backgroundColor = '#1d4ed8';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.backgroundColor = '#2563eb';
               }}
             >
               Start Experiment <ArrowRight size={22} color="#ffffff" />
@@ -415,11 +414,11 @@ export default function MagneticTable({ onComplete }) {
         }}>
           <div style={{
             backgroundColor: '#ffffff',
-            border: '1px solid #cbd5e1',
+            border: '1.5px solid #CCECE7',
             borderRadius: '30px',
             padding: '2.5rem 3rem',
             textAlign: 'center',
-            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
+            boxShadow: '0 15px 40px rgba(15, 118, 110, 0.18)',
             maxWidth: '520px',
             width: '90%',
             display: 'flex',
@@ -427,8 +426,8 @@ export default function MagneticTable({ onComplete }) {
             alignItems: 'center',
             gap: '1.25rem'
           }}>
-            <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#1e293b', fontWeight: 800 }}>Table Complete! 🎉</h2>
-            <p style={{ color: '#475569', margin: 0, fontSize: '1.15rem', fontWeight: 600 }}>
+            <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#134E4A', fontWeight: 800 }}>Table Complete! 🎉</h2>
+            <p style={{ color: '#115E59', margin: 0, fontSize: '1.15rem', fontWeight: 600 }}>
               You have successfully tested all objects on the magnetic table!
             </p>
             <button
@@ -438,24 +437,22 @@ export default function MagneticTable({ onComplete }) {
                 fontSize: '1.15rem',
                 fontWeight: 800,
                 borderRadius: '40px',
-                backgroundColor: '#2563eb',
+                background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                 color: '#ffffff',
                 border: 'none',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.85rem',
-                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
                 transition: 'all 0.25s ease',
                 marginTop: '0.5rem'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'scale(1.03)';
-                e.currentTarget.style.backgroundColor = '#1d4ed8';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.backgroundColor = '#2563eb';
               }}
             >
               Continue to Quiz <ArrowRight size={24} color="#ffffff" />

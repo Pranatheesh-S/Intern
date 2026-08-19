@@ -133,11 +133,11 @@ export default function Quiz({ onComplete }) {
       flexDirection: 'column', 
       alignItems: 'center', 
       justifyContent: 'center', 
-      padding: '0.5rem', 
+      padding: '0.75rem 0.5rem', 
       boxSizing: 'border-box',
       overflowY: 'auto'
     }}>
-      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
+      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column' }}>
         {/* Top Bar matching screenshot */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', padding: '0 0.5rem', flexShrink: 0 }}>
           <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)', fontWeight: 700 }}>Test Your Knowledge</h3>
@@ -157,9 +157,6 @@ export default function Quiz({ onComplete }) {
           flexDirection: 'column',
           gap: '0.85rem',
           width: '100%',
-          flex: 1,
-          minHeight: 0,
-          overflowY: 'auto',
           boxSizing: 'border-box'
         }}>
           {/* Title */}

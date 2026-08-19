@@ -28,20 +28,38 @@ export default function Activity4_6({ onBackToDashboard, onComplete }) {
       overflow: 'hidden',
       boxSizing: 'border-box',
       padding: '0.5rem 0.75rem',
-      background: 'var(--bg-color)', 
-      color: 'var(--text-primary)'
+      background: 'linear-gradient(135deg, #EBF5F6 0%, #EDF8F7 100%)',
+      position: 'relative'
     }}>
-      {/* Top Header Bar matching Activity 4.2 / 4.5 Standard */}
+      {/* Light Pastel Magnetic Field Vector Lines Background SVG */}
+      <svg 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 0
+        }} 
+        viewBox="0 0 1440 900" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(13, 148, 136, 0.15)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 180, 500 180, 720 450 C 940 720, 1240 720, 1540 450" stroke="rgba(244, 63, 94, 0.15)" strokeWidth="3" fill="none" />
+      </svg>
+
+      {/* Top Header Bar */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
         paddingBottom: '0.4rem',
         marginBottom: '0.4rem',
-        borderBottom: '1px solid var(--border)',
+        borderBottom: '1px solid #CCECE7',
         flexShrink: 0
       }}>
-        {/* Left Column: Back Button matching Activity 4.2 & 4.5 */}
+        {/* Left Column: Back Button */}
         <button 
           onClick={onBackToDashboard}
           style={{ 
@@ -49,7 +67,7 @@ export default function Activity4_6({ onBackToDashboard, onComplete }) {
             padding: '0.4rem 0.85rem', 
             fontSize: '0.8rem', 
             gap: '0.35rem',
-            background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+            background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
             color: '#ffffff',
             border: 'none',
             borderRadius: '8px',
@@ -57,21 +75,19 @@ export default function Activity4_6({ onBackToDashboard, onComplete }) {
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            boxShadow: '0 4px 12px rgba(255, 119, 0, 0.35)'
+            boxShadow: '0 4px 12px rgba(244, 63, 94, 0.35)'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
         >
           <ArrowLeft size={14} color="#ffffff" /> Back to Class 6 Chapter 4
         </button>
 
         {/* Center Column: Title */}
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: 'var(--text-heading)' }}>
-            <Compass size={18} style={{ color: '#ff7700' }} />
+          <h2 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#134E4A' }}>
+            <Compass size={18} style={{ color: '#F43F5E' }} />
             Activity 4.6: Compass & Bar Magnet
           </h2>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Class 6 Science: Chapter 4 — Attraction and Repulsion Exploration</span>
+          <span style={{ fontSize: '0.72rem', color: '#0F766E', fontWeight: 600 }}>Class 6 Science: Chapter 4 — Attraction and Repulsion Exploration</span>
         </div>
 
         {/* Right Column: Active Navigation Tabs */}
@@ -90,18 +106,18 @@ export default function Activity4_6({ onBackToDashboard, onComplete }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  border: 'none',
-                  background: isActive ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#f1f5f9',
-                  color: isActive ? '#ffffff' : tab.disabled ? '#cbd5e1' : '#1e3a8a',
+                  background: isActive ? 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' : '#FFFFFF',
+                  color: isActive ? '#ffffff' : tab.disabled ? '#cbd5e1' : '#E11D48',
                   borderRadius: '20px',
                   cursor: tab.disabled ? 'not-allowed' : 'pointer',
                   fontWeight: 700,
                   fontSize: '0.82rem',
                   transition: 'all 0.2s ease',
-                  boxShadow: isActive ? '0 4px 12px rgba(255, 119, 0, 0.35)' : 'none'
+                  border: isActive ? 'none' : '1.5px solid #FECDD3',
+                  boxShadow: isActive ? '0 4px 12px rgba(244, 63, 94, 0.35)' : 'none'
                 }}
               >
-                <Icon size={15} color={isActive ? '#ffffff' : tab.disabled ? '#cbd5e1' : '#1e3a8a'} />
+                <Icon size={15} color={isActive ? '#ffffff' : tab.disabled ? '#cbd5e1' : '#F43F5E'} />
                 {tab.label}
               </button>
             );

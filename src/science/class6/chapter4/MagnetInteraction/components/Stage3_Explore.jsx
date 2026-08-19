@@ -49,10 +49,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
       boxSizing: 'border-box',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
-      border: '1.5px solid #1e40af',
-      borderRadius: '20px',
-      boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+      background: 'transparent'
     }}>
       {/* Left Side: Interactive Workspace */}
       <div style={{ flex: "1.35", display: "flex", flexDirection: "column", gap: "1rem", height: '100%', justifyContent: 'center' }}>
@@ -144,18 +141,18 @@ export default function Stage3_Explore({ onComplete, onNext }) {
         {/* Real-time Observation Box */}
         <div style={{ 
           background: "#ffffff", 
-          border: "2px solid #2563eb", 
+          border: "1.5px solid #CCECE7", 
           padding: "1.1rem 1.4rem", 
           borderRadius: "16px", 
           display: "flex", 
           gap: "0.75rem", 
           alignItems: "flex-start",
-          boxShadow: "0 8px 25px rgba(0,0,0,0.1)"
+          boxShadow: "0 4px 14px rgba(15, 118, 110, 0.04)"
         }}>
-          <Info size={22} style={{ color: "#2563eb", flexShrink: 0, marginTop: "2px" }} />
+          <Info size={22} color="#F43F5E" style={{ flexShrink: 0, marginTop: "2px" }} />
           <div>
-            <h4 style={{ margin: "0 0 0.25rem 0", color: "#1e3a8a", fontSize: "1.05rem", fontWeight: 800 }}>Real-time Observation</h4>
-            <p style={{ margin: 0, fontSize: "0.95rem", color: "#1e40af", lineHeight: "1.5", fontWeight: 600 }}>
+            <h4 style={{ margin: "0 0 0.25rem 0", color: "#134E4A", fontSize: "1.05rem", fontWeight: 800 }}>Real-time Observation</h4>
+            <p style={{ margin: 0, fontSize: "0.95rem", color: "#115E59", lineHeight: "1.5", fontWeight: 600 }}>
               {distance > 180 ? "The magnets are too far apart to exert a noticeable magnetic force on each other." : 
                !hasPencils ? "The high friction of the table makes it very hard for Magnet A to move, even though there is a magnetic force." :
                polesMatch ? "Like poles repel! The magnetic force pushes Magnet A away, and it rolls easily on the pencils." :
@@ -165,22 +162,33 @@ export default function Stage3_Explore({ onComplete, onNext }) {
         </div>
       </div>
 
-      {/* Right Side: Controls */}
-      <div style={{ flex: "0.85", display: "flex", flexDirection: "column", gap: "1.25rem", overflowY: "auto" }}>
+      {/* Right Side: Frosted Glacial Teal Panel */}
+      <div style={{ 
+        flex: "0.85", 
+        background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)',
+        border: '1.5px solid #CCECE7',
+        borderRadius: '20px',
+        padding: '1.25rem 1.5rem',
+        boxShadow: '0 8px 25px rgba(15, 118, 110, 0.06)',
+        display: "flex", 
+        flexDirection: "column", 
+        gap: "1.25rem", 
+        overflowY: "auto" 
+      }}>
         <div style={{ 
-          padding: "1.35rem 1.6rem", 
+          padding: "1.25rem 1.4rem", 
           background: "#ffffff", 
-          border: "2px solid #2563eb", 
+          border: "1.5px solid #CCECE7", 
           borderRadius: "16px",
-          boxShadow: "0 8px 25px rgba(0,0,0,0.1)"
+          boxShadow: "0 4px 14px rgba(15, 118, 110, 0.04)"
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#1e3a8a", marginBottom: "1.25rem", fontWeight: 800, fontSize: "1.15rem" }}>
-            <Settings2 size={20} color="#1e3a8a" /> Experiment Controls
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#134E4A", marginBottom: "1.25rem", fontWeight: 800, fontSize: "1.15rem" }}>
+            <Settings2 size={20} color="#F43F5E" /> Experiment Controls
           </div>
 
           {/* Magnet A Orientation */}
           <div style={{ marginBottom: "1.25rem" }}>
-            <label style={{ display: "block", fontSize: "0.88rem", fontWeight: "700", marginBottom: "0.4rem", color: "#1e40af" }}>
+            <label style={{ display: "block", fontSize: "0.88rem", fontWeight: "700", marginBottom: "0.4rem", color: "#115E59" }}>
               Magnet A (Left) Orientation
             </label>
             <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -193,10 +201,10 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                   fontSize: "0.9rem",
                   fontWeight: 700,
                   cursor: "pointer",
-                  background: magnetAPoleRight === "S" ? "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" : "#ffffff",
-                  color: magnetAPoleRight === "S" ? "#ffffff" : "#1e3a8a",
-                  border: magnetAPoleRight === "S" ? "none" : "2px solid #3b82f6",
-                  boxShadow: magnetAPoleRight === "S" ? "0 4px 12px rgba(255, 119, 0, 0.4)" : "none"
+                  background: magnetAPoleRight === "S" ? "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)" : "#ffffff",
+                  color: magnetAPoleRight === "S" ? "#ffffff" : "#0F766E",
+                  border: magnetAPoleRight === "S" ? "none" : "1.5px solid #CCECE7",
+                  boxShadow: magnetAPoleRight === "S" ? "0 4px 12px rgba(244, 63, 94, 0.4)" : "none"
                 }}
               >
                 [N - S]
@@ -210,10 +218,10 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                   fontSize: "0.9rem",
                   fontWeight: 700,
                   cursor: "pointer",
-                  background: magnetAPoleRight === "N" ? "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" : "#ffffff",
-                  color: magnetAPoleRight === "N" ? "#ffffff" : "#1e3a8a",
-                  border: magnetAPoleRight === "N" ? "none" : "2px solid #3b82f6",
-                  boxShadow: magnetAPoleRight === "N" ? "0 4px 12px rgba(255, 119, 0, 0.4)" : "none"
+                  background: magnetAPoleRight === "N" ? "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)" : "#ffffff",
+                  color: magnetAPoleRight === "N" ? "#ffffff" : "#0F766E",
+                  border: magnetAPoleRight === "N" ? "none" : "1.5px solid #CCECE7",
+                  boxShadow: magnetAPoleRight === "N" ? "0 4px 12px rgba(244, 63, 94, 0.4)" : "none"
                 }}
               >
                 [S - N]
@@ -223,7 +231,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
 
           {/* Magnet B Orientation */}
           <div style={{ marginBottom: "1.25rem" }}>
-            <label style={{ display: "block", fontSize: "0.88rem", fontWeight: "700", marginBottom: "0.4rem", color: "#1e40af" }}>
+            <label style={{ display: "block", fontSize: "0.88rem", fontWeight: "700", marginBottom: "0.4rem", color: "#115E59" }}>
               Magnet B (Right) Orientation
             </label>
             <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -236,10 +244,10 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                   fontSize: "0.9rem",
                   fontWeight: 700,
                   cursor: "pointer",
-                  background: magnetBPoleLeft === "N" ? "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" : "#ffffff",
-                  color: magnetBPoleLeft === "N" ? "#ffffff" : "#1e3a8a",
-                  border: magnetBPoleLeft === "N" ? "none" : "2px solid #3b82f6",
-                  boxShadow: magnetBPoleLeft === "N" ? "0 4px 12px rgba(255, 119, 0, 0.4)" : "none"
+                  background: magnetBPoleLeft === "N" ? "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)" : "#ffffff",
+                  color: magnetBPoleLeft === "N" ? "#ffffff" : "#0F766E",
+                  border: magnetBPoleLeft === "N" ? "none" : "1.5px solid #CCECE7",
+                  boxShadow: magnetBPoleLeft === "N" ? "0 4px 12px rgba(244, 63, 94, 0.4)" : "none"
                 }}
               >
                 [N - S]
@@ -253,10 +261,10 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                   fontSize: "0.9rem",
                   fontWeight: 700,
                   cursor: "pointer",
-                  background: magnetBPoleLeft === "S" ? "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" : "#ffffff",
-                  color: magnetBPoleLeft === "S" ? "#ffffff" : "#1e3a8a",
-                  border: magnetBPoleLeft === "S" ? "none" : "2px solid #3b82f6",
-                  boxShadow: magnetBPoleLeft === "S" ? "0 4px 12px rgba(255, 119, 0, 0.4)" : "none"
+                  background: magnetBPoleLeft === "S" ? "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)" : "#ffffff",
+                  color: magnetBPoleLeft === "S" ? "#ffffff" : "#0F766E",
+                  border: magnetBPoleLeft === "S" ? "none" : "1.5px solid #CCECE7",
+                  boxShadow: magnetBPoleLeft === "S" ? "0 4px 12px rgba(244, 63, 94, 0.4)" : "none"
                 }}
               >
                 [S - N]
@@ -266,7 +274,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
 
           {/* Surface Friction */}
           <div style={{ marginBottom: "1.25rem" }}>
-            <label style={{ display: "block", fontSize: "0.88rem", fontWeight: "700", marginBottom: "0.4rem", color: "#1e40af" }}>
+            <label style={{ display: "block", fontSize: "0.88rem", fontWeight: "700", marginBottom: "0.4rem", color: "#115E59" }}>
               Surface Friction
             </label>
             <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -279,10 +287,10 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                   fontSize: "0.88rem",
                   fontWeight: 700,
                   cursor: "pointer",
-                  background: hasPencils ? "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" : "#ffffff",
-                  color: hasPencils ? "#ffffff" : "#1e3a8a",
-                  border: hasPencils ? "none" : "2px solid #3b82f6",
-                  boxShadow: hasPencils ? "0 4px 12px rgba(255, 119, 0, 0.4)" : "none"
+                  background: hasPencils ? "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)" : "#ffffff",
+                  color: hasPencils ? "#ffffff" : "#0F766E",
+                  border: hasPencils ? "none" : "1.5px solid #CCECE7",
+                  boxShadow: hasPencils ? "0 4px 12px rgba(244, 63, 94, 0.4)" : "none"
                 }}
               >
                 Pencils (Low)
@@ -296,10 +304,10 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                   fontSize: "0.88rem",
                   fontWeight: 700,
                   cursor: "pointer",
-                  background: !hasPencils ? "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" : "#ffffff",
-                  color: !hasPencils ? "#ffffff" : "#1e3a8a",
-                  border: !hasPencils ? "none" : "2px solid #3b82f6",
-                  boxShadow: !hasPencils ? "0 4px 12px rgba(255, 119, 0, 0.4)" : "none"
+                  background: !hasPencils ? "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)" : "#ffffff",
+                  color: !hasPencils ? "#ffffff" : "#0F766E",
+                  border: !hasPencils ? "none" : "1.5px solid #CCECE7",
+                  boxShadow: !hasPencils ? "0 4px 12px rgba(244, 63, 94, 0.4)" : "none"
                 }}
               >
                 Table (High)
@@ -309,7 +317,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
 
           {/* Distance Slider */}
           <div style={{ marginBottom: "1.5rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.88rem", fontWeight: "700", marginBottom: "0.4rem", color: "#1e40af" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.88rem", fontWeight: "700", marginBottom: "0.4rem", color: "#115E59" }}>
               <span>Distance</span>
               <span>{Math.round(distance)} px</span>
             </div>
@@ -321,7 +329,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
               onPointerDown={() => setIsAdjustingDistance(true)}
               onPointerUp={() => setIsAdjustingDistance(false)}
               onPointerLeave={() => setIsAdjustingDistance(false)}
-              style={{ width: "100%", accentColor: "#ff7700" }} 
+              style={{ width: "100%", accentColor: "#F43F5E" }} 
             />
           </div>
 
@@ -337,11 +345,11 @@ export default function Stage3_Explore({ onComplete, onNext }) {
               justifyContent: "center", 
               alignItems: "center", 
               gap: "0.6rem",
-              background: "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)",
+              background: "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)",
               color: "#ffffff",
               border: "none",
               cursor: "pointer",
-              boxShadow: "0 6px 20px rgba(255, 119, 0, 0.45)"
+              boxShadow: "0 6px 20px rgba(244, 63, 94, 0.45)"
             }}
           >
             <CheckCircle2 size={18} color="#ffffff" /> Proceed to Quiz

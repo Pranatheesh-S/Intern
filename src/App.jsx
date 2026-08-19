@@ -2839,7 +2839,7 @@ export default function App() {
     </div>
   );
 
-  const isFullscreen = (activeActivity && !['chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || hideHeader || ['chapter2', 'chapter3', 'chapter4', 'chapter4_cover', 'chapter5', 'chapter6', 'chapter10', 'chapter11'].includes(activeActivity);
+  const isFullscreen = Boolean(activeActivity) || hideHeader;
 
   return (
     <div className="app-container">

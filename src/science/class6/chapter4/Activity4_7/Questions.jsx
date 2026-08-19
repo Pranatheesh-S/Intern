@@ -270,14 +270,14 @@ export default function Questions({ onComplete, onNext }) {
                   onClick={handleNext}
                   style={{
                     padding: '0.65rem 2rem',
-                    background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                    background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '30px',
                     fontSize: '1.1rem',
                     fontWeight: 800,
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',
+                    boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
                     transition: 'all 0.25s ease'
                   }}
                   onMouseEnter={(e) => {

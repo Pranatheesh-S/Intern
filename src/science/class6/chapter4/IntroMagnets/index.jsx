@@ -353,14 +353,14 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
     stopSpeech();
     if (currentPage > 1) {
       setCurrentPage(p => p - 1);
-    } else {
-      onBackToDashboard();
     }
   };
 
   const handleFinish = () => {
     stopSpeech();
-    setIsCompleted(true);
+    setTimeout(() => {
+      setIsCompleted(true);
+    }, 1500);
   };
 
   const toggleMute = () => {
@@ -376,7 +376,26 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const currentScene = scenes[currentPage - 1];
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#090D16', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'linear-gradient(135deg, #EBF5F6 0%, #EDF8F7 100%)', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
+      {/* Light Pastel Magnetic Field Vector Lines Background SVG */}
+      <svg 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 0
+        }} 
+        viewBox="0 0 1440 900" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(13, 148, 136, 0.15)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 180, 500 180, 720 450 C 940 720, 1240 720, 1540 450" stroke="rgba(244, 63, 94, 0.15)" strokeWidth="3" fill="none" />
+      </svg>
+
+
       
       {/* Background Image Container */}
       <div style={{
@@ -676,38 +695,49 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       )}
 
       {/* Bottom Left Controls */}
-      <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', display: 'flex', gap: '1rem', zIndex: 99999 }}>
-        <button
-          onClick={handleBack}
-          style={{ padding: '0.75rem 1.5rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', color: 'white', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-        >
-          <ArrowLeft size={16} /> Back
-        </button>
-      </div>
+      {currentPage > 1 && (
+        <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', display: 'flex', gap: '1rem', zIndex: 99999 }}>
+          <button
+            onClick={handleBack}
+            style={{ padding: '0.75rem 1.5rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', color: 'white', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            <ArrowLeft size={16} /> Back
+          </button>
+        </div>
+      )}
 
-      {/* Bottom Right Controls */}
-      <div style={{ 
-        position: 'absolute', 
-        bottom: '1.25rem', 
-        right: '1.25rem', 
-        display: 'flex', 
-        zIndex: 99999 
-      }}>
-        {currentPage < scenes.length ? (
+      {/* Controls */}
+      {currentPage < scenes.length ? (
+        <div style={{ 
+          position: 'absolute', 
+          bottom: '1.25rem', 
+          right: '1.25rem', 
+          display: 'flex', 
+          zIndex: 99999 
+        }}>
           <button 
             onClick={handleNext}
             style={{ padding: '0.75rem 2rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}
           >
             Next
           </button>
-        ) : (
+        </div>
+      ) : (
+        <div style={{ 
+          position: 'absolute', 
+          top: '50%', 
+          right: '2.5rem', 
+          transform: 'translateY(-50%)', 
+          display: 'flex', 
+          zIndex: 99999 
+        }}>
           <button 
             onClick={handleFinish}
             style={{ 
               padding: '1.1rem 2.75rem', 
               borderRadius: '40px', 
               border: 'none', 
-              background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', 
+              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', 
               color: '#ffffff', 
               cursor: 'pointer', 
               fontWeight: 800,
@@ -715,22 +745,22 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
-              boxShadow: '0 8px 25px rgba(37, 99, 235, 0.5)',
+              boxShadow: '0 8px 25px rgba(244, 63, 94, 0.45)',
               transition: 'all 0.25s ease'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'scale(1.05)';
-              e.currentTarget.style.boxShadow = '0 12px 30px rgba(37, 99, 235, 0.65)';
+              e.currentTarget.style.boxShadow = '0 12px 30px rgba(244, 63, 94, 0.65)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(37, 99, 235, 0.5)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(244, 63, 94, 0.45)';
             }}
           >
-            Finish Story <ArrowRight size={24} />
+            Finish Story <ArrowRight size={24} color="#ffffff" />
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* COMPLETION MODAL */}
       {isCompleted && (
@@ -768,7 +798,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                 fontSize: '1.15rem',
                 fontWeight: 800,
                 borderRadius: '40px',
-                backgroundColor: '#2563eb',
+                background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                 color: '#ffffff',
                 border: 'none',
                 cursor: 'pointer',
@@ -776,17 +806,9 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.75rem',
-                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
                 transition: 'all 0.25s ease',
                 marginTop: '0.5rem'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.03)';
-                e.currentTarget.style.backgroundColor = '#1d4ed8';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.backgroundColor = '#2563eb';
               }}
             >
               Continue to Activity 4.1 <ArrowRight size={22} color="#ffffff" />

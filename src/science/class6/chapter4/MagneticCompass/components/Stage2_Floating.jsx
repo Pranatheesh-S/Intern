@@ -82,9 +82,9 @@ export default function Stage2_Floating({ onComplete }) {
             onClick={isInteractive ? handleSpin : undefined}
             title={isInteractive && step === 'settled' ? "Click to spin!" : ""}
           >
-            <div style={{ position: 'absolute', width: 80, height: 80, left: -40, top: -40, transformStyle: 'preserve-3d' }}>
+            <div style={{ position: 'absolute', width: 95, height: 95, left: -47.5, top: -47.5, transformStyle: 'preserve-3d' }}>
               {/* Shadow on water */}
-              <div style={{ position: 'absolute', width: 80, height: 80, left: 0, top: 0, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', filter: 'blur(6px)', transform: 'translateZ(-2px)' }} />
+              <div style={{ position: 'absolute', width: 95, height: 95, left: 0, top: 0, borderRadius: '50%', background: 'rgba(0,0,0,0.5)', filter: 'blur(6px)', transform: 'translateZ(-2px)' }} />
 
               {Array.from({length: 15}).map((_, i) => (
                 <div key={i} style={{ 
@@ -100,11 +100,11 @@ export default function Stage2_Floating({ onComplete }) {
                 draggable="false"
                 style={{
                   position: 'absolute',
-                  width: '180px',
+                  width: '260px',
                   left: '50%',
                   top: '50%',
                   transform: 'translateZ(15px) translate(-50%, -50%) rotate(-90deg)',
-                  filter: 'drop-shadow(2px 2px 5px rgba(0,0,0,0.4))',
+                  filter: 'drop-shadow(3px 4px 8px rgba(0,0,0,0.45))',
                   pointerEvents: 'none'
                 }}
               />
@@ -126,18 +126,15 @@ export default function Stage2_Floating({ onComplete }) {
       boxSizing: 'border-box',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
-      border: '1.5px solid #1e40af',
-      borderRadius: '20px',
-      boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+      background: 'transparent'
     }}>
       {/* Left Side: Interactive Area */}
       <div style={{ flex: '1.35', display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'center' }}>
         <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#134E4A', letterSpacing: '-0.01em' }}>
             Floating the Compass
           </h3>
-          <p style={{ margin: 0, color: '#94a3b8', fontSize: '1.05rem', fontWeight: 500 }}>
+          <p style={{ margin: 0, color: '#0F766E', fontSize: '1.05rem', fontWeight: 600 }}>
             {step === 'initial' 
               ? "Drag the cork into the bowl of water."
               : "Click the cork to gently rotate it and see what happens."}
@@ -272,40 +269,51 @@ export default function Stage2_Floating({ onComplete }) {
               display: 'flex', 
               alignItems: 'center', 
               gap: '0.6rem',
-              background: step !== 'initial' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
-              color: step !== 'initial' ? '#ffffff' : '#1e3a8a',
-              border: step !== 'initial' ? 'none' : '2px solid #3b82f6',
+              background: '#ffffff',
+              color: '#64748B',
+              border: '1.5px solid #E2E8F0',
               cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
-              opacity: step !== 'initial' ? 1 : 0.85,
-              boxShadow: step !== 'initial' ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+              opacity: step !== 'initial' ? 1 : 0.6,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
             }}
           >
-            <RotateCcw size={18} color={step !== 'initial' ? '#ffffff' : '#1e3a8a'} /> Reset Activity
+            <RotateCcw size={18} color="#64748B" /> Reset Activity
           </button>
         </div>
       </div>
 
-      {/* Right Side: Instructions */}
-      <div style={{ flex: '0.85', display: 'flex', flexDirection: 'column', gap: '1.25rem', overflowY: 'auto' }}>
+      {/* Right Side: Frosted Glacial Teal Panel */}
+      <div style={{ 
+        flex: '0.85', 
+        background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)',
+        border: '1.5px solid #CCECE7',
+        borderRadius: '20px',
+        padding: '1.25rem 1.5rem',
+        boxShadow: '0 8px 25px rgba(15, 118, 110, 0.06)',
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '1.25rem', 
+        overflowY: 'auto' 
+      }}>
         <div style={{ 
-          padding: '1.35rem 1.6rem', 
+          padding: '1.25rem 1.4rem', 
           background: '#ffffff', 
-          border: '2px solid #2563eb', 
+          border: '1.5px solid #CCECE7', 
           borderRadius: '16px',
-          boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+          boxShadow: '0 4px 14px rgba(15, 118, 110, 0.04)'
         }}>
-          <h4 style={{ color: '#1e3a8a', margin: '0 0 0.75rem 0', fontSize: '1.2rem', fontWeight: 800 }}>Instructions</h4>
-          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: '#1e40af', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.98rem', lineHeight: '1.6', fontWeight: 600 }}>
-            <li style={{ fontWeight: step === 'initial' ? 800 : 600, color: step === 'initial' ? '#ea580c' : '#1e40af' }}>
+          <h4 style={{ color: '#134E4A', margin: '0 0 0.75rem 0', fontSize: '1.15rem', fontWeight: 800 }}>Instructions</h4>
+          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: '#115E59', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.92rem', lineHeight: '1.6', fontWeight: 600 }}>
+            <li style={{ fontWeight: step === 'initial' ? 800 : 600, color: step === 'initial' ? '#F43F5E' : '#115E59' }}>
               Insert the magnetized needle through a small piece of cork.
             </li>
-            <li style={{ fontWeight: step === 'initial' ? 800 : 600, color: step === 'initial' ? '#ea580c' : '#1e40af' }}>
+            <li style={{ fontWeight: step === 'initial' ? 800 : 600, color: step === 'initial' ? '#F43F5E' : '#115E59' }}>
               <strong>Drag</strong> the cork to let it float in the bowl of water. Make sure the needle does not touch the water.
             </li>
-            <li style={{ fontWeight: step === 'settled' && spinCount === 0 ? 800 : 600, color: step === 'settled' && spinCount === 0 ? '#ea580c' : '#1e40af' }}>
+            <li style={{ fontWeight: step === 'settled' && spinCount === 0 ? 800 : 600, color: step === 'settled' && spinCount === 0 ? '#F43F5E' : '#115E59' }}>
               Observe the direction in which the needle points when the cork stops rotating.
             </li>
-            <li style={{ fontWeight: step === 'settled' && spinCount > 0 ? 800 : 600, color: step === 'settled' && spinCount > 0 ? '#ea580c' : '#1e40af' }}>
+            <li style={{ fontWeight: step === 'settled' && spinCount > 0 ? 800 : 600, color: step === 'settled' && spinCount > 0 ? '#F43F5E' : '#115E59' }}>
               <strong>Click the cork</strong> to gently rotate it and wait till it stops rotating. Repeat this a few more times. Do the ends always point in the same direction?
             </li>
           </ol>
@@ -317,18 +325,18 @@ export default function Stage2_Floating({ onComplete }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               style={{ 
-                padding: '1.35rem 1.6rem', 
+                padding: '1.25rem 1.4rem', 
                 background: '#ffffff', 
-                border: '2px solid #10b981', 
+                border: '1.5px solid #CCECE7', 
                 borderRadius: '16px',
-                boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+                boxShadow: '0 4px 14px rgba(15, 118, 110, 0.05)'
               }}
             >
-              <h4 style={{ color: '#1e3a8a', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.15rem', fontWeight: 800 }}>
+              <h4 style={{ color: '#134E4A', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 800 }}>
                 <CheckCircle size={22} style={{ color: '#10b981' }} /> 
                 Observation
               </h4>
-              <p style={{ margin: '0 0 1rem 0', color: '#065f46', fontSize: '0.98rem', fontWeight: '700' }}>
+              <p style={{ margin: '0 0 1rem 0', color: '#047857', fontSize: '0.92rem', fontWeight: '700' }}>
                 Yes! No matter how you spin it, the magnetized needle always comes to rest pointing in the <strong>North-South</strong> direction, just like a standard magnetic compass!
               </p>
               
@@ -344,11 +352,11 @@ export default function Stage2_Floating({ onComplete }) {
                   justifyContent: 'center', 
                   alignItems: 'center', 
                   gap: '0.75rem',
-                  background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                  background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                   color: '#ffffff',
                   border: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',
+                  boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
                   transition: 'all 0.25s ease'
                 }}
               >

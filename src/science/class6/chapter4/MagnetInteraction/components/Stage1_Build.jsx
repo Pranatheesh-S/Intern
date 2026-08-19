@@ -278,40 +278,36 @@ export default function Stage1_Build({ onComplete, onNext }) {
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
       <div style={{ 
-        padding: '1.25rem 1.75rem', 
-        display: 'flex', 
-        flexDirection: 'column',
-        gap: '1rem', 
-        height: '100%', 
-        minHeight: 0, 
-        overflow: 'hidden', 
-        boxSizing: 'border-box',
-        background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
-        border: '1.5px solid #1e40af',
-        borderRadius: '20px',
-        boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)',
-        position: 'relative'
-      }}>
-        
-        {/* Top Header Row */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "1.25rem", flexWrap: "wrap" }}>
-            <h3 style={{ margin: 0, color: "#ffffff", fontSize: "1.45rem", fontWeight: 800 }}>Build the Experiment</h3>
-            <span style={{ fontSize: "0.98rem", color: "#94a3b8", fontWeight: 600 }}>
-              Assemble the setup as shown in Fig. 4.8.
-            </span>
-          </div>
+      padding: '1.25rem 1.75rem', 
+      display: 'flex', 
+      flexDirection: 'column',
+      gap: '1rem', 
+      height: '100%', 
+      minHeight: 0, 
+      overflow: 'hidden', 
+      boxSizing: 'border-box',
+      background: 'transparent'
+    }}>
+      
+      {/* Top Header Row */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: "1.25rem", flexWrap: "wrap" }}>
+          <h3 style={{ margin: 0, color: "#134E4A", fontSize: "1.45rem", fontWeight: 800 }}>Build the Experiment</h3>
+          <span style={{ fontSize: "0.98rem", color: "#0F766E", fontWeight: 600 }}>
+            Assemble the setup as shown in Fig. 4.8.
+          </span>
+        </div>
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <div style={{ width: "160px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem", color: "#cbd5e1", fontWeight: 700 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem", color: "#0F766E", fontWeight: 700 }}>
                 <span>Progress</span>
                 <span>{Math.round(progressPercent)}%</span>
               </div>
-              <div style={{ width: "100%", height: "7px", background: "rgba(255, 255, 255, 0.15)", borderRadius: "4px", overflow: "hidden" }}>
+              <div style={{ width: "100%", height: "7px", background: "#CCECE7", borderRadius: "4px", overflow: "hidden" }}>
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
-                  style={{ height: "100%", background: success ? "linear-gradient(135deg, #10b981 0%, #059669 100%)" : "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" }}
+                  style={{ height: "100%", background: success ? "linear-gradient(135deg, #10b981 0%, #059669 100%)" : "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)" }}
                 />
               </div>
             </div>
@@ -320,11 +316,11 @@ export default function Stage1_Build({ onComplete, onNext }) {
               style={{ 
                 padding: "0.55rem", 
                 borderRadius: "50%",
-                background: "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)",
+                background: "linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)",
                 color: "#ffffff",
                 border: "none",
                 cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(255, 119, 0, 0.4)",
+                boxShadow: "0 4px 12px rgba(244, 63, 94, 0.4)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center"
@@ -523,20 +519,12 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     display: 'flex', 
                     alignItems: 'center', 
                     gap: '0.75rem',
-                    backgroundColor: '#2563eb',
+                    background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                     color: '#ffffff',
                     border: 'none',
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                    boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
                     transition: 'all 0.25s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.03)';
-                    e.currentTarget.style.backgroundColor = '#1d4ed8';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.backgroundColor = '#2563eb';
                   }}
                 >
                   Proceed to Prediction <ArrowRight size={22} color="#ffffff" />

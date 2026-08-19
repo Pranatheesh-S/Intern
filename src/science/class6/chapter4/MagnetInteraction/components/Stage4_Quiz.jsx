@@ -100,24 +100,16 @@ export default function Stage4_Quiz({ onComplete }) {
             onClick={() => { if (onComplete) onComplete(score); }}
             style={{
               padding: '1.1rem 3rem',
-              backgroundColor: '#2563eb',
+              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
               color: '#ffffff',
               border: 'none',
               borderRadius: '40px',
               fontSize: '1.15rem',
               fontWeight: 800,
               cursor: 'pointer',
-              boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+              boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
               transition: 'all 0.25s ease',
               marginTop: '0.5rem'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.03)';
-              e.currentTarget.style.backgroundColor = '#1d4ed8';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.backgroundColor = '#2563eb';
             }}
           >
             Finish Activity
@@ -135,11 +127,11 @@ export default function Stage4_Quiz({ onComplete }) {
       flexDirection: 'column', 
       alignItems: 'center', 
       justifyContent: 'center', 
-      padding: '0.5rem', 
+      padding: '0.75rem 0.5rem', 
       boxSizing: 'border-box',
       overflowY: 'auto'
     }}>
-      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
+      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column' }}>
         {/* Top Bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', padding: '0 0.5rem', flexShrink: 0 }}>
           <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)', fontWeight: 700 }}>Test Your Knowledge</h3>
@@ -159,9 +151,6 @@ export default function Stage4_Quiz({ onComplete }) {
           flexDirection: 'column',
           gap: '0.85rem',
           width: '100%',
-          flex: 1,
-          minHeight: 0,
-          overflowY: 'auto',
           boxSizing: 'border-box'
         }}>
           {/* Title */}
@@ -242,14 +231,14 @@ export default function Stage4_Quiz({ onComplete }) {
                   onClick={handleNextQuestion}
                   style={{
                     padding: '0.75rem 2.25rem',
-                    background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                    background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '30px',
                     fontSize: '1.15rem',
                     fontWeight: 800,
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',
+                    boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
                     transition: 'all 0.25s ease'
                   }}
                   onMouseEnter={(e) => {

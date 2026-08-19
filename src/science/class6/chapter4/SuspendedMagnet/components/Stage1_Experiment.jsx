@@ -52,12 +52,9 @@ export default function Stage1_Experiment({ onComplete }) {
       boxSizing: 'border-box',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
-      border: '1.5px solid #1e40af',
-      borderRadius: '20px',
-      boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+      background: 'transparent'
     }}>
-      {/* Left Side: Interactive Setup (Enlarged & Centered to fill empty space) */}
+      {/* Left Side: Interactive Setup */}
       <div style={{ 
         flex: '1.35', 
         display: 'flex', 
@@ -69,28 +66,28 @@ export default function Stage1_Experiment({ onComplete }) {
         height: '100%'
       }}>
         <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#134E4A', letterSpacing: '-0.01em' }}>
             Interactive Setup
           </h3>
-          <p style={{ margin: 0, color: '#94a3b8', fontSize: '1.05rem', fontWeight: 500 }}>
+          <p style={{ margin: 0, color: '#0F766E', fontSize: '1.05rem', fontWeight: 600 }}>
             A bar magnet is freely suspended by a thread. Rotate it and see where it settles!
           </p>
         </div>
 
-        {/* Canvas (Enlarged to 380px Height, 650px Max Width to fill empty space) */}
+        {/* Canvas */}
         <div style={{ 
           position: 'relative', 
           width: '100%', 
           maxWidth: '650px', 
           height: '380px', 
-          background: '#f8fafc',
-          border: '2px solid #cbd5e1',
+          background: '#ffffff',
+          border: '2px solid #CCECE7',
           borderRadius: '20px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           overflow: 'hidden',
-          boxShadow: 'inset 0 0 25px rgba(0,0,0,0.05), 0 8px 25px rgba(0,0,0,0.07)'
+          boxShadow: 'inset 0 0 25px rgba(0,0,0,0.03), 0 8px 25px rgba(15, 118, 110, 0.07)'
         }}>
           <img src="/SuspendedMagnet/hello.jpeg" alt="Experiment Setup" style={{ width: '100%', height: '100%', objectFit: 'contain', position: 'absolute', top: 0, left: 0, zIndex: 1 }} />
           
@@ -98,121 +95,99 @@ export default function Stage1_Experiment({ onComplete }) {
           <div style={{
             position: 'absolute',
             left: '50%',
-            transform: 'translateX(-50%)',
-            bottom: '95px',
-            width: '2.5px',
-            height: '195px',
-            background: '#1e293b',
-            zIndex: 9
+            top: 0,
+            width: '2px',
+            height: '185px',
+            background: '#64748b',
+            zIndex: 10,
+            transform: 'translateX(-50%)'
           }} />
-          
-          {/* Magnet Wrapper for 3D Perspective */}
-          <div style={{
-            position: 'absolute',
-            bottom: '75px',
-            width: '230px',
-            height: '42px',
-            perspective: '1000px',
-            zIndex: 10
-          }}>
-            <div style={{
-              width: '100%',
-              height: '100%',
-              transformStyle: 'preserve-3d',
-              transform: 'rotateX(60deg)'
-            }}>
-              <motion.div
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.5}
-                onDragEnd={(e, info) => {
-                  if (Math.abs(info.offset.x) > 20 || Math.abs(info.velocity.x) > 100) {
-                    if (!isSpinning && quizAnswer !== 'yes') {
-                      handleSpin();
-                    }
-                  }
-                }}
-                animate={{ rotateZ: magnetRotation }}
-                transition={{ 
-                  type: 'spring', 
-                  stiffness: 40, 
-                  damping: 8, 
-                  mass: 1.5,
-                  restDelta: 0.1 
-                }}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  borderRadius: '6px',
-                  overflow: 'hidden',
-                  boxShadow: '0 12px 20px rgba(0,0,0,0.45)',
-                  cursor: isSpinning ? 'wait' : 'grab'
-                }}
-              >
-                <div style={{ flex: 1, backgroundColor: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1.4rem', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
-                  N
-                </div>
-                <div style={{ flex: 1, backgroundColor: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1.4rem', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
-                  S
-                </div>
-              </motion.div>
-            </div>
+
+          {/* Magnet Container */}
+          <motion.div
+            drag
+            dragConstraints={{ left: -150, right: 150, top: -50, bottom: 50 }}
+            dragElastic={0.2}
+            animate={{ rotate: magnetRotation }}
+            transition={isSpinning ? { duration: 3, ease: 'easeOut' } : { type: 'spring', stiffness: 60 }}
+            style={{
+              position: 'absolute',
+              top: '185px',
+              left: 'calc(50% - 130px)',
+              width: '260px',
+              height: '55px',
+              zIndex: 20,
+              cursor: 'grab',
+              display: 'flex',
+              filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.25))'
+            }}
+            whileGrab={{ cursor: 'grabbing', scale: 1.05 }}
+          >
+            <img src="/horizontal_magnet.png" alt="Bar Magnet" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          </motion.div>
+
+          {/* Direction Indicator overlay */}
+          <div style={{ position: 'absolute', bottom: '15px', right: '15px', background: '#FFFFFF', border: '1.5px solid #CCECE7', borderRadius: '12px', padding: '0.4rem 0.85rem', zIndex: 30, fontSize: '0.85rem', fontWeight: 800, color: '#0F766E', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}>
+            📍 North-South Axis
           </div>
         </div>
 
-        {/* Controls (Enlarged Action Buttons with High Visibility) */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem' }}>
+        {/* Action Controls */}
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button 
-            onClick={handleSpin}
-            disabled={isSpinning || quizAnswer === 'yes'}
+            onClick={handleSpin} 
+            disabled={isSpinning}
             style={{ 
-              padding: '0.9rem 1.8rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 700, 
+              padding: '0.85rem 1.8rem', 
+              fontSize: '1rem', 
+              fontWeight: 800, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
               gap: '0.6rem',
-              background: (!isSpinning && quizAnswer !== 'yes') ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
-              color: (!isSpinning && quizAnswer !== 'yes') ? '#ffffff' : '#1e3a8a',
-              border: (!isSpinning && quizAnswer !== 'yes') ? 'none' : '2px solid #3b82f6',
-              cursor: (!isSpinning && quizAnswer !== 'yes') ? 'pointer' : 'not-allowed',
-              opacity: (!isSpinning && quizAnswer !== 'yes') ? 1 : 0.85,
-              boxShadow: (!isSpinning && quizAnswer !== 'yes') ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+              color: '#ffffff',
+              border: 'none',
+              cursor: isSpinning ? 'not-allowed' : 'pointer',
+              boxShadow: '0 6px 20px rgba(244, 63, 94, 0.4)'
             }}
           >
-            <RotateCw size={20} color={(!isSpinning && quizAnswer !== 'yes') ? '#ffffff' : '#1e3a8a'} className={isSpinning ? 'spin-animation' : ''} /> 
-            {isSpinning ? 'Spinning...' : 'Rotate Magnet'}
+            <RotateCw size={20} color="#ffffff" className={isSpinning ? 'animate-spin' : ''} /> 
+            {isSpinning ? 'Magnet Spinning...' : '1. Rotate Magnet'}
           </button>
           
           <button 
             onClick={handleReset}
             disabled={isSpinning || spinCount === 0}
             style={{ 
-              padding: '0.9rem 1.8rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 700, 
+              padding: '0.85rem 1.8rem', 
+              fontSize: '1rem', 
+              fontWeight: 800, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
               gap: '0.6rem',
-              background: (!isSpinning && spinCount > 0) ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
-              color: (!isSpinning && spinCount > 0) ? '#ffffff' : '#1e3a8a',
-              border: (!isSpinning && spinCount > 0) ? 'none' : '2px solid #3b82f6',
+              background: '#ffffff',
+              color: '#64748B',
+              border: '1.5px solid #E2E8F0',
               cursor: (!isSpinning && spinCount > 0) ? 'pointer' : 'not-allowed',
-              opacity: (!isSpinning && spinCount > 0) ? 1 : 0.85,
-              boxShadow: (!isSpinning && spinCount > 0) ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+              opacity: (!isSpinning && spinCount > 0) ? 1 : 0.6,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
             }}
           >
-            <RotateCcw size={20} color={(!isSpinning && spinCount > 0) ? '#ffffff' : '#1e3a8a'} /> Reset
+            <RotateCcw size={20} color="#64748B" /> Reset
           </button>
         </div>
       </div>
 
-      {/* Right Side: Instructions & Observation (Centered) */}
+      {/* Right Side: Frosted Glacial Teal Panel */}
       <div style={{ 
         flex: '0.85', 
+        background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)',
+        border: '1.5px solid #CCECE7',
+        borderRadius: '20px',
+        padding: '1.25rem 1.5rem',
+        boxShadow: '0 8px 25px rgba(15, 118, 110, 0.06)',
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'center', 
@@ -222,17 +197,17 @@ export default function Stage1_Experiment({ onComplete }) {
       }}>
         {/* Instructions Box */}
         <div style={{ 
-          padding: '1.35rem 1.6rem', 
+          padding: '1.15rem', 
           background: '#ffffff', 
-          border: '2px solid #2563eb', 
+          border: '1.5px solid #CCECE7', 
           borderRadius: '16px',
-          boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+          boxShadow: '0 4px 14px rgba(15, 118, 110, 0.04)'
         }}>
-          <h4 style={{ color: '#1e3a8a', margin: '0 0 0.75rem 0', fontSize: '1.2rem', fontWeight: 800 }}>
-            Instructions
+          <h4 style={{ color: '#134E4A', margin: '0 0 0.6rem 0', fontSize: '1.05rem', fontWeight: 800 }}>
+            Activity 4.3 Instructions
           </h4>
-          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: '#1e40af', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.98rem', lineHeight: '1.6', fontWeight: 600 }}>
-            <li>Drag or click "Rotate Magnet" to disturb the freely suspended bar magnet.</li>
+          <ol style={{ margin: 0, paddingLeft: '1.2rem', color: '#115E59', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.88rem', lineHeight: '1.5', fontWeight: 600 }}>
+            <li>Drag or click "Rotate Magnet" to disturb the suspended bar magnet.</li>
             <li>Observe which direction the magnet points when it comes to rest.</li>
             <li>Repeat 2-3 times to see if it settles in the same direction every time!</li>
           </ol>
@@ -245,63 +220,61 @@ export default function Stage1_Experiment({ onComplete }) {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               style={{ 
-                padding: '1.35rem 1.6rem', 
+                padding: '1.15rem', 
                 background: '#ffffff', 
-                border: '2px solid #2563eb', 
+                border: '1.5px solid #CCECE7', 
                 borderRadius: '16px',
-                boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+                boxShadow: '0 4px 14px rgba(15, 118, 110, 0.05)'
               }}
             >
-              <h4 style={{ color: '#1e3a8a', margin: '0 0 0.6rem 0', fontSize: '1.18rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <AlertCircle size={22} style={{ color: '#2563eb' }} /> 
+              <h4 style={{ color: '#134E4A', margin: '0 0 0.5rem 0', fontSize: '1.02rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <AlertCircle size={20} color="#F43F5E" /> 
                 Observation Question
               </h4>
-              <p style={{ margin: '0 0 0.85rem 0', color: '#1e40af', fontSize: '0.98rem', lineHeight: 1.55, fontWeight: 600 }}>
+              <p style={{ margin: '0 0 0.75rem 0', color: '#115E59', fontSize: '0.92rem', lineHeight: 1.5, fontWeight: 600 }}>
                 Does the bar magnet always come to rest in the same direction (North-South)?
               </p>
 
-              <div style={{ display: 'flex', gap: '0.85rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.85rem' }}>
                 <button
                   onClick={() => handleQuizAnswer('yes')}
                   style={{
                     flex: 1,
-                    padding: '0.85rem 1.1rem',
-                    fontSize: '0.96rem',
+                    padding: '0.75rem 1rem',
+                    fontSize: '0.9rem',
                     fontWeight: 700,
                     borderRadius: '12px',
                     cursor: 'pointer',
                     transition: 'all 0.25s ease',
-                    background: quizAnswer === 'yes' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : '#f8fafc',
-                    borderColor: quizAnswer === 'yes' ? '#047857' : '#cbd5e1',
+                    background: quizAnswer === 'yes' ? 'rgba(16, 185, 129, 0.12)' : '#F0FDF9',
+                    borderColor: quizAnswer === 'yes' ? '#10b981' : '#CCECE7',
                     borderStyle: 'solid',
-                    borderWidth: '2px',
-                    color: quizAnswer === 'yes' ? '#ffffff' : '#1e293b',
+                    borderWidth: '1.5px',
+                    color: quizAnswer === 'yes' ? '#065f46' : '#134E4A',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '0.5rem',
-                    boxShadow: quizAnswer === 'yes' ? '0 4px 15px rgba(16, 185, 129, 0.4)' : 'none'
+                    gap: '0.4rem'
                   }}
                 >
-                  Yes, always N-S {quizAnswer === 'yes' && <CheckCircle size={18} color="#ffffff" />}
+                  Yes, always N-S {quizAnswer === 'yes' && <CheckCircle size={18} color="#10b981" />}
                 </button>
                 
                 <button
                   onClick={() => handleQuizAnswer('no')}
                   style={{
                     flex: 1,
-                    padding: '0.85rem 1.1rem',
-                    fontSize: '0.96rem',
+                    padding: '0.75rem 1rem',
+                    fontSize: '0.9rem',
                     fontWeight: 700,
                     borderRadius: '12px',
                     cursor: 'pointer',
                     transition: 'all 0.25s ease',
-                    background: quizAnswer === 'no' ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' : '#f8fafc',
-                    borderColor: quizAnswer === 'no' ? '#b91c1c' : '#cbd5e1',
+                    background: quizAnswer === 'no' ? 'rgba(239, 68, 68, 0.1)' : '#F0FDF9',
+                    borderColor: quizAnswer === 'no' ? '#ef4444' : '#CCECE7',
                     borderStyle: 'solid',
-                    borderWidth: '2px',
-                    color: quizAnswer === 'no' ? '#ffffff' : '#1e293b',
-                    boxShadow: quizAnswer === 'no' ? '0 4px 15px rgba(239, 68, 68, 0.4)' : 'none'
+                    borderWidth: '1.5px',
+                    color: quizAnswer === 'no' ? '#991b1b' : '#134E4A'
                   }}
                 >
                   No, random
@@ -313,36 +286,30 @@ export default function Stage1_Experiment({ onComplete }) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <p style={{ margin: '0 0 0.85rem 0', color: '#065f46', fontSize: '0.98rem', fontWeight: '700' }}>
+                  <p style={{ margin: '0 0 0.75rem 0', color: '#047857', fontSize: '0.88rem', fontWeight: '700' }}>
                     Correct! A freely suspended magnet always comes to rest in the North-South direction!
                   </p>
                   <button 
                     onClick={handleNextSection}
                     style={{
                       width: '100%',
-                      padding: '0.9rem 1.6rem',
-                      fontSize: '1.05rem',
+                      padding: '0.85rem 1.5rem',
+                      fontSize: '1rem',
                       fontWeight: 800,
                       borderRadius: '35px',
-                      background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                      background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                       color: '#ffffff',
                       border: 'none',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '0.75rem',
-                      boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',
+                      gap: '0.5rem',
+                      boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
                       transition: 'all 0.25s ease'
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.03)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}
                   >
-                    Next Section: Conclusion <ArrowRight size={22} color="#ffffff" />
+                    Next Section: Conclusion <ArrowRight size={20} color="#ffffff" />
                   </button>
                 </motion.div>
               )}

@@ -26,8 +26,28 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
       flexDirection: 'column', 
       overflow: 'hidden',
       boxSizing: 'border-box',
-      padding: '0.25rem 0.75rem'
+      padding: '0.25rem 0.75rem',
+      background: 'linear-gradient(135deg, #EBF5F6 0%, #EDF8F7 100%)',
+      position: 'relative'
     }}>
+      {/* Light Pastel Magnetic Field Vector Lines Background SVG */}
+      <svg 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 0
+        }} 
+        viewBox="0 0 1440 900" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(13, 148, 136, 0.15)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 180, 500 180, 720 450 C 940 720, 1240 720, 1540 450" stroke="rgba(244, 63, 94, 0.15)" strokeWidth="3" fill="none" />
+      </svg>
+
       {/* Top Header */}
       <div style={{ 
         display: 'grid', 
@@ -35,34 +55,39 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
         alignItems: 'center', 
         paddingBottom: '0.4rem',
         marginBottom: '0.4rem',
-        borderBottom: '1px solid var(--border)',
+        borderBottom: '1px solid #CCECE7',
         flexShrink: 0
       }}>
         <button 
           onClick={onBackToDashboard} 
-          className="outline" 
           style={{ 
             position: 'relative', zIndex: 100,
-            padding: '0.35rem 0.75rem', 
-            fontSize: '0.78rem', 
+            padding: '0.4rem 0.85rem', 
+            fontSize: '0.8rem', 
             gap: '0.35rem',
-            borderColor: 'var(--border)',
+            background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '8px',
+            fontWeight: 700,
+            cursor: 'pointer',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            boxShadow: '0 4px 12px rgba(244, 63, 94, 0.35)'
           }}
         >
-          <ArrowLeft size={14} /> Back to Class 6 Chapter 4
+          <ArrowLeft size={14} color="#ffffff" /> Back to Class 6 Chapter 4
         </button>
 
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-            <Compass size={18} style={{ color: 'var(--accent)' }} />
+          <h2 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#134E4A' }}>
+            <Compass size={18} style={{ color: '#F43F5E' }} />
             Activity 4.1: Magnetic and Non-Magnetic Materials
           </h2>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Class 6 Science: Chapter 4 — Find and test materials</span>
+          <span style={{ fontSize: '0.72rem', color: '#0F766E', fontWeight: 600 }}>Class 6 Science: Chapter 4 — Find and test materials</span>
         </div>
 
-        {/* Balancing spacer to keep title exactly centered */}
+        {/* Balancing spacer */}
         <div style={{ width: '180px', visibility: 'hidden' }} />
       </div>
 

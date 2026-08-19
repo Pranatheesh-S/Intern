@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight } from 'lucide-react';
+import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen } from 'lucide-react';
 
-// Generates random filing positions (Original style)
+// Generates random filing positions
 const generateFilings = (count) => {
   return Array.from({ length: count }, (_, i) => {
     const width = 6 + Math.random() * 18;
-    const color = Math.random() > 0.5 ? 'rgba(30, 41, 59, 0.65)' : 'rgba(51, 65, 85, 0.65)';
+    const color = Math.random() > 0.5 ? 'rgba(30, 41, 59, 0.75)' : 'rgba(15, 23, 42, 0.8)';
     return {
       id: i,
-      x: Math.random() * 600 - 300,
-      y: Math.random() * 400 - 200,
+      x: Math.random() * 560 - 280,
+      y: Math.random() * 340 - 170,
       rotation: Math.random() * 360,
       width,
       color
@@ -20,9 +20,12 @@ const generateFilings = (count) => {
 
 export default function Stage1_Investigate({ onComplete }) {
   const [step, setStep] = useState('initial'); // initial, scattered, tapped, quiz, complete
+  const [tapCount, setTapCount] = useState(0);
   const [filings, setFilings] = useState([]);
   const [quizAnswer, setQuizAnswer] = useState(null);
   const [shape, setShape] = useState('bar');
+  const [isSprinkling, setIsSprinkling] = useState(false);
+  const [isVibrating, setIsVibrating] = useState(false);
 
   const handleShapeChange = (newShape) => {
     setShape(newShape);
@@ -30,18 +33,30 @@ export default function Stage1_Investigate({ onComplete }) {
   };
 
   const handleScatter = () => {
-    setFilings(generateFilings(2500));
-    setStep('scattered');
+    setIsSprinkling(true);
+    setFilings([]);
+    
+    setTimeout(() => {
+      setFilings(generateFilings(2200));
+      setIsSprinkling(false);
+      setStep('scattered');
+    }, 900);
   };
 
   const handleTap = () => {
+    if (tapCount >= 1) return;
+    setIsVibrating(true);
+    setTimeout(() => setIsVibrating(false), 350);
+
+    setTapCount(1);
+
     const clusteredFilings = filings.map(f => {
       let nx = f.x;
       let ny = f.y;
       
-      let poleNx = -90; 
+      let poleNx = -100; 
       let poleNy = 0;
-      let poleSx = 90; 
+      let poleSx = 100; 
       let poleSy = 0;
 
       const distN = Math.hypot(nx - poleNx, ny - poleNy);
@@ -50,21 +65,21 @@ export default function Stage1_Investigate({ onComplete }) {
       const minDist = Math.min(distN, distS);
       const isNorth = distN < distS;
       const targetX = isNorth ? poleNx : poleSx;
-      const targetY = isNorth ? poleSy : poleSy;
+      const targetY = isNorth ? poleNy : poleSy;
 
-      let pullFactor = Math.pow(Math.E, -minDist / 120) * 0.3;
+      let pullFactor = Math.pow(Math.E, -minDist / 110) * 0.35;
       
-      if (minDist < 60) {
-        pullFactor = Math.max(pullFactor, Math.pow(Math.E, -minDist / 40) * 0.7);
+      if (minDist < 70) {
+        pullFactor = Math.max(pullFactor, Math.pow(Math.E, -minDist / 35) * 0.75);
       }
       
-      if (Math.abs(nx) < 90 && Math.abs(ny) < 60) {
-        const bodyPull = Math.pow(Math.E, -Math.abs(ny) / 40);
-        ny = ny - ny * bodyPull * 0.4;
+      if (Math.abs(nx) < 95 && Math.abs(ny) < 65) {
+        const bodyPull = Math.pow(Math.E, -Math.abs(ny) / 35);
+        ny = ny - ny * bodyPull * 0.45;
       }
 
-      nx = nx + (targetX - nx) * pullFactor;
-      ny = ny + (targetY - ny) * pullFactor;
+      nx = nx + (targetX - nx) * Math.min(pullFactor, 0.85);
+      ny = ny + (targetY - ny) * Math.min(pullFactor, 0.85);
 
       const dxN = nx - poleNx;
       const dyN = ny - poleNy;
@@ -82,10 +97,10 @@ export default function Stage1_Investigate({ onComplete }) {
       const by = byN + byS;
 
       let angle = Math.atan2(by, bx) * (180 / Math.PI);
-      angle += (Math.random() - 0.5) * 4;
+      angle += (Math.random() - 0.5) * 10;
 
-      nx += (Math.random() - 0.5) * 5;
-      ny += (Math.random() - 0.5) * 5;
+      nx += (Math.random() - 0.5) * 4;
+      ny += (Math.random() - 0.5) * 4;
 
       return {
         ...f,
@@ -97,10 +112,6 @@ export default function Stage1_Investigate({ onComplete }) {
 
     setFilings(clusteredFilings);
     setStep('tapped');
-    
-    setTimeout(() => {
-      setStep('quiz');
-    }, 1200);
   };
 
   const handleQuizAnswer = (answer) => {
@@ -116,25 +127,23 @@ export default function Stage1_Investigate({ onComplete }) {
 
   const handleReset = () => {
     setStep('initial');
+    setTapCount(0);
     setFilings([]);
     setQuizAnswer(null);
+    setIsSprinkling(false);
   };
 
   return (
-    <div className="glass-panel" style={{ 
-      padding: '1.25rem 1.75rem', 
+    <div style={{ 
+      padding: '0.5rem', 
       display: 'flex', 
-      gap: '1.75rem', 
+      gap: '1.25rem', 
       height: '100%', 
       minHeight: 0, 
       overflow: 'hidden', 
-      boxSizing: 'border-box',
-      background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
-      border: '1.5px solid #1e40af',
-      borderRadius: '20px',
-      boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+      boxSizing: 'border-box'
     }}>
-      {/* Left Side: Interactive Area */}
+      {/* Left Side: Activity Interactive Area */}
       <div style={{ 
         flex: '1.35', 
         display: 'flex', 
@@ -145,154 +154,228 @@ export default function Stage1_Investigate({ onComplete }) {
         minWidth: 0,
         height: '100%'
       }}>
-        <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
+        {/* Content Above Activity Canvas */}
+        <div style={{ marginBottom: '0.6rem', textAlign: 'center' }}>
+          <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.01em' }}>
             Interactive Board
           </h3>
-          <p style={{ margin: 0, color: '#94a3b8', fontSize: '1.05rem', fontWeight: 500 }}>
-            Follow the steps to investigate magnetic poles.
+          <p style={{ margin: 0, color: '#F43F5E', fontSize: '1.02rem', fontWeight: 700 }}>
+            {step === 'initial' && '✨ Step 1: Click "Sprinkle Filings" to cover the paper with iron filings.'}
+            {step === 'scattered' && '🖐️ Step 2: Click directly on the paper board to TAP it once!'}
+            {(step === 'tapped' || step === 'quiz' || step === 'complete') && '🧲 Filings have gathered in curved chains near the poles! Answer the observation below.'}
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem' }}>
-          <button 
-            onClick={() => handleShapeChange('bar')}
-            style={{ 
-              padding: '0.65rem 1.75rem', 
-              fontSize: '1.02rem', 
-              fontWeight: 700, 
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
-              color: '#ffffff',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(255, 119, 0, 0.4)'
-            }}
-          >
-            Bar Magnet
-          </button>
-        </div>
+        {/* Paper Board Canvas (Direct Click / Tap Interactive with Vibration) */}
+        <motion.div 
+          onClick={() => {
+            if (step === 'scattered' && tapCount === 0) {
+              handleTap();
+            }
+          }}
+          animate={isVibrating ? { x: [-5, 5, -4, 4, -2, 2, 0], y: [-3, 3, -2, 2, 0] } : {}}
+          transition={{ duration: 0.35 }}
+          whileTap={(step === 'scattered' && tapCount === 0) ? { scale: 0.98 } : {}}
+          style={{ 
+            position: 'relative', 
+            width: '100%', 
+            maxWidth: '650px', 
+            height: '350px', 
+            background: '#FFFFFF',
+            border: (step === 'scattered' && tapCount === 0) ? '3px dashed #F43F5E' : '2px solid #CBD5E1',
+            borderRadius: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+            cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'default',
+            boxShadow: (step === 'scattered' && tapCount === 0) ? '0 0 25px rgba(244, 63, 94, 0.25), inset 0 0 30px rgba(0,0,0,0.04)' : 'inset 0 0 30px rgba(0,0,0,0.04), 0 8px 25px rgba(0,0,0,0.06)'
+          }}
+        >
+          {/* Animated Shaker Tool Pouring Filings */}
+          <AnimatePresence>
+            {isSprinkling && (
+              <motion.div
+                initial={{ opacity: 0, x: -180, y: -80, rotate: 0 }}
+                animate={{ 
+                  opacity: [0, 1, 1, 0], 
+                  x: [-180, 0, 180], 
+                  y: [-80, -90, -80], 
+                  rotate: [-15, 25, -15, 25] 
+                }}
+                transition={{ duration: 0.9 }}
+                style={{
+                  position: 'absolute',
+                  zIndex: 50,
+                  fontSize: '2.5rem',
+                  filter: 'drop-shadow(0 8px 15px rgba(0,0,0,0.3))',
+                  pointerEvents: 'none'
+                }}
+              >
+                🧂
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-        {/* Paper Board (Enlarged to 360px Height, 650px Max Width to fill empty space) */}
-        <div style={{ 
-          position: 'relative', 
-          width: '100%', 
-          maxWidth: '650px', 
-          height: '360px', 
-          background: '#f8fafc',
-          border: '2px solid #cbd5e1',
-          borderRadius: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          boxShadow: 'inset 0 0 30px rgba(0,0,0,0.06), 0 8px 25px rgba(0,0,0,0.07)'
-        }}>
+          {/* Magnetic Field Lines Arcs Overlay (Shows when tapped) */}
+          {tapCount > 0 && (
+            <svg style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none', zIndex: 5, opacity: 0.45 }}>
+              <path d="M 225 175 Q 325 105 425 175" fill="none" stroke="#F43F5E" strokeWidth="2" strokeDasharray="6,4" />
+              <path d="M 225 175 Q 325 75 425 175" fill="none" stroke="#F43F5E" strokeWidth="2" strokeDasharray="6,4" />
+              <path d="M 225 175 Q 325 245 425 175" fill="none" stroke="#F43F5E" strokeWidth="2" strokeDasharray="6,4" />
+              <path d="M 225 175 Q 325 275 425 175" fill="none" stroke="#F43F5E" strokeWidth="2" strokeDasharray="6,4" />
+            </svg>
+          )}
+
+          {/* Direct Tap Prompt Banner */}
+          {step === 'scattered' && tapCount === 0 && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ repeat: Infinity, repeatType: "reverse", duration: 0.8 }}
+              style={{
+                position: 'absolute',
+                top: '12px',
+                zIndex: 35,
+                background: '#F43F5E',
+                color: '#FFFFFF',
+                padding: '0.4rem 1.25rem',
+                borderRadius: '20px',
+                fontSize: '0.9rem',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                boxShadow: '0 4px 15px rgba(244, 63, 94, 0.4)'
+              }}
+            >
+              <Hand size={18} color="#FFFFFF" /> Click anywhere on the paper board to TAP!
+            </motion.div>
+          )}
+
           {/* Bar Magnet */}
           {shape === 'bar' && (
-            <img 
+            <motion.img 
+              drag
+              dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
+              dragElastic={0.1}
               src="/MagneticPoles/horizontal_magnet.png" 
               alt="Bar Magnet"
               style={{
                 position: 'absolute',
                 width: '280px',
                 zIndex: 10,
-                pointerEvents: 'none',
-                filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.3))'
+                cursor: 'grab',
+                filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.3))'
               }}
+              whileGrab={{ cursor: 'grabbing', scale: 1.05 }}
             />
           )}
 
-          {/* Render Filings */}
+          {/* Render Filings with smooth spring physics */}
           {filings.map((f) => (
-            <div
+            <motion.div
               key={f.id}
+              animate={{
+                x: f.x,
+                y: f.y,
+                rotate: f.rotation
+              }}
+              transition={{ type: 'spring', damping: 18, stiffness: 120 }}
               style={{
                 position: 'absolute',
-                left: `calc(50% + ${f.x}px)`,
-                top: `calc(50% + ${f.y}px)`,
+                left: '50%',
+                top: '50%',
                 width: `${f.width}px`,
                 height: '2.8px',
                 backgroundColor: f.color,
-                transform: `rotate(${f.rotation}deg)`,
                 borderRadius: '1px',
                 pointerEvents: 'none',
                 zIndex: 20
               }}
             />
           ))}
-        </div>
+        </motion.div>
 
-        {/* Action Controls (Enlarged Action Buttons with High Visibility) */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem' }}>
+        {/* Action Controls */}
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button 
             onClick={handleScatter} 
-            disabled={step !== 'initial'}
+            disabled={step !== 'initial' || isSprinkling}
             style={{ 
-              padding: '0.9rem 1.75rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 700, 
+              padding: '0.85rem 1.6rem', 
+              fontSize: '1rem', 
+              fontWeight: 800, 
               borderRadius: '14px',
-              background: step === 'initial' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
-              color: step === 'initial' ? '#ffffff' : '#1e3a8a',
-              border: step === 'initial' ? 'none' : '2px solid #3b82f6',
+              background: step === 'initial' ? 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' : '#ffffff',
+              color: step === 'initial' ? '#ffffff' : '#64748B',
+              border: step === 'initial' ? 'none' : '1.5px solid #E2E8F0',
               cursor: step === 'initial' ? 'pointer' : 'not-allowed',
-              opacity: step === 'initial' ? 1 : 0.85,
-              boxShadow: step === 'initial' ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+              opacity: step === 'initial' ? 1 : 0.6,
+              boxShadow: step === 'initial' ? '0 6px 20px rgba(244, 63, 94, 0.4)' : '0 2px 8px rgba(0,0,0,0.04)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
             }}
           >
-            1. Scatter Iron Filings
+            🧪 1. Sprinkle Filings
           </button>
           
           <button 
             onClick={handleTap}
-            disabled={step !== 'scattered'}
+            disabled={step !== 'scattered' || tapCount >= 1}
             style={{ 
-              padding: '0.9rem 1.75rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 700, 
+              padding: '0.85rem 1.6rem', 
+              fontSize: '1rem', 
+              fontWeight: 800, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
               gap: '0.6rem',
-              background: step === 'scattered' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
-              color: step === 'scattered' ? '#ffffff' : '#1e3a8a',
-              border: step === 'scattered' ? 'none' : '2px solid #3b82f6',
-              cursor: step === 'scattered' ? 'pointer' : 'not-allowed',
-              opacity: step === 'scattered' ? 1 : 0.85,
-              boxShadow: step === 'scattered' ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+              background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' : '#ffffff',
+              color: (step === 'scattered' && tapCount === 0) ? '#ffffff' : '#64748B',
+              border: (step === 'scattered' && tapCount === 0) ? 'none' : '1.5px solid #E2E8F0',
+              cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'not-allowed',
+              opacity: (step === 'scattered' && tapCount === 0) ? 1 : 0.6,
+              boxShadow: (step === 'scattered' && tapCount === 0) ? '0 6px 20px rgba(244, 63, 94, 0.4)' : '0 2px 8px rgba(0,0,0,0.04)'
             }}
           >
-            <Hand size={20} color={step === 'scattered' ? '#ffffff' : '#1e3a8a'} /> 2. Tap Paper
+            <Hand size={18} color={(step === 'scattered' && tapCount === 0) ? '#ffffff' : '#64748B'} /> 
+            {tapCount === 0 ? '2. Tap Paper' : 'Paper Tapped ✓'}
           </button>
           
           <button 
             onClick={handleReset}
             disabled={step === 'initial'}
             style={{ 
-              padding: '0.9rem 1.75rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 700, 
+              padding: '0.85rem 1.6rem', 
+              fontSize: '1rem', 
+              fontWeight: 800, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
               gap: '0.6rem',
-              background: step !== 'initial' ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
-              color: step !== 'initial' ? '#ffffff' : '#1e3a8a',
-              border: step !== 'initial' ? 'none' : '2px solid #3b82f6',
+              background: '#ffffff',
+              color: '#64748B',
+              border: '1.5px solid #E2E8F0',
               cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
-              opacity: step !== 'initial' ? 1 : 0.85,
-              boxShadow: step !== 'initial' ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+              opacity: step !== 'initial' ? 1 : 0.6,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
             }}
           >
-            <RotateCcw size={20} color={step !== 'initial' ? '#ffffff' : '#1e3a8a'} /> Reset Activity
+            <RotateCcw size={18} color="#64748B" /> Reset
           </button>
         </div>
       </div>
 
-      {/* Right Side: Instructions & Observation Quiz Card */}
+      {/* Right Side: Frosted Glacial Teal (Modern Magnetics Lab) Panel */}
       <div style={{ 
-        flex: '0.85', 
+        flex: '0.95', 
+        background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)',
+        border: '1.5px solid #CCECE7',
+        borderRadius: '20px',
+        padding: '1.25rem 1.5rem',
+        boxShadow: '0 8px 25px rgba(15, 118, 110, 0.06)',
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
@@ -300,174 +383,161 @@ export default function Stage1_Investigate({ onComplete }) {
         minWidth: 0, 
         overflowY: 'auto' 
       }}>
-        {/* Instructions Panel */}
-        <div style={{ 
-          padding: '1.25rem 1.5rem', 
-          background: '#ffffff', 
-          border: '2px solid #2563eb', 
-          borderRadius: '16px',
-          boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
-        }}>
-          <h4 style={{ color: '#1e3a8a', margin: '0 0 0.75rem 0', fontSize: '1.2rem', fontWeight: 800 }}>
-            Instructions
-          </h4>
-          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: '#1e40af', display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.98rem', lineHeight: '1.6', fontWeight: 600 }}>
-            <li style={{ fontWeight: step === 'initial' ? 800 : 600, color: step === 'initial' ? '#ea580c' : '#1e40af' }}>
-              Spread iron filings uniformly on the sheet of paper over the magnet.
-            </li>
-            <li style={{ fontWeight: step === 'scattered' ? 800 : 600, color: step === 'scattered' ? '#ea580c' : '#1e40af' }}>
-              Gently tap the paper and observe how the filings orient along field lines.
-            </li>
-            <li style={{ fontWeight: (step === 'quiz' || step === 'complete') ? 800 : 600, color: (step === 'quiz' || step === 'complete') ? '#ea580c' : '#1e40af' }}>
-              Answer the observation question below.
-            </li>
-          </ol>
+        <div>
+          {/* Badge Tag & Title */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#CCFBF1', border: '1px solid #5EEAD4', color: '#0F766E', padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '0.6rem' }}>
+            ⚡ LET'S INVESTIGATE
+          </div>
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#134E4A' }}>
+            Observe Magnetic Poles
+          </h3>
+          <p style={{ margin: '0 0 0.85rem 0', color: '#115E59', fontSize: '0.92rem', lineHeight: 1.5, fontWeight: 600 }}>
+            Follow the activity procedure below, then complete the observation.
+          </p>
+
+          {/* Activity Procedure / Instructions Card */}
+          <div style={{ 
+            background: '#FFFFFF', 
+            border: '1.5px solid #CCECE7', 
+            borderRadius: '16px',
+            padding: '0.9rem 1.15rem',
+            boxShadow: '0 4px 14px rgba(15, 118, 110, 0.04)',
+            marginBottom: '0.85rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem'
+          }}>
+            <h4 style={{ color: '#134E4A', margin: 0, fontSize: '0.98rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <BookOpen size={18} color="#0D9488" /> Activity 4.2 Instructions
+            </h4>
+            <ol style={{ margin: 0, paddingLeft: '1.15rem', color: '#115E59', fontSize: '0.86rem', lineHeight: '1.45', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              <li>Spread iron filings evenly on a sheet of paper.</li>
+              <li>Place a bar magnet over the iron filings.</li>
+              <li>Tap the paper sheet gently a few times.</li>
+              <li>Observe where filings stick most tightly.</li>
+            </ol>
+          </div>
         </div>
 
-        {/* Observation Quiz & Continue Section */}
-        <AnimatePresence>
-          {(step === 'quiz' || step === 'complete') && (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              style={{ 
-                padding: '1.25rem 1.5rem', 
-                background: '#ffffff', 
-                border: '2px solid #2563eb', 
-                borderRadius: '16px',
-                boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
-                flex: 1, 
-                display: 'flex', 
-                flexDirection: 'column', 
-                justifyContent: 'space-between' 
+        {/* Inner Controls Card (Pure White with #CCECE7 pale seafoam border) */}
+        <div style={{ 
+          background: '#FFFFFF', 
+          border: '1.5px solid #CCECE7', 
+          borderRadius: '16px',
+          padding: '1.15rem',
+          boxShadow: '0 4px 14px rgba(15, 118, 110, 0.05)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.85rem'
+        }}>
+          <h4 style={{ color: '#134E4A', margin: 0, fontSize: '1.02rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <AlertCircle size={20} color="#0D9488" /> 
+            Observation Question
+          </h4>
+          <p style={{ margin: 0, color: '#115E59', fontSize: '0.92rem', lineHeight: 1.5, fontWeight: 600 }}>
+            Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+            <button
+              onClick={() => handleQuizAnswer('uniformly')}
+              style={{
+                padding: '0.75rem 1rem',
+                textAlign: 'left',
+                fontSize: '0.9rem',
+                fontWeight: 700,
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                background: quizAnswer === 'uniformly' ? 'rgba(239, 68, 68, 0.1)' : '#F0FDF9',
+                borderColor: quizAnswer === 'uniformly' ? '#ef4444' : '#CCECE7',
+                borderStyle: 'solid',
+                borderWidth: '1.5px',
+                color: quizAnswer === 'uniformly' ? '#991b1b' : '#134E4A'
               }}
             >
-              <div>
-                <h4 style={{ color: '#1e3a8a', margin: '0 0 0.6rem 0', fontSize: '1.15rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <AlertCircle size={22} style={{ color: '#2563eb' }} /> 
-                  Observation Question
-                </h4>
-                <p style={{ margin: '0 0 0.85rem 0', color: '#1e40af', fontSize: '0.98rem', lineHeight: 1.5, fontWeight: 600 }}>
-                  Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
-                </p>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                  <button
-                    onClick={() => handleQuizAnswer('uniformly')}
-                    style={{
-                      padding: '0.75rem 1rem',
-                      textAlign: 'left',
-                      fontSize: '0.9rem',
-                      fontWeight: 700,
-                      borderRadius: '12px',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s ease',
-                      background: quizAnswer === 'uniformly' ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' : '#f8fafc',
-                      borderColor: quizAnswer === 'uniformly' ? '#b91c1c' : '#cbd5e1',
-                      borderStyle: 'solid',
-                      borderWidth: '2px',
-                      color: quizAnswer === 'uniformly' ? '#ffffff' : '#1e293b',
-                      boxShadow: quizAnswer === 'uniformly' ? '0 4px 15px rgba(239, 68, 68, 0.4)' : 'none'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span>They stick uniformly all over the magnet</span>
-                      {quizAnswer === 'uniformly' && <XCircle size={18} color="#ffffff" />}
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => handleQuizAnswer('middle')}
-                    style={{
-                      padding: '0.75rem 1rem',
-                      textAlign: 'left',
-                      fontSize: '0.9rem',
-                      fontWeight: 700,
-                      borderRadius: '12px',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s ease',
-                      background: quizAnswer === 'middle' ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' : '#f8fafc',
-                      borderColor: quizAnswer === 'middle' ? '#b91c1c' : '#cbd5e1',
-                      borderStyle: 'solid',
-                      borderWidth: '2px',
-                      color: quizAnswer === 'middle' ? '#ffffff' : '#1e293b',
-                      boxShadow: quizAnswer === 'middle' ? '0 4px 15px rgba(239, 68, 68, 0.4)' : 'none'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span>They stick mostly in the middle</span>
-                      {quizAnswer === 'middle' && <XCircle size={18} color="#ffffff" />}
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => handleQuizAnswer('ends')}
-                    style={{
-                      padding: '0.75rem 1rem',
-                      textAlign: 'left',
-                      fontSize: '0.9rem',
-                      fontWeight: 700,
-                      borderRadius: '12px',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s ease',
-                      background: (quizAnswer === 'ends' || step === 'complete') ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : '#f8fafc',
-                      borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#047857' : '#cbd5e1',
-                      borderStyle: 'solid',
-                      borderWidth: '2px',
-                      color: (quizAnswer === 'ends' || step === 'complete') ? '#ffffff' : '#1e293b',
-                      boxShadow: (quizAnswer === 'ends' || step === 'complete') ? '0 4px 15px rgba(16, 185, 129, 0.4)' : 'none'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span>They stick maximum near the ends</span>
-                      {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={18} color="#ffffff" />}
-                    </div>
-                  </button>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>They stick uniformly all over the magnet</span>
+                {quizAnswer === 'uniformly' && <XCircle size={18} color="#ef4444" />}
               </div>
+            </button>
 
-              {quizAnswer === 'ends' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  style={{ marginTop: '1rem' }}
-                >
-                  <p style={{ margin: '0 0 0.85rem 0', color: 'var(--success)', fontSize: '0.9rem', fontWeight: '600' }}>
-                    Correct! The regions where the maximum iron filings stick are called the <strong>poles</strong> of the magnet.
-                  </p>
-                  <button 
-                    onClick={handleNextSection}
-                    style={{
-                      width: '100%',
-                      padding: '0.85rem 1.5rem',
-                      fontSize: '1rem',
-                      fontWeight: 800,
-                      borderRadius: '35px',
-                      background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
-                      color: '#ffffff',
-                      border: 'none',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.75rem',
-                      boxShadow: '0 6px 20px rgba(255, 119, 0, 0.4)',
-                      transition: 'all 0.25s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.03)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}
-                  >
-                    Next Section: Breaking a Magnet <ArrowRight size={20} color="#ffffff" />
-                  </button>
-                </motion.div>
-              )}
-            </motion.div>
+            <button
+              onClick={() => handleQuizAnswer('middle')}
+              style={{
+                padding: '0.75rem 1rem',
+                textAlign: 'left',
+                fontSize: '0.9rem',
+                fontWeight: 700,
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                background: quizAnswer === 'middle' ? 'rgba(239, 68, 68, 0.1)' : '#F0FDF9',
+                borderColor: quizAnswer === 'middle' ? '#ef4444' : '#CCECE7',
+                borderStyle: 'solid',
+                borderWidth: '1.5px',
+                color: quizAnswer === 'middle' ? '#991b1b' : '#134E4A'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>They stick mostly in the middle</span>
+                {quizAnswer === 'middle' && <XCircle size={18} color="#ef4444" />}
+              </div>
+            </button>
+
+            <button
+              onClick={() => handleQuizAnswer('ends')}
+              style={{
+                padding: '0.75rem 1rem',
+                textAlign: 'left',
+                fontSize: '0.9rem',
+                fontWeight: 700,
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+                background: (quizAnswer === 'ends' || step === 'complete') ? 'rgba(16, 185, 129, 0.12)' : '#F0FDF9',
+                borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#10b981' : '#CCECE7',
+                borderStyle: 'solid',
+                borderWidth: '1.5px',
+                color: (quizAnswer === 'ends' || step === 'complete') ? '#065f46' : '#134E4A'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>They stick maximum near the ends</span>
+                {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={18} color="#10b981" />}
+              </div>
+            </button>
+          </div>
+
+          {(quizAnswer === 'ends' || step === 'complete') && (
+            <div style={{ marginTop: '0.5rem' }}>
+              <p style={{ margin: '0 0 0.75rem 0', color: '#047857', fontSize: '0.88rem', fontWeight: 600 }}>
+                Correct! The regions where the maximum iron filings stick are called the <strong>poles</strong> of the magnet.
+              </p>
+              <button 
+                onClick={handleNextSection}
+                style={{
+                  width: '100%',
+                  padding: '0.85rem 1.5rem',
+                  fontSize: '1rem',
+                  fontWeight: 800,
+                  borderRadius: '35px',
+                  background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+                  color: '#ffffff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                Continue to Stage 2 <ArrowRight size={18} color="#ffffff" />
+              </button>
+            </div>
           )}
-        </AnimatePresence>
+        </div>
       </div>
     </div>
   );
