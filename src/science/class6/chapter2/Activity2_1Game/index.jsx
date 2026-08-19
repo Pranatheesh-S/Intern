@@ -1,56 +1,92 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Activity2_1Game.css';
+import grassImage from '../../../../assets/grass_scene8.png';
+import tulsiImage from '../../../../assets/tulsi_scene8.png';
+import hibiscusImage from '../../../../assets/hibiscus_scene8.png';
+import neemImage from '../../../../assets/neem_scene8.png';
+import sunflowerImage from '../../../../assets/specimens/sunflower.png';
+
+const PLANT_CROPPED_IMAGES = {
+  p1: hibiscusImage,
+  p2: tulsiImage,
+  p3: neemImage,
+  p4: grassImage,
+  p7: sunflowerImage,
+  hibiscus: hibiscusImage,
+  tulsi: tulsiImage,
+  neem: neemImage,
+  grass: grassImage,
+  sunflower: sunflowerImage,
+  Hibiscus: hibiscusImage,
+  Tulsi: tulsiImage,
+  Neem: neemImage,
+  Grass: grassImage,
+  Sunflower: sunflowerImage,
+};
 
 // ─── DATA ───────────────────────────────────────────────────────────────────
 
 const PLANTS_DATA = [
   {
-    id: 'p1', name: 'Rose', emoji: '🌹', color: '#ff6b8a',
-    habitat: 'Garden', parts: ['Root', 'Stem', 'Leaf', 'Flower', 'Fruit'],
+    id: 'p1', name: 'Hibiscus', emoji: '🌺', color: '#ff6b8a',
+    habitat: 'Garden', parts: ['Root', 'Stem', 'Leaf', 'Flower'],
     type: 'Shrub', food: 'Makes own food', movement: 'Rooted',
-    fact: 'Roses have been grown for over 5,000 years! 🌹',
-    desc: 'A beautiful flowering shrub with thorny stems. Bees love its sweet nectar!',
-    observations: { stem: 'Woody & thorny', leaf: 'Green with serrated edges', flower: 'Red petals', root: 'Fibrous roots' }
+    fact: 'Hibiscus flowers have vibrant red petals and are common flowering shrubs! 🌺',
+    desc: 'A flowering shrub with thin, hard, woody stems branching out close to the base.',
+    observations: { stem: 'Thin, hard, woody stem branching near base', leaf: 'Green simple leaves with serrated margins', flower: 'Large, bright red flowers', other: 'Medium height shrub; branches close to ground' }
   },
   {
-    id: 'p2', name: 'Mango Tree', emoji: '🥭', color: '#ffa040',
-    habitat: 'Tropical forest', parts: ['Root', 'Stem', 'Leaf', 'Flower', 'Fruit'],
-    type: 'Tree', food: 'Makes own food', movement: 'Rooted',
-    fact: 'Mango is called the "King of Fruits" in India! 🥭',
-    desc: 'A tall tropical tree that gives juicy mangoes. It can live for over 100 years!',
-    observations: { stem: 'Thick & tall trunk', leaf: 'Long, lance-shaped', flower: 'Small, yellowish', root: 'Deep taproot' }
-  },
-  {
-    id: 'p3', name: 'Grass', emoji: '🌿', color: '#44d62c',
-    habitat: 'Grassland', parts: ['Root', 'Stem', 'Leaf'],
-    type: 'Herb', food: 'Makes own food', movement: 'Rooted',
-    fact: 'Bamboo is actually a type of grass and it grows super fast! 🌿',
-    desc: 'A soft herb that covers fields and lawns. Most grasses have parallel leaf veins!',
-    observations: { stem: 'Thin, hollow stem', leaf: 'Long, narrow with parallel veins', flower: 'Tiny spikelets', root: 'Fibrous roots' }
-  },
-  {
-    id: 'p4', name: 'Banyan Tree', emoji: '🌳', color: '#228B22',
-    habitat: 'Tropical region', parts: ['Root', 'Stem', 'Leaf', 'Fruit'],
-    type: 'Tree', food: 'Makes own food', movement: 'Rooted',
-    fact: 'The Banyan tree is India national tree! Its roots hang down from branches! 🌳',
-    desc: 'Famous for its hanging aerial roots that grow into new trunks. One tree can look like a whole forest!',
-    observations: { stem: 'Massive trunk with aerial roots', leaf: 'Large, oval, dark green', flower: 'Hidden inside fig-like fruit', root: 'Aerial + taproot' }
-  },
-  {
-    id: 'p5', name: 'Tulsi', emoji: '🌿', color: '#7ec850',
+    id: 'p2', name: 'Tulsi', emoji: '🌿', color: '#7ec850',
     habitat: 'Home gardens', parts: ['Root', 'Stem', 'Leaf', 'Flower'],
     type: 'Herb', food: 'Makes own food', movement: 'Rooted',
     fact: 'Tulsi (Holy Basil) is worshipped in India and has powerful medicinal properties! 💚',
     desc: 'A sacred herb found in most Indian homes. Its leaves have a wonderful fragrance!',
-    observations: { stem: 'Soft, purple-green stem', leaf: 'Small, oval, fragrant', flower: 'Tiny purple-white flowers', root: 'Fibrous roots' }
+    observations: { stem: 'Soft, green, non-woody herbaceous stem', leaf: 'Small, oval, highly aromatic simple leaves', flower: 'Tiny purple-white flowers on vertical spikes', other: 'Short herb; medicinal plant found in home gardens' }
   },
   {
-    id: 'p6', name: 'Cactus', emoji: '🌵', color: '#3a9c4e',
-    habitat: 'Desert', parts: ['Root', 'Stem', 'Flower'],
+    id: 'p3', name: 'Neem', emoji: '🌳', color: '#228B22',
+    habitat: 'Tropical region', parts: ['Root', 'Stem', 'Leaf', 'Flower'],
+    type: 'Tree', food: 'Makes own food', movement: 'Rooted',
+    fact: 'Neem tree is an evergreen medicinal tree known as the village pharmacy! 🌳',
+    desc: 'A tall tree with a thick scaly trunk and broad leafy canopy.',
+    observations: { stem: 'Thick, hard, scaly brown woody trunk with bark', leaf: 'Compound pinnate serrated green leaflets', flower: 'Small, white, fragrant flowers', other: 'Tall tree; evergreen with broad canopy' }
+  },
+  {
+    id: 'p4', name: 'Grass', emoji: '🌱', color: '#44d62c',
+    habitat: 'Grassland', parts: ['Root', 'Stem', 'Leaf'],
+    type: 'Herb', food: 'Makes own food', movement: 'Rooted',
+    fact: 'Bamboo is actually a type of grass and it grows super fast! 🌿',
+    desc: 'A soft herb that covers fields and lawns. Most grasses have parallel leaf veins!',
+    observations: { stem: 'Thin, green, soft, hollow stem', leaf: 'Long, narrow leaves with parallel vein patterns', flower: 'Tiny inconspicuous spikelets', other: 'Very short herb; covers lawns, fibrous roots' }
+  },
+  {
+    id: 'p5', name: 'Rose', emoji: '🌹', color: '#e11d48',
+    habitat: 'Garden', parts: ['Root', 'Stem', 'Leaf', 'Flower'],
     type: 'Shrub', food: 'Makes own food', movement: 'Rooted',
-    fact: 'A cactus can store hundreds of liters of water in its thick stem! 🌵',
-    desc: 'A spiny plant that survives in hot deserts. Its spines are actually modified leaves!',
-    observations: { stem: 'Thick, fleshy, stores water', leaf: 'Modified into sharp spines', flower: 'Bright, colorful flowers', root: 'Wide shallow roots' }
+    fact: 'Roses have been grown for over 5,000 years! 🌹',
+    desc: 'A beautiful flowering shrub with thorny stems.',
+    observations: { stem: 'Thin woody stem with sharp thorns', leaf: 'Compound leaves with serrated edges', flower: 'Pink or red fragrant rose blooms', other: 'Medium height shrub with thorny branches' }
+  },
+  {
+    id: 'p6', name: 'Mango Tree', emoji: '🥭', color: '#ffa040',
+    habitat: 'Tropical forest', parts: ['Root', 'Stem', 'Leaf', 'Flower', 'Fruit'],
+    type: 'Tree', food: 'Makes own food', movement: 'Rooted',
+    fact: 'Mango is called the "King of Fruits" in India! 🥭',
+    desc: 'A tall tropical tree that gives juicy mangoes.',
+    observations: { stem: 'Thick & tall trunk', leaf: 'Long, lance-shaped leaves', flower: 'Small, yellowish flowers', other: 'Deep taproot system' }
+  },
+  {
+    id: 'p7', name: 'Sunflower', emoji: '🌻', color: '#f59e0b',
+    habitat: 'Garden / Fields', parts: ['Root', 'Stem', 'Leaf', 'Flower', 'Seed'],
+    type: 'Herb', food: 'Makes own food', movement: 'Rooted',
+    fact: 'Sunflowers exhibit heliotropism — young sunflowers follow the sun from east to west every day! 🌻',
+    desc: 'A tall flowering plant with broad green leaves and a large yellow flower head.',
+    observations: { 
+      stem: 'Tall, strong, green stem with a rough, slightly hairy surface', 
+      leaf: 'Large, broad green leaves with a rough texture and prominent veins', 
+      flower: 'Large bright yellow flower head with a dark brown central disc', 
+      other: 'Tall flowering plant; flower head turns toward sunlight; produces edible seeds' 
+    }
   }
 ];
 
@@ -232,60 +268,163 @@ const ProfessorBuddy = ({ mood = 'idle', message = '' }) => (
 );
 
 const PopupCard = ({ item, type, onClose }) => {
+  const [lightboxImage, setLightboxImage] = useState(null);
   useEffect(() => { playClick(); }, []);
   if (!item) return null;
+  const croppedSrc = PLANT_CROPPED_IMAGES[item.id] || PLANT_CROPPED_IMAGES[item.name];
+
   return (
-    <div className="a21-popup-overlay" onClick={onClose}>
-      <div className="a21-popup-card" onClick={e => e.stopPropagation()}>
-        <button className="a21-popup-close" onClick={onClose}>✕</button>
-        <div className="a21-popup-emoji">{item.emoji}</div>
-        <h2 className="a21-popup-title">{item.name}</h2>
-        <p className="a21-popup-desc">{item.desc}</p>
-        <div className="a21-popup-tags">
-          <span className="a21-popup-tag">🏠 {item.habitat}</span>
-          {type === 'plant' ? (
-            <>
-              <span className="a21-popup-tag">🌿 {item.type}</span>
-              <span className="a21-popup-tag">☀️ Makes own food</span>
-            </>
+    <>
+      <div className="a21-popup-overlay" onClick={onClose}>
+        <div className="a21-popup-card" onClick={e => e.stopPropagation()}>
+          <button className="a21-popup-close" onClick={onClose}>✕</button>
+          {type === 'plant' && croppedSrc ? (
+            <div 
+              style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                marginBottom: '1rem', 
+                background: '#1e293b', 
+                borderRadius: '12px', 
+                padding: '0.5rem', 
+                border: '1.5px solid rgba(34, 197, 94, 0.3)',
+                cursor: 'pointer' 
+              }}
+              onClick={() => setLightboxImage({ src: croppedSrc, alt: item.name })}
+              title="Click to view full screen"
+            >
+              <img 
+                src={croppedSrc} 
+                alt={item.name} 
+                style={{ 
+                  maxHeight: '180px', 
+                  maxWidth: '100%', 
+                  objectFit: 'contain', 
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)'
+                }} 
+              />
+            </div>
           ) : (
-            <>
-              <span className="a21-popup-tag">🦴 {item.type}</span>
-              <span className="a21-popup-tag">🍽️ {item.food}</span>
-            </>
+            <div className="a21-popup-emoji">{item.emoji}</div>
           )}
-        </div>
-        <div className="a21-obs-grid">
-          <h4>🔍 Observations:</h4>
-          <div className="a21-obs-items">
+          <h2 className="a21-popup-title">{item.name}</h2>
+          <p className="a21-popup-desc">{item.desc}</p>
+          <div className="a21-popup-tags">
+            <span className="a21-popup-tag">🏠 {item.habitat}</span>
             {type === 'plant' ? (
-              Object.entries(item.observations).map(([k, v]) => (
-                <div key={k} className="a21-obs-item">
-                  <span className="a21-obs-key">{k}</span>
-                  <span className="a21-obs-val">{v}</span>
-                </div>
-              ))
+              <>
+                <span className="a21-popup-tag">🌿 {item.type}</span>
+                <span className="a21-popup-tag">☀️ Makes own food</span>
+              </>
             ) : (
-              [
-                ['Moves by', item.movement],
-                ['Breathes', item.breathes],
-                ['Body covering', item.covering],
-                ['Wild / Pet', item.wildOrPet]
-              ].map(([k, v]) => (
-                <div key={k} className="a21-obs-item">
-                  <span className="a21-obs-key">{k}</span>
-                  <span className="a21-obs-val">{v}</span>
-                </div>
-              ))
+              <>
+                <span className="a21-popup-tag">🦴 {item.type}</span>
+                <span className="a21-popup-tag">🍽️ {item.food}</span>
+              </>
             )}
           </div>
-        </div>
-        <div className="a21-funfact">
-          <span>💡</span>
-          <p><strong>Fun Fact:</strong> {item.fact}</p>
+          <div className="a21-obs-grid">
+            <h4>🔍 Observations:</h4>
+            <div className="a21-obs-items">
+              {type === 'plant' ? (
+                Object.entries(item.observations).map(([k, v]) => (
+                  <div key={k} className="a21-obs-item">
+                    <span className="a21-obs-key">{k}</span>
+                    <span className="a21-obs-val">{v}</span>
+                  </div>
+                ))
+              ) : (
+                [
+                  ['Moves by', item.movement],
+                  ['Breathes', item.breathes],
+                  ['Body covering', item.covering],
+                  ['Wild / Pet', item.wildOrPet]
+                ].map(([k, v]) => (
+                  <div key={k} className="a21-obs-item">
+                    <span className="a21-obs-key">{k}</span>
+                    <span className="a21-obs-val">{v}</span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          <div className="a21-funfact">
+            <span>💡</span>
+            <p><strong>Fun Fact:</strong> {item.fact}</p>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Full-Screen Image Viewer / Lightbox */}
+      {lightboxImage && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 999999,
+            background: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '2rem',
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+          onClick={() => setLightboxImage(null)}
+        >
+          <div 
+            style={{
+              position: 'relative',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setLightboxImage(null)}
+              title="Close full-screen view"
+              style={{
+                position: 'absolute',
+                top: '-15px',
+                right: '-15px',
+                zIndex: 10,
+                background: 'rgba(15, 23, 42, 0.9)',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
+                color: '#ffffff',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
+              }}
+            >
+              ✕
+            </button>
+            <img 
+              src={lightboxImage.src} 
+              alt={lightboxImage.alt} 
+              style={{ 
+                maxWidth: '90vw', 
+                maxHeight: '85vh', 
+                objectFit: 'contain', 
+                borderRadius: '12px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+                border: '1.5px solid rgba(255, 255, 255, 0.2)'
+              }} 
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
