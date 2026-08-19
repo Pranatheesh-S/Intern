@@ -264,11 +264,13 @@ body:has(.chapter4-dashboard-wrapper) .content-wrapper {
 /* ---------- cards ---------- */
 .chapter4-dashboard-wrapper .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 14px;
   margin-bottom: 0;
   align-content: start;
   flex: 1;
+  overflow-y: auto;
+  padding-bottom: 1rem;
 }
 .chapter4-dashboard-wrapper .card {
   position: relative;

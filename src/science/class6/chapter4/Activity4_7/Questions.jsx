@@ -158,16 +158,18 @@ export default function Questions({ onComplete, onNext }) {
   return (
     <div style={{ 
       width: '100%', 
+      height: '100%',
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
       justifyContent: 'center', 
-      padding: '1rem 0.5rem', 
+      padding: '0.5rem', 
+      overflowY: 'auto',
       boxSizing: 'border-box' 
     }}>
-      <div style={{ width: '100%', maxWidth: '1050px' }}>
+      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {/* Top Bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', padding: '0 0.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.5rem' }}>
           <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 700 }}>Test Your Knowledge</h3>
           <div style={{ color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600 }}>
             Question {currentQuestion + 1} of {questions.length}
@@ -179,26 +181,29 @@ export default function Questions({ onComplete, onNext }) {
           background: 'var(--surface)', 
           border: '2px solid #818cf8',
           borderRadius: '20px', 
-          padding: '1.75rem 2.5rem', 
+          padding: '1.25rem 1.75rem', 
           boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '1rem',
+          gap: '0.85rem',
           width: '100%',
+          flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
           boxSizing: 'border-box'
         }}>
           {/* Title */}
-          <h3 style={{ margin: 0, color: '#6366f1', fontSize: '1.45rem', fontWeight: 800 }}>
+          <h3 style={{ margin: 0, color: '#6366f1', fontSize: 'clamp(1.15rem, 1.8vw, 1.45rem)', fontWeight: 800 }}>
             {q.title}
           </h3>
 
           {/* Question Text */}
-          <p style={{ margin: 0, fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600, color: 'var(--text-heading)' }}>
+          <p style={{ margin: 0, fontSize: 'clamp(0.95rem, 1.5vw, 1.15rem)', lineHeight: '1.45', fontWeight: 600, color: 'var(--text-heading)' }}>
             {q.question}
           </p>
 
           {/* Option Buttons */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             {q.options.map((option, index) => {
               const isSelected = selectedOption === option;
               const isCorrect = option === q.correctAnswer;
@@ -211,11 +216,11 @@ export default function Questions({ onComplete, onNext }) {
                 if (isCorrect) {
                   bgColor = 'rgba(16, 185, 129, 0.12)';
                   borderColor = '#10b981';
-                  icon = <CheckCircle size={22} color="#10b981" />;
+                  icon = <CheckCircle size={20} color="#10b981" />;
                 } else if (isSelected) {
                   bgColor = 'rgba(239, 68, 68, 0.12)';
                   borderColor = '#ef4444';
-                  icon = <XCircle size={22} color="#ef4444" />;
+                  icon = <XCircle size={20} color="#ef4444" />;
                 }
               } else if (isSelected) {
                 borderColor = '#6366f1';
@@ -232,14 +237,14 @@ export default function Questions({ onComplete, onNext }) {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '0.9rem 1.35rem',
+                    padding: '0.75rem 1.25rem',
                     borderRadius: '12px',
                     background: bgColor,
                     border: `2px solid ${borderColor}`,
                     color: 'var(--text)',
                     cursor: showFeedback ? 'default' : 'pointer',
                     textAlign: 'left',
-                    fontSize: '1.1rem',
+                    fontSize: '1.05rem',
                     fontWeight: 600,
                     transition: 'all 0.25s ease',
                     opacity: showFeedback && !isCorrect && !isSelected ? 0.6 : 1
@@ -254,22 +259,22 @@ export default function Questions({ onComplete, onNext }) {
 
           {/* Explanation & Next Question Button */}
           {showFeedback && (
-            <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <div style={{ padding: '1rem 1.35rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '14px', borderLeft: '5px solid #6366f1' }}>
-                <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '1.1rem', fontWeight: 800, color: '#6366f1' }}>Explanation</h4>
-                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.5' }}>{q.explanation}</p>
+            <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              <div style={{ padding: '0.75rem 1.15rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '12px', borderLeft: '5px solid #6366f1' }}>
+                <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.02rem', fontWeight: 800, color: '#6366f1' }}>Explanation</h4>
+                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.02rem', lineHeight: '1.45' }}>{q.explanation}</p>
               </div>
               
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button
                   onClick={handleNext}
                   style={{
-                    padding: '0.75rem 2.25rem',
+                    padding: '0.65rem 2rem',
                     background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '30px',
-                    fontSize: '1.15rem',
+                    fontSize: '1.1rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',

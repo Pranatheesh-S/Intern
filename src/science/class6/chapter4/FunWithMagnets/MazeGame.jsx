@@ -48,7 +48,6 @@ export default function MazeGame({ onSolve, isSolved }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Use actual dimensions for higher DPI if necessary, but keep original logic for now
     const W = canvas.width;
     const H = canvas.height;
     const ctx = canvas.getContext("2d");
@@ -221,6 +220,19 @@ export default function MazeGame({ onSolve, isSolved }) {
   }, []);
 
   return (
-    <canvas ref={canvasRef} width={800} height={800} style={{ width: '100%', height: 'auto', touchAction: 'none' }} />
+    <canvas 
+      ref={canvasRef} 
+      width={800} 
+      height={800} 
+      style={{ 
+        maxWidth: '100%', 
+        maxHeight: 'calc(100vh - 130px)', 
+        width: 'auto', 
+        height: 'auto', 
+        aspectRatio: '1/1', 
+        objectFit: 'contain', 
+        touchAction: 'none' 
+      }} 
+    />
   );
 }

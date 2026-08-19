@@ -347,23 +347,24 @@ export default function MagneticTable({ onComplete }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 100,
-          animation: 'fadeIn 0.3s ease-out'
+          zIndex: 100
         }}>
           <div style={{
             backgroundColor: '#ffffff',
             border: '1px solid #cbd5e1',
-            borderRadius: '24px',
-            padding: '2rem 2.5rem',
+            borderRadius: '30px',
+            padding: '2.5rem 3rem',
             textAlign: 'center',
-            boxShadow: '0 12px 35px rgba(0, 0, 0, 0.2)',
-            maxWidth: '460px',
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
+            maxWidth: '520px',
+            width: '90%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             gap: '1.25rem'
           }}>
-            <p style={{ margin: 0, color: '#1e40af', fontSize: '1.15rem', lineHeight: 1.5, fontWeight: 700 }}>
+            <h2 style={{ fontSize: '1.6rem', margin: 0, color: '#1e293b', fontWeight: 800 }}>Instructions</h2>
+            <p style={{ margin: 0, color: '#475569', fontSize: '1.15rem', lineHeight: 1.5, fontWeight: 600 }}>
               Drag an object from the table image and drop it into its matching box on the right side to test!
             </p>
 
@@ -371,7 +372,7 @@ export default function MagneticTable({ onComplete }) {
               onClick={() => setShowInstructionModal(false)}
               style={{
                 padding: '1.1rem 3rem',
-                fontSize: '1.25rem',
+                fontSize: '1.15rem',
                 fontWeight: 800,
                 borderRadius: '40px',
                 backgroundColor: '#2563eb',
@@ -381,11 +382,12 @@ export default function MagneticTable({ onComplete }) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.75rem',
-                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
-                transition: 'all 0.25s ease'
+                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                transition: 'all 0.25s ease',
+                marginTop: '0.5rem'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.transform = 'scale(1.03)';
                 e.currentTarget.style.backgroundColor = '#1d4ed8';
               }}
               onMouseLeave={(e) => {
@@ -393,7 +395,7 @@ export default function MagneticTable({ onComplete }) {
                 e.currentTarget.style.backgroundColor = '#2563eb';
               }}
             >
-              Next <ArrowRight size={24} />
+              Start Experiment <ArrowRight size={22} color="#ffffff" />
             </button>
           </div>
         </div>
@@ -409,25 +411,31 @@ export default function MagneticTable({ onComplete }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 100,
-          animation: 'fadeIn 0.3s ease-out'
+          zIndex: 100
         }}>
           <div style={{
             backgroundColor: '#ffffff',
             border: '1px solid #cbd5e1',
-            borderRadius: '24px',
-            padding: '1.75rem 2.5rem',
+            borderRadius: '30px',
+            padding: '2.5rem 3rem',
             textAlign: 'center',
-            boxShadow: '0 12px 35px rgba(0, 0, 0, 0.2)',
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
+            maxWidth: '520px',
+            width: '90%',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center'
+            gap: '1.25rem'
           }}>
+            <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#1e293b', fontWeight: 800 }}>Table Complete! 🎉</h2>
+            <p style={{ color: '#475569', margin: 0, fontSize: '1.15rem', fontWeight: 600 }}>
+              You have successfully tested all objects on the magnetic table!
+            </p>
             <button
               onClick={onComplete}
               style={{
                 padding: '1.1rem 3rem',
-                fontSize: '1.35rem',
+                fontSize: '1.15rem',
                 fontWeight: 800,
                 borderRadius: '40px',
                 backgroundColor: '#2563eb',
@@ -437,11 +445,12 @@ export default function MagneticTable({ onComplete }) {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.85rem',
-                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
-                transition: 'all 0.25s ease'
+                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                transition: 'all 0.25s ease',
+                marginTop: '0.5rem'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.transform = 'scale(1.03)';
                 e.currentTarget.style.backgroundColor = '#1d4ed8';
               }}
               onMouseLeave={(e) => {
@@ -449,7 +458,7 @@ export default function MagneticTable({ onComplete }) {
                 e.currentTarget.style.backgroundColor = '#2563eb';
               }}
             >
-              Continue to Quiz <ArrowRight size={28} />
+              Continue to Quiz <ArrowRight size={24} color="#ffffff" />
             </button>
           </div>
         </div>

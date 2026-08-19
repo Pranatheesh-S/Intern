@@ -154,17 +154,19 @@ export default function Quiz({ onComplete }) {
   return (
     <div style={{ 
       width: '100%', 
+      height: '100%',
       display: 'flex', 
       flexDirection: 'column', 
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '1rem 0.5rem', 
-      boxSizing: 'border-box' 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      padding: '0.5rem', 
+      boxSizing: 'border-box',
+      overflowY: 'auto'
     }}>
-      <div style={{ width: '100%', maxWidth: '1050px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', padding: '0 0.5rem' }}>
-          <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 700 }}>Test Your Knowledge</h3>
-          <div style={{ color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600 }}>
+      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', padding: '0 0.5rem', flexShrink: 0 }}>
+          <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)', fontWeight: 700 }}>Test Your Knowledge</h3>
+          <div style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 1.3vw, 1rem)', fontWeight: 600 }}>
             Question {currentQuestion + 1} of {quizData.length}
           </div>
         </div>
@@ -173,11 +175,19 @@ export default function Quiz({ onComplete }) {
           background: 'var(--surface)', 
           border: '2px solid #818cf8',
           borderRadius: '20px', 
-          padding: '1.75rem 2.5rem', 
-          boxShadow: '0 12px 35px rgba(0,0,0,0.08)' 
+          padding: '1.25rem 1.75rem', 
+          boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.85rem',
+          width: '100%',
+          flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
+          boxSizing: 'border-box'
         }}>
-          <h3 style={{ margin: '0 0 0.75rem 0', color: '#6366f1', fontSize: '1.45rem', fontWeight: 800 }}>{currentQ.title}</h3>
-          <p style={{ fontSize: '1.2rem', margin: '0 0 1.25rem 0', lineHeight: '1.5', fontWeight: 600, color: 'var(--text-heading)' }}>{currentQ.question}</p>
+          <h3 style={{ margin: 0, color: '#6366f1', fontSize: 'clamp(1.15rem, 1.8vw, 1.45rem)', fontWeight: 800 }}>{currentQ.title}</h3>
+          <p style={{ fontSize: 'clamp(0.95rem, 1.5vw, 1.15rem)', margin: 0, lineHeight: '1.45', fontWeight: 600, color: 'var(--text-heading)' }}>{currentQ.question}</p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {currentQ.options.map((option, index) => {

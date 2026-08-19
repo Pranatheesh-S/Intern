@@ -688,8 +688,8 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       {/* Bottom Right Controls */}
       <div style={{ 
         position: 'absolute', 
-        bottom: currentPage === 6 ? '15rem' : '2rem', 
-        right: '1.5rem', 
+        bottom: '1.25rem', 
+        right: '1.25rem', 
         display: 'flex', 
         zIndex: 99999 
       }}>
@@ -736,35 +736,36 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
       {isCompleted && (
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(6px)',
+          backgroundColor: 'rgba(15, 23, 42, 0.65)', backdropFilter: 'blur(6px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 100000, animation: 'fadeIn 0.3s ease-out'
+          zIndex: 100000
         }}>
           <div style={{
             backgroundColor: '#ffffff',
             border: '1px solid #cbd5e1',
-            borderRadius: '24px',
-            padding: '2rem 2.5rem',
-            maxWidth: '460px',
+            borderRadius: '30px',
+            padding: '2.5rem 3rem',
+            maxWidth: '520px',
+            width: '90%',
             textAlign: 'center',
-            boxShadow: '0 12px 35px rgba(0, 0, 0, 0.2)',
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             gap: '1.25rem'
           }}>
-            <h2 style={{ fontSize: '2rem', fontWeight: 800, margin: 0, color: '#1e40af' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, margin: 0, color: '#1e293b' }}>
               Story Completed!
             </h2>
-            <p style={{ fontSize: '1.08rem', color: '#2563eb', lineHeight: 1.5, margin: 0, fontWeight: 500 }}>
+            <p style={{ fontSize: '1.2rem', color: '#475569', lineHeight: 1.5, margin: 0, fontWeight: 600 }}>
               Reshma learned that magnets were essential for navigation. Are you ready to explore magnets yourself?
             </p>
             <button
               onClick={onComplete}
               style={{
                 width: '100%',
-                padding: '1.1rem 2.5rem',
-                fontSize: '1.25rem',
+                padding: '1.1rem 3rem',
+                fontSize: '1.15rem',
                 fontWeight: 800,
                 borderRadius: '40px',
                 backgroundColor: '#2563eb',
@@ -775,11 +776,12 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.75rem',
-                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
-                transition: 'all 0.25s ease'
+                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                transition: 'all 0.25s ease',
+                marginTop: '0.5rem'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.04)';
+                e.currentTarget.style.transform = 'scale(1.03)';
                 e.currentTarget.style.backgroundColor = '#1d4ed8';
               }}
               onMouseLeave={(e) => {
@@ -787,7 +789,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                 e.currentTarget.style.backgroundColor = '#2563eb';
               }}
             >
-              Continue to Activity 4.1 <ArrowRight size={24} />
+              Continue to Activity 4.1 <ArrowRight size={22} color="#ffffff" />
             </button>
           </div>
         </div>
