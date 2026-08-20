@@ -1,11 +1,22 @@
 import React from 'react';
 
 // Common SVG Wrapper to ensure consistency
-const SvgIcon = ({ children, viewBox = "0 0 100 40" }) => (
-  <svg viewBox={viewBox} width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+const SvgIcon = ({ children, viewBox = '0 0 100 54' }) => (
+  <svg viewBox={viewBox} width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style={{ display: 'block', overflow: 'visible' }}>
     {children}
   </svg>
 );
+
+export function SymbolDisplay({ Icon, width = 120, height = 52 }) {
+  if (!Icon) return null;
+  return (
+    <div style={{ width, height, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <div style={{ width: '100%', height: '100%' }}>
+        <Icon />
+      </div>
+    </div>
+  );
+}
 
 export const SVGSymbols = {
   // Transport
@@ -29,12 +40,12 @@ export const SVGSymbols = {
     </SvgIcon>
   ),
   Bridge: () => (
-    <SvgIcon>
-      <path d="M 50 5 L 50 35" stroke="#2F80ED" strokeWidth="3" />
-      <line x1="10" y1="18" x2="90" y2="18" stroke="#9E9E9E" strokeWidth="2" />
-      <line x1="10" y1="22" x2="90" y2="22" stroke="#9E9E9E" strokeWidth="2" />
-      <path d="M 35 12 L 45 18 L 55 18 L 65 12" fill="none" stroke="#555555" strokeWidth="1.5" />
-      <path d="M 35 28 L 45 22 L 55 22 L 65 28" fill="none" stroke="#555555" strokeWidth="1.5" />
+    <SvgIcon viewBox="0 0 100 54">
+      <path d="M 50 8 L 50 38" stroke="#2F80ED" strokeWidth="3" />
+      <line x1="10" y1="20" x2="90" y2="20" stroke="#9E9E9E" strokeWidth="2" />
+      <line x1="10" y1="24" x2="90" y2="24" stroke="#9E9E9E" strokeWidth="2" />
+      <path d="M 35 14 L 45 20 L 55 20 L 65 14" fill="none" stroke="#555555" strokeWidth="1.5" />
+      <path d="M 35 30 L 45 24 L 55 24 L 65 30" fill="none" stroke="#555555" strokeWidth="1.5" />
     </SvgIcon>
   ),
   Airport: () => (
@@ -48,7 +59,7 @@ export const SVGSymbols = {
   BusStand: () => (
     <SvgIcon>
       <rect x="42" y="12" width="16" height="16" rx="2" fill="none" stroke="#424242" strokeWidth="1.5" />
-      <text x="50" y="24" fontSize="10" fill="#424242" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">B</text>
+      <text x="50" y="24" fontSize="14" fill="#424242" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">B</text>
     </SvgIcon>
   ),
 
@@ -72,7 +83,7 @@ export const SVGSymbols = {
   // Important Places
   Temple: () => (
     <SvgIcon>
-      <g transform="translate(50 20) scale(1.5) translate(-50 -20)">
+      <g transform="translate(50 24) scale(1.2) translate(-50 -20)">
         <rect x="42" y="22" width="16" height="12" fill="#D32F2F" />
         <polygon points="42,22 50,10 58,22" fill="#D32F2F" />
         <line x1="50" y1="10" x2="50" y2="4" stroke="#D32F2F" strokeWidth="1.5" />
@@ -82,34 +93,34 @@ export const SVGSymbols = {
   ),
   PostOffice: () => (
     <SvgIcon>
-      <g transform="translate(50 20) scale(1.5) translate(-50 -20)">
+      <g transform="translate(50 24) scale(1.2) translate(-50 -20)">
         <rect x="40" y="10" width="20" height="20" rx="2" fill="#C62828" />
         <path d="M44,14 L50,18 L56,14" fill="none" stroke="#FFF" strokeWidth="1" />
-        <text x="50" y="27" fontSize="8" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">P.O</text>
+        <text x="50" y="27" fontSize="14" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">P.O</text>
       </g>
     </SvgIcon>
   ),
   PoliceStation: () => (
     <SvgIcon>
-      <g transform="translate(50 20) scale(1.5) translate(-50 -20)">
+      <g transform="translate(50 24) scale(1.2) translate(-50 -20)">
         <rect x="40" y="10" width="20" height="20" rx="2" fill="#1565C0" />
         <path d="M46,14 L54,14 L54,17 C54,19 50,21 50,21 C50,21 46,19 46,17 Z" fill="#FFF" />
-        <text x="50" y="27" fontSize="8" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">P.S</text>
+        <text x="50" y="27" fontSize="14" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">P.S</text>
       </g>
     </SvgIcon>
   ),
   Hospital: () => (
     <SvgIcon>
-      <g transform="translate(50 20) scale(1.5) translate(-50 -20)">
+      <g transform="translate(50 24) scale(1.2) translate(-50 -20)">
         <path d="M45,12 L55,12 L55,17 L60,17 L60,23 L55,23 L55,28 L45,28 L45,23 L40,23 L40,17 L45,17 Z" fill="#E53935" />
       </g>
     </SvgIcon>
   ),
   School: () => (
     <SvgIcon>
-      <g transform="translate(50 20) scale(1.5) translate(-50 -20)">
+      <g transform="translate(50 24) scale(1.2) translate(-50 -20)">
         <rect x="40" y="10" width="20" height="20" rx="2" fill="#F9A825" />
-        <text x="50" y="25" fontSize="12" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">S</text>
+        <text x="50" y="25" fontSize="14" fill="#FFF" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">S</text>
       </g>
     </SvgIcon>
   ),
@@ -140,11 +151,11 @@ export const SVGSymbols = {
     </SvgIcon>
   ),
   Forest: () => (
-    <SvgIcon>
-      {[[30, 10], [50, 10], [70, 10], [40, 20], [60, 20], [30, 30], [50, 30], [70, 30]].map(([x, y], i) => (
+    <SvgIcon viewBox="0 0 100 54">
+      {[[30, 12], [50, 12], [70, 12], [40, 22], [60, 22], [30, 32], [50, 32], [70, 32]].map(([x, y], i) => (
         <g key={i}>
           <circle cx={x} cy={y} r="5" fill="#43A047" stroke="#2E7D32" strokeWidth="1" />
-          <line x1={x} y1={y+5} x2={x} y2={y+11} stroke="#6D4C41" strokeWidth="1.5" />
+          <line x1={x} y1={y + 5} x2={x} y2={y + 11} stroke="#6D4C41" strokeWidth="1.5" />
         </g>
       ))}
     </SvgIcon>

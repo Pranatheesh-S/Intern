@@ -1,4 +1,5 @@
 import React from 'react';
+import CoverStage from './CoverStage';
 
 export default function BlueprintIntro({ onExplore }) {
   return (
@@ -13,7 +14,7 @@ export default function BlueprintIntro({ onExplore }) {
           
           position: fixed;
           top: 0; left: 0; right: 0; bottom: 0;
-          z-index: 1000;
+          z-index: 100000;
           font-family: var(--geo);
           color: var(--ink);
           overflow: hidden;
@@ -40,25 +41,25 @@ export default function BlueprintIntro({ onExplore }) {
           border: 1px solid rgba(255,255,255,.22); border-radius: 12px; pointer-events: none;
         }
         .etick {
-          position: absolute; font-family: var(--mono); font-size: clamp(9px, 1vw, 11px);
+          position: absolute; font-family: var(--mono); font-size: 14px;
           letter-spacing: .14em; color: var(--cyan); opacity: .75;
         }
 
-        /* two-column landscape layout */
+        /* two-column landscape layout: parallel aligned equal 50/50 split */
         .layout {
           position: absolute; inset: clamp(16px, 2.4vw, 34px); display: grid;
-          grid-template-columns: minmax(0, 0.92fr) 1px minmax(0, 1.08fr); align-items: center;
-          padding: clamp(20px, 3.5vw, 56px); gap: clamp(20px, 4vw, 64px);
+          grid-template-columns: 1fr 1fr; align-items: center; align-content: center; justify-items: center;
+          padding: clamp(20px, 3.5vw, 56px); gap: clamp(24px, 4vw, 64px);
         }
 
-        /* left: the map plot */
+        /* left: the interactive stage */
         .plot {
-          position: relative; aspect-ratio: 1; width: 100%; max-width: min(46vh, 460px); justify-self: center;
+          position: relative; aspect-ratio: 1; width: 100%; max-width: min(48vh, 480px); justify-self: center;
           border: 1px solid rgba(127,208,240,.28); border-radius: 14px;
           background: rgba(6,32,53,.35); display: grid; place-items: center;
         }
         .plot .glab {
-          position: absolute; font-family: var(--mono); font-size: clamp(8px, .9vw, 10px);
+          position: absolute; font-family: var(--mono); font-size: clamp(14px, .9vw, 14px);
           letter-spacing: .14em; color: var(--cyan); opacity: .7;
         }
         .plot .glab.tl { top: 8px; left: 10px; }
@@ -82,7 +83,7 @@ export default function BlueprintIntro({ onExplore }) {
         }
         .pin .lab {
           position: absolute; left: calc(50% + 16px); top: calc(50% - 34px);
-          font-family: var(--mono); font-size: clamp(9px, 1vw, 11px);
+          font-family: var(--mono); font-size: 14px;
           letter-spacing: .08em; color: var(--amber); white-space: nowrap;
         }
         @keyframes ping {
@@ -91,55 +92,46 @@ export default function BlueprintIntro({ onExplore }) {
           100% { box-shadow: 0 0 0 0 rgba(245,166,35,0); }
         }
 
-        /* meridian divider */
-        .meridian {
-          position: relative; width: 1px; height: 74%; justify-self: center;
-          background: repeating-linear-gradient(180deg, rgba(255,255,255,.35) 0 6px, transparent 6px 12px);
-        }
-        .meridian span {
-          position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg);
-          font-family: var(--mono); font-size: clamp(8px, .85vw, 10px); letter-spacing: .2em;
-          color: var(--cyan); white-space: nowrap;
-          background: var(--paper2); padding: 4px 8px; opacity: .85;
-        }
-
-        /* right: title cartouche */
-        .text { max-width: 560px; text-align: left; }
+        /* right: title cartouche with increased font sizes & parallel alignment */
+        .text { width: 100%; max-width: 580px; text-align: left; justify-self: center; align-self: center; }
         .pill {
-          display: inline-block; font-family: var(--mono); font-size: clamp(10px, 1.05vw, 12px);
-          letter-spacing: .26em; padding: 8px 18px; border-radius: 999px;
+          display: inline-block; font-family: var(--mono); font-size: clamp(14px, 1.15vw, 16px);
+          letter-spacing: .24em; padding: 9px 20px; border-radius: 999px; font-weight: 600;
           background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.3); color: var(--ink);
         }
         .coord {
-          font-family: var(--mono); font-size: clamp(11px, 1.2vw, 13px);
-          letter-spacing: .13em; color: var(--cyan); margin: clamp(16px, 2.2vw, 26px) 0 6px;
+          font-family: var(--mono); font-size: clamp(15px, 1.2vw, 18px); font-weight: 600;
+          letter-spacing: .14em; color: var(--cyan); margin: clamp(18px, 2.4vw, 28px) 0 8px;
         }
         .title {
-          font-family: var(--serif); font-weight: 600; font-size: clamp(48px, 7.6vw, 104px);
-          line-height: .92; color: #fff; letter-spacing: -.015em; margin: 0;
+          font-family: var(--serif); font-weight: 700;
+          font-size: clamp(44px, 6vw, 88px);
+          line-height: .96; color: #fff; letter-spacing: -.018em; margin: 0;
+          overflow-wrap: break-word; word-break: normal; hyphens: none;
         }
         .title em { font-style: normal; color: var(--cyan); }
         .metae {
-          display: flex; align-items: center; gap: 14px; margin-top: clamp(16px, 2.4vw, 28px);
+          display: flex; align-items: center; gap: 16px; margin-top: clamp(20px, 2.6vw, 32px);
+          flex-wrap: wrap;
         }
         .metae .no {
-          font-family: var(--mono); font-size: clamp(11px, 1.2vw, 13px); letter-spacing: .2em;
-          color: var(--ink); border: 1px solid rgba(255,255,255,.3); padding: 6px 12px; border-radius: 8px;
+          font-family: var(--mono); font-size: clamp(15px, 1.15vw, 17px); letter-spacing: .2em; font-weight: 700;
+          color: var(--ink); border: 1px solid rgba(255,255,255,.35); padding: 8px 16px; border-radius: 8px;
         }
         .metae .ch {
-          font-family: var(--geo); font-weight: 700; font-size: clamp(16px, 2.1vw, 24px);
+          font-family: var(--geo); font-weight: 700; font-size: clamp(20px, 2.5vw, 32px);
           color: #fff; letter-spacing: .02em;
         }
         .chsub {
-          font-family: var(--mono); font-size: clamp(9px, 1vw, 11px); letter-spacing: .16em;
-          color: var(--cyan); text-transform: uppercase; margin-top: 10px; opacity: .8;
+          font-family: var(--mono); font-size: clamp(15px, 1.2vw, 18px); letter-spacing: .14em; overflow-wrap: break-word;
+          color: var(--amber); text-transform: uppercase; margin-top: 12px; opacity: 0.98; font-weight: 600;
         }
         .cta {
-          margin-top: clamp(24px, 3.4vw, 42px); font-family: var(--geo); font-weight: 700;
+          margin-top: clamp(28px, 3.8vw, 46px); font-family: var(--geo); font-weight: 700;
           border: none; cursor: pointer; background: var(--amber); color: var(--paper2);
-          padding: clamp(13px, 1.6vw, 17px) clamp(28px, 3.4vw, 40px); border-radius: 12px;
-          font-size: clamp(14px, 1.6vw, 17px); box-shadow: 0 14px 34px rgba(245,166,35,.32);
-          transition: all .2s; display: inline-flex; gap: 10px; align-items: center;
+          padding: clamp(16px, 1.8vw, 20px) clamp(36px, 3.8vw, 48px); border-radius: 12px;
+          font-size: clamp(16px, 1.6vw, 20px); box-shadow: 0 14px 34px rgba(245,166,35,.36);
+          transition: all .2s; display: inline-flex; gap: 12px; align-items: center;
         }
         .cta:hover, .cta:focus-visible { background: var(--amber2); transform: translateY(-2px); outline: none; }
 
@@ -149,10 +141,10 @@ export default function BlueprintIntro({ onExplore }) {
         }
         .corner-brand .logo {
           width: 26px; height: 26px; border-radius: 7px; background: var(--amber); color: var(--paper2);
-          display: grid; place-items: center; font-weight: 800; font-family: var(--geo); font-size: 15px;
+          display: grid; place-items: center; font-weight: 800; font-family: var(--geo); font-size: 14px;
         }
-        .corner-brand b { font-size: 12px; color: #fff; }
-        .corner-brand span { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: rgba(234,246,251,.6); display: block; }
+        .corner-brand b { font-size: 14px; color: #fff; }
+        .corner-brand span { font-family: var(--mono); font-size: 14px; letter-spacing: .1em; color: rgba(234,246,251,.6); display: block; }
 
         /* portrait / small: stack */
         @media (max-aspect-ratio:1/1), (max-width:760px){
@@ -161,7 +153,6 @@ export default function BlueprintIntro({ onExplore }) {
             gap: clamp(18px, 4vh, 36px); overflow: auto;
           }
           .text { text-align: center; }
-          .meridian { display: none; }
           .plot { max-width: min(40vh, 320px); }
           .text { max-width: 100%; }
           .metae { justify-content: center; }
@@ -173,38 +164,28 @@ export default function BlueprintIntro({ onExplore }) {
       <div className="cover">
         <div className="grid"></div>
         <div className="frame"></div>
-        <span className="etick" style={{ top: 'clamp(22px, 3vw, 42px)', left: 'clamp(22px, 3vw, 42px)' }}>90°N</span>
-        <span className="etick" style={{ top: 'clamp(22px, 3vw, 42px)', right: 'clamp(22px, 3vw, 42px)' }}>0°</span>
-        <span className="etick" style={{ bottom: 'clamp(22px, 3vw, 42px)', left: 'clamp(22px, 3vw, 42px)' }}>EQUATOR</span>
-        <span className="etick" style={{ bottom: 'clamp(22px, 3vw, 42px)', right: 'clamp(22px, 3vw, 42px)' }}>180°</span>
+        <span className="etick" style={{ top: 'clamp(22px, 3vw, 42px)', left: 'clamp(22px, 3vw, 42px)' }}>90°N · 180°W</span>
+        <span className="etick" style={{ top: 'clamp(22px, 3vw, 42px)', right: 'clamp(22px, 3vw, 42px)' }}>90°N · 180°E</span>
+        <span className="etick" style={{ bottom: 'clamp(22px, 3vw, 42px)', left: 'clamp(22px, 3vw, 42px)' }}>90°S · 180°W</span>
+        <span className="etick" style={{ top: '50%', left: 'clamp(22px, 3vw, 42px)', transform: 'translateY(-50%)' }}>EQUATOR · 0°</span>
+        <span className="etick" style={{ top: 'clamp(22px, 3vw, 42px)', left: '50%', transform: 'translateX(-50%)' }}>NORTH POLE · 90°N</span>
+        <span className="etick" style={{ bottom: 'clamp(22px, 3vw, 42px)', left: '50%', transform: 'translateX(-50%)' }}>SOUTH POLE · 90°S</span>
 
         <div className="layout">
-          {/* LEFT · the plotted map */}
-          <div className="plot">
-            <span className="glab tl">75.8°E</span><span className="glab tr">N ↑</span>
-            <span className="glab bl">SHEET 01</span><span className="glab br">SST · CH 01</span>
-            <div className="pin">
-              <div className="cross"><i className="h"></i><i className="v"></i></div>
-              <div className="ping"></div>
-              <div className="dot"></div>
-              <div className="lab">◎ 23.26°N · 77.41°E</div>
-            </div>
-          </div>
-
-          {/* MERIDIAN */}
-          <div className="meridian"><span>PRIME MERIDIAN · 0°</span></div>
+          {/* LEFT · the interactive stage */}
+          <CoverStage />
 
           {/* RIGHT · title cartouche */}
           <div className="text">
             <span className="pill">CLASS 6 · SOCIAL SCIENCE</span>
             <div className="coord">◎ PLOTTING YOUR POSITION ON EARTH</div>
-            <h1 className="title">Social&nbsp;<em>Science</em></h1>
+            <h1 className="title">Social <em>Science</em></h1>
             <div className="metae">
-              <span className="no">CH 01 / 05</span>
+              <span className="no">CH 01 / 14</span>
               <span className="ch">Locating Places on the Earth</span>
             </div>
             <div className="chsub">Maps · Coordinates · Latitude &amp; Longitude · Time zones</div>
-            <button className="cta" onClick={onExplore}>Open Book&nbsp;→</button>
+            <button className="cta" onClick={onExplore}>Plot My Position&nbsp;→</button>
           </div>
         </div>
 

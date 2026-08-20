@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Photorealistic Earth Globe</title>
+  <meta name="description" content="A full-screen, photorealistic 3D Earth globe rendered with physically-based materials, volumetric clouds, and realistic atmosphere scattering.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #000;
+      cursor: grab;
+    }
+    body:active { cursor: grabbing; }
+    #globe-container {
+      width: 100vw; height: 100vh;
+      position: absolute; top: 0; left: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="globe-container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="data/geoData.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
