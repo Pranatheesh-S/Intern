@@ -52,17 +52,17 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
         fullPageMode ? (
           <div style={{ flex: 1, minHeight: 0, padding: '0px 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', overflow: 'hidden' }}>
             <div style={{ minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1b2a4a', fontWeight: 'bold', borderBottom: '4px solid #3b4ea0', paddingBottom: '8px', display: 'inline-block' }}>
+              <h2 style={{ flexShrink: 0, margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1b2a4a', fontWeight: 'bold', borderBottom: '4px solid #3b4ea0', paddingBottom: '8px', display: 'inline-block' }}>
                 What are Objects Made Of?
               </h2>
 
-              <div style={{ fontSize: 'var(--text-xl)', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
+              <div style={{ flex: '1 1 auto', minHeight: 0, fontSize: 'var(--text-xl)', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
                 <p style={{ margin: '0 0 12px 0' }}>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</p>
                 <p style={{ margin: '0 0 16px 0' }}>These are all <strong style={{ color: '#1b2a4a' }}>objects.</strong></p>
                 <p style={{ margin: '0' }}>Even though they look different, each object is made of some <strong style={{ color: '#1b2a4a' }}>material.</strong></p>
               </div>
 
-              <div style={{ border: '2px dashed #93c5fd', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+              <div style={{ flexShrink: 0, border: '2px dashed #93c5fd', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
                 <div style={{ fontSize: 'var(--text-xl)', color: '#1e293b', marginBottom: '8px' }}>
                   <strong style={{ color: '#1b2a4a' }}>Material:</strong> The substance used to make an object.
                 </div>
@@ -71,7 +71,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 </div>
               </div>
 
-              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+              <div style={{ flexShrink: 0, background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
                 <h4 style={{ margin: '0 0 8px 0', color: '#d97706', fontSize: 'var(--text-xl)' }}>Examples:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: '#451a03' }}>
                   <div>Chair can be made of wood, plastic or steel.</div>
@@ -80,7 +80,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 </div>
               </div>
 
-              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '16px' }}>
+              <div style={{ flexShrink: 0, background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '16px' }}>
                 <div style={{ fontSize: 'var(--text-xl)', color: '#1e3a8a', lineHeight: '1.4' }}>
                   <strong>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
                 </div>
@@ -123,17 +123,17 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           bookPage === 1 ? (
             <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               {/* ================= LEFT PAGE ================= */}
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1b2a4a', fontWeight: 'bold', borderBottom: '4px solid #3b4ea0', paddingBottom: '8px', display: 'inline-block' }}>
+              <h2 style={{ flexShrink: 0, margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1b2a4a', fontWeight: 'bold', borderBottom: '4px solid #3b4ea0', paddingBottom: '8px', display: 'inline-block' }}>
                 What are Objects Made Of?
               </h2>
 
-              <div style={{ fontSize: 'var(--text-xl)', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
+              <div style={{ flex: '1 1 auto', minHeight: 0, fontSize: 'var(--text-xl)', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
                 <p style={{ margin: '0 0 12px 0' }}>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</p>
                 <p style={{ margin: '0 0 16px 0' }}>These are all <strong style={{ color: '#1b2a4a' }}>objects.</strong></p>
                 <p style={{ margin: '0' }}>Even though they look different, each object is made of some <strong style={{ color: '#1b2a4a' }}>material.</strong></p>
               </div>
 
-              <div style={{ border: '2px dashed #93c5fd', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+              <div style={{ flexShrink: 0, border: '2px dashed #93c5fd', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
                 <div style={{ fontSize: 'var(--text-xl)', color: '#1e293b', marginBottom: '8px' }}>
                   <strong style={{ color: '#1b2a4a' }}>Material:</strong> The substance used to make an object.
                 </div>
@@ -142,7 +142,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 </div>
               </div>
 
-              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+              <div style={{ flexShrink: 0, background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
                 <h4 style={{ margin: '0 0 8px 0', color: '#d97706', fontSize: 'var(--text-xl)' }}>Examples:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: '#451a03' }}>
                   <div>Chair can be made of wood, plastic or steel.</div>
@@ -151,7 +151,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 </div>
               </div>
 
-              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '16px' }}>
+              <div style={{ flexShrink: 0, background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '16px' }}>
                 <div style={{ fontSize: 'var(--text-xl)', color: '#1e3a8a', lineHeight: '1.4' }}>
                   <strong>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
                 </div>

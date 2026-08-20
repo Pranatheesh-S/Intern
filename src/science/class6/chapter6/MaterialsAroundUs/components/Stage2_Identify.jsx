@@ -334,7 +334,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                             display: 'block', 
                             width: '100%', 
                             height: '100%', 
-                            objectFit: 'contain',
+                            objectFit: 'cover',
                             objectPosition: 'center',
                             filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.15))' 
                           }} 
