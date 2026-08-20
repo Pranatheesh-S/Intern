@@ -1,5 +1,258 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
+
+﻿const SvgIcons = {
+  MagnifyingGlass: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+  ),
+  Play: () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>),
+  Pause: () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>),
+  Check: () => (<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>),
+  IconCurrent: () => (<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>),
+  IconLocked: () => (<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="2" fill="none"></path></svg>)
+};
+
+
+const clues = [
+  {
+    id: 1,
+    title: "HOW OLD IS POTTERY?",
+    bigFact: "7,000ΓÇô8,000 YEARS",
+    text: "The earliest pottery found in the Indian subcontinent dates back to 7,000 to 8,000 years in the Ganga plains (Lahuradewa) and in Baluchistan (Mehrgarh).",
+    timelineText: "AGE"
+  },
+  {
+    id: 2,
+    title: "POTTERY TECHNOLOGY",
+    bigFact: "AROUND 4000 BCE",
+    text: "About 4000 BCE onwards, Sindhu-Sarasvat─½ developed techniques of wheel-turned pottery production, pigmentation, application of protective or decorative coats (called ΓÇÿslipsΓÇÖ) of multiple colours, decorative painting, etc.",
+    timelineText: "SHAPING"
+  },
+  {
+    id: 3,
+    title: "HARAPPAN POTTERY",
+    bigFact: "2600ΓÇô1900 BCE",
+    text: "These techniques became further sophisticated during the Sindhu-Sarasvat─½ (also known as ΓÇÿHarappanΓÇÖ) Civilisation (2600ΓÇô1900 BCE), with a bright red surface painted with black-coloured designs displaying geometric patterns, and aquatic and terrestrial animals.",
+    timelineText: "DESIGN"
+  },
+  {
+    id: 4,
+    title: "HOW WAS IT MADE?",
+    bigFact: "TERRACOTTA",
+    text: "The clay used for making pots, dishes, bowls and other items was carefully selected and cleaned, sieved, kneaded, turned over a wheel and finally baked in kilns (baked clay is called ΓÇÿterracottaΓÇÖ).",
+    timelineText: "MAKING"
+  },
+  {
+    id: 5,
+    title: "HOW WAS IT USED?",
+    bigFact: "STORAGE & COOKING",
+    text: "Pots were used for various purposes, from cooking to storage of food grains, oil, ghee, and so on. Some very large storage jars and other pottery items are exhibited at the National Museum, New Delhi.",
+    timelineText: "USES"
+  }
+];
+
+const HighlightedText = ({ phrases, activeCharIndex }) => {
+  const fullText = phrases.join('');
+  return (
+    <span>
+      {fullText.split('').map((char, index) => (
+        <span key={index} style={{
+          backgroundColor: index < activeCharIndex ? '#fef08a' : 'transparent',
+          color: index < activeCharIndex ? '#000' : 'inherit',
+          transition: 'background-color 0.1s',
+          borderRadius: '2px'
+        }}>
+          {char}
+        </span>
+      ))}
+    </span>
+  );
+};
+
+const PotterySpotlight = ({ page1Layout }) => {
+  const [currentClue, setCurrentClue] = useState(1);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [activeCharIndex, setActiveCharIndex] = useState(-1);
+  const [hasPlayed, setHasPlayed] = useState(false);
+
+  const currentData = clues[currentClue - 1];
+
+  const stopAudio = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsPlaying(false);
+    setActiveCharIndex(-1);
+  };
+
+  useEffect(() => {
+    stopAudio();
+    setHasPlayed(false);
+  }, [currentClue]);
+
+  useEffect(() => {
+    return stopAudio;
+  }, []);
+
+  const playAudio = () => {
+    if (!('speechSynthesis' in window)) return;
+    stopAudio();
+    setIsPlaying(true);
+    setHasPlayed(true);
+
+    const fullText = currentData.text;
+    const utterance = new SpeechSynthesisUtterance(fullText);
+    utterance.lang = 'en-IN';
+    const voices = window.speechSynthesis.getVoices();
+    const femaleVoice = voices.find(v => v.lang === 'en-IN' && (v.name.includes('Female') || v.name.includes('Ravi') === false));
+    if (femaleVoice) utterance.voice = femaleVoice;
+    
+    utterance.rate = 0.9;
+    
+    utterance.onboundary = (e) => {
+      setActiveCharIndex(e.charIndex);
+    };
+    
+    utterance.onend = () => {
+      setIsPlaying(false);
+      setActiveCharIndex(fullText.length);
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const timelineNode = (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 'auto', paddingTop: '16px', flexWrap: 'nowrap', overflow: 'hidden' }}>
+      {clues.map((c, idx) => (
+        <React.Fragment key={c.id}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+            <div 
+              onClick={() => setCurrentClue(c.id)}
+              style={{
+                width: '32px', height: '32px', 
+                borderRadius: '50%',
+                background: currentClue === c.id ? '#3b82f6' : (currentClue > c.id ? '#10b981' : '#e2e8f0'),
+                color: currentClue === c.id || currentClue > c.id ? 'white' : '#64748b',
+                display: 'flex', justifyContent: 'center', alignItems: 'center',
+                fontWeight: 'bold', fontSize: '14px', cursor: 'pointer',
+                boxShadow: currentClue === c.id ? '0 0 0 4px rgba(59,130,246,0.3)' : 'none',
+                flexShrink: 0
+              }}
+            >
+              {currentClue > c.id ? <SvgIcons.Check /> : `0${c.id}`}
+            </div>
+            <div style={{ 
+              fontSize: '10px', 
+              fontWeight: 'bold', 
+              color: currentClue === c.id ? '#3b82f6' : '#64748b',
+              marginTop: '4px'
+            }}>
+              {c.timelineText}
+            </div>
+          </div>
+          {idx < clues.length - 1 && (
+            <div style={{ 
+              height: '4px', 
+              width: '40px',
+              background: currentClue > c.id ? '#10b981' : '#e2e8f0',
+              margin: '0 4px',
+              flexShrink: 1,
+              transform: 'translateY(-8px)'
+            }} />
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '0', boxSizing: 'border-box', overflow: 'hidden' }}>
+      
+      <div style={{ marginBottom: 'clamp(8px, 1.5vh, 16px)' }}>
+        <h3 style={{ fontSize: 'clamp(20px, 3vw, 36px)', fontWeight: 'bold', color: '#1e293b', margin: '0 0 4px 0', wordBreak: 'break-word', lineHeight: '1.2' }}>
+          {currentData.title}
+        </h3>
+        <div style={{ fontSize: 'clamp(14px, 2vw, 22px)', fontWeight: 'bold', color: '#3b82f6', letterSpacing: '1px' }}>
+          DO YOU KNOW?
+        </div>
+      </div>
+
+      <div style={{ 
+        flex: '1 1 auto', 
+        backgroundColor: '#f8fafc', 
+        borderRadius: '12px', 
+        border: '1px solid #e2e8f0', 
+        padding: 'clamp(12px, 2.5vmin, 24px)',
+
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        marginBottom: 'clamp(8px, 1.5vh, 16px)',
+        minHeight: 0,
+        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)',
+        boxSizing: 'border-box',
+        overflow: 'hidden'
+      }}>
+        
+        <div style={{ fontSize: 'clamp(24px, 4.5vmin, 60px)', fontWeight: '900', color: '#1e3a8a', marginBottom: 'clamp(8px, 1.5vh, 24px)', lineHeight: '1.1', wordBreak: 'break-word' }}>
+          {currentData.bigFact}
+        </div>
+        
+        <div style={{ fontSize: 'clamp(14px, 2.5vmin, 24px)', color: '#334155', lineHeight: '1.5', maxWidth: '100%', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}>
+          {isPlaying ? (
+            <HighlightedText phrases={[currentData.text]} activeCharIndex={activeCharIndex} />
+          ) : (
+             <span style={{ backgroundColor: hasPlayed ? '#fef08a' : 'transparent' }}>{currentData.text}</span>
+          )}
+        </div>
+      </div>
+
+      <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'space-between', alignItems: 'center' }}>
+          <button 
+            onClick={isPlaying ? stopAudio : playAudio}
+            style={{
+              background: isPlaying ? '#ef4444' : '#3b82f6',
+              color: 'white', border: 'none', borderRadius: '24px',
+              padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)',
+              display: 'flex', alignItems: 'center', gap: '8px',
+              fontWeight: 'bold', fontSize: 'clamp(14px, 2vw, 18px)',
+              cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}
+          >
+            {isPlaying ? <SvgIcons.Pause /> : <SvgIcons.Play />}
+            {isPlaying ? 'PLAYING...' : (hasPlayed ? 'PLAY AGAIN' : 'PLAY EXPLANATION')}
+          </button>
+          
+          {currentClue < clues.length ? (
+             <button 
+               onClick={() => setCurrentClue(currentClue + 1)}
+               style={{
+                 background: '#8b5cf6', color: 'white', border: 'none', borderRadius: '24px',
+                 padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)', fontWeight: 'bold', fontSize: 'clamp(14px, 2vw, 18px)',
+                 cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+               }}
+             >
+               NEXT CLUE →
+             </button>
+          ) : (
+             <div style={{
+                 background: '#10b981', color: 'white', borderRadius: '24px',
+                 padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)', fontWeight: 'bold', fontSize: 'clamp(14px, 2vw, 18px)',
+
+                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+               }}>
+               INVESTIGATION COMPLETE! <SvgIcons.Check />
+             </div>
+          )}
+        </div>
+        {timelineNode}
+      </div>
+    </div>
+  );
+};
 
 export default function InvestigationHandbook({ highestUnlockedIndex = 0, currentFlowIndex = 0, stageCompleted = false, onNext, onComplete }) {
   const handleProceed = onNext || onComplete;
@@ -71,61 +324,26 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 What are Objects Made Of?
               </h2>
 
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', background: '#f8fafc', padding: '16px', borderRadius: '12px', marginBottom: '16px', gap: '16px' }}>
-                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ width: 'clamp(63px, 9vw, 135px)', height: 'clamp(63px, 9vw, 135px)' }} />
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
-                  <div style={{ fontSize: 'var(--text-2xl)' }}>📕</div>
-                  <div style={{ marginBottom: '2px', display: 'flex', alignItems: 'center', height: '32px' }}>
-                    <svg width="32" height="32" viewBox="0 0 50 50" style={{ verticalAlign: 'middle', transform: 'translateY(-2px)' }}>
-                      <rect x="15" y="15" width="20" height="32" rx="3" fill="#38bdf8" />
-                      <rect x="17" y="17" width="3" height="28" fill="rgba(255,255,255,0.6)" rx="1" />
-                      <rect x="18.5" y="8" width="13" height="7" fill="#0ea5e9" />
-                      <rect x="20.5" y="2" width="9" height="6" rx="1" fill="#0284c7" />
-                    </svg>
-                  </div>
-                  <div style={{ fontSize: 'var(--text-2xl)' }}>✏️</div>
-                  <div style={{ fontSize: 'var(--text-2xl)' }}>🪑</div>
-                </div>
+              <div style={{ fontSize: '28px', color: '#334155', lineHeight: '1.6', marginBottom: '12px', fontWeight: '500' }}>
+                <p style={{ margin: '0 0 8px 0' }}>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</p>
+                <p style={{ margin: '0' }}>These are all <strong style={{ color: '#1b2a4a', fontWeight: '800' }}>objects</strong>. Even though they look different, each object is made of some <strong style={{ color: '#1b2a4a', fontWeight: '800' }}>material</strong>.</p>
               </div>
 
-              <div style={{ fontSize: 'var(--text-xl)', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
-                <p style={{ margin: '0 0 12px 0' }}>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</p>
-                <p style={{ margin: '0 0 16px 0' }}>These are all <strong style={{ color: '#1b2a4a' }}>objects.</strong></p>
-                <p style={{ margin: '0' }}>Even though they look different, each object is made of some <strong style={{ color: '#1b2a4a' }}>material.</strong></p>
+              <div style={{ border: '1px dashed #94a3b8', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+                <div style={{ fontSize: 'var(--text-xl)', color: '#1e293b', marginBottom: '8px' }}><strong style={{ color: '#1b2a4a' }}>Material:</strong> The substance used to make an object.</div>
+                <div style={{ fontSize: 'var(--text-xl)', color: '#1e293b' }}><strong style={{ color: '#1b2a4a' }}>Object:</strong> Anything we can see or use around us.</div>
               </div>
 
-              <div style={{ border: '2px dashed #93c5fd', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                  <div style={{ background: '#e0e7ff', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 'var(--text-lg)', flexShrink: 0 }}>🧱</div>
-                  <div style={{ fontSize: 'var(--text-xl)', color: '#1e293b' }}><strong style={{ color: '#1b2a4a' }}>Material:</strong> The substance used to make an object.</div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ background: '#dcfce7', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 'var(--text-lg)', flexShrink: 0 }}>📦</div>
-                  <div style={{ fontSize: 'var(--text-xl)', color: '#1e293b' }}><strong style={{ color: '#1b2a4a' }}>Object:</strong> Anything we can see or use around us.</div>
-                </div>
-              </div>
-
-              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
                 <h4 style={{ margin: '0 0 8px 0', color: '#d97706', fontSize: 'var(--text-xl)' }}>Examples:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: '#451a03' }}>
-                  <div style={{ display: 'flex', gap: '8px' }}><span>🪑</span> Chair can be made of wood, plastic or steel.</div>
-                  <div style={{ display: 'flex', gap: '8px' }}><span>🍽️</span> A plate can be made of steel, glass or plastic.</div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <span>
-                      <svg width="16" height="16" viewBox="0 0 50 50" style={{ verticalAlign: 'middle', transform: 'translateY(-2px)' }}>
-                        <rect x="15" y="15" width="20" height="32" rx="3" fill="#38bdf8" />
-                        <rect x="17" y="17" width="3" height="28" fill="rgba(255,255,255,0.6)" rx="1" />
-                        <rect x="18.5" y="8" width="13" height="7" fill="#0ea5e9" />
-                        <rect x="20.5" y="2" width="9" height="6" rx="1" fill="#0284c7" />
-                      </svg>
-                    </span> 
-                    A bottle can be made of plastic, glass or steel.
-                  </div>
+                  <div>Chair can be made of wood, plastic or steel.</div>
+                  <div>A plate can be made of steel, glass or plastic.</div>
+                  <div>A bottle can be made of plastic, glass or steel.</div>
                 </div>
               </div>
 
-              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: 'var(--text-xl)' }}>💡</div>
+              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '16px', display: 'flex', alignItems: 'flex-start' }}>
                 <div style={{ fontSize: 'var(--text-xl)', color: '#1e3a8a', lineHeight: '1.4' }}>
                   <strong>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
                 </div>
@@ -138,30 +356,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 Historical Spotlight: Pottery
               </h2>
 
-              <div style={{ background: '#fdf6e3', border: '2px solid #eab308', borderRadius: '12px', padding: '16px', marginBottom: '16px', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: '-15px', right: '20px', background: '#eab308', color: 'white', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>Do you know?</div>
-                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#451a03', lineHeight: '1.5' }}>
-                  The earliest pottery found in the Indian subcontinent dates back to <strong>7,000 to 8,000 years</strong> in the Ganga plains (Lahuradewa) and in Baluchistan (Mehrgarh). 
-                </p>
-                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#451a03', lineHeight: '1.5' }}>
-                  About <strong>4000 BCE onwards</strong>, Sindhu-Sarasvati developed techniques of wheel-turned pottery production, pigmentation, application of protective or decorative coats (called 'slips') of multiple colours, decorative painting, etc. 
-                </p>
-                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#451a03', lineHeight: '1.5' }}>
-                  These techniques became further sophisticated during the <strong>Sindhu-Sarasvati (also known as 'Harappan') Civilisation (2600-1900 BCE)</strong>, with a bright red surface painted with black-coloured designs displaying geometric patterns, and aquatic and terrestrial animals.
-                </p>
-              </div>
-
-              <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#334155', fontSize: 'var(--text-lg)' }}>How Pottery is Made</h4>
-                <p style={{ margin: '0', fontSize: 'var(--text-lg)', color: '#475569', lineHeight: '1.5' }}>
-                  The clay used for making pots, dishes, bowls and other items was carefully selected and cleaned, sieved, kneaded, turned over a wheel and finally baked in kilns (baked clay is called <strong>'terracotta'</strong>).
-                </p>
-              </div>
-
-              <div style={{ fontSize: 'var(--text-lg)', color: '#334155', lineHeight: '1.5' }}>
-                <p style={{ margin: '0 0 8px 0' }}>Pots were used for various purposes, from cooking to storage of food grains, oil, ghee, and so on.</p>
-                <p style={{ margin: '0' }}>Some very large storage jars and other pottery items are exhibited at the <strong>National Museum, New Delhi</strong>.</p>
-              </div>
+              <PotterySpotlight />
             </div>
           </>
         ) : isBarrier2 ? (

@@ -90,15 +90,21 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   
   const currentNode = chapterFlow[currentFlowIndex];
   
-  // Handlers for Mission / Debrief
   const handleMissionAccept = () => {
     if (currentNode.rewardXP && currentNode.type === 'mission') {
       addXp(currentNode.rewardXP);
     }
-    setShowHandbook(true);
     setStageCompleted(false);
     if (currentFlowIndex < chapterFlow.length - 1) {
       const nextIndex = currentFlowIndex + 1;
+      const nextNode = chapterFlow[nextIndex];
+      
+      if (nextNode && nextNode.id === 'stage2') {
+        setShowHandbook(false);
+      } else {
+        setShowHandbook(true);
+      }
+      
       setCurrentFlowIndex(nextIndex);
       if (nextIndex > highestUnlockedIndex) {
         setHighestUnlockedIndex(nextIndex);
@@ -424,6 +430,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
             onClick={() => {
               if (currentNode.id === 'stage3_material') {
                 const prevIndex = chapterFlow.findIndex(node => node.id === 'stage3_use');
+                if (prevIndex !== -1) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (currentNode.id === 'stage2') {
+                const prevIndex = chapterFlow.findIndex(node => node.title === 'Phase 2: Identification');
                 if (prevIndex !== -1) {
                   setShowHandbook(false);
                   setCurrentFlowIndex(prevIndex);

@@ -227,7 +227,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
         }
       `}</style>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(350px, 40%) minmax(0, 60%)', gap: '1.25rem', flex: 1, minHeight: 0, height: '100%', overflow: 'hidden', paddingLeft: '1rem', alignItems: 'stretch' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '1.25rem', flex: 1, minHeight: 0, height: '100%', overflow: 'hidden', paddingLeft: '1rem', alignItems: 'stretch' }}>
         {/* Left: Tray of items */}
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', height: '100%', width: '100%' }}>
           <div className="glass-panel" style={{ 
