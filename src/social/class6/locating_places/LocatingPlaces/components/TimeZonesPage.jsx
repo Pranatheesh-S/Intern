@@ -109,18 +109,22 @@ const TimeZonesGlobe = ({ step }) => {
              lineWidth={1}
              transparent opacity={0.3}
           />
-          <Html position={[0, 2.4, 0]} center zIndexRange={[100,0]}>
-             <div style={{ color: '#cbd5e1', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌓 day - night line</div>
-          </Html>
-          <Html position={[2.4, 1.2, 0]} center zIndexRange={[100,0]}>
-             <div style={{ color: '#fef08a', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ 12:00 NOON</div>
-          </Html>
-          <Html position={[-2.4, 0.8, 0]} center zIndexRange={[100,0]}>
-             <div style={{ color: '#93c5fd', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌙 MIDNIGHT</div>
-          </Html>
-          <Html position={[4, 1.5, 0]} center zIndexRange={[100,0]}>
-             <div style={{ color: '#fbbf24', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ sun rays</div>
-          </Html>
+          {step === 2 && (
+            <>
+              <Html position={[0, 2.4, 0]} center zIndexRange={[100,0]}>
+                 <div style={{ color: '#cbd5e1', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌓 day - night line</div>
+              </Html>
+              <Html position={[2.4, 1.2, 0]} center zIndexRange={[100,0]}>
+                 <div style={{ color: '#fef08a', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ 12:00 NOON</div>
+              </Html>
+              <Html position={[-2.4, 0.8, 0]} center zIndexRange={[100,0]}>
+                 <div style={{ color: '#93c5fd', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌙 MIDNIGHT</div>
+              </Html>
+              <Html position={[4, 1.5, 0]} center zIndexRange={[100,0]}>
+                 <div style={{ color: '#fbbf24', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ sun rays</div>
+              </Html>
+            </>
+          )}
         </group>
       )}
     </>
@@ -136,7 +140,7 @@ const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, form
   
   useFrame(() => {
     if (groupRef.current) {
-      groupRef.current.rotation.y = -82.5 * (Math.PI / 180);
+      groupRef.current.rotation.y = -172.5 * (Math.PI / 180);
     }
   });
 
@@ -156,9 +160,9 @@ const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, form
     <>
       <color attach="background" args={['#000000']} />
       <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-      <ambientLight intensity={0.4} />
+      <ambientLight intensity={0.15} />
       <directionalLight 
-        position={[10 * Math.sin(sunAngle), 0, 10 * Math.cos(sunAngle)]} 
+        position={[-10 * Math.sin(sunAngle), 0, 10 * Math.cos(sunAngle)]} 
         intensity={2.5} 
       />
 
@@ -188,11 +192,7 @@ const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, form
              <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: porbDay ? '#fef08a' : '#93c5fd' }}>{porbDay ? '☀️' : '🌙'} {format12(porbMins)}</div>
              <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
           </div>
-          {istMins === 17*60 + 42 && (
-            <div style={{ position: 'absolute', bottom: '100%', left: '50%', transform: 'translate(-50%, -10px)', background: '#fef3c7', color: '#92400E', padding: '10px', borderRadius: '12px 12px 0 12px', fontSize: '12px', fontWeight: 'bold', whiteSpace: 'pre-wrap', width: '160px', textAlign: 'center', border: '1px solid #fde68a', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
-              "My watch also says 17:42 — yet the Sun here shows only 4:50 p.m.."
-            </div>
-          )}
+
         </Html>
 
         <Html position={getLatLonPoint(27.5, 95.3, 2.25)} center zIndexRange={[100,0]}>
@@ -202,20 +202,10 @@ const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, form
              <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: tinDay ? '#fef08a' : '#93c5fd' }}>{tinDay ? '☀️' : '🌙'} {format12(tinMins)}</div>
              <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
           </div>
-          {istMins === 17*60 + 42 && (
-            <div style={{ position: 'absolute', bottom: '100%', left: '50%', transform: 'translate(-50%, -10px)', background: '#1e3a8a', color: '#bfdbfe', padding: '10px', borderRadius: '12px 12px 12px 0', fontSize: '12px', fontWeight: 'bold', whiteSpace: 'pre-wrap', width: '160px', textAlign: 'center', border: '1px solid #3b82f6', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
-              "My watch says 17:42 — but by the Sun it's already 6:33 p.m.!"
-            </div>
-          )}
+
         </Html>
       </group>
 
-      {showDayNight && (
-         <mesh rotation-y={sunAngle + Math.PI/2}>
-           <sphereGeometry args={[2.23, 64, 64, 0, Math.PI]} />
-           <meshBasicMaterial color="#000" transparent opacity={0.65} depthWrite={false} />
-         </mesh>
-      )}
     </>
   );
 };
@@ -266,18 +256,11 @@ const LocalTimeExplorer = ({ onNextActivity, onBack }) => {
         <div style={{ fontSize: '12px', color: '#94a3b8' }}>The same two friends — Porbandar (Gujarat) & Tinsukia (Assam)</div>
       </div>
       
-      <div style={{ position: 'absolute', top: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '10px', zIndex: 10 }}>
-         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '8px 16px', borderRadius: '100px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px', color: '#fff' }}>
-           ☀️ <div><strong>Local (Sun) time</strong><div style={{ color: '#94a3b8', fontSize: '10px' }}>follows the Sun — different at each place</div></div>
-         </div>
-         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '8px 16px', borderRadius: '100px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px', color: '#fff' }}>
-           🕒 <div><strong>Standard time: IST {format24(istMins)}</strong><div style={{ color: '#94a3b8', fontSize: '10px' }}>one shared clock (GMT +5:30, from 82½°E)</div></div>
-         </div>
-      </div>
 
-      <div style={{ position: 'absolute', top: 20, right: 30, zIndex: 10 }}>
-         <button className="dark-nav-btn next" onClick={onNextActivity} style={{ background: 'var(--green)', padding: '12px 24px' }}>
-            Finish <CheckCircle2 size={16} />
+
+      <div style={{ position: 'absolute', bottom: 30, right: 30, zIndex: 10 }}>
+         <button className="dark-nav-btn next" onClick={onNextActivity} style={{ padding: '12px 24px' }}>
+            Next <Play size={16} fill="currentColor" style={{ marginLeft: '4px' }} />
          </button>
       </div>
 
@@ -288,10 +271,10 @@ const LocalTimeExplorer = ({ onNextActivity, onBack }) => {
         </Canvas>
       </div>
 
-      <div style={{ position: 'absolute', bottom: 30, left: 30, width: '260px', background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(8px)', padding: '20px', borderRadius: '16px', border: '1px solid #334155', zIndex: 10 }}>
+      <div style={{ position: 'absolute', top: 20, right: 30, width: '260px', background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(8px)', padding: '20px', borderRadius: '16px', border: '1px solid #334155', zIndex: 10 }}>
          <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#94a3b8', letterSpacing: '1px', marginBottom: '12px' }}>CONTROLS</div>
          
-         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>
                <button onClick={() => setPlaying(!playing)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                  {playing ? <Pause size={16} /> : <Play size={16} />}
@@ -300,31 +283,22 @@ const LocalTimeExplorer = ({ onNextActivity, onBack }) => {
             </div>
             <input type="range" min="0" max="1440" value={timeMins} onChange={e => { setTimeMins(Number(e.target.value)); setPlaying(false); }} style={{ width: '80px', accentColor: '#3b82f6', cursor: 'pointer' }} />
          </div>
-
-         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>
-            <span>Day / night line</span>
-            <input type="checkbox" checked={showDayNight} onChange={e => setShowDayNight(e.target.checked)} style={{ accentColor: '#10b981', width: '16px', height: '16px', cursor: 'pointer' }} />
-         </div>
-         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>
-            <span>Grid & meridians</span>
-            <input type="checkbox" checked={showGrid} onChange={e => setShowGrid(e.target.checked)} style={{ accentColor: '#10b981', width: '16px', height: '16px', cursor: 'pointer' }} />
-         </div>
       </div>
 
       <div style={{ position: 'absolute', bottom: 30, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '16px', zIndex: 10 }}>
-         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '16px', borderRadius: '12px', textAlign: 'center', width: '160px' }}>
+         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
             <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' }}>Porbandar • Sun time</div>
             <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fef08a', margin: '4px 0' }}>{format24(porbMins)}</div>
             <div style={{ fontSize: '10px', color: '#94a3b8' }}>≈ 52 min behind IST</div>
          </div>
-         <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}>VS</div>
-         <div style={{ background: '#78350f', border: '1px solid #d97706', padding: '16px', borderRadius: '12px', textAlign: 'center', width: '180px' }}>
-            <div style={{ fontSize: '11px', color: '#fde68a', fontWeight: 'bold' }}>🕒 IST • standard (82½°E)</div>
-            <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#fff', margin: '4px 0' }}>{format24(istMins)}</div>
+         <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>VS</div>
+         <div style={{ background: '#78350f', border: '1px solid #d97706', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
+            <div style={{ fontSize: '11px', color: '#fde68a', fontWeight: 'bold' }}>🕒 IST (82½°E)</div>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', margin: '4px 0' }}>{format24(istMins)}</div>
             <div style={{ fontSize: '10px', color: '#fde68a' }}>the one shared clock</div>
          </div>
-         <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}>VS</div>
-         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '16px', borderRadius: '12px', textAlign: 'center', width: '160px' }}>
+         <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>VS</div>
+         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
             <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' }}>Tinsukia • Sun time</div>
             <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#93c5fd', margin: '4px 0' }}>{format24(tinMins)}</div>
             <div style={{ fontSize: '10px', color: '#94a3b8' }}>≈ 51 min ahead of IST</div>
@@ -334,7 +308,7 @@ const LocalTimeExplorer = ({ onNextActivity, onBack }) => {
       <button 
          className="dark-nav-btn" 
          onClick={onBack}
-         style={{ position: 'absolute', bottom: 30, right: 30, background: 'rgba(255,255,255,0.1)', zIndex: 10 }}
+         style={{ position: 'absolute', bottom: 30, left: 30, background: 'rgba(255,255,255,0.1)', zIndex: 10 }}
       >
          <ArrowLeft size={16} /> Back
       </button>
@@ -419,9 +393,9 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
           <div className="dark-top-title">Time Around the World — Why Clocks Differ</div>
           
           <div className="dark-globe-container">
-            <Canvas camera={{ position: [0, 0, 7], fov: 45 }}>
+            <Canvas camera={{ position: [1.5, 0, 7], fov: 45 }}>
               <TimeZonesGlobe step={step.stepNum} />
-              <OrbitControls enableZoom={true} enablePan={false} />
+              <OrbitControls enableZoom={true} enablePan={false} target={[1.5, 0, 0]} />
             </Canvas>
           </div>
 
