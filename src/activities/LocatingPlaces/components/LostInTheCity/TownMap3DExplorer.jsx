@@ -16,43 +16,45 @@ import person3d from './assets/person_3d.png';
 const VIEW_W = 1400;
 const VIEW_H = 760;
 
-/* ── 1. PLACES CONFIG (Strictly on Asphalt Road Corridors) ─────────── */
+/* ── 1. PLACES CONFIG (STRICTLY ROAD-LOCKED WITHIN ASPHALT LANES) ──────── */
+const ROAD_X = {
+  WEST_LANE: 50,      // West Lane (far left edge)
+  HOSPITAL_WAY: 345,  // Hospital Way (between Railway Station/Hospital/School and Pond/Town Hall/Market)
+  CIVIC_WAY: 500,     // Civic Way (Town Hall Plaza & Market Center)
+  BANK_ROAD: 650,     // Bank Road (between Town Hall/Market and Bank/Museum)
+  EAST_LANE: 955,     // East Lane (right side of Apex Bank and Museum)
+  FAR_EAST: 1345,     // Far East Avenue
+};
+
+const ROAD_Y = {
+  NORTH_AVE: 280,     // Northern Avenue running across top
+  CENTRAL_BLVD: 505,  // Central Boulevard running across center
+  SOUTHERN_RD: 735,   // Southern Road running along bottom
+};
+
 const PLACES = [
-  { id: 'RS', x: 340, y: 255, name: 'Railway Station', full: 'Central Junction Railway Station', icon: '🚂', type: 'station', start: true, blurb: 'Express rail terminal. Trains depart and arrive here.' },
-  { id: 'AP', x: 690, y: 255, name: 'Apartments', full: 'Sunview Heights Residency', icon: '🏢', type: 'apartment', blurb: 'Multi-story residential apartment towers.' },
-  { id: 'PG', x: 990, y: 255, name: 'Public Garden', full: 'Rosewood Botanical Garden', icon: '🌳', type: 'garden', blurb: 'Botanical flora, flower beds and walking paths.' },
-  { id: 'HO', x: 445, y: 380, name: 'Hospital', full: 'City Care Hospital', icon: '🏥', type: 'hospital', blurb: '24/7 emergency care, doctors and ambulance bay.' },
-  { id: 'NP', x: 690, y: 505, name: 'Town Hall', full: 'Civic Nagar Panchayat Town Hall', icon: '🏛️', type: 'civic', blurb: 'Municipal council and public administrative office.' },
-  { id: 'BK', x: 920, y: 505, name: 'Bank', full: 'Apex National Bank', icon: '🏦', type: 'bank', goal: true, blurb: 'Treasury, currency exchange and banking vaults.' },
-  { id: 'SC', x: 445, y: 620, name: 'School', full: 'Greenwood Public School', icon: '🏫', type: 'school', blurb: 'Primary & high school with student playground.' },
-  { id: 'MK', x: 690, y: 740, name: 'Market', full: 'Janata Central Bazaar', icon: '🛍️', type: 'market', blurb: 'Daily fresh fruits, vegetables and grocery stalls.' },
-  { id: 'MU', x: 920, y: 620, name: 'Museum', full: 'Heritage Antiquities Museum', icon: '🏛️', type: 'museum', blurb: 'Classical historical museum with ancient sculptures.' },
+  // ── ROW 1: NORTHERN AVENUE (Y = 280) ──
+  { id: 'W_N', x: ROAD_X.WEST_LANE, y: ROAD_Y.NORTH_AVE, name: 'West Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
+  { id: 'RS', x: ROAD_X.HOSPITAL_WAY, y: ROAD_Y.NORTH_AVE, name: 'Railway Station', full: 'Central Junction Railway Station', icon: '🚂', type: 'station', start: true, blurb: 'Express rail terminal concourse along Northern Ave & Hospital Way.' },
+  { id: 'AP', x: ROAD_X.CIVIC_WAY, y: ROAD_Y.NORTH_AVE, name: 'Apartments', full: 'Sunview Heights Residency', icon: '🏢', type: 'apartment', blurb: 'Multi-story residential apartment towers along Northern Ave.' },
+  { id: 'PG', x: ROAD_X.EAST_LANE, y: ROAD_Y.NORTH_AVE, name: 'Public Garden', full: 'Rosewood Botanical Garden', icon: '🌳', type: 'garden', blurb: 'Botanical greenhouse and floral park along Northern Ave.' },
+  { id: 'E_N', x: ROAD_X.FAR_EAST, y: ROAD_Y.NORTH_AVE, name: 'East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
 
-  { id: 'E1', x: 165, y: 255, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E2', x: 445, y: 255, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E3', x: 920, y: 255, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E4', x: 1210, y: 255, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E5', x: 165, y: 505, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E6', x: 445, y: 505, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E7', x: 1210, y: 505, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E8', x: 165, y: 740, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E9', x: 445, y: 740, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E10', x: 920, y: 740, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
-  { id: 'E11', x: 1210, y: 740, name: 'Empty Road', full: 'Road Intersection', icon: '🛣️', type: 'empty', blurb: 'Just an empty road intersection.' },
+  // ── ROW 2: CENTRAL BOULEVARD (Y = 505) ──
+  { id: 'W_C', x: ROAD_X.WEST_LANE, y: ROAD_Y.CENTRAL_BLVD, name: 'West Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
+  { id: 'HO', x: ROAD_X.HOSPITAL_WAY, y: ROAD_Y.CENTRAL_BLVD, name: 'Hospital', full: 'City Care Hospital', icon: '🏥', type: 'hospital', blurb: '24/7 emergency trauma center at Central Blvd & Hospital Way.' },
+  { id: 'NP', x: ROAD_X.CIVIC_WAY, y: ROAD_Y.CENTRAL_BLVD, name: 'Town Hall', full: 'Civic Nagar Panchayat Town Hall', icon: '🏛️', type: 'civic', blurb: 'Municipal civic council plaza at Central Blvd.' },
+  { id: 'BK', x: ROAD_X.BANK_ROAD, y: ROAD_Y.CENTRAL_BLVD, name: 'Bank', full: 'Apex National Bank', icon: '🏦', type: 'bank', goal: true, blurb: 'Treasury & banking vaults at Central Blvd & Bank Road.' },
+  { id: 'E_C', x: ROAD_X.EAST_LANE, y: ROAD_Y.CENTRAL_BLVD, name: 'East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
+  { id: 'FE_C', x: ROAD_X.FAR_EAST, y: ROAD_Y.CENTRAL_BLVD, name: 'Far East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
 
-  { id: 'L1', x: 60, y: 255, name: 'Road End', full: 'West Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-  { id: 'L2', x: 60, y: 505, name: 'Road End', full: 'West Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-  { id: 'L3', x: 60, y: 740, name: 'Road End', full: 'West Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-
-  { id: 'R1', x: 1340, y: 255, name: 'Road End', full: 'East Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-  { id: 'R2', x: 1340, y: 505, name: 'Road End', full: 'East Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-  { id: 'R3', x: 1340, y: 740, name: 'Road End', full: 'East Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-
-  { id: 'T1', x: 165, y: 100, name: 'Road End', full: 'North Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-  { id: 'T2', x: 445, y: 100, name: 'Road End', full: 'North Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-  { id: 'T3', x: 690, y: 100, name: 'Road End', full: 'North Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-  { id: 'T4', x: 920, y: 100, name: 'Road End', full: 'North Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
-  { id: 'T5', x: 1210, y: 100, name: 'Road End', full: 'North Edge', icon: '🚧', type: 'empty', blurb: 'End of the road.' },
+  // ── ROW 3: SOUTHERN ROAD (Y = 735) ──
+  { id: 'W_S', x: ROAD_X.WEST_LANE, y: ROAD_Y.SOUTHERN_RD, name: 'West Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
+  { id: 'SC', x: ROAD_X.HOSPITAL_WAY, y: ROAD_Y.SOUTHERN_RD, name: 'School', full: 'Greenwood Public School', icon: '🏫', type: 'school', blurb: 'Primary & high school campus at Southern Road & Hospital Way.' },
+  { id: 'MK', x: ROAD_X.CIVIC_WAY, y: ROAD_Y.SOUTHERN_RD, name: 'Market', full: 'Janata Central Bazaar', icon: '🛍️', type: 'market', blurb: 'Fresh daily bazaar and fruit market stalls on Southern Road.' },
+  { id: 'MU', x: ROAD_X.BANK_ROAD, y: ROAD_Y.SOUTHERN_RD, name: 'Museum', full: 'Heritage Antiquities Museum', icon: '🏛️', type: 'museum', blurb: 'Classical historical museum on Southern Road & Bank Road.' },
+  { id: 'E_S', x: ROAD_X.EAST_LANE, y: ROAD_Y.SOUTHERN_RD, name: 'East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
+  { id: 'FE_S', x: ROAD_X.FAR_EAST, y: ROAD_Y.SOUTHERN_RD, name: 'Far East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' }
 ];
 
 const BY_ID = {};
@@ -60,47 +62,30 @@ PLACES.forEach(p => { BY_ID[p.id] = p; });
 
 const nodeXY = (id) => ({ x: BY_ID[id].x, y: BY_ID[id].y });
 
-/* ── 2. ADJACENCY & ROAD PATHS ─────────────────────────────────────── */
+/* ── 2. ADJACENCY & ROAD PATHS (STRICTLY ON ASPHALT ROAD INTERSECTIONS) ── */
 const ADJ = {
-  // Row 1
-  L1: { E: 'E1' },
-  E1: { W: 'L1', E: 'RS', N: 'T1', S: 'E5' },
-  RS: { W: 'E1', E: 'E2' },
-  E2: { W: 'RS', E: 'AP', N: 'T2', S: 'HO' },
-  AP: { W: 'E2', E: 'E3', N: 'T3', S: 'NP' },
-  E3: { W: 'AP', E: 'PG', N: 'T4', S: 'BK' },
-  PG: { W: 'E3', E: 'E4' },
-  E4: { W: 'PG', E: 'R1', N: 'T5', S: 'E7' },
-  R1: { W: 'E4' },
+  // Row 1 (Northern Ave, Y = 280)
+  W_N: { E: 'RS' },
+  RS: { W: 'W_N', E: 'AP', S: 'HO' },
+  AP: { W: 'RS', E: 'PG', S: 'NP' },
+  PG: { W: 'AP', E: 'E_N', S: 'E_C' },
+  E_N: { W: 'PG' },
 
-  // Row 2
-  L2: { E: 'E5' },
-  E5: { W: 'L2', E: 'E6', N: 'E1', S: 'E8' },
-  E6: { W: 'E5', E: 'NP', N: 'HO', S: 'SC' },
-  NP: { W: 'E6', E: 'BK', N: 'AP', S: 'MK' },
-  BK: { W: 'NP', E: 'E7', N: 'E3', S: 'MU' },
-  E7: { W: 'BK', E: 'R2', N: 'E4', S: 'E11' },
-  R2: { W: 'E7' },
+  // Row 2 (Central Blvd, Y = 505)
+  W_C: { E: 'HO', N: 'W_N', S: 'W_S' },
+  HO: { W: 'W_C', E: 'NP', N: 'RS', S: 'SC' },
+  NP: { W: 'HO', E: 'BK', N: 'AP', S: 'MK' },
+  BK: { W: 'NP', E: 'E_C', S: 'MU' },
+  E_C: { W: 'BK', E: 'FE_C', N: 'PG', S: 'E_S' },
+  FE_C: { W: 'E_C', S: 'FE_S' },
 
-  // Row 3
-  L3: { E: 'E8' },
-  E8: { W: 'L3', E: 'E9', N: 'E5' },
-  E9: { W: 'E8', E: 'MK', N: 'SC' },
-  MK: { W: 'E9', E: 'E10', N: 'NP' },
-  E10: { W: 'MK', E: 'E11', N: 'MU' },
-  E11: { W: 'E10', E: 'R3', N: 'E7' },
-  R3: { W: 'E11' },
-
-  // Vertical connections that are places
-  T1: { S: 'E1' },
-  T2: { S: 'E2' },
-  T3: { S: 'AP' },
-  T4: { S: 'E3' },
-  T5: { S: 'E4' },
-
-  HO: { N: 'E2', S: 'E6' },
-  SC: { N: 'E6', S: 'E9' },
-  MU: { N: 'BK', S: 'E10' }
+  // Row 3 (Southern Road, Y = 735)
+  W_S: { E: 'SC', N: 'W_C' },
+  SC: { W: 'W_S', E: 'MK', N: 'HO' },
+  MK: { W: 'SC', E: 'MU', N: 'NP' },
+  MU: { W: 'MK', E: 'E_S', N: 'BK' },
+  E_S: { W: 'MU', E: 'FE_S', N: 'E_C' },
+  FE_S: { W: 'E_S', N: 'FE_C' }
 };
 
 function getRoadPoints(a, b) {
@@ -113,34 +98,35 @@ const DIR_WORD = { N: 'North', S: 'South', E: 'East', W: 'West' };
 
 /* ── 3. STREET NAME PLATES ─────────────────────────────────────────── */
 const STREETS = [
-  { id: 's1', name: 'NORTHERN AVE', x: 570, y: 255, angle: 0 },
-  { id: 's2', name: 'NORTHERN AVE', x: 1080, y: 255, angle: 0 },
-  { id: 's3', name: 'CENTRAL BLVD', x: 570, y: 505, angle: 0 },
-  { id: 's4', name: 'CENTRAL BLVD', x: 1080, y: 505, angle: 0 },
-  { id: 's5', name: 'SOUTHERN ROAD', x: 570, y: 740, angle: 0 },
-  { id: 's6', name: 'WEST LANE', x: 165, y: 380, angle: -90 },
-  { id: 's7', name: 'HOSPITAL WAY', x: 445, y: 380, angle: -90 },
-  { id: 's8', name: 'TOWN HALL ST', x: 700, y: 380, angle: -90 },
-  { id: 's9', name: 'BANK ROAD', x: 955, y: 380, angle: -90 },
-  { id: 's10', name: 'EAST LANE', x: 1210, y: 380, angle: -90 },
+  { id: 's1', name: 'NORTHERN AVE', x: 420, y: 280, angle: 0 },
+  { id: 's2', name: 'NORTHERN AVE', x: 780, y: 280, angle: 0 },
+  { id: 's3', name: 'CENTRAL BLVD', x: 420, y: 505, angle: 0 },
+  { id: 's4', name: 'CENTRAL BLVD', x: 780, y: 505, angle: 0 },
+  { id: 's5', name: 'SOUTHERN ROAD', x: 420, y: 735, angle: 0 },
+  { id: 's6', name: 'SOUTHERN ROAD', x: 780, y: 735, angle: 0 },
+  { id: 's7', name: 'WEST LANE', x: 50, y: 390, angle: -90 },
+  { id: 's8', name: 'HOSPITAL WAY', x: 345, y: 390, angle: -90 },
+  { id: 's9', name: 'BANK ROAD', x: 650, y: 620, angle: -90 },
+  { id: 's10', name: 'EAST LANE', x: 955, y: 390, angle: -90 },
 ];
 
 function streetBetween(aId, bId) {
   const ax = BY_ID[aId].x, ay = BY_ID[aId].y;
   const bx = BY_ID[bId].x, by = BY_ID[bId].y;
   if (ay === by) {
-    if (ay === 255) return 'NORTHERN AVE';
+    if (ay === 280) return 'NORTHERN AVE';
     if (ay === 505) return 'CENTRAL BLVD';
-    if (ay === 740) return 'SOUTHERN ROAD';
+    if (ay === 735) return 'SOUTHERN ROAD';
   }
   if (ax === bx) {
-    if (ax === 165) return 'WEST LANE';
-    if (ax === 445) return 'HOSPITAL WAY';
-    if (ax === 700) return 'TOWN HALL ST';
-    if (ax === 955) return 'BANK ROAD';
-    if (ax === 1210) return 'EAST LANE';
+    if (ax === 50) return 'WEST LANE';
+    if (ax === 345) return 'HOSPITAL WAY';
+    if (ax === 500) return 'CIVIC WAY';
+    if (ax === 650) return 'BANK ROAD';
+    if (ax === 955) return 'EAST LANE';
+    if (ax === 1345) return 'FAR EAST AVENUE';
   }
-  return 'the road';
+  return 'TOWN CORRIDOR';
 }
 
 /* ── 4. REALISTIC ARTICULATED 3D HUMAN EXPLORER (NATURAL BIPEDAL WALK) ── */
@@ -396,14 +382,14 @@ const Realistic3DPerson = ({ x, y, angle, isWalking }) => {
 
 
 
-/* ── 6. WRONG DIRECTION POPUP ──────────────────────────────────────── */
+/* ── 6. WRONG DIRECTION & DEAD END POPUPS ──────────────────────────── */
 const WrongDirPopup = ({ show, direction }) => {
   if (!show) return null;
   return (
     <div style={{
       position: 'absolute',
       top: '50%',
-      left: 'calc(50% - 155px)',
+      left: 'calc(50% - 150px)',
       transform: 'translate(-50%, -50%)',
       zIndex: 999,
       background: 'linear-gradient(145deg, #1E293B, #0F172A)',
@@ -412,14 +398,14 @@ const WrongDirPopup = ({ show, direction }) => {
       padding: '16px 24px',
       boxShadow: '0 16px 40px rgba(0,0,0,0.6), 0 0 20px rgba(239,68,68,0.25)',
       textAlign: 'center',
-      minWidth: '220px',
+      minWidth: '240px',
     }}>
-      <div style={{ fontSize: '24px', marginBottom: '4px' }}>⚠️</div>
+      <div style={{ fontSize: '24px', marginBottom: '4px' }}>🚫</div>
       <div style={{ fontSize: '15px', fontWeight: 900, color: '#FCA5A5', fontFamily: 'Space Grotesk, sans-serif' }}>
         NO ROAD {direction.toUpperCase()}
       </div>
       <div style={{ fontSize: '12px', fontWeight: 600, color: '#CBD5E1', marginTop: '4px' }}>
-        You must walk along asphalt road corridors and sidewalks.
+        Road closed. You cannot walk through buildings.
       </div>
     </div>
   );
@@ -437,21 +423,21 @@ const EmptyRoadPopup = ({ show }) => {
       background: 'linear-gradient(145deg, #1E293B, #0F172A)',
       border: '2px solid #EF4444',
       borderRadius: '16px',
-      padding: '16px 22px',
-      boxShadow: '0 16px 40px rgba(0,0,0,0.7), 0 0 20px rgba(239,68,68,0.3)',
+      padding: '16px 24px',
+      boxShadow: '0 16px 40px rgba(0,0,0,0.7), 0 0 25px rgba(239,68,68,0.35)',
       textAlign: 'center',
-      minWidth: '260px',
+      minWidth: '280px',
       pointerEvents: 'none'
     }}>
-      <div style={{ fontSize: '24px', marginBottom: '4px' }}>⚠️</div>
-      <div style={{ fontSize: '15px', fontWeight: 900, color: '#FCA5A5', fontFamily: 'Space Grotesk, sans-serif' }}>
+      <div style={{ fontSize: '26px', marginBottom: '4px' }}>⚠️</div>
+      <div style={{ fontSize: '15.5px', fontWeight: 900, color: '#FCA5A5', fontFamily: 'Space Grotesk, sans-serif' }}>
         WRONG DIRECTION!
       </div>
-      <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#E2E8F0', marginTop: '4px' }}>
-        No buildings nearby on this road.
+      <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#F87171', marginTop: '4px' }}>
+        Road Closure / Dead End ahead!
       </div>
-      <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-        Turn back and navigate toward a landmark!
+      <div style={{ fontSize: '11.5px', color: '#CBD5E1', marginTop: '3px' }}>
+        No buildings nearby. Turn back toward a landmark!
       </div>
     </div>
   );
@@ -483,6 +469,7 @@ const TownMap3DExplorer = ({ onComplete, onNext }) => {
 
   /* ── DRAGGABLE & MINIMIZABLE DIRECTION CONTROLS STATE ── */
   const viewportRef = useRef(null);
+  const [visitedSequence, setVisitedSequence] = useState([START]);
   const [dpadPos, setDpadPos] = useState(null);
   const [isDpadDragging, setIsDpadDragging] = useState(false);
   const [dpadDragOffset, setDpadDragOffset] = useState({ x: 0, y: 0 });
@@ -649,12 +636,15 @@ const TownMap3DExplorer = ({ onComplete, onNext }) => {
         setCur(targetId);
         setTrail(tr => [...tr, endPos]);
         setVisited(v => ({ ...v, [targetId]: true }));
+        if (target.type !== 'empty') {
+          setVisitedSequence(seq => seq.includes(targetId) ? seq : [...seq, targetId]);
+        }
         setLog(l => [...l, { text: `Walked ${DIR_WORD[dir]} along ${street} to ${target.name}.`, ok: true }]);
 
         if (target.type === 'empty') {
           setEmptyWarn(true);
-          setTimeout(() => setEmptyWarn(false), 2800);
-          setLog(l => [...l, { text: `⚠️ Wrong Direction! No buildings nearby on this road. Turn back or navigate toward a landmark!`, ok: false }]);
+          setTimeout(() => setEmptyWarn(false), 3000);
+          setLog(l => [...l, { text: `⚠️ Wrong Direction! Road closure / dead end ahead. No buildings nearby. Turn back toward a landmark!`, ok: false }]);
         }
 
         if (targetId === GOAL) {
@@ -674,11 +664,13 @@ const TownMap3DExplorer = ({ onComplete, onNext }) => {
     setPersonPos(nodeXY(START));
     setIsWalking(false);
     setHeading('E');
-    setActiveStreet('M.G. ROAD');
+    setActiveStreet('NORTHERN AVE');
     setTrail([nodeXY(START)]);
     setVisited({ [START]: true });
+    setVisitedSequence([START]);
     setWon(false);
     setWrongDir(null);
+    setEmptyWarn(false);
     setLog([{ text: `Returned to ${BY_ID[START].name}. Reach the ${BY_ID[GOAL].name}!`, ok: true }]);
   };
 
@@ -1033,21 +1025,71 @@ const TownMap3DExplorer = ({ onComplete, onNext }) => {
           </button>
         </div>
 
-        <div style={{
-          position: 'absolute',
-          top: '16px',
-          left: '16px',
-          zIndex: 100,
-          background: 'rgba(15, 23, 42, 0.85)',
-          border: '1px solid rgba(245, 158, 11, 0.25)',
-          borderRadius: '999px',
-          padding: '4px 12px',
-          color: '#94A3B8',
-          fontSize: '10.5px',
-          fontWeight: 700,
-          pointerEvents: 'none'
-        }}>
-          🖐️ Click & drag to move map • Scroll to zoom
+        {/* ── PLACES VISITED BREADCRUMB BAR (TOP BAR WITHOUT OVERLAP) ── */}
+        <div
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute',
+            top: '14px',
+            left: '14px',
+            zIndex: 120,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(15, 23, 42, 0.94)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(245, 158, 11, 0.35)',
+            borderRadius: '12px',
+            padding: '5px 12px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+            maxWidth: 'calc(100% - 410px)',
+            overflowX: 'auto',
+            scrollbarWidth: 'none',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
+            <span style={{ fontSize: '11px' }}>📍</span>
+            <span style={{ fontSize: '9.5px', fontWeight: 900, color: '#F59E0B', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+              VISITED ({visitedSequence.filter(id => BY_ID[id] && BY_ID[id].type !== 'empty').length})
+            </span>
+            <span style={{ color: '#475569', fontSize: '11px' }}>|</span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+            {visitedSequence.filter(id => BY_ID[id] && BY_ID[id].type !== 'empty').map((id, idx, arr) => {
+              const p = BY_ID[id];
+              const isLatest = id === cur;
+              const isGoalNode = id === GOAL;
+              return (
+                <React.Fragment key={id}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    background: isLatest
+                      ? 'linear-gradient(135deg, rgba(245,158,11,0.3) 0%, rgba(217,119,6,0.15) 100%)'
+                      : 'rgba(30, 41, 59, 0.8)',
+                    border: isLatest
+                      ? '1.5px solid #F59E0B'
+                      : (isGoalNode ? '1.5px solid #10B981' : '1px solid #334155'),
+                    borderRadius: '7px',
+                    padding: '2px 7px',
+                    color: isLatest ? '#FDE68A' : (isGoalNode ? '#6EE7B7' : '#E2E8F0'),
+                    fontSize: '10.5px',
+                    fontWeight: 800
+                  }}>
+                    <span style={{ fontSize: '12px' }}>{p.icon}</span>
+                    <span>{p.name}</span>
+                  </div>
+                  {idx < arr.length - 1 && (
+                    <span style={{ color: '#F59E0B', fontSize: '8.5px', fontWeight: 900 }}>➔</span>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
         </div>
 
         <svg

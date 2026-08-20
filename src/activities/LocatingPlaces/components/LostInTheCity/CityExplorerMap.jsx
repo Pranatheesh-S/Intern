@@ -567,6 +567,7 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
 
   /* ── DRAGGABLE & MINIMIZABLE DIRECTION CONTROLS STATE ── */
   const viewportRef = useRef(null);
+  const [visitedSequence, setVisitedSequence] = useState([START]);
   const [dpadPos, setDpadPos] = useState(null);
   const [isDpadDragging, setIsDpadDragging] = useState(false);
   const [dpadDragOffset, setDpadDragOffset] = useState({ x: 0, y: 0 });
@@ -748,6 +749,9 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
         setCur(targetId);
         setTrail(tr => [...tr, endPos]);
         setVisited(v => ({ ...v, [targetId]: true }));
+        if (target.type !== 'empty') {
+          setVisitedSequence(seq => seq.includes(targetId) ? seq : [...seq, targetId]);
+        }
         setLog(l => [...l, { text: `Walked ${DIR_WORD[dir]} along ${street} to ${target.name}.`, ok: true }]);
 
         if (target.type === 'empty') {
@@ -776,6 +780,7 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
     setActiveStreet('Central Avenue');
     setTrail([{ x: BY_ID[START].x, y: BY_ID[START].y }]);
     setVisited({ [START]: true });
+    setVisitedSequence([START]);
     setWon(false);
     setWrongDir(null);
     setEmptyWarn(false);
@@ -1127,21 +1132,71 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
           </button>
         </div>
 
-        <div style={{
-          position: 'absolute',
-          top: '16px',
-          left: '16px',
-          zIndex: 100,
-          background: 'rgba(15, 23, 42, 0.85)',
-          border: '1px solid rgba(56, 189, 248, 0.25)',
-          borderRadius: '999px',
-          padding: '4px 12px',
-          color: '#94A3B8',
-          fontSize: '10.5px',
-          fontWeight: 700,
-          pointerEvents: 'none'
-        }}>
-          🖐️ Click & drag to move map • Scroll to zoom
+        {/* ── PLACES VISITED BREADCRUMB BAR (TOP BAR WITHOUT OVERLAP) ── */}
+        <div
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute',
+            top: '14px',
+            left: '14px',
+            zIndex: 120,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(15, 23, 42, 0.94)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(56, 189, 248, 0.35)',
+            borderRadius: '12px',
+            padding: '5px 12px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+            maxWidth: 'calc(100% - 410px)',
+            overflowX: 'auto',
+            scrollbarWidth: 'none',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
+            <span style={{ fontSize: '11px' }}>📍</span>
+            <span style={{ fontSize: '9.5px', fontWeight: 900, color: '#38BDF8', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+              VISITED ({visitedSequence.filter(id => BY_ID[id] && BY_ID[id].type !== 'empty').length})
+            </span>
+            <span style={{ color: '#475569', fontSize: '11px' }}>|</span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+            {visitedSequence.filter(id => BY_ID[id] && BY_ID[id].type !== 'empty').map((id, idx, arr) => {
+              const p = BY_ID[id];
+              const isLatest = id === cur;
+              const isGoalNode = id === GOAL;
+              return (
+                <React.Fragment key={id}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    background: isLatest
+                      ? 'linear-gradient(135deg, rgba(56,189,248,0.3) 0%, rgba(2,132,199,0.15) 100%)'
+                      : 'rgba(30, 41, 59, 0.8)',
+                    border: isLatest
+                      ? '1.5px solid #38BDF8'
+                      : (isGoalNode ? '1.5px solid #10B981' : '1px solid #334155'),
+                    borderRadius: '7px',
+                    padding: '2px 7px',
+                    color: isLatest ? '#7DD3FC' : (isGoalNode ? '#6EE7B7' : '#E2E8F0'),
+                    fontSize: '10.5px',
+                    fontWeight: 800
+                  }}>
+                    <span style={{ fontSize: '12px' }}>{p.icon}</span>
+                    <span>{p.name}</span>
+                  </div>
+                  {idx < arr.length - 1 && (
+                    <span style={{ color: '#38BDF8', fontSize: '8.5px', fontWeight: 900 }}>➔</span>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
         </div>
 
         <svg
