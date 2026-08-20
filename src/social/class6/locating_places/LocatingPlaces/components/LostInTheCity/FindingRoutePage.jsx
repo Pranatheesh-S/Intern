@@ -861,6 +861,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   const [mapFull, setMapFull] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [winCity, setWinCity] = useState(false);
+  const [townCompletion, setTownCompletion] = useState(null);
 
   /* ── 8A. SEPARATE STATE FOR 3D ILLUSTRATED MAP ── */
   const [cur3D, setCur3D] = useState('RS');
@@ -1334,8 +1335,9 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
             {mapMode === '3d' && (
               <div style={{ position: 'absolute', inset: 0, paddingTop: '58px', background: '#F7F1E2' }}>
                 <TownMap3DExplorer
-                  onComplete={() => {
+                  onComplete={(stats) => {
                     setWin3D(true);
+                    setTownCompletion(stats);
                     if (onMissionUnlock) onMissionUnlock();
                   }}
                   onNext={() => {
@@ -1602,20 +1604,48 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
 
             {/* Win Overlay */}
             {(activeWin && !showQuiz && mapMode !== 'city') && (
-              <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: 'rgba(9,26,44,0.55)', backdropFilter: 'blur(3px)', zIndex: 25, animation: 'fadeIn 0.4s ease' }}>
-                <div style={{ background: '#fff', borderRadius: '18px', padding: '30px 34px', textAlign: 'center', maxWidth: '380px', boxShadow: '0 30px 70px rgba(0,0,0,0.4)' }}>
-                  <div style={{ fontSize: '44px' }}>🎉</div>
-                  <h3 style={{ fontFamily: '"Fraunces", serif', color: '#12a15f', fontSize: '26px', margin: '6px 0 8px' }}>You reached the Bank!</h3>
-                  <p style={{ color: '#5c6b7a', fontSize: '14px', lineHeight: 1.5, marginBottom: '24px' }}>
-                    {userTook === optTook ? (
-                      <span>Perfect route in <b>{userTook} roads</b> — that's the shortest possible! Railway Station → Hospital → Nagar Panchayat → Junction → Bank.</span>
-                    ) : (
-                      <span>You made it in <b>{userTook} roads</b>. The shortest route is <b>{optTook}</b> (for example: Hospital → Nagar Panchayat → Junction → Bank).</span>
+              <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: 'rgba(9,26,44,0.65)', backdropFilter: 'blur(4px)', zIndex: 999, animation: 'fadeIn 0.3s ease' }}>
+                <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '28px 32px', textAlign: 'center', maxWidth: '420px', boxShadow: '0 25px 60px rgba(0,0,0,0.4)', border: '1.5px solid #E2E8F0' }}>
+                  <div style={{ fontSize: '42px', marginBottom: '4px' }}>🎉</div>
+                  <h3 style={{ fontFamily: '"Space Grotesk", sans-serif', color: '#10B981', fontSize: '24px', fontWeight: 900, margin: '6px 0 8px' }}>
+                    You reached the Bank!
+                  </h3>
+                  <div style={{ color: '#475569', fontSize: '13.5px', lineHeight: 1.55, marginBottom: '20px' }}>
+                    <div>
+                      You completed the journey in <b>{townCompletion?.steps || activePath.length - 1 || 3} moves</b> across the town road network.
+                    </div>
+                    {townCompletion?.visitedPlaces && townCompletion.visitedPlaces.length > 1 && (
+                      <div style={{ marginTop: '10px', fontSize: '12px', color: '#334155', background: '#F8FAFC', padding: '8px 12px', borderRadius: '10px', border: '1px solid #E2E8F0', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', flexWrap: 'wrap' }}>
+                        <span>📍 Route:</span>
+                        {townCompletion.visitedPlaces.map((id, i) => (
+                          <span key={id}>
+                            {N_3D[id]?.label || id}
+                            {i < townCompletion.visitedPlaces.length - 1 && ' ➔ '}
+                          </span>
+                        ))}
+                      </div>
                     )}
-                  </p>
-                  <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                    <button onClick={activeResetHandler} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, border: '1px solid #d6e0ec', cursor: 'pointer', background: '#fff', color: '#5c6b7a', padding: '12px 20px', borderRadius: '999px', fontSize: '14px' }}>Play again</button>
-                    <button onClick={onBeginChapter} style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700, border: 'none', cursor: 'pointer', background: '#10B981', color: '#fff', padding: '12px 24px', borderRadius: '999px', fontSize: '15px', boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)' }}>Next Activity →</button>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <button
+                      onClick={() => {
+                        setWin3D(false);
+                        setTownCompletion(null);
+                        if (activeResetHandler) activeResetHandler();
+                      }}
+                      style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, border: '1.5px solid #CBD5E1', cursor: 'pointer', background: '#F8FAFC', color: '#475569', padding: '10px 20px', borderRadius: '12px', fontSize: '13.5px' }}
+                    >
+                      Play again
+                    </button>
+                    <button
+                      onClick={() => {
+                        setWin3D(false);
+                        setShowQuiz(true);
+                      }}
+                      style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, border: 'none', cursor: 'pointer', background: '#10B981', color: '#FFFFFF', padding: '10px 22px', borderRadius: '12px', fontSize: '13.5px', boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)' }}
+                    >
+                      Next Activity →
+                    </button>
                   </div>
                 </div>
               </div>

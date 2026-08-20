@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Compass, Navigation, CheckCircle2, User, AlertCircle, ArrowRight } from 'lucide-react';
-import mapBg from './assets/Map.png';
+import mapBg from './assets/town_map_fig1.jpg';
 import { MAP_NODES, MAP_EDGES, isBankReachable } from './MapGraph';
 
 export default function MapViewScene({ onComplete }) {
@@ -80,9 +80,9 @@ export default function MapViewScene({ onComplete }) {
           minWidth: '350px', 
           borderRadius: '24px', 
           overflow: 'hidden', 
-          border: '1px solid var(--border)', 
+          border: '1px solid #d6e0ec', 
           background: '#eef2f6',
-          boxShadow: 'var(--card-shadow)'
+          boxShadow: '0 8px 30px rgba(14,42,69,0.08)'
         }}>
           <img src={mapBg} alt="Town Map" style={{ width: '100%', height: 'auto', display: 'block' }} />
           
@@ -125,9 +125,9 @@ export default function MapViewScene({ onComplete }) {
               alignItems: 'center',
               justifyContent: 'center',
               boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-              border: '2px solid var(--accent)'
+              border: '2px solid #6366f1'
             }}>
-              <User size={20} color="var(--accent)" />
+              <User size={20} color="#6366f1" />
             </div>
           </div>
 
@@ -164,7 +164,7 @@ export default function MapViewScene({ onComplete }) {
                       cursor: 'pointer',
                       boxShadow: '0 4px 12px rgba(147,51,234,0.5)',
                       fontWeight: 'bold',
-                      fontSize: '0.85rem',
+                      fontSize: '14px',
                       transition: 'transform 0.2s'
                     }}
                     onMouseOver={(e) => e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1.1)'}
@@ -182,23 +182,23 @@ export default function MapViewScene({ onComplete }) {
         <div style={{ 
           flex: '1 1 30%', 
           minWidth: '280px', 
-          background: 'var(--surface)', 
+          background: '#ffffff', 
           padding: '2rem', 
           borderRadius: '24px', 
-          border: '1px solid var(--border)', 
+          border: '1px solid #d6e0ec', 
           display: 'flex', 
           flexDirection: 'column', 
           gap: '2rem',
-          boxShadow: 'var(--card-shadow)'
+          boxShadow: '0 8px 30px rgba(14,42,69,0.08)'
         }}>
           <div>
-            <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textTransform: 'uppercase', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', letterSpacing: '1px' }}>
+            <h3 style={{ color: '#5c6b7a', fontSize: '0.9rem', textTransform: 'uppercase', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', letterSpacing: '1px' }}>
               <Compass size={18} /> Mission
             </h3>
-            <p style={{ fontSize: '1.15rem', fontWeight: 'bold', color: 'var(--text-primary)', lineHeight: 1.4 }}>
+            <p style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#20303f', lineHeight: 1.4 }}>
               Help the boy reach the Bank.
             </p>
-            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginTop: '0.5rem', lineHeight: 1.4 }}>
+            <p style={{ fontSize: '14px', color: '#47586b', marginTop: '0.5rem', lineHeight: 1.4 }}>
               There may be more than one correct path. Choose the correct road whenever you reach a junction.
             </p>
           </div>
@@ -207,7 +207,7 @@ export default function MapViewScene({ onComplete }) {
             <button 
               onClick={handleStart}
               className="primary" 
-              style={{ padding: '1.25rem', fontSize: '1.1rem', borderRadius: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', border: 'none', background: 'var(--accent)', color: 'white', fontWeight: 'bold' }}
+              style={{ padding: '1.25rem', fontSize: '1.1rem', borderRadius: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', border: 'none', background: '#6366f1', color: 'white', fontWeight: 'bold' }}
             >
               <Navigation size={20} /> Let's Go
             </button>
@@ -216,24 +216,24 @@ export default function MapViewScene({ onComplete }) {
           {phase !== 'idle' && (
             <>
               {/* Progress */}
-              <div style={{ background: 'var(--bg-primary)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                <h4 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.5px' }}>Progress</h4>
+              <div style={{ background: '#ffffff', padding: '1.25rem', borderRadius: '12px', border: '1px solid #d6e0ec' }}>
+                <h4 style={{ color: '#5c6b7a', fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.5px' }}>Progress</h4>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>Railway Station</div>
-                  <ArrowRight size={16} color="var(--text-muted)" />
-                  <div style={{ color: 'var(--accent)', fontWeight: 'bold', fontSize: '0.95rem' }}>{MAP_NODES[currentNode]?.name}</div>
-                  <ArrowRight size={16} color="var(--text-muted)" />
-                  <div style={{ opacity: 0.5, fontSize: '0.95rem' }}>Bank</div>
+                  <div style={{ fontWeight: 'bold', fontSize: '14px' }}>Railway Station</div>
+                  <ArrowRight size={16} color="#5c6b7a" />
+                  <div style={{ color: '#6366f1', fontWeight: 'bold', fontSize: '14px' }}>{MAP_NODES[currentNode]?.name}</div>
+                  <ArrowRight size={16} color="#5c6b7a" />
+                  <div style={{ opacity: 0.5, fontSize: '14px' }}>Bank</div>
                 </div>
               </div>
 
               {/* Journey Log */}
               <div style={{ flex: 1 }}>
-                 <h4 style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.5px' }}>Journey Log</h4>
+                 <h4 style={{ color: '#5c6b7a', fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.5px' }}>Journey Log</h4>
                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                    {journeyLog.map((log, i) => (
-                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
-                       <CheckCircle2 size={16} color="var(--success, #22c55e)" /> {log}
+                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '14px', color: '#47586b' }}>
+                       <CheckCircle2 size={16} color="#10b981" /> {log}
                      </div>
                    ))}
                  </div>
@@ -245,11 +245,11 @@ export default function MapViewScene({ onComplete }) {
         {/* ERROR POPUP */}
         {showError && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
-             <div style={{ background: 'var(--surface)', padding: '2.5rem', borderRadius: '24px', textAlign: 'center', maxWidth: '350px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+             <div style={{ background: '#ffffff', padding: '2.5rem', borderRadius: '24px', textAlign: 'center', maxWidth: '350px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
                <AlertCircle size={56} color="#ef4444" style={{ margin: '0 auto 1.5rem' }} />
-               <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Oops!</h3>
-               <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>This road doesn't lead to the Bank. Try another direction.</p>
-               <button onClick={handleWrongClose} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '12px', fontSize: '1.05rem', fontWeight: 'bold', cursor: 'pointer', width: '100%' }}>Choose Again</button>
+               <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#20303f' }}>Oops!</h3>
+               <p style={{ marginBottom: '2rem', color: '#47586b', lineHeight: 1.5 }}>This road doesn't lead to the Bank. Try another direction.</p>
+               <button onClick={handleWrongClose} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '12px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', width: '100%' }}>Choose Again</button>
              </div>
           </div>
         )}
@@ -257,14 +257,14 @@ export default function MapViewScene({ onComplete }) {
         {/* SUCCESS POPUP */}
         {phase === 'success' && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
-             <div style={{ background: 'var(--surface)', padding: '3rem', borderRadius: '24px', textAlign: 'center', maxWidth: '420px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
-               <CheckCircle2 size={72} color="var(--success, #22c55e)" style={{ margin: '0 auto 1.5rem' }} />
-               <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Congratulations!</h2>
-               <p style={{ marginBottom: '2.5rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '1.1rem' }}>
+             <div style={{ background: '#ffffff', padding: '3rem', borderRadius: '24px', textAlign: 'center', maxWidth: '420px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+               <CheckCircle2 size={72} color="#10b981" style={{ margin: '0 auto 1.5rem' }} />
+               <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: '#20303f' }}>Congratulations!</h2>
+               <p style={{ marginBottom: '2.5rem', color: '#47586b', lineHeight: 1.6, fontSize: '1.1rem' }}>
                  You helped the boy reach the Bank using the town map. 
                  Maps help us choose the correct route and reach places easily.
                </p>
-               <button onClick={() => { setPhase('completed'); onComplete(); }} style={{ background: 'var(--accent)', color: 'white', border: 'none', padding: '1.25rem 2rem', borderRadius: '14px', fontSize: '1.15rem', fontWeight: 'bold', cursor: 'pointer', width: '100%', boxShadow: '0 4px 12px rgba(147,51,234,0.3)' }}>
+               <button onClick={() => { setPhase('completed'); onComplete(); }} style={{ background: '#6366f1', color: 'white', border: 'none', padding: '1.25rem 2rem', borderRadius: '14px', fontSize: '1.15rem', fontWeight: 'bold', cursor: 'pointer', width: '100%', boxShadow: '0 4px 12px rgba(147,51,234,0.3)' }}>
                  Continue to Quiz
                </button>
              </div>

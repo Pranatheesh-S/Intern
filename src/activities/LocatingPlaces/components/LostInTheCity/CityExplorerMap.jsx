@@ -763,7 +763,10 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
         if (targetId === GOAL) {
           setWon(true);
           setLog(l => [...l, { text: `🎉 Reached ${BY_ID[GOAL].name}! Navigation successfully completed.`, ok: true }]);
-          if (onComplete) onComplete();
+          const finalVisited = target.type !== 'empty' && !visitedSequence.includes(targetId)
+            ? [...visitedSequence, targetId]
+            : visitedSequence;
+          if (onComplete) onComplete({ steps: trail.length, visitedPlaces: finalVisited });
         }
       }
     };
