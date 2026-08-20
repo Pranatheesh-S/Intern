@@ -68,6 +68,7 @@ const Activity4_6 = lazy(() => import('./science/class6/chapter4/Activity4_6'));
 const Activity4_7 = lazy(() => import('./science/class6/chapter4/Activity4_7'));
 const FunWithMagnets = lazy(() => import('./science/class6/chapter4/FunWithMagnets'));
 const Chapter4Flow = lazy(() => import('./science/class6/chapter4/Chapter4Flow'));
+const Chapter4Cover = lazy(() => import('./science/class6/chapter4/Chapter4Cover'));
 const Chapter5Flow = lazy(() => import('./science/class6/chapter5/Chapter5Flow'));
 const Chapter4Quiz = lazy(() => import('./science/class6/chapter4/Chapter4Flow/Chapter4Quiz'));
 const IntroMagnets = lazy(() => import('./science/class6/chapter4/IntroMagnets'));
@@ -1041,7 +1042,7 @@ export default function App() {
                   ) : (
                     <button 
                       onClick={() => {
-                        if (chapter.num === 4) navigateTo('class6', 'chapter4_flow');
+                        if (chapter.num === 4) navigateTo('class6', 'chapter4_cover');
                         else if (chapter.num === 5) navigateTo('class6', 'chapter5_flow');
                         else navigateTo('class6', `chapter${chapter.num}`);
                       }}
@@ -2838,7 +2839,7 @@ export default function App() {
     </div>
   );
 
-  const isFullscreen = (activeActivity && !['chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || hideHeader || ['chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6', 'chapter10', 'chapter11'].includes(activeActivity);
+  const isFullscreen = (activeActivity && !['chapter4_flow', 'chapter5_flow', 'chapter9'].includes(activeActivity)) || hideHeader || ['chapter2', 'chapter3', 'chapter4', 'chapter4_cover', 'chapter5', 'chapter6', 'chapter10', 'chapter11'].includes(activeActivity);
 
   return (
     <div className="app-container">
@@ -2994,7 +2995,7 @@ export default function App() {
           ) : activeActivity === 'intro_magnets' ? (
             <IntroMagnets 
               onBackToDashboard={() => navigateTo('class6', 'chapter4_flow')} 
-              onComplete={() => navigateTo('class6', 'chapter4_flow', 'act-4-1')}
+              onComplete={() => navigateTo('class6', 'chapter4_flow')}
             />
           ) : activeActivity === 'activity_4_1' ? (
             <Activity4_1 
@@ -3079,8 +3080,11 @@ export default function App() {
             <MaterialsAroundUsActivity onBackToDashboard={() => navigateTo('class6', null)} />
           ) : activeActivity === 'materials_around_us_new' ? (
             <MaterialsAroundUsNewActivity onBackToDashboard={() => navigateTo('class6', null)} />
-          ) : activeActivity === 'chapter4' ? (
-            renderClass6Chapter4()
+          ) : activeActivity === 'chapter4_cover' || activeActivity === 'chapter4' ? (
+            <Chapter4Cover 
+              onStartJourney={() => navigateTo('class6', 'intro_magnets')} 
+              onBack={() => navigateTo('class6', 'chapter4_flow')}
+            />
           ) : activeActivity === 'chapter4_flow' ? (
             <Chapter4Flow 
               onBackToDashboard={() => navigateTo('class6', null)} 
@@ -3205,6 +3209,59 @@ export default function App() {
             onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
           >
             {isAudioPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
+          </button>
+        )}
+        {/* Global Circular Theme Toggle */}
+        {!(
+          (activeActivity && activeActivity.toLowerCase().includes('material')) ||
+          (activeActivity && activeActivity.toLowerCase().includes('chapter6')) ||
+          (activeActivity === 'materials_around_us') ||
+          (activeSection === 'chapter6') ||
+          (window.location.hash.includes('chapter6')) ||
+          (window.location.hash.includes('material')) ||
+          ((activeSubject === 'class6' || activeSubject === 'science_lab' || !activeSubject) && (
+            activeActivity?.includes('chapter4') ||
+            activeActivity?.includes('ch4') ||
+            [
+              'intro_magnets', 
+              '4.1', 
+              'activity_4_1', 
+              'magnetic_poles', 
+              'suspended_magnet', 
+              'magnetic_compass', 
+              'magnet_interaction', 
+              'activity_4_6', 
+              'activity_4_7', 
+              'sci6-ch4-sec45-fun-with-magnets',
+              'chapter_4_quiz',
+              'sci6-ch4-exploring-magnets-full',
+              'sci6-ch4-exploring-magnets-flagship'
+            ].includes(activeActivity)
+          ))
+        ) && (
+          <button
+            onClick={toggleTheme}
+            style={{
+              width: '46px',
+              height: '46px',
+              borderRadius: '50%',
+              border: '1px solid var(--border)',
+              background: theme === 'dark' ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+              color: 'var(--text-primary)',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              padding: 0,
+            }}
+            title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.08)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
         )}
       </div>

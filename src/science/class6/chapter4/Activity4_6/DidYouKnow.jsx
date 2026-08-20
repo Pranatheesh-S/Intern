@@ -1,50 +1,179 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Sparkles } from 'lucide-react';
+import { useHybridVoice } from '../../../../hooks/useHybridVoice';
 
 const facts = [
   {
-    "title": "Tiny Magnets",
-    "content": "A compass needle is actually a tiny magnet. It turns because it responds to Earth's magnetic field, helping us find directions wherever we go."
+    id: 'magnetic_induction',
+    title: "Magnetic Induction",
+    shortTitle: "Magnetic Induction",
+    content: "When a magnet comes close to a magnetic material like iron, it temporarily turns that material into a magnet itself! This phenomenon is known as magnetic induction.",
+    audioUrl: '/audio/magnetic_induction.mp3'
   },
   {
-    "title": "Age of Exploration",
-    "content": "During the Age of Exploration, magnetic compasses helped sailors travel across vast oceans and discover new trade routes. Without compasses, long sea journeys would have been much more difficult and risky."
+    id: 'permanent_magnets',
+    title: "Making Permanent Magnets",
+    shortTitle: "Making Permanent Magnets",
+    content: "Strong magnets in factories are made by placing iron or steel inside very powerful magnetic fields created by electricity, permanently aligning their magnetic domains.",
+    audioUrl: '/audio/permanent_magnets.mp3'
   }
 ];
 
 export default function DidYouKnow() {
+  const [hoveredFact, setHoveredFact] = useState(null);
+  const { speak, stop, spokenCharIndex } = useHybridVoice();
+
+  const handleMouseEnter = (fact) => {
+    setHoveredFact(fact);
+    const fullText = `${fact.title}. ${fact.content}`;
+    speak({
+      text: fullText,
+      audioUrl: fact.audioUrl
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredFact(null);
+    stop();
+  };
+
+  const renderHighlightedContent = (content, title, charIndex) => {
+    if (!content) return null;
+    if (charIndex === undefined || charIndex === null || charIndex < 0) {
+      return <span>{content}</span>;
+    }
+
+    const titleOffset = title ? title.length + 2 : 0;
+    const adjustedIndex = charIndex - titleOffset;
+
+    const words = content.split(' ');
+    let currentPos = 0;
+
+    return words.map((word, i) => {
+      const startPos = currentPos;
+      const endPos = currentPos + word.length;
+      currentPos = endPos + 1;
+
+      const isCurrentWord = adjustedIndex >= startPos && adjustedIndex <= endPos + 2;
+      const isPastWord = adjustedIndex > endPos + 2;
+
+      let color = '#cbd5e1';
+      let fontWeight = 500;
+
+      if (isCurrentWord) {
+        color = '#ff7700'; // Bright Orange active spoken word
+      } else if (isPastWord) {
+        color = '#f1f5f9'; // Bright read word
+      }
+
+      return (
+        <span
+          key={i}
+          style={{
+            color,
+            fontWeight,
+            transition: 'color 0.15s ease',
+            display: 'inline-block',
+            marginRight: '0.25rem'
+          }}
+        >
+          {word}
+        </span>
+      );
+    });
+  };
+
   return (
-    <div className="glass-panel" style={{
-      background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 27, 75, 0.95))',
-      border: '1px solid rgba(139, 92, 246, 0.3)',
-      borderRadius: '16px',
-      padding: '1.5rem',
-      position: 'sticky',
-      top: '2rem',
-      color: '#f8fafc'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-        <span style={{ fontSize: '1.5rem' }}>🧠</span>
-        <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#f8fafc' }}>Did you know?</h3>
-      </div>
-      
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        {facts.map((fact, idx) => (
-          <div key={idx} style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '0.5rem',
-            paddingBottom: idx !== facts.length - 1 ? '1.5rem' : '0',
-            borderBottom: idx !== facts.length - 1 ? '1px solid rgba(255,255,255,0.1)' : 'none'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '1.2rem' }}>👉</span>
-              <h4 style={{ margin: 0, fontSize: '1.05rem', color: '#f8fafc' }}>{fact.title}</h4>
-            </div>
-            <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: '1.6', color: '#cbd5e1', paddingLeft: '1.7rem', textAlign: 'justify' }}>
-              {fact.content}
-            </p>
+    <div style={{ position: 'relative', width: '100%' }}>
+      {/* Floating Hover Tooltip Card */}
+      {hoveredFact && (
+        <div style={{
+          position: 'absolute',
+          bottom: 'calc(100% + 14px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '95%',
+          maxWidth: '700px',
+          background: 'linear-gradient(145deg, #0b132b, #1c2541)',
+          border: '2px solid #a78bfa',
+          borderRadius: '22px',
+          padding: '1.25rem 1.75rem',
+          color: '#f8fafc',
+          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(167, 139, 250, 0.4)',
+          zIndex: 100000,
+          pointerEvents: 'none',
+          backdropFilter: 'blur(16px)',
+          transition: 'all 0.25s ease'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span>
+            <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: '#38bdf8' }}>
+              {hoveredFact.title}
+            </h4>
           </div>
-        ))}
+          <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#cbd5e1' }}>
+            {renderHighlightedContent(hoveredFact.content, hoveredFact.title, spokenCharIndex)}
+          </p>
+        </div>
+      )}
+
+      {/* Main Bottom Bar */}
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 27, 75, 0.95))',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(139, 92, 246, 0.4)',
+        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.25), 0 0 20px rgba(139, 92, 246, 0.15)',
+        borderRadius: '24px',
+        padding: '0.6rem 1.25rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        boxSizing: 'border-box',
+        height: '54px',
+        minHeight: '54px'
+      }}>
+        {/* Brain Icon */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, paddingRight: '0.75rem' }}>
+          <span style={{ fontSize: '1.4rem' }}>🧠</span>
+        </div>
+
+        {/* Fact items horizontally */}
+        <div style={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'space-around', height: '100%' }}>
+          {facts.map((fact, idx) => (
+            <React.Fragment key={idx}>
+              {idx > 0 && (
+                <div style={{ width: '1px', height: '60%', backgroundColor: 'rgba(255, 255, 255, 0.12)' }} />
+              )}
+              <div
+                onMouseEnter={() => handleMouseEnter(fact)}
+                onMouseLeave={handleMouseLeave}
+                style={{
+                  color: hoveredFact === fact ? '#ff7700' : '#e2e8f0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  cursor: 'pointer',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
+                  padding: '0.4rem 0.6rem',
+                  borderRadius: '8px',
+                  backgroundColor: 'transparent',
+                  transition: 'color 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                <span style={{ fontSize: '1rem' }}>👉</span>
+                <span>{fact.shortTitle}</span>
+              </div>
+            </React.Fragment>
+          ))}
+        </div>
+
+        {/* Sparkle Icon */}
+        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem', color: '#60a5fa' }}>
+          <Sparkles size={18} />
+        </div>
       </div>
     </div>
   );

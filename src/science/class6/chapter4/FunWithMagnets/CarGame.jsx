@@ -53,9 +53,9 @@ export default function CarGame({ isPushing, onComplete }) {
     let carX = W * 0.42;
 
     const barImage = new Image();
-    barImage.src = "/mini_bar.png";
+    barImage.src = "/FunWithMagnets/mini_bar.png";
     const carImage = new Image();
-    carImage.src = "/toycar.png";
+    carImage.src = "/FunWithMagnets/toycar.png";
     
     function drawCars(handX) {
       const cy = H / 2;

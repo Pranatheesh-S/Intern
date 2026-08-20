@@ -1,72 +1,335 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Compass, Sun, Navigation, ArrowRight, Flag } from 'lucide-react';
+import { Navigation, RotateCw, Flag } from 'lucide-react';
 
 export default function Stage2_Conclusion({ onComplete }) {
+  const [needleAngle, setNeedleAngle] = useState(0); // 0deg = North
+  const [isSpinning, setIsSpinning] = useState(false);
+  const containerRef = useRef(null);
+
+  // Rotate / deflect compass needle on click or button press
+  const handleDeflect = () => {
+    if (isSpinning) return;
+    setIsSpinning(true);
+    // Deflect to a random offset then settle back to 0deg (North)
+    const randomOffset = (Math.random() > 0.5 ? 1 : -1) * (360 + Math.random() * 360);
+    setNeedleAngle(randomOffset);
+
+    setTimeout(() => {
+      setNeedleAngle(0); // Settles back straight to North (0deg)
+      setIsSpinning(false);
+    }, 1800);
+  };
+
+  // Mouse tracking to deflect compass needle slightly when moving mouse near compass
+  const handleMouseMove = (e) => {
+    if (isSpinning || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = e.clientX - cx;
+    const dy = e.clientY - cy;
+
+    // Small realistic magnetic deflection angle (max +/- 20deg)
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    const deflection = (angle / 180) * 20;
+    setNeedleAngle(deflection);
+  };
+
+  const handleMouseLeave = () => {
+    if (!isSpinning) {
+      setNeedleAngle(0); // Settle back straight to North
+    }
+  };
+
   const handleFinish = () => {
     onComplete();
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-      {/* Left Side: Illustration Area */}
-      <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Finding Directions</h3>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            Using the Sun to find our way.
+    <div style={{ 
+      padding: '1.25rem 1.75rem', 
+      display: 'flex', 
+      gap: '1.75rem', 
+      height: '100%', 
+      minHeight: 0, 
+      overflow: 'hidden', 
+      boxSizing: 'border-box',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
+      border: '1.5px solid #1e40af',
+      borderRadius: '20px',
+      boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+    }}>
+      {/* Left Side: Interactive Working Compass Scene (Centered) */}
+      <div style={{ 
+        flex: '1.15', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        textAlign: 'center', 
+        minWidth: 0 
+      }}>
+        <div style={{ marginBottom: '0.75rem', textAlign: 'center' }}>
+          <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.4rem', fontWeight: 800, color: '#ffffff' }}>
+            Finding Directions
+          </h3>
+          <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.95rem', fontWeight: 500 }}>
+            Move mouse or tap "Press Compass" to see the needle always settle pointing North!
           </p>
         </div>
 
-        {/* Scene */}
-        <div style={{ 
-          width: '100%', 
-          maxWidth: '500px',
-          borderRadius: '8px',
-          overflow: 'hidden',
-          border: '1px solid var(--border)',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-        }}>
-          <img 
-            src="/holding_compass.png" 
-            alt="Holding a compass" 
-            style={{ width: '100%', height: 'auto', display: 'block' }}
-          />
+        {/* Scene Container with Realistic Morning Nature Sunrise (Northeast) */}
+        <div 
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          style={{ 
+            position: 'relative',
+            width: '100%', 
+            maxWidth: '500px',
+            height: '320px',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            border: '2px solid rgba(251, 191, 36, 0.5)',
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(251, 191, 36, 0.2)',
+            backgroundImage: 'url(/SuspendedMagnet/morning_sunrise.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {/* Subtle Dark Overlay for contrast */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.5) 100%)',
+            pointerEvents: 'none'
+          }} />
+
+          {/* Realistic Working Antique Brass Compass (Without White Border) */}
+          <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            
+            {/* Real Brass Compass Housing Dial (Clipped cleanly to eliminate outer white border) */}
+            <div 
+              onClick={handleDeflect}
+              style={{
+                position: 'relative',
+                width: '210px',
+                height: '210px',
+                borderRadius: '50%',
+                clipPath: 'circle(45.5% at 50% 50%)',
+                backgroundImage: 'url(/SuspendedMagnet/real_compass_dial.jpg)',
+                backgroundSize: '112%',
+                backgroundPosition: 'center',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.95), 0 0 30px rgba(245, 158, 11, 0.4)',
+                cursor: 'pointer',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              title="Click to press compass and watch needle settle North"
+            >
+              {/* Glass Lens Highlight Overlay */}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.03) 50%, rgba(0,0,0,0.2) 100%)',
+                pointerEvents: 'none',
+                zIndex: 12
+              }} />
+
+              {/* Rotatable Photorealistic 3D Metallic Magnetic Needle */}
+              <motion.div
+                animate={{ rotate: needleAngle }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 55,
+                  damping: 9,
+                  mass: 1.3
+                }}
+                style={{
+                  width: '18px',
+                  height: '135px',
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 10,
+                  filter: 'drop-shadow(3px 5px 8px rgba(0,0,0,0.75))'
+                }}
+              >
+                {/* North Pointer (Striking Crimson Red / Ruby Metallic Arrow) */}
+                <div style={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: '9px solid transparent',
+                  borderRight: '9px solid transparent',
+                  borderBottom: '67px solid #e11d48',
+                  position: 'relative',
+                  filter: 'drop-shadow(0 0 8px rgba(225, 29, 72, 0.6))'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '-67px',
+                    left: '-4.5px',
+                    width: 0,
+                    height: 0,
+                    borderLeft: '4.5px solid transparent',
+                    borderRight: '4.5px solid transparent',
+                    borderBottom: '67px solid #fda4af'
+                  }} />
+                </div>
+
+                {/* South Pointer (Dark Slate / Charcoal Metallic Arrow) */}
+                <div style={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: '9px solid transparent',
+                  borderRight: '9px solid transparent',
+                  borderTop: '67px solid #334155',
+                  position: 'relative'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: '-67px',
+                    left: '-4.5px',
+                    width: 0,
+                    height: 0,
+                    borderLeft: '4.5px solid transparent',
+                    borderRight: '4.5px solid transparent',
+                    borderTop: '67px solid #94a3b8'
+                  }} />
+                </div>
+
+                {/* Center Brass Pivot Cap (Dark Brass border, no white ring) */}
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle at 35% 35%, #fef08a, #d97706, #78350f)',
+                  border: '1.5px solid #78350f',
+                  boxShadow: '0 3px 8px rgba(0,0,0,0.8)',
+                  zIndex: 15
+                }} />
+              </motion.div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Controls */}
+        <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.85rem' }}>
+          <button
+            onClick={handleDeflect}
+            disabled={isSpinning}
+            style={{ 
+              padding: '0.85rem 1.6rem', 
+              fontSize: '1rem', 
+              fontWeight: 700, 
+              borderRadius: '14px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.6rem',
+              background: !isSpinning ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+              color: !isSpinning ? '#ffffff' : '#1e3a8a',
+              border: !isSpinning ? 'none' : '2px solid #3b82f6',
+              cursor: !isSpinning ? 'pointer' : 'not-allowed',
+              opacity: !isSpinning ? 1 : 0.85,
+              boxShadow: !isSpinning ? '0 6px 20px rgba(255, 119, 0, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+            }}
+          >
+            <RotateCw size={18} color={!isSpinning ? '#ffffff' : '#1e3a8a'} className={isSpinning ? 'spin-animation' : ''} />
+            {isSpinning ? 'Pressing Compass...' : 'Press Compass'}
+          </button>
         </div>
       </div>
 
-      {/* Right Side: Explanation */}
-      <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--surface)' }}>
-          <h4 style={{ color: 'var(--text-heading)', margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Navigation size={20} style={{ color: 'var(--accent)' }} /> 
+      {/* Right Side: Explanation (Centered) */}
+      <div style={{ 
+        flex: '0.85', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'center', 
+        gap: '1.1rem', 
+        minWidth: 0, 
+        overflowY: 'auto' 
+      }}>
+        {/* "How do we know which way is North?" Box (Solid White with Royal Blue text) */}
+        <div style={{ 
+          padding: '1.4rem 1.6rem', 
+          background: '#ffffff', 
+          border: '2px solid #2563eb', 
+          borderRadius: '16px',
+          boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
+        }}>
+          <h4 style={{ color: '#1e3a8a', margin: '0 0 0.85rem 0', fontSize: '1.2rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Navigation size={22} style={{ color: '#2563eb' }} /> 
             How do we know which way is North?
           </h4>
-          <p style={{ margin: '0 0 1rem 0', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-            If we notice the direction where the <strong>Sun rises</strong>, we know that is <strong>East</strong>. 
-            Once we know East, we can figure out West (opposite), North (left of East), and South (right of East).
+          <p style={{ margin: '0 0 0.95rem 0', color: '#1e40af', fontSize: '0.98rem', lineHeight: '1.65', fontWeight: 600 }}>
+            If we notice the direction where the <strong style={{ color: '#1e3a8a', fontWeight: 800 }}>Sun rises in the morning (North-East horizon)</strong>, we know that general direction is <strong style={{ color: '#1e3a8a', fontWeight: 800 }}>East</strong>. 
+            Once we know East, West is opposite, North is to the left, and South is to the right.
           </p>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-            A freely suspended magnet will always align itself along the <strong>North-South</strong> axis. This makes magnets incredibly useful for navigation!
+          <p style={{ margin: 0, color: '#1e40af', fontSize: '0.98rem', lineHeight: '1.65', fontWeight: 600 }}>
+            A freely suspended magnet or compass needle will always align itself pointing towards <strong style={{ color: '#1e3a8a', fontWeight: 800 }}>North-South</strong>. This makes compasses essential for navigation!
           </p>
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 3 }}
-          className="glass-panel"
-          style={{ padding: '1.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', display: 'flex', flexDirection: 'column', gap: '1rem' }}
+          style={{ 
+            padding: '1.4rem 1.6rem', 
+            background: '#ffffff', 
+            border: '2px solid #10b981', 
+            borderRadius: '16px',
+            boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1.1rem' 
+          }}
         >
-          <p style={{ margin: 0, color: 'var(--success)', fontSize: '0.95rem', fontWeight: '500', lineHeight: '1.5', textAlign: 'center' }}>
+          <p style={{ margin: 0, color: '#065f46', fontSize: '1.08rem', fontWeight: '700', lineHeight: '1.5', textAlign: 'center' }}>
             You have successfully completed this activity!
           </p>
           <button 
             onClick={handleFinish}
-            className="primary"
-            style={{ width: '100%', padding: '0.75rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', background: '#10b981', borderColor: '#10b981' }}
+            style={{
+              width: '100%',
+              padding: '0.95rem 1.75rem',
+              fontSize: '1.08rem',
+              fontWeight: 800,
+              borderRadius: '35px',
+              background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+              color: '#ffffff',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.65rem',
+              boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',
+              transition: 'all 0.25s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
           >
-            <Flag size={16} /> Finish Activity
+            <Flag size={22} color="#ffffff" /> Finish Activity
           </button>
         </motion.div>
       </div>

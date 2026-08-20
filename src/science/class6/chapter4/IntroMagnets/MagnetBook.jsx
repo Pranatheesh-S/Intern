@@ -87,8 +87,8 @@ export default function MagnetBook({ isOpen, currentPage, totalPages, onNext, on
 
             {/* Navigation Controls */}
             <div style={{ position: 'absolute', bottom: '1.5rem', left: 0, right: 0, display: 'flex', justifyContent: 'space-between', padding: '0 2rem' }}>
-              <button onClick={onPrev} disabled={currentPage === 1} style={{ background: 'transparent', border: '1px solid rgba(0,0,0,0.1)', padding: '0.4rem 1rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: currentPage === 1 ? 'default' : 'pointer', opacity: currentPage === 1 ? 0 : 1, transition: 'background 0.2s', color: '#334155' }}>
-                <ChevronLeft size={18} /> Previous
+              <button onClick={() => { if (currentPage > 1) onPrev(); else if (onFinish) onFinish(); }} style={{ background: 'transparent', border: '1px solid rgba(0,0,0,0.1)', padding: '0.4rem 1rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'background 0.2s', color: '#334155' }}>
+                <ChevronLeft size={18} /> Back
               </button>
               
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.9rem' }}>

@@ -528,7 +528,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}
           >
             {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, alignSelf: 'start' }}>
+              <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.75rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
                 {items.map((item) => {
@@ -598,6 +599,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                 })}
               </div>
             </div>
+          </div>
 
             {/* Right: Illustrated Material Baskets */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', overflowY: 'auto' }}>
