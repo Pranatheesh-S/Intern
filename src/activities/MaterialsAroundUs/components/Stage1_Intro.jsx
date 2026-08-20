@@ -104,7 +104,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             {completed ? (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', textAlign: 'center' }}>
                 <span style={{ fontFamily: 'Arial, sans-serif', color: '#6ee7b7', fontSize: '1.3rem', fontWeight: 'bold' }}>All Objects Identified!</span>
-                <span style={{ fontFamily: 'Arial, sans-serif', color: '#fcd34d', fontSize: '1rem' }}>Click "Proceed to next" in the top right to continue!</span>
+                <span style={{ fontFamily: 'Arial, sans-serif', color: '#fcd34d', fontSize: '1rem' }}>Click "Proceed to next" in the bottom right corner to continue!</span>
               </div>
             ) : (
               <span style={{ fontFamily: 'Arial, sans-serif', color: '#a7f3d0', fontSize: '1.15rem', textAlign: 'center', lineHeight: '1.5' }}>

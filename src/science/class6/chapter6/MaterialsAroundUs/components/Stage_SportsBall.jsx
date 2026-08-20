@@ -245,7 +245,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
             </p>
           </div>
           <p style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>
-            Click "Proceed to next" in the top right!
+            Click "Proceed to next" in the bottom right corner!
           </p>
         </motion.div>
       )}

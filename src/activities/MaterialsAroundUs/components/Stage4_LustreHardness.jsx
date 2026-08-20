@@ -451,7 +451,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp, mode = 'both'
           (mode === 'hardness_only' && allHardnessTested) || 
           (mode === 'both' && allLustrePolished && allHardnessTested)) && (
           <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}>
-            Tests Complete! Click "Proceed to next" in the top right.
+            Tests Complete! Click "Proceed to next" in the bottom right corner.
           </div>
         )}
       </div>

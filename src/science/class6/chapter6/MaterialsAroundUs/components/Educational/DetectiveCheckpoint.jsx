@@ -290,7 +290,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             <p style={{ color: '#475569', fontSize: '1.1rem', maxWidth: '400px', marginBottom: '2rem' }}>
               Excellent work! You scored {score} out of {maxScore}. All discoveries have been securely logged to the Case File.
               <br/><br/>
-              <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Click "Proceed to next" in the top right to continue.</span>
+              <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Click "Proceed to next" in the bottom right corner to continue.</span>
             </p>
           </div>
         )}

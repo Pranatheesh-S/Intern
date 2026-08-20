@@ -188,7 +188,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
         {gunasCompleted && (
           <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}>
-            Review Complete! Click "Proceed to next" in the top right.
+            Review Complete! Click "Proceed to next" in the bottom right corner.
           </div>
         )}
       </div>

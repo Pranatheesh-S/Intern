@@ -408,7 +408,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
               <div>
                 <h3 style={{ margin: 0, color: '#ffffff', fontSize: '2rem', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Scan Complete!</h3>
                 <p style={{ color: '#e2e8f0', fontSize: '1.1rem', marginTop: '0.75rem', maxWidth: '340px', lineHeight: '1.5', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-                  You have successfully scanned and identified materials for all objects. Click <strong style={{ color: '#ffffff' }}>"Proceed to next"</strong> in the top right!
+                  You have successfully scanned and identified materials for all objects. Click <strong style={{ color: '#ffffff' }}>"Proceed to next"</strong> in the bottom right corner!
                 </p>
               </div>
             </div>

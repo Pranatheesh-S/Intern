@@ -243,12 +243,20 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}
+            style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr', 
+              gap: '1.25rem', 
+              flex: 1, 
+              minHeight: 0 
+            }}
           >
-            {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', flex: 1, minHeight: 0, padding: '1.25rem' }}>
-              <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.85rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
+            {/* Left Section: Evidence Tray */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0, padding: '1.1rem 1.25rem' }}>
+              <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
+                Evidence Tray
+              </h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.75rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
                 {items.map((item) => {
                   const isSorted = usePlacements[item.id] !== undefined;
                   return (
@@ -263,9 +271,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       style={{
                         width: '100%',
                         height: '100%',
-                        borderRadius: '14px',
-                        border: '2px solid var(--border)',
-                        background: 'var(--card-bg)',
+                        borderRadius: '12px',
+                        border: isSorted ? '2px solid rgba(16, 185, 129, 0.45)' : '1px solid var(--border)',
+                        background: isSorted ? 'rgba(16, 185, 129, 0.05)' : 'var(--card-bg, #ffffff)',
                         opacity: isSorted ? 0.45 : 1,
                         cursor: isSorted ? 'default' : 'grab',
                         transition: 'all 0.2s',
@@ -273,27 +281,42 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         position: 'relative',
                         overflow: 'hidden',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: '8px',
+                        flexDirection: 'column',
+                        padding: '6px 6px 8px 6px',
                         boxSizing: 'border-box',
                         boxShadow: '0 2px 6px rgba(0,0,0,0.06)'
                       }}
                     >
-                      <img 
-                        src={item.icon} 
-                        alt={item.name} 
-                        style={{ 
-                          width: '100%', 
-                          height: '100%', 
-                          objectFit: 'contain', 
-                          borderRadius: '8px',
-                          pointerEvents: 'none' 
-                        }} 
-                      />
+                      <div style={{ flex: 1, minHeight: 0, width: '100%', borderRadius: '8px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <img 
+                          src={item.icon} 
+                          alt={item.name} 
+                          style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'cover', 
+                            borderRadius: '8px',
+                            pointerEvents: 'none' 
+                          }} 
+                        />
+                      </div>
+                      <span style={{ 
+                        fontSize: '0.85rem', 
+                        fontWeight: '600', 
+                        color: 'var(--text-heading, #1e293b)', 
+                        textAlign: 'center', 
+                        paddingTop: '8px', 
+                        paddingBottom: '2px', 
+                        maxWidth: '100%', 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis', 
+                        whiteSpace: 'nowrap' 
+                      }}>
+                        {item.name}
+                      </span>
                       {isSorted && (
-                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(2px)' }}>
-                          <Check size={40} color="white" strokeWidth={3.5} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(2px)', borderRadius: '12px' }}>
+                          <Check size={42} color="white" strokeWidth={3.5} />
                         </div>
                       )}
                     </div>
@@ -302,9 +325,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               </div>
             </div>
 
-            {/* Right: Shelves visual */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {/* Right Section: Shelves visual + Tips */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0, justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', flex: 1, justifyContent: 'space-between' }}>
                 {[
                   { name: 'School Shelf', icon: <BookOpen size={16} />, bgImage: bgShelfKitchen },
                   { name: 'Home Shelf', icon: <Home size={16} />, bgImage: bgShelfKitchen },
@@ -327,58 +350,147 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         handleUseSort(itemId, shelf.name);
                       }}
                       style={{
-                        background: `url(${shelf.bgImage}) center 60% / cover no-repeat`,
-                        border: isDraggingOverMe ? '3px dashed var(--accent)' : '2px solid transparent',
+                        position: 'relative',
                         borderRadius: '14px',
-                        padding: '1rem',
-                        minHeight: '185px',
-                        height: '185px',
+                        border: isDraggingOverMe ? '3px dashed var(--accent, #3b82f6)' : '1px solid var(--border)',
+                        overflow: 'hidden',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
-                        position: 'relative',
+                        padding: '0.5rem 0.85rem',
+                        minHeight: '140px',
+                        flex: 1,
+                        boxShadow: isDraggingOverMe 
+                          ? '0 0 0 3px rgba(59, 130, 246, 0.35), 0 6px 14px rgba(0,0,0,0.15)' 
+                          : '0 3px 8px rgba(0,0,0,0.08)',
                         transition: 'all 0.2s',
-                        overflow: 'hidden',
-                        boxShadow: isDraggingOverMe ? 'inset 0 0 0 1000px rgba(0,0,0,0.45), 0 6px 12px rgba(0,0,0,0.25)' : '0 6px 12px rgba(0,0,0,0.2)'
+                        background: '#1e293b'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', background: 'rgba(0,0,0,0.7)', padding: '0.4rem 0.85rem', borderRadius: '8px', alignSelf: 'flex-start', backdropFilter: 'blur(6px)', zIndex: 2 }}>
+                      {/* Shelf Background Image */}
+                      <img 
+                        src={shelf.bgImage} 
+                        alt={shelf.name}
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center 65%',
+                          pointerEvents: 'none'
+                        }}
+                      />
+                      {isDraggingOverMe && (
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(59, 130, 246, 0.25)', zIndex: 1, pointerEvents: 'none' }} />
+                      )}
+
+                      {/* Header Badge */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#fff', fontWeight: 'bold', fontSize: '0.95rem', background: 'rgba(0,0,0,0.7)', padding: '0.3rem 0.75rem', borderRadius: '8px', alignSelf: 'flex-start', backdropFilter: 'blur(6px)', zIndex: 2, position: 'relative' }}>
                         {shelf.icon}
                         <span>{shelf.name}</span>
                       </div>
                       
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', alignItems: 'flex-end', minHeight: '65px', paddingBottom: '0.75rem', paddingLeft: '0.75rem', zIndex: 2 }}>
+                      {/* Placed Items on Shelf Surface */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: 0,
+                          right: 0,
+                          bottom: '38px',
+                          display: 'flex',
+                          gap: '3.25rem',
+                          alignItems: 'flex-end',
+                          justifyContent: 'center',
+                          zIndex: 2,
+                          pointerEvents: 'none'
+                        }}
+                      >
                         {sortedHere.map((item) => (
                           <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0, y: -15, scale: 0.85 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                             key={item.id}
                             title={item.name}
                             style={{
                               display: 'flex',
-                              alignItems: 'flex-end',
-                              filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.35))',
-                              cursor: 'default'
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              pointerEvents: 'auto',
+                              cursor: 'default',
+                              position: 'relative'
                             }}
                           >
-                            <div style={{ transform: 'translateY(1px)' }}>
-                              <img 
-                                src={shelf.name === 'Kitchen Shelf' ? item.icon : (item.id === 'register' || item.id === 'remote' ? itemSpoon : itemGlass)} 
-                                alt={item.name} 
-                                style={{ 
-                                  width: '65px', 
-                                  height: '65px', 
-                                  objectFit: 'cover', 
-                                  borderRadius: '10px', 
-                                  border: '2px solid rgba(255,255,255,0.9)',
-                                  boxShadow: '0 4px 8px rgba(0,0,0,0.25)'
-                                }} 
-                              />
-                            </div>
+                            {/* Object Image */}
+                            <img 
+                              src={item.icon} 
+                              alt={item.name} 
+                              style={{ 
+                                width: '76px', 
+                                height: '76px', 
+                                objectFit: 'cover', 
+                                borderRadius: '8px',
+                                pointerEvents: 'none',
+                                filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.35))'
+                              }} 
+                            />
+
+                            {/* Realistic Soft Contact Shadow on Shelf Wood */}
+                            <div 
+                              style={{
+                                width: '68px',
+                                height: '7px',
+                                background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, transparent 80%)',
+                                borderRadius: '50%',
+                                marginTop: '-3px',
+                                marginBottom: '3px',
+                                filter: 'blur(1.5px)'
+                              }}
+                            />
+
+                            {/* Label */}
+                            <span
+                              style={{
+                                fontSize: '0.78rem',
+                                fontWeight: 'bold',
+                                color: '#ffffff',
+                                textShadow: '0 1px 2px rgba(0,0,0,0.9)',
+                                background: 'rgba(15, 23, 42, 0.88)',
+                                backdropFilter: 'blur(4px)',
+                                padding: '2px 8px',
+                                borderRadius: '5px',
+                                maxWidth: '110px',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                boxShadow: '0 2px 5px rgba(0,0,0,0.35)',
+                                border: '1px solid rgba(255,255,255,0.2)'
+                              }}
+                            >
+                              {item.name}
+                            </span>
                           </motion.div>
                         ))}
                         {sortedHere.length === 0 && (
-                          <span style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.9)', textShadow: '0 1px 3px rgba(0,0,0,0.8)', fontStyle: 'italic', marginBottom: '0.5rem', background: 'rgba(0,0,0,0.45)', padding: '0.2rem 0.65rem', borderRadius: '6px' }}>Empty Shelf</span>
+                          <div
+                            style={{
+                              border: '2px dashed rgba(255,255,255,0.65)',
+                              borderRadius: '10px',
+                              padding: '0.4rem 1.6rem',
+                              background: isDraggingOverMe ? 'rgba(59, 130, 246, 0.35)' : 'rgba(0,0,0,0.28)',
+                              color: 'rgba(255,255,255,0.95)',
+                              fontSize: '0.88rem',
+                              fontWeight: '500',
+                              backdropFilter: 'blur(2px)',
+                              textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.4rem'
+                            }}
+                          >
+                            {isDraggingOverMe ? 'Drop item here!' : 'Drop items here'}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -386,23 +498,20 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                 })}
               </div>
 
-              {/* Error messages overlay */}
-              {errorMessage && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--danger)', fontSize: '0.8rem' }}>
+              {/* Error messages overlay / Tips */}
+              {errorMessage ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--danger)', fontSize: '0.85rem' }}>
                   <AlertCircle size={16} />
                   <span>{errorMessage}</span>
                 </div>
-              )}
-
-              {/* Complete state message */}
-              {allUseSorted ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem' }}>
+              ) : allUseSorted ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.92rem' }}>
                   <Check size={18} />
-                  <span>All objects grouped successfully! Click "Proceed to next"</span>
+                  <span>All objects grouped successfully! Click "Proceed to next" in the bottom right corner!</span>
                 </div>
               ) : (
-                <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
-                  💡 Tip: Drag items directly into the shelves, or use the drop-downs on the left.
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.35rem', background: 'rgba(0,0,0,0.03)', borderRadius: '8px' }}>
+                  💡 <strong>Tip:</strong> Drag items from the Evidence Tray directly into the shelves based on where they are used.
                 </div>
               )}
             </div>
@@ -421,7 +530,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             {/* Left Drawer */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
               <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.85rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.75rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
                   return (
@@ -436,9 +545,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       style={{
                         width: '100%',
                         height: '100%',
-                        borderRadius: '14px',
-                        border: '2px solid var(--border)',
-                        background: 'var(--card-bg)',
+                        borderRadius: '12px',
+                        border: isSorted ? '2px solid rgba(16, 185, 129, 0.45)' : '1px solid var(--border)',
+                        background: isSorted ? 'rgba(16, 185, 129, 0.05)' : 'var(--card-bg, #ffffff)',
                         opacity: isSorted ? 0.45 : 1,
                         cursor: isSorted ? 'default' : 'grab',
                         transition: 'all 0.2s',
@@ -446,27 +555,42 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         position: 'relative',
                         overflow: 'hidden',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: '8px',
+                        flexDirection: 'column',
+                        padding: '6px 6px 8px 6px',
                         boxSizing: 'border-box',
                         boxShadow: '0 2px 6px rgba(0,0,0,0.06)'
                       }}
                     >
-                      <img 
-                        src={item.icon} 
-                        alt={item.name} 
-                        style={{ 
-                          width: '100%', 
-                          height: '100%', 
-                          objectFit: 'contain', 
-                          borderRadius: '8px',
-                          pointerEvents: 'none' 
-                        }} 
-                      />
+                      <div style={{ flex: 1, minHeight: 0, width: '100%', borderRadius: '8px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <img 
+                          src={item.icon} 
+                          alt={item.name} 
+                          style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'cover', 
+                            borderRadius: '8px',
+                            pointerEvents: 'none' 
+                          }} 
+                        />
+                      </div>
+                      <span style={{ 
+                        fontSize: '0.85rem', 
+                        fontWeight: '600', 
+                        color: 'var(--text-heading, #1e293b)', 
+                        textAlign: 'center', 
+                        paddingTop: '8px', 
+                        paddingBottom: '2px', 
+                        maxWidth: '100%', 
+                        overflow: 'hidden', 
+                        textOverflow: 'ellipsis', 
+                        whiteSpace: 'nowrap' 
+                      }}>
+                        {item.name}
+                      </span>
                       {isSorted && (
-                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(2px)' }}>
-                          <Check size={40} color="white" strokeWidth={3.5} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(2px)', borderRadius: '12px' }}>
+                          <Check size={42} color="white" strokeWidth={3.5} />
                         </div>
                       )}
                     </div>
@@ -722,7 +846,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     </div>
                   </div>
                   <p style={{ marginTop: '0.75rem', fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--text-primary)', textAlign: 'right' }}>
-                    Click "Proceed to next" in the top right!
+                    Click "Proceed to next" in the bottom right corner!
                   </p>
                 </motion.div>
               ) : (

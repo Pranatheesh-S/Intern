@@ -188,7 +188,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
               animate={{ opacity: 1, y: 0 }} 
               style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}
             >
-              Tests Complete! Click "Proceed to next" in the top right.
+              Tests Complete! Click "Proceed to next" in the bottom right corner.
             </motion.div>
           )}
         </AnimatePresence>
