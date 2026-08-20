@@ -11,6 +11,14 @@ import tulsiImage from '../../../../assets/tulsi.png';
 import neemImage from '../../../../assets/neem.png';
 import { useTheme } from '../../../../ThemeContext.jsx';
 
+import frogImg from '../../../../assets/frog.png';
+import antImg from '../../../../assets/ant.png';
+import crowImg from '../../../../assets/crow.png';
+import butterflyImg from '../../../../assets/butterfly.png';
+import sparrowImg from '../../../../assets/sparrow.png';
+import squirrelImg from '../../../../assets/squirrel.png';
+import cowImg from '../../../../assets/cow.png';
+
 const PLANT_CROPPED_IMAGES = {
   grass: grassImage,
   rose: roseImage,
@@ -24,6 +32,23 @@ const PLANT_CROPPED_IMAGES = {
   Hibiscus: hibiscusImage,
   Neem: neemImage,
   Sunflower: sunflowerImage,
+};
+
+const ANIMAL_IMAGE_ASSETS = {
+  frog: frogImg,
+  ant: antImg,
+  crow: crowImg,
+  butterfly: butterflyImg,
+  sparrow: sparrowImg,
+  squirrel: squirrelImg,
+  cow: cowImg,
+  'Indian Pond Frog': frogImg,
+  'Ant': antImg,
+  'Crow': crowImg,
+  'Butterfly': butterflyImg,
+  'Sparrow': sparrowImg,
+  'Squirrel': squirrelImg,
+  'Cow': cowImg
 };
 
 /* ─────────────────────────────────────────────
@@ -170,6 +195,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
   const [bonusLog, setBonusLog] = useState([]);
   const [containerSize, setContainerSize] = useState({ width: 800, height: 450 });
   const [infoCardPlant, setInfoCardPlant] = useState(null);
+  const [infoCardAnimal, setInfoCardAnimal] = useState(null);
   const [lightboxImage, setLightboxImage] = useState(null);
 
   const filteredTargets = React.useMemo(() => {
@@ -279,87 +305,95 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
     } else {
       return [
         {
-          id: 'frog',
-          name: 'Indian Pond Frog',
-          emoji: '🐸',
+          id: 'crow',
+          name: 'Crow',
+          popupName: 'Crow',
+          emoji: '🐦‍⬛',
           type: 'animal',
-          x: 22, y: 78, w: 12, h: 12,
-          details: 'Lives both in the freshwater pond and on moist soil shores. Its green skin is smooth, and its feet are webbed for swimming.',
-          fact: 'Frogs can breathe through their lungs on land and directly through their moist skin underwater — they are true amphibians!',
-          verifyQ: { q: 'What type of habitat does an Indian Pond Frog live in?', opts: ['Only on dry land', 'Only in deep ocean', 'Both in freshwater and on moist shores', 'Only in desert sand'], correct: 2 },
-          tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Jumps and swims. Amphibian. Lives near pond.' },
+          x: 11, y: 18, w: 20, h: 32,
+          details: 'A clever grey-necked bird that flies in the open sky and perches on tree branches. Crows are intelligent scavengers with sharp sight and strong wings.',
+          fact: 'Crows are remarkably intelligent — they can recognize individual human faces and use tools to fetch food!',
+          verifyQ: { q: 'What is a crow classified as in terms of its diet?', opts: ['Pure herbivore', 'Scavenger that eats scraps and pests', 'Deep-sea predator', 'Insect only feeder'], correct: 1 },
+          tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Flies using wings. Perches on branches.' },
+        },
+        {
+          id: 'sparrow',
+          name: 'Sparrow',
+          popupName: 'Sparrow',
+          emoji: '🐦',
+          type: 'animal',
+          x: 47.5, y: 27, w: 11, h: 14,
+          details: 'A small, friendly bird perched on tree branches. Sparrows chirp cheerfully and feed on tiny seeds, grains, and insects near garden trees.',
+          fact: 'House Sparrows have lived alongside humans for over 10,000 years — they are one of the most widespread birds on Earth!',
+          verifyQ: { q: 'What do House Sparrows primarily eat?', opts: ['Large mammals', 'Insects and small seeds', 'Big fish', 'Tree bark'], correct: 1 },
+          tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Flies and hops. Perches on branches.' },
+        },
+        {
+          id: 'cow',
+          name: 'Cow',
+          popupName: 'Cow',
+          emoji: '🐄',
+          type: 'animal',
+          x: 84, y: 42.5, w: 28, h: 37,
+          details: 'A large domestic herbivore that grazes peacefully on fresh green grass and hay. Cows move calmly on four legs and provide healthy milk.',
+          fact: 'Cows have best friends and get happy when spending time together in green pastures!',
+          verifyQ: { q: 'What type of food does a cow eat?', opts: ['Fish and meat', 'Grass and hay', 'Insects only', 'Tree bark'], correct: 1 },
+          tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Walks on four legs. Terrestrial herbivore.' },
         },
         {
           id: 'squirrel',
-          name: 'Three-Striped Palm Squirrel',
+          name: 'Squirrel',
+          popupName: 'Squirrel',
           emoji: '🐿️',
           type: 'animal',
-          x: 81, y: 63, w: 12, h: 16,
-          details: 'A quick terrestrial rodent found climbing tree trunks, feeding on nuts, seeds, and berries. It has three distinctive pale stripes on its back.',
-          fact: 'Squirrels accidentally plant thousands of trees each year by forgetting where they buried their nut stashes!',
-          verifyQ: { q: 'Where would you most likely spot a Three-Striped Palm Squirrel?', opts: ['In the ocean', 'Climbing a tree trunk', 'Flying in the sky', 'Burrowing underground'], correct: 1 },
+          x: 16.5, y: 56, w: 29, h: 30,
+          details: 'A quick and nimble rodent with three pale stripes along its back. It climbs tree trunks rapidly and nibbles on nuts, seeds, and berries.',
+          fact: 'Squirrels accidentally plant thousands of trees each year by forgetting where they buried their stashes!',
+          verifyQ: { q: 'Where would you most likely spot a Three-Striped Palm Squirrel?', opts: ['In the ocean', 'Climbing a tree trunk or rock', 'Flying in the sky', 'Burrowing underground'], correct: 1 },
           tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Runs and climbs. Lives on trees and land.' },
         },
         {
           id: 'butterfly',
-          name: 'Monarch Butterfly',
+          name: 'Butterfly',
+          popupName: 'Butterfly',
           emoji: '🦋',
           type: 'animal',
-          x: 45, y: 58, w: 12, h: 12,
-          details: 'A flying insect feeding on the sweet nectar of garden flowers. Moves dynamically from bloom to bloom, helping in pollination.',
+          x: 49, y: 54.5, w: 10, h: 19,
+          details: 'A colorful flying insect with delicate wings fluttering around garden flowers. It feeds on nectar using its long proboscis and helps pollinate flowers.',
           fact: 'Butterflies taste their food using tiny sensory receptors on their feet — not their mouths!',
           verifyQ: { q: 'How does a butterfly help plants?', opts: ['It eats all the leaves', 'It digs up roots', 'It helps in pollination by carrying pollen', 'It blocks sunlight'], correct: 2 },
           tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Flies using wings. Feeds on flower nectar.' },
         },
         {
-          id: 'monkey',
-          name: 'Rhesus Macaque (Monkey)',
-          emoji: '🐒',
+          id: 'frog',
+          name: 'Indian Pond Frog',
+          popupName: 'Indian Pond Frog',
+          emoji: '🐸',
           type: 'animal',
-          x: 49, y: 26, w: 14, h: 16,
-          details: 'A wild mammal seen perched high on tree branches, jumping between trees and grooming its group members in a social fashion.',
-          fact: 'Monkeys use vocal calls, facial expressions, and body language to communicate warnings, greetings, and emotions to their group!',
-          verifyQ: { q: 'Which habitat do Rhesus Macaque monkeys primarily live in?', opts: ['Underground burrows', 'Treetops in forests', 'Deep ocean', 'Arctic tundra'], correct: 1 },
-          tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Jumps and climbs. Lives high on trees.' },
+          x: 81, y: 84, w: 22, h: 22,
+          details: 'An amphibian with smooth green skin resting near ponds and moist shores. It uses its strong hind legs to jump on land and webbed feet to swim swiftly in water.',
+          fact: 'Frogs can breathe through their lungs on land and directly through their moist skin underwater — they are true amphibians!',
+          verifyQ: { q: 'What type of habitat does an Indian Pond Frog live in?', opts: ['Only on dry land', 'Only in deep ocean', 'Both in freshwater and on moist shores', 'Only in desert sand'], correct: 2 },
+          tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Jumps and swims. Amphibian. Lives near pond.' },
         },
         {
-          id: 'sparrow',
-          name: 'House Sparrows (Perched)',
-          emoji: '🐦',
+          id: 'ant',
+          name: 'Ant',
+          popupName: 'Ant',
+          emoji: '🐜',
           type: 'animal',
-          x: 20, y: 30, w: 12, h: 12,
-          details: 'Small birds chirping and resting on tree branches. They feed on insects, small seeds, and breadcrumbs near human settlements.',
-          fact: 'House Sparrows have lived alongside humans for over 10,000 years — they are one of the most widespread birds on Earth!',
-          verifyQ: { q: 'What do House Sparrows primarily eat?', opts: ['Large mammals', 'Insects and small seeds', 'Big fish', 'Tree bark'], correct: 1 },
-          tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Flies and hops. Perches on branches.' },
+          x: 35, y: 91, w: 38, h: 14,
+          details: 'Tiny, hardworking social insects crawling together along the soil. Ants communicate using scent trails and can carry loads many times their own weight!',
+          fact: 'Ants are incredibly strong — an ant can carry objects up to 50 times its own body weight!',
+          verifyQ: { q: 'How do ants move and work together?', opts: ['They fly individually', 'They crawl in social trails using scent clues', 'They swim underwater', 'They jump over trees'], correct: 1 },
+          tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Crawls on six legs. Lives in colonies.' },
         }
       ];
     }
   }, [typeFilter]);
 
   const filteredBonus = React.useMemo(() => {
-    if (typeFilter === 'plant') {
-      return [];
-    } else {
-      return [
-        {
-          id: 'crow',
-          name: 'House Crow (Flying)',
-          emoji: '🐦‍⬛',
-          x: 28, y: 14, w: 14, h: 12,
-          details: 'A grey-necked bird flying in the clear sky. Crows are scavengers that eat scraps, small pests, and seeds.',
-          fact: 'Crows are remarkably intelligent — they can recognize individual human faces and even use sticks as tools to fetch food!',
-        },
-        {
-          id: 'snail',
-          name: 'Garden Snail',
-          emoji: '🐌',
-          x: 34, y: 86, w: 10, h: 10,
-          details: 'A slow-moving mollusc that carries a protective spiral shell on its back and leaves a silvery slime trail.',
-          fact: 'Snails cannot hear at all — they rely solely on their sense of touch and smell to find their way around!',
-        }
-      ];
-    }
+    return [];
   }, [typeFilter]);
 
   // Scanner state
@@ -434,7 +468,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
     const pctX = (x / rect.width) * 100;
     const pctY = (y / rect.height) * 100;
-    const hitMargin = 2; // Expand target hit area slightly for smoother scanning
+    const hitMargin = 1; // Precise boundary margin
 
     // 1. Check required targets
     const target = filteredTargets.find(t =>
@@ -468,13 +502,23 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
     e.preventDefault(); // Prevent text selection and zoom-related drag behaviors
     const currentHover = hoveredTargetRef.current;
     if (!currentHover) {
-      setMissMessage('Try searching another area!');
-      setMissPos({ x: mousePosRef.current.x, y: mousePosRef.current.y });
-      setTimeout(() => setMissMessage(''), 1400);
+      if (typeFilter === 'plant') {
+        setMissMessage('Try searching another area!');
+        setMissPos({ x: mousePosRef.current.x, y: mousePosRef.current.y });
+        setTimeout(() => setMissMessage(''), 1400);
+      }
       return;
     }
 
     const { data, isBonus } = currentHover;
+
+    if (typeFilter === 'animal') {
+      if (!notebook.includes(data.id)) {
+        setNotebook(prev => [...prev, data.id]);
+      }
+      setInfoCardAnimal(data);
+      return;
+    }
     const isAlreadyLogged = isBonus 
       ? bonusLog.includes(data.id) 
       : notebook.includes(data.id);
@@ -569,16 +613,29 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
             <p style={{ color: '#ffffff' }}>
               Join <b>Dr. Raghu</b> and <b>Maniram chacha</b> as we venture into the neighborhood and school garden to catalog the {typeFilter === 'plant' ? 'plant life' : 'animal life'} in our area!
             </p>
-            <p style={{ color: '#ffffff' }}>
-              Your objective is to observe different {typeFilter === 'plant' ? 'plant types (herbs, shrubs, trees, and water lilies)' : 'animal behaviors and modes of movement'}. When you spot an organism on the right, <b>click and hold</b> your scanner lens on it to examine its details.
-            </p>
-            <p style={{ color: '#ffffff' }}>
-              You must then complete the <b>Verification MCQ</b> to confirm your observation and document it in your field notebook.
-            </p>
+            {typeFilter === 'plant' ? (
+              <>
+                <p style={{ color: '#ffffff' }}>
+                  Your objective is to observe different plant types (herbs, shrubs, trees, and water lilies). When you spot an organism on the right, <b>click and hold</b> your scanner lens on it to examine its details.
+                </p>
+                <p style={{ color: '#ffffff' }}>
+                  You must then complete the <b>Verification MCQ</b> to confirm your observation and document it in your field notebook.
+                </p>
+              </>
+            ) : (
+              <>
+                <p style={{ color: '#ffffff' }}>
+                  Your objective is to observe different animals and their behaviours. When you spot an animal on the right, <b>click and hold</b> your scanner lens directly on it to examine its details.
+                </p>
+                <p style={{ color: '#ffffff' }}>
+                  You must then complete the <b>Verification MCQ</b> to confirm your observation and document it in your field notebook.
+                </p>
+              </>
+            )}
           </div>
 
           <div className="textbook-explore" style={{ marginTop: '1.25rem' }}>
-            ✏️ <b>Your Mission:</b> Scan and identify all <b>{filteredTargets.length} target {typeFilter === 'plant' ? 'plant' : 'animal'} species</b> to complete Table {typeFilter === 'plant' ? '2.1' : '2.2'} in your journal. Toggle hints if you need help finding them.
+            ✏️ <b>Your Mission:</b> {typeFilter === 'plant' ? <>Scan and identify all <b>{filteredTargets.length} target plant species</b> to complete Table 2.1 in your journal. Toggle hints if you need help finding them.</> : <>Observe all <b>{filteredTargets.length} target animal species</b> to complete Table 2.2 in your journal.</>}
           </div>
 
           {/* Scanned Organism Verification Pane */}
@@ -666,49 +723,53 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
           {/* Activity status checkup at bottom */}
           <div style={{ marginTop: 'auto', paddingTop: '1.25rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-              <span style={{ fontSize: '12.5px', fontWeight: 'bold', color: 'var(--navy)' }}>
-                Field Journal Progress
-              </span>
-              <span style={{ fontSize: '12px', fontWeight: 'bold', color: notebook.length >= filteredTargets.length ? '#16a34a' : 'var(--accent)' }}>
-                {notebook.length} / {filteredTargets.length} Logged
-              </span>
-            </div>
-            
-            <div style={{ width: '100%', height: '8px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden', marginBottom: '1rem' }}>
-              <div style={{ height: '100%', background: notebook.length >= filteredTargets.length ? '#10b981' : 'var(--accent)', width: `${(notebook.length / Math.max(1, filteredTargets.length)) * 100}%`, transition: 'width 0.4s ease' }} />
-            </div>
+            {typeFilter === 'plant' ? (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                  <span style={{ fontSize: '12.5px', fontWeight: 'bold', color: 'var(--navy)' }}>
+                    Field Journal Progress
+                  </span>
+                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: notebook.length >= filteredTargets.length ? '#16a34a' : 'var(--accent)' }}>
+                    {notebook.length} / {filteredTargets.length} Logged
+                  </span>
+                </div>
+                
+                <div style={{ width: '100%', height: '8px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden', marginBottom: '1rem' }}>
+                  <div style={{ height: '100%', background: notebook.length >= filteredTargets.length ? '#10b981' : 'var(--accent)', width: `${(notebook.length / Math.max(1, filteredTargets.length)) * 100}%`, transition: 'width 0.4s ease' }} />
+                </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button onClick={() => setShowHints(h => !h)} className="outline" style={{ flex: 1, padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Eye size={14} /> {showHints ? 'Hide Hints' : 'Show Hints'}
-              </button>
-              <button onClick={handleReset} className="outline" style={{ padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <RefreshCw size={13} /> Reset
-              </button>
-            </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button onClick={() => setShowHints(h => !h)} className="outline" style={{ flex: 1, padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Eye size={14} /> {showHints ? 'Hide Hints' : 'Show Hints'}
+                  </button>
+                  <button onClick={handleReset} className="outline" style={{ padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <RefreshCw size={13} /> Reset
+                  </button>
+                </div>
 
-            {notebook.length >= filteredTargets.length && (
-              <button 
-                onClick={onNextSection || onBackToDashboard} 
-                className="primary" 
-                style={{ 
-                  width: '100%', 
-                  padding: '0.6rem', 
-                  marginTop: '0.75rem', 
-                  borderRadius: '8px', 
-                  fontSize: '13px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  gap: '0.35rem', 
-                  background: '#16a34a', 
-                  boxShadow: '0 4px 12px rgba(22,163,74,0.25)' 
-                }}
-              >
-                🎉 Walk Completed! {typeFilter === 'plant' ? 'Proceed to Animals Walk' : 'Proceed to Level 2'} <ArrowRight size={14} />
-              </button>
-            )}
+                {notebook.length >= filteredTargets.length && (
+                  <button 
+                    onClick={onNextSection || onBackToDashboard} 
+                    className="primary" 
+                    style={{ 
+                      width: '100%', 
+                      padding: '0.6rem', 
+                      marginTop: '0.75rem', 
+                      borderRadius: '8px', 
+                      fontSize: '13px', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      gap: '0.35rem', 
+                      background: '#16a34a', 
+                      boxShadow: '0 4px 12px rgba(22,163,74,0.25)' 
+                    }}
+                  >
+                    🎉 Walk Completed! Proceed to Animals Walk <ArrowRight size={14} />
+                  </button>
+                )}
+              </>
+            ) : null}
           </div>
         </div>
 
@@ -812,7 +873,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               />
 
               {/* Gold hint rings */}
-              {showHints && filteredTargets.map(t => {
+              {showHints && typeFilter === 'plant' && filteredTargets.map(t => {
                 const logged = notebook.includes(t.id);
                 if (logged) return null;
                 return (
@@ -837,7 +898,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               })}
 
               {/* Scanned target badges */}
-              {filteredTargets.map(t => {
+              {typeFilter === 'plant' && filteredTargets.map(t => {
                 const logged = notebook.includes(t.id);
                 if (!logged) return null;
                 return (
@@ -863,7 +924,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               })}
 
               {/* Miss message floats */}
-              {missMessage && (
+              {missMessage && typeFilter === 'plant' && (
                 <div style={{ position: 'absolute', left: `${missPos.x}px`, top: `${missPos.y - 28}px`, transform: 'translateX(-50%)', background: 'rgba(239,68,68,0.95)', color: '#fff', padding: '0.25rem 0.5rem', borderRadius: '6px', fontSize: '11px', fontWeight: 'bold', pointerEvents: 'none', zIndex: 30 }}>
                   {missMessage}
                 </div>
@@ -878,14 +939,14 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                   transform: 'translate(-50%, -50%)',
                   width: '90px',
                   height: '60px',
-                  border: hoveredTarget ? '2px solid #22d3ee' : '2px solid #3b82f6',
+                  border: hoveredTarget ? '2.5px solid #22d3ee' : '2px solid #3b82f6',
                   borderRadius: '8px',
                   pointerEvents: 'none',
                   zIndex: 25,
-                  background: hoveredTarget ? 'rgba(34, 211, 238, 0.2)' : 'rgba(59, 130, 246, 0.2)',
-                  boxShadow: hoveredTarget ? '0 0 15px rgba(34, 211, 238, 0.5)' : '0 0 12px rgba(59, 130, 246, 0.4)',
+                  background: hoveredTarget ? 'rgba(34, 211, 238, 0.25)' : 'rgba(59, 130, 246, 0.15)',
+                  boxShadow: hoveredTarget ? '0 0 18px rgba(34, 211, 238, 0.6)' : '0 0 10px rgba(59, 130, 246, 0.3)',
                 }}>
-                  {isHolding && (
+                  {isHolding && typeFilter === 'plant' && (
                     <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '3px', background: 'rgba(0,0,0,0.3)' }}>
                       <div style={{ height: '100%', background: hoveredTarget?.isBonus ? '#fbbf24' : '#22d3ee', width: `${holdProgress}%` }} />
                     </div>
@@ -897,27 +958,27 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 </div>
               )}
 
-              {/* Click-and-hold popup containing ONLY the object's correct name */}
-              {isInsideImage && isHolding && hoveredTarget && (
+              {/* Scanned/Hovered Target Popup Label */}
+              {isInsideImage && hoveredTarget && (
                 <div style={{
                   position: 'absolute',
                   left: `${mousePos.x}px`,
-                  top: `${mousePos.y - 45}px`,
+                  top: `${mousePos.y - 48}px`,
                   transform: 'translateX(-50%)',
                   background: 'rgba(15, 23, 42, 0.95)',
                   color: '#ffffff',
-                  padding: '0.35rem 0.75rem',
+                  padding: '0.4rem 0.85rem',
                   borderRadius: '6px',
-                  fontSize: '13px',
+                  fontSize: '13.5px',
                   fontWeight: 'bold',
                   border: '1.5px solid #22d3ee',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.35), 0 0 10px rgba(34,211,238,0.5)',
+                  boxShadow: '0 4px 14px rgba(0,0,0,0.4), 0 0 12px rgba(34,211,238,0.5)',
                   pointerEvents: 'none',
                   zIndex: 35,
                   whiteSpace: 'nowrap',
-                  letterSpacing: '0.3px'
+                  letterSpacing: '0.4px'
                 }}>
-                  {hoveredTarget.data.name}
+                  {hoveredTarget.data.popupName || hoveredTarget.data.name}
                 </div>
               )}
             </div>
@@ -941,16 +1002,16 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                     gap: '4px',
                     fontWeight: logged ? '600' : '400',
                     cursor: 'pointer'
-                  }} onClick={() => setInfoCardPlant(t)}>
+                  }} onClick={() => typeFilter === 'plant' ? setInfoCardPlant(t) : setInfoCardAnimal(t)}>
                     <span>{t.emoji}</span>
-                    <span>{t.name.split(' ')[0]}</span>
+                    <span>{t.popupName || t.name.split(' ')[0]}</span>
                     {logged && <CheckCircle size={10} />}
                   </span>
                 );
               })}
             </div>
             <div className="work" style={{ fontSize: '11px' }}>
-              ✏️ <b>Scanner hint:</b> Hover the map to search. Click &amp; hold on any {typeFilter === 'plant' ? 'plant' : 'animal'} to trigger scanning. Logged species fill the left journal.
+              ✏️ <b>Scanner hint:</b> Move your scanner over an organism to examine it. Click to open its observation card.
             </div>
           </div>
         </div>
@@ -1137,6 +1198,190 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 }}
               >
                 ✓ Close &amp; Select Another Plant
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Textbook Table 2.2 Animal Information Card Modal */}
+      {infoCardAnimal && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgba(9, 13, 22, 0.85)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0',
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+          onClick={() => setInfoCardAnimal(null)}
+        >
+          <div 
+            style={{
+              position: 'relative',
+              width: '100vw',
+              height: '100vh',
+              maxWidth: '100vw',
+              maxHeight: '100vh',
+              background: '#0f172a',
+              display: 'flex',
+              flexDirection: 'row',
+              color: '#f8fafc',
+              fontFamily: 'system-ui, -apple-system, sans-serif',
+              overflow: 'hidden'
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Close Button Top Right */}
+            <button 
+              onClick={() => setInfoCardAnimal(null)}
+              style={{
+                position: 'absolute',
+                top: '1.5rem',
+                right: '1.5rem',
+                zIndex: 100,
+                background: 'rgba(15, 23, 42, 0.12)',
+                border: '1px solid rgba(15, 23, 42, 0.2)',
+                color: '#0f172a',
+                width: '42px',
+                height: '42px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '22px',
+                fontWeight: 'bold',
+                backdropFilter: 'blur(4px)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              ✕
+            </button>
+
+            {/* LEFT SIDE — Actual Existing Asset Image of Scanned Animal (65% width) */}
+            <div 
+              style={{
+                width: '65%',
+                flex: '0 0 65%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2rem',
+                background: 'linear-gradient(135deg, #090d16 0%, #1e293b 100%)',
+                borderRight: '1px solid rgba(34, 211, 238, 0.3)',
+                boxSizing: 'border-box',
+                overflow: 'hidden'
+              }}
+            >
+              <img 
+                src={infoCardAnimal.img || ANIMAL_IMAGE_ASSETS[infoCardAnimal.id] || ANIMAL_IMAGE_ASSETS[infoCardAnimal.name]} 
+                alt={infoCardAnimal.name} 
+                style={{ 
+                  maxWidth: '100%', 
+                  maxHeight: '100%', 
+                  objectFit: 'contain', 
+                  borderRadius: '16px',
+                  filter: 'drop-shadow(0 15px 35px rgba(0, 0, 0, 0.75))'
+                }} 
+              />
+            </div>
+
+            {/* RIGHT SIDE — Animal Name & Short Description (35% width) */}
+            <div 
+              style={{
+                width: '35%',
+                flex: '0 0 35%',
+                height: '100%',
+                overflowY: 'auto',
+                padding: '2.5rem 2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxSizing: 'border-box',
+                background: 'rgba(248, 250, 252, 0.95)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
+                boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              <div>
+                {/* Header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', borderBottom: '2px solid rgba(15, 23, 42, 0.12)', paddingBottom: '1.25rem', marginBottom: '1.5rem' }}>
+                  <span style={{ fontSize: '3rem' }}>{infoCardAnimal.emoji}</span>
+                  <div>
+                    <h2 style={{ margin: 0, fontSize: '2.2rem', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.02em' }}>
+                      {infoCardAnimal.popupName || infoCardAnimal.name}
+                    </h2>
+                    <span style={{ fontSize: '13px', color: '#0284c7', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                      Textbook Table 2.2 — Animal Observation
+                    </span>
+                  </div>
+                </div>
+
+                {/* Description Box */}
+                <div style={{
+                  background: '#ffffff',
+                  padding: '1.25rem 1.5rem',
+                  borderRadius: '14px',
+                  borderLeft: '6px solid #0284c7',
+                  border: '1px solid rgba(15, 23, 42, 0.14)',
+                  borderLeftWidth: '6px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)'
+                }}>
+                  <div style={{ fontSize: '13px', color: '#0369a1', fontWeight: '800', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.6px' }}>
+                    • Animal Description &amp; Behavior
+                  </div>
+                  <div style={{ fontSize: '17px', color: '#0f172a', fontWeight: '600', lineHeight: '1.55' }}>
+                    {infoCardAnimal.details}
+                  </div>
+                </div>
+
+                {/* Key Facts */}
+                <div style={{
+                  marginTop: '1.25rem',
+                  background: '#f0fdf4',
+                  padding: '1.15rem 1.35rem',
+                  borderRadius: '14px',
+                  borderLeft: '6px solid #16a34a',
+                  border: '1px solid rgba(22, 163, 74, 0.2)',
+                  borderLeftWidth: '6px',
+                  boxShadow: '0 6px 18px rgba(0, 0, 0, 0.04)'
+                }}>
+                  <div style={{ fontSize: '13px', color: '#15803d', fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.6px' }}>
+                    💡 Did You Know?
+                  </div>
+                  <div style={{ fontSize: '15px', color: '#166534', fontWeight: '600', lineHeight: '1.5' }}>
+                    {infoCardAnimal.fact}
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer close button */}
+              <button
+                onClick={() => setInfoCardAnimal(null)}
+                style={{
+                  width: '100%',
+                  padding: '0.9rem',
+                  borderRadius: '10px',
+                  background: '#0284c7',
+                  color: '#ffffff',
+                  fontWeight: 'bold',
+                  fontSize: '15px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  marginTop: '1.5rem',
+                  boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)'
+                }}
+              >
+                ✓ Close Card
               </button>
             </div>
           </div>
