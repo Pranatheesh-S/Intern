@@ -1,26 +1,30 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Activity2_1Game.css';
-import grassImage from '../../../../assets/grass_scene8.png';
-import tulsiImage from '../../../../assets/tulsi_scene8.png';
-import hibiscusImage from '../../../../assets/hibiscus_scene8.png';
-import neemImage from '../../../../assets/neem_scene8.png';
-import sunflowerImage from '../../../../assets/specimens/sunflower.png';
+import grassImage from '../../../../assets/grass.png';
+import roseImage from '../../../../assets/rose.png';
+import sunflowerImage from '../../../../assets/sunflower.png';
+import hibiscusImage from '../../../../assets/hibiscus.png';
+import tulsiImage from '../../../../assets/tulsi.png';
+import neemImage from '../../../../assets/neem.png';
 
 const PLANT_CROPPED_IMAGES = {
   p1: hibiscusImage,
   p2: tulsiImage,
   p3: neemImage,
   p4: grassImage,
+  p5: roseImage,
   p7: sunflowerImage,
   hibiscus: hibiscusImage,
   tulsi: tulsiImage,
   neem: neemImage,
   grass: grassImage,
+  rose: roseImage,
   sunflower: sunflowerImage,
   Hibiscus: hibiscusImage,
   Tulsi: tulsiImage,
   Neem: neemImage,
   Grass: grassImage,
+  Rose: roseImage,
   Sunflower: sunflowerImage,
 };
 
@@ -273,80 +277,82 @@ const PopupCard = ({ item, type, onClose }) => {
   if (!item) return null;
   const croppedSrc = PLANT_CROPPED_IMAGES[item.id] || PLANT_CROPPED_IMAGES[item.name];
 
+  if (type === 'plant') {
+    return (
+      <div className="a21-popup-overlay a21-popup-overlay--fullscreen" onClick={onClose}>
+        <div className="a21-popup-card a21-popup-card--fullscreen" onClick={e => e.stopPropagation()}>
+          <button className="a21-popup-close" onClick={onClose} style={{ zIndex: 100 }}>✕</button>
+          
+          {/* LEFT SIDE — Plant Image */}
+          <div className="a21-popup-left">
+            {croppedSrc ? (
+              <img 
+                src={croppedSrc} 
+                alt={item.name} 
+                className="a21-popup-plant-img"
+              />
+            ) : (
+              <div className="a21-popup-emoji" style={{ fontSize: '8rem' }}>{item.emoji}</div>
+            )}
+          </div>
+
+          {/* RIGHT SIDE — Existing Observation Content */}
+          <div className="a21-popup-right">
+            <h2 className="a21-popup-title">{item.name}</h2>
+            <p className="a21-popup-desc">{item.desc}</p>
+            <div className="a21-popup-tags">
+              <span className="a21-popup-tag">🏠 {item.habitat}</span>
+              <span className="a21-popup-tag">🌿 {item.type}</span>
+              <span className="a21-popup-tag">☀️ Makes own food</span>
+            </div>
+            <div className="a21-obs-grid">
+              <h4>🔍 Observations:</h4>
+              <div className="a21-obs-items">
+                {Object.entries(item.observations).map(([k, v]) => (
+                  <div key={k} className="a21-obs-item">
+                    <span className="a21-obs-key">{k}</span>
+                    <span className="a21-obs-val">{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="a21-funfact">
+              <span>💡</span>
+              <p><strong>Fun Fact:</strong> {item.fact}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="a21-popup-overlay" onClick={onClose}>
         <div className="a21-popup-card" onClick={e => e.stopPropagation()}>
           <button className="a21-popup-close" onClick={onClose}>✕</button>
-          {type === 'plant' && croppedSrc ? (
-            <div 
-              style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                marginBottom: '1rem', 
-                background: '#1e293b', 
-                borderRadius: '12px', 
-                padding: '0.5rem', 
-                border: '1.5px solid rgba(34, 197, 94, 0.3)',
-                cursor: 'pointer' 
-              }}
-              onClick={() => setLightboxImage({ src: croppedSrc, alt: item.name })}
-              title="Click to view full screen"
-            >
-              <img 
-                src={croppedSrc} 
-                alt={item.name} 
-                style={{ 
-                  maxHeight: '180px', 
-                  maxWidth: '100%', 
-                  objectFit: 'contain', 
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)'
-                }} 
-              />
-            </div>
-          ) : (
-            <div className="a21-popup-emoji">{item.emoji}</div>
-          )}
+          <div className="a21-popup-emoji">{item.emoji}</div>
           <h2 className="a21-popup-title">{item.name}</h2>
           <p className="a21-popup-desc">{item.desc}</p>
           <div className="a21-popup-tags">
             <span className="a21-popup-tag">🏠 {item.habitat}</span>
-            {type === 'plant' ? (
-              <>
-                <span className="a21-popup-tag">🌿 {item.type}</span>
-                <span className="a21-popup-tag">☀️ Makes own food</span>
-              </>
-            ) : (
-              <>
-                <span className="a21-popup-tag">🦴 {item.type}</span>
-                <span className="a21-popup-tag">🍽️ {item.food}</span>
-              </>
-            )}
+            <span className="a21-popup-tag">🦴 {item.type}</span>
+            <span className="a21-popup-tag">🍽️ {item.food}</span>
           </div>
           <div className="a21-obs-grid">
             <h4>🔍 Observations:</h4>
             <div className="a21-obs-items">
-              {type === 'plant' ? (
-                Object.entries(item.observations).map(([k, v]) => (
-                  <div key={k} className="a21-obs-item">
-                    <span className="a21-obs-key">{k}</span>
-                    <span className="a21-obs-val">{v}</span>
-                  </div>
-                ))
-              ) : (
-                [
-                  ['Moves by', item.movement],
-                  ['Breathes', item.breathes],
-                  ['Body covering', item.covering],
-                  ['Wild / Pet', item.wildOrPet]
-                ].map(([k, v]) => (
-                  <div key={k} className="a21-obs-item">
-                    <span className="a21-obs-key">{k}</span>
-                    <span className="a21-obs-val">{v}</span>
-                  </div>
-                ))
-              )}
+              {[
+                ['Moves by', item.movement],
+                ['Breathes', item.breathes],
+                ['Body covering', item.covering],
+                ['Wild / Pet', item.wildOrPet]
+              ].map(([k, v]) => (
+                <div key={k} className="a21-obs-item">
+                  <span className="a21-obs-key">{k}</span>
+                  <span className="a21-obs-val">{v}</span>
+                </div>
+              ))}
             </div>
           </div>
           <div className="a21-funfact">

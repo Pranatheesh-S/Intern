@@ -5094,15 +5094,17 @@ export default function ChapterLearningLab({
                     {isCompleted ? '✓ Done' : 'Mark Done'}
                   </button>
                 )}
-                <button 
-                  onClick={() => {
-                    setIsFullscreen(true);
-                    setActivityFocused(null);
-                  }}
-                  className="glass-btn primary"
-                >
-                  Open Fullscreen ↗
-                </button>
+                {!(chapterNum === 2 && (stage === 'scenes' || showBriefing || (activeLevel && activeLevel.id === 'lvl-1'))) && (
+                  <button 
+                    onClick={() => {
+                      setIsFullscreen(true);
+                      setActivityFocused(null);
+                    }}
+                    className="glass-btn primary"
+                  >
+                    Open Fullscreen ↗
+                  </button>
+                )}
               </div>
             </div>
           </div>
