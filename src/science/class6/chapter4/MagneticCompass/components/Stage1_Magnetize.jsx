@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Magnet, CheckCircle, RotateCcw, ArrowRight, Activity, Beaker, MousePointer2, Play } from 'lucide-react';
+import MagneticNeedleShape from './MagneticNeedleShape';
 
 export default function Stage1_Magnetize({ onComplete }) {
   const [strokeCount, setStrokeCount] = useState(0);
@@ -121,9 +122,9 @@ export default function Stage1_Magnetize({ onComplete }) {
 
   return (
     <div style={{ 
-      padding: '1.25rem 1.75rem', 
+      padding: '0.5rem 1rem', 
       display: 'flex', 
-      gap: '1.75rem', 
+      gap: '1.25rem', 
       height: '100%', 
       minHeight: 0, 
       overflow: 'hidden', 
@@ -132,33 +133,36 @@ export default function Stage1_Magnetize({ onComplete }) {
       justifyContent: 'center',
       background: 'transparent'
     }}>
-      {/* Left Side: Interactive Area */}
-      <div style={{ flex: '1.35', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100%', boxSizing: 'border-box' }}>
+      {/* Left Side: Interactive Area (Enlarged to fit screen without scrolling) */}
+      <div style={{ flex: '1.75', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100%', minHeight: 0, boxSizing: 'border-box' }}>
         {/* Top Header Container */}
         <div style={{ 
           width: '100%',
           textAlign: 'center',
           background: 'rgba(24, 24, 27, 0.95)',
           backdropFilter: 'blur(10px)',
-          padding: '0.65rem 1.25rem',
-          borderRadius: '20px',
+          padding: '0.5rem 1rem',
+          borderRadius: '16px',
           border: '1.5px solid #3F3F46',
           boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
-          boxSizing: 'border-box'
+          boxSizing: 'border-box',
+          marginBottom: '0.5rem'
         }}>
-          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
+          <h3 style={{ margin: '0 0 0.15rem 0', fontSize: '1.35rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
             Magnetization Process
           </h3>
-          <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.92rem', fontWeight: 700 }}>
+          <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.88rem', fontWeight: 700 }}>
             Drag the magnet across the iron needle, or click Auto Magnetize.
           </p>
         </div>
 
-        {/* Canvas */}
+        {/* Enlarged Canvas Activity Area */}
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          height: '280px', 
+          maxWidth: '100%',
+          flex: 1,
+          minHeight: '300px', 
           background: 'rgba(18, 18, 20, 0.95)',
           border: '1.5px solid #3F3F46',
           borderRadius: '20px',
@@ -171,21 +175,27 @@ export default function Stage1_Magnetize({ onComplete }) {
           userSelect: 'none',
           WebkitUserSelect: 'none'
         }}>
-          {/* Iron Needle Image (Larger & Thicker) */}
-          <img 
-            src="/MagneticCompass/magnetic_needle.png" 
-            alt="Magnetic Needle"
+          {/* Photorealistic 3D Magnetized Needle Image with Background Removed */}
+          <motion.img 
+            src="/MagneticCompass/magnetic_needle_transparent.png"
+            alt="Photorealistic Magnetic Needle"
             draggable="false"
+            animate={{ scale: testComplete ? [1, 1.04, 1] : 1 }}
+            transition={{ repeat: testComplete ? Infinity : 0, duration: 2.5 }}
             style={{
               position: 'absolute',
-              width: '380px',
-              filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.5))',
-              zIndex: 10,
-              pointerEvents: 'none'
+              width: '420px',
+              height: 'auto',
+              filter: testComplete 
+                ? 'drop-shadow(0 0 22px rgba(245, 158, 11, 0.95)) drop-shadow(0 8px 18px rgba(0,0,0,0.85))' 
+                : 'drop-shadow(0 8px 16px rgba(0,0,0,0.75))',
+              zIndex: 30,
+              pointerEvents: 'none',
+              transition: 'filter 0.3s ease'
             }}
           />
 
-          {/* Iron Filings (for testing) */}
+          {/* Iron Filings (for testing - rendered under the clear needle) */}
           <AnimatePresence>
             {isTesting && (
               <motion.div
@@ -221,16 +231,16 @@ export default function Stage1_Magnetize({ onComplete }) {
             )}
           </AnimatePresence>
 
-          {/* Interactive Bar Magnet */}
+          {/* Interactive Bar Magnet with Stroke Animation Moved Down over Needle */}
           <AnimatePresence>
             {!isMagnetized && (
               <motion.div
                 drag={!isAutoStroking}
-                dragConstraints={{ left: -220, right: 220, top: -100, bottom: 80 }}
+                dragConstraints={{ left: -220, right: 220, top: -40, bottom: 40 }}
                 dragElastic={0.1}
                 animate={isAutoStroking ? {
                   x: [-180, 180, -180],
-                  y: [-30, -30, -30],
+                  y: [25, 25, 25],
                   rotate: [0, 0, 0]
                 } : {}}
                 transition={isAutoStroking ? {
@@ -245,12 +255,12 @@ export default function Stage1_Magnetize({ onComplete }) {
                 }}
                 style={{
                   position: 'absolute',
-                  top: '40px',
-                  width: '140px',
-                  height: '90px',
+                  top: '95px', // Moved animation down directly over the needle body
+                  width: '150px',
+                  height: '95px',
                   display: 'flex',
                   flexDirection: 'column',
-                  zIndex: 20,
+                  zIndex: 40,
                   cursor: isMagnetized ? 'default' : 'grab'
                 }}
                 whileTap={{ cursor: 'grabbing', scale: 1.05 }}
@@ -264,7 +274,7 @@ export default function Stage1_Magnetize({ onComplete }) {
                     height: '100%',
                     objectFit: 'contain',
                     pointerEvents: 'none',
-                    filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5))'
+                    filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))'
                   }}
                 />
               </motion.div>
@@ -273,8 +283,8 @@ export default function Stage1_Magnetize({ onComplete }) {
         </div>
 
         {/* Progress Bar */}
-        <div style={{ width: '100%', marginTop: '0.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem', fontSize: '0.9rem', color: '#A1A1AA', fontWeight: 700 }}>
+        <div style={{ width: '100%', marginTop: '0.4rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem', fontSize: '0.88rem', color: '#A1A1AA', fontWeight: 700 }}>
             <span>Strokes: {strokeCount} / {maxStrokes}</span>
             <span style={{ color: '#F59E0B', fontWeight: 800 }}>{Math.round((strokeCount / maxStrokes) * 100)}%</span>
           </div>
@@ -287,14 +297,14 @@ export default function Stage1_Magnetize({ onComplete }) {
         </div>
 
         {/* Controls (Equal Big Buttons matching 100% width) */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', width: '100%' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '0.4rem', width: '100%' }}>
           {!isMagnetized && (
             <button 
               onClick={() => setIsAutoStroking(true)} 
               disabled={isAutoStroking}
               style={{ 
                 flex: 1,
-                padding: '0.85rem 1rem', 
+                padding: '0.75rem 1rem', 
                 fontSize: '1rem', 
                 fontWeight: 800, 
                 borderRadius: '14px', 
@@ -320,7 +330,7 @@ export default function Stage1_Magnetize({ onComplete }) {
               disabled={isTesting}
               style={{ 
                 flex: 1,
-                padding: '0.85rem 1rem', 
+                padding: '0.75rem 1rem', 
                 fontSize: '1rem', 
                 fontWeight: 800, 
                 borderRadius: '14px', 
@@ -345,7 +355,7 @@ export default function Stage1_Magnetize({ onComplete }) {
             disabled={strokeCount === 0 && !isAutoStroking && !isTesting}
             style={{ 
               flex: 1,
-              padding: '0.85rem 1rem', 
+              padding: '0.75rem 1rem', 
               fontSize: '1rem', 
               fontWeight: 800, 
               borderRadius: '14px', 
@@ -368,16 +378,19 @@ export default function Stage1_Magnetize({ onComplete }) {
 
       {/* Right Side: Midnight Carbon Panel */}
       <div style={{ 
-        flex: '0.85', 
+        flex: '0.75', 
         background: 'rgba(24, 24, 27, 0.95)',
         backdropFilter: 'blur(10px)',
         border: '1.5px solid #3F3F46',
         borderRadius: '20px',
-        padding: '1.25rem 1.5rem',
+        padding: '1rem 1.25rem',
         boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6)',
         display: 'flex', 
         flexDirection: 'column', 
-        gap: '1.25rem', 
+        gap: '0.85rem', 
+        height: '100%',
+        minHeight: 0,
+        boxSizing: 'border-box',
         overflowY: 'auto' 
       }}>
         <div style={{ 

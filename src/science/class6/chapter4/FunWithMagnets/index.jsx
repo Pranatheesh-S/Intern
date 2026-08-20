@@ -177,8 +177,8 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                 <div style={{
                   position: 'absolute',
                   inset: 0,
-                  backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                  backdropFilter: 'blur(6px)',
+                  backgroundColor: 'rgba(9, 9, 11, 0.85)',
+                  backdropFilter: 'blur(8px)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -189,12 +189,12 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
                     style={{
-                      backgroundColor: '#ffffff',
-                      border: '1px solid #cbd5e1',
-                      borderRadius: '30px',
+                      backgroundColor: '#18181B',
+                      border: '1.5px solid #3F3F46',
+                      borderRadius: '28px',
                       padding: '2.5rem 3rem',
                       textAlign: 'center',
-                      boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
+                      boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.2)',
                       maxWidth: '520px',
                       width: '90%',
                       display: 'flex',
@@ -203,12 +203,12 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                       gap: '1.25rem'
                     }}
                   >
-                    <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.8rem', fontWeight: 800 }}>
-                      The Magnetic Maze
+                    <h2 style={{ margin: 0, color: '#FAFAFA', fontSize: '1.8rem', fontWeight: 800 }}>
+                      The Forest Rescue Maze 🦌🦁
                     </h2>
 
-                    <p style={{ margin: 0, color: '#475569', fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600 }}>
-                      Guide the ball to the exit. Drag the magnet (under the tray) to pull the steel ball 🔵 through the cardboard to the green ✅ exit, without crossing the pink walls.
+                    <p style={{ margin: 0, color: '#A1A1AA', fontSize: '1.15rem', lineHeight: '1.5', fontWeight: 600 }}>
+                      A hungry Lion 🦁 is chasing the Deer 🦌 in the forest! Pull the magnet under the board to guide the <strong style={{ color: '#F59E0B' }}>Deer 🦌</strong> safely along the forest paths to the Rescue Sanctuary 🏰!
                     </p>
 
                     <button
@@ -218,27 +218,19 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                         fontSize: '1.15rem',
                         fontWeight: 800,
                         borderRadius: '40px',
-                        backgroundColor: '#2563eb',
-                        color: '#ffffff',
+                        background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                        color: '#000000',
                         border: 'none',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.75rem',
-                        boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                        boxShadow: '0 6px 20px rgba(245, 158, 11, 0.45)',
                         transition: 'all 0.25s ease',
                         marginTop: '0.5rem'
                       }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.03)';
-                        e.currentTarget.style.backgroundColor = '#1d4ed8';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.backgroundColor = '#2563eb';
-                      }}
                     >
-                      Continue <ArrowRight size={22} color="#ffffff" />
+                      Start Maze <ArrowRight size={22} color="#000000" />
                     </button>
                   </motion.div>
                 </div>
@@ -264,29 +256,29 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             {/* Solved Pop-up Overlay using standard Activity 4.3 Quiz Completion style */}
             <AnimatePresence>
               {showMazeSolveModal && (
-                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(6px)' }}>
+                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(9, 9, 11, 0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(8px)' }}>
                   <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
                     style={{ 
-                      backgroundColor: '#ffffff', 
-                      borderRadius: '30px', 
+                      backgroundColor: '#18181B', 
+                      borderRadius: '28px', 
                       padding: '2.5rem 3rem', 
                       maxWidth: '520px', 
                       width: '90%',
                       textAlign: 'center', 
-                      border: '1px solid #cbd5e1',
-                      boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
+                      border: '1.5px solid #3F3F46',
+                      boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.2)',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
                       gap: '1.25rem'
                     }}
                   >
-                    <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.8rem', fontWeight: 800 }}>Maze Solved! 🎉</h2>
-                    <p style={{ margin: 0, color: '#475569', fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600 }}>
-                      Excellent job! The magnet's pull reached through the cardboard to guide the ball to the exit!
+                    <h2 style={{ margin: 0, color: '#FAFAFA', fontSize: '1.8rem', fontWeight: 800 }}>Deer Rescued! 🏰🎉</h2>
+                    <p style={{ margin: 0, color: '#A1A1AA', fontSize: '1.15rem', lineHeight: '1.5', fontWeight: 600 }}>
+                      Heroic Rescue! The magnet's pull guided the Deer 🦌 safely through the forest outrunning the Lion into the Rescue Sanctuary 🏰!
                     </p>
                     <button 
                       onClick={() => {
@@ -295,30 +287,21 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                       }}
                       style={{
                         padding: '1.1rem 3rem',
-                        backgroundColor: '#2563eb',
-                        color: '#ffffff',
-                        border: 'none',
-                        borderRadius: '40px',
                         fontSize: '1.15rem',
                         fontWeight: 800,
+                        borderRadius: '40px',
+                        background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                        color: '#000000',
+                        border: 'none',
                         cursor: 'pointer',
-                        boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
-                        transition: 'all 0.25s ease',
-                        marginTop: '0.5rem',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.75rem'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.03)';
-                        e.currentTarget.style.backgroundColor = '#1d4ed8';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.backgroundColor = '#2563eb';
+                        gap: '0.75rem',
+                        boxShadow: '0 6px 20px rgba(245, 158, 11, 0.45)',
+                        transition: 'all 0.25s ease'
                       }}
                     >
-                      Next Trick <ArrowRight size={22} color="#ffffff" />
+                      Next Activity <ArrowRight size={22} color="#000000" />
                     </button>
                   </motion.div>
                 </div>

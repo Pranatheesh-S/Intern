@@ -79,18 +79,18 @@ export default function Quiz({ onComplete }) {
           width: '90%', 
           padding: '2.5rem 3rem', 
           textAlign: 'center', 
-          background: '#ffffff', 
-          borderRadius: '30px', 
-          border: '1px solid #cbd5e1',
-          boxShadow: '0 15px 40px rgba(0,0,0,0.18)',
+          background: '#FFFFFF', 
+          borderRadius: '24px', 
+          border: '1.5px solid #A7F3D0',
+          boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: '1.25rem'
         }}>
-          <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#1e293b', fontWeight: 800 }}>Quiz Completed!</h2>
+          <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#064E3B', fontWeight: 900 }}>Quiz Completed! 🎉</h2>
           
-          <p style={{ color: '#475569', margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>
+          <p style={{ color: '#334155', margin: 0, fontSize: '1.2rem', fontWeight: 700 }}>
             You scored {score} out of {quizData.length}
           </p>
 
@@ -98,24 +98,16 @@ export default function Quiz({ onComplete }) {
             onClick={() => { if (onComplete) onComplete(score); }}
             style={{
               padding: '1.1rem 3rem',
-              backgroundColor: '#2563eb',
-              color: '#ffffff',
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+              color: '#FFFFFF',
               border: 'none',
               borderRadius: '40px',
               fontSize: '1.15rem',
-              fontWeight: 800,
+              fontWeight: 900,
               cursor: 'pointer',
-              boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+              boxShadow: '0 6px 20px rgba(217, 119, 6, 0.4)',
               transition: 'all 0.25s ease',
               marginTop: '0.5rem'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.03)';
-              e.currentTarget.style.backgroundColor = '#1d4ed8';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.backgroundColor = '#2563eb';
             }}
           >
             Finish Activity
@@ -140,56 +132,59 @@ export default function Quiz({ onComplete }) {
       <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column' }}>
         {/* Top Bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', padding: '0 0.5rem', flexShrink: 0 }}>
-          <h3 style={{ margin: 0, color: '#71717A', fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)', fontWeight: 700 }}>Test Your Knowledge</h3>
-          <div style={{ color: '#F59E0B', fontSize: 'clamp(0.85rem, 1.3vw, 1rem)', fontWeight: 700 }}>
+          <h3 style={{ margin: 0, color: '#047857', fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)', fontWeight: 800 }}>Test Your Knowledge</h3>
+          <div style={{ color: '#D97706', fontSize: 'clamp(0.85rem, 1.3vw, 1rem)', fontWeight: 800 }}>
             Question {currentQuestion + 1} of {quizData.length}
           </div>
         </div>
 
-        {/* Main Quiz Card */}
-        <div className="glass-panel" style={{ 
-          background: 'rgba(24, 24, 27, 0.95)', 
-          backdropFilter: 'blur(10px)',
-          border: '1.5px solid #3F3F46',
-          borderRadius: '18px', 
-          padding: '0.85rem 1.35rem', 
-          boxShadow: '0 12px 35px rgba(0, 0, 0, 0.6)',
+        {/* Main Quiz Card (Sage Mint Light Theme) */}
+        <div style={{ 
+          background: '#FFFFFF', 
+          border: '1.5px solid #A7F3D0',
+          borderRadius: '24px', 
+          padding: '1.25rem 1.75rem', 
+          boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.55rem',
+          gap: '0.85rem',
           width: '100%',
           boxSizing: 'border-box'
         }}>
           {/* Title */}
-          <h3 style={{ margin: 0, color: '#F59E0B', fontSize: 'clamp(1.05rem, 1.5vw, 1.3rem)', fontWeight: 800 }}>
+          <h3 style={{ margin: 0, color: '#D97706', fontSize: 'clamp(1.15rem, 1.6vw, 1.4rem)', fontWeight: 900 }}>
             {currentQ.title}
           </h3>
 
-          {/* Question Text */}
-          <p style={{ margin: 0, fontSize: 'clamp(0.88rem, 1.3vw, 1.02rem)', lineHeight: '1.4', fontWeight: 600, color: '#FAFAFA' }}>
+          {/* Question Text Area */}
+          <p style={{ margin: 0, fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)', lineHeight: '1.5', fontWeight: 700, color: '#064E3B' }}>
             {currentQ.question}
           </p>
 
           {/* Option Buttons */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
             {currentQ.options.map((option, index) => {
-              let bgColor = '#27272A';
-              let borderColor = '#3F3F46';
+              let bgColor = '#F8FAFC';
+              let borderColor = '#CBD5E1';
+              let textColor = '#1E293B';
               let icon = null;
 
               if (showResult) {
                 if (index === currentQ.correctIndex) {
-                  bgColor = 'rgba(34, 197, 94, 0.2)';
-                  borderColor = '#22C55E';
-                  icon = <CheckCircle size={18} color="#22C55E" />;
+                  bgColor = '#DCFCE7';
+                  borderColor = '#16A34A';
+                  textColor = '#065F46';
+                  icon = <CheckCircle size={20} color="#16A34A" />;
                 } else if (index === selectedOption) {
-                  bgColor = 'rgba(239, 68, 68, 0.2)';
+                  bgColor = '#FEE2E2';
                   borderColor = '#EF4444';
-                  icon = <XCircle size={18} color="#EF4444" />;
+                  textColor = '#991B1B';
+                  icon = <XCircle size={20} color="#EF4444" />;
                 }
               } else if (index === selectedOption) {
-                borderColor = '#F59E0B';
-                bgColor = 'rgba(245, 158, 11, 0.12)';
+                borderColor = '#D97706';
+                bgColor = '#FEF3C7';
+                textColor = '#92400E';
               }
 
               return (
@@ -202,17 +197,18 @@ export default function Quiz({ onComplete }) {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '0.6rem 1.15rem',
-                    borderRadius: '10px',
+                    padding: '0.75rem 1.25rem',
+                    borderRadius: '14px',
                     background: bgColor,
                     border: `1.5px solid ${borderColor}`,
-                    color: '#FAFAFA',
+                    color: textColor,
                     cursor: showResult ? 'default' : 'pointer',
                     textAlign: 'left',
-                    fontSize: '0.98rem',
-                    fontWeight: 600,
-                    transition: 'all 0.25s ease',
-                    opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.6 : 1
+                    fontSize: '1rem',
+                    fontWeight: 700,
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)',
+                    opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.65 : 1
                   }}
                 >
                   <span>{option}</span>
@@ -224,32 +220,26 @@ export default function Quiz({ onComplete }) {
 
           {/* Explanation & Next Question Button */}
           {showResult && (
-            <div style={{ marginTop: '0.45rem', animation: 'fadeIn 0.35s ease' }}>
-              <div style={{ padding: '0.55rem 1.15rem', background: '#27272A', borderRadius: '12px', borderLeft: '4px solid #F59E0B', border: '1px solid #3F3F46', borderLeftWidth: '4px' }}>
-                <h4 style={{ margin: '0 0 0.2rem 0', fontSize: '0.92rem', fontWeight: 800, color: '#F59E0B' }}>Explanation</h4>
-                <p style={{ margin: 0, color: '#FAFAFA', fontSize: '0.9rem', lineHeight: '1.4' }}>{currentQ.explanation}</p>
+            <div style={{ marginTop: '0.55rem', animation: 'fadeIn 0.35s ease' }}>
+              <div style={{ padding: '0.85rem 1.25rem', background: '#F0FDF4', borderRadius: '16px', borderLeft: '4px solid #D97706', border: '1.5px solid #A7F3D0', borderLeftWidth: '5px' }}>
+                <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '0.95rem', fontWeight: 900, color: '#D97706' }}>Explanation</h4>
+                <p style={{ margin: 0, color: '#334155', fontSize: '0.92rem', lineHeight: '1.5', fontWeight: 600 }}>{currentQ.explanation}</p>
               </div>
               
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.45rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
                 <button
                   onClick={handleNext}
                   style={{
-                    padding: '0.55rem 1.8rem',
+                    padding: '0.75rem 2rem',
                     background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#000000',
+                    color: '#FFFFFF',
                     border: 'none',
-                    borderRadius: '25px',
-                    fontSize: '0.96rem',
-                    fontWeight: 800,
+                    borderRadius: '30px',
+                    fontSize: '1rem',
+                    fontWeight: 900,
                     cursor: 'pointer',
-                    boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)',
-                    transition: 'all 0.25s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.03)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
+                    boxShadow: '0 4px 15px rgba(217, 119, 6, 0.35)',
+                    transition: 'all 0.2s ease'
                   }}
                 >
                   {currentQuestion === quizData.length - 1 ? 'Finish Quiz' : 'Next Question'}
