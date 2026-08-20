@@ -514,48 +514,14 @@ export default function IndiaSVGMap({
           <span>Base: <strong>Chennai</strong> (13°N, 80°E)</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', flexWrap: 'wrap' }}>
-          <button
-            onClick={() => setShowGraticule(!showGraticule)}
-            style={{
-              background: showGraticule ? '#FEF3C7' : 'transparent',
-              border: '1px solid #FDE68A',
-              borderRadius: '5px',
-              padding: '2px 5px',
-              fontSize: '10px',
-              fontWeight: 800,
-              color: showGraticule ? '#92400E' : '#94A3B8',
-              cursor: 'pointer'
-            }}
-            title="Toggle 23.5°N Tropic of Cancer & Graticule Lines"
-          >
-            🌐 Graticule
-          </button>
-          
-          <button
-            onClick={() => setShowRivers(!showRivers)}
-            style={{
-              background: showRivers ? '#DBEAFE' : 'transparent',
-              border: '1px solid #93C5FD',
-              borderRadius: '5px',
-              padding: '2px 5px',
-              fontSize: '10px',
-              fontWeight: 800,
-              color: showRivers ? '#1E40AF' : '#94A3B8',
-              cursor: 'pointer'
-            }}
-            title="Toggle Major Indian River Systems"
-          >
-            🌊 Rivers
-          </button>
-
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setShowRelief(!showRelief)}
             style={{
               background: showRelief ? '#DCFCE7' : 'transparent',
               border: '1px solid #86EFAC',
               borderRadius: '5px',
-              padding: '2px 5px',
+              padding: '2px 6px',
               fontSize: '10px',
               fontWeight: 800,
               color: showRelief ? '#166534' : '#94A3B8',
@@ -572,7 +538,7 @@ export default function IndiaSVGMap({
               background: showMeridian ? '#F3E8FF' : 'transparent',
               border: '1px solid #D8B4FE',
               borderRadius: '5px',
-              padding: '2px 5px',
+              padding: '2px 6px',
               fontSize: '10px',
               fontWeight: 800,
               color: showMeridian ? '#6B21A8' : '#94A3B8',
@@ -581,29 +547,6 @@ export default function IndiaSVGMap({
             title="Standard Meridian 82.5° E (Indian Standard Time)"
           >
             ⏰ 82.5°E IST
-          </button>
-
-          <button
-            onClick={() => {
-              setRulerMode(!rulerMode);
-              if (rulerMode) {
-                setRulerStart(null);
-                setRulerEnd(null);
-              }
-            }}
-            style={{
-              background: rulerMode ? '#EA580C' : '#FFF7ED',
-              border: `1px solid ${rulerMode ? '#C2410C' : '#FDBA74'}`,
-              borderRadius: '5px',
-              padding: '2px 5px',
-              fontSize: '10px',
-              fontWeight: 800,
-              color: rulerMode ? '#FFFFFF' : '#C2410C',
-              cursor: 'pointer'
-            }}
-            title="Digital Ruler: Click 2 cities to measure distance & bearing"
-          >
-            📏 Ruler
           </button>
 
 
