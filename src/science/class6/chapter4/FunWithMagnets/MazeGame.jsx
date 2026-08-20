@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { RotateCcw } from 'lucide-react';
 
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -15,17 +16,17 @@ function draw3DMagnet(ctx, cx, cy, w, h) {
   ctx.translate(cx, cy);
 
   // Outer Magnetic Attraction Field Aura
-  const auraGlow = ctx.createRadialGradient(0, 0, 10, 0, 0, w * 0.9);
-  auraGlow.addColorStop(0, "rgba(245, 158, 11, 0.5)");
-  auraGlow.addColorStop(0.5, "rgba(239, 68, 68, 0.25)");
+  const auraGlow = ctx.createRadialGradient(0, 0, 10, 0, 0, w * 0.95);
+  auraGlow.addColorStop(0, "rgba(245, 158, 11, 0.6)");
+  auraGlow.addColorStop(0.5, "rgba(239, 68, 68, 0.35)");
   auraGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = auraGlow;
   ctx.beginPath();
-  ctx.arc(0, 0, w * 0.9, 0, Math.PI * 2);
+  ctx.arc(0, 0, w * 0.95, 0, Math.PI * 2);
   ctx.fill();
 
   // Drop Shadow
-  ctx.shadowColor = "rgba(0, 0, 0, 0.75)";
+  ctx.shadowColor = "rgba(0, 0, 0, 0.65)";
   ctx.shadowBlur = 14;
   ctx.shadowOffsetY = 8;
 
@@ -42,7 +43,7 @@ function draw3DMagnet(ctx, cx, cy, w, h) {
   roundRect(ctx, -w / 2, -h / 2, w / 2, h, 10);
   ctx.fill();
 
-  // Metallic Seam Divider
+  // Seam Divider
   ctx.fillStyle = "#FFFFFF";
   ctx.fillRect(-2, -h / 2, 4, h);
 
@@ -66,61 +67,36 @@ function draw3DMagnet(ctx, cx, cy, w, h) {
   ctx.restore();
 }
 
-function drawLion(ctx, x, y, size) {
+function drawSteelBall(ctx, x, y, radius) {
   ctx.save();
   ctx.translate(x, y);
 
-  // Soft Drop Shadow
+  // Drop Shadow
   ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
   ctx.beginPath();
-  ctx.ellipse(0, size * 0.38, size * 0.35, size * 0.12, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, radius * 0.7, radius * 0.8, radius * 0.3, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Lion Fluffy Mane Outer
-  ctx.fillStyle = "#B45309";
+  // Outer Chrome Sphere
+  const gSteel = ctx.createRadialGradient(-radius * 0.35, -radius * 0.35, radius * 0.1, 0, 0, radius);
+  gSteel.addColorStop(0, "#FFFFFF");
+  gSteel.addColorStop(0.3, "#E2E8F0");
+  gSteel.addColorStop(0.7, "#64748B");
+  gSteel.addColorStop(1, "#1E293B");
+
+  ctx.fillStyle = gSteel;
   ctx.beginPath();
-  ctx.arc(0, 0, size * 0.46, 0, Math.PI * 2);
+  ctx.arc(0, 0, radius, 0, Math.PI * 2);
   ctx.fill();
+  ctx.strokeStyle = "#475569";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
 
-  // Lion Inner Mane Accent
-  ctx.fillStyle = "#D97706";
+  // Specular Highlight
+  ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
   ctx.beginPath();
-  ctx.arc(0, 0, size * 0.38, 0, Math.PI * 2);
+  ctx.arc(-radius * 0.35, -radius * 0.35, radius * 0.28, 0, Math.PI * 2);
   ctx.fill();
-
-  // Lion Face Base
-  ctx.fillStyle = "#F59E0B";
-  ctx.beginPath();
-  ctx.arc(0, 0, size * 0.3, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Ears
-  ctx.fillStyle = "#B45309";
-  ctx.beginPath(); ctx.arc(-size * 0.24, -size * 0.28, size * 0.1, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(size * 0.24, -size * 0.28, size * 0.1, 0, Math.PI * 2); ctx.fill();
-
-  // Muzzle & Nose
-  ctx.fillStyle = "#FEF3C7";
-  ctx.beginPath(); ctx.arc(0, size * 0.08, size * 0.14, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = "#78350F";
-  ctx.beginPath(); ctx.arc(0, size * 0.02, size * 0.06, 0, Math.PI * 2); ctx.fill();
-
-  // Fierce Playful Eyes
-  ctx.fillStyle = "#0F172A";
-  ctx.beginPath(); ctx.arc(-size * 0.1, -size * 0.08, size * 0.04, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(size * 0.1, -size * 0.08, size * 0.04, 0, Math.PI * 2); ctx.fill();
-
-  // Label Tag
-  ctx.fillStyle = "#18181B";
-  ctx.strokeStyle = "#EF4444";
-  ctx.lineWidth = 1;
-  roundRect(ctx, -26, -size * 0.62, 52, 16, 4);
-  ctx.fill(); ctx.stroke();
-  ctx.fillStyle = "#EF4444";
-  ctx.font = "900 10px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("🦁 LION", 0, -size * 0.62 + 8);
 
   ctx.restore();
 }
@@ -131,12 +107,12 @@ export default function MazeGame({ onSolve, isSolved }) {
   const onSolveRef = useRef(onSolve);
   const isSolvedRef = useRef(isSolved);
 
-  const [warningText, setWarningText] = useState("🧲 Drag the Magnet to help the Deer run through the forest to safety!");
-
   useEffect(() => {
     onSolveRef.current = onSolve;
     isSolvedRef.current = isSolved;
   }, [onSolve, isSolved]);
+
+  const handleResetRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -146,284 +122,236 @@ export default function MazeGame({ onSolve, isSolved }) {
     const H = canvas.height;
     const ctx = canvas.getContext("2d");
 
-    // Load 3D Deer Image
-    const deerImg = new Image();
-    deerImg.src = "/FunWithMagnets/deer.png";
-
-    let mzDrag = false;
+    let isDragging = false;
     let animFrame = null;
-    let runTime = 0;
 
-    // Deer position at START (top left)
-    let deer = { x: 100, y: 100, vx: 0, vy: 0 };
-    // Magnet position under deer
-    let mzMag = { x: 100, y: 100 };
-    // Chasing Lion position (starts behind deer)
-    let lion = { x: 45, y: 45 };
-
-    // Goal Rescue Sanctuary at bottom right
-    const mzExit = { x: 700, y: 700, r: 44 };
-
-    // LOGICAL FOREST MAZE WALL BARRIERS
-    const wallThick = 22;
-    const mzWalls = [
-      // Outer Perimeter Hedge Walls
-      { x: 30, y: 30, w: 740, h: wallThick },
-      { x: 30, y: 30, w: wallThick, h: 740 },
-      { x: 30, y: 744, w: 600, h: wallThick },
-      { x: 744, y: 30, w: wallThick, h: 600 },
-
-      // Forest Hedge Barriers (Forming logical paths and turns)
-      { x: 150, y: 150, w: 480, h: wallThick },
-      { x: 150, y: 150, w: wallThick, h: 320 },
-      { x: 270, y: 270, w: 360, h: wallThick },
-      { x: 630, y: 270, w: wallThick, h: 260 },
-      { x: 150, y: 470, w: 360, h: wallThick },
-      { x: 270, y: 390, w: wallThick, h: 220 },
-      { x: 390, y: 590, w: 354, h: wallThick },
-      { x: 510, y: 470, w: wallThick, h: 220 }
+    // Magnet & 3 Steel Balls state
+    let mag = { x: 80, y: 80 };
+    let balls = [
+      { x: 80, y: 80, vx: 0, vy: 0, r: 14, id: 1 },
+      { x: 100, y: 80, vx: 0, vy: 0, r: 12, id: 2 },
+      { x: 80, y: 100, vx: 0, vy: 0, r: 13, id: 3 }
     ];
 
-    const mzDown = (e) => {
+    handleResetRef.current = () => {
+      mag = { x: 80, y: 80 };
+      balls[0].x = 80; balls[0].y = 80; balls[0].vx = 0; balls[0].vy = 0;
+      balls[1].x = 100; balls[1].y = 80; balls[1].vx = 0; balls[1].vy = 0;
+      balls[2].x = 80; balls[2].y = 100; balls[2].vx = 0; balls[2].vy = 0;
+    };
+
+    // HIGH-DENSITY TOUGH MAZE WALL GRID
+    const mazeWalls = [
+      // Outer Tray Rim
+      { x: 20, y: 20, w: 960, h: 14 },
+      { x: 20, y: 686, w: 960, h: 14 },
+      { x: 20, y: 20, w: 14, h: 680 },
+      { x: 966, y: 20, w: 14, h: 680 },
+
+      // Vertical Interlocking Walls
+      { x: 140, y: 20, w: 14, h: 420 },
+      { x: 140, y: 520, w: 14, h: 180 },
+
+      { x: 260, y: 140, w: 14, h: 440 },
+
+      { x: 380, y: 20, w: 14, h: 320 },
+      { x: 380, y: 440, w: 14, h: 260 },
+
+      { x: 500, y: 140, w: 14, h: 440 },
+
+      { x: 620, y: 20, w: 14, h: 320 },
+      { x: 620, y: 440, w: 14, h: 260 },
+
+      { x: 740, y: 140, w: 14, h: 440 },
+
+      { x: 860, y: 20, w: 14, h: 540 },
+
+      // Horizontal Barriers
+      { x: 20, y: 240, w: 70, h: 14 },
+      { x: 140, y: 140, w: 60, h: 14 },
+      { x: 140, y: 380, w: 70, h: 14 },
+
+      { x: 260, y: 240, w: 60, h: 14 },
+      { x: 260, y: 480, w: 60, h: 14 },
+
+      { x: 380, y: 140, w: 60, h: 14 },
+      { x: 380, y: 340, w: 70, h: 14 },
+
+      { x: 500, y: 240, w: 60, h: 14 },
+      { x: 500, y: 440, w: 70, h: 14 },
+
+      { x: 620, y: 140, w: 60, h: 14 },
+      { x: 620, y: 340, w: 70, h: 14 },
+
+      { x: 740, y: 240, w: 60, h: 14 },
+      { x: 740, y: 480, w: 70, h: 14 },
+
+      { x: 860, y: 140, w: 50, h: 14 },
+      { x: 860, y: 340, w: 50, h: 14 }
+    ];
+
+    const goalArea = { x: 915, y: 630, r: 48 };
+
+    const updateMagnetPos = (e) => {
       const r = canvas.getBoundingClientRect();
       const scaleX = canvas.width / r.width;
       const scaleY = canvas.height / r.height;
-      const mouseX = (e.clientX - r.left) * scaleX;
-      const mouseY = (e.clientY - r.top) * scaleY;
-      
-      if (Math.hypot(mouseX - mzMag.x, mouseY - mzMag.y) < 90) {
-        mzDrag = true;
-        canvas.setPointerCapture(e.pointerId);
-      }
+      mag.x = Math.max(40, Math.min(canvas.width - 40, (e.clientX - r.left) * scaleX));
+      mag.y = Math.max(40, Math.min(canvas.height - 40, (e.clientY - r.top) * scaleY));
+    };
+
+    const mzDown = (e) => {
+      isDragging = true;
+      canvas.setPointerCapture(e.pointerId);
+      updateMagnetPos(e);
     };
 
     const mzMove = (e) => {
-      if (!mzDrag) return;
-      const r = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / r.width;
-      const scaleY = canvas.height / r.height;
-      mzMag.x = Math.max(30, Math.min(canvas.width - 30, (e.clientX - r.left) * scaleX));
-      mzMag.y = Math.max(30, Math.min(canvas.height - 30, (e.clientY - r.top) * scaleY));
+      if (!isDragging) return;
+      updateMagnetPos(e);
     };
 
     const mzUp = () => {
-      mzDrag = false;
+      isDragging = false;
     };
 
     canvas.addEventListener("pointerdown", mzDown);
     canvas.addEventListener("pointermove", mzMove);
     window.addEventListener("pointerup", mzUp);
 
-    function mzBlocked(x, y) {
-      for (const w of mzWalls) {
-        if (x > w.x - 18 && x < w.x + w.w + 18 && y > w.y - 18 && y < w.y + w.h + 18) return true;
-      }
-      return false;
-    }
+    function step() {
+      // Pull steel balls smoothly toward underboard magnet
+      let allInGoal = true;
 
-    function stepMaze() {
-      runTime += 0.05;
-      let dx = mzMag.x - deer.x;
-      let dy = mzMag.y - deer.y;
-      let dist = Math.hypot(dx, dy) || 1;
+      for (const b of balls) {
+        let dx = mag.x - b.x;
+        let dy = mag.y - b.y;
+        let dist = Math.hypot(dx, dy) || 1;
 
-      // Magnetic Pull Physics: Pulls the Deer along the forest paths
-      const pullForce = Math.min(1.2, (230 / (dist + 12)));
-      deer.vx = (deer.vx + (dx / dist) * pullForce) * 0.86;
-      deer.vy = (deer.vy + (dy / dist) * pullForce) * 0.86;
-      
-      let nx = deer.x + deer.vx;
-      let ny = deer.y + deer.vy;
+        const pullForce = Math.min(2.2, (450 / (dist + 10)));
+        b.vx = (b.vx + (dx / dist) * pullForce) * 0.88;
+        b.vy = (b.vy + (dy / dist) * pullForce) * 0.88;
 
-      if (!mzBlocked(nx, deer.y)) {
-        deer.x = Math.max(30, Math.min(W - 30, nx));
-      } else {
-        deer.vx *= -0.2;
-      }
+        let nextX = b.x + b.vx;
+        let nextY = b.y + b.vy;
 
-      if (!mzBlocked(deer.x, ny)) {
-        deer.y = Math.max(30, Math.min(H - 30, ny));
-      } else {
-        deer.vy *= -0.2;
-      }
+        // Wall collisions
+        for (const w of mazeWalls) {
+          if (nextX + b.r > w.x && nextX - b.r < w.x + w.w &&
+              nextY + b.r > w.y && nextY - b.r < w.y + w.h) {
+            b.vx *= -0.3;
+            b.vy *= -0.3;
+            nextX = b.x;
+            nextY = b.y;
+            break;
+          }
+        }
 
-      // Lion AI Chase Physics: The Lion pursues the Deer along the path
-      let ldx = deer.x - lion.x;
-      let ldy = deer.y - lion.y;
-      let ldist = Math.hypot(ldx, ldy) || 1;
+        b.x = nextX;
+        b.y = nextY;
 
-      const lionSpeed = 1.05; // Lion steady chase speed
-      if (ldist > 35) {
-        let lnx = lion.x + (ldx / ldist) * lionSpeed;
-        let lny = lion.y + (ldy / ldist) * lionSpeed;
-        if (!mzBlocked(lnx, lion.y)) lion.x = lnx;
-        if (!mzBlocked(lion.x, lny)) lion.y = lny;
-      }
-
-      // Check distance between Lion and Deer
-      if (ldist < 40) {
-        setWarningText("⚠️ LION IS CLOSING IN! Pull the magnet fast to rescue the Deer!");
-      } else {
-        setWarningText("🧲 Drag the Magnet to help the Deer run through the forest to safety!");
+        if (Math.hypot(b.x - goalArea.x, b.y - goalArea.y) > goalArea.r) {
+          allInGoal = false;
+        }
       }
 
       ctx.clearRect(0, 0, W, H);
 
-      // 1. Enchanted Forest Canvas Background
-      ctx.fillStyle = "#022C22";
+      // 1. Board Surface Texture
+      const gBoard = ctx.createLinearGradient(0, 0, W, H);
+      gBoard.addColorStop(0, "#FEF3C7");
+      gBoard.addColorStop(0.5, "#F59E0B");
+      gBoard.addColorStop(1, "#D97706");
+      ctx.fillStyle = gBoard;
       ctx.fillRect(0, 0, W, H);
 
-      // Forest Trees Detail
-      ctx.fillStyle = "#064E3B";
-      for (let tx = 50; tx < W; tx += 90) {
-        for (let ty = 50; ty < H; ty += 90) {
-          ctx.beginPath(); ctx.arc(tx, ty, 6, 0, Math.PI * 2); ctx.fill();
-        }
+      // Cardboard Grid Lines
+      ctx.strokeStyle = "rgba(120, 53, 15, 0.15)";
+      ctx.lineWidth = 1;
+      for (let x = 40; x < W; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 40; y < H; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
       }
 
-      // 2. Dirt Trail Forest Paths (With Glowing Gold Borders)
-      ctx.fillStyle = "#B45309";
-      ctx.strokeStyle = "#F59E0B";
-      ctx.lineWidth = 2.5;
-
-      roundRect(ctx, 52, 52, 696, 696, 16); ctx.fill(); ctx.stroke();
-      roundRect(ctx, 172, 172, 456, 456, 12); ctx.fill(); ctx.stroke();
-
-      // Forest Acorns / Berries Collectibles
-      ctx.fillStyle = "#F59E0B";
-      ctx.strokeStyle = "#FFFFFF";
-      ctx.lineWidth = 1.5;
-      const itemPositions = [
-        {x: 210, y: 95}, {x: 400, y: 95}, {x: 690, y: 210},
-        {x: 570, y: 330}, {x: 210, y: 330}, {x: 210, y: 530},
-        {x: 450, y: 530}, {x: 570, y: 650}
-      ];
-      for (const item of itemPositions) {
-        ctx.beginPath();
-        ctx.arc(item.x, item.y, 9, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = "#000000";
-        ctx.font = "bold 9px sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("🌿", item.x, item.y);
-        ctx.fillStyle = "#F59E0B";
-      }
-
-      // 3. Draw Forest Hedge & Wood Walls
-      for (const w of mzWalls) {
-        // Shadow
-        ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
-        roundRect(ctx, w.x + 3, w.y + 3, w.w, w.h, 6);
-        ctx.fill();
-
-        // Hedge Body
-        const gHedge = ctx.createLinearGradient(w.x, w.y, w.x + w.w, w.y + w.h);
-        gHedge.addColorStop(0, "#166534");
-        gHedge.addColorStop(1, "#14532D");
-        ctx.fillStyle = gHedge;
-        ctx.strokeStyle = "#052E16";
-        ctx.lineWidth = 1.5;
-        roundRect(ctx, w.x, w.y, w.w, w.h, 6);
-        ctx.fill();
-        ctx.stroke();
-      }
-
-      // START Sign Banner (Top Left)
-      ctx.fillStyle = "#2563EB";
-      ctx.strokeStyle = "#FFFFFF";
-      ctx.lineWidth = 2;
-      roundRect(ctx, 55, 55, 90, 32, 8);
-      ctx.fill(); ctx.stroke();
-      ctx.fillStyle = "#FFFFFF";
-      ctx.font = "900 13px system-ui, sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("🏁 START", 100, 71);
-
-      // 4. Draw Goal Rescue Sanctuary (Bottom Right Exit)
-      ctx.save();
-      const goalPulse = 1 + Math.sin(runTime * 4) * 0.08;
-      ctx.fillStyle = "rgba(34, 197, 94, 0.4)";
-      ctx.strokeStyle = "#22C55E";
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.arc(mzExit.x, mzExit.y, mzExit.r * goalPulse, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = "#FFFFFF";
-      ctx.font = "900 15px system-ui, sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("🏰 SANCTUARY", mzExit.x, mzExit.y);
-      ctx.restore();
-
-      // 5. Draw Chasing Lion
-      drawLion(ctx, lion.x, lion.y, 60);
-
-      // 6. Draw Magnetic Field Rays between Magnet and Deer
-      if (dist < 260) {
+      // 2. Render 3D Walls
+      for (const w of mazeWalls) {
         ctx.save();
-        ctx.strokeStyle = "rgba(245, 158, 11, 0.8)";
-        ctx.lineWidth = 3.5;
-        ctx.setLineDash([8, 6]);
-        ctx.lineDashOffset = -runTime * 40;
-        ctx.beginPath();
-        ctx.moveTo(mzMag.x, mzMag.y);
-        ctx.lineTo(deer.x, deer.y);
-        ctx.stroke();
+        ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+        ctx.fillRect(w.x + 6, w.y + 6, w.w, w.h);
+
+        const gWall = ctx.createLinearGradient(w.x, w.y, w.x + w.w, w.y + w.h);
+        gWall.addColorStop(0, "#065F46");
+        gWall.addColorStop(0.5, "#047857");
+        gWall.addColorStop(1, "#022C22");
+        ctx.fillStyle = gWall;
+        ctx.fillRect(w.x, w.y, w.w, w.h);
+
+        ctx.fillStyle = "#A7F3D0";
+        ctx.fillRect(w.x, w.y, w.w, 3);
         ctx.restore();
       }
 
-      // 7. Draw 3D Deer Character (Smooth Motion - No Shaking)
+      // 3. Draw Goal Sanctuary 🏰
       ctx.save();
-      ctx.translate(deer.x, deer.y);
+      ctx.translate(goalArea.x, goalArea.y);
 
-      // Smooth vertical stride bounce
-      const currentSpeed = Math.hypot(deer.vx, deer.vy);
-      const isRunning = currentSpeed > 0.25;
-      const strideBounce = isRunning ? Math.abs(Math.sin(runTime * 8)) * -4 : 0;
-
-      ctx.translate(0, strideBounce);
-
-      // Drop Shadow under Deer hooves
-      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      const haloGlow = ctx.createRadialGradient(0, 0, 10, 0, 0, goalArea.r * 1.4);
+      haloGlow.addColorStop(0, "rgba(245, 158, 11, 0.65)");
+      haloGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = haloGlow;
       ctx.beginPath();
-      ctx.ellipse(0, 34, 26, 10, 0, 0, Math.PI * 2);
+      ctx.arc(0, 0, goalArea.r * 1.4, 0, Math.PI * 2);
       ctx.fill();
 
-      // Render 3D Deer Image (88x88 px)
-      if (deerImg.complete && deerImg.naturalWidth !== 0) {
-        const deerSize = 88;
-        ctx.drawImage(deerImg, -deerSize / 2, -deerSize / 2, deerSize, deerSize);
-      } else {
-        // Fallback Deer Badge
-        ctx.fillStyle = "#B45309";
-        ctx.beginPath();
-        ctx.arc(0, -5, 24, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "bold 16px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("🦌", 0, 0);
-      }
+      ctx.fillStyle = "#FFFFFF";
+      ctx.strokeStyle = "#F59E0B";
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, goalArea.r, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+
+      ctx.font = "34px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("🏰", 0, -2);
       ctx.restore();
 
-      // 8. Draw Magnet under the board
-      draw3DMagnet(ctx, mzMag.x, mzMag.y, 96, 28);
+      // 4. Draw Magnetic Force Rays
+      for (const b of balls) {
+        let dist = Math.hypot(mag.x - b.x, mag.y - b.y);
+        if (dist < 400) {
+          ctx.save();
+          ctx.strokeStyle = "rgba(245, 158, 11, 0.85)";
+          ctx.lineWidth = 3;
+          ctx.setLineDash([8, 6]);
+          ctx.beginPath();
+          ctx.moveTo(mag.x, mag.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
 
-      // Check Goal Rescue Solved
-      if (!isSolvedRef.current && Math.hypot(deer.x - mzExit.x, deer.y - mzExit.y) < mzExit.r) {
+      // 5. Draw 3D Chrome Steel Marbles
+      for (const b of balls) {
+        drawSteelBall(ctx, b.x, b.y, b.r);
+      }
+
+      // 6. Draw Underboard Magnet
+      draw3DMagnet(ctx, mag.x, mag.y, 104, 30);
+
+      // Check Solved
+      if (!isSolvedRef.current && allInGoal) {
         isSolvedRef.current = true;
         if (onSolveRef.current) onSolveRef.current();
       }
 
-      animFrame = requestAnimationFrame(stepMaze);
+      animFrame = requestAnimationFrame(step);
     }
 
-    stepMaze();
+    step();
 
     return () => {
       cancelAnimationFrame(animFrame);
@@ -434,27 +362,65 @@ export default function MazeGame({ onSolve, isSolved }) {
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
-      <canvas 
-        ref={canvasRef} 
-        width={800} 
-        height={800} 
-        style={{ 
-          maxWidth: '100%', 
-          maxHeight: 'calc(100vh - 170px)', 
-          width: 'auto', 
-          height: 'auto', 
-          aspectRatio: '1/1', 
-          objectFit: 'contain', 
+    <div style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '0.4rem',
+      boxSizing: 'border-box',
+      position: 'relative'
+    }}>
+      {/* Top Controls Overlay Bar */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        right: '16px',
+        zIndex: 40,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.6rem'
+      }}>
+        <button
+          onClick={() => handleResetRef.current && handleResetRef.current()}
+          style={{
+            padding: '0.55rem 1.25rem',
+            borderRadius: '20px',
+            border: '1.5px solid #A7F3D0',
+            background: '#FFFFFF',
+            color: '#064E3B',
+            fontWeight: 900,
+            fontSize: '0.85rem',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(6, 78, 59, 0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem'
+          }}
+        >
+          <RotateCcw size={16} /> Reset Marbles
+        </button>
+      </div>
+
+      {/* Full Page 3D Canvas */}
+      <canvas
+        ref={canvasRef}
+        width={1000}
+        height={720}
+        style={{
+          width: '100%',
+          height: '100%',
+          maxHeight: 'calc(100vh - 160px)',
+          objectFit: 'contain',
           touchAction: 'none',
           borderRadius: '24px',
-          border: '2px solid #3F3F46',
-          boxShadow: '0 12px 35px rgba(0, 0, 0, 0.7)'
-        }} 
+          border: '2.5px solid #A7F3D0',
+          boxShadow: '0 12px 35px rgba(6, 78, 59, 0.12)',
+          cursor: 'grab'
+        }}
       />
-      <div style={{ fontSize: '0.88rem', color: '#F59E0B', fontWeight: 800, textAlign: 'center' }}>
-        {warningText}
-      </div>
     </div>
   );
 }

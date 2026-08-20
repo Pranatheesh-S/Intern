@@ -88,7 +88,7 @@ export default function Stage2_Conclusion({ onComplete }) {
           </p>
         </div>
 
-        {/* Scene Container with Realistic Morning Nature Sunrise (Northeast) */}
+        {/* Scene Container with Larger Stronger 3D Vintage Brass Magnetic Compass Instrument */}
         <div 
           ref={containerRef}
           onMouseMove={handleMouseMove}
@@ -116,7 +116,7 @@ export default function Stage2_Conclusion({ onComplete }) {
             style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }} 
           />
 
-          {/* Top Left Floating Badge Overlay matching reference style */}
+          {/* Top Left Floating Badge Overlay (Brown theme) */}
           <div style={{
             position: 'absolute',
             top: '14px',
@@ -143,92 +143,223 @@ export default function Stage2_Conclusion({ onComplete }) {
             </div>
           </div>
 
-          {/* Large Interactive 3D Vector Compass Instrument Component */}
+          {/* High-Detail Larger 3D Brass Magnetic Compass Instrument (340px) */}
           <motion.div
-            animate={{ scale: isSpinning ? 1.05 : 1 }}
+            animate={{ scale: isSpinning ? 1.04 : 1 }}
             style={{
               position: 'relative',
-              width: '260px',
-              height: '260px',
+              width: '340px',
+              height: '340px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, #FFFFFF 0%, #F1F5F9 100%)',
-              border: '8px solid #0F172A',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.5), inset 0 0 25px rgba(0,0,0,0.2)',
+              background: 'linear-gradient(135deg, #FDE047 0%, #D97706 35%, #78350F 75%, #F59E0B 100%)',
+              padding: '16px',
+              border: '4px solid #78350F',
+              boxShadow: '0 30px 75px rgba(0,0,0,0.65), 0 0 35px rgba(245, 158, 11, 0.45), inset 0 0 15px rgba(120, 53, 15, 0.5)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               zIndex: 20,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              boxSizing: 'border-box'
             }}
             onClick={handleDeflect}
           >
-            {/* Outer Brass Ring Accent */}
+            {/* Outer Strong Brass Ring Bezel Detail & Screws */}
             <div style={{
               position: 'absolute',
-              inset: '-4px',
+              inset: '6px',
               borderRadius: '50%',
-              border: '2px solid #D97706',
+              border: '4px solid #78350F',
               pointerEvents: 'none'
             }} />
+            
+            {/* Bezel Screws at 8 Points */}
+            {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
+              <div 
+                key={angle} 
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  width: '100%',
+                  height: '100%',
+                  transform: `translate(-50%, -50%) rotate(${angle}deg)`,
+                  pointerEvents: 'none'
+                }}
+              >
+                <div style={{
+                  position: 'absolute',
+                  top: '3px',
+                  left: 'calc(50% - 4px)',
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  background: '#FDE047',
+                  border: '1.5px solid #78350F',
+                  boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5)'
+                }} />
+              </div>
+            ))}
 
-            {/* Compass Rose Direction Labels */}
-            <div style={{ position: 'absolute', top: '10px', color: '#EF4444', fontWeight: 900, fontSize: '1.4rem' }}>N</div>
-            <div style={{ position: 'absolute', bottom: '10px', color: '#3B82F6', fontWeight: 900, fontSize: '1.4rem' }}>S</div>
-            <div style={{ position: 'absolute', right: '14px', color: '#0F172A', fontWeight: 900, fontSize: '1.2rem' }}>E</div>
-            <div style={{ position: 'absolute', left: '14px', color: '#0F172A', fontWeight: 900, fontSize: '1.2rem' }}>W</div>
+            {/* Inner Dial Face (Ivory Parchment Theme) */}
+            <div style={{
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, #FFFFFF 0%, #FAF8F5 65%, #F1ECE1 100%)',
+              border: '4px solid #0F172A',
+              boxShadow: 'inset 0 0 25px rgba(120, 53, 15, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden'
+            }}>
+              {/* Compass Rose 8-Point Star Vector */}
+              <svg width="260" height="260" viewBox="0 0 220 220" style={{ position: 'absolute', inset: 0, opacity: 0.28 }}>
+                <polygon points="110,15 120,100 110,110 100,100" fill="#EF4444" />
+                <polygon points="110,205 120,120 110,110 100,120" fill="#3B82F6" />
+                <polygon points="205,110 120,120 110,110 120,100" fill="#D97706" />
+                <polygon points="15,110 100,120 110,110 100,100" fill="#D97706" />
+                <polygon points="177,43 120,105 110,110 105,120" fill="#78350F" />
+                <polygon points="43,177 100,115 110,110 115,100" fill="#78350F" />
+                <polygon points="43,43 105,100 110,110 100,105" fill="#78350F" />
+                <polygon points="177,177 115,120 110,110 120,115" fill="#78350F" />
+                <circle cx="110" cy="110" r="95" fill="none" stroke="#D97706" strokeWidth="1.5" strokeDasharray="3 4" />
+              </svg>
 
-            {/* Rotating Magnetic Compass Needle */}
-            <motion.div
-              animate={{ rotate: needleAngle }}
-              transition={isSpinning ? { duration: 1.8, ease: 'easeOut' } : { type: 'spring', stiffness: 100, damping: 12 }}
-              style={{
-                position: 'relative',
-                width: '24px',
-                height: '180px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 25,
-                filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.4))'
-              }}
-            >
-              {/* North Tip (Red Arrow) */}
-              <div style={{
-                width: 0,
-                height: 0,
-                borderLeft: '12px solid transparent',
-                borderRight: '12px solid transparent',
-                borderBottom: '90px solid #EF4444',
-                position: 'relative'
-              }}>
-                <span style={{ position: 'absolute', top: '45px', left: '-5px', color: '#FFF', fontSize: '0.8rem', fontWeight: 900 }}>N</span>
+              {/* Clean Tick Marks Around Outer Circle (Degrees Numbers Removed) */}
+              {Array.from({ length: 24 }).map((_, idx) => {
+                const angle = idx * 15;
+                const isMajor = angle % 90 === 0;
+                const isMedium = angle % 45 === 0;
+
+                return (
+                  <div 
+                    key={angle}
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      width: '100%',
+                      height: '100%',
+                      transform: `translate(-50%, -50%) rotate(${angle}deg)`,
+                      pointerEvents: 'none'
+                    }}
+                  >
+                    <div style={{ 
+                      position: 'absolute', 
+                      top: '6px', 
+                      left: isMajor ? 'calc(50% - 2.5px)' : 'calc(50% - 1px)', 
+                      width: isMajor ? '5px' : isMedium ? '3px' : '2px', 
+                      height: isMajor ? '14px' : isMedium ? '10px' : '7px', 
+                      background: isMajor ? '#0F172A' : isMedium ? '#D97706' : '#94A3B8',
+                      borderRadius: '2px'
+                    }} />
+                  </div>
+                );
+              })}
+
+              {/* Cardinal Badges */}
+              {/* NORTH (N) */}
+              <div style={{ position: 'absolute', top: '28px', left: 'calc(50% - 18px)', width: '36px', height: '26px', background: '#EF4444', borderRadius: '8px', color: '#FFFFFF', fontWeight: 900, fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 3px 8px rgba(239,68,68,0.45)', zIndex: 10 }}>
+                N
               </div>
 
-              {/* Center Brass Pivot Cap */}
-              <div style={{
-                position: 'absolute',
-                width: '20px',
-                height: '20px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, #FDE047 0%, #D97706 100%)',
-                border: '2px solid #FFFFFF',
-                boxShadow: '0 0 8px rgba(0,0,0,0.5)',
-                zIndex: 30
-              }} />
-
-              {/* South Tip (Blue Arrow) */}
-              <div style={{
-                width: 0,
-                height: 0,
-                borderLeft: '12px solid transparent',
-                borderRight: '12px solid transparent',
-                borderTop: '90px solid #3B82F6',
-                position: 'relative'
-              }}>
-                <span style={{ position: 'absolute', bottom: '45px', left: '-4px', color: '#FFF', fontSize: '0.8rem', fontWeight: 900 }}>S</span>
+              {/* SOUTH (S) */}
+              <div style={{ position: 'absolute', bottom: '28px', left: 'calc(50% - 18px)', width: '36px', height: '26px', background: '#3B82F6', borderRadius: '8px', color: '#FFFFFF', fontWeight: 900, fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 3px 8px rgba(59,130,246,0.45)', zIndex: 10 }}>
+                S
               </div>
-            </motion.div>
+
+              {/* EAST (E) */}
+              <div style={{ position: 'absolute', right: '28px', top: 'calc(50% - 14px)', width: '28px', height: '28px', background: '#064E3B', borderRadius: '50%', color: '#FFFFFF', fontWeight: 900, fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                E
+              </div>
+
+              {/* WEST (W) */}
+              <div style={{ position: 'absolute', left: '28px', top: 'calc(50% - 14px)', width: '28px', height: '28px', background: '#064E3B', borderRadius: '50%', color: '#FFFFFF', fontWeight: 900, fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                W
+              </div>
+
+              {/* Intercardinal Direction Labels */}
+              <span style={{ position: 'absolute', top: '65px', right: '65px', fontSize: '11px', fontWeight: 900, color: '#78350F' }}>NE</span>
+              <span style={{ position: 'absolute', top: '65px', left: '65px', fontSize: '11px', fontWeight: 900, color: '#78350F' }}>NW</span>
+              <span style={{ position: 'absolute', bottom: '65px', right: '65px', fontSize: '11px', fontWeight: 900, color: '#78350F' }}>SE</span>
+              <span style={{ position: 'absolute', bottom: '65px', left: '65px', fontSize: '11px', fontWeight: 900, color: '#78350F' }}>SW</span>
+
+              {/* High-Detail 3D Magnetized Compass Needle */}
+              <motion.div
+                animate={{ rotate: needleAngle }}
+                transition={isSpinning ? { duration: 1.8, ease: 'easeOut' } : { type: 'spring', stiffness: 100, damping: 12 }}
+                style={{
+                  position: 'relative',
+                  width: '30px',
+                  height: '245px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 25,
+                  filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.5))'
+                }}
+              >
+                {/* North Pointer Tip (Crimson Metallic Gradient) */}
+                <div style={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: '15px solid transparent',
+                  borderRight: '15px solid transparent',
+                  borderBottom: '122px solid #EF4444',
+                  position: 'relative',
+                  filter: 'drop-shadow(0 0 8px rgba(239, 68, 68, 0.55))'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: '30px',
+                    left: '-15px',
+                    width: '15px',
+                    height: '92px',
+                    background: 'rgba(255, 255, 255, 0.3)',
+                    clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+                  }} />
+                  <span style={{ position: 'absolute', top: '65px', left: '-6px', color: '#FFF', fontSize: '0.95rem', fontWeight: 900, textShadow: '0 1px 3px #000' }}>N</span>
+                </div>
+
+                {/* Central Polished Brass Pivot Jewel Cap */}
+                <div style={{
+                  position: 'absolute',
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, #FDE047 0%, #D97706 60%, #78350F 100%)',
+                  border: '3px solid #FFFFFF',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.65), inset 0 2px 4px rgba(255,255,255,0.85)',
+                  zIndex: 30
+                }} />
+
+                {/* South Pointer Tip (Sapphire Metallic Gradient) */}
+                <div style={{
+                  width: 0,
+                  height: 0,
+                  borderLeft: '15px solid transparent',
+                  borderRight: '15px solid transparent',
+                  borderTop: '122px solid #3B82F6',
+                  position: 'relative',
+                  filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.55))'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '30px',
+                    left: '-15px',
+                    width: '15px',
+                    height: '92px',
+                    background: 'rgba(255, 255, 255, 0.3)',
+                    clipPath: 'polygon(100% 100%, 0 0, 100% 0)'
+                  }} />
+                  <span style={{ position: 'absolute', bottom: '65px', left: '-5px', color: '#FFF', fontSize: '0.95rem', fontWeight: 900, textShadow: '0 1px 3px #000' }}>S</span>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
 
           {/* Instruction Bar Overlay */}
