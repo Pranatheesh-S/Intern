@@ -137,8 +137,8 @@ export default function TwoFriendsActivity({ onBack, onNextActivity }) {
     // Set initial time when switching cases
     if (activeCase === 1) setTimeMins(17 * 60 + 30); // 5:30 PM
     if (activeCase === 2) setTimeMins(12 * 60 + 0);  // 12:00 PM
-    if (activeCase === 3) setTimeMins(17 * 60 + 30); 
-    if (activeCase === 4) setTimeMins(17 * 60 + 30); 
+    if (activeCase === 3) setTimeMins(12 * 60 + 0);  // 12:00 PM
+    if (activeCase === 4) setTimeMins(12 * 60 + 0);  // 12:00 PM
     setPlaying(false);
   }, [activeCase]);
 
@@ -355,8 +355,8 @@ export default function TwoFriendsActivity({ onBack, onNextActivity }) {
               <button className="dark-nav-btn" onClick={onBack} style={{ padding: '8px 16px', fontSize: '13px' }}>
                 <ArrowLeft size={16} /> Back
               </button>
-              <button className="dark-nav-btn next" onClick={onNextActivity} style={{ background: '#10b981', color: '#0f172a', padding: '8px 16px', fontSize: '13px' }}>
-                Finish
+              <button className="dark-nav-btn next" onClick={() => activeCase < 4 ? setActiveCase(activeCase + 1) : onNextActivity()} style={{ background: '#10b981', color: '#0f172a', padding: '8px 16px', fontSize: '13px' }}>
+                {activeCase < 4 ? 'Next' : 'Finish'}
               </button>
             </div>
           </div>

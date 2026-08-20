@@ -4,6 +4,76 @@ import CoordinatesMinigame from './CoordinatesMinigame';
 import './CoordinatesPageBook.css';
 import './CoordinatesPageDark.css';
 
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Sphere, Line } from '@react-three/drei';
+import * as THREE from 'three';
+
+const OrangeModel = () => {
+  const orangeRef = React.useRef();
+  
+  useFrame((state, delta) => {
+    if (orangeRef.current) {
+      // Just set a nice static viewing angle so the leaf and stem are clearly visible
+      orangeRef.current.rotation.y = 0.5;
+      orangeRef.current.rotation.x = 0.2;
+    }
+  });
+
+  const meridians = [];
+  const radius = 1;
+  for (let i = 0; i < 12; i++) {
+    const lon = i * 30;
+    const points = [];
+    for (let lat = 90; lat >= -90; lat -= 5) {
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lon) * (Math.PI / 180);
+      points.push(new THREE.Vector3(
+        radius * 1.01 * Math.sin(phi) * Math.sin(theta),
+        radius * 1.01 * Math.cos(phi),
+        radius * 1.01 * Math.sin(phi) * Math.cos(theta)
+      ));
+    }
+    meridians.push(
+      <Line key={i} points={points} color="#ffed4a" lineWidth={2} transparent opacity={0.6} />
+    );
+  }
+
+  return (
+    <group ref={orangeRef}>
+      <Sphere args={[radius, 32, 32]}>
+        <meshStandardMaterial color="#f97316" roughness={0.8} />
+      </Sphere>
+      
+      {/* Stem */}
+      <mesh position={[0, radius + 0.04, 0]}>
+        <cylinderGeometry args={[0.02, 0.04, 0.15, 8]} />
+        <meshStandardMaterial color="#4a2e15" roughness={0.9} />
+      </mesh>
+      
+      {/* Leaf */}
+      <mesh position={[0.22, radius + 0.08, 0.1]} rotation={[0.2, -0.4, 0.3]} scale={[0.3, 0.03, 0.15]}>
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshStandardMaterial color="#16a34a" roughness={0.5} />
+      </mesh>
+
+      {meridians}
+    </group>
+  );
+};
+
+const Orange3D = () => {
+  return (
+    <div style={{ width: '100%', height: '180px', margin: '20px 0', background: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+      <Canvas camera={{ position: [0, 0, 3], fov: 45 }}>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} intensity={1.5} color="#fff" />
+        <directionalLight position={[-5, -5, -5]} intensity={0.5} color="#fff" />
+        <OrangeModel />
+      </Canvas>
+    </div>
+  );
+};
+
 const stepsData = [
   {
     stepNum: 1,
@@ -105,9 +175,7 @@ const stepsData = [
     title: "Meridians of Longitude",
     paragraphs: [
       <span key="1">Travel from the <strong>North Pole to the South Pole</strong> by the shortest line. Whether you pass through Europe and Africa or through Asia, the distance is the <strong>same</strong>. These pole-to-pole lines are the <strong>meridians of longitude</strong> — all <strong>half-circles</strong> that meet at the two poles.</span>,
-      <div key="2" style={{ textAlign: 'center', margin: '24px 0' }}>
-        <span style={{ fontSize: '72px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.5))' }}>🍊</span>
-      </div>,
+      <Orange3D key="2" />,
       <span key="3">An orange 🍊 — its segment lines run pole to pole, just like meridians.</span>
     ],
     keyIdea: <span key="ki10">Meridians of longitude are half-circles from pole to pole — like the segment lines of an <strong>orange</strong>.</span>,

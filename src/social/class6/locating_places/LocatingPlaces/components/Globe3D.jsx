@@ -1,8 +1,60 @@
 import React, { useRef, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Sphere, Line, useTexture, Html, Cylinder, Stars, Edges } from '@react-three/drei';
 import * as THREE from 'three';
 import worldMapUrl from './world-map.jpg';
+
+const Comet = ({ currentTask }) => {
+  const cometRef = useRef();
+  
+  useFrame((state) => {
+    if (currentTask !== 0 || !cometRef.current) return;
+    
+    // Cycle every 8 seconds
+    const time = state.clock.getElapsedTime();
+    const t = (time % 8) / 8;
+    
+    // Move from top-right-far to bottom-left-far
+    const startX = 35; const startY = 20; const startZ = -15;
+    const endX = -35; const endY = -20; const endZ = -5;
+    
+    cometRef.current.position.x = THREE.MathUtils.lerp(startX, endX, t);
+    cometRef.current.position.y = THREE.MathUtils.lerp(startY, endY, t);
+    cometRef.current.position.z = THREE.MathUtils.lerp(startZ, endZ, t);
+    
+    // Face the direction of motion
+    cometRef.current.lookAt(endX, endY, endZ);
+  });
+
+  if (currentTask !== 0) return null;
+
+  return (
+    <group ref={cometRef}>
+      {/* Comet Core */}
+      <Sphere args={[0.15, 16, 16]}>
+        <meshBasicMaterial color="#ffffff" />
+      </Sphere>
+      
+      {/* Inner Tail (Brightest) */}
+      <mesh position={[0, 0, -2]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.25, 0.0, 4, 16]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.6} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </mesh>
+      
+      {/* Mid Tail */}
+      <mesh position={[0, 0, -4]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.35, 0.0, 8, 16]} />
+        <meshBasicMaterial color="#88ccff" transparent opacity={0.3} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </mesh>
+      
+      {/* Outer Tail (Widest, Faintest) */}
+      <mesh position={[0, 0, -6]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.5, 0.0, 12, 16]} />
+        <meshBasicMaterial color="#2266ff" transparent opacity={0.15} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </mesh>
+    </group>
+  );
+};
 
 const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
   const globeRef = useRef();
@@ -395,6 +447,20 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
   );
 };
 
+const CameraResetter = ({ currentTask }) => {
+  const { camera, controls } = useThree();
+  useEffect(() => {
+    if (controls) {
+      controls.reset();
+    }
+    camera.position.set(0, 1.5, 6);
+    camera.lookAt(0, 0, 0);
+    camera.zoom = 1;
+    camera.updateProjectionMatrix();
+  }, [currentTask, camera, controls]);
+  return null;
+};
+
 export default function Globe3D({ currentTask, latVal, lonVal, gridLat, gridLon }) {
   return (
     <Canvas camera={{ position: [0, 1.5, 6], fov: 45 }} style={{ width: '100%', height: '100%', cursor: 'grab', background: 'black' }} gl={{ localClippingEnabled: true }}>
@@ -413,13 +479,17 @@ export default function Globe3D({ currentTask, latVal, lonVal, gridLat, gridLon 
         gridLon={gridLon} 
       />
       
+      <Comet currentTask={currentTask} />
+      
       <OrbitControls 
+        makeDefault
         enableZoom={true} 
         enablePan={false} 
         autoRotate={false} 
         minDistance={3}
         maxDistance={10}
       />
+      <CameraResetter currentTask={currentTask} />
     </Canvas>
   );
 }
