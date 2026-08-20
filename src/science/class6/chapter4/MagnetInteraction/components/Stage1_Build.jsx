@@ -11,20 +11,20 @@ import {
   useSensor, 
   useSensors 
 } from '@dnd-kit/core';
-import SupercarShape from './SupercarShape';
+import FlightShape from './FlightShape';
 
 const STEPS = [
   {
     id: "carA",
-    name: "Lightning Supercar A (Driver Man)",
-    instruction: "Drag Lightning Supercar A (with Driver Man) and drop it onto the track.",
-    hint: "Drag Lightning Supercar A onto the race track workspace.",
+    name: "Lightning Jet Flight A",
+    instruction: "Drag Lightning Jet Flight A and drop it onto the sky flight airway.",
+    hint: "Drag Lightning Jet Flight A onto the sky workspace.",
   },
   {
     id: "carB",
-    name: "Nitro Supercar B",
-    instruction: "Drag Nitro Supercar B and drop it behind Supercar A.",
-    hint: "Drag Nitro Supercar B onto the race track workspace.",
+    name: "Nitro Jet Flight B",
+    instruction: "Drag Nitro Jet Flight B and drop it alongside Flight A.",
+    hint: "Drag Nitro Jet Flight B onto the sky workspace.",
   }
 ];
 
@@ -37,16 +37,24 @@ function CanvasDroppable({ children }) {
         width: '100%',
         height: '100%',
         position: 'relative',
-        background: isOver ? 'rgba(245, 158, 11, 0.12)' : 'rgba(18, 18, 20, 0.95)',
-        border: `2px dashed ${isOver ? '#F59E0B' : '#3F3F46'}`,
+        background: isOver ? 'rgba(217, 119, 6, 0.15)' : '#F0FDF4',
+        border: `2px dashed ${isOver ? '#D97706' : '#A7F3D0'}`,
         borderRadius: '16px',
         overflow: 'hidden',
-        boxShadow: 'inset 0 0 25px rgba(0,0,0,0.6)',
+        boxShadow: 'inset 0 0 20px rgba(6, 78, 59, 0.04)',
         transition: 'all 0.2s ease'
       }}
     >
-      <div style={{ position: 'absolute', bottom: '40px', width: '100%', height: '2px', background: '#3F3F46' }} />
-      {children}
+      <img 
+        src="/SuspendedMagnet/wooden_stand_lab_bg.jpg" 
+        alt="Physics Lab Track" 
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(1.05) contrast(0.95)', zIndex: 1 }} 
+      />
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(255, 255, 255, 0.25)', zIndex: 1, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '40px', width: '100%', height: '3px', background: '#A7F3D0', zIndex: 2 }} />
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%' }}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -74,32 +82,32 @@ function TrayItemCard({ step, isPlaced, isUnlocked, renderThumbnail }) {
         gap: '1rem', 
         padding: '0.85rem 1rem', 
         borderRadius: '14px',
-        background: isPlaced ? 'rgba(34, 197, 94, 0.15)' : isUnlocked ? '#18181B' : 'rgba(24, 24, 27, 0.4)',
-        border: `1.5px solid ${isPlaced ? '#22C55E' : isUnlocked ? '#3F3F46' : 'rgba(63, 63, 70, 0.4)'}`,
-        color: '#FAFAFA',
+        background: isPlaced ? '#DCFCE7' : isUnlocked ? '#FFFFFF' : '#F8FAFC',
+        border: `1.5px solid ${isPlaced ? '#16A34A' : isUnlocked ? '#A7F3D0' : '#E2E8F0'}`,
+        color: '#1E293B',
         cursor: isDisabled ? 'not-allowed' : 'grab',
         transition: 'all 0.2s ease',
         position: 'relative',
         fontWeight: 800,
-        boxShadow: isUnlocked && !isPlaced ? '0 4px 14px rgba(0, 0, 0, 0.4)' : 'none',
+        boxShadow: isUnlocked && !isPlaced ? '0 2px 8px rgba(6, 78, 59, 0.04)' : 'none',
         userSelect: 'none',
         boxSizing: 'border-box'
       }}
     >
-      <div style={{ width: '54px', height: '42px', background: '#27272A', border: '1px solid #3F3F46', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, opacity: isUnlocked ? 1 : 0.4 }}>
+      <div style={{ width: '54px', height: '42px', background: '#F0FDF4', border: '1.5px solid #A7F3D0', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, opacity: isUnlocked ? 1 : 0.4 }}>
         {renderThumbnail(step.id)}
       </div>
       <div style={{ textAlign: 'left', flex: 1 }}>
-        <div style={{ fontSize: '0.92rem', fontWeight: '800', color: isPlaced ? '#86EFAC' : '#FAFAFA' }}>{step.name}</div>
-        <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 700, color: '#A1A1AA' }}>
-          {isPlaced ? 'Placed' : isUnlocked ? 'Drag to workspace' : 'Locked'}
+        <div style={{ fontSize: '0.92rem', fontWeight: '900', color: isPlaced ? '#065F46' : '#064E3B' }}>{step.name}</div>
+        <div style={{ fontSize: '0.78rem', fontWeight: 700, color: isPlaced ? '#16A34A' : '#475569' }}>
+          {isPlaced ? 'Placed' : isUnlocked ? 'Drag to track workspace' : 'Locked'}
         </div>
       </div>
       <div style={{ marginLeft: 'auto' }}>
         {isPlaced ? (
-          <CheckCircle2 size={18} style={{ color: '#22C55E' }} />
+          <CheckCircle2 size={18} style={{ color: '#16A34A' }} />
         ) : !isUnlocked ? (
-          <Lock size={16} style={{ color: '#71717A' }} />
+          <Lock size={16} style={{ color: '#94A3B8' }} />
         ) : null}
       </div>
     </div>
@@ -217,8 +225,8 @@ export default function Stage1_Build({ onComplete, onNext }) {
 
   const renderThumbnail = (id) => {
     switch (id) {
-      case "carA": return <SupercarShape carType="supercarA" width={48} height={28} />;
-      case "carB": return <SupercarShape carType="supercarB" width={48} height={28} />;
+      case "carA": return <FlightShape flightType="flightA" width={48} height={28} />;
+      case "carB": return <FlightShape flightType="flightB" width={48} height={28} />;
       default: return null;
     }
   };
@@ -241,37 +249,36 @@ export default function Stage1_Build({ onComplete, onNext }) {
         <div style={{ 
           width: '100%',
           textAlign: 'center',
-          background: 'rgba(24, 24, 27, 0.95)',
-          backdropFilter: 'blur(10px)',
-          padding: '0.5rem 1rem',
-          borderRadius: '16px',
-          border: '1.5px solid #3F3F46',
-          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
+          background: '#FFFFFF',
+          padding: '0.65rem 1.25rem',
+          borderRadius: '20px',
+          border: '1.5px solid #A7F3D0',
+          boxShadow: '0 4px 16px rgba(6, 78, 59, 0.06)',
           boxSizing: 'border-box',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
           <div style={{ textAlign: 'left' }}>
-            <h3 style={{ margin: '0 0 0.15rem 0', fontSize: '1.35rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
-              Build the Experiment
+            <h3 style={{ margin: '0 0 0.15rem 0', fontSize: '1.35rem', fontWeight: 900, color: '#064E3B', letterSpacing: '-0.01em' }}>
+              Build the Experiment (Fig. 4.8)
             </h3>
-            <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.88rem', fontWeight: 700 }}>
-              Assemble the setup with Car A (Driver Man) and Car B as shown in Fig. 4.8.
+            <p style={{ margin: 0, color: '#475569', fontSize: '0.88rem', fontWeight: 600 }}>
+              Assemble the setup with Car A (Driver Man) and Car B on the race track.
             </p>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <div style={{ width: "160px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem", color: "#A1A1AA", fontWeight: 700 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem", color: "#475569", fontWeight: 700 }}>
                 <span>Progress</span>
-                <span style={{ color: "#F59E0B", fontWeight: 800 }}>{Math.round(progressPercent)}%</span>
+                <span style={{ color: "#D97706", fontWeight: 900 }}>{Math.round(progressPercent)}%</span>
               </div>
-              <div style={{ width: "100%", height: "8px", background: "#18181B", border: "1px solid #3F3F46", borderRadius: "4px", overflow: "hidden" }}>
+              <div style={{ width: "100%", height: "8px", background: "#E2E8F0", borderRadius: "4px", overflow: "hidden" }}>
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
-                  style={{ height: "100%", background: success ? "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)" : "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)" }}
+                  style={{ height: "100%", background: success ? "linear-gradient(135deg, #16A34A 0%, #15803D 100%)" : "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)" }}
                 />
               </div>
             </div>
@@ -279,42 +286,41 @@ export default function Stage1_Build({ onComplete, onNext }) {
               onClick={handleReset} 
               style={{ 
                 padding: "0.55rem 0.95rem", 
-                borderRadius: "10px",
-                background: "#18181B",
-                color: "#FAFAFA",
-                border: "1.5px solid #3F3F46",
+                borderRadius: "12px",
+                background: "#FFFFFF",
+                color: "#1E293B",
+                border: "1.5px solid #CBD5E1",
                 cursor: "pointer",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.4)",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.4rem",
                 fontSize: "0.85rem",
-                fontWeight: 700
+                fontWeight: 800
               }} 
               title="Reset Assembly"
             >
-              <RotateCcw size={16} color="#FAFAFA" /> Reset
+              <RotateCcw size={16} color="#334155" /> Reset
             </button>
           </div>
         </div>
 
         {/* Main Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "270px 1fr", gap: "1.25rem", flex: 1, minHeight: 0 }}>
-          {/* Left Column: Midnight Carbon 3D Parts Bench Panel */}
+          {/* Left Column: 3D Parts Bench Panel */}
           <div style={{ 
             padding: "1.15rem", 
             display: "flex", 
             flexDirection: "column", 
             gap: "1rem", 
-            background: "rgba(24, 24, 27, 0.95)",
-            backdropFilter: "blur(10px)",
-            border: "1.5px solid #3F3F46",
+            background: "#FFFFFF",
+            border: "1.5px solid #A7F3D0",
             borderRadius: "20px",
-            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.6)",
+            boxShadow: "0 6px 20px rgba(6, 78, 59, 0.06)",
             overflowY: "auto",
-            color: "#FAFAFA"
+            color: "#1E293B"
           }}>
-            <h4 style={{ margin: 0, borderBottom: "1.5px solid #3F3F46", paddingBottom: "0.6rem", color: "#F59E0B", fontWeight: 800, fontSize: "1.15rem" }}>
+            <h4 style={{ margin: 0, borderBottom: "1.5px solid #A7F3D0", paddingBottom: "0.6rem", color: "#064E3B", fontWeight: 900, fontSize: "1.15rem" }}>
               🧊 3D Parts Bench
             </h4>
             
@@ -343,10 +349,10 @@ export default function Stage1_Build({ onComplete, onNext }) {
               padding: "1rem 1.25rem", 
               display: "flex", 
               flexDirection: "column",
-              background: "rgba(18, 18, 20, 0.95)",
-              border: "1.5px solid #3F3F46",
+              background: "#FFFFFF",
+              border: "1.5px solid #A7F3D0",
               borderRadius: "20px",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
+              boxShadow: "0 6px 20px rgba(6, 78, 59, 0.06)",
               minHeight: 0,
               overflow: "hidden"
             }}>
@@ -357,7 +363,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    style={{ background: "rgba(239, 68, 68, 0.2)", color: "#FCA5A5", padding: "0.55rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #EF4444", fontWeight: 700 }}
+                    style={{ background: "#FEE2E2", color: "#991B1B", padding: "0.55rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #EF4444", fontWeight: 800 }}
                   >
                     <AlertCircle size={18} color="#EF4444" /> {error}
                   </motion.div>
@@ -367,9 +373,9 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    style={{ background: "#18181B", color: "#F59E0B", padding: "0.55rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #3F3F46", fontWeight: 700 }}
+                    style={{ background: "#F0FDF4", color: "#064E3B", padding: "0.55rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #A7F3D0", fontWeight: 800 }}
                   >
-                    <Info size={18} color="#F59E0B" /> {activeStep.hint}
+                    <Info size={18} color="#D97706" /> {activeStep.hint}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -377,25 +383,25 @@ export default function Stage1_Build({ onComplete, onNext }) {
               {/* Full Workspace Canvas */}
               <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
                 <CanvasDroppable>
-                  {/* Lightning Supercar A with Driver Man */}
+                  {/* Lightning Jet Flight A */}
                   {placed.carA && (
                     <PlacedElement 
                       id="carA" 
                       x={positions.carA.x + (activeDraggingId === 'placed-carA' ? dragDelta.x : 0)} 
                       y={positions.carA.y + (activeDraggingId === 'placed-carA' ? dragDelta.y : 0)}
                     >
-                      <SupercarShape carType="supercarA" poleRight="S" width={230} height={100} />
+                      <FlightShape flightType="flightA" poleLeft="N" width={230} height={100} />
                     </PlacedElement>
                   )}
 
-                  {/* Nitro Supercar B */}
+                  {/* Nitro Jet Flight B */}
                   {placed.carB && (
                     <PlacedElement 
                       id="carB" 
                       x={positions.carB.x + (activeDraggingId === 'placed-carB' ? dragDelta.x : 0)} 
                       y={positions.carB.y + (activeDraggingId === 'placed-carB' ? dragDelta.y : 0)}
                     >
-                      <SupercarShape carType="supercarB" poleRight="N" width={230} height={100} />
+                      <FlightShape flightType="flightB" poleLeft="S" width={230} height={100} />
                     </PlacedElement>
                   )}
                 </CanvasDroppable>
@@ -415,7 +421,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'rgba(9, 9, 11, 0.85)',
+                background: 'rgba(6, 78, 59, 0.45)',
                 backdropFilter: 'blur(8px)',
                 display: 'flex',
                 alignItems: 'center',
@@ -428,26 +434,26 @@ export default function Stage1_Build({ onComplete, onNext }) {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.8, y: 20 }}
                 style={{
-                  background: '#18181B',
-                  border: '1.5px solid #3F3F46',
+                  background: '#FFFFFF',
+                  border: '1.5px solid #A7F3D0',
                   borderRadius: '24px',
                   padding: '2.25rem 2.75rem',
                   maxWidth: '520px',
                   width: '90%',
                   textAlign: 'center',
-                  boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.2)',
+                  boxShadow: '0 12px 40px rgba(6, 78, 59, 0.15)',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: '1.1rem'
                 }}
               >
-                <h2 style={{ margin: 0, color: '#FAFAFA', fontSize: '1.8rem', fontWeight: 800 }}>
+                <h2 style={{ margin: 0, color: '#064E3B', fontSize: '1.8rem', fontWeight: 900 }}>
                   Setup Complete! 🎉
                 </h2>
 
-                <p style={{ margin: 0, color: '#A1A1AA', fontSize: '1.1rem', lineHeight: '1.5', fontWeight: 600 }}>
-                  Excellent! Car A (with Driver Man) and Car B are placed and ready for testing attraction and repulsion.
+                <p style={{ margin: 0, color: '#334155', fontSize: '1.1rem', lineHeight: '1.5', fontWeight: 700 }}>
+                  Excellent! Flight A and Flight B are placed and ready for testing attraction and repulsion.
                 </p>
 
                 <button 
@@ -457,22 +463,22 @@ export default function Stage1_Build({ onComplete, onNext }) {
                   }} 
                   style={{ 
                     marginTop: '0.5rem',
-                    padding: '1.1rem 3rem', 
-                    fontSize: '1.15rem', 
-                    fontWeight: 800, 
-                    borderRadius: '40px', 
+                    padding: '0.85rem 2.5rem', 
+                    fontSize: '1.05rem', 
+                    fontWeight: 900, 
+                    borderRadius: '25px', 
                     display: 'flex', 
                     alignItems: 'center', 
                     gap: '0.75rem',
                     background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#000000',
+                    color: '#FFFFFF',
                     border: 'none',
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(245, 158, 11, 0.45)',
+                    boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                     transition: 'all 0.25s ease'
                   }}
                 >
-                  Proceed to Explore <ArrowRight size={22} color="#000000" />
+                  Proceed to Explore <ArrowRight size={20} color="#FFFFFF" />
                 </button>
               </motion.div>
             </motion.div>
@@ -484,10 +490,10 @@ export default function Stage1_Build({ onComplete, onNext }) {
         {activeDraggingId && activeDraggingId.startsWith('tray-') ? (
           <div style={{ opacity: 0.9, pointerEvents: "none" }}>
             {activeDraggingId.includes("carA") && (
-              <SupercarShape carType="supercarA" poleRight="S" width={230} height={100} />
+              <FlightShape flightType="flightA" poleLeft="N" width={230} height={100} />
             )}
             {activeDraggingId.includes("carB") && (
-              <SupercarShape carType="supercarB" poleRight="N" width={230} height={100} />
+              <FlightShape flightType="flightB" poleLeft="S" width={230} height={100} />
             )}
           </div>
         ) : null}

@@ -150,130 +150,134 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         height: '100%',
         boxSizing: 'border-box'
       }}>
-        {/* Content Above Activity Canvas (Left Top Bar) */}
+        {/* Top Header Card above Canvas */}
         <div style={{ 
           width: '100%',
           textAlign: 'center',
-          background: 'rgba(24, 24, 27, 0.95)',
-          backdropFilter: 'blur(10px)',
+          background: '#FFFFFF',
           padding: '0.65rem 1.25rem',
           borderRadius: '20px',
-          border: '1.5px solid #3F3F46',
-          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
-          boxSizing: 'border-box'
+          border: '1.5px solid #A7F3D0',
+          boxShadow: '0 4px 16px rgba(6, 78, 59, 0.06)',
+          boxSizing: 'border-box',
+          marginBottom: '0.5rem'
         }}>
-          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
-            Breaking a Magnet
+          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.35rem', fontWeight: 900, color: '#064E3B', letterSpacing: '-0.01em' }}>
+            Breaking a Magnet Experiment (Fig. 4.4)
           </h3>
-          <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.92rem', fontWeight: 700 }}>
-            {!broken ? '✂️ Click on the dashed Cut Line or button below to break the magnet!' : '🧲 Notice how new North (N) and South (S) poles instantly form at the broken ends!'}
+          <p style={{ margin: 0, color: '#475569', fontSize: '0.9rem', fontWeight: 600 }}>
+            {!broken ? '✂️ Click "Break Magnet" to cut the bar magnet directly in half.' : '🎉 The magnet is broken into two independent pieces!'}
           </p>
         </div>
 
-        {/* Cinematic Physics Lab Canvas */}
+        {/* Physics Lab Board Canvas */}
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          height: '350px', 
-          background: 'radial-gradient(circle at center, #F8FAFC 0%, #E2E8F0 100%)',
-          backgroundImage: `
-            radial-gradient(circle at center, rgba(250, 204, 21, 0.22) 0%, rgba(226, 232, 240, 0.98) 75%),
-            linear-gradient(rgba(217, 119, 6, 0.14) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(217, 119, 6, 0.14) 1px, transparent 1px)
-          `,
-          backgroundSize: '100% 100%, 25px 25px, 25px 25px',
-          border: '2px solid #FACC15',
-          borderRadius: '20px',
+          flex: 1,
+          minHeight: '380px',
+          borderRadius: '24px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5)'
+          border: '1.5px solid #A7F3D0',
+          boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)'
         }}>
-          {!broken ? (
-            <motion.div 
-              exit={{ opacity: 0, scale: 0.9 }}
-              style={{ cursor: 'pointer' }}
-              onClick={handleBreak}
-            >
-              <MagnetPart isLeft={true} isFull={true} showNewPoles={false} width={480} />
-            </motion.div>
-          ) : (
-            <div style={{ display: 'flex', gap: '35px', alignItems: 'center', justifyContent: 'center' }}>
-              <motion.div
-                drag
-                dragConstraints={{ left: -100, right: 20, top: -60, bottom: 60 }}
-                initial={{ x: 80, rotate: 0 }}
-                animate={{ x: -15, rotate: -4 }}
-                transition={{ type: 'spring', damping: 14 }}
-                style={{ cursor: 'grab' }}
-                whileGrab={{ cursor: 'grabbing', scale: 1.05 }}
-              >
-                <MagnetPart isLeft={true} isFull={false} showNewPoles={showPoles} width={220} />
-              </motion.div>
+          {/* Finding Directions Physics Lab Background Image */}
+          <img 
+            src="/SuspendedMagnet/wooden_stand_lab_bg.jpg" 
+            alt="Physics Lab Background" 
+            style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover', 
+              filter: 'brightness(1.05) contrast(0.95)',
+              zIndex: 1 
+            }} 
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255, 255, 255, 0.25)', zIndex: 1, pointerEvents: 'none' }} />
+          
+          {/* Transparent White Sheet of Paper matching Iron Filings area width (560px x 340px) */}
+          <div style={{
+            position: 'absolute',
+            width: '560px',
+            maxWidth: '92%',
+            height: '340px',
+            maxHeight: '86%',
+            background: 'rgba(255, 255, 255, 0.82)',
+            backdropFilter: 'blur(3px)',
+            border: '1.5px solid rgba(255, 255, 255, 0.95)',
+            borderRadius: '18px',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.12), inset 0 0 20px rgba(255, 255, 255, 0.6)',
+            zIndex: 2,
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-end',
+            padding: '8px 12px'
+          }}>
+            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#475569', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.75 }}>
+              📄 White Paper Sheet
+            </span>
+          </div>
+          
+          {/* Magnet Container */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: broken ? '40px' : '0px', transition: 'all 0.5s ease', zIndex: 2 }}>
+            {!broken ? (
+              <MagnetPart isFull={true} showNewPoles={false} width={340} />
+            ) : (
+              <>
+                <motion.div initial={{ x: 0 }} animate={{ x: -25 }} transition={{ duration: 0.5 }}>
+                  <MagnetPart isLeft={true} isFull={false} showNewPoles={showPoles} width={160} />
+                </motion.div>
+                <motion.div initial={{ x: 0 }} animate={{ x: 25 }} transition={{ duration: 0.5 }}>
+                  <MagnetPart isLeft={false} isFull={false} showNewPoles={showPoles} width={160} />
+                </motion.div>
+              </>
+            )}
+          </div>
 
-              <motion.div
-                drag
-                dragConstraints={{ left: -20, right: 100, top: -60, bottom: 60 }}
-                initial={{ x: -80, rotate: 0 }}
-                animate={{ x: 15, rotate: 4 }}
-                transition={{ type: 'spring', damping: 14 }}
-                style={{ cursor: 'grab' }}
-                whileGrab={{ cursor: 'grabbing', scale: 1.05 }}
-              >
-                <MagnetPart isLeft={false} isFull={false} showNewPoles={showPoles} width={220} />
-              </motion.div>
-            </div>
-          )}
-
+          {/* Interactive Scissors Indicator */}
           <AnimatePresence>
             {!broken && (
               <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.5 }}
                 onClick={handleBreak}
-                whileHover={{ scale: 1.15 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
                 style={{
                   position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  zIndex: 25,
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  zIndex: 40
                 }}
               >
-                <div style={{
-                  borderLeft: '4px dashed #F59E0B',
-                  height: '140px',
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <motion.span 
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ repeat: Infinity, duration: 1.2 }}
+                <div style={{ position: 'relative' }}>
+                  <Scissors size={36} color="#D97706" style={{ filter: 'drop-shadow(0 4px 10px rgba(217, 119, 6, 0.5))' }} />
+                  <motion.span
+                    animate={{ scale: [1, 1.08, 1] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
                     style={{
                       position: 'absolute',
                       top: '-32px',
                       left: '50%',
                       transform: 'translateX(-50%)',
                       background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                      color: '#000000',
+                      color: '#FFFFFF',
                       padding: '4px 14px',
                       borderRadius: '12px',
                       fontSize: '0.85rem',
-                      fontWeight: 800,
+                      fontWeight: 900,
                       whiteSpace: 'nowrap',
-                      boxShadow: '0 4px 14px rgba(245, 158, 11, 0.6)',
+                      boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.3rem'
                     }}
                   >
-                    <Scissors size={14} color="#000000" /> Click to Cut Here!
+                    <Scissors size={14} color="#FFFFFF" /> Click to Cut Here!
                   </motion.span>
                 </div>
               </motion.div>
@@ -288,36 +292,35 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
             disabled={broken}
             style={{ 
               width: '100%',
-              padding: '0.95rem 1.8rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 800, 
+              padding: '0.85rem 1.8rem', 
+              fontSize: '1rem', 
+              fontWeight: 900, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
               gap: '0.6rem',
-              background: !broken ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#27272A',
-              color: !broken ? '#000000' : '#A1A1AA',
-              border: !broken ? 'none' : '1.5px solid #3F3F46',
+              background: !broken ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
+              color: !broken ? '#FFFFFF' : '#94A3B8',
+              border: !broken ? 'none' : '1.5px solid #CBD5E1',
               cursor: !broken ? 'pointer' : 'not-allowed',
               opacity: !broken ? 1 : 0.6,
-              boxShadow: !broken ? '0 6px 20px rgba(245, 158, 11, 0.4)' : '0 2px 8px rgba(0,0,0,0.2)'
+              boxShadow: !broken ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none'
             }}
           >
-            <Scissors size={20} color={!broken ? '#000000' : '#A1A1AA'} /> Break Magnet
+            <Scissors size={20} color={!broken ? '#FFFFFF' : '#94A3B8'} /> Break Magnet
           </button>
         </div>
       </div>
 
-      {/* Right Side: Pitch Charcoal Panel */}
+      {/* Right Side: Control Panel (Activity 4.3 Theme) */}
       <div style={{ 
         flex: '0.95', 
-        background: 'rgba(24, 24, 27, 0.95)',
-        backdropFilter: 'blur(10px)',
-        border: '1.5px solid #3F3F46',
+        background: '#FFFFFF',
+        border: '1.5px solid #A7F3D0',
         borderRadius: '20px',
         padding: '1.25rem 1.5rem',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)',
+        boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
@@ -327,32 +330,32 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
       }}>
         <div>
           {/* Badge Tag & Title */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(245, 158, 11, 0.12)', border: '1px solid #F59E0B', color: '#F59E0B', padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '0.6rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#D1FAE5', color: '#047857', padding: '0.35rem 0.85rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.05em', marginBottom: '0.6rem' }}>
             ✂️ STAGE 2: BREAKING A MAGNET
           </div>
-          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#F59E0B' }}>
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.5rem', fontWeight: 900, color: '#064E3B' }}>
             Do Isolated Poles Exist?
           </h3>
-          <p style={{ margin: '0 0 0.85rem 0', color: '#FAFAFA', fontSize: '0.92rem', lineHeight: 1.5, fontWeight: 600 }}>
+          <p style={{ margin: '0 0 0.85rem 0', color: '#334155', fontSize: '0.92rem', lineHeight: 1.55, fontWeight: 600 }}>
             Follow the activity procedure below, then answer the question.
           </p>
 
           {/* Activity Procedure / Instructions Card */}
           <div style={{ 
-            background: '#27272A', 
-            border: '1.5px solid #3F3F46', 
+            background: '#F0FDF4', 
+            border: '1.5px solid #A7F3D0', 
             borderRadius: '16px',
             padding: '0.9rem 1.15rem',
-            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
+            boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)',
             marginBottom: '0.85rem',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.5rem'
           }}>
-            <h4 style={{ color: '#F59E0B', margin: 0, fontSize: '0.98rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <BookOpen size={18} color="#F59E0B" /> Stage 2 Instructions
+            <h4 style={{ color: '#064E3B', margin: 0, fontSize: '0.98rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <BookOpen size={18} color="#047857" /> Stage 2 Instructions
             </h4>
-            <ol style={{ margin: 0, paddingLeft: '1.15rem', color: '#A1A1AA', fontSize: '0.86rem', lineHeight: '1.45', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+            <ol style={{ margin: 0, paddingLeft: '1.15rem', color: '#334155', fontSize: '0.88rem', lineHeight: '1.5', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
               <li>Take a bar magnet with North (N) & South (S) poles.</li>
               <li>Click to cut/break the magnet into two pieces.</li>
               <li>Observe the newly formed poles at the cut ends.</li>
@@ -363,20 +366,20 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
 
         {/* Inner Controls Card */}
         <div style={{ 
-          background: '#27272A', 
-          border: '1.5px solid #3F3F46', 
+          background: '#F0FDF4', 
+          border: '1.5px solid #A7F3D0', 
           borderRadius: '16px',
           padding: '1.15rem',
-          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
+          boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.85rem'
         }}>
-          <h4 style={{ color: '#F59E0B', margin: 0, fontSize: '1.02rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <AlertCircle size={20} color="#F59E0B" /> 
+          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.02rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <AlertCircle size={20} color="#D97706" /> 
             Observation & Conclusion
           </h4>
-          <p style={{ margin: 0, color: '#FAFAFA', fontSize: '0.92rem', lineHeight: 1.5, fontWeight: 600 }}>
+          <p style={{ margin: 0, color: '#334155', fontSize: '0.92rem', lineHeight: 1.55, fontWeight: 600 }}>
             Based on what happens when a magnet breaks, is it possible to obtain a magnet with only a single pole?
           </p>
 
@@ -388,20 +391,22 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 textAlign: 'left',
                 borderRadius: '12px',
                 fontSize: '0.9rem',
-                fontWeight: 700,
+                fontWeight: 800,
                 cursor: 'pointer',
                 transition: 'all 0.25s ease',
-                background: quizAnswer === 'yes' ? 'rgba(239, 68, 68, 0.2)' : '#18181B',
-                borderColor: quizAnswer === 'yes' ? '#EF4444' : '#3F3F46',
+                background: quizAnswer === 'yes' ? '#FEE2E2' : '#FFFFFF',
+                borderColor: quizAnswer === 'yes' ? '#EF4444' : '#CBD5E1',
                 borderStyle: 'solid',
                 borderWidth: '1.5px',
-                color: quizAnswer === 'yes' ? '#FCA5A5' : '#FAFAFA'
+                color: quizAnswer === 'yes' ? '#991B1B' : '#1E293B',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>Yes, we can isolate a single North or South pole.</span>
-                {quizAnswer === 'yes' && <XCircle size={18} color="#EF4444" />}
-              </div>
+              <span>Yes, we can isolate a single North or South pole.</span>
+              {quizAnswer === 'yes' && <XCircle size={18} color="#EF4444" />}
             </button>
 
             <button
@@ -411,48 +416,51 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 textAlign: 'left',
                 borderRadius: '12px',
                 fontSize: '0.9rem',
-                fontWeight: 700,
+                fontWeight: 800,
                 cursor: 'pointer',
                 transition: 'all 0.25s ease',
-                background: quizAnswer === 'no' ? 'rgba(34, 197, 94, 0.2)' : '#18181B',
-                borderColor: quizAnswer === 'no' ? '#22C55E' : '#3F3F46',
+                background: quizAnswer === 'no' ? '#DCFCE7' : '#FFFFFF',
+                borderColor: quizAnswer === 'no' ? '#16A34A' : '#CBD5E1',
                 borderStyle: 'solid',
                 borderWidth: '1.5px',
-                color: quizAnswer === 'no' ? '#86EFAC' : '#FAFAFA'
+                color: quizAnswer === 'no' ? '#065F46' : '#1E293B',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>No, a single isolated pole cannot exist.</span>
-                {quizAnswer === 'no' && <CheckCircle size={18} color="#22C55E" />}
-              </div>
+              <span>No, a single isolated pole cannot exist.</span>
+              {quizAnswer === 'no' && <CheckCircle size={18} color="#16A34A" />}
             </button>
           </div>
 
           {quizAnswer === 'no' && (
             <div style={{ marginTop: '0.5rem' }}>
-              <p style={{ margin: '0 0 0.75rem 0', color: '#F59E0B', fontSize: '0.88rem', fontWeight: 600 }}>
+              <p style={{ margin: '0 0 0.75rem 0', color: '#065F46', fontSize: '0.88rem', fontWeight: 800 }}>
                 Correct! North and South poles <strong>always exist in pairs</strong>, even in the smallest pieces of a magnet.
               </p>
               <button 
                 onClick={handleNextSection}
                 style={{
                   width: '100%',
-                  padding: '0.85rem 1.5rem',
-                  fontSize: '1rem',
-                  fontWeight: 800,
-                  borderRadius: '35px',
+                  padding: '0.75rem 1.5rem',
+                  fontSize: '0.92rem',
+                  fontWeight: 900,
+                  borderRadius: '25px',
                   background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                  color: '#000000',
+                  color: '#FFFFFF',
                   border: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 6px 20px rgba(245, 158, 11, 0.45)',
+                  boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.5rem'
+                  gap: '0.5rem',
+                  transition: 'all 0.2s ease'
                 }}
               >
-                Continue to Sandbox <ArrowRight size={18} color="#000000" />
+                Proceed to Stage 3 <ArrowRight size={18} color="#FFFFFF" />
               </button>
             </div>
           )}

@@ -162,80 +162,28 @@ export default function Stage3_Sandbox({ onComplete }) {
         <div style={{ 
           width: '100%',
           textAlign: 'center',
-          background: 'rgba(24, 24, 27, 0.95)',
-          backdropFilter: 'blur(10px)',
+          background: '#FFFFFF',
           padding: '0.65rem 1.25rem',
           borderRadius: '20px',
-          border: '1.5px solid #3F3F46',
-          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
-          boxSizing: 'border-box'
+          border: '1.5px solid #A7F3D0',
+          boxShadow: '0 4px 16px rgba(6, 78, 59, 0.06)',
+          boxSizing: 'border-box',
+          marginBottom: '0.5rem'
         }}>
-          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
+          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.35rem', fontWeight: 900, color: '#064E3B', letterSpacing: '-0.01em' }}>
             Sandbox: Magnet Shapes
           </h3>
-          <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.92rem', fontWeight: 700 }}>
-            {step === 'initial' && ' Choose a magnet shape below, then click "Sprinkle Filings".'}
+          <p style={{ margin: 0, color: '#475569', fontSize: '0.9rem', fontWeight: 600 }}>
+            {step === 'initial' && '✨ Choose a magnet shape below, then click "Sprinkle Filings".'}
             {step === 'scattered' && '🖐️ Click directly on the paper board to TAP it and reveal magnetic poles!'}
             {(step === 'tapped' || step === 'complete') && '🧲 Filings clustered at the poles! Try switching magnet shapes.'}
           </p>
         </div>
 
-        {/* Shape Selectors */}
-        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.6rem' }}>
-          <button 
-            onClick={() => handleShapeChange('horseshoe')}
-            style={{ 
-              padding: '0.55rem 1.5rem', 
-              fontSize: '0.96rem', 
-              fontWeight: 700, 
-              borderRadius: '12px',
-              background: shape === 'horseshoe' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#27272A',
-              color: shape === 'horseshoe' ? '#000000' : '#FAFAFA',
-              border: shape === 'horseshoe' ? 'none' : '1.5px solid #3F3F46',
-              cursor: 'pointer',
-              boxShadow: shape === 'horseshoe' ? '0 4px 15px rgba(245, 158, 11, 0.4)' : '0 2px 8px rgba(0,0,0,0.2)'
-            }}
-          >
-            Horseshoe
-          </button>
-          <button 
-            onClick={() => handleShapeChange('ring')}
-            style={{ 
-              padding: '0.55rem 1.5rem', 
-              fontSize: '0.96rem', 
-              fontWeight: 700, 
-              borderRadius: '12px',
-              background: shape === 'ring' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#27272A',
-              color: shape === 'ring' ? '#000000' : '#FAFAFA',
-              border: shape === 'ring' ? 'none' : '1.5px solid #3F3F46',
-              cursor: 'pointer',
-              boxShadow: shape === 'ring' ? '0 4px 15px rgba(245, 158, 11, 0.4)' : '0 2px 8px rgba(0,0,0,0.2)'
-            }}
-          >
-            Ring Magnet
-          </button>
-          <button 
-            onClick={() => handleShapeChange('bar')}
-            style={{ 
-              padding: '0.55rem 1.5rem', 
-              fontSize: '0.96rem', 
-              fontWeight: 700, 
-              borderRadius: '12px',
-              background: shape === 'bar' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#27272A',
-              color: shape === 'bar' ? '#000000' : '#FAFAFA',
-              border: shape === 'bar' ? 'none' : '1.5px solid #3F3F46',
-              cursor: 'pointer',
-              boxShadow: shape === 'bar' ? '0 4px 15px rgba(245, 158, 11, 0.4)' : '0 2px 8px rgba(0,0,0,0.2)'
-            }}
-          >
-            Bar Magnet
-          </button>
-        </div>
-
-        {/* Cinematic Physics Lab Board Canvas */}
+        {/* Physics Lab Board Canvas */}
         <motion.div 
           onClick={() => {
-            if (step === 'scattered' || step === 'tapped') {
+            if ((step === 'scattered' || step === 'tapped') && tapCount === 0) {
               handleTap();
             }
           }}
@@ -245,24 +193,58 @@ export default function Stage3_Sandbox({ onComplete }) {
           style={{ 
             position: 'relative', 
             width: '100%', 
-            height: '340px', 
-            background: 'radial-gradient(circle at center, #F8FAFC 0%, #E2E8F0 100%)',
-            backgroundImage: `
-              radial-gradient(circle at center, rgba(250, 204, 21, 0.22) 0%, rgba(226, 232, 240, 0.98) 75%),
-              linear-gradient(rgba(217, 119, 6, 0.14) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(217, 119, 6, 0.14) 1px, transparent 1px)
-            `,
-            backgroundSize: '100% 100%, 25px 25px, 25px 25px',
-            border: '2px solid #FACC15',
-            borderRadius: '20px',
+            flex: 1,
+            minHeight: '380px',
+            borderRadius: '24px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             overflow: 'hidden',
             cursor: (step === 'scattered' || step === 'tapped') ? 'pointer' : 'default',
-            boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5)'
+            border: '1.5px solid #A7F3D0',
+            boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)'
           }}
         >
+          {/* Finding Directions Physics Lab Background Image */}
+          <img 
+            src="/SuspendedMagnet/wooden_stand_lab_bg.jpg" 
+            alt="Physics Lab Background" 
+            style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover', 
+              filter: 'brightness(1.05) contrast(0.95)',
+              zIndex: 1 
+            }} 
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255, 255, 255, 0.25)', zIndex: 1, pointerEvents: 'none' }} />
+
+          {/* Transparent White Sheet of Paper matching Iron Filings area width (560px x 340px) */}
+          <div style={{
+            position: 'absolute',
+            width: '560px',
+            maxWidth: '92%',
+            height: '340px',
+            maxHeight: '86%',
+            background: 'rgba(255, 255, 255, 0.82)',
+            backdropFilter: 'blur(3px)',
+            border: '1.5px solid rgba(255, 255, 255, 0.95)',
+            borderRadius: '18px',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.12), inset 0 0 20px rgba(255, 255, 255, 0.6)',
+            zIndex: 2,
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-end',
+            padding: '8px 12px'
+          }}>
+            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#475569', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.75 }}>
+              📄 White Paper Sheet
+            </span>
+          </div>
+
           {/* Animated Shaker Tool Pouring Filings */}
           <AnimatePresence>
             {isSprinkling && (
@@ -279,7 +261,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                   position: 'absolute',
                   zIndex: 50,
                   fontSize: '2.8rem',
-                  filter: 'drop-shadow(0 8px 18px rgba(250, 204, 21, 0.6))',
+                  filter: 'drop-shadow(0 8px 18px rgba(217, 119, 6, 0.4))',
                   pointerEvents: 'none'
                 }}
               >
@@ -288,7 +270,7 @@ export default function Stage3_Sandbox({ onComplete }) {
             )}
           </AnimatePresence>
 
-          {/* Cinematic Tapping Energy Shockwave Ripple */}
+          {/* Tapping Energy Shockwave Ripple */}
           <AnimatePresence>
             {isVibrating && (
               <motion.div
@@ -301,8 +283,8 @@ export default function Stage3_Sandbox({ onComplete }) {
                   width: '220px',
                   height: '220px',
                   borderRadius: '50%',
-                  border: '3px solid #F59E0B',
-                  boxShadow: '0 0 35px #F59E0B, inset 0 0 25px #F59E0B',
+                  border: '3px solid #D97706',
+                  boxShadow: '0 0 35px #D97706, inset 0 0 25px #D97706',
                   pointerEvents: 'none',
                   zIndex: 8
                 }}
@@ -310,10 +292,9 @@ export default function Stage3_Sandbox({ onComplete }) {
             )}
           </AnimatePresence>
 
-          {/* 3D Cinematic Bar Magnet */}
+          {/* 3D Bar Magnet */}
           {shape === 'bar' && (
-            <motion.div 
-              drag
+            <motion.div
               dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
               dragElastic={0.1}
               whileGrab={{ scale: 1.06, cursor: 'grabbing' }}
@@ -325,16 +306,16 @@ export default function Stage3_Sandbox({ onComplete }) {
                 display: 'flex',
                 zIndex: 30,
                 cursor: 'grab',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(245, 158, 11, 0.25)',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.35), 0 0 25px rgba(245, 158, 11, 0.35)',
                 overflow: 'hidden',
-                border: '2px solid rgba(255, 255, 255, 0.35)',
+                border: '2.5px solid #FFFFFF',
                 background: '#18181B'
               }}
             >
               <div style={{ flex: 1, background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                 <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 10px rgba(255,255,255,0.9)' }}>N</span>
               </div>
-              <div style={{ width: '6px', background: 'linear-gradient(180deg, #FFFFFF 0%, #71717A 100%)', zIndex: 2 }} />
+              <div style={{ width: '5px', background: '#FFFFFF', zIndex: 2 }} />
               <div style={{ flex: 1, background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                 <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 10px rgba(255,255,255,0.9)' }}>S</span>
               </div>
@@ -352,7 +333,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                 width: '200px',
                 zIndex: 30,
                 cursor: 'grab',
-                filter: 'drop-shadow(0 12px 25px rgba(0,0,0,0.6)) drop-shadow(0 0 20px rgba(245, 158, 11, 0.3))'
+                filter: 'drop-shadow(0 12px 25px rgba(0,0,0,0.4))'
               }}
               whileGrab={{ cursor: 'grabbing', scale: 1.05 }}
             />
@@ -369,13 +350,13 @@ export default function Stage3_Sandbox({ onComplete }) {
                 width: '180px',
                 zIndex: 30,
                 cursor: 'grab',
-                filter: 'drop-shadow(0 12px 25px rgba(0,0,0,0.6)) drop-shadow(0 0 20px rgba(245, 158, 11, 0.3))'
+                filter: 'drop-shadow(0 12px 25px rgba(0,0,0,0.4))'
               }}
               whileGrab={{ cursor: 'grabbing', scale: 1.05 }}
             />
           )}
 
-          {/* Render Filings with smooth spring physics & metallic shine */}
+          {/* Render Filings */}
           {filings.map((f) => (
             <motion.div
               key={f.id}
@@ -391,8 +372,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                 top: '50%',
                 width: `${f.width}px`,
                 height: '3px',
-                backgroundColor: tapCount > 0 ? '#334155' : '#1E293B',
-                boxShadow: tapCount > 0 ? '0 0 3px rgba(255, 255, 255, 0.3)' : 'none',
+                backgroundColor: f.color,
                 borderRadius: '1.5px',
                 pointerEvents: 'none',
                 zIndex: 15
@@ -401,23 +381,23 @@ export default function Stage3_Sandbox({ onComplete }) {
           ))}
         </motion.div>
 
-        {/* Action Controls (Equal Big Buttons matching Activity Area Width) */}
+        {/* Action Controls Row under Canvas */}
         <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'space-between' }}>
           <button 
             onClick={handleScatter} 
             disabled={step !== 'initial' || isSprinkling}
             style={{ 
               flex: 1,
-              padding: '0.95rem 1rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 800, 
+              padding: '0.85rem 1rem', 
+              fontSize: '0.95rem', 
+              fontWeight: 900, 
               borderRadius: '14px',
-              background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#27272A',
-              color: step === 'initial' ? '#000000' : '#A1A1AA',
-              border: step === 'initial' ? 'none' : '1.5px solid #3F3F46',
+              background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
+              color: step === 'initial' ? '#FFFFFF' : '#94A3B8',
+              border: step === 'initial' ? 'none' : '1.5px solid #CBD5E1',
               cursor: step === 'initial' ? 'pointer' : 'not-allowed',
               opacity: step === 'initial' ? 1 : 0.6,
-              boxShadow: step === 'initial' ? '0 6px 20px rgba(245, 158, 11, 0.4)' : '0 2px 8px rgba(0,0,0,0.2)',
+              boxShadow: step === 'initial' ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -432,24 +412,24 @@ export default function Stage3_Sandbox({ onComplete }) {
             disabled={step !== 'scattered' || tapCount >= 1}
             style={{ 
               flex: 1,
-              padding: '0.95rem 1rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 800, 
+              padding: '0.85rem 1rem', 
+              fontSize: '0.95rem', 
+              fontWeight: 900, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
               gap: '0.6rem',
-              background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#27272A',
-              color: (step === 'scattered' && tapCount === 0) ? '#000000' : '#A1A1AA',
-              border: (step === 'scattered' && tapCount === 0) ? 'none' : '1.5px solid #3F3F46',
+              background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
+              color: (step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8',
+              border: (step === 'scattered' && tapCount === 0) ? 'none' : '1.5px solid #CBD5E1',
               cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'not-allowed',
               opacity: (step === 'scattered' && tapCount === 0) ? 1 : 0.6,
-              boxShadow: (step === 'scattered' && tapCount === 0) ? '0 6px 20px rgba(245, 158, 11, 0.4)' : '0 2px 8px rgba(0,0,0,0.2)'
+              boxShadow: (step === 'scattered' && tapCount === 0) ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none'
             }}
           >
-            <Hand size={20} color={(step === 'scattered' && tapCount === 0) ? '#000000' : '#A1A1AA'} /> 
-            {tapCount === 0 ? '2. Tap Paper' : 'Paper Tapped ✓'}
+            <Hand size={20} color={(step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8'} /> 
+            {tapCount === 0 ? '2. Tap Board' : 'Board Tapped ✓'}
           </button>
           
           <button 
@@ -457,36 +437,35 @@ export default function Stage3_Sandbox({ onComplete }) {
             disabled={step === 'initial'}
             style={{ 
               flex: 1,
-              padding: '0.95rem 1rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 800, 
+              padding: '0.85rem 1rem', 
+              fontSize: '0.95rem', 
+              fontWeight: 900, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
               gap: '0.6rem',
-              background: '#27272A',
-              color: step !== 'initial' ? '#FAFAFA' : '#A1A1AA',
-              border: '1.5px solid #3F3F46',
+              background: '#FFFFFF',
+              color: step !== 'initial' ? '#1E293B' : '#94A3B8',
+              border: '1.5px solid #CBD5E1',
               cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
               opacity: step !== 'initial' ? 1 : 0.6,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
             }}
           >
-            <RotateCcw size={20} color={step !== 'initial' ? '#FAFAFA' : '#A1A1AA'} /> Reset
+            <RotateCcw size={20} color={step !== 'initial' ? '#1E293B' : '#94A3B8'} /> Reset
           </button>
         </div>
       </div>
 
-      {/* Right Side: Pitch Charcoal Panel */}
+      {/* Right Side: Control Panel (Activity 4.3 Reference Theme) */}
       <div style={{ 
         flex: '0.95', 
-        background: 'rgba(24, 24, 27, 0.95)',
-        backdropFilter: 'blur(10px)',
-        border: '1.5px solid #3F3F46',
+        background: '#FFFFFF',
+        border: '1.5px solid #A7F3D0',
         borderRadius: '20px',
         padding: '1.25rem 1.5rem',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)',
+        boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
@@ -496,88 +475,142 @@ export default function Stage3_Sandbox({ onComplete }) {
       }}>
         <div>
           {/* Badge Tag & Title */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(245, 158, 11, 0.12)', border: '1px solid #F59E0B', color: '#F59E0B', padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '0.6rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#D1FAE5', color: '#047857', padding: '0.35rem 0.85rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.05em', marginBottom: '0.6rem' }}>
             🧲 STAGE 3: MAGNET SHAPES
           </div>
-          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#F59E0B' }}>
-            Poles in Different Magnet Shapes
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.5rem', fontWeight: 900, color: '#064E3B' }}>
+            Poles in Different Magnets
           </h3>
-          <p style={{ margin: '0 0 0.85rem 0', color: '#FAFAFA', fontSize: '0.92rem', lineHeight: 1.5, fontWeight: 600 }}>
-            Follow the activity procedure below, then examine the summary.
+          <p style={{ margin: '0 0 0.85rem 0', color: '#334155', fontSize: '0.92rem', lineHeight: 1.55, fontWeight: 600 }}>
+            Select different magnet shapes to verify that poles exist in all magnets!
           </p>
 
-          {/* Activity Procedure / Instructions Card */}
+          {/* Magnet Shape Selector Card */}
           <div style={{ 
-            background: '#27272A', 
-            border: '1.5px solid #3F3F46', 
+            background: '#F0FDF4', 
+            border: '1.5px solid #A7F3D0', 
             borderRadius: '16px',
             padding: '0.9rem 1.15rem',
-            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
+            boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)',
             marginBottom: '0.85rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.5rem'
+            gap: '0.75rem'
           }}>
-            <h4 style={{ color: '#F59E0B', margin: 0, fontSize: '0.98rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <BookOpen size={18} color="#F59E0B" /> Stage 3 Instructions
+            <h4 style={{ color: '#064E3B', margin: 0, fontSize: '0.98rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Shapes size={18} color="#047857" /> Choose Magnet Shape
             </h4>
-            <ol style={{ margin: 0, paddingLeft: '1.15rem', color: '#A1A1AA', fontSize: '0.86rem', lineHeight: '1.45', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-              <li>Select a magnet shape (Horseshoe, Ring, or Bar).</li>
-              <li>Click "Sprinkle Filings" to scatter iron filings on the paper.</li>
-              <li>Click to TAP the paper and observe filings line up at the poles.</li>
-              <li>Observe where the magnetic force is concentrated on each shape.</li>
-            </ol>
+            
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                onClick={() => handleShapeChange('horseshoe')}
+                style={{
+                  flex: 1,
+                  padding: '0.6rem 0.5rem',
+                  borderRadius: '10px',
+                  border: '1.5px solid',
+                  borderColor: shape === 'horseshoe' ? '#16A34A' : '#CBD5E1',
+                  background: shape === 'horseshoe' ? '#DCFCE7' : '#FFFFFF',
+                  color: shape === 'horseshoe' ? '#065F46' : '#1E293B',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Horseshoe 🧲
+              </button>
+
+              <button
+                onClick={() => handleShapeChange('ring')}
+                style={{
+                  flex: 1,
+                  padding: '0.6rem 0.5rem',
+                  borderRadius: '10px',
+                  border: '1.5px solid',
+                  borderColor: shape === 'ring' ? '#16A34A' : '#CBD5E1',
+                  background: shape === 'ring' ? '#DCFCE7' : '#FFFFFF',
+                  color: shape === 'ring' ? '#065F46' : '#1E293B',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Ring ⭕
+              </button>
+
+              <button
+                onClick={() => handleShapeChange('bar')}
+                style={{
+                  flex: 1,
+                  padding: '0.6rem 0.5rem',
+                  borderRadius: '10px',
+                  border: '1.5px solid',
+                  borderColor: shape === 'bar' ? '#16A34A' : '#CBD5E1',
+                  background: shape === 'bar' ? '#DCFCE7' : '#FFFFFF',
+                  color: shape === 'bar' ? '#065F46' : '#1E293B',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Bar 🔲
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Inner Controls Card */}
+        {/* Observation Summary Card */}
         <div style={{ 
-          background: '#27272A', 
-          border: '1.5px solid #3F3F46', 
+          background: '#F0FDF4', 
+          border: '1.5px solid #A7F3D0', 
           borderRadius: '16px',
           padding: '1.15rem',
-          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
+          boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.85rem'
         }}>
-          <h4 style={{ color: '#F59E0B', margin: 0, fontSize: '1.02rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Shapes size={20} color="#F59E0B" /> 
+          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.02rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <Shapes size={20} color="#D97706" /> 
             Observation Summary
           </h4>
-          <p style={{ margin: 0, color: '#FAFAFA', fontSize: '0.92rem', lineHeight: 1.5, fontWeight: 600 }}>
+          <p style={{ margin: 0, color: '#334155', fontSize: '0.92rem', lineHeight: 1.55, fontWeight: 600 }}>
             If we repeat this activity with magnets of other shapes, do we get the same pole behavior?
           </p>
-          <ul style={{ margin: 0, paddingLeft: '1.15rem', color: '#A1A1AA', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.86rem', lineHeight: '1.45', fontWeight: 600 }}>
+          <ul style={{ margin: 0, paddingLeft: '1.15rem', color: '#334155', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.88rem', lineHeight: '1.5', fontWeight: 600 }}>
             <li><strong>Horseshoe Magnet:</strong> Filings cluster at the two ends.</li>
-            <li><strong>Ring Magnet:</strong> Filings cluster at opposite faces or ends.</li>
+            <li><strong>Ring Magnet:</strong> Filings cluster at opposite faces/poles.</li>
             <li><strong>Bar Magnet:</strong> Filings cluster at the two ends.</li>
           </ul>
 
           <div style={{ marginTop: '0.5rem' }}>
-            <p style={{ margin: '0 0 0.75rem 0', color: '#F59E0B', fontSize: '0.88rem', fontWeight: 600 }}>
+            <p style={{ margin: '0 0 0.75rem 0', color: '#065F46', fontSize: '0.88rem', fontWeight: 800 }}>
               Conclusion: No matter the shape, every magnet has two poles where attraction is strongest.
             </p>
             <button 
-              onClick={handleFinish}
+              onClick={() => { if (onComplete) onComplete(); }}
               style={{
                 width: '100%',
                 padding: '0.85rem 1.5rem',
-                fontSize: '1rem',
-                fontWeight: 800,
-                borderRadius: '35px',
+                fontSize: '0.95rem',
+                fontWeight: 900,
+                borderRadius: '25px',
                 background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                color: '#000000',
+                color: '#FFFFFF',
                 border: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 6px 20px rgba(245, 158, 11, 0.45)',
+                boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem'
+                gap: '0.5rem',
+                transition: 'all 0.2s ease'
               }}
             >
-              <Flag size={18} color="#000000" /> Finish Activity & Proceed to Quiz
+              <Flag size={18} color="#FFFFFF" /> Finish Activity & Proceed to Quiz
             </button>
           </div>
         </div>

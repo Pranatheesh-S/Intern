@@ -159,25 +159,25 @@ export default function Stage1_Investigate({ onComplete }) {
         <div style={{ 
           width: '100%',
           textAlign: 'center',
-          background: 'rgba(24, 24, 27, 0.95)',
-          backdropFilter: 'blur(10px)',
+          background: '#FFFFFF',
           padding: '0.65rem 1.25rem',
           borderRadius: '20px',
-          border: '1.5px solid #3F3F46',
-          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
-          boxSizing: 'border-box'
+          border: '1.5px solid #A7F3D0',
+          boxShadow: '0 4px 16px rgba(6, 78, 59, 0.06)',
+          boxSizing: 'border-box',
+          marginBottom: '0.5rem'
         }}>
-          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
-            Interactive Board
+          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.35rem', fontWeight: 900, color: '#064E3B', letterSpacing: '-0.01em' }}>
+            Interactive Board (Fig. 4.2)
           </h3>
-          <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.92rem', fontWeight: 700 }}>
+          <p style={{ margin: 0, color: '#475569', fontSize: '0.9rem', fontWeight: 600 }}>
             {step === 'initial' && '✨ Step 1: Click "Sprinkle Filings" to cover the paper with iron filings.'}
             {step === 'scattered' && '🖐️ Step 2: Click directly on the paper board to TAP it once!'}
             {(step === 'tapped' || step === 'quiz' || step === 'complete') && '🧲 Filings have gathered in curved chains near the poles! Answer the observation below.'}
           </p>
         </div>
 
-        {/* Cinematic Physics Lab Board Canvas */}
+        {/* Physics Lab Board Canvas */}
         <motion.div 
           onClick={() => {
             if (step === 'scattered' && tapCount === 0) {
@@ -190,24 +190,58 @@ export default function Stage1_Investigate({ onComplete }) {
           style={{ 
             position: 'relative', 
             width: '100%', 
-            height: '350px', 
-            background: 'radial-gradient(circle at center, #F8FAFC 0%, #E2E8F0 100%)',
-            backgroundImage: `
-              radial-gradient(circle at center, rgba(250, 204, 21, 0.22) 0%, rgba(226, 232, 240, 0.98) 75%),
-              linear-gradient(rgba(217, 119, 6, 0.14) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(217, 119, 6, 0.14) 1px, transparent 1px)
-            `,
-            backgroundSize: '100% 100%, 25px 25px, 25px 25px',
-            border: '2px solid #FACC15',
-            borderRadius: '20px',
+            flex: 1,
+            minHeight: '380px',
+            borderRadius: '24px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             overflow: 'hidden',
             cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'default',
-            boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5)'
+            border: '1.5px solid #A7F3D0',
+            boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)'
           }}
         >
+          {/* Finding Directions Physics Lab Background Image */}
+          <img 
+            src="/SuspendedMagnet/wooden_stand_lab_bg.jpg" 
+            alt="Physics Lab Background" 
+            style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover', 
+              filter: 'brightness(1.05) contrast(0.95)',
+              zIndex: 1 
+            }} 
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255, 255, 255, 0.25)', zIndex: 1, pointerEvents: 'none' }} />
+
+          {/* Transparent White Sheet of Paper matching Iron Filings area width (560px x 340px) */}
+          <div style={{
+            position: 'absolute',
+            width: '560px',
+            maxWidth: '92%',
+            height: '340px',
+            maxHeight: '86%',
+            background: 'rgba(255, 255, 255, 0.82)',
+            backdropFilter: 'blur(3px)',
+            border: '1.5px solid rgba(255, 255, 255, 0.95)',
+            borderRadius: '18px',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.12), inset 0 0 20px rgba(255, 255, 255, 0.6)',
+            zIndex: 2,
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-end',
+            padding: '8px 12px'
+          }}>
+            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#475569', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.75 }}>
+              📄 White Paper Sheet
+            </span>
+          </div>
+
           {/* Animated Shaker Tool Pouring Filings */}
           <AnimatePresence>
             {isSprinkling && (
@@ -224,7 +258,7 @@ export default function Stage1_Investigate({ onComplete }) {
                   position: 'absolute',
                   zIndex: 50,
                   fontSize: '2.8rem',
-                  filter: 'drop-shadow(0 8px 18px rgba(250, 204, 21, 0.6))',
+                  filter: 'drop-shadow(0 8px 18px rgba(217, 119, 6, 0.4))',
                   pointerEvents: 'none'
                 }}
               >
@@ -233,7 +267,7 @@ export default function Stage1_Investigate({ onComplete }) {
             )}
           </AnimatePresence>
 
-          {/* Cinematic Tapping Energy Shockwave Ripple */}
+          {/* Tapping Energy Shockwave Ripple */}
           <AnimatePresence>
             {isVibrating && (
               <motion.div
@@ -246,8 +280,8 @@ export default function Stage1_Investigate({ onComplete }) {
                   width: '220px',
                   height: '220px',
                   borderRadius: '50%',
-                  border: '3px solid #FACC15',
-                  boxShadow: '0 0 35px #FACC15, inset 0 0 25px #FACC15',
+                  border: '3px solid #D97706',
+                  boxShadow: '0 0 35px #D97706, inset 0 0 25px #D97706',
                   pointerEvents: 'none',
                   zIndex: 8
                 }}
@@ -255,17 +289,17 @@ export default function Stage1_Investigate({ onComplete }) {
             )}
           </AnimatePresence>
 
-          {/* Magnetic Field Lines Arcs Overlay (Cinematic Golden Vector Arcs) */}
+          {/* Magnetic Field Lines Arcs Overlay */}
           {tapCount > 0 && (
             <svg style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none', zIndex: 5, opacity: 0.65 }}>
-              <path d="M 225 175 Q 325 95 425 175" fill="none" stroke="#FACC15" strokeWidth="2.5" strokeDasharray="8,5" />
-              <path d="M 225 175 Q 325 65 425 175" fill="none" stroke="#FACC15" strokeWidth="2" strokeDasharray="8,5" />
-              <path d="M 225 175 Q 325 255 425 175" fill="none" stroke="#FACC15" strokeWidth="2.5" strokeDasharray="8,5" />
-              <path d="M 225 175 Q 325 285 425 175" fill="none" stroke="#FACC15" strokeWidth="2" strokeDasharray="8,5" />
+              <path d="M 225 175 Q 325 95 425 175" fill="none" stroke="#D97706" strokeWidth="2.5" strokeDasharray="8,5" />
+              <path d="M 225 175 Q 325 65 425 175" fill="none" stroke="#D97706" strokeWidth="2" strokeDasharray="8,5" />
+              <path d="M 225 175 Q 325 255 425 175" fill="none" stroke="#D97706" strokeWidth="2.5" strokeDasharray="8,5" />
+              <path d="M 225 175 Q 325 285 425 175" fill="none" stroke="#D97706" strokeWidth="2" strokeDasharray="8,5" />
             </svg>
           )}
 
-          {/* 3D Cinematic Bar Magnet Component (Always visible above filings) */}
+          {/* 3D Bar Magnet Component */}
           {shape === 'bar' && (
             <motion.div 
               drag
@@ -280,13 +314,13 @@ export default function Stage1_Investigate({ onComplete }) {
                 display: 'flex',
                 zIndex: 30,
                 cursor: 'grab',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(250, 204, 21, 0.25)',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.35), 0 0 25px rgba(245, 158, 11, 0.35)',
                 overflow: 'hidden',
-                border: '2px solid rgba(255, 255, 255, 0.35)',
+                border: '2.5px solid #FFFFFF',
                 background: '#18181B'
               }}
             >
-              {/* North Pole (Red Side with metallic 3D gradient & glow) */}
+              {/* North Pole */}
               <div style={{
                 flex: 1,
                 background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)',
@@ -302,31 +336,17 @@ export default function Stage1_Investigate({ onComplete }) {
                 <div style={{ position: 'absolute', top: 6, left: 10, fontSize: '0.68rem', fontWeight: 800, color: 'rgba(255,255,255,0.8)', letterSpacing: '1px' }}>
                   NORTH
                 </div>
-                {/* North Pole Pulse Glow */}
-                <motion.div 
-                  animate={{ opacity: [0.4, 0.85, 0.4] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    width: '25px',
-                    background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.6), transparent)',
-                    pointerEvents: 'none'
-                  }}
-                />
               </div>
 
               {/* Center Metallic Seam */}
               <div style={{
-                width: '6px',
-                background: 'linear-gradient(180deg, #FFFFFF 0%, #71717A 100%)',
-                boxShadow: '0 0 8px rgba(0,0,0,0.8)',
+                width: '5px',
+                background: '#FFFFFF',
+                boxShadow: '0 0 8px rgba(0,0,0,0.5)',
                 zIndex: 2
               }} />
 
-              {/* South Pole (Blue Side with metallic 3D gradient & glow) */}
+              {/* South Pole */}
               <div style={{
                 flex: 1,
                 background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
@@ -342,67 +362,48 @@ export default function Stage1_Investigate({ onComplete }) {
                 <div style={{ position: 'absolute', top: 6, right: 10, fontSize: '0.68rem', fontWeight: 800, color: 'rgba(255,255,255,0.8)', letterSpacing: '1px' }}>
                   SOUTH
                 </div>
-                {/* South Pole Pulse Glow */}
-                <motion.div 
-                  animate={{ opacity: [0.4, 0.85, 0.4] }}
-                  transition={{ repeat: Infinity, duration: 2, delay: 1 }}
-                  style={{
-                    position: 'absolute',
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    width: '25px',
-                    background: 'linear-gradient(-90deg, rgba(59, 130, 246, 0.6), transparent)',
-                    pointerEvents: 'none'
-                  }}
-                />
               </div>
             </motion.div>
           )}
 
-          {/* Render Filings with smooth spring physics & authentic metallic iron color */}
-          {filings.map((f) => (
-            <motion.div
+          {/* Render Scattered / Clustered Iron Filings */}
+          {filings.map(f => (
+            <div
               key={f.id}
-              animate={{
-                x: f.x,
-                y: f.y,
-                rotate: f.rotation
-              }}
-              transition={{ type: 'spring', damping: 18, stiffness: 120 }}
               style={{
                 position: 'absolute',
-                left: '50%',
-                top: '50%',
+                left: `calc(50% + ${f.x}px)`,
+                top: `calc(50% + ${f.y}px)`,
                 width: `${f.width}px`,
                 height: '3px',
-                backgroundColor: tapCount > 0 ? '#334155' : '#1E293B',
-                boxShadow: tapCount > 0 ? '0 0 3px rgba(255, 255, 255, 0.3)' : 'none',
-                borderRadius: '1.5px',
+                backgroundColor: f.color,
+                borderRadius: '2px',
+                transform: `rotate(${f.rotation}deg)`,
                 pointerEvents: 'none',
-                zIndex: 15
+                zIndex: 4,
+                boxShadow: tapCount > 0 ? '0 0 3px rgba(30, 41, 59, 0.4)' : 'none'
               }}
             />
           ))}
         </motion.div>
 
-        {/* Action Controls (Equal Big Buttons matching Activity Area Width) */}
-        <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'space-between' }}>
+        {/* Action Controls Row under Canvas */}
+        <div style={{ width: '100%', display: 'flex', gap: '0.75rem' }}>
           <button 
-            onClick={handleScatter} 
+            onClick={handleScatter}
             disabled={step !== 'initial' || isSprinkling}
             style={{ 
               flex: 1,
-              padding: '0.95rem 1rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 800, 
-              borderRadius: '14px',
-              background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#27272A',
-              color: step === 'initial' ? '#000000' : '#A1A1AA',
-              border: step === 'initial' ? 'none' : '1.5px solid #3F3F46',
+              padding: '0.85rem 1rem', 
+              fontSize: '0.95rem', 
+              fontWeight: 900, 
+              borderRadius: '14px', 
+              background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
+              color: step === 'initial' ? '#FFFFFF' : '#94A3B8',
+              border: step === 'initial' ? 'none' : '1.5px solid #CBD5E1',
               cursor: step === 'initial' ? 'pointer' : 'not-allowed',
               opacity: step === 'initial' ? 1 : 0.6,
-              boxShadow: step === 'initial' ? '0 6px 20px rgba(245, 158, 11, 0.4)' : '0 2px 8px rgba(0,0,0,0.2)',
+              boxShadow: step === 'initial' ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -417,23 +418,23 @@ export default function Stage1_Investigate({ onComplete }) {
             disabled={step !== 'scattered' || tapCount >= 1}
             style={{ 
               flex: 1,
-              padding: '0.95rem 1rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 800, 
+              padding: '0.85rem 1rem', 
+              fontSize: '0.95rem', 
+              fontWeight: 900, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
               gap: '0.6rem',
-              background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#27272A',
-              color: (step === 'scattered' && tapCount === 0) ? '#000000' : '#A1A1AA',
-              border: (step === 'scattered' && tapCount === 0) ? 'none' : '1.5px solid #3F3F46',
+              background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
+              color: (step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8',
+              border: (step === 'scattered' && tapCount === 0) ? 'none' : '1.5px solid #CBD5E1',
               cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'not-allowed',
               opacity: (step === 'scattered' && tapCount === 0) ? 1 : 0.6,
-              boxShadow: (step === 'scattered' && tapCount === 0) ? '0 6px 20px rgba(245, 158, 11, 0.4)' : '0 2px 8px rgba(0,0,0,0.2)'
+              boxShadow: (step === 'scattered' && tapCount === 0) ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none'
             }}
           >
-            <Hand size={20} color={(step === 'scattered' && tapCount === 0) ? '#000000' : '#A1A1AA'} /> 
+            <Hand size={20} color={(step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8'} /> 
             {tapCount === 0 ? '2. Tap Paper' : 'Paper Tapped ✓'}
           </button>
           
@@ -442,36 +443,35 @@ export default function Stage1_Investigate({ onComplete }) {
             disabled={step === 'initial'}
             style={{ 
               flex: 1,
-              padding: '0.95rem 1rem', 
-              fontSize: '1.05rem', 
-              fontWeight: 800, 
+              padding: '0.85rem 1rem', 
+              fontSize: '0.95rem', 
+              fontWeight: 900, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
               gap: '0.6rem',
-              background: '#27272A',
-              color: step !== 'initial' ? '#FAFAFA' : '#A1A1AA',
-              border: '1.5px solid #3F3F46',
+              background: '#FFFFFF',
+              color: step !== 'initial' ? '#1E293B' : '#94A3B8',
+              border: '1.5px solid #CBD5E1',
               cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
               opacity: step !== 'initial' ? 1 : 0.6,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
             }}
           >
-            <RotateCcw size={20} color={step !== 'initial' ? '#FAFAFA' : '#A1A1AA'} /> Reset
+            <RotateCcw size={20} color={step !== 'initial' ? '#1E293B' : '#94A3B8'} /> Reset
           </button>
         </div>
       </div>
 
-      {/* Right Side: Pitch Charcoal Panel */}
+      {/* Right Side: Control Panel (Activity 4.3 Reference Theme) */}
       <div style={{ 
         flex: '0.95', 
-        background: 'rgba(24, 24, 27, 0.95)',
-        backdropFilter: 'blur(10px)',
-        border: '1.5px solid #3F3F46',
+        background: '#FFFFFF',
+        border: '1.5px solid #A7F3D0',
         borderRadius: '20px',
         padding: '1.25rem 1.5rem',
-        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)',
+        boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
@@ -481,32 +481,32 @@ export default function Stage1_Investigate({ onComplete }) {
       }}>
         <div>
           {/* Badge Tag & Title */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(245, 158, 11, 0.12)', border: '1px solid #F59E0B', color: '#F59E0B', padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '0.6rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#D1FAE5', color: '#047857', padding: '0.35rem 0.85rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.05em', marginBottom: '0.6rem' }}>
             ⚡ LET'S INVESTIGATE
           </div>
-          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#F59E0B' }}>
+          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.5rem', fontWeight: 900, color: '#064E3B' }}>
             Observe Magnetic Poles
           </h3>
-          <p style={{ margin: '0 0 0.85rem 0', color: '#FAFAFA', fontSize: '0.92rem', lineHeight: 1.5, fontWeight: 600 }}>
+          <p style={{ margin: '0 0 0.85rem 0', color: '#334155', fontSize: '0.92rem', lineHeight: 1.55, fontWeight: 600 }}>
             Follow the activity procedure below, then complete the observation.
           </p>
 
           {/* Activity Procedure / Instructions Card */}
           <div style={{ 
-            background: '#27272A', 
-            border: '1.5px solid #3F3F46', 
+            background: '#F0FDF4', 
+            border: '1.5px solid #A7F3D0', 
             borderRadius: '16px',
             padding: '0.9rem 1.15rem',
-            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
+            boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)',
             marginBottom: '0.85rem',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.5rem'
           }}>
-            <h4 style={{ color: '#F59E0B', margin: 0, fontSize: '0.98rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <BookOpen size={18} color="#F59E0B" /> Activity 4.2 Instructions
+            <h4 style={{ color: '#064E3B', margin: 0, fontSize: '0.98rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <BookOpen size={18} color="#047857" /> Activity 4.2 Instructions
             </h4>
-            <ol style={{ margin: 0, paddingLeft: '1.15rem', color: '#A1A1AA', fontSize: '0.86rem', lineHeight: '1.45', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+            <ol style={{ margin: 0, paddingLeft: '1.15rem', color: '#334155', fontSize: '0.88rem', lineHeight: '1.5', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
               <li>Spread iron filings evenly on a sheet of paper.</li>
               <li>Place a bar magnet over the iron filings.</li>
               <li>Tap the paper sheet gently a few times.</li>
@@ -515,22 +515,22 @@ export default function Stage1_Investigate({ onComplete }) {
           </div>
         </div>
 
-        {/* Inner Controls Card */}
+        {/* Inner Controls / Observation Question Card */}
         <div style={{ 
-          background: '#27272A', 
-          border: '1.5px solid #3F3F46', 
+          background: '#F0FDF4', 
+          border: '1.5px solid #A7F3D0', 
           borderRadius: '16px',
           padding: '1.15rem',
-          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
+          boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.85rem'
         }}>
-          <h4 style={{ color: '#F59E0B', margin: 0, fontSize: '1.02rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <AlertCircle size={20} color="#F59E0B" /> 
+          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.02rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <AlertCircle size={20} color="#D97706" /> 
             Observation Question
           </h4>
-          <p style={{ margin: 0, color: '#FAFAFA', fontSize: '0.92rem', lineHeight: 1.5, fontWeight: 600 }}>
+          <p style={{ margin: 0, color: '#334155', fontSize: '0.92rem', lineHeight: 1.55, fontWeight: 600 }}>
             Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
           </p>
 
@@ -541,44 +541,23 @@ export default function Stage1_Investigate({ onComplete }) {
                 padding: '0.75rem 1rem',
                 textAlign: 'left',
                 fontSize: '0.9rem',
-                fontWeight: 700,
+                fontWeight: 800,
                 borderRadius: '12px',
                 cursor: 'pointer',
                 transition: 'all 0.25s ease',
-                background: quizAnswer === 'uniformly' ? 'rgba(239, 68, 68, 0.2)' : '#18181B',
-                borderColor: quizAnswer === 'uniformly' ? '#EF4444' : '#3F3F46',
+                background: quizAnswer === 'uniformly' ? '#FEE2E2' : '#FFFFFF',
+                borderColor: quizAnswer === 'uniformly' ? '#EF4444' : '#CBD5E1',
                 borderStyle: 'solid',
                 borderWidth: '1.5px',
-                color: quizAnswer === 'uniformly' ? '#FCA5A5' : '#FAFAFA'
+                color: quizAnswer === 'uniformly' ? '#991B1B' : '#1E293B',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>They stick uniformly all over the magnet</span>
-                {quizAnswer === 'uniformly' && <XCircle size={18} color="#EF4444" />}
-              </div>
-            </button>
-
-            <button
-              onClick={() => handleQuizAnswer('middle')}
-              style={{
-                padding: '0.75rem 1rem',
-                textAlign: 'left',
-                fontSize: '0.9rem',
-                fontWeight: 700,
-                borderRadius: '12px',
-                cursor: 'pointer',
-                transition: 'all 0.25s ease',
-                background: quizAnswer === 'middle' ? 'rgba(239, 68, 68, 0.2)' : '#18181B',
-                borderColor: quizAnswer === 'middle' ? '#EF4444' : '#3F3F46',
-                borderStyle: 'solid',
-                borderWidth: '1.5px',
-                color: quizAnswer === 'middle' ? '#FCA5A5' : '#FAFAFA'
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>They stick mostly in the middle</span>
-                {quizAnswer === 'middle' && <XCircle size={18} color="#EF4444" />}
-              </div>
+              <span>A) Filings stick uniformly all over the magnet</span>
+              {quizAnswer === 'uniformly' && <XCircle size={18} color="#EF4444" />}
             </button>
 
             <button
@@ -587,49 +566,59 @@ export default function Stage1_Investigate({ onComplete }) {
                 padding: '0.75rem 1rem',
                 textAlign: 'left',
                 fontSize: '0.9rem',
-                fontWeight: 700,
+                fontWeight: 800,
                 borderRadius: '12px',
                 cursor: 'pointer',
                 transition: 'all 0.25s ease',
-                background: (quizAnswer === 'ends' || step === 'complete') ? 'rgba(34, 197, 94, 0.2)' : '#18181B',
-                borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#22C55E' : '#3F3F46',
+                background: (quizAnswer === 'ends' || step === 'complete') ? '#DCFCE7' : '#FFFFFF',
+                borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#16A34A' : '#CBD5E1',
                 borderStyle: 'solid',
                 borderWidth: '1.5px',
-                color: (quizAnswer === 'ends' || step === 'complete') ? '#86EFAC' : '#FAFAFA'
+                color: (quizAnswer === 'ends' || step === 'complete') ? '#065F46' : '#1E293B',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>They stick maximum near the ends</span>
-                {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={18} color="#22C55E" />}
-              </div>
+              <span>B) Most filings cluster at the two ends (Poles)</span>
+              {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={18} color="#16A34A" />}
             </button>
           </div>
 
+          {/* Feedback Explanation */}
+          {quizAnswer === 'uniformly' && (
+            <div style={{ fontSize: '0.85rem', color: '#991B1B', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <XCircle size={16} /> Incorrect. Look closely — iron filings cluster heavily near the two ends!
+            </div>
+          )}
+
           {(quizAnswer === 'ends' || step === 'complete') && (
             <div style={{ marginTop: '0.5rem' }}>
-              <p style={{ margin: '0 0 0.75rem 0', color: '#FACC15', fontSize: '0.88rem', fontWeight: 600 }}>
-                Correct! The regions where the maximum iron filings stick are called the <strong>poles</strong> of the magnet.
+              <p style={{ margin: '0 0 0.75rem 0', color: '#065F46', fontSize: '0.88rem', fontWeight: 800 }}>
+                Correct! The two ends where attraction is strongest are called <strong>Poles</strong>.
               </p>
               <button 
                 onClick={handleNextSection}
                 style={{
                   width: '100%',
-                  padding: '0.85rem 1.5rem',
-                  fontSize: '1rem',
-                  fontWeight: 800,
-                  borderRadius: '35px',
-                  background: 'linear-gradient(135deg, #FACC15 0%, #EAB308 100%)',
-                  color: '#000000',
+                  padding: '0.75rem 1.8rem',
+                  fontSize: '0.92rem',
+                  fontWeight: 900,
+                  borderRadius: '25px',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  color: '#FFFFFF',
                   border: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 6px 20px rgba(234, 179, 8, 0.45)',
+                  boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.5rem'
+                  gap: '0.5rem',
+                  transition: 'all 0.2s ease'
                 }}
               >
-                Continue to Stage 2 <ArrowRight size={18} color="#000000" />
+                Proceed to Stage 2 <ArrowRight size={18} color="#FFFFFF" />
               </button>
             </div>
           )}

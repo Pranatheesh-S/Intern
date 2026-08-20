@@ -1,26 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Zap, ArrowRight, Check } from 'lucide-react';
+import { Sparkles, Zap, ArrowRight, Check, AlertCircle } from 'lucide-react';
 
+// Completely Mixed Magnetic & Non-Magnetic Objects Grid
 const OBJECT_ITEMS = [
-  // Magnetic Objects
-  { id: 'clip_lime', name: 'Steel Paperclip', color: '#10B981', icon: '📎', glow: 'rgba(16, 185, 129, 0.5)', isMagnetic: true },
-  { id: 'bead_red', name: 'Magnetic Bead', color: '#EF4444', icon: '🔴', glow: 'rgba(239, 68, 68, 0.5)', isMagnetic: true },
-  { id: 'washer_chrome', name: 'Steel Washer', color: '#94A3B8', icon: '⚙️', glow: 'rgba(148, 163, 184, 0.5)', isMagnetic: true },
-  { id: 'ring_cyan', name: 'Metal Key Ring', color: '#06B6D4', icon: '🔑', glow: 'rgba(6, 182, 212, 0.5)', isMagnetic: true },
-  { id: 'star_gold', name: 'Golden Steel Star', color: '#F59E0B', icon: '⭐', glow: 'rgba(245, 158, 11, 0.5)', isMagnetic: true },
-
-  // Non-Magnetic Objects
-  { id: 'pencil_wood', name: 'Wooden Pencil', color: '#D97706', icon: '✏️', glow: 'transparent', isMagnetic: false },
-  { id: 'eraser_rubber', name: 'Rubber Eraser', color: '#F43F5E', icon: '🧹', glow: 'transparent', isMagnetic: false },
-  { id: 'paper_slip', name: 'Paper Slip', color: '#64748B', icon: '📄', glow: 'transparent', isMagnetic: false },
-  { id: 'comb_plastic', name: 'Plastic Comb', color: '#8B5CF6', icon: '🪮', glow: 'transparent', isMagnetic: false },
-  { id: 'stick_wood', name: 'Wooden Stick', color: '#B45309', icon: '🪵', glow: 'transparent', isMagnetic: false }
+  { id: 'pencil_wood', name: 'Wooden Pencil', icon: '✏️', glow: 'transparent', isMagnetic: false, material: 'Wood' },
+  { id: 'clip_lime', name: 'Steel Paperclip', icon: '📎', glow: 'rgba(16, 185, 129, 0.6)', isMagnetic: true, material: 'Steel' },
+  { id: 'comb_plastic', name: 'Plastic Comb', icon: '🪮', glow: 'transparent', isMagnetic: false, material: 'Plastic' },
+  { id: 'bead_red', name: 'Magnetic Bead', icon: '🔴', glow: 'rgba(239, 68, 68, 0.6)', isMagnetic: true, material: 'Magnetized Iron' },
+  { id: 'paper_slip', name: 'Paper Slip', icon: '📄', glow: 'transparent', isMagnetic: false, material: 'Paper' },
+  { id: 'washer_chrome', name: 'Steel Washer', icon: '⚙️', glow: 'rgba(148, 163, 184, 0.6)', isMagnetic: true, material: 'Iron Alloy' },
+  { id: 'eraser_rubber', name: 'Rubber Eraser', icon: '🧹', glow: 'transparent', isMagnetic: false, material: 'Rubber' },
+  { id: 'ring_cyan', name: 'Metal Key Ring', icon: '🔑', glow: 'rgba(6, 182, 212, 0.6)', isMagnetic: true, material: 'Steel' },
+  { id: 'stick_wood', name: 'Wooden Stick', icon: '🪵', glow: 'transparent', isMagnetic: false, material: 'Wood' },
+  { id: 'star_gold', name: 'Golden Steel Star', icon: '⭐', glow: 'rgba(245, 158, 11, 0.6)', isMagnetic: true, material: 'Gold-Plated Steel' }
 ];
 
 export default function GarlandGame({ onComplete, onPlayMaze }) {
   const [chain, setChain] = useState([]);
   const [draggedItem, setDraggedItem] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [nonMagModalItem, setNonMagModalItem] = useState(null);
   const [toastMsg, setToastMsg] = useState(null);
   const containerRef = useRef(null);
 
@@ -34,8 +33,8 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
     }
 
     if (!item.isMagnetic) {
-      setToastMsg(`❌ ${item.name} is Non-Magnetic! Wood/Plastic does not stick to magnets.`);
-      setTimeout(() => setToastMsg(null), 2500);
+      // Show Center Pop-up Modal for Non-Magnetic Objects!
+      setNonMagModalItem(item);
       return;
     }
 
@@ -89,9 +88,80 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
         boxSizing: 'border-box',
         touchAction: 'none',
         userSelect: 'none',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        position: 'relative'
       }}
     >
+      {/* Center Pop-up Modal for Non-Magnetic Objects with OK Button */}
+      {nonMagModalItem && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundColor: 'rgba(6, 78, 59, 0.45)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 999999
+        }}>
+          <div style={{
+            backgroundColor: '#FFFFFF',
+            border: '2px solid #EF4444',
+            borderRadius: '24px',
+            padding: '2rem 2.5rem',
+            textAlign: 'center',
+            boxShadow: '0 20px 50px rgba(239, 68, 68, 0.3)',
+            maxWidth: '480px',
+            width: '90%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1.1rem',
+            animation: 'bounceIn 0.3s ease'
+          }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '50%',
+              background: '#FEE2E2',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '2.5rem'
+            }}>
+              {nonMagModalItem.icon}
+            </div>
+
+            <h2 style={{ margin: 0, color: '#991B1B', fontSize: '1.65rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <AlertCircle size={24} color="#EF4444" /> Non-Magnetic Object!
+            </h2>
+
+            <p style={{ margin: 0, color: '#334155', fontSize: '1rem', lineHeight: '1.5', fontWeight: 600 }}>
+              <strong>{nonMagModalItem.name}</strong> is made of <strong>{nonMagModalItem.material}</strong>, which is a non-magnetic material. It is not attracted by magnets and cannot form a garland chain!
+            </p>
+
+            <button
+              onClick={() => setNonMagModalItem(null)}
+              style={{
+                padding: '0.85rem 3rem',
+                fontSize: '1.1rem',
+                fontWeight: 900,
+                borderRadius: '30px',
+                background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)',
+                color: '#FFFFFF',
+                border: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 6px 20px rgba(239, 68, 68, 0.4)',
+                transition: 'all 0.2s ease',
+                marginTop: '0.5rem'
+              }}
+            >
+              OK, Got It!
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Left Column: 3D Garland Crafting Arch Canvas with Laboratory Background */}
       <div style={{
         flex: '1.6',
@@ -105,10 +175,10 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
         overflow: 'hidden',
         boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)'
       }}>
-        {/* Rich Science Laboratory Background Image */}
+        {/* Validated Science Laboratory Background Image */}
         <img 
           src="/SuspendedMagnet/wooden_stand_lab_bg.jpg" 
-          alt="Science Laboratory Background" 
+          alt="Garland Crafting Scene Background" 
           style={{
             width: '100%',
             height: '100%',
@@ -117,34 +187,33 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
             top: 0,
             left: 0,
             zIndex: 1,
-            opacity: 0.9
+            opacity: 0.95
           }} 
         />
 
-        {/* Non-Magnetic / Duplicate Warning Toast */}
+        {/* Duplicate Toast Warning */}
         {toastMsg && (
           <div style={{
             position: 'absolute',
             top: '16px',
-            background: '#FEE2E2',
-            border: '1.5px solid #EF4444',
-            color: '#991B1B',
+            background: '#FEF3C7',
+            border: '1.5px solid #F59E0B',
+            color: '#92400E',
             padding: '0.65rem 1.4rem',
             borderRadius: '20px',
             fontWeight: 800,
             fontSize: '0.92rem',
             zIndex: 100,
-            boxShadow: '0 4px 16px rgba(239, 68, 68, 0.3)',
-            animation: 'bounceIn 0.3s ease'
+            boxShadow: '0 4px 16px rgba(245, 158, 11, 0.3)'
           }}>
             {toastMsg}
           </div>
         )}
 
-        {/* Larger 3D Arc Suspension Stand */}
+        {/* 3D Arc Suspension Stand */}
         <div style={{
           position: 'absolute',
-          top: '55px',
+          top: '50px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -152,18 +221,18 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
         }}>
           {/* Ornate Golden Brass Arch Beam */}
           <div style={{
-            width: '280px',
+            width: '290px',
             height: '18px',
             background: 'linear-gradient(135deg, #FDE047 0%, #D97706 50%, #78350F 100%)',
             borderRadius: '9px',
             boxShadow: '0 6px 15px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.7)'
           }} />
-          <div style={{ width: '5px', height: '40px', background: '#94A3B8' }} />
+          <div style={{ width: '5px', height: '42px', background: '#94A3B8' }} />
 
-          {/* Larger 3D Bar Magnet (250px x 56px) */}
+          {/* 3D Bar Magnet (260px x 58px) */}
           <div style={{
-            width: '250px',
-            height: '56px',
+            width: '260px',
+            height: '58px',
             borderRadius: '14px',
             display: 'flex',
             border: '3px solid #FFFFFF',
@@ -171,16 +240,16 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
             overflow: 'hidden',
             position: 'relative'
           }}>
-            <div style={{ flex: 1, background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)', color: '#FFFFFF', fontWeight: 900, fontSize: '1.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>N</div>
+            <div style={{ flex: 1, background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)', color: '#FFFFFF', fontWeight: 900, fontSize: '1.45rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>N</div>
             <div style={{ width: '4px', background: '#FFFFFF' }} />
-            <div style={{ flex: 1, background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)', color: '#FFFFFF', fontWeight: 900, fontSize: '1.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>S</div>
+            <div style={{ flex: 1, background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)', color: '#FFFFFF', fontWeight: 900, fontSize: '1.45rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>S</div>
           </div>
         </div>
 
-        {/* Larger Attached Garland Chain Items (58px x 60px) */}
+        {/* Attached Garland Objects (CLEAN OBJECT ALONE, NO BOX BACKGROUND) */}
         <div style={{
           position: 'absolute',
-          top: '166px',
+          top: '168px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -190,40 +259,43 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
             <div 
               key={item.instanceId || idx}
               style={{
-                width: '58px',
-                height: '60px',
-                borderRadius: '16px',
-                background: item.color,
-                border: '3px solid #FFFFFF',
-                boxShadow: `0 10px 25px rgba(0,0,0,0.3), 0 0 20px ${item.glow}`,
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '2.2rem',
-                color: '#FFFFFF',
-                marginTop: idx === 0 ? '0' : '-10px',
+                marginTop: idx === 0 ? '0' : '-12px',
                 position: 'relative',
                 animation: 'bounceIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
               }}
             >
-              {item.icon}
-              <div style={{
-                position: 'absolute',
-                top: '-5px',
-                width: '10px',
-                height: '10px',
-                borderRadius: '50%',
-                background: '#FDE047',
-                border: '1.5px solid #78350F'
-              }} />
+              {/* Golden Link Ring connecting objects */}
+              {idx > 0 && (
+                <div style={{
+                  width: '12px',
+                  height: '12px',
+                  borderRadius: '50%',
+                  border: '2.5px solid #FDE047',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+                  marginBottom: '-4px',
+                  zIndex: 30
+                }} />
+              )}
+
+              {/* Clean Object Alone (No Box Background) */}
+              <span style={{
+                fontSize: '3.4rem',
+                filter: `drop-shadow(0 8px 16px rgba(0,0,0,0.6)) drop-shadow(0 0 12px ${item.glow})`
+              }}>
+                {item.icon}
+              </span>
             </div>
           ))}
 
           {/* Magnetic Snap Target Ring */}
           <div style={{
-            marginTop: '10px',
-            width: '60px',
-            height: '60px',
+            marginTop: '12px',
+            width: '64px',
+            height: '64px',
             borderRadius: '50%',
             border: '3px dashed #D97706',
             background: 'rgba(245, 158, 11, 0.25)',
@@ -231,7 +303,7 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '0.85rem',
+            fontSize: '0.88rem',
             color: '#FFFFFF',
             fontWeight: 900,
             boxShadow: '0 0 20px rgba(245, 158, 11, 0.35)'
@@ -246,16 +318,8 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
             position: 'absolute',
             left: mousePos.x - 30,
             top: mousePos.y - 30,
-            width: '60px',
-            height: '60px',
-            borderRadius: '16px',
-            background: draggedItem.color,
-            border: '3px solid #FFFFFF',
-            boxShadow: `0 15px 35px rgba(0,0,0,0.5)`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '2.2rem',
+            fontSize: '3.4rem',
+            filter: 'drop-shadow(0 12px 25px rgba(0,0,0,0.6))',
             zIndex: 9999,
             pointerEvents: 'none'
           }}>
@@ -264,7 +328,7 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
         )}
       </div>
 
-      {/* Right Column: Mission Control & Expanded Object Tray (Fills Container Space) */}
+      {/* Right Column: Mission Control & Mixed Object Tray Grid */}
       <div style={{
         flex: '0.9',
         height: '100%',
@@ -331,10 +395,10 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
           </h3>
 
           <p style={{ margin: '0 0 1.1rem 0', color: '#334155', fontSize: '0.95rem', lineHeight: '1.5', fontWeight: 600 }}>
-            Tap or drag objects from the tray below. Each magnetic item can be added <strong>only once</strong>! Non-magnetic items will drop away.
+            Tap or drag objects from the mixed tray below. Only <strong>magnetic items</strong> stick through magnetic induction! Non-magnetic items will show a warning popup.
           </p>
 
-          {/* Expanded Rich Object Tray Grid Filling Space */}
+          {/* Mixed Object Tray Grid */}
           <div style={{
             background: '#F0FDF4',
             border: '1.5px solid #A7F3D0',
@@ -342,7 +406,7 @@ export default function GarlandGame({ onComplete, onPlayMaze }) {
             padding: '1.1rem'
           }}>
             <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#047857', marginBottom: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <Zap size={16} color="#047857" /> OBJECT TRAY (TAP OR DRAG EACH OBJECT ONCE)
+              <Zap size={16} color="#047857" /> OBJECT TRAY (MIXED MAGNETIC & NON-MAGNETIC)
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>

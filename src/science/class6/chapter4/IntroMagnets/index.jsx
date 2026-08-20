@@ -694,17 +694,50 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
         </div>
       )}
 
-      {/* Bottom Left Controls */}
-      {currentPage > 1 && (
-        <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', display: 'flex', gap: '1rem', zIndex: 99999 }}>
-          <button
-            onClick={handleBack}
-            style={{ padding: '0.75rem 1.5rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', color: 'white', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-          >
-            <ArrowLeft size={16} /> Back
-          </button>
-        </div>
-      )}
+      {/* Bottom Left Controls - Always present, matching Next button styling & navigating to Chapter 4 flow on page 1 */}
+      <div style={{ 
+        position: 'absolute', 
+        bottom: '1.25rem', 
+        left: '1.25rem', 
+        display: 'flex', 
+        zIndex: 99999 
+      }}>
+        <button
+          onClick={() => {
+            stopSpeech();
+            if (currentPage > 1) {
+              handleBack();
+            } else if (onBackToDashboard) {
+              onBackToDashboard();
+            }
+          }}
+          style={{ 
+            padding: '0.75rem 2rem', 
+            borderRadius: '30px', 
+            border: '1px solid rgba(255,255,255,0.3)', 
+            background: 'rgba(0,0,0,0.65)', 
+            backdropFilter: 'blur(6px)', 
+            color: 'white', 
+            cursor: 'pointer', 
+            fontWeight: 'bold', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.5rem',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.05)';
+            e.currentTarget.style.background = 'rgba(0,0,0,0.85)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.background = 'rgba(0,0,0,0.65)';
+          }}
+        >
+          <ArrowLeft size={16} /> Back
+        </button>
+      </div>
 
       {/* Controls */}
       {currentPage < scenes.length ? (

@@ -134,14 +134,12 @@ export default function DidYouKnow() {
         </div>
       )}
 
-      {/* Main Bottom Bar - True Midnight Black (#09090B) with Dark Graphite (#3F3F46) Border */}
+      {/* Main Bottom Bar - Rich Brown Theme matching Activity 4.3 */}
       <div style={{
-        background: 'rgba(9, 9, 11, 0.95)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid #3F3F46',
-        borderTop: '1px solid #3F3F46',
-        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.7), 0 0 20px rgba(245, 158, 11, 0.12)',
-        borderRadius: '24px',
+        background: 'linear-gradient(135deg, #78350F 0%, #451A03 100%)',
+        border: '1.5px solid #B45309',
+        boxShadow: '0 4px 16px rgba(69, 26, 3, 0.4)',
+        borderRadius: '18px',
         padding: '0.6rem 1.25rem',
         display: 'flex',
         alignItems: 'center',
@@ -161,19 +159,19 @@ export default function DidYouKnow() {
           {facts.map((fact, idx) => (
             <React.Fragment key={idx}>
               {idx > 0 && (
-                <div style={{ width: '1px', height: '60%', backgroundColor: '#3F3F46' }} />
+                <div style={{ width: '1px', height: '60%', backgroundColor: '#B45309' }} />
               )}
               <div
                 onMouseEnter={() => handleMouseEnter(fact)}
                 onMouseLeave={handleMouseLeave}
                 style={{
-                  color: hoveredFact === fact ? '#F59E0B' : '#FAFAFA',
+                  color: hoveredFact === fact ? '#F59E0B' : '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                   cursor: 'pointer',
                   fontSize: '0.88rem',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   padding: '0.4rem 0.6rem',
                   borderRadius: '8px',
                   backgroundColor: 'transparent',
@@ -181,7 +179,7 @@ export default function DidYouKnow() {
                   whiteSpace: 'nowrap'
                 }}
               >
-                <span style={{ fontSize: '1rem', color: hoveredFact === fact ? '#F59E0B' : '#FAFAFA' }}>👉</span>
+                <span style={{ fontSize: '1rem', color: hoveredFact === fact ? '#F59E0B' : '#F59E0B' }}>👉</span>
                 <span>{fact.shortTitle}</span>
               </div>
             </React.Fragment>

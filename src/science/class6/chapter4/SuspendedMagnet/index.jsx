@@ -118,7 +118,7 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', color: '#064E3B', letterSpacing: '-0.01em' }}>
             <Compass size={24} style={{ color: '#D97706' }} />
-            Activity 4.3: Finding Directions
+            Activity 4.4: Finding Directions
           </h2>
           <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>Class 6 Science — A Freely Suspended Bar Magnet</span>
         </div>
