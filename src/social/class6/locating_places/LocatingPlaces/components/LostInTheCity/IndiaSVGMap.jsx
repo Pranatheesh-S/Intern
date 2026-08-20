@@ -1,16 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IndiaMapData } from './IndiaMapData';
+import { 
+  Plane, Compass, Navigation, Sparkles, MapPin, Landmark, 
+  Layers, Maximize2, Minimize2, X, Eye, EyeOff, Mountain, Waves, Globe,
+  Volume2, VolumeX, Sun, Moon, Radio, Wind, ShieldAlert, Ruler, Clock, 
+  Activity, ArrowUpRight, Check
+} from 'lucide-react';
 
 export default function IndiaSVGMap({
   activeRoute, // { to: string, showBoth: boolean }
   animating,
   missionIndex,
-  missions
+  missions,
+  mapStyle = 'physical', // 'physical' | 'satellite' | 'atlas'
+  travelMode = 'plane', // 'plane' | 'train'
+  soundEnabled = true,
+  onToggleSound,
+  onSelectCity
 }) {
   const [localHover, setLocalHover] = useState(null);
+  const [travelProgress, setTravelProgress] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [selectedCityDetail, setSelectedCityDetail] = useState(null);
+  const [radarAngle, setRadarAngle] = useState(0);
 
+  // Cartographic layer toggles
+  const [showGraticule, setShowGraticule] = useState(true);
+  const [showRivers, setShowRivers] = useState(true);
+  const [showRelief, setShowRelief] = useState(true);
+  const [showMeridian, setShowMeridian] = useState(false);
+
+  // Interactive Ruler / Distance measurement tool state
+  const [rulerMode, setRulerMode] = useState(false);
+  const [rulerStart, setRulerStart] = useState(null);
+  const [rulerEnd, setRulerEnd] = useState(null);
+
+  // Radar sweep animation
+  useEffect(() => {
+    const rTimer = setInterval(() => {
+      setRadarAngle(a => (a + 3) % 360);
+    }, 30);
+    return () => clearInterval(rTimer);
+  }, []);
+
+  // Geographic affine transformation calibrated to India map SVG coordinates
   const projectCoordinates = (lat, lon) => {
-    // Calibrated affine transformation using 12 geographic control points across India
     const a = 20.6606;
     const b = 0.5652;
     const c = -1416.7303;
@@ -24,15 +58,79 @@ export default function IndiaSVGMap({
     };
   };
 
+  // Adjusted offsets (dx, dy) to guarantee NO overlap between city badges
   const cityData = {
-    tn: { lat: 13.0827, lon: 80.2707, state: "Tamil Nadu", name: "Chennai", anchor: "start", dx: 8, dy: 4 },
-    ka: { lat: 12.9716, lon: 77.5946, state: "Karnataka", name: "Bengaluru", anchor: "end", dx: -8, dy: 12 },
-    mh: { lat: 19.0760, lon: 72.8777, state: "Maharashtra", name: "Mumbai", anchor: "start", dx: 8, dy: 12 },
-    ap: { lat: 16.5193, lon: 80.5153, state: "Andhra Pradesh", name: "Amaravati", anchor: "start", dx: 8, dy: 4 },
-    wb: { lat: 22.5726, lon: 88.3639, state: "West Bengal", name: "Kolkata", anchor: "end", dx: -8, dy: 12 },
-    rj: { lat: 26.9124, lon: 75.7873, state: "Rajasthan", name: "Jaipur", anchor: "end", dx: -8, dy: -12 },
-    as: { lat: 26.1445, lon: 91.7362, state: "Assam", name: "Dispur (Assam)", anchor: "start", dx: 8, dy: -12 }
+    tn: {
+      lat: 13.0827, lon: 80.2707, state: "Tamil Nadu", name: "Chennai",
+      anchor: "start", dx: 14, dy: -4, landmark: "Marina Beach & Coromandel Coast",
+      icon: "🏖️", code: "MAA", region: "Coromandel Coastal Plain", bearing: 0, distance: 0,
+      elevation: "6m", climate: "Tropical Wet & Dry", river: "Cooum & Adyar Rivers",
+      desc: "Starting base camp of our voyage. Located on the Coromandel coast bordering the Bay of Bengal.",
+      landscape: "Golden coastal shores, palm groves, and deep blue Bay of Bengal waters."
+    },
+    ka: {
+      lat: 12.9716, lon: 77.5946, state: "Karnataka", name: "Bengaluru",
+      anchor: "end", dx: -108, dy: 8, landmark: "Vidhana Soudha & Silicon Plateau",
+      icon: "🏛️", code: "BLR", region: "Deccan Plateau", bearing: 268, distance: 350,
+      elevation: "920m (High Elevation)", climate: "Moderate Tropical Savanna", river: "Vrishabhavathi Basin",
+      desc: "Situated at an elevation of over 900m on the Deccan Plateau, directly West of Chennai.",
+      landscape: "Elevated granite plateau ridges, lush Lalbagh botanical greenery, and breezy lakes."
+    },
+    mh: {
+      lat: 19.0760, lon: 72.8777, state: "Maharashtra", name: "Mumbai",
+      anchor: "end", dx: -108, dy: -12, landmark: "Gateway of India & Arabian Sea Port",
+      icon: "🏙️", code: "BOM", region: "Konkan Coastal Strip", bearing: 318, distance: 1300,
+      elevation: "14m", climate: "Tropical Monsoon", river: "Ulhas & Mithi Rivers",
+      desc: "Financial hub facing the Arabian Sea on the western Konkan coast, surrounded by the Western Ghats.",
+      landscape: "Iconic Arabian Sea skyline, Marine Drive promenade, and misty Western Ghats in the backdrop."
+    },
+    ap: {
+      lat: 16.5193, lon: 80.5153, state: "Andhra Pradesh", name: "Amaravati",
+      anchor: "start", dx: 14, dy: -8, landmark: "Amaravati Stupa & Krishna River Delta",
+      icon: "☸️", code: "VGA", region: "Eastern Coastal Plains", bearing: 358, distance: 450,
+      elevation: "25m", climate: "Tropical Hot & Humid", river: "Mighty Krishna River",
+      desc: "Ancient Buddhist heritage center situated on the fertile southern bank of the Krishna River.",
+      landscape: "Vast fertile rice fields, wide flowing waters of the sacred Krishna River, and ancient stupas."
+    },
+    wb: {
+      lat: 22.5726, lon: 88.3639, state: "West Bengal", name: "Kolkata",
+      anchor: "start", dx: 14, dy: 6, landmark: "Howrah Bridge & Hooghly Estuary",
+      icon: "🌉", code: "CCU", region: "Ganga-Brahmaputra Delta", bearing: 38, distance: 1650,
+      elevation: "9m", climate: "Tropical Wet & Dry", river: "Hooghly (Ganga tributary)",
+      desc: "Historic port city in the lower Ganga Delta, connected directly to the Bay of Bengal.",
+      landscape: "The grand cantilever Howrah Bridge spanning the busy waters of the Hooghly River."
+    },
+    rj: {
+      lat: 26.9124, lon: 75.7873, state: "Rajasthan", name: "Jaipur",
+      anchor: "end", dx: -108, dy: -14, landmark: "Hawa Mahal & Aravalli Ridges",
+      icon: "🏰", code: "JAI", region: "Semi-Arid Aravalli Foothills", bearing: 338, distance: 2100,
+      elevation: "431m", climate: "Semi-Arid (Thar Desert Border)", river: "Dhanuvati & Banas Basin",
+      desc: "The royal Pink City surrounded by the rugged ancient Aravalli mountain ranges.",
+      landscape: "Golden Thar desert sands, rugged Aravalli hilltop forts, and terracotta pink palaces."
+    },
+    as: {
+      lat: 26.1445, lon: 91.7362, state: "Assam", name: "Dispur (Assam)",
+      anchor: "start", dx: 14, dy: -10, landmark: "Tea Valleys & Brahmaputra Floodplain",
+      icon: "🍵", code: "GAU", region: "Brahmaputra Valley & Hills", bearing: 48, distance: 2500,
+      elevation: "55m", climate: "Subtropical Monsoon", river: "Mighty Brahmaputra River",
+      desc: "Surrounded by lush rainforests and tea hills along the perennial Brahmaputra River.",
+      landscape: "Rolling emerald tea garden hills, morning mist, and the mighty braided Brahmaputra River."
+    }
   };
+
+  const nightLights = [
+    { name: "Delhi", lat: 28.6139, lon: 77.2090, r: 8, intensity: 0.95 },
+    { name: "Mumbai", lat: 19.0760, lon: 72.8777, r: 9, intensity: 1.0 },
+    { name: "Bengaluru", lat: 12.9716, lon: 77.5946, r: 7.5, intensity: 0.9 },
+    { name: "Chennai", lat: 13.0827, lon: 80.2707, r: 7.5, intensity: 0.9 },
+    { name: "Kolkata", lat: 22.5726, lon: 88.3639, r: 8, intensity: 0.9 },
+    { name: "Hyderabad", lat: 17.3850, lon: 78.4867, r: 7, intensity: 0.85 },
+    { name: "Ahmedabad", lat: 23.0225, lon: 72.5714, r: 6.5, intensity: 0.8 },
+    { name: "Jaipur", lat: 26.9124, lon: 75.7873, r: 6, intensity: 0.8 },
+    { name: "Pune", lat: 18.5204, lon: 73.8567, r: 6, intensity: 0.8 },
+    { name: "Lucknow", lat: 26.8467, lon: 80.9462, r: 5.5, intensity: 0.75 },
+    { name: "Guwahati", lat: 26.1445, lon: 91.7362, r: 5, intensity: 0.7 }
+  ];
 
   const stateCentroids = {};
   for (const id in cityData) {
@@ -41,15 +139,9 @@ export default function IndiaSVGMap({
 
   const startNode = stateCentroids['tn'];
 
-  if (!IndiaMapData || !IndiaMapData.locations) {
-    return <div>Error loading map data</div>;
-  }
-
-  // Determine current destination state
   const currentMission = missionIndex >= 0 && missionIndex < missions.length ? missions[missionIndex] : null;
   const currentDestinationId = currentMission ? currentMission.id : null;
 
-  // Determine which states have been completed to keep their routes/dots on map
   const completedMissionIds = [];
   if (missionIndex >= 0) {
     for (let i = 0; i < Math.min(missionIndex, missions.length); i++) {
@@ -57,235 +149,1015 @@ export default function IndiaSVGMap({
     }
   }
 
-  // Draw Route Helper
-  const drawRoute = (toId, animate = false, delay = 0, isExtra = false) => {
+  // Animation progress timer
+  useEffect(() => {
+    if (!animating) {
+      setTravelProgress(0);
+      return;
+    }
+    let start = Date.now();
+    const duration = 2400;
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const p = Math.min(1, elapsed / duration);
+      setTravelProgress(p);
+      if (p >= 1) clearInterval(timer);
+    }, 16);
+    return () => clearInterval(timer);
+  }, [animating]);
+
+  // Handle ESC key to exit fullscreen
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (isFullscreen) setIsFullscreen(false);
+        if (rulerMode) {
+          setRulerStart(null);
+          setRulerEnd(null);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen, rulerMode]);
+
+  const calculateGreatCircleDistance = (c1, c2) => {
+    if (!c1 || !c2) return 0;
+    const R = 6371;
+    const dLat = ((c2.lat - c1.lat) * Math.PI) / 180;
+    const dLon = ((c2.lon - c1.lon) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((c1.lat * Math.PI) / 180) *
+        Math.cos((c2.lat * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return Math.round(R * c);
+  };
+
+  const calculateBearing = (c1, c2) => {
+    if (!c1 || !c2) return 0;
+    const y = Math.sin(((c2.lon - c1.lon) * Math.PI) / 180) * Math.cos((c2.lat * Math.PI) / 180);
+    const x =
+      Math.cos((c1.lat * Math.PI) / 180) * Math.sin((c2.lat * Math.PI) / 180) -
+      Math.sin((c1.lat * Math.PI) / 180) *
+        Math.cos((c2.lat * Math.PI) / 180) *
+        Math.cos(((c2.lon - c1.lon) * Math.PI) / 180);
+    let brng = (Math.atan2(y, x) * 180) / Math.PI;
+    return Math.round((brng + 360) % 360);
+  };
+
+  const getDirectionText = (brng) => {
+    const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N'];
+    return directions[Math.round(brng / 45) % 8];
+  };
+
+  // Straight line direct vector path from Chennai to destination
+  const getDirectPath = (toId) => {
+    const endNode = stateCentroids[toId];
+    if (!endNode || !startNode) return { d: '', cx: 0, cy: 0, angle: 0, dist: 0 };
+
+    const dx = endNode.x - startNode.x;
+    const dy = endNode.y - startNode.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    
+    // Direct midpoint
+    const cx = (startNode.x + endNode.x) / 2;
+    const cy = (startNode.y + endNode.y) / 2;
+
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    return {
+      d: `M ${startNode.x} ${startNode.y} L ${endNode.x} ${endNode.y}`,
+      cx, cy,
+      angle,
+      dist
+    };
+  };
+
+  const getStateColor = (id, isDestination, isCompleted, isStart, isHovered) => {
+    if (isStart) {
+      return {
+        fill: mapStyle === 'satellite' ? '#064e3b' : 'url(#tamilNaduGrad)',
+        stroke: '#16A34A',
+        strokeWidth: 2.2
+      };
+    }
+    if (isDestination && !animating) {
+      return {
+        fill: mapStyle === 'satellite' ? '#78350f' : 'url(#destinationGrad)',
+        stroke: '#D97706',
+        strokeWidth: 2.5
+      };
+    }
+    if (isCompleted || (animating && isDestination)) {
+      return {
+        fill: mapStyle === 'satellite' ? '#1e3a8a' : 'url(#completedGrad)',
+        stroke: '#3B82F6',
+        strokeWidth: 2
+      };
+    }
+    if (isHovered) {
+      return {
+        fill: mapStyle === 'satellite' ? '#1e293b' : '#FEF9C3',
+        stroke: '#CA8A04',
+        strokeWidth: 1.8
+      };
+    }
+
+    if (mapStyle === 'physical') {
+      if (['jk', 'la', 'hp', 'ut', 'sk', 'ar'].includes(id)) {
+        return { fill: 'url(#himalayaGrad)', stroke: '#94A3B8', strokeWidth: 1 };
+      }
+      if (['rj', 'gj'].includes(id)) {
+        return { fill: 'url(#desertGrad)', stroke: '#FDE68A', strokeWidth: 1 };
+      }
+      if (['pb', 'hr', 'up', 'br', 'wb', 'as', 'ml', 'tr', 'mz', 'nl', 'mn', 'kl', 'ap', 'or'].includes(id)) {
+        return { fill: 'url(#plainsGrad)', stroke: '#86EFAC', strokeWidth: 1 };
+      }
+      return { fill: 'url(#plateauGrad)', stroke: '#FED7AA', strokeWidth: 1 };
+    }
+
+    if (mapStyle === 'satellite') {
+      return { fill: '#0B1528', stroke: '#1E293B', strokeWidth: 1 };
+    }
+
+    return { fill: '#FFFFFF', stroke: '#CBD5E1', strokeWidth: 1 };
+  };
+
+  // Render straight vector path with perfectly aligned forward-facing airplane
+  const renderFlightRoute = (toId, isExtra = false, isLiveAnimation = false) => {
     const endNode = stateCentroids[toId];
     if (!endNode) return null;
 
-    const angle = Math.atan2(endNode.y - startNode.y, endNode.x - startNode.x) * (180 / Math.PI);
-    
-    // Create unique animation names for dynamic CSS
-    const trainAnimName = `trainMove_${toId}`;
-    const routeAnimName = `routeDraw_${toId}`;
+    const { d, cx, cy, dist } = getDirectPath(toId);
+    const city = cityData[toId];
+
+    const t = isLiveAnimation ? travelProgress : 1;
+    // Straight linear interpolation
+    const curX = (1 - t) * startNode.x + t * endNode.x;
+    const curY = (1 - t) * startNode.y + t * endNode.y;
+
+    const dx = endNode.x - startNode.x;
+    const dy = endNode.y - startNode.y;
+    // Exact forward heading angle in degrees (0° = pointing Right / East, 90° = South, -90° = North, 180° = West)
+    const heading = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    const strokeColor = isExtra ? '#64748B' : (isLiveAnimation ? '#D97706' : '#2563EB');
+    const glowColor = isExtra ? 'rgba(100,116,139,0.3)' : 'rgba(217,119,6,0.5)';
 
     return (
-      <g key={`route-${toId}${isExtra ? '-extra' : ''}`}>
-        {animate && (
-          <style>{`
-            @keyframes ${trainAnimName} {
-              0% { transform: translate(${startNode.x}px, ${startNode.y}px); opacity: 0; }
-              5% { opacity: 1; }
-              90% { transform: translate(${endNode.x}px, ${endNode.y}px); opacity: 1; }
-              100% { transform: translate(${endNode.x}px, ${endNode.y}px); opacity: 0; }
-            }
-            @keyframes ${routeAnimName} {
-              from { stroke-dashoffset: 1000; }
-              to { stroke-dashoffset: 0; }
-            }
-            @keyframes pulseEnd {
-              0% { r: 4; opacity: 1; }
-              100% { r: 15; opacity: 0; }
-            }
-          `}</style>
-        )}
-        
-        {/* Dotted Route */}
-        <line
-          x1={startNode.x}
-          y1={startNode.y}
-          x2={endNode.x}
-          y2={endNode.y}
-          stroke={isExtra ? "#64748b" : "#B45309"}
-          strokeWidth="3"
-          strokeDasharray="6 6"
-          strokeDashoffset={animate ? 1000 : 0}
-          style={animate ? { animation: `${routeAnimName} 1.8s ease-out forwards ${delay}s` } : {}}
+      <g key={`flight-route-${toId}${isExtra ? '-extra' : ''}`}>
+        {/* Glow backdrop line */}
+        <path
+          d={d}
+          fill="none"
+          stroke={glowColor}
+          strokeWidth={isLiveAnimation ? "8" : "4"}
+          strokeLinecap="round"
+          opacity={isLiveAnimation ? 0.8 : 0.35}
         />
 
-        {/* Solid connection line for completed routes */}
-        {!animate && (
-          <line
-            x1={startNode.x}
-            y1={startNode.y}
-            x2={endNode.x}
-            y2={endNode.y}
-            stroke={isExtra ? "#94a3b8" : "#D97706"}
-            strokeWidth="2"
-            opacity="0.8"
-          />
-        )}
-
-        {/* Destination Node */}
-        <circle 
-          cx={endNode.x} 
-          cy={endNode.y} 
-          r={isExtra ? "4" : "6"} 
-          fill={isExtra ? "#64748b" : "#D97706"} 
-          stroke="#FFFFFF"
-          strokeWidth="1.5"
-          opacity={animate ? 0 : 1}
-          style={animate ? { animation: `fade-in 0.3s ease-out forwards ${delay + 1.8}s` } : {}}
+        {/* Straight trajectory dash line */}
+        <path
+          d={d}
+          fill="none"
+          stroke={strokeColor}
+          strokeWidth={isLiveAnimation ? "3" : "2"}
+          strokeDasharray="6 5"
+          strokeLinecap="round"
+          opacity={isLiveAnimation ? 1 : 0.85}
         />
 
-        {/* Pulse effect on destination if animating */}
-        {animate && !isExtra && (
-          <circle 
-            cx={endNode.x} 
-            cy={endNode.y} 
-            r="5" 
-            fill="#D97706" 
-            style={{ animation: `pulseEnd 1.5s infinite ${delay + 1.8}s` }}
-          />
-        )}
-
-        {/* Moving Vehicle Icon */}
-        {animate && (
-          <g style={{ animation: `${trainAnimName} 2s ease-in-out forwards ${delay}s`, opacity: 0 }}>
-            <g transform={`rotate(${angle + 90}) translate(-10, -10)`}>
-              <rect x="2" y="2" width="16" height="16" rx="4" fill="#D97706" />
-              <rect x="4" y="4" width="12" height="6" rx="2" fill="#FFFFFF" />
-              <circle cx="6" cy="14" r="2" fill="#1E293B" />
-              <circle cx="14" cy="14" r="2" fill="#1E293B" />
-            </g>
+        {/* Distance label pill along the straight path */}
+        {(!isLiveAnimation || isExtra) && city && (
+          <g transform={`translate(${cx}, ${cy - 8})`} style={{ pointerEvents: 'none' }}>
+            <rect
+              x="-32"
+              y="-9"
+              width="64"
+              height="18"
+              rx="9"
+              fill={mapStyle === 'satellite' ? '#0F172A' : '#FFFFFF'}
+              stroke={strokeColor}
+              strokeWidth="1.2"
+              filter="drop-shadow(0 2px 4px rgba(0,0,0,0.18))"
+            />
+            <text
+              x="0"
+              y="3"
+              textAnchor="middle"
+              fontSize="9"
+              fontWeight="900"
+              fill={mapStyle === 'satellite' ? '#F8FAFC' : '#1E293B'}
+              fontFamily="'Space Grotesk', sans-serif"
+            >
+              {city.distance} km
+            </text>
           </g>
         )}
+
+        {/* Moving Straight Forward Airplane / Train */}
+        {isLiveAnimation && (
+          <g transform={`translate(${curX}, ${curY}) rotate(${heading})`}>
+            {/* Jet Engine Contrail Particles (trailing straight behind at -X) */}
+            <circle cx="-16" cy="0" r="3.5" fill="#F59E0B" opacity="0.85" filter="blur(1px)" />
+            <circle cx="-28" cy="0" r="2.5" fill="#FBBF24" opacity="0.65" filter="blur(1.5px)" />
+            <circle cx="-42" cy="0" r="1.8" fill="#FDE68A" opacity="0.45" filter="blur(2px)" />
+
+            {travelMode === 'plane' ? (
+              /* Ultra-Realistic Commercial Jet (Constructed pointing FORWARD towards +X / 0°) */
+              <g transform="scale(0.9)">
+                {/* Airplane Body & Swept Wings (Nose at +X=18, Tail at -X=-16) */}
+                <path
+                  d="M 18 0 L 10 3.5 L 2 3.5 L -8 20 L -12 20 L -8 3.5 L -14 3.5 L -18 10 L -21 10 L -19 0 L -21 -10 L -18 -10 L -14 -3.5 L -8 -3.5 L -12 -20 L -8 -20 L 2 -3.5 L 10 -3.5 Z"
+                  fill="#FFFFFF"
+                  stroke="#0F172A"
+                  strokeWidth="1.2"
+                  filter="drop-shadow(0 3px 6px rgba(0,0,0,0.35))"
+                />
+                {/* Cockpit Windshield (facing forward right) */}
+                <polygon points="12,-2 15,-1.5 15,1.5 12,2" fill="#38BDF8" />
+                
+                {/* Underwing Jet Engines */}
+                <rect x="-6" y="-12" width="8" height="3" rx="1.5" fill="#334155" />
+                <rect x="-6" y="9" width="8" height="3" rx="1.5" fill="#334155" />
+
+                {/* Left Port Wing Navigation Strobe: Red (Top Wing in 0° view) */}
+                <circle cx="-10" cy="-20" r="2" fill="#EF4444" style={{ animation: 'ping 1s infinite' }} />
+                {/* Right Starboard Wing Navigation Strobe: Green (Bottom Wing in 0° view) */}
+                <circle cx="-10" cy="20" r="2" fill="#22C55E" style={{ animation: 'ping 1s infinite' }} />
+                {/* Center Tail Beacon */}
+                <circle cx="-19" cy="0" r="1.8" fill="#F59E0B" />
+              </g>
+            ) : (
+              /* High-Speed Train Cab (Facing forward towards +X) */
+              <g transform="translate(-16, -6) scale(0.9)">
+                <rect x="0" y="0" width="32" height="12" rx="6" fill="#1E3A8A" stroke="#FFFFFF" strokeWidth="1.2" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.35))" />
+                <rect x="4" y="2" width="20" height="8" rx="2" fill="#F8FAFC" />
+                <circle cx="27" cy="6" r="2.2" fill="#38BDF8" />
+                {/* Forward Headlight Beams */}
+                <polygon points="32,4 46,1 46,11 32,8" fill="rgba(254, 240, 138, 0.45)" />
+                <circle cx="31" cy="4" r="1.5" fill="#FEF08A" />
+                <circle cx="31" cy="8" r="1.5" fill="#FEF08A" />
+              </g>
+            )}
+          </g>
+        )}
+
+        {/* Destination Arrival Target Beacon */}
+        <g transform={`translate(${endNode.x}, ${endNode.y})`}>
+          {isLiveAnimation && (
+            <>
+              <circle r="18" fill="none" stroke="#D97706" strokeWidth="1.8" opacity="0.7" style={{ animation: 'ping 1.2s cubic-bezier(0, 0, 0.2, 1) infinite' }} />
+              <circle r="10" fill="none" stroke="#F59E0B" strokeWidth="2" opacity="0.85" />
+            </>
+          )}
+          <circle
+            r="6"
+            fill={isExtra ? '#64748B' : (isLiveAnimation ? '#D97706' : '#2563EB')}
+            stroke="#FFFFFF"
+            strokeWidth="2"
+            filter="drop-shadow(0 2px 5px rgba(0,0,0,0.3))"
+          />
+        </g>
       </g>
     );
   };
 
+  const handleCityClick = (cityKey) => {
+    const city = cityData[cityKey];
+    if (!city) return;
+
+    if (rulerMode) {
+      if (!rulerStart || (rulerStart && rulerEnd)) {
+        setRulerStart(cityKey);
+        setRulerEnd(null);
+      } else if (rulerStart && !rulerEnd && rulerStart !== cityKey) {
+        setRulerEnd(cityKey);
+      }
+    } else {
+      setSelectedCityDetail(city);
+      if (onSelectCity) onSelectCity(cityKey);
+    }
+  };
+
+  const containerStyle = isFullscreen ? {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 99999,
+    width: '100vw',
+    height: '100vh',
+    background: mapStyle === 'satellite' ? '#030712' : '#F7F1E2',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    boxSizing: 'border-box',
+    padding: '12px'
+  } : {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden'
+  };
+
+  const rulerCity1 = rulerStart ? cityData[rulerStart] : null;
+  const rulerCity2 = rulerEnd ? cityData[rulerEnd] : null;
+  const rulerDist = rulerCity1 && rulerCity2 ? calculateGreatCircleDistance(rulerCity1, rulerCity2) : 0;
+  const rulerBearing = rulerCity1 && rulerCity2 ? calculateBearing(rulerCity1, rulerCity2) : 0;
+  const rulerDir = getDirectionText(rulerBearing);
+
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <svg
-        viewBox="10 0 575 680"
-        style={{ width: '100%', height: '100%', maxHeight: '100%', objectFit: 'contain' }}
-      >
-        <style>{`
-          @keyframes fade-in {
-            to { opacity: 1; }
-          }
-          @keyframes state-pulse {
-            0% { fill: #FEF3C7; }
-            50% { fill: #FDE68A; }
-            100% { fill: #FEF3C7; }
-          }
-        `}</style>
+    <div style={containerStyle}>
+      
+      <style>{`
+        @keyframes ping {
+          75%, 100% { transform: scale(2.2); opacity: 0; }
+        }
+        @keyframes pulse-wave {
+          0%, 100% { opacity: 0.25; transform: scale(1); }
+          50% { opacity: 0.55; transform: scale(1.05); }
+        }
+        @keyframes river-flow {
+          0% { stroke-dashoffset: 20; }
+          100% { stroke-dashoffset: 0; }
+        }
+        @keyframes city-glow {
+          0%, 100% { opacity: 0.65; transform: scale(1); }
+          50% { opacity: 0.95; transform: scale(1.15); }
+        }
+      `}</style>
 
-        {/* States Layer */}
-        <g stroke="#CBD5E1" strokeWidth="1" strokeLinejoin="round" strokeLinecap="round">
-          {IndiaMapData.locations.map((loc) => {
-            const isDestination = currentDestinationId === loc.id;
-            const isCompleted = completedMissionIds.includes(loc.id);
-            const isStart = loc.id === 'tn';
-            const isHovered = localHover === loc.id;
-            
-            let fill = '#FAFAFA';
-            let stroke = '#CBD5E1';
-            let strokeWidth = 1;
-            
-            if (isStart) {
-              fill = '#DCFCE7';
-              stroke = '#16A34A';
-              strokeWidth = 1.8;
-            } else if (isDestination && !animating) {
-              fill = '#FEF3C7';
-              stroke = '#D97706';
-              strokeWidth = 2;
-            } else if (isCompleted || (animating && isDestination)) {
-              fill = '#EFF6FF';
-              stroke = '#3B82F6';
-              strokeWidth = 1.5;
-            } else if (isHovered) {
-              fill = '#F1F5F9';
-            }
+      {/* Top Map Context & Layer Control Bar */}
+      <div style={{
+        padding: '6px 10px',
+        background: mapStyle === 'satellite' ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.94)',
+        borderBottom: '1.5px solid #F2DFBC',
+        borderRadius: isFullscreen ? '14px 14px 0 0' : '0',
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexShrink: 0,
+        gap: '4px',
+        fontSize: '11px',
+        fontFamily: '"Space Grotesk", sans-serif',
+        color: '#78350F',
+        fontWeight: 700,
+        zIndex: 5
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <MapPin size={12} color="#16A34A" />
+          <span>Base: <strong>Chennai</strong> (13°N, 80°E)</span>
+        </div>
 
-            return (
-              <path
-                key={loc.id}
-                id={loc.id}
-                d={loc.path}
-                fill={fill}
-                stroke={stroke}
-                strokeWidth={strokeWidth}
-                style={{ 
-                  transition: 'fill 0.4s, stroke 0.4s, stroke-width 0.4s', 
-                  animation: (isDestination && !animating) ? 'state-pulse 2s infinite' : 'none'
-                }}
-                onMouseEnter={() => setLocalHover(loc.id)}
-                onMouseLeave={() => setLocalHover(null)}
-              />
-            );
-          })}
-        </g>
-        
-        {/* Routes Layer */}
-        <g>
-          {/* Permanent Start Node */}
-          {missionIndex >= 0 && (
-            <circle cx={startNode.x} cy={startNode.y} r="6" fill="#16A34A" stroke="#FFFFFF" strokeWidth="1.5" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setShowGraticule(!showGraticule)}
+            style={{
+              background: showGraticule ? '#FEF3C7' : 'transparent',
+              border: '1px solid #FDE68A',
+              borderRadius: '5px',
+              padding: '2px 5px',
+              fontSize: '10px',
+              fontWeight: 800,
+              color: showGraticule ? '#92400E' : '#94A3B8',
+              cursor: 'pointer'
+            }}
+            title="Toggle 23.5°N Tropic of Cancer & Graticule Lines"
+          >
+            🌐 Graticule
+          </button>
+          
+          <button
+            onClick={() => setShowRivers(!showRivers)}
+            style={{
+              background: showRivers ? '#DBEAFE' : 'transparent',
+              border: '1px solid #93C5FD',
+              borderRadius: '5px',
+              padding: '2px 5px',
+              fontSize: '10px',
+              fontWeight: 800,
+              color: showRivers ? '#1E40AF' : '#94A3B8',
+              cursor: 'pointer'
+            }}
+            title="Toggle Major Indian River Systems"
+          >
+            🌊 Rivers
+          </button>
+
+          <button
+            onClick={() => setShowRelief(!showRelief)}
+            style={{
+              background: showRelief ? '#DCFCE7' : 'transparent',
+              border: '1px solid #86EFAC',
+              borderRadius: '5px',
+              padding: '2px 5px',
+              fontSize: '10px',
+              fontWeight: 800,
+              color: showRelief ? '#166534' : '#94A3B8',
+              cursor: 'pointer'
+            }}
+            title="Toggle Mountain Ranges & Relief"
+          >
+            ⛰️ Relief
+          </button>
+
+          <button
+            onClick={() => setShowMeridian(!showMeridian)}
+            style={{
+              background: showMeridian ? '#F3E8FF' : 'transparent',
+              border: '1px solid #D8B4FE',
+              borderRadius: '5px',
+              padding: '2px 5px',
+              fontSize: '10px',
+              fontWeight: 800,
+              color: showMeridian ? '#6B21A8' : '#94A3B8',
+              cursor: 'pointer'
+            }}
+            title="Standard Meridian 82.5° E (Indian Standard Time)"
+          >
+            ⏰ 82.5°E IST
+          </button>
+
+          <button
+            onClick={() => {
+              setRulerMode(!rulerMode);
+              if (rulerMode) {
+                setRulerStart(null);
+                setRulerEnd(null);
+              }
+            }}
+            style={{
+              background: rulerMode ? '#EA580C' : '#FFF7ED',
+              border: `1px solid ${rulerMode ? '#C2410C' : '#FDBA74'}`,
+              borderRadius: '5px',
+              padding: '2px 5px',
+              fontSize: '10px',
+              fontWeight: 800,
+              color: rulerMode ? '#FFFFFF' : '#C2410C',
+              cursor: 'pointer'
+            }}
+            title="Digital Ruler: Click 2 cities to measure distance & bearing"
+          >
+            📏 Ruler
+          </button>
+
+
+          {onToggleSound && (
+            <button
+              onClick={onToggleSound}
+              style={{
+                background: soundEnabled ? '#DCFCE7' : '#F1F5F9',
+                border: `1px solid ${soundEnabled ? '#86EFAC' : '#CBD5E1'}`,
+                borderRadius: '5px',
+                padding: '2px 5px',
+                fontSize: '10px',
+                fontWeight: 800,
+                color: soundEnabled ? '#166534' : '#64748B',
+                cursor: 'pointer'
+              }}
+              title={soundEnabled ? "Mute Audio SFX" : "Unmute Audio SFX"}
+            >
+              {soundEnabled ? '🔊 SFX' : '🔇 Mute'}
+            </button>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          {currentMission && cityData[currentMission.id] && (
+            <span style={{ background: '#FEF3C7', padding: '2px 5px', borderRadius: '4px', border: '1px solid #FDE68A', color: '#92400E', fontWeight: 800, fontSize: '10px' }}>
+              📍 {cityData[currentMission.id].name} ({cityData[currentMission.id].distance} km)
+            </span>
           )}
 
-          {/* Render already completed routes statically */}
-          {completedMissionIds.map(toId => {
-            if (toId === 'mh') {
-               return (
-                 <React.Fragment key={`comp-mh`}>
-                   {drawRoute('ka', false, 0, true)}
-                   {drawRoute('mh', false, 0, false)}
-                 </React.Fragment>
-               );
-            }
-            return drawRoute(toId, false);
-          })}
+          <button
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            title={isFullscreen ? "Exit Fullscreen (Esc)" : "View Map in Fullscreen"}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '3px',
+              background: isFullscreen ? '#EF4444' : '#0E3556',
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: '5px',
+              padding: '2px 6px',
+              fontSize: '10px',
+              fontWeight: 800,
+              cursor: 'pointer'
+            }}
+          >
+            {isFullscreen ? <><Minimize2 size={11} /> Exit</> : <><Maximize2 size={10} /> Fullscreen</>}
+          </button>
+        </div>
+      </div>
 
-          {/* Render active animation route */}
-          {animating && activeRoute && (
-            <>
-              {activeRoute.showBoth && drawRoute('ka', true, 0, true)}
-              {drawRoute(activeRoute.to, true, 0, false)}
-            </>
-          )}
-        </g>
+      {rulerMode && (
+        <div style={{
+          background: '#FFF7ED',
+          borderBottom: '1.5px solid #FDBA74',
+          padding: '4px 10px',
+          fontSize: '11px',
+          fontWeight: 700,
+          color: '#9A3412',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          zIndex: 6
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <Ruler size={13} color="#EA580C" />
+            <span>
+              {!rulerStart && "Click 1st city on the map to start measuring..."}
+              {rulerStart && !rulerEnd && `Point A: ${cityData[rulerStart].name}. Now click 2nd city...`}
+              {rulerStart && rulerEnd && (
+                <span>
+                  <strong>{cityData[rulerStart].name} ➔ {cityData[rulerEnd].name}:</strong> <span style={{ color: '#15803D', background: '#DCFCE7', padding: '1px 5px', borderRadius: '4px' }}>{rulerDist} km</span> • Bearing: <span style={{ color: '#1E40AF', background: '#DBEAFE', padding: '1px 5px', borderRadius: '4px' }}>{rulerBearing}° ({rulerDir})</span> • Flight: ~{Math.round(rulerDist / 14)}m
+                </span>
+              )}
+            </span>
+          </div>
 
-        {/* Labels Layer */}
-        {missionIndex >= 0 && (
-          <g fontSize="13.5" fontWeight="700" fontFamily="'Space Grotesk', sans-serif" style={{ pointerEvents: 'none' }}>
-            {/* Start Node (Chennai) */}
-            <g>
-              <text x={startNode.x} y={startNode.y + 2} textAnchor="middle" fontSize="13">📍</text>
-              <text x={startNode.x + cityData.tn.dx} y={startNode.y + cityData.tn.dy} fill="#166534" textAnchor={cityData.tn.anchor}>
-                <tspan x={startNode.x + cityData.tn.dx} dy="0" fontWeight="900">{cityData.tn.name}</tspan>
-                <tspan x={startNode.x + cityData.tn.dx} dy="13" fontSize="11" fill="#15803D" fontWeight="700">{cityData.tn.state}</tspan>
+          <button
+            onClick={() => {
+              setRulerStart(null);
+              setRulerEnd(null);
+            }}
+            style={{
+              background: '#FED7AA',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '1px 6px',
+              fontSize: '10px',
+              fontWeight: 800,
+              color: '#9A3412',
+              cursor: 'pointer'
+            }}
+          >
+            Clear
+          </button>
+        </div>
+      )}
+
+      {/* Main SVG Map Canvas */}
+      <div style={{ 
+        flex: 1, 
+        minHeight: 0, 
+        position: 'relative', 
+        overflow: 'hidden',
+        background: mapStyle === 'satellite'
+          ? 'radial-gradient(ellipse at 50% 50%, #0c1a30 0%, #030712 100%)'
+          : (mapStyle === 'physical'
+            ? 'radial-gradient(ellipse at 60% 50%, #C7EAFE 0%, #93D4FB 40%, #38BDF8 85%, #0284C7 100%)'
+            : '#F8FAFC'),
+        borderRadius: isFullscreen ? '0 0 14px 14px' : '0'
+      }}>
+        <svg
+          viewBox="-10 -10 615 690"
+          style={{
+            width: '100%',
+            height: '100%',
+            maxHeight: '100%',
+            objectFit: 'contain'
+          }}
+        >
+          <defs>
+            <filter id="mapShadow" x="-10%" y="-10%" width="130%" height="130%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" floodOpacity="0.16" floodColor="#0F172A" />
+            </filter>
+
+            <linearGradient id="himalayaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#FFFFFF" />
+              <stop offset="50%" stopColor="#E2E8F0" />
+              <stop offset="100%" stopColor="#CBD5E1" />
+            </linearGradient>
+
+            <linearGradient id="desertGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#FEF3C7" />
+              <stop offset="60%" stopColor="#FDE68A" />
+              <stop offset="100%" stopColor="#F59E0B" />
+            </linearGradient>
+
+            <linearGradient id="plainsGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#F0FDF4" />
+              <stop offset="70%" stopColor="#DCFCE7" />
+              <stop offset="100%" stopColor="#BBF7D0" />
+            </linearGradient>
+
+            <linearGradient id="plateauGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#FFFBEB" />
+              <stop offset="60%" stopColor="#FEF3C7" />
+              <stop offset="100%" stopColor="#FED7AA" />
+            </linearGradient>
+
+            <linearGradient id="tamilNaduGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#DCFCE7" />
+              <stop offset="100%" stopColor="#86EFAC" />
+            </linearGradient>
+
+            <linearGradient id="destinationGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#FEF3C7" />
+              <stop offset="100%" stopColor="#FDE68A" />
+            </linearGradient>
+
+            <linearGradient id="completedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#EFF6FF" />
+              <stop offset="100%" stopColor="#BFDBFE" />
+            </linearGradient>
+
+            <radialGradient id="cityGlow">
+              <stop offset="0%" stopColor="#FEF08A" stopOpacity="0.95" />
+              <stop offset="40%" stopColor="#F59E0B" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#D97706" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+
+          {/* Oceanic & Graticule Background */}
+          <g opacity={mapStyle === 'satellite' ? 0.25 : 0.9}>
+            {showGraticule && (
+              <g stroke={mapStyle === 'satellite' ? '#334155' : '#0284C7'} strokeWidth="0.75" strokeDasharray="3 6" opacity="0.4">
+                <line x1="-10" y1="180" x2="615" y2="180" />
+                <line x1="-10" y1="340" x2="615" y2="340" />
+                <line x1="-10" y1="500" x2="615" y2="500" />
+                <line x1="130" y1="-10" x2="130" y2="690" />
+                <line x1="290" y1="-10" x2="290" y2="690" />
+                <line x1="450" y1="-10" x2="450" y2="690" />
+
+                <text x="5" y="176" fontSize="8" fill="#0369A1" fontWeight="700">28° N</text>
+                <text x="5" y="336" fontSize="8" fill="#0369A1" fontWeight="700">20° N</text>
+                <text x="5" y="496" fontSize="8" fill="#0369A1" fontWeight="700">12° N</text>
+                <text x="132" y="675" fontSize="8" fill="#0369A1" fontWeight="700">72° E</text>
+                <text x="292" y="675" fontSize="8" fill="#0369A1" fontWeight="700">80° E</text>
+                <text x="452" y="675" fontSize="8" fill="#0369A1" fontWeight="700">88° E</text>
+              </g>
+            )}
+
+            {showGraticule && (
+              <g>
+                <line x1="20" y1="280" x2="570" y2="280" stroke="#D97706" strokeWidth="1.4" strokeDasharray="7 4" opacity="0.9" />
+                <rect x="50" y="271" width="130" height="16" rx="4" fill="#FEF3C7" stroke="#FDE68A" strokeWidth="1" opacity="0.95" />
+                <text x="55" y="282.5" fontSize="8.5" fontWeight="900" fill="#92400E" fontFamily="'Space Grotesk', sans-serif">
+                  23.5° N • Tropic of Cancer
+                </text>
+              </g>
+            )}
+
+            {showMeridian && (
+              <g>
+                <line x1="340" y1="-10" x2="340" y2="690" stroke="#9333EA" strokeWidth="1.4" strokeDasharray="6 4" opacity="0.85" />
+                <rect x="275" y="130" width="130" height="16" rx="4" fill="#F3E8FF" stroke="#D8B4FE" strokeWidth="1" opacity="0.95" />
+                <text x="280" y="141.5" fontSize="8.5" fontWeight="900" fill="#6B21A8" fontFamily="'Space Grotesk', sans-serif">
+                  82.5° E • Standard Meridian (IST)
+                </text>
+              </g>
+            )}
+
+            <text x="50" y="440" fontSize="11" fontWeight="900" fill={mapStyle === 'satellite' ? '#64748B' : '#0369A1'} letterSpacing="2" opacity="0.75" fontFamily="'Space Grotesk', sans-serif">ARABIAN SEA</text>
+            <text x="360" y="470" fontSize="11" fontWeight="900" fill={mapStyle === 'satellite' ? '#64748B' : '#0369A1'} letterSpacing="2" opacity="0.75" fontFamily="'Space Grotesk', sans-serif">BAY OF BENGAL</text>
+            <text x="180" y="660" fontSize="11" fontWeight="900" fill={mapStyle === 'satellite' ? '#64748B' : '#0369A1'} letterSpacing="2" opacity="0.75" fontFamily="'Space Grotesk', sans-serif">INDIAN OCEAN</text>
+            
+            {showRelief && (
+              <g opacity="0.85">
+                <text x="290" y="32" fontSize="9.5" fontWeight="900" fill={mapStyle === 'satellite' ? '#94A3B8' : '#78350F'} letterSpacing="2" textAnchor="middle" fontFamily="'Space Grotesk', sans-serif">
+                  ▲ THE GREAT HIMALAYAS ▲
+                </text>
+                <text x="110" y="500" fontSize="7.5" fontWeight="900" fill="#15803D" letterSpacing="1" transform="rotate(-65 110 500)" opacity="0.65">
+                  Western Ghats
+                </text>
+                <text x="340" y="500" fontSize="7.5" fontWeight="900" fill="#15803D" letterSpacing="1" transform="rotate(45 340 500)" opacity="0.65">
+                  Eastern Ghats
+                </text>
+              </g>
+            )}
+
+            <g transform="translate(245, 615)" opacity="0.75">
+              <ellipse cx="12" cy="16" rx="9" ry="14" fill={mapStyle === 'satellite' ? '#1E293B' : '#E2E8F0'} stroke={mapStyle === 'satellite' ? '#475569' : '#94A3B8'} strokeWidth="1" />
+              <text x="12" y="38" fontSize="8.5" fontWeight="800" fill="#64748B" textAnchor="middle">Sri Lanka</text>
+            </g>
+
+            <g transform="translate(520, 500)" opacity="0.8">
+              <circle cx="0" cy="0" r="3" fill="#16A34A" />
+              <circle cx="2" cy="12" r="2.5" fill="#16A34A" />
+              <circle cx="4" cy="24" r="3" fill="#16A34A" />
+              <circle cx="5" cy="38" r="2.5" fill="#16A34A" />
+              <text x="-12" y="56" fontSize="7.5" fontWeight="800" fill="#0369A1" fontFamily="'Space Grotesk', sans-serif">
+                Andaman & Nicobar
               </text>
             </g>
-            
-            {/* Show destination label if active or completed */}
+
+            <g transform="translate(110, 565)" opacity="0.8">
+              <circle cx="0" cy="0" r="2.5" fill="#16A34A" />
+              <circle cx="-3" cy="10" r="2" fill="#16A34A" />
+              <circle cx="-2" cy="22" r="2.2" fill="#16A34A" />
+              <text x="-16" y="36" fontSize="7.5" fontWeight="800" fill="#0369A1" fontFamily="'Space Grotesk', sans-serif">
+                Lakshadweep
+              </text>
+            </g>
+          </g>
+
+          {/* States Polygons Layer */}
+          <g filter="url(#mapShadow)">
+            {IndiaMapData.locations.map((loc) => {
+              const isDestination = currentDestinationId === loc.id;
+              const isCompleted = completedMissionIds.includes(loc.id);
+              const isStart = loc.id === 'tn';
+              const isHovered = localHover === loc.id;
+              const style = getStateColor(loc.id, isDestination, isCompleted, isStart, isHovered);
+
+              return (
+                <path
+                  key={loc.id}
+                  id={`state-${loc.id}`}
+                  d={loc.path}
+                  fill={style.fill}
+                  stroke={style.stroke}
+                  strokeWidth={style.strokeWidth}
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  style={{
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={() => setLocalHover(loc.id)}
+                  onMouseLeave={() => setLocalHover(null)}
+                  onClick={() => handleCityClick(loc.id)}
+                />
+              );
+            })}
+          </g>
+
+          {/* Satellite Night City Lights Cluster Layer */}
+          {mapStyle === 'satellite' && (
+            <g pointerEvents="none">
+              {nightLights.map((city, idx) => {
+                const node = projectCoordinates(city.lat, city.lon);
+                return (
+                  <g key={`light-${idx}`} transform={`translate(${node.x}, ${node.y})`}>
+                    <circle r={city.r * 2} fill="url(#cityGlow)" opacity={city.intensity} style={{ animation: 'city-glow 3s ease-in-out infinite' }} />
+                    <circle r={city.r * 0.8} fill="#FEF08A" opacity={0.9} />
+                    <circle r="1.5" fill="#FFFFFF" />
+                  </g>
+                );
+              })}
+            </g>
+          )}
+
+          {/* Major Indian River Systems Layer */}
+          {showRivers && (
+            <g opacity="0.75" pointerEvents="none">
+              <path
+                d="M 210 150 Q 280 200 350 215 T 440 270"
+                fill="none"
+                stroke="#0284C7"
+                strokeWidth="1.8"
+                strokeDasharray="4 2"
+                style={{ animation: 'river-flow 2s linear infinite' }}
+              />
+              <text x="260" y="192" fontSize="7.5" fontWeight="800" fill="#0369A1" fontStyle="italic">Ganga R.</text>
+
+              <path
+                d="M 520 180 Q 480 200 450 240 T 440 270"
+                fill="none"
+                stroke="#0284C7"
+                strokeWidth="2"
+                strokeDasharray="4 2"
+                style={{ animation: 'river-flow 2s linear infinite' }}
+              />
+              <text x="470" y="175" fontSize="7.5" fontWeight="800" fill="#0369A1" fontStyle="italic">Brahmaputra R.</text>
+
+              <path
+                d="M 280 320 Q 200 330 160 325"
+                fill="none"
+                stroke="#0284C7"
+                strokeWidth="1.5"
+              />
+              <text x="195" y="322" fontSize="7.5" fontWeight="800" fill="#0369A1" fontStyle="italic">Narmada R.</text>
+
+              <path
+                d="M 180 430 Q 240 450 300 450"
+                fill="none"
+                stroke="#0284C7"
+                strokeWidth="1.5"
+              />
+              <text x="195" y="440" fontSize="7.5" fontWeight="800" fill="#0369A1" fontStyle="italic">Krishna R.</text>
+            </g>
+          )}
+
+          {/* Trajectories & Routes Layer */}
+          <g>
+            {completedMissionIds.map(toId => {
+              if (toId === 'mh') {
+                return (
+                  <React.Fragment key="comp-mh-routes">
+                    {renderFlightRoute('ka', true, false)}
+                    {renderFlightRoute('mh', false, false)}
+                  </React.Fragment>
+                );
+              }
+              return renderFlightRoute(toId, false, false);
+            })}
+
+            {animating && activeRoute && (
+              <>
+                {activeRoute.showBoth && renderFlightRoute('ka', true, false)}
+                {renderFlightRoute(activeRoute.to, false, true)}
+              </>
+            )}
+          </g>
+
+          {/* Dynamic Ruler Measurement Line Overlay */}
+          {rulerStart && rulerEnd && stateCentroids[rulerStart] && stateCentroids[rulerEnd] && (
+            <g pointerEvents="none">
+              <line
+                x1={stateCentroids[rulerStart].x}
+                y1={stateCentroids[rulerStart].y}
+                x2={stateCentroids[rulerEnd].x}
+                y2={stateCentroids[rulerEnd].y}
+                stroke="#EA580C"
+                strokeWidth="3"
+                strokeDasharray="5 3"
+              />
+              <g transform={`translate(${(stateCentroids[rulerStart].x + stateCentroids[rulerEnd].x) / 2}, ${(stateCentroids[rulerStart].y + stateCentroids[rulerEnd].y) / 2 - 10})`}>
+                <rect x="-42" y="-10" width="84" height="20" rx="10" fill="#EA580C" stroke="#FFFFFF" strokeWidth="1.5" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.25))" />
+                <text x="0" y="3.5" textAnchor="middle" fontSize="10" fontWeight="900" fill="#FFFFFF" fontFamily="'Space Grotesk', sans-serif">
+                  {rulerDist} km ({rulerDir})
+                </text>
+              </g>
+            </g>
+          )}
+
+          {/* City Labels & Landmark Badges */}
+          <g>
+            {missionIndex >= 0 && (
+              <g transform={`translate(${startNode.x}, ${startNode.y})`} style={{ cursor: 'pointer' }} onClick={() => handleCityClick('tn')}>
+                <circle r="22" fill="none" stroke="#16A34A" strokeWidth="1" opacity="0.35" style={{ animation: 'pulse-wave 2.5s infinite' }} />
+                <line
+                  x1="0"
+                  y1="0"
+                  x2={26 * Math.cos((radarAngle * Math.PI) / 180)}
+                  y2={26 * Math.sin((radarAngle * Math.PI) / 180)}
+                  stroke="#16A34A"
+                  strokeWidth="1.2"
+                  opacity="0.6"
+                />
+
+                <circle r="6" fill="#16A34A" stroke="#FFFFFF" strokeWidth="2" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))" />
+                <text x="0" y="3.5" fontSize="8" textAnchor="middle" fill="#FFFFFF" fontWeight="900">★</text>
+                
+                <g transform="translate(14, -6)">
+                  <rect x="0" y="-8" width="94" height="22" rx="6" fill="#DCFCE7" stroke="#16A34A" strokeWidth="1.2" opacity="0.95" />
+                  <text x="6" y="6" fontSize="10" fontWeight="900" fill="#166534" fontFamily="'Space Grotesk', sans-serif">
+                    Chennai (Base) 📍
+                  </text>
+                </g>
+              </g>
+            )}
+
             {missions.map((m) => {
               const isActive = m.id === currentDestinationId;
               const isComp = completedMissionIds.includes(m.id);
-              
-              if (!isActive && !isComp) return null;
-              
-              const c = cityData[m.id];
               const node = stateCentroids[m.id];
-              if (!c || !node) return null;
-              
+              const city = cityData[m.id];
+              if (!node || !city) return null;
+
+              const isShown = isActive || isComp || missionIndex >= missions.length || rulerMode;
+
               return (
-                <g key={m.id} style={{ transition: 'all 0.3s' }}>
-                  <text 
-                    x={node.x + c.dx} 
-                    y={node.y + c.dy} 
-                    fill={isActive ? "#92400E" : "#1E40AF"}
-                    textAnchor={c.anchor}
-                  >
-                    <tspan x={node.x + c.dx} dy="0" fontWeight="900" fontSize="13.5">{c.name}</tspan>
-                    <tspan x={node.x + c.dx} dy="13" fontSize="11" fill={isActive ? "#B45309" : "#3B82F6"} fontWeight="700">{c.state}</tspan>
-                  </text>
+                <g
+                  key={`city-badge-${m.id}`}
+                  transform={`translate(${node.x}, ${node.y})`}
+                  style={{
+                    cursor: 'pointer',
+                    opacity: isShown ? 1 : 0.4,
+                    transition: 'all 0.3s ease'
+                  }}
+                  onClick={() => handleCityClick(m.id)}
+                >
+                  {isActive && !animating && (
+                    <>
+                      <circle r="18" fill="none" stroke="#D97706" strokeWidth="1.5" opacity="0.6" style={{ animation: 'ping 1.8s infinite' }} />
+                      <circle r="10" fill="#FEF3C7" opacity="0.7" />
+                    </>
+                  )}
+
+                  <circle
+                    r={isActive ? "7" : "5"}
+                    fill={isActive ? "#D97706" : (isComp ? "#16A34A" : "#64748B")}
+                    stroke="#FFFFFF"
+                    strokeWidth="1.8"
+                    filter="drop-shadow(0 2px 5px rgba(0,0,0,0.3))"
+                  />
+
+                  <g transform={`translate(${city.dx}, ${city.dy})`}>
+                    <rect
+                      x="0"
+                      y="-8"
+                      width="94"
+                      height="24"
+                      rx="6"
+                      fill={isActive ? "#FEF3C7" : (isComp ? "#EFF6FF" : "#FFFFFF")}
+                      stroke={isActive ? "#D97706" : (isComp ? "#3B82F6" : "#CBD5E1")}
+                      strokeWidth={isActive ? "1.5" : "1"}
+                      filter="drop-shadow(0 2px 5px rgba(0,0,0,0.12))"
+                    />
+                    <text x="5" y="3.5" fontSize="9.5" fontWeight="900" fill={isActive ? "#92400E" : (isComp ? "#1E40AF" : "#1E293B")} fontFamily="'Space Grotesk', sans-serif">
+                      {city.icon} {city.name}
+                    </text>
+                    <text x="5" y="12.5" fontSize="8" fontWeight="700" fill={isActive ? "#B45309" : "#64748B"} fontFamily="'Space Grotesk', sans-serif">
+                      {city.state}
+                    </text>
+                  </g>
                 </g>
               );
             })}
           </g>
-        )}
-      </svg>
+
+          {/* Interactive 3D Compass Rose HUD */}
+          <g transform="translate(540, 70)">
+            <circle r="30" fill={mapStyle === 'satellite' ? '#0F172A' : '#FFFFFF'} stroke="#D97706" strokeWidth="2" filter="drop-shadow(0 3px 8px rgba(0,0,0,0.2))" />
+            <circle r="25" fill="none" stroke="#FDE68A" strokeWidth="1" strokeDasharray="3 3" />
+            
+            <text x="0" y="-16" fontSize="9" fontWeight="900" fill="#DC2626" textAnchor="middle">N</text>
+            <text x="18" y="3" fontSize="8" fontWeight="900" fill="#78350F" textAnchor="middle">E</text>
+            <text x="0" y="22" fontSize="8" fontWeight="900" fill="#78350F" textAnchor="middle">S</text>
+            <text x="-18" y="3" fontSize="8" fontWeight="900" fill="#78350F" textAnchor="middle">W</text>
+
+            {/* Standard Map North Compass Rose */}
+            <g transform="rotate(0)">
+              <polygon points="0,-18 3,0 0,-1.5 -3,0" fill="#DC2626" stroke="#991B1B" strokeWidth="0.5" />
+              <polygon points="0,18 3,0 0,1.5 -3,0" fill="#64748B" stroke="#334155" strokeWidth="0.5" />
+              <circle r="2.2" fill="#D97706" stroke="#FFFFFF" strokeWidth="0.8" />
+            </g>
+          </g>
+        </svg>
+
+
+      </div>
+
+      {selectedCityDetail && (
+        <div style={{
+          position: 'absolute',
+          bottom: '12px',
+          left: '12px',
+          right: '12px',
+          zIndex: 40,
+          background: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(10px)',
+          border: '2px solid #D97706',
+          borderRadius: '12px',
+          padding: '10px 12px',
+          boxShadow: '0 8px 24px rgba(60,40,20,0.18)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ fontSize: '24px', background: '#FEF3C7', padding: '5px', borderRadius: '8px', border: '1px solid #FDE68A' }}>
+              {selectedCityDetail.icon}
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '14px', fontWeight: 900, color: '#78350F' }}>
+                  {selectedCityDetail.name} ({selectedCityDetail.state})
+                </span>
+                <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#166534', background: '#DCFCE7', padding: '1px 5px', borderRadius: '4px' }}>
+                  {selectedCityDetail.distance > 0 ? `${selectedCityDetail.distance} km from Chennai` : 'Starting Base'}
+                </span>
+              </div>
+              <div style={{ fontSize: '11.5px', color: '#3D2E24', fontWeight: 600, marginTop: '1px' }}>
+                <strong>Landmark:</strong> {selectedCityDetail.landmark} • <strong>Elevation:</strong> {selectedCityDetail.elevation}
+              </div>
+              <div style={{ fontSize: '11px', color: '#64748B' }}>
+                {selectedCityDetail.desc}
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setSelectedCityDetail(null)}
+            style={{
+              background: '#F1F5F9',
+              border: 'none',
+              borderRadius: '50%',
+              width: '24px',
+              height: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#64748B'
+            }}
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
     </div>
   );
 }

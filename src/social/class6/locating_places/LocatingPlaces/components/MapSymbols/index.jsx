@@ -117,14 +117,14 @@ export default function MapSymbols({ onComplete, onBack }) {
           
           {/* Header */}
           <div style={{ flexShrink: 0 }}>
-            <div style={{ display: 'inline-block', fontSize: '12px', fontWeight: 800, color: '#92400E', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px', background: '#FEF3C7', border: '1px solid #FDE68A', padding: '2px 8px', borderRadius: '6px' }}>
+            <div style={{ display: 'inline-block', fontSize: '13px', fontWeight: 800, color: '#92400E', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '4px', background: '#FEF3C7', border: '1px solid #FDE68A', padding: '3px 10px', borderRadius: '6px' }}>
               CHAPTER 1 • SYMBOLS
             </div>
-            <h1 style={{ fontSize: 'clamp(1.5rem, 2.2vw, 1.95rem)', color: '#78350F', margin: '2px 0 3px 0', fontFamily: '"Fraunces", serif', fontWeight: 900, lineHeight: 1.15, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Map size={26} color="#D97706" style={{ flexShrink: 0 }} />
+            <h1 style={{ fontSize: 'clamp(1.65rem, 2.4vw, 2.1rem)', color: '#78350F', margin: '2px 0 4px 0', fontFamily: '"Fraunces", serif', fontWeight: 900, lineHeight: 1.15, display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Map size={28} color="#D97706" style={{ flexShrink: 0 }} />
               Understanding Map Symbols
             </h1>
-            <p style={{ color: '#3D2E24', fontSize: '13.5px', fontStyle: 'italic', margin: '0 0 8px 0', fontWeight: 600 }}>
+            <p style={{ color: '#3D2E24', fontSize: '15px', fontStyle: 'italic', margin: '0 0 10px 0', fontWeight: 600 }}>
               Small drawings and shapes that represent real places on Earth.
             </p>
           </div>
@@ -132,44 +132,44 @@ export default function MapSymbols({ onComplete, onBack }) {
           {/* Left Sub-Page Viewport */}
           <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden' }}>
             {leftPage === 1 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, justifyContent: 'space-between' }}>
                 {/* What are Symbols? */}
-                <div style={{ background: '#FFFFFF', padding: '12px 14px', borderRadius: '12px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
-                  <h2 style={{ fontSize: '1.15rem', color: '#92400E', margin: '0 0 4px 0', fontFamily: '"Fraunces", serif', fontWeight: 900 }}>What are Symbols?</h2>
-                  <p style={{ color: '#3D2E24', fontSize: '13.5px', lineHeight: 1.45, margin: 0, fontWeight: 600 }}>
+                <div style={{ background: '#FFFFFF', padding: '14px 18px', borderRadius: '14px', border: '1.5px solid #F2DFBC', boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
+                  <h2 style={{ fontSize: '1.3rem', color: '#92400E', margin: '0 0 6px 0', fontFamily: '"Fraunces", serif', fontWeight: 900 }}>What are Symbols?</h2>
+                  <p style={{ color: '#3D2E24', fontSize: '15.5px', lineHeight: 1.5, margin: 0, fontWeight: 600 }}>
                     Real places are too huge to draw exactly on a map. Instead of full buildings, roads, and rivers, we use standardized symbols.
                   </p>
                 </div>
 
                 {/* Real Place -> Map Symbol Table */}
-                <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '12px', overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <div style={{ display: 'flex', background: '#FEF3C7', padding: '8px 12px', fontWeight: 800, color: '#78350F', borderBottom: '1.5px solid #F2DFBC', fontSize: '12.5px' }}>
+                <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', background: '#FEF3C7', padding: '10px 16px', fontWeight: 900, color: '#78350F', borderBottom: '1.5px solid #F2DFBC', fontSize: '14.5px' }}>
                     <div style={{ flex: 1 }}>Real Geographical Feature</div>
-                    <div style={{ width: '30px', textAlign: 'center' }}>→</div>
+                    <div style={{ width: '36px', textAlign: 'center' }}>→</div>
                     <div style={{ flex: 1 }}>Standard Map Symbol</div>
                   </div>
-                  <div style={{ display: 'flex', padding: '8px 12px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
-                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '13px', fontWeight: 700 }}>Curved river line</div>
-                    <div style={{ width: '30px', textAlign: 'center', color: '#B45309', fontWeight: 900 }}>→</div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'river')?.Icon} width={46} height={30} />
-                      <span style={{ fontSize: '13px', color: '#1E40AF', fontWeight: 800 }}>River</span>
+                  <div style={{ display: 'flex', padding: '10px 16px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '15.5px', fontWeight: 700 }}>Curved river line</div>
+                    <div style={{ width: '36px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '16px' }}>→</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'river')?.Icon} width={52} height={32} />
+                      <span style={{ fontSize: '16px', color: '#1E40AF', fontWeight: 900 }}>River</span>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', padding: '8px 12px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
-                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '13px', fontWeight: 700 }}>Hospital building</div>
-                    <div style={{ width: '30px', textAlign: 'center', color: '#B45309', fontWeight: 900 }}>→</div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'hospital')?.Icon} width={46} height={30} />
-                      <span style={{ fontSize: '13px', color: '#991B1B', fontWeight: 800 }}>Hospital</span>
+                  <div style={{ display: 'flex', padding: '10px 16px', borderBottom: '1px solid #F2DFBC', alignItems: 'center' }}>
+                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '15.5px', fontWeight: 700 }}>Hospital building</div>
+                    <div style={{ width: '36px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '16px' }}>→</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'hospital')?.Icon} width={52} height={32} />
+                      <span style={{ fontSize: '16px', color: '#991B1B', fontWeight: 900 }}>Hospital</span>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', padding: '8px 12px', alignItems: 'center' }}>
-                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '13px', fontWeight: 700 }}>Thick forest trees</div>
-                    <div style={{ width: '30px', textAlign: 'center', color: '#B45309', fontWeight: 900 }}>→</div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'forest')?.Icon} width={46} height={30} />
-                      <span style={{ fontSize: '13px', color: '#166534', fontWeight: 800 }}>Forest</span>
+                  <div style={{ display: 'flex', padding: '10px 16px', alignItems: 'center' }}>
+                    <div style={{ flex: 1, color: '#3D2E24', fontSize: '15.5px', fontWeight: 700 }}>Thick forest trees</div>
+                    <div style={{ width: '36px', textAlign: 'center', color: '#B45309', fontWeight: 900, fontSize: '16px' }}>→</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <SymbolDisplay Icon={ALL_SYMBOLS.find(s => s.id === 'forest')?.Icon} width={52} height={32} />
+                      <span style={{ fontSize: '16px', color: '#166534', fontWeight: 900 }}>Forest</span>
                     </div>
                   </div>
                 </div>
@@ -177,25 +177,25 @@ export default function MapSymbols({ onComplete, onBack }) {
             )}
 
             {leftPage === 2 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, justifyContent: 'space-between' }}>
                 {/* Common Map Symbols */}
-                <div style={{ background: '#FFFFFF', padding: '12px 14px', borderRadius: '12px', border: '1.5px solid #F2DFBC', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <h3 style={{ fontSize: '1.1rem', color: '#92400E', margin: '0 0 8px 0', fontFamily: '"Fraunces", serif', fontWeight: 900 }}>Common Symbol Groups</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                <div style={{ background: '#FFFFFF', padding: '16px 18px', borderRadius: '14px', border: '1.5px solid #F2DFBC', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <h3 style={{ fontSize: '1.3rem', color: '#92400E', margin: '0 0 12px 0', fontFamily: '"Fraunces", serif', fontWeight: 900 }}>Common Symbol Groups</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                     {SYMBOL_GROUPS[0].items.slice(0, 4).map((item, idx) => (
-                      <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 8px', background: '#FFF9F0', borderRadius: '8px', border: '1px solid #F2DFBC' }}>
-                        <SymbolDisplay Icon={item.Icon} width={40} height={26} />
-                        <span style={{ fontSize: '12.5px', color: '#3D2E24', fontWeight: 800 }}>{item.name}</span>
+                      <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', background: '#FFF9F0', borderRadius: '10px', border: '1px solid #F2DFBC' }}>
+                        <SymbolDisplay Icon={item.Icon} width={48} height={30} />
+                        <span style={{ fontSize: '15.5px', color: '#3D2E24', fontWeight: 900 }}>{item.name}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Remember */}
-                <div style={{ background: '#FEF3C7', padding: '12px 14px', borderRadius: '12px', border: '1.5px solid #FDE68A', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Lightbulb size={22} color="#D97706" style={{ flexShrink: 0 }} />
-                  <p style={{ color: '#78350F', margin: 0, fontSize: '13px', lineHeight: 1.4, fontWeight: 700 }}>
-                    <strong>Remember:</strong> Map symbols are standard drawings that make reading maps easy and clear across the world.
+                <div style={{ background: '#FEF3C7', padding: '14px 18px', borderRadius: '14px', border: '1.5px solid #FDE68A', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <Lightbulb size={26} color="#D97706" style={{ flexShrink: 0 }} />
+                  <p style={{ color: '#78350F', margin: 0, fontSize: '15px', lineHeight: 1.5, fontWeight: 700 }}>
+                    <strong style={{ fontSize: '15.5px', fontWeight: 900 }}>Remember:</strong> Map symbols are standard drawings that make reading maps easy and clear across the world.
                   </p>
                 </div>
               </div>
@@ -203,34 +203,36 @@ export default function MapSymbols({ onComplete, onBack }) {
           </div>
 
           {/* Sub-Page Navigation Bar */}
-          <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1.5px solid #F2DFBC', paddingTop: '8px', marginTop: '8px' }}>
+          <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1.5px solid #F2DFBC', paddingTop: '10px', marginTop: '10px' }}>
             <button
               onClick={() => setLeftPage(1)}
               disabled={leftPage === 1}
               style={{
-                fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '12.5px',
+                fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '13.5px',
                 background: '#92400E', color: '#fff', border: 'none', borderRadius: '999px',
-                padding: '5px 12px', cursor: leftPage === 1 ? 'not-allowed' : 'pointer',
-                opacity: leftPage === 1 ? 0.35 : 1
+                padding: '6px 16px', cursor: leftPage === 1 ? 'not-allowed' : 'pointer',
+                opacity: leftPage === 1 ? 0.35 : 1,
+                boxShadow: leftPage === 1 ? 'none' : '0 2px 6px rgba(146,64,14,0.25)'
               }}
             >
               ◀ Back
             </button>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', fontWeight: 800, color: '#78350F' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 800, color: '#78350F' }}>
               <span>Page {leftPage} of 2</span>
-              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: leftPage === 1 ? '#92400E' : '#E2D2B8' }} />
-              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: leftPage === 2 ? '#92400E' : '#E2D2B8' }} />
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 1 ? '#92400E' : '#E2D2B8' }} />
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === 2 ? '#92400E' : '#E2D2B8' }} />
             </div>
 
             <button
               onClick={() => setLeftPage(2)}
               disabled={leftPage === 2}
               style={{
-                fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '12.5px',
+                fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: '13.5px',
                 background: '#F59E0B', color: '#fff', border: 'none', borderRadius: '999px',
-                padding: '5px 12px', cursor: leftPage === 2 ? 'not-allowed' : 'pointer',
-                opacity: leftPage === 2 ? 0.35 : 1
+                padding: '6px 16px', cursor: leftPage === 2 ? 'not-allowed' : 'pointer',
+                opacity: leftPage === 2 ? 0.35 : 1,
+                boxShadow: leftPage === 2 ? 'none' : '0 2px 6px rgba(245,158,11,0.3)'
               }}
             >
               Next ▶
