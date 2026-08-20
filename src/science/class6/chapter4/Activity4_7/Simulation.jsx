@@ -37,13 +37,40 @@ const CompassNeedle = ({ rotation, scale = 1 }) => (
 
 const MagnetVisual = ({ isFlipped, isDragging }) => (
   <div style={{ 
-    width: '150px', height: '38px', display: 'flex', borderRadius: '6px', overflow: 'hidden', 
-    boxShadow: isDragging ? '0 12px 20px rgba(0,0,0,0.35)' : '0 4px 10px rgba(0,0,0,0.2)',
+    width: '160px', 
+    height: '44px', 
+    borderRadius: '10px', 
+    overflow: 'hidden', 
+    display: 'flex',
+    boxShadow: isDragging ? '0 15px 30px rgba(0,0,0,0.6), 0 0 25px rgba(245,158,11,0.3)' : '0 6px 16px rgba(0,0,0,0.4)',
+    border: '1.5px solid rgba(255,255,255,0.35)',
     flexDirection: isFlipped ? 'row-reverse' : 'row',
-    userSelect: 'none'
+    userSelect: 'none',
+    background: '#18181B'
   }}>
-    <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '17px' }}>N</div>
-    <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '17px' }}>S</div>
+    <div style={{
+      flex: 1,
+      background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -4px 6px rgba(0,0,0,0.4)'
+    }}>
+      <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 8px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.8)' }}>N</span>
+    </div>
+    <div style={{ width: '4px', background: 'linear-gradient(180deg, #FFFFFF 0%, #71717A 100%)', zIndex: 2 }} />
+    <div style={{
+      flex: 1,
+      background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -4px 6px rgba(0,0,0,0.4)'
+    }}>
+      <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 8px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.8)' }}>S</span>
+    </div>
   </div>
 );
 
@@ -235,7 +262,7 @@ export default function Simulation({ onComplete, onNext }) {
        const allCorrect = Object.values(newObservations).every(val => val === 'deflects');
        if (allCorrect) {
          setFeedback({ type: 'success', text: '✅ Non-magnetic materials do not block magnetic fields!' });
-         setTimeout(() => { setStep(4); setFeedback(null); }, 3000);
+         setTimeout(() => { setStep(4); setFeedback(null); }, 1500);
        } else {
          const isFull = Object.values(newObservations).every(val => val !== null);
          if (isFull && !allCorrect) {
@@ -434,28 +461,25 @@ export default function Simulation({ onComplete, onNext }) {
         minHeight: 0, 
         overflow: 'hidden', 
         boxSizing: 'border-box',
-        background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
-        border: '1.5px solid #1e40af',
-        borderRadius: '20px',
-        boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+        background: 'transparent'
       }}>
         
-        {/* Left Side: Light Green Instructions & Observation Table Card with Black Text */}
+        {/* Left Side: Frosted Glacial Teal Panel */}
         <div style={{ 
           width: '340px', 
           flexShrink: 0, 
           padding: '1.25rem 1.35rem', 
-          background: 'linear-gradient(145deg, #a7f3d0 0%, #6ee7b7 100%)', 
-          border: '2px solid #059669', 
+          background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)', 
+          border: '1.5px solid #CCECE7', 
           borderRadius: '16px',
-          boxShadow: '0 8px 25px rgba(5, 150, 105, 0.25)',
+          boxShadow: '0 8px 25px rgba(15, 118, 110, 0.06)',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.85rem',
           overflowY: 'auto',
-          color: '#000000'
+          color: '#134E4A'
         }}>
-          <h3 style={{ margin: 0, color: '#000000', fontSize: '1.15rem', fontWeight: 800, borderBottom: '1.5px solid #059669', paddingBottom: '0.4rem' }}>
+          <h3 style={{ margin: 0, color: '#134E4A', fontSize: '1.15rem', fontWeight: 800, borderBottom: '1.5px solid #CCECE7', paddingBottom: '0.4rem' }}>
             Instructions & Observations
           </h3>
           
@@ -523,13 +547,13 @@ export default function Simulation({ onComplete, onNext }) {
                           padding: '0.45rem 0.5rem',
                           borderRadius: '10px',
                           border: 'none',
-                          background: activeMaterial === mat ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+                          background: activeMaterial === mat ? 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' : '#ffffff',
                           color: activeMaterial === mat ? '#ffffff' : '#000000',
                           fontWeight: 800,
                           fontSize: '0.8rem',
                           textTransform: 'capitalize',
                           cursor: 'pointer',
-                          boxShadow: activeMaterial === mat ? '0 4px 10px rgba(255, 119, 0, 0.4)' : 'none'
+                          boxShadow: activeMaterial === mat ? '0 4px 10px rgba(244, 63, 94, 0.4)' : 'none'
                         }}
                       >
                         {mat}
@@ -567,7 +591,7 @@ export default function Simulation({ onComplete, onNext }) {
                           
                           setNeedleRotation(getNeedleRotation(finalMX, finalMY, compassPos.x, compassPos.y, isFlipped, activeMaterial, val));
                         }} 
-                        style={{ width: '100%', cursor: 'pointer' }} 
+                        style={{ width: '100%', cursor: 'pointer', accentColor: '#F43F5E' }} 
                       />
                     </div>
                   )}
@@ -637,24 +661,24 @@ export default function Simulation({ onComplete, onNext }) {
                 exit={{ scale: 0.8, y: 20 }}
                 style={{
                   background: '#ffffff',
-                  border: '1px solid #cbd5e1',
+                  border: '1.5px solid #CCECE7',
                   borderRadius: '30px',
                   padding: '2.5rem 3rem',
                   maxWidth: '520px',
                   width: '90%',
                   textAlign: 'center',
-                  boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
+                  boxShadow: '0 15px 40px rgba(15, 118, 110, 0.18)',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: '1.25rem'
                 }}
               >
-                <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.8rem', fontWeight: 800 }}>
+                <h2 style={{ margin: 0, color: '#134E4A', fontSize: '1.8rem', fontWeight: 800 }}>
                   Experiment Complete! 🎉
                 </h2>
 
-                <p style={{ margin: 0, color: '#475569', fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600 }}>
+                <p style={{ margin: 0, color: '#115E59', fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600 }}>
                   You have successfully verified that magnetic fields pass through non-magnetic materials like wood, cardboard, plastic, and glass!
                 </p>
 
@@ -669,23 +693,14 @@ export default function Simulation({ onComplete, onNext }) {
                     display: 'flex', 
                     alignItems: 'center', 
                     gap: '0.75rem',
-                    backgroundColor: '#2563eb',
+                    background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                     color: '#ffffff',
                     border: 'none',
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
-                    transition: 'all 0.25s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.03)';
-                    e.currentTarget.style.backgroundColor = '#1d4ed8';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.backgroundColor = '#2563eb';
+                    boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)'
                   }}
                 >
-                  Proceed to Concept Check <ArrowRight size={22} color="#ffffff" />
+                  Continue to Concept Check <ArrowRight size={24} color="#ffffff" />
                 </button>
               </motion.div>
             </motion.div>
@@ -699,9 +714,9 @@ export default function Simulation({ onComplete, onNext }) {
           <div style={{ 
             padding: '0.75rem 1.25rem', 
             background: '#ffffff', 
-            border: '2px solid #2563eb', 
+            border: '1.5px solid #CCECE7', 
             borderRadius: '16px',
-            boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+            boxShadow: '0 4px 14px rgba(15, 118, 110, 0.04)',
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'center' 
@@ -714,13 +729,13 @@ export default function Simulation({ onComplete, onNext }) {
                 display: 'flex', 
                 alignItems: 'center', 
                 gap: '0.5rem',
-                background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                 color: '#ffffff',
                 border: 'none',
                 borderRadius: '25px',
                 fontWeight: 800,
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(255, 119, 0, 0.4)'
+                boxShadow: '0 4px 12px rgba(244, 63, 94, 0.4)'
               }}
             >
               <RotateCcw size={16} color="#ffffff" /> Flip Magnet
@@ -734,8 +749,8 @@ export default function Simulation({ onComplete, onNext }) {
                 alignItems: 'center', 
                 gap: '0.5rem',
                 background: '#ffffff',
-                border: '2px solid #3b82f6',
-                color: '#1e3a8a',
+                border: '1.5px solid #E2E8F0',
+                color: '#64748B',
                 borderRadius: '25px',
                 fontWeight: 800,
                 cursor: 'pointer'

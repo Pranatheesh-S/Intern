@@ -37,13 +37,40 @@ const CompassNeedle = ({ rotation, scale = 1 }) => (
 
 const MagnetVisual = ({ isFlipped, isDragging }) => (
   <div style={{ 
-    width: '150px', height: '38px', display: 'flex', borderRadius: '6px', overflow: 'hidden', 
-    boxShadow: isDragging ? '0 12px 20px rgba(0,0,0,0.35)' : '0 4px 10px rgba(0,0,0,0.2)',
+    width: '160px', 
+    height: '44px', 
+    borderRadius: '10px', 
+    overflow: 'hidden', 
+    display: 'flex',
+    boxShadow: isDragging ? '0 15px 30px rgba(0,0,0,0.6), 0 0 25px rgba(245,158,11,0.3)' : '0 6px 16px rgba(0,0,0,0.4)',
+    border: '1.5px solid rgba(255,255,255,0.35)',
     flexDirection: isFlipped ? 'row-reverse' : 'row',
-    userSelect: 'none'
+    userSelect: 'none',
+    background: '#18181B'
   }}>
-    <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '17px' }}>N</div>
-    <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '17px' }}>S</div>
+    <div style={{
+      flex: 1,
+      background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -4px 6px rgba(0,0,0,0.4)'
+    }}>
+      <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 8px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.8)' }}>N</span>
+    </div>
+    <div style={{ width: '4px', background: 'linear-gradient(180deg, #FFFFFF 0%, #71717A 100%)', zIndex: 2 }} />
+    <div style={{
+      flex: 1,
+      background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -4px 6px rgba(0,0,0,0.4)'
+    }}>
+      <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 8px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.8)' }}>S</span>
+    </div>
   </div>
 );
 
@@ -189,7 +216,7 @@ export default function Simulation({ onComplete, onNext }) {
     } else {
       if (step === 4 && distS < 120 && flipped) {
         setFeedback({ type: 'success', text: '✅ Unlike poles attract. Compass needle moves toward!' });
-        setTimeout(() => setStep(prev => prev === 4 ? 5 : prev), 2000);
+        setTimeout(() => setStep(prev => prev === 4 ? 5 : prev), 1500);
       } else {
         setFeedback({ type: 'success', text: '✅ Unlike poles attract.' });
       }
@@ -317,40 +344,37 @@ export default function Simulation({ onComplete, onNext }) {
         minHeight: 0, 
         overflow: 'hidden', 
         boxSizing: 'border-box',
-        background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
-        border: '1.5px solid #1e40af',
-        borderRadius: '20px',
-        boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+        background: 'transparent'
       }}>
         
         {/* Left Side: Light Green Instructions Card with Black Text */}
         <div style={{ 
           width: '320px', 
           flexShrink: 0, 
-          padding: '1.35rem 1.5rem', 
-          background: 'linear-gradient(145deg, #a7f3d0 0%, #6ee7b7 100%)', 
-          border: '2px solid #059669', 
+          padding: '1.25rem 1.5rem', 
+          background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)', 
+          border: '1.5px solid #CCECE7', 
           borderRadius: '16px',
-          boxShadow: '0 8px 25px rgba(5, 150, 105, 0.25)',
+          boxShadow: '0 8px 25px rgba(15, 118, 110, 0.06)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
           overflowY: 'auto',
-          color: '#000000'
+          color: '#134E4A'
         }}>
-          <h3 style={{ margin: 0, color: '#000000', fontSize: '1.2rem', fontWeight: 800, borderBottom: '1.5px solid #059669', paddingBottom: '0.5rem' }}>
-            Instructions
+          <h3 style={{ margin: 0, color: '#134E4A', fontSize: '1.15rem', fontWeight: 800, borderBottom: '1.5px solid #CCECE7', paddingBottom: '0.5rem' }}>
+            Activity 4.6 Instructions
           </h3>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', flex: 1 }}>
             
             <div style={{ opacity: step >= 1 ? 1 : 0.4 }}>
-              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#000000' }}>Step 1</div>
-              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#000000', fontWeight: 700 }}>Take a magnetic compass and a bar magnet.</p>
+              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#134E4A' }}>Step 1</div>
+              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#115E59', fontWeight: 700 }}>Take a magnetic compass and a bar magnet.</p>
               {step === 1 && (
-                <div style={{ marginTop: '0.6rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.75)', borderRadius: '12px', border: '2px dashed #059669' }}>
-                  <div style={{ fontSize: '0.78rem', color: '#000000', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '800' }}>
-                    <Pointer size={14} color="#000000" /> Drag into workspace
+                <div style={{ marginTop: '0.6rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', background: '#FFFFFF', borderRadius: '12px', border: '1.5px dashed #0D9488' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#0F766E', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '800' }}>
+                    <Pointer size={14} color="#0D9488" /> Drag into workspace
                   </div>
                   <SidebarDraggableCompass />
                 </div>
@@ -358,12 +382,12 @@ export default function Simulation({ onComplete, onNext }) {
             </div>
 
             <div style={{ opacity: step >= 2 ? 1 : 0.4 }}>
-              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#000000' }}>Step 2</div>
-              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#000000', fontWeight: 700 }}>Place compass on surface. Observe it resting towards North.</p>
+              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#134E4A' }}>Step 2</div>
+              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#115E59', fontWeight: 700 }}>Place compass on surface. Observe it resting towards North.</p>
               {step === 2 && (
-                <div style={{ marginTop: '0.6rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.75)', borderRadius: '12px', border: '2px dashed #059669' }}>
-                  <div style={{ fontSize: '0.78rem', color: '#000000', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '800' }}>
-                    <Pointer size={14} color="#000000" /> Drag into workspace
+                <div style={{ marginTop: '0.6rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', padding: '0.75rem', background: '#FFFFFF', borderRadius: '12px', border: '1.5px dashed #0D9488' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#0F766E', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '800' }}>
+                    <Pointer size={14} color="#0D9488" /> Drag into workspace
                   </div>
                   <SidebarDraggableMagnet />
                 </div>
@@ -371,24 +395,24 @@ export default function Simulation({ onComplete, onNext }) {
             </div>
 
             <div style={{ opacity: step >= 3 ? 1 : 0.4 }}>
-              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#000000' }}>Step 3</div>
-              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#000000', fontWeight: 700 }}>Bring <strong>North Pole</strong> near compass North Pole.</p>
+              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#134E4A' }}>Step 3</div>
+              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#115E59', fontWeight: 700 }}>Bring <strong>North Pole</strong> near compass North Pole.</p>
             </div>
 
             <div style={{ opacity: step >= 4 ? 1 : 0.4 }}>
-              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#000000' }}>Step 4</div>
-              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#000000', fontWeight: 700 }}>Flip magnet and bring <strong>South Pole</strong> near compass.</p>
+              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#134E4A' }}>Step 4</div>
+              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#115E59', fontWeight: 700 }}>Flip magnet and bring <strong>South Pole</strong> near compass.</p>
             </div>
             
             <div style={{ opacity: step >= 5 ? 1 : 0.4 }}>
-              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#000000' }}>Complete</div>
-              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#000000', fontWeight: 700 }}>Experiment completed! Proceed to concept check.</p>
+              <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#134E4A' }}>Complete</div>
+              <p style={{ fontSize: '0.88rem', margin: '0.2rem 0', color: '#115E59', fontWeight: 700 }}>Experiment completed! Proceed to concept check.</p>
             </div>
 
           </div>
         </div>
 
-        {/* Activity 4.3 Standardized Pop-up Modal when Experiment is Complete */}
+        {/* Standardized Pop-up Modal when Experiment is Complete */}
         <AnimatePresence>
           {step === 5 && (
             <motion.div
@@ -412,24 +436,24 @@ export default function Simulation({ onComplete, onNext }) {
                 exit={{ scale: 0.8, y: 20 }}
                 style={{
                   background: '#ffffff',
-                  border: '1px solid #cbd5e1',
+                  border: '1.5px solid #CCECE7',
                   borderRadius: '30px',
                   padding: '2.5rem 3rem',
                   maxWidth: '520px',
                   width: '90%',
                   textAlign: 'center',
-                  boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
+                  boxShadow: '0 15px 40px rgba(15, 118, 110, 0.18)',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: '1.25rem'
                 }}
               >
-                <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.8rem', fontWeight: 800 }}>
+                <h2 style={{ margin: 0, color: '#134E4A', fontSize: '1.8rem', fontWeight: 800 }}>
                   Experiment Complete! 🎉
                 </h2>
 
-                <p style={{ margin: 0, color: '#475569', fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600 }}>
+                <p style={{ margin: 0, color: '#115E59', fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600 }}>
                   You have successfully observed how bringing a magnet near a compass needle causes it to deflect!
                 </p>
 
@@ -444,23 +468,14 @@ export default function Simulation({ onComplete, onNext }) {
                     display: 'flex', 
                     alignItems: 'center', 
                     gap: '0.75rem',
-                    backgroundColor: '#2563eb',
+                    background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                     color: '#ffffff',
                     border: 'none',
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
-                    transition: 'all 0.25s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.03)';
-                    e.currentTarget.style.backgroundColor = '#1d4ed8';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.backgroundColor = '#2563eb';
+                    boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)'
                   }}
                 >
-                  Proceed to Concept Check <ArrowRight size={22} color="#ffffff" />
+                  Continue to Concept Check <ArrowRight size={24} color="#ffffff" />
                 </button>
               </motion.div>
             </motion.div>

@@ -101,7 +101,7 @@ export default function RealWorldScene({ hasStarted, onDiscoverMap }) {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem' }}>
               <span style={{ fontWeight: '700', fontSize: '1.2rem', color: '#1e293b' }}>Town Map</span>
-              <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: '500' }}>Click to examine</span>
+              <span style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>Click to examine</span>
             </div>
           </button>
         </div>

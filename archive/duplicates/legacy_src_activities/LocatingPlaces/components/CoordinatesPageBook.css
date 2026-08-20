@@ -1,0 +1,383 @@
+:root {
+  --navy: #78350F;
+  --navy2: #92400E;
+  --ink: #3D2E24;
+  --mut: #4A3B32;
+  --paper1: #FFF9F0;
+  --paper2: #FBF3E3;
+  --card: #FFFFFF;
+  --cardline: #F2DFBC;
+  --amber: #D97706;
+  --blue: #1D4ED8;
+  --violet: #7C3AED;
+  --green: #16A34A;
+  --orange: #EA580C;
+  --serif: "Fraunces", "Iowan Old Style", Palatino, Georgia, serif;
+  --mono: "IBM Plex Mono", "SF Mono", ui-monospace, Menlo, monospace;
+  --geo: "Space Grotesk", system-ui, -apple-system, sans-serif;
+}
+
+/* ============ STRICT VIEWPORT LAYOUT ============ */
+.coords-page {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  padding: clamp(10px, 1.5vw, 20px);
+  background: linear-gradient(160deg, #F7F1E2 0%, #EFE6D2 100%);
+  font-family: var(--geo);
+  color: var(--ink);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* The Book Itself */
+.coords-book {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%);
+  border: 2px solid #F2DFBC;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(60, 40, 20, 0.08);
+}
+
+/* Main Content Area (Two Pages) */
+.coords-main-content {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+}
+
+/* Book fold shadow down the center */
+.coords-main-content::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(60,40,20,0.02) 40%, 
+    rgba(60,40,20,0.05) 50%, 
+    rgba(60,40,20,0.02) 60%, 
+    transparent 100%
+  );
+  z-index: 10;
+}
+
+/* ============ LEFT PAGE ============ */
+.coords-left {
+  background: linear-gradient(160deg, var(--paper1), var(--paper2));
+  padding: clamp(16px, 2.5vw, 36px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-right: 1px solid var(--cardline);
+}
+
+.coords-eyebrow {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.coords-chtitle {
+  font-family: var(--serif);
+  font-weight: 900;
+  color: var(--navy);
+  font-size: 44px;
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+
+/* Expanded globe visual */
+.coords-illus {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: 18px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(120% 100% at 30% 20%, #172554, #0f172a);
+  border: 1.5px solid var(--cardline);
+  display: flex;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, .4);
+  height: min(48vh, 460px);
+}
+
+.coords-illus .tag {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  color: #78350F;
+  background: #FEF3C7;
+  border: 1px solid #FDE68A;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  z-index: 10;
+}
+
+/* ============ RIGHT PAGE ============ */
+.coords-right {
+  background: linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%);
+  padding: clamp(16px, 2.5vw, 36px);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.coords-rhead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--navy);
+  font-weight: 900;
+  font-size: 28px;
+  font-family: var(--serif);
+  margin-bottom: 16px;
+}
+
+/* Content flows naturally, NO scrolling */
+.coords-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.coords-task-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 14px;
+}
+
+.coords-hero {
+  background: #FFFFFF;
+  border: 1.5px solid var(--cardline);
+  border-left: 4px solid var(--amber);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(60,40,20,0.03);
+}
+
+.coords-hero h3 {
+  font-family: var(--serif);
+  font-weight: 900;
+  color: var(--navy);
+  font-size: 22px;
+  margin: 0 0 6px 0;
+}
+
+.coords-hero p {
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 600;
+}
+
+.coords-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.coords-fact {
+  background: #FFFFFF;
+  border: 1.5px solid var(--cardline);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 6px rgba(60,40,20,0.03);
+}
+
+.coords-fact .lab {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.coords-fact .v {
+  font-weight: 800;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.coords-connect {
+  background: #FFFFFF;
+  border: 1.5px solid var(--cardline);
+  border-left: 4px solid var(--amber);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 2px 6px rgba(60,40,20,0.03);
+}
+
+.coords-connect h4 {
+  color: #92400E;
+  font-size: 16.5px;
+  font-weight: 900;
+  margin: 0 0 8px 0;
+  font-family: var(--serif);
+}
+
+.coords-connect .lk {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.45;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.coords-connect .lk:last-child {
+  margin-bottom: 0;
+}
+
+.coords-connect .lk b { color: var(--navy); font-weight: 800; }
+.coords-connect .lk .dot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  margin-top: 8px;
+}
+
+/* Colors for labels */
+.l-blue { color: #1E40AF; }
+.l-violet { color: #6B21A8; }
+.l-green { color: #166534; }
+.l-orange { color: #9A3412; }
+.l-navy { color: var(--navy); }
+.l-amber { color: #B45309; }
+
+/* Control labels */
+.coords-control-label {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--navy);
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* ============ FOOTER ============ */
+.coords-rfoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(20px, 2.5vw, 36px);
+  height: 64px;
+  flex-shrink: 0;
+  background: #FFF9F0;
+  border-top: 2px solid var(--cardline);
+}
+
+.coords-pageind {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #78350F;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.coords-next {
+  font-family: var(--geo);
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  background: #16A34A;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  transition: all .2s;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+}
+
+.coords-next:hover {
+  transform: translateY(-1px);
+}
+.coords-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ============ RESPONSIVE HEIGHT MEDIA QUERIES ============ */
+
+@media (max-height: 850px) {
+  .coords-chtitle { font-size: 38px; }
+  .coords-rhead { font-size: 25px; margin-bottom: 12px; }
+  .coords-hero { padding: 14px; }
+  .coords-hero h3 { font-size: 20px; margin-bottom: 4px; }
+  .coords-hero p { font-size: 14.5px; }
+  .coords-fact { padding: 10px 12px; }
+  .coords-fact .v { font-size: 18px; }
+  .coords-connect { padding: 12px 14px; }
+  .coords-connect h4 { font-size: 15px; margin-bottom: 6px; }
+  .coords-connect .lk { font-size: 13.5px; }
+  .coords-illus { height: min(45vh, 340px); margin-top: 12px; }
+  .coords-task-container { gap: 10px; }
+  .coords-grid { gap: 10px; }
+  .coords-rfoot { height: 56px; }
+}
+
+@media (max-height: 750px) {
+  .coords-left, .coords-right { padding: clamp(10px, 1.5vw, 20px); }
+  .coords-chtitle { font-size: 30px; margin-top: 2px; }
+  .coords-eyebrow { font-size: 11.5px; margin-bottom: 2px; }
+  .coords-rhead { font-size: 22px; margin-bottom: 10px; }
+  .coords-hero { padding: 10px; }
+  .coords-hero h3 { font-size: 18px; }
+  .coords-hero p { font-size: 13.5px; }
+  .coords-fact { padding: 8px 10px; }
+  .coords-fact .v { font-size: 16px; }
+  .coords-connect { padding: 10px; }
+  .coords-connect h4 { font-size: 14.5px; margin-bottom: 4px; }
+  .coords-connect .lk { font-size: 13px; margin-bottom: 3px; }
+  .coords-illus { height: min(40vh, 280px); margin-top: 8px; }
+  .coords-task-container { gap: 8px; }
+  .coords-grid { gap: 8px; }
+  .coords-rfoot { height: 50px; padding: 0 clamp(12px, 1.5vw, 20px); }
+  .coords-next { padding: 8px 18px; font-size: 13.5px; }
+  .coords-control-label { font-size: 13px; margin-bottom: 3px; }
+}
+
+@media (max-width: 1024px) {
+  .coords-main-content {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+}

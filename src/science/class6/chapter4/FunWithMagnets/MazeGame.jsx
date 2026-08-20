@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { RotateCcw } from 'lucide-react';
 
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -10,26 +11,93 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-function drawBar(ctx, cx, cy, w, h) {
+function draw3DMagnet(ctx, cx, cy, w, h) {
   ctx.save();
-  const g1 = ctx.createLinearGradient(cx - w / 2, 0, cx, 0);
-  g1.addColorStop(0, "#F07070");
-  g1.addColorStop(1, "#C74444");
-  ctx.fillStyle = g1;
-  roundRect(ctx, cx - w / 2, cy - h / 2, w / 2, h, 5);
+  ctx.translate(cx, cy);
+
+  // Outer Magnetic Attraction Field Aura
+  const auraGlow = ctx.createRadialGradient(0, 0, 10, 0, 0, w * 0.95);
+  auraGlow.addColorStop(0, "rgba(245, 158, 11, 0.6)");
+  auraGlow.addColorStop(0.5, "rgba(239, 68, 68, 0.35)");
+  auraGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+  ctx.fillStyle = auraGlow;
+  ctx.beginPath();
+  ctx.arc(0, 0, w * 0.95, 0, Math.PI * 2);
   ctx.fill();
-  const g2 = ctx.createLinearGradient(cx, 0, cx + w / 2, 0);
-  g2.addColorStop(0, "#4477C7");
-  g2.addColorStop(1, "#7FB2F0");
-  ctx.fillStyle = g2;
-  roundRect(ctx, cx, cy - h / 2, w / 2, h, 5);
+
+  // Drop Shadow
+  ctx.shadowColor = "rgba(0, 0, 0, 0.65)";
+  ctx.shadowBlur = 14;
+  ctx.shadowOffsetY = 8;
+
+  // Magnet Body Base
+  roundRect(ctx, -w / 2, -h / 2, w, h, 10);
+  ctx.fillStyle = "#18181B";
   ctx.fill();
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold " + (h * 0.55) + "px Georgia";
+
+  // North Pole (Red)
+  const gNorth = ctx.createLinearGradient(-w / 2, 0, 0, 0);
+  gNorth.addColorStop(0, "#EF4444");
+  gNorth.addColorStop(1, "#B91C1C");
+  ctx.fillStyle = gNorth;
+  roundRect(ctx, -w / 2, -h / 2, w / 2, h, 10);
+  ctx.fill();
+
+  // Seam Divider
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(-2, -h / 2, 4, h);
+
+  // South Pole (Blue)
+  const gSouth = ctx.createLinearGradient(0, 0, w / 2, 0);
+  gSouth.addColorStop(0, "#3B82F6");
+  gSouth.addColorStop(1, "#1E40AF");
+  ctx.fillStyle = gSouth;
+  roundRect(ctx, 0, -h / 2, w / 2, h, 10);
+  ctx.fill();
+
+  // Pole Labels
+  ctx.shadowColor = "transparent";
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "900 " + Math.round(h * 0.55) + "px system-ui, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("N", cx - w / 4, cy);
-  ctx.fillText("S", cx + w / 4, cy);
+  ctx.fillText("N", -w / 4, 1);
+  ctx.fillText("S", w / 4, 1);
+
+  ctx.restore();
+}
+
+function drawSteelBall(ctx, x, y, radius) {
+  ctx.save();
+  ctx.translate(x, y);
+
+  // Drop Shadow
+  ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+  ctx.beginPath();
+  ctx.ellipse(0, radius * 0.7, radius * 0.8, radius * 0.3, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Outer Chrome Sphere
+  const gSteel = ctx.createRadialGradient(-radius * 0.35, -radius * 0.35, radius * 0.1, 0, 0, radius);
+  gSteel.addColorStop(0, "#FFFFFF");
+  gSteel.addColorStop(0.3, "#E2E8F0");
+  gSteel.addColorStop(0.7, "#64748B");
+  gSteel.addColorStop(1, "#1E293B");
+
+  ctx.fillStyle = gSteel;
+  ctx.beginPath();
+  ctx.arc(0, 0, radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#475569";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Specular Highlight
+  ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+  ctx.beginPath();
+  ctx.arc(-radius * 0.35, -radius * 0.35, radius * 0.28, 0, Math.PI * 2);
+  ctx.fill();
+
   ctx.restore();
 }
 
@@ -44,6 +112,8 @@ export default function MazeGame({ onSolve, isSolved }) {
     isSolvedRef.current = isSolved;
   }, [onSolve, isSolved]);
 
+  const handleResetRef = useRef(null);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -52,164 +122,236 @@ export default function MazeGame({ onSolve, isSolved }) {
     const H = canvas.height;
     const ctx = canvas.getContext("2d");
 
-    const mazeImage = new Image();
-    mazeImage.src = "/FunWithMagnets/maze.png";
-    const barImage = new Image();
-    barImage.src = "/FunWithMagnets/mini_bar.png";
-
-    let mzDrag = false;
+    let isDragging = false;
     let animFrame = null;
 
-    const wallThick = 20;
-    let mzBall = { x: 100, y: 120, vx: 0, vy: 0 };
-    let mzMag = { x: 100, y: 120 };
-    const mzExit = { x: 700, y: 750, r: 22 };
-    const mzWalls = [
-      { x: 60, y: 60, w: 540, h: wallThick },
-      { x: 60, y: 60, w: wallThick, h: 680 },
-      { x: 60, y: 720, w: 220, h: wallThick },
-      { x: 340, y: 720, w: 280, h: wallThick },
-      { x: 720, y: 60, w: wallThick, h: 280 },
-      { x: 660, y: 200, w: wallThick, h: 280 },
-      { x: 720, y: 440, w: wallThick, h: 300 },
-      { x: 560, y: 60, w: wallThick, h: 100 },
-      { x: 380, y: 140, w: 180, h: wallThick },
-      { x: 480, y: 140, w: wallThick, h: 140 },
-      { x: 580, y: 180, w: 120, h: wallThick },
-      { x: 580, y: 180, w: wallThick, h: 140 },
-      { x: 140, y: 160, w: wallThick, h: 120 },
-      { x: 140, y: 260, w: 200, h: wallThick },
-      { x: 240, y: 260, w: wallThick, h: 100 },
-      { x: 240, y: 340, w: 160, h: wallThick },
-      { x: 200, y: 400, w: 340, h: wallThick },
-      { x: 200, y: 400, w: wallThick, h: 140 },
-      { x: 260, y: 520, w: wallThick, h: 160 },
-      { x: 340, y: 480, w: 160, h: wallThick },
-      { x: 420, y: 480, w: wallThick, h: 120 },
-      { x: 420, y: 580, w: 160, h: wallThick },
-      { x: 540, y: 380, w: 100, h: wallThick },
-      { x: 540, y: 380, w: wallThick, h: 100 },
-      { x: 640, y: 380, w: wallThick, h: 160 },
-      { x: 540, y: 520, w: 120, h: wallThick },
-      { x: 600, y: 580, w: wallThick, h: 140 },
-      { x: 600, y: 660, w: 140, h: wallThick },
-      { x: 60, y: 500, w: 80, h: wallThick },
-      { x: 120, y: 500, w: wallThick, h: 120 },
-      { x: 60, y: 600, w: 80, h: wallThick },
-      { x: 260, y: 640, w: 280, h: wallThick },
-      { x: 400, y: 720, w: wallThick, h: 80 },
-      { x: 660, y: 720, w: wallThick, h: 80 },
-      { x: 660, y: 780, w: 80, h: wallThick }
+    // Magnet & 3 Steel Balls state
+    let mag = { x: 80, y: 80 };
+    let balls = [
+      { x: 80, y: 80, vx: 0, vy: 0, r: 14, id: 1 },
+      { x: 100, y: 80, vx: 0, vy: 0, r: 12, id: 2 },
+      { x: 80, y: 100, vx: 0, vy: 0, r: 13, id: 3 }
     ];
 
-    const mzDown = (e) => {
+    handleResetRef.current = () => {
+      mag = { x: 80, y: 80 };
+      balls[0].x = 80; balls[0].y = 80; balls[0].vx = 0; balls[0].vy = 0;
+      balls[1].x = 100; balls[1].y = 80; balls[1].vx = 0; balls[1].vy = 0;
+      balls[2].x = 80; balls[2].y = 100; balls[2].vx = 0; balls[2].vy = 0;
+    };
+
+    // HIGH-DENSITY TOUGH MAZE WALL GRID
+    const mazeWalls = [
+      // Outer Tray Rim
+      { x: 20, y: 20, w: 960, h: 14 },
+      { x: 20, y: 686, w: 960, h: 14 },
+      { x: 20, y: 20, w: 14, h: 680 },
+      { x: 966, y: 20, w: 14, h: 680 },
+
+      // Vertical Interlocking Walls
+      { x: 140, y: 20, w: 14, h: 420 },
+      { x: 140, y: 520, w: 14, h: 180 },
+
+      { x: 260, y: 140, w: 14, h: 440 },
+
+      { x: 380, y: 20, w: 14, h: 320 },
+      { x: 380, y: 440, w: 14, h: 260 },
+
+      { x: 500, y: 140, w: 14, h: 440 },
+
+      { x: 620, y: 20, w: 14, h: 320 },
+      { x: 620, y: 440, w: 14, h: 260 },
+
+      { x: 740, y: 140, w: 14, h: 440 },
+
+      { x: 860, y: 20, w: 14, h: 540 },
+
+      // Horizontal Barriers
+      { x: 20, y: 240, w: 70, h: 14 },
+      { x: 140, y: 140, w: 60, h: 14 },
+      { x: 140, y: 380, w: 70, h: 14 },
+
+      { x: 260, y: 240, w: 60, h: 14 },
+      { x: 260, y: 480, w: 60, h: 14 },
+
+      { x: 380, y: 140, w: 60, h: 14 },
+      { x: 380, y: 340, w: 70, h: 14 },
+
+      { x: 500, y: 240, w: 60, h: 14 },
+      { x: 500, y: 440, w: 70, h: 14 },
+
+      { x: 620, y: 140, w: 60, h: 14 },
+      { x: 620, y: 340, w: 70, h: 14 },
+
+      { x: 740, y: 240, w: 60, h: 14 },
+      { x: 740, y: 480, w: 70, h: 14 },
+
+      { x: 860, y: 140, w: 50, h: 14 },
+      { x: 860, y: 340, w: 50, h: 14 }
+    ];
+
+    const goalArea = { x: 915, y: 630, r: 48 };
+
+    const updateMagnetPos = (e) => {
       const r = canvas.getBoundingClientRect();
       const scaleX = canvas.width / r.width;
       const scaleY = canvas.height / r.height;
-      const mouseX = (e.clientX - r.left) * scaleX;
-      const mouseY = (e.clientY - r.top) * scaleY;
-      
-      if (Math.hypot(mouseX - mzMag.x, mouseY - mzMag.y) < 70) {
-        mzDrag = true;
-        canvas.setPointerCapture(e.pointerId);
-      }
+      mag.x = Math.max(40, Math.min(canvas.width - 40, (e.clientX - r.left) * scaleX));
+      mag.y = Math.max(40, Math.min(canvas.height - 40, (e.clientY - r.top) * scaleY));
+    };
+
+    const mzDown = (e) => {
+      isDragging = true;
+      canvas.setPointerCapture(e.pointerId);
+      updateMagnetPos(e);
     };
 
     const mzMove = (e) => {
-      if (!mzDrag) return;
-      const r = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / r.width;
-      const scaleY = canvas.height / r.height;
-      mzMag.x = Math.max(20, Math.min(canvas.width - 20, (e.clientX - r.left) * scaleX));
-      mzMag.y = Math.max(20, Math.min(canvas.height - 20, (e.clientY - r.top) * scaleY));
+      if (!isDragging) return;
+      updateMagnetPos(e);
     };
 
     const mzUp = () => {
-      mzDrag = false;
+      isDragging = false;
     };
 
     canvas.addEventListener("pointerdown", mzDown);
     canvas.addEventListener("pointermove", mzMove);
     window.addEventListener("pointerup", mzUp);
 
-    function mzBlocked(x, y) {
-      for (const w of mzWalls) {
-        if (x > w.x - 8 && x < w.x + w.w + 8 && y > w.y - 8 && y < w.y + w.h + 8) return true;
-      }
-      return false;
-    }
+    function step() {
+      // Pull steel balls smoothly toward underboard magnet
+      let allInGoal = true;
 
-    function stepMaze() {
-      let dx = mzMag.x - mzBall.x, dy = mzMag.y - mzBall.y, dist = Math.hypot(dx, dy) || 1;
-      const pull = Math.min(0.6, 120 / (dist * dist) * 20);
-      mzBall.vx = (mzBall.vx + dx / dist * pull) * 0.85;
-      mzBall.vy = (mzBall.vy + dy / dist * pull) * 0.85;
-      
-      let nx = mzBall.x + mzBall.vx, ny = mzBall.y + mzBall.vy;
-      if (!mzBlocked(nx, mzBall.y)) mzBall.x = Math.max(10, Math.min(W - 10, nx)); else mzBall.vx *= -0.3;
-      if (!mzBlocked(mzBall.x, ny)) mzBall.y = Math.max(10, Math.min(H - 10, ny)); else mzBall.vy *= -0.3;
-      
-      ctx.clearRect(0, 0, W, H);
-      if (mazeImage.complete && mazeImage.naturalWidth !== 0) {
-        ctx.drawImage(mazeImage, 0, 0, W, H);
-      } else {
-        ctx.fillStyle = "#24252A";
-        roundRect(ctx, 4, 4, W - 8, H - 8, 10);
-        ctx.fill();
-        ctx.fillStyle = "#A350D1";
-        for (const w of mzWalls) {
-          roundRect(ctx, w.x, w.y, w.w, w.h, 5);
-          ctx.fill();
+      for (const b of balls) {
+        let dx = mag.x - b.x;
+        let dy = mag.y - b.y;
+        let dist = Math.hypot(dx, dy) || 1;
+
+        const pullForce = Math.min(2.2, (450 / (dist + 10)));
+        b.vx = (b.vx + (dx / dist) * pullForce) * 0.88;
+        b.vy = (b.vy + (dy / dist) * pullForce) * 0.88;
+
+        let nextX = b.x + b.vx;
+        let nextY = b.y + b.vy;
+
+        // Wall collisions
+        for (const w of mazeWalls) {
+          if (nextX + b.r > w.x && nextX - b.r < w.x + w.w &&
+              nextY + b.r > w.y && nextY - b.r < w.y + w.h) {
+            b.vx *= -0.3;
+            b.vy *= -0.3;
+            nextX = b.x;
+            nextY = b.y;
+            break;
+          }
+        }
+
+        b.x = nextX;
+        b.y = nextY;
+
+        if (Math.hypot(b.x - goalArea.x, b.y - goalArea.y) > goalArea.r) {
+          allInGoal = false;
         }
       }
-      
-      ctx.fillStyle = "rgba(92,225,185,.25)";
-      ctx.strokeStyle = "#5CE1B9";
-      ctx.lineWidth = 2;
+
+      ctx.clearRect(0, 0, W, H);
+
+      // 1. Board Surface Texture
+      const gBoard = ctx.createLinearGradient(0, 0, W, H);
+      gBoard.addColorStop(0, "#FEF3C7");
+      gBoard.addColorStop(0.5, "#F59E0B");
+      gBoard.addColorStop(1, "#D97706");
+      ctx.fillStyle = gBoard;
+      ctx.fillRect(0, 0, W, H);
+
+      // Cardboard Grid Lines
+      ctx.strokeStyle = "rgba(120, 53, 15, 0.15)";
+      ctx.lineWidth = 1;
+      for (let x = 40; x < W; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 40; y < H; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+
+      // 2. Render 3D Walls
+      for (const w of mazeWalls) {
+        ctx.save();
+        ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+        ctx.fillRect(w.x + 6, w.y + 6, w.w, w.h);
+
+        const gWall = ctx.createLinearGradient(w.x, w.y, w.x + w.w, w.y + w.h);
+        gWall.addColorStop(0, "#065F46");
+        gWall.addColorStop(0.5, "#047857");
+        gWall.addColorStop(1, "#022C22");
+        ctx.fillStyle = gWall;
+        ctx.fillRect(w.x, w.y, w.w, w.h);
+
+        ctx.fillStyle = "#A7F3D0";
+        ctx.fillRect(w.x, w.y, w.w, 3);
+        ctx.restore();
+      }
+
+      // 3. Draw Goal Sanctuary 🏰
+      ctx.save();
+      ctx.translate(goalArea.x, goalArea.y);
+
+      const haloGlow = ctx.createRadialGradient(0, 0, 10, 0, 0, goalArea.r * 1.4);
+      haloGlow.addColorStop(0, "rgba(245, 158, 11, 0.65)");
+      haloGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = haloGlow;
       ctx.beginPath();
-      ctx.arc(mzExit.x, mzExit.y, mzExit.r, 0, 7);
+      ctx.arc(0, 0, goalArea.r * 1.4, 0, Math.PI * 2);
       ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = "#5CE1B9";
-      ctx.font = "16px Segoe UI";
+
+      ctx.fillStyle = "#FFFFFF";
+      ctx.strokeStyle = "#F59E0B";
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, goalArea.r, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+
+      ctx.font = "34px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("✓", mzExit.x, mzExit.y);
-      
-      ctx.fillStyle = "#C8D0E8";
-      ctx.beginPath();
-      ctx.arc(mzBall.x, mzBall.y, 9, 0, 7);
-      ctx.fill();
-      ctx.fillStyle = "rgba(255,255,255,.5)";
-      ctx.beginPath();
-      ctx.arc(mzBall.x - 3, mzBall.y - 3, 3, 0, 7);
-      ctx.fill();
-      
-      ctx.globalAlpha = 0.6;
-      ctx.save();
-      ctx.translate(mzMag.x, mzMag.y);
-      if (barImage.complete && barImage.naturalWidth !== 0) {
-        ctx.drawImage(barImage, -35, -9, 70, 18);
-      } else {
-        drawBar(ctx, 0, 0, 70, 18);
-      }
+      ctx.fillText("🏰", 0, -2);
       ctx.restore();
-      ctx.globalAlpha = 1;
-      ctx.strokeStyle = "rgba(124,158,255,.3)";
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.arc(mzMag.x, mzMag.y, 44, 0, 7);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      
-      if (!isSolvedRef.current && Math.hypot(mzBall.x - mzExit.x, mzBall.y - mzExit.y) < mzExit.r) {
+
+      // 4. Draw Magnetic Force Rays
+      for (const b of balls) {
+        let dist = Math.hypot(mag.x - b.x, mag.y - b.y);
+        if (dist < 400) {
+          ctx.save();
+          ctx.strokeStyle = "rgba(245, 158, 11, 0.85)";
+          ctx.lineWidth = 3;
+          ctx.setLineDash([8, 6]);
+          ctx.beginPath();
+          ctx.moveTo(mag.x, mag.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+
+      // 5. Draw 3D Chrome Steel Marbles
+      for (const b of balls) {
+        drawSteelBall(ctx, b.x, b.y, b.r);
+      }
+
+      // 6. Draw Underboard Magnet
+      draw3DMagnet(ctx, mag.x, mag.y, 104, 30);
+
+      // Check Solved
+      if (!isSolvedRef.current && allInGoal) {
         isSolvedRef.current = true;
         if (onSolveRef.current) onSolveRef.current();
       }
-      animFrame = requestAnimationFrame(stepMaze);
+
+      animFrame = requestAnimationFrame(step);
     }
 
-    stepMaze();
+    step();
 
     return () => {
       cancelAnimationFrame(animFrame);
@@ -220,19 +362,65 @@ export default function MazeGame({ onSolve, isSolved }) {
   }, []);
 
   return (
-    <canvas 
-      ref={canvasRef} 
-      width={800} 
-      height={800} 
-      style={{ 
-        maxWidth: '100%', 
-        maxHeight: 'calc(100vh - 130px)', 
-        width: 'auto', 
-        height: 'auto', 
-        aspectRatio: '1/1', 
-        objectFit: 'contain', 
-        touchAction: 'none' 
-      }} 
-    />
+    <div style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '0.4rem',
+      boxSizing: 'border-box',
+      position: 'relative'
+    }}>
+      {/* Top Controls Overlay Bar */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        right: '16px',
+        zIndex: 40,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.6rem'
+      }}>
+        <button
+          onClick={() => handleResetRef.current && handleResetRef.current()}
+          style={{
+            padding: '0.55rem 1.25rem',
+            borderRadius: '20px',
+            border: '1.5px solid #A7F3D0',
+            background: '#FFFFFF',
+            color: '#064E3B',
+            fontWeight: 900,
+            fontSize: '0.85rem',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(6, 78, 59, 0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem'
+          }}
+        >
+          <RotateCcw size={16} /> Reset Marbles
+        </button>
+      </div>
+
+      {/* Full Page 3D Canvas */}
+      <canvas
+        ref={canvasRef}
+        width={1000}
+        height={720}
+        style={{
+          width: '100%',
+          height: '100%',
+          maxHeight: 'calc(100vh - 160px)',
+          objectFit: 'contain',
+          touchAction: 'none',
+          borderRadius: '24px',
+          border: '2.5px solid #A7F3D0',
+          boxShadow: '0 12px 35px rgba(6, 78, 59, 0.12)',
+          cursor: 'grab'
+        }}
+      />
+    </div>
   );
 }

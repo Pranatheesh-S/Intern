@@ -180,6 +180,65 @@
   --outline-hover-bg: rgba(99, 102, 241, 0.1);
   --outline-hover-border: #6366f1;
 }
+/* Opt back into the light palette for a subtree, e.g. a printed-page
+   style chapter that always sits on paper regardless of app theme. */
+[data-theme="light"] {
+  --page-bg: #e2e8f0;
+  --page-bg-gradient: #e2e8f0;
+  --card-bg: #f8fafc;
+  --card-border: #94a3b8;
+  --card-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.05);
+  --card-hover-border: #64748b;
+  --card-hover-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
+  --text-heading: #000000;
+  --text-primary: #111827;
+  --text-secondary: #1f2937;
+  --text-muted: #374151;
+  --text-faint: #4b5563;
+  --map-popup-desc: var(--text-muted);
+  --border: #9ca3af;
+  --border-light: #d1d5db;
+  --accent: #4f46e5;
+  --accent-bg: #eef2ff;
+  --accent-border: #c7d2fe;
+  --accent-text: #4338ca;
+  --success: #059669;
+  --success-bg: #ecfdf5;
+  --success-border: #a7f3d0;
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+  --danger-border: #fecaca;
+  --warning: #b45309;
+  --warning-bg: #fffbeb;
+  --warning-border: #fde68a;
+  --neutral-bg: #e5e7eb;
+  --neutral-text: #111827;
+  --neutral-border: #9ca3af;
+  --surface: #f3f4f6;
+  --surface-hover: #e5e7eb;
+  --canvas-bg: #ffffff;
+  --canvas-border: #9ca3af;
+  --canvas-grid: rgba(0,0,0,0.08);
+  --scrollbar-track: #f3f4f6;
+  --scrollbar-thumb: #9ca3af;
+  --tab-bg: #f3f4f6;
+  --tab-text: #6b7280;
+  --tab-hover-bg: #e5e7eb;
+  --tab-hover-text: #1f2937;
+  --tab-active-bg: #4f46e5;
+  --tab-active-text: #ffffff;
+  --tab-active-shadow: 0 2px 6px rgba(99, 102, 241, 0.2);
+  --btn-bg: #ffffff;
+  --btn-text: #111827;
+  --btn-border: #9ca3af;
+  --btn-hover-bg: #f3f4f6;
+  --btn-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  --outline-border: #818cf8;
+  --outline-text: #4338ca;
+  --outline-hover-bg: #eef2ff;
+  --outline-hover-border: #4f46e5;
+}
+
 
 /* ═══════════════════════════════════════════
    BASE STYLES
