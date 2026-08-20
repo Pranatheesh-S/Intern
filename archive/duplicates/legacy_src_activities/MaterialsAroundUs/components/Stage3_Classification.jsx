@@ -898,7 +898,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     </div>
                   </div>
                   <p style={{ marginTop: '0.75rem', fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--text-primary)', textAlign: 'right' }}>
-                    Click "Proceed to next" in the top right!
+                    Click "Proceed to next" in the bottom right corner!
                   </p>
                 </motion.div>
               ) : (

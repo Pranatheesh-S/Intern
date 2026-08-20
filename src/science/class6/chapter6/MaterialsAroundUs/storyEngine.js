@@ -47,6 +47,14 @@ export const chapterFlow = [
 
   // 2: Activity
   { type: 'activity', id: 'stage1', title: 'Stage 6.1: Objects Around Us', subtitle: 'Phase 1: Find Objects', component: Stage1_Intro },
+  // NEW: Chief Blake Briefing for Phase 2
+  {
+    type: 'mission',
+    title: 'Phase 2: Identification',
+    dialogue: 'Great work observing the process, Detective. Now we need to identify the materials. Review the Case File carefully.',
+    description: 'Use your scanner to analyze the evidence from the classroom.',
+    objective: ['Phase 2: Scan Evidence']
+  },
   // 3: Activity
   { type: 'activity', id: 'stage2', title: 'Stage 6.1: Objects Around Us', subtitle: 'Phase 2: Scan Evidence', component: Stage2_Identify },
   // 4: Checkpoint

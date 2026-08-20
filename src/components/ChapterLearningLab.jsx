@@ -12,6 +12,7 @@ import scientist2Img from "../assets/Scientist2.jpeg";
 import silentValleyImg from "../assets/silent_valley.jpeg";
 import protectWildlifeImg from "../assets/protect_wildlife.jpeg";
 import sacredGrovesImg from "../assets/sacred_groves.jpeg";
+import darkForestBg from "../assets/dark_forest_bg.jpg";
 
 // Context
 import { useTheme } from "../ThemeContext";
@@ -537,7 +538,50 @@ const CHAPTER_2_LEVELS = [
   }
 ];
 
-function IntroStoryteller({ onComplete }) {
+// ── Voice profiles for character-specific speech synthesis ───────────────────
+// Each profile uses pitch & rate to differentiate voices.
+// 'aged' = elderly (low pitch, slower), 'adultMale' = normal male,
+// 'youngster' = teen (higher pitch, slightly faster), 'child' = kid voice.
+const VOICE_PROFILES = {
+  'Dr. Raghu':      { pitch: 0.95, rate: 0.92, gender: 'adultMale'  },
+  'Maniram Chacha': { pitch: 0.72, rate: 0.82, gender: 'aged'        },
+  'Priya':          { pitch: 1.55, rate: 1.08, gender: 'child'       },
+  'Arjun':          { pitch: 1.35, rate: 1.10, gender: 'youngster'   },
+};
+
+function speakWithProfile(text, characterName, muteFlag) {
+  if (muteFlag || !('speechSynthesis' in window)) return null;
+  window.speechSynthesis.cancel();
+  const profile = VOICE_PROFILES[characterName] || { pitch: 1.0, rate: 1.0, gender: 'adultMale' };
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.pitch = profile.pitch;
+  utt.rate  = profile.rate;
+  utt.volume = 1;
+  // Try to pick a browser voice matching the gender hint
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    const lang = voices.filter(v => v.lang.startsWith('en'));
+    if (lang.length > 0) {
+      let picked = null;
+      if (profile.gender === 'aged' || profile.gender === 'adultMale') {
+        // prefer a male voice
+        picked = lang.find(v => /male/i.test(v.name)) ||
+                 lang.find(v => /david|mark|james|fred|alex|daniel/i.test(v.name)) ||
+                 lang[0];
+      } else {
+        // prefer a female voice for child/youngster
+        picked = lang.find(v => /female/i.test(v.name)) ||
+                 lang.find(v => /samantha|victoria|zira|susan|karen|moira|tessa/i.test(v.name)) ||
+                 lang[0];
+      }
+      if (picked) utt.voice = picked;
+    }
+  }
+  window.speechSynthesis.speak(utt);
+  return utt;
+}
+
+function IntroStoryteller({ onComplete, onBack }) {
   const [currentScene, setCurrentScene] = useState(0);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [narrationVisible, setNarrationVisible] = useState(false);
@@ -545,6 +589,7 @@ function IntroStoryteller({ onComplete }) {
   const [isDialogueDone, setIsDialogueDone] = useState(false);
   const [dialogueStep, setDialogueStep] = useState(0);
   const [isTypingDone, setIsTypingDone] = useState(false);
+  const [isNarrationMuted, setIsNarrationMuted] = useState(false);
   const typeTimerRef = useRef(null);
   const narrationTimerRef = useRef(null);
   const dialogueTimerRef = useRef(null);
@@ -562,8 +607,10 @@ function IntroStoryteller({ onComplete }) {
       title: "🌱 The Nature Walk Begins",
       text: "Dr Raghu and Maniram chacha lead the students out of the classroom into a nearby patch of forest. The air is fresh and filled with the scent of wet soil and leaves. The kids are excited to discover what secrets the nature walk holds!",
       dialogues: [
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!", top: '22%', left: '22%', side: 'right' },
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!", top: '18%', left: '50%', side: 'left' }
+        // Dr. Raghu is typically on the left side — popup placed top-right area, away from face
+        { character: "Dr. Raghu",      avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!",    top: '5%',  left: '3%',  side: 'right' },
+        // Maniram Chacha on centre-right — popup placed bottom-left area, away from face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!",            top: '5%',  left: '52%', side: 'left'  }
       ]
     },
     {
@@ -571,7 +618,8 @@ function IntroStoryteller({ onComplete }) {
       title: "🌿 Observing Diverse Plants",
       text: "As they walk, they observe different kinds of plants. Some are small herbs growing close to the ground, others are bushy shrubs, and some are grand trees with thick trunks. Dr Raghu reminds them to observe gently without plucking any leaves or flowers.",
       dialogues: [
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '25%', left: '30%', side: 'left' }
+        // popup placed upper-right open sky area, away from characters
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '5%', left: '54%', side: 'left' }
       ]
     },
     {
@@ -579,8 +627,10 @@ function IntroStoryteller({ onComplete }) {
       title: "🐦 Listening to Bird Calls",
       text: "Hush! Maniram chacha stops and cups his ear. He mimics a bird song, and suddenly, a beautiful response is heard from the tree canopy! The students learn to listen to the unique calls of birds and respect their home.",
       dialogues: [
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵", top: '18%', left: '38%', side: 'left' },
-        { character: "Priya", avatar: "👧", text: "It replied! The bird actually replied to chacha!", top: '30%', left: '60%', side: 'right' }
+        // Maniram popup: upper-left open area above foliage, away from his face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵",              top: '5%',  left: '3%',  side: 'right' },
+        // Priya popup: right side open area, well below bird canopy
+        { character: "Priya",          avatar: "👧",    text: "It replied! The bird actually replied to chacha!",             top: '5%',  left: '54%', side: 'left'  }
       ]
     },
     {
@@ -588,8 +638,10 @@ function IntroStoryteller({ onComplete }) {
       title: "🦋 Fluttering Insects & Butterflies",
       text: "Near a cluster of wildflowers, butterflies and bees are busy gathering nectar. The students watch closely as a butterfly unfolds its delicate wings. They notice how insects play a vital role in helping flowers grow.",
       dialogues: [
-        { character: "Arjun", avatar: "👦", text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '32%', left: '58%', side: 'right' },
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.", top: '18%', left: '26%', side: 'left' }
+        // Arjun popup: upper-right sky area, away from his face which is lower
+        { character: "Arjun",     avatar: "👦",    text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '5%',  left: '54%', side: 'left'  },
+        // Dr. Raghu popup: upper-left open area
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.",         top: '5%',  left: '3%',  side: 'right' }
       ]
     },
     {
@@ -597,7 +649,8 @@ function IntroStoryteller({ onComplete }) {
       title: "🐒 Animals in the Canopy",
       text: "A rustle in the branches reveals monkeys jumping from limb to limb, and a tiny squirrel scurrying down a trunk. The forest is alive with creatures of all sizes, each adapted to live in their part of the woods.",
       dialogues: [
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '20%', left: '42%', side: 'left' }
+        // Maniram popup: upper-left open area away from character faces below
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '5%', left: '3%', side: 'right' }
       ]
     },
     {
@@ -605,7 +658,8 @@ function IntroStoryteller({ onComplete }) {
       title: "📋 Recording in the Table",
       text: "The students take out their notebooks to record their observations in Tables 2.1 and 2.2. They separate their findings into plants and animals, marveling at the incredible diversity of life surrounding them!",
       dialogues: [
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '22%', left: '35%', side: 'left' }
+        // popup placed in upper-right open area, away from student faces
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '5%', left: '54%', side: 'left' }
       ]
     }
   ];
@@ -614,6 +668,9 @@ function IntroStoryteller({ onComplete }) {
   const scene = scenes[currentScene];
 
   useEffect(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
     clearTimeout(narrationTimerRef.current);
     clearTimeout(typeTimerRef.current);
     clearTimeout(dialogueTimerRef.current);
@@ -624,6 +681,7 @@ function IntroStoryteller({ onComplete }) {
     setDialogueStep(0);
     setImgLoaded(false);
     return () => {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       clearTimeout(narrationTimerRef.current);
       clearTimeout(typeTimerRef.current);
       clearTimeout(dialogueTimerRef.current);
@@ -649,28 +707,88 @@ function IntroStoryteller({ onComplete }) {
   }, [isDialogueDone, currentScene]);
 
   useEffect(() => {
+    let active = true;
     if (dialogueStep < scene.dialogues.length) {
-      dialogueTimerRef.current = setTimeout(() => {
-        setDialogueStep(p => p + 1);
-      }, 1200);
+      const dlg = scene.dialogues[dialogueStep];
+      const nextStep = () => { if (active) setDialogueStep(p => p + 1); };
+
+      // ── Advance dialogueStep to N+1 IMMEDIATELY so popup N is visible while voice plays ──
+      // The popup for dialogue N is shown when dialogueStep >= N (i.e. when we've started it).
+      // We pre-increment BEFORE speaking so text appears simultaneously with voice.
+      // We schedule the actual voice right after the state flush (rAF).
+      if (!isNarrationMuted && 'speechSynthesis' in window) {
+        // Show popup immediately by advancing to next step (popup idx < dialogueStep)
+        // We keep the current index visible via dialogueStep >= idx check in the render.
+        const fallbackTime = Math.max(2000, dlg.text.length * 70 + 500);
+        // Use voices if loaded, else defer to 'voiceschanged' event first call
+        const doSpeak = () => {
+          if (!active) return;
+          const utt = speakWithProfile(dlg.text, dlg.character, isNarrationMuted);
+          if (utt) {
+            utt.onend = () => {
+              if (active) {
+                clearTimeout(dialogueTimerRef.current);
+                dialogueTimerRef.current = setTimeout(nextStep, 350);
+              }
+            };
+          }
+          // Fallback timer in case onend doesn't fire
+          dialogueTimerRef.current = setTimeout(nextStep, fallbackTime);
+        };
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          doSpeak();
+        } else {
+          window.speechSynthesis.onvoiceschanged = () => { doSpeak(); };
+          // still set a fallback in case voices never load
+          dialogueTimerRef.current = setTimeout(nextStep, fallbackTime);
+        }
+      } else {
+        dialogueTimerRef.current = setTimeout(nextStep, Math.max(1500, dlg.text.length * 50));
+      }
     } else if (scene.dialogues.length > 0) {
       dialogueTimerRef.current = setTimeout(() => {
-        setIsDialogueDone(true);
-      }, 250);
+        if (active) setIsDialogueDone(true);
+      }, 350);
     } else {
       setIsDialogueDone(true);
     }
-    return () => clearTimeout(dialogueTimerRef.current);
-  }, [dialogueStep, currentScene]);
+    return () => {
+      active = false;
+      clearTimeout(dialogueTimerRef.current);
+    };
+  }, [dialogueStep, currentScene, isNarrationMuted]);
 
   const skipTyping = () => {
     clearTimeout(typeTimerRef.current);
     clearTimeout(dialogueTimerRef.current);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     setDialogueStep(scene.dialogues.length);
     setIsDialogueDone(true);
     setNarrationVisible(true);
     setTypedChars(scene.text.length);
     setIsTypingDone(true);
+  };
+
+  const replayNarration = (e) => {
+    e.stopPropagation();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    clearTimeout(narrationTimerRef.current);
+    clearTimeout(typeTimerRef.current);
+    clearTimeout(dialogueTimerRef.current);
+    setDialogueStep(0);
+    setIsDialogueDone(false);
+    setNarrationVisible(false);
+    setTypedChars(0);
+    setIsTypingDone(false);
+  };
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    setIsNarrationMuted(prev => {
+      if (!prev && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+      return !prev;
+    });
   };
 
   const handleNext = () => { if (currentScene < totalScenes - 1) setCurrentScene(prev => prev + 1); else if (onComplete) onComplete(); };
@@ -730,7 +848,9 @@ function IntroStoryteller({ onComplete }) {
         }} />
 
         {scene.dialogues.map((dlg, idx) => {
-          const isVisible = dialogueStep > idx;
+          // Show popup from the moment its voice STARTS (dialogueStep >= idx),
+          // not after it ends (dialogueStep > idx). This synchronises text + voice.
+          const isVisible = dialogueStep >= idx && imgLoaded;
           return (
             <div key={idx} style={{
               position: 'absolute',
@@ -794,18 +914,28 @@ function IntroStoryteller({ onComplete }) {
         })}
       </div>
 
-      <div style={{ position: 'absolute', top: '0.9rem', right: '0.9rem', display: 'flex', gap: '5px', zIndex: 12 }}>
-        {scenes.map((_, i) => (
-          <button key={i}
-            onClick={(e) => { e.stopPropagation(); setCurrentScene(i); }}
-            style={{
-              width: i === currentScene ? '20px' : '7px', height: '7px',
-              borderRadius: '4px', border: 'none', cursor: 'pointer', padding: 0,
-              background: i === currentScene ? '#34d399' : 'rgba(255,255,255,0.4)',
-              transition: 'all 0.3s ease'
-            }}
-          />
-        ))}
+      <div style={{ position: 'absolute', top: '0.9rem', right: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px', zIndex: 12 }}>
+        <div style={{ display: 'flex', gap: '8px', background: 'rgba(0,0,0,0.4)', padding: '4px 8px', borderRadius: '12px' }}>
+          <button onClick={replayNarration} title="Replay Scene" style={{ background: 'none', border: 'none', color: '#34d399', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center' }}>
+            <RefreshCw size={14} strokeWidth={2.5} />
+          </button>
+          <button onClick={toggleMute} title={isNarrationMuted ? "Unmute Voice" : "Mute Voice"} style={{ background: 'none', border: 'none', color: isNarrationMuted ? '#ef4444' : '#34d399', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center' }}>
+            {isNarrationMuted ? <VolumeX size={14} strokeWidth={2.5} /> : <Volume2 size={14} strokeWidth={2.5} />}
+          </button>
+        </div>
+        <div style={{ display: 'flex', gap: '5px' }}>
+          {scenes.map((_, i) => (
+            <button key={i}
+              onClick={(e) => { e.stopPropagation(); setCurrentScene(i); }}
+              style={{
+                width: i === currentScene ? '20px' : '7px', height: '7px',
+                borderRadius: '4px', border: 'none', cursor: 'pointer', padding: 0,
+                background: i === currentScene ? '#34d399' : 'rgba(255,255,255,0.4)',
+                transition: 'all 0.3s ease'
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <div style={{
@@ -817,6 +947,28 @@ function IntroStoryteller({ onComplete }) {
       }}>
         Class 6 · Scene {currentScene + 1} of {totalScenes}
       </div>
+
+      {onBack && (
+        <div style={{
+          position: 'absolute', bottom: '1.2rem', left: '1.2rem', zIndex: 15
+        }}>
+          <button 
+            onClick={(e) => { e.stopPropagation(); onBack(); }}
+            style={{
+              padding: '0.7rem 1.4rem', fontSize: '0.9rem', fontWeight: '700',
+              borderRadius: '8px', border: '1px solid rgba(255,255,255,0.3)',
+              background: 'rgba(0,0,0,0.65)', color: '#fff',
+              backdropFilter: 'blur(12px)', cursor: 'pointer',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.4)', transition: 'all 0.2s',
+              display: 'flex', alignItems: 'center', gap: '0.5rem'
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(16, 185, 129, 0.8)'; e.currentTarget.style.borderColor = '#34d399'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.65)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'; }}
+          >
+            ← Back to Slogan
+          </button>
+        </div>
+      )}
 
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
@@ -1664,6 +1816,7 @@ export default function ChapterLearningLab({
   onBack,
   onHeaderVisibilityChange,
   coverBgImage,
+  coverBgVideo,
   learningLabBg,
   levelMapBg,
 }) {
@@ -1682,7 +1835,25 @@ export default function ChapterLearningLab({
   const [activeActivityIdx, setActiveActivityIdx] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activityFocused, setActivityFocused] = useState(null);
+  const [showBriefing, setShowBriefing] = useState(false);
   const [fsBarVisible, setFsBarVisible] = useState(false);
+
+  // Level Map Auto-hide States
+  const [isLevelMapOpen, setIsLevelMapOpen] = useState(false);
+  const hoverTimeoutRef = useRef(null);
+
+  const handleLevelMapEnter = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setIsLevelMapOpen(true);
+  };
+
+  const handleLevelMapLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsLevelMapOpen(false);
+    }, 400);
+  };
 
   const isLevelCompleted = (lvl) => {
     if (activityStatus[lvl.id] === 'done') return true;
@@ -1696,6 +1867,7 @@ export default function ChapterLearningLab({
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizChecked, setQuizChecked] = useState(false);
   const [activeQuizQuestionIdx, setActiveQuizQuestionIdx] = useState(0);
+  const [dykExpanded, setDykExpanded] = useState(false);
 
   // Progress tracking states
   const [contentLessonProgress, setContentLessonProgress] = useState({});
@@ -1738,7 +1910,26 @@ export default function ChapterLearningLab({
   };
 
   const handleEnterLab = () => {
+    // For Chapter 2, go through scenes then checkpoint before entering the lab
+    if (chapterNum === 2) {
+      setStage("scenes");
+    } else {
+      setStage("lab");
+    }
+  };
+
+  const handleEnterCheckpoint = () => {
+    setStage("checkpoint");
+  };
+
+  const handleStartLabFromCheckpoint = () => {
+    // Enter lab at Activity 2.1 Plants (lvl-1, activity index 0) with activity focused
+    setActiveLevelId("lvl-1");
+    setActiveActivityIdx(0);
+    setActivityFocused(true);
+    setShowBriefing(false);
     setStage("lab");
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
   };
 
   const handleExitLab = () => {
@@ -2203,48 +2394,73 @@ export default function ChapterLearningLab({
     const activityDone = activeLevel.activities ? activeLevel.activities.every(act => activityStatus[act.id] === 'done') : true;
     
     const showQuiz = lessonDone && activityDone && levelQuiz;
+    const isCh2SceneQuiz = chapterNum === 2 && lessonId === 'biodiversity_concept';
 
     return (
       <div id="pane-quiz-window" className="glass-panel" style={{ display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none', flexDirection: 'column', gap: '1.25rem', borderTop: '1px dashed var(--border)', paddingTop: '2.5rem' }}>
+        {(!showQuiz || !isCh2SceneQuiz) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
           <span style={{ fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             {showQuiz ? '📝 CHECKPOINT QUIZ' : '💡 DID YOU KNOW?'}
           </span>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            {showQuiz ? `Question ${activeQuizQuestionIdx + 1} of ${levelQuiz.length}` : 'Fascinating science facts'}
-          </span>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {showQuiz ? `Question ${activeQuizQuestionIdx + 1} of ${levelQuiz.length}` : (
+              chapterNum === 2 ? (
+                <button 
+                  onClick={() => setDykExpanded(!dykExpanded)}
+                  style={{
+                    padding: '0.35rem 0.85rem',
+                    borderRadius: '20px',
+                    fontSize: '0.8rem',
+                    fontWeight: 'bold',
+                    background: dykExpanded ? 'var(--card-bg)' : 'var(--accent)',
+                    color: dykExpanded ? 'var(--text-secondary)' : '#fff',
+                    border: dykExpanded ? '1px solid var(--border)' : '1px solid var(--accent)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: dykExpanded ? 'none' : '0 2px 8px rgba(99,102,241,0.25)'
+                  }}
+                >
+                  {dykExpanded ? 'Close ✕' : 'Explore Facts ➔'}
+                </button>
+              ) : 'Fascinating science facts'
+            )}
+          </div>
         </div>
+        )}
 
         {showQuiz ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {quizChecked ? (
+            {quizChecked || isCh2SceneQuiz ? (
               // Quiz completed: show score summary + Did You Know again below
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-                <div style={{ padding: '1.5rem', borderRadius: '18px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-heading)' }}>
-                      🎉 Quiz Completed!
-                    </span>
-                    <span style={{ fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
-                      Your Score: <b>{levelQuiz.filter((qObj, qIdx) => quizAnswers[qIdx] === qObj.correct).length} / {levelQuiz.length}</b> Correct
-                    </span>
+                {!isCh2SceneQuiz && (
+                  <div style={{ padding: '1.5rem', borderRadius: '18px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-heading)' }}>
+                        🎉 Quiz Completed!
+                      </span>
+                      <span style={{ fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
+                        Your Score: <b>{levelQuiz.filter((qObj, qIdx) => quizAnswers[qIdx] === qObj.correct).length} / {levelQuiz.length}</b> Correct
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                      <button
+                        onClick={() => {
+                          setQuizAnswers({});
+                          setQuizChecked(false);
+                          setActiveQuizQuestionIdx(0);
+                        }}
+                        className="glass-btn"
+                        style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
+                      >
+                        🔄 Retry Quiz
+                      </button>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                    <button
-                      onClick={() => {
-                        setQuizAnswers({});
-                        setQuizChecked(false);
-                        setActiveQuizQuestionIdx(0);
-                      }}
-                      className="glass-btn"
-                      style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
-                    >
-                      🔄 Retry Quiz
-                    </button>
-                  </div>
-                </div>
+                )}
 
-                <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '1.5rem' }}>
+                <div style={{ borderTop: isCh2SceneQuiz ? 'none' : '1px dashed var(--border)', paddingTop: isCh2SceneQuiz ? '0' : '1.5rem' }}>
                   <h4 style={{ margin: '0 0 1.25rem 0', fontSize: '0.95rem', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
                     💡 Reinforce Your Learning
                   </h4>
@@ -2387,8 +2603,22 @@ export default function ChapterLearningLab({
           </div>
         ) : (
           /* Quiz not unlocked yet: show DYK facts */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateRows: (chapterNum !== 2 || dykExpanded) ? '1fr' : '0fr',
+            transition: 'grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            marginTop: (chapterNum === 2 && !dykExpanded) ? '0' : '0.5rem'
+          }}>
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+                gap: '1rem',
+                opacity: (chapterNum !== 2 || dykExpanded) ? 1 : 0,
+                transform: (chapterNum !== 2 || dykExpanded) ? 'translateY(0)' : 'translateY(-10px)',
+                transition: 'opacity 0.4s ease, transform 0.4s ease',
+                paddingBottom: '0.5rem'
+              }}>
               {dykList.slice(0, 3).map((fact, idx) => {
                 const colors = [
                   { bg: 'linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(129,140,248,0.02) 100%)', border: 'rgba(99,102,241,0.2)', icon: '💡', accent: 'var(--accent)' },
@@ -2411,127 +2641,7 @@ export default function ChapterLearningLab({
                 );
               })}
             </div>
-            {lessonId === 'biodiversity_concept' && (
-              <div style={{ padding: '1rem 1.25rem', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.92rem' }}>
-                <span>🌱</span>
-                <span style={{ color: 'var(--text-secondary)' }}>
-                  <b>Activity Tip:</b> Focus on the plants and animals in the scene. Use hints if needed, then hold the scanner until it verifies the organism.
-                </span>
-              </div>
-            )}
-            {levelQuiz && (
-              <div style={{ 
-                padding: '1.25rem', 
-                borderRadius: '16px', 
-                background: 'rgba(59, 130, 246, 0.04)', 
-                border: '1px solid rgba(59, 130, 246, 0.15)', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '0.85rem',
-                textAlign: 'left'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--accent)' }}>
-                  <span>📝</span>
-                  <span>Checkpoint Quiz Requirements</span>
-                </div>
-                
-                <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  This checkpoint quiz is currently locked. Complete the following required items to unlock it:
-                </p>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.25rem' }}>
-                  {/* 1. Concept Lesson Status */}
-                  {activeLevel.lessonId && (
-                    <div 
-                      onClick={() => {
-                        if (!lessonDone) {
-                          setActiveContentLesson(activeLevel.lessonId);
-                          setActiveSlide(0);
-                          setQuizAnswers({});
-                          setQuizChecked(false);
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }
-                      }}
-                      style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'space-between', 
-                        padding: '0.65rem 1rem', 
-                        background: '#fff', 
-                        border: '1px solid var(--border)', 
-                        borderRadius: '10px', 
-                        cursor: !lessonDone ? 'pointer' : 'default',
-                        transition: 'all 0.2s' 
-                      }}
-                      className={!lessonDone ? "hover-scale" : ""}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
-                        <span>📖</span>
-                        <span style={{ fontWeight: '600', color: 'var(--navy)' }}>Concept Lesson</span>
-                      </div>
-                      <span style={{ 
-                        fontSize: '0.75rem', 
-                        fontWeight: 'bold', 
-                        color: lessonDone ? 'var(--success)' : 'var(--accent)',
-                        background: lessonDone ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
-                        padding: '0.2rem 0.5rem',
-                        borderRadius: '6px'
-                      }}>
-                        {lessonDone ? '✓ Completed' : '→ Click to Read'}
-                      </span>
-                    </div>
-                  )}
-                  
-                  {/* 2. Activities Status */}
-                  {activeLevel.activities && activeLevel.activities.map(act => {
-                    const isActDone = activityStatus[act.id] === 'done';
-                    return (
-                      <div 
-                        key={act.id}
-                        onClick={() => {
-                          if (!isActDone) {
-                            const idx = activeLevel.activities.findIndex(a => a.id === act.id);
-                            if (idx !== -1) {
-                              setActiveActivityIdx(idx);
-                              setActivityFocused(true);
-                              const actPane = document.getElementById("pane-activity-window");
-                              if (actPane) actPane.scrollIntoView({ behavior: 'smooth' });
-                            }
-                          }
-                        }}
-                        style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'space-between', 
-                          padding: '0.65rem 1rem', 
-                          background: '#fff', 
-                          border: '1px solid var(--border)', 
-                          borderRadius: '10px', 
-                          cursor: !isActDone ? 'pointer' : 'default',
-                          transition: 'all 0.2s' 
-                        }}
-                        className={!isActDone ? "hover-scale" : ""}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
-                          <span>{act.icon || '🧩'}</span>
-                          <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
-                        </div>
-                        <span style={{ 
-                          fontSize: '0.75rem', 
-                          fontWeight: 'bold', 
-                          color: isActDone ? 'var(--success)' : 'var(--accent)',
-                          background: isActDone ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
-                          padding: '0.2rem 0.5rem',
-                          borderRadius: '6px'
-                        }}>
-                          {isActDone ? '✓ Completed' : '→ Click to Play'}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         )}
       </div>
@@ -4316,6 +4426,7 @@ export default function ChapterLearningLab({
         onBack={onBack}
         onNext={handleNextToSlogan}
         bgImage={coverBgImage}
+        bgVideo={coverBgVideo}
       />
     );
   }
@@ -4330,6 +4441,107 @@ export default function ChapterLearningLab({
         onBack={handleBackToCover}
         onEnterLab={handleEnterLab}
       />
+    );
+  }
+
+  // Stage: scenes (Chapter 2 — IntroStoryteller scenes before entering lab)
+  if (stage === "scenes" && chapterNum === 2) {
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'var(--page-bg)',
+        zIndex: 9999,
+        overflowY: 'auto'
+      }}>
+        <IntroStoryteller
+          onComplete={handleEnterCheckpoint}
+          onBack={() => setStage("slogan")}
+        />
+      </div>
+    );
+  }
+
+  // Stage: checkpoint (Chapter 2 — Learning Checkpoint before Activity 2.1)
+  if (stage === "checkpoint" && chapterNum === 2) {
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'var(--page-bg)',
+        zIndex: 9999,
+        overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem',
+        boxSizing: 'border-box'
+      }}>
+        <div style={{
+          maxWidth: '680px',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem'
+        }}>
+          {/* Header */}
+          <div style={{ textAlign: 'center', background: 'var(--card-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+            <h2 style={{ fontSize: '1.8rem', color: 'var(--text-heading)', margin: 0 }}>Learning Checkpoint</h2>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Review the activity tips and requirements before proceeding.</p>
+          </div>
+
+          {/* Activity Tip */}
+          <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'flex-start', gap: '1rem', fontSize: '1rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🌱</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <span style={{ fontWeight: 'bold', color: 'var(--text-heading)', fontSize: '1.1rem' }}>Activity Tip</span>
+              <span style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                Focus on the plants and animals in the scene. Use hints if needed, then hold the scanner until it verifies the organism.
+              </span>
+            </div>
+          </div>
+
+          {/* Activities overview */}
+          <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(59, 130, 246, 0.04)', border: '1px solid rgba(59, 130, 246, 0.15)', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent)' }}>
+              <span style={{ fontSize: '1.3rem' }}>📝</span>
+              <span>Upcoming Activities</span>
+            </div>
+            {CHAPTER_2_LEVELS[0].activities.map(act => (
+              <div key={act.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1.25rem', background: '#fff', border: '1px solid var(--border)', borderRadius: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
+                  <span style={{ fontSize: '1.2rem' }}>{act.icon}</span>
+                  <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
+                </div>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{act.pg}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation buttons */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+            <button
+              onClick={() => setStage("scenes")}
+              className="glass-btn"
+              style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', fontWeight: '600' }}
+            >
+              ← Back
+            </button>
+            <button
+              onClick={handleStartLabFromCheckpoint}
+              className="glass-btn primary"
+              style={{ padding: '0.8rem 2rem', fontSize: '1rem', fontWeight: '600', background: 'var(--accent)', color: '#fff', border: 'none', boxShadow: '0 4px 12px rgba(99,102,241,0.3)' }}
+            >
+              Start Activity 2.1 →
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -4455,6 +4667,42 @@ export default function ChapterLearningLab({
 
     // Controls
     const handlePrevControl = () => {
+      // Exception: From lvl-2 (How to Group Plants & Animals?), "Previous" always goes specifically to Activity 2.1 Animals focused
+      if (activeLevel.id === 'lvl-2') {
+        setActiveLevelId('lvl-1');
+        setActiveActivityIdx(1);
+        setActivityFocused(true);
+        setShowBriefing(false);
+        setQuizAnswers({});
+        setQuizChecked(false);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+
+      // Exception: From lvl-1 Animals, "Previous" goes to Plants
+      if (activeLevel.id === 'lvl-1' && activityFocused === true && activeActivityIdx === 1) {
+        setActiveActivityIdx(0);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+      
+      // Exception: From lvl-1 Plants (or any lvl-1 state), "Previous" goes to Learning Checkpoint
+      if (activeLevel.id === 'lvl-1') {
+        setStage("checkpoint");
+        return;
+      }
+
+      if (activityFocused === true) {
+        setActivityFocused(false);
+        setShowBriefing(true);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+      if (showBriefing === true) {
+        setShowBriefing(false);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
       setActivityFocused(false);
       if (activeLevel.lessonId === 'vocabulary_glossary' || activeLevel.lessonId === 'chapter_challenge_overview') {
         setActiveLevelId(CHAPTER_2_LEVELS[activeLevelIdx - 1].id);
@@ -4478,6 +4726,12 @@ export default function ChapterLearningLab({
         setActiveSlide(0);
         setQuizAnswers({});
         setQuizChecked(false);
+      } else {
+        if (chapterNum === 2) {
+          setStage("slogan");
+        } else {
+          onBack();
+        }
       }
     };
 
@@ -4511,9 +4765,16 @@ export default function ChapterLearningLab({
       }
       
       // 2. Focus activity if it isn't focused yet and we just completed slides
-      if (activeLevel.activities.length > 0 && !activityFocused && activeActivityIdx === 0 && activityStatus[activeActivity.id] !== 'done') {
+      if (activeLevel.activities.length > 0 && !activityFocused && !showBriefing && activeActivityIdx === 0 && activityStatus[activeActivity.id] !== 'done') {
+        setShowBriefing(true);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+      if (showBriefing) {
+        setShowBriefing(false);
         setActivityFocused(true);
         setActiveActivityIdx(0);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
         return;
       }
       
@@ -4525,13 +4786,15 @@ export default function ChapterLearningLab({
       }
       
       // 4. If current activity is not marked as Done, prompt user to do so
-      if (activeActivity && activityStatus[activeActivity.id] !== 'done') {
+      // Exception: lvl-1 (Activity 2.1 Plants/Animals) navigates freely without requiring 'done'
+      if (activeActivity && activityStatus[activeActivity.id] !== 'done' && activeLevel.id !== 'lvl-1') {
         alert("Please complete the current activity and mark it as Done before proceeding!");
         return;
       }
       
       // 5. If we are still focusing the activity (and it's marked done), return to Show All to reveal the quiz
-      if (activityFocused) {
+      // Exception: lvl-1 navigates directly without unfocusing to show quiz
+      if (activityFocused && activeLevel.id !== 'lvl-1') {
         setActivityFocused(null);
         setTimeout(() => {
           const quizPaneEl = document.getElementById("pane-quiz-window");
@@ -4543,8 +4806,10 @@ export default function ChapterLearningLab({
       }
       
       // 6. Check if subheading quiz exists and is completed
+      // Exception: Activity 2.1 → Activity 2.2 navigation must NOT be blocked by the quiz guard
+      const isActivity21ToActivity22 = activeLevel.id === 'lvl-1';
       const hasQuiz = LEVEL_QUIZZES[activeLevel.lessonId];
-      if (hasQuiz && !quizChecked) {
+      if (hasQuiz && !quizChecked && !isActivity21ToActivity22) {
         alert("Please complete the Checkpoint Quiz and check your answers first!");
         setTimeout(() => {
           const quizPaneEl = document.getElementById("pane-quiz-window");
@@ -4565,6 +4830,11 @@ export default function ChapterLearningLab({
         setQuizChecked(false);
       }
     };
+
+    // Use dark theme background ONLY for Activity 2.1 (Plants & Animals) and its Learning Checkpoint
+    const isDarkThemePage = chapterNum === 2 && activeLevel && activeLevel.id === 'lvl-1' && (showBriefing || (activityFocused && activeActivity && activeActivity.activityId === 'virtual_biodiversity'));
+    const dynamicBg = isDarkThemePage ? darkForestBg : learningLabBg;
+
     return (
       <div style={isFullscreen ? {
         position: 'fixed',
@@ -4573,7 +4843,7 @@ export default function ChapterLearningLab({
         height: '100vh',
         margin: 0,
         padding: 0,
-        backgroundImage: learningLabBg ? `url(${learningLabBg})` : 'none',
+        backgroundImage: dynamicBg ? `url(${dynamicBg})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -4588,7 +4858,7 @@ export default function ChapterLearningLab({
         flexDirection: 'column',
         width: '100%',
         boxSizing: 'border-box',
-        backgroundImage: learningLabBg ? `url(${learningLabBg})` : 'none',
+        backgroundImage: dynamicBg ? `url(${dynamicBg})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -4702,11 +4972,25 @@ export default function ChapterLearningLab({
               border: 1px solid rgba(255, 255, 255, 0.12) !important;
             }
           ` : ''}
+          
+          /* Chapter 2 specific header hover effect */
+          .ch2-hover-header {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+          .ch2-hover-header:hover {
+            opacity: 1;
+          }
+          .ch2-hover-header:not(:hover) * {
+            pointer-events: none;
+          }
         `}</style>
 
         {/* Master stats & control header (Sticky when not in fullscreen) */}
         {!isFullscreen && (
-          <div style={{
+          <div 
+            className={chapterNum === 2 ? 'ch2-hover-header' : ''}
+            style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -4738,6 +5022,7 @@ export default function ChapterLearningLab({
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
               {/* Mastery ring stats */}
+              {!(chapterNum === 2 && activeLevel.id === 'lvl-1') && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <div className="ring-container">
                   <svg width="50" height="50" viewBox="0 0 64 64">
@@ -4764,24 +5049,29 @@ export default function ChapterLearningLab({
                   </span>
                 </div>
               </div>
+              )}
 
               {/* Navigation buttons */}
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button 
-                  onClick={handlePrevControl} 
-                  disabled={activeLevelIdx === 0 && activeSlide === 0 && activeActivityIdx === 0}
-                  className="glass-btn"
-                >
-                  ‹ Prev
-                </button>
-                <button 
-                  onClick={handleNextControl}
-                  disabled={isNextDisabled()}
-                  className="glass-btn"
-                >
-                  Next ›
-                </button>
-                {activeActivity && (
+                {chapterNum !== 2 && (
+                  <button 
+                    onClick={handlePrevControl} 
+                    disabled={activeLevelIdx === 0 && activeSlide === 0 && activeActivityIdx === 0}
+                    className="glass-btn"
+                  >
+                    ‹ Prev
+                  </button>
+                )}
+                {chapterNum !== 2 && (
+                  <button 
+                    onClick={handleNextControl}
+                    disabled={isNextDisabled()}
+                    className="glass-btn"
+                  >
+                    Next ›
+                  </button>
+                )}
+                {activeActivity && !(chapterNum === 2 && activeLevel.id === 'lvl-1') && (
                   <button
                     onClick={() => {
                       setActivityStatus(prev => {
@@ -4804,15 +5094,17 @@ export default function ChapterLearningLab({
                     {isCompleted ? '✓ Done' : 'Mark Done'}
                   </button>
                 )}
-                <button 
-                  onClick={() => {
-                    setIsFullscreen(true);
-                    setActivityFocused(null);
-                  }}
-                  className="glass-btn primary"
-                >
-                  Open Fullscreen ↗
-                </button>
+                {!(chapterNum === 2 && (stage === 'scenes' || showBriefing || (activeLevel && activeLevel.id === 'lvl-1'))) && (
+                  <button 
+                    onClick={() => {
+                      setIsFullscreen(true);
+                      setActivityFocused(null);
+                    }}
+                    className="glass-btn primary"
+                  >
+                    Open Fullscreen ↗
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -4893,20 +5185,7 @@ export default function ChapterLearningLab({
               </div>
             </div>
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <button 
-                onClick={handlePrevControl} 
-                disabled={activeLevelIdx === 0 && activeSlide === 0 && activeActivityIdx === 0}
-                className="glass-btn"
-              >
-                ‹ Prev
-              </button>
-              <button 
-                onClick={handleNextControl}
-                disabled={isNextDisabled()}
-                className="glass-btn"
-              >
-                Next ›
-              </button>
+              {/* Prev and Next moved to bottom navigation */}
               {activeLevel.activities.length > 0 && (
                 <button
                   onClick={() => setActivityFocused(prev => prev === true ? null : true)}
@@ -4916,7 +5195,7 @@ export default function ChapterLearningLab({
                   {activityFocused === true ? 'Show All' : 'Focus Activity'}
                 </button>
               )}
-              {activeActivity && (
+              {activeActivity && !(chapterNum === 2 && activeLevel.id === 'lvl-1') && (
                 <button
                   onClick={() => {
                     setActivityStatus(prev => {
@@ -4963,22 +5242,72 @@ export default function ChapterLearningLab({
           
           {/* Level map on left (hidden in fullscreen) */}
           {!isFullscreen && (
-            <VerticalLevelMap 
-              sections={CHAPTER_2_LEVELS.map(lvl => ({
-                id: lvl.id,
-                title: lvl.title,
-                isCompleted: isLevelCompleted(lvl)
-              }))}
-              activeSectionId={activeLevelId}
-              onSelectNode={(nodeId) => {
-                setActiveLevelId(nodeId);
-                setActiveActivityIdx(0);
-                setActiveSlide(0);
-                setActivityFocused(false);
+            <div 
+              onMouseEnter={handleLevelMapEnter}
+              onMouseLeave={handleLevelMapLeave}
+              style={{
+                position: 'fixed',
+                left: isLevelMapOpen ? '0' : '-300px',
+                top: learningLabBg ? "5.5rem" : "6.5rem",
+                bottom: '1.5rem',
+                width: '300px',
+                zIndex: 50,
+                transition: 'left 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                display: 'flex',
+                boxShadow: isLevelMapOpen ? '10px 0 30px rgba(0,0,0,0.5)' : 'none'
               }}
-              bgImage={levelMapBg}
-              stickyTop={learningLabBg ? "5.5rem" : "6.5rem"}
-            />
+            >
+              <div style={{ flex: 1, height: '100%', position: 'relative' }}>
+                <VerticalLevelMap 
+                  sections={CHAPTER_2_LEVELS.map(lvl => ({
+                    id: lvl.id,
+                    title: lvl.title,
+                    isCompleted: isLevelCompleted(lvl)
+                  }))}
+                  activeSectionId={activeLevelId}
+                  onSelectNode={(nodeId) => {
+                    setActiveLevelId(nodeId);
+                    setActiveActivityIdx(0);
+                    setActiveSlide(0);
+                    setActivityFocused(false);
+                  }}
+                  bgImage={levelMapBg}
+                  stickyTop="0"
+                />
+              </div>
+
+              {/* Trigger Tab */}
+              <div 
+                onClick={() => setIsLevelMapOpen(!isLevelMapOpen)}
+                style={{
+                  position: 'absolute',
+                  right: '-36px',
+                  top: '40%',
+                  width: '36px',
+                  height: '110px',
+                  background: 'rgba(6, 30, 20, 0.85)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderLeft: 'none',
+                  borderRadius: '0 12px 12px 0',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  boxShadow: '4px 0 15px rgba(0,0,0,0.3)',
+                  color: '#fbbf24',
+                  transition: 'background 0.3s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(16, 185, 129, 0.9)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(6, 30, 20, 0.85)'}
+              >
+                <div style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontSize: '11px', fontWeight: 'bold', letterSpacing: '2px', color: '#fff', marginBottom: '8px' }}>
+                  LEVEL MAP
+                </div>
+                <ChevronRight size={20} style={{ transform: isLevelMapOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }} />
+              </div>
+            </div>
           )}
 
           {/* Combined Lesson & Activity Panel on right */}
@@ -4989,7 +5318,7 @@ export default function ChapterLearningLab({
               id="pane-lesson-window"
               className={activeLevel.lessonId === 'biodiversity_concept' ? '' : 'glass-panel'}
               style={{
-                display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none',
+                display: (chapterNum === 2 ? (!showBriefing && (activityFocused === null || activityFocused === false)) : (!isFullscreen || activityFocused !== true)) ? 'flex' : 'none',
                 flexDirection: 'column',
                 gap: activeLevel.lessonId === 'biodiversity_concept' ? '0' : '0.75rem',
                 position: 'relative',
@@ -5014,11 +5343,8 @@ export default function ChapterLearningLab({
                 <IntroStoryteller 
                   onComplete={() => {
                     setContentLessonProgress(prev => ({ ...prev, biodiversity_concept: true }));
-                    const activityPaneEl = document.getElementById("pane-activity-window");
-                    if (activityPaneEl) {
-                      activityPaneEl.scrollIntoView({ behavior: 'smooth' });
-                    }
                     setActivityFocused(true);
+                    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
                   }} 
                 />
               ) : activeLevel.lessonId === 'vocabulary_glossary' ? (
@@ -5034,10 +5360,126 @@ export default function ChapterLearningLab({
               )}
             </div>
 
+            {/* 1.5 NEW PANE: Briefing Window */}
+            {chapterNum === 2 && (
+              <div
+                id="pane-briefing-window"
+                style={{
+                  display: showBriefing ? 'flex' : 'none',
+                  flexDirection: 'column',
+                  gap: '1.5rem',
+                  padding: '1rem 0'
+                }}
+              >
+                <div style={{ textAlign: 'center', marginBottom: '0.5rem', background: 'var(--card-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+                  <h2 style={{ fontSize: '1.8rem', color: 'var(--text-heading)', margin: 0 }}>Learning Checkpoint</h2>
+                  <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Review the activity tips and requirements before proceeding.</p>
+                </div>
+                
+                {activeLevel.lessonId === 'biodiversity_concept' && (
+                  <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'flex-start', gap: '1rem', fontSize: '1rem' }}>
+                    <span style={{ fontSize: '1.5rem' }}>🌱</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <span style={{ fontWeight: 'bold', color: 'var(--text-heading)', fontSize: '1.1rem' }}>Activity Tip</span>
+                      <span style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                        Focus on the plants and animals in the scene. Use hints if needed, then hold the scanner until it verifies the organism.
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {activeLevel.activities && activeLevel.activities.length > 0 && (
+                  <div style={{ 
+                    padding: '1.5rem', 
+                    borderRadius: '16px', 
+                    background: 'rgba(59, 130, 246, 0.04)', 
+                    border: '1px solid rgba(59, 130, 246, 0.15)', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: '1rem',
+                    textAlign: 'left'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent)' }}>
+                      <span style={{ fontSize: '1.3rem' }}>📝</span>
+                      <span>Checkpoint Quiz Requirements</span>
+                    </div>
+                    
+                    <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                      This checkpoint quiz is currently locked. Complete the following required items to unlock it:
+                    </p>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+                      {/* 1. Concept Lesson Status */}
+                      {activeLevel.lessonId && (
+                        <div style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'space-between', 
+                          padding: '0.85rem 1.25rem', 
+                          background: '#fff', 
+                          border: '1px solid var(--border)', 
+                          borderRadius: '12px', 
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
+                            <span style={{ fontSize: '1.2rem' }}>📖</span>
+                            <span style={{ fontWeight: '600', color: 'var(--navy)' }}>Concept Lesson</span>
+                          </div>
+                          <span style={{ 
+                            fontSize: '0.8rem', 
+                            fontWeight: 'bold', 
+                            color: 'var(--success)',
+                            background: 'rgba(16,185,129,0.1)',
+                            padding: '0.3rem 0.6rem',
+                            borderRadius: '8px'
+                          }}>
+                            ✓ Completed
+                          </span>
+                        </div>
+                      )}
+                      
+                      {/* 2. Activities Status */}
+                      {activeLevel.activities.map(act => {
+                        const isActDone = activityStatus[act.id] === 'done';
+                        return (
+                          <div 
+                            key={act.id}
+                            style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'space-between', 
+                              padding: '0.85rem 1.25rem', 
+                              background: '#fff', 
+                              border: '1px solid var(--border)', 
+                              borderRadius: '12px', 
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
+                              <span style={{ fontSize: '1.2rem' }}>{act.icon || '🧩'}</span>
+                              <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
+                            </div>
+                            <span style={{ 
+                              fontSize: '0.8rem', 
+                              fontWeight: 'bold', 
+                              color: isActDone ? 'var(--success)' : 'var(--accent)',
+                              background: isActDone ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
+                              padding: '0.3rem 0.6rem',
+                              borderRadius: '8px'
+                            }}>
+                              {isActDone ? '✓ Completed' : 'Pending'}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* 2. MIDDLE PANE: Full Interactive Activity Window */}
             {activeLevel.activities && activeLevel.activities.length > 0 && activeLevel.lessonId !== 'vocabulary_glossary' && activeLevel.lessonId !== 'chapter_challenge_overview' && (
               <div id="pane-activity-window" className="glass-panel" style={{ 
-                display: (!isFullscreen || activityFocused !== false) ? 'flex' : 'none', 
+                display: (chapterNum === 2 ? (!showBriefing && activityFocused === true) : (!isFullscreen || activityFocused !== false)) ? 'flex' : 'none', 
                 flexDirection: 'column', 
                 gap: '0.75rem',
                 padding: '0.75rem 1rem 1rem 1rem !important',
@@ -5138,14 +5580,76 @@ export default function ChapterLearningLab({
             )}
 
             {/* 3. BOTTOM PANE: Quiz & DYK Pane */}
-            <div style={{ display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: (chapterNum === 2 ? (!showBriefing && (activityFocused === null || activityFocused === false)) : (!isFullscreen || activityFocused !== true)) ? 'flex' : 'none', flexDirection: 'column', gap: '0.75rem' }}>
               {(activeLevel.lessonId === 'vocabulary_glossary' || activeLevel.lessonId === 'chapter_challenge_overview')
                   ? <SummaryPane lessonId={activeLevel.lessonId} />
                   : renderQuizAndDykPane(activeLevel.lessonId)
               }
             </div>
+
+            {/* 4. BOTTOM NAVIGATION PANE */}
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '2rem 0 1rem 0',
+              borderTop: '1px solid var(--border)',
+              marginTop: '1rem',
+              width: '100%'
+            }}>
+              <button
+                onClick={handlePrevControl}
+                className="glass-btn"
+                style={{
+                  padding: '0.8rem 1.5rem',
+                  fontSize: '1rem',
+                  fontWeight: '600'
+                }}
+              >
+                ← Previous
+              </button>
+              
+              <button
+                onClick={handleNextControl}
+                className="glass-btn primary"
+                style={{
+                  padding: '0.8rem 1.5rem',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  background: 'var(--accent)',
+                  color: '#fff',
+                  border: 'none',
+                  boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+                }}
+              >
+                {(() => {
+                  if (showBriefing === true) {
+                    if (activeLevel.activities && activeLevel.activities.length > 0) {
+                      const actTitle = activeLevel.activities[0].title;
+                      const shortTitle = actTitle.includes("—") ? actTitle.split("—")[0].trim() : actTitle;
+                      return `Continue to ${shortTitle} →`;
+                    }
+                    return "Continue →";
+                  } else if (activityFocused === true) {
+                    return "Next Activity →";
+                  } else {
+                    const lessonData = typeof contentLessonsData !== 'undefined' ? contentLessonsData[activeLevel.lessonId] : null;
+                    const maxSlides = lessonData ? lessonData.slides.length : 1;
+                    if (activeSlide < maxSlides - 1) {
+                      return "Next Scene →";
+                    } else {
+                      return "Next →";
+                    }
+                  }
+                })()}
+              </button>
+            </div>
           </div>
         </div>
+
+
       </div>
     );
   }

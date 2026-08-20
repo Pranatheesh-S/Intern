@@ -244,7 +244,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
         {isCompleted && (
           <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}>
-            Lab Complete! Click "Proceed to next" in the top right.
+            Lab Complete! Click "Proceed to next" in the bottom right corner.
           </div>
         )}
       </div>

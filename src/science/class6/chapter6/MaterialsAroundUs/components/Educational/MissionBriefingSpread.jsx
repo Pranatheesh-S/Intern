@@ -2,9 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldAlert, Check, X, ArrowRight, ArrowLeft } from 'lucide-react';
 import useSound from 'use-sound';
+import newChiefDetectiveImage from '../../../../../../assets/new chief detective .jpeg';
 
 export default function MissionBriefingSpread({ data, onContinue, onBack }) {
   const BLAKE_IMG_URL = '/images/chief_detective_blake.png';
+  const isBarrier2 = data?.title?.includes('Barrier 2') || data?.title?.includes('Grouping Materials') || data?.id === 'barrier_2';
+  const detectiveImg = data?.detectiveImage || (isBarrier2 ? newChiefDetectiveImage : BLAKE_IMG_URL);
+  
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
 
   const handleStart = () => {
@@ -48,48 +52,74 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .page-spread {
             flex: 1;
-            padding: 44px 48px 40px;
           }
           .left-page {
             background: #f6f1e4;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start;
+            align-items: stretch;
             height: 100%;
             overflow: hidden;
             position: relative;
+            padding: 24px 28px 76px;
           }
+          .left-hero-wrapper {
+            width: 100%;
+            flex: 1 1 auto;
+            max-height: 56%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            overflow: hidden;
+            border-radius: 12px;
+          }
+          .barrier2-hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.12));
+          }
+          .default-hero-img {
+            height: 100%;
+            max-height: 500px;
+            object-fit: contain;
+          }
+
+          /* ---------- RIGHT PAGE ---------- */
           .right-page {
             background: #ffffff;
             border-left: 1px solid #ece7d8;
             height: 100%;
             overflow-y: auto;
-            padding-bottom: 80px;
+            padding: 32px 40px 28px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
+            align-items: flex-start;
           }
           
-          /* ---------- LEFT PAGE ---------- */
+          /* ---------- LEFT PAGE SPEECH BUBBLE ---------- */
           .speech-bubble {
-            position: absolute;
-            bottom: 40px;
-            left: 40px;
-            right: 40px;
+            position: relative;
+            margin-top: 4px;
+            width: 100%;
             background: white;
-            padding: 1.5rem 2rem;
+            padding: 1.2rem 1.5rem;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             z-index: 20;
             border: 2px solid #e2e8f0;
+            flex: 0 0 auto;
           }
           .speech-bubble::after {
             content: '';
             position: absolute;
-            top: -16px;
-            left: 40px;
-            border-width: 0 16px 16px;
+            top: -14px;
+            left: 32px;
+            border-width: 0 14px 14px;
             border-style: solid;
             border-color: transparent transparent white;
             display: block;
@@ -99,9 +129,9 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           .speech-bubble::before {
             content: '';
             position: absolute;
-            top: -19px;
-            left: 38px;
-            border-width: 0 18px 18px;
+            top: -17px;
+            left: 30px;
+            border-width: 0 16px 16px;
             border-style: solid;
             border-color: transparent transparent #e2e8f0;
             display: block;
@@ -109,46 +139,48 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .speech-speaker {
             position: absolute;
-            top: -16px;
-            right: 24px;
+            top: -15px;
+            right: 20px;
             background: #64748b;
             color: white;
             padding: 4px 16px;
             border-radius: 6px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 0.85rem;
+            font-size: 1.08rem;
             font-weight: bold;
             letter-spacing: 1px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
           }
 
-          /* ---------- RIGHT PAGE ---------- */
+          /* ---------- RIGHT PAGE CONTENT ---------- */
           .mission-header {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 18px;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 1.8px;
             color: #3b4ea0;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 10px;
           }
           .mission-title {
-            font-size: 52px;
-            line-height: 1.1;
+            font-size: clamp(41px, 5vh, 53px);
+            line-height: 1.12;
             color: #1b2a4a;
             font-weight: 700;
-            margin: 0 0 36px 0;
+            margin: 0 0 22px 0;
+            font-family: Georgia, "Times New Roman", serif;
           }
           .mission-content {
-            margin-bottom: 48px;
+            margin-bottom: 22px;
+            width: 100%;
           }
           .mission-content p {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 26px;
-            line-height: 1.6;
+            font-size: clamp(23px, 2.8vh, 29px);
+            line-height: 1.5;
             color: #3b4560;
           }
           .mission-box {
@@ -156,37 +188,40 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             border: 1px solid #e2e8f0;
             border-left: 4px solid #ef4444;
             border-radius: 12px;
-            padding: 28px;
-            margin-bottom: 40px;
+            padding: 22px 26px;
+            margin-bottom: 22px;
+            width: 100%;
           }
           .mission-box h3 {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 700;
-            color: #64748b;
-            margin: 0 0 16px 0;
+            color: #3b4ea0;
+            margin: 0 0 12px 0;
             display: flex;
             align-items: center;
             gap: 10px;
             letter-spacing: 1px;
           }
-          .mission-box p {
-            margin: 0;
+          .mission-box p, .mission-box li {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 20px;
+            font-size: clamp(20px, 2.5vh, 25px);
             color: #1e293b;
-            line-height: 1.5;
+            line-height: 1.45;
+            font-weight: 600;
           }
           .mission-meta {
             display: flex;
-            gap: 40px;
+            gap: 48px;
             border-top: 1px dashed #cbd5e1;
-            padding-top: 24px;
+            padding-top: 18px;
+            margin-bottom: 22px;
+            width: 100%;
           }
           .meta-item {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
           }
           .meta-label {
             font-family: Arial, Helvetica, sans-serif;
@@ -198,36 +233,36 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .meta-value {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
             color: #0f172a;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
           }
           .meta-stars {
             color: #eab308;
-            font-size: 20px;
+            font-size: 24px;
           }
           .meta-stars.empty {
             color: #cbd5e1;
           }
 
           .start-btn {
-            background: #3b4ea0;
+            background: #4052a0;
             color: white;
             border: none;
-            padding: 20px 40px;
-            border-radius: 40px;
+            padding: 18px 44px;
+            border-radius: 42px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 16px;
-            box-shadow: 0 8px 20px rgba(59,78,160,0.3);
+            gap: 14px;
+            box-shadow: 0 6px 18px rgba(64,82,160,0.3);
             transition: all 0.2s;
             width: fit-content;
           }
@@ -242,22 +277,23 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .spread-back-btn {
             position: absolute;
-            top: 24px;
+            bottom: 18px;
             left: 24px;
+            top: auto;
             z-index: 10000;
             background: #ffffff;
-            border: 1px solid #e2e8f0;
+            border: 2px solid #cbd5e1;
             color: #1e293b;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 12px 26px;
+            border-radius: 11px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 14px;
+            font-size: 19px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 14px rgba(0,0,0,0.09);
             transition: all 0.2s;
           }
           .spread-back-btn:hover {
@@ -266,10 +302,6 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
         `}
       </style>
-
-      <button className="spread-back-btn" onClick={onBack}>
-        <ArrowLeft size={16} /> Back
-      </button>
 
       <motion.div 
         className="book-frame"
@@ -280,12 +312,14 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
         <div className="spread">
           {/* LEFT PAGE */}
           <div className="page-spread left-page">
-            <img 
-              src={BLAKE_IMG_URL} 
-              alt="Chief Detective Blake" 
-              style={{ height: '70%', maxHeight: '600px', objectFit: 'contain' }} 
-              onError={(e) => { e.target.src = 'https://via.placeholder.com/400x600.png?text=Blake'; }}
-            />
+            <div className="left-hero-wrapper">
+              <img 
+                src={detectiveImg} 
+                alt="Chief Detective" 
+                className={isBarrier2 ? "barrier2-hero-img" : "default-hero-img"}
+                onError={(e) => { e.target.src = 'https://via.placeholder.com/400x600.png?text=Blake'; }}
+              />
+            </div>
             <motion.div 
               className="speech-bubble"
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -293,16 +327,20 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               transition={{ delay: 0.4 }}
             >
               <div className="speech-speaker">CHIEF BLAKE</div>
-              <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: '#1e293b', lineHeight: '1.6' }}>
+              <p style={{ margin: 0, fontSize: 'clamp(26px, 3vh, 34px)', color: '#1e293b', lineHeight: '1.45', fontWeight: '500' }}>
                 {data.dialogue || "Good morning, Detective. Headquarters has received an unusual science case. Study your investigation brief carefully before proceeding!"}
               </p>
             </motion.div>
+
+            <button className="spread-back-btn" onClick={onBack}>
+              <ArrowLeft size={20} /> Back
+            </button>
           </div>
           
           {/* RIGHT PAGE */}
           <div className="page-spread right-page">
             <div className="mission-header">
-              <ShieldAlert size={20} />
+              <ShieldAlert size={22} />
               MISSION BRIEFING
             </div>
             
@@ -313,11 +351,11 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             </div>
             
             <div className="mission-box">
-              <h3><Check size={16} color="#ef4444" /> OBJECTIVES</h3>
+              <h3><Check size={18} color="#ef4444" /> OBJECTIVES</h3>
               {Array.isArray(data.objective) ? (
-                <ul style={{ margin: 0, paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <ul style={{ margin: 0, paddingLeft: '26px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
                   {data.objective.map((obj, i) => (
-                    <li key={i} style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '20px', color: '#1e293b', lineHeight: '1.5' }}>
+                    <li key={i} style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: 'clamp(20px, 2.5vh, 25px)', color: '#1e293b', lineHeight: '1.45' }}>
                       {obj}
                     </li>
                   ))}
@@ -342,9 +380,9 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               </div>
             </div>
             
-            <div style={{ marginTop: '48px' }}>
+            <div style={{ marginTop: '4px' }}>
               <button className="start-btn" onClick={handleStart}>
-                Acknowledge & Begin <ArrowRight size={20} />
+                Acknowledge & Begin <ArrowRight size={22} />
               </button>
             </div>
           </div>

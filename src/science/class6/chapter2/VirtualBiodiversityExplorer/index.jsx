@@ -1,9 +1,30 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X, RefreshCw, Volume2, CheckCircle, ChevronRight, Award, ArrowLeft, BookOpen, Target, Eye, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import activityPlantsImage from '../../../../assets/activity_plants_image.png';
-import activityAnimalsImage from '../../../../assets/activity_animals_image.png';
+import activityPlantsImage from '../../../../assets/2.1_plant.png';
+import activityAnimalsImage from '../../../../assets/activity_2.1 animals.png';
+import grassImage from '../../../../assets/grass.png';
+import roseImage from '../../../../assets/rose.png';
+import sunflowerImage from '../../../../assets/sunflower.png';
+import hibiscusImage from '../../../../assets/hibiscus.png';
+import tulsiImage from '../../../../assets/tulsi.png';
+import neemImage from '../../../../assets/neem.png';
 import { useTheme } from '../../../../ThemeContext.jsx';
+
+const PLANT_CROPPED_IMAGES = {
+  grass: grassImage,
+  rose: roseImage,
+  tulsi: tulsiImage,
+  hibiscus: hibiscusImage,
+  neem: neemImage,
+  sunflower: sunflowerImage,
+  Grass: grassImage,
+  Rose: roseImage,
+  Tulsi: tulsiImage,
+  Hibiscus: hibiscusImage,
+  Neem: neemImage,
+  Sunflower: sunflowerImage,
+};
 
 /* ─────────────────────────────────────────────
    TARGET ORGANISMS (8 required species)
@@ -76,26 +97,48 @@ const TARGET_ORGANISMS = [
     tableInfo: { stem: '—', leaves: '—', flowers: '—', notes: 'Locomotion: Flies. Soars in the open air.' },
   },
   {
-    id: 'rose_plants',
-    name: 'Hibiscus & Rose Bushes',
+    id: 'hibiscus',
+    name: 'Hibiscus',
     emoji: '🌺',
     type: 'plant',
-    x: 10, y: 62, w: 18, h: 18,
-    details: 'Flowering shrubs with multiple thin but woody stems branching near the ground level. Produce vibrant red and pink blooms.',
-    fact: 'Shrubs are medium-sized plants with hard woody stems, but unlike trees they do not have a single thick main trunk!',
-    verifyQ: { q: 'Which plant classification do Hibiscus and Rose Bushes belong to?', opts: ['Herbs (soft stem)', 'Trees (single thick trunk)', 'Shrubs (woody stems, no main trunk)', 'Aquatic plants'], correct: 2 },
-    tableInfo: { stem: 'Hard, thin woody stems branching near base', leaves: 'Simple, alternate arrangement', flowers: 'Vibrant red and pink', notes: 'Classified as Shrub. Medium height.' },
+    x: 29, y: 46, w: 28, h: 32,
+    details: 'Red Hibiscus flowers and bush growing on the center-left.',
+    fact: 'Hibiscus flowers have vibrant red petals and are common flowering shrubs!',
+    verifyQ: { q: 'Which plant classification does Hibiscus belong to?', opts: ['Herbs', 'Trees', 'Shrubs', 'Aquatic plants'], correct: 2 },
+    tableInfo: { stem: 'Woody stems branching near base', leaves: 'Green serrated leaves', flowers: 'Red Hibiscus flowers', notes: 'Classified as Shrub. Medium height.' },
   },
   {
     id: 'tulsi',
-    name: 'Tulsi & Grass Herbs',
+    name: 'Tulsi',
     emoji: '🌿',
     type: 'plant',
-    x: 69, y: 89, w: 18, h: 16,
-    details: 'Small leafy green plants growing close to the ground, with soft tender stems and highly aromatic leaves.',
-    fact: 'Tulsi (Holy Basil) is considered sacred in India and has been used in traditional medicine for over 3,000 years!',
-    verifyQ: { q: 'What is the key feature that identifies Tulsi as an herb?', opts: ['It has a thick woody trunk', 'It lives underwater', 'It has soft green non-woody stems', 'It only grows in snow'], correct: 2 },
-    tableInfo: { stem: 'Soft, green, tender non-woody stem', leaves: 'Opposite simple green leaves', flowers: 'Small purplish spikes', notes: 'Classified as Herb. Very short height.' },
+    x: 48, y: 78, w: 28, h: 36,
+    details: 'Tulsi plant growing in the foreground with vertical flower spikes and aromatic leaves.',
+    fact: 'Tulsi (Holy Basil) is an important medicinal herb with soft green stems.',
+    verifyQ: { q: 'What type of plant is Tulsi?', opts: ['Tree', 'Shrub', 'Herb', 'Climber'], correct: 2 },
+    tableInfo: { stem: 'Soft green non-woody stem', leaves: 'Aromatic simple leaves', flowers: 'Purple-white spikes', notes: 'Classified as Herb.' }
+  },
+  {
+    id: 'grass',
+    name: 'Grass',
+    emoji: '🌱',
+    type: 'plant',
+    x: 72, y: 77, w: 24, h: 30,
+    details: 'Green grass clump growing on the bottom-right near the tree.',
+    fact: 'Grasses are small herbs with narrow leaves and parallel vein patterns.',
+    verifyQ: { q: 'Which category does Grass belong to?', opts: ['Tree', 'Herb', 'Shrub', 'Woody climber'], correct: 1 },
+    tableInfo: { stem: 'Thin green stem', leaves: 'Long narrow parallel veins', flowers: 'Tiny spikelets', notes: 'Classified as Herb.' }
+  },
+  {
+    id: 'rose',
+    name: 'Rose',
+    emoji: '🌹',
+    type: 'plant',
+    x: 53, y: 51, w: 26, h: 28,
+    details: 'Pink Rose bush with flowering blooms located in the center-right area.',
+    fact: 'Roses are thorny flowering shrubs with woody stems branching near the ground.',
+    verifyQ: { q: 'What type of stem does a Rose bush have?', opts: ['Soft green stem', 'Thin woody stem with thorns', 'Massive trunk', 'Underwater stem'], correct: 1 },
+    tableInfo: { stem: 'Thin woody stem with thorns', leaves: 'Compound serrated leaves', flowers: 'Pink Rose blooms', notes: 'Classified as Shrub.' }
   },
 ];
 
@@ -126,53 +169,111 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
   const [notebook, setNotebook] = useState([]);
   const [bonusLog, setBonusLog] = useState([]);
   const [containerSize, setContainerSize] = useState({ width: 800, height: 450 });
+  const [infoCardPlant, setInfoCardPlant] = useState(null);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   const filteredTargets = React.useMemo(() => {
     if (typeFilter === 'plant') {
       return [
         {
-          id: 'rose_plants',
-          name: 'Hibiscus & Rose Bushes',
+          id: 'hibiscus',
+          name: 'Hibiscus',
           emoji: '🌺',
           type: 'plant',
-          x: 60, y: 60, w: 30, h: 20,
-          details: 'Flowering shrubs with multiple thin but woody stems branching near the ground level. Produce vibrant red and pink blooms.',
-          fact: 'Shrubs are medium-sized plants with hard woody stems, but unlike trees they do not have a single thick main trunk!',
-          verifyQ: { q: 'Which plant classification do Hibiscus and Rose Bushes belong to?', opts: ['Herbs (soft stem)', 'Trees (single thick trunk)', 'Shrubs (woody stems, no main trunk)', 'Aquatic plants'], correct: 2 },
-          tableInfo: { stem: 'Hard, thin woody stems branching near base', leaves: 'Simple, alternate arrangement', flowers: 'Vibrant red and pink', notes: 'Classified as Shrub. Medium height.' },
+          x: 29, y: 46, w: 28, h: 32,
+          details: 'Red Hibiscus flowers and bush growing on the center-left.',
+          fact: 'Hibiscus flowers have vibrant red petals and are common flowering shrubs!',
+          verifyQ: { q: 'Which plant classification does Hibiscus belong to?', opts: ['Herbs', 'Trees', 'Shrubs', 'Aquatic plants'], correct: 2 },
+          tableInfo: { 
+            stem: 'Thin, hard, woody stem branching out near base', 
+            leaves: 'Green simple leaves with serrated margins', 
+            flowers: 'Large, bright red flowers', 
+            notes: 'Medium height shrub; branches close to ground' 
+          },
         },
         {
           id: 'tulsi',
-          name: 'Tulsi & Grass Herbs',
+          name: 'Tulsi',
           emoji: '🌿',
           type: 'plant',
-          x: 68, y: 74, w: 14, h: 14,
-          details: 'Small leafy green plants growing close to the ground, with soft tender stems and highly aromatic leaves.',
-          fact: 'Tulsi (Holy Basil) is considered sacred in India and has been used in traditional medicine for over 3,000 years!',
-          verifyQ: { q: 'What is the key feature that identifies Tulsi as an herb?', opts: ['It has a thick woody trunk', 'It lives underwater', 'It has soft green non-woody stems', 'It only grows in snow'], correct: 2 },
-          tableInfo: { stem: 'Soft, green, tender non-woody stem', leaves: 'Opposite simple green leaves', flowers: 'Small purplish spikes', notes: 'Classified as Herb. Very short height.' },
+          x: 48, y: 78, w: 28, h: 36,
+          details: 'Tulsi plant growing in the foreground with vertical flower spikes and aromatic leaves.',
+          fact: 'Tulsi (Holy Basil) is an important medicinal herb with soft green stems.',
+          verifyQ: { q: 'What type of plant is Tulsi?', opts: ['Tree', 'Shrub', 'Herb', 'Climber'], correct: 2 },
+          tableInfo: { 
+            stem: 'Soft, green, non-woody herbaceous stem', 
+            leaves: 'Small, oval, highly aromatic simple leaves', 
+            flowers: 'Tiny purple-white flowers on vertical spikes', 
+            notes: 'Short herb; medicinal plant found in home gardens' 
+          }
         },
         {
-          id: 'lilies',
-          name: 'Pond Water Lilies',
-          emoji: '🪷',
+          id: 'grass',
+          name: 'Grass',
+          emoji: '🌱',
           type: 'plant',
-          x: 18, y: 88, w: 16, h: 12,
-          details: 'Water lilies floating in the freshwater pond, supporting small aquatic organisms and adding biological beauty.',
-          fact: 'Water lily leaves have stomata on their upper surfaces instead of their lower surfaces to breathe directly in contact with air!',
-          verifyQ: { q: 'Where are the stomata located on water lily leaves?', opts: ['Under the water', 'On the upper surface facing the air', 'In the roots', 'There are no stomata'], correct: 1 },
-          tableInfo: { stem: 'Soft, flexible underwater stem', leaves: 'Broad floating green circular leaves', flowers: 'Large pink or white blooms', notes: 'Classified as Aquatic plant. Stomata on upper surface.' }
+          x: 72, y: 77, w: 24, h: 30,
+          details: 'Green grass clump growing on the bottom-right near the tree.',
+          fact: 'Grasses are small herbs with narrow leaves and parallel vein patterns.',
+          verifyQ: { q: 'Which category does Grass belong to?', opts: ['Tree', 'Herb', 'Shrub', 'Woody climber'], correct: 1 },
+          tableInfo: { 
+            stem: 'Thin, green, soft, hollow stem', 
+            leaves: 'Long, narrow leaves with parallel vein patterns', 
+            flowers: 'Tiny inconspicuous spikelets', 
+            notes: 'Short herb; covers ground lawns, fibrous roots' 
+          }
         },
         {
-          id: 'banyan_tree',
-          name: 'Grand Neem Tree',
+          id: 'neem',
+          name: 'Neem',
           emoji: '🌳',
           type: 'plant',
-          x: 85, y: 35, w: 20, h: 40,
-          details: 'A large tree with a thick trunk and many woody branches providing shelter to birds and monkeys.',
-          fact: 'Neem trees are evergreen and known for their medicinal properties, often called the village pharmacy in India.',
+          x: 85, y: 35, w: 22, h: 42,
+          details: 'Grand Neem tree with thick trunk and broad canopy on the right.',
+          fact: 'Neem trees are evergreen trees with medicinal properties.',
           verifyQ: { q: 'Which plant classification does a Neem Tree belong to?', opts: ['Herb', 'Shrub', 'Tree', 'Creeper'], correct: 2 },
-          tableInfo: { stem: 'Thick, hard, woody trunk', leaves: 'Serrated green leaflets', flowers: 'Small white fragrant', notes: 'Classified as Tree. Very tall.' }
+          tableInfo: { 
+            stem: 'Thick, hard, scaly brown woody trunk with bark', 
+            leaves: 'Compound pinnate serrated green leaflets', 
+            flowers: 'Small, white, fragrant flowers', 
+            notes: 'Tall tree; evergreen with broad canopy' 
+          }
+        },
+        {
+          id: 'rose',
+          name: 'Rose',
+          emoji: '🌹',
+          type: 'plant',
+          x: 53, y: 51, w: 26, h: 28,
+          details: 'Pink Rose bush with flowering blooms located in the center-right area.',
+          fact: 'Roses are thorny flowering shrubs with woody stems branching near the ground.',
+          verifyQ: { q: 'What type of stem does a Rose bush have?', opts: ['Soft green stem', 'Thin woody stem with thorns', 'Massive trunk', 'Underwater stem'], correct: 1 },
+          tableInfo: { 
+            stem: 'Thin woody stem with sharp thorns', 
+            leaves: 'Compound leaves with serrated edges', 
+            flowers: 'Pink or red fragrant rose blooms', 
+            notes: 'Medium height shrub with thorny branches' 
+          }
+        },
+        {
+          id: 'sunflower',
+          name: 'Sunflower',
+          emoji: '🌻',
+          type: 'plant',
+          x: 63, y: 48, w: 22, h: 28,
+          details: 'Tall flowering plant with large bright yellow petals turning toward sunlight.',
+          fact: 'Sunflowers exhibit heliotropism — young sunflowers follow the sun from east to west every day!',
+          verifyQ: { 
+            q: 'Which feature is characteristic of a Sunflower?', 
+            opts: ['Underwater stem', 'Large yellow flower head with a dark brown central disc', 'Scaly tree trunk', 'No flowers'], 
+            correct: 1 
+          },
+          tableInfo: { 
+            stem: 'Tall, strong, green stem with a rough, slightly hairy surface', 
+            leaves: 'Large, broad green leaves with a rough texture and prominent veins', 
+            flowers: 'Large bright yellow flower head with a dark brown central disc', 
+            notes: 'Tall flowering plant; flower head turns toward sunlight; produces edible seeds' 
+          }
         }
       ];
     } else {
@@ -417,6 +518,9 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
         setNotebook(prev => [...prev, scannedOrganism.id]);
       }
     }
+    if (scannedOrganism.type === 'plant') {
+      setInfoCardPlant(scannedOrganism);
+    }
     setScannedOrganism(null);
     setVerifyAnswer(null);
     setVerifyChecked(false);
@@ -461,14 +565,14 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
             {typeFilter === 'plant' ? '🌿 Virtual Plants Walk' : '🐾 Virtual Animals Walk'}
           </h1>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '13.5px', color: 'var(--mut)', lineHeight: '1.5' }}>
-            <p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '13.5px', color: '#ffffff', lineHeight: '1.5' }}>
+            <p style={{ color: '#ffffff' }}>
               Join <b>Dr. Raghu</b> and <b>Maniram chacha</b> as we venture into the neighborhood and school garden to catalog the {typeFilter === 'plant' ? 'plant life' : 'animal life'} in our area!
             </p>
-            <p>
+            <p style={{ color: '#ffffff' }}>
               Your objective is to observe different {typeFilter === 'plant' ? 'plant types (herbs, shrubs, trees, and water lilies)' : 'animal behaviors and modes of movement'}. When you spot an organism on the right, <b>click and hold</b> your scanner lens on it to examine its details.
             </p>
-            <p>
+            <p style={{ color: '#ffffff' }}>
               You must then complete the <b>Verification MCQ</b> to confirm your observation and document it in your field notebook.
             </p>
           </div>
@@ -669,6 +773,29 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 position: 'relative' 
               }}
             >
+              {/* Clickable hotspots for plants */}
+              {typeFilter === 'plant' && filteredTargets.map(t => (
+                <div
+                  key={`click-area-${t.id}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setInfoCardPlant(t);
+                  }}
+                  title={`Click to view ${t.name} observations`}
+                  style={{
+                    position: 'absolute',
+                    left: `${t.x}%`,
+                    top: `${t.y}%`,
+                    transform: 'translate(-50%, -50%)',
+                    width: `${t.w}%`,
+                    height: `${t.h}%`,
+                    cursor: 'pointer',
+                    borderRadius: '8px',
+                    zIndex: 20
+                  }}
+                />
+              ))}
+
               {/* Nature Walk Scene Background */}
               <img
                 src={typeFilter === 'plant' ? activityPlantsImage : activityAnimalsImage}
@@ -769,6 +896,30 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                   ))}
                 </div>
               )}
+
+              {/* Click-and-hold popup containing ONLY the object's correct name */}
+              {isInsideImage && isHolding && hoveredTarget && (
+                <div style={{
+                  position: 'absolute',
+                  left: `${mousePos.x}px`,
+                  top: `${mousePos.y - 45}px`,
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(15, 23, 42, 0.95)',
+                  color: '#ffffff',
+                  padding: '0.35rem 0.75rem',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  border: '1.5px solid #22d3ee',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.35), 0 0 10px rgba(34,211,238,0.5)',
+                  pointerEvents: 'none',
+                  zIndex: 35,
+                  whiteSpace: 'nowrap',
+                  letterSpacing: '0.3px'
+                }}>
+                  {hoveredTarget.data.name}
+                </div>
+              )}
             </div>
           </div>
 
@@ -788,8 +939,9 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
-                    fontWeight: logged ? '600' : '400'
-                  }}>
+                    fontWeight: logged ? '600' : '400',
+                    cursor: 'pointer'
+                  }} onClick={() => setInfoCardPlant(t)}>
                     <span>{t.emoji}</span>
                     <span>{t.name.split(' ')[0]}</span>
                     {logged && <CheckCircle size={10} />}
@@ -805,12 +957,267 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
       </div>
 
+      {/* Textbook Table 2.1 Plant Observations Popup Modal */}
+      {infoCardPlant && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgba(9, 13, 22, 0.85)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0',
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+          onClick={() => setInfoCardPlant(null)}
+        >
+          <div 
+            style={{
+              position: 'relative',
+              width: '100vw',
+              height: '100vh',
+              maxWidth: '100vw',
+              maxHeight: '100vh',
+              background: '#0f172a',
+              display: 'flex',
+              flexDirection: 'row',
+              color: '#f8fafc',
+              fontFamily: 'system-ui, -apple-system, sans-serif',
+              overflow: 'hidden'
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Close Button Top Right */}
+            <button 
+              onClick={() => setInfoCardPlant(null)}
+              style={{
+                position: 'absolute',
+                top: '1.5rem',
+                right: '1.5rem',
+                zIndex: 100,
+                background: 'rgba(15, 23, 42, 0.12)',
+                border: '1px solid rgba(15, 23, 42, 0.2)',
+                color: '#0f172a',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                backdropFilter: 'blur(4px)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              ✕
+            </button>
+
+            {/* LEFT SIDE — Plant Image (65% width, filling complete available height top to bottom edge) */}
+            <div 
+              style={{
+                width: '65%',
+                flex: '0 0 65%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 0,
+                background: 'linear-gradient(135deg, #090d16 0%, #1e293b 100%)',
+                borderRight: '1px solid rgba(34, 197, 94, 0.3)',
+                overflow: 'hidden'
+              }}
+            >
+              <img 
+                src={PLANT_CROPPED_IMAGES[infoCardPlant.id] || PLANT_CROPPED_IMAGES[infoCardPlant.name]} 
+                alt={infoCardPlant.name} 
+                style={{ 
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: '100%', 
+                  maxHeight: '100%', 
+                  objectFit: 'cover', 
+                  objectPosition: 'center',
+                  filter: 'drop-shadow(0 12px 30px rgba(0, 0, 0, 0.6))'
+                }} 
+              />
+            </div>
+
+            {/* RIGHT SIDE — Existing Observation Content (35% width, Light-Grey Frosted Glass Panel) */}
+            <div 
+              style={{
+                width: '35%',
+                flex: '0 0 35%',
+                height: '100%',
+                overflowY: 'auto',
+                padding: '2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxSizing: 'border-box',
+                background: 'rgba(248, 250, 252, 0.92)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
+                boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid rgba(15, 23, 42, 0.12)', paddingBottom: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                  <span style={{ fontSize: '2.75rem' }}>{infoCardPlant.emoji}</span>
+                  <div>
+                    <h2 style={{ margin: 0, fontSize: '1.95rem', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.02em' }}>
+                      {infoCardPlant.name}
+                    </h2>
+                    <span style={{ fontSize: '13px', color: '#14532d', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                      Textbook Table 2.1 — Observations
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Observation Details Table — Raised Bright White Cards */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem', flex: 1, justifyContent: 'space-around', margin: '1.25rem 0' }}>
+                <div style={{ background: '#ffffff', padding: '1rem 1.25rem', borderRadius: '12px', borderLeft: '5px solid #16a34a', border: '1px solid rgba(15, 23, 42, 0.14)', borderLeftWidth: '5px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)' }}>
+                  <div style={{ fontSize: '13.5px', color: '#15803d', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.6px' }}>
+                    • Stem
+                  </div>
+                  <div style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', lineHeight: '1.45' }}>
+                    {infoCardPlant.tableInfo?.stem || '—'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#ffffff', padding: '1rem 1.25rem', borderRadius: '12px', borderLeft: '5px solid #2563eb', border: '1px solid rgba(15, 23, 42, 0.14)', borderLeftWidth: '5px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)' }}>
+                  <div style={{ fontSize: '13.5px', color: '#1d4ed8', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.6px' }}>
+                    • Leaves
+                  </div>
+                  <div style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', lineHeight: '1.45' }}>
+                    {infoCardPlant.tableInfo?.leaves || '—'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#ffffff', padding: '1rem 1.25rem', borderRadius: '12px', borderLeft: '5px solid #db2777', border: '1px solid rgba(15, 23, 42, 0.14)', borderLeftWidth: '5px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)' }}>
+                  <div style={{ fontSize: '13.5px', color: '#be185d', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.6px' }}>
+                    • Flowers
+                  </div>
+                  <div style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', lineHeight: '1.45' }}>
+                    {infoCardPlant.tableInfo?.flowers || '—'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#ffffff', padding: '1rem 1.25rem', borderRadius: '12px', borderLeft: '5px solid #d97706', border: '1px solid rgba(15, 23, 42, 0.14)', borderLeftWidth: '5px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)' }}>
+                  <div style={{ fontSize: '13.5px', color: '#b45309', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.6px' }}>
+                    • Any other observations / features
+                  </div>
+                  <div style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', lineHeight: '1.45' }}>
+                    {infoCardPlant.tableInfo?.notes || infoCardPlant.tableInfo?.other || '—'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer action */}
+              <button
+                onClick={() => setInfoCardPlant(null)}
+                style={{
+                  width: '100%',
+                  padding: '0.85rem',
+                  borderRadius: '10px',
+                  background: '#16a34a',
+                  color: '#ffffff',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(22, 163, 74, 0.35)'
+                }}
+              >
+                ✓ Close &amp; Select Another Plant
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         @keyframes hintGlow {
           0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.65; }
           50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; box-shadow: 0 0 12px #f59e0b, inset 0 0 6px #f59e0b; }
         }
       `}</style>
+
+      {/* Full-Screen Image Viewer / Lightbox */}
+      {lightboxImage && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 999999,
+            background: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '2rem',
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+          onClick={() => setLightboxImage(null)}
+        >
+          <div 
+            style={{
+              position: 'relative',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setLightboxImage(null)}
+              title="Close full-screen view"
+              style={{
+                position: 'absolute',
+                top: '-15px',
+                right: '-15px',
+                zIndex: 10,
+                background: 'rgba(15, 23, 42, 0.9)',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
+                color: '#ffffff',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
+              }}
+            >
+              ✕
+            </button>
+            <img 
+              src={lightboxImage.src} 
+              alt={lightboxImage.alt} 
+              style={{ 
+                maxWidth: '90vw', 
+                maxHeight: '85vh', 
+                objectFit: 'contain', 
+                borderRadius: '12px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+                border: '1.5px solid rgba(255, 255, 255, 0.2)'
+              }} 
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

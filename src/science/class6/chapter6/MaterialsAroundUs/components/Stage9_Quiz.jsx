@@ -361,7 +361,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
                 <RefreshCw size={20} /> Restart Quiz
               </button>
               <div style={{ background: '#10b981', color: 'white', padding: '1rem 2rem', borderRadius: '30px', fontSize: '1.2rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                Click "Proceed" in Top Right!
+                Click "Proceed to next" in the bottom right corner!
               </div>
             </div>
           </motion.div>

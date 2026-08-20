@@ -132,7 +132,7 @@ export const chapterFlow = [
   { type: 'activity', id: 'stage4_1', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 1: Observation Notebook', component: Stage4a_Appearance_Observe, handbook: Handbook_Appearance, layout: '450px 1fr' },
   { type: 'activity', id: 'stage4_2', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 2: Group by Appearance', component: Stage4b_Appearance_Group, handbook: Handbook_Appearance, layout: '450px 1fr' },
   { type: 'activity', id: 'stage4_3', title: 'Stage 6.3.1: Appearance', subtitle: 'Phase 3: Lustre Testing', component: Stage4_LustreHardness, props: { mode: 'lustre_only' }, handbook: Handbook_Appearance },
-  
+
   // Checkpoint for 6.3.1
   {
     type: 'checkpoint',
@@ -151,7 +151,7 @@ export const chapterFlow = [
       }
     ]
   },
-  
+
   // Summary for 6.3.1
   {
     type: 'summary',
@@ -166,7 +166,7 @@ export const chapterFlow = [
     rewardReason: 'Appearance Expert Badge',
     rewardXP: 100
   },
-  
+
   // Mission Briefing for 6.3.2 Hardness
   {
     type: 'mission',
@@ -178,10 +178,10 @@ export const chapterFlow = [
     estimatedTime: '5 minutes',
     rewardXP: 100
   },
-  
+
   { type: 'activity', id: 'stage4_4', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 1: Observe Hardness', component: Stage4c_Hardness_Observe, handbook: Handbook_Hardness, layout: '450px 1fr' },
   { type: 'activity', id: 'stage4_5', title: 'Stage 6.3.2: Hardness', subtitle: 'Phase 2: Material Identification', component: Stage4d_MaterialIdentification, handbook: Handbook_Hardness, layout: '450px 1fr' },
-  
+
   // Checkpoint for 6.3.2
   {
     type: 'checkpoint',
@@ -200,7 +200,7 @@ export const chapterFlow = [
       }
     ]
   },
-  
+
   // Summary for 6.3.2
   {
     type: 'summary',
@@ -215,7 +215,7 @@ export const chapterFlow = [
     rewardReason: 'Hardness Expert Badge',
     rewardXP: 100
   },
-  
+
   // Mission Briefing for 6.3.3 Transparency
   {
     type: 'mission',
@@ -227,7 +227,7 @@ export const chapterFlow = [
     estimatedTime: '5 minutes',
     rewardXP: 100
   },
-  
+
   { type: 'activity', id: 'stage6_a', title: 'Stage 6.3.3: Transparency', subtitle: 'Phase 1: Surveillance Simulator', component: Stage6a_Surveillance, handbook: Handbook_Transparency, layout: '450px 1fr' },
   { type: 'activity', id: 'stage6_b', title: 'Stage 6.3.3: Transparency', subtitle: 'Phase 2: Activity 6.6', component: Stage6b_Classify, handbook: Handbook_Transparency, layout: '450px 1fr' },
   // Float/Sink (6.3.4) and Solubility will follow here

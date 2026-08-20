@@ -10,6 +10,7 @@ import EvidenceSummary from './components/Educational/EvidenceSummary';
 import ChapterCover from './components/Educational/ChapterCover';
 import ChapterIntroSpread from './components/Educational/ChapterIntroSpread';
 import MissionBriefingSpread from './components/Educational/MissionBriefingSpread';
+import FullscreenButton from './components/Common/FullscreenButton';
 
 const timelineTree = (() => {
   const tree = [];
@@ -60,6 +61,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const [resetKey, setResetKey] = useState(0);
   const [showCover, setShowCover] = useState(true);
   const [showIntroSpread, setShowIntroSpread] = useState(false);
+  const [showHandbook, setShowHandbook] = useState(true);
   const [expandedNodes, setExpandedNodes] = useState({ 
     'Barrier 6.1': true, 'Barrier 6.2': true, 'Barrier 6.3': true, 'Barrier 6.4': true, 'Final Wrap-up': true,
     'Stage 6.3.1': true, 'Stage 6.3.2': true, 'Stage 6.3.3': true, 'Stage 6.3.4': true, 'Stage 6.3.5': true, 'Stage 6.3.6': true
@@ -76,6 +78,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
   const handleNext = () => {
     setStageCompleted(false);
+    setShowHandbook(false);
     if (currentFlowIndex < chapterFlow.length - 1) {
       const nextIndex = currentFlowIndex + 1;
       setCurrentFlowIndex(nextIndex);
@@ -92,7 +95,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
     if (currentNode.rewardXP && currentNode.type === 'mission') {
       addXp(currentNode.rewardXP);
     }
-    handleNext();
+    setShowHandbook(true);
+    setStageCompleted(false);
+    if (currentFlowIndex < chapterFlow.length - 1) {
+      const nextIndex = currentFlowIndex + 1;
+      setCurrentFlowIndex(nextIndex);
+      if (nextIndex > highestUnlockedIndex) {
+        setHighestUnlockedIndex(nextIndex);
+      }
+    }
   };
 
   const handleDebriefContinue = () => {
@@ -113,85 +124,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   // Global Theme Hook
   const { theme, toggleTheme } = useTheme();
 
-  if (showCover) {
-    return <ChapterCover onOpenBook={() => { setShowCover(false); setShowIntroSpread(true); }} onBack={onBackToDashboard} />;
-  }
-
-  if (showIntroSpread) {
-    return <ChapterIntroSpread onContinue={() => setShowIntroSpread(false)} onBack={() => { setShowIntroSpread(false); setShowCover(true); }} />;
-  }
-
   return (
-    <div className="activity-workspace flex h-screen bg-[#eaf6fb] overflow-hidden font-geo" style={{ paddingTop: '60px' }}>
-      {/* ═══════════════════════════════════════════
-          GLOBAL ACTION BAR (WINDOW CHROME)
-          ═══════════════════════════════════════════ */}
-      <div className="global-action-bar">
-        <div className="global-action-bar-left">
-          <button 
-            onClick={onBackToDashboard} 
-            className="outline" 
-            style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px' }}
-          >
-            <ArrowLeft size={16} /> Dashboard
-          </button>
-        </div>
-
-        <div className="global-action-bar-center">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', padding: '0.4rem 1rem', borderRadius: '20px', border: '1px solid var(--border)' }}>
-            <span style={{ fontSize: '1.2rem' }}>🕵️‍♂️</span>
-            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                Science Detective
-              </span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="global-action-bar-right">
-          <button 
-            onClick={() => {
-              if (currentFlowIndex > 0) {
-                setCurrentFlowIndex(prev => prev - 1);
-              } else {
-                setShowIntroSpread(true);
-              }
-            }}
-            className="outline"
-            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--text-primary)' }}
-          >
-            <ArrowLeft size={14} /> Back
-          </button>
-
-          <button 
-            onClick={() => setResetKey(prev => prev + 1)}
-            className="outline"
-            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', gap: '0.5rem', borderRadius: '8px', color: 'var(--danger)', borderColor: 'var(--danger-border)' }}
-          >
-            <RefreshCw size={14} /> Reset Activity
-          </button>
-
-          {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
-            <button 
-              onClick={handleNext}
-              disabled={!stageCompleted}
-              className={stageCompleted ? 'primary' : 'outline'}
-              style={{ 
-                padding: '0.45rem 1rem', 
-                fontSize: '0.9rem', 
-                gap: '0.5rem', 
-                borderRadius: '8px',
-                opacity: stageCompleted ? 1 : 0.5,
-                cursor: stageCompleted ? 'pointer' : 'not-allowed',
-                transition: 'all 0.3s'
-              }}
-            >
-              Proceed to next <ArrowRight size={16} />
-            </button>
-          )}
-        </div>
-      </div>
-
+    <>
+      <FullscreenButton />
+      {showCover ? (
+        <ChapterCover onOpenBook={() => { setShowCover(false); setShowIntroSpread(true); }} onBack={onBackToDashboard} />
+      ) : showIntroSpread ? (
+        <ChapterIntroSpread onContinue={() => setShowIntroSpread(false)} onBack={() => { setShowIntroSpread(false); setShowCover(true); }} />
+      ) : (
+        <div className="activity-workspace flex h-screen bg-[#eaf6fb] overflow-hidden font-geo" style={{ paddingTop: 0, paddingBottom: '72px' }}>
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
         {/* Toggle Button */}
         <button
@@ -261,6 +202,11 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                       onClick={() => {
                         if (!isLocked) {
                           try { playSuccess(); } catch (e) {}
+                          if (item.type === 'mission') {
+                            setShowHandbook(true);
+                          } else {
+                            setShowHandbook(false);
+                          }
                           setCurrentFlowIndex(idx);
                           setIsTimelineOpen(false);
                         }
@@ -390,32 +336,23 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 onComplete={handleStageComplete} 
                 addXp={addXp} 
               />
+            ) : showHandbook ? (
+              <div style={{ flex: 1, minHeight: 0, padding: '1.5rem', display: 'flex', flexDirection: 'column', width: '100%', height: '100%', boxSizing: 'border-box' }}>
+                <InvestigationHandbook 
+                  highestUnlockedIndex={highestUnlockedIndex} 
+                  currentFlowIndex={currentFlowIndex} 
+                  stageCompleted={stageCompleted} 
+                  onNext={() => setShowHandbook(false)}
+                />
+              </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: currentNode.layout || '1fr 1fr', gap: '1.5rem', flex: 1, minHeight: 0, padding: '1.5rem' }}>
-                {/* Left Side: Handbook */}
-                {currentNode.handbook ? (
-                  <currentNode.handbook 
-                    highestUnlockedIndex={highestUnlockedIndex} 
-                    currentFlowIndex={currentFlowIndex} 
-                    stageCompleted={stageCompleted} 
-                  />
-                ) : (
-                  <InvestigationHandbook 
-                    highestUnlockedIndex={highestUnlockedIndex} 
-                    currentFlowIndex={currentFlowIndex} 
-                    stageCompleted={stageCompleted} 
-                  />
-                )}
-                
-                {/* Right Side: Activity */}
-                <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px' }}>
-                  <currentNode.component 
-                    key={`${currentNode.id}-${resetKey}`}
-                    {...(currentNode.props || {})} 
-                    onComplete={handleStageComplete} 
-                    addXp={addXp} 
-                  />
-                </div>
+              <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '1.5rem', width: '100%', height: '100%', boxSizing: 'border-box' }}>
+                <currentNode.component 
+                  key={`${currentNode.id}-${resetKey}`}
+                  {...(currentNode.props || {})} 
+                  onComplete={handleStageComplete} 
+                  addXp={addXp} 
+                />
               </div>
             )
           )}
@@ -469,6 +406,101 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           })()}
         </div>
       </div>
+
+      {/* ═══════════════════════════════════════════
+          GLOBAL BOTTOM ACTION BAR
+          ═══════════════════════════════════════════ */}
+      <div className="global-action-bar">
+        <div className="global-action-bar-left">
+          <button 
+            onClick={onBackToDashboard} 
+            className="outline" 
+            style={{ padding: '0.65rem 1.35rem', fontSize: '1.05rem', fontWeight: 'bold', gap: '0.6rem', borderRadius: '10px', display: 'flex', alignItems: 'center' }}
+          >
+            <ArrowLeft size={20} /> Dashboard
+          </button>
+
+          <button 
+            onClick={() => {
+              if (currentNode.id === 'stage3_material') {
+                const prevIndex = chapterFlow.findIndex(node => node.id === 'stage3_use');
+                if (prevIndex !== -1) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (!showHandbook && currentNode.type === 'activity') {
+                setShowHandbook(true);
+              } else if (currentFlowIndex > 0) {
+                const prevIndex = currentFlowIndex - 1;
+                const prevNode = chapterFlow[prevIndex];
+                if (prevNode && prevNode.type === 'mission') {
+                  setShowHandbook(true);
+                } else {
+                  setShowHandbook(false);
+                }
+                setCurrentFlowIndex(prevIndex);
+              } else {
+                setShowIntroSpread(true);
+              }
+            }}
+            className="outline"
+            style={{ padding: '0.65rem 1.35rem', fontSize: '1.05rem', fontWeight: 'bold', gap: '0.6rem', borderRadius: '10px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center' }}
+          >
+            <ArrowLeft size={20} /> Back
+          </button>
+
+          {!showHandbook && currentNode.type === 'activity' && !['quiz', 'summary'].includes(currentNode.id) && (
+            <button 
+              onClick={() => setShowHandbook(true)}
+              className="outline"
+              style={{ padding: '0.65rem 1.35rem', fontSize: '1.05rem', fontWeight: 'bold', gap: '0.6rem', borderRadius: '10px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center' }}
+            >
+              📖 View Handbook
+            </button>
+          )}
+        </div>
+
+        <div className="global-action-bar-center">
+          {/* Science Detective removed as requested */}
+        </div>
+        
+        <div className="global-action-bar-right">
+          <button 
+            onClick={() => setResetKey(prev => prev + 1)}
+            className="outline"
+            style={{ padding: '0.65rem 1.35rem', fontSize: '1.05rem', fontWeight: 'bold', gap: '0.6rem', borderRadius: '10px', color: 'var(--danger)', borderColor: 'var(--danger-border)', display: 'flex', alignItems: 'center' }}
+          >
+            <RefreshCw size={18} /> Reset Activity
+          </button>
+
+          {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
+            <button 
+              onClick={showHandbook ? () => setShowHandbook(false) : handleNext}
+              disabled={showHandbook ? false : !stageCompleted}
+              className={(showHandbook || stageCompleted) ? 'primary' : 'outline'}
+              style={{ 
+                padding: '0.65rem 1.6rem', 
+                fontSize: '1.1rem', 
+                fontWeight: 'bold',
+                gap: '0.65rem', 
+                borderRadius: '10px',
+                opacity: (showHandbook || stageCompleted) ? 1 : 0.5,
+                cursor: (showHandbook || stageCompleted) ? 'pointer' : 'not-allowed',
+                transition: 'all 0.3s',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              Proceed to next <ArrowRight size={22} />
+            </button>
+          )}
+        </div>
+      </div>
     </div>
+    )}
+  </>
   );
 }

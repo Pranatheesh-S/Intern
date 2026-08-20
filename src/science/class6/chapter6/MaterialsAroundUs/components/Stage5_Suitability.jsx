@@ -68,7 +68,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         alt={`Tumbler made of ${tumblerMaterial}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, ...animateProps }}
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
       />
     );
   };
@@ -93,7 +93,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         alt={`Pot made of ${potMaterial}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, ...animateProps }}
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
       />
     );
   };
@@ -107,7 +107,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
   }, [isCompleted, onComplete]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%' }}>
       {/* Intro */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
         <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -119,7 +119,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', alignItems: 'stretch' }}>
         {/* Tumbler Designer */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -139,11 +139,11 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
             ))}
           </div>
 
-          <div style={{ height: '250px', background: 'var(--neutral-bg)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+          <div style={{ height: '370px', minHeight: '350px', background: 'var(--neutral-bg)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '0.5rem', boxSizing: 'border-box' }}>
             {tumblerMaterial ? renderTumblerAnimation() : <span style={{ fontSize: '1rem', color: '#64748b' }}>Select a tumbler material</span>}
           </div>
 
-          <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5', minHeight: '60px' }}>
+          <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>
             {tumblerMaterial === 'cloth' && <span style={{ color: 'var(--danger)' }}><strong>Leakage!</strong> Cloth has porous holes. Water slips through instantly.</span>}
             {tumblerMaterial === 'paper' && <span style={{ color: 'var(--danger)' }}><strong>Collapse!</strong> Paper absorbs water and loses structural strength.</span>}
             {(tumblerMaterial === 'glass' || tumblerMaterial === 'metal') && <span style={{ color: 'var(--success)' }}><strong>Perfect!</strong> Glass and Metal are non-porous and hold liquids perfectly.</span>}
@@ -169,18 +169,18 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
             ))}
           </div>
 
-          <div style={{ height: '250px', background: 'var(--neutral-bg)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+          <div style={{ height: '370px', minHeight: '350px', background: 'var(--neutral-bg)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '0.5rem', boxSizing: 'border-box' }}>
             {potMaterial ? renderPotAnimation() : <span style={{ fontSize: '1rem', color: '#64748b' }}>Select a pot material</span>}
           </div>
 
-          <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5', minHeight: '60px' }}>
+          <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>
             {potMaterial === 'paper' && <span style={{ color: 'var(--danger)' }}><strong>Danger!</strong> Paper is combustible and catches fire easily.</span>}
             {potMaterial === 'metal' && <span style={{ color: 'var(--success)' }}><strong>Safe!</strong> Stainless steel is fire-resistant and conducts heat perfectly.</span>}
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', minHeight: '60px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem', minHeight: '50px' }}>
         <AnimatePresence>
           {isCompleted && (
             <motion.div 
@@ -188,7 +188,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
               animate={{ opacity: 1, y: 0 }} 
               style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}
             >
-              Tests Complete! Click "Proceed to next" in the top right.
+              Tests Complete! Click "Proceed to next" in the bottom right corner.
             </motion.div>
           )}
         </AnimatePresence>

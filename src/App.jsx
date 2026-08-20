@@ -77,6 +77,7 @@ const LeafVenationLab = lazy(() => import('./science/class6/chapter2/LeafVenatio
 const RootSystemsLab = lazy(() => import('./science/class6/chapter2/RootSystemsLab'));
 const VenationRootCorrelationLab = lazy(() => import('./science/class6/chapter2/VenationRootCorrelationLab'));
 const SeedDissectionLab = lazy(() => import('./science/class6/chapter2/SeedDissectionLab'));
+const Activity2_1Game = lazy(() => import('./science/class6/chapter2/Activity2_1Game'));
 
 import './App.css';
 const Chapter2LearningLab = lazy(() => import('./science/class6/chapter2/Chapter2LearningLab'));
@@ -3032,6 +3033,8 @@ export default function App() {
             <LinearMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5_flow')} />
           ) : activeActivity === 'circular_motion' ? (
             <CircularMotionActivity onBackToDashboard={() => navigateTo('class6', 'chapter5_flow')} />
+          ) : activeActivity === 'activity_2_1' ? (
+            <Activity2_1Game onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'virtual_biodiversity' ? (
             <VirtualBiodiversityExplorerActivity onBackToDashboard={() => navigateTo('class6', 'chapter2')} />
           ) : activeActivity === 'appreciating_biodiversity' ? (
@@ -3174,6 +3177,7 @@ export default function App() {
 
       {/* Floating circular controls (Theme & Music) */}
       <div 
+        id="global-theme-music-controls"
         style={{ 
           position: 'fixed', 
           bottom: '2rem', 
@@ -3211,10 +3215,15 @@ export default function App() {
             {isAudioPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
           </button>
         )}
-
         {/* Global Circular Theme Toggle */}
         {!(
-          (activeSubject === 'class6' || activeSubject === 'science_lab' || !activeSubject) && (
+          (activeActivity && activeActivity.toLowerCase().includes('material')) ||
+          (activeActivity && activeActivity.toLowerCase().includes('chapter6')) ||
+          (activeActivity === 'materials_around_us') ||
+          (activeSection === 'chapter6') ||
+          (window.location.hash.includes('chapter6')) ||
+          (window.location.hash.includes('material')) ||
+          ((activeSubject === 'class6' || activeSubject === 'science_lab' || !activeSubject) && (
             activeActivity?.includes('chapter4') ||
             activeActivity?.includes('ch4') ||
             [
@@ -3232,7 +3241,7 @@ export default function App() {
               'sci6-ch4-exploring-magnets-full',
               'sci6-ch4-exploring-magnets-flagship'
             ].includes(activeActivity)
-          )
+          ))
         ) && (
           <button
             onClick={toggleTheme}
