@@ -133,12 +133,23 @@ export default function Stage1_Magnetize({ onComplete }) {
       background: 'transparent'
     }}>
       {/* Left Side: Interactive Area */}
-      <div style={{ flex: '1.35', display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'center' }}>
-        <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.65rem', fontWeight: 800, color: '#134E4A', letterSpacing: '-0.01em' }}>
+      <div style={{ flex: '1.35', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100%', boxSizing: 'border-box' }}>
+        {/* Top Header Container */}
+        <div style={{ 
+          width: '100%',
+          textAlign: 'center',
+          background: 'rgba(24, 24, 27, 0.95)',
+          backdropFilter: 'blur(10px)',
+          padding: '0.65rem 1.25rem',
+          borderRadius: '20px',
+          border: '1.5px solid #3F3F46',
+          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
+          boxSizing: 'border-box'
+        }}>
+          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
             Magnetization Process
           </h3>
-          <p style={{ margin: 0, color: '#0F766E', fontSize: '1.05rem', fontWeight: 600 }}>
+          <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.92rem', fontWeight: 700 }}>
             Drag the magnet across the iron needle, or click Auto Magnetize.
           </p>
         </div>
@@ -147,17 +158,16 @@ export default function Stage1_Magnetize({ onComplete }) {
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          maxWidth: '550px', 
           height: '280px', 
-          background: '#ffffff',
-          border: '2px solid #CCECE7',
+          background: 'rgba(18, 18, 20, 0.95)',
+          border: '1.5px solid #3F3F46',
           borderRadius: '20px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          boxShadow: 'inset 0 0 25px rgba(0,0,0,0.03), 0 8px 25px rgba(15, 118, 110, 0.07)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
           userSelect: 'none',
           WebkitUserSelect: 'none'
         }}>
@@ -168,9 +178,8 @@ export default function Stage1_Magnetize({ onComplete }) {
             draggable="false"
             style={{
               position: 'absolute',
-              bottom: '40px',
               width: '380px',
-              filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.35))',
+              filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.5))',
               zIndex: 10,
               pointerEvents: 'none'
             }}
@@ -178,27 +187,33 @@ export default function Stage1_Magnetize({ onComplete }) {
 
           {/* Iron Filings (for testing) */}
           <AnimatePresence>
-            {isMagnetized && (
+            {isTesting && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', zIndex: 3 }}
+                style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 15 }}
               >
                 {filings.map(f => (
-                  <div
-                    key={`filing-${f.id}`}
+                  <motion.div
+                    key={f.id}
+                    initial={{ x: f.initX, y: f.initY, rotate: f.initRot, opacity: 0.2 }}
+                    animate={{ 
+                      x: testComplete ? f.targetX : f.initX, 
+                      y: testComplete ? f.targetY : f.initY,
+                      rotate: testComplete ? f.targetRot : f.initRot,
+                      opacity: 1 
+                    }}
+                    transition={{ type: 'spring', damping: 18, stiffness: 60 }}
                     style={{
                       position: 'absolute',
+                      left: 'calc(50% - 2.5px)',
+                      top: 'calc(50% - 1.5px)',
                       width: `${f.width}px`,
-                      height: '4px',
-                      background: f.color,
-                      borderRadius: '2px',
-                      transform: isTesting 
-                        ? `translate(${f.targetX}px, ${f.targetY}px) rotate(${f.targetRot}deg)`
-                        : `translate(${f.initX}px, ${f.initY}px) rotate(${f.initRot}deg)`,
-                      transition: 'transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1)'
+                      height: '2px',
+                      background: testComplete ? '#F59E0B' : '#71717A',
+                      boxShadow: testComplete ? '0 0 4px rgba(245, 158, 11, 0.7)' : 'none',
+                      borderRadius: '1px'
                     }}
                   />
                 ))}
@@ -206,51 +221,36 @@ export default function Stage1_Magnetize({ onComplete }) {
             )}
           </AnimatePresence>
 
-          {/* Drag Indicator */}
-          {!isMagnetized && strokeCount === 0 && !isAutoStroking && (
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 0.6, x: -50 }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-              style={{ position: 'absolute', bottom: '150px', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1e293b', fontWeight: 600 }}
-            >
-              <MousePointer2 size={24} /> <span>Drag right</span> <ArrowRight size={18} />
-            </motion.div>
-          )}
-
-          {/* Bar Magnet */}
+          {/* Interactive Bar Magnet */}
           <AnimatePresence>
-            {!isTesting && (
+            {!isMagnetized && (
               <motion.div
-                initial={{ x: -125, y: -22, rotate: 10 }}
-                animate={isAutoStroking ? {
-                  x: [-125, 125, 125, -125, -125],
-                  y: [-22, -22, -80, -80, -22],
-                  rotate: [10, 10, 10, 10, 10]
-                } : { x: -125, y: -22, rotate: 10 }}
-                transition={isAutoStroking ? {
-                  duration: 1.5,
-                  repeat: Infinity,
-                  times: [0, 0.4, 0.5, 0.9, 1],
-                  ease: "easeInOut"
-                } : {}}
-                drag={!isMagnetized && !isAutoStroking}
-                dragSnapToOrigin={true}
+                drag={!isAutoStroking}
+                dragConstraints={{ left: -220, right: 220, top: -100, bottom: 80 }}
                 dragElastic={0.1}
+                animate={isAutoStroking ? {
+                  x: [-180, 180, -180],
+                  y: [-30, -30, -30],
+                  rotate: [0, 0, 0]
+                } : {}}
+                transition={isAutoStroking ? {
+                  repeat: maxStrokes - strokeCount - 1,
+                  duration: 1.5,
+                  ease: 'easeInOut'
+                } : { type: 'spring', stiffness: 300, damping: 25 }}
                 onDragEnd={(event, info) => {
                   if (info.offset.x > 150) {
                     setStrokeCount(prev => Math.min(prev + 1, maxStrokes));
                   }
                 }}
-                exit={{ opacity: 0, y: -100 }}
                 style={{
                   position: 'absolute',
-                  bottom: '70px',
-                  width: '30px',
+                  top: '40px',
+                  width: '140px',
                   height: '90px',
                   display: 'flex',
                   flexDirection: 'column',
-                  zIndex: 10,
+                  zIndex: 20,
                   cursor: isMagnetized ? 'default' : 'grab'
                 }}
                 whileTap={{ cursor: 'grabbing', scale: 1.05 }}
@@ -264,7 +264,7 @@ export default function Stage1_Magnetize({ onComplete }) {
                     height: '100%',
                     objectFit: 'contain',
                     pointerEvents: 'none',
-                    filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3))'
+                    filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5))'
                   }}
                 />
               </motion.div>
@@ -273,42 +273,44 @@ export default function Stage1_Magnetize({ onComplete }) {
         </div>
 
         {/* Progress Bar */}
-        <div style={{ width: '100%', maxWidth: '550px', marginTop: '1rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem', fontSize: '0.9rem', color: '#0F766E', fontWeight: 700 }}>
+        <div style={{ width: '100%', marginTop: '0.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem', fontSize: '0.9rem', color: '#A1A1AA', fontWeight: 700 }}>
             <span>Strokes: {strokeCount} / {maxStrokes}</span>
-            <span>{Math.round((strokeCount / maxStrokes) * 100)}%</span>
+            <span style={{ color: '#F59E0B', fontWeight: 800 }}>{Math.round((strokeCount / maxStrokes) * 100)}%</span>
           </div>
-          <div style={{ width: '100%', height: '10px', background: '#CCECE7', borderRadius: '5px', overflow: 'hidden' }}>
+          <div style={{ width: '100%', height: '10px', background: '#18181B', border: '1px solid #3F3F46', borderRadius: '5px', overflow: 'hidden' }}>
             <motion.div 
               animate={{ width: `${(strokeCount / maxStrokes) * 100}%` }}
-              style={{ height: '100%', background: isMagnetized ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' }}
+              style={{ height: '100%', background: isMagnetized ? 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)' : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' }}
             />
           </div>
         </div>
 
-        {/* Controls */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
+        {/* Controls (Equal Big Buttons matching 100% width) */}
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', width: '100%' }}>
           {!isMagnetized && (
             <button 
               onClick={() => setIsAutoStroking(true)} 
               disabled={isAutoStroking}
               style={{ 
-                padding: '0.85rem 1.75rem', 
-                fontSize: '1.02rem', 
-                fontWeight: 700, 
+                flex: 1,
+                padding: '0.85rem 1rem', 
+                fontSize: '1rem', 
+                fontWeight: 800, 
                 borderRadius: '14px', 
                 display: 'flex', 
                 alignItems: 'center', 
+                justifyContent: 'center',
                 gap: '0.6rem',
-                background: !isAutoStroking ? 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' : '#ffffff',
-                color: !isAutoStroking ? '#ffffff' : '#64748B',
-                border: !isAutoStroking ? 'none' : '1.5px solid #E2E8F0',
+                background: !isAutoStroking ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#18181B',
+                color: !isAutoStroking ? '#000000' : '#71717A',
+                border: !isAutoStroking ? 'none' : '1.5px solid #3F3F46',
                 cursor: !isAutoStroking ? 'pointer' : 'not-allowed',
                 opacity: !isAutoStroking ? 1 : 0.85,
-                boxShadow: !isAutoStroking ? '0 6px 20px rgba(244, 63, 94, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+                boxShadow: !isAutoStroking ? '0 4px 14px rgba(245, 158, 11, 0.4)' : 'none'
               }}
             >
-              <Play size={18} color={!isAutoStroking ? '#ffffff' : '#64748B'} /> {isAutoStroking ? 'Magnetizing...' : 'Auto Magnetize'}
+              <Play size={18} color={!isAutoStroking ? '#000000' : '#71717A'} /> {isAutoStroking ? 'Magnetizing...' : 'Auto Magnetize'}
             </button>
           )}
 
@@ -317,22 +319,24 @@ export default function Stage1_Magnetize({ onComplete }) {
               onClick={handleTest} 
               disabled={isTesting}
               style={{ 
-                padding: '0.85rem 1.75rem', 
-                fontSize: '1.02rem', 
-                fontWeight: 700, 
+                flex: 1,
+                padding: '0.85rem 1rem', 
+                fontSize: '1rem', 
+                fontWeight: 800, 
                 borderRadius: '14px', 
                 display: 'flex', 
                 alignItems: 'center', 
+                justifyContent: 'center',
                 gap: '0.6rem',
-                background: !isTesting ? 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' : '#ffffff',
-                color: !isTesting ? '#ffffff' : '#64748B',
-                border: !isTesting ? 'none' : '1.5px solid #E2E8F0',
+                background: !isTesting ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#18181B',
+                color: !isTesting ? '#000000' : '#71717A',
+                border: !isTesting ? 'none' : '1.5px solid #3F3F46',
                 cursor: !isTesting ? 'pointer' : 'not-allowed',
                 opacity: !isTesting ? 1 : 0.85,
-                boxShadow: !isTesting ? '0 6px 20px rgba(244, 63, 94, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+                boxShadow: !isTesting ? '0 4px 14px rgba(245, 158, 11, 0.4)' : 'none'
               }}
             >
-              <Beaker size={18} color={!isTesting ? '#ffffff' : '#64748B'} /> {isTesting ? 'Testing...' : 'Test Magnetization'}
+              <Beaker size={18} color={!isTesting ? '#000000' : '#71717A'} /> {isTesting ? 'Testing...' : 'Test Magnetization'}
             </button>
           )}
           
@@ -340,34 +344,37 @@ export default function Stage1_Magnetize({ onComplete }) {
             onClick={handleReset}
             disabled={strokeCount === 0 && !isAutoStroking && !isTesting}
             style={{ 
-              padding: '0.85rem 1.75rem', 
-              fontSize: '1.02rem', 
-              fontWeight: 700, 
+              flex: 1,
+              padding: '0.85rem 1rem', 
+              fontSize: '1rem', 
+              fontWeight: 800, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
+              justifyContent: 'center',
               gap: '0.6rem',
-              background: '#ffffff',
-              color: '#64748B',
-              border: '1.5px solid #E2E8F0',
+              background: '#18181B',
+              color: (strokeCount > 0 || isAutoStroking || isTesting) ? '#FAFAFA' : '#71717A',
+              border: '1.5px solid #3F3F46',
               cursor: (strokeCount > 0 || isAutoStroking || isTesting) ? 'pointer' : 'not-allowed',
               opacity: (strokeCount > 0 || isAutoStroking || isTesting) ? 1 : 0.6,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+              boxShadow: '0 2px 8px rgba(0,0,0,0.4)'
             }}
           >
-            <RotateCcw size={18} color="#64748B" /> Reset
+            <RotateCcw size={18} color={(strokeCount > 0 || isAutoStroking || isTesting) ? '#FAFAFA' : '#71717A'} /> Reset
           </button>
         </div>
       </div>
 
-      {/* Right Side: Frosted Glacial Teal Panel */}
+      {/* Right Side: Midnight Carbon Panel */}
       <div style={{ 
         flex: '0.85', 
-        background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)',
-        border: '1.5px solid #CCECE7',
+        background: 'rgba(24, 24, 27, 0.95)',
+        backdropFilter: 'blur(10px)',
+        border: '1.5px solid #3F3F46',
         borderRadius: '20px',
         padding: '1.25rem 1.5rem',
-        boxShadow: '0 8px 25px rgba(15, 118, 110, 0.06)',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6)',
         display: 'flex', 
         flexDirection: 'column', 
         gap: '1.25rem', 
@@ -375,23 +382,23 @@ export default function Stage1_Magnetize({ onComplete }) {
       }}>
         <div style={{ 
           padding: '1.25rem 1.4rem', 
-          background: '#ffffff', 
-          border: '1.5px solid #CCECE7', 
+          background: '#18181B', 
+          border: '1.5px solid #3F3F46', 
           borderRadius: '16px',
-          boxShadow: '0 4px 14px rgba(15, 118, 110, 0.04)'
+          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)'
         }}>
-          <h4 style={{ color: '#134E4A', margin: '0 0 0.75rem 0', fontSize: '1.15rem', fontWeight: 800 }}>Instructions</h4>
-          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: '#115E59', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.92rem', lineHeight: '1.6', fontWeight: 600 }}>
-            <li style={{ fontWeight: !isMagnetized ? 800 : 600, color: !isMagnetized ? '#F43F5E' : '#115E59' }}>
+          <h4 style={{ color: '#F59E0B', margin: '0 0 0.75rem 0', fontSize: '1.15rem', fontWeight: 800 }}>Instructions</h4>
+          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: '#A1A1AA', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.92rem', lineHeight: '1.6', fontWeight: 600 }}>
+            <li style={{ fontWeight: !isMagnetized ? 800 : 600, color: !isMagnetized ? '#F59E0B' : '#A1A1AA' }}>
               Place the iron sewing needle on a wooden table.
             </li>
-            <li style={{ fontWeight: !isMagnetized ? 800 : 600, color: !isMagnetized ? '#F43F5E' : '#115E59' }}>
+            <li style={{ fontWeight: !isMagnetized ? 800 : 600, color: !isMagnetized ? '#F59E0B' : '#A1A1AA' }}>
               Keep any one pole of the magnet at one end of the needle. <strong>Drag</strong> the magnet over the needle along its length.
             </li>
-            <li style={{ fontWeight: !isMagnetized ? 800 : 600, color: !isMagnetized ? '#F43F5E' : '#115E59' }}>
+            <li style={{ fontWeight: !isMagnetized ? 800 : 600, color: !isMagnetized ? '#F59E0B' : '#A1A1AA' }}>
               When it reaches the other end, lift it up. Bring the same pole back to the start. Repeat this at least 5 times.
             </li>
-            <li style={{ fontWeight: isMagnetized && !testComplete ? 800 : 600, color: isMagnetized && !testComplete ? '#F43F5E' : '#115E59' }}>
+            <li style={{ fontWeight: isMagnetized && !testComplete ? 800 : 600, color: isMagnetized && !testComplete ? '#F59E0B' : '#A1A1AA' }}>
               Bring some iron filings or steel pins near the needle to test if it has become a magnet.
             </li>
           </ol>
@@ -404,17 +411,17 @@ export default function Stage1_Magnetize({ onComplete }) {
               animate={{ opacity: 1, y: 0 }}
               style={{ 
                 padding: '1.25rem 1.4rem', 
-                background: '#ffffff', 
-                border: '1.5px solid #CCECE7', 
+                background: '#18181B', 
+                border: '1.5px solid #3F3F46', 
                 borderRadius: '16px',
-                boxShadow: '0 4px 14px rgba(15, 118, 110, 0.05)'
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)'
               }}
             >
-              <h4 style={{ color: '#134E4A', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 800 }}>
-                <CheckCircle size={22} style={{ color: '#10b981' }} /> 
+              <h4 style={{ color: '#86EFAC', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 800 }}>
+                <CheckCircle size={22} color="#86EFAC" /> 
                 Success!
               </h4>
-              <p style={{ margin: '0 0 1rem 0', color: '#047857', fontSize: '0.92rem', fontWeight: '700' }}>
+              <p style={{ margin: '0 0 1rem 0', color: '#A1A1AA', fontSize: '0.92rem', fontWeight: '700' }}>
                 The steel pins & iron filings are attracted to the needle! This means the needle has successfully become a magnet.
               </p>
               
@@ -430,15 +437,15 @@ export default function Stage1_Magnetize({ onComplete }) {
                   justifyContent: 'center', 
                   alignItems: 'center', 
                   gap: '0.75rem',
-                  background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
-                  color: '#ffffff',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  color: '#000000',
                   border: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
+                  boxShadow: '0 4px 14px rgba(245, 158, 11, 0.4)',
                   transition: 'all 0.25s ease'
                 }}
               >
-                Next Section: Make a Compass <ArrowRight size={20} color="#ffffff" />
+                Next Section: Make a Compass <ArrowRight size={20} color="#000000" />
               </button>
             </motion.div>
           )}

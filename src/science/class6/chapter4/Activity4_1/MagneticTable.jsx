@@ -210,29 +210,29 @@ export default function MagneticTable({ onComplete }) {
         minWidth: 0,
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: 'rgba(10, 15, 36, 0.95)',
-        borderRadius: '18px',
-        border: '1px solid rgba(59, 130, 246, 0.4)',
-        boxShadow: '0 0 25px rgba(0, 0, 0, 0.4)',
-        overflow: 'hidden',
-        position: 'relative'
+      backgroundColor: 'rgba(24, 24, 27, 0.95)',
+      borderRadius: '18px',
+      border: '1.5px solid #3F3F46',
+      boxShadow: '0 0 25px rgba(0, 0, 0, 0.6)',
+      overflow: 'hidden',
+      position: 'relative'
+    }}>
+      {/* Header */}
+      <div style={{
+        padding: '0.5rem 1rem',
+        borderBottom: '1px solid #3F3F46',
+        backgroundColor: '#18181B',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexShrink: 0
       }}>
-        {/* Header */}
-        <div style={{
-          padding: '0.5rem 1rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          backgroundColor: 'rgba(15, 23, 42, 0.85)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexShrink: 0
-        }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '0.94rem', fontWeight: 600, color: '#f8fafc' }}>
-              Experiment: Test which items are magnetic!
-            </h3>
-          </div>
+        <div>
+          <h3 style={{ margin: 0, fontSize: '0.94rem', fontWeight: 800, color: '#F59E0B' }}>
+            Experiment: Test which items are magnetic!
+          </h3>
         </div>
+      </div>
 
         {/* Experiment Image Container with Full Height Area Fill */}
         <div

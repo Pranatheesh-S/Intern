@@ -64,16 +64,29 @@ export default function Stage2_Conclusion({ onComplete }) {
         flex: '1.15', 
         display: 'flex', 
         flexDirection: 'column', 
+        justifyContent: 'space-between',
         alignItems: 'center', 
-        justifyContent: 'center',
         textAlign: 'center', 
-        minWidth: 0 
+        minWidth: 0,
+        height: '100%',
+        boxSizing: 'border-box'
       }}>
-        <div style={{ marginBottom: '0.75rem', textAlign: 'center' }}>
-          <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.4rem', fontWeight: 800, color: '#134E4A' }}>
+        {/* Left Top Bar Container */}
+        <div style={{ 
+          width: '100%',
+          textAlign: 'center',
+          background: 'rgba(24, 24, 27, 0.95)',
+          backdropFilter: 'blur(10px)',
+          padding: '0.65rem 1.25rem',
+          borderRadius: '20px',
+          border: '1.5px solid #3F3F46',
+          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
+          boxSizing: 'border-box'
+        }}>
+          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
             Finding Directions
           </h3>
-          <p style={{ margin: 0, color: '#0F766E', fontSize: '0.95rem', fontWeight: 600 }}>
+          <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.92rem', fontWeight: 700 }}>
             Move mouse or tap "Press Compass" to see the needle always settle pointing North!
           </p>
         </div>
@@ -86,12 +99,11 @@ export default function Stage2_Conclusion({ onComplete }) {
           style={{ 
             position: 'relative',
             width: '100%', 
-            maxWidth: '500px',
             height: '320px',
             borderRadius: '20px',
             overflow: 'hidden',
-            border: '2px solid rgba(251, 191, 36, 0.5)',
-            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(251, 191, 36, 0.2)',
+            border: '1.5px solid #3F3F46',
+            boxShadow: '0 12px 35px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(245, 158, 11, 0.15)',
             backgroundImage: 'url(/SuspendedMagnet/morning_sunrise.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -226,40 +238,43 @@ export default function Stage2_Conclusion({ onComplete }) {
         </div>
 
         {/* Action Controls */}
-        <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.85rem' }}>
+        <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.5rem', width: '100%' }}>
           <button
             onClick={handleDeflect}
             disabled={isSpinning}
             style={{ 
+              flex: 1,
               padding: '0.85rem 1.6rem', 
               fontSize: '1rem', 
-              fontWeight: 700, 
+              fontWeight: 800, 
               borderRadius: '14px', 
               display: 'flex', 
               alignItems: 'center', 
+              justifyContent: 'center',
               gap: '0.6rem',
-              background: !isSpinning ? 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' : '#ffffff',
-              color: !isSpinning ? '#ffffff' : '#64748B',
-              border: !isSpinning ? 'none' : '1.5px solid #E2E8F0',
+              background: !isSpinning ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#18181B',
+              color: !isSpinning ? '#000000' : '#71717A',
+              border: !isSpinning ? 'none' : '1.5px solid #3F3F46',
               cursor: !isSpinning ? 'pointer' : 'not-allowed',
               opacity: !isSpinning ? 1 : 0.85,
-              boxShadow: !isSpinning ? '0 6px 20px rgba(244, 63, 94, 0.45)' : '0 4px 12px rgba(0,0,0,0.1)'
+              boxShadow: !isSpinning ? '0 4px 14px rgba(245, 158, 11, 0.4)' : 'none'
             }}
           >
-            <RotateCw size={18} color={!isSpinning ? '#ffffff' : '#64748B'} className={isSpinning ? 'spin-animation' : ''} />
+            <RotateCw size={18} color={!isSpinning ? '#000000' : '#71717A'} className={isSpinning ? 'spin-animation' : ''} />
             {isSpinning ? 'Pressing Compass...' : 'Press Compass'}
           </button>
         </div>
       </div>
 
-      {/* Right Side: Frosted Glacial Teal Panel */}
+      {/* Right Side: Midnight Carbon Panel */}
       <div style={{ 
         flex: '0.85', 
-        background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)',
-        border: '1.5px solid #CCECE7',
+        background: 'rgba(24, 24, 27, 0.95)',
+        backdropFilter: 'blur(10px)',
+        border: '1.5px solid #3F3F46',
         borderRadius: '20px',
         padding: '1.25rem 1.5rem',
-        boxShadow: '0 8px 25px rgba(15, 118, 110, 0.06)',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6)',
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'center', 
@@ -270,21 +285,21 @@ export default function Stage2_Conclusion({ onComplete }) {
         {/* "How do we know which way is North?" Box */}
         <div style={{ 
           padding: '1.25rem 1.4rem', 
-          background: '#ffffff', 
-          border: '1.5px solid #CCECE7', 
+          background: '#18181B', 
+          border: '1.5px solid #3F3F46', 
           borderRadius: '16px',
-          boxShadow: '0 4px 14px rgba(15, 118, 110, 0.04)'
+          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)'
         }}>
-          <h4 style={{ color: '#134E4A', margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Navigation size={20} color="#F43F5E" /> 
+          <h4 style={{ color: '#F59E0B', margin: '0 0 0.75rem 0', fontSize: '1.1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Navigation size={20} color="#F59E0B" /> 
             How do we know which way is North?
           </h4>
-          <p style={{ margin: '0 0 0.85rem 0', color: '#115E59', fontSize: '0.92rem', lineHeight: '1.6', fontWeight: 600 }}>
-            If we notice the direction where the <strong style={{ color: '#134E4A', fontWeight: 800 }}>Sun rises in the morning (North-East horizon)</strong>, we know that general direction is <strong style={{ color: '#134E4A', fontWeight: 800 }}>East</strong>. 
+          <p style={{ margin: '0 0 0.85rem 0', color: '#A1A1AA', fontSize: '0.92rem', lineHeight: '1.6', fontWeight: 600 }}>
+            If we notice the direction where the <strong style={{ color: '#F59E0B', fontWeight: 800 }}>Sun rises in the morning (North-East horizon)</strong>, we know that general direction is <strong style={{ color: '#F59E0B', fontWeight: 800 }}>East</strong>. 
             Once we know East, West is opposite, North is to the left, and South is to the right.
           </p>
-          <p style={{ margin: 0, color: '#115E59', fontSize: '0.92rem', lineHeight: '1.6', fontWeight: 600 }}>
-            A freely suspended magnet or compass needle will always align itself pointing towards <strong style={{ color: '#134E4A', fontWeight: 800 }}>North-South</strong>. This makes compasses essential for navigation!
+          <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.92rem', lineHeight: '1.6', fontWeight: 600 }}>
+            A freely suspended magnet or compass needle will always align itself pointing towards <strong style={{ color: '#F59E0B', fontWeight: 800 }}>North-South</strong>. This makes compasses essential for navigation!
           </p>
         </div>
 
@@ -293,16 +308,16 @@ export default function Stage2_Conclusion({ onComplete }) {
           animate={{ opacity: 1, y: 0 }}
           style={{ 
             padding: '1.25rem 1.4rem', 
-            background: '#ffffff', 
-            border: '1.5px solid #CCECE7', 
+            background: '#18181B', 
+            border: '1.5px solid #3F3F46', 
             borderRadius: '16px',
-            boxShadow: '0 4px 14px rgba(15, 118, 110, 0.05)',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)',
             display: 'flex', 
             flexDirection: 'column', 
             gap: '1rem' 
           }}
         >
-          <p style={{ margin: 0, color: '#047857', fontSize: '1rem', fontWeight: '700', lineHeight: '1.5', textAlign: 'center' }}>
+          <p style={{ margin: 0, color: '#86EFAC', fontSize: '1rem', fontWeight: '700', lineHeight: '1.5', textAlign: 'center' }}>
             You have successfully completed this activity!
           </p>
           <button 
@@ -313,19 +328,19 @@ export default function Stage2_Conclusion({ onComplete }) {
               fontSize: '1.05rem',
               fontWeight: 800,
               borderRadius: '35px',
-              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
-              color: '#ffffff',
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+              color: '#000000',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '0.65rem',
-              boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
+              boxShadow: '0 4px 14px rgba(245, 158, 11, 0.4)',
               transition: 'all 0.25s ease'
             }}
           >
-            <Flag size={20} color="#ffffff" /> Finish Activity
+            <Flag size={20} color="#000000" /> Finish Activity
           </button>
         </motion.div>
       </div>

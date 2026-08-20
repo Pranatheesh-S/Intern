@@ -132,12 +132,13 @@ export default function DidYouKnow() {
         </div>
       )}
 
-      {/* Main Bottom Bar */}
+      {/* Main Bottom Bar - True Midnight Black (#09090B) with Dark Graphite (#3F3F46) Border */}
       <div style={{
-        background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 27, 75, 0.95))',
+        background: 'rgba(9, 9, 11, 0.95)',
         backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(139, 92, 246, 0.4)',
-        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.25), 0 0 20px rgba(139, 92, 246, 0.15)',
+        border: '1px solid #3F3F46',
+        borderTop: '1px solid #3F3F46',
+        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.7), 0 0 20px rgba(245, 158, 11, 0.12)',
         borderRadius: '24px',
         padding: '0.6rem 1.25rem',
         display: 'flex',
@@ -158,27 +159,27 @@ export default function DidYouKnow() {
           {facts.map((fact, idx) => (
             <React.Fragment key={idx}>
               {idx > 0 && (
-                <div style={{ width: '1px', height: '60%', backgroundColor: 'rgba(255, 255, 255, 0.12)' }} />
+                <div style={{ width: '1px', height: '60%', backgroundColor: '#3F3F46' }} />
               )}
               <div
                 onMouseEnter={() => handleMouseEnter(fact)}
                 onMouseLeave={handleMouseLeave}
                 style={{
-                  color: hoveredFact === fact ? '#ff7700' : '#e2e8f0',
+                  color: hoveredFact === fact ? '#F59E0B' : '#FAFAFA',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                   cursor: 'pointer',
                   fontSize: '0.88rem',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   padding: '0.4rem 0.6rem',
                   borderRadius: '8px',
                   backgroundColor: 'transparent',
-                  transition: 'color 0.2s ease',
+                  transition: 'all 0.2s ease',
                   whiteSpace: 'nowrap'
                 }}
               >
-                <span style={{ fontSize: '1rem' }}>👉</span>
+                <span style={{ fontSize: '1rem', color: hoveredFact === fact ? '#F59E0B' : '#FAFAFA' }}>👉</span>
                 <span>{fact.shortTitle}</span>
               </div>
             </React.Fragment>
@@ -186,8 +187,8 @@ export default function DidYouKnow() {
         </div>
 
         {/* Sparkle Icon */}
-        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem', color: '#60a5fa' }}>
-          <Sparkles size={18} />
+        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem', color: '#F59E0B' }}>
+          <Sparkles size={18} color="#F59E0B" />
         </div>
       </div>
     </div>

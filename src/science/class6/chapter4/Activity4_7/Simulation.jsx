@@ -37,13 +37,40 @@ const CompassNeedle = ({ rotation, scale = 1 }) => (
 
 const MagnetVisual = ({ isFlipped, isDragging }) => (
   <div style={{ 
-    width: '150px', height: '38px', display: 'flex', borderRadius: '6px', overflow: 'hidden', 
-    boxShadow: isDragging ? '0 12px 20px rgba(0,0,0,0.35)' : '0 4px 10px rgba(0,0,0,0.2)',
+    width: '160px', 
+    height: '44px', 
+    borderRadius: '10px', 
+    overflow: 'hidden', 
+    display: 'flex',
+    boxShadow: isDragging ? '0 15px 30px rgba(0,0,0,0.6), 0 0 25px rgba(245,158,11,0.3)' : '0 6px 16px rgba(0,0,0,0.4)',
+    border: '1.5px solid rgba(255,255,255,0.35)',
     flexDirection: isFlipped ? 'row-reverse' : 'row',
-    userSelect: 'none'
+    userSelect: 'none',
+    background: '#18181B'
   }}>
-    <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '17px' }}>N</div>
-    <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '17px' }}>S</div>
+    <div style={{
+      flex: 1,
+      background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -4px 6px rgba(0,0,0,0.4)'
+    }}>
+      <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 8px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.8)' }}>N</span>
+    </div>
+    <div style={{ width: '4px', background: 'linear-gradient(180deg, #FFFFFF 0%, #71717A 100%)', zIndex: 2 }} />
+    <div style={{
+      flex: 1,
+      background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -4px 6px rgba(0,0,0,0.4)'
+    }}>
+      <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 8px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.8)' }}>S</span>
+    </div>
   </div>
 );
 

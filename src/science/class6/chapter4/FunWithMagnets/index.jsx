@@ -85,14 +85,14 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
     switch (step) {
       case 0:
         return (
-          <div style={{ width: '100%', maxWidth: '980px', maxHeight: '100%', overflowY: 'auto', background: '#ffffff', border: '2px solid #818cf8', borderRadius: '24px', padding: '1.25rem 1.75rem', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', boxSizing: 'border-box' }}>
-            <div className="kicker" style={{ fontSize: '0.78rem', color: '#6366f1', fontWeight: 800, letterSpacing: '2px', marginBottom: '0.35rem' }}>
+          <div style={{ width: '100%', maxWidth: '980px', maxHeight: '100%', overflowY: 'auto', background: 'rgba(24, 24, 27, 0.95)', backdropFilter: 'blur(10px)', border: '1.5px solid #3F3F46', borderRadius: '24px', padding: '1.25rem 1.75rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', boxSizing: 'border-box' }}>
+            <div className="kicker" style={{ fontSize: '0.78rem', color: '#F59E0B', fontWeight: 800, letterSpacing: '2px', marginBottom: '0.35rem' }}>
               SECTION 4.5 · FUN WITH MAGNETS
             </div>
-            <h1 style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', color: '#1e3a8a', fontWeight: 800, margin: '0 0 0.5rem 0' }}>
+            <h1 style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', color: '#FFFFFF', fontWeight: 800, margin: '0 0 0.5rem 0' }}>
               Magnets can move things without touching them.
             </h1>
-            <p className="lead" style={{ fontSize: 'clamp(0.88rem, 1.5vw, 1.02rem)', lineHeight: '1.45', color: '#334155', margin: '0 0 1rem 0', fontWeight: 600 }}>
+            <p className="lead" style={{ fontSize: 'clamp(0.88rem, 1.5vw, 1.02rem)', lineHeight: '1.45', color: '#A1A1AA', margin: '0 0 1rem 0', fontWeight: 600 }}>
               Now that you know magnetism passes through non-magnetic materials, you can build toys and tricks. Predict: in a "magnetic maze," you move a magnet <b>under</b> a cardboard tray to guide a steel ball on top. What makes the ball move?
             </p>
             
@@ -107,22 +107,22 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                 const isSelected = predictAns && predictAns.selectedIndex === idx;
                 const isCorrect = c.ok;
                 
-                let bgColor = '#f8fafc';
-                let borderColor = '#cbd5e1';
-                let textColor = '#1e293b';
+                let bgColor = '#27272A';
+                let borderColor = '#3F3F46';
+                let textColor = '#FAFAFA';
                 let icon = null;
 
                 if (predictAns) {
                   if (isCorrect) {
-                    bgColor = 'rgba(16, 185, 129, 0.12)';
-                    borderColor = '#10b981';
-                    textColor = '#065f46';
-                    icon = <CheckCircle2 size={18} color="#10b981" />;
+                    bgColor = 'rgba(34, 197, 94, 0.2)';
+                    borderColor = '#22C55E';
+                    textColor = '#86EFAC';
+                    icon = <CheckCircle2 size={18} color="#22C55E" />;
                   } else if (isSelected) {
-                    bgColor = 'rgba(239, 68, 68, 0.12)';
-                    borderColor = '#ef4444';
-                    textColor = '#991b1b';
-                    icon = <XCircle size={18} color="#ef4444" />;
+                    bgColor = 'rgba(239, 68, 68, 0.2)';
+                    borderColor = '#EF4444';
+                    textColor = '#FCA5A5';
+                    icon = <XCircle size={18} color="#EF4444" />;
                   }
                 }
 
@@ -141,7 +141,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                       fontSize: 'clamp(0.85rem, 1.4vw, 0.95rem)',
                       fontWeight: 700,
                       background: bgColor,
-                      border: `2px solid ${borderColor}`,
+                      border: `1.5px solid ${borderColor}`,
                       color: textColor,
                       cursor: predictAns ? 'default' : 'pointer',
                       display: 'flex',
@@ -151,7 +151,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span className="key" style={{ marginRight: '0.6rem', padding: '0.15rem 0.5rem', borderRadius: '6px', background: 'rgba(0,0,0,0.06)', fontSize: '0.8rem' }}>{['A','B','C','D'][idx]}</span>
+                      <span className="key" style={{ marginRight: '0.6rem', padding: '0.15rem 0.5rem', borderRadius: '6px', background: 'rgba(255,255,255,0.1)', fontSize: '0.8rem' }}>{['A','B','C','D'][idx]}</span>
                       {c.label}
                     </div>
                     {icon}
@@ -161,7 +161,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             </div>
             
             {predictAns && (
-              <div className="reveal show" style={{ marginTop: '0.75rem', padding: '0.75rem 1rem', background: predictAns.correct ? 'rgba(16, 185, 129, 0.12)' : 'rgba(99, 102, 241, 0.08)', borderLeft: `4px solid ${predictAns.correct ? '#10b981' : '#6366f1'}`, borderRadius: '10px', color: '#1e3a8a', fontWeight: 600, fontSize: '0.9rem' }}>
+              <div className="reveal show" style={{ marginTop: '0.75rem', padding: '0.75rem 1rem', background: predictAns.correct ? 'rgba(34, 197, 94, 0.15)' : '#27272A', borderLeft: `4px solid ${predictAns.correct ? '#22C55E' : '#F59E0B'}`, borderRadius: '10px', color: '#FAFAFA', fontWeight: 600, fontSize: '0.9rem' }}>
                 <b>{predictAns.correct ? '✓ Correct!' : '✗ Not quite.'} Magnetism through the cardboard!</b> The steel ball is a magnetic material, and the magnet's pull passes through the non-magnetic tray - so wherever you move the magnet, the ball follows. Let's play the maze!
               </div>
             )}
@@ -329,14 +329,14 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
       case 2:
         return (
           <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box' }}>
-            <div style={{ width: '100%', maxWidth: '980px', maxHeight: '100%', overflowY: 'auto', background: '#ffffff', border: '2px solid #818cf8', borderRadius: '24px', padding: '1.25rem 1.75rem', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', boxSizing: 'border-box' }}>
-              <div className="kicker" style={{ fontSize: '0.78rem', color: '#6366f1', fontWeight: 800, letterSpacing: '2px', marginBottom: '0.35rem' }}>
+            <div style={{ width: '100%', maxWidth: '980px', maxHeight: '100%', overflowY: 'auto', background: 'rgba(24, 24, 27, 0.95)', backdropFilter: 'blur(10px)', border: '1.5px solid #3F3F46', borderRadius: '24px', padding: '1.25rem 1.75rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', boxSizing: 'border-box' }}>
+              <div className="kicker" style={{ fontSize: '0.78rem', color: '#F59E0B', fontWeight: 800, letterSpacing: '2px', marginBottom: '0.35rem' }}>
                 TRICK 2 · RUNAWAY CARS
               </div>
-              <h1 style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', color: '#1e3a8a', fontWeight: 800, margin: '0 0 0.4rem 0' }}>
+              <h1 style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', color: '#FFFFFF', fontWeight: 800, margin: '0 0 0.4rem 0' }}>
                 Make a toy car flee without touching it.
               </h1>
-              <p className="lead" style={{ fontSize: 'clamp(0.85rem, 1.4vw, 0.98rem)', lineHeight: '1.45', color: '#334155', margin: '0 0 0.75rem 0', fontWeight: 600 }}>
+              <p className="lead" style={{ fontSize: 'clamp(0.85rem, 1.4vw, 0.98rem)', lineHeight: '1.45', color: '#A1A1AA', margin: '0 0 0.75rem 0', fontWeight: 600 }}>
                 Fix a bar magnet on a toy car, and hold another magnet in your hand. Point <b>like poles</b> at each other (N toward N). Tap "Push" and watch.
               </p>
               
@@ -356,12 +356,12 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                       padding: '0.75rem 1.75rem',
                       borderRadius: '30px',
                       border: 'none',
-                      background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
-                      color: '#ffffff',
+                      background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                      color: '#000000',
                       fontWeight: 800,
                       fontSize: '0.95rem',
                       cursor: carPushing ? 'not-allowed' : 'pointer',
-                      boxShadow: '0 4px 14px rgba(255, 119, 0, 0.4)'
+                      boxShadow: '0 4px 14px rgba(245, 158, 11, 0.4)'
                     }}
                   >
                     Bring N pole toward car's N pole
@@ -372,9 +372,9 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                     style={{
                       padding: '0.75rem 1.25rem',
                       borderRadius: '30px',
-                      border: '2px solid #cbd5e1',
-                      background: '#ffffff',
-                      color: '#1e3a8a',
+                      border: '1.5px solid #3F3F46',
+                      background: '#27272A',
+                      color: '#FAFAFA',
                       fontWeight: 800,
                       fontSize: '0.95rem',
                       cursor: !carPushing ? 'not-allowed' : 'pointer'
@@ -392,14 +392,14 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
       case 3:
         return (
           <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box' }}>
-            <div style={{ width: '100%', maxWidth: '980px', maxHeight: '100%', overflowY: 'auto', background: '#ffffff', border: '2px solid #818cf8', borderRadius: '24px', padding: '1.25rem 1.75rem', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', boxSizing: 'border-box' }}>
-              <div className="kicker" style={{ fontSize: '0.78rem', color: '#6366f1', fontWeight: 800, letterSpacing: '2px', marginBottom: '0.35rem' }}>
+            <div style={{ width: '100%', maxWidth: '980px', maxHeight: '100%', overflowY: 'auto', background: 'rgba(24, 24, 27, 0.95)', backdropFilter: 'blur(10px)', border: '1.5px solid #3F3F46', borderRadius: '24px', padding: '1.25rem 1.75rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)', boxSizing: 'border-box' }}>
+              <div className="kicker" style={{ fontSize: '0.78rem', color: '#F59E0B', fontWeight: 800, letterSpacing: '2px', marginBottom: '0.35rem' }}>
                 MAGNET CARE & ASSESSMENT
               </div>
-              <h1 style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', color: '#1e3a8a', fontWeight: 800, margin: '0 0 0.4rem 0' }}>
+              <h1 style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', color: '#FFFFFF', fontWeight: 800, margin: '0 0 0.4rem 0' }}>
                 How should magnets be stored safely?
               </h1>
-              <p className="lead" style={{ fontSize: 'clamp(0.85rem, 1.4vw, 0.98rem)', lineHeight: '1.45', color: '#334155', margin: '0 0 0.85rem 0', fontWeight: 600 }}>
+              <p className="lead" style={{ fontSize: 'clamp(0.85rem, 1.4vw, 0.98rem)', lineHeight: '1.45', color: '#A1A1AA', margin: '0 0 0.85rem 0', fontWeight: 600 }}>
                 Test your knowledge on caring for magnets to maintain their magnetic strength.
               </p>
 
@@ -414,22 +414,22 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                   const isSelected = qHard && qHard.selectedIndex === idx;
                   const isCorrect = c.ok;
                   
-                  let bgColor = '#f8fafc';
-                  let borderColor = '#cbd5e1';
-                  let textColor = '#1e293b';
+                  let bgColor = '#27272A';
+                  let borderColor = '#3F3F46';
+                  let textColor = '#FAFAFA';
                   let icon = null;
 
                   if (qHard) {
                     if (isCorrect) {
-                      bgColor = 'rgba(16, 185, 129, 0.12)';
-                      borderColor = '#10b981';
-                      textColor = '#065f46';
-                      icon = <CheckCircle2 size={18} color="#10b981" />;
+                      bgColor = 'rgba(34, 197, 94, 0.2)';
+                      borderColor = '#22C55E';
+                      textColor = '#86EFAC';
+                      icon = <CheckCircle2 size={18} color="#22C55E" />;
                     } else if (isSelected) {
-                      bgColor = 'rgba(239, 68, 68, 0.12)';
-                      borderColor = '#ef4444';
-                      textColor = '#991b1b';
-                      icon = <XCircle size={18} color="#ef4444" />;
+                      bgColor = 'rgba(239, 68, 68, 0.2)';
+                      borderColor = '#EF4444';
+                      textColor = '#FCA5A5';
+                      icon = <XCircle size={18} color="#EF4444" />;
                     }
                   }
 
@@ -448,7 +448,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                         fontSize: 'clamp(0.82rem, 1.3vw, 0.92rem)',
                         fontWeight: 700,
                         background: bgColor,
-                        border: `2px solid ${borderColor}`,
+                        border: `1.5px solid ${borderColor}`,
                         color: textColor,
                         cursor: qHard ? 'default' : 'pointer',
                         display: 'flex',
@@ -458,7 +458,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <span className="key" style={{ marginRight: '0.6rem', padding: '0.15rem 0.5rem', borderRadius: '6px', background: 'rgba(0,0,0,0.06)', fontSize: '0.8rem' }}>{['A','B','C','D'][idx]}</span>
+                        <span className="key" style={{ marginRight: '0.6rem', padding: '0.15rem 0.5rem', borderRadius: '6px', background: 'rgba(255,255,255,0.1)', fontSize: '0.8rem' }}>{['A','B','C','D'][idx]}</span>
                         {c.label}
                       </div>
                       {icon}
@@ -469,15 +469,15 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
 
               {qHard && (
                 <div style={{ marginTop: '0.85rem' }}>
-                  <div className="reveal show" style={{ padding: '0.75rem 1rem', background: qHard.correct ? 'rgba(16, 185, 129, 0.12)' : 'rgba(99, 102, 241, 0.08)', borderLeft: `4px solid ${qHard.correct ? '#10b981' : '#6366f1'}`, borderRadius: '10px', color: '#1e3a8a', fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.85rem' }}>
+                  <div className="reveal show" style={{ padding: '0.75rem 1rem', background: qHard.correct ? 'rgba(34, 197, 94, 0.15)' : '#27272A', borderLeft: `4px solid ${qHard.correct ? '#22C55E' : '#F59E0B'}`, borderRadius: '10px', color: '#FAFAFA', fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.85rem' }}>
                     <b>{qHard.correct ? '✓ Correct!' : '✗ Incorrect.'} Mistreatment weakened it - and careful storage prevents it.</b> Dropping, knocking and heat disturb the aligned tiny magnets inside. Store magnets in pairs with unlike poles together!
                   </div>
                   <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', justifyContent: 'center' }}>
                     <button 
                       onClick={() => setShowFinalCompletionModal(true)}
-                      style={{ padding: '0.75rem 2.2rem', borderRadius: '40px', border: 'none', background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)', color: '#ffffff', fontWeight: 800, fontSize: '1.05rem', cursor: 'pointer', boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                      style={{ padding: '0.75rem 2.2rem', borderRadius: '40px', border: 'none', background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', color: '#000000', fontWeight: 800, fontSize: '1.05rem', cursor: 'pointer', boxShadow: '0 6px 20px rgba(245, 158, 11, 0.45)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                     >
-                      Finish Activity <Trophy size={18} color="#ffffff" />
+                      Finish Activity <Trophy size={18} color="#000000" />
                     </button>
                   </div>
                 </div>
@@ -566,10 +566,34 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
       overflow: 'hidden',
       boxSizing: 'border-box',
       padding: '0.5rem 0.75rem',
-      background: 'linear-gradient(135deg, #EBF5F6 0%, #EDF8F7 100%)',
+      backgroundColor: '#09090B',
       position: 'relative'
     }}>
-      {/* Light Pastel Magnetic Field Vector Lines Background SVG */}
+      {/* High Quality Recognizeable Physics Lab Background with Controlled Blur */}
+      <div 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `url('/MagneticPoles/vintage_lab_bg.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'blur(3px) brightness(1.18) contrast(0.96)',
+          transform: 'scale(1.02)',
+          zIndex: 0
+        }}
+      />
+
+      {/* Dark Vector Overlay */}
+      <div 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(9, 9, 11, 0.45)',
+          zIndex: 0
+        }}
+      />
+
+      {/* Magnetic Field Vector Lines SVG */}
       <svg 
         style={{
           position: 'absolute',
@@ -583,49 +607,56 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(13, 148, 136, 0.15)" strokeWidth="3" fill="none" />
-        <path d="M-100 450 C 200 180, 500 180, 720 450 C 940 720, 1240 720, 1540 450" stroke="rgba(244, 63, 94, 0.15)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(245, 158, 11, 0.3)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 180, 500 180, 720 450 C 940 720, 1240 720, 1540 450" stroke="rgba(255, 255, 255, 0.25)" strokeWidth="3" fill="none" />
       </svg>
 
-      {/* Top Header Bar */}
+      {/* Top Header Bar with Midnight Carbon Contrast Theme */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
-        paddingBottom: '0.4rem',
+        padding: '0.45rem 0.85rem',
         marginBottom: '0.4rem',
-        borderBottom: '1px solid #CCECE7',
-        flexShrink: 0
+        background: 'rgba(9, 9, 11, 0.95)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid #3F3F46',
+        borderRadius: '16px',
+        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(245, 158, 11, 0.15)',
+        flexShrink: 0,
+        position: 'relative',
+        zIndex: 100
       }}>
-        {/* Left Column: Crimson Red Back Button */}
+        {/* Left Column: Back Button */}
         <button 
           onClick={onBackToDashboard}
           style={{ 
             position: 'relative', zIndex: 100,
-            padding: '0.4rem 0.85rem', 
-            fontSize: '0.8rem', 
-            gap: '0.35rem',
-            background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '8px',
+            padding: '0.45rem 0.95rem', 
+            fontSize: '0.82rem', 
+            gap: '0.4rem',
+            background: '#18181B',
+            color: '#FFFFFF',
+            border: '1px solid #3F3F46',
+            borderRadius: '10px',
             fontWeight: 700,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            boxShadow: '0 4px 12px rgba(244, 63, 94, 0.35)'
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+            transition: 'all 0.2s ease'
           }}
         >
-          <ArrowLeft size={14} color="#ffffff" /> Back to Class 6 Chapter 4
+          <ArrowLeft size={16} color="#FFFFFF" /> Back to Class 6 Chapter 4
         </button>
 
         {/* Center Column: Title */}
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: '#134E4A' }}>
-            <Compass size={18} style={{ color: '#F43F5E' }} />
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+            <Compass size={22} style={{ color: '#F59E0B', filter: 'drop-shadow(0 0 8px rgba(245, 158, 11, 0.6))' }} />
             Activity 4.8: Fun with Magnets
           </h2>
-          <span style={{ fontSize: '0.72rem', color: '#0F766E', fontWeight: 600 }}>Class 6 Science: Chapter 4 — Maze & Runaway Cars Exploration</span>
+          <span style={{ fontSize: '0.78rem', color: '#71717A', fontWeight: 600 }}>Class 6 Science: Chapter 4 — Maze & Runaway Cars Exploration</span>
         </div>
 
         {/* Right Column: Navigation Tabs */}
@@ -642,15 +673,15 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  border: isActive ? 'none' : '1.5px solid #FECDD3',
-                  background: isActive ? 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' : '#FFFFFF',
-                  color: isActive ? '#ffffff' : '#E11D48',
+                  border: isActive ? 'none' : '1px solid #3F3F46',
+                  background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#18181B',
+                  color: isActive ? '#000000' : '#71717A',
                   borderRadius: '20px',
                   cursor: 'pointer',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   fontSize: '0.82rem',
                   transition: 'all 0.2s ease',
-                  boxShadow: isActive ? '0 4px 12px rgba(244, 63, 94, 0.35)' : 'none'
+                  boxShadow: isActive ? '0 4px 14px rgba(245, 158, 11, 0.4)' : 'none'
                 }}
               >
                 {nav.label}

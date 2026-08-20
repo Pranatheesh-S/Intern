@@ -164,67 +164,65 @@ export default function Questions({ onComplete, onNext }) {
       alignItems: 'center', 
       justifyContent: 'center', 
       padding: '0.5rem', 
-      overflowY: 'auto',
+      overflow: 'hidden',
       boxSizing: 'border-box' 
     }}>
-      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column' }}>
         {/* Top Bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.5rem' }}>
-          <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 700 }}>Test Your Knowledge</h3>
-          <div style={{ color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', padding: '0 0.5rem' }}>
+          <h3 style={{ margin: 0, color: '#71717A', fontSize: '1.1rem', fontWeight: 700 }}>Test Your Knowledge</h3>
+          <div style={{ color: '#F59E0B', fontSize: '1rem', fontWeight: 700 }}>
             Question {currentQuestion + 1} of {questions.length}
           </div>
         </div>
 
         {/* Main Quiz Card */}
         <div className="glass-panel" style={{ 
-          background: 'var(--surface)', 
-          border: '2px solid #818cf8',
-          borderRadius: '20px', 
-          padding: '1.25rem 1.75rem', 
-          boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
+          background: 'rgba(24, 24, 27, 0.95)', 
+          backdropFilter: 'blur(10px)',
+          border: '1.5px solid #3F3F46',
+          borderRadius: '18px', 
+          padding: '0.85rem 1.35rem', 
+          boxShadow: '0 12px 35px rgba(0, 0, 0, 0.6)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.85rem',
+          gap: '0.55rem',
           width: '100%',
-          flex: 1,
-          minHeight: 0,
-          overflowY: 'auto',
           boxSizing: 'border-box'
         }}>
           {/* Title */}
-          <h3 style={{ margin: 0, color: '#6366f1', fontSize: 'clamp(1.15rem, 1.8vw, 1.45rem)', fontWeight: 800 }}>
+          <h3 style={{ margin: 0, color: '#F59E0B', fontSize: 'clamp(1.05rem, 1.5vw, 1.3rem)', fontWeight: 800 }}>
             {q.title}
           </h3>
 
           {/* Question Text */}
-          <p style={{ margin: 0, fontSize: 'clamp(0.95rem, 1.5vw, 1.15rem)', lineHeight: '1.45', fontWeight: 600, color: 'var(--text-heading)' }}>
+          <p style={{ margin: 0, fontSize: 'clamp(0.88rem, 1.3vw, 1.02rem)', lineHeight: '1.4', fontWeight: 600, color: '#FAFAFA' }}>
             {q.question}
           </p>
 
           {/* Option Buttons */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
             {q.options.map((option, index) => {
               const isSelected = selectedOption === option;
               const isCorrect = option === q.correctAnswer;
 
-              let bgColor = 'var(--bg)';
-              let borderColor = '#cbd5e1';
+              let bgColor = '#27272A';
+              let borderColor = '#3F3F46';
               let icon = null;
 
               if (showFeedback) {
                 if (isCorrect) {
-                  bgColor = 'rgba(16, 185, 129, 0.12)';
-                  borderColor = '#10b981';
-                  icon = <CheckCircle size={20} color="#10b981" />;
+                  bgColor = 'rgba(34, 197, 94, 0.2)';
+                  borderColor = '#22C55E';
+                  icon = <CheckCircle size={18} color="#22C55E" />;
                 } else if (isSelected) {
-                  bgColor = 'rgba(239, 68, 68, 0.12)';
-                  borderColor = '#ef4444';
-                  icon = <XCircle size={20} color="#ef4444" />;
+                  bgColor = 'rgba(239, 68, 68, 0.2)';
+                  borderColor = '#EF4444';
+                  icon = <XCircle size={18} color="#EF4444" />;
                 }
               } else if (isSelected) {
-                borderColor = '#6366f1';
-                bgColor = 'rgba(99, 102, 241, 0.08)';
+                borderColor = '#F59E0B';
+                bgColor = 'rgba(245, 158, 11, 0.12)';
               }
 
               return (
@@ -237,14 +235,14 @@ export default function Questions({ onComplete, onNext }) {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: '12px',
+                    padding: '0.6rem 1.15rem',
+                    borderRadius: '10px',
                     background: bgColor,
-                    border: `2px solid ${borderColor}`,
-                    color: 'var(--text)',
+                    border: `1.5px solid ${borderColor}`,
+                    color: '#FAFAFA',
                     cursor: showFeedback ? 'default' : 'pointer',
                     textAlign: 'left',
-                    fontSize: '1.05rem',
+                    fontSize: '0.98rem',
                     fontWeight: 600,
                     transition: 'all 0.25s ease',
                     opacity: showFeedback && !isCorrect && !isSelected ? 0.6 : 1
@@ -259,25 +257,25 @@ export default function Questions({ onComplete, onNext }) {
 
           {/* Explanation & Next Question Button */}
           {showFeedback && (
-            <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              <div style={{ padding: '0.75rem 1.15rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '12px', borderLeft: '5px solid #6366f1' }}>
-                <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.02rem', fontWeight: 800, color: '#6366f1' }}>Explanation</h4>
-                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.02rem', lineHeight: '1.45' }}>{q.explanation}</p>
+            <div style={{ marginTop: '0.45rem', animation: 'fadeIn 0.35s ease' }}>
+              <div style={{ padding: '0.55rem 1.15rem', background: '#27272A', borderRadius: '12px', borderLeft: '4px solid #F59E0B', border: '1px solid #3F3F46', borderLeftWidth: '4px' }}>
+                <h4 style={{ margin: '0 0 0.2rem 0', fontSize: '0.92rem', fontWeight: 800, color: '#F59E0B' }}>Explanation</h4>
+                <p style={{ margin: 0, color: '#FAFAFA', fontSize: '0.9rem', lineHeight: '1.4' }}>{q.explanation}</p>
               </div>
               
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.45rem' }}>
                 <button
-                  onClick={handleNext}
+                  onClick={handleNextQuestion}
                   style={{
-                    padding: '0.65rem 2rem',
-                    background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
-                    color: '#ffffff',
+                    padding: '0.55rem 1.8rem',
+                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                    color: '#000000',
                     border: 'none',
-                    borderRadius: '30px',
-                    fontSize: '1.1rem',
+                    borderRadius: '25px',
+                    fontSize: '0.96rem',
                     fontWeight: 800,
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
+                    boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)',
                     transition: 'all 0.25s ease'
                   }}
                   onMouseEnter={(e) => {
@@ -287,7 +285,7 @@ export default function Questions({ onComplete, onNext }) {
                     e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
-                  {currentQuestion === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                  {currentQuestion === questions.length - 1 ? 'Proceed to Challenge Mode' : 'Next Question'}
                 </button>
               </div>
             </div>
