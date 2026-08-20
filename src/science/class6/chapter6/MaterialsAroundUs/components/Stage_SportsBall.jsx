@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Target, Search, ArrowRight, CheckCircle } from 'lucide-react';
 
+import imgBallTennis from '../images/b2_ball_tennis.png';
+import imgBallCricket from '../images/b2_ball_cricket.png';
+import imgBallSponge from '../images/b2_ball_sponge.png';
+
 export default function Stage_SportsBall({ onComplete, addXp }) {
   const [activeBall, setActiveBall] = useState(null);
   const [inspected, setInspected] = useState({});
@@ -11,7 +15,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
     {
       id: 'tennis',
       name: 'Tennis Ball',
-      emoji: '🥎',
+      icon: imgBallTennis,
       material: 'Rubber & Felt',
       hardness: 'Medium (Squeezable)',
       weight: 'Light',
@@ -20,7 +24,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
     {
       id: 'cricket',
       name: 'Cricket Ball',
-      emoji: '🔴',
+      icon: imgBallCricket,
       material: 'Leather & Cork',
       hardness: 'Very Hard',
       weight: 'Heavy',
@@ -28,8 +32,8 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
     },
     {
       id: 'exercise',
-      name: 'Exercise Ball',
-      emoji: '🟡',
+      name: 'Sponge Ball',
+      icon: imgBallSponge,
       material: 'Soft Sponge / Foam',
       hardness: 'Very Soft & Flexible',
       weight: 'Light (low density)',
@@ -89,7 +93,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
                 borderRadius: '12px'
               }}
             >
-              <span style={{ fontSize: '1.75rem' }}>{ball.emoji}</span>
+              <img src={ball.icon} alt={ball.name} style={{ width: '36px', height: '36px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
               <span style={{ fontWeight: 'bold' }}>{ball.name}</span>
               {inspected[ball.id] && <CheckCircle size={18} style={{ marginLeft: 'auto', color: activeBall === ball.id ? '#fff' : 'var(--success)' }} />}
             </button>
@@ -112,7 +116,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
                   return (
                     <>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-                        <span style={{ fontSize: '4rem' }}>{ball.emoji}</span>
+                        <img src={ball.icon} alt={ball.name} style={{ width: '80px', height: '80px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                         <div>
                           <h2 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.75rem' }}>{ball.name}</h2>
                           <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Scientific Profile</span>
@@ -196,8 +200,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
               animate={dropState === 'dropping' ? { y: [0, 120, 30, 120, 60, 120, 90, 120, 105, 120, 115, 120, 120] } : { y: 0 }} 
               transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
             >
-              <circle cx="60" cy="15" r="15" fill="#a3e635" />
-              <path d="M 48,8 Q 55,15 48,22 M 72,8 Q 65,15 72,22" stroke="#fff" strokeWidth="1.5" fill="none" opacity="0.7" />
+              <image href={imgBallTennis} x="45" y="0" width="30" height="30" style={{ mixBlendMode: 'multiply' }} />
             </motion.g>
           </g>
 
@@ -208,8 +211,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
               animate={dropState === 'dropping' ? { y: [0, 120, 110, 120, 115, 120, 120, 120, 120, 120, 120, 120, 120] } : { y: 0 }} 
               transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
             >
-              <circle cx="150" cy="15" r="15" fill="#dc2626" />
-              <line x1="150" y1="0" x2="150" y2="30" stroke="#fff" strokeWidth="2" strokeDasharray="3,2" opacity="0.8" />
+              <image href={imgBallCricket} x="135" y="0" width="30" height="30" style={{ mixBlendMode: 'multiply' }} />
             </motion.g>
           </g>
 
@@ -220,7 +222,7 @@ export default function Stage_SportsBall({ onComplete, addXp }) {
               animate={dropState === 'dropping' ? { y: [0, 120, 80, 120, 100, 120, 110, 120, 115, 120, 120, 120, 120] } : { y: 0 }} 
               transition={dropState === 'dropping' ? { duration: 3.5, ease: "easeInOut" } : { duration: 0 }}
             >
-              <circle cx="240" cy="15" r="15" fill="#fbbf24" />
+              <image href={imgBallSponge} x="225" y="0" width="30" height="30" style={{ mixBlendMode: 'multiply' }} />
             </motion.g>
           </g>
         </svg>

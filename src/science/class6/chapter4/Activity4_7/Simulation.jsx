@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle2, RotateCcw, Compass, Activity, Eye, EyeOff, Pointer } from 'lucide-react';
+import { ArrowRight, CheckCircle2, RotateCcw, Pointer, Info } from 'lucide-react';
 import { DndContext, useSensor, useSensors, PointerSensor, TouchSensor, useDraggable, useDroppable, DragOverlay } from '@dnd-kit/core';
 
 // Helper: Calculate angle between two points
@@ -14,36 +14,36 @@ const calculateAngle = (cx, cy, px, py) => {
 
 // Compass component
 const CompassNeedle = ({ rotation, scale = 1 }) => (
-  <div style={{ transform: `scale(${scale})`, transformOrigin: 'center', position: 'relative', width: '180px', height: '180px', flexShrink: 0, borderRadius: '50%', background: '#fff', border: '6px solid #94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 12px rgba(0,0,0,0.15)', userSelect: 'none' }}>
-    <div style={{ position: 'absolute', top: '10px', fontWeight: 'bold', color: '#ef4444', fontSize: '18px' }}>N</div>
-    <div style={{ position: 'absolute', bottom: '10px', fontWeight: 'bold', color: '#3b82f6', fontSize: '18px' }}>S</div>
-    <div style={{ position: 'absolute', left: '10px', fontWeight: 'bold', color: '#94a3b8', fontSize: '18px' }}>W</div>
-    <div style={{ position: 'absolute', right: '10px', fontWeight: 'bold', color: '#94a3b8', fontSize: '18px' }}>E</div>
+  <div style={{ transform: `scale(${scale})`, transformOrigin: 'center', position: 'relative', width: '160px', height: '160px', flexShrink: 0, borderRadius: '50%', background: '#fff', border: '5px solid #64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.18)', userSelect: 'none' }}>
+    <div style={{ position: 'absolute', top: '8px', fontWeight: '800', color: '#ef4444', fontSize: '16px' }}>N</div>
+    <div style={{ position: 'absolute', bottom: '8px', fontWeight: '800', color: '#3b82f6', fontSize: '16px' }}>S</div>
+    <div style={{ position: 'absolute', left: '8px', fontWeight: '800', color: '#64748b', fontSize: '16px' }}>W</div>
+    <div style={{ position: 'absolute', right: '8px', fontWeight: '800', color: '#64748b', fontSize: '16px' }}>E</div>
     
     <motion.div
       animate={{ rotate: rotation }}
-      transition={{ type: "spring", stiffness: 40, damping: 10 }}
-      style={{ position: 'absolute', width: '8px', height: '140px', display: 'flex', flexDirection: 'column' }}
+      transition={{ type: "spring", stiffness: 45, damping: 12 }}
+      style={{ position: 'absolute', width: '8px', height: '120px', display: 'flex', flexDirection: 'column' }}
     >
       {/* North pointing part (Red) */}
-      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '12px solid transparent', borderRight: '12px solid transparent', borderBottom: '70px solid #ef4444', transform: 'translateX(-8px)' }} />
+      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '10px solid transparent', borderRight: '10px solid transparent', borderBottom: '60px solid #ef4444', transform: 'translateX(-6px)' }} />
       {/* South pointing part (Blue) */}
-      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '12px solid transparent', borderRight: '12px solid transparent', borderTop: '70px solid #3b82f6', transform: 'translateX(-8px)' }} />
+      <div style={{ flex: 1, width: '0', height: '0', borderLeft: '10px solid transparent', borderRight: '10px solid transparent', borderTop: '60px solid #3b82f6', transform: 'translateX(-6px)' }} />
     </motion.div>
     
-    <div style={{ position: 'absolute', width: '18px', height: '18px', background: '#334155', borderRadius: '50%' }} />
+    <div style={{ position: 'absolute', width: '16px', height: '16px', background: '#1e293b', borderRadius: '50%' }} />
   </div>
 );
 
 const MagnetVisual = ({ isFlipped, isDragging }) => (
   <div style={{ 
-    width: '160px', height: '40px', display: 'flex', borderRadius: '4px', overflow: 'hidden', 
-    boxShadow: isDragging ? '0 10px 15px rgba(0,0,0,0.3)' : '0 4px 6px rgba(0,0,0,0.1)',
+    width: '150px', height: '38px', display: 'flex', borderRadius: '6px', overflow: 'hidden', 
+    boxShadow: isDragging ? '0 12px 20px rgba(0,0,0,0.35)' : '0 4px 10px rgba(0,0,0,0.2)',
     flexDirection: isFlipped ? 'row-reverse' : 'row',
     userSelect: 'none'
   }}>
-    <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>N</div>
-    <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>S</div>
+    <div style={{ flex: 1, background: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '17px' }}>N</div>
+    <div style={{ flex: 1, background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '800', fontSize: '17px' }}>S</div>
   </div>
 );
 
@@ -66,7 +66,6 @@ const DraggableMagnet = ({ isFlipped, onDoubleClick }) => {
   );
 };
 
-// Draggable Compass
 const DraggableCompass = ({ rotation }) => {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: 'compass',
@@ -96,13 +95,13 @@ const SidebarDraggableCompass = () => {
     zIndex: 10,
     cursor: isDragging ? 'grabbing' : 'grab',
     touchAction: 'none',
-    width: '100px', height: '100px',
+    width: '90px', height: '90px',
     display: 'flex', alignItems: 'center', justifyContent: 'center'
   };
 
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-       <CompassNeedle rotation={0} scale={100/180} />
+       <CompassNeedle rotation={0} scale={90/160} />
     </div>
   );
 };
@@ -128,10 +127,10 @@ const SidebarDraggableMagnet = () => {
 
 const MaterialBlock3D = ({ type, thickness = 1 }) => {
   const getStyle = () => {
-    const baseWidth = 24 + thickness * 20;
+    const baseWidth = 20 + thickness * 16;
     const base = {
       width: `${baseWidth}px`,
-      height: '240px',
+      height: '200px',
       borderRadius: '2px',
       display: 'flex',
       alignItems: 'center',
@@ -168,11 +167,11 @@ const MaterialBlock3D = ({ type, thickness = 1 }) => {
         return {
           ...base,
           position: 'relative',
-          borderRadius: '4px',
-          border: '2px solid rgba(255,255,255,0.4)',
-          background: 'linear-gradient(90deg, rgba(255,255,255,0.35), rgba(220,230,240,0.12), rgba(255,255,255,0.28))',
-          boxShadow: 'inset 0 0 15px rgba(255,255,255,0.2), inset -5px 0 10px rgba(255,255,255,0.15), inset 5px 0 10px rgba(255,255,255,0.08), 2px 4px 8px rgba(0,0,0,0.1)',
-          backdropFilter: 'blur(2px)'
+          borderRadius: '6px',
+          background: 'linear-gradient(90deg, rgba(56, 189, 248, 0.85) 0%, rgba(14, 165, 233, 0.75) 30%, rgba(56, 189, 248, 0.85) 100%)',
+          border: '2px solid #0284c7',
+          boxShadow: '0 8px 20px rgba(2, 132, 199, 0.35), inset 0 0 12px rgba(255, 255, 255, 0.5)',
+          backdropFilter: 'blur(4px)'
         };
       default:
         return base;
@@ -184,23 +183,25 @@ const MaterialBlock3D = ({ type, thickness = 1 }) => {
       {type === 'glass' && (
         <div style={{
           position: 'absolute',
-          left: '4px',
+          left: '6px',
           top: '6px',
           width: '4px',
-          height: '224px',
-          background: 'rgba(255,255,255,0.3)',
-          borderRadius: '5px'
+          height: '188px',
+          background: '#ffffff',
+          borderRadius: '4px',
+          opacity: 0.9
         }} />
       )}
       <span style={{ 
         transform: 'rotate(-90deg)', 
-        color: type === 'glass' || type === 'plastic' ? '#fff' : '#4a3018',
-        fontWeight: 'bold',
-        fontSize: type === 'glass' ? '18px' : '14px',
+        color: '#ffffff',
+        fontWeight: '900',
+        fontSize: '15px',
         fontFamily: 'Arial, sans-serif',
         textTransform: 'uppercase',
-        letterSpacing: type === 'glass' ? '4px' : '2px',
-        opacity: 0.8
+        letterSpacing: '3px',
+        textShadow: '0 2px 4px rgba(0,0,0,0.4)',
+        opacity: 0.95
       }}>
         {type}
       </span>
@@ -210,10 +211,10 @@ const MaterialBlock3D = ({ type, thickness = 1 }) => {
 
 export default function Simulation({ onComplete, onNext }) {
   const [step, setStep] = useState(1);
-  const [magnetPos, setMagnetPos] = useState({ x: 350, y: 400 });
-  const [compassPos, setCompassPos] = useState({ x: 750, y: 400 });
+  const [magnetPos, setMagnetPos] = useState({ x: 280, y: 300 });
+  const [compassPos, setCompassPos] = useState({ x: 620, y: 300 });
   const [isFlipped, setIsFlipped] = useState(false);
-  const [needleRotation, setNeedleRotation] = useState(0); // 0 is North (pointing up)
+  const [needleRotation, setNeedleRotation] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 });
   const [activeDragId, setActiveDragId] = useState(null);
@@ -238,7 +239,7 @@ export default function Simulation({ onComplete, onNext }) {
        } else {
          const isFull = Object.values(newObservations).every(val => val !== null);
          if (isFull && !allCorrect) {
-           setFeedback({ type: 'info', text: 'Some observations are incorrect. The field passes through non-magnetic materials.' });
+           setFeedback({ type: 'info', text: 'Some observations are incorrect. Magnetic fields pass through non-magnetic materials.' });
          }
        }
     }
@@ -256,7 +257,7 @@ export default function Simulation({ onComplete, onNext }) {
   const distanceModifier = ({ transform, active }) => {
     if (!active || (active.id !== 'bar_magnet' && active.id !== 'compass')) return transform;
 
-    const minDist = activeMaterial ? 170 + (24 + thickness * 20) : 170; 
+    const minDist = activeMaterial ? 150 + (20 + thickness * 16) : 150; 
 
     let newX = active.id === 'bar_magnet' ? magnetPos.x + transform.x : compassPos.x + transform.x;
     let newY = active.id === 'bar_magnet' ? magnetPos.y + transform.y : compassPos.y + transform.y;
@@ -266,7 +267,7 @@ export default function Simulation({ onComplete, onNext }) {
 
     const dx = newX - otherX;
     const dy = newY - otherY;
-    const dist = Math.sqrt(dx * dx + dy * dy) || 1; // prevent divide by zero
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
     if (dist < minDist) {
       const angle = Math.atan2(dy, dx);
@@ -284,7 +285,7 @@ export default function Simulation({ onComplete, onNext }) {
   };
 
   const getNeedleRotation = (mX, mY, cX, cY, flipped, material, thick) => {
-    const magnetWidth = 160;
+    const magnetWidth = 150;
     const nPoleX = flipped ? mX + magnetWidth / 4 : mX - magnetWidth / 4;
     const sPoleX = flipped ? mX - magnetWidth / 4 : mX + magnetWidth / 4;
     const poleY = mY;
@@ -294,10 +295,7 @@ export default function Simulation({ onComplete, onNext }) {
 
     const minDist = Math.min(distN, distS);
 
-    // The max center-to-center distance at thickness 5 is 294 (80 + 124 + 90).
-    // The pole is 40px from the center, so pole-to-center distance is 254.
-    // We set the absolute limit of the magnetic field reach to 255.
-    if (minDist > 255) return 0;
+    if (minDist > 240) return 0;
 
     const angleToN = calculateAngle(cX, cY, nPoleX, poleY);
     const angleToS = calculateAngle(cX, cY, sPoleX, poleY);
@@ -307,14 +305,9 @@ export default function Simulation({ onComplete, onNext }) {
     while (targetAngle > 180) targetAngle -= 360;
     while (targetAngle < -180) targetAngle += 360;
 
-    // Deflection drops to 0 at exactly 255. Starts dropping from 120.
-    const deflectionFactor = Math.max(0, Math.min(1, 1 - (minDist - 120) / 135));
+    const deflectionFactor = Math.max(0, Math.min(1, 1 - (minDist - 110) / 130));
     
     return targetAngle * deflectionFactor;
-  };
-
-  const checkStepCompletion = (mX, mY, cX, cY, flipped) => {
-    // No step advancement needed here, just observation
   };
 
   const handleDragStart = (event) => {
@@ -345,42 +338,16 @@ export default function Simulation({ onComplete, onNext }) {
     setActiveDragId(null);
     setDragDelta({ x: 0, y: 0 });
     
-    const { active, over, delta } = event;
+    const { active, delta } = event;
 
     if (active.id === 'sidebar_compass') {
-      let finalX = 750;
-      let finalY = 400;
-      if (active.rect?.current?.translated) {
-        const translatedRect = active.rect.current.translated;
-        const wsEl = document.getElementById('simulation-workspace');
-        if (wsEl) {
-          const wsRect = wsEl.getBoundingClientRect();
-          finalX = (translatedRect.left + translatedRect.width / 2) - wsRect.left;
-          finalY = (translatedRect.top + translatedRect.height / 2) - wsRect.top;
-          finalX = Math.max(80, Math.min(finalX, wsRect.width - 80));
-          finalY = Math.max(20, Math.min(finalY, wsRect.height - 20));
-        }
-      }
-      setCompassPos({ x: finalX, y: finalY });
+      setCompassPos({ x: 620, y: 300 });
       setStep(2);
       return;
     }
     
     if (active.id === 'sidebar_magnet') {
-      let finalX = 350;
-      let finalY = 400;
-      if (active.rect?.current?.translated) {
-        const translatedRect = active.rect.current.translated;
-        const wsEl = document.getElementById('simulation-workspace');
-        if (wsEl) {
-          const wsRect = wsEl.getBoundingClientRect();
-          finalX = (translatedRect.left + translatedRect.width / 2) - wsRect.left;
-          finalY = (translatedRect.top + translatedRect.height / 2) - wsRect.top;
-          finalX = Math.max(80, Math.min(finalX, wsRect.width - 80));
-          finalY = Math.max(20, Math.min(finalY, wsRect.height - 20));
-        }
-      }
-      setMagnetPos({ x: finalX, y: finalY });
+      setMagnetPos({ x: 280, y: 300 });
       setStep(3);
       return;
     }
@@ -391,29 +358,27 @@ export default function Simulation({ onComplete, onNext }) {
     let newCY = compassPos.y;
     
     if (active.id === 'bar_magnet') {
-      newMX = Math.max(80, Math.min(magnetPos.x + delta.x, 1220));
-      newMY = Math.max(20, Math.min(magnetPos.y + delta.y, 680));
+      newMX = Math.max(80, Math.min(magnetPos.x + delta.x, 900));
+      newMY = Math.max(20, Math.min(magnetPos.y + delta.y, 500));
       setMagnetPos({ x: newMX, y: newMY });
     } else if (active.id === 'compass') {
-      newCX = Math.max(80, Math.min(compassPos.x + delta.x, 1220));
-      newCY = Math.max(20, Math.min(compassPos.y + delta.y, 680));
+      newCX = Math.max(80, Math.min(compassPos.x + delta.x, 900));
+      newCY = Math.max(20, Math.min(compassPos.y + delta.y, 500));
       setCompassPos({ x: newCX, y: newCY });
     }
     
     setNeedleRotation(getNeedleRotation(newMX, newMY, newCX, newCY, isFlipped, activeMaterial, thickness));
-    checkStepCompletion(newMX, newMY, newCX, newCY, isFlipped);
   };
 
   const flipMagnet = () => {
     const newFlipped = !isFlipped;
     setIsFlipped(newFlipped);
     setNeedleRotation(getNeedleRotation(magnetPos.x, magnetPos.y, compassPos.x, compassPos.y, newFlipped, activeMaterial, thickness));
-    checkStepCompletion(magnetPos.x, magnetPos.y, compassPos.x, compassPos.y, newFlipped);
   };
 
   const handleReset = () => {
-    setMagnetPos({ x: 350, y: 400 });
-    setCompassPos({ x: 750, y: 400 });
+    setMagnetPos({ x: 280, y: 300 });
+    setCompassPos({ x: 620, y: 300 });
     setIsFlipped(false);
     setNeedleRotation(0);
     setFeedback(null);
@@ -434,7 +399,7 @@ export default function Simulation({ onComplete, onNext }) {
     const currentMX = magnetPos.x + (activeDragId === 'bar_magnet' ? dragDelta.x : 0);
     const currentMY = magnetPos.y + (activeDragId === 'bar_magnet' ? dragDelta.y : 0);
     
-    const fieldOpacity = Math.max(0.05, 0.3 - (activeMaterial ? thickness * 0.04 : 0));
+    const fieldOpacity = Math.max(0.05, 0.35 - (activeMaterial ? thickness * 0.04 : 0));
 
     return (
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', opacity: fieldOpacity }}>
@@ -447,17 +412,11 @@ export default function Simulation({ onComplete, onNext }) {
             </linearGradient>
           </defs>
           <g transform={`translate(${currentMX}, ${currentMY}) ${isFlipped ? 'scale(-1, 1)' : ''}`}>
-             <path d="M -80 0 Q 0 -150 80 0" fill="none" stroke="url(#fieldGrad)" strokeWidth="2" strokeDasharray="5,5">
+             <path d="M -75 0 Q 0 -130 75 0" fill="none" stroke="url(#fieldGrad)" strokeWidth="2" strokeDasharray="5,5">
                <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
              </path>
-             <path d="M -80 0 Q 0 150 80 0" fill="none" stroke="url(#fieldGrad)" strokeWidth="2" strokeDasharray="5,5">
+             <path d="M -75 0 Q 0 130 75 0" fill="none" stroke="url(#fieldGrad)" strokeWidth="2" strokeDasharray="5,5">
                <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
-             </path>
-             <path d="M -80 0 Q 0 -300 80 0" fill="none" stroke="url(#fieldGrad)" strokeWidth="2" strokeDasharray="5,5">
-               <animate attributeName="stroke-dashoffset" from="100" to="0" dur="3s" repeatCount="indefinite" />
-             </path>
-             <path d="M -80 0 Q 0 300 80 0" fill="none" stroke="url(#fieldGrad)" strokeWidth="2" strokeDasharray="5,5">
-               <animate attributeName="stroke-dashoffset" from="100" to="0" dur="3s" repeatCount="indefinite" />
              </path>
           </g>
         </svg>
@@ -467,50 +426,74 @@ export default function Simulation({ onComplete, onNext }) {
 
   return (
     <DndContext sensors={sensors} modifiers={[distanceModifier]} onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
-      <div className="main-grid" style={{ gridTemplateColumns: "1fr", gap: "1rem", maxWidth: "1800px", margin: "0 auto", width: "100%" }}>
-      
-      <div style={{ display: "grid", gridTemplateColumns: "350px 1fr", gap: "1.5rem" }}>
+      <div style={{ 
+        padding: '1.25rem 1.75rem', 
+        display: 'flex', 
+        gap: '1.5rem', 
+        height: '100%', 
+        minHeight: 0, 
+        overflow: 'hidden', 
+        boxSizing: 'border-box',
+        background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
+        border: '1.5px solid #1e40af',
+        borderRadius: '20px',
+        boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)'
+      }}>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        {/* Left Panel: Instructions */}
-        <div className="glass-panel" style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem", background: "var(--surface)" }}>
-          <h3 style={{ margin: 0, color: "var(--text-heading)", borderBottom: "1px solid var(--border)", paddingBottom: "0.5rem" }}>Instructions</h3>
+        {/* Left Side: Light Green Instructions & Observation Table Card with Black Text */}
+        <div style={{ 
+          width: '340px', 
+          flexShrink: 0, 
+          padding: '1.25rem 1.35rem', 
+          background: 'linear-gradient(145deg, #a7f3d0 0%, #6ee7b7 100%)', 
+          border: '2px solid #059669', 
+          borderRadius: '16px',
+          boxShadow: '0 8px 25px rgba(5, 150, 105, 0.25)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.85rem',
+          overflowY: 'auto',
+          color: '#000000'
+        }}>
+          <h3 style={{ margin: 0, color: '#000000', fontSize: '1.15rem', fontWeight: 800, borderBottom: '1.5px solid #059669', paddingBottom: '0.4rem' }}>
+            Instructions & Observations
+          </h3>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
             
-            <div style={{ opacity: step >= 1 ? 1 : 0.3 }}>
-              <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--accent)' }}>Step 1</div>
-              <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>Take a magnetic compass and a bar magnet.</p>
+            <div style={{ opacity: step >= 1 ? 1 : 0.4 }}>
+              <div style={{ fontWeight: '800', fontSize: '0.88rem', color: '#000000' }}>Step 1</div>
+              <p style={{ fontSize: '0.85rem', margin: '0.2rem 0', color: '#000000', fontWeight: 700 }}>Take a magnetic compass and a bar magnet.</p>
               {step === 1 && (
-                <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '8px', border: '1px dashed var(--border)' }}>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '500' }}>
-                    <Pointer size={14} /> Drag into workspace
+                <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', padding: '0.65rem', background: 'rgba(255, 255, 255, 0.75)', borderRadius: '12px', border: '2px dashed #059669' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#000000', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '800' }}>
+                    <Pointer size={14} color="#000000" /> Drag into workspace
                   </div>
                   <SidebarDraggableCompass />
                 </div>
               )}
             </div>
 
-            <div style={{ opacity: step >= 2 ? 1 : 0.3 }}>
-              <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--accent)' }}>Step 2</div>
-              <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>Place the compass on the surface. Observe it resting towards North.</p>
+            <div style={{ opacity: step >= 2 ? 1 : 0.4 }}>
+              <div style={{ fontWeight: '800', fontSize: '0.88rem', color: '#000000' }}>Step 2</div>
+              <p style={{ fontSize: '0.85rem', margin: '0.2rem 0', color: '#000000', fontWeight: 700 }}>Place compass on surface. Observe it resting towards North.</p>
               {step === 2 && (
-                <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '8px', border: '1px dashed var(--border)' }}>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '500' }}>
-                    <Pointer size={14} /> Drag into workspace
+                <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', padding: '0.65rem', background: 'rgba(255, 255, 255, 0.75)', borderRadius: '12px', border: '2px dashed #059669' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#000000', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: '800' }}>
+                    <Pointer size={14} color="#000000" /> Drag into workspace
                   </div>
                   <SidebarDraggableMagnet />
                 </div>
               )}
             </div>
 
-            <div style={{ opacity: step >= 3 ? 1 : 0.3 }}>
-              <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--accent)' }}>Step 3</div>
-              <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>Place different non-magnetic materials between the magnet and compass. Does the needle still deflect?</p>
+            <div style={{ opacity: step >= 3 ? 1 : 0.4 }}>
+              <div style={{ fontWeight: '800', fontSize: '0.88rem', color: '#000000' }}>Step 3</div>
+              <p style={{ fontSize: '0.85rem', margin: '0.2rem 0', color: '#000000', fontWeight: 700 }}>Place non-magnetic materials between magnet and compass. Test deflection.</p>
               
               {step === 3 && (
-                <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                <div style={{ marginTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
                     {['wood', 'cardboard', 'plastic', 'glass'].map(mat => (
                       <button 
                         key={mat}
@@ -522,22 +505,32 @@ export default function Simulation({ onComplete, onNext }) {
                           let finalMY = magnetPos.y;
                           
                           if (newMat) {
-                            const reqDist = 160 + (24 + thickness * 20);
+                            const reqDist = 150 + (20 + thickness * 16);
                             const dx = magnetPos.x - compassPos.x;
                             const dy = magnetPos.y - compassPos.y;
                             const dist = Math.sqrt(dx * dx + dy * dy) || 1;
                             if (dist < reqDist) {
                               const angle = Math.atan2(dy, dx);
-                              finalMX = Math.max(80, Math.min(compassPos.x + Math.cos(angle) * reqDist, 1220));
-                              finalMY = Math.max(20, Math.min(compassPos.y + Math.sin(angle) * reqDist, 680));
+                              finalMX = Math.max(80, Math.min(compassPos.x + Math.cos(angle) * reqDist, 900));
+                              finalMY = Math.max(20, Math.min(compassPos.y + Math.sin(angle) * reqDist, 500));
                               setMagnetPos({ x: finalMX, y: finalMY });
                             }
                           }
                           
                           setNeedleRotation(getNeedleRotation(finalMX, finalMY, compassPos.x, compassPos.y, isFlipped, newMat, thickness));
                         }}
-                        className={activeMaterial === mat ? 'primary' : 'outline'}
-                        style={{ padding: '0.4rem', fontSize: '0.8rem', textTransform: 'capitalize' }}
+                        style={{
+                          padding: '0.45rem 0.5rem',
+                          borderRadius: '10px',
+                          border: 'none',
+                          background: activeMaterial === mat ? 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)' : '#ffffff',
+                          color: activeMaterial === mat ? '#ffffff' : '#000000',
+                          fontWeight: 800,
+                          fontSize: '0.8rem',
+                          textTransform: 'capitalize',
+                          cursor: 'pointer',
+                          boxShadow: activeMaterial === mat ? '0 4px 10px rgba(255, 119, 0, 0.4)' : 'none'
+                        }}
                       >
                         {mat}
                       </button>
@@ -545,9 +538,9 @@ export default function Simulation({ onComplete, onNext }) {
                   </div>
 
                   {activeMaterial && (
-                    <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', background: 'rgba(0,0,0,0.02)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                      <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
-                        Material Thickness: {thickness}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', background: 'rgba(255, 255, 255, 0.75)', padding: '0.6rem', borderRadius: '10px', border: '1.5px solid #059669' }}>
+                      <label style={{ fontSize: '0.78rem', fontWeight: '800', color: '#000000' }}>
+                        Thickness: {thickness}
                       </label>
                       <input 
                         type="range" 
@@ -560,15 +553,15 @@ export default function Simulation({ onComplete, onNext }) {
                           let finalMX = magnetPos.x;
                           let finalMY = magnetPos.y;
                           
-                          const reqDist = 160 + (24 + val * 20);
+                          const reqDist = 150 + (20 + val * 16);
                           const dx = magnetPos.x - compassPos.x;
                           const dy = magnetPos.y - compassPos.y;
                           const dist = Math.sqrt(dx * dx + dy * dy) || 1;
                           
                           if (dist < reqDist) {
                             const angle = Math.atan2(dy, dx);
-                            finalMX = Math.max(80, Math.min(compassPos.x + Math.cos(angle) * reqDist, 1220));
-                            finalMY = Math.max(20, Math.min(compassPos.y + Math.sin(angle) * reqDist, 680));
+                            finalMX = Math.max(80, Math.min(compassPos.x + Math.cos(angle) * reqDist, 900));
+                            finalMY = Math.max(20, Math.min(compassPos.y + Math.sin(angle) * reqDist, 500));
                             setMagnetPos({ x: finalMX, y: finalMY });
                           }
                           
@@ -580,29 +573,29 @@ export default function Simulation({ onComplete, onNext }) {
                   )}
 
                   {/* Observation Table */}
-                  <div style={{ background: 'var(--bg-color)', borderRadius: '8px', border: '1px solid var(--border)', overflow: 'hidden' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', background: 'rgba(0,0,0,0.04)', padding: '0.5rem', fontSize: '0.7rem', fontWeight: 'bold' }}>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.85)', borderRadius: '10px', border: '1.5px solid #059669', overflow: 'hidden' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', background: 'rgba(255, 255, 255, 0.95)', padding: '0.45rem', fontSize: '0.72rem', fontWeight: '800', color: '#000000' }}>
                       <div>Material</div>
                       <div style={{ textAlign: 'center' }}>Deflects</div>
                       <div style={{ textAlign: 'center' }}>No Deflect</div>
                     </div>
                     {['wood', 'cardboard', 'plastic', 'glass'].map(mat => (
-                      <div key={mat} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', padding: '0.4rem 0.5rem', fontSize: '0.8rem', borderTop: '1px solid var(--border)', alignItems: 'center' }}>
+                      <div key={mat} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', padding: '0.35rem 0.45rem', fontSize: '0.78rem', borderTop: '1px solid #059669', alignItems: 'center', color: '#000000', fontWeight: 700 }}>
                         <div style={{ textTransform: 'capitalize' }}>{mat}</div>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                           <button 
                             onClick={() => handleObservation(mat, 'deflects')}
-                            style={{ width: '20px', height: '20px', borderRadius: '50%', border: '1px solid var(--border)', background: observations[mat] === 'deflects' ? 'var(--success)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                            style={{ width: '22px', height: '22px', borderRadius: '50%', border: '1.5px solid #059669', background: observations[mat] === 'deflects' ? '#10b981' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                           >
-                            {observations[mat] === 'deflects' && <CheckCircle2 size={12} color="white" />}
+                            {observations[mat] === 'deflects' && <CheckCircle2 size={13} color="white" />}
                           </button>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                           <button 
                             onClick={() => handleObservation(mat, 'no_deflect')}
-                            style={{ width: '20px', height: '20px', borderRadius: '50%', border: '1px solid var(--border)', background: observations[mat] === 'no_deflect' ? '#ef4444' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                            style={{ width: '22px', height: '22px', borderRadius: '50%', border: '1.5px solid #059669', background: observations[mat] === 'no_deflect' ? '#ef4444' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                           >
-                            {observations[mat] === 'no_deflect' && <CheckCircle2 size={12} color="white" />}
+                            {observations[mat] === 'no_deflect' && <CheckCircle2 size={13} color="white" />}
                           </button>
                         </div>
                       </div>
@@ -612,35 +605,148 @@ export default function Simulation({ onComplete, onNext }) {
               )}
             </div>
 
-            <div style={{ opacity: step >= 4 ? 1 : 0.3 }}>
-              <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--success)' }}>Complete</div>
-              <p style={{ fontSize: '0.85rem', margin: '0.25rem 0' }}>Experiment completed! Proceed to the questions.</p>
-              {step === 4 && (
-                <button onClick={onNext} className="primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                  Next <ArrowRight size={14} />
+            <div style={{ opacity: step >= 4 ? 1 : 0.4 }}>
+              <div style={{ fontWeight: '800', fontSize: '0.88rem', color: '#000000' }}>Complete</div>
+              <p style={{ fontSize: '0.85rem', margin: '0.2rem 0', color: '#000000', fontWeight: 700 }}>Experiment completed! Proceed to concept check.</p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Activity 4.3 Standardized Pop-up Modal when Experiment is Complete */}
+        <AnimatePresence>
+          {step === 4 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundColor: 'rgba(15, 23, 42, 0.65)',
+                backdropFilter: 'blur(6px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 100
+              }}
+            >
+              <motion.div
+                initial={{ scale: 0.8, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.8, y: 20 }}
+                style={{
+                  background: '#ffffff',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '30px',
+                  padding: '2.5rem 3rem',
+                  maxWidth: '520px',
+                  width: '90%',
+                  textAlign: 'center',
+                  boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '1.25rem'
+                }}
+              >
+                <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.8rem', fontWeight: 800 }}>
+                  Experiment Complete! 🎉
+                </h2>
+
+                <p style={{ margin: 0, color: '#475569', fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600 }}>
+                  You have successfully verified that magnetic fields pass through non-magnetic materials like wood, cardboard, plastic, and glass!
+                </p>
+
+                <button 
+                  onClick={onNext} 
+                  style={{ 
+                    marginTop: '0.5rem',
+                    padding: '1.1rem 3rem', 
+                    fontSize: '1.15rem', 
+                    fontWeight: 800, 
+                    borderRadius: '40px', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.75rem',
+                    backgroundColor: '#2563eb',
+                    color: '#ffffff',
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                    transition: 'all 0.25s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.03)';
+                    e.currentTarget.style.backgroundColor = '#1d4ed8';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.backgroundColor = '#2563eb';
+                  }}
+                >
+                  Proceed to Concept Check <ArrowRight size={22} color="#ffffff" />
                 </button>
-              )}
-            </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        </div>
-        </div>
-        </div>
-
-        {/* Right Panel: Workspace */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {/* Right Side: Interactive Workspace & Controls */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%', minHeight: 0 }}>
           
-          <div className="glass-panel" style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button onClick={flipMagnet} className="outline" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <RotateCcw size={16} /> Flip Magnet
-              </button>
-            </div>
-            <button onClick={handleReset} className="outline" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {/* Controls Bar */}
+          <div style={{ 
+            padding: '0.75rem 1.25rem', 
+            background: '#ffffff', 
+            border: '2px solid #2563eb', 
+            borderRadius: '16px',
+            boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center' 
+          }}>
+            <button 
+              onClick={flipMagnet} 
+              style={{ 
+                padding: '0.55rem 1.25rem', 
+                fontSize: '0.88rem', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem',
+                background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '25px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(255, 119, 0, 0.4)'
+              }}
+            >
+              <RotateCcw size={16} color="#ffffff" /> Flip Magnet
+            </button>
+            <button 
+              onClick={handleReset} 
+              style={{ 
+                padding: '0.55rem 1.25rem', 
+                fontSize: '0.88rem', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem',
+                background: '#ffffff',
+                border: '2px solid #3b82f6',
+                color: '#1e3a8a',
+                borderRadius: '25px',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
               Reset Workspace
             </button>
           </div>
 
-          <div id="simulation-workspace" ref={setWorkspaceRef} className="glass-panel" style={{ position: 'relative', flex: 1, minHeight: '700px', background: 'var(--bg-color)', borderRadius: '12px', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
+          {/* Canvas Workspace */}
+          <div id="simulation-workspace" ref={setWorkspaceRef} style={{ position: 'relative', flex: 1, minHeight: 0, background: '#f8fafc', border: '2px solid #cbd5e1', borderRadius: '16px', overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
             
             {renderMagneticFields()}
 
@@ -652,8 +758,8 @@ export default function Simulation({ onComplete, onNext }) {
                   animate={{ opacity: 1, scale: 1 }}
                   style={{ 
                     position: 'absolute', 
-                    left: (compassPos.x + magnetPos.x) / 2 - (12 + thickness * 10),
-                    top: (compassPos.y + magnetPos.y) / 2 - 120,
+                    left: (compassPos.x + magnetPos.x) / 2 - (10 + thickness * 8),
+                    top: (compassPos.y + magnetPos.y) / 2 - 100,
                     zIndex: 5,
                     pointerEvents: 'none'
                   }}
@@ -662,12 +768,12 @@ export default function Simulation({ onComplete, onNext }) {
                 </motion.div>
               )}
               {step >= 2 && (
-                <div style={{ position: 'absolute', left: compassPos.x - 50, top: compassPos.y - 50 }}>
+                <div style={{ position: 'absolute', left: compassPos.x - 80, top: compassPos.y - 80 }}>
                   <DraggableCompass rotation={needleRotation} />
                 </div>
               )}
               {step >= 3 && (
-                <div style={{ position: 'absolute', left: magnetPos.x - 80, top: magnetPos.y - 20 }}>
+                <div style={{ position: 'absolute', left: magnetPos.x - 75, top: magnetPos.y - 19 }}>
                   <DraggableMagnet isFlipped={isFlipped} onDoubleClick={flipMagnet} />
                 </div>
               )}
@@ -683,14 +789,14 @@ export default function Simulation({ onComplete, onNext }) {
                   style={{ 
                     position: 'absolute', 
                     bottom: '20px', 
-                    background: feedback.type === 'success' ? 'var(--success-bg)' : 'var(--surface)', 
-                    color: feedback.type === 'success' ? 'var(--success)' : 'var(--text-primary)',
+                    background: '#ffffff', 
+                    color: feedback.type === 'success' ? '#065f46' : '#1e3a8a',
                     padding: '0.75rem 1.5rem',
-                    borderRadius: '24px',
-                    border: `1px solid ${feedback.type === 'success' ? 'var(--success-border)' : 'var(--border)'}`,
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                    fontWeight: 'bold',
-                    fontSize: '0.9rem'
+                    borderRadius: '25px',
+                    border: `2px solid ${feedback.type === 'success' ? '#10b981' : '#3b82f6'}`,
+                    boxShadow: '0 8px 25px rgba(0,0,0,0.12)',
+                    fontWeight: 800,
+                    fontSize: '0.92rem'
                   }}
                 >
                   {feedback.text}
@@ -701,12 +807,11 @@ export default function Simulation({ onComplete, onNext }) {
         </div>
 
       </div>
-      </div>
-      
+
       <DragOverlay zIndex={2000}>
         {activeDragId === 'sidebar_compass' ? (
-          <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CompassNeedle rotation={0} scale={100/180} />
+          <div style={{ width: '90px', height: '90px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <CompassNeedle rotation={0} scale={90/160} />
           </div>
         ) : null}
         {activeDragId === 'sidebar_magnet' ? (

@@ -2,78 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, Check, Award, ArrowRight, BookOpen, Home, Utensils, AlertCircle } from 'lucide-react';
 
-// Custom Item SVGs
-const RegisterIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 40 45" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="2" width="30" height="40" rx="2" fill="#e2e8f0" stroke="#64748b" strokeWidth="2" />
-    <rect x="5" y="2" width="6" height="40" fill="#3b82f6" />
-    <line x1="15" y1="10" x2="30" y2="10" stroke="#94a3b8" strokeWidth="2" />
-    <line x1="15" y1="16" x2="30" y2="16" stroke="#94a3b8" strokeWidth="2" />
-    <line x1="15" y1="22" x2="30" y2="22" stroke="#94a3b8" strokeWidth="2" />
-    <line x1="15" y1="28" x2="30" y2="28" stroke="#94a3b8" strokeWidth="2" />
-  </svg>
-);
-
-const DusterIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 50 30" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="15" width="40" height="10" rx="2" fill="#475569" />
-    <rect x="5" y="5" width="40" height="10" rx="2" fill="#b45309" />
-  </svg>
-);
-
-const ChalkIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 20 50" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="5" width="10" height="40" rx="3" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
-    <path d="M5,10 Q10,15 15,10" fill="none" stroke="#e2e8f0" strokeWidth="1" />
-  </svg>
-);
-
-const RemoteIcon = ({ size = 40 }) => (
-  <svg width={size} height={size} viewBox="0 0 30 60" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="2" width="20" height="56" rx="4" fill="#334155" />
-    <circle cx="15" cy="10" r="3" fill="#ef4444" />
-    <circle cx="15" cy="20" r="5" fill="#1e293b" />
-    <rect x="10" y="30" width="10" height="4" rx="1" fill="#94a3b8" />
-    <rect x="10" y="38" width="10" height="4" rx="1" fill="#94a3b8" />
-    <rect x="10" y="46" width="10" height="4" rx="1" fill="#94a3b8" />
-  </svg>
-);
-
-const TShirtIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
-    <path d="M 15,10 Q 25,20 35,10 L 45,15 L 40,25 L 35,22 L 35,45 L 15,45 L 15,22 L 10,25 L 5,15 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="2" strokeLinejoin="round" />
-    <path d="M 15,10 Q 25,20 35,10" fill="none" stroke="#f87171" strokeWidth="2" />
-  </svg>
-);
-
-const BallIcon = ({ size = 40 }) => (
-  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
-    <circle cx="25" cy="25" r="20" fill="#dc2626" stroke="#991b1b" strokeWidth="2" />
-    <path d="M15,10 Q25,25 15,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
-    <path d="M35,10 Q25,25 35,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
-  </svg>
-);
-
-const PlateIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 60 20" preserveAspectRatio="xMidYMid meet">
-    <ellipse cx="30" cy="10" rx="25" ry="8" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="2" />
-    <ellipse cx="30" cy="10" rx="15" ry="4" fill="none" stroke="#e2e8f0" strokeWidth="1" />
-  </svg>
-);
-
-const SpoonIcon = ({ size = 40 }) => (
-  <svg width={size} height={size} viewBox="0 0 60 20" preserveAspectRatio="xMidYMid meet" style={{ transform: 'rotate(-45deg)' }}>
-    <ellipse cx="15" cy="10" rx="10" ry="6" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="1.5" />
-    <rect x="23" y="8" width="30" height="4" rx="2" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="1.5" />
-  </svg>
-);
-
-const TumblerIcon = ({ size = 35 }) => (
-  <svg width={size} height={size} viewBox="0 0 40 60" preserveAspectRatio="xMidYMid meet">
-    <polygon points="5,5 35,5 30,55 10,55" fill="rgba(56, 189, 248, 0.2)" stroke="#0ea5e9" strokeWidth="2" />
-    <line x1="12" y1="15" x2="16" y2="45" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
-  </svg>
-);
+import itemRegister from '../images/b2_item_register.png';
+import itemDuster from '../images/b2_item_duster.png';
+import itemRemote from '../images/b2_item_remote.png';
+import itemTshirt from '../images/b2_item_tshirt.png';
+import itemSpoon from '../images/b2_item_spoon.png';
+import itemGlass from '../images/b2_item_glass.png';
+import bgShelfSchool from '../images/b2_shelf_school.png';
+import bgShelfHome from '../images/b2_shelf_home.png';
+import bgShelfKitchen from '../images/b2_shelf_kitchen.png';
+import imgBasketPaper from '../images/b2_basket_paper.png';
+import imgBasketWood from '../images/b2_basket_wood.png';
+import imgBasketPlastic from '../images/b2_basket_plastic.png';
+import imgBasketMetal from '../images/b2_basket_metal.png';
+import imgBasketGlass from '../images/b2_basket_glass.png';
+import imgBasketCloth from '../images/b2_basket_cloth.png';
 
 export default function Stage3_Classification({ defaultPhase = 'use', onComplete, addXp }) {
   const phase = defaultPhase; // controlled externally via props
@@ -86,12 +29,12 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
   const [errorMessage, setErrorMessage] = useState('');
 
   const allItems = [
-    { id: 'register', name: 'Attendance Register', icon: RegisterIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where teachers take attendance.', materialHint: 'Think about what the pages are made of.' },
-    { id: 'duster', name: 'Blackboard Duster', icon: DusterIcon, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where this is used to erase a chalkboard.', materialHint: 'Think about what the hard back part is usually made of.' },
-    { id: 'remote', name: 'TV Remote', icon: RemoteIcon, correctUse: 'Home Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you watch TV.', materialHint: 'Think about what hard, light material electronic casings are made of.' },
-    { id: 'tshirt', name: 'T-Shirt', icon: TShirtIcon, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about where you keep your clothes.', materialHint: 'Think about what soft, woven material clothes are made from.' },
-    { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard material is used for cutlery.' },
-    { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' }
+    { id: 'register', name: 'Attendance Register', icon: itemRegister, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where teachers take attendance.', materialHint: 'Think about what the pages are made of.' },
+    { id: 'duster', name: 'Blackboard Duster', icon: itemDuster, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where this is used to erase a chalkboard.', materialHint: 'Think about what the hard back part is usually made of.' },
+    { id: 'remote', name: 'TV Remote', icon: itemRemote, correctUse: 'Home Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you watch TV.', materialHint: 'Think about what hard, light material electronic casings are made of.' },
+    { id: 'tshirt', name: 'T-Shirt', icon: itemTshirt, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about where you keep your clothes.', materialHint: 'Think about what soft, woven material clothes are made from.' },
+    { id: 'spoon', name: 'Spoon', icon: itemSpoon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard material is used for cutlery.' },
+    { id: 'glass', name: 'Tumbler', icon: itemGlass, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' }
   ];
 
   const items = allItems;
@@ -306,10 +249,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, alignSelf: 'start' }}>
               <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingRight: '0.25rem', paddingTop: '0.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: '0.75rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
                 {items.map((item) => {
                   const isSorted = usePlacements[item.id] !== undefined;
-                  const IconComponent = item.icon;
                   return (
                     <div
                       key={item.id}
@@ -318,67 +260,26 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         e.dataTransfer.setData('text/plain', item.id);
                       }}
                       className="interactive-tray-item"
+                      title={item.name}
                       style={{
                         width: '100%',
-                        padding: '0.6rem 0.75rem',
+                        aspectRatio: '1',
                         borderRadius: '12px',
-                        border: '1px solid var(--border)',
-                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.4rem',
-                        opacity: isSorted ? 0.7 : 1,
+                        border: '2px solid var(--border)',
+                        background: 'var(--card-bg)',
+                        opacity: isSorted ? 0.5 : 1,
                         cursor: isSorted ? 'default' : 'grab',
                         transition: 'all 0.2s',
                         userSelect: 'none',
-                        position: 'relative'
+                        position: 'relative',
+                        overflow: 'hidden'
                       }}
                     >
-                      {/* Top row: icon + name + check */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center', 
-                          width: '40px', 
-                          height: '40px', 
-                          borderRadius: '10px', 
-                          background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
-                          color: isSorted ? 'var(--success)' : 'var(--accent)',
-                          flexShrink: 0,
-                          border: '1px solid var(--border)'
-                        }}>
-                          <IconComponent size={24} />
+                      <img src={item.icon} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      {isSorted && (
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Check size={32} color="white" strokeWidth={3} />
                         </div>
-                        <span style={{ fontWeight: '600', fontSize: '0.95rem', lineHeight: '1.2', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
-                        {isSorted && (
-                          <div style={{ 
-                            background: 'var(--success)', 
-                            borderRadius: '50%', 
-                            width: '20px', 
-                            height: '20px', 
-                            flexShrink: 0,
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center',
-                            color: 'white'
-                          }}>
-                            <Check size={12} strokeWidth={3} />
-                          </div>
-                        )}
-                      </div>
-                      {/* Bottom row: dropdown (only when not sorted) */}
-                      {!isSorted && (
-                        <select
-                          value=""
-                          onChange={(e) => handleUseSort(item.id, e.target.value)}
-                          style={{ fontSize: '0.85rem', padding: '0.3rem 0.5rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%', cursor: 'pointer' }}
-                        >
-                          <option value="" disabled>Select Shelf ▾</option>
-                          <option value="School Shelf">School</option>
-                          <option value="Home Shelf">Home</option>
-                          <option value="Kitchen Shelf">Kitchen</option>
-                        </select>
                       )}
                     </div>
                   );
@@ -391,9 +292,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 {[
-                  { name: 'School Shelf', icon: <BookOpen size={16} />, color: '#3b82f6', plankColor: '#94a3b8' },
-                  { name: 'Home Shelf', icon: <Home size={16} />, color: '#f97316', plankColor: '#94a3b8' },
-                  { name: 'Kitchen Shelf', icon: <Utensils size={16} />, color: '#10b981', plankColor: '#94a3b8' }
+                  { name: 'School Shelf', icon: <BookOpen size={16} />, bgImage: bgShelfSchool },
+                  { name: 'Home Shelf', icon: <Home size={16} />, bgImage: bgShelfHome },
+                  { name: 'Kitchen Shelf', icon: <Utensils size={16} />, bgImage: bgShelfKitchen }
                 ].map((shelf) => {
                   const sortedHere = items.filter(i => usePlacements[i.id] === shelf.name);
                   const isDraggingOverMe = draggingOverShelf === shelf.name;
@@ -412,26 +313,25 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         handleUseSort(itemId, shelf.name);
                       }}
                       style={{
-                        background: isDraggingOverMe ? 'rgba(var(--accent-rgb), 0.05)' : 'linear-gradient(to bottom, var(--surface) 0%, var(--card-bg) 100%)',
-                        border: isDraggingOverMe ? '2px dashed var(--accent)' : '1px solid var(--border)',
-                        borderBottom: `14px solid ${shelf.plankColor}`,
-                        borderRadius: '12px 12px 6px 6px',
-                        padding: '1rem 1rem 0 1rem', // 0 bottom padding so items sit flush on the bottom border
-                        minHeight: '145px',
+                        background: `url(${shelf.bgImage}) center/cover`,
+                        border: isDraggingOverMe ? '3px dashed var(--accent)' : '2px solid transparent',
+                        borderRadius: '12px',
+                        padding: '1rem',
+                        minHeight: '160px',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         gap: '1rem',
                         transition: 'all 0.2s',
-                        boxShadow: 'inset 0 -25px 25px -25px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.05)'
+                        boxShadow: isDraggingOverMe ? 'inset 0 0 0 1000px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.3)' : '0 4px 8px rgba(0,0,0,0.3)'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: shelf.color, fontWeight: 'bold', fontSize: '1.15rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontWeight: 'bold', fontSize: '1.1rem', background: 'rgba(0,0,0,0.65)', padding: '0.4rem 0.8rem', borderRadius: '8px', alignSelf: 'flex-start', backdropFilter: 'blur(4px)' }}>
                         {shelf.icon}
                         <span>{shelf.name}</span>
                       </div>
                       
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', alignItems: 'flex-end', minHeight: '65px' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', alignItems: 'flex-end', minHeight: '65px', paddingBottom: '0.5rem', paddingLeft: '0.5rem' }}>
                         {sortedHere.map((item) => (
                           <motion.div
                             initial={{ opacity: 0, y: -10 }}
@@ -446,7 +346,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                             }}
                           >
                             <div style={{ transform: 'translateY(1px)' }}>
-                              <item.icon size={55} />
+                              <img src={item.icon} alt={item.name} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px', border: '2px solid rgba(255,255,255,0.8)' }} />
                             </div>
                           </motion.div>
                         ))}
@@ -495,10 +395,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, alignSelf: 'start' }}>
               <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', paddingRight: '0.25rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: '0.75rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
-                  const IconComponent = item.icon;
                   return (
                     <div
                       key={item.id}
@@ -507,70 +406,26 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         e.dataTransfer.setData('text/plain', item.id);
                       }}
                       className="interactive-tray-item"
+                      title={item.name}
                       style={{
                         width: '100%',
-                        padding: '0.65rem 0.9rem',
+                        aspectRatio: '1',
                         borderRadius: '12px',
-                        border: '1px solid var(--border)',
-                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.4rem',
-                        opacity: isSorted ? 0.7 : 1,
+                        border: '2px solid var(--border)',
+                        background: 'var(--card-bg)',
+                        opacity: isSorted ? 0.5 : 1,
                         cursor: isSorted ? 'default' : 'grab',
                         transition: 'all 0.2s',
                         userSelect: 'none',
-                        position: 'relative'
+                        position: 'relative',
+                        overflow: 'hidden'
                       }}
                     >
-                      {/* Top row: icon + name + check */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center', 
-                          width: '40px', 
-                          height: '40px', 
-                          borderRadius: '10px', 
-                          background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
-                          color: isSorted ? 'var(--success)' : 'var(--accent)',
-                          flexShrink: 0,
-                          border: '1px solid var(--border)'
-                        }}>
-                          <IconComponent size={24} />
+                      <img src={item.icon} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      {isSorted && (
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(16, 185, 129, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Check size={32} color="white" strokeWidth={3} />
                         </div>
-                        <span style={{ fontWeight: '600', fontSize: '0.95rem', lineHeight: '1.2', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
-                        {isSorted && (
-                          <div style={{ 
-                            background: 'var(--success)', 
-                            borderRadius: '50%', 
-                            width: '20px', 
-                            height: '20px', 
-                            flexShrink: 0,
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center',
-                            color: 'white'
-                          }}>
-                            <Check size={12} strokeWidth={3} />
-                          </div>
-                        )}
-                      </div>
-                      {/* Bottom row: dropdown (only when not sorted) */}
-                      {!isSorted && (
-                        <select
-                          value=""
-                          onChange={(e) => handleMaterialSort(item.id, e.target.value)}
-                          style={{ fontSize: '0.85rem', padding: '0.3rem 0.5rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%', cursor: 'pointer' }}
-                        >
-                          <option value="" disabled>Select Material ▾</option>
-                          <option value="Paper">Paper</option>
-                          <option value="Wood">Wood</option>
-                          <option value="Plastic">Plastic</option>
-                          <option value="Glass">Glass</option>
-                          <option value="Metal">Metal</option>
-                          <option value="Cloth">Cloth</option>
-                        </select>
                       )}
                     </div>
                   );
@@ -591,64 +446,13 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               ].map((basket) => {
                 const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
                 const isDraggingOverMe = draggingOverBasket === basket.name;
-                const basketSvgs = {
-                  Paper: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#1d4ed8" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="none" stroke="#1e3a8a" strokeWidth="1.5" />
-                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#1e3a8a" strokeWidth="1" opacity="0.5"/>)}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#2563eb" />
-                      <path d="M12 8 Q27 5 42 8 L44 16 Q27 12 10 16 Z" fill="#3b82f6" opacity="0.4" />
-                    </svg>
-                  ),
-                  Wood: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#a16207" />
-                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#78350f" strokeWidth="1.5" opacity="0.6"/>)}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#b45309" />
-                    </svg>
-                  ),
-                  Plastic: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 14 L10 42 L44 42 L47 14 Z" fill="#15803d" />
-                      {Array.from({length:5},(_,r)=>Array.from({length:4},(_,c)=>(
-                        <rect key={`${r}-${c}`} x={10+c*9} y={16+r*5} width="7" height="3" rx="1" fill="none" stroke="#14532d" strokeWidth="1" opacity="0.5" />
-                      )))}
-                      <path d="M5 12 Q27 8 49 12 Q27 16 5 12Z" fill="#16a34a" />
-                    </svg>
-                  ),
-                  Metal: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#64748b" />
-                      {Array.from({length:4},(_,r)=>Array.from({length:5},(_,c)=>(
-                        <rect key={`${r}-${c}`} x={9+c*7.5} y={17+r*6} width="5" height="4" rx="1" fill="none" stroke="#334155" strokeWidth="1" opacity="0.6" />
-                      )))}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#94a3b8" />
-                    </svg>
-                  ),
-                  Glass: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="rgba(6,182,212,0.4)" stroke="#0891b2" strokeWidth="1.5" />
-                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#0e7490" strokeWidth="1" opacity="0.4"/>)}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#06b6d4" />
-                    </svg>
-                  ),
-                  Cloth: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#b45309" />
-                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#78350f" strokeWidth="1.5" opacity="0.5"/>)}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#d97706" />
-                      <rect x="14" y="10" width="8" height="8" rx="2" fill="#ef4444" opacity="0.8" />
-                      <rect x="24" y="8" width="8" height="8" rx="2" fill="#3b82f6" opacity="0.8" />
-                      <rect x="34" y="10" width="8" height="8" rx="2" fill="#10b981" opacity="0.8" />
-                    </svg>
-                  )
+                const basketImages = {
+                  Paper: imgBasketPaper,
+                  Wood: imgBasketWood,
+                  Plastic: imgBasketPlastic,
+                  Metal: imgBasketMetal,
+                  Glass: imgBasketGlass,
+                  Cloth: imgBasketCloth
                 };
 
                 return (
@@ -674,9 +478,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       minHeight: '68px'
                     }}
                   >
-                    {/* Basket Illustration */}
-                    <div style={{ flexShrink: 0 }}>
-                      {basketSvgs[basket.name]}
+                    {/* Basket Image */}
+                    <div style={{ flexShrink: 0, width: '70px', height: '70px' }}>
+                      <img src={basketImages[basket.name]} alt={`${basket.name} Basket`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
                     </div>
 
                     {/* Content */}
@@ -792,7 +596,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     >
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', width: '100%', overflow: 'hidden' }}>
                         <div style={{ width: '20px', height: '20px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isActive ? 'rgba(255,255,255,0.2)' : 'var(--surface)', borderRadius: '4px' }}>
-                          <item.icon size={13} />
+                          <img src={item.icon} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }} />
                         </div>
                         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{item.name}</span>
                       </span>

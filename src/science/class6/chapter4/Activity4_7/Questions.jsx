@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 const questions = [
   {
     id: 1,
+    title: "Quiz 1",
     question: "What is placed between the bar magnet and the compass needle in this activity?",
     options: [
       "An iron sheet",
@@ -17,6 +17,7 @@ const questions = [
   },
   {
     id: 2,
+    title: "Quiz 2",
     question: "Which of the following materials is tested in this activity?",
     options: [
       "Iron",
@@ -29,6 +30,7 @@ const questions = [
   },
   {
     id: 3,
+    title: "Quiz 3",
     question: "What happens to the compass needle when a cardboard sheet is placed between the magnet and the compass?",
     options: [
       "It stops moving completely.",
@@ -41,6 +43,7 @@ const questions = [
   },
   {
     id: 4,
+    title: "Quiz 4",
     question: "What can be concluded from this activity?",
     options: [
       "Magnets work only in air.",
@@ -53,6 +56,7 @@ const questions = [
   },
   {
     id: 5,
+    title: "Quiz 5",
     question: "Which observation best supports the conclusion of this activity?",
     options: [
       "The compass needle shows similar deflection even when non-magnetic materials are placed between it and the magnet.",
@@ -72,12 +76,14 @@ export default function Questions({ onComplete, onNext }) {
   const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
+  const q = questions[currentQuestion];
+
   const handleOptionSelect = (option) => {
     if (showFeedback) return;
     setSelectedOption(option);
     setShowFeedback(true);
     
-    if (option === questions[currentQuestion].correctAnswer) {
+    if (option === q.correctAnswer) {
       setScore(prev => prev + 1);
     }
   };
@@ -89,134 +95,204 @@ export default function Questions({ onComplete, onNext }) {
       setShowFeedback(false);
     } else {
       setIsFinished(true);
-      onComplete();
     }
   };
 
   if (isFinished) {
     return (
-      <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center', maxWidth: '600px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
-        <div style={{ width: '80px', height: '80px', background: 'var(--success-bg)', color: 'var(--success)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <CheckCircle2 size={40} />
+      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', overflowY: 'auto', padding: '1rem', boxSizing: 'border-box' }}>
+        <div style={{ 
+          maxWidth: '520px', 
+          width: '90%', 
+          padding: '2.5rem 3rem', 
+          textAlign: 'center', 
+          background: '#ffffff', 
+          borderRadius: '30px', 
+          border: '1px solid #cbd5e1',
+          boxShadow: '0 15px 40px rgba(0,0,0,0.18)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1.25rem'
+        }}>
+          <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#1e293b', fontWeight: 800 }}>Quiz Completed!</h2>
+          
+          <p style={{ color: '#475569', margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>
+            You scored {score} out of {questions.length}
+          </p>
+
+          <button
+            onClick={() => {
+              if (onComplete) onComplete(score);
+              if (onNext) onNext();
+            }}
+            style={{
+              padding: '1.1rem 3rem',
+              backgroundColor: '#2563eb',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '40px',
+              fontSize: '1.15rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+              transition: 'all 0.25s ease',
+              marginTop: '0.5rem'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+              e.currentTarget.style.backgroundColor = '#1d4ed8';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.backgroundColor = '#2563eb';
+            }}
+          >
+            Proceed to Challenge
+          </button>
         </div>
-        <div>
-          <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)' }}>Quiz Complete!</h2>
-          <p style={{ margin: 0, color: 'var(--text-secondary)' }}>You scored {score} out of {questions.length}.</p>
-        </div>
-        <button onClick={onNext} className="primary" style={{ padding: '0.75rem 2rem', fontSize: '1rem', marginTop: '1rem' }}>
-          Proceed to Challenge <ArrowRight size={18} />
-        </button>
       </div>
     );
   }
 
-  const q = questions[currentQuestion];
-
   return (
-    <div className="glass-panel" style={{ padding: '2rem', maxWidth: '100%', margin: '0 auto', width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-heading)' }}>Concept Check</h2>
-        <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>
-          Question {currentQuestion + 1} of {questions.length}
+    <div style={{ 
+      width: '100%', 
+      height: '100%',
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      padding: '0.5rem', 
+      overflowY: 'auto',
+      boxSizing: 'border-box' 
+    }}>
+      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        {/* Top Bar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.5rem' }}>
+          <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 700 }}>Test Your Knowledge</h3>
+          <div style={{ color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 600 }}>
+            Question {currentQuestion + 1} of {questions.length}
+          </div>
         </div>
-      </div>
 
-      <div style={{ marginBottom: '2rem' }}>
-        <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', lineHeight: '1.5', margin: '0 0 1.5rem 0' }}>
-          {q.question}
-        </h3>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {q.options.map((option, index) => {
-            const isSelected = selectedOption === option;
-            const isCorrect = option === q.correctAnswer;
-            
-            let bg = 'var(--surface)';
-            let borderColor = 'var(--border)';
-            let color = 'var(--text-primary)';
+        {/* Main Quiz Card */}
+        <div className="glass-panel" style={{ 
+          background: 'var(--surface)', 
+          border: '2px solid #818cf8',
+          borderRadius: '20px', 
+          padding: '1.25rem 1.75rem', 
+          boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.85rem',
+          width: '100%',
+          flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
+          boxSizing: 'border-box'
+        }}>
+          {/* Title */}
+          <h3 style={{ margin: 0, color: '#6366f1', fontSize: 'clamp(1.15rem, 1.8vw, 1.45rem)', fontWeight: 800 }}>
+            {q.title}
+          </h3>
 
-            if (showFeedback) {
-              if (isCorrect) {
-                bg = 'var(--success-bg)';
-                borderColor = 'var(--success-border)';
-                color = 'var(--success)';
+          {/* Question Text */}
+          <p style={{ margin: 0, fontSize: 'clamp(0.95rem, 1.5vw, 1.15rem)', lineHeight: '1.45', fontWeight: 600, color: 'var(--text-heading)' }}>
+            {q.question}
+          </p>
+
+          {/* Option Buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            {q.options.map((option, index) => {
+              const isSelected = selectedOption === option;
+              const isCorrect = option === q.correctAnswer;
+
+              let bgColor = 'var(--bg)';
+              let borderColor = '#cbd5e1';
+              let icon = null;
+
+              if (showFeedback) {
+                if (isCorrect) {
+                  bgColor = 'rgba(16, 185, 129, 0.12)';
+                  borderColor = '#10b981';
+                  icon = <CheckCircle size={20} color="#10b981" />;
+                } else if (isSelected) {
+                  bgColor = 'rgba(239, 68, 68, 0.12)';
+                  borderColor = '#ef4444';
+                  icon = <XCircle size={20} color="#ef4444" />;
+                }
               } else if (isSelected) {
-                bg = 'var(--destructive-bg)';
-                borderColor = 'var(--destructive-border)';
-                color = 'var(--destructive)';
-              } else {
-                color = 'rgba(var(--text-primary-rgb), 0.5)';
+                borderColor = '#6366f1';
+                bgColor = 'rgba(99, 102, 241, 0.08)';
               }
-            } else if (isSelected) {
-              bg = 'var(--accent-bg)';
-              borderColor = 'var(--accent)';
-            }
 
-            return (
-              <button
-                key={index}
-                onClick={() => handleOptionSelect(option)}
-                disabled={showFeedback}
-                style={{
-                  padding: '1rem 1.5rem',
-                  borderRadius: '12px',
-                  background: bg,
-                  border: `2px solid ${borderColor}`,
-                  color: color,
-                  fontSize: '1rem',
-                  textAlign: 'left',
-                  cursor: showFeedback ? 'default' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  transition: 'all 0.2s',
-                  opacity: showFeedback && !isCorrect && !isSelected ? 0.5 : 1
-                }}
-              >
-                {option}
-                {showFeedback && isCorrect && <CheckCircle2 size={20} />}
-                {showFeedback && isSelected && !isCorrect && <XCircle size={20} />}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleOptionSelect(option)}
+                  disabled={showFeedback}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '0.75rem 1.25rem',
+                    borderRadius: '12px',
+                    background: bgColor,
+                    border: `2px solid ${borderColor}`,
+                    color: 'var(--text)',
+                    cursor: showFeedback ? 'default' : 'pointer',
+                    textAlign: 'left',
+                    fontSize: '1.05rem',
+                    fontWeight: 600,
+                    transition: 'all 0.25s ease',
+                    opacity: showFeedback && !isCorrect && !isSelected ? 0.6 : 1
+                  }}
+                >
+                  <span>{option}</span>
+                  {icon}
+                </button>
+              );
+            })}
+          </div>
 
-      <AnimatePresence>
-        {showFeedback && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ 
-              padding: '1.5rem', 
-              background: selectedOption === q.correctAnswer ? 'var(--success-bg)' : 'var(--destructive-bg)', 
-              borderRadius: '12px',
-              border: `1px solid ${selectedOption === q.correctAnswer ? 'var(--success-border)' : 'var(--destructive-border)'}`,
-              marginBottom: '1.5rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem'
-            }}
-          >
-            <div style={{ fontWeight: 'bold', color: selectedOption === q.correctAnswer ? 'var(--success)' : 'var(--destructive)' }}>
-              {selectedOption === q.correctAnswer ? 'Correct!' : 'Incorrect.'}
+          {/* Explanation & Next Question Button */}
+          {showFeedback && (
+            <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              <div style={{ padding: '0.75rem 1.15rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '12px', borderLeft: '5px solid #6366f1' }}>
+                <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.02rem', fontWeight: 800, color: '#6366f1' }}>Explanation</h4>
+                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.02rem', lineHeight: '1.45' }}>{q.explanation}</p>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={handleNext}
+                  style={{
+                    padding: '0.65rem 2rem',
+                    background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '30px',
+                    fontSize: '1.1rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',
+                    transition: 'all 0.25s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.03)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  {currentQuestion === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                </button>
+              </div>
             </div>
-            <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
-              {q.explanation}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <button
-          onClick={handleNext}
-          disabled={!showFeedback}
-          className="primary"
-          style={{ opacity: showFeedback ? 1 : 0.5, padding: '0.75rem 2rem' }}
-        >
-          {currentQuestion < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
-        </button>
+          )}
+        </div>
       </div>
     </div>
   );
