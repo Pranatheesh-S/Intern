@@ -153,8 +153,8 @@ export default function TwoFriendsActivity({ onBack, onNextActivity }) {
     while(diff < -180) diff += 360;
     while(diff > 180) diff -= 360;
     if (diff > -85 && diff < 85) return "☀️ Daytime";
-    if (diff >= 85 && diff <= 95) return "🌆 Sunset";
-    if (diff <= -85 && diff >= -95) return "🌅 Sunrise";
+    if (diff >= 85 && diff <= 98) return "🌆 Sunset";
+    if (diff <= -85 && diff >= -98) return "🌅 Sunrise";
     return "🌙 Night";
   };
 
