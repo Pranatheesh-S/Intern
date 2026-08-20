@@ -36,15 +36,15 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
           alt="Chief Detective" 
           style={{ width: '100px', height: '100px', filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.15))', objectFit: 'contain' }}
         />
-        <div style={{ flex: 1, background: '#f8fafc', padding: '20px', borderRadius: '0 20px 20px 20px', border: '1px solid #cbd5e1', position: 'relative' }}>
+        <div style={{ flex: 1, background: 'var(--surface)', padding: '20px', borderRadius: '0 20px 20px 20px', border: '1px solid var(--border)', position: 'relative' }}>
           {/* Speech bubble tail */}
-          <div style={{ position: 'absolute', left: '-10px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid #cbd5e1' }}></div>
-          <div style={{ position: 'absolute', left: '-8px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid #f8fafc' }}></div>
+          <div style={{ position: 'absolute', left: '-10px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid var(--border)' }}></div>
+          <div style={{ position: 'absolute', left: '-8px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid var(--surface)' }}></div>
           
-          <h4 style={{ margin: '0 0 8px 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ background: '#3b82f6', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: 'var(--text-sm)' }}>CHIEF DETECTIVE</span>
+          <h4 style={{ margin: '0 0 8px 0', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ background: 'var(--accent)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: 'var(--text-sm)' }}>CHIEF DETECTIVE</span>
           </h4>
-          <p style={{ margin: 0, color: '#334155', fontSize: 'var(--text-lg)', lineHeight: '1.6' }}>
+          <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: 'var(--text-lg)', lineHeight: '1.6' }}>
             "We have thoroughly explored and understood the various properties of materials in the modern world. But wait! Most of the materials that we see today would have also existed earlier. I am curious to know... how did people classify them back then?"
           </p>
         </div>

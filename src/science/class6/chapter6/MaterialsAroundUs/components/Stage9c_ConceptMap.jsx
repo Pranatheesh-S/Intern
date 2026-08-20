@@ -22,9 +22,9 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     lustre: {
       id: 'lustre',
       title: 'Lustre (Shine)',
-      color: '#a855f7',
-      bg: '#faf5ff',
-      icon: <Sparkles size={24} color="#a855f7" />,
+      color: 'var(--accent)',
+      bg: 'var(--accent-bg)',
+      icon: <Sparkles size={24} color="var(--accent)" />,
       desc: "The way a material's surface reflects light. Examples: Gold, Silver, Plastic",
       prefix: 'Lustre',
       summary: 'helps us identify how a material looks by its shine.',
@@ -34,9 +34,9 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     hardness: {
       id: 'hardness',
       title: 'Hardness & Softness',
-      color: '#3b82f6',
-      bg: '#eff6ff',
-      icon: <Hammer size={24} color="#3b82f6" />,
+      color: 'var(--accent)',
+      bg: 'var(--surface)',
+      icon: <Hammer size={24} color="var(--accent)" />,
       desc: 'The ability of a material to resist scratching or pressure. Examples: Iron (hard), Chalk (soft)',
       prefix: 'Hardness & softness',
       summary: 'tell us how strong or weak a material is when pressed or scratched.',
@@ -85,18 +85,18 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', overflowY: 'auto', paddingRight: '0.5rem' }}>
       
       {/* Top Header */}
-      <div style={{ background: '#ffffff', borderRadius: '16px', padding: '1.5rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-        <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0, background: '#e0e7ff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Book size={40} color="#4f46e5" />
+      <div style={{ background: 'var(--surface)', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+        <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0, background: 'var(--surface)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Book size={40} color="var(--accent)" />
           <div style={{ position: 'absolute', bottom: -5, right: -5, background: '#10b981', borderRadius: '50%', padding: '4px', border: '3px solid white' }}>
             <Compass size={20} color="white" />
           </div>
         </div>
         <div style={{ flex: 1 }}>
-          <h2 style={{ margin: '0 0 0.5rem 0', color: '#1e3a8a', fontSize: '1.6rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <h2 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-heading)', fontSize: '1.6rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
             Case File Complete: Property Concept Map
           </h2>
-          <p style={{ margin: 0, color: '#475569', fontSize: '1.05rem', lineHeight: '1.5' }}>
+          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.5' }}>
             Review all the properties we investigated during this mission.<br/>
             Click through the categories to refresh your memory!
           </p>
@@ -108,7 +108,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
       <div style={{ display: 'flex', gap: '1rem', flex: 1, minHeight: 0 }}>
         
         {/* Left Map Panel */}
-        <div style={{ flex: 2, background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 2, background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
           
           {/* Navigation Buttons */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', justifyContent: 'center', marginBottom: '1.2rem', zIndex: 10 }}>
@@ -158,12 +158,12 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
               <foreignObject x="400" y="250" width="200" height="200">
                 <div style={{ 
                   width: '100%', height: '100%', 
-                  background: 'radial-gradient(circle, #1e3a8a, #0f172a)',
+                  background: 'radial-gradient(circle, var(--text-heading), var(--text-primary))',
                   borderRadius: '50%',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                   color: 'white', textAlign: 'center',
                   boxShadow: '0 8px 24px rgba(30, 58, 138, 0.4)',
-                  border: '6px solid #e0e7ff',
+                  border: '6px solid var(--surface)',
                   padding: '20px'
                 }}>
                   <div style={{ fontSize: '26px', fontWeight: 'bold', lineHeight: '1.2' }}>Properties<br/>of Matter</div>
@@ -196,7 +196,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                       </div>
                       <div style={{ color: c.color, fontWeight: 'bold', fontSize: '20px' }}>{c.title}</div>
                     </div>
-                    <div style={{ color: '#475569', fontSize: '15px', lineHeight: '1.5' }}>
+                    <div style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: '1.5' }}>
                       {c.desc}
                     </div>
                   </div>
@@ -209,11 +209,11 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
         </div>
 
         {/* Right Summary Panel */}
-        <div style={{ flex: 1, background: '#faf5ff', borderRadius: '16px', border: '1px solid #e9d5ff', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ flex: 1, background: 'var(--accent-bg)', borderRadius: '16px', border: '1px solid var(--accent)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           
-          <div style={{ padding: '1.5rem 1.5rem 0.5rem 1.5rem', borderBottom: '1px solid #e9d5ff', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-            <Brain size={24} color="#9333ea" />
-            <h3 style={{ margin: 0, color: '#7e22ce', fontSize: '1.3rem' }}>Quick Summary</h3>
+          <div style={{ padding: '1.5rem 1.5rem 0.5rem 1.5rem', borderBottom: '1px solid var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+            <Brain size={24} color="var(--accent)" />
+            <h3 style={{ margin: 0, color: 'var(--accent)', fontSize: '1.3rem' }}>Quick Summary</h3>
           </div>
           
           <div style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', flex: 1, overflowY: 'auto' }}>
@@ -233,7 +233,7 @@ export default function Stage9c_ConceptMap({ onComplete, addXp }) {
                 <div style={{ background: c.color, color: 'white', padding: '8px', borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {React.cloneElement(c.icon, { color: 'white', size: 18 })}
                 </div>
-                <div style={{ color: '#334155', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                <div style={{ color: 'var(--text-primary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
                   <strong style={{ color: c.color }}>{c.prefix}</strong> {c.summary}
                 </div>
               </div>

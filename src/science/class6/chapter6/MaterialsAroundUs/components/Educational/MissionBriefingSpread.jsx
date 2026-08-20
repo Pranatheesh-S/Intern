@@ -23,8 +23,8 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
       left: 0,
       right: 0,
       bottom: 0,
-      background: '#ffffff',
-      fontFamily: 'Georgia, "Times New Roman", serif',
+      background: 'var(--surface)',
+      fontFamily: '"Times New Roman", serif',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -37,8 +37,8 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           .book-frame {
             width: 100%;
             height: 100%;
-            background: #ffffff;
-            border: 8px solid #1b2a4a;
+            background: var(--surface);
+            border: 8px solid var(--text-heading);
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.18);
             position: relative;
@@ -90,7 +90,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
 
           /* ---------- RIGHT PAGE ---------- */
           .right-page {
-            background: #ffffff;
+            background: var(--surface);
             border-left: 1px solid #ece7d8;
             height: 100%;
             overflow-y: auto;
@@ -111,7 +111,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             z-index: 20;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--border);
             flex: 0 0 auto;
           }
           .speech-bubble::after {
@@ -133,7 +133,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             left: 30px;
             border-width: 0 16px 16px;
             border-style: solid;
-            border-color: transparent transparent #e2e8f0;
+            border-color: transparent transparent var(--border);
             display: block;
             width: 0;
           }
@@ -141,7 +141,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             position: absolute;
             top: -15px;
             right: 20px;
-            background: #64748b;
+            background: var(--text-muted);
             color: white;
             padding: 4px 16px;
             border-radius: 6px;
@@ -158,7 +158,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-size: 18px;
             font-weight: 700;
             letter-spacing: 1.8px;
-            color: #3b4ea0;
+            color: var(--text-heading);
             margin-bottom: 14px;
             display: flex;
             align-items: center;
@@ -167,7 +167,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           .mission-title {
             font-size: clamp(41px, 5vh, 53px);
             line-height: 1.12;
-            color: #1b2a4a;
+            color: var(--text-heading);
             font-weight: 700;
             margin: 0 0 22px 0;
             font-family: Georgia, "Times New Roman", serif;
@@ -184,8 +184,8 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             color: #3b4560;
           }
           .mission-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-left: 4px solid #ef4444;
             border-radius: 12px;
             padding: 22px 26px;
@@ -196,7 +196,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 19px;
             font-weight: 700;
-            color: #3b4ea0;
+            color: var(--text-heading);
             margin: 0 0 12px 0;
             display: flex;
             align-items: center;
@@ -206,14 +206,14 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           .mission-box p, .mission-box li {
             font-family: Arial, Helvetica, sans-serif;
             font-size: clamp(20px, 2.5vh, 25px);
-            color: #1e293b;
+            color: var(--text-primary);
             line-height: 1.45;
             font-weight: 600;
           }
           .mission-meta {
             display: flex;
             gap: 48px;
-            border-top: 1px dashed #cbd5e1;
+            border-top: 1px dashed var(--border);
             padding-top: 18px;
             margin-bottom: 22px;
             width: 100%;
@@ -227,7 +227,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
             font-weight: 700;
-            color: #64748b;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
           }
@@ -235,7 +235,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 22px;
             font-weight: 600;
-            color: #0f172a;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 7px;
@@ -245,11 +245,11 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             font-size: 24px;
           }
           .meta-stars.empty {
-            color: #cbd5e1;
+            color: var(--border);
           }
 
           .start-btn {
-            background: #4052a0;
+            background: var(--text-heading);
             color: white;
             border: none;
             padding: 18px 44px;
@@ -268,7 +268,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .start-btn:hover {
             transform: translateY(-2px);
-            background: #2a3a80;
+            background: var(--text-heading);
           }
 
           @media (max-width: 1024px) {
@@ -281,9 +281,9 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             left: 24px;
             top: auto;
             z-index: 10000;
-            background: #ffffff;
-            border: 2px solid #cbd5e1;
-            color: #1e293b;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
             padding: 12px 26px;
             border-radius: 11px;
             display: flex;
@@ -297,7 +297,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             transition: all 0.2s;
           }
           .spread-back-btn:hover {
-            background: #f8fafc;
+            background: var(--surface);
             transform: translateY(-1px);
           }
         `}
@@ -327,7 +327,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               transition={{ delay: 0.4 }}
             >
               <div className="speech-speaker">CHIEF BLAKE</div>
-              <p style={{ margin: 0, fontSize: 'clamp(26px, 3vh, 34px)', color: '#1e293b', lineHeight: '1.45', fontWeight: '500' }}>
+              <p style={{ margin: 0, fontSize: 'clamp(26px, 3vh, 34px)', color: 'var(--text-primary)', lineHeight: '1.45', fontWeight: '500' }}>
                 {data.dialogue || "Good morning, Detective. Headquarters has received an unusual science case. Study your investigation brief carefully before proceeding!"}
               </p>
             </motion.div>
@@ -355,7 +355,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               {Array.isArray(data.objective) ? (
                 <ul style={{ margin: 0, paddingLeft: '26px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
                   {data.objective.map((obj, i) => (
-                    <li key={i} style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: 'clamp(20px, 2.5vh, 25px)', color: '#1e293b', lineHeight: '1.45' }}>
+                    <li key={i} style={{ fontSize: 'clamp(20px, 2.5vh, 25px)', color: 'var(--text-primary)', lineHeight: '1.45' }}>
                       {obj}
                     </li>
                   ))}

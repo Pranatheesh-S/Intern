@@ -58,7 +58,7 @@ const HighlightedText = ({ phrases, activeCharIndex }) => {
       {fullText.split('').map((char, index) => (
         <span key={index} style={{
           backgroundColor: index < activeCharIndex ? '#fef08a' : 'transparent',
-          color: index < activeCharIndex ? '#000' : 'inherit',
+          color: index < activeCharIndex ? 'var(--text-primary)' : 'inherit',
           transition: 'background-color 0.1s',
           borderRadius: '2px'
         }}>
@@ -131,8 +131,8 @@ const PotterySpotlight = ({ page1Layout }) => {
               style={{
                 width: '32px', height: '32px', 
                 borderRadius: '50%',
-                background: currentClue === c.id ? '#3b82f6' : (currentClue > c.id ? '#10b981' : '#e2e8f0'),
-                color: currentClue === c.id || currentClue > c.id ? 'white' : '#64748b',
+                background: currentClue === c.id ? 'var(--accent)' : (currentClue > c.id ? 'var(--success)' : 'var(--border)'),
+                color: currentClue === c.id || currentClue > c.id ? 'white' : 'var(--text-muted)',
                 display: 'flex', justifyContent: 'center', alignItems: 'center',
                 fontWeight: 'bold', fontSize: '14px', cursor: 'pointer',
                 boxShadow: currentClue === c.id ? '0 0 0 4px rgba(59,130,246,0.3)' : 'none',
@@ -144,7 +144,7 @@ const PotterySpotlight = ({ page1Layout }) => {
             <div style={{ 
               fontSize: '10px', 
               fontWeight: 'bold', 
-              color: currentClue === c.id ? '#3b82f6' : '#64748b',
+              color: currentClue === c.id ? 'var(--accent)' : 'var(--text-muted)',
               marginTop: '4px'
             }}>
               {c.timelineText}
@@ -154,7 +154,7 @@ const PotterySpotlight = ({ page1Layout }) => {
             <div style={{ 
               height: '4px', 
               width: '40px',
-              background: currentClue > c.id ? '#10b981' : '#e2e8f0',
+              background: currentClue > c.id ? 'var(--success)' : 'var(--border)',
               margin: '0 4px',
               flexShrink: 1,
               transform: 'translateY(-8px)'
@@ -169,19 +169,19 @@ const PotterySpotlight = ({ page1Layout }) => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '0', boxSizing: 'border-box', overflow: 'hidden' }}>
       
       <div style={{ marginBottom: 'clamp(8px, 1.5vh, 16px)' }}>
-        <h3 style={{ fontSize: 'clamp(20px, 3vw, 36px)', fontWeight: 'bold', color: '#1e293b', margin: '0 0 4px 0', wordBreak: 'break-word', lineHeight: '1.2' }}>
+        <h3 style={{ fontSize: 'clamp(20px, 3vw, 36px)', fontWeight: 'bold', color: 'var(--text-primary)', margin: '0 0 4px 0', wordBreak: 'break-word', lineHeight: '1.2' }}>
           {currentData.title}
         </h3>
-        <div style={{ fontSize: 'clamp(14px, 2vw, 22px)', fontWeight: 'bold', color: '#3b82f6', letterSpacing: '1px' }}>
+        <div style={{ fontSize: 'clamp(14px, 2vw, 22px)', fontWeight: 'bold', color: 'var(--accent)', letterSpacing: '1px' }}>
           DO YOU KNOW?
         </div>
       </div>
 
       <div style={{ 
         flex: '1 1 auto', 
-        backgroundColor: '#f8fafc', 
+        backgroundColor: 'var(--surface)', 
         borderRadius: '12px', 
-        border: '1px solid #e2e8f0', 
+        border: '1px solid var(--border)', 
         padding: 'clamp(12px, 2.5vmin, 24px)',
 
         display: 'flex',
@@ -196,11 +196,11 @@ const PotterySpotlight = ({ page1Layout }) => {
         overflow: 'hidden'
       }}>
         
-        <div style={{ fontSize: 'clamp(24px, 4.5vmin, 60px)', fontWeight: '900', color: '#1e3a8a', marginBottom: 'clamp(8px, 1.5vh, 24px)', lineHeight: '1.1', wordBreak: 'break-word' }}>
+        <div style={{ fontSize: 'clamp(24px, 4.5vmin, 60px)', fontWeight: '900', color: 'var(--text-heading)', marginBottom: 'clamp(8px, 1.5vh, 24px)', lineHeight: '1.1', wordBreak: 'break-word' }}>
           {currentData.bigFact}
         </div>
         
-        <div style={{ fontSize: 'clamp(14px, 2.5vmin, 24px)', color: '#334155', lineHeight: '1.5', maxWidth: '100%', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}>
+        <div style={{ fontSize: 'clamp(14px, 2.5vmin, 24px)', color: 'var(--text-primary)', lineHeight: '1.5', maxWidth: '100%', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}>
           {isPlaying ? (
             <HighlightedText phrases={[currentData.text]} activeCharIndex={activeCharIndex} />
           ) : (
@@ -214,7 +214,7 @@ const PotterySpotlight = ({ page1Layout }) => {
           <button 
             onClick={isPlaying ? stopAudio : playAudio}
             style={{
-              background: isPlaying ? '#ef4444' : '#3b82f6',
+              background: isPlaying ? '#ef4444' : 'var(--accent)',
               color: 'white', border: 'none', borderRadius: '24px',
               padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)',
               display: 'flex', alignItems: 'center', gap: '8px',
@@ -230,7 +230,7 @@ const PotterySpotlight = ({ page1Layout }) => {
              <button 
                onClick={() => setCurrentClue(currentClue + 1)}
                style={{
-                 background: '#8b5cf6', color: 'white', border: 'none', borderRadius: '24px',
+                 background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '24px',
                  padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)', fontWeight: 'bold', fontSize: 'clamp(14px, 2vw, 18px)',
                  cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                }}
@@ -239,7 +239,7 @@ const PotterySpotlight = ({ page1Layout }) => {
              </button>
           ) : (
              <div style={{
-                 background: '#10b981', color: 'white', borderRadius: '24px',
+                 background: 'var(--success)', color: 'white', borderRadius: '24px',
                  padding: 'clamp(8px, 1.5vw, 12px) clamp(16px, 3vw, 24px)', fontWeight: 'bold', fontSize: 'clamp(14px, 2vw, 18px)',
 
                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
@@ -285,14 +285,13 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
       height: '100%',
       minHeight: 0,
       boxSizing: 'border-box',
-      background: '#ffffff',
+      background: 'var(--surface)',
       borderRadius: '12px',
       boxShadow: '0 12px 36px rgba(0,0,0,0.14)',
       display: 'flex',
       flexDirection: 'column',
-      border: '8px solid #1b2a4a',
+      border: '8px solid var(--text-heading)',
       position: 'relative',
-      fontFamily: 'Arial, Helvetica, sans-serif',
       overflow: 'hidden'
     }}>
       {/* Central Book Spine Divider */}
@@ -302,7 +301,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
         bottom: '56px',
         left: '50%',
         width: '1px',
-        background: '#e2e8f0',
+        background: 'var(--border)',
         zIndex: 5,
         pointerEvents: 'none'
       }} />
@@ -319,40 +318,40 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           // ================= BARRIER 1 TWO-PAGE SPREAD =================
           <>
             {/* ================= LEFT PAGE (PAGE 1) ================= */}
-            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', borderRight: '1px solid #e2e8f0' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1b2a4a', fontWeight: 'bold', borderBottom: '4px solid #3b4ea0', paddingBottom: '8px', display: 'inline-block' }}>
+            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: 'var(--text-heading)', fontWeight: 'bold', borderBottom: '4px solid var(--accent)', paddingBottom: '8px', display: 'inline-block' }}>
                 What are Objects Made Of?
               </h2>
 
-              <div style={{ fontSize: '28px', color: '#334155', lineHeight: '1.6', marginBottom: '12px', fontWeight: '500' }}>
-                <p style={{ margin: '0 0 8px 0' }}>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</p>
-                <p style={{ margin: '0' }}>These are all <strong style={{ color: '#1b2a4a', fontWeight: '800' }}>objects</strong>. Even though they look different, each object is made of some <strong style={{ color: '#1b2a4a', fontWeight: '800' }}>material</strong>.</p>
+              <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '16px', fontWeight: '500' }}>
+                <p style={{ margin: '0 0 12px 0' }}>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</p>
+                <p style={{ margin: '0' }}>These are all <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>objects</strong>. Even though they look different, each object is made of some <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>material</strong>.</p>
               </div>
 
-              <div style={{ border: '1px dashed #94a3b8', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-                <div style={{ fontSize: 'var(--text-xl)', color: '#1e293b', marginBottom: '8px' }}><strong style={{ color: '#1b2a4a' }}>Material:</strong> The substance used to make an object.</div>
-                <div style={{ fontSize: 'var(--text-xl)', color: '#1e293b' }}><strong style={{ color: '#1b2a4a' }}>Object:</strong> Anything we can see or use around us.</div>
+              <div style={{ border: '1px dashed var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+                <div style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)', marginBottom: '8px' }}><strong style={{ color: 'var(--text-heading)' }}>Material:</strong> The substance used to make an object.</div>
+                <div style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)' }}><strong style={{ color: 'var(--text-heading)' }}>Object:</strong> Anything we can see or use around us.</div>
               </div>
 
-              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#d97706', fontSize: 'var(--text-xl)' }}>Examples:</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: '#451a03' }}>
+              <div style={{ background: 'var(--warning-bg)', border: '1px solid var(--warning-border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: 'var(--accent)', fontSize: 'var(--text-xl)' }}>Examples:</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: 'var(--text-primary)' }}>
                   <div>Chair can be made of wood, plastic or steel.</div>
                   <div>A plate can be made of steel, glass or plastic.</div>
                   <div>A bottle can be made of plastic, glass or steel.</div>
                 </div>
               </div>
 
-              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '16px', display: 'flex', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: 'var(--text-xl)', color: '#1e3a8a', lineHeight: '1.4' }}>
+              <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', display: 'flex', alignItems: 'flex-start' }}>
+                <div style={{ fontSize: 'var(--text-xl)', color: 'var(--text-heading)', lineHeight: '1.4' }}>
                   <strong>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
                 </div>
               </div>
             </div>
 
             {/* ================= RIGHT PAGE (PAGE 2) ================= */}
-            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1b2a4a', fontWeight: 'bold', borderBottom: '4px solid #3b4ea0', paddingBottom: '8px', display: 'inline-block' }}>
+            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: 'var(--text-heading)', fontWeight: 'bold', borderBottom: '4px solid var(--accent)', paddingBottom: '8px', display: 'inline-block' }}>
                 Historical Spotlight: Pottery
               </h2>
 
@@ -363,21 +362,21 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           // ================= BARRIER 2 TWO-PAGE SPREAD =================
           <>
             {/* ================= LEFT PAGE B2 (PAGE 1) ================= */}
-            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'hidden', borderRight: '1px solid #e2e8f0' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'calc(var(--text-2xl) * 1.25)', color: '#1e3a8a', fontWeight: 'bold', borderBottom: '4px solid #3b82f6', paddingBottom: '6px', display: 'inline-block' }}>
+            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'hidden', borderRight: '1px solid var(--border)' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'calc(var(--text-2xl) * 1.25)', color: 'var(--text-heading)', fontWeight: 'bold', borderBottom: '4px solid var(--accent)', paddingBottom: '6px', display: 'inline-block' }}>
                 How Can We Group Objects?
               </h2>
 
-              <div style={{ fontSize: '28px', color: '#334155', lineHeight: '1.6', marginBottom: '16px' }}>
-                <p style={{ margin: '0 0 16px 0', fontSize: '28px', lineHeight: '1.6' }}>We see many objects around us, such as books, bottles, spoons and toys.</p>
-                <p style={{ margin: '0 0 16px 0', fontSize: '28px', lineHeight: '1.6' }}>Objects can be grouped based on a common property, such as material, colour, shape or hardness.</p>
-                <p style={{ margin: '0 0 16px 0', fontSize: '28px', lineHeight: '1.6' }}>This process is called classification.</p>
-                <p style={{ margin: '0', fontSize: '28px', lineHeight: '1.6' }}>The same object can belong to different groups depending on the property we choose.</p>
+              <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '16px', fontWeight: '500' }}>
+                <p style={{ margin: '0 0 12px 0' }}>We see many objects around us, such as books, bottles, spoons and toys.</p>
+                <p style={{ margin: '0 0 12px 0' }}>Objects can be grouped based on a common property, such as material, colour, shape or hardness.</p>
+                <p style={{ margin: '0 0 12px 0' }}>This process is called <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>classification</strong>.</p>
+                <p style={{ margin: '0' }}>The same object can belong to different groups depending on the property we choose.</p>
               </div>
 
-              <div style={{ marginTop: '6px', background: '#eff6ff', border: '2px dashed #bfdbfe', borderRadius: '12px', padding: '12px 18px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <div style={{ marginTop: '6px', background: 'var(--surface)', border: '2px dashed var(--border)', borderRadius: '12px', padding: '12px 18px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <div style={{ fontSize: 'calc(var(--text-xl) * 1.3)' }}>💡</div>
-                <div style={{ fontSize: 'calc(var(--text-lg) * 1.3)', color: '#1e3a8a', lineHeight: '1.35' }}>
+                <div style={{ fontSize: 'calc(var(--text-lg) * 1.3)', color: 'var(--text-heading)', lineHeight: '1.35' }}>
                   <strong>Remember</strong><br/>
                   Classification means grouping objects based on a common property.
                 </div>
@@ -386,57 +385,57 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
 
             {/* ================= RIGHT PAGE B2 (PAGE 2) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: '20px 28px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'hidden' }}>
-              <h2 style={{ margin: '0 0 12px 0', fontSize: 'calc(var(--text-2xl) * 1.15)', color: '#1e3a8a', fontWeight: 'bold' }}>
+              <h2 style={{ margin: '0 0 12px 0', fontSize: 'calc(var(--text-2xl) * 1.15)', color: 'var(--text-heading)', fontWeight: 'bold' }}>
                 Case File 02: Scientific Classification
               </h2>
 
-              <div style={{ fontSize: '26px', color: '#334155', lineHeight: '1.55', marginBottom: '22px' }}>
-                <p style={{ margin: '0 0 14px 0', fontSize: '26px', lineHeight: '1.55' }}>Your next case is ready!</p>
-                <p style={{ margin: '0 0 14px 0', fontSize: '26px', lineHeight: '1.55' }}>Observe each object and identify the material it is made of.</p>
-                <p style={{ margin: '0', fontSize: '26px', lineHeight: '1.55' }}>Then place each object into the correct material group.</p>
+              <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '16px', fontWeight: '500' }}>
+                <p style={{ margin: '0 0 12px 0' }}>Your next case is ready!</p>
+                <p style={{ margin: '0 0 12px 0' }}>Observe each object and identify the material it is made of.</p>
+                <p style={{ margin: '0' }}>Then place each object into the correct material group.</p>
               </div>
 
-              <div style={{ border: '2px solid #10b981', borderRadius: '12px', padding: '12px 18px', background: '#f0fdf4', display: 'flex', position: 'relative' }}>
+              <div style={{ border: '2px solid var(--success)', borderRadius: '12px', padding: '12px 18px', background: 'var(--success-bg)', display: 'flex', position: 'relative' }}>
                 <div style={{ flex: 1 }}>
-                  <h4 style={{ margin: '0 0 10px 0', color: '#047857', fontSize: 'calc(var(--text-lg) * 1.22)', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: 'var(--success)', fontSize: 'calc(var(--text-lg) * 1.22)', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
                     🎯 MISSION
                   </h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: '#064e3b', fontWeight: '600' }}>
-                      <input type="checkbox" checked={true} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '3px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', fontWeight: '600' }}>
+                      <input type="checkbox" checked={true} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
                       <span>Read the Handbook</span>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: '#064e3b', fontWeight: '600' }}>
-                      <input type="checkbox" checked={isB2Phase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '3px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', fontWeight: '600' }}>
+                      <input type="checkbox" checked={isB2Phase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
                       <span>Organize objects by purpose</span>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: '#064e3b', fontWeight: '600' }}>
-                      <input type="checkbox" checked={isB2Phase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '3px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', fontWeight: '600' }}>
+                      <input type="checkbox" checked={isB2Phase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
                       <span>Group objects by material</span>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: '#064e3b', lineHeight: '1.4' }}>
-                      <input type="checkbox" checked={isB2Phase3Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '3px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', lineHeight: '1.4' }}>
+                      <input type="checkbox" checked={isB2Phase3Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
                       <span>
-                        <strong style={{ display: 'block', fontWeight: '600', color: '#064e3b' }}>Multi-Property Insights</strong>
-                        <span style={{ fontSize: 'calc(var(--text-base) * 1.18)', color: '#047857', display: 'block', marginTop: '2px', lineHeight: '1.35' }}>
+                        <strong style={{ display: 'block', fontWeight: '600', color: 'var(--text-primary)' }}>Multi-Property Insights</strong>
+                        <span style={{ fontSize: 'calc(var(--text-base) * 1.18)', color: 'var(--success)', display: 'block', marginTop: '2px', lineHeight: '1.35' }}>
                           Inspect how the same objects fit into different groups depending on the property we look at.
                         </span>
                       </span>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: '#064e3b', lineHeight: '1.4' }}>
-                      <input type="checkbox" checked={isB2Phase4Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '3px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', lineHeight: '1.4' }}>
+                      <input type="checkbox" checked={isB2Phase4Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
                       <span>
-                        <strong style={{ display: 'block', fontWeight: '600', color: '#064e3b' }}>Activity 6.3: Material Suitability</strong>
-                        <span style={{ fontSize: 'calc(var(--text-base) * 1.18)', color: '#047857', display: 'block', marginTop: '2px', lineHeight: '1.35' }}>
+                        <strong style={{ display: 'block', fontWeight: '600', color: 'var(--text-primary)' }}>Activity 6.3: Material Suitability</strong>
+                        <span style={{ fontSize: 'calc(var(--text-base) * 1.18)', color: 'var(--success)', display: 'block', marginTop: '2px', lineHeight: '1.35' }}>
                           We choose materials based on their properties and the purpose of the object.
                         </span>
                       </span>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: '#064e3b', lineHeight: '1.4' }}>
-                      <input type="checkbox" checked={isB2Phase5Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '3px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', lineHeight: '1.4' }}>
+                      <input type="checkbox" checked={isB2Phase5Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
                       <span>
-                        <strong style={{ display: 'block', fontWeight: '600', color: '#064e3b' }}>Investigation: Sports Equipment Properties</strong>
-                        <span style={{ fontSize: 'calc(var(--text-base) * 1.18)', color: '#047857', display: 'block', marginTop: '2px', lineHeight: '1.35' }}>
+                        <strong style={{ display: 'block', fontWeight: '600', color: 'var(--text-primary)' }}>Investigation: Sports Equipment Properties</strong>
+                        <span style={{ fontSize: 'calc(var(--text-base) * 1.18)', color: 'var(--success)', display: 'block', marginTop: '2px', lineHeight: '1.35' }}>
                           Click each ball to analyze its properties and discover how its material matches its purpose.
                         </span>
                       </span>
@@ -450,12 +449,12 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           // ================= BARRIER 3 TWO-PAGE SPREAD =================
           <>
             {/* ================= LEFT PAGE B3 (PAGE 1) ================= */}
-            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', borderRight: '1px solid #e2e8f0' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1e3a8a', fontWeight: 'bold', borderBottom: '4px solid #3b82f6', paddingBottom: '8px', display: 'inline-block' }}>
+            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto', borderRight: '1px solid var(--border)' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: 'var(--text-heading)', fontWeight: 'bold', borderBottom: '4px solid var(--accent)', paddingBottom: '8px', display: 'inline-block' }}>
                 Choosing the Right Material
               </h2>
 
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#f8fafc', padding: '24px', borderRadius: '12px', marginBottom: '24px', position: 'relative' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'var(--surface)', padding: '24px', borderRadius: '12px', marginBottom: '24px', position: 'relative' }}>
                 <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ width: 'clamp(84px, 12vw, 180px)', height: 'clamp(84px, 12vw, 180px)', zIndex: 2 }} />
                 <div style={{ position: 'absolute', display: 'flex', gap: '40px', bottom: '20px' }}>
                    <div style={{ fontSize: 'var(--text-2xl)', filter: 'drop-shadow(0px 4px 2px rgba(0,0,0,0.2))' }}>🖋️</div>
@@ -463,16 +462,16 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 </div>
               </div>
 
-              <div style={{ fontSize: 'var(--text-xl)', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
+              <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '24px', fontWeight: '500' }}>
                 <p style={{ margin: '0 0 16px 0' }}>Different objects are made for different purposes.</p>
-                <p style={{ margin: '0 0 16px 0' }}>The material used to make an object depends on its <strong style={{ color: '#1e3a8a' }}>properties</strong> and how the object will be used.</p>
+                <p style={{ margin: '0 0 16px 0' }}>The material used to make an object depends on its <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>properties</strong> and how the object will be used.</p>
                 <p style={{ margin: '0 0 16px 0' }}>For example, a pen is made of different materials such as plastic, metal and ink. Each material is chosen because it performs a specific job.</p>
-                <p style={{ margin: '0' }}>Choosing the right material helps us make objects that are <strong style={{ color: '#1e3a8a' }}>safe</strong>, <strong style={{ color: '#1e3a8a' }}>useful</strong> and <strong style={{ color: '#1e3a8a' }}>long-lasting</strong>.</p>
+                <p style={{ margin: '0' }}>Choosing the right material helps us make objects that are <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>safe</strong>, <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>useful</strong> and <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>long-lasting</strong>.</p>
               </div>
 
-              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <div style={{ background: 'var(--warning-bg)', border: '1px solid var(--warning-border)', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <div style={{ fontSize: 'var(--text-xl)' }}>💡</div>
-                <div style={{ fontSize: 'var(--text-xl)', color: '#b45309', lineHeight: '1.4' }}>
+                <div style={{ fontSize: 'var(--text-xl)', color: 'var(--accent-text)', lineHeight: '1.4' }}>
                   <strong>Remember</strong><br/>
                   The properties of a material help us decide where and how it should be used.
                 </div>
@@ -480,65 +479,65 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
             </div>
 
             {/* ================= RIGHT PAGE B3 (PAGE 2) ================= */}
-            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: '#1e3a8a', fontWeight: 'bold' }}>
+            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: 'var(--text-heading)', fontWeight: 'bold' }}>
                 Case File 03: Choosing the Right Material
               </h2>
 
-              <div style={{ fontSize: 'var(--text-xl)', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
-                <p style={{ margin: '0 0 16px 0' }}>As a Science Detective, your next challenge is to decide which material is the <strong style={{ color: '#16a34a' }}>best choice</strong> for making an object.</p>
-                <p style={{ margin: '0' }}>Sometimes an object can be made from different materials, but only some materials are <strong style={{ color: '#3b82f6' }}>suitable</strong> for its purpose.</p>
+              <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '24px', fontWeight: '500' }}>
+                <p style={{ margin: '0 0 16px 0' }}>As a Science Detective, your next challenge is to decide which material is the <strong style={{ color: 'var(--success)', fontWeight: '800' }}>best choice</strong> for making an object.</p>
+                <p style={{ margin: '0' }}>Sometimes an object can be made from different materials, but only some materials are <strong style={{ color: 'var(--accent)', fontWeight: '800' }}>suitable</strong> for its purpose.</p>
               </div>
 
-              <div style={{ border: '2px dashed #c4b5fd', borderRadius: '12px', padding: '16px', marginBottom: '16px', background: '#f5f3ff', position: 'relative' }}>
-                <h4 style={{ margin: '0 0 12px 0', color: '#6d28d9', fontSize: 'var(--text-xl)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ border: '2px dashed var(--accent-border)', borderRadius: '12px', padding: '16px', marginBottom: '16px', background: 'var(--accent-bg)', position: 'relative' }}>
+                <h4 style={{ margin: '0 0 12px 0', color: 'var(--accent)', fontSize: 'var(--text-xl)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   🧠 Think Like a Scientist
                 </h4>
-                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-xl)', color: '#334155' }}>Before making a choice, ask yourself:</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: '#334155' }}>
-                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: '#6d28d9', fontWeight: 'bold' }}>✔</span> Is this material strong enough?</div>
-                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: '#6d28d9', fontWeight: 'bold' }}>✔</span> Is it safe to use?</div>
-                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: '#6d28d9', fontWeight: 'bold' }}>✔</span> Will it work well for this purpose?</div>
+                <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-xl)', color: 'var(--text-primary)' }}>Before making a choice, ask yourself:</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: 'var(--text-primary)' }}>
+                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: 'var(--accent)', fontWeight: 'bold' }}>✔</span> Is this material strong enough?</div>
+                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: 'var(--accent)', fontWeight: 'bold' }}>✔</span> Is it safe to use?</div>
+                  <div style={{ display: 'flex', gap: '8px' }}><span style={{ color: 'var(--accent)', fontWeight: 'bold' }}>✔</span> Will it work well for this purpose?</div>
                 </div>
                 <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ position: 'absolute', bottom: '10px', right: '10px', width: 'clamp(56px, 8vw, 120px)', height: 'clamp(56px, 8vw, 120px)' }} />
               </div>
 
-              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ background: 'var(--warning-bg)', border: '1px solid var(--warning-border)', borderRadius: '12px', padding: '16px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <div style={{ flex: 1 }}>
-                  <h4 style={{ margin: '0 0 6px 0', color: '#d97706', fontSize: 'var(--text-xl)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <h4 style={{ margin: '0 0 6px 0', color: 'var(--accent)', fontSize: 'var(--text-xl)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     ⭐ Example
                   </h4>
-                  <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: '#451a03' }}>
+                  <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--text-primary)' }}>
                     A shopping bag can be made from cloth or paper, but each material is suitable for different situations.
                   </p>
                 </div>
                 <div style={{ fontSize: 'var(--text-3xl)', display: 'flex', gap: '8px' }}>🛍️ 🛍️</div>
               </div>
 
-              <div style={{ border: '2px solid #10b981', borderRadius: '12px', padding: '16px', background: '#f0fdf4', display: 'flex', position: 'relative' }}>
+              <div style={{ border: '2px solid var(--success)', borderRadius: '12px', padding: '16px', background: 'var(--success-bg)', display: 'flex', position: 'relative' }}>
                 <div style={{ flex: 1, paddingRight: '80px' }}>
-                  <h4 style={{ margin: '0 0 12px 0', color: '#047857', fontSize: 'var(--text-lg)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h4 style={{ margin: '0 0 12px 0', color: 'var(--success)', fontSize: 'var(--text-lg)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     🎯 MISSION
                   </h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: '#064e3b' }}>
-                      <input type="checkbox" checked={true} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>
+                      <input type="checkbox" checked={true} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '4px' }} />
                       Read the Handbook
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: '#064e3b' }}>
-                      <input type="checkbox" checked={isB3Phase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>
+                      <input type="checkbox" checked={isB3Phase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '4px' }} />
                       Observe carefully.
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: '#064e3b' }}>
-                      <input type="checkbox" checked={isB3Phase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>
+                      <input type="checkbox" checked={isB3Phase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '4px' }} />
                       Compare different materials.
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: '#064e3b' }}>
-                      <input type="checkbox" checked={isB3Phase3Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>
+                      <input type="checkbox" checked={isB3Phase3Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '4px' }} />
                       Think about their properties.
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: '#064e3b' }}>
-                      <input type="checkbox" checked={isB3Phase4Done} readOnly style={{ width: '18px', height: '18px', accentColor: '#10b981', marginTop: '4px' }} />
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>
+                      <input type="checkbox" checked={isB3Phase4Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '4px' }} />
                       Find the most suitable material for each object.
                     </label>
                   </div>
@@ -553,8 +552,8 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
       {/* FOOTER BAR WITH BOTTOM-RIGHT NEXT BUTTON */}
       <div style={{
         height: '56px',
-        background: '#f8fafc',
-        borderTop: '1px solid #e2e8f0',
+        background: 'var(--surface)',
+        borderTop: '1px solid var(--border)',
         padding: '0 24px',
         display: 'flex',
         alignItems: 'center',
@@ -562,7 +561,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
         flexShrink: 0,
         zIndex: 10
       }}>
-        <div style={{ color: '#64748b', fontSize: '0.9rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span>📖</span> Investigation Handbook
         </div>
       </div>

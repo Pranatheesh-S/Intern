@@ -85,7 +85,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
       <style>{`
         :root {
           --classroom-bg: url('${classroomBg}');
-          --classroom-border: 2px solid #94a3b8;
+          --classroom-border: 2px solid var(--text-muted);
         }
         [data-theme="dark"] {
           --classroom-bg: url('${classroomBg}');
@@ -150,11 +150,11 @@ export default function Stage1_Intro({ onComplete, addXp }) {
         <div style={{ position: 'absolute', top: '5%', right: '10%', width: '45%', height: '35%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 15 }}>
           {completed ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', textAlign: 'center' }}>
-              <span style={{ fontFamily: 'Georgia, serif', color: '#ffffff', fontSize: 'clamp(1rem, 1.5vw, 2.5rem)', fontWeight: 'bold' }}>All Objects Identified!</span>
-              <span style={{ fontFamily: 'Georgia, serif', color: '#fcd34d', fontSize: 'clamp(0.8rem, 1vw, 1.8rem)' }}>Click "Proceed to next" in the bottom right corner to continue!</span>
+              <span style={{ color: 'var(--surface)', fontSize: 'clamp(1rem, 1.5vw, 2.5rem)', fontWeight: 'bold' }}>All Objects Identified!</span>
+              <span style={{ color: '#fcd34d', fontSize: 'clamp(0.8rem, 1vw, 1.8rem)' }}>Click "Proceed to next" in the bottom right corner to continue!</span>
             </div>
           ) : (
-            <span style={{ fontFamily: 'Georgia, serif', color: '#ffffff', fontSize: 'clamp(1rem, 1.3vw, 2.2rem)', textAlign: 'center', lineHeight: '1.5' }}>
+            <span style={{ color: 'var(--surface)', fontSize: 'clamp(1rem, 1.3vw, 2.2rem)', textAlign: 'center', lineHeight: '1.5' }}>
               Welcome back!<br />
               What is <strong style={{ color: '#fbbf24' }}>Material</strong>?<br />
               Click on the objects to scan.
@@ -189,7 +189,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             <span style={{ fontSize: '0.65rem', color: '#fff', fontWeight: 'bold' }}>You</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
               <GraduationCap size={18} />
             </div>
             <span style={{ fontSize: '0.65rem', color: '#fff', fontWeight: 'bold' }}>Teacher</span>
@@ -327,7 +327,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                 <div style={{
                   background: 'rgba(59, 130, 246, 0.05)',
                   border: '1px solid var(--border)',
-                  borderLeft: '4px solid #3b82f6',
+                  borderLeft: '4px solid var(--accent)',
                   padding: '24px 28px',
                   borderRadius: '0 8px 8px 0',
                   textAlign: 'center',
@@ -338,8 +338,8 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                   width: '100%',
                   boxSizing: 'border-box'
                 }}>
-                  <span style={{ fontWeight: 'bold', color: '#3b82f6', letterSpacing: '1.5px', fontSize: '0.85rem' }}>KEY FINDING</span>
-                  <span style={{ fontFamily: 'Georgia, serif', fontSize: '1.35rem', fontWeight: 'bold', color: 'var(--text-heading)', lineHeight: '1.4' }}>
+                  <span style={{ fontWeight: 'bold', color: 'var(--accent)', letterSpacing: '1.5px', fontSize: '0.85rem' }}>KEY FINDING</span>
+                  <span style={{ fontSize: '1.35rem', fontWeight: 'bold', color: 'var(--text-heading)', lineHeight: '1.4' }}>
                     "Objects can be classified on the basis of a common property that they have."
                   </span>
                 </div>

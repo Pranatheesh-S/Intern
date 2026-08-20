@@ -140,7 +140,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
           </div>
 
           <div style={{ height: '370px', minHeight: '350px', background: 'var(--neutral-bg)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '0.5rem', boxSizing: 'border-box' }}>
-            {tumblerMaterial ? renderTumblerAnimation() : <span style={{ fontSize: '1rem', color: '#64748b' }}>Select a tumbler material</span>}
+            {tumblerMaterial ? renderTumblerAnimation() : <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Select a tumbler material</span>}
           </div>
 
           <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>
@@ -170,7 +170,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
           </div>
 
           <div style={{ height: '370px', minHeight: '350px', background: 'var(--neutral-bg)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '0.5rem', boxSizing: 'border-box' }}>
-            {potMaterial ? renderPotAnimation() : <span style={{ fontSize: '1rem', color: '#64748b' }}>Select a pot material</span>}
+            {potMaterial ? renderPotAnimation() : <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Select a pot material</span>}
           </div>
 
           <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>

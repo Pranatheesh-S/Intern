@@ -29,13 +29,13 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
   }, [allRevealed, onComplete]);
 
   return (
-    <div style={{ padding: '24px', background: '#f8fafc', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', overflowY: 'auto', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div style={{ padding: '24px', background: 'var(--surface)', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '20px', height: '100%', overflowY: 'auto', }}>
       
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <Box size={24} color="#6366f1" />
+        <Box size={24} color="var(--accent)" />
         <div>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#4f46e5', margin: 0 }}>Phase 2: Understanding Volume</h2>
-          <p style={{ color: '#475569', fontSize: '0.9rem', margin: '4px 0 0 0' }}>Let's continue exploring why some containers hold more water than others.</p>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--accent)', margin: 0 }}>Phase 2: Understanding Volume</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '4px 0 0 0' }}>Let's continue exploring why some containers hold more water than others.</p>
         </div>
       </div>
 
@@ -45,16 +45,16 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Section 1: Why can't I fill the bottle completely? */}
-          <div style={{ background: 'white', borderRadius: '12px', padding: '20px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', color: '#3730a3', margin: '0 0 16px 0' }}>
-              <span style={{ background: '#e0e7ff', color: '#4f46e5', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 'bold' }}>1</span>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', color: 'var(--text-heading)', margin: '0 0 16px 0' }}>
+              <span style={{ background: 'var(--surface)', color: 'var(--accent)', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 'bold' }}>1</span>
               Why can't I fill the bottle completely?
             </h3>
             
             <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
               {/* Illustration Replacement */}
               <div style={{ flex: 1, display: 'flex', gap: '16px', alignItems: 'center' }}>
-                <div style={{ width: '220px', height: '180px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #e2e8f0', flexShrink: 0, boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+                <div style={{ width: '220px', height: '180px', borderRadius: '12px', overflow: 'hidden', border: '2px solid var(--border)', flexShrink: 0, boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                   <img 
                     src="/images/volume_overflow.png" 
                     alt="Overflowing Bottle" 
@@ -68,14 +68,14 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
               </div>
               
               {/* Explanation */}
-              <div style={{ flex: 1.2, background: '#f8fafc', padding: '16px', borderRadius: '12px' }}>
-                <p style={{ margin: '0 0 8px 0', color: '#334155', fontSize: '0.9rem', lineHeight: '1.5' }}>
+              <div style={{ flex: 1.2, background: 'var(--surface)', padding: '16px', borderRadius: '12px' }}>
+                <p style={{ margin: '0 0 8px 0', color: 'var(--text-primary)', fontSize: '0.9rem', lineHeight: '1.5' }}>
                   A bottle has limited space. Once it is full, no more water can be poured in.
                 </p>
-                <p style={{ margin: '0 0 12px 0', color: '#334155', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                <p style={{ margin: '0 0 12px 0', color: 'var(--text-primary)', fontSize: '0.9rem', lineHeight: '1.5' }}>
                   That is why I couldn't fill the bottle completely.
                 </p>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', color: '#4f46e5', fontSize: '0.85rem' }}>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', color: 'var(--accent)', fontSize: '0.85rem' }}>
                   <Info size={16} />
                   <span>Every container can hold only a certain amount of space.</span>
                 </div>
@@ -84,18 +84,18 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
           </div>
 
           {/* Section 2: Volume in Everyday Life */}
-          <div style={{ background: 'white', borderRadius: '12px', padding: '20px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', color: '#3730a3', margin: '0 0 16px 0' }}>
-              <span style={{ background: '#e0e7ff', color: '#4f46e5', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 'bold' }}>2</span>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', color: 'var(--text-heading)', margin: '0 0 16px 0' }}>
+              <span style={{ background: 'var(--surface)', color: 'var(--accent)', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 'bold' }}>2</span>
               Volume in Everyday Life
             </h3>
             
             <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
               <div style={{ flex: 1 }}>
-                <p style={{ margin: '0 0 8px 0', color: '#334155', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                <p style={{ margin: '0 0 8px 0', color: 'var(--text-primary)', fontSize: '0.9rem', lineHeight: '1.5' }}>
                   Different bottles have different volumes.
                 </p>
-                <p style={{ margin: 0, color: '#334155', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: '0.9rem', lineHeight: '1.5' }}>
                   The number written on the label shows how much liquid the bottle can hold.
                 </p>
               </div>
@@ -103,35 +103,35 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
               <div style={{ display: 'flex', gap: '24px' }}>
                 {/* Bottle 1 */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ width: '70px', height: '140px', background: '#e0f2fe', border: '3px solid #bae6fd', borderRadius: '16px 16px 6px 6px', position: 'relative' }}>
-                    <div style={{ position: 'absolute', top: '-10px', left: '15px', width: '34px', height: '10px', background: '#94a3b8', borderRadius: '4px' }}></div>
-                    <div style={{ position: 'absolute', top: '45px', left: '-3px', right: '-3px', height: '50px', background: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '2px solid #e2e8f0' }}>
+                  <div style={{ width: '70px', height: '140px', background: 'var(--surface)', border: '3px solid var(--surface)', borderRadius: '16px 16px 6px 6px', position: 'relative' }}>
+                    <div style={{ position: 'absolute', top: '-10px', left: '15px', width: '34px', height: '10px', background: 'var(--text-muted)', borderRadius: '4px' }}></div>
+                    <div style={{ position: 'absolute', top: '45px', left: '-3px', right: '-3px', height: '50px', background: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--border)' }}>
                       <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'bold', lineHeight: '1.2' }}>Drinking</span>
                       <span style={{ fontSize: 'var(--text-xs)', fontWeight: 'bold', lineHeight: '1.2' }}>Water</span>
-                      <span style={{ fontSize: 'var(--text-xs)', fontWeight: '900', color: '#0284c7', marginTop: '2px' }}>500 mL</span>
+                      <span style={{ fontSize: 'var(--text-xs)', fontWeight: '900', color: 'var(--accent)', marginTop: '2px' }}>500 mL</span>
                     </div>
                   </div>
                 </div>
                 {/* Bottle 2 */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ width: '70px', height: '140px', background: 'white', border: '3px solid #e2e8f0', borderRadius: '16px 16px 6px 6px', position: 'relative' }}>
-                    <div style={{ position: 'absolute', top: '-10px', left: '15px', width: '34px', height: '10px', background: '#94a3b8', borderRadius: '4px' }}></div>
-                    <div style={{ position: 'absolute', top: '45px', left: '-3px', right: '-3px', height: '50px', background: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '2px solid #e2e8f0' }}>
+                  <div style={{ width: '70px', height: '140px', background: 'white', border: '3px solid var(--border)', borderRadius: '16px 16px 6px 6px', position: 'relative' }}>
+                    <div style={{ position: 'absolute', top: '-10px', left: '15px', width: '34px', height: '10px', background: 'var(--text-muted)', borderRadius: '4px' }}></div>
+                    <div style={{ position: 'absolute', top: '45px', left: '-3px', right: '-3px', height: '50px', background: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '2px solid var(--border)' }}>
                       <span style={{ fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>Milk</span>
-                      <span style={{ fontSize: 'var(--text-xs)', fontWeight: '900', color: '#475569', marginTop: '4px' }}>500 mL</span>
+                      <span style={{ fontSize: 'var(--text-xs)', fontWeight: '900', color: 'var(--text-secondary)', marginTop: '4px' }}>500 mL</span>
                     </div>
                   </div>
                 </div>
               </div>
               
-              <div style={{ flex: 1.2, background: '#f5f3ff', padding: '16px', borderRadius: '12px' }}>
+              <div style={{ flex: 1.2, background: 'var(--accent-bg)', padding: '16px', borderRadius: '12px' }}>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                  <div style={{ background: '#ddd6fe', color: '#6d28d9', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 'bold', flexShrink: 0, marginTop: '2px' }}>0</div>
+                  <div style={{ background: 'var(--accent-bg)', color: 'var(--accent)', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 'bold', flexShrink: 0, marginTop: '2px' }}>0</div>
                   <p style={{ margin: '0 0 12px 0', color: '#4c1d95', fontSize: '0.85rem', lineHeight: '1.5' }}>
                     Even though both bottles contain different liquids, the label shows they have the same volume.
                   </p>
                 </div>
-                <div style={{ color: '#6d28d9', fontWeight: 'bold', fontSize: '0.85rem', textAlign: 'center' }}>
+                <div style={{ color: 'var(--accent)', fontWeight: 'bold', fontSize: '0.85rem', textAlign: 'center' }}>
                   Same volume, different material!
                 </div>
               </div>
@@ -139,78 +139,78 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
           </div>
 
           {/* Section 3: Explore Different Volumes */}
-          <div style={{ background: 'white', borderRadius: '12px', padding: '20px', border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', color: '#3730a3', margin: '0 0 8px 0' }}>
-              <span style={{ background: '#e0e7ff', color: '#4f46e5', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 'bold' }}>3</span>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', color: 'var(--text-heading)', margin: '0 0 8px 0' }}>
+              <span style={{ background: 'var(--surface)', color: 'var(--accent)', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 'bold' }}>3</span>
               Explore Different Volumes
             </h3>
-            <p style={{ margin: '0 0 16px 0', color: '#64748b', fontSize: '0.9rem' }}>Click on each item to see its volume.</p>
+            <p style={{ margin: '0 0 16px 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>Click on each item to see its volume.</p>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '16px' }}>
               
               {/* Tea Cup */}
-              <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+              <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '16px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
                 <Coffee size={48} color="#f59e0b" strokeWidth={1.5} />
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#334155' }}>Tea Cup</div>
-                  <div style={{ color: '#4f46e5', fontWeight: 'bold', height: '20px', marginTop: '4px' }}>
+                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-primary)' }}>Tea Cup</div>
+                  <div style={{ color: 'var(--accent)', fontWeight: 'bold', height: '20px', marginTop: '4px' }}>
                     {volumesRevealed.teaCup ? '150 mL' : '?'}
                   </div>
                 </div>
                 {!volumesRevealed.teaCup ? (
-                  <button onClick={() => handleReveal('teaCup')} style={{ background: 'white', border: '1px solid #c7d2fe', color: '#4f46e5', padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: '500' }}>View Volume</button>
+                  <button onClick={() => handleReveal('teaCup')} style={{ background: 'white', border: '1px solid var(--border)', color: 'var(--accent)', padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: '500' }}>View Volume</button>
                 ) : (
                   <div style={{ height: '26px' }}></div>
                 )}
               </div>
 
               {/* Soup Bowl */}
-              <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+              <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '16px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '56px', height: '30px', background: '#86efac', borderRadius: '0 0 30px 30px', border: '2px solid #4ade80', marginTop: '18px' }}></div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#334155' }}>Soup Bowl</div>
-                  <div style={{ color: '#4f46e5', fontWeight: 'bold', height: '20px', marginTop: '4px' }}>
+                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-primary)' }}>Soup Bowl</div>
+                  <div style={{ color: 'var(--accent)', fontWeight: 'bold', height: '20px', marginTop: '4px' }}>
                     {volumesRevealed.soupBowl ? '300 mL' : '?'}
                   </div>
                 </div>
                 {!volumesRevealed.soupBowl ? (
-                  <button onClick={() => handleReveal('soupBowl')} style={{ background: 'white', border: '1px solid #c7d2fe', color: '#4f46e5', padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: '500' }}>View Volume</button>
+                  <button onClick={() => handleReveal('soupBowl')} style={{ background: 'white', border: '1px solid var(--border)', color: 'var(--accent)', padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: '500' }}>View Volume</button>
                 ) : (
                   <div style={{ height: '26px' }}></div>
                 )}
               </div>
 
               {/* Water Glass */}
-              <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '40px', height: '48px', border: '2px solid #94a3b8', borderRadius: '2px 2px 6px 6px', position: 'relative' }}>
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30px', background: '#bae6fd', borderRadius: '0 0 4px 4px' }}></div>
+              <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '16px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '48px', border: '2px solid var(--text-muted)', borderRadius: '2px 2px 6px 6px', position: 'relative' }}>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30px', background: 'var(--surface)', borderRadius: '0 0 4px 4px' }}></div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#334155' }}>Water Glass</div>
-                  <div style={{ color: '#4f46e5', fontWeight: 'bold', height: '20px', marginTop: '4px' }}>
+                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-primary)' }}>Water Glass</div>
+                  <div style={{ color: 'var(--accent)', fontWeight: 'bold', height: '20px', marginTop: '4px' }}>
                     {volumesRevealed.waterGlass ? '250 mL' : '?'}
                   </div>
                 </div>
                 {!volumesRevealed.waterGlass ? (
-                  <button onClick={() => handleReveal('waterGlass')} style={{ background: 'white', border: '1px solid #c7d2fe', color: '#4f46e5', padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: '500' }}>View Volume</button>
+                  <button onClick={() => handleReveal('waterGlass')} style={{ background: 'white', border: '1px solid var(--border)', color: 'var(--accent)', padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: '500' }}>View Volume</button>
                 ) : (
                   <div style={{ height: '26px' }}></div>
                 )}
               </div>
 
               {/* Bucket */}
-              <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '56px', height: '48px', background: '#38bdf8', borderRadius: '4px', border: '2px solid #0284c7', position: 'relative' }}>
-                  <div style={{ position: 'absolute', top: '-10px', left: '-5px', right: '-5px', height: '20px', border: '2px solid #0f172a', borderRadius: '50%', clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 50%)' }}></div>
+              <div style={{ border: '1px solid var(--border)', borderRadius: '8px', padding: '16px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '56px', height: '48px', background: 'var(--accent)', borderRadius: '4px', border: '2px solid var(--accent)', position: 'relative' }}>
+                  <div style={{ position: 'absolute', top: '-10px', left: '-5px', right: '-5px', height: '20px', border: '2px solid var(--text-primary)', borderRadius: '50%', clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 50%)' }}></div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#334155' }}>Bucket</div>
-                  <div style={{ color: '#4f46e5', fontWeight: 'bold', height: '20px', marginTop: '4px' }}>
+                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-primary)' }}>Bucket</div>
+                  <div style={{ color: 'var(--accent)', fontWeight: 'bold', height: '20px', marginTop: '4px' }}>
                     {volumesRevealed.bucket ? '10 L' : '?'}
                   </div>
                 </div>
                 {!volumesRevealed.bucket ? (
-                  <button onClick={() => handleReveal('bucket')} style={{ background: 'white', border: '1px solid #c7d2fe', color: '#4f46e5', padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: '500' }}>View Volume</button>
+                  <button onClick={() => handleReveal('bucket')} style={{ background: 'white', border: '1px solid var(--border)', color: 'var(--accent)', padding: '4px 12px', borderRadius: '16px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: '500' }}>View Volume</button>
                 ) : (
                   <div style={{ height: '26px' }}></div>
                 )}
@@ -218,8 +218,8 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
 
             </div>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#f8fafc', padding: '10px 16px', borderRadius: '8px', color: '#475569', fontSize: '0.85rem' }}>
-              <Info size={16} color="#6366f1" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--surface)', padding: '10px 16px', borderRadius: '8px', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+              <Info size={16} color="var(--accent)" />
               Different containers can hold different amounts of liquid. That amount is called their <strong>volume</strong>.
             </div>
 

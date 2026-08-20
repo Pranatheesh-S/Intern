@@ -93,11 +93,11 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%', maxWidth: '1000px', margin: '0 auto', paddingBottom: '2rem' }}>
       
       {/* Intro Header */}
-      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        <h3 style={{ margin: 0, fontSize: '1.6rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Eye size={26} color="#6366f1" /> Explore materials through which one can see or cannot see
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.6rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <Eye size={26} color="var(--accent)" /> Explore materials through which one can see or cannot see
         </h3>
-        <p style={{ margin: 0, fontSize: '1rem', color: '#334155', lineHeight: '1.5' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-primary)', lineHeight: '1.5' }}>
           Chief Blake is running a surveillance simulation! Click on the locations to see if the suspect is visible through the material. Then complete Activity 6.6 below.
         </p>
       </div>
@@ -105,9 +105,9 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
         {/* Interactive Yard */}
-        <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem' }}>
-          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ background: '#3b82f6', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>1</div>
+        <div style={{ background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '1.5rem' }}>
+          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ background: 'var(--accent)', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>1</div>
             Surveillance Simulator
           </h4>
 
@@ -120,7 +120,7 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                   onClick={() => handleSpotClick(spot)}
                   style={{
                     background: spot.bg,
-                    border: `2px solid ${selectedHidingSpot?.id === spot.id ? spot.color : '#e2e8f0'}`,
+                    border: `2px solid ${selectedHidingSpot?.id === spot.id ? spot.color : 'var(--border)'}`,
                     borderRadius: '12px',
                     padding: '1rem',
                     display: 'flex',
@@ -132,15 +132,15 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                 >
                   <div style={{ fontSize: '2.5rem' }}>{spot.icon}</div>
                   <div>
-                    <div style={{ fontWeight: 'bold', color: '#1e293b' }}>{spot.name}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{spot.character}</div>
+                    <div style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>{spot.name}</div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{spot.character}</div>
                   </div>
                 </motion.div>
               ))}
             </div>
 
             {/* Dialogue display */}
-            <div style={{ flex: 1, background: '#f8fafc', borderRadius: '12px', border: '1px solid #cbd5e1', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ flex: 1, background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               {selectedHidingSpot ? (
                 <>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
@@ -148,15 +148,15 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                       {selectedHidingSpot.type.toUpperCase()}
                     </div>
                   </div>
-                  <p style={{ fontSize: '1.1rem', color: '#334155', margin: 0, lineHeight: '1.6', fontStyle: 'italic' }}>
+                  <p style={{ fontSize: '1.1rem', color: 'var(--text-primary)', margin: 0, lineHeight: '1.6', fontStyle: 'italic' }}>
                     "{selectedHidingSpot.seekerDialog}"
                   </p>
-                  <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0', color: selectedHidingSpot.color, fontWeight: 'bold' }}>
+                  <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border)', color: selectedHidingSpot.color, fontWeight: 'bold' }}>
                     {selectedHidingSpot.description}
                   </div>
                 </>
               ) : (
-                <div style={{ textAlign: 'center', color: '#94a3b8', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                <div style={{ textAlign: 'center', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
                   <Eye size={48} opacity={0.5} />
                   <span>Click a location to check your visibility of the suspect through the material!</span>
                 </div>
@@ -166,24 +166,24 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
         </div>
 
         {/* Classification Table */}
-        <div style={{ background: '#ffffff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem' }}>
-          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '1.5rem' }}>
+          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div style={{ background: '#22c55e', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>2</div>
             Activity 6.6: Let us classify
           </h4>
-          <p style={{ margin: '0 0 1rem 0', color: '#64748b' }}>
+          <p style={{ margin: '0 0 1rem 0', color: 'var(--text-muted)' }}>
             Classify the following objects into Table 6.4. Select the correct column for each item!
           </p>
 
           <div style={{ display: 'flex', gap: '2rem' }}>
             {/* Items Pool */}
             <div style={{ flex: '0 0 250px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <div style={{ fontWeight: 'bold', color: '#334155', borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem', marginBottom: '0.5rem' }}>Objects to Classify</div>
+              <div style={{ fontWeight: 'bold', color: 'var(--text-primary)', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '0.5rem' }}>Objects to Classify</div>
               {objectsToClassify.map((obj) => {
                 const isSelected = classifications[obj.id] !== undefined;
                 if (isSelected) return null; // Hide if placed
                 return (
-                  <div key={obj.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: '8px', fontWeight: 'bold', color: '#1e293b' }}>
+                  <div key={obj.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'var(--surface)', border: '1px solid var(--border)', padding: '8px 12px', borderRadius: '8px', fontWeight: 'bold', color: 'var(--text-primary)' }}>
                     <span style={{ fontSize: '1.2rem' }}>{obj.icon}</span> {obj.name}
                   </div>
                 );
@@ -197,7 +197,7 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
 
             {/* Table 6.4 */}
             <div style={{ flex: 1 }}>
-              <div style={{ textAlign: 'center', fontWeight: 'bold', color: '#1e293b', marginBottom: '10px' }}>Table 6.4: Classification of objects</div>
+              <div style={{ textAlign: 'center', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '10px' }}>Table 6.4: Classification of objects</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
                 
                 {['Transparent', 'Translucent', 'Opaque'].map(category => (
@@ -207,7 +207,7 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                     </div>
                     
                     {/* Items placed in this category */}
-                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '0 0 8px 8px', padding: '10px', minHeight: '150px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '0 0 8px 8px', padding: '10px', minHeight: '150px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {objectsToClassify.filter(o => classifications[o.id] === category).map(obj => (
                         <div key={obj.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: obj.correct === category ? '#f0fdf4' : '#fef2f2', border: `1px solid ${obj.correct === category ? '#86efac' : '#fca5a5'}`, padding: '6px 10px', borderRadius: '6px', fontSize: '0.9rem' }}>
                           <span style={{ fontSize: '1.1rem' }}>{obj.icon}</span> {obj.name}
@@ -220,10 +220,10 @@ export default function Stage6_Transparency({ onComplete, addXp }) {
                           key={`btn-${obj.id}`}
                           onClick={() => handleClassify(obj.id, category)}
                           style={{
-                            background: 'white', border: '1px dashed #cbd5e1', padding: '6px', borderRadius: '6px', color: '#64748b', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', transition: 'all 0.2s'
+                            background: 'white', border: '1px dashed var(--border)', padding: '6px', borderRadius: '6px', color: 'var(--text-muted)', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', transition: 'all 0.2s'
                           }}
-                          onMouseOver={(e) => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.color = '#3b82f6'; }}
-                          onMouseOut={(e) => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.color = '#64748b'; }}
+                          onMouseOver={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                          onMouseOut={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
                         >
                           Place <strong>{obj.name}</strong> here
                         </button>

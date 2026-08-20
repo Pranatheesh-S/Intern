@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, RefreshCw, Sun, Moon, ArrowRight } from 'lucide-react';
+import './theme.css';
 import useSound from 'use-sound';
 import { useTheme } from '../../../../ThemeContext.jsx';
 import { chapterFlow } from './storyEngine';
@@ -138,7 +139,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       ) : showIntroSpread ? (
         <ChapterIntroSpread onContinue={() => setShowIntroSpread(false)} onBack={() => { setShowIntroSpread(false); setShowCover(true); }} />
       ) : (
-        <div className="activity-workspace flex h-screen bg-[#eaf6fb] overflow-hidden font-geo" style={{ paddingTop: 0, paddingBottom: '72px' }}>
+        <div className="activity-workspace materials-around-us-theme flex h-screen bg-[var(--surface)] overflow-hidden" style={{ paddingTop: 0, paddingBottom: '72px' }}>
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
         {/* Toggle Button */}
         <button
@@ -235,7 +236,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                     >
                       <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{icon}</span>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', minWidth: 0 }}>
-                        <span style={{ fontSize: '0.85rem', fontWeight: isActive ? 'bold' : 'normal', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: isActive ? 'bold' : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {item.title}
                         </span>
                         <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>

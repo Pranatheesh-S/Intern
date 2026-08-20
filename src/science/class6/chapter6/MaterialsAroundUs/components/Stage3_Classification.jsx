@@ -159,14 +159,14 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
       {/* Dynamic phase header */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <LayoutGrid size={22} style={{ color: 'var(--accent)' }} /> 
+        <h3 style={{ margin: 0, fontSize: '1.6rem', fontWeight: '800', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <LayoutGrid size={24} style={{ color: 'var(--accent)' }} /> 
           {phase === 'briefing' && 'Case Briefing: Stage 1 Report'}
           {phase === 'use' && 'Case File 02 – Organizing by Purpose'}
           {phase === 'material' && 'Case File 02 – Scientific Classification'}
           {phase === 'demo' && 'Case File 02 – Multi-Property Insights'}
         </h3>
-        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+        <p style={{ margin: 0, fontSize: '1.15rem', fontWeight: '500', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
           {phase === 'briefing' && 'Review your findings from the classroom scan before analyzing them.'}
           {phase === 'use' && 'Drag collected items to shelves, or select them based on how they are used.'}
           {phase === 'material' && 'Drag items to their material baskets, or select the correct material.'}
@@ -196,8 +196,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           >
             <div style={{ fontSize: '3rem' }}>🕵️‍♂️</div>
             <div>
-              <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.75rem' }}>Investigation Report: Stage 1</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginTop: '0.5rem' }}>
+              <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '2rem', fontWeight: '800' }}>Investigation Report: Stage 1</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.15rem', fontWeight: '600', marginTop: '0.5rem' }}>
                 You have successfully identified the base materials of all classroom evidence.
               </p>
             </div>
@@ -214,7 +214,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               textAlign: 'left'
             }}>
               {items.slice(0, 6).map((item) => (
-                <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', color: 'var(--text-primary)' }}>
+                <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', color: 'var(--text-primary)' }}>
                   <span style={{ color: 'var(--success)' }}>✓</span>
                   <strong>{item.name}:</strong> 
                   <span style={{ color: 'var(--accent)' }}>{item.correctMaterial}</span>
@@ -222,14 +222,14 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               ))}
             </div>
 
-            <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontStyle: 'italic', maxWidth: '520px', lineHeight: '1.5' }}>
+            <div style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', fontStyle: 'italic', maxWidth: '520px', lineHeight: '1.5' }}>
               "Excellent work, Detective! Now that we know what these objects are made of, we must analyze and organize them to reveal scientific property patterns."
             </div>
 
             <button
               className="primary"
               onClick={() => setPhase('use')}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 2rem', fontWeight: 'bold' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 2rem', fontSize: '1.2rem', fontWeight: '800' }}
             >
               Start Evidence Analysis <ArrowRight size={16} />
             </button>
@@ -253,7 +253,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           >
             {/* Left Section: Evidence Tray */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0, padding: '1.1rem 1.25rem' }}>
-              <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
+              <h4 style={{ margin: 0, fontSize: 'var(--text-xl)', fontWeight: '800', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
                 Evidence Tray
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.75rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
@@ -273,7 +273,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         height: '100%',
                         borderRadius: '12px',
                         border: isSorted ? '2px solid rgba(16, 185, 129, 0.45)' : '1px solid var(--border)',
-                        background: isSorted ? 'rgba(16, 185, 129, 0.05)' : 'var(--card-bg, #ffffff)',
+                        background: isSorted ? 'rgba(16, 185, 129, 0.05)' : 'var(--card-bg, var(--surface))',
                         opacity: isSorted ? 0.45 : 1,
                         cursor: isSorted ? 'default' : 'grab',
                         transition: 'all 0.2s',
@@ -301,9 +301,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         />
                       </div>
                       <span style={{ 
-                        fontSize: '0.85rem', 
-                        fontWeight: '600', 
-                        color: 'var(--text-heading, #1e293b)', 
+                        fontSize: '1.15rem', 
+                        fontWeight: '800', 
+                        color: 'var(--text-heading, var(--text-primary))', 
                         textAlign: 'center', 
                         paddingTop: '8px', 
                         paddingBottom: '2px', 
@@ -352,7 +352,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       style={{
                         position: 'relative',
                         borderRadius: '14px',
-                        border: isDraggingOverMe ? '3px dashed var(--accent, #3b82f6)' : '1px solid var(--border)',
+                        border: isDraggingOverMe ? '3px dashed var(--accent, var(--accent))' : '1px solid var(--border)',
                         overflow: 'hidden',
                         display: 'flex',
                         flexDirection: 'column',
@@ -364,7 +364,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                           ? '0 0 0 3px rgba(59, 130, 246, 0.35), 0 6px 14px rgba(0,0,0,0.15)' 
                           : '0 3px 8px rgba(0,0,0,0.08)',
                         transition: 'all 0.2s',
-                        background: '#1e293b'
+                        background: 'var(--text-primary)'
                       }}
                     >
                       {/* Shelf Background Image */}
@@ -386,7 +386,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       )}
 
                       {/* Header Badge */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#fff', fontWeight: 'bold', fontSize: '0.95rem', background: 'rgba(0,0,0,0.7)', padding: '0.3rem 0.75rem', borderRadius: '8px', alignSelf: 'flex-start', backdropFilter: 'blur(6px)', zIndex: 2, position: 'relative' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#fff', fontWeight: '800', fontSize: '1.2rem', background: 'rgba(0,0,0,0.7)', padding: '0.3rem 0.75rem', borderRadius: '8px', alignSelf: 'flex-start', backdropFilter: 'blur(6px)', zIndex: 2, position: 'relative' }}>
                         {shelf.icon}
                         <span>{shelf.name}</span>
                       </div>
@@ -452,9 +452,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                             {/* Label */}
                             <span
                               style={{
-                                fontSize: '0.78rem',
-                                fontWeight: 'bold',
-                                color: '#ffffff',
+                                fontSize: '1.15rem',
+                                fontWeight: '800',
+                                color: 'var(--surface)',
                                 textShadow: '0 1px 2px rgba(0,0,0,0.9)',
                                 background: 'rgba(15, 23, 42, 0.88)',
                                 backdropFilter: 'blur(4px)',
@@ -480,8 +480,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                               padding: '0.4rem 1.6rem',
                               background: isDraggingOverMe ? 'rgba(59, 130, 246, 0.35)' : 'rgba(0,0,0,0.28)',
                               color: 'rgba(255,255,255,0.95)',
-                              fontSize: '0.88rem',
-                              fontWeight: '500',
+                              fontSize: '1.2rem',
+                              fontWeight: '700',
                               backdropFilter: 'blur(2px)',
                               textShadow: '0 1px 3px rgba(0,0,0,0.8)',
                               display: 'flex',
@@ -500,17 +500,17 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
               {/* Error messages overlay / Tips */}
               {errorMessage ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--danger)', fontSize: '0.85rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--danger)', fontSize: '1.1rem' }}>
                   <AlertCircle size={16} />
                   <span>{errorMessage}</span>
                 </div>
               ) : allUseSorted ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.92rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: '800', fontSize: '1.15rem' }}>
                   <Check size={18} />
                   <span>All objects grouped successfully! Click "Proceed to next" in the bottom right corner!</span>
                 </div>
               ) : (
-                <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.35rem', background: 'rgba(0,0,0,0.03)', borderRadius: '8px' }}>
+                <div style={{ fontSize: '1.1rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.35rem', background: 'rgba(0,0,0,0.03)', borderRadius: '8px' }}>
                   💡 <strong>Tip:</strong> Drag items from the Evidence Tray directly into the shelves based on where they are used.
                 </div>
               )}
@@ -530,7 +530,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             {/* Left Drawer */}
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, alignSelf: 'start' }}>
               <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
+              <h4 style={{ margin: 0, fontSize: 'var(--text-xl)', fontWeight: '800', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.75rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
@@ -548,7 +548,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         height: '100%',
                         borderRadius: '12px',
                         border: isSorted ? '2px solid rgba(16, 185, 129, 0.45)' : '1px solid var(--border)',
-                        background: isSorted ? 'rgba(16, 185, 129, 0.05)' : 'var(--card-bg, #ffffff)',
+                        background: isSorted ? 'rgba(16, 185, 129, 0.05)' : 'var(--card-bg, var(--surface))',
                         opacity: isSorted ? 0.45 : 1,
                         cursor: isSorted ? 'default' : 'grab',
                         transition: 'all 0.2s',
@@ -576,9 +576,9 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         />
                       </div>
                       <span style={{ 
-                        fontSize: '0.85rem', 
-                        fontWeight: '600', 
-                        color: 'var(--text-heading, #1e293b)', 
+                        fontSize: '1.15rem', 
+                        fontWeight: '800', 
+                        color: 'var(--text-heading, var(--text-primary))', 
                         textAlign: 'center', 
                         paddingTop: '8px', 
                         paddingBottom: '2px', 
@@ -604,10 +604,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             {/* Right: Illustrated Material Baskets */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', overflowY: 'auto' }}>
               {[
-                { name: 'Paper', color: '#2563eb', icon: '📄', emoji: '♻️', bgLight: '#eff6ff', borderColor: '#93c5fd' },
+                { name: 'Paper', color: 'var(--accent)', icon: '📄', emoji: '♻️', bgLight: 'var(--surface)', borderColor: 'var(--border)' },
                 { name: 'Wood', color: '#92400e', icon: '🪵', emoji: '🪵', bgLight: '#fef3c7', borderColor: '#d97706' },
                 { name: 'Plastic', color: '#16a34a', icon: '🧴', emoji: '♻️', bgLight: '#f0fdf4', borderColor: '#4ade80' },
-                { name: 'Metal', color: '#64748b', icon: '🔩', emoji: '🔧', bgLight: '#f1f5f9', borderColor: '#94a3b8' },
+                { name: 'Metal', color: 'var(--text-muted)', icon: '🔩', emoji: '🔧', bgLight: 'var(--surface)', borderColor: 'var(--text-muted)' },
                 { name: 'Glass', color: '#0891b2', icon: '🥛', emoji: '♻️', bgLight: '#ecfeff', borderColor: '#67e8f9' },
                 { name: 'Cloth', color: '#dc2626', icon: '👕', emoji: '👕', bgLight: '#fff1f2', borderColor: '#fca5a5' }
               ].map((basket) => {
@@ -654,10 +654,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     <div style={{ flex: 1 }}>
                       {/* Header */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                        <span style={{ fontWeight: '800', fontSize: '0.85rem', color: basket.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                        <span style={{ fontWeight: '800', fontSize: '1.15rem', color: basket.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                           {basket.name} Basket
                         </span>
-                        <span style={{ fontSize: '1rem' }}>{basket.emoji}</span>
+                        <span style={{ fontSize: '1.2rem' }}>{basket.emoji}</span>
                       </div>
 
                       {/* Drop Zone */}
@@ -674,7 +674,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         transition: 'all 0.15s'
                       }}>
                         {sortedHere.length === 0 ? (
-                          <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic' }}>
+                          <span style={{ fontSize: '1.1rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                             {isDraggingOverMe ? 'Drop here!' : 'Drop items here...'}
                           </span>
                         ) : (
@@ -688,8 +688,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                                 border: `1px solid ${basket.borderColor}`,
                                 borderRadius: '6px',
                                 padding: '0.15rem 0.5rem',
-                                fontSize: '0.78rem',
-                                fontWeight: '600',
+                                fontSize: '1.1rem',
+                                fontWeight: '700',
                                 color: basket.color,
                                 display: 'flex',
                                 alignItems: 'center',
@@ -709,16 +709,16 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
               {/* Error / tip */}
               {errorMessage ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: '#dc2626', fontSize: '0.82rem', marginTop: '0.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: '#dc2626', fontSize: '1.1rem', marginTop: '0.25rem' }}>
                   <AlertCircle size={15} />
                   <span>{errorMessage}</span>
                 </div>
               ) : allMaterialSorted ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: '800', fontSize: '1.15rem' }}>
                   <Check size={16} /> All objects sorted! Click "Proceed to next"
                 </div>
               ) : (
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.25rem' }}>
+                <div style={{ fontSize: '1.1rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.25rem' }}>
                   💡 Tip: Drag items to baskets, or use the dropdowns on the left.
                 </div>
               )}
@@ -738,7 +738,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           >
             {/* Left list of items */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 'clamp(250px, 40vh, 500px)', minWidth: 0 }}>
-              <h4 style={{ margin: 0, fontSize: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Select Object to Inspect</h4>
+              <h4 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '800', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Select Object to Inspect</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', flex: 1, overflowY: 'auto' }}>
                 {items.map((item) => {
                   const isInspected = inspectedItems[item.id];
@@ -756,7 +756,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         alignItems: 'flex-start',
                         gap: '0.2rem',
                         borderRadius: '8px',
-                        fontSize: '0.9rem',
+                        fontSize: '1.2rem',
+                        fontWeight: '700',
                         textAlign: 'left',
                         overflow: 'hidden'
                       }}
@@ -768,7 +769,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{item.name}</span>
                       </span>
                       {isInspected && (
-                        <span style={{ fontSize: '0.78rem', color: isActive ? 'rgba(255,255,255,0.85)' : 'var(--success)', paddingLeft: '24px', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                        <span style={{ fontSize: '1rem', color: isActive ? 'rgba(255,255,255,0.85)' : 'var(--success)', paddingLeft: '24px', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                           ✓ Seen
                         </span>
                       )}
@@ -776,7 +777,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                   );
                 })}
               </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border)', paddingTop: '0.5rem', flexShrink: 0 }}>
+              <div style={{ fontSize: '1.15rem', fontWeight: '600', color: 'var(--text-muted)', borderTop: '1px solid var(--border)', paddingTop: '0.5rem', flexShrink: 0 }}>
                 Objects Inspected: <strong>{inspectedCount} / 3</strong>
               </div>
             </div>
@@ -790,20 +791,20 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     {React.createElement(items.find(i => i.id === activeDemoId)?.icon || RemoteIcon, { size: 40 })}
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.5rem' }}>
+                    <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '2rem', fontWeight: '800' }}>
                       {items.find(i => i.id === activeDemoId)?.name}
                     </h3>
-                    <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>Multi-Property Classification Profile</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-muted)' }}>Multi-Property Classification Profile</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   {getDemoProperties(activeDemoId).map((prop, idx) => (
                     <div key={idx} style={{ background: 'var(--surface)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                      <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
+                      <span style={{ display: 'block', fontSize: '1.1rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '800' }}>
                         {prop.label}
                       </span>
-                      <span style={{ fontSize: '1.05rem', fontWeight: 'bold', color: 'var(--text-primary)', marginTop: '0.3rem', display: 'block' }}>
+                      <span style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--text-primary)', marginTop: '0.3rem', display: 'block' }}>
                         {prop.value}
                       </span>
                     </div>
@@ -826,10 +827,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     gap: '0.75rem'
                   }}
                 >
-                  <h4 style={{ margin: 0, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem' }}>
-                    <Award size={22} /> Lesson Outcomes Confirmed!
+                  <h4 style={{ margin: 0, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.6rem', fontWeight: '800' }}>
+                    <Award size={24} /> Lesson Outcomes Confirmed!
                   </h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
                       <span style={{ color: 'var(--success)' }}>✔</span>
                       <span>Classification depends entirely on the property selected.</span>
@@ -847,13 +848,13 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       <span>Scientists choose properties based on their study goals.</span>
                     </div>
                   </div>
-                  <p style={{ marginTop: '0.75rem', fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--text-primary)', textAlign: 'right' }}>
+                  <p style={{ marginTop: '0.75rem', fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-primary)', textAlign: 'right' }}>
                     Click "Proceed to next" in the bottom right corner!
                   </p>
                 </motion.div>
               ) : (
                 <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>
                     🕵️‍♂️ <strong>Detective Mission:</strong> Click on at least <strong>{3 - inspectedCount} more</strong> objects in the left panel to examine how different criteria classify them.
                   </span>
                 </div>
