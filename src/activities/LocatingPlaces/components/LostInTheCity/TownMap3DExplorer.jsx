@@ -16,14 +16,15 @@ import person3d from './assets/person_3d.png';
 const VIEW_W = 1400;
 const VIEW_H = 760;
 
-/* ── 1. PLACES CONFIG (STRICTLY ROAD-LOCKED WITHIN ASPHALT LANES) ──────── */
+/* ── 1. PLACES CONFIG (NEAREST BUILDING FRONTAGE ON ASPHALT LANES) ─── */
 const ROAD_X = {
-  WEST_LANE: 50,      // West Lane (far left edge)
-  HOSPITAL_WAY: 345,  // Hospital Way (between Railway Station/Hospital/School and Pond/Town Hall/Market)
-  CIVIC_WAY: 500,     // Civic Way (Town Hall Plaza & Market Center)
-  BANK_ROAD: 650,     // Bank Road (between Town Hall/Market and Bank/Museum)
-  EAST_LANE: 955,     // East Lane (right side of Apex Bank and Museum)
-  FAR_EAST: 1345,     // Far East Avenue
+  WEST_LANE: 140,     // In front of Railway Station, Hospital & School
+  HOSPITAL_WAY: 345,  // Hospital Way cross-street
+  CIVIC_PLAZA: 500,   // Town Hall Plaza & Market frontage
+  APARTMENTS_X: 630,  // Sunview Heights entrance frontage
+  BANK_ROAD: 660,     // Bank Road cross-street
+  BANK_FRONT: 810,    // Apex Bank, Museum & Public Garden frontage
+  EAST_LANE: 955,     // East Lane perimeter
 };
 
 const ROAD_Y = {
@@ -34,27 +35,27 @@ const ROAD_Y = {
 
 const PLACES = [
   // ── ROW 1: NORTHERN AVENUE (Y = 280) ──
-  { id: 'W_N', x: ROAD_X.WEST_LANE, y: ROAD_Y.NORTH_AVE, name: 'West Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
-  { id: 'RS', x: ROAD_X.HOSPITAL_WAY, y: ROAD_Y.NORTH_AVE, name: 'Railway Station', full: 'Central Junction Railway Station', icon: '🚂', type: 'station', start: true, blurb: 'Express rail terminal concourse along Northern Ave & Hospital Way.' },
-  { id: 'AP', x: ROAD_X.CIVIC_WAY, y: ROAD_Y.NORTH_AVE, name: 'Apartments', full: 'Sunview Heights Residency', icon: '🏢', type: 'apartment', blurb: 'Multi-story residential apartment towers along Northern Ave.' },
-  { id: 'PG', x: ROAD_X.EAST_LANE, y: ROAD_Y.NORTH_AVE, name: 'Public Garden', full: 'Rosewood Botanical Garden', icon: '🌳', type: 'garden', blurb: 'Botanical greenhouse and floral park along Northern Ave.' },
-  { id: 'E_N', x: ROAD_X.FAR_EAST, y: ROAD_Y.NORTH_AVE, name: 'East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
+  { id: 'RS', x: ROAD_X.WEST_LANE, y: ROAD_Y.NORTH_AVE, name: 'Railway Station', full: 'Central Junction Railway Station', icon: '🚂', type: 'station', start: true, blurb: 'Express rail terminal concourse along Northern Ave.' },
+  { id: 'J_NH', x: ROAD_X.HOSPITAL_WAY, y: ROAD_Y.NORTH_AVE, name: 'Hospital Way Junc', full: 'Northern Ave & Hospital Way', icon: '🛣️', type: 'empty', blurb: 'Road intersection.' },
+  { id: 'AP', x: ROAD_X.APARTMENTS_X, y: ROAD_Y.NORTH_AVE, name: 'Apartments', full: 'Sunview Heights Residency', icon: '🏢', type: 'apartment', blurb: 'Multi-story residential apartment towers along Northern Ave.' },
+  { id: 'PG', x: ROAD_X.BANK_FRONT, y: ROAD_Y.NORTH_AVE, name: 'Public Garden', full: 'Rosewood Botanical Garden', icon: '🌳', type: 'garden', blurb: 'Botanical greenhouse and floral park along Northern Ave.' },
+  { id: 'J_NE', x: ROAD_X.EAST_LANE, y: ROAD_Y.NORTH_AVE, name: 'East End', full: 'Northern Ave & East Lane', icon: '🛣️', type: 'empty', blurb: 'Road intersection.' },
 
   // ── ROW 2: CENTRAL BOULEVARD (Y = 505) ──
-  { id: 'W_C', x: ROAD_X.WEST_LANE, y: ROAD_Y.CENTRAL_BLVD, name: 'West Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
-  { id: 'HO', x: ROAD_X.HOSPITAL_WAY, y: ROAD_Y.CENTRAL_BLVD, name: 'Hospital', full: 'City Care Hospital', icon: '🏥', type: 'hospital', blurb: '24/7 emergency trauma center at Central Blvd & Hospital Way.' },
-  { id: 'NP', x: ROAD_X.CIVIC_WAY, y: ROAD_Y.CENTRAL_BLVD, name: 'Town Hall', full: 'Civic Nagar Panchayat Town Hall', icon: '🏛️', type: 'civic', blurb: 'Municipal civic council plaza at Central Blvd.' },
-  { id: 'BK', x: ROAD_X.BANK_ROAD, y: ROAD_Y.CENTRAL_BLVD, name: 'Bank', full: 'Apex National Bank', icon: '🏦', type: 'bank', goal: true, blurb: 'Treasury & banking vaults at Central Blvd & Bank Road.' },
-  { id: 'E_C', x: ROAD_X.EAST_LANE, y: ROAD_Y.CENTRAL_BLVD, name: 'East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
-  { id: 'FE_C', x: ROAD_X.FAR_EAST, y: ROAD_Y.CENTRAL_BLVD, name: 'Far East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
+  { id: 'HO', x: ROAD_X.WEST_LANE, y: ROAD_Y.CENTRAL_BLVD, name: 'Hospital', full: 'City Care Hospital', icon: '🏥', type: 'hospital', blurb: '24/7 emergency trauma center at Central Blvd.' },
+  { id: 'J_CH', x: ROAD_X.HOSPITAL_WAY, y: ROAD_Y.CENTRAL_BLVD, name: 'Hospital Central Junc', full: 'Central Blvd & Hospital Way', icon: '🛣️', type: 'empty', blurb: 'Road intersection.' },
+  { id: 'NP', x: ROAD_X.CIVIC_PLAZA, y: ROAD_Y.CENTRAL_BLVD, name: 'Town Hall', full: 'Civic Nagar Panchayat Town Hall', icon: '🏛️', type: 'civic', blurb: 'Municipal civic council plaza at Central Blvd.' },
+  { id: 'J_CB', x: ROAD_X.BANK_ROAD, y: ROAD_Y.CENTRAL_BLVD, name: 'Bank Road Junc', full: 'Central Blvd & Bank Road', icon: '🛣️', type: 'empty', blurb: 'Road intersection.' },
+  { id: 'BK', x: ROAD_X.BANK_FRONT, y: ROAD_Y.CENTRAL_BLVD, name: 'Bank', full: 'Apex National Bank', icon: '🏦', type: 'bank', goal: true, blurb: 'Treasury & banking vaults at Central Blvd in front of Apex Bank.' },
+  { id: 'J_CE', x: ROAD_X.EAST_LANE, y: ROAD_Y.CENTRAL_BLVD, name: 'East Central Junc', full: 'Central Blvd & East Lane', icon: '🛣️', type: 'empty', blurb: 'Road intersection.' },
 
   // ── ROW 3: SOUTHERN ROAD (Y = 735) ──
-  { id: 'W_S', x: ROAD_X.WEST_LANE, y: ROAD_Y.SOUTHERN_RD, name: 'West Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
-  { id: 'SC', x: ROAD_X.HOSPITAL_WAY, y: ROAD_Y.SOUTHERN_RD, name: 'School', full: 'Greenwood Public School', icon: '🏫', type: 'school', blurb: 'Primary & high school campus at Southern Road & Hospital Way.' },
-  { id: 'MK', x: ROAD_X.CIVIC_WAY, y: ROAD_Y.SOUTHERN_RD, name: 'Market', full: 'Janata Central Bazaar', icon: '🛍️', type: 'market', blurb: 'Fresh daily bazaar and fruit market stalls on Southern Road.' },
-  { id: 'MU', x: ROAD_X.BANK_ROAD, y: ROAD_Y.SOUTHERN_RD, name: 'Museum', full: 'Heritage Antiquities Museum', icon: '🏛️', type: 'museum', blurb: 'Classical historical museum on Southern Road & Bank Road.' },
-  { id: 'E_S', x: ROAD_X.EAST_LANE, y: ROAD_Y.SOUTHERN_RD, name: 'East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' },
-  { id: 'FE_S', x: ROAD_X.FAR_EAST, y: ROAD_Y.SOUTHERN_RD, name: 'Far East Dead End', full: 'Road Closure / Dead End', icon: '🚧', type: 'empty', blurb: 'Closed road perimeter.' }
+  { id: 'SC', x: ROAD_X.WEST_LANE, y: ROAD_Y.SOUTHERN_RD, name: 'School', full: 'Greenwood Public School', icon: '🏫', type: 'school', blurb: 'Primary & high school campus on Southern Road.' },
+  { id: 'J_SH', x: ROAD_X.HOSPITAL_WAY, y: ROAD_Y.SOUTHERN_RD, name: 'Hospital South Junc', full: 'Southern Road & Hospital Way', icon: '🛣️', type: 'empty', blurb: 'Road intersection.' },
+  { id: 'MK', x: ROAD_X.CIVIC_PLAZA, y: ROAD_Y.SOUTHERN_RD, name: 'Market', full: 'Janata Central Bazaar', icon: '🛍️', type: 'market', blurb: 'Fresh daily bazaar and fruit market stalls on Southern Road.' },
+  { id: 'J_SB', x: ROAD_X.BANK_ROAD, y: ROAD_Y.SOUTHERN_RD, name: 'Bank South Junc', full: 'Southern Road & Bank Road', icon: '🛣️', type: 'empty', blurb: 'Road intersection.' },
+  { id: 'MU', x: ROAD_X.BANK_FRONT, y: ROAD_Y.SOUTHERN_RD, name: 'Museum', full: 'Heritage Antiquities Museum', icon: '🏛️', type: 'museum', blurb: 'Classical historical museum on Southern Road in front of Museum steps.' },
+  { id: 'J_SE', x: ROAD_X.EAST_LANE, y: ROAD_Y.SOUTHERN_RD, name: 'East South Junc', full: 'Southern Road & East Lane', icon: '🛣️', type: 'empty', blurb: 'Road intersection.' }
 ];
 
 const BY_ID = {};
@@ -65,27 +66,27 @@ const nodeXY = (id) => ({ x: BY_ID[id].x, y: BY_ID[id].y });
 /* ── 2. ADJACENCY & ROAD PATHS (STRICTLY ON ASPHALT ROAD INTERSECTIONS) ── */
 const ADJ = {
   // Row 1 (Northern Ave, Y = 280)
-  W_N: { E: 'RS' },
-  RS: { W: 'W_N', E: 'AP', S: 'HO' },
-  AP: { W: 'RS', E: 'PG', S: 'NP' },
-  PG: { W: 'AP', E: 'E_N', S: 'E_C' },
-  E_N: { W: 'PG' },
+  RS: { E: 'J_NH', S: 'HO' },
+  J_NH: { W: 'RS', E: 'AP', S: 'J_CH' },
+  AP: { W: 'J_NH', E: 'PG', S: 'NP' },
+  PG: { W: 'AP', E: 'J_NE', S: 'BK' },
+  J_NE: { W: 'PG', S: 'J_CE' },
 
   // Row 2 (Central Blvd, Y = 505)
-  W_C: { E: 'HO', N: 'W_N', S: 'W_S' },
-  HO: { W: 'W_C', E: 'NP', N: 'RS', S: 'SC' },
-  NP: { W: 'HO', E: 'BK', N: 'AP', S: 'MK' },
-  BK: { W: 'NP', E: 'E_C', S: 'MU' },
-  E_C: { W: 'BK', E: 'FE_C', N: 'PG', S: 'E_S' },
-  FE_C: { W: 'E_C', S: 'FE_S' },
+  HO: { E: 'J_CH', N: 'RS', S: 'SC' },
+  J_CH: { W: 'HO', E: 'NP', N: 'J_NH', S: 'J_SH' },
+  NP: { W: 'J_CH', E: 'J_CB', N: 'AP', S: 'MK' },
+  J_CB: { W: 'NP', E: 'BK', S: 'J_SB' },
+  BK: { W: 'J_CB', E: 'J_CE', N: 'PG', S: 'MU' },
+  J_CE: { W: 'BK', N: 'J_NE', S: 'J_SE' },
 
   // Row 3 (Southern Road, Y = 735)
-  W_S: { E: 'SC', N: 'W_C' },
-  SC: { W: 'W_S', E: 'MK', N: 'HO' },
-  MK: { W: 'SC', E: 'MU', N: 'NP' },
-  MU: { W: 'MK', E: 'E_S', N: 'BK' },
-  E_S: { W: 'MU', E: 'FE_S', N: 'E_C' },
-  FE_S: { W: 'E_S', N: 'FE_C' }
+  SC: { E: 'J_SH', N: 'HO' },
+  J_SH: { W: 'SC', E: 'MK', N: 'J_CH' },
+  MK: { W: 'J_SH', E: 'J_SB', N: 'NP' },
+  J_SB: { W: 'MK', E: 'MU', N: 'J_CB' },
+  MU: { W: 'J_SB', E: 'J_SE', N: 'BK' },
+  J_SE: { W: 'MU', N: 'J_CE' }
 };
 
 function getRoadPoints(a, b) {
