@@ -252,7 +252,7 @@ function bfsClassic(start, goal) {
   return null;
 }
 
-/* ── MAP ACTIVITY QUESTION BANK (6 NCERT Questions × 3 Options) ───── */
+/* ── MAP ACTIVITY QUESTION BANK (8 NCERT & City Explorer Questions × 3 Options) ───── */
 const MAP_QUIZ = [
   {
     id: 'q1',
@@ -265,15 +265,33 @@ const MAP_QUIZ = [
   },
   {
     id: 'q2',
-    tag: 'Map Symbols',
-    question: 'What conventional colour is universally used on maps to represent water bodies like rivers, lakes, and oceans?',
-    options: ['Blue', 'Green', 'Brown'],
-    answer: 'Blue',
-    right: 'Correct! Blue is the universal map symbol colour for all water bodies.',
-    wrong: 'Standard cartography uses Blue for water bodies like rivers, lakes, and seas.'
+    tag: 'City Explorer Route',
+    question: 'In City Explorer, starting from Skyline Airport, which direction do you walk along Northern Boulevard to reach Star Cineplex?',
+    options: ['East', 'South', 'West'],
+    answer: 'East',
+    right: 'Correct! Walking along Northern Boulevard from Airport to Star Cineplex heads directly East.',
+    wrong: 'Check the compass: Moving rightwards towards Star Cineplex goes East.'
   },
   {
     id: 'q3',
+    tag: 'City Explorer Route',
+    question: 'Starting from Skyline Airport, in which direction is Greenfield Park located?',
+    options: ['South', 'North', 'West'],
+    answer: 'South',
+    right: 'Correct! Walking down West Avenue from Skyline Airport takes you directly South to Greenfield Park.',
+    wrong: 'Look at the vertical road: Moving down from Skyline Airport to Greenfield Park goes South.'
+  },
+  {
+    id: 'q4',
+    tag: 'Intermediate Directions',
+    question: 'On the City Explorer map, in which overall direction is the destination Sunset Beach located from Skyline Airport?',
+    options: ['South-East (SE)', 'North-West (NW)', 'South-West (SW)'],
+    answer: 'South-East (SE)',
+    right: 'Correct! Sunset Beach is in the bottom-right corner, which is South-East (SE) from the Airport.',
+    wrong: 'The bottom-right corner between South and East is South-East (SE).'
+  },
+  {
+    id: 'q5',
     tag: 'Intermediate Directions',
     question: 'Which intermediate direction lies midway between North and East on a compass rose?',
     options: ['North-East (NE)', 'North-West (NW)', 'South-East (SE)'],
@@ -282,7 +300,16 @@ const MAP_QUIZ = [
     wrong: 'The intermediate direction midway between North and East is North-East (NE).'
   },
   {
-    id: 'q4',
+    id: 'q6',
+    tag: 'Map Symbols',
+    question: 'What conventional colour is universally used on maps to represent water bodies like oceans and lakes?',
+    options: ['Blue', 'Green', 'Brown'],
+    answer: 'Blue',
+    right: 'Correct! Blue is the universal map symbol colour for all water bodies.',
+    wrong: 'Standard cartography uses Blue for water bodies like rivers, lakes, and seas.'
+  },
+  {
+    id: 'q7',
     tag: 'Map Components',
     question: 'What are the three essential components of any standard geographical map?',
     options: ['Distance, Direction, and Symbols', 'Colours, Borders, and Pictures', 'Latitude, Longitude, and Weather'],
@@ -291,22 +318,13 @@ const MAP_QUIZ = [
     wrong: 'The three fundamental components of any map are Distance, Direction, and Symbols.'
   },
   {
-    id: 'q5',
+    id: 'q8',
     tag: 'Map Scale',
     question: 'What is the primary purpose of a scale on a map?',
     options: ['To show the ratio between map distance and actual ground distance', 'To indicate the direction of the wind', 'To decorate the map borders'],
     answer: 'To show the ratio between map distance and actual ground distance',
     right: 'Correct! A map scale gives the proportional ratio between map distance and actual ground distance.',
     wrong: 'A scale shows the proportional relationship between distance on paper and actual ground distance.'
-  },
-  {
-    id: 'q6',
-    tag: 'Physical Features',
-    question: 'Which colour is standardly used on physical maps to depict mountains and hilly highlands?',
-    options: ['Brown', 'Yellow', 'Green'],
-    answer: 'Brown',
-    right: 'Correct! Brown (or shades of brown) represents mountains and highlands on physical maps.',
-    wrong: 'Physical maps universally use Brown for mountains, Yellow for plateaus, and Green for plains.'
   }
 ];
 
@@ -839,11 +857,10 @@ const DraggableDirectionHUD = ({
 
 /* ── 8. MAIN ROUTE ACTIVITY COMPONENT ───────────────────────────── */
 export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBack }) {
-  // Current active map tab: '3d' or 'city'
   const [mapMode, setMapMode] = useState('3d');
-  const [useStraightRoad3D, setUseStraightRoad3D] = useState(true);
   const [mapFull, setMapFull] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [winCity, setWinCity] = useState(false);
 
   /* ── 8A. SEPARATE STATE FOR 3D ILLUSTRATED MAP ── */
   const [cur3D, setCur3D] = useState('RS');
@@ -1176,7 +1193,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
     if (quizPage > quizPages - 1) setQuizPage(quizPages - 1);
   }, [quizPage, quizPages]);
 
-  const hasWonAny = win3D || winClassic;
+  const hasWonAny = win3D || winCity || winClassic;
 
   // Active Map Specific Variables
   const is3DActive = mapMode === '3d';
@@ -1216,9 +1233,9 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
         </div>
       )}
 
-      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         {/* LEFT PAGE - MAP CONTAINER */}
-        <div style={{ flex: 1.4, padding: mapFull ? 0 : '16px', display: 'flex', flexDirection: 'column', borderRight: '2px solid #F2DFBC', position: 'relative', background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)' }}>
+        <div style={{ flex: 1, padding: mapFull ? 0 : '12px', display: 'flex', flexDirection: 'column', borderRight: showQuiz ? '2px solid #F2DFBC' : 'none', position: 'relative', overflow: 'hidden', height: '100%', background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)' }}>
 
           {/* The Map Frame (Expands to Fullscreen when mapFull is true) */}
           <div style={{
@@ -1237,16 +1254,16 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
             boxShadow: mapFull ? 'none' : '0 8px 30px rgba(60,40,20,0.06)'
           }}>
 
-            {/* Top Bar Controls — Map Mode Switcher */}
-            <div style={{ position: 'absolute', top: '14px', left: '14px', zIndex: 10, display: 'flex', flexWrap: 'wrap', gap: '6px', background: 'rgba(255,249,240,0.95)', backdropFilter: 'blur(6px)', padding: '4px 6px', borderRadius: '12px', border: '1.5px solid #F2DFBC', boxShadow: '0 4px 14px rgba(60,40,20,0.08)' }}>
+            {/* Top Bar Controls — Mode Switcher & Map Activity Questions Tab */}
+            <div style={{ position: 'absolute', top: '14px', left: '14px', zIndex: 10, display: 'flex', flexWrap: 'wrap', gap: '8px', background: 'rgba(255,249,240,0.95)', backdropFilter: 'blur(6px)', padding: '5px 8px', borderRadius: '12px', border: '1.5px solid #F2DFBC', boxShadow: '0 4px 14px rgba(60,40,20,0.08)' }}>
               <button
                 type="button"
-                onClick={() => setMapMode('3d')}
+                onClick={() => { setMapMode('3d'); setShowQuiz(false); }}
                 style={{
                   border: 'none',
-                  background: mapMode === '3d' ? '#92400E' : 'transparent',
-                  color: mapMode === '3d' ? '#ffffff' : '#78350F',
-                  padding: '6px 14px',
+                  background: (mapMode === '3d' && !showQuiz) ? '#92400E' : 'transparent',
+                  color: (mapMode === '3d' && !showQuiz) ? '#ffffff' : '#78350F',
+                  padding: '7px 16px',
                   borderRadius: '8px',
                   fontSize: '13px',
                   fontWeight: 800,
@@ -1254,16 +1271,16 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                   transition: 'all 0.15s'
                 }}
               >
-                🎨 3D Illustrated Map
+                🏡 Town Map
               </button>
               <button
                 type="button"
-                onClick={() => setMapMode('city')}
+                onClick={() => { setMapMode('city'); setShowQuiz(false); }}
                 style={{
                   border: 'none',
-                  background: mapMode === 'city' ? '#0E7490' : 'transparent',
-                  color: mapMode === 'city' ? '#ffffff' : '#0F5666',
-                  padding: '6px 14px',
+                  background: (mapMode === 'city' && !showQuiz) ? '#0E7490' : 'transparent',
+                  color: (mapMode === 'city' && !showQuiz) ? '#ffffff' : '#0F5666',
+                  padding: '7px 16px',
                   borderRadius: '8px',
                   fontSize: '13px',
                   fontWeight: 800,
@@ -1273,6 +1290,37 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               >
                 🏙️ City Explorer
               </button>
+              <button
+                type="button"
+                onClick={() => { setShowQuiz(true); }}
+                style={{
+                  border: 'none',
+                  background: showQuiz ? '#16A34A' : '#FEF3C7',
+                  color: showQuiz ? '#ffffff' : '#92400E',
+                  padding: '7px 16px',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: showQuiz ? '0 2px 8px rgba(22,163,74,0.35)' : 'none',
+                  transition: 'all 0.15s'
+                }}
+              >
+                <span>📝</span> Map Activity Questions
+                <span style={{
+                  background: showQuiz ? 'rgba(255,255,255,0.25)' : '#FDE68A',
+                  color: showQuiz ? '#fff' : '#78350F',
+                  padding: '2px 7px',
+                  borderRadius: '999px',
+                  fontSize: '11px',
+                  fontWeight: 900
+                }}>
+                  {correctCount}/{MAP_QUIZ.length}
+                </span>
+              </button>
             </div>
 
             {/* LIVE COMPASS HUD: DISPLAYED ONLY ON 3D ILLUSTRATED MAP */}
@@ -1280,35 +1328,9 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               <LiveCompassHUD angle={walkerAngle3D} currentDir={currentHeadingDir3D} />
             )}
 
-            {/* Enlarge / Full Screen Button */}
-            <button
-              onClick={() => setMapFull(v => !v)}
-              title={mapFull ? 'Exit full screen (Esc)' : 'View the map full screen'}
-              aria-label={mapFull ? 'Exit full screen' : 'View the map full screen'}
-              style={{
-                position: 'absolute',
-                top: '14px',
-                right: '14px',
-                zIndex: 10,
-                width: '44px',
-                height: '44px',
-                borderRadius: '12px',
-                border: '1px solid #d6e0ec',
-                background: 'rgba(255,255,255,0.92)',
-                color: '#0E3556',
-                display: 'grid',
-                placeItems: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 6px 16px rgba(14,42,69,0.14)',
-                transition: 'background 0.15s'
-              }}
-              onMouseOver={e => e.currentTarget.style.background = '#fff'}
-              onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.92)'}
-            >
-              {mapFull ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
-            </button>
 
-            {/* ── MODE 1: 3D ILLUSTRATED MAP (EXACT CITY EXPLORER ARCHITECTURE) ── */}
+
+            {/* ── MODE 1: 3D ILLUSTRATED MAP ── */}
             {mapMode === '3d' && (
               <div style={{ position: 'absolute', inset: 0, paddingTop: '58px', background: '#F7F1E2' }}>
                 <TownMap3DExplorer
@@ -1316,20 +1338,24 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                     setWin3D(true);
                     if (onMissionUnlock) onMissionUnlock();
                   }}
-                  onNext={onBeginChapter}
+                  onNext={() => {
+                    setShowQuiz(true);
+                  }}
                 />
               </div>
             )}
 
-            {/* ── MODE 3: CITY EXPLORER (airport, cinema, beach, park, bus stop…) ── */}
+            {/* ── MODE 2: CITY EXPLORER ── */}
             {mapMode === 'city' && (
               <div style={{ position: 'absolute', inset: 0, paddingTop: '58px', background: '#F7F1E2' }}>
                 <CityExplorerMap
                   onComplete={() => {
-                    setWin3D(true);
+                    setWinCity(true);
                     if (onMissionUnlock) onMissionUnlock();
                   }}
-                  onNext={onBeginChapter}
+                  onNext={() => {
+                    setShowQuiz(true);
+                  }}
                 />
               </div>
             )}
@@ -1597,8 +1623,20 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
           </div>
         </div>
 
-        {/* RIGHT PAGE - CONTROLS & 3-QUESTION QUIZ (Used for Classic Map Fig 1.1) */}
-        <div style={{ flex: 1, minHeight: 0, padding: 'clamp(16px, 2vw, 28px) clamp(16px, 2vw, 28px) 10px clamp(16px, 2vw, 28px)', position: 'relative', background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)', color: '#3D2E24', display: (mapMode === 'city' || mapMode === '3d') ? 'none' : 'flex', flexDirection: 'column', borderRadius: '0 18px 18px 0', borderLeft: '2px solid #F2DFBC', overflow: 'hidden' }}>
+        {/* RIGHT PAGE - MAP ACTIVITY QUIZ (Displayed when Questions tab is active) */}
+        <div style={{
+          flex: 1,
+          minHeight: 0,
+          padding: 'clamp(16px, 2vw, 28px) clamp(16px, 2vw, 28px) 10px clamp(16px, 2vw, 28px)',
+          position: 'relative',
+          background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)',
+          color: '#3D2E24',
+          display: !showQuiz ? 'none' : 'flex',
+          flexDirection: 'column',
+          borderRadius: '0 18px 18px 0',
+          borderLeft: '2px solid #F2DFBC',
+          overflow: 'hidden'
+        }}>
 
           {!showQuiz && (
             <>
@@ -1610,7 +1648,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               </div>
               <div style={{ color: '#3D2E24', fontSize: '13.5px', lineHeight: 1.45, fontWeight: 600 }}>
                 {is3DActive ? (
-                  <>Walk the realistic curved asphalt roads on the <b>3D Illustrated Map</b> from the <b>Railway Station</b> to the <b>Bank</b>.</>
+                  <>Walk the realistic curved asphalt roads on the <b>Town Map</b> from the <b>Railway Station</b> to the <b>Bank</b>.</>
                 ) : (
                   <>Move the player pin along the grid roads on <b>Town Map (Fig. 1.1)</b> from the <b>Railway Station</b> to the <b>Bank</b>.</>
                 )}
@@ -1844,7 +1882,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
             <div style={{ display: 'flex', alignItems: 'center', borderTop: '1.5px solid #F2DFBC', paddingTop: '8px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400E', fontWeight: 800, fontSize: '12.5px' }}>
                 <MapPin size={16} color="#D97706" />
-                Interactive {is3DActive ? '3D Illustrated Map' : 'Town Map'} Activity
+                Interactive {is3DActive ? 'Town Map' : 'Town Map'} Activity
               </div>
             </div>
           </div>
