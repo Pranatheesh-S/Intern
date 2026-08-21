@@ -1,820 +1,431 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Sphere, useTexture, Line, Html, Stars } from '@react-three/drei';
+import * as THREE from 'three';
+import { Play, Pause, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import './CoordinatesPageBook.css';
+import './CoordinatesPageDark.css';
+import worldMapUrl from './world-map.jpg';
+import sunMapUrl from './sun-map.jpg';
+import flareMapUrl from './lens-flare.jpg';
+import TwoFriendsActivity from './TwoFriendsActivity';
 
-const fmt = (h) => {
-  h = ((h % 24) + 24) % 24;
-  let hr = Math.floor(h);
-  let mn = Math.round((h - hr) * 60);
-  if (mn === 60) { mn = 0; hr = (hr + 1) % 24; }
-  const ap = hr < 12 ? 'am' : 'pm';
-  let hh = hr % 12;
-  if (hh === 0) hh = 12;
-  return `${hh}:${mn.toString().padStart(2, '0')} ${ap}`;
+const getLatLonPoint = (lat, lon, r) => {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lon + 90) * (Math.PI / 180);
+  return new THREE.Vector3(
+    r * Math.sin(phi) * Math.sin(theta),
+    r * Math.cos(phi),
+    r * Math.sin(phi) * Math.cos(theta)
+  );
 };
 
-const localTime = (targetLong) => 12 + targetLong / 15;
+const darkStepsData = [
+  {
+    stepNum: 1,
+    title: "The Sun and the Spinning Earth",
+    paragraphs: [
+      <span key="1">The <strong>Sun</strong> stays fixed on the left, while the <strong>Earth spins</strong> on its axis (once in about 24 hours).</span>,
+      <span key="2">The half of the Earth facing the Sun has <strong>daytime</strong>; the half turned away is in <strong>night</strong>. Watch a continent move from night into day as the globe turns.</span>
+    ],
+    keyIdea: <span key="ki">Day and night happen because the Earth spins under a fixed Sun.</span>
+  },
+  {
+    stepNum: 2,
+    title: "Why Clocks Differ",
+    paragraphs: [
+      <span key="1">It is <strong>noon</strong> for a place when the Sun is straight overhead. As the Earth turns, different places face the Sun at different moments — so their <strong>local time</strong> is different.</span>,
+      <span key="2">The Earth turns <strong>360° in 24 hours</strong>, which is <strong>15° every hour</strong>. So two places 15° apart in longitude have clocks one hour apart.</span>
+    ],
+    keyIdea: <span key="ki">The Earth turns <strong>15° of longitude = 1 hour</strong> of time.</span>
+  },
+];
 
-export default function TimeZonesPage() {
-  const [activeTab, setActiveTab] = useState('tz');
-
-  // TZ State
-  const [tzLon, setTzLon] = useState(30);
-
-  // STD State
-  const [gmtH, setGmtH] = useState(12);
-  const [quickThinkFb, setQuickThinkFb] = useState(null);
-
-  // IDL State
-  const [idlMission, setIdlMission] = useState(1);
-  const [idlAnimState, setIdlAnimState] = useState('ready'); // ready, flying, asked, answered
-  const [idlAnswer, setIdlAnswer] = useState(null);
-  const [animProgress, setAnimProgress] = useState(0);
-
-  const missions = [
-    {
-      id: 1,
-      from: 'Tokyo',
-      to: 'Honolulu',
-      dir: 'East',
-      startDay: 'MONDAY',
-      endDay: 'SUNDAY',
-      desc: 'Crossing East → Subtract a day',
-      q: 'What happens to the date?',
-      options: ['Sunday', 'Monday', 'Tuesday'],
-      correct: 'Sunday',
-      startCoord: { x: 120, y: 120 },
-      endCoord: { x: 420, y: 130 }
-    },
-    {
-      id: 2,
-      from: 'Sydney',
-      to: 'Los Angeles',
-      dir: 'East',
-      startDay: 'FRIDAY',
-      endDay: 'THURSDAY',
-      desc: 'Crossing East → Subtract a day',
-      q: 'What happens to the date?',
-      options: ['Thursday', 'Friday', 'Saturday'],
-      correct: 'Thursday',
-      startCoord: { x: 140, y: 180 },
-      endCoord: { x: 500, y: 140 }
-    },
-    {
-      id: 3,
-      from: 'Honolulu',
-      to: 'Tokyo',
-      dir: 'West',
-      startDay: 'SUNDAY',
-      endDay: 'MONDAY',
-      desc: 'Crossing West → Add a day',
-      q: 'What happens to the date?',
-      options: ['Saturday', 'Sunday', 'Monday'],
-      correct: 'Monday',
-      startCoord: { x: 420, y: 130 },
-      endCoord: { x: 120, y: 120 }
-    },
-    {
-      id: 4,
-      from: 'USA',
-      to: 'Japan',
-      dir: 'West',
-      startDay: 'WEDNESDAY',
-      endDay: 'THURSDAY',
-      desc: 'Crossing West → Add a day',
-      q: 'What happens to the date?',
-      options: ['Tuesday', 'Wednesday', 'Thursday'],
-      correct: 'Thursday',
-      startCoord: { x: 520, y: 110 },
-      endCoord: { x: 120, y: 120 }
-    }
-  ];
-
-  const currentMission = missions[idlMission - 1];
-
-  const startFlight = () => {
-    setIdlAnimState('flying');
-    setAnimProgress(0);
-    
-    // Animate to middle
-    let p = 0;
-    const interval = setInterval(() => {
-      p += 0.05;
-      if (p >= 0.5) {
-        clearInterval(interval);
-        setIdlAnimState('asked');
-        setAnimProgress(0.5);
-      } else {
-        setAnimProgress(p);
+const TimeZonesGlobe = ({ step }) => {
+  const colorMap = useTexture(worldMapUrl);
+  const sunMap = useTexture(sunMapUrl);
+  const flareMap = useTexture(flareMapUrl);
+  const groupRef = useRef();
+  
+  useFrame((state, delta) => {
+    if (groupRef.current) {
+      if (step === 1) {
+        groupRef.current.rotation.y -= delta * 0.2;
+      } else if (step === 2) {
+         groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, -45 * (Math.PI / 180), 0.05);
       }
-    }, 50);
-  };
-
-  const handleAnswer = (opt) => {
-    setIdlAnswer(opt);
-    if (opt === currentMission.correct) {
-      setIdlAnimState('answered');
-      
-      // Finish flight
-      let p = 0.5;
-      const interval = setInterval(() => {
-        p += 0.05;
-        if (p >= 1) {
-          clearInterval(interval);
-          setAnimProgress(1);
-        } else {
-          setAnimProgress(p);
-        }
-      }, 50);
     }
-  };
-
-  const tabs = [
-    { id: 'tz', label: 'Time Zones', sub: '15° = 1 hour' },
-    { id: 'std', label: 'Local & Standard Time', sub: 'IST · GMT' },
-    { id: 'idl', label: 'International Date Line', sub: '±1 day' }
-  ];
-
-  const renderClock = (cx, cy, r, hour, hl) => {
-    const ha = ((hour % 12) * 30) * Math.PI / 180;
-    const hx = cx + r * 0.5 * Math.sin(ha);
-    const hy = cy - r * 0.5 * Math.cos(ha);
-    const lines = [];
-    for (let k = 0; k < 12; k++) {
-      const a = k * 30 * Math.PI / 180;
-      lines.push(<line key={k} x1={cx + r * 0.82 * Math.sin(a)} y1={cy - r * 0.82 * Math.cos(a)} x2={cx + r * 0.94 * Math.sin(a)} y2={cy - r * 0.94 * Math.cos(a)} stroke="#9fb0c0" strokeWidth="1" />);
-    }
-    return (
-      <g key={cx}>
-        <circle cx={cx} cy={cy} r={r} fill={hl ? '#fff5e0' : '#fff'} stroke={hl ? '#F5A623' : '#c9d4e0'} strokeWidth={hl ? 2.4 : 1.4} />
-        {lines}
-        <line x1={cx} y1={cy} x2={cx} y2={cy - r * 0.7} stroke="#20303f" strokeWidth="1.4" />
-        <line x1={cx} y1={cy} x2={hx} y2={hy} stroke="#20303f" strokeWidth="2.6" strokeLinecap="round" />
-        <circle cx={cx} cy={cy} r="2.4" fill="#20303f" />
-      </g>
-    );
-  };
-
-  const renderTZExplorer = () => {
-    return (
-      <svg viewBox="0 0 640 240" style={{ width: '100%', height: '100%', maxHeight: '100%', maxWidth: '100%', display: 'block' }}>
-        <text x="200" y="40" textAnchor="middle" fontSize="16" fontWeight="700" fill="#0E3556">Greenwich Time</text>
-        {renderClock(200, 110, 50, 12, false)}
-        <text x="200" y="190" textAnchor="middle" fontSize="14" fill="#5c6b7a" fontFamily="monospace">0° Longitude</text>
-        
-        <text x="440" y="40" textAnchor="middle" fontSize="16" fontWeight="700" fill="#c98511">Local Time</text>
-        {renderClock(440, 110, 50, localTime(tzLon), true)}
-        <text x="440" y="190" textAnchor="middle" fontSize="14" fill="#5c6b7a" fontFamily="monospace">
-          {tzLon === 0 ? '0° GMT' : (Math.abs(tzLon) + '° ' + (tzLon > 0 ? 'East' : 'West'))}
-        </text>
-        <line x1="320" y1="60" x2="320" y2="160" stroke="#e4ebf3" strokeWidth="2" strokeDasharray="4 4" />
-      </svg>
-    );
-  };
-
-  const renderISTGlobe = () => {
-    const ist = gmtH + 5.5;
-    return (
-      <svg viewBox="0 0 640 220" style={{ width: '100%', height: '100%', maxHeight: '100%', maxWidth: '100%', display: 'block' }}>
-        <text x="120" y="30" textAnchor="middle" fontSize="13" fontWeight="700" fill="#0E3556">Greenwich (GMT)</text>
-        {renderClock(120, 110, 54, gmtH, false)}
-        <text x="120" y="196" textAnchor="middle" fontSize="12" fill="#5c6b7a" fontFamily="monospace">0° longitude</text>
-        
-        <text x="320" y="110" textAnchor="middle" fontSize="30" fill="#c9d4e0">+5:30 →</text>
-        
-        <text x="520" y="30" textAnchor="middle" fontSize="13" fontWeight="700" fill="#c98511">India (IST)</text>
-        {renderClock(520, 110, 54, ist, true)}
-        <text x="520" y="196" textAnchor="middle" fontSize="12" fill="#5c6b7a" fontFamily="monospace">82.5° E meridian</text>
-      </svg>
-    );
-  };
-
-
+  });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif', overflow: 'hidden' }}>
-      <style>{`
-        .tab-btn { flex: 1; font-family: inherit; font-weight: 700; cursor: pointer; border: none; background: transparent; color: var(--text-muted, #5c6b7a); border-radius: 10px; padding: 11px 8px; font-size: clamp(12px, 1.3vw, 14.5px); transition: all 0.2s; display: flex; flexDirection: column; gap: 1px; align-items: center; }
-        .tab-btn.active { background: var(--navy, #0E3556); color: #fff; }
-        .tab-btn small { font-weight: 400; font-size: 10.5px; opacity: 0.7; }
-        .tab-btn.active small { opacity: 0.85; }
-        
-        .hist { background: #eef3ff; border-left: 4px solid #7c5cff; border-radius: 9px; padding: 11px 13px; margin: 10px 0; font-size: 12.5px; line-height: 1.5; color: #3a3a66; }
-        .hist b { color: #7c5cff; }
-        .kbox { background: #fbf5e6; border-left: 4px solid #F5A623; border-radius: 9px; padding: 11px 13px; margin: 10px 0; font-size: 13px; line-height: 1.5; color: #7a5a2a; }
-        .kbox b { color: #0E3556; }
-        
-        .readout { background: #f4f7fb; border: 1px solid #e4ebf3; border-radius: 12px; padding: 12px 15px; margin-top: 10px; }
-        .readout .big { font-size: clamp(18px, 2.2vw, 26px); font-weight: 800; color: #0E3556; }
-        .readout .big span { color: #F5A623; }
-        .readout .work { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #5c6b7a; margin-top: 5px; line-height: 1.5; }
-        
-        .chip { font-family: inherit; font-weight: 600; cursor: pointer; border: 1px solid #d6e0ec; background: #fff; color: #0E3556; border-radius: 8px; padding: 6px 11px; font-size: 12px; transition: all 0.15s; }
-        .chip:hover { border-color: #7c5cff; background: #f5f2ff; }
-        .chip.active { background: #0E3556; color: #fff; border-color: #0E3556; }
-        
-        .c-num { background: #f7f9fc; border: 1px solid #d6e0ec; border-radius: 9px; padding: 9px 11px; font-size: 14px; font-family: inherit; width: 100%; }
-        .c-num:focus { outline: none; border-color: #7c5cff; }
+    <>
+      <color attach="background" args={['#000000']} />
+      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+      <ambientLight intensity={0.35} />
+      <directionalLight position={[15, 0, 0]} intensity={2.5} color="#FDB813" />
       
-        @media (max-width: 768px) {
-          .panels-container { flex-direction: column !important; }
-          .panel-left, .panel-right { flex: 1 !important; width: 100% !important; min-height: unset !important; }
-        }
-      `}</style>
-      
-      {/* Sub-tabs */}
-      <div style={{ display: 'flex', gap: '6px', background: '#fff', borderRadius: '14px', padding: '4px', boxShadow: '0 8px 24px rgba(14,42,69,.1)', flexShrink: 0, marginBottom: '10px' }}>
-        {tabs.map(t => (
-          <button key={t.id} className={`tab-btn ${activeTab === t.id ? 'active' : ''}`} onClick={() => setActiveTab(t.id)}>
-            {t.label}
-            <small>{t.sub}</small>
-          </button>
+      <group position={[12, 0, 0]}>
+        <mesh rotation={[0, -Math.PI / 2, 0]}>
+          <sphereGeometry args={[2, 32, 32]} />
+          <meshBasicMaterial map={sunMap} color="#fef08a" />
+        </mesh>
+        {/* Cinematic Optical Lens Flare (Stable in World Space) */}
+        <group position={[0, 0, 0]}>
+          <mesh scale={[24, 24, 1]}>
+            <planeGeometry args={[1, 1]} />
+            <meshBasicMaterial map={flareMap} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} depthTest={false} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh scale={[24, 24, 1]} rotation={[Math.PI/2, 0, 0]}>
+            <planeGeometry args={[1, 1]} />
+            <meshBasicMaterial map={flareMap} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} depthTest={false} side={THREE.DoubleSide} />
+          </mesh>
+        </group>
+      </group>
+
+      <group ref={groupRef}>
+        <Sphere args={[2.2, 64, 64]}>
+          <meshStandardMaterial map={colorMap} roughness={0.8} />
+        </Sphere>
+        
+        {step >= 3 && Array.from({length: 24}).map((_, i) => {
+          let lon = i * 15;
+          const points = [];
+          for (let lat = 90; lat >= -90; lat -= 5) {
+            points.push(getLatLonPoint(lat, lon, 2.205));
+          }
+          return <Line key={i} points={points} color="rgba(255,255,255,0.15)" lineWidth={1} transparent />;
+        })}
+      </group>
+
+      {(step === 1 || step === 2) && (
+        <group>
+          <Line 
+             points={Array.from({length: 61}).map((_,i) => {
+                const angle = (i/60) * Math.PI * 2;
+                return [0, 2.23 * Math.cos(angle), 2.23 * Math.sin(angle)];
+             })}
+             color="#cbd5e1"
+             lineWidth={1}
+             transparent opacity={0.3}
+          />
+          {step === 2 && (
+            <>
+              <Html position={[0, 2.4, 0]} center zIndexRange={[100,0]}>
+                 <div style={{ color: '#cbd5e1', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌓 day - night line</div>
+              </Html>
+              <Html position={[2.4, 1.2, 0]} center zIndexRange={[100,0]}>
+                 <div style={{ color: '#fef08a', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ 12:00 NOON</div>
+              </Html>
+              <Html position={[-2.4, 0.8, 0]} center zIndexRange={[100,0]}>
+                 <div style={{ color: '#93c5fd', fontSize: '12px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>🌙 MIDNIGHT</div>
+              </Html>
+              <Html position={[4, 1.5, 0]} center zIndexRange={[100,0]}>
+                 <div style={{ color: '#fbbf24', fontSize: '11px', whiteSpace: 'nowrap', fontWeight: 'bold' }}>☀️ sun rays</div>
+              </Html>
+            </>
+          )}
+        </group>
+      )}
+    </>
+  );
+};
+
+
+const GlobeContent = ({ istMins, porbMins, tinMins, showDayNight, showGrid, format12, format24 }) => {
+  const colorMap = useTexture(worldMapUrl);
+  const sunMap = useTexture(sunMapUrl);
+  const flareMap = useTexture(flareMapUrl);
+  const groupRef = useRef();
+  
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y = -172.5 * (Math.PI / 180);
+    }
+  });
+
+  const sunAngle = (istMins / 60 - 12) * 15 * (Math.PI / 180);
+
+  const isDaytime = (mins) => {
+    let m = Math.round(mins);
+    while (m < 0) m += 1440;
+    m = m % 1440;
+    return m >= 360 && m <= 1080; // 6:00 AM to 6:00 PM
+  };
+
+  const porbDay = isDaytime(porbMins);
+  const tinDay = isDaytime(tinMins);
+
+  return (
+    <>
+      <color attach="background" args={['#000000']} />
+      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+      <ambientLight intensity={0.15} />
+      <directionalLight 
+        position={[-10 * Math.sin(sunAngle), 0, 10 * Math.cos(sunAngle)]} 
+        intensity={2.5} 
+      />
+
+      <group ref={groupRef}>
+        <Sphere args={[2.2, 64, 64]}>
+          <meshStandardMaterial map={colorMap} roughness={0.8} />
+        </Sphere>
+        
+        {showGrid && Array.from({length: 24}).map((_, i) => (
+          <Line key={i} points={Array.from({length: 37}).map((_,j) => getLatLonPoint(90-j*5, i*15, 2.205))} color="rgba(255,255,255,0.1)" lineWidth={1} transparent />
         ))}
+        {showGrid && Array.from({length: 17}).map((_, i) => {
+          const lat = 80 - i*10;
+          const pts = [];
+          for (let lon=0; lon<=360; lon+=5) pts.push(getLatLonPoint(lat, lon, 2.205));
+          return <Line key={`lat${i}`} points={pts} color="rgba(255,255,255,0.1)" lineWidth={1} transparent />
+        })}
+
+        <Line points={Array.from({length:37}).map((_,i)=>getLatLonPoint(90-i*5, 82.5, 2.21))} color="#10b981" lineWidth={3} />
+        <Line points={Array.from({length:37}).map((_,i)=>getLatLonPoint(90-i*5, 69.6, 2.21))} color="#d97706" lineWidth={2} transparent opacity={0.5} />
+        <Line points={Array.from({length:37}).map((_,i)=>getLatLonPoint(90-i*5, 95.3, 2.21))} color="#d97706" lineWidth={2} transparent opacity={0.5} />
+
+        <Html position={getLatLonPoint(21.6, 69.6, 2.25)} center zIndexRange={[100,0]}>
+          <div style={{ background: '#1e293b', color: '#fff', padding: '8px 12px', borderRadius: '12px', fontSize: '11px', border: '1px solid #475569', display: 'flex', flexDirection: 'column', alignItems: 'center', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
+             <div style={{ fontWeight: 'bold' }}>Porbandar</div>
+             <div style={{ color: '#94a3b8', fontSize: '9px' }}>Gujarat • west</div>
+             <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: porbDay ? '#fef08a' : '#93c5fd' }}>{porbDay ? '☀️' : '🌙'} {format12(porbMins)}</div>
+             <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
+          </div>
+
+        </Html>
+
+        <Html position={getLatLonPoint(27.5, 95.3, 2.25)} center zIndexRange={[100,0]}>
+          <div style={{ background: '#1e293b', color: '#fff', padding: '8px 12px', borderRadius: '12px', fontSize: '11px', border: '1px solid #475569', display: 'flex', flexDirection: 'column', alignItems: 'center', whiteSpace: 'nowrap', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
+             <div style={{ fontWeight: 'bold' }}>Tinsukia</div>
+             <div style={{ color: '#94a3b8', fontSize: '9px' }}>Assam • east</div>
+             <div style={{ marginTop: '6px', fontSize: '14px', fontWeight: 'bold', color: tinDay ? '#fef08a' : '#93c5fd' }}>{tinDay ? '☀️' : '🌙'} {format12(tinMins)}</div>
+             <div style={{ background: '#334155', padding: '2px 6px', borderRadius: '8px', fontSize: '9px', marginTop: '4px', fontWeight: 'bold' }}>🕒 IST {format24(istMins)}</div>
+          </div>
+
+        </Html>
+      </group>
+
+    </>
+  );
+};
+
+const LocalTimeExplorer = ({ onNextActivity, onBack }) => {
+  const [timeMins, setTimeMins] = useState(17 * 60 + 42);
+  const [showDayNight, setShowDayNight] = useState(true);
+  const [showGrid, setShowGrid] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  
+  const istMins = timeMins;
+  const porbMins = timeMins - 52;
+  const tinMins = timeMins + 51;
+
+  const format24 = (m) => {
+    let mt = Math.round(m);
+    while(mt < 0) mt += 24*60;
+    while(mt >= 24*60) mt -= 24*60;
+    const hr = Math.floor(mt / 60);
+    const mn = mt % 60;
+    return `${hr.toString().padStart(2,'0')}:${mn.toString().padStart(2,'0')}`;
+  };
+
+  const format12 = (m) => {
+    let mt = Math.round(m);
+    while(mt < 0) mt += 24*60;
+    while(mt >= 24*60) mt -= 24*60;
+    const hr = Math.floor(mt / 60);
+    const mn = mt % 60;
+    const ap = hr < 12 ? 'a.m.' : 'p.m.';
+    let h = hr % 12;
+    if (h === 0) h = 12;
+    return `${h}:${mn.toString().padStart(2,'0')} ${ap}`;
+  };
+  
+  useEffect(() => {
+    let interval;
+    if (playing) {
+      interval = setInterval(() => setTimeMins(t => t + 5), 50);
+    }
+    return () => clearInterval(interval);
+  }, [playing]);
+
+  return (
+    <div className="dark-coords-page" style={{ position: 'relative' }}>
+      <div style={{ position: 'absolute', top: 20, left: 30, zIndex: 10 }}>
+        <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>Local Time vs Standard Time</h2>
+        <div style={{ fontSize: '12px', color: '#94a3b8' }}>The same two friends — Porbandar (Gujarat) & Tinsukia (Assam)</div>
+      </div>
+      
+
+
+      <div style={{ position: 'absolute', bottom: 30, right: 30, zIndex: 10 }}>
+         <button className="dark-nav-btn next" onClick={onNextActivity} style={{ padding: '12px 24px' }}>
+            Next <Play size={16} fill="currentColor" style={{ marginLeft: '4px' }} />
+         </button>
       </div>
 
-      <div className="panels-container" style={{ flex: 1, display: 'flex', gap: '12px', minHeight: 0, overflow: 'hidden' }}>
-        {/* LEFT PANEL */}
-        <div className="panel-left" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.4 : 0.82, background: activeTab === 'std' ? '#fff' : 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRadius: '16px', padding: '16px', overflow: 'hidden', boxShadow: activeTab === 'std' ? '0 4px 12px rgba(0,0,0,0.05)' : '0 16px 40px rgba(14,42,69,.12)' }}>
-          {activeTab === 'tz' && (
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 3 · (a)</div>
-              <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '24px', margin: '6px 0 10px' }}>Understanding time zones</h1>
-              
-              <ul style={{ fontSize: '13.5px', lineHeight: 1.5, marginBottom: '14px', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <li>Earth rotates once every <b style={{ color: '#0E3556' }}>24 hours</b>.</li>
-                <li>Earth has <b style={{ color: '#0E3556' }}>360°</b> of longitude.</li>
-                <li>Every <b style={{ color: '#0E3556' }}>15°</b> of longitude equals <b style={{ color: '#0E3556' }}>1 hour</b>.</li>
-                <li>Places <b style={{ color: '#0E3556' }}>east</b> are ahead in time. Places <b style={{ color: '#0E3556' }}>west</b> are behind.</li>
-                <li><b style={{ color: '#0E3556' }}>Greenwich (0°)</b> is the starting reference for all time zones.</li>
-              </ul>
-              
-              <div className="kbox" style={{ marginTop: 'auto' }}>
-                <div style={{ fontWeight: 700, color: '#F5A623', fontSize: '11px', letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '4px' }}>Did You Know?</div>
-                <div>India uses one Standard Time (IST) based on <b>82.5° East</b> longitude.</div>
+      <div style={{ position: 'absolute', inset: 0 }}>
+        <Canvas camera={{ position: [0, 0, 7], fov: 45 }}>
+           <GlobeContent istMins={istMins} porbMins={porbMins} tinMins={tinMins} showDayNight={showDayNight} showGrid={showGrid} format12={format12} format24={format24} />
+           <OrbitControls enableZoom={true} enablePan={false} />
+        </Canvas>
+      </div>
+
+      <div style={{ position: 'absolute', top: 20, right: 30, width: '260px', background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(8px)', padding: '20px', borderRadius: '16px', border: '1px solid #334155', zIndex: 10 }}>
+         <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#94a3b8', letterSpacing: '1px', marginBottom: '12px' }}>CONTROLS</div>
+         
+         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>
+               <button onClick={() => setPlaying(!playing)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                 {playing ? <Pause size={16} /> : <Play size={16} />}
+               </button>
+               Move the Sun
+            </div>
+            <input type="range" min="0" max="1440" value={timeMins} onChange={e => { setTimeMins(Number(e.target.value)); setPlaying(false); }} style={{ width: '80px', accentColor: '#3b82f6', cursor: 'pointer' }} />
+         </div>
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 30, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '16px', zIndex: 10 }}>
+         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
+            <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' }}>Porbandar • Sun time</div>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fef08a', margin: '4px 0' }}>{format24(porbMins)}</div>
+            <div style={{ fontSize: '10px', color: '#94a3b8' }}>≈ 52 min behind IST</div>
+         </div>
+         <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>VS</div>
+         <div style={{ background: '#78350f', border: '1px solid #d97706', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
+            <div style={{ fontSize: '11px', color: '#fde68a', fontWeight: 'bold' }}>🕒 IST (82½°E)</div>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff', margin: '4px 0' }}>{format24(istMins)}</div>
+            <div style={{ fontSize: '10px', color: '#fde68a' }}>the one shared clock</div>
+         </div>
+         <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>VS</div>
+         <div style={{ background: '#1e293b', border: '1px solid #334155', padding: '12px', borderRadius: '12px', textAlign: 'center', width: '160px', height: '100px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxSizing: 'border-box' }}>
+            <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 'bold' }}>Tinsukia • Sun time</div>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#93c5fd', margin: '4px 0' }}>{format24(tinMins)}</div>
+            <div style={{ fontSize: '10px', color: '#94a3b8' }}>≈ 51 min ahead of IST</div>
+         </div>
+      </div>
+      
+      <button 
+         className="dark-nav-btn" 
+         onClick={onBack}
+         style={{ position: 'absolute', bottom: 30, left: 30, background: 'rgba(255,255,255,0.1)', zIndex: 10 }}
+      >
+         <ArrowLeft size={16} /> Back
+      </button>
+    </div>
+  );
+};
+
+export default function TimeZonesPage({ onNextActivity, onBack }) {
+  const [currentStepIdx, setCurrentStepIdx] = useState(0); 
+
+  const handleNext = () => setCurrentStepIdx(c => c + 1);
+  const handlePrev = () => {
+    if (currentStepIdx > 0) setCurrentStepIdx(c => c - 1);
+    else if (onBack) onBack();
+  };
+
+  if (currentStepIdx === 0) {
+    return (
+      <div className="coords-page">
+        <div className="coords-book">
+          <div className="coords-main-content">
+            <div className="coords-left">
+              <div className="coords-eyebrow">CHAPTER 1 &bull; CLASS 6 SOCIAL SCIENCE</div>
+              <h1 className="coords-chtitle">Understanding<br/>Time Zones</h1>
+              <div className="coords-illus" style={{ position: 'relative', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', border: '1px solid #334155', boxShadow: 'inset 0 0 30px rgba(0,0,0,0.8)', overflow: 'hidden', padding: 0 }}>
+                <img src="/time_zones_illustration.jpg" alt="Time Zones Overview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             </div>
-          )}
-          {activeTab === 'std' && (
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, paddingRight: '8px' }}>
-              
-              {/* SECTION 1 */}
-              <div style={{ marginBottom: '12px' }}>
-                <h2 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '20px', margin: '0 0 10px' }}>Why is the time different?</h2>
-                
-                <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '12px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ fontSize: '32px', marginBottom: '8px' }}>☀️</div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '16px', marginTop: '16px' }}>
-                    <div style={{ flex: 1, background: '#fff', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', position: 'relative' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>📍 Porbandar</div>
-                      <div style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic' }}>"It is still bright here!"</div>
-                      <div style={{ position: 'absolute', top: '-10px', right: '-10px', background: '#e2e8f0', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>WEST</div>
-                    </div>
-                    
-                    <div style={{ flex: 1, background: '#fff', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', position: 'relative' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>📍 Tinsukia</div>
-                      <div style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic' }}>"The Sun is already setting!"</div>
-                      <div style={{ position: 'absolute', top: '-10px', right: '-10px', background: '#e2e8f0', fontSize: '10px', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>EAST</div>
-                    </div>
-                  </div>
-                </div>
-                
-                <p style={{ fontSize: '13px', lineHeight: 1.45, color: '#334155', marginTop: '8px', marginBottom: 0 }}>
-                  Places in the east see the Sun earlier because the Earth rotates from west to east.
-                </p>
+            
+            <div className="coords-right">
+              <div className="coords-rhead" style={{ fontSize: '32px' }}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                TIME ZONES
               </div>
-
-              {/* SECTION 2 */}
-              <div style={{ background: '#fef3c7', borderRadius: '12px', padding: '12px', marginBottom: '12px', boxShadow: '0 4px 12px rgba(253, 230, 138, 0.4)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-                  <div style={{ fontSize: '16px' }}>⚠️</div>
-                  <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: '#92400e' }}>If every city followed its own local time...</h3>
-                </div>
-                <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '13px', color: '#92400e', display: 'flex', flexDirection: 'column', gap: '4px', lineHeight: 1.4 }}>
-                  <li>School timings would be confusing.</li>
-                  <li>Train timings would be different in every city.</li>
-                  <li>People would find it difficult to plan meetings.</li>
-                </ul>
-              </div>
-
-              {/* SECTION 3 */}
-              <div style={{ background: '#dcfce7', borderRadius: '12px', padding: '12px', marginBottom: '12px', boxShadow: '0 4px 12px rgba(134, 239, 172, 0.3)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                  <div style={{ fontSize: '16px' }}>🇮🇳</div>
-                  <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#166534' }}>Indian Standard Time (IST)</h3>
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.6)', padding: '10px', borderRadius: '10px', marginBottom: '8px' }}>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#166534', background: '#fff', padding: '6px 12px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Different Local Times</div>
-                  <div style={{ fontSize: '16px', color: '#15803d', fontWeight: 900 }}>↓</div>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#166534', background: '#fff', padding: '6px 12px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>One Common Time</div>
-                  <div style={{ fontSize: '16px', color: '#15803d', fontWeight: 900 }}>↓</div>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff', background: '#16a34a', padding: '8px 16px', borderRadius: '20px', boxShadow: '0 4px 6px rgba(22, 163, 74, 0.2)' }}>Indian Standard Time (IST)</div>
-                </div>
-                
-                <p style={{ margin: 0, fontSize: '13px', fontWeight: 700, color: '#166534', textAlign: 'center', lineHeight: 1.35 }}>
-                  Everyone in India follows one common time called IST.
-                </p>
-              </div>
-
-              {/* SECTION 4 */}
-              <div style={{ background: '#e0f2fe', borderRadius: '12px', padding: '12px', boxShadow: '0 4px 12px rgba(125, 211, 252, 0.3)' }}>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                  <div style={{ fontSize: '18px', fontWeight: 800, color: '#0369a1' }}>GMT</div>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#0284c7', background: '#fff', padding: '4px 12px', borderRadius: '20px' }}>+5 hours 30 minutes</div>
-                  <div style={{ fontSize: '18px', fontWeight: 800, color: '#0369a1' }}>IST</div>
-                </div>
-                
-                <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: '#075985', textAlign: 'center', lineHeight: 1.35 }}>
-                  India's Standard Time is 5 hours 30 minutes ahead of Greenwich Mean Time (GMT).
-                </p>
-              </div>
-
-            </div>
-          )}
-          {activeTab === 'idl' && (
-            <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '8px' }}>
-              <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Time zones & the date</div>
-              <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '24px', margin: '6px 0 14px', lineHeight: 1.2 }}>THE INTERNATIONAL DATE LINE</h1>
-              
-              <p style={{ fontSize: '13.5px', lineHeight: 1.5, marginBottom: '14px', color: '#334155' }}>
-                The Earth is divided into time zones. Countries choose one standard time for everyday life. Opposite the Prime Meridian, near <b>180° longitude</b>, lies a special imaginary line called the <b>International Date Line</b>. When people cross this line, the date changes.
-              </p>
-
-              <div style={{ background: '#f0fdf4', borderRadius: '12px', padding: '14px', border: '2px solid #86efac', boxShadow: '0 4px 12px rgba(134, 239, 172, 0.2)', marginBottom: '10px' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  ⭐ Remember
-                </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <div style={{ flex: 1, background: '#fff', borderRadius: '10px', padding: '10px', textAlign: 'center', border: '1px solid #bbf7d0' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross East ⬅</div>
-                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#15803d' }}>Subtract one day</div>
-                  </div>
-                  <div style={{ flex: 1, background: '#fff', borderRadius: '10px', padding: '10px', textAlign: 'center', border: '1px solid #bbf7d0' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross West ➡</div>
-                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#15803d' }}>Add one day</div>
+              <div className="coords-content">
+                <div className="coords-task-container" style={{ justifyContent: 'flex-start', paddingTop: '10px' }}>
+                  <div className="coords-hero" style={{ padding: '32px' }}>
+                    <h3 style={{ marginBottom: '20px', fontSize: '28px' }}>Understanding Time Zones</h3>
+                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>
+                      Let’s make the globe rotate again from west to east — that is how our planet spins around its axis, making a full turn every 24 hours. A full turn is 360°, so this means 15° per hour (15 × 24 = 360).
+                    </p>
+                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>
+                      Moving eastward from the Prime Meridian, we get 0°, 15°E, 30°E, 45°E, and so on every 15°. It is the same as adding one hour of <strong>local time</strong> with each 15° meridian.
+                    </p>
+                    <p style={{ fontSize: '18px', lineHeight: '1.7' }}>
+                      But it would not be convenient for a country to use many local times! That is why most countries adopt a <strong>standard time</strong> based on a meridian passing through them.
+                    </p>
                   </div>
                 </div>
               </div>
-
-              <div style={{ marginBottom: '10px' }}>
-                <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#0E3556', margin: '0 0 6px' }}>Why does this happen?</h3>
-                <p style={{ fontSize: '14px', lineHeight: 1.55, color: '#475569', margin: 0 }}>
-                  Imagine you travel around the Earth. When you reach the opposite side of the globe, the calendar needs to stay correct. So, the date changes when crossing the International Date Line.
-                </p>
-              </div>
-
-              <div style={{ background: '#fef3c7', borderRadius: '12px', padding: '12px', marginBottom: '10px', boxShadow: '0 4px 12px rgba(253,230,138,0.3)', border: '1px solid #fde68a' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <div style={{ fontSize: '20px' }}>🌍</div>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Did You Know?</div>
-                </div>
-                <div style={{ fontSize: '14px', color: '#92400e', lineHeight: 1.5 }}>
-                  The International Date Line is not perfectly straight. It bends around some countries and islands so that one country does not have two different dates.
-                </div>
-              </div>
-
-              <div style={{ background: '#f8fafc', borderRadius: '10px', padding: '10px', border: '1px solid #e2e8f0', marginBottom: '10px' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#334155', marginBottom: '12px' }}>Countries with Multiple Time Zones</div>
-                <div style={{ display: 'flex', gap: '16px', marginBottom: '8px' }}>
-                  <div style={{ flex: 1, fontSize: '13px', color: '#475569' }}>🇷🇺 <b>Russia</b> → 11 Time Zones</div>
-                  <div style={{ flex: 1, fontSize: '13px', color: '#475569' }}>🇺🇸 <b>USA</b> → 6 Time Zones</div>
-                </div>
-                <div style={{ fontSize: '13px', color: '#475569' }}>🇨🇦 <b>Canada</b> → 6 Time Zones</div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '12px', fontStyle: 'italic' }}>Large countries need more than one standard time.</div>
-              </div>
-
-              <div style={{ marginTop: 'auto', background: '#e0f2fe', borderRadius: '12px', padding: '16px' }}>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#0369a1', marginBottom: '12px', textTransform: 'uppercase' }}>Key Takeaways</div>
-                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px', color: '#075985', fontWeight: 600 }}><span>✔</span> Time zones divide the Earth.</li>
-                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px', color: '#075985', fontWeight: 600 }}><span>✔</span> International Date Line is near 180°.</li>
-                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px', color: '#075985', fontWeight: 600 }}><span>✔</span> Crossing East → Previous Day</li>
-                  <li style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px', color: '#075985', fontWeight: 600 }}><span>✔</span> Crossing West → Next Day</li>
-                </ul>
-              </div>
             </div>
-          )}
+          </div>
+          <div className="coords-rfoot">
+            <div className="coords-pageind" style={{ fontSize: '16px' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              Page 1 of 4
+            </div>
+            <button className="coords-next" onClick={handleNext} style={{ fontSize: '16px', padding: '12px 26px' }}>
+              Next Page &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentStepIdx === 3) {
+    return <LocalTimeExplorer onNextActivity={() => setCurrentStepIdx(4)} onBack={handlePrev} />;
+  }
+
+  if (currentStepIdx >= 4) {
+    return <TwoFriendsActivity onNextActivity={onNextActivity} onBack={() => setCurrentStepIdx(3)} />;
+  }
+
+  const activeStepIdx = Math.min(currentStepIdx - 1, darkStepsData.length - 1);
+  const step = darkStepsData[activeStepIdx];
+
+  return (
+    <div className="dark-coords-page">
+      <div className="dark-coords-main-content">
+        <div className="dark-coords-left">
+          <div className="dark-top-title">Time Around the World — Why Clocks Differ</div>
+          
+          <div className="dark-globe-container">
+            <Canvas camera={{ position: [1.5, 0, 7], fov: 45 }}>
+              <TimeZonesGlobe step={step.stepNum} />
+              <OrbitControls enableZoom={true} enablePan={false} target={[1.5, 0, 0]} />
+            </Canvas>
+          </div>
+
+          <div className="dark-bottom-nav">
+            <button className="dark-nav-btn" onClick={handlePrev}>
+              <ArrowLeft size={16} /> Back
+            </button>
+            <div className="dark-nav-dots">
+              {Array.from({ length: 2 }).map((_, i) => (
+                <div key={i} className={`dark-nav-dot ${i === activeStepIdx ? 'active' : ''}`} />
+              ))}
+            </div>
+            <button className="dark-nav-btn next" onClick={handleNext}>
+              Next <Play size={16} fill="currentColor" style={{ marginLeft: '4px' }} />
+            </button>
+          </div>
         </div>
 
-        {/* RIGHT PANEL */}
-        <div className="panel-right" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.6 : 1.18, background: activeTab === 'std' ? '#F7FAFC' : (activeTab === 'tz' ? '#F7FAFC' : '#fff'), borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: activeTab === 'std' ? 'none' : '0 16px 40px rgba(14,42,69,.12)' }}>
-          {activeTab === 'tz' && (
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-              <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#0E3556', margin: '0 0 10px', textAlign: 'center' }}>Local Time Explorer</h2>
-              
-              <div style={{ flex: 1, display: 'grid', placeItems: 'center', background: '#fff', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', padding: '10px', marginBottom: '10px' }}>
-                {renderTZExplorer()}
-                
-                <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                  <div style={{ fontSize: '16px', color: '#5c6b7a', marginBottom: '4px' }}>
-                    Selected Longitude: <b style={{ color: '#0E3556' }}>{tzLon === 0 ? '0° GMT' : (Math.abs(tzLon) + '° ' + (tzLon > 0 ? 'East' : 'West'))}</b>
-                  </div>
-                  <div style={{ fontSize: '24px', fontWeight: 800, color: '#F5A623' }}>
-                    {fmt(localTime(tzLon))}
-                  </div>
-                </div>
-              </div>
-              
-              <div style={{ marginBottom: '24px' }}>
-                <input type="range" style={{ width: '100%', accentColor: '#F5A623', cursor: 'pointer', height: '8px' }} min="-45" max="45" step="15" value={tzLon} onChange={e => setTzLon(Number(e.target.value))} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: 600, color: '#5c6b7a', marginTop: '8px' }}>
-                  <span>← West (Earlier)</span>
-                  <span style={{ color: '#0E3556' }}>Greenwich</span>
-                  <span style={{ color: '#16a34a' }}>East (Later) →</span>
-                </div>
-              </div>
-              
-              <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
-                <div style={{ fontSize: '14px', color: '#5c6b7a', fontWeight: 600, marginBottom: '8px' }}>At {Math.abs(tzLon) + '° ' + (tzLon >= 0 ? 'E' : 'W')}</div>
-                
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '16px', color: '#334155' }}>Time Difference</span>
-                  <span style={{ fontSize: '20px', fontWeight: 700, color: '#0E3556' }}>{Math.abs(tzLon)} ÷ 15 = {Math.abs(tzLon / 15)} hour{Math.abs(tzLon / 15) !== 1 ? 's' : ''}</span>
-                </div>
-                
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '16px', color: '#334155' }}>Greenwich Time</span>
-                  <span style={{ fontSize: '20px', fontWeight: 700, color: '#5c6b7a' }}>12:00 pm</span>
-                </div>
-                
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid #e4ebf3' }}>
-                  <span style={{ fontSize: '18px', fontWeight: 600, color: '#0E3556' }}>Local Time</span>
-                  <span style={{ fontSize: '22px', fontWeight: 800, color: '#16a34a' }}>{fmt(localTime(tzLon))}</span>
-                </div>
-              </div>
-              
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '24px' }}>
-                <button className="chip active" style={{ padding: '12px 24px', fontSize: '18px', background: '#0E3556', color: '#fff', border: '1px solid #0E3556', borderRadius: '30px' }} onClick={() => setActiveTab('std')}>Next</button>
-              </div>
-            </div>
-          )}
+        <div className="dark-coords-right">
+          <div className="dark-step-eyebrow">STEP {activeStepIdx + 1} OF 2</div>
+          <h2 className="dark-step-title">{step.title}</h2>
+          
+          {step.paragraphs.map((p, idx) => (
+            <div key={idx} className="dark-step-text">{p}</div>
+          ))}
 
-          {activeTab === 'std' && (
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, fontFamily: '"Space Grotesk", system-ui, sans-serif', paddingRight: '8px' }}>
-              
-              <div style={{ marginBottom: '24px', textAlign: 'center' }}>
-                <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#0E3556', margin: '0 0 8px' }}>Let's Use Standard Time</h2>
-                <div style={{ fontSize: '16px', color: '#5c6b7a' }}>We now know why India follows one common time. Let's use IST to solve everyday situations.</div>
-              </div>
-
-              {/* SECTION 1: Everyday Examples */}
-              <div style={{ background: '#fff', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '24px' }}>
-                <div style={{ fontSize: '18px', fontWeight: 800, color: '#0E3556', marginBottom: '16px' }}>Where do we use IST?</div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>🚆</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>Train Timetable</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>Everyone follows the same time.</div>
-                  </div>
-                  <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>🎓</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>School</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>Classes begin at one common time.</div>
-                  </div>
-                  <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>✈️</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>Flights</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>Departure and arrival use IST.</div>
-                  </div>
-                  <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>📺</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#334155', marginBottom: '4px' }}>Television</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>Programs start at the same time across India.</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* SECTION 2: Did You Know? */}
-              <div style={{ background: '#fef3c7', borderRadius: '16px', padding: '20px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(253,230,138,0.3)', border: '1px solid #fde68a' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <div style={{ fontSize: '20px' }}>💡</div>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Did You Know?</div>
-                </div>
-                <div style={{ fontSize: '15px', color: '#92400e', lineHeight: 1.5 }}>
-                  India is almost 3,000 km wide from east to west. The Sun rises much earlier in Arunachal Pradesh than in Gujarat. Yet everyone follows the same IST clock.
-                </div>
-              </div>
-
-              {/* SECTION 3: Quick Thinking */}
-              <div style={{ background: '#fff', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '24px' }}>
-                <div style={{ fontSize: '18px', fontWeight: 800, color: '#0E3556', marginBottom: '16px' }}>Think Before You Calculate</div>
-                <div style={{ fontSize: '16px', color: '#334155', fontWeight: 600, marginBottom: '20px', textAlign: 'center' }}>
-                  If it is 12:00 noon in London, do you think it is earlier or later in India?
-                </div>
-                
-                <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                  <button onClick={() => !quickThinkFb && setQuickThinkFb('earlier')} style={{ flex: 1, padding: '16px', fontSize: '18px', fontWeight: 700, background: quickThinkFb === 'earlier' ? '#fee2e2' : '#f1f5f9', color: quickThinkFb === 'earlier' ? '#991b1b' : '#475569', border: quickThinkFb === 'earlier' ? '2px solid #ef4444' : '2px solid #cbd5e1', borderRadius: '12px', cursor: quickThinkFb === 'later' ? 'default' : 'pointer' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                      <input type="radio" checked={quickThinkFb === 'earlier'} readOnly style={{ accentColor: '#ef4444' }} /> Earlier
-                    </div>
-                  </button>
-                  <button onClick={() => !quickThinkFb && setQuickThinkFb('later')} style={{ flex: 1, padding: '16px', fontSize: '18px', fontWeight: 700, background: quickThinkFb === 'later' ? '#dcfce7' : '#f1f5f9', color: quickThinkFb === 'later' ? '#166534' : '#475569', border: quickThinkFb === 'later' ? '2px solid #22c55e' : '2px solid #cbd5e1', borderRadius: '12px', cursor: quickThinkFb === 'later' ? 'default' : 'pointer' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                      <input type="radio" checked={quickThinkFb === 'later'} readOnly style={{ accentColor: '#22c55e' }} /> Later
-                    </div>
-                  </button>
-                </div>
-                
-                {quickThinkFb === 'earlier' && (
-                  <div style={{ color: '#991b1b', fontSize: '14px', fontWeight: 600, textAlign: 'center', animation: 'fadeIn 0.3s' }}>
-                    Not quite! Remember, the Earth rotates from west to east, so places in the east are ahead in time. Try again!
-                    <div style={{ marginTop: '8px' }}><button onClick={() => setQuickThinkFb(null)} style={{ padding: '6px 12px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Retry</button></div>
-                  </div>
-                )}
-                
-                {quickThinkFb === 'later' && (
-                  <div style={{ background: '#dcfce7', color: '#166534', padding: '16px', borderRadius: '12px', textAlign: 'center', animation: 'scaleIn 0.3s' }}>
-                    <div style={{ fontSize: '18px', fontWeight: 800, marginBottom: '4px' }}>Excellent! 🎉</div>
-                    <div style={{ fontSize: '15px', fontWeight: 600 }}>India is ahead of Greenwich by 5 hours 30 minutes.</div>
-                  </div>
-                )}
-              </div>
-
-              {/* SECTIONS 4 & 5: Calculator (Revealed only after correct prediction) */}
-              {quickThinkFb === 'later' && (
-                <div style={{ animation: 'fadeIn 0.5s' }}>
-                  <div style={{ background: '#fff', borderRadius: '24px', padding: '32px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', marginBottom: '24px', border: '1px solid #f1f5f9' }}>
-                    <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-                      <h3 style={{ margin: '0 0 8px', fontSize: '24px', fontWeight: 800, color: '#0E3556' }}>Try It Yourself</h3>
-                      <div style={{ fontSize: '15px', color: '#64748b', fontWeight: 500 }}>Slide the time to see what happens in India!</div>
-                    </div>
-                    
-                    {/* The Visual Result Box */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '24px', marginBottom: '40px' }}>
-                       {/* GMT Side */}
-                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '120px' }}>
-                          <div style={{ fontSize: '14px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Greenwich</div>
-                          <div style={{ fontSize: '32px', fontWeight: 900, color: '#0E3556' }}>{fmt(gmtH)}</div>
-                       </div>
-                       
-                       {/* Connection */}
-                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#f1f5f9', padding: '8px 16px', borderRadius: '20px' }}>
-                          <div style={{ fontSize: '13px', fontWeight: 800, color: '#3b82f6' }}>+ 5h 30m</div>
-                          <div style={{ fontSize: '20px', color: '#3b82f6', fontWeight: 900 }}>→</div>
-                       </div>
-
-                       {/* IST Side */}
-                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '120px' }}>
-                          <div style={{ fontSize: '14px', color: '#d97706', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>India</div>
-                          <div style={{ fontSize: '32px', fontWeight: 900, color: '#f59e0b', background: '#fef3c7', padding: '4px 16px', borderRadius: '12px' }}>{fmt(gmtH + 5.5)}</div>
-                       </div>
-                    </div>
-
-                    {/* Interactive Slider */}
-                    <div style={{ position: 'relative', padding: '0 20px' }}>
-                       <input 
-                         type="range" 
-                         min="0" 
-                         max="23" 
-                         value={gmtH} 
-                         onChange={e => setGmtH(Number(e.target.value))}
-                         style={{ width: '100%', accentColor: '#3b82f6', height: '8px', borderRadius: '4px', outline: 'none', cursor: 'pointer' }}
-                       />
-                       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', padding: '0 4px' }}>
-                          <div style={{ textAlign: 'center', cursor: 'pointer', opacity: gmtH === 8 ? 1 : 0.5, transition: 'opacity 0.2s' }} onClick={() => setGmtH(8)}>
-                             <div style={{ fontSize: '20px' }}>🌅</div>
-                             <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>Morning</div>
-                          </div>
-                          <div style={{ textAlign: 'center', cursor: 'pointer', opacity: gmtH === 12 ? 1 : 0.5, transition: 'opacity 0.2s' }} onClick={() => setGmtH(12)}>
-                             <div style={{ fontSize: '20px' }}>☀️</div>
-                             <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>Noon</div>
-                          </div>
-                          <div style={{ textAlign: 'center', cursor: 'pointer', opacity: gmtH === 18 ? 1 : 0.5, transition: 'opacity 0.2s' }} onClick={() => setGmtH(18)}>
-                             <div style={{ fontSize: '20px' }}>🌇</div>
-                             <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', marginTop: '4px' }}>Evening</div>
-                          </div>
-                       </div>
-                    </div>
-                  </div>
-
-                  {/* SECTION 6: Remember */}
-                  <div style={{ background: '#f0fdf4', borderRadius: '16px', padding: '24px', border: '2px solid #86efac', boxShadow: '0 4px 12px rgba(134, 239, 172, 0.2)', marginBottom: '24px' }}>
-                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#166534', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Remember</div>
-                    <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                        <div style={{ color: '#16a34a', fontSize: '18px' }}>✔</div>
-                        <div style={{ fontSize: '15px', color: '#15803d', fontWeight: 600 }}>Different cities can have different local times.</div>
-                      </li>
-                      <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                        <div style={{ color: '#16a34a', fontSize: '18px' }}>✔</div>
-                        <div style={{ fontSize: '15px', color: '#15803d', fontWeight: 600 }}>India avoids confusion by using IST.</div>
-                      </li>
-                      <li style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                        <div style={{ color: '#16a34a', fontSize: '18px' }}>✔</div>
-                        <div style={{ fontSize: '15px', color: '#15803d', fontWeight: 600 }}>IST is always GMT + 5 hours 30 minutes.</div>
-                      </li>
-                    </ul>
-                  </div>
-                  
-                  <div style={{ display: 'flex', gap: '12px', width: '100%' }}>
-                    <button onClick={() => setActiveTab('tz')} style={{ padding: '16px 24px', background: '#f1f5f9', color: '#475569', fontSize: '16px', fontWeight: 700, border: '1px solid #cbd5e1', borderRadius: '12px', cursor: 'pointer' }}>← Back to Time Zones</button>
-                    <button onClick={() => setActiveTab('idl')} style={{ flex: 1, padding: '16px', background: '#0E3556', color: '#fff', fontSize: '16px', fontWeight: 700, border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(14,53,86,0.2)' }}>
-                      Continue → International Date Line
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-          {activeTab === 'idl' && (
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
-              
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <div>
-                  <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0E3556', margin: '0 0 4px' }}>🌍 Around the World Flight</h2>
-                  <div style={{ fontSize: '14px', color: '#64748b', fontWeight: 500 }}>Help the airplane complete its journey. Watch the calendar!</div>
-                </div>
-                {idlMission <= 4 && (
-                  <div style={{ background: '#f1f5f9', padding: '8px 16px', borderRadius: '20px', fontSize: '14px', fontWeight: 700, color: '#334155' }}>
-                    Mission {idlMission} / 4
-                  </div>
-                )}
-              </div>
-
-              {idlMission <= 4 ? (
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  {/* The Interactive Globe / Map */}
-                  <div style={{ position: 'relative', width: '100%', height: '260px', background: '#e0f2fe', borderRadius: '16px', overflow: 'hidden', border: '1px solid #bae6fd', boxShadow: 'inset 0 4px 12px rgba(0,0,0,0.05)' }}>
-                    
-                    {/* SVG Map representing the Pacific Ocean centered Date Line */}
-                    <svg viewBox="0 0 600 260" style={{ width: '100%', height: '100%', display: 'block' }}>
-                      <defs>
-                        <linearGradient id="oceanFade" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#bae6fd" />
-                          <stop offset="100%" stopColor="#7dd3fc" />
-                        </linearGradient>
-                      </defs>
-                      <rect width="100%" height="100%" fill="url(#oceanFade)" />
-                      
-                      {/* Continents mock */}
-                      <path d="M 0 50 Q 50 40 80 80 T 150 140 Q 120 180 80 200 Q 40 220 0 200 Z" fill="#bbf7d0" stroke="#86efac" strokeWidth="2" />
-                      <text x="60" y="120" fontSize="14" fontWeight="800" fill="#166534">Asia</text>
-                      <circle cx="120" cy="120" r="5" fill="#ef4444" />
-                      <text x="120" y="110" fontSize="12" fontWeight="700" fill="#0f172a" textAnchor="middle">Tokyo</text>
-
-                      <path d="M 20 220 Q 60 210 80 250 T 160 260 L 0 260 Z" fill="#bbf7d0" stroke="#86efac" strokeWidth="2" />
-                      <text x="100" y="245" fontSize="14" fontWeight="800" fill="#166534">Australia</text>
-                      <circle cx="140" cy="180" r="5" fill="#ef4444" />
-                      <text x="140" y="170" fontSize="12" fontWeight="700" fill="#0f172a" textAnchor="middle">Sydney</text>
-
-                      <path d="M 450 0 Q 500 50 600 60 L 600 0 Z" fill="#bbf7d0" stroke="#86efac" strokeWidth="2" />
-                      <path d="M 500 80 Q 550 120 600 140 L 600 80 Z" fill="#bbf7d0" stroke="#86efac" strokeWidth="2" />
-                      <text x="550" y="40" fontSize="14" fontWeight="800" fill="#166534">N. America</text>
-                      
-                      <circle cx="500" cy="140" r="5" fill="#ef4444" />
-                      <text x="500" y="130" fontSize="12" fontWeight="700" fill="#0f172a" textAnchor="middle">LA</text>
-
-                      <circle cx="420" cy="130" r="5" fill="#ef4444" />
-                      <text x="420" y="120" fontSize="12" fontWeight="700" fill="#0f172a" textAnchor="middle">Honolulu</text>
-                      
-                      {/* Date Line */}
-                      <path d="M 300 0 L 300 80 L 330 100 L 330 150 L 300 180 L 300 260" fill="none" stroke="#f59e0b" strokeWidth="3" strokeDasharray="6 4" opacity="0.8" />
-                      <text x="300" y="20" fontSize="12" fontWeight="800" fill="#d97706" textAnchor="middle" background="#fff">DATE LINE (180°)</text>
-
-                      {/* Flight Path */}
-                      <path 
-                        d={`M ${currentMission.startCoord.x} ${currentMission.startCoord.y} Q 300 50 ${currentMission.endCoord.x} ${currentMission.endCoord.y}`} 
-                        fill="none" 
-                        stroke="#0E3556" 
-                        strokeWidth="2" 
-                        strokeDasharray="4 4" 
-                        opacity="0.3" 
-                      />
-
-                      {/* Airplane */}
-                      {idlAnimState !== 'ready' && (
-                        <g style={{ 
-                          transform: `translate(${
-                            currentMission.startCoord.x + (currentMission.endCoord.x - currentMission.startCoord.x) * animProgress
-                          }px, ${
-                            currentMission.startCoord.y + (currentMission.endCoord.y - currentMission.startCoord.y) * animProgress - Math.sin(animProgress * Math.PI) * 40
-                          }px)`,
-                          transition: 'transform 0.05s linear'
-                        }}>
-                          <text x="0" y="0" fontSize="24" textAnchor="middle" dominantBaseline="middle" 
-                                style={{ transform: `scaleX(${currentMission.dir === 'West' ? -1 : 1})` }}>
-                            ✈️
-                          </text>
-                        </g>
-                      )}
-                    </svg>
-
-                    {/* Mission Overlay */}
-                    {idlAnimState === 'ready' && (
-                      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(255,255,255,0.8)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', animation: 'fadeIn 0.3s' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 800, color: '#0E3556', marginBottom: '8px' }}>
-                          Mission: {currentMission.from} ➔ {currentMission.to}
-                        </div>
-                        <div style={{ fontSize: '14px', fontWeight: 600, color: '#64748b', marginBottom: '24px' }}>
-                          Direction: Travel {currentMission.dir}
-                        </div>
-                        <button onClick={startFlight} style={{ padding: '16px 32px', fontSize: '18px', fontWeight: 700, background: '#0E3556', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 8px 16px rgba(14,53,86,0.3)', transition: 'transform 0.1s' }} onMouseDown={e=>e.target.style.transform='scale(0.95)'} onMouseUp={e=>e.target.style.transform='none'}>
-                          Start Journey ✈️
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Below Globe: Calendar & Story */}
-                  <div style={{ display: 'flex', gap: '24px', marginTop: '24px', flex: 1 }}>
-                    {/* Calendar Card */}
-                    <div style={{ width: '160px', background: '#fff', borderRadius: '16px', boxShadow: '0 8px 24px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ background: '#ef4444', padding: '12px', textAlign: 'center', color: '#fff', fontWeight: 800, fontSize: '14px', letterSpacing: '2px' }}>CALENDAR</div>
-                      <div style={{ flex: 1, display: 'grid', placeItems: 'center', padding: '24px', position: 'relative' }}>
-                        
-                        <div style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', transition: 'all 0.5s', transform: (idlAnimState === 'answered' && animProgress >= 0.5) ? 'rotateX(-90deg)' : 'rotateX(0)', opacity: (idlAnimState === 'answered' && animProgress >= 0.5) ? 0 : 1, position: 'absolute' }}>
-                          {currentMission.startDay}
-                        </div>
-                        
-                        <div style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', transition: 'all 0.5s', transform: (idlAnimState === 'answered' && animProgress >= 0.5) ? 'rotateX(0)' : 'rotateX(90deg)', opacity: (idlAnimState === 'answered' && animProgress >= 0.5) ? 1 : 0, position: 'absolute' }}>
-                          {currentMission.endDay}
-                        </div>
-
-                      </div>
-                    </div>
-
-                    {/* Question / Explanation Panel */}
-                    <div style={{ flex: 1, background: '#f8fafc', borderRadius: '16px', padding: '24px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                      {idlAnimState === 'ready' && (
-                        <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, color: '#475569' }}>
-                          Ready to Fly!
-                        </div>
-                      )}
-                      
-                      {idlAnimState === 'flying' && (
-                        <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, color: '#0E3556', animation: 'pulse 1s infinite' }}>
-                          Flying across the ocean...
-                        </div>
-                      )}
-
-                      {idlAnimState === 'asked' && (
-                        <div style={{ animation: 'fadeIn 0.3s' }}>
-                          <div style={{ fontSize: '18px', fontWeight: 800, color: '#0E3556', marginBottom: '16px', textAlign: 'center' }}>
-                            {currentMission.q}
-                          </div>
-                          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-                            {currentMission.options.map(opt => (
-                              <button key={opt} onClick={() => handleAnswer(opt)} style={{ padding: '12px 24px', background: idlAnswer === opt ? (opt === currentMission.correct ? '#16a34a' : '#dc2626') : '#fff', color: idlAnswer === opt ? '#fff' : '#334155', border: '2px solid', borderColor: idlAnswer === opt ? (opt === currentMission.correct ? '#16a34a' : '#dc2626') : '#cbd5e1', borderRadius: '12px', fontSize: '16px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>
-                                {opt}
-                              </button>
-                            ))}
-                          </div>
-                          {idlAnswer && idlAnswer !== currentMission.correct && (
-                            <div style={{ textAlign: 'center', color: '#dc2626', fontWeight: 600, marginTop: '12px', fontSize: '14px', animation: 'fadeIn 0.2s' }}>
-                              Not quite! Check the rule on the left.
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {idlAnimState === 'answered' && (
-                        <div style={{ textAlign: 'center', animation: 'fadeIn 0.3s' }}>
-                          <div style={{ fontSize: '20px', fontWeight: 800, color: '#16a34a', marginBottom: '8px' }}>
-                            Excellent! 🎉
-                          </div>
-                          <div style={{ fontSize: '15px', fontWeight: 600, color: '#334155', marginBottom: '16px' }}>
-                            You crossed the International Date Line. Because you travelled {currentMission.dir}, the date {currentMission.dir === 'East' ? 'moved back' : 'moved forward'} by one day.
-                          </div>
-                          {animProgress >= 1 && (
-                            <button onClick={() => {
-                              setIdlMission(m => m + 1);
-                              setIdlAnimState('ready');
-                              setIdlAnswer(null);
-                            }} style={{ padding: '12px 24px', background: '#0E3556', color: '#fff', fontSize: '16px', fontWeight: 700, border: 'none', borderRadius: '12px', cursor: 'pointer' }}>
-                              Next Mission →
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                /* Completion Screen */
-                <div style={{ flex: 1, background: '#fff', borderRadius: '24px', padding: '40px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', animation: 'scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}>
-                  <div style={{ fontSize: '64px', marginBottom: '16px' }}>🏆</div>
-                  <h2 style={{ fontSize: '32px', fontWeight: 900, color: '#0E3556', margin: '0 0 16px' }}>Congratulations!</h2>
-                  <div style={{ fontSize: '16px', color: '#475569', textAlign: 'center', maxWidth: '400px', lineHeight: 1.6, marginBottom: '32px' }}>
-                    You discovered one of the most interesting facts in Geography. Now you know why calendars change while travelling around the world!
-                  </div>
-                  
-                  <div style={{ display: 'flex', gap: '24px', marginBottom: '40px' }}>
-                    <div style={{ background: '#f0fdf4', border: '2px solid #86efac', borderRadius: '16px', padding: '16px 24px', textAlign: 'center' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross East ⬅</div>
-                      <div style={{ fontSize: '16px', fontWeight: 900, color: '#15803d' }}>Previous Day</div>
-                    </div>
-                    <div style={{ background: '#f0fdf4', border: '2px solid #86efac', borderRadius: '16px', padding: '16px 24px', textAlign: 'center' }}>
-                      <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross West ➡</div>
-                      <div style={{ fontSize: '16px', fontWeight: 900, color: '#15803d' }}>Next Day</div>
-                    </div>
-                  </div>
-
-                  <button onClick={() => {
-                    // Could navigate back to start, or show a completion check.
-                    setActiveTab('tz');
-                  }} style={{ padding: '16px 32px', fontSize: '18px', fontWeight: 700, background: '#16a34a', color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 8px 16px rgba(22,163,74,0.3)' }}>
-                    Finish Chapter ➔
-                  </button>
-                </div>
-              )}
+          {step.keyIdea && (
+            <div className="dark-key-idea-box">
+              <div className="dark-key-idea-title">KEY IDEA</div>
+              <div className="dark-key-idea-text">{step.keyIdea}</div>
             </div>
           )}
         </div>

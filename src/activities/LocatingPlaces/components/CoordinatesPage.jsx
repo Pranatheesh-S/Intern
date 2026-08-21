@@ -1,0 +1,395 @@
+import React, { useState } from 'react';
+import Globe3D from './Globe3D';
+import CoordinatesMinigame from './CoordinatesMinigame';
+import './CoordinatesPageBook.css';
+import './CoordinatesPageDark.css';
+
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Sphere, Line } from '@react-three/drei';
+import * as THREE from 'three';
+
+const OrangeModel = () => {
+  const orangeRef = React.useRef();
+  
+  useFrame((state, delta) => {
+    if (orangeRef.current) {
+      // Just set a nice static viewing angle so the leaf and stem are clearly visible
+      orangeRef.current.rotation.y = 0.5;
+      orangeRef.current.rotation.x = 0.2;
+    }
+  });
+
+  const meridians = [];
+  const radius = 1;
+  for (let i = 0; i < 12; i++) {
+    const lon = i * 30;
+    const points = [];
+    for (let lat = 90; lat >= -90; lat -= 5) {
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lon) * (Math.PI / 180);
+      points.push(new THREE.Vector3(
+        radius * 1.01 * Math.sin(phi) * Math.sin(theta),
+        radius * 1.01 * Math.cos(phi),
+        radius * 1.01 * Math.sin(phi) * Math.cos(theta)
+      ));
+    }
+    meridians.push(
+      <Line key={i} points={points} color="#ffed4a" lineWidth={2} transparent opacity={0.6} />
+    );
+  }
+
+  return (
+    <group ref={orangeRef}>
+      <Sphere args={[radius, 32, 32]}>
+        <meshStandardMaterial color="#f97316" roughness={0.8} />
+      </Sphere>
+      
+      {/* Stem */}
+      <mesh position={[0, radius + 0.04, 0]}>
+        <cylinderGeometry args={[0.02, 0.04, 0.15, 8]} />
+        <meshStandardMaterial color="#4a2e15" roughness={0.9} />
+      </mesh>
+      
+      {/* Leaf */}
+      <mesh position={[0.22, radius + 0.08, 0.1]} rotation={[0.2, -0.4, 0.3]} scale={[0.3, 0.03, 0.15]}>
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshStandardMaterial color="#16a34a" roughness={0.5} />
+      </mesh>
+
+      {meridians}
+    </group>
+  );
+};
+
+const Orange3D = () => {
+  return (
+    <div style={{ width: '100%', height: '180px', margin: '20px 0', background: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+      <Canvas camera={{ position: [0, 0, 3], fov: 45 }}>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} intensity={1.5} color="#fff" />
+        <directionalLight position={[-5, -5, -5]} intensity={0.5} color="#fff" />
+        <OrangeModel />
+      </Canvas>
+    </div>
+  );
+};
+
+const stepsData = [
+  {
+    stepNum: 1,
+    title: "Return to the Globe",
+    paragraphs: [
+      "Let us look closely at a globe — a small model of our round Earth. Because a ball has no corners or edges, we cannot simply say a place is \"in the corner\".",
+      "To pinpoint any place exactly, mapmakers imagine a network of lines drawn across the globe. Over the next steps we will draw those lines one by one."
+    ],
+    keyIdea: "The lines on a globe are imaginary — we only picture them to help locate places.",
+    task: 0, lat: 0
+  },
+  {
+    stepNum: 2,
+    title: "The North & South Poles",
+    paragraphs: [
+      "Rotate the globe and two points stay fixed — one at the very top and one at the very bottom. These are the North Pole and the South Pole.",
+      "The Earth spins around an imaginary rod that joins them, called its axis (shown in gold). The poles are our starting references for every other line."
+    ],
+    keyIdea: "The North Pole and South Pole are the two fixed ends of Earth's axis.",
+    task: 4, lat: 0
+  },
+  {
+    stepNum: 3,
+    title: "The Equator",
+    paragraphs: [
+      "Exactly halfway between the two poles is a circle that runs right around the middle of the Earth. This is the Equator.",
+      "It is the largest circle on the globe and divides the Earth into a Northern half and a Southern half. Its value is 0°."
+    ],
+    keyIdea: "The Equator is the halfway circle between the poles — latitude 0°.",
+    task: 1, lat: 0
+  },
+  {
+    stepNum: 4,
+    title: "What is Latitude?",
+    paragraphs: [
+      "Imagine you stand on the Equator and travel towards one of the poles. Your distance from the Equator keeps increasing.",
+      "Latitude is exactly this — a measure of how far north or south of the Equator a place is."
+    ],
+    keyIdea: "Latitude measures your distance north or south of the Equator.",
+    task: 1, lat: 0
+  },
+  {
+    stepNum: 5,
+    title: "Parallels of Latitude",
+    paragraphs: [
+      "At any point on that journey you can draw an imaginary line running east-west, parallel to the Equator. Such a line is called a parallel of latitude, and it forms a circle around the Earth.",
+      "The Equator is the largest of these circles; the parallels grow smaller as we move towards either pole."
+    ],
+    keyIdea: "A parallel of latitude runs east-west and makes a circle; the circles shrink towards the poles.",
+    task: 5, lat: 0 
+  },
+  {
+    stepNum: 6,
+    title: "Latitude in Degrees",
+    paragraphs: [
+      <span key="1">Latitudes are written in <strong>degrees</strong>. By convention, the Equator is latitude <strong>0°</strong>.</span>,
+      <span key="2">The two poles are the highest latitudes — <strong>90° North</strong> and <strong>90° South</strong>, written <strong>90°N</strong> and <strong>90°S</strong>. So latitude runs from 0° up to 90° on each side.</span>
+    ],
+    keyIdea: <span key="ki6">Equator = <strong>0°</strong> · North Pole = <strong>90°N</strong> · South Pole = <strong>90°S</strong>.</span>,
+    task: 7, lat: 0 
+  },
+  {
+    stepNum: 7,
+    title: "Latitude and Climate",
+    paragraphs: [
+      <span key="1">Latitude is linked to <strong>climate</strong>. The coloured belts on the globe show the three zones. Near the Equator it is generally <strong>hot</strong> — the <strong>torrid</strong> zone (orange), bounded by the <strong>Tropic of Cancer</strong> (23½°N) and <strong>Tropic of Capricorn</strong> (23½°S).</span>,
+      <div key="2" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '12px 0' }}>
+        <span style={{ background: '#f97316', color: '#fff', padding: '4px 12px', borderRadius: '16px', fontSize: '13px', fontWeight: 'bold' }}>Torrid - hot</span>
+        <span style={{ background: '#22c55e', color: '#fff', padding: '4px 12px', borderRadius: '16px', fontSize: '13px', fontWeight: 'bold' }}>Temperate - mild</span>
+        <span style={{ background: '#3b82f6', color: '#fff', padding: '4px 12px', borderRadius: '16px', fontSize: '13px', fontWeight: 'bold' }}>Frigid - cold</span>
+      </div>,
+      <span key="3">Moving away from the Equator the climate becomes <strong>temperate</strong> (green, mild); beyond the <strong>Arctic Circle</strong> (66½°N) and <strong>Antarctic Circle</strong> (66½°S) it is <strong>frigid</strong> (blue, very cold). Latitude also helps explain the <strong>seasons</strong>.</span>
+    ],
+    keyIdea: <span key="ki7">Torrid (hot) near the Equator → Temperate (mild) → Frigid (cold) near the poles.</span>,
+    task: 8, lat: 0 
+  },
+  {
+    stepNum: 8,
+    title: "The Prime Meridian",
+    paragraphs: [
+      <span key="1">Longitude needs a <strong>starting line</strong>, just as latitude has the Equator. That line is the <strong>Prime Meridian</strong>.</span>,
+      <span key="2">In <strong>1884</strong>, nations agreed that the meridian passing through <strong>Greenwich</strong>, in London, would be the international standard — so it is also called the <strong>Greenwich Meridian</strong>. It is marked <strong>0° longitude</strong>.</span>
+    ],
+    keyIdea: <span key="ki8">The <strong>Prime Meridian</strong> (through Greenwich, London) is the <strong>0°</strong> starting line for longitude.</span>,
+    task: 2, lon: 0 
+  },
+  {
+    stepNum: 9,
+    title: "What is Longitude?",
+    paragraphs: [
+      <span key="1">Now imagine standing on the Prime Meridian and travelling <strong>east or west</strong> along the Equator. Your <strong>distance</strong> from the Prime Meridian keeps increasing.</span>,
+      <span key="2"><strong>Longitude</strong> is exactly this — a measure of how far <strong>east or west</strong> of the Prime Meridian a place is.<br/><br/><span style={{opacity: 0.8}}>(Latitude measured distance <strong>north–south</strong>; longitude measures it <strong>east–west</strong>.)</span></span>
+    ],
+    keyIdea: <span key="ki9">Longitude measures your distance <strong>east or west</strong> of the Prime Meridian.</span>,
+    task: 2, lon: 0 
+  },
+  {
+    stepNum: 10,
+    title: "Meridians of Longitude",
+    paragraphs: [
+      <span key="1">Travel from the <strong>North Pole to the South Pole</strong> by the shortest line. Whether you pass through Europe and Africa or through Asia, the distance is the <strong>same</strong>. These pole-to-pole lines are the <strong>meridians of longitude</strong> — all <strong>half-circles</strong> that meet at the two poles.</span>,
+      <Orange3D key="2" />,
+      <span key="3">An orange 🍊 — its segment lines run pole to pole, just like meridians.</span>
+    ],
+    keyIdea: <span key="ki10">Meridians of longitude are half-circles from pole to pole — like the segment lines of an <strong>orange</strong>.</span>,
+    task: 3, gridLat: 0, gridLon: 0
+  },
+  {
+    stepNum: 11,
+    title: "Longitude in Degrees",
+    paragraphs: [
+      <span key="1">Longitude is measured in <strong>degrees</strong>, from <strong>0° to 180°</strong>, adding <strong>E</strong> for east or <strong>W</strong> for west of the Prime Meridian.</span>,
+      <span key="2">For example, <strong>New York</strong> is <strong>74°W</strong>, <strong>Delhi</strong> is <strong>77°E</strong>, and <strong>Tokyo</strong> is <strong>140°E</strong> — shown by the <strong style={{color: '#f97316'}}>orange pins</strong> on the globe.</span>
+    ],
+    keyIdea: <span key="ki11">Longitude runs <strong>0° to 180°</strong>, East or West — e.g. Delhi <strong>77°E</strong>, New York <strong>74°W</strong>, Tokyo <strong>140°E</strong>.</span>,
+    task: 6, lon: 77 
+  },
+  {
+    stepNum: 12,
+    title: "Longitude and Time",
+    paragraphs: [
+      <span key="1">The Earth spins on its axis. Picture a lamp as the <strong>Sun</strong> lighting one side of the globe. As the Earth turns <strong>eastward</strong>, it is morning for some places, midday for others, and night for the rest.</span>,
+      <span key="2">So when it is breakfast time in one country, it is lunchtime in another and people are asleep in a third. That is why a place’s <strong>longitude</strong> also tells us its <strong>time</strong>.</span>
+    ],
+    keyIdea: <span key="ki12">Because the Earth spins, <strong>longitude is closely linked to the time</strong> of day.</span>,
+    task: 16, gridLat: 0, gridLon: 0
+  },
+  {
+    stepNum: 13,
+    title: "Finding Any Place",
+    paragraphs: [
+      <span key="1">Put the parallels and the meridians together and they form a complete net — the <strong>global grid</strong>, or <strong>graticule</strong>. Every place now sits where one line of latitude <strong>crosses</strong> one line of longitude.</span>,
+      <span key="2">We give its <strong>latitude first</strong>, then its <strong>longitude</strong>. For example, <strong>New Delhi</strong> is <strong>28.6°N, 77.2°E</strong> — a single, exact address.</span>
+    ],
+    keyIdea: <span key="ki13">Any place = (<strong>latitude, longitude</strong>) — latitude always written first.</span>,
+    task: 10, gridLat: 28.6, gridLon: 77.2 
+  },
+  {
+    stepNum: 14,
+    title: "India's Ancient Prime Meridian",
+    paragraphs: [
+      <span key="1">Travel back more than <strong>1,500 years</strong>! Long before Greenwich was chosen as the global standard, ancient Indian astronomers needed a central reference line to map the stars and calculate time.</span>,
+      <span key="2">They established their own Prime Meridian running through the ancient city of <strong>Ujjayini</strong> (modern-day Ujjain). Great scholars like <strong>Aryabhata</strong> and <strong>Varahamihira</strong> used this central meridian for all their brilliant astronomical calculations.</span>
+    ],
+    keyIdea: <span key="ki14"><strong>Ujjayini</strong> served as the Prime Meridian of ancient India over 1,500 years ago.</span>,
+    task: 9
+  },
+  {
+    stepNum: 15,
+    title: "Western & Eastern Hemispheres",
+    paragraphs: [
+      <span key="1">Cut the globe along the <strong>Prime Meridian (0&deg;)</strong> and the <strong>180&deg;</strong> line, and it falls into two halves that we can see <strong>fully</strong>.</span>,
+      <span key="2">The left half (blue) is the <strong>Western Hemisphere</strong> (0&deg;&ndash;180&deg; West); the right half (orange) is the <strong>Eastern Hemisphere</strong> (0&deg;&ndash;180&deg; East). India lies in the Eastern Hemisphere.</span>
+    ],
+    keyIdea: <span key="ki15">The <strong>Prime Meridian</strong> splits Earth into the <strong>Western</strong> and <strong>Eastern</strong> hemispheres.</span>,
+    task: 11
+  },
+  {
+    stepNum: 16,
+    title: "Northern & Southern Hemispheres",
+    paragraphs: [
+      <span key="1">Now cut the globe along the <strong>Equator (0&deg;)</strong> instead. Again it opens into two halves shown <strong>fully</strong>.</span>,
+      <span key="2">The top half (green) is the <strong>Northern Hemisphere</strong>; the bottom half (purple) is the <strong>Southern Hemisphere</strong>. India lies in the Northern Hemisphere.</span>
+    ],
+    keyIdea: <span key="ki16">The <strong>Equator</strong> splits Earth into the <strong>Northern</strong> and <strong>Southern</strong> hemispheres.</span>,
+    task: 12
+  },
+  {
+    stepNum: 17,
+    title: "The Four Quarters",
+    paragraphs: [
+      <span key="1">Use <strong>both</strong> dividing lines at once and the globe splits into <strong>four quarters</strong>: Northern-Eastern, Northern-Western, Southern-Eastern and Southern-Western.</span>,
+      <span key="2">Every place on Earth sits in exactly <strong>one</strong> of these quarters.</span>
+    ],
+    keyIdea: <span key="ki17">The Equator and the Prime Meridian together divide Earth into <strong>four</strong> quarters.</span>,
+    task: 13
+  }
+];
+
+export default function CoordinatesPage({ onNextActivity, onBack }) {
+  const [currentStepIdx, setCurrentStepIdx] = useState(0);
+  const totalGlobeSteps = 17;
+  const totalPages = totalGlobeSteps + 2; // 1 (intro) + 1 (minigame) + 17 (globe) = 19
+
+  const handleNext = () => {
+    if (currentStepIdx < totalPages - 1) {
+      setCurrentStepIdx(c => c + 1);
+    } else {
+      if (onNextActivity) onNextActivity();
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentStepIdx > 0) {
+      setCurrentStepIdx(c => c - 1);
+    } else {
+      if (onBack) onBack();
+    }
+  };
+
+  if (currentStepIdx === 0) {
+    return (
+      <div className="coords-page">
+        <div className="coords-book">
+          <div className="coords-main-content">
+            {/* Left Page */}
+            <div className="coords-left">
+              <div className="coords-eyebrow">CHAPTER 1 &bull; CLASS 6 SOCIAL SCIENCE</div>
+              <h1 className="coords-chtitle">Locating Places<br/>on the Earth</h1>
+              <div className="coords-illus" style={{ position: 'relative', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', border: '1px solid #334155', boxShadow: 'inset 0 0 30px rgba(0,0,0,0.8)', overflow: 'hidden', padding: 0 }}>
+                <img src="/coordinate_grid_globe_wide.jpg" alt="Grid Coordinate System Globe" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+            </div>
+            
+            {/* Right Page */}
+            <div className="coords-right">
+              <div className="coords-rhead" style={{ fontSize: '32px' }}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                UNDERSTANDING COORDINATES
+              </div>
+              <div className="coords-content">
+                <div className="coords-task-container" style={{ justifyContent: 'flex-start', paddingTop: '10px' }}>
+                  <div className="coords-hero" style={{ padding: '32px' }}>
+                    <h3 style={{ marginBottom: '20px', fontSize: '28px' }}>Understanding Coordinates</h3>
+                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>
+                      Imagine a big market with neat rows of shops. If you tell a friend, "Meet me at the 7th shop in the 5th row," they can find you instantly.
+                    </p>
+                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>
+                      Similarly, in a game of chess, players record their moves using letters (a-h) and numbers (1-8). By saying "d4", they pinpoint one exact square on the board.
+                    </p>
+                    <p style={{ fontSize: '18px', lineHeight: '1.7' }}>
+                      To locate a place precisely, we always need <strong>two pieces of information</strong> to form a coordinate.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="coords-rfoot">
+            <div className="coords-pageind" style={{ fontSize: '16px' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              Page 1 of {totalPages}
+            </div>
+            <button className="coords-next" onClick={handleNext} style={{ fontSize: '16px', padding: '12px 26px' }}>
+              Next Page &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentStepIdx === 1) {
+    return (
+      <CoordinatesMinigame 
+        onComplete={handleNext}
+        onBack={handlePrev}
+      />
+    );
+  }
+
+  const activeGlobeIdx = currentStepIdx - 2;
+
+  const step = stepsData[activeGlobeIdx] || stepsData[stepsData.length - 1];
+
+  const getTopTitle = () => {
+    if (activeGlobeIdx >= 14) return "Hemispheres — How the Earth is Divided";
+    return "The Global Grid — Latitude & Longitude";
+  };
+
+  return (
+    <div className="dark-coords-page">
+      <div className="dark-coords-main-content">
+        <div className="dark-coords-left">
+          <div className="dark-top-title">{getTopTitle()}</div>
+          
+          <div className="dark-globe-container">
+            <Globe3D 
+              currentTask={step.task} 
+              latVal={step.lat} 
+              lonVal={step.lon || 0} 
+              gridLat={step.gridLat || 0} 
+              gridLon={step.gridLon || 0} 
+            />
+          </div>
+
+          <div className="dark-bottom-nav">
+            <button className="dark-nav-btn" onClick={handlePrev}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+              Back
+            </button>
+            <div className="dark-nav-dots">
+              {Array.from({ length: totalGlobeSteps }).map((_, i) => (
+                <div key={i} className={`dark-nav-dot ${i === activeGlobeIdx ? 'active' : ''}`} />
+              ))}
+            </div>
+            <button className="dark-nav-btn next" onClick={handleNext}>
+              {activeGlobeIdx === totalGlobeSteps - 1 ? 'Finish' : 'Next'}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div className="dark-coords-right">
+          <div className="dark-step-eyebrow">STEP {activeGlobeIdx + 1} OF {totalGlobeSteps}</div>
+          <h2 className="dark-step-title">{step.title}</h2>
+          
+          {step.paragraphs.map((p, idx) => (
+            <div key={idx} className="dark-step-text">{p}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

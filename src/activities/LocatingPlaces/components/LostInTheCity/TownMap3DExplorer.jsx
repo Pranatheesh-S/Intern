@@ -917,7 +917,6 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           50%  { transform: scale(0.65); opacity: 0.35; }
           100% { transform: scale(1.15); opacity: 0.85; }
         }
-
         /* 9. Footstep Dust Ripples */
         @keyframes stepDustLeft {
           0%, 45% { r: 2px; opacity: 0; }
@@ -1214,7 +1213,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                       r={isCur ? 9 : 4.5}
                       fill={isCur ? '#F59E0B' : isSeen ? '#64748B' : '#1E293B'}
                       stroke="#FFFFFF"
-                      strokeWidth={isCur ? 2 : 1}
+                      strokeWidth={2}
                       opacity={isCur ? 1 : 0.6}
                       style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.5))' }}
                     />

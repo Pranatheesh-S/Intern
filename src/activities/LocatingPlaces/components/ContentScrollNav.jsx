@@ -110,9 +110,9 @@ export function PageBar({ currentPage = 0, pageCount = 1, onPageUp, onPageDown, 
           disabled={last}
           title="Next page"
           style={{
-            ...barBtn, gap: '10px', border: 'none', background: '#0E3556', color: '#fff',
+            ...barBtn, gap: '10px', border: 'none', background: '#F59E0B', color: '#fff',
             cursor: 'pointer', padding: '12px 26px', borderRadius: '999px',
-            boxShadow: '0 6px 16px rgba(14,42,69,.25)',
+            boxShadow: '0 6px 16px rgba(245,158,11,.38)',
             opacity: last ? 0 : 1, pointerEvents: last ? 'none' : 'auto'
           }}
         >
