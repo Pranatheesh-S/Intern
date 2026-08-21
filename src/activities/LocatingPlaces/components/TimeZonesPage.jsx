@@ -190,7 +190,7 @@ export default function TimeZonesPage() {
 
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif', overflow: 'hidden' }}>
       <style>{`
         .tab-btn { flex: 1; font-family: inherit; font-weight: 700; cursor: pointer; border: none; background: transparent; color: var(--text-muted, #5c6b7a); border-radius: 10px; padding: 11px 8px; font-size: clamp(12px, 1.3vw, 14.5px); transition: all 0.2s; display: flex; flexDirection: column; gap: 1px; align-items: center; }
         .tab-btn.active { background: var(--navy, #0E3556); color: #fff; }
@@ -221,7 +221,7 @@ export default function TimeZonesPage() {
       `}</style>
       
       {/* Sub-tabs */}
-      <div style={{ display: 'flex', gap: '6px', background: '#fff', borderRadius: '14px', padding: '6px', boxShadow: '0 8px 24px rgba(14,42,69,.1)', flexShrink: 0, marginBottom: '16px' }}>
+      <div style={{ display: 'flex', gap: '6px', background: '#fff', borderRadius: '14px', padding: '4px', boxShadow: '0 8px 24px rgba(14,42,69,.1)', flexShrink: 0, marginBottom: '10px' }}>
         {tabs.map(t => (
           <button key={t.id} className={`tab-btn ${activeTab === t.id ? 'active' : ''}`} onClick={() => setActiveTab(t.id)}>
             {t.label}
@@ -230,15 +230,15 @@ export default function TimeZonesPage() {
         ))}
       </div>
 
-      <div className="panels-container" style={{ flex: 1, display: 'flex', gap: '18px', minHeight: 0 }}>
+      <div className="panels-container" style={{ flex: 1, display: 'flex', gap: '12px', minHeight: 0, overflow: 'hidden' }}>
         {/* LEFT PANEL */}
-        <div className="panel-left" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.4 : 0.82, background: activeTab === 'std' ? '#fff' : 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRadius: '16px', padding: '24px', overflowY: 'auto', boxShadow: activeTab === 'std' ? '0 4px 12px rgba(0,0,0,0.05)' : '0 16px 40px rgba(14,42,69,.12)' }}>
+        <div className="panel-left" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.4 : 0.82, background: activeTab === 'std' ? '#fff' : 'linear-gradient(160deg, #F7F1E2, #EFE6D2)', borderRadius: '16px', padding: '16px', overflow: 'hidden', boxShadow: activeTab === 'std' ? '0 4px 12px rgba(0,0,0,0.05)' : '0 16px 40px rgba(14,42,69,.12)' }}>
           {activeTab === 'tz' && (
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Big Question 3 · (a)</div>
-              <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '32px', margin: '8px 0 16px' }}>Understanding time zones</h1>
+              <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '24px', margin: '6px 0 10px' }}>Understanding time zones</h1>
               
-              <ul style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '24px', paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <ul style={{ fontSize: '13.5px', lineHeight: 1.5, marginBottom: '14px', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <li>Earth rotates once every <b style={{ color: '#0E3556' }}>24 hours</b>.</li>
                 <li>Earth has <b style={{ color: '#0E3556' }}>360°</b> of longitude.</li>
                 <li>Every <b style={{ color: '#0E3556' }}>15°</b> of longitude equals <b style={{ color: '#0E3556' }}>1 hour</b>.</li>
@@ -256,10 +256,10 @@ export default function TimeZonesPage() {
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, paddingRight: '8px' }}>
               
               {/* SECTION 1 */}
-              <div style={{ marginBottom: '24px' }}>
-                <h2 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '26px', margin: '0 0 16px' }}>Why is the time different?</h2>
+              <div style={{ marginBottom: '12px' }}>
+                <h2 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '20px', margin: '0 0 10px' }}>Why is the time different?</h2>
                 
-                <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '20px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '12px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <div style={{ fontSize: '32px', marginBottom: '8px' }}>☀️</div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', gap: '16px', marginTop: '16px' }}>
                     <div style={{ flex: 1, background: '#fff', padding: '12px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', textAlign: 'center', position: 'relative' }}>
@@ -276,18 +276,18 @@ export default function TimeZonesPage() {
                   </div>
                 </div>
                 
-                <p style={{ fontSize: '15px', lineHeight: 1.55, color: '#334155', marginTop: '16px', marginBottom: 0 }}>
+                <p style={{ fontSize: '13px', lineHeight: 1.45, color: '#334155', marginTop: '8px', marginBottom: 0 }}>
                   Places in the east see the Sun earlier because the Earth rotates from west to east.
                 </p>
               </div>
 
               {/* SECTION 2 */}
-              <div style={{ background: '#fef3c7', borderRadius: '16px', padding: '20px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(253, 230, 138, 0.4)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                  <div style={{ fontSize: '20px' }}>⚠️</div>
-                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#92400e' }}>If every city followed its own local time...</h3>
+              <div style={{ background: '#fef3c7', borderRadius: '12px', padding: '12px', marginBottom: '12px', boxShadow: '0 4px 12px rgba(253, 230, 138, 0.4)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+                  <div style={{ fontSize: '16px' }}>⚠️</div>
+                  <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: '#92400e' }}>If every city followed its own local time...</h3>
                 </div>
-                <ul style={{ margin: 0, paddingLeft: '24px', fontSize: '15px', color: '#92400e', display: 'flex', flexDirection: 'column', gap: '8px', lineHeight: 1.4 }}>
+                <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '13px', color: '#92400e', display: 'flex', flexDirection: 'column', gap: '4px', lineHeight: 1.4 }}>
                   <li>School timings would be confusing.</li>
                   <li>Train timings would be different in every city.</li>
                   <li>People would find it difficult to plan meetings.</li>
@@ -295,13 +295,13 @@ export default function TimeZonesPage() {
               </div>
 
               {/* SECTION 3 */}
-              <div style={{ background: '#dcfce7', borderRadius: '16px', padding: '20px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(134, 239, 172, 0.3)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                  <div style={{ fontSize: '20px' }}>🇮🇳</div>
-                  <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: '#166534' }}>Indian Standard Time (IST)</h3>
+              <div style={{ background: '#dcfce7', borderRadius: '12px', padding: '12px', marginBottom: '12px', boxShadow: '0 4px 12px rgba(134, 239, 172, 0.3)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                  <div style={{ fontSize: '16px' }}>🇮🇳</div>
+                  <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#166534' }}>Indian Standard Time (IST)</h3>
                 </div>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.6)', padding: '16px', borderRadius: '12px', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.6)', padding: '10px', borderRadius: '10px', marginBottom: '8px' }}>
                   <div style={{ fontSize: '14px', fontWeight: 600, color: '#166534', background: '#fff', padding: '6px 12px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Different Local Times</div>
                   <div style={{ fontSize: '16px', color: '#15803d', fontWeight: 900 }}>↓</div>
                   <div style={{ fontSize: '14px', fontWeight: 600, color: '#166534', background: '#fff', padding: '6px 12px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>One Common Time</div>
@@ -309,20 +309,20 @@ export default function TimeZonesPage() {
                   <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff', background: '#16a34a', padding: '8px 16px', borderRadius: '20px', boxShadow: '0 4px 6px rgba(22, 163, 74, 0.2)' }}>Indian Standard Time (IST)</div>
                 </div>
                 
-                <p style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#166534', textAlign: 'center', lineHeight: 1.4 }}>
+                <p style={{ margin: 0, fontSize: '13px', fontWeight: 700, color: '#166534', textAlign: 'center', lineHeight: 1.35 }}>
                   Everyone in India follows one common time called IST.
                 </p>
               </div>
 
               {/* SECTION 4 */}
-              <div style={{ background: '#e0f2fe', borderRadius: '16px', padding: '20px', boxShadow: '0 4px 12px rgba(125, 211, 252, 0.3)' }}>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+              <div style={{ background: '#e0f2fe', borderRadius: '12px', padding: '12px', boxShadow: '0 4px 12px rgba(125, 211, 252, 0.3)' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
                   <div style={{ fontSize: '18px', fontWeight: 800, color: '#0369a1' }}>GMT</div>
                   <div style={{ fontSize: '14px', fontWeight: 600, color: '#0284c7', background: '#fff', padding: '4px 12px', borderRadius: '20px' }}>+5 hours 30 minutes</div>
                   <div style={{ fontSize: '18px', fontWeight: 800, color: '#0369a1' }}>IST</div>
                 </div>
                 
-                <p style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: '#075985', textAlign: 'center', lineHeight: 1.4 }}>
+                <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: '#075985', textAlign: 'center', lineHeight: 1.35 }}>
                   India's Standard Time is 5 hours 30 minutes ahead of Greenwich Mean Time (GMT).
                 </p>
               </div>
@@ -332,36 +332,36 @@ export default function TimeZonesPage() {
           {activeTab === 'idl' && (
             <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '8px' }}>
               <div style={{ fontFamily: 'monospace', fontSize: '11px', letterSpacing: '.2em', textTransform: 'uppercase', color: '#F5A623', fontWeight: 600 }}>Time zones & the date</div>
-              <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '32px', margin: '8px 0 24px', lineHeight: 1.2 }}>THE INTERNATIONAL DATE LINE</h1>
+              <h1 style={{ fontFamily: 'Georgia, serif', fontWeight: 900, color: '#0E3556', fontSize: '24px', margin: '6px 0 14px', lineHeight: 1.2 }}>THE INTERNATIONAL DATE LINE</h1>
               
-              <p style={{ fontSize: '15px', lineHeight: 1.55, marginBottom: '24px', color: '#334155' }}>
+              <p style={{ fontSize: '13.5px', lineHeight: 1.5, marginBottom: '14px', color: '#334155' }}>
                 The Earth is divided into time zones. Countries choose one standard time for everyday life. Opposite the Prime Meridian, near <b>180° longitude</b>, lies a special imaginary line called the <b>International Date Line</b>. When people cross this line, the date changes.
               </p>
 
-              <div style={{ background: '#f0fdf4', borderRadius: '16px', padding: '24px', border: '2px solid #86efac', boxShadow: '0 4px 12px rgba(134, 239, 172, 0.2)', marginBottom: '24px' }}>
-                <div style={{ fontSize: '18px', fontWeight: 800, color: '#166534', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ background: '#f0fdf4', borderRadius: '12px', padding: '14px', border: '2px solid #86efac', boxShadow: '0 4px 12px rgba(134, 239, 172, 0.2)', marginBottom: '10px' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   ⭐ Remember
                 </div>
-                <div style={{ display: 'flex', gap: '16px' }}>
-                  <div style={{ flex: 1, background: '#fff', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #bbf7d0' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '8px' }}>Cross East ⬅</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#15803d' }}>Subtract one day</div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <div style={{ flex: 1, background: '#fff', borderRadius: '10px', padding: '10px', textAlign: 'center', border: '1px solid #bbf7d0' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross East ⬅</div>
+                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#15803d' }}>Subtract one day</div>
                   </div>
-                  <div style={{ flex: 1, background: '#fff', borderRadius: '12px', padding: '16px', textAlign: 'center', border: '1px solid #bbf7d0' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#166534', marginBottom: '8px' }}>Cross West ➡</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#15803d' }}>Add one day</div>
+                  <div style={{ flex: 1, background: '#fff', borderRadius: '10px', padding: '10px', textAlign: 'center', border: '1px solid #bbf7d0' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>Cross West ➡</div>
+                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#15803d' }}>Add one day</div>
                   </div>
                 </div>
               </div>
 
-              <div style={{ marginBottom: '24px' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0E3556', margin: '0 0 12px' }}>Why does this happen?</h3>
+              <div style={{ marginBottom: '10px' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#0E3556', margin: '0 0 6px' }}>Why does this happen?</h3>
                 <p style={{ fontSize: '14px', lineHeight: 1.55, color: '#475569', margin: 0 }}>
                   Imagine you travel around the Earth. When you reach the opposite side of the globe, the calendar needs to stay correct. So, the date changes when crossing the International Date Line.
                 </p>
               </div>
 
-              <div style={{ background: '#fef3c7', borderRadius: '16px', padding: '20px', marginBottom: '24px', boxShadow: '0 4px 12px rgba(253,230,138,0.3)', border: '1px solid #fde68a' }}>
+              <div style={{ background: '#fef3c7', borderRadius: '12px', padding: '12px', marginBottom: '10px', boxShadow: '0 4px 12px rgba(253,230,138,0.3)', border: '1px solid #fde68a' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <div style={{ fontSize: '20px' }}>🌍</div>
                   <div style={{ fontSize: '16px', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Did You Know?</div>
@@ -371,7 +371,7 @@ export default function TimeZonesPage() {
                 </div>
               </div>
 
-              <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '16px', border: '1px solid #e2e8f0', marginBottom: '24px' }}>
+              <div style={{ background: '#f8fafc', borderRadius: '10px', padding: '10px', border: '1px solid #e2e8f0', marginBottom: '10px' }}>
                 <div style={{ fontSize: '14px', fontWeight: 800, color: '#334155', marginBottom: '12px' }}>Countries with Multiple Time Zones</div>
                 <div style={{ display: 'flex', gap: '16px', marginBottom: '8px' }}>
                   <div style={{ flex: 1, fontSize: '13px', color: '#475569' }}>🇷🇺 <b>Russia</b> → 11 Time Zones</div>
@@ -395,12 +395,12 @@ export default function TimeZonesPage() {
         </div>
 
         {/* RIGHT PANEL */}
-        <div className="panel-right" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.6 : 1.18, background: activeTab === 'std' ? '#F7FAFC' : (activeTab === 'tz' ? '#F7FAFC' : '#fff'), borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', overflowY: 'auto', boxShadow: activeTab === 'std' ? 'none' : '0 16px 40px rgba(14,42,69,.12)' }}>
+        <div className="panel-right" style={{ flex: (activeTab === 'std' || activeTab === 'idl') ? 0.6 : 1.18, background: activeTab === 'std' ? '#F7FAFC' : (activeTab === 'tz' ? '#F7FAFC' : '#fff'), borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: activeTab === 'std' ? 'none' : '0 16px 40px rgba(14,42,69,.12)' }}>
           {activeTab === 'tz' && (
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-              <h2 style={{ fontSize: '22px', fontWeight: 700, color: '#0E3556', margin: '0 0 16px', textAlign: 'center' }}>Local Time Explorer</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#0E3556', margin: '0 0 10px', textAlign: 'center' }}>Local Time Explorer</h2>
               
-              <div style={{ flex: 1, display: 'grid', placeItems: 'center', background: '#fff', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', padding: '16px', marginBottom: '24px' }}>
+              <div style={{ flex: 1, display: 'grid', placeItems: 'center', background: '#fff', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', padding: '10px', marginBottom: '10px' }}>
                 {renderTZExplorer()}
                 
                 <div style={{ textAlign: 'center', marginTop: '16px' }}>

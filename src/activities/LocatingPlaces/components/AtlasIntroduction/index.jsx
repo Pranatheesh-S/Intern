@@ -18,7 +18,7 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
       <div style={{
         width: '100%', 
         height: '100%',
-        minHeight: '600px',
+        minHeight: 0,
         display: 'flex', 
         flexDirection: 'column',
         background: 'linear-gradient(160deg, #F7F1E2 0%, #EFE6D2 100%)', 

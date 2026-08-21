@@ -35,11 +35,11 @@ export default function ChapterBackFooter({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '12px 2rem',
+      padding: '8px 1.25rem',
       borderTop: '1px solid #d6e0ec',
       background: '#ffffff',
       flexShrink: 0,
-      gap: '12px'
+      gap: '10px'
     }}>
       <div style={{ flex: '0 0 auto' }}>
         {onBack ? (
@@ -52,14 +52,14 @@ export default function ChapterBackFooter({
               cursor: 'pointer',
               background: '#0E3556',
               color: '#fff',
-              padding: '12px 24px',
+              padding: '8px 16px',
               borderRadius: '999px',
-              fontSize: '14px',
+              fontSize: '13px',
               display: 'inline-flex',
-              gap: '8px',
+              gap: '6px',
               alignItems: 'center',
               transition: 'all .2s',
-              boxShadow: '0 10px 24px rgba(14,53,86,.25)'
+              boxShadow: '0 6px 16px rgba(14,53,86,.2)'
             }}
             onMouseOver={e => { e.currentTarget.style.background = '#124070'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
             onMouseOut={e => { e.currentTarget.style.background = '#0E3556'; e.currentTarget.style.transform = 'translateY(0)'; }}
@@ -90,9 +90,9 @@ export default function ChapterBackFooter({
               cursor: nextDisabled ? 'not-allowed' : 'pointer',
               background: nextDisabled ? '#c3cfdd' : nextStyle.background,
               color: nextStyle.color,
-              padding: '12px 24px',
+              padding: '8px 16px',
               borderRadius: '999px',
-              fontSize: '14px',
+              fontSize: '13px',
               display: 'inline-flex',
               gap: '8px',
               alignItems: 'center',

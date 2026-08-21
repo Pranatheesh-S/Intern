@@ -35,15 +35,15 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
   }
 
   return (
-    <div style={{ 
+    <div style={{
       position: 'fixed',
       top: 0,
       left: 0,
-      width: '100vw', 
-      height: '100vh', 
-      padding: 'clamp(16px, 2.5vh, 24px) clamp(16px, 2.5vw, 24px)', 
-      boxSizing: 'border-box', 
-      display: 'flex', 
+      width: '100vw',
+      height: '100vh',
+      padding: 'clamp(16px, 2.5vh, 24px) clamp(16px, 2.5vw, 24px)',
+      boxSizing: 'border-box',
+      display: 'flex',
       flexDirection: 'column',
       background: 'var(--background, #f8fafc)',
       zIndex: 50
@@ -92,10 +92,10 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
       </nav>
 
       {/* Main Content Area */}
-      <div style={{ 
+      <div style={{
         width: '100%',
         margin: '0 auto',
-        display: 'flex', 
+        display: 'flex',
         flex: 1,
         flexDirection: 'column',
         minHeight: 0

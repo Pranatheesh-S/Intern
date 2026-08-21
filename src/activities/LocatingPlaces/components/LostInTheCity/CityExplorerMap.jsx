@@ -24,162 +24,208 @@ import person3d from './assets/person_3d.png';
 const VIEW_W = 1400;
 const VIEW_H = 760;
 
-/* ── 1. EXACT ROAD CORRIDOR COORDINATES (100% ROAD-LOCKED) ────────── */
+/* ── 1. EXACT ROAD CORRIDOR COORDINATES (100% ASPHALT ROAD-LOCKED) ── */
 const ROAD_X = {
-  WEST: 310,       // West Avenue between Airport/Stadium and Cinema/Fire Station
-  CENTER_L: 510,   // Civic Way between Cinema/Fire Station and City Hospital/Offices
-  CENTER_R: 735,   // Grand Avenue between Hospital/Offices and Hotel/Bus Station
-  EAST: 1040,      // Port Lane east of Hotel/Bus Station
+  AIRPORT: 180,   // Airport Terminal Concourse Driveway on Northern Blvd
+  PARK:    250,   // Botanical Park Main Entrance Gate on Grand Ave
+  WEST:    405,   // West Avenue (marked 'WEST AVE' with yellow car)
+  MUSEUM:  560,   // Heritage Museum Portico Entrance Steps on Crossway
+  CINEMA:  560,   // Star Cinema Marquee Entrance on Grand Ave
+  CENTRAL: 690,   // Central Avenue (marked 'CENTRAL AVE' with white dash lines)
+  MALL:    870,   // City Mall Main Glass Entrance on Crossway
+  HOSPITAL:870,   // Metropolitan Hospital Roundabout Entrance on Grand Ave
+  EAST:    1045,  // East Avenue (between Mall/Hospital and Hotel/Bus Station)
+  HOTEL:   1170,  // Luxury Hotel Resort Driveway on Northern Blvd
+  PIER:    1225,  // Sunset Beach Boardwalk & Wooden Ocean Pier
 };
 
 const ROAD_Y = {
-  TOP: 255,        // Northern Boulevard running across the top road corridor
-  MID: 505,        // Central Avenue running across the middle road corridor
-  BOT: 735,        // Coastal Drive running along the shoreline
+  NORTH: 115,  // Northern Boulevard (marked 'NORTHERN BLVD' with cars)
+  MID:   325,  // Central Crossway (Asphalt crossroad between Museum/Mall and Cinema/Hospital)
+  SOUTH: 560,  // Grand Avenue (marked 'GRAND AVE' with cars, ON ASPHALT above beach sand)
+  PIER:  715,  // Sunset Beach Pier Dock (Wooden Boardwalk over water)
 };
 
-/* ── 2. PLACES CONFIGURATION (STRICTLY ON ASPHALT INTERSECTIONS) ─────── */
+/* ── 2. CLEAN ROAD-LOCKED PLACES WITH DEDICATED BUILDING ENTRANCE PATHS ── */
 const PLACES = [
-  // Row 0 (Y = 255: Northern Boulevard)
+  // ── ROW 1: Northern Boulevard (Y = 115) ──
   {
     id: 'AIRPORT',
-    name: 'Skyline Airport', full: 'Skyline International Airport',
-    x: ROAD_X.WEST, y: ROAD_Y.TOP,
+    name: 'Skyline Airport', full: 'Skyline International Airport Terminal Concourse',
+    x: ROAD_X.AIRPORT, y: ROAD_Y.NORTH,
     icon: '✈️', type: 'airport', start: true,
-    blurb: 'International runway terminal concourse at Northern Blvd.'
+    blurb: 'International passenger terminal entrance driveway on Northern Boulevard.'
   },
   {
-    id: 'CINEMA',
-    name: 'Star Cineplex', full: 'Star Cineplex Theatre',
-    x: ROAD_X.CENTER_L, y: ROAD_Y.TOP,
-    icon: '🎬', type: 'cinema',
-    blurb: 'Art deco premiere cinema junction at Northern Blvd & Civic Way.'
+    id: 'WEST_N',
+    name: 'West Avenue North', full: 'Northern Boulevard & West Avenue Junction',
+    x: ROAD_X.WEST, y: ROAD_Y.NORTH,
+    icon: '🧭', type: 'junction',
+    blurb: 'Main intersection connecting the Airport to West Avenue.'
+  },
+  {
+    id: 'MUSEUM_N',
+    name: 'Heritage Plaza North', full: 'Heritage Museum North Plaza & Central Avenue',
+    x: ROAD_X.CENTRAL, y: ROAD_Y.NORTH,
+    icon: '🏛️', type: 'junction',
+    blurb: 'Museum north garden intersection at Northern Blvd & Central Ave.'
+  },
+  {
+    id: 'MALL_N',
+    name: 'City Mall North', full: 'City Shopping Mall North Plaza & East Avenue',
+    x: ROAD_X.EAST, y: ROAD_Y.NORTH,
+    icon: '🛍️', type: 'junction',
+    blurb: 'Mall north concourse at Northern Blvd & East Ave.'
+  },
+  {
+    id: 'HOTEL_N',
+    name: 'Luxury Hotel Driveway', full: 'The Grand Luxury Hotel Resort Entrance',
+    x: ROAD_X.HOTEL, y: ROAD_Y.NORTH,
+    icon: '🏨', type: 'hotel',
+    blurb: '5-star skyscraper resort canopy entrance on Northern Boulevard.'
+  },
+
+  // ── ROW 2: Central Crossway (Y = 325) ──
+  {
+    id: 'STADIUM',
+    name: 'Olympic Stadium', full: 'Olympic Champions Stadium Main Entrance',
+    x: ROAD_X.WEST, y: ROAD_Y.MID,
+    icon: '🏟️', type: 'stadium',
+    blurb: 'Championship athletic arena entrance on West Avenue & Central Crossway.'
+  },
+  {
+    id: 'MUSEUM',
+    name: 'Heritage Museum', full: 'Royal Heritage Fine Arts Museum Main Steps',
+    x: ROAD_X.MUSEUM, y: ROAD_Y.MID,
+    icon: '🏛️', type: 'museum',
+    blurb: 'Classical museum grand entrance steps and plaza on Central Crossway.'
+  },
+  {
+    id: 'CENTRAL_M',
+    name: 'Central Plaza', full: 'Central Avenue & Crossway Junction',
+    x: ROAD_X.CENTRAL, y: ROAD_Y.MID,
+    icon: '🧭', type: 'junction',
+    blurb: 'Central city crossroads between Museum, Cinema, Mall, and Hospital.'
   },
   {
     id: 'MALL',
-    name: 'City Centre Mall', full: 'City Centre Shopping Mall',
-    x: ROAD_X.CENTER_R, y: ROAD_Y.TOP,
+    name: 'City Mall', full: 'City Centre Shopping Mall Main Glass Entrance',
+    x: ROAD_X.MALL, y: ROAD_Y.MID,
     icon: '🛍️', type: 'mall',
-    blurb: 'Glass retail atrium at Northern Blvd & Grand Avenue.'
+    blurb: 'Retail shopping galleria grand glass doors on Central Crossway.'
   },
   {
     id: 'HOTEL',
-    name: 'Grand Hotel', full: 'The Coastal Grand Luxury Hotel',
-    x: ROAD_X.EAST, y: ROAD_Y.TOP,
-    icon: '🏨', type: 'hotel',
-    blurb: 'Modern skyscraper hotel junction at Northern Blvd & Port Lane.'
+    name: 'Resort Concourse', full: 'Luxury Hotel & Bus Station Concourse',
+    x: ROAD_X.EAST, y: ROAD_Y.MID,
+    icon: '🧭', type: 'junction',
+    blurb: 'Resort boulevard junction on East Avenue & Central Crossway.'
   },
 
-  // Row 1 (Y = 505: Central Avenue)
+  // ── ROW 3: Grand Avenue (Y = 560) & Sunset Beach Pier (Y = 715) ──
   {
     id: 'PARK',
-    name: 'Greenfield Park', full: 'Greenfield Botanical City Park',
-    x: ROAD_X.WEST, y: ROAD_Y.MID,
+    name: 'Botanical Park', full: 'Greenfield Botanical Greenhouse Park Gate',
+    x: ROAD_X.PARK, y: ROAD_Y.SOUTH,
     icon: '🌳', type: 'park',
-    blurb: 'Botanical freshwater park crossroads at Central Ave & West Ave.'
+    blurb: 'Botanical greenhouse palm promenade entrance on Grand Avenue.'
   },
   {
-    id: 'LIBRARY',
-    name: 'Public Library', full: 'Civic Public Heritage Library',
-    x: ROAD_X.CENTER_L, y: ROAD_Y.MID,
-    icon: '📚', type: 'library',
-    blurb: 'Civic library town hall crossroads at Central Ave & Civic Way.'
+    id: 'WEST_S',
+    name: 'West Avenue South', full: 'Grand Avenue & West Avenue Junction',
+    x: ROAD_X.WEST, y: ROAD_Y.SOUTH,
+    icon: '🧭', type: 'junction',
+    blurb: 'Southwest boulevard junction connecting Stadium and Botanical Park.'
+  },
+  {
+    id: 'CINEMA',
+    name: 'Star Cinema', full: 'Star Cinema Theatre Marquee Entrance',
+    x: ROAD_X.CINEMA, y: ROAD_Y.SOUTH,
+    icon: '🎬', type: 'cinema',
+    blurb: 'Art-deco IMAX theatre box office & marquee entrance on Grand Avenue.'
+  },
+  {
+    id: 'CENTRAL_S',
+    name: 'Central Beach Walk', full: 'Central Avenue & Grand Avenue Promenade',
+    x: ROAD_X.CENTRAL, y: ROAD_Y.SOUTH,
+    icon: '🧭', type: 'junction',
+    blurb: 'Beachfront central promenade crosswalk along Grand Avenue.'
   },
   {
     id: 'HOSPITAL',
-    name: 'Central Hospital', full: 'Metropolitan Central Hospital',
-    x: ROAD_X.CENTER_R, y: ROAD_Y.MID,
+    name: 'City Hospital', full: 'Metropolitan Hospital Emergency & Main Entrance',
+    x: ROAD_X.HOSPITAL, y: ROAD_Y.SOUTH,
     icon: '🏥', type: 'hospital',
-    blurb: '24/7 emergency trauma center at Central Ave & Grand Avenue.'
+    blurb: '24/7 trauma medical center circular entrance driveway on Grand Avenue.'
   },
   {
-    id: 'BUSSTOP',
-    name: 'Bus Terminal', full: 'Central Transit Bus Terminal',
-    x: ROAD_X.EAST, y: ROAD_Y.MID,
+    id: 'BUS_TERMINAL',
+    name: 'Bus Station', full: 'Central Transit Bus Terminal Entrance',
+    x: ROAD_X.EAST, y: ROAD_Y.SOUTH,
     icon: '🚌', type: 'busstop',
-    blurb: 'Regional transit bus concourse at Central Ave & Port Lane.'
-  },
-
-  // Row 2 (Y = 735: Coastal Drive)
-  {
-    id: 'STADIUM',
-    name: 'Victory Stadium', full: 'Victory Arena Sports Stadium',
-    x: ROAD_X.WEST, y: ROAD_Y.BOT,
-    icon: '⚽', type: 'stadium',
-    blurb: 'Championship athletic arena junction at Coastal Drive & West Ave.'
+    blurb: 'Regional transit bus passenger concourse on Grand Avenue.'
   },
   {
-    id: 'FIRE',
-    name: 'Fire Station', full: 'Municipal Fire & Rescue Station No. 1',
-    x: ROAD_X.CENTER_L, y: ROAD_Y.BOT,
-    icon: '🚒', type: 'fire',
-    blurb: 'Emergency tender bay junction at Coastal Drive & Civic Way.'
-  },
-  {
-    id: 'POLICE',
-    name: 'Police HQ', full: 'Metropolitan Police Headquarters',
-    x: ROAD_X.CENTER_R, y: ROAD_Y.BOT,
-    icon: '🚓', type: 'police',
-    blurb: 'Civic police precinct junction at Coastal Drive & Grand Avenue.'
+    id: 'PIER_GATE',
+    name: 'Boardwalk Entrance', full: 'Sunset Beach Boardwalk Entrance Gate',
+    x: ROAD_X.PIER, y: ROAD_Y.SOUTH,
+    icon: '🌊', type: 'junction',
+    blurb: 'Entrance gate leading onto the scenic wooden ocean boardwalk pier.'
   },
   {
     id: 'BEACH',
-    name: 'Sunset Beach', full: 'Sunset Bay Golden Sand Beach',
-    x: ROAD_X.EAST, y: ROAD_Y.BOT,
+    name: 'Sunset Beach Pier', full: 'Sunset Beach Ocean Boardwalk & Boat Dock',
+    x: ROAD_X.PIER, y: ROAD_Y.PIER,
     icon: '🏖️', type: 'beach', goal: true,
-    blurb: 'Golden shoreline promenade at Coastal Drive & Ocean Promenade.'
+    blurb: 'Golden shoreline sands and wooden ocean boardwalk pier dock.'
   },
 
-  // Perimeter Road Corridors (No Buildings Nearby)
-  { id: 'W_AIRPORT', name: 'West Runway Road', full: 'West Road Corridor', x: 120, y: ROAD_Y.TOP, icon: '🛣️', type: 'empty', blurb: 'Outer road perimeter near runway.' },
-  { id: 'E_HOTEL', name: 'East Port Perimeter', full: 'East Road Corridor', x: 1240, y: ROAD_Y.TOP, icon: '🛣️', type: 'empty', blurb: 'Outer perimeter road near east hills.' },
-  { id: 'W_PARK', name: 'West Forest Road', full: 'West Road Corridor', x: 120, y: ROAD_Y.MID, icon: '🛣️', type: 'empty', blurb: 'Outer road perimeter near forest.' },
-  { id: 'E_BUSSTOP', name: 'East Coastal Access', full: 'East Road Corridor', x: 1240, y: ROAD_Y.MID, icon: '🛣️', type: 'empty', blurb: 'Outer road overlooking coastline.' },
-  { id: 'W_STADIUM', name: 'West Stadium Road', full: 'West Road Corridor', x: 120, y: ROAD_Y.BOT, icon: '🛣️', type: 'empty', blurb: 'Outer perimeter near sports complex parking.' },
-  { id: 'E_BEACH', name: 'East Promenade End', full: 'East Road Corridor', x: 1240, y: ROAD_Y.BOT, icon: '🛣️', type: 'empty', blurb: 'Outer coastline walkway end.' },
-  { id: 'N_AIRPORT', name: 'North West Ave', full: 'North Road Corridor', x: ROAD_X.WEST, y: 110, icon: '🛣️', type: 'empty', blurb: 'North end of West Avenue.' },
-  { id: 'N_CINEMA', name: 'North Civic Way', full: 'North Road Corridor', x: ROAD_X.CENTER_L, y: 110, icon: '🛣️', type: 'empty', blurb: 'North end of Civic Way.' },
-  { id: 'N_MALL', name: 'North Grand Ave', full: 'North Road Corridor', x: ROAD_X.CENTER_R, y: 110, icon: '🛣️', type: 'empty', blurb: 'North end of Grand Avenue.' },
-  { id: 'N_HOTEL', name: 'North Port Lane', full: 'North Road Corridor', x: ROAD_X.EAST, y: 110, icon: '🛣️', type: 'empty', blurb: 'North end of Port Lane.' },
-  { id: 'S_STADIUM', name: 'South Stadium Bay', full: 'South Road Corridor', x: ROAD_X.WEST, y: 755, icon: '🛣️', type: 'empty', blurb: 'South coastline overlook.' },
-  { id: 'S_FIRE', name: 'South Marina Pier', full: 'South Road Corridor', x: ROAD_X.CENTER_L, y: 755, icon: '🛣️', type: 'empty', blurb: 'South harbor dock.' },
-  { id: 'S_POLICE', name: 'South Police Dock', full: 'South Road Corridor', x: ROAD_X.CENTER_R, y: 755, icon: '🛣️', type: 'empty', blurb: 'Precinct patrol dock access.' },
-  { id: 'S_BEACH', name: 'South Sunset Deck', full: 'South Road Corridor', x: ROAD_X.EAST, y: 755, icon: '🛣️', type: 'empty', blurb: 'Beach wooden walkway extension.' },
+  // ── LEFT & RIGHT CORNER ROAD DEAD END NODES (Shows "Wrong Direction" Popup) ──
+  // Left Side 3 Road Ends:
+  { id: 'DEAD_NW', name: 'Airport Runway West', full: 'Airport Tarmac (Dead End)', x: 35, y: ROAD_Y.NORTH, icon: '🛑', type: 'empty', blurb: 'Restricted airport tarmac perimeter.' },
+  { id: 'DEAD_MW', name: 'Stadium West Gate', full: 'Stadium West Concourse (Dead End)', x: 300, y: ROAD_Y.MID, icon: '🛑', type: 'empty', blurb: 'Stadium arena parking boundary.' },
+  { id: 'DEAD_SW', name: 'Botanical West Fence', full: 'Botanical Park Boundary (Dead End)', x: 35, y: ROAD_Y.SOUTH, icon: '🛑', type: 'empty', blurb: 'Botanical garden west fence perimeter.' },
+
+  // Right Side 3 Road Ends:
+  { id: 'DEAD_NE', name: 'East Coast Highway', full: 'East Coast Highway (Dead End)', x: 1365, y: ROAD_Y.NORTH, icon: '🛑', type: 'empty', blurb: 'Coastal expressway perimeter.' },
+  { id: 'DEAD_ME', name: 'East Commercial Alley', full: 'East Commercial Alley (Dead End)', x: 1365, y: ROAD_Y.MID, icon: '🛑', type: 'empty', blurb: 'Eastern commercial zone boundary.' },
+  { id: 'DEAD_SE', name: 'Ocean Shoreline East', full: 'Ocean Coastline (Dead End)', x: 1365, y: ROAD_Y.SOUTH, icon: '🛑', type: 'empty', blurb: 'Open ocean coastline east of beach.' },
 ];
 
 const BY_ID = {};
 PLACES.forEach(p => { BY_ID[p.id] = p; });
 
-/* ── 3. STRICT ROAD-LOCKED ADJACENCY (ALL 4 DIRECTIONS ENABLED) ─────── */
+/* ── 3. STRICT ROAD & ENTRANCE-LOCKED ADJACENCY WITH DEAD ENDS ─────── */
 const ADJ = {
-  AIRPORT:  { N: 'N_AIRPORT', W: 'W_AIRPORT', E: 'CINEMA',    S: 'PARK' },
-  CINEMA:   { N: 'N_CINEMA',  W: 'AIRPORT',   E: 'MALL',      S: 'LIBRARY' },
-  MALL:     { N: 'N_MALL',    W: 'CINEMA',    E: 'HOTEL',     S: 'HOSPITAL' },
-  HOTEL:    { N: 'N_HOTEL',   W: 'MALL',      E: 'E_HOTEL',   S: 'BUSSTOP' },
-  PARK:     { N: 'AIRPORT',   W: 'W_PARK',    E: 'LIBRARY',   S: 'STADIUM' },
-  LIBRARY:  { N: 'CINEMA',    W: 'PARK',      E: 'HOSPITAL',  S: 'FIRE' },
-  HOSPITAL: { N: 'MALL',      W: 'LIBRARY',   E: 'BUSSTOP',   S: 'POLICE' },
-  BUSSTOP:  { N: 'HOTEL',     W: 'HOSPITAL',  E: 'E_BUSSTOP', S: 'BEACH' },
-  STADIUM:  { N: 'PARK',      W: 'W_STADIUM', E: 'FIRE',      S: 'S_STADIUM' },
-  FIRE:     { N: 'LIBRARY',   W: 'STADIUM',   E: 'POLICE',    S: 'S_FIRE' },
-  POLICE:   { N: 'HOSPITAL',  W: 'FIRE',      E: 'BEACH',     S: 'S_POLICE' },
-  BEACH:    { N: 'BUSSTOP',   W: 'POLICE',    E: 'E_BEACH',   S: 'S_BEACH' },
+  // Row 1 (Northern Blvd Y = 115)
+  DEAD_NW:        { E: 'AIRPORT' },
+  AIRPORT:        { W: 'DEAD_NW', E: 'WEST_N' },
+  WEST_N:         { W: 'AIRPORT', E: 'MUSEUM_N', S: 'STADIUM' },
+  MUSEUM_N:       { W: 'WEST_N', E: 'MALL_N', S: 'CENTRAL_M' },
+  MALL_N:         { W: 'MUSEUM_N', E: 'HOTEL_N', S: 'HOTEL' },
+  HOTEL_N:        { W: 'MALL_N', E: 'DEAD_NE' },
+  DEAD_NE:        { W: 'HOTEL_N' },
 
-  // Empty Perimeter Nodes (can always turn back)
-  W_AIRPORT: { E: 'AIRPORT' },
-  E_HOTEL:   { W: 'HOTEL' },
-  W_PARK:    { E: 'PARK' },
-  E_BUSSTOP: { W: 'BUSSTOP' },
-  W_STADIUM: { E: 'STADIUM' },
-  E_BEACH:   { W: 'BEACH' },
-  N_AIRPORT: { S: 'AIRPORT' },
-  N_CINEMA:  { S: 'CINEMA' },
-  N_MALL:    { S: 'MALL' },
-  N_HOTEL:   { S: 'HOTEL' },
-  S_STADIUM: { N: 'STADIUM' },
-  S_FIRE:    { N: 'FIRE' },
-  S_POLICE:  { N: 'POLICE' },
-  S_BEACH:   { N: 'BEACH' },
+  // Row 2 (Central Crossway Y = 325)
+  DEAD_MW:        { E: 'STADIUM' },
+  STADIUM:        { W: 'DEAD_MW', N: 'WEST_N', E: 'MUSEUM', S: 'WEST_S' },
+  MUSEUM:         { W: 'STADIUM', E: 'CENTRAL_M' },
+  CENTRAL_M:      { W: 'MUSEUM', N: 'MUSEUM_N', E: 'MALL', S: 'CENTRAL_S' },
+  MALL:           { W: 'CENTRAL_M', E: 'HOTEL' },
+  HOTEL:          { W: 'MALL', N: 'MALL_N', E: 'DEAD_ME', S: 'BUS_TERMINAL' },
+  DEAD_ME:        { W: 'HOTEL' },
+
+  // Row 3 (Grand Ave Y = 560) & Pier Boardwalk
+  DEAD_SW:        { E: 'PARK' },
+  PARK:           { W: 'DEAD_SW', E: 'WEST_S' },
+  WEST_S:         { W: 'PARK', N: 'STADIUM', E: 'CINEMA' },
+  CINEMA:         { W: 'WEST_S', E: 'CENTRAL_S' },
+  CENTRAL_S:      { W: 'CINEMA', N: 'CENTRAL_M', E: 'HOSPITAL' },
+  HOSPITAL:       { W: 'CENTRAL_S', E: 'BUS_TERMINAL' },
+  BUS_TERMINAL:   { W: 'HOSPITAL', N: 'HOTEL', E: 'PIER_GATE' },
+  PIER_GATE:      { W: 'BUS_TERMINAL', E: 'DEAD_SE', S: 'BEACH' },
+  DEAD_SE:        { W: 'PIER_GATE' },
+  BEACH:          { N: 'PIER_GATE' },
 };
 
 function getRoadPathPoints(a, b) {
@@ -187,42 +233,24 @@ function getRoadPathPoints(a, b) {
   if (pa && pb) {
     return [[pa.x, pa.y], [pb.x, pb.y]];
   }
-  return [[ROAD_X.WEST, ROAD_Y.TOP], [ROAD_X.CENTER_L, ROAD_Y.TOP]];
+  return [[ROAD_X.WEST, ROAD_Y.NORTH], [ROAD_X.CENTRAL, ROAD_Y.NORTH]];
 }
 
 const DIR_WORD = { N: 'North', S: 'South', E: 'East', W: 'West' };
-
-/* ── 4. STREET SIGN LABELS (POSITIONED ON ROAD MEDIANS) ─────────────── */
-const STREETS = [
-  { id: 's_northern', name: 'NORTHERN BOULEVARD', x: 410, y: 255, angle: 0 },
-  { id: 's_express',  name: 'METRO EXPRESSWAY',   x: 885, y: 255, angle: 0 },
-  { id: 's_central',  name: 'CENTRAL AVENUE',     x: 410, y: 505, angle: 0 },
-  { id: 's_hospital', name: 'HOSPITAL WAY',       x: 885, y: 505, angle: 0 },
-  { id: 's_coastal',  name: 'COASTAL DRIVE',      x: 410, y: 735, angle: 0 },
-  { id: 's_sunset',   name: 'SUNSET PROMENADE',   x: 885, y: 735, angle: 0 },
-  { id: 's_west',     name: 'WEST AVENUE',        x: 310, y: 380, angle: -90 },
-  { id: 's_civic',    name: 'CIVIC WAY',          x: 510, y: 380, angle: -90 },
-  { id: 's_grand',    name: 'GRAND AVENUE',       x: 735, y: 380, angle: -90 },
-  { id: 's_port',     name: 'PORT LANE',          x: 1040, y: 380, angle: -90 },
-  { id: 's_stadium',  name: 'STADIUM ROAD',       x: 310, y: 620, angle: -90 },
-  { id: 's_fire',     name: 'STATION WAY',        x: 510, y: 620, angle: -90 },
-  { id: 's_police',   name: 'PRECINCT AVE',       x: 735, y: 620, angle: -90 },
-  { id: 's_beach',    name: 'OCEAN DRIVE',        x: 1040, y: 620, angle: -90 },
-];
 
 function streetBetween(aId, bId) {
   const pa = BY_ID[aId], pb = BY_ID[bId];
   if (!pa || !pb) return 'the street';
   if (Math.abs(pa.y - pb.y) < 15) {
-    if (Math.abs(pa.y - 255) < 20) return 'Northern Boulevard';
-    if (Math.abs(pa.y - 505) < 20) return 'Central Avenue';
-    if (Math.abs(pa.y - 735) < 20) return 'Coastal Drive';
+    if (Math.abs(pa.y - 115) < 25) return 'Northern Boulevard';
+    if (Math.abs(pa.y - 325) < 25) return 'Central Crossway';
+    if (Math.abs(pa.y - 560) < 25) return 'Grand Avenue';
   }
   if (Math.abs(pa.x - pb.x) < 15) {
-    if (Math.abs(pa.x - 310) < 20) return 'West Avenue';
-    if (Math.abs(pa.x - 510) < 20) return 'Civic Way';
-    if (Math.abs(pa.x - 735) < 20) return 'Grand Avenue';
-    if (Math.abs(pa.x - 1040) < 20) return 'Port Lane';
+    if (Math.abs(pa.x - 405) < 25) return 'West Avenue';
+    if (Math.abs(pa.x - 690) < 25) return 'Central Avenue';
+    if (Math.abs(pa.x - 1045) < 25) return 'East Avenue';
+    if (Math.abs(pa.x - 1225) < 25) return 'Sunset Pier Boardwalk';
   }
   return 'the avenue';
 }
@@ -486,24 +514,28 @@ const WrongDirPopup = ({ show, direction }) => {
   return (
     <div style={{
       position: 'absolute',
-      top: '50%',
-      left: 'calc(50% - 155px)',
+      top: '32%',
+      left: '50%',
       transform: 'translate(-50%, -50%)',
       zIndex: 999,
-      background: 'linear-gradient(145deg, #1E293B, #0F172A)',
+      background: 'linear-gradient(145deg, rgba(30,41,59,0.96), rgba(15,23,42,0.98))',
       border: '2px solid #EF4444',
       borderRadius: '16px',
-      padding: '16px 24px',
-      boxShadow: '0 16px 40px rgba(0,0,0,0.6), 0 0 20px rgba(239,68,68,0.25)',
+      padding: '16px 28px',
+      boxShadow: '0 16px 40px rgba(0,0,0,0.7), 0 0 24px rgba(239,68,68,0.35)',
       textAlign: 'center',
-      minWidth: '220px',
+      minWidth: '260px',
+      pointerEvents: 'none',
     }}>
-      <div style={{ fontSize: '24px', marginBottom: '4px' }}>⚠️</div>
-      <div style={{ fontSize: '15px', fontWeight: 900, color: '#FCA5A5', fontFamily: 'Space Grotesk, sans-serif' }}>
-        NO ROAD {direction.toUpperCase()}
+      <div style={{ fontSize: '26px', marginBottom: '4px' }}>🛑</div>
+      <div style={{ fontSize: '15px', fontWeight: 900, color: '#FCA5A5', fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '0.5px' }}>
+        WRONG DIRECTION!
       </div>
-      <div style={{ fontSize: '12px', fontWeight: 600, color: '#CBD5E1', marginTop: '4px' }}>
-        You must walk along asphalt road corridors and sidewalks.
+      <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#E2E8F0', marginTop: '4px' }}>
+        No road leading {direction?.toUpperCase() || 'this way'}.
+      </div>
+      <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
+        You cannot walk over buildings. Follow the asphalt roads!
       </div>
     </div>
   );
@@ -521,25 +553,81 @@ const EmptyRoadPopup = ({ show }) => {
       background: 'linear-gradient(145deg, #1E293B, #0F172A)',
       border: '2px solid #EF4444',
       borderRadius: '16px',
-      padding: '16px 22px',
-      boxShadow: '0 16px 40px rgba(0,0,0,0.7), 0 0 20px rgba(239,68,68,0.3)',
+      padding: '16px 24px',
+      boxShadow: '0 16px 40px rgba(0,0,0,0.7), 0 0 24px rgba(239,68,68,0.4)',
       textAlign: 'center',
-      minWidth: '260px',
+      minWidth: '280px',
       pointerEvents: 'none'
     }}>
-      <div style={{ fontSize: '24px', marginBottom: '4px' }}>⚠️</div>
-      <div style={{ fontSize: '15px', fontWeight: 900, color: '#FCA5A5', fontFamily: 'Space Grotesk, sans-serif' }}>
-        WRONG DIRECTION!
+      <div style={{ fontSize: '26px', marginBottom: '4px' }}>🛑</div>
+      <div style={{ fontSize: '15px', fontWeight: 900, color: '#FCA5A5', fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '0.03em' }}>
+        DEAD END — WRONG DIRECTION!
       </div>
       <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#E2E8F0', marginTop: '4px' }}>
-        No buildings nearby on this road.
+        This road leads to a dead end outside the city.
       </div>
-      <div style={{ fontSize: '11px', color: '#94A3B8', marginTop: '2px' }}>
-        Turn back and navigate toward a landmark!
+      <div style={{ fontSize: '11px', color: '#CBD5E1', marginTop: '2px' }}>
+        Turn around to navigate toward Sunset Beach!
       </div>
     </div>
   );
 };
+
+/* ── CITY MAP ACTIVITY QUESTIONS (4 QUESTIONS WITH 3 OPTIONS EACH) ── */
+const CITY_MAP_QUESTIONS = [
+  {
+    id: 'cq1',
+    tag: 'Directions & Spatial',
+    question: '1. In which general direction is Sunset Beach located from the City Airport?',
+    options: [
+      'South-East (SE)',
+      'North-West (NW)',
+      'Due North'
+    ],
+    answer: 'South-East (SE)',
+    right: 'Correct! Sunset Beach is located in the South-Eastern sector of the city map.',
+    wrong: 'Look at the map compass: Sunset Beach is to the South and East of the Airport.'
+  },
+  {
+    id: 'cq2',
+    tag: 'City Landmarks',
+    question: '2. Which landmark is situated along Central Avenue between the Police Station and City Library?',
+    options: [
+      'City Museum',
+      'Luxury Grand Hotel',
+      'Underground Metro'
+    ],
+    answer: 'City Museum',
+    right: 'Correct! The City Museum is located centrally along Central Avenue.',
+    wrong: 'Check the Central Avenue corridor on the left to identify the central museum.'
+  },
+  {
+    id: 'cq3',
+    tag: 'Routes & Proximity',
+    question: '3. If you travel along Palm Boulevard from Sunset Beach, which major facility is nearest?',
+    options: [
+      'City Shopping Mall',
+      'Airport Terminal',
+      'Botanical Park'
+    ],
+    answer: 'City Shopping Mall',
+    right: 'Correct! City Mall is right along Palm Boulevard directly connected from the Beach.',
+    wrong: 'Trace the connected road north-east from the beach to find City Mall.'
+  },
+  {
+    id: 'cq4',
+    tag: 'Map Understanding',
+    question: '4. What is the primary purpose of street symbols, road lines, and landmark icons on this city map?',
+    options: [
+      'To help locate places, find routes, and understand spatial directions',
+      'Only to decorate the screen with colorful drawings',
+      'To show live weather forecasts for each building'
+    ],
+    answer: 'To help locate places, find routes, and understand spatial directions',
+    right: 'Correct! Maps use standardized symbols and landmarks to enable accurate spatial navigation.',
+    wrong: 'Maps are designed to represent physical spatial relationships and directions.'
+  }
+];
 
 /* ── 9. MAIN CITY EXPLORER COMPONENT ────────────────────────────────── */
 const CityExplorerMap = ({ onComplete, onNext }) => {
@@ -557,6 +645,11 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
   const [won, setWon] = useState(false);
   const [wrongDir, setWrongDir] = useState(null);
   const [emptyWarn, setEmptyWarn] = useState(false);
+
+  /* ── CITY MAP QUIZ STATE ── */
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [quizPage, setQuizPage] = useState(0);
 
   /* ── ZOOM, PAN & MAP-ALONE FULLSCREEN STATE ── */
   const [zoom, setZoom] = useState(1);
@@ -585,33 +678,8 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
     setZoom(1);
     setPan({ x: 0, y: 0 });
   };
-  const centerOnPlayer = () => {
-    setPan({
-      x: (VIEW_W / 2 - personPos.x) * 0.85,
-      y: (VIEW_H / 2 - personPos.y) * 0.85
-    });
-  };
   const toggleMapOnlyFullscreen = () => {
     setIsMapOnlyFullscreen(v => !v);
-  };
-
-  const handleMouseDown = (e) => {
-    if (!isDpadDragging) {
-      setIsDragging(true);
-      setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
-    }
-  };
-
-  const handleTouchStart = (e) => {
-    if (e.touches.length === 1 && !isDpadDragging) {
-      setIsDragging(true);
-      setDragStart({ x: e.touches[0].clientX - pan.x, y: e.touches[0].clientY - pan.y });
-    }
-  };
-
-  const handleWheel = (e) => {
-    const zoomFactor = e.deltaY < 0 ? 1.12 : 0.88;
-    setZoom(z => Math.max(0.65, Math.min(3.5, +(z * zoomFactor).toFixed(2))));
   };
 
   const startDpadDrag = (e) => {
@@ -630,12 +698,6 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
   };
 
   const handleMouseMove = (e) => {
-    if (isDragging) {
-      setPan({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y
-      });
-    }
     if (isDpadDragging && viewportRef.current) {
       const rect = viewportRef.current.getBoundingClientRect();
       const rawX = e.clientX - rect.left - dpadDragOffset.x;
@@ -648,17 +710,7 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
     }
   };
 
-  const handleTouchMove = (e) => {
-    if (isDragging && e.touches.length === 1) {
-      setPan({
-        x: e.touches[0].clientX - dragStart.x,
-        y: e.touches[0].clientY - dragStart.y
-      });
-    }
-  };
-
   const handleMouseUp = () => {
-    setIsDragging(false);
     setIsDpadDragging(false);
   };
 
@@ -946,9 +998,6 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
         @keyframes stepDustLeft {
           0%, 45% { r: 2px; opacity: 0; }
           50%     { r: 5px; opacity: 0.8; }
-          75%     { r: 14px; opacity: 0; }
-          100%    { r: 2px; opacity: 0; }
-        }
         @keyframes stepDustRight {
           0%      { r: 5px; opacity: 0.8; }
           25%     { r: 14px; opacity: 0; }
@@ -975,16 +1024,12 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
         }
       `}</style>
 
-      {/* ══════════ BOX 1: 3D PHOTOREALISTIC MAP VIEWPORT (STANDALONE BOX) ══════════ */}
+      {/* ══════════ BOX 1: 3D MAP VIEWPORT (STANDALONE BOX) ══════════ */}
       <div
         ref={viewportRef}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleMouseUp}
-        onWheel={handleWheel}
         style={{
           flex: 1,
+          height: '100%',
           position: 'relative',
           minWidth: 0,
           background: '#090D16',
@@ -992,14 +1037,14 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
           border: isMapOnlyFullscreen ? 'none' : '2px solid rgba(56, 189, 248, 0.28)',
           boxShadow: isMapOnlyFullscreen ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05)',
           overflow: 'hidden',
-          cursor: isDragging ? 'grabbing' : 'grab'
+          cursor: 'default'
         }}
       >
 
         <WrongDirPopup show={!!wrongDir} direction={wrongDir} />
         <EmptyRoadPopup show={emptyWarn} />
 
-        {/* ── FLOATING ZOOM & FULLSCREEN TOOLBAR (MAP INSPECTION) ── */}
+        {/* ── TOP RIGHT TOOLBAR (ZOOM CONTROLS & FULLSCREEN TOGGLE) ── */}
         <div style={{
           position: 'absolute',
           top: '14px',
@@ -1008,26 +1053,56 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
-          background: 'rgba(15, 23, 42, 0.92)',
-          backdropFilter: 'blur(8px)',
+          background: 'rgba(15, 23, 42, 0.94)',
+          backdropFilter: 'blur(10px)',
           border: '1px solid rgba(56, 189, 248, 0.4)',
           borderRadius: '12px',
-          padding: '6px 10px',
+          padding: '4px 6px',
           boxShadow: '0 8px 30px rgba(0,0,0,0.6)'
         }}>
+          {/* Zoom Out Button */}
+          <button
+            type="button"
+            onClick={handleZoomOut}
+            title="Zoom Out (−)"
+            style={{
+              background: '#1E293B',
+              border: '1px solid #475569',
+              color: '#38BDF8',
+              cursor: 'pointer',
+              width: '28px',
+              height: '28px',
+              borderRadius: '7px',
+              fontSize: '15px',
+              fontWeight: 900,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.15s'
+            }}
+          >
+            −
+          </button>
+
+          {/* Zoom Level Indicator */}
+          <span style={{ fontSize: '11px', fontWeight: 800, color: '#F1F5F9', minWidth: '38px', textAlign: 'center', userSelect: 'none' }}>
+            {Math.round(zoom * 100)}%
+          </span>
+
+          {/* Zoom In Button */}
           <button
             type="button"
             onClick={handleZoomIn}
-            title="Zoom In"
+            title="Zoom In (+)"
             style={{
               background: '#1E293B',
-              border: '1px solid #334155',
+              border: '1px solid #475569',
               color: '#38BDF8',
               cursor: 'pointer',
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              fontSize: '18px',
+              width: '28px',
+              height: '28px',
+              borderRadius: '7px',
+              fontSize: '15px',
               fontWeight: 900,
               display: 'flex',
               alignItems: 'center',
@@ -1037,44 +1112,21 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
           >
             +
           </button>
-          <span style={{ fontSize: '12px', fontWeight: 800, color: '#F1F5F9', minWidth: '40px', textAlign: 'center' }}>
-            {Math.round(zoom * 100)}%
-          </span>
-          <button
-            type="button"
-            onClick={handleZoomOut}
-            title="Zoom Out"
-            style={{
-              background: '#1E293B',
-              border: '1px solid #334155',
-              color: '#38BDF8',
-              cursor: 'pointer',
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              fontSize: '18px',
-              fontWeight: 900,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.15s'
-            }}
-          >
-            -
-          </button>
+
+          {/* Reset View Button */}
           <button
             type="button"
             onClick={handleResetView}
-            title="Reset Zoom & Pan (Fit to Viewport)"
+            title="Reset View"
             style={{
               background: '#1E293B',
-              border: '1px solid #334155',
+              border: '1px solid #475569',
               color: '#94A3B8',
               cursor: 'pointer',
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              fontSize: '14px',
+              width: '28px',
+              height: '28px',
+              borderRadius: '7px',
+              fontSize: '13px',
               fontWeight: 900,
               display: 'flex',
               alignItems: 'center',
@@ -1085,133 +1137,44 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
             ⟲
           </button>
 
-          <button
-            type="button"
-            onClick={centerOnPlayer}
-            title="Focus & Center Map on Player"
-            style={{
-              background: '#1E293B',
-              border: '1px solid #334155',
-              color: '#38BDF8',
-              cursor: 'pointer',
-              padding: '0 8px',
-              height: '32px',
-              borderRadius: '8px',
-              fontSize: '12px',
-              fontWeight: 800,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              transition: 'all 0.15s'
-            }}
-          >
-            📍 Focus
-          </button>
+          <div style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.2)', margin: '0 2px' }} />
 
-          <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.2)', margin: '0 2px' }} />
-
-          {/* Fullscreen Map Toggle (Shows Map Alone) */}
+          {/* Fullscreen Toggle Symbol Button */}
           <button
             type="button"
             onClick={toggleMapOnlyFullscreen}
-            title={isMapOnlyFullscreen ? "Exit Map Full Screen" : "View Map Alone in Full Screen"}
+            title={isMapOnlyFullscreen ? "Exit Fullscreen" : "Fullscreen Map"}
             style={{
               background: isMapOnlyFullscreen ? '#EF4444' : '#0284C7',
               border: 'none',
               color: '#FFFFFF',
               cursor: 'pointer',
-              padding: '6px 14px',
-              borderRadius: '8px',
-              fontSize: '12.5px',
-              fontWeight: 800,
+              width: '28px',
+              height: '28px',
+              borderRadius: '7px',
+              fontSize: isMapOnlyFullscreen ? '14px' : '15px',
+              fontWeight: 900,
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+              justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
               transition: 'all 0.15s'
             }}
           >
-            {isMapOnlyFullscreen ? '✕ Exit Fullscreen' : '⛶ Fullscreen Map'}
+            {isMapOnlyFullscreen ? '✕' : '⛶'}
           </button>
-        </div>
-
-        {/* ── PLACES VISITED BREADCRUMB BAR (TOP BAR WITHOUT OVERLAP) ── */}
-        <div
-          onMouseDown={(e) => e.stopPropagation()}
-          onTouchStart={(e) => e.stopPropagation()}
-          style={{
-            position: 'absolute',
-            top: '14px',
-            left: '14px',
-            zIndex: 120,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'rgba(15, 23, 42, 0.94)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(56, 189, 248, 0.35)',
-            borderRadius: '12px',
-            padding: '5px 12px',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-            maxWidth: 'calc(100% - 410px)',
-            overflowX: 'auto',
-            scrollbarWidth: 'none',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
-            <span style={{ fontSize: '11px' }}>📍</span>
-            <span style={{ fontSize: '9.5px', fontWeight: 900, color: '#38BDF8', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-              VISITED ({visitedSequence.filter(id => BY_ID[id] && BY_ID[id].type !== 'empty').length})
-            </span>
-            <span style={{ color: '#475569', fontSize: '11px' }}>|</span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto', scrollbarWidth: 'none' }}>
-            {visitedSequence.filter(id => BY_ID[id] && BY_ID[id].type !== 'empty').map((id, idx, arr) => {
-              const p = BY_ID[id];
-              const isLatest = id === cur;
-              const isGoalNode = id === GOAL;
-              return (
-                <React.Fragment key={id}>
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    background: isLatest
-                      ? 'linear-gradient(135deg, rgba(56,189,248,0.3) 0%, rgba(2,132,199,0.15) 100%)'
-                      : 'rgba(30, 41, 59, 0.8)',
-                    border: isLatest
-                      ? '1.5px solid #38BDF8'
-                      : (isGoalNode ? '1.5px solid #10B981' : '1px solid #334155'),
-                    borderRadius: '7px',
-                    padding: '2px 7px',
-                    color: isLatest ? '#7DD3FC' : (isGoalNode ? '#6EE7B7' : '#E2E8F0'),
-                    fontSize: '10.5px',
-                    fontWeight: 800
-                  }}>
-                    <span style={{ fontSize: '12px' }}>{p.icon}</span>
-                    <span>{p.name}</span>
-                  </div>
-                  {idx < arr.length - 1 && (
-                    <span style={{ color: '#38BDF8', fontSize: '8.5px', fontWeight: 900 }}>➔</span>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </div>
         </div>
 
         <svg
           viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-          preserveAspectRatio="xMidYMid meet"
+          preserveAspectRatio="none"
           style={{ width: '100%', height: '100%', display: 'block' }}
         >
           <g
-            transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}
+            transform={zoom === 1 ? undefined : `scale(${zoom})`}
             style={{
               transformOrigin: `${VIEW_W / 2}px ${VIEW_H / 2}px`,
-              transition: isDragging ? 'none' : 'transform 0.15s ease-out'
+              transition: 'transform 0.15s ease-out'
             }}
           >
             <defs>
@@ -1224,6 +1187,7 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
             {/* ---------- 1. Exact 3D Architectural City Model Background ---------- */}
             <image
               href={cityExplorerRealisticMap}
+              xlinkHref={cityExplorerRealisticMap}
               x="0"
               y="0"
               width={VIEW_W}
@@ -1231,40 +1195,7 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
               preserveAspectRatio="none"
             />
 
-            {/* ---------- 2. Subtle Street Name Badges ---------- */}
-            <g id="street-signs" pointerEvents="none">
-              {STREETS.map(s => {
-                const isHot = activeStreet.toUpperCase() === s.name.toUpperCase();
-                const wdt = s.name.length * 6.8 + 20;
-                return (
-                  <g key={s.id} transform={`translate(${s.x},${s.y}) rotate(${s.angle})`}>
-                    <rect
-                      x={-wdt / 2}
-                      y="-10"
-                      width={wdt}
-                      height="20"
-                      rx="6"
-                      fill={isHot ? '#38BDF8' : 'rgba(15,23,42,0.85)'}
-                      stroke={isHot ? '#FFFFFF' : '#475569'}
-                      strokeWidth="1.2"
-                      style={{ filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.6))' }}
-                    />
-                    <text
-                      x="0"
-                      y="4.5"
-                      textAnchor="middle"
-                      fontSize="9.5"
-                      fontWeight="800"
-                      fill={isHot ? '#0F172A' : '#E2E8F0'}
-                      fontFamily="Space Grotesk, sans-serif"
-                      letterSpacing="0.6px"
-                    >
-                      {s.name}
-                    </text>
-                  </g>
-                );
-              })}
-            </g>
+
 
             {/* ---------- 3. Clean Route Trail Ribbon ---------- */}
             {trail.length > 1 && (
@@ -1290,24 +1221,29 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
               </>
             )}
 
-            {/* ---------- 4. Clean Waypoints on Asphalt ---------- */}
+            {/* ---------- 4. Clean Waypoints on Asphalt & Perimeter Ends ---------- */}
             {PLACES.map(p => {
               const isCur = cur === p.id;
               const isGoal = p.id === GOAL;
               const isSeen = visited[p.id];
+              const isEmpty = p.type === 'empty';
               return (
                 <g key={p.id} transform={`translate(${p.x},${p.y})`} pointerEvents="none">
                   <circle
                     cx="0"
                     cy="0"
-                    r={isCur ? 13 : isGoal ? 12 : 7}
-                    fill={isCur ? '#0284C7' : isGoal ? '#10B981' : isSeen ? '#334155' : '#1E293B'}
-                    stroke="#FFFFFF"
-                    strokeWidth={isCur ? 2.5 : 1.5}
-                    opacity={isCur || isGoal ? 1 : 0.75}
+                    r={isCur ? 13 : isGoal ? 12 : isEmpty ? 8 : 7}
+                    fill={isCur ? '#0284C7' : isGoal ? '#10B981' : isEmpty ? (isSeen ? '#EF4444' : '#7F1D1D') : isSeen ? '#334155' : '#1E293B'}
+                    stroke={isEmpty ? '#EF4444' : '#FFFFFF'}
+                    strokeWidth={isCur ? 2.5 : isEmpty ? 1.8 : 1.5}
+                    opacity={isCur || isGoal || isEmpty ? 1 : 0.75}
                     style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}
                   />
-                  <circle cx="0" cy="0" r={isCur ? 4.5 : 2.5} fill="#FFFFFF" />
+                  {isEmpty ? (
+                    <text x="0" y="3.5" textAnchor="middle" fontSize="8.5" fill="#FCA5A5">🛑</text>
+                  ) : (
+                    <circle cx="0" cy="0" r={isCur ? 4.5 : 2.5} fill="#FFFFFF" />
+                  )}
                 </g>
               );
             })}
@@ -1431,23 +1367,6 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
                   <DirBtn dir="E" label="E" arrow="▶" gridArea="E" isCompact />
                   <DirBtn dir="S" label="S" arrow="▼" gridArea="S" isCompact />
                 </div>
-
-                <div style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: '#F1F5F9',
-                  textAlign: 'center',
-                  background: 'rgba(30, 41, 59, 0.9)',
-                  padding: '4px 10px',
-                  borderRadius: '8px',
-                  border: '1px solid #334155',
-                  maxWidth: '160px',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
-                }}>
-                  📍 {curPlace.name}
-                </div>
               </>
             )}
           </div>
@@ -1494,137 +1413,627 @@ const CityExplorerMap = ({ onComplete, onNext }) => {
         </div>
       </div>
 
-      {/* ══════════ BOX 2: DIRECTION & NAVIGATION CONTROL STATION (STANDALONE BOX) ══════════ */}
-      <div style={{
-        width: '300px',
-        flexShrink: 0,
-        height: '100%',
-        background: 'linear-gradient(165deg, #1E293B 0%, #0F172A 100%)',
-        borderRadius: '18px',
-        border: '2px solid rgba(56, 189, 248, 0.22)',
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
-        display: isMapOnlyFullscreen ? 'none' : 'flex',
-        flexDirection: 'column',
-        padding: '10px 12px',
-        gap: '8px',
-        overflow: 'hidden',
-        boxSizing: 'border-box'
-      }}>
+      {/* ══════════ BOX 2: RIGHT STATION (PARALLEL SIDE-BY-SIDE ALIGNMENT) ══════════ */}
+      {showQuizModal ? (
         <div style={{
-          background: won ? 'linear-gradient(145deg, #064E3B, #065F46)' : 'linear-gradient(145deg, #1E293B, #0F172A)',
-          border: `1.5px solid ${won ? '#10B981' : '#0284C7'}`, borderRadius: '12px', padding: '8px 10px'
+          width: 'clamp(340px, 26vw, 390px)',
+          flexShrink: 0,
+          height: '100%',
+          background: 'linear-gradient(165deg, #1E293B 0%, #0F172A 100%)',
+          borderRadius: '16px',
+          border: '2px solid rgba(56, 189, 248, 0.4)',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+          display: isMapOnlyFullscreen ? 'none' : 'flex',
+          flexDirection: 'column',
+          padding: '10px 12px',
+          gap: '6px',
+          overflow: 'hidden',
+          boxSizing: 'border-box'
         }}>
-          <div style={{ fontSize: '9.5px', fontWeight: 900, color: won ? '#6EE7B7' : '#38BDF8', letterSpacing: '0.8px' }}>
-            🎯 NAVIGATION MISSION
-          </div>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#F8FAFC', marginTop: '3px', lineHeight: 1.35 }}>
-            {won
-              ? '🎉 Mission Complete! You reached Sunset Beach.'
-              : <>Walk from <b>Skyline Airport</b> to <b>Sunset Beach</b>.</>}
-          </div>
-
-          {won && onNext && (
+          {/* Header */}
+          <div style={{
+            background: 'linear-gradient(145deg, rgba(2,132,199,0.2) 0%, rgba(3,105,161,0.08) 100%)',
+            border: '1.5px solid rgba(56,189,248,0.5)',
+            borderRadius: '10px',
+            padding: '6px 10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexShrink: 0
+          }}>
+            <div>
+              <div style={{ fontSize: '8.5px', fontWeight: 900, color: '#38BDF8', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                📝 MAP ACTIVITY QUESTIONS
+              </div>
+              <div style={{ fontSize: '11.5px', fontWeight: 900, color: '#FFFFFF', marginTop: '1px' }}>
+                Question {quizPage + 1} of {CITY_MAP_QUESTIONS.length}
+              </div>
+            </div>
             <button
               type="button"
-              onClick={onNext}
+              onClick={() => setShowQuizModal(false)}
+              title="Return to Direction Controls"
               style={{
-                marginTop: '8px',
-                width: '100%',
-                background: '#10B981',
-                color: '#FFFFFF',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '8px 10px',
-                fontSize: '12px',
-                fontWeight: 900,
+                background: '#0F172A',
+                border: '1.5px solid rgba(56,189,248,0.5)',
+                borderRadius: '7px',
+                padding: '3px 8px',
+                fontSize: '9.5px',
+                fontWeight: 800,
+                color: '#BAE6FD',
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                boxShadow: '0 4px 14px rgba(16,185,129,0.4)',
+                transition: 'all 0.2s ease'
               }}
             >
-              Continue to Map Questions ➔
+              🧭 Walk Mode
             </button>
-          )}
-        </div>
-
-        <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: '12px', padding: '8px 10px' }}>
-          <div style={{ fontSize: '9px', fontWeight: 900, color: '#94A3B8', letterSpacing: '0.8px' }}>📍 CURRENT LOCATION</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-            <span style={{ fontSize: '20px' }}>{curPlace.icon}</span>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: '13px', fontWeight: 900, color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{curPlace.name}</div>
-              <div style={{ fontSize: '10px', color: '#94A3B8', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{curPlace.full}</div>
-            </div>
-          </div>
-        </div>
-
-        <div style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: '12px', padding: '8px 10px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isSidebarDpadMinimized ? '0' : '6px' }}>
-            <span style={{ fontSize: '9px', fontWeight: 900, color: '#94A3B8', letterSpacing: '0.8px' }}>🧭 DIRECTION CONTROLS</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <button
-                type="button"
-                onClick={reset}
-                style={{
-                  background: 'transparent', border: '1px solid #475569', borderRadius: '5px',
-                  color: '#94A3B8', fontSize: '9px', fontWeight: 700, padding: '1px 5px', cursor: 'pointer'
-                }}
-              >
-                ↺ Reset
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsSidebarDpadMinimized(v => !v)}
-                title={isSidebarDpadMinimized ? "Expand Controls" : "Minimize Controls"}
-                style={{
-                  background: '#0F172A', border: '1px solid #475569', borderRadius: '5px',
-                  color: '#CBD5E1', fontSize: '9px', fontWeight: 700, padding: '1px 5px', cursor: 'pointer'
-                }}
-              >
-                {isSidebarDpadMinimized ? '➕' : '➖'}
-              </button>
-            </div>
           </div>
 
-          {!isSidebarDpadMinimized && (
+          {/* 4 Step Progress Bar */}
+          <div style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
+            {CITY_MAP_QUESTIONS.map((q, idx) => {
+              const isAnswered = !!quizAnswers[q.id];
+              const isCurrent = idx === quizPage;
+              return (
+                <button
+                  key={q.id}
+                  type="button"
+                  onClick={() => setQuizPage(idx)}
+                  style={{
+                    flex: 1,
+                    height: '4px',
+                    borderRadius: '3px',
+                    background: isCurrent
+                      ? '#38BDF8'
+                      : isAnswered
+                      ? '#10B981'
+                      : '#334155',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                    transition: 'all 0.25s ease'
+                  }}
+                  title={`Go to Question ${idx + 1}`}
+                />
+              );
+            })}
+          </div>
+
+          {/* Active Question Card */}
+          {(() => {
+            const q = CITY_MAP_QUESTIONS[quizPage] || CITY_MAP_QUESTIONS[0];
+            const picked = quizAnswers[q.id] || null;
+            const isCorrect = picked === q.answer;
+            const optionLabels = ['A', 'B', 'C'];
+
+            return (
+              <div style={{
+                flex: 1,
+                minHeight: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                background: '#0F172A',
+                border: `1.5px solid ${isCorrect ? '#10B981' : picked ? '#EF4444' : '#334155'}`,
+                borderRadius: '12px',
+                padding: '9px 11px',
+                gap: '6px',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
+                overflow: 'hidden'
+              }}>
+                {/* Question Header & Category */}
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <span style={{
+                        background: '#0284C7',
+                        color: '#FFFFFF',
+                        fontSize: '9px',
+                        fontWeight: 900,
+                        padding: '1px 6px',
+                        borderRadius: '5px',
+                        letterSpacing: '0.4px'
+                      }}>
+                        Q{quizPage + 1}
+                      </span>
+                      <span style={{ fontSize: '9px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        {q.tag}
+                      </span>
+                    </div>
+                    {picked && (
+                      <span style={{
+                        background: isCorrect ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
+                        border: `1px solid ${isCorrect ? '#10B981' : '#EF4444'}`,
+                        color: isCorrect ? '#6EE7B7' : '#FCA5A5',
+                        fontSize: '9px',
+                        fontWeight: 900,
+                        padding: '1px 7px',
+                        borderRadius: '999px'
+                      }}>
+                        {isCorrect ? '✓ Correct' : '✗ Try Again'}
+                      </span>
+                    )}
+                  </div>
+
+                  <div style={{ fontSize: '11.5px', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.35 }}>
+                    {q.question}
+                  </div>
+                </div>
+
+                {/* 3 Options */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  {q.options.map((opt, oIdx) => {
+                    const isOptionPicked = picked === opt;
+                    const isOptionCorrect = opt === q.answer;
+                    let bg = 'rgba(30, 41, 59, 0.6)';
+                    let border = 'rgba(51, 65, 85, 0.9)';
+                    let color = '#F1F5F9';
+                    let badgeBg = '#1E293B';
+                    let badgeColor = '#94A3B8';
+
+                    if (picked !== null) {
+                      if (isOptionCorrect) {
+                        bg = 'rgba(16, 185, 129, 0.22)';
+                        border = '#10B981';
+                        color = '#FFFFFF';
+                        badgeBg = '#10B981';
+                        badgeColor = '#FFFFFF';
+                      } else if (isOptionPicked) {
+                        bg = 'rgba(239, 68, 68, 0.22)';
+                        border = '#EF4444';
+                        color = '#FCA5A5';
+                        badgeBg = '#EF4444';
+                        badgeColor = '#FFFFFF';
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => setQuizAnswers(a => ({ ...a, [q.id]: opt }))}
+                        style={{
+                          textAlign: 'left',
+                          padding: '7px 10px',
+                          background: bg,
+                          border: `1.5px solid ${border}`,
+                          borderRadius: '8px',
+                          color: color,
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                          fontFamily: '"Space Grotesk", sans-serif',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          lineHeight: 1.3
+                        }}
+                      >
+                        <span style={{
+                          width: '18px',
+                          height: '18px',
+                          borderRadius: '50%',
+                          background: badgeBg,
+                          color: badgeColor,
+                          fontSize: '9.5px',
+                          fontWeight: 900,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0
+                        }}>
+                          {optionLabels[oIdx]}
+                        </span>
+                        <span style={{ flex: 1 }}>{opt}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Explanation Card */}
+                {picked ? (
+                  <div style={{
+                    padding: '6px 9px',
+                    borderRadius: '7px',
+                    background: isCorrect ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                    border: `1px solid ${isCorrect ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    color: isCorrect ? '#6EE7B7' : '#FCA5A5',
+                    lineHeight: 1.35
+                  }}>
+                    {isCorrect ? `✓ ${q.right}` : `✗ ${q.wrong}`}
+                  </div>
+                ) : (
+                  <div style={{
+                    background: 'rgba(15, 23, 42, 0.6)',
+                    border: '1px dashed #334155',
+                    borderRadius: '7px',
+                    padding: '5px 8px',
+                    fontSize: '9.5px',
+                    color: '#94A3B8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}>
+                    <span>💡</span>
+                    <span>Observe the City Map on the left to find the correct answer.</span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Footer Controls & Paging */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '6px',
+            borderTop: '1px solid #334155',
+            paddingTop: '6px',
+            flexShrink: 0
+          }}>
+            <button
+              type="button"
+              onClick={() => setQuizPage(p => Math.max(0, p - 1))}
+              disabled={quizPage === 0}
+              style={{
+                fontFamily: '"Space Grotesk", sans-serif',
+                fontWeight: 800,
+                fontSize: '10px',
+                background: '#0F172A',
+                color: '#94A3B8',
+                border: '1px solid #475569',
+                borderRadius: '7px',
+                padding: '5px 10px',
+                cursor: quizPage === 0 ? 'not-allowed' : 'pointer',
+                opacity: quizPage === 0 ? 0.35 : 1
+              }}
+            >
+              ◀ Back
+            </button>
+
+            <div style={{ display: 'flex', gap: '4px' }}>
+              {CITY_MAP_QUESTIONS.map((_, i) => (
+                <span
+                  key={i}
+                  style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: i === quizPage ? '#38BDF8' : '#334155',
+                    transition: 'all 0.2s ease'
+                  }}
+                />
+              ))}
+            </div>
+
+            {quizPage < CITY_MAP_QUESTIONS.length - 1 ? (
+              <button
+                type="button"
+                onClick={() => setQuizPage(p => p + 1)}
+                style={{
+                  fontFamily: '"Space Grotesk", sans-serif',
+                  fontWeight: 800,
+                  fontSize: '10px',
+                  background: '#0284C7',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '7px',
+                  padding: '5px 12px',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(2, 132, 199, 0.4)'
+                }}
+              >
+                Next ▶
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  if (onNext) onNext();
+                  else if (onComplete) onComplete();
+                }}
+                style={{
+                  fontFamily: '"Space Grotesk", sans-serif',
+                  fontWeight: 900,
+                  fontSize: '10px',
+                  background: '#10B981',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '7px',
+                  padding: '5px 12px',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
+                }}
+              >
+                Next Activity ➔
+              </button>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div style={{
+          width: 'clamp(340px, 26vw, 390px)',
+          flexShrink: 0,
+          height: '100%',
+          background: 'linear-gradient(165deg, #1E293B 0%, #0F172A 100%)',
+          borderRadius: '16px',
+          border: '2px solid rgba(56, 189, 248, 0.3)',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+          display: isMapOnlyFullscreen ? 'none' : 'flex',
+          flexDirection: 'column',
+          padding: '8px 10px',
+          gap: '6px',
+          overflow: 'hidden',
+          boxSizing: 'border-box'
+        }}>
+          {/* 1. Mission Card */}
+          <div style={{
+            background: won
+              ? 'linear-gradient(145deg, rgba(6,78,59,0.9), rgba(6,95,70,0.9))'
+              : 'linear-gradient(145deg, rgba(2,132,199,0.18), rgba(30,41,59,0.8))',
+            border: `1.5px solid ${won ? '#10B981' : 'rgba(56,189,248,0.45)'}`,
+            borderRadius: '10px',
+            padding: '6px 8px',
+            flexShrink: 0
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '8.5px', fontWeight: 900, color: won ? '#6EE7B7' : '#38BDF8', letterSpacing: '0.8px' }}>
+                🎯 NAVIGATION MISSION
+              </span>
+              <span style={{
+                fontSize: '8.5px',
+                fontWeight: 800,
+                color: won ? '#6EE7B7' : '#94A3B8',
+                background: 'rgba(15,23,42,0.6)',
+                padding: '1px 5px',
+                borderRadius: '4px'
+              }}>
+                {won ? 'COMPLETED ✓' : 'IN PROGRESS'}
+              </span>
+            </div>
+
+            <div style={{ fontSize: '11px', fontWeight: 700, color: '#F8FAFC', marginTop: '2px', lineHeight: 1.3 }}>
+              {won
+                ? '🎉 Mission Complete! You reached Sunset Beach.'
+                : <>Walk from <b>Skyline Airport</b> to <b>Sunset Beach</b>.</>}
+            </div>
+
+            {won && (
+              <button
+                type="button"
+                onClick={() => setShowQuizModal(true)}
+                style={{
+                  marginTop: '5px',
+                  width: '100%',
+                  background: 'linear-gradient(145deg, #10B981, #059669)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '7px',
+                  padding: '6px 8px',
+                  fontSize: '11px',
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '5px',
+                  boxShadow: '0 4px 14px rgba(16,185,129,0.45)',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Continue to Map Questions ➔
+              </button>
+            )}
+          </div>
+
+          {/* 2. Current Location Card */}
+          <div style={{
+            background: 'rgba(15, 23, 42, 0.75)',
+            border: '1px solid #334155',
+            borderRadius: '10px',
+            padding: '5px 8px',
+            flexShrink: 0
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#94A3B8', letterSpacing: '0.8px' }}>📍 CURRENT LOCATION</span>
+              <span style={{ fontSize: '8.5px', fontWeight: 800, color: '#38BDF8', background: 'rgba(2,132,199,0.2)', padding: '1px 5px', borderRadius: '4px' }}>
+                {activeStreet}
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+              <span style={{ fontSize: '17px', flexShrink: 0 }}>{curPlace.icon}</span>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '11.5px', fontWeight: 900, color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {curPlace.name}
+                </div>
+                <div style={{ fontSize: '9px', color: '#94A3B8', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {curPlace.full}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Direction Controls (D-pad) */}
+          <div style={{
+            background: 'rgba(15, 23, 42, 0.75)',
+            border: '1px solid #334155',
+            borderRadius: '10px',
+            padding: '5px 8px',
+            flexShrink: 0
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isSidebarDpadMinimized ? '0' : '3px' }}>
+              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#94A3B8', letterSpacing: '0.8px' }}>🧭 DIRECTION CONTROLS</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <button
+                  type="button"
+                  onClick={reset}
+                  style={{
+                    background: 'transparent', border: '1px solid #475569', borderRadius: '4px',
+                    color: '#94A3B8', fontSize: '8.5px', fontWeight: 700, padding: '1px 4px', cursor: 'pointer'
+                  }}
+                >
+                  ↺ Reset
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsSidebarDpadMinimized(v => !v)}
+                  title={isSidebarDpadMinimized ? "Expand Controls" : "Minimize Controls"}
+                  style={{
+                    background: '#0F172A', border: '1px solid #475569', borderRadius: '4px',
+                    color: '#CBD5E1', fontSize: '8.5px', fontWeight: 700, padding: '1px 4px', cursor: 'pointer'
+                  }}
+                >
+                  {isSidebarDpadMinimized ? '➕' : '➖'}
+                </button>
+              </div>
+            </div>
+
+            {!isSidebarDpadMinimized && (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gridTemplateRows: 'repeat(3, 25px)',
+                gridTemplateAreas: `
+                  ". N ."
+                  "W . E"
+                  ". S ."
+                `,
+                gap: '3px',
+                maxWidth: '200px',
+                margin: '0 auto'
+              }}>
+                <DirBtn dir="N" label="N" arrow="▲" gridArea="N" isCompact />
+                <DirBtn dir="W" label="W" arrow="◀" gridArea="W" isCompact />
+                <DirBtn dir="E" label="E" arrow="▶" gridArea="E" isCompact />
+                <DirBtn dir="S" label="S" arrow="▼" gridArea="S" isCompact />
+              </div>
+            )}
+          </div>
+
+          {/* 4. Places Visited Grid */}
+          <div style={{
+            background: 'rgba(15, 23, 42, 0.75)',
+            border: '1px solid #334155',
+            borderRadius: '10px',
+            padding: '5px 8px',
+            flex: 1,
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            overflow: 'hidden'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#38BDF8', letterSpacing: '0.8px' }}>
+                📍 PLACES VISITED
+              </span>
+              <span style={{
+                fontSize: '9px',
+                fontWeight: 800,
+                color: [
+                  'AIRPORT', 'MUSEUM', 'MALL', 'HOTEL_N', 'STADIUM', 'CINEMA', 'HOSPITAL', 'BUS_TERMINAL', 'PARK', 'BEACH'
+                ].filter(id => visited[id]).length === 10 ? '#34D399' : '#94A3B8',
+                background: 'rgba(30, 41, 59, 0.8)',
+                padding: '1px 5px',
+                borderRadius: '4px',
+                border: '1px solid rgba(255,255,255,0.08)'
+              }}>
+                {[
+                  'AIRPORT', 'MUSEUM', 'MALL', 'HOTEL_N', 'STADIUM', 'CINEMA', 'HOSPITAL', 'BUS_TERMINAL', 'PARK', 'BEACH'
+                ].filter(id => visited[id]).length} / 10
+              </span>
+            </div>
+
+            {/* Progress Bar */}
+            <div style={{ width: '100%', height: '3px', background: '#1E293B', borderRadius: '2px', overflow: 'hidden', marginBottom: '4px' }}>
+              <div style={{
+                width: `${([
+                  'AIRPORT', 'MUSEUM', 'MALL', 'HOTEL_N', 'STADIUM', 'CINEMA', 'HOSPITAL', 'BUS_TERMINAL', 'PARK', 'BEACH'
+                ].filter(id => visited[id]).length / 10) * 100}%`,
+                height: '100%',
+                background: 'linear-gradient(90deg, #0284C7, #10B981)',
+                borderRadius: '2px',
+                transition: 'width 0.35s ease'
+              }} />
+            </div>
+
+            {/* 2-column Grid of Place Chips */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gridTemplateRows: 'repeat(3, 38px)',
-              gridTemplateAreas: `
-                ". N ."
-                "W . E"
-                ". S ."
-              `,
-              gap: '5px'
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gridTemplateRows: 'repeat(5, 1fr)',
+              gap: '3px',
+              flex: 1,
+              minHeight: 0
             }}>
-              <DirBtn dir="N" label="N" arrow="▲" gridArea="N" isCompact />
-              <DirBtn dir="W" label="W" arrow="◀" gridArea="W" isCompact />
-              <DirBtn dir="E" label="E" arrow="▶" gridArea="E" isCompact />
-              <DirBtn dir="S" label="S" arrow="▼" gridArea="S" isCompact />
+              {[
+                { id: 'AIRPORT', name: 'Airport', icon: '✈️' },
+                { id: 'MUSEUM', name: 'Museum', icon: '🏛️' },
+                { id: 'MALL', name: 'City Mall', icon: '🛍️' },
+                { id: 'HOTEL_N', name: 'Luxury Hotel', icon: '🏨' },
+                { id: 'STADIUM', name: 'Stadium', icon: '🏟️' },
+                { id: 'CINEMA', name: 'Cinema', icon: '🎬' },
+                { id: 'HOSPITAL', name: 'Hospital', icon: '🏥' },
+                { id: 'BUS_TERMINAL', name: 'Bus Station', icon: '🚌' },
+                { id: 'PARK', name: 'Botanical Park', icon: '🌳' },
+                { id: 'BEACH', name: 'Sunset Beach', icon: '🏖️' },
+              ].map(lm => {
+                const isVisited = !!visited[lm.id];
+                const isCurrent = cur === lm.id;
+                return (
+                  <div
+                    key={lm.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      padding: '2px 5px',
+                      borderRadius: '5px',
+                      fontSize: '9.5px',
+                      fontWeight: isVisited || isCurrent ? 800 : 600,
+                      background: isCurrent
+                        ? 'rgba(2, 132, 199, 0.25)'
+                        : isVisited
+                        ? 'rgba(16, 185, 129, 0.15)'
+                        : 'rgba(30, 41, 59, 0.5)',
+                      border: `1px solid ${
+                        isCurrent
+                          ? '#38BDF8'
+                          : isVisited
+                          ? 'rgba(52, 211, 153, 0.4)'
+                          : 'rgba(51, 65, 85, 0.5)'
+                      }`,
+                      color: isCurrent
+                        ? '#38BDF8'
+                        : isVisited
+                        ? '#6EE7B7'
+                        : '#94A3B8',
+                      transition: 'all 0.25s ease',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}
+                  >
+                    <span style={{ fontSize: '10px', flexShrink: 0 }}>{lm.icon}</span>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>
+                      {lm.name}
+                    </span>
+                    {isVisited && (
+                      <span style={{ fontSize: '8.5px', color: '#10B981', fontWeight: 900, flexShrink: 0 }}>
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-          )}
-        </div>
-
-        <div style={{ background: '#090D16', border: '1px solid #1E293B', borderRadius: '12px', padding: '8px 10px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={{ fontSize: '9px', fontWeight: 900, color: '#38BDF8', letterSpacing: '0.8px', marginBottom: '4px' }}>📋 GPS TRAVEL LOG</div>
-          <div ref={logRef} style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '3px', scrollbarWidth: 'none' }}>
-            {log.map((l, i) => (
-              <div key={i} style={{
-                fontSize: '10.5px', lineHeight: 1.3, padding: '4px 6px', borderRadius: '5px',
-                background: l.ok ? 'rgba(56,189,248,0.1)' : 'rgba(239,68,68,0.15)',
-                color: l.ok ? '#E2E8F0' : '#FCA5A5',
-                borderLeft: `2.5px solid ${l.ok ? '#38BDF8' : '#EF4444'}`
-              }}>
-                {l.text}
-              </div>
-            ))}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

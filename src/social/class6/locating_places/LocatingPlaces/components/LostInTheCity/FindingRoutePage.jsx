@@ -252,79 +252,59 @@ function bfsClassic(start, goal) {
   return null;
 }
 
-/* ── MAP ACTIVITY QUESTION BANK (8 NCERT & City Explorer Questions × 3 Options) ───── */
+/* ── MAP ACTIVITY QUESTION BANK (Town Map NCERT Questions) ───── */
 const MAP_QUIZ = [
   {
     id: 'q1',
-    tag: 'Cardinal Directions',
-    question: 'When you stand facing North, which direction is directly to your right-hand side?',
-    options: ['East', 'West', 'South'],
-    answer: 'East',
-    right: 'Correct! When facing North, East is always to your right and West is to your left.',
-    wrong: 'Remember: When you face North, East is to your right and West is to your left.'
+    tag: 'Town Landmarks',
+    question: '1. Mark the hospital on the Town Map. Where is it located?',
+    options: [
+      'South of Railway Station along West Lane (marked with 🏥)',
+      'East of Rosewood Botanical Garden',
+      'North of Sunview Heights'
+    ],
+    answer: 'South of Railway Station along West Lane (marked with 🏥)',
+    right: 'Correct! The Hospital is located South of the Railway Station along West Lane, indicated with a Red Cross 🏥.',
+    wrong: 'Look at the map: The Hospital (🏥) is situated South of the Railway Station along West Lane.'
   },
   {
     id: 'q2',
-    tag: 'City Explorer Route',
-    question: 'In City Explorer, starting from Skyline Airport, which direction do you walk along Northern Boulevard to reach Star Cineplex?',
-    options: ['East', 'South', 'West'],
-    answer: 'East',
-    right: 'Correct! Walking along Northern Boulevard from Airport to Star Cineplex heads directly East.',
-    wrong: 'Check the compass: Moving rightwards towards Star Cineplex goes East.'
+    tag: 'Map Colours',
+    question: '2. What is the meaning of the blue-coloured areas on the map?',
+    options: [
+      'Water bodies (such as ponds, lakes, and rivers)',
+      'Vegetation, trees and playgrounds',
+      'Asphalt roads and railway tracks'
+    ],
+    answer: 'Water bodies (such as ponds, lakes, and rivers)',
+    right: 'Correct! Blue is the standard conventional color universally used on maps to represent water bodies like ponds and lakes.',
+    wrong: 'Standard cartography always uses Blue for water bodies like ponds, lakes, and streams.'
   },
   {
     id: 'q3',
-    tag: 'City Explorer Route',
-    question: 'Starting from Skyline Airport, in which direction is Greenfield Park located?',
-    options: ['South', 'North', 'West'],
-    answer: 'South',
-    right: 'Correct! Walking down West Avenue from Skyline Airport takes you directly South to Greenfield Park.',
-    wrong: 'Look at the vertical road: Moving down from Skyline Airport to Greenfield Park goes South.'
+    tag: 'Distance & Scale',
+    question: '3. Which is farther away from the railway station — the school, the Nagar Panchayat or the public garden?',
+    options: [
+      'The public garden',
+      'The school',
+      'The Nagar Panchayat'
+    ],
+    answer: 'The public garden',
+    right: 'Correct! The Public Garden (located in the far North-East corner) is the farthest away across multiple road blocks from the Railway Station.',
+    wrong: 'Measuring the road distance shows the Public Garden in the far North-East corner is the farthest from the Railway Station.'
   },
   {
     id: 'q4',
-    tag: 'Intermediate Directions',
-    question: 'On the City Explorer map, in which overall direction is the destination Sunset Beach located from Skyline Airport?',
-    options: ['South-East (SE)', 'North-West (NW)', 'South-West (SW)'],
+    tag: 'Town Map Navigation',
+    question: '4. In which overall direction is the Bank located from the Railway Station on the Town Map?',
+    options: [
+      'South-East (SE)',
+      'North-West (NW)',
+      'Due North'
+    ],
     answer: 'South-East (SE)',
-    right: 'Correct! Sunset Beach is in the bottom-right corner, which is South-East (SE) from the Airport.',
-    wrong: 'The bottom-right corner between South and East is South-East (SE).'
-  },
-  {
-    id: 'q5',
-    tag: 'Intermediate Directions',
-    question: 'Which intermediate direction lies midway between North and East on a compass rose?',
-    options: ['North-East (NE)', 'North-West (NW)', 'South-East (SE)'],
-    answer: 'North-East (NE)',
-    right: 'Correct! North-East (NE) lies exactly halfway between North and East.',
-    wrong: 'The intermediate direction midway between North and East is North-East (NE).'
-  },
-  {
-    id: 'q6',
-    tag: 'Map Symbols',
-    question: 'What conventional colour is universally used on maps to represent water bodies like oceans and lakes?',
-    options: ['Blue', 'Green', 'Brown'],
-    answer: 'Blue',
-    right: 'Correct! Blue is the universal map symbol colour for all water bodies.',
-    wrong: 'Standard cartography uses Blue for water bodies like rivers, lakes, and seas.'
-  },
-  {
-    id: 'q7',
-    tag: 'Map Components',
-    question: 'What are the three essential components of any standard geographical map?',
-    options: ['Distance, Direction, and Symbols', 'Colours, Borders, and Pictures', 'Latitude, Longitude, and Weather'],
-    answer: 'Distance, Direction, and Symbols',
-    right: 'Correct! Distance (scale), Direction (North arrow), and Symbols are the three core components of a map.',
-    wrong: 'The three fundamental components of any map are Distance, Direction, and Symbols.'
-  },
-  {
-    id: 'q8',
-    tag: 'Map Scale',
-    question: 'What is the primary purpose of a scale on a map?',
-    options: ['To show the ratio between map distance and actual ground distance', 'To indicate the direction of the wind', 'To decorate the map borders'],
-    answer: 'To show the ratio between map distance and actual ground distance',
-    right: 'Correct! A map scale gives the proportional ratio between map distance and actual ground distance.',
-    wrong: 'A scale shows the proportional relationship between distance on paper and actual ground distance.'
+    right: 'Correct! The Bank is in the lower-right section of the town, which is South-East (SE) from the Railway Station.',
+    wrong: 'Look at the cardinal compass: Heading down and right to the Bank is South-East (SE).'
   }
 ];
 
@@ -1184,11 +1164,10 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   const correctCount = MAP_QUIZ.filter(q => answers[q.id] === q.answer).length;
   const isQuizComplete = correctCount === MAP_QUIZ.length;
 
-  // Fit as many questions on a page as the panel can actually hold, so a tall
-  // screen shows fewer, fuller pages instead of half-empty ones.
-  const perQuizPage = quizH >= 700 ? 3 : 2;
+  // Fit questions on pages
+  const perQuizPage = 2;
   const questionPages = Math.ceil(MAP_QUIZ.length / perQuizPage);
-  const quizPages = questionPages + 1;          // + the map-basics page
+  const quizPages = questionPages;
 
   useEffect(() => {
     if (quizPage > quizPages - 1) setQuizPage(quizPages - 1);
@@ -1225,7 +1204,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
             onMouseOver={(e) => e.currentTarget.style.color = '#78350F'}
             onMouseOut={(e) => e.currentTarget.style.color = '#92400E'}
           >
-            <ArrowLeft size={18} color="#92400E" /> Back to {is3DActive ? '3D Map' : 'Town Map'}
+            <ArrowLeft size={18} color="#92400E" /> Back to {is3DActive ? 'Town Map' : 'City Map'}
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, color: isQuizComplete ? '#16A34A' : '#D97706' }}>
@@ -1255,7 +1234,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
             boxShadow: mapFull ? 'none' : '0 8px 30px rgba(60,40,20,0.06)'
           }}>
 
-            {/* Top Bar Controls — Mode Switcher & Map Activity Questions Tab */}
+            {/* Top Bar Controls — Mode Switcher */}
             <div style={{ position: 'absolute', top: '14px', left: '14px', zIndex: 10, display: 'flex', flexWrap: 'wrap', gap: '8px', background: 'rgba(255,249,240,0.95)', backdropFilter: 'blur(6px)', padding: '5px 8px', borderRadius: '12px', border: '1.5px solid #F2DFBC', boxShadow: '0 4px 14px rgba(60,40,20,0.08)' }}>
               <button
                 type="button"
@@ -1272,7 +1251,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                   transition: 'all 0.15s'
                 }}
               >
-                🏡 Town Map
+                🏕️ Town Map
               </button>
               <button
                 type="button"
@@ -1291,37 +1270,6 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               >
                 🏙️ City Explorer
               </button>
-              <button
-                type="button"
-                onClick={() => { setShowQuiz(true); }}
-                style={{
-                  border: 'none',
-                  background: showQuiz ? '#16A34A' : '#FEF3C7',
-                  color: showQuiz ? '#ffffff' : '#92400E',
-                  padding: '7px 16px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  boxShadow: showQuiz ? '0 2px 8px rgba(22,163,74,0.35)' : 'none',
-                  transition: 'all 0.15s'
-                }}
-              >
-                <span>📝</span> Map Activity Questions
-                <span style={{
-                  background: showQuiz ? 'rgba(255,255,255,0.25)' : '#FDE68A',
-                  color: showQuiz ? '#fff' : '#78350F',
-                  padding: '2px 7px',
-                  borderRadius: '999px',
-                  fontSize: '11px',
-                  fontWeight: 900
-                }}>
-                  {correctCount}/{MAP_QUIZ.length}
-                </span>
-              </button>
             </div>
 
             {/* LIVE COMPASS HUD: DISPLAYED ONLY ON 3D ILLUSTRATED MAP */}
@@ -1329,12 +1277,11 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               <LiveCompassHUD angle={walkerAngle3D} currentDir={currentHeadingDir3D} />
             )}
 
-
-
             {/* ── MODE 1: 3D ILLUSTRATED MAP ── */}
             {mapMode === '3d' && (
               <div style={{ position: 'absolute', inset: 0, paddingTop: '58px', background: '#F7F1E2' }}>
                 <TownMap3DExplorer
+                  hideSidebar={showQuiz}
                   onComplete={(stats) => {
                     setWin3D(true);
                     setTownCompletion(stats);
@@ -1640,7 +1587,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                     <button
                       onClick={() => {
                         setWin3D(false);
-                        setShowQuiz(true);
+                        if (onBeginChapter) onBeginChapter();
                       }}
                       style={{ fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, border: 'none', cursor: 'pointer', background: '#10B981', color: '#FFFFFF', padding: '10px 22px', borderRadius: '12px', fontSize: '13.5px', boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)' }}
                     >
@@ -1830,38 +1777,9 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                     </div>
                   );
                 })}
-
-                {quizPage === questionPages && (
-                  <div ref={elementsRef} style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: 'clamp(10px, 1.8vh, 16px)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400E', fontFamily: '"Space Grotesk", sans-serif', fontSize: 'clamp(10px, 1.7vh, 11.5px)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 800, marginBottom: 'clamp(6px, 1.3vh, 10px)', flexShrink: 0 }}>
-                      <Compass size={15} color="#D97706" /> Key Elements of a Map
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(6px, 1.4vh, 12px)' }}>
-                      <div>
-                        <h4 style={{ margin: '0 0 3px 0', color: '#78350F', fontSize: 'clamp(12.5px, 2.1vh, 14.5px)', fontWeight: 800 }}>1. Directions &amp; Compass</h4>
-                        <p style={{ margin: 0, fontSize: 'clamp(11.5px, 1.95vh, 13px)', color: '#3D2E24', lineHeight: 1.4, fontWeight: 600 }}>
-                          The compass shows North (top), South (bottom), East (right) and West (left).
-                        </p>
-                      </div>
-                      <div>
-                        <h4 style={{ margin: '0 0 3px 0', color: '#78350F', fontSize: 'clamp(12.5px, 2.1vh, 14.5px)', fontWeight: 800 }}>2. Conventional Colours &amp; Symbols</h4>
-                        <p style={{ margin: 0, fontSize: 'clamp(11.5px, 1.95vh, 13px)', color: '#3D2E24', lineHeight: 1.4, fontWeight: 600 }}>
-                          Blue marks water bodies, green marks gardens and trees, and yellow or red marks civic landmarks.
-                        </p>
-                      </div>
-                      <div>
-                        <h4 style={{ margin: '0 0 3px 0', color: '#78350F', fontSize: 'clamp(12.5px, 2.1vh, 14.5px)', fontWeight: 800 }}>3. Distance &amp; Road Routes</h4>
-                        <p style={{ margin: 0, fontSize: 'clamp(11.5px, 1.95vh, 13px)', color: '#3D2E24', lineHeight: 1.4, fontWeight: 600 }}>
-                          Roads connect landmarks across distances and guide travellers to their destination.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
               </div>
 
-              {/* Pager — always pinned, never overlapped */}
+              {/* Pager & Next Activity Action — always pinned, never overlapped */}
               <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', borderTop: '1.5px solid #F2DFBC', paddingTop: 'clamp(5px, 1.1vh, 9px)' }}>
                 <button
                   onClick={() => setQuizPage(p => Math.max(0, p - 1))}
@@ -1878,9 +1796,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#78350F', fontSize: 'clamp(11px, 1.9vh, 13px)', fontWeight: 800, minWidth: 0 }}>
                   <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {quizPage < questionPages
-                      ? `Questions ${quizPage * perQuizPage + 1}–${Math.min((quizPage + 1) * perQuizPage, MAP_QUIZ.length)} of ${MAP_QUIZ.length}`
-                      : 'Map Basics'}
+                    {`Questions ${quizPage * perQuizPage + 1}–${Math.min((quizPage + 1) * perQuizPage, MAP_QUIZ.length)} of ${MAP_QUIZ.length}`}
                   </span>
                   <span style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
                     {Array.from({ length: quizPages }).map((_, i) => (
@@ -1889,20 +1805,38 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                   </span>
                 </div>
 
-                <button
-                  onClick={() => setQuizPage(p => Math.min(quizPages - 1, p + 1))}
-                  disabled={quizPage === quizPages - 1}
-                  style={{
-                    fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.95vh, 13px)',
-                    background: quizPage === quizPages - 1 ? '#F7F1E2' : '#F59E0B',
-                    color: quizPage === quizPages - 1 ? '#78350F' : '#FFFFFF',
-                    border: `1.5px solid ${quizPage === quizPages - 1 ? '#F2DFBC' : '#F59E0B'}`, borderRadius: '999px',
-                    padding: 'clamp(5px, 1vh, 8px) clamp(11px, 1.6vw, 16px)', cursor: quizPage === quizPages - 1 ? 'not-allowed' : 'pointer',
-                    opacity: quizPage === quizPages - 1 ? 0.35 : 1, whiteSpace: 'nowrap'
-                  }}
-                >
-                  Next ▶
-                </button>
+                {quizPage < quizPages - 1 ? (
+                  <button
+                    onClick={() => setQuizPage(p => Math.min(quizPages - 1, p + 1))}
+                    style={{
+                      fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.95vh, 13px)',
+                      background: '#F59E0B',
+                      color: '#FFFFFF',
+                      border: '1.5px solid #F59E0B', borderRadius: '999px',
+                      padding: 'clamp(5px, 1vh, 8px) clamp(11px, 1.6vw, 16px)', cursor: 'pointer',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    Next ▶
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      if (onBeginChapter) onBeginChapter();
+                    }}
+                    style={{
+                      fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.95vh, 13px)',
+                      background: '#10B981',
+                      color: '#FFFFFF',
+                      border: '1.5px solid #059669', borderRadius: '999px',
+                      padding: 'clamp(5px, 1vh, 8px) clamp(14px, 1.8vw, 20px)', cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      boxShadow: '0 2px 8px rgba(16, 185, 129, 0.4)'
+                    }}
+                  >
+                    Next Activity ➔
+                  </button>
+                )}
               </div>
 
             </div>
@@ -1921,8 +1855,15 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
       </div>
       <ChapterBackFooter
         onBack={onBack}
-        nextLabel={hasWonAny ? 'Next Activity' : 'Reach the Bank to unlock'}
-        onNext={onBeginChapter}
+        nextLabel={!hasWonAny ? 'Reach the Bank to unlock' : 'Next Activity'}
+        onNext={() => {
+          if (!hasWonAny) return;
+          if (!showQuiz) {
+            setShowQuiz(true);
+          } else {
+            if (onBeginChapter) onBeginChapter();
+          }
+        }}
         nextDisabled={!hasWonAny}
         nextVariant="green"
       />
