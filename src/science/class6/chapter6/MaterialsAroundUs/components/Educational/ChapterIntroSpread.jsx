@@ -315,13 +315,18 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
         .slogan-two-col {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 1vw;
+          gap: 0.8vw;
           margin-bottom: 0;
           flex: 1 1 0;
           min-height: 0;
         }
         .slogan-two-col .slogan-card {
           margin-bottom: 0;
+          padding: 1vh 1vw;
+        }
+        .slogan-two-col .slogan-card p {
+          text-align: left;
+          line-height: 1.36;
         }
 
         .slogan-material-dot {
@@ -643,7 +648,10 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           <button className="slogan-btn slogan-btn-secondary" onClick={onBack}>
             ← Back
           </button>
-          <button className="slogan-btn slogan-btn-primary" onClick={onContinue}>
+          <button 
+            className={`slogan-btn ${currentPage === 2 ? 'slogan-btn-secondary' : 'slogan-btn-primary'}`} 
+            onClick={onContinue}
+          >
             Begin Investigation →
           </button>
         </div>

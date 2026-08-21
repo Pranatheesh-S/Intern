@@ -93,12 +93,21 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             background: var(--surface);
             border-left: 1px solid #ece7d8;
             height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+          }
+          .right-page-content {
+            width: 100%;
+            height: 100%;
             overflow-y: auto;
-            padding: 32px 40px 28px;
+            padding: 32px 40px 96px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
+            box-sizing: border-box;
           }
           
           /* ---------- LEFT PAGE SPEECH BUBBLE ---------- */
@@ -165,12 +174,13 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             gap: 10px;
           }
           .mission-title {
-            font-size: clamp(41px, 5vh, 53px);
-            line-height: 1.12;
+            font-size: clamp(35px, 4.3vh, 46px);
+            line-height: 1.15;
             color: var(--text-heading);
             font-weight: 700;
             margin: 0 0 22px 0;
             font-family: Georgia, "Times New Roman", serif;
+            word-break: keep-all;
           }
           .mission-content {
             margin-bottom: 22px;
@@ -249,6 +259,10 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
 
           .start-btn {
+            position: absolute;
+            bottom: 18px;
+            right: 28px;
+            z-index: 10000;
             background: var(--text-heading);
             color: white;
             border: none;
@@ -274,6 +288,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           @media (max-width: 1024px) {
             .spread { flex-direction: column; overflow-y: auto; }
             .right-page { border-left: none; border-top: 1px solid #ece7d8; overflow-y: visible; }
+            .right-page-content { overflow-y: visible; height: auto; padding-bottom: 96px; }
           }
           .spread-back-btn {
             position: absolute;
@@ -339,52 +354,54 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           
           {/* RIGHT PAGE */}
           <div className="page-spread right-page">
-            <div className="mission-header">
-              <ShieldAlert size={22} />
-              MISSION BRIEFING
-            </div>
-            
-            <h1 className="mission-title">{data.title || 'The Classroom Mystery'}</h1>
-            
-            <div className="mission-content">
-              <p>{data.description || "Review the handbook and proceed to the activity area to complete the required tasks for this barrier."}</p>
-            </div>
-            
-            <div className="mission-box">
-              <h3><Check size={18} color="#ef4444" /> OBJECTIVES</h3>
-              {Array.isArray(data.objective) ? (
-                <ul style={{ margin: 0, paddingLeft: '26px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
-                  {data.objective.map((obj, i) => (
-                    <li key={i} style={{ fontSize: 'clamp(20px, 2.5vh, 25px)', color: 'var(--text-primary)', lineHeight: '1.45' }}>
-                      {obj}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>{data.objective || "Complete the investigation."}</p>
-              )}
-            </div>
-            
-            <div className="mission-meta">
-              <div className="meta-item">
-                <span className="meta-label">Difficulty</span>
-                <span className="meta-value">
-                  {[1, 2, 3].map(star => (
-                    <span key={star} className={`meta-stars ${star > (data.difficulty || 1) ? 'empty' : ''}`}>★</span>
-                  ))}
-                </span>
+            <div className="right-page-content">
+              <div className="mission-header">
+                <ShieldAlert size={22} />
+                MISSION BRIEFING
               </div>
-              <div className="meta-item">
-                <span className="meta-label">Est. Time</span>
-                <span className="meta-value">⏱ {data.estimatedTime || '5 minutes'}</span>
+              
+              <h1 className="mission-title">
+                {typeof data?.title === 'string' ? data.title.replace('Barrier 2', 'Barrier\u00A02') : (data?.title || 'The Classroom Mystery')}
+              </h1>
+              
+              <div className="mission-content">
+                <p>{data.description || "Review the handbook and proceed to the activity area to complete the required tasks for this barrier."}</p>
+              </div>
+              
+              <div className="mission-box">
+                <h3><Check size={18} color="#ef4444" /> OBJECTIVES</h3>
+                {Array.isArray(data.objective) ? (
+                  <ul style={{ margin: 0, paddingLeft: '26px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
+                    {data.objective.map((obj, i) => (
+                      <li key={i} style={{ fontSize: 'clamp(20px, 2.5vh, 25px)', color: 'var(--text-primary)', lineHeight: '1.45' }}>
+                        {obj}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>{data.objective || "Complete the investigation."}</p>
+                )}
+              </div>
+              
+              <div className="mission-meta">
+                <div className="meta-item">
+                  <span className="meta-label">Difficulty</span>
+                  <span className="meta-value">
+                    {[1, 2, 3].map(star => (
+                      <span key={star} className={`meta-stars ${star > (data.difficulty || 1) ? 'empty' : ''}`}>★</span>
+                    ))}
+                  </span>
+                </div>
+                <div className="meta-item">
+                  <span className="meta-label">Est. Time</span>
+                  <span className="meta-value">⏱ {data.estimatedTime || '5 minutes'}</span>
+                </div>
               </div>
             </div>
-            
-            <div style={{ marginTop: '4px' }}>
-              <button className="start-btn" onClick={handleStart}>
-                Acknowledge & Begin <ArrowRight size={22} />
-              </button>
-            </div>
+
+            <button className="start-btn" onClick={handleStart}>
+              Acknowledge & Begin <ArrowRight size={22} />
+            </button>
           </div>
         </div>
       </motion.div>

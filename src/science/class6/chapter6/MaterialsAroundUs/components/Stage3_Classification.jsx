@@ -63,8 +63,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
   ];
 
   const shelves = [
-    { name: 'School Shelf', icon: <BookOpen size={18} />, bgImage: bgShelfSchool },
-    { name: 'Home Shelf', icon: <Home size={18} />, bgImage: bgShelfHome },
+    { name: 'School Shelf', icon: <BookOpen size={18} />, bgImage: bgShelfKitchen },
+    { name: 'Home Shelf', icon: <Home size={18} />, bgImage: bgShelfKitchen },
     { name: 'Kitchen Shelf', icon: <Utensils size={18} />, bgImage: bgShelfKitchen }
   ];
 
@@ -289,7 +289,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           >
             {/* Left Section: Evidence Tray */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0, padding: '1.1rem 1.25rem' }}>
-              <h4 style={{ margin: 0, fontSize: 'var(--text-xl)', fontWeight: '800', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
+              <h4 style={{ margin: 0, fontSize: 'calc(var(--text-xl) * 1.1)', fontWeight: '800', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
                 Evidence Tray
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.75rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
@@ -328,14 +328,14 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         alt={item.name}
                         style={{
                           width: '100%',
-                          height: '75%',
+                          height: '70%',
                           objectFit: 'contain',
                           pointerEvents: 'none'
                         }}
                       />
                       <span
                         style={{
-                          fontSize: '0.85rem',
+                          fontSize: '1.27rem',
                           fontWeight: '700',
                           color: 'var(--text-heading)',
                           textAlign: 'center',
@@ -362,7 +362,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
             {/* Right Section: Shelves */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0, padding: '1.1rem 1.25rem' }}>
-              <h4 style={{ margin: 0, fontSize: 'var(--text-xl)', fontWeight: '800', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
+              <h4 style={{ margin: 0, fontSize: 'calc(var(--text-xl) * 1.1)', fontWeight: '800', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
                 Shelves (Organize by Use)
               </h4>
               <div style={{ display: 'grid', gridTemplateRows: 'repeat(3, 1fr)', gap: '0.65rem', flex: 1, minHeight: 0 }}>
@@ -415,7 +415,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                           width: '100%',
                           height: '100%',
                           objectFit: 'cover',
-                          objectPosition: 'center 65%',
+                          objectPosition: 'center 62%',
                           pointerEvents: 'none'
                         }}
                       />
@@ -435,7 +435,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                           position: 'absolute',
                           left: 0,
                           right: 0,
-                          bottom: '34px',
+                          bottom: '18px',
                           display: 'flex',
                           gap: '2.5rem',
                           alignItems: 'flex-end',
@@ -452,47 +452,63 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                             key={item.id}
                             title={item.name}
                             style={{
+                              width: '135px',
                               display: 'flex',
                               flexDirection: 'column',
                               alignItems: 'center',
+                              justifyContent: 'flex-end',
+                              flexShrink: 0,
                               pointerEvents: 'auto',
                               cursor: 'default',
                               position: 'relative'
                             }}
                           >
-                            {/* Object Image */}
-                            <img 
-                              src={item.icon} 
-                              alt={item.name} 
-                              style={{ 
-                                width: '124px', 
-                                height: '124px', 
-                                objectFit: 'cover', 
+                            {/* Polished Physical Evidence Card Frame */}
+                            <div
+                              style={{
+                                width: '104px',
+                                height: '104px',
                                 borderRadius: '12px',
-                                pointerEvents: 'none',
-                                filter: 'drop-shadow(0 6px 16px rgba(0,0,0,0.5))',
-                                border: '1.5px solid rgba(255,255,255,0.3)',
-                                background: '#1e293b'
-                              }} 
-                            />
+                                overflow: 'hidden',
+                                border: '2px solid rgba(255, 255, 255, 0.9)',
+                                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.25)',
+                                background: '#1e293b',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                position: 'relative'
+                              }}
+                            >
+                              <img 
+                                src={item.icon} 
+                                alt={item.name} 
+                                style={{ 
+                                  width: '100%', 
+                                  height: '100%', 
+                                  objectFit: 'cover',
+                                  display: 'block',
+                                  pointerEvents: 'none'
+                                }} 
+                              />
+                            </div>
 
                             {/* Realistic Soft Contact Shadow on Shelf Wood */}
                             <div 
                               style={{
-                                width: '112px',
-                                height: '8px',
-                                background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 60%, transparent 80%)',
+                                width: '92px',
+                                height: '6px',
+                                background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 80%)',
                                 borderRadius: '50%',
-                                marginTop: '-4px',
+                                marginTop: '-2px',
                                 marginBottom: '3px',
-                                filter: 'blur(1.5px)'
+                                filter: 'blur(1.2px)'
                               }}
                             />
 
                             {/* Label */}
                             <span
                               style={{
-                                fontSize: '0.84rem',
+                                fontSize: '0.82rem',
                                 fontWeight: '700',
                                 color: '#ffffff',
                                 textShadow: '0 1px 2px rgba(0,0,0,0.9)',
@@ -500,12 +516,12 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                                 backdropFilter: 'blur(4px)',
                                 padding: '2px 10px',
                                 borderRadius: '6px',
-                                maxWidth: '135px',
+                                maxWidth: '130px',
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
-                                border: '1px solid rgba(255,255,255,0.2)'
+                                border: '1px solid rgba(255,255,255,0.25)'
                               }}
                             >
                               {item.name}
@@ -589,7 +605,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               flexShrink: 0
             }}>
               <div style={{
-                fontSize: '0.95rem',
+                fontSize: '1.81rem',
                 fontWeight: '700',
                 color: '#0f172a',
                 letterSpacing: '-0.01em'
@@ -683,7 +699,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         pointerEvents: 'none'
                       }}>
                         <span style={{
-                          fontSize: 'clamp(10px, 0.72vw, 12px)',
+                          fontSize: 'clamp(14.7px, 1.07vw, 18.3px)',
                           fontWeight: '700',
                           color: '#1e293b',
                           lineHeight: '1.2',
@@ -899,7 +915,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     }}>
                       <span style={{
                         fontWeight: '800',
-                        fontSize: 'clamp(11.5px, 0.85vw, 14.5px)',
+                        fontSize: 'clamp(17.7px, 1.31vw, 22.2px)',
                         color: basket.color,
                         letterSpacing: '0.04em',
                         textTransform: 'uppercase',
