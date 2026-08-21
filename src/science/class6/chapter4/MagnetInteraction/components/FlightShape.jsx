@@ -1,145 +1,203 @@
 import React from 'react';
 
 export default function FlightShape({ 
-  flightType = 'flightA', // 'flightA' (Red Airline Accent) or 'flightB' (Blue Airline Accent)
+  flightType = 'flightA', // 'flightA' (Left Jet) or 'flightB' (Right Jet)
   poleLeft = 'N',         // 'N' or 'S' for left wing
-  width = 250,
-  height = 120,
-  isVertical = true,
+  width = 240,
+  height = 280,
   style = {}
 }) {
-  const isFlightA = flightType === 'flightA';
   const poleRight = poleLeft === 'N' ? 'S' : 'N';
 
-  const containerWidth = isVertical ? height : width;
-  const containerHeight = isVertical ? width : height;
+  const leftWingColor = poleLeft === 'N' ? '#EF4444' : '#3B82F6';
+  const leftWingDark = poleLeft === 'N' ? '#B91C1C' : '#1D4ED8';
+  const leftWingLight = poleLeft === 'N' ? '#FCA5A5' : '#93C5FD';
 
-  const leftWingColor = poleLeft === 'N' ? '#DC2626' : '#2563EB';
-  const rightWingColor = poleRight === 'N' ? '#DC2626' : '#2563EB';
+  const rightWingColor = poleRight === 'N' ? '#EF4444' : '#3B82F6';
+  const rightWingDark = poleRight === 'N' ? '#B91C1C' : '#1D4ED8';
+  const rightWingLight = poleRight === 'N' ? '#FCA5A5' : '#93C5FD';
 
   return (
     <div
       style={{
         position: 'relative',
-        width: `${containerWidth}px`,
-        height: `${containerHeight}px`,
+        width: `${width}px`,
+        height: `${height}px`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        filter: 'drop-shadow(0 16px 26px rgba(0, 0, 0, 0.45))',
+        filter: 'drop-shadow(0 25px 35px rgba(0, 0, 0, 0.55)) drop-shadow(0 10px 15px rgba(0, 0, 0, 0.35))',
         pointerEvents: 'none',
         userSelect: 'none',
-        transform: isVertical ? 'rotate(-90deg)' : 'none',
         ...style
       }}
     >
       <svg 
         width="100%" 
         height="100%" 
-        viewBox="0 0 270 120" 
+        viewBox="0 0 300 350" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Pristine White Fuselage Gradient */}
-          <linearGradient id="whiteFuselageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="45%" stopColor="#F8FAFC" />
-            <stop offset="85%" stopColor="#E2E8F0" />
-            <stop offset="100%" stopColor="#CBD5E1" />
+          {/* Fuselage Metallic Shading */}
+          <linearGradient id="fuselageGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#CBD5E1" />
+            <stop offset="25%" stopColor="#F8FAFC" />
+            <stop offset="50%" stopColor="#FFFFFF" />
+            <stop offset="75%" stopColor="#F1F5F9" />
+            <stop offset="100%" stopColor="#94A3B8" />
           </linearGradient>
 
-          {/* Cockpit Dark Tinted Glass */}
-          <linearGradient id="cockpitGlass" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#0F172A" />
-            <stop offset="100%" stopColor="#334155" />
+          {/* Fuselage Top Highlight Spine */}
+          <linearGradient id="spineHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+            <stop offset="50%" stopColor="rgba(255,255,255,0.95)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
           </linearGradient>
 
           {/* Left Wing Gradient */}
-          <linearGradient id="leftWingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={poleLeft === 'N' ? "#EF4444" : "#3B82F6"} />
-            <stop offset="100%" stopColor={poleLeft === 'N' ? "#991B1B" : "#1E3A8A"} />
+          <linearGradient id="leftWingFill" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={leftWingLight} />
+            <stop offset="35%" stopColor={leftWingColor} />
+            <stop offset="100%" stopColor={leftWingDark} />
           </linearGradient>
 
           {/* Right Wing Gradient */}
-          <linearGradient id="rightWingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={poleRight === 'N' ? "#EF4444" : "#3B82F6"} />
-            <stop offset="100%" stopColor={poleRight === 'N' ? "#991B1B" : "#1E3A8A"} />
+          <linearGradient id="rightWingFill" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={rightWingLight} />
+            <stop offset="35%" stopColor={rightWingColor} />
+            <stop offset="100%" stopColor={rightWingDark} />
           </linearGradient>
 
-          {/* Jet Turbine Engine Metal */}
-          <linearGradient id="engineMetal" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#64748B" />
+          {/* Engine Nacelle Gradient */}
+          <linearGradient id="engineNacelle" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#94A3B8" />
+            <stop offset="40%" stopColor="#FFFFFF" />
+            <stop offset="100%" stopColor="#475569" />
+          </linearGradient>
+
+          {/* Vertical Stabilizer Fin Gradient */}
+          <linearGradient id="finGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#E2E8F0" />
             <stop offset="50%" stopColor="#FFFFFF" />
-            <stop offset="100%" stopColor="#334155" />
+            <stop offset="100%" stopColor="#64748B" />
           </linearGradient>
         </defs>
 
-        {/* REAR HORIZONTAL TAIL STABILIZERS */}
-        <path d="M 40 55 L 12 18 L 32 18 L 65 52 Z" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="1.2" />
-        <path d="M 40 65 L 12 102 L 32 102 L 65 68 Z" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="1.2" />
-
-        {/* LEFT MAIN WING (Red for North / Blue for South) */}
-        <g>
+        {/* 1. HORIZONTAL TAIL STABILIZERS (Rear Wings at bottom) */}
+        <g id="tail-stabilizers">
+          {/* Left Tail Wing */}
           <path 
-            d="M 115 48 L 175 6 L 198 10 L 165 50 Z" 
-            fill="url(#leftWingGrad)" 
+            d="M 138 275 L 60 300 L 68 312 L 140 295 Z" 
+            fill="#E2E8F0" 
+            stroke="#94A3B8" 
+            strokeWidth="1.5" 
+          />
+          {/* Right Tail Wing */}
+          <path 
+            d="M 162 275 L 240 300 L 232 312 L 160 295 Z" 
+            fill="#E2E8F0" 
+            stroke="#94A3B8" 
+            strokeWidth="1.5" 
+          />
+        </g>
+
+        {/* 2. LEFT MAIN WING (Swept back with Pole Color) */}
+        <g id="left-main-wing">
+          <path 
+            d="M 132 155 L 15 210 L 10 200 L 128 120 Z" 
+            fill="url(#leftWingFill)" 
             stroke="#FFFFFF" 
             strokeWidth="1.5" 
           />
-          {/* Left Wing Engine Pod */}
-          <rect x="135" y="24" width="28" height="10" rx="5" fill="url(#engineMetal)" stroke="#475569" strokeWidth="1" />
-          <circle cx="163" cy="29" r="4" fill="#0F172A" />
+          {/* Winglet (Upturned tip) */}
+          <path d="M 10 200 L 15 210 L 8 185 Z" fill={leftWingDark} stroke="#FFFFFF" strokeWidth="1" />
 
-          {/* Left Wing Pole Badge Pill */}
-          <rect x="142" y="14" width="34" height="20" rx="6" fill="#FFFFFF" stroke={leftWingColor} strokeWidth="2.5" />
-          <text x="159" y="29" textAnchor="middle" fill={leftWingColor} fontSize="14" fontWeight="900">
-            {poleLeft}
-          </text>
+          {/* Left Jet Engine under wing */}
+          <rect x="85" y="172" width="22" height="42" rx="11" fill="url(#engineNacelle)" stroke="#475569" strokeWidth="1.2" />
+          {/* Engine Exhaust & Turbine Details */}
+          <ellipse cx="96" cy="212" rx="9" ry="4" fill="#0F172A" />
+          <ellipse cx="96" cy="174" rx="9" ry="4" fill="#334155" />
+
+          {/* Left Wing Magnetic Pole Badge */}
+          <g transform="translate(48, 172)">
+            <rect x="0" y="0" width="34" height="22" rx="6" fill="#FFFFFF" stroke={leftWingColor} strokeWidth="2.5" />
+            <text x="17" y="16" textAnchor="middle" fill={leftWingColor} fontSize="14" fontWeight="900" fontFamily="sans-serif">
+              {poleLeft}
+            </text>
+          </g>
         </g>
 
-        {/* RIGHT MAIN WING (Blue for South / Red for North) */}
-        <g>
+        {/* 3. RIGHT MAIN WING (Swept back with Pole Color) */}
+        <g id="right-main-wing">
           <path 
-            d="M 115 72 L 175 114 L 198 110 L 165 70 Z" 
-            fill="url(#rightWingGrad)" 
+            d="M 168 155 L 285 210 L 290 200 L 172 120 Z" 
+            fill="url(#rightWingFill)" 
             stroke="#FFFFFF" 
             strokeWidth="1.5" 
           />
-          {/* Right Wing Engine Pod */}
-          <rect x="135" y="86" width="28" height="10" rx="5" fill="url(#engineMetal)" stroke="#475569" strokeWidth="1" />
-          <circle cx="163" cy="91" r="4" fill="#0F172A" />
+          {/* Winglet (Upturned tip) */}
+          <path d="M 290 200 L 285 210 L 292 185 Z" fill={rightWingDark} stroke="#FFFFFF" strokeWidth="1" />
 
-          {/* Right Wing Pole Badge Pill */}
-          <rect x="142" y="86" width="34" height="20" rx="6" fill="#FFFFFF" stroke={rightWingColor} strokeWidth="2.5" />
-          <text x="159" y="101" textAnchor="middle" fill={rightWingColor} fontSize="14" fontWeight="900">
-            {poleRight}
-          </text>
+          {/* Right Jet Engine under wing */}
+          <rect x="193" y="172" width="22" height="42" rx="11" fill="url(#engineNacelle)" stroke="#475569" strokeWidth="1.2" />
+          {/* Engine Exhaust & Turbine Details */}
+          <ellipse cx="204" cy="212" rx="9" ry="4" fill="#0F172A" />
+          <ellipse cx="204" cy="174" rx="9" ry="4" fill="#334155" />
+
+          {/* Right Wing Magnetic Pole Badge */}
+          <g transform="translate(218, 172)">
+            <rect x="0" y="0" width="34" height="22" rx="6" fill="#FFFFFF" stroke={rightWingColor} strokeWidth="2.5" />
+            <text x="17" y="16" textAnchor="middle" fill={rightWingColor} fontSize="14" fontWeight="900" fontFamily="sans-serif">
+              {poleRight}
+            </text>
+          </g>
         </g>
 
-        {/* PRISTINE WHITE AIRPLANE FUSELAGE (MAIN BODY) */}
-        <path 
-          d="M 20 60 C 20 46, 70 38, 185 38 C 225 38, 255 48, 258 60 C 255 72, 225 82, 185 82 C 70 82, 20 74, 20 60 Z" 
-          fill="url(#whiteFuselageGrad)" 
-          stroke="#94A3B8" 
-          strokeWidth="1.5" 
-        />
+        {/* 4. MAIN FUSELAGE (Sleek White Cylindrical Airliner Body) */}
+        <g id="fuselage">
+          <path 
+            d="M 150 25 C 166 25, 172 65, 172 135 L 170 255 C 168 285, 158 315, 150 315 C 142 315, 132 285, 130 255 L 128 135 C 128 65, 134 25, 150 25 Z" 
+            fill="url(#fuselageGrad)" 
+            stroke="#94A3B8" 
+            strokeWidth="1.5" 
+          />
 
-        {/* PASSENGER WINDOWS STRIPE */}
-        {Array.from({ length: 9 }).map((_, i) => (
-          <circle key={i} cx={75 + i * 14} cy="53" r="2.2" fill="#334155" />
-        ))}
-        {Array.from({ length: 9 }).map((_, i) => (
-          <circle key={i} cx={75 + i * 14} cy="67" r="2.2" fill="#334155" />
-        ))}
+          {/* Top Spine Highlight */}
+          <path 
+            d="M 150 35 L 150 295" 
+            stroke="url(#spineHighlight)" 
+            strokeWidth="6" 
+            strokeLinecap="round" 
+          />
 
-        {/* AIRLINE LOGO TAIL FIN TRIME */}
-        <path d="M 28 60 L 15 28 L 38 28 L 54 56 Z" fill={isFlightA ? "#DC2626" : "#2563EB"} />
-        <path d="M 28 60 L 15 92 L 38 92 L 54 64 Z" fill={isFlightA ? "#DC2626" : "#2563EB"} />
+          {/* Cockpit Windshield (tinted dark glass at nose) */}
+          <path 
+            d="M 143 42 C 147 38, 153 38, 157 42 C 161 46, 159 52, 150 54 C 141 52, 139 46, 143 42 Z" 
+            fill="#0F172A" 
+            stroke="#64748B" 
+            strokeWidth="1" 
+          />
 
-        {/* COCKPIT WINDSHIELD GLASS */}
-        <path d="M 225 52 C 238 52, 248 56, 252 60 C 248 64, 238 68, 225 68 C 220 64, 220 56, 225 52 Z" fill="url(#cockpitGlass)" stroke="#FFFFFF" strokeWidth="1" />
-        <path d="M 228 54 C 238 56, 244 58, 248 60" stroke="#38BDF8" strokeWidth="1.5" opacity="0.85" />
+          {/* Auxiliary Power Unit (APU) Tail Cone exhaust */}
+          <circle cx="150" cy="314" r="3.5" fill="#1E293B" stroke="#64748B" strokeWidth="1" />
+        </g>
+
+        {/* 5. VERTICAL STABILIZER (Tail Fin viewed from above/behind) */}
+        <g id="vertical-tail-fin">
+          <path 
+            d="M 148 215 L 152 215 L 154 290 L 146 290 Z" 
+            fill="url(#finGrad)" 
+            stroke="#64748B" 
+            strokeWidth="1" 
+          />
+          <path 
+            d="M 150 215 L 150 290" 
+            stroke="#FFFFFF" 
+            strokeWidth="2" 
+          />
+        </g>
       </svg>
     </div>
   );

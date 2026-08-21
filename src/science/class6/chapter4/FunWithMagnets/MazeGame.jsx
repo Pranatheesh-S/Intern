@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { RotateCcw, Trophy, Layers } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { RotateCcw, Trophy, Compass, MapPin, CheckCircle2, Sparkles, Navigation, Target } from 'lucide-react';
 
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -17,8 +18,8 @@ function draw3DMagnet(ctx, cx, cy, w, h) {
 
   // Outer Magnetic Attraction Field Aura
   const auraGlow = ctx.createRadialGradient(0, 0, 10, 0, 0, w * 0.95);
-  auraGlow.addColorStop(0, "rgba(245, 158, 11, 0.65)");
-  auraGlow.addColorStop(0.5, "rgba(239, 68, 68, 0.4)");
+  auraGlow.addColorStop(0, "rgba(245, 158, 11, 0.75)");
+  auraGlow.addColorStop(0.5, "rgba(239, 68, 68, 0.45)");
   auraGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = auraGlow;
   ctx.beginPath();
@@ -93,7 +94,7 @@ function drawSteelBall(ctx, x, y, radius) {
   ctx.stroke();
 
   // Specular Highlight
-  ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
   ctx.beginPath();
   ctx.arc(-radius * 0.35, -radius * 0.35, radius * 0.3, 0, Math.PI * 2);
   ctx.fill();
@@ -101,96 +102,77 @@ function drawSteelBall(ctx, x, y, radius) {
   ctx.restore();
 }
 
-// 3 Distinct Stages with Custom Background Colors & Wall Layouts
-const MAZE_STAGES = [
+// Town Waypoints / Landmarks
+const LANDMARKS = [
+  { id: 'airport', name: 'Skyline Airport ✈️', x: 230, y: 350, icon: '✈️' },
+  { id: 'beach', name: 'Sunset Beach 🏖️', x: 170, y: 640, icon: '🏖️' },
+  { id: 'park', name: 'Greenfield Park 🌳', x: 490, y: 470, icon: '🌳' },
+  { id: 'stadium', name: 'City Stadium 🏟️', x: 670, y: 390, icon: '🏟️' },
+  { id: 'hospital', name: 'Central Hospital 🏥', x: 880, y: 390, icon: '🏥' },
+  { id: 'fire_station', name: 'Fire Station 🚒', x: 720, y: 560, icon: '🚒' },
+  { id: 'cineplex', name: 'Star Cineplex 🎬', x: 850, y: 640, icon: '🎬' }
+];
+
+// Sequential Missions
+const MISSIONS = [
   {
     id: 1,
-    name: 'Stage 1: Emerald Gateway',
-    bgGradient: ['#064E3B', '#047857', '#022C22'],
-    wallFill: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-    wallBorder: '#A7F3D0',
-    gridColor: 'rgba(167, 243, 208, 0.15)',
-    startPos: { x: 80, y: 80 },
-    goal: { x: 910, y: 630, r: 50 },
-    walls: [
-      { x: 20, y: 20, w: 960, h: 14 },
-      { x: 20, y: 686, w: 960, h: 14 },
-      { x: 20, y: 20, w: 14, h: 680 },
-      { x: 966, y: 20, w: 14, h: 680 },
-
-      { x: 180, y: 20, w: 14, h: 480 },
-      { x: 360, y: 200, w: 14, h: 490 },
-      { x: 540, y: 20, w: 14, h: 480 },
-      { x: 720, y: 200, w: 14, h: 490 },
-
-      { x: 180, y: 240, w: 120, h: 14 },
-      { x: 540, y: 240, w: 120, h: 14 }
-    ]
+    title: "Mission 1: Airport to Sunset Beach",
+    desc: "Guide your magnetic object from Skyline Airport through town roads to Sunset Beach 🏖️!",
+    start: 'airport',
+    target: 'beach'
   },
   {
     id: 2,
-    name: 'Stage 2: Cosmic Sapphire Vault',
-    bgGradient: ['#0F172A', '#1E1B4B', '#0284C7'],
-    wallFill: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
-    wallBorder: '#38BDF8',
-    gridColor: 'rgba(56, 189, 248, 0.18)',
-    startPos: { x: 80, y: 630 },
-    goal: { x: 910, y: 90, r: 50 },
-    walls: [
-      { x: 20, y: 20, w: 960, h: 14 },
-      { x: 20, y: 686, w: 960, h: 14 },
-      { x: 20, y: 20, w: 14, h: 680 },
-      { x: 966, y: 20, w: 14, h: 680 },
-
-      { x: 220, y: 140, w: 14, h: 550 },
-      { x: 440, y: 20, w: 14, h: 550 },
-      { x: 660, y: 140, w: 14, h: 550 },
-
-      { x: 220, y: 340, w: 140, h: 14 },
-      { x: 440, y: 200, w: 140, h: 14 },
-      { x: 660, y: 440, w: 140, h: 14 }
-    ]
+    title: "Mission 2: Beach to City Stadium",
+    desc: "Navigate past Greenfield Park to reach the City Stadium 🏟️!",
+    start: 'beach',
+    target: 'stadium'
   },
   {
     id: 3,
-    name: 'Stage 3: Golden Amber Fortress',
-    bgGradient: ['#451A03', '#78350F', '#D97706'],
-    wallFill: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-    wallBorder: '#FDE047',
-    gridColor: 'rgba(253, 224, 71, 0.2)',
-    startPos: { x: 80, y: 80 },
-    goal: { x: 500, y: 630, r: 50 },
-    walls: [
-      { x: 20, y: 20, w: 960, h: 14 },
-      { x: 20, y: 686, w: 960, h: 14 },
-      { x: 20, y: 20, w: 14, h: 680 },
-      { x: 966, y: 20, w: 14, h: 680 },
-
-      { x: 150, y: 20, w: 14, h: 420 },
-      { x: 300, y: 180, w: 14, h: 510 },
-      { x: 450, y: 20, w: 14, h: 420 },
-      { x: 600, y: 180, w: 14, h: 510 },
-      { x: 750, y: 20, w: 14, h: 420 },
-
-      { x: 150, y: 260, w: 80, h: 14 },
-      { x: 450, y: 260, w: 80, h: 14 }
-    ]
+    title: "Mission 3: Stadium to Central Hospital",
+    desc: "Follow the avenue right into Central Hospital 🏥!",
+    start: 'stadium',
+    target: 'hospital'
+  },
+  {
+    id: 4,
+    title: "Mission 4: Hospital to Fire Station",
+    desc: "Guide the magnetic toy down the street to the Fire Station 🚒!",
+    start: 'hospital',
+    target: 'fire_station'
   }
 ];
 
-export default function MazeGame({ onSolve, isSolved }) {
-  const [currentStageIdx, setCurrentStageIdx] = useState(0);
-  const canvasRef = useRef(null);
+// Selectable Magnetic Toy Objects
+const AVATAR_OPTIONS = [
+  { id: 'car', label: '🏎️ Sports Car', type: 'image', src: '/FunWithMagnets/toycar.png', size: 48 },
+  { id: 'ball', label: '🔮 Steel Ball', type: 'ball', size: 22 },
+  { id: 'runner', label: '🏃 Mini Man', type: 'image', src: '/FunWithMagnets/toy_runner.png', size: 44 },
+  { id: 'deer', label: '🦌 Cute Deer', type: 'image', src: '/FunWithMagnets/deer.png', size: 46 },
+  { id: 'robot', label: '🤖 Big Toy', type: 'image', src: '/FunWithMagnets/big_toy.png', size: 48 }
+];
 
+export default function MazeGame({ onSolve, isSolved }) {
+  const [missionIdx, setMissionIdx] = useState(0);
+  const [selectedAvatar, setSelectedAvatar] = useState('car');
+  const [visitedCount, setVisitedCount] = useState(1);
+  const [showCelebration, setShowCelebration] = useState(false);
+
+  const canvasRef = useRef(null);
   const onSolveRef = useRef(onSolve);
   const isSolvedRef = useRef(isSolved);
+  const handleResetRef = useRef(null);
 
   useEffect(() => {
     onSolveRef.current = onSolve;
     isSolvedRef.current = isSolved;
   }, [onSolve, isSolved]);
 
-  const handleResetRef = useRef(null);
+  const currentMission = MISSIONS[missionIdx] || MISSIONS[0];
+  const startPoint = LANDMARKS.find(l => l.id === currentMission.start) || LANDMARKS[0];
+  const targetPoint = LANDMARKS.find(l => l.id === currentMission.target) || LANDMARKS[1];
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -200,29 +182,41 @@ export default function MazeGame({ onSolve, isSolved }) {
     const H = canvas.height;
     const ctx = canvas.getContext("2d");
 
-    const stage = MAZE_STAGES[currentStageIdx];
+    // Load background image
+    const bgImg = new Image();
+    bgImg.src = "/FunWithMagnets/town_map_3d.jpg";
+
+    // Load avatar images
+    const avatarImages = {};
+    AVATAR_OPTIONS.forEach(opt => {
+      if (opt.type === 'image' && opt.src) {
+        const img = new Image();
+        img.src = opt.src;
+        avatarImages[opt.id] = img;
+      }
+    });
 
     let isDragging = false;
     let animFrame = null;
 
-    // Underboard Magnet & ONE Single 3D Steel Ball State
-    let mag = { x: stage.startPos.x, y: stage.startPos.y };
-    let ball = { x: stage.startPos.x, y: stage.startPos.y, vx: 0, vy: 0, r: 18 };
+    // Magnet and Avatar Object State
+    let mag = { x: startPoint.x + 30, y: startPoint.y + 30 };
+    let obj = { x: startPoint.x, y: startPoint.y, vx: 0, vy: 0, r: 24, rotation: 0 };
 
     handleResetRef.current = () => {
-      mag = { x: stage.startPos.x, y: stage.startPos.y };
-      ball.x = stage.startPos.x;
-      ball.y = stage.startPos.y;
-      ball.vx = 0;
-      ball.vy = 0;
+      mag = { x: startPoint.x + 30, y: startPoint.y + 30 };
+      obj.x = startPoint.x;
+      obj.y = startPoint.y;
+      obj.vx = 0;
+      obj.vy = 0;
     };
 
     const updateMagnetPos = (e) => {
       const r = canvas.getBoundingClientRect();
       const scaleX = canvas.width / r.width;
       const scaleY = canvas.height / r.height;
-      mag.x = Math.max(40, Math.min(canvas.width - 40, (e.clientX - r.left) * scaleX));
-      mag.y = Math.max(40, Math.min(canvas.height - 40, (e.clientY - r.top) * scaleY));
+      mag.x = Math.max(30, Math.min(canvas.width - 30, (e.clientX - r.left) * scaleX));
+      mag.y = Math.max(30, Math.min(canvas.height - 30, (e.clientY - r.top) * scaleY));
     };
 
     const mzDown = (e) => {
@@ -244,129 +238,140 @@ export default function MazeGame({ onSolve, isSolved }) {
     canvas.addEventListener("pointermove", mzMove);
     window.addEventListener("pointerup", mzUp);
 
-    // Wall collision helper with sliding physics
-    function checkWallCollision(x, y, radius) {
-      for (const w of stage.walls) {
-        if (x + radius > w.x && x - radius < w.x + w.w &&
-            y + radius > w.y && y - radius < w.y + w.h) {
-          return true;
-        }
-      }
-      return false;
-    }
-
     function step() {
-      // MAGNETIC ATTRACTION & SMOOTH SLIDING PHYSICS
-      let dx = mag.x - ball.x;
-      let dy = mag.y - ball.y;
+      // MAGNETIC ATTRACTION PHYSICS
+      let dx = mag.x - obj.x;
+      let dy = mag.y - obj.y;
       let dist = Math.hypot(dx, dy) || 1;
 
-      // Strong magnetic force so ball ALWAYS comes along with magnet!
-      const maxSpeed = 16;
+      // Smooth magnetic pull so object moves naturally towards magnet
+      const maxSpeed = 14;
       let targetVx = (dx / dist) * Math.min(maxSpeed, dist * 0.45);
       let targetVy = (dy / dist) * Math.min(maxSpeed, dist * 0.45);
 
-      ball.vx = ball.vx * 0.4 + targetVx * 0.6;
-      ball.vy = ball.vy * 0.4 + targetVy * 0.6;
+      obj.vx = obj.vx * 0.45 + targetVx * 0.55;
+      obj.vy = obj.vy * 0.45 + targetVy * 0.55;
 
-      // Move X independently for smooth wall sliding
-      let nextX = ball.x + ball.vx;
-      if (!checkWallCollision(nextX, ball.y, ball.r)) {
-        ball.x = nextX;
-      } else {
-        ball.vx = 0;
+      // Update position within canvas bounds
+      obj.x = Math.max(40, Math.min(W - 40, obj.x + obj.vx));
+      obj.y = Math.max(40, Math.min(H - 40, obj.y + obj.vy));
+
+      // Calculate smooth rotation angle facing movement direction
+      if (Math.abs(obj.vx) > 0.5 || Math.abs(obj.vy) > 0.5) {
+        obj.rotation = Math.atan2(obj.vy, obj.vx);
       }
 
-      // Move Y independently for smooth wall sliding
-      let nextY = ball.y + ball.vy;
-      if (!checkWallCollision(ball.x, nextY, ball.r)) {
-        ball.y = nextY;
-      } else {
-        ball.vy = 0;
-      }
-
-      // 1. Draw Distinct Stage Background Gradient
+      // 1. Draw 3D Town Map Background
       ctx.clearRect(0, 0, W, H);
-      const gBoard = ctx.createLinearGradient(0, 0, W, H);
-      gBoard.addColorStop(0, stage.bgGradient[0]);
-      gBoard.addColorStop(0.5, stage.bgGradient[1]);
-      gBoard.addColorStop(1, stage.bgGradient[2]);
-      ctx.fillStyle = gBoard;
-      ctx.fillRect(0, 0, W, H);
-
-      // Distinct Stage Blueprint Grid Lines
-      ctx.strokeStyle = stage.gridColor;
-      ctx.lineWidth = 1.5;
-      for (let x = 40; x < W; x += 40) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-      }
-      for (let y = 40; y < H; y += 40) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      if (bgImg.complete && bgImg.naturalWidth > 0) {
+        ctx.drawImage(bgImg, 0, 0, W, H);
+      } else {
+        ctx.fillStyle = "#0F172A";
+        ctx.fillRect(0, 0, W, H);
       }
 
-      // 2. Render Stage 3D Walls
-      for (const w of stage.walls) {
-        ctx.save();
-        ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-        ctx.fillRect(w.x + 8, w.y + 8, w.w, w.h);
-
-        ctx.fillStyle = stage.wallBorder;
-        ctx.fillRect(w.x, w.y, w.w, w.h);
-
-        ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-        ctx.fillRect(w.x + 3, w.y + 3, w.w - 6, w.h - 6);
-        ctx.restore();
-      }
-
-      // 3. Draw Goal Castle Sanctuary 🏰
+      // 2. Draw Target Goal Beacon
       ctx.save();
-      ctx.translate(stage.goal.x, stage.goal.y);
+      ctx.translate(targetPoint.x, targetPoint.y);
 
-      const haloGlow = ctx.createRadialGradient(0, 0, 10, 0, 0, stage.goal.r * 1.5);
-      haloGlow.addColorStop(0, "rgba(245, 158, 11, 0.7)");
-      haloGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = haloGlow;
+      // Glowing Aura
+      const targetGlow = ctx.createRadialGradient(0, 0, 5, 0, 0, 48);
+      targetGlow.addColorStop(0, "rgba(245, 158, 11, 0.85)");
+      targetGlow.addColorStop(0.5, "rgba(239, 68, 68, 0.5)");
+      targetGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = targetGlow;
       ctx.beginPath();
-      ctx.arc(0, 0, stage.goal.r * 1.5, 0, Math.PI * 2);
+      ctx.arc(0, 0, 48, 0, Math.PI * 2);
       ctx.fill();
 
+      // Beacon Disc
       ctx.fillStyle = "#FFFFFF";
       ctx.strokeStyle = "#F59E0B";
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 3.5;
       ctx.beginPath();
-      ctx.arc(0, 0, stage.goal.r, 0, Math.PI * 2);
-      ctx.fill(); ctx.stroke();
+      ctx.arc(0, 0, 24, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
 
-      ctx.font = "38px sans-serif";
+      ctx.font = "20px system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("🏰", 0, -2);
+      ctx.fillText(targetPoint.icon, 0, 1);
+
+      // Target Label Pill
+      ctx.fillStyle = "#064E3B";
+      roundRect(ctx, -60, -42, 120, 24, 12);
+      ctx.fill();
+      ctx.strokeStyle = "#A7F3D0";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "900 11px system-ui, sans-serif";
+      ctx.fillText("GOAL TARGET 🎯", 0, -30);
       ctx.restore();
 
-      // 4. Draw Magnetic Force Rays to Single Marble
-      if (dist < 500) {
+      // 3. Draw Magnetic Force Line & Flux Rays
+      if (dist < 450) {
         ctx.save();
-        ctx.strokeStyle = "rgba(245, 158, 11, 0.9)";
+        ctx.strokeStyle = "rgba(245, 158, 11, 0.95)";
         ctx.lineWidth = 3.5;
         ctx.setLineDash([8, 6]);
         ctx.beginPath();
         ctx.moveTo(mag.x, mag.y);
-        ctx.lineTo(ball.x, ball.y);
+        ctx.lineTo(obj.x, obj.y);
         ctx.stroke();
+
+        // Magnetic Attraction Particles
+        ctx.fillStyle = "#FDE047";
+        const midX = (mag.x + obj.x) / 2;
+        const midY = (mag.y + obj.y) / 2;
+        ctx.beginPath();
+        ctx.arc(midX, midY, 4, 0, Math.PI * 2);
+        ctx.fill();
         ctx.restore();
       }
 
-      // 5. Draw ONE Single 3D Steel Ball
-      drawSteelBall(ctx, ball.x, ball.y, ball.r);
+      // 4. Draw Selected Magnetic Toy Avatar
+      const curAvatar = AVATAR_OPTIONS.find(a => a.id === selectedAvatar) || AVATAR_OPTIONS[0];
+      if (curAvatar.type === 'ball') {
+        drawSteelBall(ctx, obj.x, obj.y, curAvatar.size);
+      } else {
+        const img = avatarImages[curAvatar.id];
+        if (img && img.complete && img.naturalWidth > 0) {
+          ctx.save();
+          ctx.translate(obj.x, obj.y);
+          // Drop shadow
+          ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+          ctx.shadowBlur = 12;
+          ctx.shadowOffsetY = 6;
+          const sz = curAvatar.size;
+          ctx.drawImage(img, -sz / 2, -sz / 2, sz, sz);
+          ctx.restore();
+        } else {
+          drawSteelBall(ctx, obj.x, obj.y, 20);
+        }
+      }
 
-      // 6. Draw Underboard Magnet
-      draw3DMagnet(ctx, mag.x, mag.y, 110, 32);
+      // 5. Draw 3D Underboard Magnet
+      draw3DMagnet(ctx, mag.x, mag.y, 115, 34);
 
-      // Check Stage Victory Goal Collision
-      if (Math.hypot(ball.x - stage.goal.x, ball.y - stage.goal.y) <= stage.goal.r) {
-        if (!isSolvedRef.current && onSolveRef.current) {
-          isSolvedRef.current = true;
-          onSolveRef.current();
+      // 6. Check Mission Completion Goal Hit
+      if (Math.hypot(obj.x - targetPoint.x, obj.y - targetPoint.y) <= 38) {
+        if (!showCelebration) {
+          setShowCelebration(true);
+          setVisitedCount(prev => Math.min(prev + 1, LANDMARKS.length));
+
+          if (missionIdx < MISSIONS.length - 1) {
+            setTimeout(() => {
+              setMissionIdx(prev => prev + 1);
+              setShowCelebration(false);
+            }, 1200);
+          } else {
+            if (!isSolvedRef.current && onSolveRef.current) {
+              isSolvedRef.current = true;
+              onSolveRef.current();
+            }
+          }
         }
       }
 
@@ -381,7 +386,7 @@ export default function MazeGame({ onSolve, isSolved }) {
       canvas.removeEventListener("pointermove", mzMove);
       window.removeEventListener("pointerup", mzUp);
     };
-  }, [currentStageIdx]);
+  }, [missionIdx, selectedAvatar, showCelebration]);
 
   return (
     <div style={{
@@ -395,7 +400,7 @@ export default function MazeGame({ onSolve, isSolved }) {
       boxSizing: 'border-box',
       position: 'relative'
     }}>
-      {/* Top Bar: Stage Selector & Controls */}
+      {/* Top Header Controls Row */}
       <div style={{
         position: 'absolute',
         top: '12px',
@@ -407,33 +412,34 @@ export default function MazeGame({ onSolve, isSolved }) {
         justifyContent: 'space-between',
         pointerEvents: 'none'
       }}>
-        {/* Stage Selector Pills */}
-        <div style={{ display: 'flex', gap: '0.5rem', pointerEvents: 'auto' }}>
-          {MAZE_STAGES.map((stg, idx) => (
+        {/* Avatar / Toy Selector Pills */}
+        <div style={{ display: 'flex', gap: '0.4rem', pointerEvents: 'auto', background: 'rgba(255,255,255,0.92)', padding: '4px 8px', borderRadius: '22px', border: '1.5px solid #A7F3D0', boxShadow: '0 4px 14px rgba(6, 78, 59, 0.08)' }}>
+          {AVATAR_OPTIONS.map((opt) => (
             <button
-              key={stg.id}
-              onClick={() => setCurrentStageIdx(idx)}
+              key={opt.id}
+              onClick={() => setSelectedAvatar(opt.id)}
               style={{
-                padding: '0.5rem 1.1rem',
-                borderRadius: '18px',
-                border: currentStageIdx === idx ? '2px solid #F59E0B' : '1.5px solid #CBD5E1',
-                background: currentStageIdx === idx ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
-                color: currentStageIdx === idx ? '#FFFFFF' : '#1E293B',
+                padding: '0.4rem 0.85rem',
+                borderRadius: '16px',
+                border: selectedAvatar === opt.id ? 'none' : '1px solid #E2E8F0',
+                background: selectedAvatar === opt.id ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
+                color: selectedAvatar === opt.id ? '#FFFFFF' : '#1E293B',
                 fontWeight: 900,
-                fontSize: '0.82rem',
+                fontSize: '0.8rem',
                 cursor: 'pointer',
-                boxShadow: '0 3px 10px rgba(0,0,0,0.1)',
+                boxShadow: selectedAvatar === opt.id ? '0 2px 8px rgba(217, 119, 6, 0.35)' : 'none',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.35rem'
+                gap: '0.3rem',
+                transition: 'all 0.2s ease'
               }}
             >
-              <Layers size={14} /> Stage {stg.id}
+              {opt.label}
             </button>
           ))}
         </div>
 
-        {/* Reset Button */}
+        {/* Reset Position Button */}
         <button
           onClick={() => handleResetRef.current && handleResetRef.current()}
           style={{
@@ -452,28 +458,96 @@ export default function MazeGame({ onSolve, isSolved }) {
             pointerEvents: 'auto'
           }}
         >
-          <RotateCcw size={15} /> Reset Marble
+          <RotateCcw size={15} color="#D97706" /> Reset to Start
         </button>
       </div>
 
-      {/* Stage Title Display */}
+      {/* Top Left Active Mission Card */}
       <div style={{
         position: 'absolute',
-        top: '60px',
-        left: '24px',
+        top: '62px',
+        left: '20px',
         zIndex: 30,
-        color: '#FFFFFF',
-        fontWeight: 900,
-        fontSize: '1rem',
-        textShadow: '0 2px 8px rgba(0,0,0,0.6)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.4rem'
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(8px)',
+        border: '1.5px solid #A7F3D0',
+        borderRadius: '18px',
+        padding: '0.65rem 1rem',
+        maxWidth: '360px',
+        boxShadow: '0 8px 24px rgba(6, 78, 59, 0.12)',
+        pointerEvents: 'none'
       }}>
-        <Trophy size={18} color="#FDE047" /> {MAZE_STAGES[currentStageIdx].name}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.2rem' }}>
+          <Target size={18} color="#D97706" />
+          <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#92400E' }}>
+            {currentMission.title}
+          </span>
+        </div>
+        <p style={{ margin: 0, fontSize: '0.8rem', color: '#334155', fontWeight: 700, lineHeight: '1.4' }}>
+          {currentMission.desc}
+        </p>
       </div>
 
-      {/* Full Page 3D Canvas */}
+      {/* Bottom Right Places Visited Progress Tracker */}
+      <div style={{
+        position: 'absolute',
+        bottom: '16px',
+        right: '20px',
+        zIndex: 30,
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(8px)',
+        border: '1.5px solid #A7F3D0',
+        borderRadius: '18px',
+        padding: '0.65rem 1.15rem',
+        boxShadow: '0 8px 24px rgba(6, 78, 59, 0.12)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.8rem',
+        pointerEvents: 'none'
+      }}>
+        <Navigation size={18} color="#047857" />
+        <div>
+          <div style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 800 }}>Places Visited</div>
+          <div style={{ fontSize: '0.92rem', color: '#064E3B', fontWeight: 900 }}>
+            {visitedCount} / {LANDMARKS.length} Landmarks
+          </div>
+        </div>
+      </div>
+
+      {/* Mission Reached Celebration Banner */}
+      <AnimatePresence>
+        {showCelebration && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: -20 }}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 50,
+              background: '#FFFFFF',
+              border: '2px solid #16A34A',
+              borderRadius: '24px',
+              padding: '1.25rem 2rem',
+              textAlign: 'center',
+              boxShadow: '0 15px 40px rgba(22, 163, 74, 0.25)',
+              pointerEvents: 'none'
+            }}
+          >
+            <div style={{ fontSize: '2rem', marginBottom: '0.25rem' }}>🎉</div>
+            <h3 style={{ margin: '0 0 0.2rem 0', color: '#065F46', fontSize: '1.3rem', fontWeight: 900 }}>
+              Destination Reached!
+            </h3>
+            <p style={{ margin: 0, color: '#334155', fontSize: '0.9rem', fontWeight: 700 }}>
+              Magnetic force guided your vehicle successfully!
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Full Page 3D Town Map Canvas */}
       <canvas
         ref={canvasRef}
         width={1000}

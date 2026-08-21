@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, CheckCircle, RotateCcw, Flag } from 'lucide-react';
+import MagneticNeedleShape from './MagneticNeedleShape';
 
 export default function Stage2_Floating({ onComplete }) {
   const [step, setStep] = useState('initial'); // 'initial', 'floating', 'settled'
@@ -8,34 +9,35 @@ export default function Stage2_Floating({ onComplete }) {
   const [spinCount, setSpinCount] = useState(0);
 
   const handlePlaceCork = () => {
-    // Random starting rotation
-    const initialRotation = (Math.random() > 0.5 ? 1 : -1) * (45 + Math.random() * 90);
+    // Initial spin when placed in water, then settling to 0 (North-South)
+    const initialRotation = (Math.random() > 0.5 ? 1 : -1) * (180 + Math.random() * 90);
     setRotationAngle(initialRotation);
     setStep('floating');
 
-    // After a short delay, let it settle to 0 degrees (North-South)
     setTimeout(() => {
       setRotationAngle(0);
       setTimeout(() => {
         setStep('settled');
-      }, 1500); // settling time
-    }, 1000);
+      }, 900); // settling time
+    }, 400);
   };
 
   const handleSpin = () => {
     if (step !== 'settled') return;
     
     setSpinCount(prev => prev + 1);
-    const spinAmount = (Math.random() > 0.5 ? 1 : -1) * (180 + Math.random() * 180);
-    setRotationAngle(prev => prev + spinAmount);
+    // Rapid fast spin of 2-3 full turns (720deg+)
+    const fastSpinAmount = (Math.random() > 0.5 ? 1 : -1) * (720 + Math.random() * 360);
+    setRotationAngle(prev => prev + fastSpinAmount);
     setStep('floating');
 
+    // Rapidly settles back to 0 degrees (pointing North-South)
     setTimeout(() => {
       setRotationAngle(0);
       setTimeout(() => {
         setStep('settled');
-      }, 1500);
-    }, 1000);
+      }, 900);
+    }, 500);
   };
 
   const handleFinish = () => {
@@ -50,29 +52,29 @@ export default function Stage2_Floating({ onComplete }) {
 
   const renderCorkWithNeedle = (isInteractive) => (
     <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', perspective: '1200px', pointerEvents: 'none' }}>
-      <div style={{ position: 'absolute', top: '48%', left: '50%', transformStyle: 'preserve-3d', transform: 'translate(-50%, -50%) rotateX(58deg)' }}>
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transformStyle: 'preserve-3d', transform: 'translate(-50%, -50%) rotateX(55deg)' }}>
         
-        {/* Dynamic Water Ripples when Floating or Spinning */}
+        {/* Dynamic Water Ripples when Floating or Fast Spinning */}
         {(step === 'floating' || step === 'settled') && (
           <>
             <motion.div 
               initial={{ scale: 0.5, opacity: 0.9 }}
-              animate={{ scale: [0.6, 2.4], opacity: [0.8, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+              animate={{ scale: [0.6, 2.6], opacity: [0.85, 0] }}
+              transition={{ duration: step === 'floating' ? 0.9 : 2.2, repeat: Infinity, ease: 'easeOut' }}
               style={{ 
                 position: 'absolute', top: -75, left: -75, width: 150, height: 150, 
-                borderRadius: '50%', border: '2.5px solid rgba(255, 255, 255, 0.85)',
-                boxShadow: '0 0 12px rgba(56, 189, 248, 0.6)',
+                borderRadius: '50%', border: '2.5px solid rgba(255, 255, 255, 0.9)',
+                boxShadow: '0 0 14px rgba(56, 189, 248, 0.7)',
                 pointerEvents: 'none' 
               }}
             />
             <motion.div 
               initial={{ scale: 0.4, opacity: 0.9 }}
-              animate={{ scale: [0.4, 1.8], opacity: [0.7, 0] }}
-              transition={{ duration: 2, delay: 0.6, repeat: Infinity, ease: 'easeOut' }}
+              animate={{ scale: [0.4, 2.0], opacity: [0.75, 0] }}
+              transition={{ duration: step === 'floating' ? 0.9 : 2.2, delay: 0.35, repeat: Infinity, ease: 'easeOut' }}
               style={{ 
                 position: 'absolute', top: -75, left: -75, width: 150, height: 150, 
-                borderRadius: '50%', border: '2px solid rgba(186, 230, 253, 0.7)',
+                borderRadius: '50%', border: '2px solid rgba(186, 230, 253, 0.8)',
                 pointerEvents: 'none' 
               }}
             />
@@ -82,35 +84,35 @@ export default function Stage2_Floating({ onComplete }) {
         {/* Idle Buoyancy Bobbing Motion */}
         <motion.div
           animate={{ 
-            z: step === 'floating' || step === 'settled' ? [0, 5, 0] : 0,
-            rotateX: step === 'floating' || step === 'settled' ? [0, 1.5, 0] : 0 
+            z: step === 'floating' || step === 'settled' ? [0, 6, 0] : 0,
+            rotateX: step === 'floating' || step === 'settled' ? [0, 2, 0] : 0 
           }}
-          transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
           style={{ position: 'absolute', top: 0, left: 0, width: 0, height: 0, transformStyle: 'preserve-3d' }}
         >
-          {/* Rotational Alignment Container */}
+          {/* Fast Rotational Alignment Container */}
           <motion.div
             style={{
               position: 'absolute', top: 0, left: 0, width: 0, height: 0,
               transformStyle: 'preserve-3d', cursor: isInteractive ? 'pointer' : 'grab', pointerEvents: 'auto'
             }}
             animate={{ rotateZ: rotationAngle }}
-            transition={{ type: 'spring', stiffness: 28, damping: 12, mass: 1.8 }}
-            whileHover={isInteractive ? { scale: 1.06 } : {}}
-            whileTap={isInteractive ? { scale: 0.94 } : { cursor: 'grabbing' }}
+            transition={{ type: 'spring', stiffness: 120, damping: 14, mass: 1.1 }}
+            whileHover={isInteractive ? { scale: 1.08 } : {}}
+            whileTap={isInteractive ? { scale: 0.92 } : { cursor: 'grabbing' }}
             onClick={isInteractive ? handleSpin : undefined}
-            title={isInteractive && step === 'settled' ? "Click to gently spin the compass!" : ""}
+            title={isInteractive && step === 'settled' ? "Click to rapidly spin the compass needle!" : ""}
           >
             {/* 3D Cork Disc Assembly */}
-            <div style={{ position: 'absolute', width: 100, height: 100, left: -50, top: -50, transformStyle: 'preserve-3d' }}>
+            <div style={{ position: 'absolute', width: 96, height: 96, left: -48, top: -48, transformStyle: 'preserve-3d' }}>
               {/* Soft Water Shadow */}
               <div style={{ 
-                position: 'absolute', width: 104, height: 104, left: -2, top: -2, 
-                borderRadius: '50%', background: 'rgba(3, 105, 161, 0.45)', 
+                position: 'absolute', width: 104, height: 104, left: -4, top: -4, 
+                borderRadius: '50%', background: 'rgba(3, 105, 161, 0.55)', 
                 filter: 'blur(8px)', transform: 'translateZ(-4px)' 
               }} />
 
-              {/* Stacked 3D Cylindrical Cork Layers for Realistic Height */}
+              {/* Stacked 3D Cylindrical Cork Layers */}
               {Array.from({ length: 16 }).map((_, i) => (
                 <div key={i} style={{ 
                   position: 'absolute', width: '100%', height: '100%', borderRadius: '50%', 
@@ -123,22 +125,23 @@ export default function Stage2_Floating({ onComplete }) {
                 }} />
               ))}
 
-              {/* Photorealistic 3D Magnetized Needle Mounted on Cork */}
-              <img 
-                src="/MagneticCompass/magnetic_needle_transparent.png"
-                alt="Photorealistic Magnetized Needle"
-                draggable="false"
-                style={{
-                  position: 'absolute',
-                  width: '290px',
-                  height: 'auto',
-                  left: '50%',
-                  top: '50%',
-                  transform: 'translateZ(17px) translate(-50%, -50%) rotate(-90deg)',
-                  filter: 'drop-shadow(0 0 16px rgba(245, 158, 11, 0.95)) drop-shadow(0 8px 14px rgba(0,0,0,0.65))',
-                  pointerEvents: 'none'
-                }}
-              />
+              {/* Magnetized Needle Mounted on Cork:
+                  North (Red Tip) points directly UP to North (N), South (Blue End) points DOWN to South (S) */}
+              <div style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translateZ(18px) translate(-50%, -50%) rotate(90deg)',
+                filter: 'drop-shadow(0 0 16px rgba(245, 158, 11, 0.95)) drop-shadow(0 8px 14px rgba(0,0,0,0.65))',
+                pointerEvents: 'none'
+              }}>
+                <MagneticNeedleShape 
+                  width={260} 
+                  height={32} 
+                  orientation="horizontal"
+                  isGlowing={true} 
+                />
+              </div>
             </div>
           </motion.div>
         </motion.div>
@@ -160,7 +163,7 @@ export default function Stage2_Floating({ onComplete }) {
       background: 'transparent'
     }}>
       {/* Left Side: Interactive Area */}
-      <div style={{ flex: '1.75', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100%', minHeight: 0, boxSizing: 'border-box' }}>
+      <div style={{ flex: '1.65', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100%', minHeight: 0, boxSizing: 'border-box' }}>
         {/* Top Header Container */}
         <div style={{ 
           width: '100%',
@@ -179,7 +182,7 @@ export default function Stage2_Floating({ onComplete }) {
           <p style={{ margin: 0, color: '#475569', fontSize: '0.88rem', fontWeight: 600 }}>
             {step === 'initial' 
               ? "Drag the cork into the bowl of water."
-              : "Click the cork to gently rotate it and see what happens."}
+              : "Click the floating cork to spin the compass needle fast and observe it settle North-South!"}
           </p>
         </div>
 
@@ -188,7 +191,7 @@ export default function Stage2_Floating({ onComplete }) {
           position: 'relative', 
           width: '100%', 
           maxWidth: '100%',
-          flex: 1,
+          flex: 1, 
           minHeight: '300px', 
           background: '#F0FDF4',
           border: '1.5px solid #A7F3D0',
@@ -216,7 +219,7 @@ export default function Stage2_Floating({ onComplete }) {
           />
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(255, 255, 255, 0.25)', zIndex: 1, pointerEvents: 'none' }} />
 
-          {/* Transparent White Sheet of Paper Sheet */}
+          {/* Transparent White Sheet of Paper */}
           <div style={{
             position: 'absolute',
             width: '560px',
@@ -240,103 +243,63 @@ export default function Stage2_Floating({ onComplete }) {
             </span>
           </div>
           
-          {/* Photorealistic 3D Glass Water Bowl & Compass Assembly */}
+          {/* Photorealistic 3D Ceramic Water Bowl & Compass Assembly */}
           <div style={{
-            width: '360px',
-            height: '280px',
+            width: '380px',
+            height: '340px',
             position: 'relative',
-            marginTop: '10px',
             zIndex: 10,
-            perspective: '1000px'
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}>
-            {/* Outer Glass Bowl Base & Rim */}
-            <div style={{ 
-              position: 'absolute', top: 70, left: 0, width: 360, height: 180, 
-              borderRadius: '0 0 180px 180px', 
-              background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(224, 242, 254, 0.85) 45%, rgba(14, 165, 233, 0.4) 100%)', 
-              boxSizing: 'border-box',
-              border: '3px solid rgba(255, 255, 255, 0.9)',
-              borderTop: 'none',
-              boxShadow: '0 20px 40px rgba(14, 165, 233, 0.25), inset 0 -15px 25px rgba(2, 132, 199, 0.3)'
-            }} />
-
-            {/* Glass Interior Bowl Rim */}
-            <div style={{ 
-              position: 'absolute', top: 10, left: 0, width: 360, height: 150, 
-              borderRadius: '50%', 
-              background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', 
-              boxSizing: 'border-box',
-              border: '4px solid #CBD5E1',
-              boxShadow: 'inset 0 12px 25px rgba(0,0,0,0.9), 0 0 15px rgba(255,255,255,0.6)' 
-            }} />
-
-            {/* Metallic Gold Compass Bezel Outer Ring */}
-            <div style={{ 
-              position: 'absolute', top: 14, left: 4, width: 352, height: 142, 
-              borderRadius: '50%', 
-              background: 'linear-gradient(135deg, #FDE68A 0%, #D97706 50%, #78350F 100%)', 
-              boxSizing: 'border-box',
-              padding: '3px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.6)'
-            }}>
-              {/* Photorealistic Water Surface */}
-              <div style={{ 
-                position: 'relative', width: '100%', height: '100%', 
-                borderRadius: '50%', 
-                background: 'radial-gradient(ellipse at 45% 35%, #E0F2FE 0%, #38BDF8 30%, #0284C7 65%, #0369A1 100%)', 
-                boxSizing: 'border-box',
-                overflow: 'hidden',
-                boxShadow: 'inset 0 8px 18px rgba(3, 105, 161, 0.8)' 
-              }}>
-                {/* Caustic Light Waves & Reflections */}
-                <div style={{ 
-                  position: 'absolute', inset: 0, 
-                  background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 60%)', 
-                  pointerEvents: 'none' 
-                }} />
-                
-                {/* Concentric Water Waves */}
-                <div style={{ position: 'absolute', top: '6%', left: '6%', width: '88%', height: '88%', borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.25)', pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', top: '18%', left: '18%', width: '64%', height: '64%', borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.18)', pointerEvents: 'none' }} />
-                
-                {/* Faint Compass Rose Dial on Water */}
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%) scale(1.1, 0.46)', opacity: 0.22, pointerEvents: 'none' }}>
-                  <Compass size={240} color="#FFFFFF" />
-                </div>
-              </div>
-            </div>
+            {/* 3D Water Bowl Image */}
+            <img 
+              src="/MagneticCompass/water_bowl_3d.png" 
+              alt="Photorealistic 3D Water Bowl" 
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 16px 30px rgba(0, 0, 0, 0.35))'
+              }}
+            />
 
             {/* 3D High-Contrast Cardinal Direction Markers (N, S, E, W) */}
             <div style={{ 
-              position: 'absolute', top: -14, left: 172, 
+              position: 'absolute', top: 22, left: '50%', transform: 'translateX(-50%)',
               fontWeight: 900, color: '#EF4444', fontSize: '1.35rem', 
               textShadow: '0 0 10px rgba(239, 68, 68, 0.8), 0 2px 4px rgba(0,0,0,0.8)',
-              background: '#FFFFFF', padding: '1px 8px', borderRadius: '12px', border: '1.5px solid #EF4444'
+              background: '#FFFFFF', padding: '1px 8px', borderRadius: '12px', border: '1.5px solid #EF4444',
+              zIndex: 25
             }}>N</div>
 
             <div style={{ 
-              position: 'absolute', top: 236, left: 173, 
+              position: 'absolute', bottom: 22, left: '50%', transform: 'translateX(-50%)',
               fontWeight: 900, color: '#3B82F6', fontSize: '1.35rem', 
               textShadow: '0 0 10px rgba(59, 130, 246, 0.8), 0 2px 4px rgba(0,0,0,0.8)',
-              background: '#FFFFFF', padding: '1px 8px', borderRadius: '12px', border: '1.5px solid #3B82F6'
+              background: '#FFFFFF', padding: '1px 8px', borderRadius: '12px', border: '1.5px solid #3B82F6',
+              zIndex: 25
             }}>S</div>
 
             <div style={{ 
-              position: 'absolute', top: 68, left: -26, 
+              position: 'absolute', top: '50%', left: 16, transform: 'translateY(-50%)',
               fontWeight: 900, color: '#1E293B', fontSize: '1.25rem', 
               textShadow: '0 2px 4px rgba(0,0,0,0.4)',
-              background: '#FFFFFF', padding: '1px 6px', borderRadius: '10px', border: '1.5px solid #CBD5E1'
+              background: '#FFFFFF', padding: '1px 6px', borderRadius: '10px', border: '1.5px solid #CBD5E1',
+              zIndex: 25
             }}>W</div>
 
             <div style={{ 
-              position: 'absolute', top: 68, right: -26, 
+              position: 'absolute', top: '50%', right: 16, transform: 'translateY(-50%)',
               fontWeight: 900, color: '#1E293B', fontSize: '1.25rem', 
               textShadow: '0 2px 4px rgba(0,0,0,0.4)',
-              background: '#FFFFFF', padding: '1px 6px', borderRadius: '10px', border: '1.5px solid #CBD5E1'
+              background: '#FFFFFF', padding: '1px 6px', borderRadius: '10px', border: '1.5px solid #CBD5E1',
+              zIndex: 25
             }}>E</div>
 
             {/* Floating Cork with Magnetized Needle (Inside Bowl) */}
-            <div style={{ position: 'absolute', top: -55, left: 40, width: 280, height: 280, pointerEvents: 'none' }}>
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
               <AnimatePresence>
                 {step !== 'initial' && (
                   <motion.div
@@ -353,162 +316,244 @@ export default function Stage2_Floating({ onComplete }) {
             </div>
           </div>
 
-          {/* Standalone Cork (Outside Bowl initially - Drag to water) */}
-          <AnimatePresence>
-            {step === 'initial' && (
+          {/* Draggable Cork Disc on Left (Initial Step) */}
+          {step === 'initial' && (
+            <div style={{ position: 'absolute', left: '25px', top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}>
               <motion.div
                 drag
-                dragSnapToOrigin={true}
-                onDragEnd={(e, info) => {
-                  if (info.offset.x < -80 || info.offset.x > 80 || info.offset.y < -50 || info.offset.y > 50) {
+                dragConstraints={{ left: -10, right: 350, top: -120, bottom: 120 }}
+                dragElastic={0.15}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ cursor: 'grabbing', scale: 0.95 }}
+                onDragEnd={(event, info) => {
+                  if (info.offset.x > 100) {
                     handlePlaceCork();
                   }
                 }}
                 style={{
-                  position: 'relative',
                   width: '130px',
                   height: '130px',
-                  cursor: 'grab',
-                  marginLeft: '25px',
-                  zIndex: 20
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'grab'
                 }}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ cursor: 'grabbing', scale: 1.02 }}
               >
                 {renderCorkWithNeedle(false)}
-                <div style={{ 
-                  position: 'absolute', bottom: '-20px', left: '5px', width: '120px', 
-                  textAlign: 'center', fontSize: '0.8rem', fontWeight: 900, 
-                  color: '#FFFFFF', background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', 
-                  border: 'none', padding: '0.3rem 0.4rem', borderRadius: '14px', 
-                  boxShadow: '0 4px 12px rgba(217, 119, 6, 0.35)',
-                  whiteSpace: 'nowrap',
-                  boxSizing: 'border-box'
+                <div style={{
+                  position: 'absolute',
+                  bottom: '-20px',
+                  left: '5px',
+                  width: '120px',
+                  background: '#FFFFFF',
+                  border: '1.5px solid #A7F3D0',
+                  borderRadius: '12px',
+                  padding: '0.3rem 0.4rem',
+                  fontSize: '0.78rem',
+                  fontWeight: 900,
+                  color: '#064E3B',
+                  boxShadow: '0 4px 10px rgba(6, 78, 59, 0.1)',
+                  pointerEvents: 'none',
+                  textAlign: 'center'
                 }}>
                   Drag to bowl
                 </div>
               </motion.div>
-            )}
-          </AnimatePresence>
+            </div>
+          )}
         </div>
 
-        {/* Action Controls */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '0.4rem', width: '100%' }}>
-          <button 
-            onClick={handleReset}
-            disabled={step === 'initial'}
-            style={{ 
-              flex: 1,
-              padding: '0.75rem 1rem', 
-              fontSize: '0.95rem', 
-              fontWeight: 800, 
-              borderRadius: '25px', 
-              display: 'flex', 
-              alignItems: 'center', 
+        {/* Action Controls Button under Activity Canvas (amber-orange) */}
+        <div style={{ marginTop: '0.4rem', width: '100%' }}>
+          <button
+            onClick={step === 'initial' ? handlePlaceCork : handleSpin}
+            style={{
+              width: '100%',
+              padding: '0.75rem 1.5rem',
+              fontSize: '0.98rem',
+              fontWeight: 900,
+              borderRadius: '25px',
+              display: 'flex',
               justifyContent: 'center',
+              alignItems: 'center',
               gap: '0.6rem',
-              background: '#FFFFFF',
-              color: step !== 'initial' ? '#1E293B' : '#94A3B8',
-              border: '1.5px solid #CBD5E1',
-              cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
-              opacity: step !== 'initial' ? 1 : 0.6,
-              boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+              color: '#FFFFFF',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
+              transition: 'all 0.25s ease'
             }}
           >
-            <RotateCcw size={18} color={step !== 'initial' ? '#334155' : '#94A3B8'} /> Reset Activity
+            {step === 'initial' ? (
+              <>
+                <Flag size={18} color="#FFFFFF" /> Float Cork on Water
+              </>
+            ) : (
+              <>
+                <RotateCcw size={18} color="#FFFFFF" /> Spin Needle Fast! 🔄
+              </>
+            )}
           </button>
         </div>
       </div>
 
-      {/* Right Side: Instructions & Always Visible Observation Panel */}
+      {/* Right Side: Step-by-Step Guide & Observations (Filled spacious typography) */}
       <div style={{ 
-        flex: '0.75', 
+        flex: '0.95', 
         background: '#FFFFFF',
         border: '1.5px solid #A7F3D0',
-        borderRadius: '20px',
-        padding: '1rem 1.25rem',
+        borderRadius: '22px',
+        padding: '1.25rem 1.35rem',
         boxShadow: '0 6px 20px rgba(6, 78, 59, 0.06)',
         display: 'flex', 
         flexDirection: 'column', 
-        gap: '0.85rem', 
+        justifyContent: 'space-between', 
+        minWidth: 0, 
         height: '100%',
-        minHeight: 0,
-        boxSizing: 'border-box',
-        overflowY: 'auto' 
+        boxSizing: 'border-box' 
       }}>
-        <div style={{ 
-          padding: '1.25rem 1.4rem', 
-          background: '#F0FDF4', 
-          border: '1.5px solid #A7F3D0', 
-          borderRadius: '16px',
-          boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)'
-        }}>
-          <h4 style={{ color: '#064E3B', margin: '0 0 0.75rem 0', fontSize: '1.15rem', fontWeight: 900 }}>Instructions</h4>
-          <ol style={{ margin: 0, paddingLeft: '1.25rem', color: '#334155', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.92rem', lineHeight: '1.6', fontWeight: 600 }}>
-            <li style={{ fontWeight: step === 'initial' ? 800 : 600, color: step === 'initial' ? '#D97706' : '#334155' }}>
-              Insert the magnetized needle through a small piece of cork.
-            </li>
-            <li style={{ fontWeight: step === 'initial' ? 800 : 600, color: step === 'initial' ? '#D97706' : '#334155' }}>
-              <strong>Drag</strong> the cork to let it float in the bowl of water. Make sure the needle does not touch the water.
-            </li>
-            <li style={{ fontWeight: step === 'settled' && spinCount === 0 ? 800 : 600, color: step === 'settled' && spinCount === 0 ? '#D97706' : '#334155' }}>
-              Observe the direction in which the needle points when the cork stops rotating.
-            </li>
-            <li style={{ fontWeight: step === 'settled' && spinCount > 0 ? 800 : 600, color: step === 'settled' && spinCount > 0 ? '#D97706' : '#334155' }}>
-              <strong>Click the cork</strong> to gently rotate it and wait till it stops rotating. Repeat this a few more times. Do the ends always point in the same direction?
-            </li>
-          </ol>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem' }}>
+          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.22rem', fontWeight: 900, letterSpacing: '-0.01em' }}>
+            Floating Compass Steps
+          </h4>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div style={{ 
+              display: 'flex', 
+              gap: '0.75rem', 
+              alignItems: 'flex-start',
+              padding: '0.75rem 0.95rem',
+              borderRadius: '14px',
+              background: step !== 'initial' ? '#DCFCE7' : '#F0FDF4',
+              border: `1.5px solid ${step !== 'initial' ? '#16A34A' : '#A7F3D0'}`
+            }}>
+              <span style={{ 
+                width: '26px', 
+                height: '26px', 
+                borderRadius: '50%', 
+                background: step !== 'initial' ? '#16A34A' : '#D97706',
+                color: '#FFF', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                fontSize: '0.85rem',
+                fontWeight: 900,
+                flexShrink: 0
+              }}>1</span>
+              <div>
+                <strong style={{ color: '#064E3B', fontSize: '0.98rem' }}>Float on Water:</strong>
+                <p style={{ margin: '0.15rem 0 0 0', color: '#475569', fontSize: '0.88rem', lineHeight: '1.4' }}>
+                  Insert the magnetized needle into the light cork and place it in the water bowl.
+                </p>
+              </div>
+            </div>
+
+            <div style={{ 
+              display: 'flex', 
+              gap: '0.75rem', 
+              alignItems: 'flex-start',
+              padding: '0.75rem 0.95rem',
+              borderRadius: '14px',
+              background: step === 'settled' ? '#DCFCE7' : '#F8FAFC',
+              border: `1.5px solid ${step === 'settled' ? '#16A34A' : '#CBD5E1'}`
+            }}>
+              <span style={{ 
+                width: '26px', 
+                height: '26px', 
+                borderRadius: '50%', 
+                background: step === 'settled' ? '#16A34A' : '#94A3B8',
+                color: '#FFF', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                fontSize: '0.85rem',
+                fontWeight: 900,
+                flexShrink: 0
+              }}>2</span>
+              <div>
+                <strong style={{ color: '#064E3B', fontSize: '0.98rem' }}>Observe Alignment:</strong>
+                <p style={{ margin: '0.15rem 0 0 0', color: '#475569', fontSize: '0.88rem', lineHeight: '1.4' }}>
+                  The floating needle freely rotates and settles pointing along the North-South line.
+                </p>
+              </div>
+            </div>
+
+            <div style={{ 
+              display: 'flex', 
+              gap: '0.75rem', 
+              alignItems: 'flex-start',
+              padding: '0.75rem 0.95rem',
+              borderRadius: '14px',
+              background: spinCount > 0 ? '#DCFCE7' : '#F8FAFC',
+              border: `1.5px solid ${spinCount > 0 ? '#16A34A' : '#CBD5E1'}`
+            }}>
+              <span style={{ 
+                width: '26px', 
+                height: '26px', 
+                borderRadius: '50%', 
+                background: spinCount > 0 ? '#16A34A' : '#94A3B8',
+                color: '#FFF', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                fontSize: '0.85rem',
+                fontWeight: 900,
+                flexShrink: 0
+              }}>3</span>
+              <div>
+                <strong style={{ color: '#064E3B', fontSize: '0.98rem' }}>Rotate & Test:</strong>
+                <p style={{ margin: '0.15rem 0 0 0', color: '#475569', fontSize: '0.88rem', lineHeight: '1.4' }}>
+                  Spin the needle in any random direction — it always returns directly to North-South!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Observation Alert Card */}
+          <div style={{ 
+            background: step === 'settled' ? '#F0FDF4' : '#F8FAFC', 
+            border: `1.5px solid ${step === 'settled' ? '#A7F3D0' : '#E2E8F0'}`, 
+            padding: '1rem 1.15rem', 
+            borderRadius: '16px',
+            boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)'
+          }}>
+            <h5 style={{ margin: '0 0 0.35rem 0', color: step === 'settled' ? '#064E3B' : '#64748B', fontSize: '1.02rem', fontWeight: 900 }}>
+              🔍 Scientific Observation
+            </h5>
+            <p style={{ margin: 0, fontSize: '0.92rem', color: step === 'settled' ? '#1E293B' : '#64748B', lineHeight: '1.55', fontWeight: 600 }}>
+              {step === 'settled'
+                ? "No matter how many times you spin the cork, the magnetized needle always comes to rest pointing in the North-South direction. This simple floating device works just like a real magnetic navigation compass!"
+                : "Rotate the needle in different directions and let it settle to observe."}
+            </p>
+          </div>
         </div>
 
-        {/* Observation Card - Always Visible, Enabled Only After Activity Completed */}
-        {(() => {
-          const isCompleted = step === 'settled' && spinCount > 0;
-          return (
-            <div
-              style={{ 
-                padding: '1.25rem 1.4rem', 
-                background: isCompleted ? '#DCFCE7' : '#F8FAFC', 
-                border: `1.5px solid ${isCompleted ? '#16A34A' : '#CBD5E1'}`, 
-                borderRadius: '16px',
-                boxShadow: isCompleted ? '0 4px 14px rgba(22, 163, 74, 0.15)' : '0 2px 8px rgba(0, 0, 0, 0.03)',
-                transition: 'all 0.3s ease'
-              }}
-            >
-              <h4 style={{ color: isCompleted ? '#065F46' : '#64748B', margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 900 }}>
-                <CheckCircle size={22} color={isCompleted ? '#16A34A' : '#94A3B8'} /> 
-                Observation
-              </h4>
-              <p style={{ margin: '0 0 1rem 0', color: isCompleted ? '#166534' : '#64748B', fontSize: '0.92rem', fontWeight: '700' }}>
-                Yes! No matter how you spin it, the magnetized needle always comes to rest pointing in the <strong style={{ color: isCompleted ? '#D97706' : '#475569' }}>North-South</strong> direction, just like a standard magnetic compass!
-              </p>
-              
-              <button 
-                onClick={handleFinish}
-                disabled={!isCompleted}
-                style={{ 
-                  width: '100%', 
-                  padding: '0.85rem 1.5rem', 
-                  fontSize: '1.05rem', 
-                  fontWeight: 900, 
-                  borderRadius: '25px', 
-                  display: 'flex', 
-                  justifyContent: 'center', 
-                  alignItems: 'center', 
-                  gap: '0.75rem',
-                  background: isCompleted ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#E2E8F0',
-                  color: isCompleted ? '#FFFFFF' : '#94A3B8',
-                  border: isCompleted ? 'none' : '1.5px solid #CBD5E1',
-                  cursor: isCompleted ? 'pointer' : 'not-allowed',
-                  opacity: isCompleted ? 1 : 0.6,
-                  boxShadow: isCompleted ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
-                  transition: 'all 0.25s ease'
-                }}
-              >
-                <Flag size={20} color={isCompleted ? '#FFFFFF' : '#94A3B8'} /> Finish Activity
-              </button>
-            </div>
-          );
-        })()}
+        {/* Completion Proceed Button (using amber-orange gradient matching back to chapter4) */}
+        <button 
+          onClick={handleFinish} 
+          disabled={step !== 'settled'}
+          style={{ 
+            width: '100%', 
+            padding: '0.95rem 1.6rem', 
+            fontSize: '1.05rem', 
+            fontWeight: 900, 
+            borderRadius: '25px', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            gap: '0.65rem',
+            background: step === 'settled' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#E2E8F0',
+            color: step === 'settled' ? '#FFFFFF' : '#94A3B8',
+            border: 'none',
+            cursor: step === 'settled' ? 'pointer' : 'not-allowed',
+            boxShadow: step === 'settled' ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
+            transition: 'all 0.25s ease'
+          }}
+        >
+          <CheckCircle size={20} color={step === 'settled' ? "#FFFFFF" : "#94A3B8"} /> Finish Activity & Proceed to Quiz
+        </button>
       </div>
     </div>
   );
