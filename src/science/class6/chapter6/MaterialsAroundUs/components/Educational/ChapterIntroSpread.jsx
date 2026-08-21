@@ -564,7 +564,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
                           <p>Withstands high temperatures without melting easily — used for the outer body.</p>
                         </div>
                         <div className="slogan-card">
-                          <h3><span className="slogan-material-dot" style={{ background: '#8a8a8a' }}></span>Iron</h3>
+                          <h3><span className="slogan-material-dot" style={{ background: 'var(--text-muted)' }}></span>Iron</h3>
                           <p>Provides strength and durability, keeping the crucible stable during heating.</p>
                         </div>
                       </div>

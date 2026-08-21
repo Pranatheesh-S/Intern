@@ -15,21 +15,20 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
         background: 'white', borderRadius: '16px',
         boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
         display: 'flex', flexDirection: 'column', 
-        border: 'clamp(6px, 1.5vw, 18px) solid #1b2a4a', // Dark blue border as requested
+        border: 'clamp(6px, 1.5vw, 18px) solid var(--text-heading)', // Dark blue border as requested
         position: 'relative',
-        fontFamily: 'Arial, Helvetica, sans-serif',
         overflow: 'hidden',
         padding: '24px 20px',
         gap: '16px',
         overflowY: 'auto'
     }}>
       {/* Title */}
-      <h2 style={{ margin: '0', fontSize: 'var(--text-xl)', color: '#1e3a8a', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <Layers size={24} style={{ color: '#3b82f6' }} /> Investigation: Group by Appearance
+      <h2 style={{ margin: '0', fontSize: 'var(--text-xl)', color: 'var(--text-heading)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <Layers size={24} style={{ color: 'var(--accent)' }} /> Investigation: Group by Appearance
       </h2>
 
       {/* Intro Text */}
-      <div style={{ fontSize: 'var(--text-base)', color: '#475569', lineHeight: '1.5' }}>
+      <div style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
         Materials can be different in the way they look. Let's group them based on how their surface appears when light falls on them.
       </div>
 
@@ -55,26 +54,26 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
             {isPhase2Done ? <CheckSquare size={18} color="#16a34a" /> : <Square size={18} color="#16a34a" />} Observe the materials
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#166534' }}>
-            {isPhase3Done ? <CheckSquare size={18} color="#94a3b8" /> : <Square size={18} color="#94a3b8" />} Group by appearance
+            {isPhase3Done ? <CheckSquare size={18} color="var(--text-muted)" /> : <Square size={18} color="var(--text-muted)" />} Group by appearance
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'var(--text-sm)', color: '#166534' }}>
-            {isPhase4Done ? <CheckSquare size={18} color="#94a3b8" /> : <Square size={18} color="#94a3b8" />} Test with the lamp
+            {isPhase4Done ? <CheckSquare size={18} color="var(--text-muted)" /> : <Square size={18} color="var(--text-muted)" />} Test with the lamp
           </div>
         </div>
       </div>
 
       {/* How to do */}
-      <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', background: '#f8fafc' }}>
-        <h4 style={{ margin: '0 0 12px 0', color: '#1e3a8a', fontSize: 'var(--text-sm)' }}>How to do:</h4>
+      <div style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '16px', background: 'var(--surface)' }}>
+        <h4 style={{ margin: '0 0 12px 0', color: 'var(--text-heading)', fontSize: 'var(--text-sm)' }}>How to do:</h4>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: '#334155' }}>
-            <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><MousePointer2 size={16} /></div> Drag an item from the tray
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
+            <div style={{ background: 'var(--surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--accent)' }}><MousePointer2 size={16} /></div> Drag an item from the tray
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: '#334155' }}>
-            <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Move size={16} /></div> Drop it in the right group
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
+            <div style={{ background: 'var(--surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--accent)' }}><Move size={16} /></div> Drop it in the right group
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: '#334155' }}>
-            <div style={{ background: '#e0e7ff', padding: '6px', borderRadius: '8px', display: 'flex', color: '#4f46e5' }}><Eye size={16} /></div> Click the lamp to observe again
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>
+            <div style={{ background: 'var(--surface)', padding: '6px', borderRadius: '8px', display: 'flex', color: 'var(--accent)' }}><Eye size={16} /></div> Click the lamp to observe again
           </div>
         </div>
       </div>
@@ -82,8 +81,8 @@ export default function Handbook_GroupAppearance({ highestUnlockedIndex, current
       {/* Detective Tip */}
       <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: 'auto', paddingTop: '10px' }}>
         <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=transparent" alt="Detective" style={{ width: 'clamp(42px, 6vw, 90px)', height: 'clamp(42px, 6vw, 90px)' }} />
-        <div style={{ background: '#f1f5f9', padding: '12px', borderRadius: '12px', fontSize: 'var(--text-sm)', color: '#334155', position: 'relative', flex: 1, border: '1px solid #e2e8f0' }}>
-          <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: '#f1f5f9', borderLeft: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', transform: 'rotate(45deg)' }} />
+        <div style={{ background: 'var(--surface)', padding: '12px', borderRadius: '12px', fontSize: 'var(--text-sm)', color: 'var(--text-primary)', position: 'relative', flex: 1, border: '1px solid var(--border)' }}>
+          <div style={{ position: 'absolute', left: '-6px', top: '20px', width: '10px', height: '10px', background: 'var(--surface)', borderLeft: '1px solid var(--border)', borderBottom: '1px solid var(--border)', transform: 'rotate(45deg)' }} />
           Remember, shiny surfaces reflect more light!
         </div>
       </div>

@@ -18,7 +18,7 @@ const DeskLamp = ({ lightOn }) => {
       {/* Base top disc */}
       <mesh position={[0, 0.12, 0]}>
         <cylinderGeometry args={[0.45, 0.9, 0.12, 32]} />
-        <meshStandardMaterial color="#1a1a1a" metalness={0.8} roughness={0.3} />
+        <meshStandardMaterial color="var(--text-primary)" metalness={0.8} roughness={0.3} />
       </mesh>
 
       {/* === LOWER PIVOT / STEM === */}
@@ -30,7 +30,7 @@ const DeskLamp = ({ lightOn }) => {
       {/* === LOWER HINGE (horizontal cylinder) === */}
       <mesh position={[0, 0.4, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.2, 0.2, 0.55, 16]} />
-        <meshStandardMaterial color="#111" metalness={0.9} roughness={0.2} />
+        <meshStandardMaterial color="var(--text-primary)" metalness={0.9} roughness={0.2} />
       </mesh>
 
       {/* === LOWER ARM - goes up and slightly left === */}
@@ -39,18 +39,18 @@ const DeskLamp = ({ lightOn }) => {
         {/* Left strut */}
         <mesh position={[-0.12, 1.5, 0]}>
           <cylinderGeometry args={[0.055, 0.055, 3.0, 12]} />
-          <meshStandardMaterial color="#1a1a1a" metalness={0.7} roughness={0.4} />
+          <meshStandardMaterial color="var(--text-primary)" metalness={0.7} roughness={0.4} />
         </mesh>
         {/* Right strut */}
         <mesh position={[0.12, 1.5, 0]}>
           <cylinderGeometry args={[0.055, 0.055, 3.0, 12]} />
-          <meshStandardMaterial color="#1a1a1a" metalness={0.7} roughness={0.4} />
+          <meshStandardMaterial color="var(--text-primary)" metalness={0.7} roughness={0.4} />
         </mesh>
 
         {/* === MIDDLE HINGE === */}
         <mesh position={[0, 3.05, 0]} rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.22, 0.22, 0.6, 16]} />
-          <meshStandardMaterial color="#111" metalness={0.9} roughness={0.2} />
+          <meshStandardMaterial color="var(--text-primary)" metalness={0.9} roughness={0.2} />
         </mesh>
 
         {/* === UPPER ARM - bends more to the left and slightly down === */}
@@ -59,18 +59,18 @@ const DeskLamp = ({ lightOn }) => {
           {/* Left strut */}
           <mesh position={[-0.12, 1.2, 0]}>
             <cylinderGeometry args={[0.055, 0.055, 2.4, 12]} />
-            <meshStandardMaterial color="#1a1a1a" metalness={0.7} roughness={0.4} />
+            <meshStandardMaterial color="var(--text-primary)" metalness={0.7} roughness={0.4} />
           </mesh>
           {/* Right strut */}
           <mesh position={[0.12, 1.2, 0]}>
             <cylinderGeometry args={[0.055, 0.055, 2.4, 12]} />
-            <meshStandardMaterial color="#1a1a1a" metalness={0.7} roughness={0.4} />
+            <meshStandardMaterial color="var(--text-primary)" metalness={0.7} roughness={0.4} />
           </mesh>
 
           {/* === HEAD HINGE === */}
           <mesh position={[0, 2.45, 0]} rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.18, 0.18, 0.5, 16]} />
-            <meshStandardMaterial color="#111" metalness={0.9} roughness={0.2} />
+            <meshStandardMaterial color="var(--text-primary)" metalness={0.9} roughness={0.2} />
           </mesh>
 
           {/* === LAMP HEAD (shade pointing down-left at object) === */}
@@ -90,8 +90,8 @@ const DeskLamp = ({ lightOn }) => {
             <mesh position={[0, -0.6, 0]}>
               <cylinderGeometry args={[0.36, 0.88, 1.38, 32, 1, true]} />
               <meshStandardMaterial
-                color={lightOn ? '#fff8e1' : '#888'}
-                emissive={lightOn ? '#ffedcc' : '#000'}
+                color={lightOn ? '#fff8e1' : 'var(--text-muted)'}
+                emissive={lightOn ? '#ffedcc' : 'var(--text-primary)'}
                 emissiveIntensity={lightOn ? 1.2 : 0}
                 side={THREE.BackSide}
               />
@@ -100,8 +100,8 @@ const DeskLamp = ({ lightOn }) => {
             <mesh position={[0, -0.35, 0]}>
               <sphereGeometry args={[0.28, 32, 32]} />
               <meshStandardMaterial
-                color={lightOn ? '#ffffff' : '#666'}
-                emissive={lightOn ? '#ffe8b0' : '#000'}
+                color={lightOn ? 'var(--surface)' : 'var(--text-muted)'}
+                emissive={lightOn ? '#ffe8b0' : 'var(--text-primary)'}
                 emissiveIntensity={lightOn ? 5 : 0}
                 transparent
                 opacity={lightOn ? 1 : 0.5}
@@ -135,7 +135,7 @@ const MaterialModel = ({ activeObject, lightOn }) => {
         return (
           <mesh>
             <boxGeometry args={[3, 4, 0.05]} />
-            <meshStandardMaterial color="#ffffff" {...dullMaterialProps} />
+            <meshStandardMaterial color="var(--surface)" {...dullMaterialProps} />
           </mesh>
         );
       case 'cardboard':
@@ -170,7 +170,7 @@ const MaterialModel = ({ activeObject, lightOn }) => {
         return (
           <mesh rotation={[Math.PI / 4, 0, Math.PI / 4]}>
             <cylinderGeometry args={[0.4, 0.4, 4, 32]} />
-            <meshStandardMaterial color="#e0e0e0" {...shinyMaterialProps} />
+            <meshStandardMaterial color="var(--border)" {...shinyMaterialProps} />
           </mesh>
         );
       case 'steel':
@@ -179,12 +179,12 @@ const MaterialModel = ({ activeObject, lightOn }) => {
             {/* Handle */}
             <mesh position={[0, -1.7, -0.05]}>
               <cylinderGeometry args={[0.15, 0.08, 3, 16]} />
-              <meshStandardMaterial color="#d1d5db" {...shinyMaterialProps} />
+              <meshStandardMaterial color="var(--border)" {...shinyMaterialProps} />
             </mesh>
             {/* Bowl */}
             <mesh position={[0, 1, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[0.8, 0.2, 1.2]}>
               <sphereGeometry args={[1, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
-              <meshStandardMaterial color="#d1d5db" side={THREE.DoubleSide} {...shinyMaterialProps} />
+              <meshStandardMaterial color="var(--border)" side={THREE.DoubleSide} {...shinyMaterialProps} />
             </mesh>
           </group>
         );
@@ -206,7 +206,7 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
     { id: 'cardboard', name: 'Cardboard', icon: '📦', isShiny: false, propColour: 'Brown', propTexture: 'Rough' },
     { id: 'wood', name: 'Wood', icon: '🪵', isShiny: false, propColour: 'Brown', propTexture: 'Rough' },
     { id: 'copper', name: 'Copper Wire', icon: '➰', isShiny: true, propColour: 'Reddish', propTexture: 'Smooth' },
-    { id: 'aluminium', name: 'Aluminium Rod', icon: <div style={{ width: '14px', height: '42px', background: 'linear-gradient(to right, #9ca3af, #f9fafb, #6b7280)', borderRadius: '4px', transform: 'rotate(20deg)' }} />, isShiny: true, propColour: 'Silver', propTexture: 'Smooth' },
+    { id: 'aluminium', name: 'Aluminium Rod', icon: <div style={{ width: '14px', height: '42px', background: 'linear-gradient(to right, var(--text-muted), var(--surface), var(--text-muted))', borderRadius: '4px', transform: 'rotate(20deg)' }} />, isShiny: true, propColour: 'Silver', propTexture: 'Smooth' },
     { id: 'steel', name: 'Steel Spoon', icon: '🥄', isShiny: true, propColour: 'Silver', propTexture: 'Smooth' }
   ];
 
@@ -288,7 +288,7 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
             className="glass-panel" 
             style={{ 
               flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', 
-              background: 'radial-gradient(circle at center, #334155, #0f172a)', 
+              background: 'radial-gradient(circle at center, var(--text-primary), var(--text-primary))', 
               border: '2px solid var(--border)', borderRadius: '16px', overflow: 'hidden',
               boxShadow: 'inset 0 0 30px rgba(0,0,0,0.5)'
             }}
@@ -371,11 +371,11 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                     }}
                   >
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <span style={{ color: '#94a3b8', fontWeight: '600' }}>Colour:</span>
+                      <span style={{ color: 'var(--text-muted)', fontWeight: '600' }}>Colour:</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                         <div style={{ 
                           width: '14px', height: '14px', borderRadius: '50%', 
-                          background: activeObjDetails.propColour === 'White' ? '#ffffff' : 
+                          background: activeObjDetails.propColour === 'White' ? 'var(--surface)' : 
                                       activeObjDetails.propColour === 'Brown' ? '#8b4513' : 
                                       activeObjDetails.propColour === 'Reddish' ? '#cd5c5c' : '#c0c0c0',
                           boxShadow: '0 0 0 1px rgba(255,255,255,0.2)'
@@ -387,7 +387,7 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                     <div style={{ width: '1px', background: 'rgba(255,255,255,0.1)' }} />
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <span style={{ color: '#94a3b8', fontWeight: '600' }}>Texture:</span>
+                      <span style={{ color: 'var(--text-muted)', fontWeight: '600' }}>Texture:</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                         <span style={{ fontWeight: '500' }}>{activeObjDetails.propTexture}</span>
                         <span style={{ opacity: 0.7 }}>{activeObjDetails.propTexture === 'Smooth' ? '〰️' : '🌫️'}</span>
@@ -397,7 +397,7 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                     <div style={{ width: '1px', background: 'rgba(255,255,255,0.1)' }} />
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <span style={{ color: '#94a3b8', fontWeight: '600' }}>Surface:</span>
+                      <span style={{ color: 'var(--text-muted)', fontWeight: '600' }}>Surface:</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                         <span style={{ fontWeight: '500' }}>{activeObjDetails.isShiny ? 'Shiny' : 'Dull'}</span>
                         <span>{activeObjDetails.isShiny ? '✨' : '🪨'}</span>

@@ -11,9 +11,9 @@ const CustomIcons = {
   ),
   iron: (
     <svg width="40" height="40" viewBox="0 0 40 40">
-      <rect x="5" y="16" width="30" height="8" rx="2" fill="#64748b" />
-      <rect x="5" y="16" width="30" height="3" fill="#94a3b8" opacity="0.8" />
-      <rect x="3" y="14" width="4" height="12" rx="1" fill="#475569" />
+      <rect x="5" y="16" width="30" height="8" rx="2" fill="var(--text-muted)" />
+      <rect x="5" y="16" width="30" height="3" fill="var(--text-muted)" opacity="0.8" />
+      <rect x="3" y="14" width="4" height="12" rx="1" fill="var(--text-secondary)" />
     </svg>
   ),
   glass: (
@@ -24,15 +24,15 @@ const CustomIcons = {
   ),
   steel: (
     <svg width="60" height="60" viewBox="0 0 40 40">
-      <path d="M12 28 C10 32, 4 36, 4 36 C4 36, 8 30, 12 28 Z" fill="#94a3b8" />
-      <ellipse cx="22" cy="18" rx="8" ry="12" fill="#cbd5e1" transform="rotate(45 22 18)" />
+      <path d="M12 28 C10 32, 4 36, 4 36 C4 36, 8 30, 12 28 Z" fill="var(--text-muted)" />
+      <ellipse cx="22" cy="18" rx="8" ry="12" fill="var(--border)" transform="rotate(45 22 18)" />
       <ellipse cx="21" cy="17" rx="4" ry="8" fill="white" opacity="0.8" transform="rotate(45 21 17)" />
     </svg>
   ),
   paper: (
     <svg width="60" height="60" viewBox="0 0 40 40">
-      <rect x="10" y="4" width="20" height="32" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="2" rx="1" />
-      <path d="M14 12 H26 M14 18 H26 M14 24 H26 M14 30 H20" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+      <rect x="10" y="4" width="20" height="32" fill="var(--surface)" stroke="var(--border)" strokeWidth="2" rx="1" />
+      <path d="M14 12 H26 M14 18 H26 M14 24 H26 M14 30 H20" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" />
     </svg>
   ),
   wood: (
@@ -143,15 +143,15 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
   }, [items, observedItem, onComplete]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', height: '100%', background: '#f8fafc', padding: '1rem', borderRadius: '16px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', height: '100%', background: 'var(--surface)', padding: '1rem', borderRadius: '16px' }}>
       
       {/* Header & Lamp toggle */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             📌 Material Tray
           </h3>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b' }}>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
             Drag each material to the correct group
           </p>
         </div>
@@ -159,7 +159,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           <button 
             onClick={() => setLampOn(!lampOn)}
             style={{ 
-              background: lampOn ? '#fbbf24' : '#818cf8', 
+              background: lampOn ? '#fbbf24' : 'var(--accent)', 
               color: 'white', border: 'none', padding: '0.4rem 0.75rem', 
               borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer',
               fontWeight: 'bold', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
@@ -174,7 +174,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
       </div>
 
       {/* Material Tray */}
-      <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1rem' }}>
+      <div style={{ background: 'white', borderRadius: '12px', border: '1px solid var(--border)', padding: '1rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
           <AnimatePresence>
             {items.map(item => (
@@ -186,7 +186,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 style={{
-                  padding: '0.75rem', background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px',
+                  padding: '0.75rem', background: 'white', border: '1px solid var(--border)', borderRadius: '8px',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'grab',
                   boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
                 }}
@@ -194,7 +194,7 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60px', filter: (lampOn && item.correct === 'shiny') ? 'drop-shadow(0 0 12px #fef08a)' : 'none' }}>
                   {item.icon}
                 </div>
-                <div style={{ fontSize: '0.85rem', color: '#475569', fontWeight: '500', textAlign: 'center', lineHeight: '1.2' }}>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500', textAlign: 'center', lineHeight: '1.2' }}>
                   {item.name}
                 </div>
               </motion.div>
@@ -241,24 +241,24 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, 'dull')}
           style={{ 
-            border: '2px dashed #94a3b8', background: '#f8fafc', borderRadius: '12px',
+            border: '2px dashed var(--text-muted)', background: 'var(--surface)', borderRadius: '12px',
             display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem',
             position: 'relative', overflowY: 'auto'
           }}
         >
-          <div style={{ color: '#475569', fontWeight: 'bold', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+          <div style={{ color: 'var(--text-secondary)', fontWeight: 'bold', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
             🪨 Dull (Does not Reflect much)
           </div>
-          <div style={{ color: '#64748b', opacity: 0.7, fontSize: '0.8rem', marginBottom: '1rem' }}>
+          <div style={{ color: 'var(--text-muted)', opacity: 0.7, fontSize: '0.8rem', marginBottom: '1rem' }}>
             Drop items here
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
             {placed.dull.map(item => (
-              <motion.div key={item.id} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ padding: '0.5rem', background: 'white', borderRadius: '8px', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', width: '90px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+              <motion.div key={item.id} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ padding: '0.5rem', background: 'white', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', width: '90px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60px' }}>
                   <div>{item.icon}</div>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#475569', textAlign: 'center', lineHeight: '1.2' }}>{item.name}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textAlign: 'center', lineHeight: '1.2' }}>{item.name}</div>
               </motion.div>
             ))}
           </div>
@@ -273,22 +273,22 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
         onDragOver={handleDragOver}
         onDrop={(e) => handleDrop(e, 'observe')}
         style={{ 
-          background: 'white', borderRadius: '12px', border: '1px solid #c7d2fe', padding: '0.75rem 1rem',
+          background: 'white', borderRadius: '12px', border: '1px solid var(--border)', padding: '0.75rem 1rem',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           flexShrink: 0
         }}
       >
         <div>
-          <h4 style={{ margin: '0 0 0.15rem 0', color: '#4338ca', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <h4 style={{ margin: '0 0 0.15rem 0', color: 'var(--text-heading)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🔍 Observation Area
           </h4>
-          <p style={{ margin: 0, color: '#6366f1', fontSize: '0.85rem' }}>
+          <p style={{ margin: 0, color: 'var(--accent)', fontSize: '0.85rem' }}>
             Place any item under the lamp to observe how it looks.
           </p>
         </div>
         <div style={{ 
           border: '2px dashed #a5b4fc', borderRadius: '10px', padding: '0.4rem 1rem', 
-          background: '#eef2ff', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: '180px', justifyContent: 'center', minHeight: '50px'
+          background: 'var(--surface)', display: 'flex', alignItems: 'center', gap: '1rem', minWidth: '180px', justifyContent: 'center', minHeight: '50px'
         }}>
           {observedItem ? (
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -296,9 +296,9 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
                 {observedItem.icon}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontWeight: 'bold', color: '#4338ca', fontSize: '0.9rem' }}>{observedItem.name}</span>
+                <span style={{ fontWeight: 'bold', color: 'var(--text-heading)', fontSize: '0.9rem' }}>{observedItem.name}</span>
                 {lampOn && (
-                  <span style={{ fontSize: '0.75rem', color: observedItem.correct === 'shiny' ? '#ca8a04' : '#64748b' }}>
+                  <span style={{ fontSize: '0.75rem', color: observedItem.correct === 'shiny' ? '#ca8a04' : 'var(--text-muted)' }}>
                     {observedItem.correct === 'shiny' ? '✨ It reflects light!' : '🪨 It does not reflect light.'}
                   </span>
                 )}
@@ -306,10 +306,10 @@ export default function Stage4b_Appearance_Group({ onComplete, addXp }) {
             </motion.div>
           ) : (
             <>
-              <div style={{ background: 'white', padding: '0.4rem', borderRadius: '50%', color: '#818cf8', display: 'flex' }}>
+              <div style={{ background: 'white', padding: '0.4rem', borderRadius: '50%', color: 'var(--accent)', display: 'flex' }}>
                 <MousePointer2 size={16} />
               </div>
-              <span style={{ color: '#6366f1', fontSize: '0.8rem' }}>Drag an item here<br/>to observe</span>
+              <span style={{ color: 'var(--accent)', fontSize: '0.8rem' }}>Drag an item here<br/>to observe</span>
             </>
           )}
         </div>

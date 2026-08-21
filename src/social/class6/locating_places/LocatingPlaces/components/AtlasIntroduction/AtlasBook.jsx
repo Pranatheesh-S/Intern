@@ -3,9 +3,7 @@ import { Compass, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { PhysicalMapPage, PoliticalMapPage, ThematicMapPage } from './MapPages';
 
 export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinish }) {
-  
-  return (
-    <div style={{ 
+  return (    <div style={{ 
       width: '100%', height: '100%', 
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       perspective: '2000px',
@@ -23,44 +21,42 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
         {/* RIGHT HALF (Back cover + right pages) */}
         <div style={{
           position: 'absolute', top: 0, left: '50%', width: '50%', height: '100%',
-          backgroundColor: '#1e3a8a', borderRadius: '0 8px 8px 0',
-          boxShadow: '10px 20px 40px rgba(0,0,0,0.3)'
+          backgroundColor: '#78350F', borderRadius: '0 8px 8px 0',
+          boxShadow: '10px 20px 40px rgba(60,40,20,0.3)',
+          border: '2px solid #F2DFBC'
         }}>
-          {/* Right paper */}
           <div style={{
             position: 'absolute', top: '10px', bottom: '10px', left: 0, right: '10px',
-            backgroundColor: '#fdfbf7', borderRadius: '0 4px 4px 0',
-            boxShadow: 'inset -5px 0 20px rgba(0,0,0,0.05)'
+            backgroundColor: '#FFF9F0', borderRadius: '0 4px 4px 0',
+            boxShadow: 'inset -5px 0 20px rgba(60,40,20,0.05)'
           }}></div>
         </div>
 
-        {/* LEFT HALF (Back cover + left pages) - Fades in as it opens to hide weird overlapping */}
+        {/* LEFT HALF */}
         <div style={{
           position: 'absolute', top: 0, left: 0, width: '50%', height: '100%',
-          backgroundColor: '#1e3a8a', borderRadius: '8px 0 0 8px',
+          backgroundColor: '#78350F', borderRadius: '8px 0 0 8px',
           opacity: isOpen ? 1 : 0, transition: 'opacity 0.3s ease-in-out',
-          boxShadow: '-10px 20px 40px rgba(0,0,0,0.2)'
+          boxShadow: '-10px 20px 40px rgba(60,40,20,0.2)',
+          border: '2px solid #F2DFBC'
         }}>
-          {/* Left paper */}
           <div style={{
             position: 'absolute', top: '10px', bottom: '10px', left: '10px', right: 0,
-            backgroundColor: '#fdfbf7', borderRadius: '4px 0 0 4px',
-            boxShadow: 'inset 5px 0 20px rgba(0,0,0,0.05)'
+            backgroundColor: '#FFF9F0', borderRadius: '4px 0 0 4px',
+            boxShadow: 'inset 5px 0 20px rgba(60,40,20,0.05)'
           }}></div>
         </div>
 
-        {/* BOOK SPINE SHADOW */}
         <div style={{
           position: 'absolute', top: 0, bottom: 0, left: '50%', width: '40px', transform: 'translateX(-50%)',
-          background: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0) 100%)',
+          background: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(60,40,20,0.08) 40%, rgba(60,40,20,0.25) 50%, rgba(60,40,20,0.08) 60%, rgba(0,0,0,0) 100%)',
           zIndex: 10, pointerEvents: 'none', opacity: isOpen ? 1 : 0, transition: 'opacity 0.6s'
         }}></div>
         
-        {/* BOOKMARK RIBBON */}
         <div style={{
           position: 'absolute', top: '-10px', left: '50%', transform: 'translateX(-50%)', width: '20px', height: '80px',
-          backgroundColor: '#b91c1c', zIndex: 12, boxShadow: '2px 2px 5px rgba(0,0,0,0.2)',
-          opacity: isOpen ? 1 : 0, transition: 'opacity 0.6s'
+          backgroundColor: '#D97706', zIndex: 12, boxShadow: '2px 2px 5px rgba(0,0,0,0.2)',
+          opacity: isOpen ? 1 : 0, transition: 'opacity 0.6s', borderRadius: '0 0 3px 3px'
         }}></div>
 
         {/* PAGE CONTENT CONTAINER */}
@@ -69,35 +65,67 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
           zIndex: 15, display: 'flex', opacity: isOpen ? 1 : 0, transition: 'opacity 0.8s 0.2s',
           pointerEvents: isOpen ? 'auto' : 'none'
         }}>
-            {/* The page turn animation is handled internally by a simple keyframe fade */}
-            <div key={currentPage} style={{ width: '100%', height: '100%', animation: 'pageTurn 0.4s ease-out' }}>
+            <div key={currentPage} style={{ width: '100%', height: '100%', animation: 'pageTurn 0.4s ease-out', boxSizing: 'border-box' }}>
               {currentPage === 1 && <PhysicalMapPage />}
               {currentPage === 2 && <PoliticalMapPage />}
               {currentPage === 3 && <ThematicMapPage />}
             </div>
 
-            {/* Navigation Controls */}
-            <div style={{ position: 'absolute', bottom: '1rem', left: '50%', right: 0, display: 'flex', justifyContent: 'space-between', padding: '0 2rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.9rem' }}>
-                <Compass size={16} /> Page {currentPage} of 3
+            <div style={{ position: 'absolute', bottom: '0.75rem', left: '50%', right: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1.5rem', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#78350F', fontSize: '14px', fontWeight: 800, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                <Compass size={16} color="#D97706" style={{ flexShrink: 0 }} />
+                <span>Page {currentPage} of 3</span>
               </div>
 
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <button onClick={onPrev} disabled={currentPage === 1} style={{ background: 'transparent', border: '1px solid rgba(0,0,0,0.1)', padding: '0.4rem 1rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: currentPage === 1 ? 'default' : 'pointer', opacity: currentPage === 1 ? 0 : 1, transition: 'background 0.2s', color: '#334155' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexShrink: 0 }}>
+                <button onClick={onPrev} disabled={currentPage === 1} style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', padding: '0.4rem 1rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: currentPage === 1 ? 'default' : 'pointer', opacity: currentPage === 1 ? 0 : 1, transition: 'all 0.2s', color: '#78350F', fontWeight: 800, whiteSpace: 'nowrap' }}>
                   <ChevronLeft size={18} /> Previous
                 </button>
                 {currentPage < 3 ? (
-                  <button onClick={onNext} style={{ background: '#1e3a8a', color: 'white', border: 'none', padding: '0.4rem 1.2rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>
+                  <button
+                    onClick={onNext}
+                    style={{
+                      background: '#F59E0B',
+                      color: 'white',
+                      border: 'none',
+                      padding: '0.45rem 1.2rem',
+                      borderRadius: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 12px rgba(245,158,11,0.38)',
+                      whiteSpace: 'nowrap',
+                      fontWeight: 800,
+                      fontFamily: '"Space Grotesk", sans-serif'
+                    }}
+                  >
                     Next <ChevronRight size={18} />
                   </button>
                 ) : (
-                  <button onClick={onFinish} style={{ background: '#16a34a', color: 'white', border: 'none', padding: '0.4rem 1.2rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>
+                  <button
+                    onClick={onFinish}
+                    style={{
+                      background: '#16A34A',
+                      color: 'white',
+                      border: 'none',
+                      padding: '0.45rem 1.2rem',
+                      borderRadius: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 12px rgba(22,163,74,0.3)',
+                      whiteSpace: 'nowrap',
+                      fontWeight: 800,
+                      fontFamily: '"Space Grotesk", sans-serif'
+                    }}
+                  >
                     Finish <CheckCircle2 size={18} />
                   </button>
                 )}
               </div>
-            </div>
-        </div>
+            </div>        </div>
 
         {/* FRONT COVER */}
         <div style={{
@@ -108,32 +136,29 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
           transformStyle: 'preserve-3d',
           zIndex: isOpen ? 10 : 50
         }}>
-          {/* Front of the Cover */}
           <div style={{
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-            backgroundColor: '#1e3a8a', borderRadius: '0 8px 8px 0',
-            boxShadow: isOpen ? 'none' : '5px 0 15px rgba(0,0,0,0.4)',
+            backgroundColor: '#78350F', borderRadius: '0 8px 8px 0',
+            boxShadow: isOpen ? 'none' : '5px 0 15px rgba(60,40,20,0.4)',
             backfaceVisibility: 'hidden',
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
             borderLeft: '1px solid rgba(255,255,255,0.1)'
           }}>
-            <div style={{ border: '2px solid #fbbf24', width: '85%', height: '90%', borderRadius: '4px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-              <Compass size={64} color="#fbbf24" style={{ marginBottom: '2rem', opacity: 0.9 }} />
-              <h1 style={{ color: '#fbbf24', fontSize: '3.5rem', letterSpacing: '6px', margin: 0, fontFamily: 'serif', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>ATLAS</h1>
-              <div style={{ height: '2px', width: '60%', backgroundColor: '#fbbf24', margin: '1.5rem 0', opacity: 0.7 }}></div>
-              <div style={{ color: '#fbbf24', fontSize: '1.2rem', letterSpacing: '4px', opacity: 0.8 }}>A COLLECTION OF MAPS</div>
+            <div style={{ border: '2px solid #FDE68A', width: '85%', height: '90%', borderRadius: '4px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+              <Compass size={64} color="#FDE68A" style={{ marginBottom: '2rem', opacity: 0.9 }} />
+              <h1 style={{ color: '#FEF3C7', fontSize: '3.5rem', letterSpacing: '6px', margin: 0, fontFamily: '"Fraunces", serif', fontWeight: 900, textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>ATLAS</h1>
+              <div style={{ height: '2px', width: '60%', backgroundColor: '#FDE68A', margin: '1.5rem 0', opacity: 0.7 }}></div>
+              <div style={{ color: '#FEF3C7', fontSize: '1.2rem', letterSpacing: '4px', opacity: 0.9, fontWeight: 700 }}>A COLLECTION OF MAPS</div>
             </div>
           </div>
           
-          {/* Back of the Cover (Inside Cover) */}
           <div style={{
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-            backgroundColor: '#1e3a8a', borderRadius: '8px 0 0 8px',
+            backgroundColor: '#78350F', borderRadius: '8px 0 0 8px',
             transform: 'rotateY(180deg)', backfaceVisibility: 'hidden',
             borderRight: '1px solid rgba(0,0,0,0.2)'
           }}>
-             {/* Left paper inside cover */}
-             <div style={{ position: 'absolute', top: '10px', bottom: '10px', left: '10px', right: '0', backgroundColor: '#fdfbf7', borderRadius: '4px 0 0 4px', boxShadow: 'inset 5px 0 20px rgba(0,0,0,0.05)' }}></div>
+             <div style={{ position: 'absolute', top: '10px', bottom: '10px', left: '10px', right: '0', backgroundColor: '#FFF9F0', borderRadius: '4px 0 0 4px', boxShadow: 'inset 5px 0 20px rgba(60,40,20,0.05)' }}></div>
           </div>
         </div>
 

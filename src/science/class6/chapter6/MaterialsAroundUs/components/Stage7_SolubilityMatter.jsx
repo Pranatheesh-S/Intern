@@ -21,7 +21,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
   const substances = [
     { id: 'sugar', name: 'Sugar', correct: 'Soluble', desc: 'Disappears completely. Dissolves in water.', effectColor: 'rgba(255,255,255,0.1)' },
     { id: 'salt', name: 'Salt', correct: 'Soluble', desc: 'Disappears completely. Dissolves in water.', effectColor: 'rgba(255,255,255,0.1)' },
-    { id: 'chalk', name: 'Chalk Powder', correct: 'Insoluble', desc: 'Water turns turbid/cloudy. Chalk powder does not disappear.', effectColor: '#e2e8f0' },
+    { id: 'chalk', name: 'Chalk Powder', correct: 'Insoluble', desc: 'Water turns turbid/cloudy. Chalk powder does not disappear.', effectColor: 'var(--border)' },
     { id: 'sand', name: 'Sand', correct: 'Insoluble', desc: 'Settles down at the bottom of the beaker.', effectColor: '#f59e0b' },
     { id: 'sawdust', name: 'Sawdust', correct: 'Insoluble', desc: 'Floats on the surface of the water, does not dissolve.', effectColor: '#d97706' }
   ];
@@ -103,7 +103,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
             <div 
               style={{ 
                 height: '140px', 
-                background: '#0f172a', 
+                background: 'var(--text-primary)', 
                 borderRadius: '12px', 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -126,7 +126,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                     {stirState === 'stirring' && (
                       <motion.line 
                         x1="30" y1="15" x2="30" y2="55" 
-                        stroke="#cbd5e1" strokeWidth="4" 
+                        stroke="var(--border)" strokeWidth="4" 
                         animate={{ x: [20, 40, 20], rotate: [0, 10, -10, 0] }}
                         transition={{ repeat: Infinity, duration: 0.5 }}
                       />
@@ -152,7 +152,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                   )}
                 </div>
               ) : (
-                <span style={{ fontSize: '1rem', color: '#64748b' }}>Select a substance to mix</span>
+                <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Select a substance to mix</span>
               )}
             </div>
 
@@ -202,7 +202,7 @@ export default function Stage7_SolubilityMatter({ onComplete, addXp, mode = 'bot
                 ))}
               </div>
               {weighedCup && (
-                <div style={{ background: '#0b1329', padding: '0.75rem', borderRadius: '4px', textAlign: 'center', color: '#10b981', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '1rem' }}>
+                <div style={{ background: '#0b1329', padding: '0.75rem', borderRadius: '4px', textAlign: 'center', color: '#10b981', fontWeight: 'bold', fontSize: '1rem' }}>
                   Digital Balance: {weighedCup.mass} (Mass = quantity of matter)
                 </div>
               )}

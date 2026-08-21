@@ -11,54 +11,47 @@ import {
   useSensor, 
   useSensors 
 } from '@dnd-kit/core';
+import SupercarShape from './SupercarShape';
 
 const STEPS = [
   {
-    id: "pencils",
-    name: "3 Pencils",
-    instruction: "Drag 3 pencils and place them parallel to each other on the table.",
-    hint: "Place the pencils horizontally on the workspace to act as rollers.",
+    id: "carA",
+    name: "Lightning Supercar A (Driver Man)",
+    instruction: "Drag Lightning Supercar A (with Driver Man) and drop it onto the track.",
+    hint: "Drag Lightning Supercar A onto the race track workspace.",
   },
   {
-    id: "magnetA",
-    name: "Magnet A",
-    instruction: "Place one bar magnet over the pencils.",
-    hint: "Place Magnet A resting horizontally across the pencils.",
-  },
-  {
-    id: "magnetB",
-    name: "Magnet B",
-    instruction: "Bring one end of Magnet B near the end of Magnet A.",
-    hint: "Place Magnet B to the right of Magnet A on the workspace.",
+    id: "carB",
+    name: "Nitro Supercar B",
+    instruction: "Drag Nitro Supercar B and drop it behind Supercar A.",
+    hint: "Drag Nitro Supercar B onto the race track workspace.",
   }
 ];
 
-function CanvasDroppable({ children, onClick }) {
+function CanvasDroppable({ children }) {
   const { isOver, setNodeRef } = useDroppable({ id: 'canvas-droppable' });
   return (
     <div 
       ref={setNodeRef}
-      onClick={onClick}
       style={{
         width: '100%',
         height: '100%',
         position: 'relative',
-        background: isOver ? '#f0f9ff' : '#f8fafc',
-        border: `2px dashed ${isOver ? '#10b981' : '#cbd5e1'}`,
+        background: isOver ? 'rgba(245, 158, 11, 0.12)' : 'rgba(18, 18, 20, 0.95)',
+        border: `2px dashed ${isOver ? '#F59E0B' : '#3F3F46'}`,
         borderRadius: '16px',
         overflow: 'hidden',
-        boxShadow: 'inset 0 0 20px rgba(0,0,0,0.04)',
-        transition: 'all 0.2s ease',
-        cursor: 'pointer'
+        boxShadow: 'inset 0 0 25px rgba(0,0,0,0.6)',
+        transition: 'all 0.2s ease'
       }}
     >
-      <div style={{ position: 'absolute', bottom: '40px', width: '100%', height: '2px', background: '#cbd5e1' }} />
+      <div style={{ position: 'absolute', bottom: '40px', width: '100%', height: '2px', background: '#3F3F46' }} />
       {children}
     </div>
   );
 }
 
-function TrayItemCard({ step, isPlaced, isUnlocked, isSelected, onClick, renderThumbnailSVG }) {
+function TrayItemCard({ step, isPlaced, isUnlocked, renderThumbnail }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `tray-${step.id}`,
     disabled: isPlaced || !isUnlocked,
@@ -72,9 +65,8 @@ function TrayItemCard({ step, isPlaced, isUnlocked, isSelected, onClick, renderT
       ref={setNodeRef} 
       {...listeners} 
       {...attributes}
-      onClick={onClick}
       style={{
-        opacity: isDragging ? 0.4 : 1,
+        opacity: isDragging ? 0.35 : 1,
         touchAction: 'none',
         width: '100%',
         display: 'flex', 
@@ -82,32 +74,32 @@ function TrayItemCard({ step, isPlaced, isUnlocked, isSelected, onClick, renderT
         gap: '1rem', 
         padding: '0.85rem 1rem', 
         borderRadius: '14px',
-        background: isPlaced ? 'rgba(255, 255, 255, 0.95)' : isSelected ? '#ffffff' : isUnlocked ? 'rgba(255, 255, 255, 0.75)' : 'rgba(255, 255, 255, 0.4)',
-        border: `2px solid ${isPlaced ? '#047857' : isSelected ? '#059669' : isUnlocked ? '#059669' : 'rgba(0, 0, 0, 0.2)'}`,
-        color: '#000000',
+        background: isPlaced ? 'rgba(34, 197, 94, 0.15)' : isUnlocked ? '#18181B' : 'rgba(24, 24, 27, 0.4)',
+        border: `1.5px solid ${isPlaced ? '#22C55E' : isUnlocked ? '#3F3F46' : 'rgba(63, 63, 70, 0.4)'}`,
+        color: '#FAFAFA',
         cursor: isDisabled ? 'not-allowed' : 'grab',
         transition: 'all 0.2s ease',
         position: 'relative',
         fontWeight: 800,
-        boxShadow: isSelected ? '0 4px 14px rgba(0, 0, 0, 0.15)' : 'none',
+        boxShadow: isUnlocked && !isPlaced ? '0 4px 14px rgba(0, 0, 0, 0.4)' : 'none',
         userSelect: 'none',
         boxSizing: 'border-box'
       }}
     >
-      <div style={{ width: '40px', height: '40px', background: 'rgba(0, 0, 0, 0.08)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, opacity: isUnlocked ? 1 : 0.4 }}>
-        {renderThumbnailSVG(step.id)}
+      <div style={{ width: '54px', height: '42px', background: '#27272A', border: '1px solid #3F3F46', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, opacity: isUnlocked ? 1 : 0.4 }}>
+        {renderThumbnail(step.id)}
       </div>
       <div style={{ textAlign: 'left', flex: 1 }}>
-        <div style={{ fontSize: '0.95rem', fontWeight: '800', color: '#000000' }}>{step.name}</div>
-        <div style={{ fontSize: '0.75rem', opacity: 0.9, fontWeight: 700, color: '#1e293b' }}>
-          {isPlaced ? 'Placed' : isUnlocked ? 'Ready to drag/click' : 'Locked'}
+        <div style={{ fontSize: '0.92rem', fontWeight: '800', color: isPlaced ? '#86EFAC' : '#FAFAFA' }}>{step.name}</div>
+        <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 700, color: '#A1A1AA' }}>
+          {isPlaced ? 'Placed' : isUnlocked ? 'Drag to workspace' : 'Locked'}
         </div>
       </div>
       <div style={{ marginLeft: 'auto' }}>
         {isPlaced ? (
-          <CheckCircle2 size={18} style={{ color: '#047857' }} />
+          <CheckCircle2 size={18} style={{ color: '#22C55E' }} />
         ) : !isUnlocked ? (
-          <Lock size={16} style={{ color: '#475569' }} />
+          <Lock size={16} style={{ color: '#71717A' }} />
         ) : null}
       </div>
     </div>
@@ -141,13 +133,11 @@ function PlacedElement({ id, x, y, children }) {
 }
 
 export default function Stage1_Build({ onComplete, onNext }) {
-  const [placed, setPlaced] = useState({ pencils: false, magnetA: false, magnetB: false });
+  const [placed, setPlaced] = useState({ carA: false, carB: false });
   const [positions, setPositions] = useState({
-    pencils: { x: 220, y: 140 },
-    magnetA: { x: 200, y: 110 },
-    magnetB: { x: 380, y: 110 }
+    carA: { x: 140, y: 110 },
+    carB: { x: 420, y: 110 }
   });
-  const [selectedItemId, setSelectedItemId] = useState("pencils");
   const [activeDraggingId, setActiveDraggingId] = useState(null);
   const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 });
   const [error, setError] = useState(null);
@@ -159,46 +149,28 @@ export default function Stage1_Build({ onComplete, onNext }) {
   );
 
   const isStepUnlocked = (stepId) => {
-    if (stepId === "pencils") return true;
-    if (stepId === "magnetA") return placed.pencils;
-    if (stepId === "magnetB") return placed.magnetA;
+    if (stepId === "carA") return true;
+    if (stepId === "carB") return placed.carA;
     return false;
-  };
-
-  const handleSelectTrayItem = (stepId) => {
-    if (!placed[stepId] && isStepUnlocked(stepId)) {
-      setSelectedItemId(stepId);
-    }
   };
 
   const placeItem = (itemId) => {
     if (!isStepUnlocked(itemId)) {
-      setError(`Please complete the previous step first!`);
+      setError(`Please drag & drop items in order: 1. Car A (with Driver Man) → 2. Car B.`);
       return;
     }
 
     const nextPlaced = { ...placed, [itemId]: true };
     setPlaced(nextPlaced);
+    setError(null);
 
-    const remainingStep = STEPS.find(s => !nextPlaced[s.id] && isStepUnlocked(s.id));
-    if (remainingStep) {
-      setSelectedItemId(remainingStep.id);
-    }
-
-    if (nextPlaced.pencils && nextPlaced.magnetA && nextPlaced.magnetB) {
+    if (nextPlaced.carA && nextPlaced.carB) {
       setSuccess(true);
-    }
-  };
-
-  const handleCanvasClick = () => {
-    if (selectedItemId && !placed[selectedItemId] && isStepUnlocked(selectedItemId)) {
-      placeItem(selectedItemId);
     }
   };
 
   const handleDragStart = (event) => {
     const { active } = event;
-    const itemId = active.data.current?.itemId;
     setActiveDraggingId(active.id);
     setDragDelta({ x: 0, y: 0 });
     setError(null);
@@ -216,9 +188,9 @@ export default function Stage1_Build({ onComplete, onNext }) {
     const itemId = active.data.current?.itemId;
     const source = active.data.current?.source;
 
-    if (source === 'tray') {
+    if (source === 'tray' && itemId) {
       placeItem(itemId);
-    } else if (source === 'placed' && delta) {
+    } else if (source === 'placed' && delta && itemId) {
       setPositions(prev => ({
         ...prev,
         [itemId]: {
@@ -230,47 +202,23 @@ export default function Stage1_Build({ onComplete, onNext }) {
   };
 
   const handleReset = () => {
-    setPlaced({ pencils: false, magnetA: false, magnetB: false });
+    setPlaced({ carA: false, carB: false });
     setPositions({
-      pencils: { x: 220, y: 140 },
-      magnetA: { x: 200, y: 110 },
-      magnetB: { x: 380, y: 110 }
+      carA: { x: 140, y: 110 },
+      carB: { x: 420, y: 110 }
     });
-    setSelectedItemId("pencils");
     setError(null);
     setSuccess(false);
   };
 
   const completedCount = Object.values(placed).filter(Boolean).length;
   const progressPercent = (completedCount / STEPS.length) * 100;
-  const activeStep = STEPS.find((s) => s.id === selectedItemId);
+  const activeStep = STEPS.find((s) => !placed[s.id] && isStepUnlocked(s.id));
 
-  const renderThumbnailSVG = (id) => {
+  const renderThumbnail = (id) => {
     switch (id) {
-      case "pencils": return (
-        <svg viewBox="-5 -5 60 50" width="28" height="28">
-          <g transform="translate(0, 5)">
-            {[...Array(6)].map((_, i) => (
-              <g key={i} transform={`translate(${i * 8}, 0)`}>
-                <polygon points="0,5 4,5 2,0" fill="#e6b981" />
-                <polygon points="1.5,1.5 2.5,1.5 2,0" fill="#334155" />
-                <rect x="0" y="5" width="4" height="22" fill="#fde047" />
-                <rect x="0" y="27" width="4" height="4" fill="#f472b6" rx="1" />
-              </g>
-            ))}
-          </g>
-        </svg>
-      );
-      case "magnetA": return (
-        <svg viewBox="0 0 100 40" width="28" height="28">
-          <image href="/Shared/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(-90 50 20)" />
-        </svg>
-      );
-      case "magnetB": return (
-        <svg viewBox="0 0 100 40" width="28" height="28">
-          <image href="/Shared/bar_magnet.png" x="30" y="-30" width="40" height="100" transform="rotate(90 50 20)" />
-        </svg>
-      );
+      case "carA": return <SupercarShape carType="supercarA" width={48} height={28} />;
+      case "carB": return <SupercarShape carType="supercarB" width={48} height={28} />;
       default: return null;
     }
   };
@@ -278,80 +226,95 @@ export default function Stage1_Build({ onComplete, onNext }) {
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragMove={handleDragMove} onDragEnd={handleDragEnd}>
       <div style={{ 
-        padding: '1.25rem 1.75rem', 
+        padding: '0.5rem 1rem', 
         display: 'flex', 
         flexDirection: 'column',
-        gap: '1rem', 
+        gap: '0.75rem', 
         height: '100%', 
         minHeight: 0, 
         overflow: 'hidden', 
         boxSizing: 'border-box',
-        background: 'linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #0f172a 100%)',
-        border: '1.5px solid #1e40af',
-        borderRadius: '20px',
-        boxShadow: '0 12px 35px rgba(11, 19, 43, 0.4)',
-        position: 'relative'
+        background: 'transparent'
       }}>
-        
-        {/* Top Header Row */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "1.25rem", flexWrap: "wrap" }}>
-            <h3 style={{ margin: 0, color: "#ffffff", fontSize: "1.45rem", fontWeight: 800 }}>Build the Experiment</h3>
-            <span style={{ fontSize: "0.98rem", color: "#94a3b8", fontWeight: 600 }}>
-              Assemble the setup as shown in Fig. 4.8.
-            </span>
+      
+        {/* Top Header Container */}
+        <div style={{ 
+          width: '100%',
+          textAlign: 'center',
+          background: 'rgba(24, 24, 27, 0.95)',
+          backdropFilter: 'blur(10px)',
+          padding: '0.5rem 1rem',
+          borderRadius: '16px',
+          border: '1.5px solid #3F3F46',
+          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
+          boxSizing: 'border-box',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div style={{ textAlign: 'left' }}>
+            <h3 style={{ margin: '0 0 0.15rem 0', fontSize: '1.35rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
+              Build the Experiment
+            </h3>
+            <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.88rem', fontWeight: 700 }}>
+              Assemble the setup with Car A (Driver Man) and Car B as shown in Fig. 4.8.
+            </p>
           </div>
+
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <div style={{ width: "160px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem", color: "#cbd5e1", fontWeight: 700 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem", color: "#A1A1AA", fontWeight: 700 }}>
                 <span>Progress</span>
-                <span>{Math.round(progressPercent)}%</span>
+                <span style={{ color: "#F59E0B", fontWeight: 800 }}>{Math.round(progressPercent)}%</span>
               </div>
-              <div style={{ width: "100%", height: "7px", background: "rgba(255, 255, 255, 0.15)", borderRadius: "4px", overflow: "hidden" }}>
+              <div style={{ width: "100%", height: "8px", background: "#18181B", border: "1px solid #3F3F46", borderRadius: "4px", overflow: "hidden" }}>
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
-                  style={{ height: "100%", background: success ? "linear-gradient(135deg, #10b981 0%, #059669 100%)" : "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)" }}
+                  style={{ height: "100%", background: success ? "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)" : "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)" }}
                 />
               </div>
             </div>
             <button 
               onClick={handleReset} 
               style={{ 
-                padding: "0.55rem", 
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #ff7700 0%, #ea580c 100%)",
-                color: "#ffffff",
-                border: "none",
+                padding: "0.55rem 0.95rem", 
+                borderRadius: "10px",
+                background: "#18181B",
+                color: "#FAFAFA",
+                border: "1.5px solid #3F3F46",
                 cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(255, 119, 0, 0.4)",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.4)",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center"
+                gap: "0.4rem",
+                fontSize: "0.85rem",
+                fontWeight: 700
               }} 
               title="Reset Assembly"
             >
-              <RotateCcw size={16} color="#ffffff" />
+              <RotateCcw size={16} color="#FAFAFA" /> Reset
             </button>
           </div>
         </div>
 
         {/* Main Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "270px 1fr", gap: "1.25rem", flex: 1, minHeight: 0 }}>
-          {/* Left Column: Light Green 3D Parts Bench Panel with Black Text */}
+          {/* Left Column: Midnight Carbon 3D Parts Bench Panel */}
           <div style={{ 
-            padding: "1.25rem", 
+            padding: "1.15rem", 
             display: "flex", 
             flexDirection: "column", 
-            gap: "1.25rem", 
-            background: "linear-gradient(145deg, #a7f3d0 0%, #6ee7b7 100%)",
-            border: "2px solid #059669",
-            borderRadius: "16px",
-            boxShadow: "0 8px 25px rgba(5, 150, 105, 0.25)",
+            gap: "1rem", 
+            background: "rgba(24, 24, 27, 0.95)",
+            backdropFilter: "blur(10px)",
+            border: "1.5px solid #3F3F46",
+            borderRadius: "20px",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.6)",
             overflowY: "auto",
-            color: "#000000"
+            color: "#FAFAFA"
           }}>
-            <h4 style={{ margin: 0, borderBottom: "1.5px solid #059669", paddingBottom: "0.6rem", color: "#000000", fontWeight: 800, fontSize: "1.15rem" }}>
+            <h4 style={{ margin: 0, borderBottom: "1.5px solid #3F3F46", paddingBottom: "0.6rem", color: "#F59E0B", fontWeight: 800, fontSize: "1.15rem" }}>
               🧊 3D Parts Bench
             </h4>
             
@@ -359,7 +322,6 @@ export default function Stage1_Build({ onComplete, onNext }) {
               {STEPS.map((step) => {
                 const isPlaced = placed[step.id];
                 const isUnlocked = isStepUnlocked(step.id);
-                const isSelected = selectedItemId === step.id;
 
                 return (
                   <TrayItemCard 
@@ -367,26 +329,24 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     step={step}
                     isPlaced={isPlaced}
                     isUnlocked={isUnlocked}
-                    isSelected={isSelected}
-                    onClick={() => handleSelectTrayItem(step.id)}
-                    renderThumbnailSVG={renderThumbnailSVG}
+                    renderThumbnail={renderThumbnail}
                   />
                 );
               })}
             </div>
           </div>
 
-          {/* Right Column: Drag-and-Drop Workspace */}
+          {/* Right Column: Drag-and-Drop Workspace Canvas */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", minHeight: 0 }}>
             <div style={{ 
               flex: 1, 
-              padding: "1.1rem 1.35rem", 
+              padding: "1rem 1.25rem", 
               display: "flex", 
               flexDirection: "column",
-              background: "#ffffff",
-              border: "2px solid #2563eb",
-              borderRadius: "16px",
-              boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
+              background: "rgba(18, 18, 20, 0.95)",
+              border: "1.5px solid #3F3F46",
+              borderRadius: "20px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
               minHeight: 0,
               overflow: "hidden"
             }}>
@@ -397,9 +357,9 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    style={{ background: "#fee2e2", color: "#991b1b", padding: "0.6rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #f87171", fontWeight: 700 }}
+                    style={{ background: "rgba(239, 68, 68, 0.2)", color: "#FCA5A5", padding: "0.55rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #EF4444", fontWeight: 700 }}
                   >
-                    <AlertCircle size={18} color="#991b1b" /> {error}
+                    <AlertCircle size={18} color="#EF4444" /> {error}
                   </motion.div>
                 )}
                 {activeStep && !error && (
@@ -407,54 +367,35 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    style={{ background: "#eff6ff", color: "#1e40af", padding: "0.6rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #93c5fd", fontWeight: 700 }}
+                    style={{ background: "#18181B", color: "#F59E0B", padding: "0.55rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #3F3F46", fontWeight: 700 }}
                   >
-                    <Info size={18} color="#2563eb" /> {activeStep.hint}
+                    <Info size={18} color="#F59E0B" /> {activeStep.hint}
                   </motion.div>
                 )}
               </AnimatePresence>
 
               {/* Full Workspace Canvas */}
               <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
-                <CanvasDroppable onClick={handleCanvasClick}>
-                  {/* Pencils */}
-                  {placed.pencils && (
+                <CanvasDroppable>
+                  {/* Lightning Supercar A with Driver Man */}
+                  {placed.carA && (
                     <PlacedElement 
-                      id="pencils" 
-                      x={positions.pencils.x + (activeDraggingId === 'placed-pencils' ? dragDelta.x : 0)} 
-                      y={positions.pencils.y + (activeDraggingId === 'placed-pencils' ? dragDelta.y : 0)}
+                      id="carA" 
+                      x={positions.carA.x + (activeDraggingId === 'placed-carA' ? dragDelta.x : 0)} 
+                      y={positions.carA.y + (activeDraggingId === 'placed-carA' ? dragDelta.y : 0)}
                     >
-                      <div style={{ filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.3))" }}>
-                        <img src="/MagnetInteraction/pencils.png" style={{ width: "100px", height: "130px", objectFit: "contain", userSelect: "none" }} draggable="false" alt="Pencils" />
-                      </div>
+                      <SupercarShape carType="supercarA" poleRight="S" width={230} height={100} />
                     </PlacedElement>
                   )}
 
-                  {/* Magnet A */}
-                  {placed.magnetA && (
+                  {/* Nitro Supercar B */}
+                  {placed.carB && (
                     <PlacedElement 
-                      id="magnetA" 
-                      x={positions.magnetA.x + (activeDraggingId === 'placed-magnetA' ? dragDelta.x : 0)} 
-                      y={positions.magnetA.y + (activeDraggingId === 'placed-magnetA' ? dragDelta.y : 0)}
+                      id="carB" 
+                      x={positions.carB.x + (activeDraggingId === 'placed-carB' ? dragDelta.x : 0)} 
+                      y={positions.carB.y + (activeDraggingId === 'placed-carB' ? dragDelta.y : 0)}
                     >
-                      <div style={{ filter: "drop-shadow(0px 8px 10px rgba(0,0,0,0.4))", position: "relative" }}>
-                        <div style={{ position: "absolute", top: "-22px", left: "50%", transform: "translateX(-50%)", fontSize: "14px", fontWeight: "bold", color: "#1e293b", whiteSpace: "nowrap" }}>Magnet A</div>
-                        <img src="/Shared/bar_magnet.png" style={{ width: "40px", height: "120px", transform: "rotate(-90deg)", objectFit: "fill", userSelect: "none" }} draggable="false" alt="Magnet A" />
-                      </div>
-                    </PlacedElement>
-                  )}
-
-                  {/* Magnet B */}
-                  {placed.magnetB && (
-                    <PlacedElement 
-                      id="magnetB" 
-                      x={positions.magnetB.x + (activeDraggingId === 'placed-magnetB' ? dragDelta.x : 0)} 
-                      y={positions.magnetB.y + (activeDraggingId === 'placed-magnetB' ? dragDelta.y : 0)}
-                    >
-                      <div style={{ filter: "drop-shadow(0px 4px 6px rgba(0,0,0,0.3))", position: "relative" }}>
-                        <div style={{ position: "absolute", top: "-22px", left: "50%", transform: "translateX(-50%)", fontSize: "14px", fontWeight: "bold", color: "#1e293b", whiteSpace: "nowrap" }}>Magnet B</div>
-                        <img src="/Shared/bar_magnet.png" style={{ width: "40px", height: "120px", transform: "rotate(90deg)", objectFit: "fill", userSelect: "none" }} draggable="false" alt="Magnet B" />
-                      </div>
+                      <SupercarShape carType="supercarB" poleRight="N" width={230} height={100} />
                     </PlacedElement>
                   )}
                 </CanvasDroppable>
@@ -464,7 +405,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
           </div>
         </div>
 
-        {/* Success Modal Pop-up Overlay matching Activity 4.3 standard */}
+        {/* Success Modal Pop-up Overlay */}
         <AnimatePresence>
           {success && (
             <motion.div
@@ -474,8 +415,8 @@ export default function Stage1_Build({ onComplete, onNext }) {
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'rgba(15, 23, 42, 0.65)',
-                backdropFilter: 'blur(6px)',
+                background: 'rgba(9, 9, 11, 0.85)',
+                backdropFilter: 'blur(8px)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -487,26 +428,26 @@ export default function Stage1_Build({ onComplete, onNext }) {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.8, y: 20 }}
                 style={{
-                  background: '#ffffff',
-                  border: '1px solid #cbd5e1',
-                  borderRadius: '30px',
-                  padding: '2.5rem 3rem',
+                  background: '#18181B',
+                  border: '1.5px solid #3F3F46',
+                  borderRadius: '24px',
+                  padding: '2.25rem 2.75rem',
                   maxWidth: '520px',
                   width: '90%',
                   textAlign: 'center',
-                  boxShadow: '0 15px 40px rgba(0, 0, 0, 0.18)',
+                  boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.2)',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '1.25rem'
+                  gap: '1.1rem'
                 }}
               >
-                <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.8rem', fontWeight: 800 }}>
+                <h2 style={{ margin: 0, color: '#FAFAFA', fontSize: '1.8rem', fontWeight: 800 }}>
                   Setup Complete! 🎉
                 </h2>
 
-                <p style={{ margin: 0, color: '#475569', fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600 }}>
-                  Excellent! Magnet A is correctly placed across the pencils, and Magnet B is ready for interaction.
+                <p style={{ margin: 0, color: '#A1A1AA', fontSize: '1.1rem', lineHeight: '1.5', fontWeight: 600 }}>
+                  Excellent! Car A (with Driver Man) and Car B are placed and ready for testing attraction and repulsion.
                 </p>
 
                 <button 
@@ -523,23 +464,15 @@ export default function Stage1_Build({ onComplete, onNext }) {
                     display: 'flex', 
                     alignItems: 'center', 
                     gap: '0.75rem',
-                    backgroundColor: '#2563eb',
-                    color: '#ffffff',
+                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                    color: '#000000',
                     border: 'none',
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                    boxShadow: '0 6px 20px rgba(245, 158, 11, 0.45)',
                     transition: 'all 0.25s ease'
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.03)';
-                    e.currentTarget.style.backgroundColor = '#1d4ed8';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.backgroundColor = '#2563eb';
-                  }}
                 >
-                  Proceed to Prediction <ArrowRight size={22} color="#ffffff" />
+                  Proceed to Explore <ArrowRight size={22} color="#000000" />
                 </button>
               </motion.div>
             </motion.div>
@@ -549,23 +482,12 @@ export default function Stage1_Build({ onComplete, onNext }) {
 
       <DragOverlay dropAnimation={null}>
         {activeDraggingId && activeDraggingId.startsWith('tray-') ? (
-          <div style={{ opacity: 0.85, pointerEvents: "none" }}>
-            {activeDraggingId.includes("pencils") && (
-              <div style={{ display: "flex", gap: "4px" }}>
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} style={{ width: "6px", height: "80px", background: "linear-gradient(90deg, #fde047, #ca8a04)", borderRadius: "3px" }} />
-                ))}
-              </div>
+          <div style={{ opacity: 0.9, pointerEvents: "none" }}>
+            {activeDraggingId.includes("carA") && (
+              <SupercarShape carType="supercarA" poleRight="S" width={230} height={100} />
             )}
-            {activeDraggingId.includes("magnetA") && (
-              <div style={{ width: "120px", height: "24px", position: "relative" }}>
-                <img src="/Shared/bar_magnet.png" style={{ position: "absolute", top: "50%", left: "50%", width: "24px", height: "120px", transform: "translate(-50%, -50%) rotate(-90deg)", objectFit: "fill", borderRadius: "4px" }} alt="" />
-              </div>
-            )}
-            {activeDraggingId.includes("magnetB") && (
-              <div style={{ width: "80px", height: "24px", position: "relative" }}>
-                <img src="/Shared/bar_magnet.png" style={{ position: "absolute", top: "50%", left: "50%", width: "24px", height: "80px", transform: "translate(-50%, -50%) rotate(90deg)", objectFit: "fill", borderRadius: "4px" }} alt="" />
-              </div>
+            {activeDraggingId.includes("carB") && (
+              <SupercarShape carType="supercarB" poleRight="N" width={230} height={100} />
             )}
           </div>
         ) : null}

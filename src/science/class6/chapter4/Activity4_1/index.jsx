@@ -26,43 +26,99 @@ export default function Activity4_1({ onBackToDashboard, onComplete, onNext }) {
       flexDirection: 'column', 
       overflow: 'hidden',
       boxSizing: 'border-box',
-      padding: '0.25rem 0.75rem'
+      padding: '0.25rem 0.75rem',
+      backgroundColor: '#09090B',
+      position: 'relative'
     }}>
-      {/* Top Header */}
+      {/* High Quality Recognizeable Physics Lab Background with Controlled Blur */}
+      <div 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `url('/MagneticPoles/vintage_lab_bg.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'blur(3px) brightness(1.18) contrast(0.96)',
+          transform: 'scale(1.02)',
+          zIndex: 0
+        }}
+      />
+
+      {/* Dark Vector Overlay */}
+      <div 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(9, 9, 11, 0.45)',
+          zIndex: 0
+        }}
+      />
+
+      {/* Magnetic Field Lines SVG */}
+      <svg 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 0
+        }} 
+        viewBox="0 0 1440 900" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(245, 158, 11, 0.3)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 180, 500 180, 720 450 C 940 720, 1240 720, 1540 450" stroke="rgba(255, 255, 255, 0.25)" strokeWidth="3" fill="none" />
+      </svg>
+
+      {/* Top Header Bar with Midnight Carbon Contrast Theme */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
-        paddingBottom: '0.4rem',
+        padding: '0.45rem 0.85rem',
         marginBottom: '0.4rem',
-        borderBottom: '1px solid var(--border)',
-        flexShrink: 0
+        background: 'rgba(9, 9, 11, 0.95)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid #3F3F46',
+        borderRadius: '16px',
+        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(245, 158, 11, 0.15)',
+        flexShrink: 0,
+        position: 'relative',
+        zIndex: 100
       }}>
         <button 
           onClick={onBackToDashboard} 
-          className="outline" 
           style={{ 
             position: 'relative', zIndex: 100,
-            padding: '0.35rem 0.75rem', 
-            fontSize: '0.78rem', 
-            gap: '0.35rem',
-            borderColor: 'var(--border)',
+            padding: '0.45rem 0.95rem', 
+            fontSize: '0.82rem', 
+            gap: '0.4rem',
+            background: '#18181B',
+            color: '#FFFFFF',
+            border: '1px solid #3F3F46',
+            borderRadius: '10px',
+            fontWeight: 700,
+            cursor: 'pointer',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+            transition: 'all 0.2s ease'
           }}
         >
-          <ArrowLeft size={14} /> Back to Class 6 Chapter 4
+          <ArrowLeft size={16} color="#FFFFFF" /> Back to Class 6 Chapter 4
         </button>
 
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-            <Compass size={18} style={{ color: 'var(--accent)' }} />
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+            <Compass size={22} style={{ color: '#F59E0B', filter: 'drop-shadow(0 0 8px rgba(245, 158, 11, 0.6))' }} />
             Activity 4.1: Magnetic and Non-Magnetic Materials
           </h2>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Class 6 Science: Chapter 4 — Find and test materials</span>
+          <span style={{ fontSize: '0.78rem', color: '#71717A', fontWeight: 600 }}>Class 6 Science: Chapter 4 — Find and test materials</span>
         </div>
 
-        {/* Balancing spacer to keep title exactly centered */}
+        {/* Balancing spacer */}
         <div style={{ width: '180px', visibility: 'hidden' }} />
       </div>
 

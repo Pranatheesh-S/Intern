@@ -51,7 +51,7 @@ export default function DidYouKnow() {
     stop();
   };
 
-  // Color-only text karaoke highlighting (no background, no glow, no size changes)
+  // Color-only text karaoke highlighting
   const renderHighlightedContent = (content, title, charIndex) => {
     if (!content) return null;
     if (charIndex === undefined || charIndex === null || charIndex < 0) {
@@ -72,13 +72,15 @@ export default function DidYouKnow() {
       const isCurrentWord = adjustedIndex >= startPos && adjustedIndex <= endPos + 2;
       const isPastWord = adjustedIndex > endPos + 2;
 
-      let color = '#cbd5e1';
-      let fontWeight = 500;
+      let color = '#334155';
+      let fontWeight = 600;
 
       if (isCurrentWord) {
-        color = '#ff7700'; // Bright Orange active spoken word
+        color = '#D97706'; // Active spoken word
+        fontWeight = 800;
       } else if (isPastWord) {
-        color = '#f1f5f9'; // Bright read word
+        color = '#064E3B'; // Read word
+        fontWeight = 700;
       }
 
       return (
@@ -104,53 +106,52 @@ export default function DidYouKnow() {
       {hoveredFact && (
         <div style={{
           position: 'absolute',
-          bottom: 'calc(100% + 14px)',
+          bottom: 'calc(100% + 12px)',
           left: '50%',
           transform: 'translateX(-50%)',
           width: '95%',
           maxWidth: '700px',
-          background: 'linear-gradient(145deg, #0b132b, #1c2541)',
-          border: '2px solid #a78bfa',
-          borderRadius: '22px',
-          padding: '1.25rem 1.75rem',
-          color: '#f8fafc',
-          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(167, 139, 250, 0.4)',
+          background: '#FFFFFF',
+          border: '1.5px solid #A7F3D0',
+          borderRadius: '20px',
+          padding: '1.15rem 1.6rem',
+          color: '#064E3B',
+          boxShadow: '0 15px 35px rgba(6, 78, 59, 0.12)',
           zIndex: 100000,
           pointerEvents: 'none',
-          backdropFilter: 'blur(16px)',
+          backdropFilter: 'blur(12px)',
           transition: 'all 0.25s ease'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🧠</span>
-            <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: '#38bdf8' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.4rem' }}>
+            <span style={{ fontSize: '1.4rem' }}>🧠</span>
+            <h4 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 900, color: '#064E3B' }}>
               {hoveredFact.title}
             </h4>
           </div>
-          <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#cbd5e1' }}>
+          <p style={{ margin: 0, fontSize: '0.98rem', lineHeight: '1.6', color: '#334155', fontWeight: 600 }}>
             {renderHighlightedContent(hoveredFact.content, hoveredFact.title, spokenCharIndex)}
           </p>
         </div>
       )}
 
-      {/* Main Bottom Bar */}
+      {/* Main Bottom Bar - Rich Brown Theme */}
       <div style={{
-        background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 27, 75, 0.95))',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(139, 92, 246, 0.4)',
-        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.25), 0 0 20px rgba(139, 92, 246, 0.15)',
-        borderRadius: '24px',
-        padding: '0.6rem 1.25rem',
+        background: 'linear-gradient(135deg, #78350F 0%, #451A03 100%)',
+        border: '1.5px solid #B45309',
+        boxShadow: '0 4px 18px rgba(69, 26, 3, 0.4)',
+        borderRadius: '20px',
+        padding: '0.5rem 1.25rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
         boxSizing: 'border-box',
-        height: '54px',
-        minHeight: '54px'
+        height: '52px',
+        minHeight: '52px'
       }}>
         {/* Brain Icon */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, paddingRight: '0.75rem' }}>
-          <span style={{ fontSize: '1.4rem' }}>🧠</span>
+          <span style={{ fontSize: '1.35rem' }}>🧠</span>
         </div>
 
         {/* Fact items horizontally */}
@@ -158,27 +159,27 @@ export default function DidYouKnow() {
           {facts.map((fact, idx) => (
             <React.Fragment key={idx}>
               {idx > 0 && (
-                <div style={{ width: '1px', height: '60%', backgroundColor: 'rgba(255, 255, 255, 0.12)' }} />
+                <div style={{ width: '1.5px', height: '55%', backgroundColor: '#92400E' }} />
               )}
               <div
                 onMouseEnter={() => handleMouseEnter(fact)}
                 onMouseLeave={handleMouseLeave}
                 style={{
-                  color: hoveredFact === fact ? '#ff7700' : '#e2e8f0',
+                  color: hoveredFact === fact ? '#FEF3C7' : '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
+                  gap: '0.45rem',
                   cursor: 'pointer',
                   fontSize: '0.88rem',
-                  fontWeight: 600,
-                  padding: '0.4rem 0.6rem',
-                  borderRadius: '8px',
-                  backgroundColor: 'transparent',
-                  transition: 'color 0.2s ease',
+                  fontWeight: 800,
+                  padding: '0.35rem 0.65rem',
+                  borderRadius: '10px',
+                  backgroundColor: hoveredFact === fact ? 'rgba(254, 243, 199, 0.2)' : 'transparent',
+                  transition: 'all 0.2s ease',
                   whiteSpace: 'nowrap'
                 }}
               >
-                <span style={{ fontSize: '1rem' }}>👉</span>
+                <span style={{ fontSize: '0.95rem', color: hoveredFact === fact ? '#F59E0B' : '#F59E0B' }}>👉</span>
                 <span>{fact.shortTitle}</span>
               </div>
             </React.Fragment>
@@ -186,8 +187,8 @@ export default function DidYouKnow() {
         </div>
 
         {/* Sparkle Icon */}
-        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem', color: '#60a5fa' }}>
-          <Sparkles size={18} />
+        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem', color: '#F59E0B' }}>
+          <Sparkles size={18} color="#F59E0B" />
         </div>
       </div>
     </div>
