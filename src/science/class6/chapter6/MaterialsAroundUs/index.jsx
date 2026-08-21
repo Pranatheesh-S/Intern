@@ -384,7 +384,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
           {currentNode.type === 'checkpoint' && (
             <div style={{ flex: 1, display: 'flex', background: 'var(--bg-color)', overflow: 'hidden' }}>
-              <DetectiveCheckpoint data={currentNode} onComplete={handleStageComplete} addXp={addXp} />
+              <DetectiveCheckpoint key={`${currentNode.id}-${resetKey}`} data={currentNode} onComplete={handleStageComplete} addXp={addXp} />
             </div>
           )}
 
@@ -494,7 +494,10 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         
         <div className="global-action-bar-right">
           <button 
-            onClick={() => setResetKey(prev => prev + 1)}
+            onClick={() => {
+              setResetKey(prev => prev + 1);
+              setStageCompleted(false);
+            }}
             className="outline"
             style={{ padding: '0.65rem 1.35rem', fontSize: '1.05rem', fontWeight: 'bold', gap: '0.6rem', borderRadius: '10px', color: 'var(--danger)', borderColor: 'var(--danger-border)', display: 'flex', alignItems: 'center' }}
           >

@@ -17,29 +17,29 @@ const clues = [
   {
     id: 1,
     title: "HOW OLD IS POTTERY?",
-    bigFact: "7,000ΓÇô8,000 YEARS",
-    text: "The earliest pottery found in the Indian subcontinent dates back to 7,000 to 8,000 years in the Ganga plains (Lahuradewa) and in Baluchistan (Mehrgarh).",
+    bigFact: "7,000-8,000 YEARS",
+    text: "The earliest pottery found in the Indian subcontinent dates back to 7,000 to 8,000 years in the Ganga plains and in Baluchistan.",
     timelineText: "AGE"
   },
   {
     id: 2,
     title: "POTTERY TECHNOLOGY",
     bigFact: "AROUND 4000 BCE",
-    text: "About 4000 BCE onwards, Sindhu-Sarasvat─½ developed techniques of wheel-turned pottery production, pigmentation, application of protective or decorative coats (called ΓÇÿslipsΓÇÖ) of multiple colours, decorative painting, etc.",
+    text: "About 4000 BCE onwards, Sindhu-Sarasvati developed techniques of wheel-turned pottery production, pigmentation, application of protective or decorative coats of multiple colours, decorative painting, etc.",
     timelineText: "SHAPING"
   },
   {
     id: 3,
     title: "HARAPPAN POTTERY",
-    bigFact: "2600ΓÇô1900 BCE",
-    text: "These techniques became further sophisticated during the Sindhu-Sarasvat─½ (also known as ΓÇÿHarappanΓÇÖ) Civilisation (2600ΓÇô1900 BCE), with a bright red surface painted with black-coloured designs displaying geometric patterns, and aquatic and terrestrial animals.",
+    bigFact: "2600-1900 BCE",
+    text: "These techniques became further sophisticated during the Sindhu-Sarasvati Civilisation, with a bright red surface painted with black-coloured designs displaying geometric patterns, and aquatic and terrestrial animals.",
     timelineText: "DESIGN"
   },
   {
     id: 4,
     title: "HOW WAS IT MADE?",
     bigFact: "TERRACOTTA",
-    text: "The clay used for making pots, dishes, bowls and other items was carefully selected and cleaned, sieved, kneaded, turned over a wheel and finally baked in kilns (baked clay is called ΓÇÿterracottaΓÇÖ).",
+    text: "The clay used for making pots, dishes, bowls and other items was carefully selected and cleaned, sieved, kneaded, turned over a wheel and finally baked in kilns.",
     timelineText: "MAKING"
   },
   {
@@ -169,10 +169,10 @@ const PotterySpotlight = ({ page1Layout }) => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '0', boxSizing: 'border-box', overflow: 'hidden' }}>
       
       <div style={{ marginBottom: 'clamp(8px, 1.5vh, 16px)' }}>
-        <h3 style={{ fontSize: 'clamp(20px, 3vw, 36px)', fontWeight: 'bold', color: 'var(--text-primary)', margin: '0 0 4px 0', wordBreak: 'break-word', lineHeight: '1.2' }}>
+        <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '900', color: 'var(--text-primary)', margin: '0 0 4px 0', wordBreak: 'break-word', lineHeight: '1.2' }}>
           {currentData.title}
         </h3>
-        <div style={{ fontSize: 'clamp(14px, 2vw, 22px)', fontWeight: 'bold', color: 'var(--accent)', letterSpacing: '1px' }}>
+        <div style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '900', color: 'var(--accent)', letterSpacing: '1px' }}>
           DO YOU KNOW?
         </div>
       </div>
@@ -182,7 +182,7 @@ const PotterySpotlight = ({ page1Layout }) => {
         backgroundColor: 'var(--surface)', 
         borderRadius: '12px', 
         border: '1px solid var(--border)', 
-        padding: 'clamp(12px, 2.5vmin, 24px)',
+        padding: 'clamp(12px, 2vmin, 16px)',
 
         display: 'flex',
         flexDirection: 'column',
@@ -190,17 +190,17 @@ const PotterySpotlight = ({ page1Layout }) => {
         alignItems: 'center',
         textAlign: 'center',
         marginBottom: 'clamp(8px, 1.5vh, 16px)',
-        minHeight: 0,
+        minHeight: 'min-content',
         boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)',
         boxSizing: 'border-box',
-        overflow: 'hidden'
+        overflow: 'visible'
       }}>
         
-        <div style={{ fontSize: 'clamp(24px, 4.5vmin, 60px)', fontWeight: '900', color: 'var(--text-heading)', marginBottom: 'clamp(8px, 1.5vh, 24px)', lineHeight: '1.1', wordBreak: 'break-word' }}>
+        <div style={{ fontSize: 'clamp(24px, 4.5vmin, 60px)', fontWeight: '900', color: 'var(--text-heading)', marginBottom: 'clamp(8px, 1.5vh, 16px)', lineHeight: '1.1', wordBreak: 'break-word' }}>
           {currentData.bigFact}
         </div>
         
-        <div style={{ fontSize: 'clamp(14px, 2.5vmin, 24px)', color: 'var(--text-primary)', lineHeight: '1.5', maxWidth: '100%', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical' }}>
+        <div style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', color: 'var(--text-primary)', lineHeight: '1.5', maxWidth: '100%', overflow: 'visible' }}>
           {isPlaying ? (
             <HighlightedText phrases={[currentData.text]} activeCharIndex={activeCharIndex} />
           ) : (
@@ -318,40 +318,40 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           // ================= BARRIER 1 TWO-PAGE SPREAD =================
           <>
             {/* ================= LEFT PAGE (PAGE 1) ================= */}
-            <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: 'var(--text-heading)', fontWeight: 'bold', borderBottom: '4px solid var(--accent)', paddingBottom: '8px', display: 'inline-block' }}>
+            <div style={{ flex: 1, minHeight: 0, padding: 'clamp(24px, 4vh, 32px) clamp(24px, 3vw, 32px)', position: 'relative', display: 'flex', flexDirection: 'column', gap: 'clamp(12px, 3vh, 24px)', borderRight: '1px solid var(--border)' }}>
+              <h2 style={{ margin: 0, fontSize: '34px', color: 'var(--text-heading)', fontWeight: '900', borderBottom: '4px solid var(--accent)', paddingBottom: '4px', display: 'inline-block', alignSelf: 'flex-start' }}>
                 What are Objects Made Of?
               </h2>
 
-              <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '16px', fontWeight: '500' }}>
-                <p style={{ margin: '0 0 12px 0' }}>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</p>
-                <p style={{ margin: '0' }}>These are all <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>objects</strong>. Even though they look different, each object is made of some <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>material</strong>.</p>
+              <div style={{ fontSize: '21px', color: 'var(--text-primary)', lineHeight: '1.4', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div>Look around you! You can see many things - a chair, a book, a water bottle, a pencil and so on.</div>
+                <div>These are all <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>objects</strong>. Even though they look different, each object is made of some <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>material</strong>.</div>
               </div>
 
-              <div style={{ border: '1px dashed var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-                <div style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)', marginBottom: '8px' }}><strong style={{ color: 'var(--text-heading)' }}>Material:</strong> The substance used to make an object.</div>
-                <div style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)' }}><strong style={{ color: 'var(--text-heading)' }}>Object:</strong> Anything we can see or use around us.</div>
+              <div style={{ border: '1px dashed var(--border)', borderRadius: '8px', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}><strong style={{ color: 'var(--text-heading)', fontWeight: '800', fontSize: '22px' }}>Material:</strong> The substance used to make an object.</div>
+                <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)' }}><strong style={{ color: 'var(--text-heading)', fontWeight: '800', fontSize: '22px' }}>Object:</strong> Anything we can see or use around us.</div>
               </div>
 
-              <div style={{ background: 'var(--warning-bg)', border: '1px solid var(--warning-border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: 'var(--accent)', fontSize: 'var(--text-xl)' }}>Examples:</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: 'var(--text-primary)' }}>
+              <div style={{ background: 'var(--warning-bg)', border: '1px solid var(--warning-border)', borderRadius: '8px', padding: '12px 16px' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: 'var(--accent)', fontSize: '24px', fontWeight: '800' }}>Examples:</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '21px', fontWeight: '600', color: 'var(--text-primary)' }}>
                   <div>Chair can be made of wood, plastic or steel.</div>
                   <div>A plate can be made of steel, glass or plastic.</div>
                   <div>A bottle can be made of plastic, glass or steel.</div>
                 </div>
               </div>
 
-              <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', display: 'flex', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: 'var(--text-xl)', color: 'var(--text-heading)', lineHeight: '1.4' }}>
-                  <strong>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
+              <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px 20px', display: 'flex', alignItems: 'flex-start' }}>
+                <div style={{ fontSize: '21px', fontWeight: '600', color: 'var(--text-heading)', lineHeight: '1.4' }}>
+                  <strong style={{ fontWeight: '800', fontSize: '24px' }}>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
                 </div>
               </div>
             </div>
 
             {/* ================= RIGHT PAGE (PAGE 2) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'var(--text-2xl)', color: 'var(--text-heading)', fontWeight: 'bold', borderBottom: '4px solid var(--accent)', paddingBottom: '8px', display: 'inline-block' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'clamp(28px, 3.5vw, 34px)', color: 'var(--text-heading)', fontWeight: '900', borderBottom: '4px solid var(--accent)', paddingBottom: '8px', display: 'inline-block' }}>
                 Historical Spotlight: Pottery
               </h2>
 

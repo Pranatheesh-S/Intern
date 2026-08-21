@@ -134,7 +134,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
         
         {/* Mission Progress */}
         <div style={{ background: 'white', borderRadius: '20px', padding: '1.5rem', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontSize: 'clamp(15px, 2.2vw, 19px)', fontWeight: '800' }}>
             <Shield size={20} color="var(--accent)" /> Mission Progress
           </div>
           
@@ -144,20 +144,20 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
               background: `conic-gradient(var(--accent) ${progressPercentage}%, var(--border) 0)`,
               display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}>
-              <div style={{ width: '56px', height: '56px', background: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'var(--accent)' }}>
+              <div style={{ width: '56px', height: '56px', background: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'clamp(16px, 2.2vw, 20px)', fontWeight: '800', color: 'var(--accent)' }}>
                 {Math.round(progressPercentage)}%
               </div>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: '800', color: 'var(--text-primary)', fontSize: '1.2rem' }}>{progressPercentage === 100 ? 'Mission Complete!' : 'Excellent!'}</div>
-              <div style={{ color: 'var(--text-muted)', fontSize: '1rem', fontWeight: '500' }}>{progressPercentage === 100 ? 'Great job 🌟' : "You're doing great 🌟"}</div>
+              <div style={{ fontWeight: '800', color: 'var(--text-primary)', fontSize: 'clamp(17px, 2.5vw, 21px)' }}>{progressPercentage === 100 ? 'Mission Complete!' : 'Excellent!'}</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: 'clamp(15px, 2.2vw, 19px)', fontWeight: '600' }}>{progressPercentage === 100 ? 'Great job 🌟' : "You're doing great 🌟"}</div>
             </div>
           </div>
         </div>
 
         {/* Question Navigator */}
         <div style={{ background: 'white', borderRadius: '20px', padding: '1.5rem', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ color: 'var(--text-primary)', fontWeight: '800', fontSize: '1.2rem', textAlign: 'center' }}>
+          <div style={{ color: 'var(--text-primary)', fontWeight: '800', fontSize: 'clamp(17px, 2.5vw, 21px)', textAlign: 'center' }}>
             Question Navigator
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -172,14 +172,14 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
                   border: `2px solid ${isFilled || isCurrent ? 'var(--accent)' : 'var(--border)'}`,
                   color: isFilled ? 'white' : (isCurrent ? 'var(--accent)' : 'var(--text-muted)'),
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: '800', fontSize: '1.15rem'
+                  fontWeight: '800', fontSize: 'clamp(17px, 2.5vw, 21px)'
                 }}>
                   {idx + 1}
                 </div>
               );
             })}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', fontSize: '1.05rem', fontWeight: '500', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', fontSize: 'clamp(15px, 2.2vw, 19px)', fontWeight: '600', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent)' }} /> Answered
             </div>
@@ -191,10 +191,10 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
 
         {/* Detective Tip */}
         <div style={{ background: 'var(--accent-bg)', borderRadius: '20px', padding: '1.5rem', border: '1px solid var(--accent)', flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent)', fontWeight: 'bold' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent)', fontSize: 'clamp(15px, 2.2vw, 19px)', fontWeight: '800' }}>
             <Lightbulb size={20} /> Detective Tip
           </div>
-          <p style={{ color: '#4c1d95', fontSize: '1.15rem', fontWeight: '600', lineHeight: '1.6', margin: 0 }}>
+          <p style={{ color: '#4c1d95', fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '700', lineHeight: '1.5', margin: 0 }}>
             Read each option carefully and think about the physical properties we investigated in the lab!
           </p>
         </div>
@@ -209,11 +209,8 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
             
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div style={{ fontSize: '1.4rem', color: 'var(--text-primary)', fontWeight: '800' }}>
+              <div style={{ fontSize: 'clamp(20px, 2.5vw, 24px)', color: 'var(--text-primary)', fontWeight: '800' }}>
                 Question <span style={{ color: 'var(--accent)' }}>{currentQIndex + 1}</span> of {questions.length}
-              </div>
-              <div style={{ fontSize: '1.4rem', color: 'var(--accent)', fontWeight: '800' }}>
-                Score: {score}
               </div>
             </div>
 
@@ -232,9 +229,9 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
               <div style={{ 
                 width: '48px', height: '48px', borderRadius: '50%', background: 'var(--accent)', color: 'white',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                fontSize: '1.5rem', fontWeight: '800', boxShadow: '0 4px 12px rgba(79, 70, 229, 0.3)'
+                fontSize: 'clamp(20px, 2.5vw, 24px)', fontWeight: '800', boxShadow: '0 4px 12px rgba(79, 70, 229, 0.3)'
               }}>?</div>
-              <h3 style={{ margin: 0, fontSize: '2rem', fontWeight: '800', color: 'var(--text-primary)', lineHeight: '1.4' }}>
+              <h3 style={{ margin: 0, fontSize: 'clamp(28px, 3.5vw, 36px)', fontWeight: '900', color: 'var(--text-primary)', lineHeight: '1.4' }}>
                 {questions[currentQIndex].q}
               </h3>
             </div>
@@ -274,12 +271,12 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
                   >
                     <div style={{ 
                       width: '36px', height: '36px', borderRadius: '50%', background: letterBg, color: letterColor,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '1.4rem',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: 'clamp(18px, 2.5vw, 22px)',
                       border: isSelected || isAnswered ? 'none' : '1px solid var(--border)'
                     }}>
                       {alphabet[idx]}
                     </div>
-                    <div style={{ fontSize: '1.4rem', color: 'var(--text-primary)', fontWeight: isSelected ? '800' : '600' }}>
+                    <div style={{ fontSize: 'clamp(18px, 2.5vw, 22px)', color: 'var(--text-primary)', fontWeight: isSelected ? '800' : '600' }}>
                       {option}
                     </div>
                   </div>
@@ -290,11 +287,11 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
             {/* Verification Block / Next Button */}
             {isAnswered && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ marginTop: '1.5rem', padding: '1.5rem', borderRadius: '16px', background: selectedAns === questions[currentQIndex].correctIndex ? '#f0fdf4' : '#fef2f2', border: `2px solid ${selectedAns === questions[currentQIndex].correctIndex ? '#22c55e' : '#ef4444'}` }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: selectedAns === questions[currentQIndex].correctIndex ? '#16a34a' : '#dc2626', fontWeight: '800', fontSize: '1.5rem', marginBottom: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: selectedAns === questions[currentQIndex].correctIndex ? '#16a34a' : '#dc2626', fontWeight: '900', fontSize: 'clamp(20px, 3vw, 24px)', marginBottom: '8px' }}>
                   {selectedAns === questions[currentQIndex].correctIndex ? <CheckCircle size={28} /> : <AlertCircle size={28} />}
                   {selectedAns === questions[currentQIndex].correctIndex ? 'Correct!' : 'Incorrect'}
                 </div>
-                <div style={{ color: 'var(--text-primary)', fontSize: '1.25rem', fontWeight: '500', lineHeight: '1.5' }}>
+                <div style={{ color: 'var(--text-primary)', fontSize: 'clamp(18px, 2.5vw, 22px)', fontWeight: '600', lineHeight: '1.5' }}>
                   {questions[currentQIndex].explanation}
                 </div>
               </motion.div>
@@ -306,7 +303,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
           <div style={{ background: 'var(--surface)', borderTop: '2px solid var(--border)', padding: '1.5rem 3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <Search size={32} color="var(--text-primary)" />
-              <div style={{ background: 'var(--surface)', color: 'var(--accent)', padding: '0.5rem 1rem', borderRadius: '12px', fontSize: '1.15rem', fontWeight: 'bold', border: '1px dashed #a5b4fc' }}>
+              <div style={{ background: 'var(--surface)', color: 'var(--accent)', padding: '0.5rem 1rem', borderRadius: '12px', fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '800', border: '1px dashed #a5b4fc' }}>
                 {questions[currentQIndex].tip}
               </div>
             </div>
@@ -317,7 +314,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
                 disabled={selectedAns === null}
                 style={{ 
                   background: selectedAns === null ? 'var(--border)' : 'var(--accent)', color: 'white',
-                  border: 'none', padding: '1rem 2.5rem', borderRadius: '30px', fontSize: '1.25rem', fontWeight: 'bold',
+                  border: 'none', padding: '1rem 2.5rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800',
                   cursor: selectedAns === null ? 'not-allowed' : 'pointer',
                   display: 'flex', alignItems: 'center', gap: '8px', boxShadow: selectedAns !== null ? '0 4px 12px rgba(79,70,229,0.3)' : 'none',
                   transition: 'all 0.2s'
@@ -330,7 +327,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
                 onClick={handleNext} 
                 style={{ 
                   background: '#10b981', color: 'white',
-                  border: 'none', padding: '1rem 2.5rem', borderRadius: '30px', fontSize: '1.25rem', fontWeight: 'bold',
+                  border: 'none', padding: '1rem 2.5rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800',
                   cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
                   transition: 'all 0.2s'
                 }}
@@ -348,19 +345,14 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
               <Award size={64} color="var(--accent)" />
             </div>
             <div>
-              <h2 style={{ margin: '0 0 1rem 0', fontSize: '3rem', color: 'var(--text-primary)' }}>Chapter Completed!</h2>
-              <p style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-secondary)' }}>You scored {score} out of {questions.length} correctly.</p>
+              <h2 style={{ margin: '0 0 1rem 0', fontSize: 'clamp(36px, 4.5vw, 48px)', fontWeight: '900', color: 'var(--text-primary)' }}>Chapter Completed!</h2>
+              <p style={{ margin: 0, fontSize: 'clamp(20px, 2.5vw, 24px)', fontWeight: '600', color: 'var(--text-secondary)' }}>Master Investigator Badge Unlocked!</p>
             </div>
-            {score === questions.length && (
-              <div style={{ padding: '1.5rem', borderRadius: '16px', background: '#f0fdf4', border: '2px solid #22c55e', display: 'flex', alignItems: 'center', gap: '1rem', color: '#15803d', fontSize: '1.5rem', fontWeight: 'bold' }}>
-                <Star size={32} fill="#22c55e" color="#22c55e" /> Perfect Score! Master Investigator Badge Unlocked!
-              </div>
-            )}
             <div style={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
-              <button onClick={restartQuiz} style={{ background: 'white', color: 'var(--accent)', border: '2px solid var(--accent)', padding: '1rem 2rem', borderRadius: '30px', fontSize: '1.2rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+              <button onClick={restartQuiz} style={{ background: 'white', color: 'var(--accent)', border: '2px solid var(--accent)', padding: '1rem 2rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
                 <RefreshCw size={20} /> Restart Quiz
               </button>
-              <div style={{ background: '#10b981', color: 'white', padding: '1rem 2rem', borderRadius: '30px', fontSize: '1.2rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ background: '#10b981', color: 'white', padding: '1rem 2rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 Click "Proceed to next" in the bottom right corner!
               </div>
             </div>
@@ -379,10 +371,10 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
           <img src="/images/chief_detective_blake.png" alt="Detective" style={{ width: '100%', maxWidth: '200px', objectFit: 'contain', zIndex: 2, filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} />
           
           <div style={{ background: '#fffbeb', border: '2px solid #fde68a', borderRadius: '12px', padding: '1.5rem', width: '90%', zIndex: 3, marginTop: '-20px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', transform: 'rotate(-2deg)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400e', fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem', borderBottom: '2px dashed #fcd34d', paddingBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400e', fontSize: 'clamp(18px, 2.5vw, 22px)', fontWeight: '800', marginBottom: '1rem', borderBottom: '2px dashed #fcd34d', paddingBottom: '0.5rem' }}>
               <FileText size={18} /> Detective Notes
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', color: '#78350f', fontSize: '1.15rem', fontWeight: '600' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', color: '#78350f', fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '700' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckSquare size={16} color="#d97706" /> Observe</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckSquare size={16} color="#d97706" /> Think</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CheckSquare size={16} color="#d97706" /> Compare</div>

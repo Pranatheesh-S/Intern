@@ -208,47 +208,45 @@ export default function Stage2_Identify({ onComplete, addXp }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
       <style>{`
-        :root {
-          --scanner-border: 2px solid var(--border);
-          --scanner-text: var(--text-primary);
-          --scanner-subtext: var(--surface);
-          --scanner-circle-bg: rgba(0, 0, 0, 0.2);
-          --scanner-circle-border: var(--border);
-          --scanner-subject-color: var(--surface);
+        .interactive-tray-item {
+          transition: all 0.2s ease-in-out;
         }
-        [data-theme="dark"] {
-          --scanner-border: 2px solid var(--accent);
-          --scanner-text: var(--surface);
-          --scanner-subtext: var(--surface);
-          --scanner-circle-bg: rgba(255, 255, 255, 0.03);
-          --scanner-circle-border: var(--text-secondary);
-          --scanner-subject-color: var(--surface);
-        }
-        .interactive-tray-item:hover {
-          border-color: var(--accent) !important;
-          transform: translateY(-1px);
+        .interactive-tray-item:not(.scanned-item):hover {
+          border-color: #bc4a1a !important;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(188, 74, 26, 0.15) !important;
         }
       `}</style>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '1.25rem', flex: 1, minHeight: 0, height: '100%', overflow: 'hidden', paddingLeft: '1rem', alignItems: 'stretch' }}>
         {/* Left: Tray of items */}
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%', height: '100%', width: '100%' }}>
-          <div className="glass-panel" style={{ 
+          <div style={{ 
             display: 'flex', 
             flexDirection: 'column', 
             gap: '0.75rem', 
-            padding: '1rem', 
-            background: 'var(--surface)',
-            border: '1px solid var(--border)',
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-            backgroundSize: '20px 20px',
+            padding: '20px', 
+            background: '#fdfbf7',
+            border: '1px solid #e2d3b9',
+            borderRadius: '16px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
             height: '100%',
-            minHeight: '100%'
+            minHeight: '100%',
+            position: 'relative'
           }}>
-            <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.25rem', flexShrink: 0 }}>
-              <h4 style={{ margin: 0, fontSize: 'var(--text-3xl)', letterSpacing: '1px', color: 'var(--text-heading)', fontWeight: '800' }}>EVIDENCE BOARD</h4>
-              <h3 style={{ margin: '0 0 4px 0', fontSize: '1.1rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
-              <div style={{ fontSize: '1.1rem', color: 'var(--accent)', marginTop: '0.4rem', fontWeight: '800' }}>{objectsToScan.length} ITEMS • READY TO SCAN</div>
+            {/* Subtle corner markings */}
+            <div style={{ position: 'absolute', top: '10px', left: '10px', width: '10px', height: '10px', borderTop: '2px solid #e2d3b9', borderLeft: '2px solid #e2d3b9' }} />
+            <div style={{ position: 'absolute', top: '10px', right: '10px', width: '10px', height: '10px', borderTop: '2px solid #e2d3b9', borderRight: '2px solid #e2d3b9' }} />
+
+            <div style={{ borderBottom: '2px dashed #e2d3b9', paddingBottom: '16px', marginBottom: '8px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Search size={28} color="#3c2415" />
+                <h4 style={{ margin: 0, fontSize: '1.8rem', letterSpacing: '1px', color: '#3c2415', fontWeight: '900' }}>EVIDENCE BOARD</h4>
+              </div>
+              <h3 style={{ margin: 0, fontSize: '1rem', color: '#8b6508', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
+              <div style={{ display: 'inline-block', alignSelf: 'flex-start', background: '#bc4a1a', color: 'white', padding: '4px 12px', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
+                {objectsToScan.length} ITEMS • READY TO SCAN
+              </div>
             </div>
             
             <div style={{ 
@@ -265,25 +263,28 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 const isSelected = selectedObj?.id === obj.id;
                 const isScanning = isSelected && scanState === 'scanning';
                 
-                let borderColor = 'var(--border)';
-                let glow = 'none';
+                let borderColor = '#e2d3b9';
+                let shadow = '0 2px 6px rgba(0,0,0,0.03)';
                 let labelText = 'READY TO SCAN';
-                let labelColor = 'var(--text-secondary)';
+                let labelColor = '#5c4033';
+                let bgColor = '#ffffff';
+                let nameColor = '#bc4a1a'; // BURNT ORANGE / TERRACOTTA
                 
                 if (isScanned) {
-                  borderColor = 'var(--success)';
+                  borderColor = '#22c55e';
+                  bgColor = '#f4fcf6';
                   labelText = 'SCANNED';
-                  labelColor = 'var(--success)';
+                  labelColor = '#22c55e';
                 } else if (isScanning) {
-                  borderColor = 'var(--accent)';
-                  glow = '0 0 10px rgba(99, 102, 241, 0.4)';
+                  borderColor = '#bc4a1a';
+                  shadow = '0 0 15px rgba(188, 74, 26, 0.2)';
                   labelText = 'SCANNING...';
-                  labelColor = 'var(--accent)';
+                  labelColor = '#bc4a1a';
                 } else if (isSelected) {
-                  borderColor = 'var(--accent)';
-                  glow = '0 0 15px rgba(99, 102, 241, 0.2)';
+                  borderColor = '#bc4a1a';
+                  shadow = '0 4px 12px rgba(188, 74, 26, 0.1)';
                   labelText = 'SELECTED FOR SCAN';
-                  labelColor = 'var(--accent)';
+                  labelColor = '#bc4a1a';
                 }
 
                 return (
@@ -294,26 +295,28 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                       e.dataTransfer.setData('text/plain', obj.id);
                     }}
                     onClick={() => handleScanObject(obj)}
-                    className="interactive-tray-item"
+                    className={`interactive-tray-item ${isScanned ? 'scanned-item' : ''}`}
                     style={{
                       width: '100%',
-                      padding: '6px 8px',
-                      borderRadius: '8px',
-                      border: `1px solid ${borderColor}`,
-                      background: 'var(--card-bg)',
+                      padding: '12px',
+                      borderRadius: '12px',
+                      border: `2px solid ${borderColor}`,
+                      background: bgColor,
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '4px',
+                      gap: '8px',
                       cursor: isScanned ? 'default' : 'pointer',
-                      transition: 'all 0.2s',
+                      boxShadow: shadow,
                       userSelect: 'none',
-                      position: 'relative',
-                      boxShadow: glow
+                      position: 'relative'
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '800', letterSpacing: '0.5px' }}>
-                      <span>EVIDENCE {(index + 1).toString().padStart(2, '0')}</span>
-                      {isScanned && <Check size={12} strokeWidth={3} style={{ color: 'var(--success)' }} />}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: '#5c4033', fontWeight: '800', letterSpacing: '0.5px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <div style={{ width: '4px', height: '12px', background: '#bc4a1a', borderRadius: '2px' }} />
+                        <span>EVIDENCE {(index + 1).toString().padStart(2, '0')}</span>
+                      </div>
+                      {isScanned && <Check size={16} strokeWidth={3} style={{ color: '#22c55e' }} />}
                     </div>
 
                     <div style={{ 
@@ -323,10 +326,10 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                       width: '100%', 
                       flex: 1,
                       minHeight: 0,
-                      borderRadius: '6px', 
-                      background: 'var(--surface)', 
+                      borderRadius: '8px', 
+                      background: '#fdfbf7', // subtle warm background for image
                       position: 'relative', 
-                      border: '1px solid rgba(0,0,0,0.05)'
+                      border: '1px solid #e2d3b9'
                     }}>
                       {obj.boardImage || obj.image ? (
                         <img 
@@ -334,8 +337,8 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                           alt={obj.name} 
                           style={{ 
                             display: 'block', 
-                            width: '100%', 
-                            height: '100%', 
+                            width: '90%', 
+                            height: '90%', 
                             objectFit: 'contain',
                             objectPosition: 'center',
                             mixBlendMode: 'multiply'
@@ -344,14 +347,14 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                       ) : null}
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '2px' }}>
-                      <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{obj.name}</span>
-                      <span style={{ fontSize: '1rem', fontWeight: 'bold', color: labelColor, display: 'flex', alignItems: 'center', gap: '4px', minHeight: '18px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '1.2rem', fontWeight: '900', color: nameColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{obj.name}</span>
+                      <span style={{ fontSize: '0.9rem', fontWeight: '800', color: labelColor, display: 'flex', alignItems: 'center', gap: '4px', minHeight: '18px' }}>
                         {isScanning && (
                            <motion.span
                              animate={{ opacity: [1, 0.4, 1] }}
                              transition={{ duration: 1, repeat: Infinity }}
-                             style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', display: 'inline-block' }}
+                             style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#bc4a1a', display: 'inline-block' }}
                            />
                         )}
                         {labelText}
@@ -625,25 +628,25 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 ) : (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', maxWidth: '500px' }}>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontSize: '1.5rem', fontWeight: 800, letterSpacing: '1px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontSize: 'clamp(20px, 3vw, 24px)', fontWeight: 900, letterSpacing: '1px' }}>
                         <Check size={24} strokeWidth={3} /> MATERIAL IDENTIFIED
                       </div>
                     </div>
                     
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', textAlign: 'center' }}>
                       <div>
-                        <div style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', letterSpacing: '1px', marginBottom: '0.25rem', fontWeight: 700 }}>OBJECT</div>
-                        <div style={{ color: 'var(--text-heading)', fontSize: '1.6rem', fontWeight: 800, letterSpacing: '0.5px' }}>{selectedObj.name.toUpperCase()}</div>
+                        <div style={{ color: 'var(--text-secondary)', fontSize: 'clamp(15px, 2vw, 18px)', letterSpacing: '1px', marginBottom: '0.25rem', fontWeight: 800 }}>OBJECT</div>
+                        <div style={{ color: 'var(--text-heading)', fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 900, letterSpacing: '0.5px' }}>{selectedObj.name.toUpperCase()}</div>
                       </div>
                       <div>
-                        <div style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', letterSpacing: '1px', marginBottom: '0.25rem', fontWeight: 700 }}>MATERIAL</div>
-                        <div style={{ color: 'var(--accent)', fontSize: '1.7rem', fontWeight: 800, letterSpacing: '1px' }}>{selectedMaterialOption.toUpperCase()}</div>
+                        <div style={{ color: 'var(--text-secondary)', fontSize: 'clamp(15px, 2vw, 18px)', letterSpacing: '1px', marginBottom: '0.25rem', fontWeight: 800 }}>MATERIAL</div>
+                        <div style={{ color: 'var(--accent)', fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 900, letterSpacing: '1px' }}>{selectedMaterialOption.toUpperCase()}</div>
                       </div>
                     </div>
     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
-                      <div style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', letterSpacing: '1px', fontWeight: 800 }}>PROPERTIES</div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontSize: '1.15rem', color: 'var(--text-primary)' }}>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: 'clamp(15px, 2vw, 18px)', letterSpacing: '1px', fontWeight: 800 }}>PROPERTIES</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontSize: 'clamp(16px, 2vw, 19px)', color: 'var(--text-primary)' }}>
                         {(() => {
                           let text = selectedObj.explanations[selectedMaterialOption];
                           const prefix = selectedMaterialOption + ' is ';
@@ -653,7 +656,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                           if (text.endsWith('.')) text = text.substring(0, text.length - 1);
                           const parts = text.split(/,\s*and\s+|,\s*|\s+and\s+/).map(p => p.trim()).filter(p => p.length > 0);
                           return parts.map((part, i) => (
-                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--surface)', border: '1px solid var(--border)', padding: '0.4rem 0.75rem', borderRadius: '4px', fontWeight: 600 }}>
+                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--surface)', border: '1px solid var(--border)', padding: '0.4rem 0.75rem', borderRadius: '4px', fontWeight: 700 }}>
                               <span style={{ color: 'var(--success)' }}>✓</span> {part.charAt(0).toUpperCase() + part.slice(1)}
                             </div>
                           ));
@@ -671,7 +674,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                         className="primary"
                         style={{
                           padding: '0.75rem 2rem',
-                          fontSize: '1.2rem',
+                          fontSize: 'clamp(17px, 2.5vw, 20px)',
                           fontWeight: 800,
                           borderRadius: '8px',
                           cursor: 'pointer'

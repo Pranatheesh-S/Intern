@@ -80,7 +80,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             <Megaphone size={28} /> Mission Briefing
           </div>
 
-          <p style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--text-primary)', lineHeight: '1.6', margin: '0 0 2rem 0' }}>
+          <p style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', color: 'var(--text-primary)', lineHeight: '1.55', margin: '0 0 2rem 0' }}>
             {data.dialogue || "Well done, detective! You've explored the Barrier. Now let's verify your understanding and log our discoveries."}
           </p>
 
@@ -97,7 +97,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             CHIEF BLAKE
           </div>
 
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', marginTop: 'auto', fontSize: '1rem', fontWeight: '700', color: 'var(--text-secondary)', lineHeight: '1.6', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', marginTop: 'auto', fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', color: 'var(--text-secondary)', lineHeight: '1.55', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}>
             Answer each question carefully. Correct answers will be added to our Case Log.
           </div>
 
@@ -115,8 +115,8 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
               <ShieldAlert size={28} />
             </div>
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>{data.title || "Detective Checkpoint"}</h2>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>Verify your understanding to record our findings.</p>
+              <h2 style={{ margin: 0, fontSize: 'clamp(26px, 3.5vw, 34px)', fontWeight: '900', color: 'var(--text-primary)' }}>{data.title || "Detective Checkpoint"}</h2>
+              <p style={{ margin: 0, fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '500', color: 'var(--text-muted)' }}>Verify your understanding to record our findings.</p>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
               </div>
             </div>
 
-            <h3 style={{ margin: '0 0 2rem 0', fontSize: '1.25rem', color: 'var(--text-primary)', display: 'flex', gap: '12px' }}>
+            <h3 style={{ margin: '0 0 2rem 0', fontSize: 'clamp(19px, 2.5vw, 23px)', fontWeight: '700', color: 'var(--text-primary)', display: 'flex', gap: '12px' }}>
               <div style={{ background: 'var(--accent)', color: 'white', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1rem' }}>
                 Q
               </div>
@@ -184,7 +184,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
                     <div style={{ width: '28px', height: '28px', borderRadius: '50%', border: `2px solid ${iconColor}`, color: iconColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem', flexShrink: 0 }}>
                       {String.fromCharCode(65 + idx)}
                     </div>
-                    <span style={{ fontSize: '1.05rem', color: 'var(--text-primary)', flex: 1 }}>{opt}</span>
+                    <span style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '800', color: 'var(--text-primary)', flex: 1 }}>{opt}</span>
                     {isVerified && idx === q.correct && (
                       <div style={{ background: '#22c55e', color: 'white', borderRadius: '50%', padding: '4px' }}>
                         <Check size={16} strokeWidth={3} />
@@ -208,10 +208,10 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
                     {isCorrect ? <Check size={20} strokeWidth={3} /> : <X size={20} strokeWidth={3} />}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 'bold', color: isCorrect ? '#166534' : '#991b1b', marginBottom: '4px' }}>
+                    <div style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '800', color: isCorrect ? '#166534' : '#991b1b', marginBottom: '4px' }}>
                       {isCorrect ? 'Great job, Detective!' : 'Not quite right!'}
                     </div>
-                    <div style={{ fontSize: '0.9rem', color: isCorrect ? '#15803d' : '#b91c1c', lineHeight: '1.4' }}>
+                    <div style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', color: isCorrect ? '#15803d' : '#b91c1c', lineHeight: '1.55' }}>
                       {q.explanation || (isCorrect ? "You've got it right." : "The correct answer has been highlighted.")}
                     </div>
                   </div>
@@ -226,7 +226,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
                       <Lightbulb size={18} /> Need a hint?
                     </button>
                   ) : (
-                    <div style={{ background: '#fffbeb', border: '1px solid #fde68a', padding: '0.75rem 1.25rem', borderRadius: '8px', color: '#92400e', fontSize: '0.9rem', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <div style={{ background: '#fffbeb', border: '1px solid #fde68a', padding: '0.75rem 1.25rem', borderRadius: '8px', color: '#92400e', fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                       <Lightbulb size={18} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
                       <div style={{ lineHeight: '1.4' }}>
                         <strong>Hint:</strong> {q.hint || "Think about the properties we just learned!"}
@@ -260,9 +260,9 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             <div style={{ width: '80px', height: '80px', background: '#10b981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', color: 'white' }}>
               <CheckCircle2 size={48} />
             </div>
-            <h2 style={{ color: 'var(--text-primary)', margin: '0 0 1rem 0' }}>Checkpoint Complete!</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', maxWidth: '400px', marginBottom: '2rem' }}>
-              Excellent work! You scored {score} out of {maxScore}. All discoveries have been securely logged to the Case File.
+            <h2 style={{ color: 'var(--text-primary)', margin: '0 0 1rem 0', fontSize: 'clamp(30px, 3.5vw, 36px)', fontWeight: '900' }}>Checkpoint Complete!</h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(18px, 2.5vw, 21px)', fontWeight: '600', maxWidth: '400px', marginBottom: '2rem' }}>
+              Excellent work! All discoveries have been securely logged to the Case File.
               <br/><br/>
               <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Click "Proceed to next" in the bottom right corner to continue.</span>
             </p>
