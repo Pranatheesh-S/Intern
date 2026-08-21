@@ -2,18 +2,15 @@ import React, { useEffect, useRef } from "react";
 
 export default function CinematicSkyFlightCanvas({ 
   interactionMode = "same", 
-  isAutoFastRace = false,
+  isRunning = true,
   polesMatch = true 
 }) {
   const canvasRef = useRef(null);
-  const videoRef = useRef(null);
+  const isRunningRef = useRef(isRunning);
 
-  // Synchronize video playback rate with nitro mode
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = isAutoFastRace ? 2.2 : 1.0;
-    }
-  }, [isAutoFastRace]);
+    isRunningRef.current = isRunning;
+  }, [isRunning]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -39,151 +36,311 @@ export default function CinematicSkyFlightCanvas({
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    // Load High-Resolution Photorealistic Airliner Aircraft Sprites
+    // Load High-Resolution Photorealistic Assets
     const imgPlaneNS = new Image();
     imgPlaneNS.src = "/MagnetInteraction/real_airliner_north_south.png";
-
-    const imgPlaneSN = new Image();
-    imgPlaneSN.src = "/MagnetInteraction/real_airliner_south_north.png";
 
     // Realistic Turbofan Jet Contrail Particles
     const contrailParticles = [];
     for (let i = 0; i < 140; i++) {
       contrailParticles.push({
         planeIndex: i % 2,
-        engineOffset: (i % 4 < 2) ? -68 : 68,
+        engineOffset: (i % 4 < 2) ? -85 : 85,
         age: Math.random() * 80,
         maxAge: 80,
-        size: 5 + Math.random() * 10,
+        size: 7 + Math.random() * 12,
         alpha: 0.55
       });
     }
 
-    // Realistic Multi-Layer Crash Physics Particle Systems
+    // Realistic High-Fidelity Crash Particle Systems
     const fireParticles = [];
     const smokeParticles = [];
     const shrapnelParticles = [];
     const shockwaveRings = [];
+    const staticSparks = [];
+
+    // Atmospheric Cloud Mist Particles matching reference image
+    const cloudMistParticles = [];
+    for (let i = 0; i < 22; i++) {
+      cloudMistParticles.push({
+        x: Math.random() * cssWidth,
+        y: cssHeight * 0.20 + Math.random() * cssHeight * 0.70,
+        radius: 70 + Math.random() * 110,
+        vx: 0.12 + Math.random() * 0.22,
+        alpha: 0.035 + Math.random() * 0.05
+      });
+    }
 
     // Aircraft physical flight coordinates
-    let planeAX = cssWidth * 0.5 - 230;
-    let planeAY = cssHeight * 0.54;
-    let planeARoll = -0.14;
+    let planeAX = cssWidth * 0.5 - 190;
+    let planeAY = polesMatch ? -140 : cssHeight + 140;
+    let planeARoll = polesMatch ? Math.PI : 0;
     let planeAScale = 1.0;
     let planeAOpacity = 1.0;
 
-    let planeBX = cssWidth * 0.5 + 230;
-    let planeBY = cssHeight * 0.54;
-    let planeBRoll = 0.14;
+    let planeBX = cssWidth * 0.5 + 190;
+    let planeBY = cssHeight + 140;
+    let planeBRoll = 0;
     let planeBScale = 1.0;
     let planeBOpacity = 1.0;
 
-    // Crash timeline sequencer
+    let samePolesTimer = 0;
     let crashTimer = 0;
     let cameraShake = 0;
+    let flashAlpha = 0;
     let time = 0;
+    let hasTriggeredImpact = false;
 
-    // Trigger Initial Catastrophic Impact
-    function triggerCatastrophicImpact(impactX, impactY) {
-      cameraShake = 16;
-
-      // 1. Shockwave blast ring
-      shockwaveRings.push({
-        x: impactX,
-        y: impactY,
-        radius: 10,
-        maxRadius: 180,
-        alpha: 0.95
-      });
-
-      // 2. High-velocity titanium/aluminum shrapnel
-      for (let i = 0; i < 35; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 4 + Math.random() * 12;
-        shrapnelParticles.push({
-          x: impactX,
-          y: impactY,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed + 3,
-          size: 2 + Math.random() * 6,
-          rotation: Math.random() * Math.PI * 2,
-          vRot: (Math.random() - 0.5) * 0.4,
+    // Pre-impact magnetic static arc discharge
+    function emitPreImpactStaticArcs(x1, y1, x2, y2) {
+      if (Math.random() > 0.4) {
+        staticSparks.push({
+          x: (x1 + x2) * 0.5 + (Math.random() - 0.5) * 20,
+          y: (y1 + y2) * 0.5 + (Math.random() - 0.5) * 10,
+          vx: (Math.random() - 0.5) * 4,
+          vy: (Math.random() - 0.5) * 4,
+          size: 2 + Math.random() * 4,
           life: 0,
-          maxLife: 40 + Math.random() * 35,
-          color: Math.random() > 0.5 ? "#E2E8F0" : "#CBD5E1"
-        });
-      }
-
-      // 3. Initial intense ignition fireball burst
-      for (let i = 0; i < 40; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 2 + Math.random() * 8;
-        fireParticles.push({
-          x: impactX + (Math.random() - 0.5) * 20,
-          y: impactY + (Math.random() - 0.5) * 15,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed + 2,
-          size: 15 + Math.random() * 25,
-          life: 0,
-          maxLife: 25 + Math.random() * 20,
-          alpha: 0.95
+          maxLife: 6 + Math.random() * 8,
+          color: Math.random() > 0.5 ? "#60A5FA" : "#FBBF24"
         });
       }
     }
 
-    // Continuous Trailing Crash Fire & Heavy Smoke Emitters
-    function emitTrailingCrashSmoke(x, y, intensity = 1) {
-      for (let i = 0; i < 2 * intensity; i++) {
-        fireParticles.push({
-          x: x + (Math.random() - 0.5) * 18,
-          y: y + (Math.random() - 0.5) * 12,
-          vx: (Math.random() - 0.5) * 3,
-          vy: 2 + Math.random() * 5,
-          size: 10 + Math.random() * 18,
+    // Trigger Initial Catastrophic Impact
+    function triggerCatastrophicImpact(impactX, impactY) {
+      cameraShake = 24; // Intense initial shock
+      flashAlpha = 0.85; // Radial blinding thermal flash
+
+      // 1. Double Shockwave blast rings
+      shockwaveRings.push({
+        x: impactX,
+        y: impactY,
+        radius: 15,
+        maxRadius: 220,
+        alpha: 0.95,
+        lineWidth: 6
+      });
+      shockwaveRings.push({
+        x: impactX,
+        y: impactY,
+        radius: 5,
+        maxRadius: 150,
+        alpha: 0.8,
+        lineWidth: 3
+      });
+
+      // 2. High-velocity supersonic titanium wing shrapnel with fiery tracers
+      for (let i = 0; i < 55; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 5 + Math.random() * 16;
+        shrapnelParticles.push({
+          x: impactX,
+          y: impactY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed + 2.5,
+          size: 3 + Math.random() * 8,
+          rotation: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.6,
           life: 0,
-          maxLife: 20 + Math.random() * 15,
+          maxLife: 45 + Math.random() * 40,
+          color: Math.random() > 0.4 ? "#F1F5F9" : "#CBD5E1",
+          isBurning: Math.random() > 0.3
+        });
+      }
+
+      // 3. Initial intense fuel ignition explosion fireball
+      for (let i = 0; i < 60; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 3 + Math.random() * 11;
+        fireParticles.push({
+          x: impactX + (Math.random() - 0.5) * 25,
+          y: impactY + (Math.random() - 0.5) * 20,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed + 1.5,
+          size: 20 + Math.random() * 35,
+          life: 0,
+          maxLife: 30 + Math.random() * 25,
+          alpha: 0.95
+        });
+      }
+
+      // 4. Instant initial dark blast smoke vortex
+      for (let i = 0; i < 30; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2 + Math.random() * 7;
+        smokeParticles.push({
+          x: impactX + (Math.random() - 0.5) * 20,
+          y: impactY + (Math.random() - 0.5) * 15,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed + 3,
+          size: 25 + Math.random() * 35,
+          growth: 1.2 + Math.random() * 1.4,
+          rotation: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.08,
+          life: 0,
+          maxLife: 60 + Math.random() * 45,
+          alpha: 0.85,
+          shade: Math.random() > 0.5 ? "15, 20, 28" : "30, 36, 45"
+        });
+      }
+    }
+
+    // Continuous Trailing Crash Fire & Billowing Heavy Smoke
+    function emitTrailingCrashSmoke(x, y, intensity = 1) {
+      // Fire tongues from fractured wing roots
+      for (let i = 0; i < 3 * intensity; i++) {
+        fireParticles.push({
+          x: x + (Math.random() - 0.5) * 22,
+          y: y + (Math.random() - 0.5) * 16,
+          vx: (Math.random() - 0.5) * 4,
+          vy: 3 + Math.random() * 6,
+          size: 14 + Math.random() * 24,
+          life: 0,
+          maxLife: 24 + Math.random() * 18,
           alpha: 0.9
         });
       }
 
-      for (let i = 0; i < 4 * intensity; i++) {
+      // Volumetric billowing dark smoke clouds
+      for (let i = 0; i < 6 * intensity; i++) {
         smokeParticles.push({
-          x: x + (Math.random() - 0.5) * 20,
-          y: y + (Math.random() - 0.5) * 10,
-          vx: (Math.random() - 0.5) * 2.5,
-          vy: 3 + Math.random() * 6,
-          size: 14 + Math.random() * 22,
-          growth: 0.8 + Math.random() * 0.9,
+          x: x + (Math.random() - 0.5) * 26,
+          y: y + (Math.random() - 0.5) * 14,
+          vx: (Math.random() - 0.5) * 3,
+          vy: 4 + Math.random() * 7,
+          size: 18 + Math.random() * 28,
+          growth: 1.0 + Math.random() * 1.3,
           rotation: Math.random() * Math.PI * 2,
-          vRot: (Math.random() - 0.5) * 0.05,
+          vRot: (Math.random() - 0.5) * 0.06,
           life: 0,
-          maxLife: 55 + Math.random() * 40,
-          alpha: 0.75,
-          shade: Math.random() > 0.4 ? "20, 25, 35" : "40, 48, 60"
+          maxLife: 65 + Math.random() * 45,
+          alpha: 0.8,
+          shade: Math.random() > 0.4 ? "15, 20, 30" : "35, 42, 52"
         });
       }
+    }
+
+    // 0. Atmospheric Volumetric God Rays & Golden Sun Shimmer (matching reference image)
+    function drawVolumetricAtmosphereAndGodRays() {
+      ctx.save();
+      ctx.globalCompositeOperation = "screen";
+
+      const sunX = cssWidth * 0.50;
+      const sunY = cssHeight * 0.11; // Horizon sun location matching reference photo
+
+      // 1. Radiant Horizon Solar Core & Corona
+      const sunPulse = 1 + Math.sin(time * 1.5) * 0.08;
+      const coronaGrad = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, 260 * sunPulse);
+      coronaGrad.addColorStop(0, "rgba(255, 255, 255, 0.75)");
+      coronaGrad.addColorStop(0.18, "rgba(254, 240, 138, 0.55)");
+      coronaGrad.addColorStop(0.45, "rgba(251, 146, 60, 0.25)");
+      coronaGrad.addColorStop(0.8, "rgba(244, 114, 182, 0.08)");
+      coronaGrad.addColorStop(1, "rgba(2, 6, 23, 0)");
+
+      ctx.fillStyle = coronaGrad;
+      ctx.beginPath();
+      ctx.arc(sunX, sunY, 260 * sunPulse, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Cascading Crepuscular God Rays (Volumetric Sun Shafts)
+      const numRays = 9;
+      for (let i = 0; i < numRays; i++) {
+        const baseAngle = Math.PI * 0.35 + (i / (numRays - 1)) * (Math.PI * 0.30); // Fan out downwards
+        const rayWobble = Math.sin(time * 0.8 + i * 1.1) * 0.04;
+        const currentAngle = baseAngle + rayWobble;
+
+        const rayLength = cssHeight * 0.95;
+        const rayWidth = 24 + Math.sin(time * 1.2 + i * 0.7) * 8 + i * 6;
+        const rayAlpha = (0.12 + Math.sin(time * 1.4 + i * 1.3) * 0.06);
+
+        ctx.save();
+        ctx.translate(sunX, sunY);
+        ctx.rotate(currentAngle - Math.PI / 2);
+
+        const rayGrad = ctx.createLinearGradient(0, 0, 0, rayLength);
+        rayGrad.addColorStop(0, `rgba(255, 255, 255, ${rayAlpha * 1.8})`);
+        rayGrad.addColorStop(0.2, `rgba(254, 240, 138, ${rayAlpha * 1.2})`);
+        rayGrad.addColorStop(0.65, `rgba(253, 186, 116, ${rayAlpha * 0.6})`);
+        rayGrad.addColorStop(1, "rgba(251, 146, 60, 0)");
+
+        ctx.fillStyle = rayGrad;
+        ctx.beginPath();
+        ctx.moveTo(-rayWidth * 0.15, 0);
+        ctx.lineTo(rayWidth * 0.15, 0);
+        ctx.lineTo(rayWidth * 1.8, rayLength);
+        ctx.lineTo(-rayWidth * 1.8, rayLength);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // 3. Shimmering Water Reflection in the Center Cloud Canyon Gap
+      const glintPulse = 0.35 + Math.sin(time * 2.2) * 0.15;
+      const glintX = cssWidth * 0.50;
+      const glintY = cssHeight * 0.52;
+      const glintGrad = ctx.createRadialGradient(glintX, glintY, 0, glintX, glintY, 140);
+      glintGrad.addColorStop(0, `rgba(255, 255, 255, ${glintPulse * 0.5})`);
+      glintGrad.addColorStop(0.3, `rgba(254, 240, 138, ${glintPulse * 0.3})`);
+      glintGrad.addColorStop(1, "rgba(254, 240, 138, 0)");
+      ctx.fillStyle = glintGrad;
+      ctx.fillRect(glintX - 50, cssHeight * 0.35, 100, cssHeight * 0.4);
+
+      // 4. Soft Parallax Cloud Mist Drifting along the Horizon
+      for (let m of cloudMistParticles) {
+        if (isRunningRef.current) {
+          m.x += m.vx;
+          if (m.x > cssWidth + 150) m.x = -150;
+          if (m.x < -150) m.x = cssWidth + 150;
+        }
+        const mGrad = ctx.createRadialGradient(m.x, m.y + Math.sin(time + m.x * 0.01) * 6, 0, m.x, m.y, m.radius);
+        mGrad.addColorStop(0, `rgba(255, 247, 237, ${m.alpha})`);
+        mGrad.addColorStop(0.5, `rgba(254, 215, 170, ${m.alpha * 0.5})`);
+        mGrad.addColorStop(1, "rgba(251, 146, 60, 0)");
+        ctx.fillStyle = mGrad;
+        ctx.beginPath();
+        ctx.arc(m.x, m.y, m.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
     }
 
     function drawTurbofanContrails() {
       ctx.save();
       ctx.globalCompositeOperation = "screen";
-      const speedMult = isAutoFastRace ? 2.5 : 1.0;
 
       for (let p of contrailParticles) {
-        p.age += 1 * speedMult;
-        if (p.age > p.maxAge) {
-          p.age = 0;
+        if (isRunningRef.current) {
+          p.age += 1;
+          if (p.age > p.maxAge) {
+            p.age = 0;
+          }
         }
 
-        const currentPlaneX = p.planeIndex === 0 ? planeAX : planeBX;
-        const currentPlaneY = p.planeIndex === 0 ? planeAY : planeBY;
-        const currentOpacity = p.planeIndex === 0 ? planeAOpacity : planeBOpacity;
+        const isPlaneA = p.planeIndex === 0;
+        const currentPlaneX = isPlaneA ? planeAX : planeBX;
+        const currentPlaneY = isPlaneA ? planeAY : planeBY;
+        const currentOpacity = isPlaneA ? planeAOpacity : planeBOpacity;
+        const roll = isPlaneA ? planeARoll : planeBRoll;
 
         if (currentOpacity < 0.2) continue;
+        if (currentPlaneX < -260 || currentPlaneX > cssWidth + 260) continue;
+        if (currentPlaneY < -200 || currentPlaneY > cssHeight + 200) continue;
 
         const progress = p.age / p.maxAge;
-        const currentY = currentPlaneY + 40 + progress * 260;
-        const currentX = currentPlaneX + p.engineOffset + Math.sin(progress * 3 + time * 2) * 1.5;
+        
+        // Exact 2D angle vector for exhaust opposite to nose heading
+        const exhaustDirX = -Math.sin(roll);
+        const exhaustDirY = Math.cos(roll);
+        const perpDirX = Math.cos(roll);
+        const perpDirY = Math.sin(roll);
+
+        const distance = 40 + progress * 240;
+        const currentX = currentPlaneX + exhaustDirX * distance + perpDirX * (p.engineOffset * 0.5) + Math.sin(progress * 3 + time * 2) * 1.5;
+        const currentY = currentPlaneY + exhaustDirY * distance + perpDirY * (p.engineOffset * 0.5);
+
         const currentSize = p.size * (1 + progress * 3.2);
         const currentAlpha = (1 - progress) * p.alpha * 0.55 * currentOpacity;
 
@@ -200,19 +357,40 @@ export default function CinematicSkyFlightCanvas({
       ctx.restore();
     }
 
-    // Render Realistic Volumetric Explosion & Smoke Simulation
+    // High-Fidelity Crash Rendering Engine
     function drawRealisticCrashEffects() {
-      // 1. Blast Shockwave Rings
+      // 0. Pre-impact Static Sparks
+      for (let i = staticSparks.length - 1; i >= 0; i--) {
+        const s = staticSparks[i];
+        if (isRunningRef.current) {
+          s.life++;
+          s.x += s.vx;
+          s.y += s.vy;
+        }
+        const alpha = (1 - s.life / s.maxLife);
+        ctx.save();
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        if (s.life >= s.maxLife) staticSparks.splice(i, 1);
+      }
+
+      // 1. Shockwave Blast Rings
       ctx.save();
       ctx.globalCompositeOperation = "screen";
       for (let i = shockwaveRings.length - 1; i >= 0; i--) {
         const ring = shockwaveRings[i];
-        ring.radius += 5.5;
+        if (isRunningRef.current) {
+          ring.radius += 6.0;
+        }
         const progress = ring.radius / ring.maxRadius;
         const alpha = (1 - progress) * ring.alpha;
 
         ctx.strokeStyle = `rgba(254, 240, 138, ${alpha})`;
-        ctx.lineWidth = 4 * (1 - progress);
+        ctx.lineWidth = ring.lineWidth * (1 - progress);
         ctx.beginPath();
         ctx.arc(ring.x, ring.y, ring.radius, 0, Math.PI * 2);
         ctx.stroke();
@@ -223,14 +401,16 @@ export default function CinematicSkyFlightCanvas({
       }
       ctx.restore();
 
-      // 2. Heavy Billowing Smoke Plumes
+      // 2. Heavy Volumetric Rolling Smoke Plumes
       for (let i = smokeParticles.length - 1; i >= 0; i--) {
         const p = smokeParticles[i];
-        p.life++;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.size += p.growth;
-        p.rotation += p.vRot;
+        if (isRunningRef.current) {
+          p.life++;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.size += p.growth;
+          p.rotation += p.vRot;
+        }
 
         const progress = p.life / p.maxLife;
         const alpha = (1 - progress) * p.alpha;
@@ -238,9 +418,10 @@ export default function CinematicSkyFlightCanvas({
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rotation);
-        const sGrad = ctx.createRadialGradient(0, 0, p.size * 0.15, 0, 0, p.size);
+        const sGrad = ctx.createRadialGradient(0, 0, p.size * 0.12, 0, 0, p.size);
         sGrad.addColorStop(0, `rgba(${p.shade}, ${alpha})`);
-        sGrad.addColorStop(0.6, `rgba(${p.shade}, ${alpha * 0.7})`);
+        sGrad.addColorStop(0.5, `rgba(${p.shade}, ${alpha * 0.75})`);
+        sGrad.addColorStop(0.85, `rgba(${p.shade}, ${alpha * 0.3})`);
         sGrad.addColorStop(1, `rgba(${p.shade}, 0)`);
         ctx.fillStyle = sGrad;
         ctx.beginPath();
@@ -253,24 +434,27 @@ export default function CinematicSkyFlightCanvas({
         }
       }
 
-      // 3. Volumetric Fireball / Combustion Wisps
+      // 3. Multi-Layer Fireball & Burning Combustion
       ctx.save();
       ctx.globalCompositeOperation = "screen";
       for (let i = fireParticles.length - 1; i >= 0; i--) {
         const p = fireParticles[i];
-        p.life++;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.size *= 0.96;
+        if (isRunningRef.current) {
+          p.life++;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.size *= 0.95; // Natural fireball burn dissipation
+        }
 
         const progress = p.life / p.maxLife;
         const alpha = (1 - progress) * p.alpha;
 
         const fGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
         fGrad.addColorStop(0, `rgba(255, 255, 255, ${alpha})`);
-        fGrad.addColorStop(0.3, `rgba(254, 240, 138, ${alpha * 0.9})`);
-        fGrad.addColorStop(0.6, `rgba(249, 115, 22, ${alpha * 0.75})`);
-        fGrad.addColorStop(1, "rgba(220, 38, 38, 0)");
+        fGrad.addColorStop(0.25, `rgba(254, 240, 138, ${alpha * 0.95})`);
+        fGrad.addColorStop(0.55, `rgba(249, 115, 22, ${alpha * 0.8})`);
+        fGrad.addColorStop(0.85, `rgba(220, 38, 38, ${alpha * 0.4})`);
+        fGrad.addColorStop(1, "rgba(185, 28, 28, 0)");
         ctx.fillStyle = fGrad;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -282,17 +466,29 @@ export default function CinematicSkyFlightCanvas({
       }
       ctx.restore();
 
-      // 4. High-Velocity Metallic Shrapnel & Debris
+      // 4. Supersonic Titanium Wing Shrapnel with Burning Tracers
       for (let i = shrapnelParticles.length - 1; i >= 0; i--) {
         const p = shrapnelParticles[i];
-        p.life++;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.2;
-        p.rotation += p.vRot;
+        if (isRunningRef.current) {
+          p.life++;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.22; // Aerodynamic drag & gravity
+          p.rotation += p.vRot;
+        }
 
         const progress = p.life / p.maxLife;
         const alpha = (1 - progress);
+
+        // Burning hot tracer spark behind shrapnel
+        if (p.isBurning && Math.random() > 0.4) {
+          ctx.save();
+          ctx.fillStyle = `rgba(251, 146, 60, ${alpha * 0.7})`;
+          ctx.beginPath();
+          ctx.arc(p.x - p.vx * 1.5, p.y - p.vy * 1.5, p.size * 0.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
 
         ctx.save();
         ctx.translate(p.x, p.y);
@@ -306,6 +502,17 @@ export default function CinematicSkyFlightCanvas({
           shrapnelParticles.splice(i, 1);
         }
       }
+
+      // 5. Thermal Impact Flash Bloom
+      if (flashAlpha > 0.01) {
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 255, 255, ${flashAlpha})`;
+        ctx.fillRect(0, 0, cssWidth, cssHeight);
+        if (isRunningRef.current) {
+          flashAlpha *= 0.84; // Rapid flash decay
+        }
+        ctx.restore();
+      }
     }
 
     function drawPhotorealisticPlane(img, x, y, rollAngle, scaleFactor = 1.0, opacity = 1.0) {
@@ -317,7 +524,7 @@ export default function CinematicSkyFlightCanvas({
       ctx.scale(scaleFactor, scaleFactor);
       ctx.globalAlpha = opacity;
 
-      const targetWidth = Math.min(cssWidth * 0.45, 360);
+      const targetWidth = Math.min(cssWidth * 0.64, 480);
       const aspect = img.naturalWidth ? img.naturalWidth / img.naturalHeight : 16 / 9;
       const targetHeight = targetWidth / aspect;
 
@@ -338,7 +545,9 @@ export default function CinematicSkyFlightCanvas({
     }
 
     function animate() {
-      time += 0.02;
+      if (isRunningRef.current) {
+        time += 0.02;
+      }
       ctx.clearRect(0, 0, cssWidth, cssHeight);
 
       // Camera vibration / shake upon crash impact
@@ -347,9 +556,14 @@ export default function CinematicSkyFlightCanvas({
         const shakeY = (Math.random() - 0.5) * cameraShake;
         ctx.save();
         ctx.translate(shakeX, shakeY);
-        cameraShake *= 0.91;
-        if (cameraShake < 0.2) cameraShake = 0;
+        if (isRunningRef.current) {
+          cameraShake *= 0.88;
+          if (cameraShake < 0.2) cameraShake = 0;
+        }
       }
+
+      // 0. Atmospheric Volumetric God Rays & Golden Sun Shimmer (matching reference image)
+      drawVolumetricAtmosphereAndGodRays();
 
       // 1. Turbofan Contrails
       drawTurbofanContrails();
@@ -359,82 +573,197 @@ export default function CinematicSkyFlightCanvas({
       const floatYB = Math.cos(time * 1.1) * 5;
 
       if (polesMatch) {
-        // --- SAME POLES (REPEL): Natural Formation Separation ---
+        // --- SAME POLES (REPEL): Flight 1 (Left) and Flight 2 (Right) Approach Head-On & Repel into Cross Turns ---
+        if (isRunningRef.current) {
+          samePolesTimer += 0.012;
+        }
         crashTimer = 0;
+
+        const centerY = cssHeight * 0.50;
         planeAScale = 1.0;
         planeBScale = 1.0;
         planeAOpacity = 1.0;
         planeBOpacity = 1.0;
 
-        const targetAX = cssWidth * 0.5 - 235;
-        const targetBX = cssWidth * 0.5 + 235;
-        const targetRollA = -0.16; // Smooth outward banking roll left
-        const targetRollB = 0.16;  // Smooth outward banking roll right
+        if (samePolesTimer < 1.5) {
+          // Step 1: Head-on Approach along Centerline (Nose N facing Nose N)
+          const progress = Math.min(1.0, samePolesTimer / 1.4);
+          const ease = 1 - Math.pow(1 - progress, 2);
 
-        const smoothFactor = 0.075;
-        planeAX += (targetAX - planeAX) * smoothFactor;
-        planeBX += (targetBX - planeBX) * smoothFactor;
-        planeARoll += (targetRollA - planeARoll) * smoothFactor;
-        planeBRoll += (targetRollB - planeBRoll) * smoothFactor;
+          const startAX = -220;
+          const meetAX = cssWidth * 0.5 - 130;
+          planeAX = startAX + (meetAX - startAX) * ease;
+          planeAY = centerY + floatYA;
+          planeARoll = Math.PI / 2; // Flight 1 Nose (N) points right
 
-        planeAY = cssHeight * 0.54 + floatYA;
-        planeBY = cssHeight * 0.54 + floatYB;
+          const startBX = cssWidth + 220;
+          const meetBX = cssWidth * 0.5 + 130;
+          planeBX = startBX + (meetBX - startBX) * ease;
+          planeBY = centerY + floatYB;
+          planeBRoll = -Math.PI / 2; // Flight 2 Nose (N) points left
+
+          if (samePolesTimer > 0.9) {
+            emitPreImpactStaticArcs(planeAX + 100, centerY, planeBX - 100, centerY);
+          }
+
+        } else if (samePolesTimer >= 1.5 && samePolesTimer < 2.5) {
+          // Step 2: Repel & Move Back — Strong magnetic push-back recoil
+          const tBack = samePolesTimer - 1.5;
+          const pBack = Math.min(1.0, tBack / 0.9);
+          const easeBack = 1 - Math.pow(1 - pBack, 2); // Quick recoil, smooth stop
+
+          const meetAX = cssWidth * 0.5 - 130;
+          const pushedAX = cssWidth * 0.5 - 240;
+          planeAX = meetAX + (pushedAX - meetAX) * easeBack;
+          planeAY = centerY + floatYA;
+          planeARoll = Math.PI / 2;
+
+          const meetBX = cssWidth * 0.5 + 130;
+          const pushedBX = cssWidth * 0.5 + 240;
+          planeBX = meetBX + (pushedBX - meetBX) * easeBack;
+          planeBY = centerY + floatYB;
+          planeBRoll = -Math.PI / 2;
+
+          // Repulsive sparks discharging during the backward move
+          emitPreImpactStaticArcs(planeAX + 100, centerY, planeBX - 100, centerY);
+
+        } else if (samePolesTimer >= 2.5 && samePolesTimer < 3.5) {
+          // Step 3: Turn Action — Flight 1 banks left into top lane; Flight 2 banks left into bottom lane
+          const tTurn = samePolesTimer - 2.5;
+          const pTurn = Math.min(1.0, tTurn / 0.95);
+          const easeTurn = 1 - Math.pow(1 - pTurn, 2);
+
+          const pushedAX = cssWidth * 0.5 - 240;
+          planeAX = pushedAX + easeTurn * 30;
+          planeAY = centerY - easeTurn * 130;
+          planeARoll = Math.PI / 2 - Math.sin(pTurn * Math.PI) * 0.5; // Smooth banking turn
+
+          const pushedBX = cssWidth * 0.5 + 240;
+          planeBX = pushedBX - easeTurn * 30;
+          planeBY = centerY + easeTurn * 130;
+          planeBRoll = -Math.PI / 2 - Math.sin(pTurn * Math.PI) * 0.5; // Smooth banking turn
+
+        } else if (samePolesTimer >= 3.5 && samePolesTimer < 5.8) {
+          // Step 4: Move Forward — Both aircraft accelerate forward across clear separated lanes
+          const tFwd = samePolesTimer - 3.5;
+          const pFwd = Math.min(1.0, tFwd / 2.2);
+          const easeFwd = Math.pow(pFwd, 1.25);
+
+          const laneAX = cssWidth * 0.5 - 210;
+          const endAX = cssWidth + 260;
+          planeAX = laneAX + (endAX - laneAX) * easeFwd;
+          planeAY = centerY - 130 + floatYA;
+          planeARoll = Math.PI / 2; // Leveled forward heading to the right
+
+          const laneBX = cssWidth * 0.5 + 210;
+          const endBX = -260;
+          planeBX = laneBX + (endBX - laneBX) * easeFwd;
+          planeBY = centerY + 130 + floatYB;
+          planeBRoll = -Math.PI / 2; // Leveled forward heading to the left
+
+        } else if (samePolesTimer >= 5.8) {
+          if (isRunningRef.current) {
+            samePolesTimer = 0;
+          }
+          planeAX = -220;
+          planeBX = cssWidth + 220;
+          planeAY = centerY;
+          planeBY = centerY;
+          planeARoll = Math.PI / 2;
+          planeBRoll = -Math.PI / 2;
+        }
 
       } else {
-        // --- DIFFERENT POLES (ATTRACT & REALISTIC CRASH SEQUENCE) ---
-        crashTimer += 0.02;
+        // --- DIFFERENT POLES (ATTRACT & CRASH): Moving in a Straight Line from Left to Right ---
+        samePolesTimer = 0;
+        if (isRunningRef.current) {
+          crashTimer += 0.011;
+        }
 
-        if (crashTimer < 1.0) {
-          // Phase 1: Rapid Inward Magnetic Convergence (0s - 1.0s)
-          const targetAX = cssWidth * 0.5 - 75;
-          const targetBX = cssWidth * 0.5 + 75;
-          const targetRollA = 0.16;  // Steep inward bank
-          const targetRollB = -0.16; // Steep inward bank
+        const centerY = cssHeight * 0.50;
+        const currentTargetWidth = Math.min(cssWidth * 0.64, 480);
+        const planeHalfLength = (currentTargetWidth / (16 / 9)) * 0.5; // ~135px along the fuselage
+        const targetImpactAX = cssWidth * 0.74;
+        const targetImpactBX = targetImpactAX - planeHalfLength * 2 + 10;
+        const impactPointX = targetImpactAX - planeHalfLength;
 
-          planeAX += (targetAX - planeAX) * 0.12;
-          planeBX += (targetBX - planeBX) * 0.12;
-          planeARoll += (targetRollA - planeARoll) * 0.12;
-          planeBRoll += (targetRollB - planeBRoll) * 0.12;
-          planeAY = cssHeight * 0.54 + floatYA;
-          planeBY = cssHeight * 0.54 + floatYB;
+        if (crashTimer < 1.7) {
+          hasTriggeredImpact = false;
 
-        } else if (crashTimer >= 1.0 && crashTimer < 1.06) {
-          // Phase 2: Instant of Catastrophic High-Speed Wing Collision (~1.0s)
-          const impactPointX = cssWidth * 0.5;
-          const impactPointY = (planeAY + planeBY) * 0.5;
-          triggerCatastrophicImpact(impactPointX, impactPointY);
+          // Horizontal in-line flight from left to right (rollAngle = Math.PI / 2 -> nose pointing right)
+          planeARoll = Math.PI / 2;
+          planeBRoll = Math.PI / 2;
+          planeAScale = 1.0;
+          planeBScale = 1.0;
+          planeAOpacity = 1.0;
+          planeBOpacity = 1.0;
 
-        } else if (crashTimer >= 1.06 && crashTimer < 4.2) {
-          // Phase 3: Structural Disintegration & Uncontrolled Aerodynamic Spiral (1.06s - 4.2s)
-          const elapsedCrash = crashTimer - 1.06;
+          planeAY = centerY + floatYA;
+          planeBY = centerY + floatYB;
 
-          // Aircraft A: Wing snapped, flat spins out to the left and dives into clouds
-          planeAX -= 2.2;
-          planeAY += 3.2 + elapsedCrash * 2.8;
-          planeARoll += 0.08;
-          planeAScale = Math.max(0.4, 1.0 - elapsedCrash * 0.18);
-          if (elapsedCrash > 2.2) planeAOpacity = Math.max(0, 1.0 - (elapsedCrash - 2.2) * 1.2);
+          // Lead Plane (Airplane A): Cruising across left-to-right to the right side
+          // Its Tail [S] (Blue) faces backward to the left
+          const startAX = cssWidth * 0.30;
+          const progressA = Math.min(1.0, crashTimer / 1.6);
+          const easeA = 1 - Math.pow(1 - progressA, 2);
+          planeAX = startAX + (targetImpactAX - startAX) * easeA;
 
-          // Aircraft B: Fuel tank breach, rolls inverted to the right and dives
-          planeBX += 2.2;
-          planeBY += 3.5 + elapsedCrash * 3.0;
-          planeBRoll -= 0.09;
-          planeBScale = Math.max(0.4, 1.0 - elapsedCrash * 0.18);
-          if (elapsedCrash > 2.2) planeBOpacity = Math.max(0, 1.0 - (elapsedCrash - 2.2) * 1.2);
+          // Chaser Plane (Airplane B): Starts behind on the left (t=0.25s delay)
+          // Its Nose [N] (Red) faces forward to the right towards Airplane A's Tail [S]
+          // Unlike magnetic attraction accelerates Airplane B forward in line!
+          const delayB = 0.25;
+          const progressB = crashTimer < delayB ? 0 : Math.min(1.0, (crashTimer - delayB) / (1.6 - delayB));
+          const easeB = Math.pow(progressB, 1.8);
+          
+          const startBX = -180;
+          planeBX = startBX + (targetImpactBX - startBX) * easeB;
 
-          // Emit intense continuous trailing smoke plumes and engine fire from fractured wings
-          emitTrailingCrashSmoke(planeAX + 20, planeAY, 1.2);
-          emitTrailingCrashSmoke(planeBX - 20, planeBY, 1.2);
+          // Pre-impact magnetic static sparks between Plane B's Nose (N) and Plane A's Tail (S)
+          if (crashTimer > 1.3 && crashTimer >= delayB) {
+            emitPreImpactStaticArcs(planeBX + planeHalfLength - 10, centerY, planeAX - planeHalfLength + 10, centerY);
+          }
 
-        } else if (crashTimer >= 4.2) {
-          // Phase 4: Smooth reset / re-spawn for seamless interactive observation
-          crashTimer = 0;
-          planeAX = cssWidth * 0.5 - 260;
-          planeBX = cssWidth * 0.5 + 260;
-          planeAY = cssHeight * 0.54;
-          planeBY = cssHeight * 0.54;
-          planeARoll = -0.14;
-          planeBRoll = 0.14;
+        } else if (crashTimer >= 1.7 && crashTimer < 5.2) {
+          // Trigger Catastrophic Impact Shockwave & Explosion ONCE at t=1.7s
+          if (!hasTriggeredImpact && isRunningRef.current) {
+            hasTriggeredImpact = true;
+            triggerCatastrophicImpact(impactPointX, centerY);
+          }
+
+          // Structural Disintegration & Asymmetric Uncontrolled Flat-Spin Dive
+          const elapsedCrash = crashTimer - 1.7;
+
+          if (isRunningRef.current) {
+            // Plane A: Tail blasted, forward flat spin dive
+            planeAX += 3.8 + elapsedCrash * 2.5;
+            planeAY += 3.6 + elapsedCrash * 3.6;
+            planeARoll += 0.13;
+            planeAScale = Math.max(0.25, 1.0 - elapsedCrash * 0.18);
+            if (elapsedCrash > 1.8) planeAOpacity = Math.max(0, 1.0 - (elapsedCrash - 1.8) * 1.5);
+
+            // Plane B: Nose smashed, backward-down flat spin dive
+            planeBX -= 2.6 + elapsedCrash * 1.5;
+            planeBY += 4.4 + elapsedCrash * 4.0;
+            planeBRoll -= 0.15;
+            planeBScale = Math.max(0.25, 1.0 - elapsedCrash * 0.18);
+            if (elapsedCrash > 1.8) planeBOpacity = Math.max(0, 1.0 - (elapsedCrash - 1.8) * 1.5);
+
+            // Billowing fire & dense rolling smoke plumes pouring from fractured aircraft
+            emitTrailingCrashSmoke(planeAX - 15, planeAY, 1.8);
+            emitTrailingCrashSmoke(planeBX + 15, planeBY, 1.8);
+          }
+
+        } else if (crashTimer >= 5.2) {
+          if (isRunningRef.current) {
+            crashTimer = 0;
+            hasTriggeredImpact = false;
+          }
+          planeAX = cssWidth * 0.30;
+          planeBX = -200;
+          planeAY = centerY;
+          planeBY = centerY;
+          planeARoll = Math.PI / 2;
+          planeBRoll = Math.PI / 2;
           planeAScale = 1.0;
           planeBScale = 1.0;
           planeAOpacity = 1.0;
@@ -442,11 +771,9 @@ export default function CinematicSkyFlightCanvas({
         }
       }
 
-      // Draw Aircraft
+      // Draw Aircraft (Both left and right aircraft use imgPlaneNS)
       drawPhotorealisticPlane(imgPlaneNS, planeAX, planeAY, planeARoll, planeAScale, planeAOpacity);
-
-      const planeBImg = interactionMode === "same" ? imgPlaneSN : imgPlaneNS;
-      drawPhotorealisticPlane(planeBImg, planeBX, planeBY, planeBRoll, planeBScale, planeBOpacity);
+      drawPhotorealisticPlane(imgPlaneNS, planeBX, planeBY, planeBRoll, planeBScale, planeBOpacity);
 
       // Draw Volumetric Explosion, Smoke, Fire & Shrapnel
       drawRealisticCrashEffects();
@@ -464,18 +791,14 @@ export default function CinematicSkyFlightCanvas({
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animId);
     };
-  }, [interactionMode, isAutoFastRace, polesMatch]);
+  }, [interactionMode, polesMatch]);
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: "24px" }}>
-      {/* Photorealistic Loop Video Background */}
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        src="/PixVerse_V6_Image_Text_540P_Create_a_smooth_re.mp4"
+      {/* High-Resolution Sunset Clouds Background Image */}
+      <img
+        src="/MagnetInteraction/sunset_clouds_backdrop.jpg"
+        alt="Photorealistic Sunset Clouds"
         style={{
           position: "absolute",
           inset: 0,
