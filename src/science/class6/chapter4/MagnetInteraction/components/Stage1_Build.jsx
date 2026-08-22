@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, RotateCcw, Info, ArrowRight, Lock, AlertCircle } from 'lucide-react';
+import MagnetActivityBackground from './MagnetActivityBackground';
 import { 
   DndContext, 
   useDraggable, 
@@ -44,22 +45,8 @@ function CanvasDroppable({ children }) {
         transition: 'all 0.2s ease'
       }}
     >
-      {/* Photorealistic Sunset Clouds Sky Backdrop matching reference image */}
-      <img 
-        src="/MagnetInteraction/sunset_clouds_backdrop.jpg" 
-        alt="Photorealistic Sunset Clouds Sky" 
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 1 }} 
-      />
-      {/* Radiant Sun Horizon Glow & Atmospheric Shimmer */}
-      <div 
-        style={{ 
-          position: 'absolute', 
-          inset: 0, 
-          background: 'radial-gradient(ellipse at 50% 12%, rgba(254, 240, 138, 0.45) 0%, rgba(251, 146, 60, 0.2) 35%, rgba(15, 23, 42, 0.25) 75%, rgba(2, 6, 23, 0.45) 100%)', 
-          zIndex: 1, 
-          pointerEvents: 'none' 
-        }} 
-      />
+      {/* 3D WebGL / GLSL Infinite Animated Cloud Sea & Volumetric God Rays */}
+      <MagnetActivityBackground />
       
       {/* Center Dashed Corridor Divider Beam */}
       <div style={{ 

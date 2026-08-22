@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import MagnetActivityBackground from "./MagnetActivityBackground";
 
 export default function CinematicSkyFlightCanvas({ 
   interactionMode = "same", 
@@ -795,19 +796,8 @@ export default function CinematicSkyFlightCanvas({
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: "24px" }}>
-      {/* High-Resolution Sunset Clouds Background Image */}
-      <img
-        src="/MagnetInteraction/sunset_clouds_backdrop.jpg"
-        alt="Photorealistic Sunset Clouds"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: 1
-        }}
-      />
+      {/* Three.js / R3F Photorealistic Animated Cloud Sea & Volumetric God Rays */}
+      <MagnetActivityBackground />
 
       {/* Flight & Particle Simulation Layer */}
       <canvas
@@ -818,18 +808,8 @@ export default function CinematicSkyFlightCanvas({
           width: "100%",
           height: "100%",
           display: "block",
-          zIndex: 2
-        }}
-      />
-
-      {/* Cinematic Vignette Overlay */}
-      <div 
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          background: "radial-gradient(ellipse at 50% 35%, transparent 50%, rgba(15, 23, 42, 0.35) 85%, rgba(2, 6, 23, 0.6) 100%)",
-          zIndex: 3
+          zIndex: 2,
+          pointerEvents: "auto"
         }}
       />
     </div>
