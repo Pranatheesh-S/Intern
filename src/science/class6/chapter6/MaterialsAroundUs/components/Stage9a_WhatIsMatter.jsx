@@ -16,14 +16,14 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
   }, [airRevealed, plasticRevealed, onComplete]);
 
   return (
-    <div style={{ padding: '24px', background: '#f8fafc', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '24px', height: '100%', overflowY: 'auto', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div style={{ padding: '24px', background: 'var(--surface)', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '24px', height: '100%', overflowY: 'auto', }}>
       
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'white', padding: '16px 20px', borderRadius: '12px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', border: '1px solid #e2e8f0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'white', padding: '16px 20px', borderRadius: '12px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', border: '1px solid var(--border)' }}>
         <Box size={28} color="#059669" />
         <div>
           <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#047857', margin: 0 }}>6.4 What is Matter?</h2>
-          <p style={{ color: '#475569', fontSize: '0.95rem', margin: '4px 0 0 0' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', margin: '4px 0 0 0' }}>
             Anything that <strong>occupies space</strong> and <strong>has mass</strong> is called <strong>matter</strong>.
           </p>
         </div>
@@ -35,7 +35,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           {/* Is Air Matter? */}
-          <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+          <div style={{ background: 'white', borderRadius: '12px', border: '1px solid var(--border)', overflow: 'hidden' }}>
             <div style={{ background: '#fef9c3', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid #fde047' }}>
               <HelpCircle size={20} color="#a16207" />
               <h3 style={{ margin: 0, color: '#854d0e', fontSize: '1.1rem' }}>Is Air Matter?</h3>
@@ -45,7 +45,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
               {!airRevealed ? (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
                   <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Annie&backgroundColor=transparent" alt="Thinking Girl" style={{ width: '80px', height: '80px' }} />
-                  <p style={{ textAlign: 'center', color: '#475569', margin: 0, fontSize: '0.95rem' }}>We can't see air. Does it occupy space and have mass?</p>
+                  <p style={{ textAlign: 'center', color: 'var(--text-secondary)', margin: 0, fontSize: '0.95rem' }}>We can't see air. Does it occupy space and have mass?</p>
                   <button 
                     onClick={() => { setAirRevealed(true); addXp(20); }}
                     style={{ background: '#eab308', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
@@ -108,14 +108,14 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
         {/* Right Column: Plastic Boon or Bane */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ background: 'white', borderRadius: '12px', border: '1px solid var(--border)', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
             <div style={{ background: '#dcfce3', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid #bbf7d0' }}>
               <HelpCircle size={20} color="#16a34a" />
               <h3 style={{ margin: 0, color: '#15803d', fontSize: '1.1rem' }}>Think it over!</h3>
             </div>
             
             <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-              <p style={{ margin: '0 0 20px 0', color: '#334155', fontSize: '1rem', lineHeight: '1.5', textAlign: 'center' }}>
+              <p style={{ margin: '0 0 20px 0', color: 'var(--text-primary)', fontSize: '1rem', lineHeight: '1.5', textAlign: 'center' }}>
                 Can you think about what changes the invention of plastic brought to humans?
                 <br/><br/><strong>Is it a boon (blessing) or a bane (curse)?</strong>
               </p>

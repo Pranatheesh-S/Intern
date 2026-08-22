@@ -12,7 +12,6 @@ export default function Handbook_Matter({ stageCompleted = false }) {
         display: 'flex', flexDirection: 'column', 
         border: 'clamp(6px, 1.5vw, 18px) solid #064e3b',
         position: 'relative',
-        fontFamily: 'Arial, Helvetica, sans-serif',
         overflow: 'hidden'
     }}>
       {/* Book Spine (Right Edge) */}
@@ -30,7 +29,7 @@ export default function Handbook_Matter({ stageCompleted = false }) {
             <div style={{ fontSize: 'clamp(44.8px, 6.4vw, 96px)', filter: 'drop-shadow(0px 4px 2px rgba(0,0,0,0.2))' }}>🌍</div>
           </div>
 
-          <div style={{ fontSize: 'var(--text-xl)', color: '#334155', lineHeight: '1.6', marginBottom: '24px' }}>
+          <div style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '24px' }}>
             <p style={{ margin: '0 0 16px 0' }}>Mass and volume are the two properties possessed by all materials.</p>
             <p style={{ margin: '0 0 16px 0' }}>Can we give a general name to anything that possesses these two properties?</p>
             <p style={{ margin: '0 0 16px 0' }}>Anything that <strong style={{ color: '#047857' }}>occupies space</strong> and has <strong style={{ color: '#047857' }}>mass</strong> is called <strong style={{ color: '#064e3b' }}>matter</strong>.</p>
@@ -46,7 +45,7 @@ export default function Handbook_Matter({ stageCompleted = false }) {
 
           {/* Page navigation */}
           <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
-            <div style={{ color: '#94a3b8', fontSize: 'var(--text-base)' }}>Page 1</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: 'var(--text-base)' }}>Page 1</div>
             <button 
               onClick={() => { setBookPage(2); setIsHandbookRead(true); }}
               style={{ background: '#10b981', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: 'var(--text-base)', transition: 'background 0.2s', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 4px rgba(16, 185, 129, 0.3)' }}
@@ -64,7 +63,7 @@ export default function Handbook_Matter({ stageCompleted = false }) {
             Defining Matter
           </h2>
 
-          <div style={{ fontSize: 'var(--text-xl)', color: '#334155', lineHeight: '1.6', marginBottom: '32px' }}>
+          <div style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '32px' }}>
             <p style={{ margin: '0 0 16px 0' }}>Your final case is to classify matter!</p>
             <p style={{ margin: '0' }}>We need to analyze strange cases, like invisible air and modern plastics, to determine how they fit into the world of matter.</p>
           </div>
@@ -100,13 +99,13 @@ export default function Handbook_Matter({ stageCompleted = false }) {
           <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px' }}>
             <button 
               onClick={() => setBookPage(1)}
-              style={{ background: 'white', border: '1px solid #cbd5e1', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#64748b', fontSize: 'var(--text-base)', fontWeight: 'bold' }}
-              onMouseOver={(e) => e.target.style.background = '#f8fafc'}
+              style={{ background: 'white', border: '1px solid var(--border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 'var(--text-base)', fontWeight: 'bold' }}
+              onMouseOver={(e) => e.target.style.background = 'var(--surface)'}
               onMouseOut={(e) => e.target.style.background = 'white'}
             >
               <span style={{ fontSize: 'var(--text-lg)' }}>←</span> Previous
             </button>
-            <div style={{ color: '#94a3b8', fontSize: 'var(--text-base)' }}>Page 2</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: 'var(--text-base)' }}>Page 2</div>
           </div>
         </div>
       )}

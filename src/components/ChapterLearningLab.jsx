@@ -12,6 +12,7 @@ import scientist2Img from "../assets/Scientist2.jpeg";
 import silentValleyImg from "../assets/silent_valley.jpeg";
 import protectWildlifeImg from "../assets/protect_wildlife.jpeg";
 import sacredGrovesImg from "../assets/sacred_groves.jpeg";
+import darkForestBg from "../assets/dark_forest_bg.jpg";
 
 // Context
 import { useTheme } from "../ThemeContext";
@@ -34,10 +35,10 @@ import FoodTestingActivity from "../science/class6/chapter3/FoodTesting";
 import FatTestingActivity from "../science/class6/chapter3/FatTesting";
 import ProteinTestingActivity from "../science/class6/chapter3/ProteinTesting";
 
-import fishImg from "../../Fish.png";
-import pigeonImg from "../../pigeon img.png";
-import snailImg from "../../Snail img.png";
-import cowImg from "../../cow img.png";
+import fishImg from "../assets/specimens/fish.png";
+import pigeonImg from "../assets/specimens/pigeon.png";
+import snailImg from "../assets/specimens/snail.png";
+import cowImg from "../assets/specimens/cow.png";
 
 const LEVEL_QUIZZES = {
   'biodiversity_concept': [
@@ -537,7 +538,149 @@ const CHAPTER_2_LEVELS = [
   }
 ];
 
-function IntroStoryteller({ onComplete }) {
+// ── Voice profiles for character-specific Indian English speech synthesis ─────
+// Distinct voice identities:
+// • Dr. Raghu (Young Adult Male Teacher): pitch 0.94, rate 0.90
+// • Maniram Chacha (Elderly Man): deep aged texture pitch 0.58, rate 0.72
+// • Priya (School Girl / Child): bright youthful pitch 1.62, rate 1.02
+// • Arjun (School Boy / Child): curious youthful pitch 1.42, rate 1.05
+const VOICE_PROFILES = {
+  'Dr. Raghu': {
+    pitch: 0.94,
+    rate: 0.90,
+    gender: 'adultMale',
+    inKeywords: ['prabhat', 'ravi', 'male', 'india', 'indian'],
+    enKeywords: ['guy', 'david', 'mark', 'male']
+  },
+  'Maniram Chacha': {
+    pitch: 0.58,
+    rate: 0.72,
+    gender: 'agedMale',
+    inKeywords: ['valluvar', 'prabhat', 'ravi', 'india', 'indian'],
+    enKeywords: ['james', 'george', 'fred', 'uk male']
+  },
+  'Priya': {
+    pitch: 1.62,
+    rate: 1.02,
+    gender: 'childGirl',
+    inKeywords: ['heera', 'neerja', 'veena', 'ananya', 'kavya', 'female'],
+    enKeywords: ['zira', 'samantha', 'victoria', 'female']
+  },
+  'Arjun': {
+    pitch: 1.42,
+    rate: 1.05,
+    gender: 'childBoy',
+    inKeywords: ['prabhat', 'ravi', 'india', 'indian'],
+    enKeywords: ['alex', 'daniel', 'karen', 'male']
+  },
+  'Female Teacher': {
+    pitch: 1.05,
+    rate: 0.95,
+    gender: 'adultFemale',
+    inKeywords: ['heera', 'neerja', 'veena', 'female'],
+    enKeywords: ['zira', 'susan', 'female']
+  }
+};
+
+function speakWithProfile(text, characterName, muteFlag, onEndCallback, onErrorCallback) {
+  if (muteFlag || !('speechSynthesis' in window)) return null;
+  window.speechSynthesis.cancel();
+
+  // Natural conversational text preprocessing for expressive pauses and stage directions
+  let spokenText = text;
+  if (spokenText.includes('coo-koo-koo') || spokenText.includes('cups ear')) {
+    spokenText = spokenText
+      .replace(/Shhh\.\.\./gi, 'Shh... ... ')
+      .replace(/\*cups ear\*/gi, '... cups ear, ... ')
+      .replace(/listen\.\.\./gi, 'listen... ... ')
+      .replace(/coo-koo-koo!/gi, 'coo... koo... koo!')
+      .replace(/🎵/g, '');
+  }
+
+  const profile = VOICE_PROFILES[characterName] || { pitch: 1.0, rate: 1.0, gender: 'adultMale', inKeywords: [], enKeywords: [] };
+  const utt = new SpeechSynthesisUtterance(spokenText);
+  utt.pitch = profile.pitch;
+  utt.rate  = profile.rate;
+  utt.volume = 1.0;
+
+  if (onEndCallback) utt.onend = onEndCallback;
+  if (onErrorCallback) utt.onerror = onErrorCallback;
+
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    // 1. Prioritize Indian English / Indian voices (lang en-IN, hi-IN or name containing india/indian/prabhat/heera/neerja/ravi)
+    const indianVoices = voices.filter(v => 
+      (v.lang && (v.lang.toLowerCase().includes('in') || v.lang.toLowerCase().includes('en-in') || v.lang.toLowerCase().includes('hi-in'))) ||
+      /india|indian|hindi|prabhat|heera|neerja|ravi|veena/i.test(v.name)
+    );
+
+    let matchedVoice = null;
+    if (indianVoices.length > 0) {
+      if (profile.inKeywords) {
+        for (const kw of profile.inKeywords) {
+          matchedVoice = indianVoices.find(v => v.name.toLowerCase().includes(kw));
+          if (matchedVoice) break;
+        }
+      }
+      if (!matchedVoice) {
+        if (profile.gender === 'agedMale') {
+          const males = indianVoices.filter(v => /male|prabhat|ravi/i.test(v.name));
+          matchedVoice = males.length > 1 ? males[1] : (males[0] || indianVoices[0]);
+        } else if (profile.gender === 'adultMale') {
+          const males = indianVoices.filter(v => /male|prabhat|ravi/i.test(v.name));
+          matchedVoice = males[0] || indianVoices[0];
+        } else if (profile.gender === 'childBoy') {
+          const males = indianVoices.filter(v => /male|prabhat|ravi/i.test(v.name));
+          matchedVoice = males.length > 1 ? males[males.length - 1] : (males[0] || indianVoices[0]);
+        } else {
+          const females = indianVoices.filter(v => /female|heera|neerja|veena/i.test(v.name));
+          matchedVoice = females[0] || indianVoices[0];
+        }
+      }
+    }
+
+    // 2. Fallback to English voices if no Indian voice is installed on current system
+    if (!matchedVoice) {
+      const englishVoices = voices.filter(v => v.lang && v.lang.startsWith('en'));
+      const pool = englishVoices.length > 0 ? englishVoices : voices;
+
+      if (profile.enKeywords) {
+        for (const kw of profile.enKeywords) {
+          matchedVoice = pool.find(v => v.name.toLowerCase().includes(kw));
+          if (matchedVoice) break;
+        }
+      }
+
+      if (!matchedVoice) {
+        if (profile.gender === 'agedMale') {
+          const males = pool.filter(v => /male|david|mark|guy|james|fred|george/i.test(v.name));
+          matchedVoice = males.length > 1 ? males[1] : (males[0] || pool[0]);
+        } else if (profile.gender === 'adultMale') {
+          const males = pool.filter(v => /male|david|mark|guy|james/i.test(v.name));
+          matchedVoice = males[0] || pool[0];
+        } else if (profile.gender === 'childGirl') {
+          const females = pool.filter(v => /female|zira|samantha|victoria|susan|karen|jessica|jenny/i.test(v.name));
+          matchedVoice = females[0] || pool[0];
+        } else if (profile.gender === 'childBoy') {
+          const males = pool.filter(v => /male|alex|daniel/i.test(v.name));
+          matchedVoice = males.length > 1 ? males[males.length - 1] : (males[0] || pool[0]);
+        } else if (profile.gender === 'adultFemale') {
+          const females = pool.filter(v => /female|zira|samantha|victoria/i.test(v.name));
+          matchedVoice = females[0] || pool[0];
+        }
+      }
+    }
+
+    if (matchedVoice) {
+      utt.voice = matchedVoice;
+    }
+  }
+
+  window.speechSynthesis.speak(utt);
+  return utt;
+}
+
+function IntroStoryteller({ onComplete, onBack }) {
   const [currentScene, setCurrentScene] = useState(0);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [narrationVisible, setNarrationVisible] = useState(false);
@@ -545,6 +688,7 @@ function IntroStoryteller({ onComplete }) {
   const [isDialogueDone, setIsDialogueDone] = useState(false);
   const [dialogueStep, setDialogueStep] = useState(0);
   const [isTypingDone, setIsTypingDone] = useState(false);
+  const [isNarrationMuted, setIsNarrationMuted] = useState(false);
   const typeTimerRef = useRef(null);
   const narrationTimerRef = useRef(null);
   const dialogueTimerRef = useRef(null);
@@ -562,8 +706,10 @@ function IntroStoryteller({ onComplete }) {
       title: "🌱 The Nature Walk Begins",
       text: "Dr Raghu and Maniram chacha lead the students out of the classroom into a nearby patch of forest. The air is fresh and filled with the scent of wet soil and leaves. The kids are excited to discover what secrets the nature walk holds!",
       dialogues: [
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!", top: '22%', left: '22%', side: 'right' },
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!", top: '18%', left: '50%', side: 'left' }
+        // Dr. Raghu on left — popup moved downward away from face
+        { character: "Dr. Raghu",      avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!",    top: '16%', left: '3%',  side: 'right' },
+        // Maniram Chacha on centre-right — popup moved downward away from face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!",            top: '20%', left: '52%', side: 'left'  }
       ]
     },
     {
@@ -571,7 +717,8 @@ function IntroStoryteller({ onComplete }) {
       title: "🌿 Observing Diverse Plants",
       text: "As they walk, they observe different kinds of plants. Some are small herbs growing close to the ground, others are bushy shrubs, and some are grand trees with thick trunks. Dr Raghu reminds them to observe gently without plucking any leaves or flowers.",
       dialogues: [
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '25%', left: '30%', side: 'left' }
+        // Dr. Raghu — popup moved downward away from face
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '18%', left: '54%', side: 'left' }
       ]
     },
     {
@@ -579,8 +726,10 @@ function IntroStoryteller({ onComplete }) {
       title: "🐦 Listening to Bird Calls",
       text: "Hush! Maniram chacha stops and cups his ear. He mimics a bird song, and suddenly, a beautiful response is heard from the tree canopy! The students learn to listen to the unique calls of birds and respect their home.",
       dialogues: [
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵", top: '18%', left: '38%', side: 'left' },
-        { character: "Priya", avatar: "👧", text: "It replied! The bird actually replied to chacha!", top: '30%', left: '60%', side: 'right' }
+        // Maniram popup — moved downward away from face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵",              top: '16%', left: '3%',  side: 'right' },
+        // Priya popup — moved downward away from face
+        { character: "Priya",          avatar: "👧",    text: "It replied! The bird actually replied to chacha!",             top: '20%', left: '54%', side: 'left'  }
       ]
     },
     {
@@ -588,8 +737,10 @@ function IntroStoryteller({ onComplete }) {
       title: "🦋 Fluttering Insects & Butterflies",
       text: "Near a cluster of wildflowers, butterflies and bees are busy gathering nectar. The students watch closely as a butterfly unfolds its delicate wings. They notice how insects play a vital role in helping flowers grow.",
       dialogues: [
-        { character: "Arjun", avatar: "👦", text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '32%', left: '58%', side: 'right' },
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.", top: '18%', left: '26%', side: 'left' }
+        // Arjun popup — moved downward away from face
+        { character: "Arjun",     avatar: "👦",    text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '20%', left: '54%', side: 'left'  },
+        // Dr. Raghu popup — moved downward away from face
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.",         top: '16%', left: '3%',  side: 'right' }
       ]
     },
     {
@@ -597,7 +748,8 @@ function IntroStoryteller({ onComplete }) {
       title: "🐒 Animals in the Canopy",
       text: "A rustle in the branches reveals monkeys jumping from limb to limb, and a tiny squirrel scurrying down a trunk. The forest is alive with creatures of all sizes, each adapted to live in their part of the woods.",
       dialogues: [
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '20%', left: '42%', side: 'left' }
+        // Maniram popup — moved downward away from face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '16%', left: '3%', side: 'right' }
       ]
     },
     {
@@ -605,7 +757,8 @@ function IntroStoryteller({ onComplete }) {
       title: "📋 Recording in the Table",
       text: "The students take out their notebooks to record their observations in Tables 2.1 and 2.2. They separate their findings into plants and animals, marveling at the incredible diversity of life surrounding them!",
       dialogues: [
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '22%', left: '35%', side: 'left' }
+        // Dr. Raghu popup — moved downward away from face
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '18%', left: '54%', side: 'left' }
       ]
     }
   ];
@@ -614,6 +767,9 @@ function IntroStoryteller({ onComplete }) {
   const scene = scenes[currentScene];
 
   useEffect(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
     clearTimeout(narrationTimerRef.current);
     clearTimeout(typeTimerRef.current);
     clearTimeout(dialogueTimerRef.current);
@@ -624,6 +780,7 @@ function IntroStoryteller({ onComplete }) {
     setDialogueStep(0);
     setImgLoaded(false);
     return () => {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       clearTimeout(narrationTimerRef.current);
       clearTimeout(typeTimerRef.current);
       clearTimeout(dialogueTimerRef.current);
@@ -649,28 +806,97 @@ function IntroStoryteller({ onComplete }) {
   }, [isDialogueDone, currentScene]);
 
   useEffect(() => {
+    let active = true;
+    let fallbackTimer = null;
+
     if (dialogueStep < scene.dialogues.length) {
-      dialogueTimerRef.current = setTimeout(() => {
-        setDialogueStep(p => p + 1);
-      }, 1200);
+      const dlg = scene.dialogues[dialogueStep];
+      const nextStep = () => {
+        if (active) {
+          clearTimeout(fallbackTimer);
+          clearTimeout(dialogueTimerRef.current);
+          setDialogueStep(p => p + 1);
+        }
+      };
+
+      // Generous fallback timeout (minimum 10s or 160ms per char) to ensure audio is NEVER cut off prematurely
+      const fallbackDuration = Math.max(10000, dlg.text.length * 160 + 4000);
+
+      if (!isNarrationMuted && 'speechSynthesis' in window) {
+        const handleEnd = () => {
+          if (active) {
+            clearTimeout(fallbackTimer);
+            clearTimeout(dialogueTimerRef.current);
+            // Wait 600ms comfortable natural pause after speech finishes 100% cleanly before advancing
+            dialogueTimerRef.current = setTimeout(nextStep, 600);
+          }
+        };
+
+        const doSpeak = () => {
+          if (!active) return;
+          const utt = speakWithProfile(dlg.text, dlg.character, isNarrationMuted, handleEnd, handleEnd);
+          if (!utt) {
+            dialogueTimerRef.current = setTimeout(nextStep, Math.max(2500, dlg.text.length * 80));
+          } else {
+            fallbackTimer = setTimeout(handleEnd, fallbackDuration);
+          }
+        };
+
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          doSpeak();
+        } else {
+          window.speechSynthesis.onvoiceschanged = () => { doSpeak(); };
+          fallbackTimer = setTimeout(handleEnd, fallbackDuration);
+        }
+      } else {
+        dialogueTimerRef.current = setTimeout(nextStep, Math.max(2500, dlg.text.length * 80));
+      }
     } else if (scene.dialogues.length > 0) {
       dialogueTimerRef.current = setTimeout(() => {
-        setIsDialogueDone(true);
-      }, 250);
+        if (active) setIsDialogueDone(true);
+      }, 500);
     } else {
       setIsDialogueDone(true);
     }
-    return () => clearTimeout(dialogueTimerRef.current);
-  }, [dialogueStep, currentScene]);
+
+    return () => {
+      active = false;
+      clearTimeout(fallbackTimer);
+      clearTimeout(dialogueTimerRef.current);
+    };
+  }, [dialogueStep, currentScene, isNarrationMuted]);
 
   const skipTyping = () => {
     clearTimeout(typeTimerRef.current);
     clearTimeout(dialogueTimerRef.current);
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     setDialogueStep(scene.dialogues.length);
     setIsDialogueDone(true);
     setNarrationVisible(true);
     setTypedChars(scene.text.length);
     setIsTypingDone(true);
+  };
+
+  const replayNarration = (e) => {
+    e.stopPropagation();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    clearTimeout(narrationTimerRef.current);
+    clearTimeout(typeTimerRef.current);
+    clearTimeout(dialogueTimerRef.current);
+    setDialogueStep(0);
+    setIsDialogueDone(false);
+    setNarrationVisible(false);
+    setTypedChars(0);
+    setIsTypingDone(false);
+  };
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    setIsNarrationMuted(prev => {
+      if (!prev && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+      return !prev;
+    });
   };
 
   const handleNext = () => { if (currentScene < totalScenes - 1) setCurrentScene(prev => prev + 1); else if (onComplete) onComplete(); };
@@ -681,14 +907,14 @@ function IntroStoryteller({ onComplete }) {
       onClick={!isTypingDone ? skipTyping : undefined}
       style={{
         position: 'relative',
-        width: '100%',
-        height: 'clamp(700px, 90vh, 920px)',
-        borderRadius: '14px',
+        width: '100vw',
+        height: '100vh',
+        borderRadius: 0,
         overflow: 'hidden',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.28)',
+        boxShadow: 'none',
         background: '#0a1220',
         cursor: !isTypingDone ? 'pointer' : 'default',
-        border: '4px solid white',
+        border: 'none',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -697,13 +923,11 @@ function IntroStoryteller({ onComplete }) {
       <div style={{
         position: 'relative',
         height: '100%',
-        aspectRatio: '16/9',
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 'auto',
-        maxWidth: '100%',
-        maxHeight: '100%'
+        zIndex: 2
       }}>
         <img
           key={scene.img}
@@ -715,7 +939,7 @@ function IntroStoryteller({ onComplete }) {
             inset: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'contain',
+            objectFit: 'cover',
             transition: 'opacity 0.5s ease',
             opacity: imgLoaded ? 1 : 0
           }}
@@ -730,7 +954,9 @@ function IntroStoryteller({ onComplete }) {
         }} />
 
         {scene.dialogues.map((dlg, idx) => {
-          const isVisible = dialogueStep > idx;
+          // Show popup from the moment its voice STARTS (dialogueStep >= idx),
+          // not after it ends (dialogueStep > idx). This synchronises text + voice.
+          const isVisible = dialogueStep >= idx && imgLoaded;
           return (
             <div key={idx} style={{
               position: 'absolute',
@@ -738,7 +964,7 @@ function IntroStoryteller({ onComplete }) {
               left: dlg.left,
               right: dlg.right,
               zIndex: 13,
-              width: '240px',
+              width: '290px',
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(14px) scale(0.92)',
               transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -750,14 +976,14 @@ function IntroStoryteller({ onComplete }) {
                 backdropFilter: 'blur(16px)',
                 border: theme === 'light' ? '1.5px solid rgba(5, 150, 105, 0.35)' : '1.5px solid rgba(52, 211, 153, 0.28)',
                 borderRadius: dlg.side === 'left' ? '4px 16px 16px 16px' : '16px 4px 16px 16px',
-                padding: '0.6rem 0.85rem',
+                padding: '0.75rem 1rem',
                 boxShadow: theme === 'light' ? '0 10px 30px rgba(0,0,0,0.1)' : '0 10px 30px rgba(0,0,0,0.4)',
                 color: theme === 'light' ? '#0f172a' : '#ffffff'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.28rem' }}>
-                  <span style={{ fontSize: '1rem' }}>{dlg.avatar}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.35rem' }}>
+                  <span style={{ fontSize: '1.15rem' }}>{dlg.avatar}</span>
                   <span style={{
-                    fontSize: '0.68rem',
+                    fontSize: '0.85rem',
                     fontWeight: '800',
                     color: theme === 'light' ? '#059669' : '#34d399',
                     textTransform: 'uppercase',
@@ -768,9 +994,9 @@ function IntroStoryteller({ onComplete }) {
                 </div>
                 <p style={{
                   margin: 0,
-                  fontSize: '0.78rem',
-                  color: theme === 'light' ? '#334155' : 'rgba(255,255,255,0.92)',
-                  lineHeight: '1.45',
+                  fontSize: '0.96rem',
+                  color: theme === 'light' ? '#334155' : 'rgba(255,255,255,0.95)',
+                  lineHeight: '1.5',
                   fontStyle: 'italic',
                   fontWeight: '550'
                 }}>
@@ -794,20 +1020,6 @@ function IntroStoryteller({ onComplete }) {
         })}
       </div>
 
-      <div style={{ position: 'absolute', top: '0.9rem', right: '0.9rem', display: 'flex', gap: '5px', zIndex: 12 }}>
-        {scenes.map((_, i) => (
-          <button key={i}
-            onClick={(e) => { e.stopPropagation(); setCurrentScene(i); }}
-            style={{
-              width: i === currentScene ? '20px' : '7px', height: '7px',
-              borderRadius: '4px', border: 'none', cursor: 'pointer', padding: 0,
-              background: i === currentScene ? '#34d399' : 'rgba(255,255,255,0.4)',
-              transition: 'all 0.3s ease'
-            }}
-          />
-        ))}
-      </div>
-
       <div style={{
         position: 'absolute', top: '0.9rem', left: '0.9rem', zIndex: 12,
         background: 'rgba(0,0,0,0.52)', backdropFilter: 'blur(10px)',
@@ -818,6 +1030,28 @@ function IntroStoryteller({ onComplete }) {
         Class 6 · Scene {currentScene + 1} of {totalScenes}
       </div>
 
+      {onBack && (
+        <div style={{
+          position: 'absolute', bottom: '1.2rem', left: '1.2rem', zIndex: 15
+        }}>
+          <button 
+            onClick={(e) => { e.stopPropagation(); onBack(); }}
+            style={{
+              padding: '0.7rem 1.4rem', fontSize: '0.9rem', fontWeight: '700',
+              borderRadius: '8px', border: 'none',
+              background: '#10b981', color: '#fff',
+              backdropFilter: 'blur(12px)', cursor: 'pointer',
+              boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)', transition: 'all 0.2s',
+              display: 'flex', alignItems: 'center', gap: '0.5rem'
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = '#059669'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = '#10b981'; e.currentTarget.style.transform = 'translateY(0)'; }}
+          >
+            ← Back to Slogan
+          </button>
+        </div>
+      )}
+
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
         display: 'flex', justifyContent: 'center',
@@ -827,22 +1061,22 @@ function IntroStoryteller({ onComplete }) {
         transition: 'transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1)'
       }}>
         <div style={{
-          width: '100%', maxWidth: '680px',
+          width: '100%', maxWidth: '780px',
           background: '#E6BF83', 
           color: '#000000',
           backdropFilter: 'blur(16px)',
           border: '1px solid rgba(160, 82, 45, 0.5)', 
           borderRadius: '16px',
-          padding: '1.1rem 1.4rem 0.9rem',
+          padding: '1.4rem 1.8rem 1.2rem',
           boxShadow: '0 -2px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(230, 191, 131, 0.18)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.95rem', fontWeight: '800', color: '#5C4033', letterSpacing: '-0.01em' }}>
+            <span style={{ fontSize: '1.28rem', fontWeight: '800', color: '#5C4033', letterSpacing: '-0.01em' }}>
               {scene.title}
             </span>
             {!isTypingDone && (
               <button onClick={(e) => { e.stopPropagation(); skipTyping(); }} style={{
-                fontSize: '0.68rem', fontWeight: '600', padding: '0.2rem 0.6rem',
+                fontSize: '0.72rem', fontWeight: '600', padding: '0.22rem 0.65rem',
                 borderRadius: '6px', border: '1px solid rgba(139, 69, 19, 0.4)',
                 background: 'rgba(0,0,0,0.07)', color: '#5C4033',
                 cursor: 'pointer', transition: 'all 0.2s'
@@ -851,8 +1085,8 @@ function IntroStoryteller({ onComplete }) {
           </div>
 
           <p style={{
-            margin: '0 0 0.85rem 0', fontSize: '0.855rem',
-            color: '#654321', lineHeight: '1.62',
+            margin: '0 0 0.85rem 0', fontSize: '1.18rem',
+            color: '#523418', lineHeight: '1.68', fontWeight: '500',
             minHeight: '3.2em', fontFamily: "'Georgia', 'Times New Roman', serif"
           }}>
             {scene.text.slice(0, typedChars)}
@@ -865,11 +1099,13 @@ function IntroStoryteller({ onComplete }) {
             <button onClick={(e) => { e.stopPropagation(); handlePrev(); }}
               disabled={currentScene === 0}
               style={{
-                padding: '0.42rem 1rem', fontSize: '0.78rem', fontWeight: '600',
-                borderRadius: '9px', border: '1px solid rgba(205,133,63,0.38)',
-                background: 'rgba(255,255,255,0.07)', color: 'rgba(255,228,196,0.85)',
+                padding: '0.45rem 1.1rem', fontSize: '0.82rem', fontWeight: '700',
+                borderRadius: '9px', border: 'none',
+                background: currentScene === 0 ? 'rgba(255,255,255,0.1)' : '#10b981',
+                color: '#fff',
                 cursor: currentScene === 0 ? 'not-allowed' : 'pointer',
-                opacity: currentScene === 0 ? 0.38 : 1, transition: 'all 0.2s'
+                opacity: currentScene === 0 ? 0.4 : 1, transition: 'all 0.2s',
+                boxShadow: currentScene === 0 ? 'none' : '0 3px 12px rgba(16, 185, 129, 0.4)'
               }}>← Prev</button>
             <button onClick={(e) => { e.stopPropagation(); handleNext(); }}
               style={{
@@ -1664,6 +1900,7 @@ export default function ChapterLearningLab({
   onBack,
   onHeaderVisibilityChange,
   coverBgImage,
+  coverBgVideo,
   learningLabBg,
   levelMapBg,
 }) {
@@ -1682,7 +1919,25 @@ export default function ChapterLearningLab({
   const [activeActivityIdx, setActiveActivityIdx] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activityFocused, setActivityFocused] = useState(null);
+  const [showBriefing, setShowBriefing] = useState(false);
   const [fsBarVisible, setFsBarVisible] = useState(false);
+
+  // Level Map Auto-hide States
+  const [isLevelMapOpen, setIsLevelMapOpen] = useState(false);
+  const hoverTimeoutRef = useRef(null);
+
+  const handleLevelMapEnter = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setIsLevelMapOpen(true);
+  };
+
+  const handleLevelMapLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsLevelMapOpen(false);
+    }, 400);
+  };
 
   const isLevelCompleted = (lvl) => {
     if (activityStatus[lvl.id] === 'done') return true;
@@ -1696,6 +1951,7 @@ export default function ChapterLearningLab({
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizChecked, setQuizChecked] = useState(false);
   const [activeQuizQuestionIdx, setActiveQuizQuestionIdx] = useState(0);
+  const [dykExpanded, setDykExpanded] = useState(false);
 
   // Progress tracking states
   const [contentLessonProgress, setContentLessonProgress] = useState({});
@@ -1738,7 +1994,26 @@ export default function ChapterLearningLab({
   };
 
   const handleEnterLab = () => {
+    // For Chapter 2, go through scenes then checkpoint before entering the lab
+    if (chapterNum === 2) {
+      setStage("scenes");
+    } else {
+      setStage("lab");
+    }
+  };
+
+  const handleEnterCheckpoint = () => {
+    setStage("checkpoint");
+  };
+
+  const handleStartLabFromCheckpoint = () => {
+    // Enter lab at Activity 2.1 Plants (lvl-1, activity index 0) with activity focused
+    setActiveLevelId("lvl-1");
+    setActiveActivityIdx(0);
+    setActivityFocused(true);
+    setShowBriefing(false);
     setStage("lab");
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
   };
 
   const handleExitLab = () => {
@@ -2203,48 +2478,73 @@ export default function ChapterLearningLab({
     const activityDone = activeLevel.activities ? activeLevel.activities.every(act => activityStatus[act.id] === 'done') : true;
     
     const showQuiz = lessonDone && activityDone && levelQuiz;
+    const isCh2SceneQuiz = chapterNum === 2 && lessonId === 'biodiversity_concept';
 
     return (
       <div id="pane-quiz-window" className="glass-panel" style={{ display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none', flexDirection: 'column', gap: '1.25rem', borderTop: '1px dashed var(--border)', paddingTop: '2.5rem' }}>
+        {(!showQuiz || !isCh2SceneQuiz) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
           <span style={{ fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             {showQuiz ? '📝 CHECKPOINT QUIZ' : '💡 DID YOU KNOW?'}
           </span>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            {showQuiz ? `Question ${activeQuizQuestionIdx + 1} of ${levelQuiz.length}` : 'Fascinating science facts'}
-          </span>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {showQuiz ? `Question ${activeQuizQuestionIdx + 1} of ${levelQuiz.length}` : (
+              chapterNum === 2 ? (
+                <button 
+                  onClick={() => setDykExpanded(!dykExpanded)}
+                  style={{
+                    padding: '0.35rem 0.85rem',
+                    borderRadius: '20px',
+                    fontSize: '0.8rem',
+                    fontWeight: 'bold',
+                    background: dykExpanded ? 'var(--card-bg)' : 'var(--accent)',
+                    color: dykExpanded ? 'var(--text-secondary)' : '#fff',
+                    border: dykExpanded ? '1px solid var(--border)' : '1px solid var(--accent)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: dykExpanded ? 'none' : '0 2px 8px rgba(99,102,241,0.25)'
+                  }}
+                >
+                  {dykExpanded ? 'Close ✕' : 'Explore Facts ➔'}
+                </button>
+              ) : 'Fascinating science facts'
+            )}
+          </div>
         </div>
+        )}
 
         {showQuiz ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {quizChecked ? (
+            {quizChecked || isCh2SceneQuiz ? (
               // Quiz completed: show score summary + Did You Know again below
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-                <div style={{ padding: '1.5rem', borderRadius: '18px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-heading)' }}>
-                      🎉 Quiz Completed!
-                    </span>
-                    <span style={{ fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
-                      Your Score: <b>{levelQuiz.filter((qObj, qIdx) => quizAnswers[qIdx] === qObj.correct).length} / {levelQuiz.length}</b> Correct
-                    </span>
+                {!isCh2SceneQuiz && (
+                  <div style={{ padding: '1.5rem', borderRadius: '18px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-heading)' }}>
+                        🎉 Quiz Completed!
+                      </span>
+                      <span style={{ fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
+                        Your Score: <b>{levelQuiz.filter((qObj, qIdx) => quizAnswers[qIdx] === qObj.correct).length} / {levelQuiz.length}</b> Correct
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                      <button
+                        onClick={() => {
+                          setQuizAnswers({});
+                          setQuizChecked(false);
+                          setActiveQuizQuestionIdx(0);
+                        }}
+                        className="glass-btn"
+                        style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
+                      >
+                        🔄 Retry Quiz
+                      </button>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                    <button
-                      onClick={() => {
-                        setQuizAnswers({});
-                        setQuizChecked(false);
-                        setActiveQuizQuestionIdx(0);
-                      }}
-                      className="glass-btn"
-                      style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
-                    >
-                      🔄 Retry Quiz
-                    </button>
-                  </div>
-                </div>
+                )}
 
-                <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '1.5rem' }}>
+                <div style={{ borderTop: isCh2SceneQuiz ? 'none' : '1px dashed var(--border)', paddingTop: isCh2SceneQuiz ? '0' : '1.5rem' }}>
                   <h4 style={{ margin: '0 0 1.25rem 0', fontSize: '0.95rem', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
                     💡 Reinforce Your Learning
                   </h4>
@@ -2387,8 +2687,22 @@ export default function ChapterLearningLab({
           </div>
         ) : (
           /* Quiz not unlocked yet: show DYK facts */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateRows: (chapterNum !== 2 || dykExpanded) ? '1fr' : '0fr',
+            transition: 'grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            marginTop: (chapterNum === 2 && !dykExpanded) ? '0' : '0.5rem'
+          }}>
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+                gap: '1rem',
+                opacity: (chapterNum !== 2 || dykExpanded) ? 1 : 0,
+                transform: (chapterNum !== 2 || dykExpanded) ? 'translateY(0)' : 'translateY(-10px)',
+                transition: 'opacity 0.4s ease, transform 0.4s ease',
+                paddingBottom: '0.5rem'
+              }}>
               {dykList.slice(0, 3).map((fact, idx) => {
                 const colors = [
                   { bg: 'linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(129,140,248,0.02) 100%)', border: 'rgba(99,102,241,0.2)', icon: '💡', accent: 'var(--accent)' },
@@ -2411,127 +2725,7 @@ export default function ChapterLearningLab({
                 );
               })}
             </div>
-            {lessonId === 'biodiversity_concept' && (
-              <div style={{ padding: '1rem 1.25rem', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.92rem' }}>
-                <span>🌱</span>
-                <span style={{ color: 'var(--text-secondary)' }}>
-                  <b>Activity Tip:</b> Focus on the plants and animals in the scene. Use hints if needed, then hold the scanner until it verifies the organism.
-                </span>
-              </div>
-            )}
-            {levelQuiz && (
-              <div style={{ 
-                padding: '1.25rem', 
-                borderRadius: '16px', 
-                background: 'rgba(59, 130, 246, 0.04)', 
-                border: '1px solid rgba(59, 130, 246, 0.15)', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '0.85rem',
-                textAlign: 'left'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--accent)' }}>
-                  <span>📝</span>
-                  <span>Checkpoint Quiz Requirements</span>
-                </div>
-                
-                <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  This checkpoint quiz is currently locked. Complete the following required items to unlock it:
-                </p>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.25rem' }}>
-                  {/* 1. Concept Lesson Status */}
-                  {activeLevel.lessonId && (
-                    <div 
-                      onClick={() => {
-                        if (!lessonDone) {
-                          setActiveContentLesson(activeLevel.lessonId);
-                          setActiveSlide(0);
-                          setQuizAnswers({});
-                          setQuizChecked(false);
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }
-                      }}
-                      style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'space-between', 
-                        padding: '0.65rem 1rem', 
-                        background: '#fff', 
-                        border: '1px solid var(--border)', 
-                        borderRadius: '10px', 
-                        cursor: !lessonDone ? 'pointer' : 'default',
-                        transition: 'all 0.2s' 
-                      }}
-                      className={!lessonDone ? "hover-scale" : ""}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
-                        <span>📖</span>
-                        <span style={{ fontWeight: '600', color: 'var(--navy)' }}>Concept Lesson</span>
-                      </div>
-                      <span style={{ 
-                        fontSize: '0.75rem', 
-                        fontWeight: 'bold', 
-                        color: lessonDone ? 'var(--success)' : 'var(--accent)',
-                        background: lessonDone ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
-                        padding: '0.2rem 0.5rem',
-                        borderRadius: '6px'
-                      }}>
-                        {lessonDone ? '✓ Completed' : '→ Click to Read'}
-                      </span>
-                    </div>
-                  )}
-                  
-                  {/* 2. Activities Status */}
-                  {activeLevel.activities && activeLevel.activities.map(act => {
-                    const isActDone = activityStatus[act.id] === 'done';
-                    return (
-                      <div 
-                        key={act.id}
-                        onClick={() => {
-                          if (!isActDone) {
-                            const idx = activeLevel.activities.findIndex(a => a.id === act.id);
-                            if (idx !== -1) {
-                              setActiveActivityIdx(idx);
-                              setActivityFocused(true);
-                              const actPane = document.getElementById("pane-activity-window");
-                              if (actPane) actPane.scrollIntoView({ behavior: 'smooth' });
-                            }
-                          }
-                        }}
-                        style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'space-between', 
-                          padding: '0.65rem 1rem', 
-                          background: '#fff', 
-                          border: '1px solid var(--border)', 
-                          borderRadius: '10px', 
-                          cursor: !isActDone ? 'pointer' : 'default',
-                          transition: 'all 0.2s' 
-                        }}
-                        className={!isActDone ? "hover-scale" : ""}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
-                          <span>{act.icon || '🧩'}</span>
-                          <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
-                        </div>
-                        <span style={{ 
-                          fontSize: '0.75rem', 
-                          fontWeight: 'bold', 
-                          color: isActDone ? 'var(--success)' : 'var(--accent)',
-                          background: isActDone ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
-                          padding: '0.2rem 0.5rem',
-                          borderRadius: '6px'
-                        }}>
-                          {isActDone ? '✓ Completed' : '→ Click to Play'}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         )}
       </div>
@@ -4316,6 +4510,7 @@ export default function ChapterLearningLab({
         onBack={onBack}
         onNext={handleNextToSlogan}
         bgImage={coverBgImage}
+        bgVideo={coverBgVideo}
       />
     );
   }
@@ -4330,6 +4525,111 @@ export default function ChapterLearningLab({
         onBack={handleBackToCover}
         onEnterLab={handleEnterLab}
       />
+    );
+  }
+
+  // Stage: scenes (Chapter 2 — IntroStoryteller scenes before entering lab)
+  if (stage === "scenes" && chapterNum === 2) {
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        background: '#0a1220',
+        zIndex: 9999,
+        overflow: 'hidden'
+      }}>
+        <IntroStoryteller
+          onComplete={handleEnterCheckpoint}
+          onBack={() => setStage("slogan")}
+        />
+      </div>
+    );
+  }
+
+  // Stage: checkpoint (Chapter 2 — Learning Checkpoint before Activity 2.1)
+  if (stage === "checkpoint" && chapterNum === 2) {
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundImage: `linear-gradient(rgba(10, 22, 16, 0.65), rgba(10, 22, 16, 0.78)), radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.08), transparent 70%), url(${darkForestBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+        zIndex: 9999,
+        overflowY: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem',
+        boxSizing: 'border-box'
+      }}>
+        <div style={{
+          maxWidth: '680px',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem'
+        }}>
+          {/* Header */}
+          <div style={{ textAlign: 'center', background: 'var(--card-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+            <h2 style={{ fontSize: '1.8rem', color: 'var(--text-heading)', margin: 0 }}>Learning Checkpoint</h2>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Review the activity tips and requirements before proceeding.</p>
+          </div>
+
+          {/* Activity Tip */}
+          <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'flex-start', gap: '1rem', fontSize: '1rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🌱</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <span style={{ fontWeight: 'bold', color: 'var(--text-heading)', fontSize: '1.1rem' }}>Activity Tip</span>
+              <span style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                Focus on the plants and animals in the scene. Use hints if needed, then hold the scanner until it verifies the organism.
+              </span>
+            </div>
+          </div>
+
+          {/* Activities overview */}
+          <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(59, 130, 246, 0.04)', border: '1px solid rgba(59, 130, 246, 0.15)', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent)' }}>
+              <span style={{ fontSize: '1.3rem' }}>📝</span>
+              <span>Upcoming Activities</span>
+            </div>
+            {CHAPTER_2_LEVELS[0].activities.map(act => (
+              <div key={act.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1.25rem', background: '#fff', border: '1px solid var(--border)', borderRadius: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
+                  <span style={{ fontSize: '1.2rem' }}>{act.icon}</span>
+                  <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
+                </div>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{act.pg}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation buttons */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+            <button
+              onClick={() => setStage("scenes")}
+              className="glass-btn primary"
+              style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', fontWeight: '600', background: 'var(--accent)', color: '#fff', border: 'none', boxShadow: '0 4px 12px rgba(99,102,241,0.3)' }}
+            >
+              ← Back
+            </button>
+            <button
+              onClick={handleStartLabFromCheckpoint}
+              className="glass-btn primary"
+              style={{ padding: '0.8rem 2rem', fontSize: '1rem', fontWeight: '600', background: 'var(--accent)', color: '#fff', border: 'none', boxShadow: '0 4px 12px rgba(99,102,241,0.3)' }}
+            >
+              Start Activity 2.1 →
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -4455,6 +4755,42 @@ export default function ChapterLearningLab({
 
     // Controls
     const handlePrevControl = () => {
+      // Exception: From lvl-2 (How to Group Plants & Animals?), "Previous" always goes specifically to Activity 2.1 Animals focused
+      if (activeLevel.id === 'lvl-2') {
+        setActiveLevelId('lvl-1');
+        setActiveActivityIdx(1);
+        setActivityFocused(true);
+        setShowBriefing(false);
+        setQuizAnswers({});
+        setQuizChecked(false);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+
+      // Exception: From lvl-1 Animals, "Previous" goes to Plants
+      if (activeLevel.id === 'lvl-1' && activityFocused === true && activeActivityIdx === 1) {
+        setActiveActivityIdx(0);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+      
+      // Exception: From lvl-1 Plants (or any lvl-1 state), "Previous" goes to Learning Checkpoint
+      if (activeLevel.id === 'lvl-1') {
+        setStage("checkpoint");
+        return;
+      }
+
+      if (activityFocused === true) {
+        setActivityFocused(false);
+        setShowBriefing(true);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+      if (showBriefing === true) {
+        setShowBriefing(false);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
       setActivityFocused(false);
       if (activeLevel.lessonId === 'vocabulary_glossary' || activeLevel.lessonId === 'chapter_challenge_overview') {
         setActiveLevelId(CHAPTER_2_LEVELS[activeLevelIdx - 1].id);
@@ -4478,6 +4814,12 @@ export default function ChapterLearningLab({
         setActiveSlide(0);
         setQuizAnswers({});
         setQuizChecked(false);
+      } else {
+        if (chapterNum === 2) {
+          setStage("slogan");
+        } else {
+          onBack();
+        }
       }
     };
 
@@ -4511,9 +4853,16 @@ export default function ChapterLearningLab({
       }
       
       // 2. Focus activity if it isn't focused yet and we just completed slides
-      if (activeLevel.activities.length > 0 && !activityFocused && activeActivityIdx === 0 && activityStatus[activeActivity.id] !== 'done') {
+      if (activeLevel.activities.length > 0 && !activityFocused && !showBriefing && activeActivityIdx === 0 && (chapterNum === 2 ? false : activityStatus[activeActivity.id] !== 'done')) {
+        setShowBriefing(true);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        return;
+      }
+      if (showBriefing) {
+        setShowBriefing(false);
         setActivityFocused(true);
         setActiveActivityIdx(0);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
         return;
       }
       
@@ -4525,13 +4874,15 @@ export default function ChapterLearningLab({
       }
       
       // 4. If current activity is not marked as Done, prompt user to do so
-      if (activeActivity && activityStatus[activeActivity.id] !== 'done') {
+      // Exception: Chapter 2 (chapterNum === 2) and lvl-1 navigate freely without requiring 'done' or showing completion alert
+      if (chapterNum !== 2 && activeActivity && activityStatus[activeActivity.id] !== 'done' && activeLevel.id !== 'lvl-1') {
         alert("Please complete the current activity and mark it as Done before proceeding!");
         return;
       }
       
       // 5. If we are still focusing the activity (and it's marked done), return to Show All to reveal the quiz
-      if (activityFocused) {
+      // Exception: lvl-1 navigates directly without unfocusing to show quiz
+      if (activityFocused && activeLevel.id !== 'lvl-1') {
         setActivityFocused(null);
         setTimeout(() => {
           const quizPaneEl = document.getElementById("pane-quiz-window");
@@ -4543,8 +4894,10 @@ export default function ChapterLearningLab({
       }
       
       // 6. Check if subheading quiz exists and is completed
+      // Exception: Activity 2.1 → Activity 2.2 navigation must NOT be blocked by the quiz guard
+      const isActivity21ToActivity22 = activeLevel.id === 'lvl-1';
       const hasQuiz = LEVEL_QUIZZES[activeLevel.lessonId];
-      if (hasQuiz && !quizChecked) {
+      if (hasQuiz && !quizChecked && !isActivity21ToActivity22) {
         alert("Please complete the Checkpoint Quiz and check your answers first!");
         setTimeout(() => {
           const quizPaneEl = document.getElementById("pane-quiz-window");
@@ -4565,6 +4918,14 @@ export default function ChapterLearningLab({
         setQuizChecked(false);
       }
     };
+
+    // Use dark theme background ONLY for Activity 2.1 (Plants & Animals), Level 2 (How to Group Plants & Animals?) and its Learning Checkpoint
+    const isDarkThemePage = chapterNum === 2 && activeLevel && (
+      (activeLevel.id === 'lvl-1' && (showBriefing || (activityFocused && activeActivity && activeActivity.activityId === 'virtual_biodiversity'))) ||
+      (activeLevel.id === 'lvl-2')
+    );
+    const dynamicBg = isDarkThemePage ? darkForestBg : learningLabBg;
+
     return (
       <div style={isFullscreen ? {
         position: 'fixed',
@@ -4573,7 +4934,7 @@ export default function ChapterLearningLab({
         height: '100vh',
         margin: 0,
         padding: 0,
-        backgroundImage: learningLabBg ? `url(${learningLabBg})` : 'none',
+        backgroundImage: dynamicBg ? `url(${dynamicBg})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -4588,7 +4949,7 @@ export default function ChapterLearningLab({
         flexDirection: 'column',
         width: '100%',
         boxSizing: 'border-box',
-        backgroundImage: learningLabBg ? `url(${learningLabBg})` : 'none',
+        backgroundImage: dynamicBg ? `url(${dynamicBg})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -4702,11 +5063,25 @@ export default function ChapterLearningLab({
               border: 1px solid rgba(255, 255, 255, 0.12) !important;
             }
           ` : ''}
+          
+          /* Chapter 2 specific header hover effect */
+          .ch2-hover-header {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+          .ch2-hover-header:hover {
+            opacity: 1;
+          }
+          .ch2-hover-header:not(:hover) * {
+            pointer-events: none;
+          }
         `}</style>
 
         {/* Master stats & control header (Sticky when not in fullscreen) */}
-        {!isFullscreen && (
-          <div style={{
+        {!isFullscreen && chapterNum !== 2 && (
+          <div 
+            className={chapterNum === 2 ? 'ch2-hover-header' : ''}
+            style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -4736,85 +5111,87 @@ export default function ChapterLearningLab({
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-              {/* Mastery ring stats */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div className="ring-container">
-                  <svg width="50" height="50" viewBox="0 0 64 64">
-                    <circle cx="32" cy="32" r="27" fill="none" stroke="var(--border)" strokeWidth="6" />
-                    <circle 
-                      cx="32" cy="32" r="27" 
-                      fill="none" 
-                      stroke="var(--success)" 
-                      strokeWidth="6" 
-                      strokeLinecap="round" 
-                      strokeDasharray="169.6" 
-                      strokeDashoffset={strokeDashoffset} 
-                      style={{ transition: 'stroke-dashoffset 0.4s ease' }}
-                    />
-                  </svg>
-                  <div className="ring-text">{pctVal}%</div>
+            {chapterNum !== 2 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                {/* Mastery ring stats */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div className="ring-container">
+                    <svg width="50" height="50" viewBox="0 0 64 64">
+                      <circle cx="32" cy="32" r="27" fill="none" stroke="var(--border)" strokeWidth="6" />
+                      <circle 
+                        cx="32" cy="32" r="27" 
+                        fill="none" 
+                        stroke="var(--success)" 
+                        strokeWidth="6" 
+                        strokeLinecap="round" 
+                        strokeDasharray="169.6" 
+                        strokeDashoffset={strokeDashoffset} 
+                        style={{ transition: 'stroke-dashoffset 0.4s ease' }}
+                      />
+                    </svg>
+                    <div className="ring-text">{pctVal}%</div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
+                      {completedActCount} of {totalActCount} done
+                    </span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Chapter Mastery
+                    </span>
+                  </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
-                    {completedActCount} of {totalActCount} done
-                  </span>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Chapter Mastery
-                  </span>
-                </div>
-              </div>
 
-              {/* Navigation buttons */}
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button 
-                  onClick={handlePrevControl} 
-                  disabled={activeLevelIdx === 0 && activeSlide === 0 && activeActivityIdx === 0}
-                  className="glass-btn"
-                >
-                  ‹ Prev
-                </button>
-                <button 
-                  onClick={handleNextControl}
-                  disabled={isNextDisabled()}
-                  className="glass-btn"
-                >
-                  Next ›
-                </button>
-                {activeActivity && (
-                  <button
-                    onClick={() => {
-                      setActivityStatus(prev => {
-                        const newStatus = prev[activeActivity.id] === 'done' ? 'none' : 'done';
-                        if (newStatus === 'done') {
-                          setActivityFocused(null);
-                          setTimeout(() => {
-                            const quizPaneEl = document.getElementById("pane-quiz-window");
-                            if (quizPaneEl) {
-                              quizPaneEl.scrollIntoView({ behavior: 'smooth' });
-                            }
-                          }, 300);
-                        }
-                        return { ...prev, [activeActivity.id]: newStatus };
-                      });
-                    }}
+                {/* Navigation buttons */}
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button 
+                    onClick={handlePrevControl} 
+                    disabled={activeLevelIdx === 0 && activeSlide === 0 && activeActivityIdx === 0}
                     className="glass-btn"
-                    style={{ color: isCompleted ? 'var(--success)' : 'inherit', borderColor: isCompleted ? 'var(--success)' : 'var(--border)' }}
                   >
-                    {isCompleted ? '✓ Done' : 'Mark Done'}
+                    ‹ Prev
                   </button>
-                )}
-                <button 
-                  onClick={() => {
-                    setIsFullscreen(true);
-                    setActivityFocused(null);
-                  }}
-                  className="glass-btn primary"
-                >
-                  Open Fullscreen ↗
-                </button>
+                  <button 
+                    onClick={handleNextControl}
+                    disabled={isNextDisabled()}
+                    className="glass-btn"
+                  >
+                    Next ›
+                  </button>
+                  {activeActivity && (
+                    <button
+                      onClick={() => {
+                        setActivityStatus(prev => {
+                          const newStatus = prev[activeActivity.id] === 'done' ? 'none' : 'done';
+                          if (newStatus === 'done') {
+                            setActivityFocused(null);
+                            setTimeout(() => {
+                              const quizPaneEl = document.getElementById("pane-quiz-window");
+                              if (quizPaneEl) {
+                                quizPaneEl.scrollIntoView({ behavior: 'smooth' });
+                              }
+                            }, 300);
+                          }
+                          return { ...prev, [activeActivity.id]: newStatus };
+                        });
+                      }}
+                      className="glass-btn"
+                      style={{ color: isCompleted ? 'var(--success)' : 'inherit', borderColor: isCompleted ? 'var(--success)' : 'var(--border)' }}
+                    >
+                      {isCompleted ? '✓ Done' : 'Mark Done'}
+                    </button>
+                  )}
+                  <button 
+                    onClick={() => {
+                      setIsFullscreen(true);
+                      setActivityFocused(null);
+                    }}
+                    className="glass-btn primary"
+                  >
+                    Open Fullscreen ↗
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -4893,20 +5270,7 @@ export default function ChapterLearningLab({
               </div>
             </div>
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <button 
-                onClick={handlePrevControl} 
-                disabled={activeLevelIdx === 0 && activeSlide === 0 && activeActivityIdx === 0}
-                className="glass-btn"
-              >
-                ‹ Prev
-              </button>
-              <button 
-                onClick={handleNextControl}
-                disabled={isNextDisabled()}
-                className="glass-btn"
-              >
-                Next ›
-              </button>
+              {/* Prev and Next moved to bottom navigation */}
               {activeLevel.activities.length > 0 && (
                 <button
                   onClick={() => setActivityFocused(prev => prev === true ? null : true)}
@@ -4916,7 +5280,7 @@ export default function ChapterLearningLab({
                   {activityFocused === true ? 'Show All' : 'Focus Activity'}
                 </button>
               )}
-              {activeActivity && (
+              {activeActivity && !(chapterNum === 2 && activeLevel.id === 'lvl-1') && (
                 <button
                   onClick={() => {
                     setActivityStatus(prev => {
@@ -4958,27 +5322,77 @@ export default function ChapterLearningLab({
           width: '100%', 
           alignItems: 'stretch', 
           boxSizing: 'border-box', 
-          padding: isFullscreen ? '1.5rem 1.25rem 1.5rem 1.25rem' : (learningLabBg ? '0 clamp(0.5rem, 2vw, 1.25rem) 1.5rem clamp(0.5rem, 2vw, 1.25rem)' : '0')
+          padding: isFullscreen ? '1.5rem 1.25rem 1.5rem 1.25rem' : (learningLabBg ? (chapterNum === 2 ? '1rem clamp(0.5rem, 2vw, 1.25rem) 1.5rem clamp(0.5rem, 2vw, 1.25rem)' : '0 clamp(0.5rem, 2vw, 1.25rem) 1.5rem clamp(0.5rem, 2vw, 1.25rem)') : '0')
         }}>
           
           {/* Level map on left (hidden in fullscreen) */}
           {!isFullscreen && (
-            <VerticalLevelMap 
-              sections={CHAPTER_2_LEVELS.map(lvl => ({
-                id: lvl.id,
-                title: lvl.title,
-                isCompleted: isLevelCompleted(lvl)
-              }))}
-              activeSectionId={activeLevelId}
-              onSelectNode={(nodeId) => {
-                setActiveLevelId(nodeId);
-                setActiveActivityIdx(0);
-                setActiveSlide(0);
-                setActivityFocused(false);
+            <div 
+              onMouseEnter={handleLevelMapEnter}
+              onMouseLeave={handleLevelMapLeave}
+              style={{
+                position: 'fixed',
+                left: isLevelMapOpen ? '0' : '-300px',
+                top: learningLabBg ? (chapterNum === 2 ? "1.5rem" : "5.5rem") : "6.5rem",
+                bottom: '1.5rem',
+                width: '300px',
+                zIndex: 50,
+                transition: 'left 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                display: 'flex',
+                boxShadow: isLevelMapOpen ? '10px 0 30px rgba(0,0,0,0.5)' : 'none'
               }}
-              bgImage={levelMapBg}
-              stickyTop={learningLabBg ? "5.5rem" : "6.5rem"}
-            />
+            >
+              <div style={{ flex: 1, height: '100%', position: 'relative' }}>
+                <VerticalLevelMap 
+                  sections={CHAPTER_2_LEVELS.map(lvl => ({
+                    id: lvl.id,
+                    title: lvl.title,
+                    isCompleted: isLevelCompleted(lvl)
+                  }))}
+                  activeSectionId={activeLevelId}
+                  onSelectNode={(nodeId) => {
+                    setActiveLevelId(nodeId);
+                    setActiveActivityIdx(0);
+                    setActiveSlide(0);
+                    setActivityFocused(false);
+                  }}
+                  bgImage={levelMapBg}
+                  stickyTop="0"
+                />
+              </div>
+
+              {/* Trigger Tab */}
+              <div 
+                onClick={() => setIsLevelMapOpen(!isLevelMapOpen)}
+                style={{
+                  position: 'absolute',
+                  right: '-36px',
+                  top: '40%',
+                  width: '36px',
+                  height: '110px',
+                  background: 'rgba(6, 30, 20, 0.85)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderLeft: 'none',
+                  borderRadius: '0 12px 12px 0',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  boxShadow: '4px 0 15px rgba(0,0,0,0.3)',
+                  color: '#fbbf24',
+                  transition: 'background 0.3s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(16, 185, 129, 0.9)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(6, 30, 20, 0.85)'}
+              >
+                <div style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontSize: '11px', fontWeight: 'bold', letterSpacing: '2px', color: '#fff', marginBottom: '8px' }}>
+                  LEVEL MAP
+                </div>
+                <ChevronRight size={20} style={{ transform: isLevelMapOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }} />
+              </div>
+            </div>
           )}
 
           {/* Combined Lesson & Activity Panel on right */}
@@ -4989,7 +5403,7 @@ export default function ChapterLearningLab({
               id="pane-lesson-window"
               className={activeLevel.lessonId === 'biodiversity_concept' ? '' : 'glass-panel'}
               style={{
-                display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none',
+                display: (chapterNum === 2 ? (!showBriefing && (activityFocused === null || activityFocused === false)) : (!isFullscreen || activityFocused !== true)) ? 'flex' : 'none',
                 flexDirection: 'column',
                 gap: activeLevel.lessonId === 'biodiversity_concept' ? '0' : '0.75rem',
                 position: 'relative',
@@ -5014,11 +5428,8 @@ export default function ChapterLearningLab({
                 <IntroStoryteller 
                   onComplete={() => {
                     setContentLessonProgress(prev => ({ ...prev, biodiversity_concept: true }));
-                    const activityPaneEl = document.getElementById("pane-activity-window");
-                    if (activityPaneEl) {
-                      activityPaneEl.scrollIntoView({ behavior: 'smooth' });
-                    }
                     setActivityFocused(true);
+                    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
                   }} 
                 />
               ) : activeLevel.lessonId === 'vocabulary_glossary' ? (
@@ -5034,10 +5445,126 @@ export default function ChapterLearningLab({
               )}
             </div>
 
+            {/* 1.5 NEW PANE: Briefing Window */}
+            {chapterNum === 2 && (
+              <div
+                id="pane-briefing-window"
+                style={{
+                  display: showBriefing ? 'flex' : 'none',
+                  flexDirection: 'column',
+                  gap: '1.5rem',
+                  padding: '1rem 0'
+                }}
+              >
+                <div style={{ textAlign: 'center', marginBottom: '0.5rem', background: 'var(--card-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+                  <h2 style={{ fontSize: '1.8rem', color: 'var(--text-heading)', margin: 0 }}>Learning Checkpoint</h2>
+                  <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Review the activity tips and requirements before proceeding.</p>
+                </div>
+                
+                {activeLevel.lessonId === 'biodiversity_concept' && (
+                  <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'flex-start', gap: '1rem', fontSize: '1rem' }}>
+                    <span style={{ fontSize: '1.5rem' }}>🌱</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <span style={{ fontWeight: 'bold', color: 'var(--text-heading)', fontSize: '1.1rem' }}>Activity Tip</span>
+                      <span style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                        Focus on the plants and animals in the scene. Use hints if needed, then hold the scanner until it verifies the organism.
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {activeLevel.activities && activeLevel.activities.length > 0 && (
+                  <div style={{ 
+                    padding: '1.5rem', 
+                    borderRadius: '16px', 
+                    background: 'rgba(59, 130, 246, 0.04)', 
+                    border: '1px solid rgba(59, 130, 246, 0.15)', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: '1rem',
+                    textAlign: 'left'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent)' }}>
+                      <span style={{ fontSize: '1.3rem' }}>📝</span>
+                      <span>Checkpoint Quiz Requirements</span>
+                    </div>
+                    
+                    <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                      This checkpoint quiz is currently locked. Complete the following required items to unlock it:
+                    </p>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+                      {/* 1. Concept Lesson Status */}
+                      {activeLevel.lessonId && (
+                        <div style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'space-between', 
+                          padding: '0.85rem 1.25rem', 
+                          background: '#fff', 
+                          border: '1px solid var(--border)', 
+                          borderRadius: '12px', 
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
+                            <span style={{ fontSize: '1.2rem' }}>📖</span>
+                            <span style={{ fontWeight: '600', color: 'var(--navy)' }}>Concept Lesson</span>
+                          </div>
+                          <span style={{ 
+                            fontSize: '0.8rem', 
+                            fontWeight: 'bold', 
+                            color: 'var(--success)',
+                            background: 'rgba(16,185,129,0.1)',
+                            padding: '0.3rem 0.6rem',
+                            borderRadius: '8px'
+                          }}>
+                            ✓ Completed
+                          </span>
+                        </div>
+                      )}
+                      
+                      {/* 2. Activities Status */}
+                      {activeLevel.activities.map(act => {
+                        const isActDone = activityStatus[act.id] === 'done';
+                        return (
+                          <div 
+                            key={act.id}
+                            style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'space-between', 
+                              padding: '0.85rem 1.25rem', 
+                              background: '#fff', 
+                              border: '1px solid var(--border)', 
+                              borderRadius: '12px', 
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
+                              <span style={{ fontSize: '1.2rem' }}>{act.icon || '🧩'}</span>
+                              <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
+                            </div>
+                            <span style={{ 
+                              fontSize: '0.8rem', 
+                              fontWeight: 'bold', 
+                              color: isActDone ? 'var(--success)' : 'var(--accent)',
+                              background: isActDone ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
+                              padding: '0.3rem 0.6rem',
+                              borderRadius: '8px'
+                            }}>
+                              {isActDone ? '✓ Completed' : 'Pending'}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* 2. MIDDLE PANE: Full Interactive Activity Window */}
             {activeLevel.activities && activeLevel.activities.length > 0 && activeLevel.lessonId !== 'vocabulary_glossary' && activeLevel.lessonId !== 'chapter_challenge_overview' && (
               <div id="pane-activity-window" className="glass-panel" style={{ 
-                display: (!isFullscreen || activityFocused !== false) ? 'flex' : 'none', 
+                display: (chapterNum === 2 ? (!showBriefing && activityFocused === true) : (!isFullscreen || activityFocused !== false)) ? 'flex' : 'none', 
                 flexDirection: 'column', 
                 gap: '0.75rem',
                 padding: '0.75rem 1rem 1rem 1rem !important',
@@ -5055,7 +5582,7 @@ export default function ChapterLearningLab({
                       </span>
                     )}
                   </h4>
-                  {activeLevel.activities.length > 1 && (
+                  {activeLevel.activities.length > 1 && activeLevel.id !== 'lvl-1' && (
                     <div style={{ display: 'flex', gap: '0.4rem' }}>
                       {activeLevel.activities.map((act, aIdx) => {
                         let btnLabel = `${aIdx + 1}`;
@@ -5138,14 +5665,80 @@ export default function ChapterLearningLab({
             )}
 
             {/* 3. BOTTOM PANE: Quiz & DYK Pane */}
-            <div style={{ display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: (chapterNum === 2 ? (!showBriefing && (activityFocused === null || activityFocused === false)) : (!isFullscreen || activityFocused !== true)) ? 'flex' : 'none', flexDirection: 'column', gap: '0.75rem' }}>
               {(activeLevel.lessonId === 'vocabulary_glossary' || activeLevel.lessonId === 'chapter_challenge_overview')
                   ? <SummaryPane lessonId={activeLevel.lessonId} />
                   : renderQuizAndDykPane(activeLevel.lessonId)
               }
             </div>
+
+            {/* 4. BOTTOM NAVIGATION PANE */}
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: (chapterNum === 2 ? '0.4rem 0 0.25rem 0' : '2rem 0 1rem 0'),
+              borderTop: '1px solid var(--border)',
+              marginTop: (chapterNum === 2 ? '0.25rem' : '1rem'),
+              width: '100%'
+            }}>
+              <button
+                onClick={handlePrevControl}
+                className={`glass-btn ${chapterNum === 2 ? 'primary' : ''}`}
+                style={{
+                  padding: '0.8rem 1.5rem',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  background: chapterNum === 2 ? 'var(--accent)' : undefined,
+                  color: chapterNum === 2 ? '#ffffff' : undefined,
+                  border: chapterNum === 2 ? 'none' : undefined,
+                  boxShadow: chapterNum === 2 ? '0 4px 12px rgba(99,102,241,0.3)' : undefined
+                }}
+              >
+                ← Previous
+              </button>
+              
+              <button
+                onClick={handleNextControl}
+                className="glass-btn primary"
+                style={{
+                  padding: '0.8rem 1.5rem',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  background: 'var(--accent)',
+                  color: '#fff',
+                  border: 'none',
+                  boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+                }}
+              >
+                {(() => {
+                  if (showBriefing === true) {
+                    if (activeLevel.activities && activeLevel.activities.length > 0) {
+                      const actTitle = activeLevel.activities[0].title;
+                      const shortTitle = actTitle.includes("—") ? actTitle.split("—")[0].trim() : actTitle;
+                      return `Continue to ${shortTitle} →`;
+                    }
+                    return "Continue →";
+                  } else if (activityFocused === true) {
+                    return "Next Activity →";
+                  } else {
+                    const lessonData = typeof contentLessonsData !== 'undefined' ? contentLessonsData[activeLevel.lessonId] : null;
+                    const maxSlides = lessonData ? lessonData.slides.length : 1;
+                    if (activeSlide < maxSlides - 1) {
+                      return "Next Scene →";
+                    } else {
+                      return "Next →";
+                    }
+                  }
+                })()}
+              </button>
+            </div>
           </div>
         </div>
+
+
       </div>
     );
   }

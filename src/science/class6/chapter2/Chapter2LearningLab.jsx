@@ -3,12 +3,12 @@ import ChapterLearningLab from '../../../components/ChapterLearningLab';
 import sanskritSlogan from '../../../assets/sanskrit_slogan.png';
 
 import coverBgImage from '../../../assets/cover_page_ch2.png';
+import coverBgVideo from '../../../assets/in_this_video_just_add_those_b (1).mp4';
 import learningLabBg from '../../../assets/class_6_ch2_learning_lab_bg.png';
 import levelMapBg from '../../../assets/class_6_ch2_level_map.jpg';
 
 const CHAPTER_2_ACTIVITIES = [
-  { icon: '🌿', title: 'Activity 2.1 — Plants (Table 2.1)', desc: 'Record real plants — tap the leaves, stems and flowers.', pg: 'p.11', path: '/activities/class6_chapter2/activity_0.html', sectionHeader: '2.1 — Diversity in Plants & Animals Around Us', activityId: 'virtual_biodiversity' },
-  { icon: '🐾', title: 'Activity 2.1 — Animals (Table 2.2)', desc: 'Where animals live, what they eat and how they move.', pg: 'p.12', path: '/activities/class6_chapter2/activity_1.html', sectionHeader: '2.1 — Diversity in Plants & Animals Around Us', activityId: 'virtual_biodiversity' },
+  { icon: '🌿', title: 'Activity 2.1 — Plants & Animals (Tables 2.1 & 2.2)', desc: '⭐ NEW Premium Game! Explore plants & animals, fill observation tables, sort by habitat, quiz & earn a certificate!', pg: 'p.11–12', path: '/activities/class6_chapter2/activity_0.html', sectionHeader: '2.1 — Diversity in Plants & Animals Around Us', activityId: 'activity_2_1' },
   { icon: '🎨', title: 'Activity 2.2 — Let us appreciate', desc: 'A live class blackboard reveals biodiversity.', pg: 'p.13', path: '/activities/class6_chapter2/activity_2.html', sectionHeader: '2.1 — Diversity in Plants & Animals Around Us', activityId: 'appreciating_biodiversity' },
   { icon: '🧩', title: '2.2 / Activity 2.3 — How to group', desc: 'The same living things regroup by any feature you pick.', pg: 'p.14–15', path: '/activities/class6_chapter2/activity_3.html', sectionHeader: '2.2 — How to Group Plants & Animals?', activityId: 'inline_sorting' },
   { icon: '🌱', title: 'Activity 2.4 — Herbs, shrubs & trees', desc: 'Grow a plant; watch it be named live. Fill Table 2.3.', pg: 'p.15–16', path: '/activities/class6_chapter2/activity_4.html', sectionHeader: '2.2 — How to Group Plants & Animals?', activityId: 'plant_detective_stem' },
@@ -30,15 +30,16 @@ export default function Chapter2LearningLab({ onBack, onHeaderVisibilityChange }
       classNum={6}
       chapterNum={2}
       chapterTitle="Diversity in the Living World"
-      subjectName="SCIENCE"
+      subjectName="CHAPTER 2 · BIOLOGY"
       topics="Plants · Animals · Habitats · Adaptation · Classification"
       coverGraphic="diversity"
       sloganImg={sanskritSlogan}
-      sloganExplanation="In this chapter, we explore Diversity in the Living World. Just like the trees in this ancient verse selflessly support all other life by offering shade and food, every living organism is interconnected. Plants, animals, and humans depend on each other, forming a beautiful, cooperative web of life. Understanding and protecting this biological diversity is not just science—it is our duty to the planet."
+      sloganExplanation="In this chapter, we explore Diversity in the Living World. Just like the trees in this ancient verse selflessly support all other life by offering shade and food, every living organism is interconnected. Plants, animals, and humans depend on each other, forming a beautiful, cooperative web of life."
       activities={CHAPTER_2_ACTIVITIES}
       onBack={onBack}
       onHeaderVisibilityChange={onHeaderVisibilityChange}
-      coverBgImage={coverBgImage}
+      coverBgImage={null}
+      coverBgVideo={coverBgVideo}
       learningLabBg={learningLabBg}
       levelMapBg={levelMapBg}
     />

@@ -2,78 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, Check, Award, ArrowRight, BookOpen, Home, Utensils, AlertCircle } from 'lucide-react';
 
-// Custom Item SVGs
-const RegisterIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 40 45" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="2" width="30" height="40" rx="2" fill="#e2e8f0" stroke="#64748b" strokeWidth="2" />
-    <rect x="5" y="2" width="6" height="40" fill="#3b82f6" />
-    <line x1="15" y1="10" x2="30" y2="10" stroke="#94a3b8" strokeWidth="2" />
-    <line x1="15" y1="16" x2="30" y2="16" stroke="#94a3b8" strokeWidth="2" />
-    <line x1="15" y1="22" x2="30" y2="22" stroke="#94a3b8" strokeWidth="2" />
-    <line x1="15" y1="28" x2="30" y2="28" stroke="#94a3b8" strokeWidth="2" />
-  </svg>
-);
+import itemRegister from '../images/b2_item_register.png';
+import itemDuster from '../images/b2_item_duster.png';
+import itemRemote from '../images/b2_item_remote.png';
+import itemTshirt from '../images/b2_item_tshirt.png';
+import itemSpoon from '../images/b2_item_spoon.png';
+import itemGlass from '../images/b2_item_glass.png';
 
-const DusterIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 50 30" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="15" width="40" height="10" rx="2" fill="#475569" />
-    <rect x="5" y="5" width="40" height="10" rx="2" fill="#b45309" />
-  </svg>
-);
+// 4 New Evidence Images from src/assets/
+import foilImg from '../../../../../assets/foil1.png';
+import handkerchiefImg from '../../../../../assets/handkerchief1.png';
+import notebookImg from '../../../../../assets/notebook1.png';
+import cardboardImg from '../../../../../assets/cardboard1.png';
 
-const ChalkIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 20 50" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="5" width="10" height="40" rx="3" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1.5" />
-    <path d="M5,10 Q10,15 15,10" fill="none" stroke="#e2e8f0" strokeWidth="1" />
-  </svg>
-);
+import bgShelfSchool from '../images/b2_shelf_school.png';
+import bgShelfHome from '../images/b2_shelf_home.png';
+import bgShelfKitchen from '../images/b2_shelf_kitchen.png';
 
-const RemoteIcon = ({ size = 40 }) => (
-  <svg width={size} height={size} viewBox="0 0 30 60" preserveAspectRatio="xMidYMid meet">
-    <rect x="5" y="2" width="20" height="56" rx="4" fill="#334155" />
-    <circle cx="15" cy="10" r="3" fill="#ef4444" />
-    <circle cx="15" cy="20" r="5" fill="#1e293b" />
-    <rect x="10" y="30" width="10" height="4" rx="1" fill="#94a3b8" />
-    <rect x="10" y="38" width="10" height="4" rx="1" fill="#94a3b8" />
-    <rect x="10" y="46" width="10" height="4" rx="1" fill="#94a3b8" />
-  </svg>
-);
-
-const TShirtIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
-    <path d="M 15,10 Q 25,20 35,10 L 45,15 L 40,25 L 35,22 L 35,45 L 15,45 L 15,22 L 10,25 L 5,15 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="2" strokeLinejoin="round" />
-    <path d="M 15,10 Q 25,20 35,10" fill="none" stroke="#f87171" strokeWidth="2" />
-  </svg>
-);
-
-const BallIcon = ({ size = 40 }) => (
-  <svg width={size} height={size} viewBox="0 0 50 50" preserveAspectRatio="xMidYMid meet">
-    <circle cx="25" cy="25" r="20" fill="#dc2626" stroke="#991b1b" strokeWidth="2" />
-    <path d="M15,10 Q25,25 15,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
-    <path d="M35,10 Q25,25 35,40" stroke="#fef08a" strokeWidth="2" fill="none" strokeDasharray="2,2" />
-  </svg>
-);
-
-const PlateIcon = ({ size = 45 }) => (
-  <svg width={size} height={size} viewBox="0 0 60 20" preserveAspectRatio="xMidYMid meet">
-    <ellipse cx="30" cy="10" rx="25" ry="8" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="2" />
-    <ellipse cx="30" cy="10" rx="15" ry="4" fill="none" stroke="#e2e8f0" strokeWidth="1" />
-  </svg>
-);
-
-const SpoonIcon = ({ size = 40 }) => (
-  <svg width={size} height={size} viewBox="0 0 60 20" preserveAspectRatio="xMidYMid meet" style={{ transform: 'rotate(-45deg)' }}>
-    <ellipse cx="15" cy="10" rx="10" ry="6" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="1.5" />
-    <rect x="23" y="8" width="30" height="4" rx="2" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="1.5" />
-  </svg>
-);
-
-const TumblerIcon = ({ size = 35 }) => (
-  <svg width={size} height={size} viewBox="0 0 40 60" preserveAspectRatio="xMidYMid meet">
-    <polygon points="5,5 35,5 30,55 10,55" fill="rgba(56, 189, 248, 0.2)" stroke="#0ea5e9" strokeWidth="2" />
-    <line x1="12" y1="15" x2="16" y2="45" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
-  </svg>
-);
+// 6 NEW Basket Images from src/assets/
+import imgBasketMetal from '../../../../../assets/metal basket.png';
+import imgBasketGlass from '../../../../../assets/glass basket.png';
+import imgBasketWood from '../../../../../assets/wood basket.png';
+import imgBasketPlastic from '../../../../../assets/plastic baskettttt.png';
+import imgBasketCloth from '../../../../../assets/cloth basket.png';
+import imgBasketPaper from '../../../../../assets/paper basket.png';
 
 export default function Stage3_Classification({ defaultPhase = 'use', onComplete, addXp }) {
   const phase = defaultPhase; // controlled externally via props
@@ -81,28 +33,48 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
   const [materialPlacements, setMaterialPlacements] = useState({});
   const [inspectedItems, setInspectedItems] = useState({});
   const [activeDemoId, setActiveDemoId] = useState('remote');
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const [draggingOverShelf, setDraggingOverShelf] = useState(null);
   const [draggingOverBasket, setDraggingOverBasket] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
 
   const allItems = [
-    { id: 'register', name: 'Attendance Register', icon: RegisterIcon, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where teachers take attendance.', materialHint: 'Think about what the pages are made of.' },
-    { id: 'duster', name: 'Blackboard Duster', icon: DusterIcon, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where this is used to erase a chalkboard.', materialHint: 'Think about what the hard back part is usually made of.' },
-    { id: 'remote', name: 'TV Remote', icon: RemoteIcon, correctUse: 'Home Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you watch TV.', materialHint: 'Think about what hard, light material electronic casings are made of.' },
-    { id: 'tshirt', name: 'T-Shirt', icon: TShirtIcon, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about where you keep your clothes.', materialHint: 'Think about what soft, woven material clothes are made from.' },
-    { id: 'spoon', name: 'Spoon', icon: SpoonIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard material is used for cutlery.' },
-    { id: 'glass', name: 'Tumbler', icon: TumblerIcon, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' }
+    { id: 'register', name: 'Attendance Register', icon: itemRegister, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about where teachers take attendance.', materialHint: 'Think about what the pages of a register are made of.' },
+    { id: 'duster', name: 'Blackboard Duster', icon: itemDuster, correctUse: 'School Shelf', correctMaterial: 'Wood', useHint: 'Think about where this is used to erase a chalkboard.', materialHint: 'Think about what the hard wooden handle/back is made of.' },
+    { id: 'remote', name: 'TV Remote', icon: itemRemote, correctUse: 'Home Shelf', correctMaterial: 'Plastic', useHint: 'Think about where you watch TV.', materialHint: 'Think about what hard, light plastic material electronic casings are made of.' },
+    { id: 'tshirt', name: 'T-Shirt', icon: itemTshirt, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about where you keep your clothes.', materialHint: 'Think about what soft woven fabric clothes are made from.' },
+    { id: 'spoon', name: 'Spoon', icon: itemSpoon, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about where you eat your meals.', materialHint: 'Think about what shiny, hard metallic material is used for cutlery.' },
+    { id: 'glass', name: 'Tumbler', icon: itemGlass, correctUse: 'Kitchen Shelf', correctMaterial: 'Glass', useHint: 'Think about where you usually drink water.', materialHint: 'Think about what transparent, breakable material is used for drinking.' },
+    { id: 'foil', name: 'Aluminium Foil', icon: foilImg, correctUse: 'Kitchen Shelf', correctMaterial: 'Metal', useHint: 'Think about what is used to wrap warm food.', materialHint: 'Think about what shiny, thin metallic sheet this is made of.' },
+    { id: 'handkerchief', name: 'Handkerchief', icon: handkerchiefImg, correctUse: 'Home Shelf', correctMaterial: 'Cloth', useHint: 'Think about what personal cloth item you carry.', materialHint: 'Think about what soft, woven fabric this is made of.' },
+    { id: 'notebook', name: 'Notebook', icon: notebookImg, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about what you write your notes in.', materialHint: 'Think about what the pages of a notebook are made of.' },
+    { id: 'cardboard', name: 'Cardboard Piece', icon: cardboardImg, correctUse: 'School Shelf', correctMaterial: 'Paper', useHint: 'Think about sturdy packaging sheets used in projects.', materialHint: 'Think about what heavy paper pulp/fiber material boxes are made from.' }
   ];
 
-  const items = allItems;
+  const items = phase === 'material' ? allItems : allItems.slice(0, 6);
+
+  const materialBaskets = [
+    { name: 'Metal', label: 'METAL BASKET', color: '#475569', borderColor: '#94a3b8', bgLight: '#f8fafc', image: imgBasketMetal },
+    { name: 'Glass', label: 'GLASS BASKET', color: '#0891b2', borderColor: '#06b6d4', bgLight: '#ecfeff', image: imgBasketGlass },
+    { name: 'Wood', label: 'WOOD BASKET', color: '#d97706', borderColor: '#f59e0b', bgLight: '#fffbeb', image: imgBasketWood },
+    { name: 'Plastic', label: 'PLASTIC BASKET', color: '#16a34a', borderColor: '#22c55e', bgLight: '#f0fdf4', image: imgBasketPlastic },
+    { name: 'Cloth', label: 'CLOTH BASKET', color: '#dc2626', borderColor: '#ef4444', bgLight: '#fef2f2', image: imgBasketCloth },
+    { name: 'Paper', label: 'PAPER BASKET', color: '#6366f1', borderColor: '#818cf8', bgLight: '#eef2ff', image: imgBasketPaper }
+  ];
+
+  const shelves = [
+    { name: 'School Shelf', icon: <BookOpen size={18} />, bgImage: bgShelfKitchen },
+    { name: 'Home Shelf', icon: <Home size={18} />, bgImage: bgShelfKitchen },
+    { name: 'Kitchen Shelf', icon: <Utensils size={18} />, bgImage: bgShelfKitchen }
+  ];
 
   const handleUseSort = (itemId, targetShelf) => {
-    const item = items.find(i => i.id === itemId);
+    const item = allItems.find(i => i.id === itemId);
     if (!item) return;
     if (item.correctUse === targetShelf) {
       setUsePlacements(prev => ({ ...prev, [itemId]: targetShelf }));
       setErrorMessage('');
-      addXp(5);
+      addXp?.(5);
     } else {
       setErrorMessage(`"${item.name}" doesn't belong here. ${item.useHint}`);
       setTimeout(() => setErrorMessage(''), 4000);
@@ -110,20 +82,20 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
   };
 
   const handleMaterialSort = (itemId, targetMaterial) => {
-    const item = items.find(i => i.id === itemId);
+    const item = allItems.find(i => i.id === itemId);
     if (!item) return;
     if (item.correctMaterial === targetMaterial) {
       setMaterialPlacements(prev => ({ ...prev, [itemId]: targetMaterial }));
       setErrorMessage('');
-      addXp(5);
+      addXp?.(5);
     } else {
       setErrorMessage(`Incorrect material. ${item.materialHint}`);
       setTimeout(() => setErrorMessage(''), 4000);
     }
   };
 
-  const allUseSorted = Object.keys(usePlacements).length === allItems.length;
-  const allMaterialSorted = Object.keys(materialPlacements).length === items.length;
+  const allUseSorted = Object.keys(usePlacements).length === 6;
+  const allMaterialSorted = Object.keys(materialPlacements).length === 10;
   const inspectedCount = Object.keys(inspectedItems).length;
   const canFinishDemo = inspectedCount >= 3;
 
@@ -158,13 +130,6 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           { label: 'Surface Texture', value: 'Hard back, soft front ☁️' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
-      case 'chalk':
-        return [
-          { label: 'Primary Use', value: 'School Item 🎒' },
-          { label: 'Base Material', value: 'Chalk 🏔️' },
-          { label: 'Surface Texture', value: 'Dusty & Brittle 🌫️' },
-          { label: 'Transparency', value: 'Opaque 🌑' }
-        ];
       case 'remote':
         return [
           { label: 'Primary Use', value: 'Home Item 🏠' },
@@ -177,20 +142,6 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           { label: 'Primary Use', value: 'Home Item 🏠' },
           { label: 'Base Material', value: 'Cloth 🧶' },
           { label: 'Surface Texture', value: 'Soft & Flexible 👕' },
-          { label: 'Transparency', value: 'Opaque 🌑' }
-        ];
-      case 'cricket_ball':
-        return [
-          { label: 'Primary Use', value: 'Home Item 🏠' },
-          { label: 'Base Material', value: 'Leather 🏏' },
-          { label: 'Surface Texture', value: 'Hard & Stitched 🧵' },
-          { label: 'Transparency', value: 'Opaque 🌑' }
-        ];
-      case 'plate':
-        return [
-          { label: 'Primary Use', value: 'Kitchen Item 🍳' },
-          { label: 'Base Material', value: 'Ceramic 🏺' },
-          { label: 'Surface Texture', value: 'Hard & Smooth 🍽️' },
           { label: 'Transparency', value: 'Opaque 🌑' }
         ];
       case 'spoon':
@@ -207,6 +158,34 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           { label: 'Surface Texture', value: 'Hard & Smooth ✨' },
           { label: 'Transparency', value: 'Transparent 🔍' }
         ];
+      case 'foil':
+        return [
+          { label: 'Primary Use', value: 'Kitchen Item 🍳' },
+          { label: 'Base Material', value: 'Metal 🦾' },
+          { label: 'Surface Texture', value: 'Smooth & Reflective ✨' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
+        ];
+      case 'handkerchief':
+        return [
+          { label: 'Primary Use', value: 'Home Item 🏠' },
+          { label: 'Base Material', value: 'Cloth 🧶' },
+          { label: 'Surface Texture', value: 'Soft & Flexible 👕' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
+        ];
+      case 'notebook':
+        return [
+          { label: 'Primary Use', value: 'School Item 🎒' },
+          { label: 'Base Material', value: 'Paper 📄' },
+          { label: 'Surface Texture', value: 'Smooth & Bound 📖' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
+        ];
+      case 'cardboard':
+        return [
+          { label: 'Primary Use', value: 'School Item 🎒' },
+          { label: 'Base Material', value: 'Paper 📦' },
+          { label: 'Surface Texture', value: 'Rough & Stiff 📦' },
+          { label: 'Transparency', value: 'Opaque 🌑' }
+        ];
       default:
         return [];
     }
@@ -216,17 +195,17 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
       {/* Dynamic phase header */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <LayoutGrid size={22} style={{ color: 'var(--accent)' }} /> 
+        <h3 style={{ margin: 0, fontSize: 'clamp(24px, 3vw, 30px)', fontWeight: '900', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <LayoutGrid size={24} style={{ color: 'var(--accent)' }} /> 
           {phase === 'briefing' && 'Case Briefing: Stage 1 Report'}
           {phase === 'use' && 'Case File 02 – Organizing by Purpose'}
           {phase === 'material' && 'Case File 02 – Scientific Classification'}
           {phase === 'demo' && 'Case File 02 – Multi-Property Insights'}
         </h3>
-        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+        <p style={{ margin: 0, fontSize: 'clamp(18px, 2.5vw, 22px)', fontWeight: '600', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
           {phase === 'briefing' && 'Review your findings from the classroom scan before analyzing them.'}
           {phase === 'use' && 'Drag collected items to shelves, or select them based on how they are used.'}
-          {phase === 'material' && 'Drag items to their material baskets, or select the correct material.'}
+          {phase === 'material' && 'Drag items from the evidence tray to the correct material basket.'}
           {phase === 'demo' && 'Inspect how the same objects fit into different groups depending on the property we look at.'}
         </p>
       </div>
@@ -251,10 +230,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               margin: '2rem auto'
             }}
           >
-            <div style={{ fontSize: '3rem' }}>🕵️‍♂️</div>
+            <div style={{ fontSize: 'clamp(40px, 5vw, 48px)' }}>🕵️‍♂️</div>
             <div>
-              <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.75rem' }}>Investigation Report: Stage 1</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginTop: '0.5rem' }}>
+              <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: 'clamp(30px, 3.5vw, 36px)', fontWeight: '900' }}>Investigation Report: Stage 1</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(18px, 2.5vw, 22px)', fontWeight: '600', marginTop: '0.5rem' }}>
                 You have successfully identified the base materials of all classroom evidence.
               </p>
             </div>
@@ -270,8 +249,8 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               gap: '1rem',
               textAlign: 'left'
             }}>
-              {items.slice(0, 6).map((item) => (
-                <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', color: 'var(--text-primary)' }}>
+              {allItems.slice(0, 6).map((item) => (
+                <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '700', color: 'var(--text-primary)' }}>
                   <span style={{ color: 'var(--success)' }}>✓</span>
                   <strong>{item.name}:</strong> 
                   <span style={{ color: 'var(--accent)' }}>{item.correctMaterial}</span>
@@ -279,14 +258,14 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               ))}
             </div>
 
-            <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontStyle: 'italic', maxWidth: '520px', lineHeight: '1.5' }}>
+            <div style={{ fontSize: 'clamp(18px, 2.5vw, 22px)', color: 'var(--text-secondary)', fontStyle: 'italic', maxWidth: '520px', lineHeight: '1.5' }}>
               "Excellent work, Detective! Now that we know what these objects are made of, we must analyze and organize them to reveal scientific property patterns."
             </div>
 
             <button
               className="primary"
-              onClick={() => setPhase('use')}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 2rem', fontWeight: 'bold' }}
+              onClick={() => {}}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 2rem', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800' }}
             >
               Start Evidence Analysis <ArrowRight size={16} />
             </button>
@@ -300,84 +279,80 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}
+            style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr', 
+              gap: '1.25rem', 
+              flex: 1, 
+              minHeight: 0 
+            }}
           >
-            {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
-              <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
+            {/* Left Section: Evidence Tray */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0, padding: '1.1rem 1.25rem' }}>
+              <h4 style={{ margin: 0, fontSize: 'clamp(24px, 3vw, 30px)', fontWeight: '900', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
+                Evidence Tray
+              </h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: '0.75rem', flex: 1, minHeight: 0, boxSizing: 'border-box' }}>
                 {items.map((item) => {
                   const isSorted = usePlacements[item.id] !== undefined;
-                  const IconComponent = item.icon;
                   return (
                     <div
                       key={item.id}
                       draggable={!isSorted}
                       onDragStart={(e) => {
                         e.dataTransfer.setData('text/plain', item.id);
+                        e.dataTransfer.effectAllowed = 'move';
                       }}
                       className="interactive-tray-item"
+                      title={item.name}
                       style={{
                         width: '100%',
-                        padding: '0.65rem 0.9rem',
+                        height: '100%',
                         borderRadius: '12px',
-                        border: '1px solid var(--border)',
-                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
+                        border: isSorted ? '2px solid rgba(16, 185, 129, 0.45)' : '1px solid var(--border)',
+                        background: isSorted ? 'rgba(16, 185, 129, 0.05)' : 'var(--card-bg, var(--surface))',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '0.4rem',
-                        opacity: isSorted ? 0.7 : 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '0.5rem',
                         cursor: isSorted ? 'default' : 'grab',
-                        transition: 'all 0.2s',
-                        userSelect: 'none',
-                        position: 'relative'
+                        opacity: isSorted ? 0.35 : 1,
+                        position: 'relative',
+                        boxSizing: 'border-box',
+                        overflow: 'hidden'
                       }}
                     >
-                      {/* Top row: icon + name + check */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center', 
-                          width: '40px', 
-                          height: '40px', 
-                          borderRadius: '10px', 
-                          background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
-                          color: isSorted ? 'var(--success)' : 'var(--accent)',
-                          flexShrink: 0,
-                          border: '1px solid var(--border)'
-                        }}>
-                          <IconComponent size={24} />
+                      <img
+                        src={item.icon}
+                        alt={item.name}
+                        style={{
+                          width: '100%',
+                          height: '70%',
+                          objectFit: 'contain',
+                          pointerEvents: 'none'
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontSize: 'clamp(14px, 2vw, 17px)',
+                          fontWeight: '800',
+                          color: 'var(--text-heading)',
+                          textAlign: 'center',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          width: '100%',
+                          marginTop: '0.25rem',
+                          pointerEvents: 'none'
+                        }}
+                      >
+                        {item.name}
+                      </span>
+                      {isSorted && (
+                        <div style={{ position: 'absolute', top: 6, right: 6, background: 'var(--success)', borderRadius: '50%', padding: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Check size={12} color="#fff" strokeWidth={3} />
                         </div>
-                        <span style={{ fontWeight: '600', fontSize: '0.95rem', lineHeight: '1.2', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
-                        {isSorted && (
-                          <div style={{ 
-                            background: 'var(--success)', 
-                            borderRadius: '50%', 
-                            width: '20px', 
-                            height: '20px', 
-                            flexShrink: 0,
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center',
-                            color: 'white'
-                          }}>
-                            <Check size={12} strokeWidth={3} />
-                          </div>
-                        )}
-                      </div>
-                      {/* Bottom row: dropdown (only when not sorted) */}
-                      {!isSorted && (
-                        <select
-                          value=""
-                          onChange={(e) => handleUseSort(item.id, e.target.value)}
-                          style={{ fontSize: '0.85rem', padding: '0.3rem 0.5rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%', cursor: 'pointer' }}
-                        >
-                          <option value="" disabled>Select Shelf ▾</option>
-                          <option value="School Shelf">School</option>
-                          <option value="Home Shelf">Home</option>
-                          <option value="Kitchen Shelf">Kitchen</option>
-                        </select>
                       )}
                     </div>
                   );
@@ -385,71 +360,194 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               </div>
             </div>
 
-            {/* Right: Shelves visual */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                {[
-                  { name: 'School Shelf', icon: <BookOpen size={16} />, color: '#3b82f6', plankColor: '#94a3b8' },
-                  { name: 'Home Shelf', icon: <Home size={16} />, color: '#f97316', plankColor: '#94a3b8' },
-                  { name: 'Kitchen Shelf', icon: <Utensils size={16} />, color: '#10b981', plankColor: '#94a3b8' }
-                ].map((shelf) => {
+            {/* Right Section: Shelves */}
+            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0, padding: '1.1rem 1.25rem' }}>
+              <h4 style={{ margin: 0, fontSize: 'calc(var(--text-xl) * 1.1)', fontWeight: '800', color: 'var(--text-heading)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>
+                Shelves (Organize by Use)
+              </h4>
+              <div style={{ display: 'grid', gridTemplateRows: 'repeat(3, 1fr)', gap: '0.65rem', flex: 1, minHeight: 0 }}>
+                {shelves.map((shelf) => {
                   const sortedHere = items.filter(i => usePlacements[i.id] === shelf.name);
                   const isDraggingOverMe = draggingOverShelf === shelf.name;
+
                   return (
                     <div
                       key={shelf.name}
                       onDragOver={(e) => {
                         e.preventDefault();
-                        setDraggingOverShelf(shelf.name);
+                        e.dataTransfer.dropEffect = 'move';
+                        if (draggingOverShelf !== shelf.name) {
+                          setDraggingOverShelf(shelf.name);
+                        }
                       }}
-                      onDragLeave={() => setDraggingOverShelf(null)}
+                      onDragLeave={(e) => {
+                        e.preventDefault();
+                        if (!e.currentTarget.contains(e.relatedTarget)) {
+                          setDraggingOverShelf(null);
+                        }
+                      }}
                       onDrop={(e) => {
                         e.preventDefault();
                         setDraggingOverShelf(null);
-                        const itemId = e.dataTransfer.getData('text/plain');
-                        handleUseSort(itemId, shelf.name);
+                        const droppedId = e.dataTransfer.getData('text/plain');
+                        handleUseSort(droppedId, shelf.name);
                       }}
                       style={{
-                        background: isDraggingOverMe ? 'rgba(var(--accent-rgb), 0.05)' : 'linear-gradient(to bottom, var(--surface) 0%, var(--card-bg) 100%)',
-                        border: isDraggingOverMe ? '2px dashed var(--accent)' : '1px solid var(--border)',
-                        borderBottom: `14px solid ${shelf.plankColor}`,
-                        borderRadius: '12px 12px 6px 6px',
-                        padding: '1rem 1rem 0 1rem', // 0 bottom padding so items sit flush on the bottom border
-                        minHeight: '145px',
+                        position: 'relative',
+                        borderRadius: '12px',
+                        overflow: 'hidden',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
-                        gap: '1rem',
-                        transition: 'all 0.2s',
-                        boxShadow: 'inset 0 -25px 25px -25px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.05)'
+                        padding: '0.6rem 0.9rem',
+                        boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)',
+                        border: isDraggingOverMe ? '2px solid #3b82f6' : '1px solid var(--border)',
+                        background: '#111827'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: shelf.color, fontWeight: 'bold', fontSize: '1.15rem' }}>
+                      {/* Shelf Background Image */}
+                      <img 
+                        src={shelf.bgImage} 
+                        alt={shelf.name}
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center 62%',
+                          pointerEvents: 'none'
+                        }}
+                      />
+                      {isDraggingOverMe && (
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(59, 130, 246, 0.25)', zIndex: 1, pointerEvents: 'none' }} />
+                      )}
+
+                      {/* Header Badge */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#fff', fontWeight: 'bold', fontSize: '0.95rem', background: 'rgba(0,0,0,0.7)', padding: '0.3rem 0.75rem', borderRadius: '8px', alignSelf: 'flex-start', backdropFilter: 'blur(6px)', zIndex: 2, position: 'relative' }}>
                         {shelf.icon}
                         <span>{shelf.name}</span>
                       </div>
                       
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', alignItems: 'flex-end', minHeight: '65px' }}>
+                      {/* Placed Items on Shelf Surface */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: 0,
+                          right: 0,
+                          bottom: '18px',
+                          display: 'flex',
+                          gap: '2.5rem',
+                          alignItems: 'flex-end',
+                          justifyContent: 'center',
+                          zIndex: 2,
+                          pointerEvents: 'none'
+                        }}
+                      >
                         {sortedHere.map((item) => (
                           <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0, y: -15, scale: 0.85 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                             key={item.id}
                             title={item.name}
                             style={{
+                              width: '135px',
                               display: 'flex',
-                              alignItems: 'flex-end',
-                              filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.15))',
-                              cursor: 'default'
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              justifyContent: 'flex-end',
+                              flexShrink: 0,
+                              pointerEvents: 'auto',
+                              cursor: 'default',
+                              position: 'relative'
                             }}
                           >
-                            <div style={{ transform: 'translateY(1px)' }}>
-                              <item.icon size={55} />
+                            {/* Polished Physical Evidence Card Frame */}
+                            <div
+                              style={{
+                                width: '104px',
+                                height: '104px',
+                                borderRadius: '12px',
+                                overflow: 'hidden',
+                                border: '2px solid rgba(255, 255, 255, 0.9)',
+                                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.25)',
+                                background: '#1e293b',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                position: 'relative'
+                              }}
+                            >
+                              <img 
+                                src={item.icon} 
+                                alt={item.name} 
+                                style={{ 
+                                  width: '100%', 
+                                  height: '100%', 
+                                  objectFit: 'cover',
+                                  display: 'block',
+                                  pointerEvents: 'none'
+                                }} 
+                              />
                             </div>
+
+                            {/* Realistic Soft Contact Shadow on Shelf Wood */}
+                            <div 
+                              style={{
+                                width: '92px',
+                                height: '6px',
+                                background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 80%)',
+                                borderRadius: '50%',
+                                marginTop: '-2px',
+                                marginBottom: '3px',
+                                filter: 'blur(1.2px)'
+                              }}
+                            />
+
+                            {/* Label */}
+                              <span
+                                style={{
+                                  fontSize: 'clamp(14px, 2vw, 17px)',
+                                  fontWeight: '800',
+                                  color: '#ffffff',
+                                textShadow: '0 1px 2px rgba(0,0,0,0.9)',
+                                background: 'rgba(15, 23, 42, 0.92)',
+                                backdropFilter: 'blur(4px)',
+                                padding: '2px 10px',
+                                borderRadius: '6px',
+                                maxWidth: '130px',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+                                border: '1px solid rgba(255,255,255,0.25)'
+                              }}
+                            >
+                              {item.name}
+                            </span>
                           </motion.div>
                         ))}
                         {sortedHere.length === 0 && (
-                          <span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '1rem' }}>Empty Shelf</span>
+                          <div
+                            style={{
+                              border: '2px dashed rgba(255,255,255,0.65)',
+                              borderRadius: '10px',
+                              padding: '0.5rem 1.8rem',
+                              background: isDraggingOverMe ? 'rgba(59, 130, 246, 0.35)' : 'rgba(0,0,0,0.28)',
+                              color: 'rgba(255,255,255,0.95)',
+                              fontSize: 'clamp(15px, 2.2vw, 19px)',
+                              fontWeight: '600',
+                              backdropFilter: 'blur(2px)',
+                              textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.4rem',
+                              marginBottom: '10px'
+                            }}
+                          >
+                            {isDraggingOverMe ? 'Drop item here!' : 'Drop items here'}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -457,117 +555,179 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                 })}
               </div>
 
-              {/* Error messages overlay */}
-              {errorMessage && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--danger)', fontSize: '0.8rem' }}>
+              {/* Error messages overlay / Tips */}
+              {errorMessage ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--danger)', fontSize: 'clamp(15px, 2.2vw, 19px)', fontWeight: '600' }}>
                   <AlertCircle size={16} />
                   <span>{errorMessage}</span>
                 </div>
-              )}
-
-              {/* Complete state message */}
-              {allUseSorted ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.75rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.95rem' }}>
+              ) : allUseSorted ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: 'clamp(16px, 2.2vw, 20px)' }}>
                   <Check size={18} />
-                  <span>All objects grouped successfully! Click "Proceed to next"</span>
+                  <span>All objects grouped successfully! Click "Proceed to next" in the bottom right corner!</span>
                 </div>
               ) : (
-                <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.5rem' }}>
-                  💡 Tip: Drag items directly into the shelves, or use the drop-downs on the left.
+                <div style={{ fontSize: 'clamp(15px, 2.2vw, 19px)', color: 'var(--text-muted)', textAlign: 'center', padding: '0.35rem', background: 'rgba(0,0,0,0.03)', borderRadius: '8px' }}>
+                  💡 <strong>Tip:</strong> Drag items from the Evidence Tray directly into the shelves based on where they are used.
                 </div>
               )}
             </div>
           </motion.div>
         )}
 
-        {/* Phase 2: Organize by MATERIAL */}
+        {/* Phase 2: Organize by MATERIAL (Scientific Classification) */}
         {phase === 'material' && (
           <motion.div
             key="material"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 38%) 1fr', gap: '1.25rem', flex: 1, minHeight: 0 }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+              flex: 1,
+              minHeight: 0,
+              width: '100%',
+              position: 'relative'
+            }}
           >
-            {/* Left Drawer */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 0 }}>
-              <h4 style={{ margin: 0, fontSize: '1.1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexShrink: 0 }}>Evidence Tray</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
+            {/* FULL-WIDTH HORIZONTAL EVIDENCE TRAY */}
+            <div style={{
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '12px 16px 14px 16px',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.03)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              flexShrink: 0
+            }}>
+              <div style={{
+                fontSize: 'clamp(20px, 2.5vw, 24px)',
+                fontWeight: '900',
+                color: '#0f172a',
+                letterSpacing: '-0.01em'
+              }}>
+                Evidence Tray
+              </div>
+              
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(10, minmax(0, 1fr))',
+                gap: '10px',
+                width: '100%'
+              }}>
                 {items.map((item) => {
                   const isSorted = materialPlacements[item.id] !== undefined;
-                  const IconComponent = item.icon;
+                  const isSelected = selectedItemId === item.id;
+                  
                   return (
                     <div
                       key={item.id}
                       draggable={!isSorted}
                       onDragStart={(e) => {
                         e.dataTransfer.setData('text/plain', item.id);
+                        e.dataTransfer.effectAllowed = 'move';
                       }}
-                      className="interactive-tray-item"
+                      onDragEnd={() => {
+                        setDraggingOverBasket(null);
+                      }}
+                      onClick={() => {
+                        if (!isSorted) {
+                          setSelectedItemId(isSelected ? null : item.id);
+                        }
+                      }}
+                      className="evidence-item-card"
+                      title={item.name}
                       style={{
-                        width: '100%',
-                        padding: '0.65rem 0.9rem',
-                        borderRadius: '12px',
-                        border: '1px solid var(--border)',
-                        background: isSorted ? 'var(--success-bg)' : 'var(--card-bg)',
+                        borderRadius: '10px',
+                        border: isSelected 
+                          ? '2px solid #6366f1' 
+                          : isSorted 
+                            ? '1px solid rgba(16, 185, 129, 0.4)' 
+                            : '1px solid #e2e8f0',
+                        background: isSorted ? '#f8fafc' : '#ffffff',
+                        opacity: isSorted ? 0.45 : 1,
+                        cursor: isSorted ? 'default' : 'grab',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '0.4rem',
-                        opacity: isSorted ? 0.7 : 1,
-                        cursor: isSorted ? 'default' : 'grab',
-                        transition: 'all 0.2s',
+                        overflow: 'hidden',
                         userSelect: 'none',
-                        position: 'relative'
+                        position: 'relative',
+                        boxShadow: isSelected ? '0 0 0 2px rgba(99, 102, 241, 0.25)' : '0 1px 3px rgba(0,0,0,0.04)',
+                        transition: 'box-shadow 0.15s ease, border-color 0.15s ease, opacity 0.15s ease',
+                        height: '118px'
                       }}
                     >
-                      {/* Top row: icon + name + check */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center', 
-                          width: '40px', 
-                          height: '40px', 
-                          borderRadius: '10px', 
-                          background: isSorted ? 'rgba(16, 185, 129, 0.15)' : 'var(--surface)', 
-                          color: isSorted ? 'var(--success)' : 'var(--accent)',
-                          flexShrink: 0,
-                          border: '1px solid var(--border)'
-                        }}>
-                          <IconComponent size={24} />
-                        </div>
-                        <span style={{ fontWeight: '600', fontSize: '0.95rem', lineHeight: '1.2', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
-                        {isSorted && (
-                          <div style={{ 
-                            background: 'var(--success)', 
-                            borderRadius: '50%', 
-                            width: '20px', 
-                            height: '20px', 
-                            flexShrink: 0,
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center',
-                            color: 'white'
-                          }}>
-                            <Check size={12} strokeWidth={3} />
-                          </div>
-                        )}
+                      {/* Thumbnail Container */}
+                      <div style={{
+                        width: '100%',
+                        height: '76px',
+                        overflow: 'hidden',
+                        background: '#f1f5f9',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        pointerEvents: 'none'
+                      }}>
+                        <img 
+                          src={item.icon} 
+                          alt={item.name} 
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            objectPosition: 'center',
+                            display: 'block',
+                            pointerEvents: 'none'
+                          }}
+                        />
                       </div>
-                      {/* Bottom row: dropdown (only when not sorted) */}
-                      {!isSorted && (
-                        <select
-                          value=""
-                          onChange={(e) => handleMaterialSort(item.id, e.target.value)}
-                          style={{ fontSize: '0.85rem', padding: '0.3rem 0.5rem', border: '1px solid var(--border)', borderRadius: '6px', background: 'var(--surface)', color: 'var(--text-primary)', outline: 'none', width: '100%', cursor: 'pointer' }}
-                        >
-                          <option value="" disabled>Select Material ▾</option>
-                          <option value="Paper">Paper</option>
-                          <option value="Wood">Wood</option>
-                          <option value="Plastic">Plastic</option>
-                          <option value="Glass">Glass</option>
-                          <option value="Metal">Metal</option>
-                          <option value="Cloth">Cloth</option>
-                        </select>
+
+                      {/* Name Label */}
+                      <div style={{
+                        flex: 1,
+                        padding: '4px 4px',
+                        textAlign: 'center',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: '#ffffff',
+                        pointerEvents: 'none'
+                      }}>
+                        <span style={{
+                          fontSize: 'clamp(14.7px, 1.07vw, 18.3px)',
+                          fontWeight: '700',
+                          color: '#1e293b',
+                          lineHeight: '1.2',
+                          textAlign: 'center',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          pointerEvents: 'none'
+                        }}>
+                          {item.name}
+                        </span>
+                      </div>
+
+                      {/* Sorted Check Overlay */}
+                      {isSorted && (
+                        <div style={{
+                          position: 'absolute',
+                          inset: 0,
+                          background: 'rgba(16, 185, 129, 0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backdropFilter: 'blur(1px)',
+                          pointerEvents: 'none'
+                        }}>
+                          <Check size={28} color="#ffffff" strokeWidth={3.5} />
+                        </div>
                       )}
                     </div>
                   );
@@ -575,182 +735,233 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               </div>
             </div>
 
-            {/* Right: Illustrated Material Baskets */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', overflowY: 'auto' }}>
-              {[
-                { name: 'Paper', color: '#2563eb', icon: '📄', emoji: '♻️', bgLight: '#eff6ff', borderColor: '#93c5fd' },
-                { name: 'Wood', color: '#92400e', icon: '🪵', emoji: '🪵', bgLight: '#fef3c7', borderColor: '#d97706' },
-                { name: 'Plastic', color: '#16a34a', icon: '🧴', emoji: '♻️', bgLight: '#f0fdf4', borderColor: '#4ade80' },
-                { name: 'Metal', color: '#64748b', icon: '🔩', emoji: '🔧', bgLight: '#f1f5f9', borderColor: '#94a3b8' },
-                { name: 'Glass', color: '#0891b2', icon: '🥛', emoji: '♻️', bgLight: '#ecfeff', borderColor: '#67e8f9' },
-                { name: 'Cloth', color: '#dc2626', icon: '👕', emoji: '👕', bgLight: '#fff1f2', borderColor: '#fca5a5' }
-              ].map((basket) => {
+            {/* SIX LARGE HORIZONTAL BASKET CARDS */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+              gap: '14px',
+              width: '100%',
+              flex: 1,
+              minHeight: 0
+            }}>
+              {materialBaskets.map((basket) => {
                 const sortedHere = items.filter(i => materialPlacements[i.id] === basket.name);
                 const isDraggingOverMe = draggingOverBasket === basket.name;
-                const basketSvgs = {
-                  Paper: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#1d4ed8" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="none" stroke="#1e3a8a" strokeWidth="1.5" />
-                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#1e3a8a" strokeWidth="1" opacity="0.5"/>)}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#2563eb" />
-                      <path d="M12 8 Q27 5 42 8 L44 16 Q27 12 10 16 Z" fill="#3b82f6" opacity="0.4" />
-                    </svg>
-                  ),
-                  Wood: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#a16207" />
-                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#78350f" strokeWidth="1.5" opacity="0.6"/>)}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#b45309" />
-                    </svg>
-                  ),
-                  Plastic: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 14 L10 42 L44 42 L47 14 Z" fill="#15803d" />
-                      {Array.from({length:5},(_,r)=>Array.from({length:4},(_,c)=>(
-                        <rect key={`${r}-${c}`} x={10+c*9} y={16+r*5} width="7" height="3" rx="1" fill="none" stroke="#14532d" strokeWidth="1" opacity="0.5" />
-                      )))}
-                      <path d="M5 12 Q27 8 49 12 Q27 16 5 12Z" fill="#16a34a" />
-                    </svg>
-                  ),
-                  Metal: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#64748b" />
-                      {Array.from({length:4},(_,r)=>Array.from({length:5},(_,c)=>(
-                        <rect key={`${r}-${c}`} x={9+c*7.5} y={17+r*6} width="5" height="4" rx="1" fill="none" stroke="#334155" strokeWidth="1" opacity="0.6" />
-                      )))}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#94a3b8" />
-                    </svg>
-                  ),
-                  Glass: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="rgba(6,182,212,0.4)" stroke="#0891b2" strokeWidth="1.5" />
-                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#0e7490" strokeWidth="1" opacity="0.4"/>)}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#06b6d4" />
-                    </svg>
-                  ),
-                  Cloth: (
-                    <svg width="54" height="48" viewBox="0 0 54 48">
-                      <ellipse cx="27" cy="44" rx="20" ry="4" fill="rgba(0,0,0,0.1)" />
-                      <path d="M7 16 L10 42 L44 42 L47 16 Z" fill="#b45309" />
-                      {[0,1,2,3,4,5].map(i=><line key={i} x1={9+i*6} y1="16" x2={10+i*5.5} y2="42" stroke="#78350f" strokeWidth="1.5" opacity="0.5"/>)}
-                      <path d="M5 14 Q27 10 49 14 Q27 18 5 14Z" fill="#d97706" />
-                      <rect x="14" y="10" width="8" height="8" rx="2" fill="#ef4444" opacity="0.8" />
-                      <rect x="24" y="8" width="8" height="8" rx="2" fill="#3b82f6" opacity="0.8" />
-                      <rect x="34" y="10" width="8" height="8" rx="2" fill="#10b981" opacity="0.8" />
-                    </svg>
-                  )
-                };
-
+                
                 return (
                   <div
                     key={basket.name}
-                    onDragOver={(e) => { e.preventDefault(); setDraggingOverBasket(basket.name); }}
-                    onDragLeave={() => setDraggingOverBasket(null)}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                      if (draggingOverBasket !== basket.name) {
+                        setDraggingOverBasket(basket.name);
+                      }
+                    }}
+                    onDragLeave={(e) => {
+                      e.preventDefault();
+                      if (!e.currentTarget.contains(e.relatedTarget)) {
+                        setDraggingOverBasket(null);
+                      }
+                    }}
                     onDrop={(e) => {
                       e.preventDefault();
                       setDraggingOverBasket(null);
-                      handleMaterialSort(e.dataTransfer.getData('text/plain'), basket.name);
+                      const droppedId = e.dataTransfer.getData('text/plain');
+                      handleMaterialSort(droppedId, basket.name);
+                    }}
+                    onClick={() => {
+                      if (selectedItemId) {
+                        handleMaterialSort(selectedItemId, basket.name);
+                        setSelectedItemId(null);
+                      }
                     }}
                     style={{
-                      background: isDraggingOverMe ? basket.bgLight : 'white',
-                      border: isDraggingOverMe ? `2px dashed ${basket.color}` : `1.5px solid ${basket.borderColor}`,
-                      borderRadius: '12px',
-                      padding: '0.6rem 0.8rem',
+                      background: '#ffffff',
+                      borderRadius: '16px',
+                      border: '2px solid',
+                      borderColor: isDraggingOverMe ? basket.color : basket.borderColor,
+                      boxShadow: isDraggingOverMe 
+                        ? `0 0 0 4px ${basket.bgLight}, 0 8px 24px rgba(0,0,0,0.12)` 
+                        : '0 2px 8px rgba(0,0,0,0.04)',
                       display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.75rem',
-                      transition: 'all 0.2s',
-                      boxShadow: isDraggingOverMe ? `0 0 0 3px ${basket.bgLight}` : '0 1px 4px rgba(0,0,0,0.08)',
-                      minHeight: '68px'
+                      flexDirection: 'column',
+                      overflow: 'hidden',
+                      height: '100%',
+                      transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+                      cursor: selectedItemId ? 'pointer' : 'default',
+                      position: 'relative',
+                      boxSizing: 'border-box'
                     }}
                   >
-                    {/* Basket Illustration */}
-                    <div style={{ flexShrink: 0 }}>
-                      {basketSvgs[basket.name]}
+                    {/* Basket Image Area */}
+                    <div style={{
+                      flex: 1,
+                      minHeight: 0,
+                      width: '100%',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      background: '#f8fafc',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      pointerEvents: 'none'
+                    }}>
+                      <img 
+                        src={basket.image} 
+                        alt={basket.label}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center 40%',
+                          display: 'block',
+                          pointerEvents: 'none'
+                        }}
+                      />
                     </div>
 
-                    {/* Content */}
-                    <div style={{ flex: 1 }}>
-                      {/* Header */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                        <span style={{ fontWeight: '800', fontSize: '0.85rem', color: basket.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                          {basket.name} Basket
+                    {/* White Drop Area Below Basket Image */}
+                    <div style={{
+                      height: '76px',
+                      minHeight: '76px',
+                      maxHeight: '76px',
+                      background: isDraggingOverMe ? basket.bgLight : '#ffffff',
+                      borderTop: '1px solid #f1f5f9',
+                      borderBottom: '1px solid #f1f5f9',
+                      padding: '6px 8px',
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '6px',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxSizing: 'border-box',
+                      overflow: 'hidden',
+                      transition: 'background 0.15s ease',
+                      pointerEvents: 'none'
+                    }}>
+                      {sortedHere.length === 0 ? (
+                        <span style={{ fontSize: 'clamp(12px, 1.5vw, 15px)', fontWeight: '600', color: '#94a3b8', fontStyle: 'italic', textAlign: 'center', pointerEvents: 'none' }}>
+                          {isDraggingOverMe ? 'Drop item here!' : 'Drop items here'}
                         </span>
-                        <span style={{ fontSize: '1rem' }}>{basket.emoji}</span>
-                      </div>
+                      ) : (
+                        sortedHere.map((item) => (
+                          <div
+                            key={item.id}
+                            title={item.name}
+                            style={{
+                              width: '46px',
+                              height: '46px',
+                              borderRadius: '8px',
+                              border: `1.5px solid ${basket.borderColor}`,
+                              background: '#ffffff',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              overflow: 'hidden',
+                              position: 'relative',
+                              boxShadow: '0 2px 5px rgba(0,0,0,0.08)',
+                              padding: '2px',
+                              boxSizing: 'border-box',
+                              flexShrink: 0,
+                              pointerEvents: 'none'
+                            }}
+                          >
+                            <img 
+                              src={item.icon} 
+                              alt={item.name} 
+                              style={{ 
+                                width: '100%', 
+                                height: '100%', 
+                                objectFit: 'cover',
+                                objectPosition: 'center',
+                                display: 'block',
+                                borderRadius: '5px',
+                                pointerEvents: 'none'
+                              }} 
+                            />
+                            <div style={{
+                              position: 'absolute',
+                              bottom: '1px',
+                              right: '1px',
+                              background: '#10b981',
+                              borderRadius: '50%',
+                              width: '13px',
+                              height: '13px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              boxShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                              pointerEvents: 'none'
+                            }}>
+                              <Check size={8} color="#ffffff" strokeWidth={3.5} />
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
 
-                      {/* Drop Zone */}
-                      <div style={{
-                        border: `2px dashed ${isDraggingOverMe ? basket.color : basket.borderColor}`,
-                        borderRadius: '8px',
-                        padding: '0.3rem 0.5rem',
-                        minHeight: '28px',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: '0.3rem',
-                        alignItems: 'center',
-                        background: isDraggingOverMe ? basket.bgLight : 'transparent',
-                        transition: 'all 0.15s'
+                    {/* Bottom Label Card Footer */}
+                    <div style={{
+                      height: '42px',
+                      minHeight: '42px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      background: '#ffffff',
+                      flexShrink: 0,
+                      pointerEvents: 'none'
+                    }}>
+                      <span style={{
+                        fontWeight: '800',
+                        fontSize: 'clamp(13px, 1.5vw, 16px)',
+                        color: basket.color,
+                        letterSpacing: '0.04em',
+                        textTransform: 'uppercase',
+                        pointerEvents: 'none'
                       }}>
-                        {sortedHere.length === 0 ? (
-                          <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic' }}>
-                            {isDraggingOverMe ? 'Drop here!' : 'Drop items here...'}
-                          </span>
-                        ) : (
-                          sortedHere.map(item => (
-                            <motion.span
-                              key={item.id}
-                              initial={{ scale: 0.8, opacity: 0 }}
-                              animate={{ scale: 1, opacity: 1 }}
-                              style={{
-                                background: basket.bgLight,
-                                border: `1px solid ${basket.borderColor}`,
-                                borderRadius: '6px',
-                                padding: '0.15rem 0.5rem',
-                                fontSize: '0.78rem',
-                                fontWeight: '600',
-                                color: basket.color,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.25rem'
-                              }}
-                            >
-                              <Check size={10} />
-                              {item.name}
-                            </motion.span>
-                          ))
-                        )}
-                      </div>
+                        {basket.label}
+                      </span>
                     </div>
                   </div>
                 );
               })}
-
-              {/* Error / tip */}
-              {errorMessage ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: '#dc2626', fontSize: '0.82rem', marginTop: '0.25rem' }}>
-                  <AlertCircle size={15} />
-                  <span>{errorMessage}</span>
-                </div>
-              ) : allMaterialSorted ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '0.9rem' }}>
-                  <Check size={16} /> All objects sorted! Click "Proceed to next"
-                </div>
-              ) : (
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', padding: '0.25rem' }}>
-                  💡 Tip: Drag items to baskets, or use the dropdowns on the left.
-                </div>
-              )}
             </div>
+
+            {/* Error Message Floating Toast */}
+            <AnimatePresence>
+              {errorMessage && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  style={{
+                    position: 'absolute',
+                    bottom: '12px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: 'rgba(220, 38, 38, 0.95)',
+                    color: '#ffffff',
+                    padding: '8px 18px',
+                    borderRadius: '8px',
+                    fontWeight: '700',
+                    fontSize: 'clamp(15px, 2.2vw, 19px)',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    zIndex: 50,
+                    backdropFilter: 'blur(4px)'
+                  }}
+                >
+                  <AlertCircle size={16} />
+                  <span>{errorMessage}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
-
 
         {/* Phase 3: Multi-Property Inspection Demo */}
         {phase === 'demo' && (
@@ -763,7 +974,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
           >
             {/* Left list of items */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, minHeight: 'clamp(250px, 40vh, 500px)', minWidth: 0 }}>
-              <h4 style={{ margin: 0, fontSize: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Select Object to Inspect</h4>
+              <h4 style={{ margin: 0, fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '800', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Select Object to Inspect</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', flex: 1, overflowY: 'auto' }}>
                 {items.map((item) => {
                   const isInspected = inspectedItems[item.id];
@@ -781,19 +992,20 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                         alignItems: 'flex-start',
                         gap: '0.2rem',
                         borderRadius: '8px',
-                        fontSize: '0.9rem',
+                        fontSize: 'clamp(15px, 2.2vw, 19px)',
+                        fontWeight: '700',
                         textAlign: 'left',
                         overflow: 'hidden'
                       }}
                     >
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', width: '100%', overflow: 'hidden' }}>
                         <div style={{ width: '20px', height: '20px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isActive ? 'rgba(255,255,255,0.2)' : 'var(--surface)', borderRadius: '4px' }}>
-                          <item.icon size={13} />
+                          <img src={item.icon} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
                         </div>
                         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>{item.name}</span>
                       </span>
                       {isInspected && (
-                        <span style={{ fontSize: '0.78rem', color: isActive ? 'rgba(255,255,255,0.85)' : 'var(--success)', paddingLeft: '24px', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                        <span style={{ fontSize: 'clamp(13px, 1.8vw, 16px)', fontWeight: '600', color: isActive ? 'rgba(255,255,255,0.85)' : 'var(--success)', paddingLeft: '24px', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                           ✓ Seen
                         </span>
                       )}
@@ -801,7 +1013,7 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                   );
                 })}
               </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border)', paddingTop: '0.5rem', flexShrink: 0 }}>
+              <div style={{ fontSize: 'clamp(14px, 2vw, 17px)', color: 'var(--text-muted)', borderTop: '1px solid var(--border)', paddingTop: '0.5rem', flexShrink: 0 }}>
                 Objects Inspected: <strong>{inspectedCount} / 3</strong>
               </div>
             </div>
@@ -812,23 +1024,23 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
               <div className="glass-panel" style={{ background: 'var(--card-bg)', border: '1px solid var(--accent)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
                   <div style={{ width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                    {React.createElement(items.find(i => i.id === activeDemoId)?.icon || RemoteIcon, { size: 40 })}
+                    <img src={items.find(i => i.id === activeDemoId)?.icon} alt="" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: '1.5rem' }}>
+                    <h3 style={{ margin: 0, color: 'var(--text-heading)', fontSize: 'clamp(22px, 3vw, 26px)', fontWeight: '900' }}>
                       {items.find(i => i.id === activeDemoId)?.name}
                     </h3>
-                    <span style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>Multi-Property Classification Profile</span>
+                    <span style={{ fontSize: 'clamp(15px, 2.2vw, 19px)', fontWeight: '600', color: 'var(--text-muted)' }}>Multi-Property Classification Profile</span>
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   {getDemoProperties(activeDemoId).map((prop, idx) => (
                     <div key={idx} style={{ background: 'var(--surface)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                      <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
+                      <span style={{ display: 'block', fontSize: 'clamp(14px, 1.8vw, 17px)', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
                         {prop.label}
                       </span>
-                      <span style={{ fontSize: '1.05rem', fontWeight: 'bold', color: 'var(--text-primary)', marginTop: '0.3rem', display: 'block' }}>
+                      <span style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '800', color: 'var(--text-primary)', marginTop: '0.3rem', display: 'block' }}>
                         {prop.value}
                       </span>
                     </div>
@@ -851,10 +1063,10 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                     gap: '0.75rem'
                   }}
                 >
-                  <h4 style={{ margin: 0, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem' }}>
+                  <h4 style={{ margin: 0, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'clamp(19px, 2.5vw, 23px)', fontWeight: '900' }}>
                     <Award size={22} /> Lesson Outcomes Confirmed!
                   </h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', fontSize: 'clamp(16px, 2.2vw, 20px)', fontWeight: '600', color: 'var(--text-secondary)' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
                       <span style={{ color: 'var(--success)' }}>✔</span>
                       <span>Classification depends entirely on the property selected.</span>
@@ -872,13 +1084,13 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
                       <span>Scientists choose properties based on their study goals.</span>
                     </div>
                   </div>
-                  <p style={{ marginTop: '0.75rem', fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--text-primary)', textAlign: 'right' }}>
-                    Click "Proceed to next" in the top right!
+                  <p style={{ marginTop: '0.75rem', fontSize: 'clamp(16px, 2.2vw, 20px)', fontWeight: '800', color: 'var(--text-primary)', textAlign: 'right' }}>
+                    Click "Proceed to next" in the bottom right corner!
                   </p>
                 </motion.div>
               ) : (
                 <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 'clamp(16px, 2.2vw, 20px)', fontWeight: '500', color: 'var(--text-muted)' }}>
                     🕵️‍♂️ <strong>Detective Mission:</strong> Click on at least <strong>{3 - inspectedCount} more</strong> objects in the left panel to examine how different criteria classify them.
                   </span>
                 </div>

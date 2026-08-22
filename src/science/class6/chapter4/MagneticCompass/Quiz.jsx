@@ -72,16 +72,17 @@ const quizData = [
 export default function Quiz({ onComplete }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
-  const [quizFinished, setQuizFinished] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
+
+  const currentQ = quizData[currentQuestion];
 
   const handleOptionSelect = (index) => {
     if (showResult) return;
     setSelectedOption(index);
     setShowResult(true);
-    
-    if (index === quizData[currentQuestion].correctIndex) {
+    if (index === currentQ.correctIndex) {
       setScore(prev => prev + 1);
     }
   };
@@ -92,130 +93,197 @@ export default function Quiz({ onComplete }) {
       setSelectedOption(null);
       setShowResult(false);
     } else {
-      setQuizFinished(true);
+      setIsFinished(true);
     }
   };
 
-  const currentQ = quizData[currentQuestion];
-  const isFinished = currentQuestion >= quizData.length - 1 && showResult;
-
-  if (quizFinished) {
+  if (isFinished) {
     return (
-      <div style={{ maxWidth: '100%', margin: '0 auto', padding: '1rem' }}>
-        <div className="glass-panel" style={{ background: 'var(--surface)', padding: '3rem', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', textAlign: 'center' }}>
-          <h2 style={{ color: 'var(--accent)', marginBottom: '1rem' }}>Quiz Completed!</h2>
-          <p style={{ fontSize: '1.5rem', marginBottom: '2rem' }}>You scored {score} out of {quizData.length}</p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-            <button
-              onClick={() => { if (onComplete) onComplete(score); }}
-              style={{
-                padding: '0.75rem 2rem',
-                background: 'var(--accent)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '1.1rem',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-              }}
-            >
-              Finish Activity
-            </button>
-          </div>
+      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', overflowY: 'auto', padding: '1rem', boxSizing: 'border-box' }}>
+        <div style={{ 
+          maxWidth: '520px', 
+          width: '90%', 
+          padding: '2.5rem 3rem', 
+          textAlign: 'center', 
+          background: '#ffffff', 
+          borderRadius: '30px', 
+          border: '1px solid #cbd5e1',
+          boxShadow: '0 15px 40px rgba(0,0,0,0.18)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1.25rem'
+        }}>
+          <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#1e293b', fontWeight: 800 }}>Quiz Completed!</h2>
+          
+          <p style={{ color: '#475569', margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>
+            You scored {score} out of {quizData.length}
+          </p>
+
+          <button
+            onClick={() => { if (onComplete) onComplete(score); }}
+            style={{
+              padding: '1.1rem 3rem',
+              backgroundColor: '#2563eb',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '40px',
+              fontSize: '1.15rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+              transition: 'all 0.25s ease',
+              marginTop: '0.5rem'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+              e.currentTarget.style.backgroundColor = '#1d4ed8';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.backgroundColor = '#2563eb';
+            }}
+          >
+            Finish Activity
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: '100%', margin: '0 auto', padding: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h3 style={{ margin: 0, color: 'var(--text-muted)' }}>Test Your Knowledge</h3>
-        <div style={{ color: 'var(--text-muted)' }}>
-          Question {currentQuestion + 1} of {quizData.length}
-        </div>
-      </div>
-
-      <div className="glass-panel" style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--accent)' }}>{currentQ.title}</h3>
-        <p style={{ fontSize: '1.25rem', marginBottom: '2rem', lineHeight: '1.5' }}>{currentQ.question}</p>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {currentQ.options.map((option, index) => {
-            let bgColor = 'var(--bg)';
-            let borderColor = 'var(--border)';
-            let icon = null;
-
-            if (showResult) {
-              if (index === currentQ.correctIndex) {
-                bgColor = 'rgba(16, 185, 129, 0.1)';
-                borderColor = '#10b981';
-                icon = <CheckCircle size={20} color="#10b981" />;
-              } else if (index === selectedOption) {
-                bgColor = 'rgba(239, 68, 68, 0.1)';
-                borderColor = '#ef4444';
-                icon = <XCircle size={20} color="#ef4444" />;
-              }
-            } else if (index === selectedOption) {
-              borderColor = 'var(--accent)';
-            }
-
-            return (
-              <button
-                key={index}
-                onClick={() => handleOptionSelect(index)}
-                disabled={showResult}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  background: bgColor,
-                  border: `2px solid ${borderColor}`,
-                  color: 'var(--text)',
-                  cursor: showResult ? 'default' : 'pointer',
-                  textAlign: 'left',
-                  fontSize: '1rem',
-                  transition: 'all 0.2s ease',
-                  opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.6 : 1
-                }}
-              >
-                <span>{option}</span>
-                {icon}
-              </button>
-            );
-          })}
-        </div>
-
-        {showResult && (
-          <div style={{ marginTop: '2rem', animation: 'fadeIn 0.5s ease' }}>
-            <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', borderLeft: '4px solid var(--accent)' }}>
-              <h4 style={{ margin: '0 0 0.5rem 0' }}>Explanation</h4>
-              <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.5' }}>{currentQ.explanation}</p>
-            </div>
-            
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
-              <button
-                onClick={handleNext}
-                style={{
-                  padding: '0.75rem 2rem',
-                  background: 'var(--accent)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '1.1rem',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-                }}
-              >
-                {isFinished ? 'Finish Quiz' : 'Next Question'}
-              </button>
-            </div>
+    <div style={{ 
+      width: '100%', 
+      height: '100%',
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      padding: '0.5rem', 
+      overflow: 'hidden',
+      boxSizing: 'border-box' 
+    }}>
+      <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column' }}>
+        {/* Top Bar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', padding: '0 0.5rem', flexShrink: 0 }}>
+          <h3 style={{ margin: 0, color: '#71717A', fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)', fontWeight: 700 }}>Test Your Knowledge</h3>
+          <div style={{ color: '#F59E0B', fontSize: 'clamp(0.85rem, 1.3vw, 1rem)', fontWeight: 700 }}>
+            Question {currentQuestion + 1} of {quizData.length}
           </div>
-        )}
+        </div>
+
+        {/* Main Quiz Card */}
+        <div className="glass-panel" style={{ 
+          background: 'rgba(24, 24, 27, 0.95)', 
+          backdropFilter: 'blur(10px)',
+          border: '1.5px solid #3F3F46',
+          borderRadius: '18px', 
+          padding: '0.85rem 1.35rem', 
+          boxShadow: '0 12px 35px rgba(0, 0, 0, 0.6)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.55rem',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}>
+          {/* Title */}
+          <h3 style={{ margin: 0, color: '#F59E0B', fontSize: 'clamp(1.05rem, 1.5vw, 1.3rem)', fontWeight: 800 }}>
+            {currentQ.title}
+          </h3>
+
+          {/* Question Text */}
+          <p style={{ margin: 0, fontSize: 'clamp(0.88rem, 1.3vw, 1.02rem)', lineHeight: '1.4', fontWeight: 600, color: '#FAFAFA' }}>
+            {currentQ.question}
+          </p>
+
+          {/* Option Buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+            {currentQ.options.map((option, index) => {
+              let bgColor = '#27272A';
+              let borderColor = '#3F3F46';
+              let icon = null;
+
+              if (showResult) {
+                if (index === currentQ.correctIndex) {
+                  bgColor = 'rgba(34, 197, 94, 0.2)';
+                  borderColor = '#22C55E';
+                  icon = <CheckCircle size={18} color="#22C55E" />;
+                } else if (index === selectedOption) {
+                  bgColor = 'rgba(239, 68, 68, 0.2)';
+                  borderColor = '#EF4444';
+                  icon = <XCircle size={18} color="#EF4444" />;
+                }
+              } else if (index === selectedOption) {
+                borderColor = '#F59E0B';
+                bgColor = 'rgba(245, 158, 11, 0.12)';
+              }
+
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleOptionSelect(index)}
+                  disabled={showResult}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '0.6rem 1.15rem',
+                    borderRadius: '10px',
+                    background: bgColor,
+                    border: `1.5px solid ${borderColor}`,
+                    color: '#FAFAFA',
+                    cursor: showResult ? 'default' : 'pointer',
+                    textAlign: 'left',
+                    fontSize: '0.98rem',
+                    fontWeight: 600,
+                    transition: 'all 0.25s ease',
+                    opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.6 : 1
+                  }}
+                >
+                  <span>{option}</span>
+                  {icon}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Explanation & Next Question Button */}
+          {showResult && (
+            <div style={{ marginTop: '0.45rem', animation: 'fadeIn 0.35s ease' }}>
+              <div style={{ padding: '0.55rem 1.15rem', background: '#27272A', borderRadius: '12px', borderLeft: '4px solid #F59E0B', border: '1px solid #3F3F46', borderLeftWidth: '4px' }}>
+                <h4 style={{ margin: '0 0 0.2rem 0', fontSize: '0.92rem', fontWeight: 800, color: '#F59E0B' }}>Explanation</h4>
+                <p style={{ margin: 0, color: '#FAFAFA', fontSize: '0.9rem', lineHeight: '1.4' }}>{currentQ.explanation}</p>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.45rem' }}>
+                <button
+                  onClick={handleNext}
+                  style={{
+                    padding: '0.55rem 1.8rem',
+                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                    color: '#000000',
+                    border: 'none',
+                    borderRadius: '25px',
+                    fontSize: '0.96rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)',
+                    transition: 'all 0.25s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.03)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  {currentQuestion === quizData.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

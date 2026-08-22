@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BookOpen, ChevronRight, Award, Volume2, VolumeX, ArrowRight, HelpCircle } from 'lucide-react';
-import { useTheme } from '../../ThemeContext.jsx';
+import { useTheme } from '../../../../ThemeContext.jsx';
+import darkForestBg from '../../assets/dark_forest_bg.jpg';
 
 export default function GroupingBasicsBookSpread({ onBackToDashboard }) {
   const { theme } = useTheme();
@@ -43,8 +44,22 @@ export default function GroupingBasicsBookSpread({ onBackToDashboard }) {
   const quizDone = checked.q1 && checked.q2 && correct.q1 && correct.q2;
 
   return (
-    <div className="book-container">
-      <div className="book-spread">
+    <div style={{
+      width: '100%',
+      minHeight: '100vh',
+      backgroundImage: `linear-gradient(rgba(10, 25, 18, 0.45), rgba(10, 25, 18, 0.55)), url(${darkForestBg})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'fixed',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '1.5rem',
+      boxSizing: 'border-box'
+    }}>
+      <div className="book-container" style={{ margin: 0, padding: 0, maxWidth: '1200px' }}>
+        <div className="book-spread">
         
         {/* ============ LEFT PAGE ============ */}
         <div className="book-page-left">
@@ -316,6 +331,7 @@ export default function GroupingBasicsBookSpread({ onBackToDashboard }) {
           </div>
         </div>
 
+        </div>
       </div>
     </div>
   );

@@ -62,7 +62,7 @@ export default function SloganPage({
         /* Full-screen layout */
         .frame {
           width: 100%;
-          height: 100vh;
+          height: 100%;
           background: #fff;
           overflow: hidden;
           display: grid;
@@ -76,7 +76,7 @@ export default function SloganPage({
           background: #f4ecdf;
           padding: clamp(75px, 8vw, 95px) clamp(20px, 2.5vw, 36px) clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px);
           overflow-y: auto;
-          height: 100vh;
+          height: 100%;
           box-sizing: border-box;
           position: relative;
         }
@@ -86,7 +86,7 @@ export default function SloganPage({
           display: flex;
           flex-direction: column;
           overflow-y: auto;
-          height: 100vh;
+          height: 100%;
           box-sizing: border-box;
           position: relative;
         }
@@ -126,7 +126,7 @@ export default function SloganPage({
           margin-bottom: 10px;
         }
         .eyebrow span.chap {
-          color: #0b1f3a;
+          color: #b5651d;
           background: #e3dcc9;
           padding: 2px 6px;
           border-radius: 4px;
@@ -210,7 +210,7 @@ export default function SloganPage({
           font-family: Georgia, serif;
           font-style: italic;
           color: #33322e;
-          font-size: clamp(18px, 2.1vw, 25px);
+          font-size: clamp(16px, 1.8vw, 22px);
           font-weight: 700;
           line-height: 1.65;
         }
@@ -352,6 +352,74 @@ export default function SloganPage({
           }
         }
       `}</style>
+      
+      {chapterNum === 2 && (
+        <style>{`
+          #global-theme-music-controls {
+            display: none !important;
+          }
+
+          /* Viewport Fitting Overrides for Chapter 2 */
+          .frame {
+            height: 100vh !important;
+            overflow: hidden !important;
+            max-height: none !important;
+          }
+          .left {
+            overflow: hidden !important;
+            padding: clamp(2vh, 4vh, 95px) clamp(20px, 2.5vw, 36px) clamp(2vh, 4vh, 40px) clamp(20px, 2.5vw, 36px) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+          }
+          .right {
+            overflow: hidden !important;
+            padding: clamp(2vh, 4vh, 95px) clamp(20px, 2.5vw, 36px) clamp(2vh, 4vh, 40px) clamp(20px, 2.5vw, 36px) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+          }
+
+          /* Remove grey background from CHAPTER */
+          .eyebrow span.chap {
+            background: transparent !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+          }
+
+          /* Vertical Spacing Reductions */
+          .eyebrow { margin-bottom: clamp(4px, 1vh, 10px) !important; }
+          h1.title { margin: 0 0 clamp(8px, 1.5vh, 26px) 0 !important; }
+          .hero { 
+            flex: 1 !important;
+            min-height: 0 !important;
+            margin-bottom: clamp(10px, 2vh, 26px) !important; 
+          }
+          .quote-card { padding: clamp(12px, 2vh, 36px) clamp(24px, 3vw, 40px) !important; }
+          .quote-mark { margin-bottom: clamp(2px, 0.5vh, 10px) !important; }
+          .sanskrit { margin-bottom: clamp(2px, 0.5vh, 6px) !important; }
+          .source-top { margin-bottom: clamp(6px, 1vh, 16px) !important; }
+          .source-bottom { margin-top: clamp(6px, 1vh, 14px) !important; }
+          
+          .right h2.section { margin: 0 0 clamp(10px, 2vh, 24px) 0 !important; }
+          .highlight { 
+            padding: clamp(12px, 2vh, 34px) clamp(28px, 3.2vw, 40px) !important;
+            margin-bottom: clamp(12px, 2vh, 36px) !important;
+          }
+          .highlight h3 { margin: 0 0 clamp(4px, 1vh, 12px) 0 !important; }
+          .grid { gap: clamp(10px, 1.5vh, 30px) !important; margin-bottom: clamp(20px, 3vh, 40px) !important; }
+          .card { padding: clamp(10px, 1.5vh, 26px) clamp(22px, 2.4vw, 30px) !important; }
+          .card .label { margin-bottom: clamp(2px, 0.5vh, 6px) !important; }
+          .card h4 { margin: 0 0 clamp(2px, 0.5vh, 8px) 0 !important; }
+
+          @media (max-width: 980px) {
+            .frame {
+              grid-template-columns: 1fr 1fr !important;
+            }
+          }
+        `}</style>
+      )}
 
       {/* Bubble background */}
       <div className="bubble-bg">
@@ -376,21 +444,33 @@ export default function SloganPage({
         /* EXACT FROM-HEAD-TO-TOE HTML PREVIEW SPECIFICATION FOR CHAPTER 2 */
         <div className="frame">
           <div className="left">
-            <button 
-              className="back-cover-btn" 
-              onClick={onBack} 
-              style={{ 
-                position: 'absolute',
-                top: 'clamp(14px, 2.5vw, 36px)', 
-                left: 'clamp(20px, 2.5vw, 36px)',
-                zIndex: 30
-              }}
-            >
-              <ArrowLeft size={16} /> Cover Page
-            </button>
+
 
             <div className="eyebrow animate-pop" style={{ animationDelay: "0.1s" }}>
-              <span className="chap">CH</span>APTER 2 &nbsp;•&nbsp; CLASS 6 SCIENCE
+              <button 
+                onClick={onBack}
+                style={{
+                  background: '#10b981',
+                  border: 'none',
+                  padding: '10px 22px',
+                  borderRadius: '10px',
+                  color: '#ffffff',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  marginRight: '12px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontFamily: 'inherit',
+                  fontSize: '16px',
+                  verticalAlign: 'middle',
+                  boxShadow: '0 10px 25px rgba(16, 185, 129, 0.25)',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <ArrowLeft size={18} /> Cover Page
+              </button>
+              <span style={{ verticalAlign: 'middle' }}><span className="chap">CHAPTER</span> 2 &nbsp;•&nbsp; CLASS 6 SCIENCE</span>
             </div>
             
             <h1 className="title animate-pop" style={{ animationDelay: "0.22s" }}>Diversity in the Living World</h1>
@@ -398,7 +478,6 @@ export default function SloganPage({
             <div className="hero animate-pop" style={{ animationDelay: "0.38s" }}>
               <div className="badge">ANCIENT WISDOM ON NATURE</div>
               <img src="/activities/cover_banner_ch2.png" alt="Ancient wisdom nature illustration" />
-              <div className="caption">Ancient wisdom linking tree life and human society.</div>
             </div>
             
             <div className="quote-card animate-pop" style={{ animationDelay: "0.58s" }}>
@@ -420,18 +499,18 @@ export default function SloganPage({
               className="enter-lab-cta animate-pop" 
               style={{ 
                 position: 'absolute', 
-                top: 'clamp(14px, 2.5vw, 36px)', 
-                right: 'clamp(20px, 2.5vw, 36px)', 
+                bottom: 'clamp(8px, 1.2vh, 14px)', 
+                right: 'clamp(88px, 6vw, 110px)', 
                 zIndex: 30, 
                 animationDelay: "0.85s", 
                 margin: 0,
-                padding: '10px 20px',
-                fontSize: '14px',
-                boxShadow: '0 10px 25px rgba(16, 185, 129, 0.15)'
+                padding: '12px 24px',
+                fontSize: '16px',
+                boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)'
               }} 
               onClick={onEnterLab}
             >
-              Enter Learning Lab <BookOpen size={16} />
+              Enter Learning Lab <BookOpen size={18} />
             </button>
 
             <div style={{ marginBottom: "20px", flexShrink: 0 }}>

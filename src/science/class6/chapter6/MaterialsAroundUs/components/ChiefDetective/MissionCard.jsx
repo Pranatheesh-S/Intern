@@ -6,7 +6,7 @@ import './animations.css';
 export default function MissionCard({ mission, onAccept }) {
   const renderStars = (diff) => {
     return Array(3).fill(0).map((_, i) => (
-      <span key={i} style={{ color: i < diff ? '#fbbf24' : '#475569' }}>★</span>
+      <span key={i} style={{ color: i < diff ? '#fbbf24' : 'var(--text-secondary)' }}>★</span>
     ));
   };
 

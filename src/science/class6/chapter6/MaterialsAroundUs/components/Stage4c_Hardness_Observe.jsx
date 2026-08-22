@@ -4,20 +4,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
   const items = [
-    { id: 'cotton', name: 'Cotton Ball', type: 'soft', resultText: 'It got compressed easily.', icon: <div style={{ width: '50px', height: '50px', background: 'radial-gradient(circle at 30% 30%, #ffffff, #e2e8f0)', borderRadius: '50%', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />, color: '#22c55e', bg: '#dcfce7', blockBg: '#bbf7d0', blockRadius: '20px' },
+    { id: 'cotton', name: 'Cotton Ball', type: 'soft', resultText: 'It got compressed easily.', icon: <div style={{ width: '50px', height: '50px', background: 'radial-gradient(circle at 30% 30%, var(--surface), var(--border))', borderRadius: '50%', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />, color: '#22c55e', bg: '#dcfce7', blockBg: '#bbf7d0', blockRadius: '20px' },
     { id: 'sponge', name: 'Washing Sponge', type: 'soft', resultText: 'It was pressed down. It is soft.', icon: '🧽', color: '#22c55e', bg: '#dcfce7', blockBg: '#86efac', blockRadius: '8px' },
     { id: 'eraser', name: 'Eraser', type: 'soft', resultText: 'It changed shape slightly.', icon: (
       <svg width="50" height="50" viewBox="0 0 50 50">
         <g transform="rotate(-15 25 25)">
           <rect x="6" y="16" width="38" height="18" rx="4" fill="#fda4af" />
           <rect x="6" y="16" width="38" height="12" rx="4" fill="#fecdd3" />
-          <rect x="16" y="16" width="18" height="18" fill="#38bdf8" />
-          <rect x="16" y="16" width="18" height="12" fill="#7dd3fc" />
+          <rect x="16" y="16" width="18" height="18" fill="var(--accent)" />
+          <rect x="16" y="16" width="18" height="12" fill="var(--border)" />
         </g>
       </svg>
-    ), color: '#22c55e', bg: '#dcfce7', blockBg: '#e2e8f0', blockRadius: '4px' },
-    { id: 'stone', name: 'River Stone', type: 'hard', resultText: 'It did not change shape.', icon: '🪨', color: '#ef4444', bg: '#fee2e2', blockBg: '#94a3b8', blockRadius: '12px' },
-    { id: 'iron', name: 'Iron Rod', type: 'hard', resultText: 'It did not change shape at all.', icon: <div style={{ width: '55px', height: '18px', background: 'linear-gradient(180deg, #cbd5e1, #f8fafc, #64748b)', borderRadius: '4px', transform: 'rotate(20deg)', boxShadow: '0 4px 6px rgba(0,0,0,0.2)' }} />, color: '#ef4444', bg: '#fee2e2', blockBg: '#64748b', blockRadius: '0px' }
+    ), color: '#22c55e', bg: '#dcfce7', blockBg: 'var(--border)', blockRadius: '4px' },
+    { id: 'stone', name: 'River Stone', type: 'hard', resultText: 'It did not change shape.', icon: '🪨', color: '#ef4444', bg: '#fee2e2', blockBg: 'var(--text-muted)', blockRadius: '12px' },
+    { id: 'iron', name: 'Iron Rod', type: 'hard', resultText: 'It did not change shape at all.', icon: <div style={{ width: '55px', height: '18px', background: 'linear-gradient(180deg, var(--border), var(--surface), var(--text-muted))', borderRadius: '4px', transform: 'rotate(20deg)', boxShadow: '0 4px 6px rgba(0,0,0,0.2)' }} />, color: '#ef4444', bg: '#fee2e2', blockBg: 'var(--text-muted)', blockRadius: '0px' }
   ];
 
   const [testedItems, setTestedItems] = useState({});
@@ -56,22 +56,22 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
       {/* Top Header & Tip */}
       <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Hand size={24} style={{ color: '#3b82f6' }} /> Observe Hardness: Press Test
+          <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Hand size={24} style={{ color: 'var(--accent)' }} /> Observe Hardness: Press Test
           </h3>
-          <p style={{ margin: 0, fontSize: '0.95rem', color: '#475569', lineHeight: '1.5' }}>
+          <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
             Before we perform advanced scratch tests, detectives test materials by simply pressing them. Press each object with your hand and observe what happens.
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#64748b' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
             <Lightbulb size={16} color="#eab308" /> Click <strong>"Press"</strong> on each material to test it. Watch carefully and compare!
           </div>
         </div>
         
-        <div style={{ width: '280px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div style={{ width: '280px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ca8a04', fontWeight: 'bold', fontSize: '0.95rem' }}>
             <Lightbulb size={18} /> Detective Tip
           </div>
-          <div style={{ fontSize: '0.85rem', color: '#475569', lineHeight: '1.4' }}>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
             If a material changes shape easily, it is <strong>soft</strong>. If it does not change shape, it is <strong>hard</strong>.
           </div>
         </div>
@@ -87,7 +87,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
           return (
             <div key={item.id} style={{ 
               flex: 1, 
-              border: `1px solid ${isTested ? item.color : '#e2e8f0'}`, 
+              border: `1px solid ${isTested ? item.color : 'var(--border)'}`, 
               borderRadius: '12px', 
               padding: '1rem 0.5rem', 
               display: 'flex', 
@@ -99,7 +99,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
               opacity: isPlaced ? 0.5 : 1
             }}>
               {/* Item Name */}
-              <div style={{ fontSize: '1rem', fontWeight: 'bold', color: isTested ? item.color : '#1e293b' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 'bold', color: isTested ? item.color : 'var(--text-primary)' }}>
                 {item.name}
               </div>
 
@@ -107,9 +107,9 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
               <div 
                 style={{ 
                   width: '100%', height: '140px', 
-                  border: `1px solid ${isTested ? item.color : '#cbd5e1'}`,
+                  border: `1px solid ${isTested ? item.color : 'var(--border)'}`,
                   borderRadius: '8px',
-                  background: isTested ? item.bg : '#f8fafc',
+                  background: isTested ? item.bg : 'var(--surface)',
                   position: 'relative',
                   display: 'flex',
                   flexDirection: 'column',
@@ -170,7 +170,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
                     <div style={{ background: item.color, color: 'white', padding: '2px 12px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '2px' }}>
                       {item.type === 'soft' ? 'Soft' : 'Hard'}
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: '#475569', textAlign: 'center', lineHeight: '1.2' }}>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textAlign: 'center', lineHeight: '1.2' }}>
                       {item.resultText}
                     </div>
                   </div>
@@ -182,7 +182,7 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
                   onClick={() => handlePress(item.id)}
                   disabled={activeAnim !== null}
                   style={{
-                    background: '#3b82f6', color: 'white', border: 'none',
+                    background: 'var(--accent)', color: 'white', border: 'none',
                     padding: '0.4rem 1.5rem', borderRadius: '20px',
                     fontWeight: 'bold', cursor: activeAnim ? 'not-allowed' : 'pointer',
                     fontSize: '0.9rem', width: '100%',
@@ -199,11 +199,11 @@ export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
       </div>
 
       {/* Auto-Sorting Observation Section */}
-      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1e3a8a', fontWeight: 'bold' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
           <span style={{ fontSize: '1.2rem' }}>🔍</span> My Observation
         </div>
-        <div style={{ fontSize: '0.95rem', color: '#475569' }}>
+        <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
           As you test the materials, they will be automatically sorted into the correct boxes based on their properties.
         </div>
 

@@ -1,116 +1,217 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { 
+  ArrowLeft, 
+  Compass, 
+  Target, 
+  Crosshair, 
+  Activity, 
+  Magnet, 
+  Sliders, 
+  Car, 
+  HelpCircle, 
+  GraduationCap 
+} from 'lucide-react';
 import './Chapter4Flow.css';
 
-const LABS = [
-  { key: "opening", id: "intro_magnets", n: "Intro", title: "The Opening", sub: "Reshma's storm & the compass mystery", tag: "Pages 61\u201362", icon: "🧲", accent: "#7C9EFF", steps: 7, group: "journey" }, 
-  { key: "s41", id: "activity_4_1", n: "4.1", title: "Magnetic & Non-magnetic", sub: "Predict-then-test Table 4.1", tag: "Activity 4.1", icon: "🧲", accent: "#5CE1B9", steps: 7, group: "journey" }, 
-  { key: "s42", id: "magnetic_poles", n: "4.2", title: "Poles of Magnet", sub: "Iron filings & poles-in-pairs", tag: "Activity 4.2", icon: "⚡", accent: "#FFC24D", steps: 8, group: "journey" }, 
-  { key: "s43", id: "suspended_magnet", n: "4.3", title: "Finding Directions", sub: "A hanging magnet points North\u2013South", tag: "Activity 4.3", icon: "🌍", accent: "#5D9BF0", steps: 7, group: "journey" }, 
-  { key: "s44", id: "magnetic_compass", n: "4.4", title: "Make a Compass", sub: "Magnetise & float your own needle", tag: "Activity 4.4", icon: "🧭", accent: "#FF7A6E", steps: 7, group: "journey" }, 
-  { key: "s45", id: "magnet_interaction", n: "4.5", title: "Attraction & Repulsion", sub: "Unlike attract, like repel", tag: "Activity 4.5", icon: "↔️", accent: "#7C9EFF", steps: 6, group: "journey" }, 
-  { key: "s46", id: "activity_4_6", n: "4.6", title: "Compass & Magnet", sub: "Deflect the needle live", tag: "Activity 4.6", icon: "🎯", accent: "#5CE1B9", steps: 6, group: "journey" }, 
-  { key: "s47", id: "activity_4_7", n: "4.7", title: "Through Materials", sub: "Magnetism passes through barriers", tag: "Activity 4.7", icon: "🚧", accent: "#FFC24D", steps: 6, group: "journey" }, 
-  { key: "fun", id: "sci6-ch4-sec45-fun-with-magnets", n: "Fun", title: "Fun with Magnets", sub: "Maze, runaway cars & magnet care", tag: "Section 4.5", icon: "🎮", accent: "#FF7A6E", steps: 7, group: "journey" }, 
-  { key: "complete", id: "sci6-ch4-exploring-magnets-full", n: "All", title: "Full Chapter \u2014 12 Sections", sub: "The complete page-by-page lab in one flow", tag: "Combined edition", icon: "📖", accent: "#7C9EFF", steps: 12, group: "combined" }, 
-  { key: "flagship", id: "sci6-ch4-exploring-magnets-flagship", n: "Flag", title: "Flagship \u2014 9 Steps", sub: "Condensed all-activities flagship build", tag: "Combined edition", icon: "⭐", accent: "#FFC24D", steps: 9, group: "combined" }
+const CARDS_DATA = [
+  {
+    num: "01",
+    id: "intro_magnets",
+    title: "INTRODUCTION",
+    sub: "Reshma's storm & compass",
+    color: "#2563eb",
+    glow: "rgba(37, 99, 235, 0.25)",
+    image: "/ch4_cards/img_1.jpg",
+    icon: Target
+  },
+  {
+    num: "02",
+    id: "activity_4_1",
+    title: "MAGNETIC ITEMS",
+    sub: "Predict & test",
+    color: "#e11d48",
+    glow: "rgba(225, 29, 72, 0.25)",
+    image: "/ch4_cards/img_2.jpg",
+    icon: Crosshair
+  },
+  {
+    num: "03",
+    id: "magnetic_poles",
+    title: "POLES OF MAGNET",
+    sub: "Iron filings & pole pairs",
+    color: "#F43F5E",
+    glow: "rgba(244, 63, 94, 0.25)",
+    image: "/ch4_cards/img_3.jpg",
+    icon: Activity
+  },
+  {
+    num: "04",
+    id: "suspended_magnet",
+    title: "FINDING DIRECTIONS",
+    sub: "Hanging magnet N->S",
+    color: "#0284c7",
+    glow: "rgba(2, 132, 199, 0.25)",
+    image: "/ch4_cards/img_4.jpg",
+    icon: Compass
+  },
+  {
+    num: "05",
+    id: "magnetic_compass",
+    title: "MAKE A COMPASS",
+    sub: "Float magnetized needle",
+    color: "#e11d48",
+    glow: "rgba(225, 29, 72, 0.25)",
+    image: "/ch4_cards/img_5.jpg",
+    icon: Crosshair
+  },
+  {
+    num: "06",
+    id: "magnet_interaction",
+    title: "ATTRACTION & REPULSION",
+    sub: "Unlike attract, like repel",
+    color: "#d97706",
+    glow: "rgba(217, 119, 6, 0.25)",
+    image: "/ch4_cards/img_6.jpg",
+    icon: Magnet
+  },
+  {
+    num: "07",
+    id: "activity_4_6",
+    title: "COMPASS & MAGNET",
+    sub: "Deflect needle live",
+    color: "#2563eb",
+    glow: "rgba(37, 99, 235, 0.25)",
+    image: "/ch4_cards/img_7.jpg",
+    icon: Compass
+  },
+  {
+    num: "08",
+    id: "activity_4_7",
+    title: "THROUGH MATERIALS",
+    sub: "Passes through barriers",
+    color: "#e11d48",
+    glow: "rgba(225, 29, 72, 0.25)",
+    image: "/ch4_cards/img_8.jpg",
+    icon: Sliders
+  },
+  {
+    num: "09",
+    id: "sci6-ch4-sec45-fun-with-magnets",
+    title: "FUN: MAZE RUN",
+    sub: "Maze & runaway cars",
+    color: "#d97706",
+    glow: "rgba(217, 119, 6, 0.25)",
+    image: "/ch4_cards/img_9.jpg",
+    icon: Car
+  },
+  {
+    num: "10",
+    id: "chapter_4_quiz",
+    title: "TEST KNOWLEDGE",
+    sub: "20 Questions on Magnets",
+    color: "#2563eb",
+    glow: "rgba(37, 99, 235, 0.25)",
+    image: "/ch4_cards/img_10.jpg",
+    icon: HelpCircle
+  }
 ];
 
 export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
-
-
   return (
-    <div className="chapter4-dashboard-wrapper">
-      <div className="wrap" id="home">
-        
-        {/* Back Button added to integrate with your app navigation */}
-        <div style={{ marginBottom: '1rem' }}>
+    <div className="hud-chapter4-wrapper light-theme">
+      {/* Magnetic Field Vector Lines Background SVG */}
+      <svg className="magnetic-lines-bg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(37, 99, 235, 0.18)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 180, 500 180, 720 450 C 940 720, 1240 720, 1540 450" stroke="rgba(239, 68, 68, 0.15)" strokeWidth="3" fill="none" />
+        <path d="M-100 450 C 200 260, 500 260, 720 450 C 940 640, 1240 640, 1540 450" stroke="rgba(37, 99, 235, 0.14)" strokeWidth="2" fill="none" />
+        <path d="M-100 450 C 200 340, 500 340, 720 450 C 940 560, 1240 560, 1540 450" stroke="rgba(239, 68, 68, 0.12)" strokeWidth="2" fill="none" />
+        <circle cx="350" cy="450" r="280" stroke="rgba(37, 99, 235, 0.08)" strokeWidth="40" fill="none" />
+        <circle cx="1090" cy="450" r="280" stroke="rgba(239, 68, 68, 0.08)" strokeWidth="40" fill="none" />
+      </svg>
+
+      <div className="hud-wrap">
+        {/* Main 10 Prominent Cards Grid */}
+        <div className="hud-grid">
+          {CARDS_DATA.map((card, idx) => {
+            const IconComponent = card.icon;
+
+            return (
+              <motion.div 
+                key={card.id}
+                initial={{ opacity: 0, scale: 0.94, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.32, delay: idx * 0.03 }}
+                className="hud-card" 
+                onClick={() => onLaunchActivity(card.id)}
+                style={{ 
+                  '--border-color': card.color,
+                  '--glow-color': card.glow 
+                }}
+              >
+                {/* Card Header Bar */}
+                <div className="hud-card-header">
+                  <div className="hud-num-badge" style={{ borderColor: card.color, color: card.color }}>
+                    {card.num}
+                  </div>
+                  <div className="hud-title-box">
+                    <h3 className="hud-card-title">{card.title}</h3>
+                    <span className="hud-card-sub">{card.sub}</span>
+                  </div>
+                </div>
+
+                {/* Central 4K Magnet Artwork Thumbnail */}
+                <div className="hud-art-container">
+                  <img 
+                    src={card.image} 
+                    alt={card.title} 
+                    className="hud-art-img" 
+                  />
+                  <div className="hud-art-overlay" />
+                  
+                  {/* Floating Circular Icon Badge */}
+                  <div className="hud-icon-badge" style={{ borderColor: card.color }}>
+                    <IconComponent size={18} color={card.color} />
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Bottom Navigation Bar */}
+        <div className="hud-bottom-bar">
           <button 
             onClick={onBackToDashboard}
-            style={{ 
-              background: 'transparent', border: '1px solid var(--line)', color: 'var(--ink)', 
-              padding: '0.4rem 0.8rem', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', fontSize: '0.85rem'
+            className="hud-btn hud-btn-back"
+            style={{
+              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '10px',
+              fontWeight: 800,
+              boxShadow: '0 4px 14px rgba(244, 63, 94, 0.35)'
             }}
           >
-            <ArrowLeft size={16} /> Back to Class 6 Wing
+            <ArrowLeft size={18} color="#ffffff" />
+            <span>BACK TO CLASS 6 WING</span>
           </button>
-        </div>
 
-        <div className="topbar">
-          <div className="logo">Fx</div>
-          <div className="brand">
-            <b>FuturaX Learning</b>
-            <span>Interactive Physics Labs</span>
-          </div>
-          <div className="spacer"></div>
-
-        </div>
-
-        <div className="hero">
-          <div className="htext">
-            <div className="kick">GRADE 6 · SCIENCE · CHAPTER 4</div>
-            <h1>Exploring Magnets</h1>
-            <p>
-              The whole chapter as hands-on physics labs &mdash; page by page, activity by activity. Every simulation runs on live-computed physics: real magnetic fields, a settling compass, iron filings that gather at the poles. Pick a lab below, or continue where you left off.
-            </p>
-            <div className="cta">
-              <button className="btn" onClick={() => onLaunchActivity(LABS[0].id)}>Start the journey</button>
-            </div>
-          </div>
-
-        </div>
-
-        <div className="sechead">
-          <h2>The Chapter, Page by Page</h2>
-          <div className="line"></div>
-          <div className="count">{LABS.filter(l => l.group === 'journey').length} activities</div>
-        </div>
-        
-        <div className="grid">
-          {LABS.filter(l => l.group === 'journey').map(lab => (
-            <div 
-              key={lab.key} 
-              className="card" 
-              onClick={() => onLaunchActivity(lab.id)}
-              style={{ '--accent': lab.accent }}
-            >
-              <div className="accentbar" style={{ background: lab.accent }}></div>
-              <div className="tagchip">{lab.tag}</div>
-              <div className="top">
-                <div className="ico">{lab.icon}</div>
-                <div>
-                  <div className="nchip" style={{ background: lab.accent }}>{lab.n}</div>
-                  <h3>{lab.title}</h3>
-                  <div className="sub">{lab.sub}</div>
-                </div>
-              </div>
-
-            </div>
-          ))}
-        </div>
-
-        <div className="sechead" style={{ marginTop: '4rem' }}>
-          <h2>Test Your Knowledge</h2>
-          <div className="line"></div>
-        </div>
-
-        <div className="grid">
-          <div 
-            className="card" 
+          <button 
             onClick={() => onLaunchActivity('chapter_4_quiz')}
-            style={{ '--accent': '#9C27B0' }}
+            className="hud-btn hud-btn-quiz"
+            style={{
+              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '10px',
+              fontWeight: 800,
+              boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)'
+            }}
           >
-            <div className="accentbar" style={{ background: '#9C27B0' }}></div>
-            <div className="tagchip">Assessment</div>
-            <div className="top">
-              <div className="ico">🧠</div>
-              <div>
-                <div className="nchip" style={{ background: '#9C27B0' }}>Quiz</div>
-                <h3>Test Your Knowledge</h3>
-                <div className="sub">20 Questions on Magnets</div>
-              </div>
-            </div>
-          </div>
+            <GraduationCap size={20} color="#ffffff" />
+            <span>QUIZ HUB</span>
+          </button>
         </div>
 
       </div>

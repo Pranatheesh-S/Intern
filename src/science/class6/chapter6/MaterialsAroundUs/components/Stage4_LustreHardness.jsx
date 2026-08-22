@@ -26,7 +26,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp, mode = 'both'
       isMetal: true,
       shapeStyles: { width: '85%', height: '26px', borderRadius: '4px' },
       baseBg: 'linear-gradient(180deg, #4a210b, #8c4114 30%, #592e13 70%, #291204)',
-      shinyBg: 'linear-gradient(180deg, #94a3b8 0%, #cbd5e1 30%, #94a3b8 70%, #64748b 100%)',
+      shinyBg: 'linear-gradient(180deg, var(--text-muted) 0%, var(--border) 30%, var(--text-muted) 70%, var(--text-muted) 100%)',
       overlayBg: 'repeating-linear-gradient(65deg, transparent, transparent 10px, rgba(0,0,0,0.6) 10px, rgba(0,0,0,0.8) 14px), linear-gradient(180deg, transparent 46%, rgba(0,0,0,0.6) 48%, rgba(0,0,0,0.6) 52%, transparent 54%)'
     },
     copper: { 
@@ -263,7 +263,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp, mode = 'both'
                     {lustreMaterials[activeScrubTarget].isMetal ? (
                       <span style={{ color: '#fbbf24', fontWeight: 'bold', textShadow: '0 0 10px rgba(251,191,36,0.6)', fontSize: '1.4rem', letterSpacing: '2px' }}>✨ LUSTROUS ✨</span>
                     ) : (
-                      <span style={{ color: '#94a3b8', fontWeight: 'bold', fontSize: '1.2rem', letterSpacing: '1px' }}>DULL (Non-lustrous)</span>
+                      <span style={{ color: 'var(--text-muted)', fontWeight: 'bold', fontSize: '1.2rem', letterSpacing: '1px' }}>DULL (Non-lustrous)</span>
                     )}
                   </motion.div>
                 )}
@@ -277,8 +277,8 @@ export default function Stage4_LustreHardness({ onComplete, addXp, mode = 'both'
                     width: '50px', 
                     height: '40px', 
                     // Simulate folded corner: top left is golden backing, rest is dark charcoal abrasive
-                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 25%, #3f3f46 27%, #27272a 100%)', 
-                    border: '1px solid #18181b',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 25%, var(--text-secondary) 27%, var(--text-primary) 100%)', 
+                    border: '1px solid var(--text-primary)',
                     borderRadius: '2px',
                     pointerEvents: 'none',
                     boxShadow: '2px 4px 8px rgba(0,0,0,0.5)',
@@ -288,7 +288,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp, mode = 'both'
                     transform: `rotate(${mousePos.x % 15 - 7}deg)` // Adds slight rotation based on movement
                   }}>
                      {/* Fine grain texture */}
-                     <div style={{ width: '100%', height: '100%', opacity: 0.5, backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '2px 2px' }}></div>
+                     <div style={{ width: '100%', height: '100%', opacity: 0.5, backgroundImage: 'radial-gradient(var(--text-primary) 1px, transparent 1px)', backgroundSize: '2px 2px' }}></div>
                   </div>
                 )}
                 
@@ -451,7 +451,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp, mode = 'both'
           (mode === 'hardness_only' && allHardnessTested) || 
           (mode === 'both' && allLustrePolished && allHardnessTested)) && (
           <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}>
-            Tests Complete! Click "Proceed to next" in the top right.
+            Tests Complete! Click "Proceed to next" in the bottom right corner.
           </div>
         )}
       </div>
