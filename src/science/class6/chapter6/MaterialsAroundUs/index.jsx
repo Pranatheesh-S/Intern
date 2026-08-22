@@ -476,16 +476,6 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           >
             <ArrowLeft size={20} /> Back
           </button>
-
-          {!showHandbook && currentNode.type === 'activity' && !['quiz', 'summary'].includes(currentNode.id) && (
-            <button 
-              onClick={() => setShowHandbook(true)}
-              className="outline"
-              style={{ padding: '0.65rem 1.35rem', fontSize: '1.05rem', fontWeight: 'bold', gap: '0.6rem', borderRadius: '10px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center' }}
-            >
-              📖 View Handbook
-            </button>
-          )}
         </div>
 
         <div className="global-action-bar-center">

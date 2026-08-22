@@ -367,11 +367,11 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 How Can We Group Objects?
               </h2>
 
-              <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '16px', fontWeight: '500' }}>
-                <p style={{ margin: '0 0 12px 0' }}>We see many objects around us, such as books, bottles, spoons and toys.</p>
-                <p style={{ margin: '0 0 12px 0' }}>Objects can be grouped based on a common property, such as material, colour, shape or hardness.</p>
-                <p style={{ margin: '0 0 12px 0' }}>This process is called <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>classification</strong>.</p>
-                <p style={{ margin: '0' }}>The same object can belong to different groups depending on the property we choose.</p>
+              <div style={{ fontSize: 'clamp(1.30rem, 1.55vw, 1.65rem)', color: 'var(--text-primary)', lineHeight: '1.4', marginBottom: '14px', fontWeight: '600' }}>
+                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>We see many objects around us, such as books, bottles, spoons and toys.</p>
+                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Objects can be grouped based on a common property, such as material, colour, shape or hardness.</p>
+                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>This process is called <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>classification</strong>.</p>
+                <p style={{ margin: '0', fontSize: 'inherit', lineHeight: 'inherit' }}>The same object can belong to different groups depending on the property we choose.</p>
               </div>
 
               <div style={{ marginTop: '6px', background: 'var(--surface)', border: '2px dashed var(--border)', borderRadius: '12px', padding: '12px 18px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
@@ -389,10 +389,10 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 Case File 02: Scientific Classification
               </h2>
 
-              <div style={{ fontSize: 'calc(var(--text-xl) * 1.05)', color: 'var(--text-primary)', lineHeight: '1.6', marginBottom: '16px', fontWeight: '500' }}>
-                <p style={{ margin: '0 0 12px 0' }}>Your next case is ready!</p>
-                <p style={{ margin: '0 0 12px 0' }}>Observe each object and identify the material it is made of.</p>
-                <p style={{ margin: '0' }}>Then place each object into the correct material group.</p>
+              <div style={{ fontSize: 'clamp(1.30rem, 1.55vw, 1.65rem)', color: 'var(--text-primary)', lineHeight: '1.4', marginBottom: '14px', fontWeight: '600' }}>
+                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Your next case is ready!</p>
+                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Observe each object and identify the material it is made of.</p>
+                <p style={{ margin: '0', fontSize: 'inherit', lineHeight: 'inherit' }}>Then place each object into the correct material group.</p>
               </div>
 
               <div style={{ border: '2px solid var(--success)', borderRadius: '12px', padding: '12px 18px', background: 'var(--success-bg)', display: 'flex', position: 'relative' }}>

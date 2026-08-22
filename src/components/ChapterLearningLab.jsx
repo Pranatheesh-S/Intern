@@ -538,45 +538,144 @@ const CHAPTER_2_LEVELS = [
   }
 ];
 
-// ── Voice profiles for character-specific speech synthesis ───────────────────
-// Each profile uses pitch & rate to differentiate voices.
-// 'aged' = elderly (low pitch, slower), 'adultMale' = normal male,
-// 'youngster' = teen (higher pitch, slightly faster), 'child' = kid voice.
+// ── Voice profiles for character-specific Indian English speech synthesis ─────
+// Distinct voice identities:
+// • Dr. Raghu (Young Adult Male Teacher): pitch 0.94, rate 0.90
+// • Maniram Chacha (Elderly Man): deep aged texture pitch 0.58, rate 0.72
+// • Priya (School Girl / Child): bright youthful pitch 1.62, rate 1.02
+// • Arjun (School Boy / Child): curious youthful pitch 1.42, rate 1.05
 const VOICE_PROFILES = {
-  'Dr. Raghu':      { pitch: 0.95, rate: 0.92, gender: 'adultMale'  },
-  'Maniram Chacha': { pitch: 0.72, rate: 0.82, gender: 'aged'        },
-  'Priya':          { pitch: 1.55, rate: 1.08, gender: 'child'       },
-  'Arjun':          { pitch: 1.35, rate: 1.10, gender: 'youngster'   },
+  'Dr. Raghu': {
+    pitch: 0.94,
+    rate: 0.90,
+    gender: 'adultMale',
+    inKeywords: ['prabhat', 'ravi', 'male', 'india', 'indian'],
+    enKeywords: ['guy', 'david', 'mark', 'male']
+  },
+  'Maniram Chacha': {
+    pitch: 0.58,
+    rate: 0.72,
+    gender: 'agedMale',
+    inKeywords: ['valluvar', 'prabhat', 'ravi', 'india', 'indian'],
+    enKeywords: ['james', 'george', 'fred', 'uk male']
+  },
+  'Priya': {
+    pitch: 1.62,
+    rate: 1.02,
+    gender: 'childGirl',
+    inKeywords: ['heera', 'neerja', 'veena', 'ananya', 'kavya', 'female'],
+    enKeywords: ['zira', 'samantha', 'victoria', 'female']
+  },
+  'Arjun': {
+    pitch: 1.42,
+    rate: 1.05,
+    gender: 'childBoy',
+    inKeywords: ['prabhat', 'ravi', 'india', 'indian'],
+    enKeywords: ['alex', 'daniel', 'karen', 'male']
+  },
+  'Female Teacher': {
+    pitch: 1.05,
+    rate: 0.95,
+    gender: 'adultFemale',
+    inKeywords: ['heera', 'neerja', 'veena', 'female'],
+    enKeywords: ['zira', 'susan', 'female']
+  }
 };
 
-function speakWithProfile(text, characterName, muteFlag) {
+function speakWithProfile(text, characterName, muteFlag, onEndCallback, onErrorCallback) {
   if (muteFlag || !('speechSynthesis' in window)) return null;
   window.speechSynthesis.cancel();
-  const profile = VOICE_PROFILES[characterName] || { pitch: 1.0, rate: 1.0, gender: 'adultMale' };
-  const utt = new SpeechSynthesisUtterance(text);
+
+  // Natural conversational text preprocessing for expressive pauses and stage directions
+  let spokenText = text;
+  if (spokenText.includes('coo-koo-koo') || spokenText.includes('cups ear')) {
+    spokenText = spokenText
+      .replace(/Shhh\.\.\./gi, 'Shh... ... ')
+      .replace(/\*cups ear\*/gi, '... cups ear, ... ')
+      .replace(/listen\.\.\./gi, 'listen... ... ')
+      .replace(/coo-koo-koo!/gi, 'coo... koo... koo!')
+      .replace(/🎵/g, '');
+  }
+
+  const profile = VOICE_PROFILES[characterName] || { pitch: 1.0, rate: 1.0, gender: 'adultMale', inKeywords: [], enKeywords: [] };
+  const utt = new SpeechSynthesisUtterance(spokenText);
   utt.pitch = profile.pitch;
   utt.rate  = profile.rate;
-  utt.volume = 1;
-  // Try to pick a browser voice matching the gender hint
+  utt.volume = 1.0;
+
+  if (onEndCallback) utt.onend = onEndCallback;
+  if (onErrorCallback) utt.onerror = onErrorCallback;
+
   const voices = window.speechSynthesis.getVoices();
   if (voices.length > 0) {
-    const lang = voices.filter(v => v.lang.startsWith('en'));
-    if (lang.length > 0) {
-      let picked = null;
-      if (profile.gender === 'aged' || profile.gender === 'adultMale') {
-        // prefer a male voice
-        picked = lang.find(v => /male/i.test(v.name)) ||
-                 lang.find(v => /david|mark|james|fred|alex|daniel/i.test(v.name)) ||
-                 lang[0];
-      } else {
-        // prefer a female voice for child/youngster
-        picked = lang.find(v => /female/i.test(v.name)) ||
-                 lang.find(v => /samantha|victoria|zira|susan|karen|moira|tessa/i.test(v.name)) ||
-                 lang[0];
+    // 1. Prioritize Indian English / Indian voices (lang en-IN, hi-IN or name containing india/indian/prabhat/heera/neerja/ravi)
+    const indianVoices = voices.filter(v => 
+      (v.lang && (v.lang.toLowerCase().includes('in') || v.lang.toLowerCase().includes('en-in') || v.lang.toLowerCase().includes('hi-in'))) ||
+      /india|indian|hindi|prabhat|heera|neerja|ravi|veena/i.test(v.name)
+    );
+
+    let matchedVoice = null;
+    if (indianVoices.length > 0) {
+      if (profile.inKeywords) {
+        for (const kw of profile.inKeywords) {
+          matchedVoice = indianVoices.find(v => v.name.toLowerCase().includes(kw));
+          if (matchedVoice) break;
+        }
       }
-      if (picked) utt.voice = picked;
+      if (!matchedVoice) {
+        if (profile.gender === 'agedMale') {
+          const males = indianVoices.filter(v => /male|prabhat|ravi/i.test(v.name));
+          matchedVoice = males.length > 1 ? males[1] : (males[0] || indianVoices[0]);
+        } else if (profile.gender === 'adultMale') {
+          const males = indianVoices.filter(v => /male|prabhat|ravi/i.test(v.name));
+          matchedVoice = males[0] || indianVoices[0];
+        } else if (profile.gender === 'childBoy') {
+          const males = indianVoices.filter(v => /male|prabhat|ravi/i.test(v.name));
+          matchedVoice = males.length > 1 ? males[males.length - 1] : (males[0] || indianVoices[0]);
+        } else {
+          const females = indianVoices.filter(v => /female|heera|neerja|veena/i.test(v.name));
+          matchedVoice = females[0] || indianVoices[0];
+        }
+      }
+    }
+
+    // 2. Fallback to English voices if no Indian voice is installed on current system
+    if (!matchedVoice) {
+      const englishVoices = voices.filter(v => v.lang && v.lang.startsWith('en'));
+      const pool = englishVoices.length > 0 ? englishVoices : voices;
+
+      if (profile.enKeywords) {
+        for (const kw of profile.enKeywords) {
+          matchedVoice = pool.find(v => v.name.toLowerCase().includes(kw));
+          if (matchedVoice) break;
+        }
+      }
+
+      if (!matchedVoice) {
+        if (profile.gender === 'agedMale') {
+          const males = pool.filter(v => /male|david|mark|guy|james|fred|george/i.test(v.name));
+          matchedVoice = males.length > 1 ? males[1] : (males[0] || pool[0]);
+        } else if (profile.gender === 'adultMale') {
+          const males = pool.filter(v => /male|david|mark|guy|james/i.test(v.name));
+          matchedVoice = males[0] || pool[0];
+        } else if (profile.gender === 'childGirl') {
+          const females = pool.filter(v => /female|zira|samantha|victoria|susan|karen|jessica|jenny/i.test(v.name));
+          matchedVoice = females[0] || pool[0];
+        } else if (profile.gender === 'childBoy') {
+          const males = pool.filter(v => /male|alex|daniel/i.test(v.name));
+          matchedVoice = males.length > 1 ? males[males.length - 1] : (males[0] || pool[0]);
+        } else if (profile.gender === 'adultFemale') {
+          const females = pool.filter(v => /female|zira|samantha|victoria/i.test(v.name));
+          matchedVoice = females[0] || pool[0];
+        }
+      }
+    }
+
+    if (matchedVoice) {
+      utt.voice = matchedVoice;
     }
   }
+
   window.speechSynthesis.speak(utt);
   return utt;
 }
@@ -607,10 +706,10 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "🌱 The Nature Walk Begins",
       text: "Dr Raghu and Maniram chacha lead the students out of the classroom into a nearby patch of forest. The air is fresh and filled with the scent of wet soil and leaves. The kids are excited to discover what secrets the nature walk holds!",
       dialogues: [
-        // Dr. Raghu is typically on the left side — popup placed top-right area, away from face
-        { character: "Dr. Raghu",      avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!",    top: '5%',  left: '3%',  side: 'right' },
-        // Maniram Chacha on centre-right — popup placed bottom-left area, away from face
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!",            top: '5%',  left: '52%', side: 'left'  }
+        // Dr. Raghu on left — popup moved downward away from face
+        { character: "Dr. Raghu",      avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!",    top: '16%', left: '3%',  side: 'right' },
+        // Maniram Chacha on centre-right — popup moved downward away from face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!",            top: '20%', left: '52%', side: 'left'  }
       ]
     },
     {
@@ -618,8 +717,8 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "🌿 Observing Diverse Plants",
       text: "As they walk, they observe different kinds of plants. Some are small herbs growing close to the ground, others are bushy shrubs, and some are grand trees with thick trunks. Dr Raghu reminds them to observe gently without plucking any leaves or flowers.",
       dialogues: [
-        // popup placed upper-right open sky area, away from characters
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '5%', left: '54%', side: 'left' }
+        // Dr. Raghu — popup moved downward away from face
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '18%', left: '54%', side: 'left' }
       ]
     },
     {
@@ -627,10 +726,10 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "🐦 Listening to Bird Calls",
       text: "Hush! Maniram chacha stops and cups his ear. He mimics a bird song, and suddenly, a beautiful response is heard from the tree canopy! The students learn to listen to the unique calls of birds and respect their home.",
       dialogues: [
-        // Maniram popup: upper-left open area above foliage, away from his face
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵",              top: '5%',  left: '3%',  side: 'right' },
-        // Priya popup: right side open area, well below bird canopy
-        { character: "Priya",          avatar: "👧",    text: "It replied! The bird actually replied to chacha!",             top: '5%',  left: '54%', side: 'left'  }
+        // Maniram popup — moved downward away from face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵",              top: '16%', left: '3%',  side: 'right' },
+        // Priya popup — moved downward away from face
+        { character: "Priya",          avatar: "👧",    text: "It replied! The bird actually replied to chacha!",             top: '20%', left: '54%', side: 'left'  }
       ]
     },
     {
@@ -638,10 +737,10 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "🦋 Fluttering Insects & Butterflies",
       text: "Near a cluster of wildflowers, butterflies and bees are busy gathering nectar. The students watch closely as a butterfly unfolds its delicate wings. They notice how insects play a vital role in helping flowers grow.",
       dialogues: [
-        // Arjun popup: upper-right sky area, away from his face which is lower
-        { character: "Arjun",     avatar: "👦",    text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '5%',  left: '54%', side: 'left'  },
-        // Dr. Raghu popup: upper-left open area
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.",         top: '5%',  left: '3%',  side: 'right' }
+        // Arjun popup — moved downward away from face
+        { character: "Arjun",     avatar: "👦",    text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '20%', left: '54%', side: 'left'  },
+        // Dr. Raghu popup — moved downward away from face
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.",         top: '16%', left: '3%',  side: 'right' }
       ]
     },
     {
@@ -649,8 +748,8 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "🐒 Animals in the Canopy",
       text: "A rustle in the branches reveals monkeys jumping from limb to limb, and a tiny squirrel scurrying down a trunk. The forest is alive with creatures of all sizes, each adapted to live in their part of the woods.",
       dialogues: [
-        // Maniram popup: upper-left open area away from character faces below
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '5%', left: '3%', side: 'right' }
+        // Maniram popup — moved downward away from face
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '16%', left: '3%', side: 'right' }
       ]
     },
     {
@@ -658,8 +757,8 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "📋 Recording in the Table",
       text: "The students take out their notebooks to record their observations in Tables 2.1 and 2.2. They separate their findings into plants and animals, marveling at the incredible diversity of life surrounding them!",
       dialogues: [
-        // popup placed in upper-right open area, away from student faces
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '5%', left: '54%', side: 'left' }
+        // Dr. Raghu popup — moved downward away from face
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '18%', left: '54%', side: 'left' }
       ]
     }
   ];
@@ -708,53 +807,62 @@ function IntroStoryteller({ onComplete, onBack }) {
 
   useEffect(() => {
     let active = true;
+    let fallbackTimer = null;
+
     if (dialogueStep < scene.dialogues.length) {
       const dlg = scene.dialogues[dialogueStep];
-      const nextStep = () => { if (active) setDialogueStep(p => p + 1); };
+      const nextStep = () => {
+        if (active) {
+          clearTimeout(fallbackTimer);
+          clearTimeout(dialogueTimerRef.current);
+          setDialogueStep(p => p + 1);
+        }
+      };
 
-      // ── Advance dialogueStep to N+1 IMMEDIATELY so popup N is visible while voice plays ──
-      // The popup for dialogue N is shown when dialogueStep >= N (i.e. when we've started it).
-      // We pre-increment BEFORE speaking so text appears simultaneously with voice.
-      // We schedule the actual voice right after the state flush (rAF).
+      // Generous fallback timeout (minimum 10s or 160ms per char) to ensure audio is NEVER cut off prematurely
+      const fallbackDuration = Math.max(10000, dlg.text.length * 160 + 4000);
+
       if (!isNarrationMuted && 'speechSynthesis' in window) {
-        // Show popup immediately by advancing to next step (popup idx < dialogueStep)
-        // We keep the current index visible via dialogueStep >= idx check in the render.
-        const fallbackTime = Math.max(2000, dlg.text.length * 70 + 500);
-        // Use voices if loaded, else defer to 'voiceschanged' event first call
+        const handleEnd = () => {
+          if (active) {
+            clearTimeout(fallbackTimer);
+            clearTimeout(dialogueTimerRef.current);
+            // Wait 600ms comfortable natural pause after speech finishes 100% cleanly before advancing
+            dialogueTimerRef.current = setTimeout(nextStep, 600);
+          }
+        };
+
         const doSpeak = () => {
           if (!active) return;
-          const utt = speakWithProfile(dlg.text, dlg.character, isNarrationMuted);
-          if (utt) {
-            utt.onend = () => {
-              if (active) {
-                clearTimeout(dialogueTimerRef.current);
-                dialogueTimerRef.current = setTimeout(nextStep, 350);
-              }
-            };
+          const utt = speakWithProfile(dlg.text, dlg.character, isNarrationMuted, handleEnd, handleEnd);
+          if (!utt) {
+            dialogueTimerRef.current = setTimeout(nextStep, Math.max(2500, dlg.text.length * 80));
+          } else {
+            fallbackTimer = setTimeout(handleEnd, fallbackDuration);
           }
-          // Fallback timer in case onend doesn't fire
-          dialogueTimerRef.current = setTimeout(nextStep, fallbackTime);
         };
+
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
           doSpeak();
         } else {
           window.speechSynthesis.onvoiceschanged = () => { doSpeak(); };
-          // still set a fallback in case voices never load
-          dialogueTimerRef.current = setTimeout(nextStep, fallbackTime);
+          fallbackTimer = setTimeout(handleEnd, fallbackDuration);
         }
       } else {
-        dialogueTimerRef.current = setTimeout(nextStep, Math.max(1500, dlg.text.length * 50));
+        dialogueTimerRef.current = setTimeout(nextStep, Math.max(2500, dlg.text.length * 80));
       }
     } else if (scene.dialogues.length > 0) {
       dialogueTimerRef.current = setTimeout(() => {
         if (active) setIsDialogueDone(true);
-      }, 350);
+      }, 500);
     } else {
       setIsDialogueDone(true);
     }
+
     return () => {
       active = false;
+      clearTimeout(fallbackTimer);
       clearTimeout(dialogueTimerRef.current);
     };
   }, [dialogueStep, currentScene, isNarrationMuted]);
@@ -799,14 +907,14 @@ function IntroStoryteller({ onComplete, onBack }) {
       onClick={!isTypingDone ? skipTyping : undefined}
       style={{
         position: 'relative',
-        width: '100%',
-        height: 'clamp(700px, 90vh, 920px)',
-        borderRadius: '14px',
+        width: '100vw',
+        height: '100vh',
+        borderRadius: 0,
         overflow: 'hidden',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.28)',
+        boxShadow: 'none',
         background: '#0a1220',
         cursor: !isTypingDone ? 'pointer' : 'default',
-        border: '4px solid white',
+        border: 'none',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -815,13 +923,11 @@ function IntroStoryteller({ onComplete, onBack }) {
       <div style={{
         position: 'relative',
         height: '100%',
-        aspectRatio: '16/9',
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 'auto',
-        maxWidth: '100%',
-        maxHeight: '100%'
+        zIndex: 2
       }}>
         <img
           key={scene.img}
@@ -833,7 +939,7 @@ function IntroStoryteller({ onComplete, onBack }) {
             inset: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'contain',
+            objectFit: 'cover',
             transition: 'opacity 0.5s ease',
             opacity: imgLoaded ? 1 : 0
           }}
@@ -858,7 +964,7 @@ function IntroStoryteller({ onComplete, onBack }) {
               left: dlg.left,
               right: dlg.right,
               zIndex: 13,
-              width: '240px',
+              width: '290px',
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(14px) scale(0.92)',
               transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -870,14 +976,14 @@ function IntroStoryteller({ onComplete, onBack }) {
                 backdropFilter: 'blur(16px)',
                 border: theme === 'light' ? '1.5px solid rgba(5, 150, 105, 0.35)' : '1.5px solid rgba(52, 211, 153, 0.28)',
                 borderRadius: dlg.side === 'left' ? '4px 16px 16px 16px' : '16px 4px 16px 16px',
-                padding: '0.6rem 0.85rem',
+                padding: '0.75rem 1rem',
                 boxShadow: theme === 'light' ? '0 10px 30px rgba(0,0,0,0.1)' : '0 10px 30px rgba(0,0,0,0.4)',
                 color: theme === 'light' ? '#0f172a' : '#ffffff'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.28rem' }}>
-                  <span style={{ fontSize: '1rem' }}>{dlg.avatar}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.35rem' }}>
+                  <span style={{ fontSize: '1.15rem' }}>{dlg.avatar}</span>
                   <span style={{
-                    fontSize: '0.68rem',
+                    fontSize: '0.85rem',
                     fontWeight: '800',
                     color: theme === 'light' ? '#059669' : '#34d399',
                     textTransform: 'uppercase',
@@ -888,9 +994,9 @@ function IntroStoryteller({ onComplete, onBack }) {
                 </div>
                 <p style={{
                   margin: 0,
-                  fontSize: '0.78rem',
-                  color: theme === 'light' ? '#334155' : 'rgba(255,255,255,0.92)',
-                  lineHeight: '1.45',
+                  fontSize: '0.96rem',
+                  color: theme === 'light' ? '#334155' : 'rgba(255,255,255,0.95)',
+                  lineHeight: '1.5',
                   fontStyle: 'italic',
                   fontWeight: '550'
                 }}>
@@ -914,30 +1020,6 @@ function IntroStoryteller({ onComplete, onBack }) {
         })}
       </div>
 
-      <div style={{ position: 'absolute', top: '0.9rem', right: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px', zIndex: 12 }}>
-        <div style={{ display: 'flex', gap: '8px', background: 'rgba(0,0,0,0.4)', padding: '4px 8px', borderRadius: '12px' }}>
-          <button onClick={replayNarration} title="Replay Scene" style={{ background: 'none', border: 'none', color: '#34d399', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center' }}>
-            <RefreshCw size={14} strokeWidth={2.5} />
-          </button>
-          <button onClick={toggleMute} title={isNarrationMuted ? "Unmute Voice" : "Mute Voice"} style={{ background: 'none', border: 'none', color: isNarrationMuted ? '#ef4444' : '#34d399', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center' }}>
-            {isNarrationMuted ? <VolumeX size={14} strokeWidth={2.5} /> : <Volume2 size={14} strokeWidth={2.5} />}
-          </button>
-        </div>
-        <div style={{ display: 'flex', gap: '5px' }}>
-          {scenes.map((_, i) => (
-            <button key={i}
-              onClick={(e) => { e.stopPropagation(); setCurrentScene(i); }}
-              style={{
-                width: i === currentScene ? '20px' : '7px', height: '7px',
-                borderRadius: '4px', border: 'none', cursor: 'pointer', padding: 0,
-                background: i === currentScene ? '#34d399' : 'rgba(255,255,255,0.4)',
-                transition: 'all 0.3s ease'
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
       <div style={{
         position: 'absolute', top: '0.9rem', left: '0.9rem', zIndex: 12,
         background: 'rgba(0,0,0,0.52)', backdropFilter: 'blur(10px)',
@@ -956,14 +1038,14 @@ function IntroStoryteller({ onComplete, onBack }) {
             onClick={(e) => { e.stopPropagation(); onBack(); }}
             style={{
               padding: '0.7rem 1.4rem', fontSize: '0.9rem', fontWeight: '700',
-              borderRadius: '8px', border: '1px solid rgba(255,255,255,0.3)',
-              background: 'rgba(0,0,0,0.65)', color: '#fff',
+              borderRadius: '8px', border: 'none',
+              background: '#10b981', color: '#fff',
               backdropFilter: 'blur(12px)', cursor: 'pointer',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.4)', transition: 'all 0.2s',
+              boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)', transition: 'all 0.2s',
               display: 'flex', alignItems: 'center', gap: '0.5rem'
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(16, 185, 129, 0.8)'; e.currentTarget.style.borderColor = '#34d399'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.65)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = '#059669'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = '#10b981'; e.currentTarget.style.transform = 'translateY(0)'; }}
           >
             ← Back to Slogan
           </button>
@@ -979,22 +1061,22 @@ function IntroStoryteller({ onComplete, onBack }) {
         transition: 'transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1)'
       }}>
         <div style={{
-          width: '100%', maxWidth: '680px',
+          width: '100%', maxWidth: '780px',
           background: '#E6BF83', 
           color: '#000000',
           backdropFilter: 'blur(16px)',
           border: '1px solid rgba(160, 82, 45, 0.5)', 
           borderRadius: '16px',
-          padding: '1.1rem 1.4rem 0.9rem',
+          padding: '1.4rem 1.8rem 1.2rem',
           boxShadow: '0 -2px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(230, 191, 131, 0.18)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.95rem', fontWeight: '800', color: '#5C4033', letterSpacing: '-0.01em' }}>
+            <span style={{ fontSize: '1.28rem', fontWeight: '800', color: '#5C4033', letterSpacing: '-0.01em' }}>
               {scene.title}
             </span>
             {!isTypingDone && (
               <button onClick={(e) => { e.stopPropagation(); skipTyping(); }} style={{
-                fontSize: '0.68rem', fontWeight: '600', padding: '0.2rem 0.6rem',
+                fontSize: '0.72rem', fontWeight: '600', padding: '0.22rem 0.65rem',
                 borderRadius: '6px', border: '1px solid rgba(139, 69, 19, 0.4)',
                 background: 'rgba(0,0,0,0.07)', color: '#5C4033',
                 cursor: 'pointer', transition: 'all 0.2s'
@@ -1003,8 +1085,8 @@ function IntroStoryteller({ onComplete, onBack }) {
           </div>
 
           <p style={{
-            margin: '0 0 0.85rem 0', fontSize: '0.855rem',
-            color: '#654321', lineHeight: '1.62',
+            margin: '0 0 0.85rem 0', fontSize: '1.18rem',
+            color: '#523418', lineHeight: '1.68', fontWeight: '500',
             minHeight: '3.2em', fontFamily: "'Georgia', 'Times New Roman', serif"
           }}>
             {scene.text.slice(0, typedChars)}
@@ -1017,11 +1099,13 @@ function IntroStoryteller({ onComplete, onBack }) {
             <button onClick={(e) => { e.stopPropagation(); handlePrev(); }}
               disabled={currentScene === 0}
               style={{
-                padding: '0.42rem 1rem', fontSize: '0.78rem', fontWeight: '600',
-                borderRadius: '9px', border: '1px solid rgba(205,133,63,0.38)',
-                background: 'rgba(255,255,255,0.07)', color: 'rgba(255,228,196,0.85)',
+                padding: '0.45rem 1.1rem', fontSize: '0.82rem', fontWeight: '700',
+                borderRadius: '9px', border: 'none',
+                background: currentScene === 0 ? 'rgba(255,255,255,0.1)' : '#10b981',
+                color: '#fff',
                 cursor: currentScene === 0 ? 'not-allowed' : 'pointer',
-                opacity: currentScene === 0 ? 0.38 : 1, transition: 'all 0.2s'
+                opacity: currentScene === 0 ? 0.4 : 1, transition: 'all 0.2s',
+                boxShadow: currentScene === 0 ? 'none' : '0 3px 12px rgba(16, 185, 129, 0.4)'
               }}>← Prev</button>
             <button onClick={(e) => { e.stopPropagation(); handleNext(); }}
               style={{
@@ -4452,9 +4536,9 @@ export default function ChapterLearningLab({
         inset: 0,
         width: '100vw',
         height: '100vh',
-        background: 'var(--page-bg)',
+        background: '#0a1220',
         zIndex: 9999,
-        overflowY: 'auto'
+        overflow: 'hidden'
       }}>
         <IntroStoryteller
           onComplete={handleEnterCheckpoint}
@@ -4472,7 +4556,11 @@ export default function ChapterLearningLab({
         inset: 0,
         width: '100vw',
         height: '100vh',
-        background: 'var(--page-bg)',
+        backgroundImage: `linear-gradient(rgba(10, 22, 16, 0.65), rgba(10, 22, 16, 0.78)), radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.08), transparent 70%), url(${darkForestBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
         zIndex: 9999,
         overflowY: 'auto',
         display: 'flex',
@@ -4527,8 +4615,8 @@ export default function ChapterLearningLab({
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
             <button
               onClick={() => setStage("scenes")}
-              className="glass-btn"
-              style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', fontWeight: '600' }}
+              className="glass-btn primary"
+              style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', fontWeight: '600', background: 'var(--accent)', color: '#fff', border: 'none', boxShadow: '0 4px 12px rgba(99,102,241,0.3)' }}
             >
               ← Back
             </button>
@@ -4765,7 +4853,7 @@ export default function ChapterLearningLab({
       }
       
       // 2. Focus activity if it isn't focused yet and we just completed slides
-      if (activeLevel.activities.length > 0 && !activityFocused && !showBriefing && activeActivityIdx === 0 && activityStatus[activeActivity.id] !== 'done') {
+      if (activeLevel.activities.length > 0 && !activityFocused && !showBriefing && activeActivityIdx === 0 && (chapterNum === 2 ? false : activityStatus[activeActivity.id] !== 'done')) {
         setShowBriefing(true);
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
         return;
@@ -4786,8 +4874,8 @@ export default function ChapterLearningLab({
       }
       
       // 4. If current activity is not marked as Done, prompt user to do so
-      // Exception: lvl-1 (Activity 2.1 Plants/Animals) navigates freely without requiring 'done'
-      if (activeActivity && activityStatus[activeActivity.id] !== 'done' && activeLevel.id !== 'lvl-1') {
+      // Exception: Chapter 2 (chapterNum === 2) and lvl-1 navigate freely without requiring 'done' or showing completion alert
+      if (chapterNum !== 2 && activeActivity && activityStatus[activeActivity.id] !== 'done' && activeLevel.id !== 'lvl-1') {
         alert("Please complete the current activity and mark it as Done before proceeding!");
         return;
       }
@@ -4831,8 +4919,11 @@ export default function ChapterLearningLab({
       }
     };
 
-    // Use dark theme background ONLY for Activity 2.1 (Plants & Animals) and its Learning Checkpoint
-    const isDarkThemePage = chapterNum === 2 && activeLevel && activeLevel.id === 'lvl-1' && (showBriefing || (activityFocused && activeActivity && activeActivity.activityId === 'virtual_biodiversity'));
+    // Use dark theme background ONLY for Activity 2.1 (Plants & Animals), Level 2 (How to Group Plants & Animals?) and its Learning Checkpoint
+    const isDarkThemePage = chapterNum === 2 && activeLevel && (
+      (activeLevel.id === 'lvl-1' && (showBriefing || (activityFocused && activeActivity && activeActivity.activityId === 'virtual_biodiversity'))) ||
+      (activeLevel.id === 'lvl-2')
+    );
     const dynamicBg = isDarkThemePage ? darkForestBg : learningLabBg;
 
     return (
@@ -4987,7 +5078,7 @@ export default function ChapterLearningLab({
         `}</style>
 
         {/* Master stats & control header (Sticky when not in fullscreen) */}
-        {!isFullscreen && (
+        {!isFullscreen && chapterNum !== 2 && (
           <div 
             className={chapterNum === 2 ? 'ch2-hover-header' : ''}
             style={{
@@ -5020,40 +5111,38 @@ export default function ChapterLearningLab({
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-              {/* Mastery ring stats */}
-              {!(chapterNum === 2 && activeLevel.id === 'lvl-1') && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div className="ring-container">
-                  <svg width="50" height="50" viewBox="0 0 64 64">
-                    <circle cx="32" cy="32" r="27" fill="none" stroke="var(--border)" strokeWidth="6" />
-                    <circle 
-                      cx="32" cy="32" r="27" 
-                      fill="none" 
-                      stroke="var(--success)" 
-                      strokeWidth="6" 
-                      strokeLinecap="round" 
-                      strokeDasharray="169.6" 
-                      strokeDashoffset={strokeDashoffset} 
-                      style={{ transition: 'stroke-dashoffset 0.4s ease' }}
-                    />
-                  </svg>
-                  <div className="ring-text">{pctVal}%</div>
+            {chapterNum !== 2 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                {/* Mastery ring stats */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div className="ring-container">
+                    <svg width="50" height="50" viewBox="0 0 64 64">
+                      <circle cx="32" cy="32" r="27" fill="none" stroke="var(--border)" strokeWidth="6" />
+                      <circle 
+                        cx="32" cy="32" r="27" 
+                        fill="none" 
+                        stroke="var(--success)" 
+                        strokeWidth="6" 
+                        strokeLinecap="round" 
+                        strokeDasharray="169.6" 
+                        strokeDashoffset={strokeDashoffset} 
+                        style={{ transition: 'stroke-dashoffset 0.4s ease' }}
+                      />
+                    </svg>
+                    <div className="ring-text">{pctVal}%</div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
+                      {completedActCount} of {totalActCount} done
+                    </span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Chapter Mastery
+                    </span>
+                  </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>
-                    {completedActCount} of {totalActCount} done
-                  </span>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Chapter Mastery
-                  </span>
-                </div>
-              </div>
-              )}
 
-              {/* Navigation buttons */}
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {chapterNum !== 2 && (
+                {/* Navigation buttons */}
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button 
                     onClick={handlePrevControl} 
                     disabled={activeLevelIdx === 0 && activeSlide === 0 && activeActivityIdx === 0}
@@ -5061,8 +5150,6 @@ export default function ChapterLearningLab({
                   >
                     ‹ Prev
                   </button>
-                )}
-                {chapterNum !== 2 && (
                   <button 
                     onClick={handleNextControl}
                     disabled={isNextDisabled()}
@@ -5070,31 +5157,29 @@ export default function ChapterLearningLab({
                   >
                     Next ›
                   </button>
-                )}
-                {activeActivity && !(chapterNum === 2 && activeLevel.id === 'lvl-1') && (
-                  <button
-                    onClick={() => {
-                      setActivityStatus(prev => {
-                        const newStatus = prev[activeActivity.id] === 'done' ? 'none' : 'done';
-                        if (newStatus === 'done') {
-                          setActivityFocused(null);
-                          setTimeout(() => {
-                            const quizPaneEl = document.getElementById("pane-quiz-window");
-                            if (quizPaneEl) {
-                              quizPaneEl.scrollIntoView({ behavior: 'smooth' });
-                            }
-                          }, 300);
-                        }
-                        return { ...prev, [activeActivity.id]: newStatus };
-                      });
-                    }}
-                    className="glass-btn"
-                    style={{ color: isCompleted ? 'var(--success)' : 'inherit', borderColor: isCompleted ? 'var(--success)' : 'var(--border)' }}
-                  >
-                    {isCompleted ? '✓ Done' : 'Mark Done'}
-                  </button>
-                )}
-                {!(chapterNum === 2 && (stage === 'scenes' || showBriefing || (activeLevel && activeLevel.id === 'lvl-1'))) && (
+                  {activeActivity && (
+                    <button
+                      onClick={() => {
+                        setActivityStatus(prev => {
+                          const newStatus = prev[activeActivity.id] === 'done' ? 'none' : 'done';
+                          if (newStatus === 'done') {
+                            setActivityFocused(null);
+                            setTimeout(() => {
+                              const quizPaneEl = document.getElementById("pane-quiz-window");
+                              if (quizPaneEl) {
+                                quizPaneEl.scrollIntoView({ behavior: 'smooth' });
+                              }
+                            }, 300);
+                          }
+                          return { ...prev, [activeActivity.id]: newStatus };
+                        });
+                      }}
+                      className="glass-btn"
+                      style={{ color: isCompleted ? 'var(--success)' : 'inherit', borderColor: isCompleted ? 'var(--success)' : 'var(--border)' }}
+                    >
+                      {isCompleted ? '✓ Done' : 'Mark Done'}
+                    </button>
+                  )}
                   <button 
                     onClick={() => {
                       setIsFullscreen(true);
@@ -5104,9 +5189,9 @@ export default function ChapterLearningLab({
                   >
                     Open Fullscreen ↗
                   </button>
-                )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -5237,7 +5322,7 @@ export default function ChapterLearningLab({
           width: '100%', 
           alignItems: 'stretch', 
           boxSizing: 'border-box', 
-          padding: isFullscreen ? '1.5rem 1.25rem 1.5rem 1.25rem' : (learningLabBg ? '0 clamp(0.5rem, 2vw, 1.25rem) 1.5rem clamp(0.5rem, 2vw, 1.25rem)' : '0')
+          padding: isFullscreen ? '1.5rem 1.25rem 1.5rem 1.25rem' : (learningLabBg ? (chapterNum === 2 ? '1rem clamp(0.5rem, 2vw, 1.25rem) 1.5rem clamp(0.5rem, 2vw, 1.25rem)' : '0 clamp(0.5rem, 2vw, 1.25rem) 1.5rem clamp(0.5rem, 2vw, 1.25rem)') : '0')
         }}>
           
           {/* Level map on left (hidden in fullscreen) */}
@@ -5248,7 +5333,7 @@ export default function ChapterLearningLab({
               style={{
                 position: 'fixed',
                 left: isLevelMapOpen ? '0' : '-300px',
-                top: learningLabBg ? "5.5rem" : "6.5rem",
+                top: learningLabBg ? (chapterNum === 2 ? "1.5rem" : "5.5rem") : "6.5rem",
                 bottom: '1.5rem',
                 width: '300px',
                 zIndex: 50,
@@ -5497,7 +5582,7 @@ export default function ChapterLearningLab({
                       </span>
                     )}
                   </h4>
-                  {activeLevel.activities.length > 1 && (
+                  {activeLevel.activities.length > 1 && activeLevel.id !== 'lvl-1' && (
                     <div style={{ display: 'flex', gap: '0.4rem' }}>
                       {activeLevel.activities.map((act, aIdx) => {
                         let btnLabel = `${aIdx + 1}`;
@@ -5594,18 +5679,22 @@ export default function ChapterLearningLab({
               gap: '1rem',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '2rem 0 1rem 0',
+              padding: (chapterNum === 2 ? '0.4rem 0 0.25rem 0' : '2rem 0 1rem 0'),
               borderTop: '1px solid var(--border)',
-              marginTop: '1rem',
+              marginTop: (chapterNum === 2 ? '0.25rem' : '1rem'),
               width: '100%'
             }}>
               <button
                 onClick={handlePrevControl}
-                className="glass-btn"
+                className={`glass-btn ${chapterNum === 2 ? 'primary' : ''}`}
                 style={{
                   padding: '0.8rem 1.5rem',
                   fontSize: '1rem',
-                  fontWeight: '600'
+                  fontWeight: '600',
+                  background: chapterNum === 2 ? 'var(--accent)' : undefined,
+                  color: chapterNum === 2 ? '#ffffff' : undefined,
+                  border: chapterNum === 2 ? 'none' : undefined,
+                  boxShadow: chapterNum === 2 ? '0 4px 12px rgba(99,102,241,0.3)' : undefined
                 }}
               >
                 ← Previous

@@ -17,7 +17,7 @@ import crowImg from '../../../../assets/crow.png';
 import butterflyImg from '../../../../assets/butterfly.png';
 import sparrowImg from '../../../../assets/sparrow.png';
 import squirrelImg from '../../../../assets/squirrel.png';
-import cowImg from '../../../../assets/cow.png';
+import cowImg from '../../../../assets/brown_cow.png';
 
 const PLANT_CROPPED_IMAGES = {
   grass: grassImage,
@@ -582,7 +582,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
   return (
     <div style={{
       width: '100%',
-      height: '660px',
+      height: '560px',
       background: 'var(--page-bg)',
       fontFamily: 'var(--geo-font)',
       color: 'var(--ink)',
@@ -779,29 +779,6 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
             <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--mut)' }}>
               🎯 neighbourhood &amp; school garden map
             </span>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              {onNextSection && (
-                <button 
-                  onClick={onNextSection} 
-                  className="primary" 
-                  style={{ 
-                    fontSize: '11.5px', 
-                    padding: '0.25rem 0.6rem', 
-                    borderRadius: '6px', 
-                    background: 'var(--accent)', 
-                    border: 'none', 
-                    color: '#fff', 
-                    cursor: 'pointer',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Skip Walk ➔
-                </button>
-              )}
-              <button onClick={onBackToDashboard} className="outline" style={{ fontSize: '11.5px', padding: '0.25rem 0.5rem', borderRadius: '6px' }}>
-                Exit Walk
-              </button>
-            </div>
           </div>
 
           <div style={{ 
@@ -986,32 +963,30 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
           {/* Readout panel inside right page */}
           <div className="readout" style={{ marginTop: '0.5rem' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.25rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
               {filteredTargets.map(t => {
                 const logged = notebook.includes(t.id);
                 return (
                   <span key={t.id} style={{
-                    fontSize: '11px',
-                    padding: '0.25rem 0.5rem',
-                    borderRadius: '6px',
+                    fontSize: '13px',
+                    padding: '0.4rem 0.85rem',
+                    borderRadius: '8px',
                     border: '1px solid var(--cardline)',
                     background: logged ? '#ecfdf5' : '#f8fafc',
                     color: logged ? '#10b981' : 'var(--mut)',
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px',
-                    fontWeight: logged ? '600' : '400',
-                    cursor: 'pointer'
+                    gap: '6px',
+                    fontWeight: logged ? '600' : '500',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
                   }} onClick={() => typeFilter === 'plant' ? setInfoCardPlant(t) : setInfoCardAnimal(t)}>
                     <span>{t.emoji}</span>
                     <span>{t.popupName || t.name.split(' ')[0]}</span>
-                    {logged && <CheckCircle size={10} />}
+                    {logged && <CheckCircle size={12} />}
                   </span>
                 );
               })}
-            </div>
-            <div className="work" style={{ fontSize: '11px' }}>
-              ✏️ <b>Scanner hint:</b> Move your scanner over an organism to examine it. Click to open its observation card.
             </div>
           </div>
         </div>
@@ -1024,13 +999,16 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 99999,
-            background: 'rgba(9, 13, 22, 0.85)',
-            backdropFilter: 'blur(8px)',
+            width: '100vw',
+            height: '100vh',
+            zIndex: 99999999,
+            background: 'rgba(9, 13, 22, 0.98)',
+            backdropFilter: 'blur(12px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '0',
+            overflow: 'hidden',
             animation: 'fadeIn 0.2s ease-out'
           }}
           onClick={() => setInfoCardPlant(null)}
@@ -1056,20 +1034,20 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               onClick={() => setInfoCardPlant(null)}
               style={{
                 position: 'absolute',
-                top: '1.5rem',
-                right: '1.5rem',
+                top: '1.25rem',
+                right: '1.25rem',
                 zIndex: 100,
-                background: 'rgba(15, 23, 42, 0.12)',
-                border: '1px solid rgba(15, 23, 42, 0.2)',
+                background: 'rgba(15, 23, 42, 0.15)',
+                border: '1px solid rgba(15, 23, 42, 0.25)',
                 color: '#0f172a',
-                width: '40px',
-                height: '40px',
+                width: '42px',
+                height: '42px',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                fontSize: '20px',
+                fontSize: '22px',
                 fontWeight: 'bold',
                 backdropFilter: 'blur(4px)',
                 transition: 'all 0.2s ease'
@@ -1078,7 +1056,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               ✕
             </button>
 
-            {/* LEFT SIDE — Plant Image (65% width, filling complete available height top to bottom edge) */}
+            {/* LEFT SIDE — Plant Image (65% width, displaying complete uncropped image extending full height) */}
             <div 
               style={{
                 width: '65%',
@@ -1087,7 +1065,8 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: 0,
+                padding: '1rem',
+                boxSizing: 'border-box',
                 background: 'linear-gradient(135deg, #090d16 0%, #1e293b 100%)',
                 borderRight: '1px solid rgba(34, 197, 94, 0.3)',
                 overflow: 'hidden'
@@ -1101,7 +1080,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                   height: '100%',
                   maxWidth: '100%', 
                   maxHeight: '100%', 
-                  objectFit: 'cover', 
+                  objectFit: 'contain', 
                   objectPosition: 'center',
                   filter: 'drop-shadow(0 12px 30px rgba(0, 0, 0, 0.6))'
                 }} 
@@ -1115,12 +1094,12 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 flex: '0 0 35%',
                 height: '100%',
                 overflowY: 'auto',
-                padding: '2rem',
+                padding: '2rem 1.8rem 1.5rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 boxSizing: 'border-box',
-                background: 'rgba(248, 250, 252, 0.92)',
+                background: 'rgba(248, 250, 252, 0.95)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
                 borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
@@ -1128,11 +1107,11 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               }}
             >
               {/* Header */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid rgba(15, 23, 42, 0.12)', paddingBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid rgba(15, 23, 42, 0.12)', paddingBottom: '0.85rem', paddingTop: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                  <span style={{ fontSize: '2.75rem' }}>{infoCardPlant.emoji}</span>
+                  <span style={{ fontSize: '2.5rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{infoCardPlant.emoji}</span>
                   <div>
-                    <h2 style={{ margin: 0, fontSize: '1.95rem', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.02em' }}>
+                    <h2 style={{ margin: 0, fontSize: '1.95rem', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.02em', lineHeight: '1.2' }}>
                       {infoCardPlant.name}
                     </h2>
                     <span style={{ fontSize: '13px', color: '#14532d', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
@@ -1210,13 +1189,16 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 99999,
-            background: 'rgba(9, 13, 22, 0.85)',
-            backdropFilter: 'blur(8px)',
+            width: '100vw',
+            height: '100vh',
+            zIndex: 99999999,
+            background: 'rgba(9, 13, 22, 0.98)',
+            backdropFilter: 'blur(12px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '0',
+            overflow: 'hidden',
             animation: 'fadeIn 0.2s ease-out'
           }}
           onClick={() => setInfoCardAnimal(null)}
@@ -1242,11 +1224,11 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               onClick={() => setInfoCardAnimal(null)}
               style={{
                 position: 'absolute',
-                top: '1.5rem',
-                right: '1.5rem',
+                top: '1.25rem',
+                right: '1.25rem',
                 zIndex: 100,
-                background: 'rgba(15, 23, 42, 0.12)',
-                border: '1px solid rgba(15, 23, 42, 0.2)',
+                background: 'rgba(15, 23, 42, 0.15)',
+                border: '1px solid rgba(15, 23, 42, 0.25)',
                 color: '#0f172a',
                 width: '42px',
                 height: '42px',
@@ -1273,7 +1255,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '2rem',
+                padding: '1.5rem',
                 background: 'linear-gradient(135deg, #090d16 0%, #1e293b 100%)',
                 borderRight: '1px solid rgba(34, 211, 238, 0.3)',
                 boxSizing: 'border-box',
@@ -1300,7 +1282,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 flex: '0 0 35%',
                 height: '100%',
                 overflowY: 'auto',
-                padding: '2.5rem 2rem',
+                padding: '2rem 1.8rem 1.5rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -1314,10 +1296,10 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
             >
               <div>
                 {/* Header */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', borderBottom: '2px solid rgba(15, 23, 42, 0.12)', paddingBottom: '1.25rem', marginBottom: '1.5rem' }}>
-                  <span style={{ fontSize: '3rem' }}>{infoCardAnimal.emoji}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', borderBottom: '2px solid rgba(15, 23, 42, 0.12)', paddingBottom: '1rem', paddingTop: '0.5rem', marginBottom: '1.25rem' }}>
+                  <span style={{ fontSize: '2.6rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{infoCardAnimal.emoji}</span>
                   <div>
-                    <h2 style={{ margin: 0, fontSize: '2.2rem', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.02em' }}>
+                    <h2 style={{ margin: 0, fontSize: '2.1rem', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.02em', lineHeight: '1.2' }}>
                       {infoCardAnimal.popupName || infoCardAnimal.name}
                     </h2>
                     <span style={{ fontSize: '13px', color: '#0284c7', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
