@@ -408,7 +408,7 @@ export default function SloganPage({
             margin-bottom: clamp(12px, 2vh, 36px) !important;
           }
           .highlight h3 { margin: 0 0 clamp(4px, 1vh, 12px) 0 !important; }
-          .grid { gap: clamp(10px, 1.5vh, 30px) !important; }
+          .grid { gap: clamp(10px, 1.5vh, 30px) !important; margin-bottom: clamp(20px, 3vh, 40px) !important; }
           .card { padding: clamp(10px, 1.5vh, 26px) clamp(22px, 2.4vw, 30px) !important; }
           .card .label { margin-bottom: clamp(2px, 0.5vh, 6px) !important; }
           .card h4 { margin: 0 0 clamp(2px, 0.5vh, 8px) 0 !important; }
@@ -450,23 +450,25 @@ export default function SloganPage({
               <button 
                 onClick={onBack}
                 style={{
-                  background: '#e3dcc9',
+                  background: '#10b981',
                   border: 'none',
-                  padding: '2px 8px',
-                  borderRadius: '4px',
-                  color: '#b5651d',
-                  fontWeight: '800',
+                  padding: '10px 22px',
+                  borderRadius: '10px',
+                  color: '#ffffff',
+                  fontWeight: '700',
                   cursor: 'pointer',
-                  marginRight: '8px',
+                  marginRight: '12px',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '4px',
+                  gap: '8px',
                   fontFamily: 'inherit',
-                  fontSize: 'inherit',
-                  verticalAlign: 'middle'
+                  fontSize: '16px',
+                  verticalAlign: 'middle',
+                  boxShadow: '0 10px 25px rgba(16, 185, 129, 0.25)',
+                  transition: 'all 0.2s ease'
                 }}
               >
-                <ArrowLeft size={14} /> Cover Page
+                <ArrowLeft size={18} /> Cover Page
               </button>
               <span style={{ verticalAlign: 'middle' }}><span className="chap">CHAPTER</span> 2 &nbsp;•&nbsp; CLASS 6 SCIENCE</span>
             </div>
@@ -497,18 +499,18 @@ export default function SloganPage({
               className="enter-lab-cta animate-pop" 
               style={{ 
                 position: 'absolute', 
-                top: 'clamp(14px, 2.5vw, 36px)', 
-                right: 'clamp(20px, 2.5vw, 36px)', 
+                bottom: 'clamp(8px, 1.2vh, 14px)', 
+                right: 'clamp(88px, 6vw, 110px)', 
                 zIndex: 30, 
                 animationDelay: "0.85s", 
                 margin: 0,
-                padding: '10px 20px',
-                fontSize: '14px',
-                boxShadow: '0 10px 25px rgba(16, 185, 129, 0.15)'
+                padding: '12px 24px',
+                fontSize: '16px',
+                boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)'
               }} 
               onClick={onEnterLab}
             >
-              Enter Learning Lab <BookOpen size={16} />
+              Enter Learning Lab <BookOpen size={18} />
             </button>
 
             <div style={{ marginBottom: "20px", flexShrink: 0 }}>
