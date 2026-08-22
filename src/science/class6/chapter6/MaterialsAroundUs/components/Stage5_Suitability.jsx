@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, ArrowRight } from 'lucide-react';
 
-import imgTumblerCloth from '../images/b3_tumbler_cloth.png';
-import imgTumblerPaper from '../images/b3_tumbler_paper.png';
-import imgTumblerGlass from '../images/b3_tumbler_glass.png';
-import imgTumblerMetal from '../images/b3_tumbler_metal.png';
-import imgPotPaper from '../images/b3_pot_paper.png';
-import imgPotMetal from '../images/b3_pot_metal.png';
+import vidTumblerCloth from '../../../../../assets/cloth tumbler.mp4';
+import vidTumblerPaper from '../../../../../assets/paper tumbler.mp4';
+import vidTumblerGlass from '../../../../../assets/glass tumbler.mp4';
+import vidTumblerMetal from '../../../../../assets/steel tumbler (2).mp4';
+import vidPotPaper from '../../../../../assets/paper cooking pot.mp4';
+import vidPotMetal from '../../../../../assets/steel cooking pot.mp4';
 
 export default function Stage5_Suitability({ onComplete, addXp }) {
   // Tumbler state
@@ -43,56 +43,54 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
   };
 
   const renderTumblerAnimation = () => {
-    let imgSrc = null;
-    let animateProps = {};
+    let vidSrc = null;
     if (tumblerMaterial === 'cloth') {
-      imgSrc = imgTumblerCloth;
-      animateProps = { y: [0, 5, -5, 0], transition: { duration: 0.4 } };
+      vidSrc = vidTumblerCloth;
     } else if (tumblerMaterial === 'paper') {
-      imgSrc = imgTumblerPaper;
-      animateProps = { scale: [1, 0.95, 1], transition: { duration: 0.4 } };
+      vidSrc = vidTumblerPaper;
     } else if (tumblerMaterial === 'glass') {
-      imgSrc = imgTumblerGlass;
-      animateProps = { scale: [0.8, 1], opacity: [0, 1], transition: { duration: 0.5 } };
+      vidSrc = vidTumblerGlass;
     } else if (tumblerMaterial === 'metal') {
-      imgSrc = imgTumblerMetal;
-      animateProps = { scale: [0.8, 1], opacity: [0, 1], transition: { duration: 0.5 } };
+      vidSrc = vidTumblerMetal;
     }
 
-    if (!imgSrc) return null;
+    if (!vidSrc) return null;
 
     return (
-      <motion.img 
+      <motion.video 
         key={tumblerMaterial}
-        src={imgSrc} 
-        alt={`Tumbler made of ${tumblerMaterial}`}
+        src={vidSrc} 
+        autoPlay
+        loop
+        muted
+        playsInline
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1, ...animateProps }}
+        animate={{ opacity: 1, transition: { duration: 0.5 } }}
         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
       />
     );
   };
 
   const renderPotAnimation = () => {
-    let imgSrc = null;
-    let animateProps = {};
+    let vidSrc = null;
     if (potMaterial === 'paper') {
-      imgSrc = imgPotPaper;
-      animateProps = { x: [-5, 5, -5, 5, 0], transition: { duration: 0.4 } };
+      vidSrc = vidPotPaper;
     } else if (potMaterial === 'metal') {
-      imgSrc = imgPotMetal;
-      animateProps = { scale: [0.8, 1], opacity: [0, 1], transition: { duration: 0.5 } };
+      vidSrc = vidPotMetal;
     }
 
-    if (!imgSrc) return null;
+    if (!vidSrc) return null;
 
     return (
-      <motion.img 
+      <motion.video 
         key={potMaterial}
-        src={imgSrc} 
-        alt={`Pot made of ${potMaterial}`}
+        src={vidSrc} 
+        autoPlay
+        loop
+        muted
+        playsInline
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1, ...animateProps }}
+        animate={{ opacity: 1, transition: { duration: 0.5 } }}
         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
       />
     );
