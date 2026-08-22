@@ -6,12 +6,13 @@ import townMapFig from './assets/town_map_fig1.jpg';
 import townMapStraightFig from './assets/town_map_straight_3d.jpg';
 import CityExplorerMap from './CityExplorerMap';
 import TownMap3DExplorer from './TownMap3DExplorer';
+import TownMapFPPTPP from './TownMapFPPTPP';
 
 /* ── 1. CLASSIC GRID MAP CONFIG (Fig. 1.1) ─────────────────────── */
 const N_CLASSIC = {
   RS: { x: 150, y: 360, label: 'Railway Station', uniqueName: 'Central Junction Station', sub: 'Express Rail Terminal', type: 'station', start: true, icon: '🚂' },
   HO: { x: 350, y: 360, label: 'Hospital', uniqueName: 'City Care Hospital', sub: '24/7 Emergency & Trauma', type: 'hospital', icon: '🏥' },
-  NP: { x: 550, y: 360, label: 'Nagar Panchayat', uniqueName: 'Civic Town Hall', sub: 'Municipal Council', type: 'civic', icon: '🏛️' },
+  NP: { x: 550, y: 360, label: 'Nagar Panchayat', uniqueName: 'Nagar Panchayat', sub: 'Municipal Council', type: 'civic', icon: '🏛️' },
   BK: { x: 740, y: 560, label: 'Bank', uniqueName: 'Apex National Bank', sub: 'Treasury & Forex', type: 'bank', goal: true, icon: '🏦' },
   SC: { x: 150, y: 560, label: 'School', uniqueName: 'Greenwood Public School', sub: 'Primary & High School', type: 'school', icon: '🏫' },
   MK: { x: 350, y: 560, label: 'Market', uniqueName: 'Janata Central Bazaar', sub: 'Daily Fresh Market', type: 'market', icon: '🛍️' },
@@ -843,6 +844,12 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   const [winCity, setWinCity] = useState(false);
   const [townCompletion, setTownCompletion] = useState(null);
 
+  useEffect(() => {
+    if (!['3d', 'city', 'classic', 'fpp'].includes(mapMode)) {
+      setMapMode('3d');
+    }
+  }, [mapMode]);
+
   /* ── 8A. SEPARATE STATE FOR 3D ILLUSTRATED MAP ── */
   const [cur3D, setCur3D] = useState('RS');
   const [path3D, setPath3D] = useState(['RS']);
@@ -1195,27 +1202,9 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', fontFamily: '"Space Grotesk", system-ui, sans-serif', background: 'linear-gradient(160deg, #F7F1E2 0%, #EFE6D2 100%)' }}>
 
-      {/* Quiz Top Action Bar */}
-      {showQuiz && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 1.5rem', background: '#FFF9F0', borderBottom: '2px solid #F2DFBC' }}>
-          <button
-            onClick={() => setShowQuiz(false)}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0', background: 'transparent', border: 'none', color: '#92400E', fontSize: '0.85rem', fontWeight: 800, cursor: 'pointer', transition: 'color 0.2s', fontFamily: '"Space Grotesk", sans-serif' }}
-            onMouseOver={(e) => e.currentTarget.style.color = '#78350F'}
-            onMouseOut={(e) => e.currentTarget.style.color = '#92400E'}
-          >
-            <ArrowLeft size={18} color="#92400E" /> Back to {is3DActive ? 'Town Map' : 'City Map'}
-          </button>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 800, color: isQuizComplete ? '#16A34A' : '#D97706' }}>
-            {isQuizComplete ? `🎉 All ${MAP_QUIZ.length} Questions Correct!` : `${correctCount} of ${MAP_QUIZ.length} correct — solve them all to complete`}
-          </div>
-        </div>
-      )}
-
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-        {/* LEFT PAGE - MAP CONTAINER */}
-        <div style={{ flex: 1, padding: mapFull ? 0 : '12px', display: 'flex', flexDirection: 'column', borderRight: showQuiz ? '2px solid #F2DFBC' : 'none', position: 'relative', overflow: 'hidden', height: '100%', background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)' }}>
+        {/* FULL PAGE - MAP CONTAINER */}
+        <div style={{ flex: 1, padding: mapFull ? 0 : '12px', display: 'flex', flexDirection: 'column', borderRight: 'none', position: 'relative', overflow: 'hidden', height: '100%', background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)' }}>
 
           {/* The Map Frame (Expands to Fullscreen when mapFull is true) */}
           <div style={{
@@ -1238,11 +1227,11 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
             <div style={{ position: 'absolute', top: '14px', left: '14px', zIndex: 10, display: 'flex', flexWrap: 'wrap', gap: '8px', background: 'rgba(255,249,240,0.95)', backdropFilter: 'blur(6px)', padding: '5px 8px', borderRadius: '12px', border: '1.5px solid #F2DFBC', boxShadow: '0 4px 14px rgba(60,40,20,0.08)' }}>
               <button
                 type="button"
-                onClick={() => { setMapMode('3d'); setShowQuiz(false); }}
+                onClick={() => { setMapMode('3d'); }}
                 style={{
                   border: 'none',
-                  background: (mapMode === '3d' && !showQuiz) ? '#92400E' : 'transparent',
-                  color: (mapMode === '3d' && !showQuiz) ? '#ffffff' : '#78350F',
+                  background: (mapMode === '3d') ? '#92400E' : 'transparent',
+                  color: (mapMode === '3d') ? '#ffffff' : '#78350F',
                   padding: '7px 16px',
                   borderRadius: '8px',
                   fontSize: '13px',
@@ -1255,11 +1244,11 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               </button>
               <button
                 type="button"
-                onClick={() => { setMapMode('city'); setShowQuiz(false); }}
+                onClick={() => { setMapMode('city'); }}
                 style={{
                   border: 'none',
-                  background: (mapMode === 'city' && !showQuiz) ? '#0E7490' : 'transparent',
-                  color: (mapMode === 'city' && !showQuiz) ? '#ffffff' : '#0F5666',
+                  background: (mapMode === 'city') ? '#0E7490' : 'transparent',
+                  color: (mapMode === 'city') ? '#ffffff' : '#0F5666',
                   padding: '7px 16px',
                   borderRadius: '8px',
                   fontSize: '13px',
@@ -1270,6 +1259,23 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               >
                 🏙️ City Explorer
               </button>
+              <button
+                type="button"
+                onClick={() => { setMapMode('fpp'); }}
+                style={{
+                  border: 'none',
+                  background: (mapMode === 'fpp') ? '#7C3AED' : 'transparent',
+                  color: (mapMode === 'fpp') ? '#ffffff' : '#5B21B6',
+                  padding: '7px 16px',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                👁️ FPP Realistic View
+              </button>
             </div>
 
             {/* LIVE COMPASS HUD: DISPLAYED ONLY ON 3D ILLUSTRATED MAP */}
@@ -1278,17 +1284,17 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
             )}
 
             {/* ── MODE 1: 3D ILLUSTRATED MAP ── */}
-            {mapMode === '3d' && (
+            {(mapMode === '3d' || (mapMode !== 'city' && mapMode !== 'classic' && mapMode !== 'fpp')) && (
               <div style={{ position: 'absolute', inset: 0, paddingTop: '58px', background: '#F7F1E2' }}>
                 <TownMap3DExplorer
-                  hideSidebar={showQuiz}
+                  hideSidebar={false}
                   onComplete={(stats) => {
                     setWin3D(true);
                     setTownCompletion(stats);
                     if (onMissionUnlock) onMissionUnlock();
                   }}
                   onNext={() => {
-                    setShowQuiz(true);
+                    if (onBeginChapter) onBeginChapter();
                   }}
                 />
               </div>
@@ -1303,7 +1309,21 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                     if (onMissionUnlock) onMissionUnlock();
                   }}
                   onNext={() => {
-                    setShowQuiz(true);
+                    if (onBeginChapter) onBeginChapter();
+                  }}
+                />
+              </div>
+            )}
+
+            {/* ── MODE 3: FPP REALISTIC VIEW ── */}
+            {mapMode === 'fpp' && (
+              <div style={{ position: 'absolute', inset: 0, paddingTop: '58px', background: '#0F172A' }}>
+                <TownMapFPPTPP
+                  onComplete={() => {
+                    if (onMissionUnlock) onMissionUnlock();
+                  }}
+                  onNext={() => {
+                    if (onBeginChapter) onBeginChapter();
                   }}
                 />
               </div>
@@ -1600,271 +1620,14 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
           </div>
         </div>
 
-        {/* RIGHT PAGE - MAP ACTIVITY QUIZ (Displayed when Questions tab is active) */}
-        <div style={{
-          flex: 1,
-          minHeight: 0,
-          padding: 'clamp(16px, 2vw, 28px) clamp(16px, 2vw, 28px) 10px clamp(16px, 2vw, 28px)',
-          position: 'relative',
-          background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)',
-          color: '#3D2E24',
-          display: !showQuiz ? 'none' : 'flex',
-          flexDirection: 'column',
-          borderRadius: '0 18px 18px 0',
-          borderLeft: '2px solid #F2DFBC',
-          overflow: 'hidden'
-        }}>
-
-          {!showQuiz && (
-            <>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FEF3C7', border: '1px solid #FDE68A', padding: '3px 10px', borderRadius: '999px', color: '#92400E', fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', alignSelf: 'flex-start' }}>
-                ◎ Let's play a game
-              </div>
-              <div style={{ fontFamily: '"Fraunces", serif', fontWeight: 900, color: '#78350F', fontSize: 'clamp(20px, 2.2vw, 26px)', margin: '6px 0 2px' }}>
-                Reach the Bank
-              </div>
-              <div style={{ color: '#3D2E24', fontSize: '13.5px', lineHeight: 1.45, fontWeight: 600 }}>
-                {is3DActive ? (
-                  <>Walk the realistic curved asphalt roads on the <b>Town Map</b> from the <b>Railway Station</b> to the <b>Bank</b>.</>
-                ) : (
-                  <>Move the player pin along the grid roads on <b>Town Map (Fig. 1.1)</b> from the <b>Railway Station</b> to the <b>Bank</b>.</>
-                )}
-              </div>
-
-              <ScrollableWithNav containerStyle={{ flex: 1, minHeight: 0, marginTop: '12px' }} scrollStyle={{ paddingRight: '4px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-
-                {/* Controls Box (Dedicated functionality per active map) */}
-                <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '14px', boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                    <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontSize: '11px', letterSpacing: '0.06em', textTransform: 'uppercase', color: '#92400E', fontWeight: 800 }}>
-                      {is3DActive ? (isWalking3D ? `🚶 Walking on ${activeRoadName3D || 'road'}...` : '🎨 3D Walker Controls') : (isMovingClassic ? '🧭 Moving Pin...' : '🗺️ Town Map Controls')}
-                    </span>
-                    <span style={{ fontSize: '11px', background: is3DActive ? '#FEF3C7' : '#DCFCE7', color: is3DActive ? '#92400E' : '#166534', border: is3DActive ? '1px solid #FDE68A' : '1px solid #86EFAC', padding: '2px 8px', borderRadius: '6px', fontWeight: 800 }}>
-                      {is3DActive ? '3D Active' : 'Fig. 1.1 Active'}
-                    </span>
-                  </div>
-
-                  {/* D-Pad Buttons Matrix */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(3, auto)', gap: '7px', maxWidth: '220px', margin: '0 auto', opacity: activeIsMoving ? 0.6 : 1 }}>
-                    <button className={`dpad-btn ${activeHintDir === 'N' ? 'hint' : ''}`} style={{ gridColumn: 2 }} disabled={activeIsMoving || !activeADJ[activeCur]['N']} onClick={() => activeMoveHandler('N')}>▲ N</button>
-                    <button className={`dpad-btn ${activeHintDir === 'W' ? 'hint' : ''}`} style={{ gridColumn: 1, gridRow: 2 }} disabled={activeIsMoving || !activeADJ[activeCur]['W']} onClick={() => activeMoveHandler('W')}>◀ W</button>
-                    <div style={{ gridColumn: 2, gridRow: 2, background: '#FFF9F0', borderRadius: '10px', border: '1.5px solid #F2DFBC', display: 'grid', placeItems: 'center', fontSize: '12.5px', fontWeight: 800, color: '#78350F' }}>{short[activeCur]}</div>
-                    <button className={`dpad-btn ${activeHintDir === 'E' ? 'hint' : ''}`} style={{ gridColumn: 3, gridRow: 2 }} disabled={activeIsMoving || !activeADJ[activeCur]['E']} onClick={() => activeMoveHandler('E')}>E ▶</button>
-                    <button className={`dpad-btn ${activeHintDir === 'S' ? 'hint' : ''}`} style={{ gridColumn: 2, gridRow: 3 }} disabled={activeIsMoving || !activeADJ[activeCur]['S']} onClick={() => activeMoveHandler('S')}>▼ S</button>
-                  </div>
-
-                  {/* Bottom Helper Buttons */}
-                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
-                    <button onClick={activeHintHandler} disabled={activeIsMoving} style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', padding: '6px 14px', borderRadius: '8px', fontSize: '12.5px', color: '#78350F', cursor: activeIsMoving ? 'not-allowed' : 'pointer', fontWeight: 700 }}>💡 Hint</button>
-                    <button onClick={activeBackHandler} disabled={activeIsMoving || activePath.length <= 1} style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', padding: '6px 14px', borderRadius: '8px', fontSize: '12.5px', color: '#78350F', cursor: activeIsMoving || activePath.length <= 1 ? 'not-allowed' : 'pointer', opacity: activeIsMoving || activePath.length <= 1 ? 0.4 : 1, fontWeight: 700 }}>↩ Back</button>
-                    <button onClick={activeResetHandler} disabled={activeIsMoving} style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', padding: '6px 14px', borderRadius: '8px', fontSize: '12.5px', color: '#78350F', cursor: activeIsMoving ? 'not-allowed' : 'pointer', fontWeight: 700 }}>↺ Restart</button>
-                  </div>
-                </div>
-
-                {/* Breadcrumbs */}
-                <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '12px 14px', boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
-                  <div style={{ fontFamily: '"Space Grotesk", sans-serif', fontSize: '11px', letterSpacing: '0.06em', textTransform: 'uppercase', color: '#92400E', fontWeight: 800, marginBottom: '8px' }}>
-                    Progress ({is3DActive ? '3D Map' : 'Town Map'})
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center', fontSize: '13px' }}>
-                    {activePath.map((p, i) => (
-                      <React.Fragment key={i}>
-                        <span style={{ fontWeight: 800, color: i === activePath.length - 1 ? '#D97706' : '#166534' }}>{N_CLASSIC[p].label}</span>
-                        <span style={{ color: '#B45309', fontWeight: 900 }}>→</span>
-                      </React.Fragment>
-                    ))}
-                    <span style={{ color: '#92400E', fontWeight: 800, border: '1.5px dashed #D97706', padding: '2px 8px', borderRadius: '6px', background: '#FEF3C7' }}>🏦 Bank</span>
-                  </div>
-                </div>
-
-                {/* Journey Log */}
-                <div style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: '12px 14px', boxShadow: '0 2px 8px rgba(60,40,20,0.03)' }}>
-                  <div style={{ fontFamily: '"Space Grotesk", sans-serif', fontSize: '11px', letterSpacing: '0.06em', textTransform: 'uppercase', color: '#92400E', fontWeight: 800, marginBottom: '8px' }}>
-                    Journey log ({is3DActive ? '3D Map' : 'Town Map'})
-                  </div>
-                  <div ref={logRef} style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '13px', maxHeight: '90px', overflowY: 'auto' }}>
-                    {activeLogs.map((log, i) => (
-                      <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', color: '#3D2E24', fontWeight: 600 }}>
-                        <span style={{ color: log.ok ? '#166534' : '#991B1B', flex: '0 0 auto', fontWeight: 900 }}>{log.ok ? '✓' : '✗'}</span>
-                        <span dangerouslySetInnerHTML={{ __html: log.html }}></span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-              </ScrollableWithNav>
-            </>
-          )}
-
-          {showQuiz && (
-            <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 'clamp(6px, 1.2vh, 10px)', overflow: 'hidden' }}>
-
-              {/* Header — compact, never grows */}
-              <div style={{ flexShrink: 0, background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: 'clamp(8px, 1.5vh, 13px) 14px', boxShadow: '0 4px 14px rgba(60,40,20,0.04)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400E', fontFamily: '"Space Grotesk", sans-serif', fontSize: 'clamp(10px, 1.7vh, 11.5px)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 800 }}>
-                  <HelpCircle size={15} color="#D97706" /> Map Activity Questions (Class 6)
-                </div>
-                <div style={{ color: '#78350F', fontSize: 'clamp(15px, 2.6vh, 18px)', fontWeight: 900, fontFamily: '"Fraunces", serif', marginTop: '2px' }}>
-                  Explore the Map Features
-                </div>
-              </div>
-
-              {/* Page body — exactly what fits, no scrolling */}
-              <div ref={quizBodyRef} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 'clamp(6px, 1.2vh, 10px)' }}>
-
-                {quizPage < questionPages && MAP_QUIZ.slice(quizPage * perQuizPage, quizPage * perQuizPage + perQuizPage).map((q, idx) => {
-                  const picked = answers[q.id] || null;
-                  const number = quizPage * perQuizPage + idx + 1;
-                  return (
-                    <div key={q.id} style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', background: '#FFFFFF', border: '1.5px solid #F2DFBC', borderRadius: '14px', padding: 'clamp(8px, 1.5vh, 14px)', boxShadow: '0 4px 12px rgba(60,40,20,0.03)' }}>
-
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                        <span style={{ background: '#FEF3C7', color: '#92400E', fontSize: 'clamp(9.5px, 1.6vh, 11px)', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', border: '1px solid #FDE68A', whiteSpace: 'nowrap' }}>
-                          QUESTION {number}
-                        </span>
-                        <span style={{ color: '#92400E', fontSize: 'clamp(9.5px, 1.6vh, 11px)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{q.tag}</span>
-                        {picked === q.answer && <CheckCircle size={15} color="#16A34A" style={{ marginLeft: 'auto', flexShrink: 0 }} />}
-                      </div>
-
-                      <p style={{ fontSize: 'clamp(12.5px, 2.15vh, 15px)', color: '#3D2E24', fontWeight: 700, margin: 'clamp(4px, 0.9vh, 8px) 0 clamp(5px, 1.1vh, 9px) 0', lineHeight: 1.35, overflowWrap: 'anywhere' }}>
-                        {q.question}
-                      </p>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(104px, 1fr))', gap: 'clamp(5px, 1vh, 8px)', flexShrink: 0 }}>
-                        {q.options.map(opt => {
-                          const isPicked = picked === opt;
-                          const isCorrect = opt === q.answer;
-                          let btnBg = '#FFF9F0', btnBorder = '#F2DFBC', btnColor = '#3D2E24';
-                          if (picked !== null) {
-                            if (isCorrect) { btnBg = '#DCFCE7'; btnBorder = '#16A34A'; btnColor = '#166534'; }
-                            else if (isPicked) { btnBg = '#FEE2E2'; btnBorder = '#EF4444'; btnColor = '#991B1B'; }
-                          }
-                          return (
-                            <button
-                              key={opt}
-                              onClick={() => setAnswers(a => ({ ...a, [q.id]: opt }))}
-                              style={{
-                                padding: 'clamp(6px, 1.2vh, 10px) 8px',
-                                background: btnBg,
-                                border: `2px solid ${btnBorder}`,
-                                borderRadius: '10px',
-                                color: btnColor,
-                                fontSize: 'clamp(11.5px, 1.95vh, 13.5px)',
-                                fontWeight: 800,
-                                cursor: 'pointer',
-                                transition: 'all 0.15s',
-                                fontFamily: '"Space Grotesk", sans-serif',
-                                lineHeight: 1.2,
-                                minWidth: 0,
-                                overflowWrap: 'anywhere'
-                              }}
-                            >
-                              {opt}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {/* fixed-height slot so answering never shifts the layout */}
-                      <div style={{ flexShrink: 0, minHeight: 'clamp(26px, 4.4vh, 36px)', display: 'flex', alignItems: 'center', marginTop: 'clamp(3px, 0.7vh, 6px)' }}>
-                        {picked && (
-                          <div style={{ fontSize: 'clamp(10.5px, 1.8vh, 12.5px)', color: picked === q.answer ? '#166534' : '#991B1B', fontWeight: 700, lineHeight: 1.3, overflowWrap: 'anywhere' }}>
-                            {picked === q.answer ? `✓ ${q.right}` : `✗ ${q.wrong}`}
-                          </div>
-                        )}
-                      </div>
-
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Pager & Next Activity Action — always pinned, never overlapped */}
-              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', borderTop: '1.5px solid #F2DFBC', paddingTop: 'clamp(5px, 1.1vh, 9px)' }}>
-                <button
-                  onClick={() => setQuizPage(p => Math.max(0, p - 1))}
-                  disabled={quizPage === 0}
-                  style={{
-                    fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.95vh, 13px)',
-                    background: '#FFF9F0', color: '#78350F', border: '1.5px solid #F2DFBC', borderRadius: '999px',
-                    padding: 'clamp(5px, 1vh, 8px) clamp(11px, 1.6vw, 16px)', cursor: quizPage === 0 ? 'not-allowed' : 'pointer',
-                    opacity: quizPage === 0 ? 0.35 : 1, whiteSpace: 'nowrap'
-                  }}
-                >
-                  ◀ Back
-                </button>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#78350F', fontSize: 'clamp(11px, 1.9vh, 13px)', fontWeight: 800, minWidth: 0 }}>
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {`Questions ${quizPage * perQuizPage + 1}–${Math.min((quizPage + 1) * perQuizPage, MAP_QUIZ.length)} of ${MAP_QUIZ.length}`}
-                  </span>
-                  <span style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
-                    {Array.from({ length: quizPages }).map((_, i) => (
-                      <span key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: i === quizPage ? '#F59E0B' : '#F2DFBC' }} />
-                    ))}
-                  </span>
-                </div>
-
-                {quizPage < quizPages - 1 ? (
-                  <button
-                    onClick={() => setQuizPage(p => Math.min(quizPages - 1, p + 1))}
-                    style={{
-                      fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.95vh, 13px)',
-                      background: '#F59E0B',
-                      color: '#FFFFFF',
-                      border: '1.5px solid #F59E0B', borderRadius: '999px',
-                      padding: 'clamp(5px, 1vh, 8px) clamp(11px, 1.6vw, 16px)', cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    Next ▶
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      if (onBeginChapter) onBeginChapter();
-                    }}
-                    style={{
-                      fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.95vh, 13px)',
-                      background: '#10B981',
-                      color: '#FFFFFF',
-                      border: '1.5px solid #059669', borderRadius: '999px',
-                      padding: 'clamp(5px, 1vh, 8px) clamp(14px, 1.8vw, 20px)', cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                      boxShadow: '0 2px 8px rgba(16, 185, 129, 0.4)'
-                    }}
-                  >
-                    Next Activity ➔
-                  </button>
-                )}
-              </div>
-
-            </div>
-          )}
-          {/* Bottom Footer Area */}
-          <div style={{ marginTop: 'auto', paddingTop: '8px', flexShrink: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', borderTop: '1.5px solid #F2DFBC', paddingTop: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#92400E', fontWeight: 800, fontSize: '12.5px' }}>
-                <MapPin size={16} color="#D97706" />
-                Interactive {is3DActive ? 'Town Map' : 'Town Map'} Activity
-              </div>
-            </div>
-          </div>
-
-        </div>
       </div>
       <ChapterBackFooter
         onBack={onBack}
-        nextLabel={!hasWonAny ? 'Reach the Bank to unlock' : 'Next Activity'}
+        nextLabel="Next Activity"
         onNext={() => {
-          if (!hasWonAny) return;
-          if (!showQuiz) {
-            setShowQuiz(true);
-          } else {
-            if (onBeginChapter) onBeginChapter();
-          }
+          if (onBeginChapter) onBeginChapter();
         }}
-        nextDisabled={!hasWonAny}
+        nextDisabled={false}
         nextVariant="green"
       />
     </div>

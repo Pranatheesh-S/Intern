@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Lightbulb, X, Globe2, Image as ImageIcon, Maximize2, Minimize2 } from 'lucide-react';
+import { Lightbulb, X, Globe2, Image as ImageIcon, Maximize2, Minimize2, Mountain } from 'lucide-react';
 import physicalImg from './assets/physical-map-v2.jpeg';
 import politicalImg from './assets/political.png';
 import rainfallImg from './assets/thematic-map.jpeg';
 import ContentScrollNav, { useScrollNav } from '../ContentScrollNav';
+import IndiaMountainsMapExplorer from './IndiaMountainsMapExplorer';
 
 // The interactive 3D globe (physical / political / thematic modes) lives as a
 // static asset so it can be dropped into an iframe from anywhere in the app.
@@ -31,6 +32,7 @@ const PageLayout = ({
 }) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [isGlobeOpen, setIsGlobeOpen] = useState(false);
+  const [isMountainsMapOpen, setIsMountainsMapOpen] = useState(false);
   const [isGlobeFull, setIsGlobeFull] = useState(false);
   const [leftPage, setLeftPage] = useState(1);
   const globePanelRef = useRef(null);
@@ -234,15 +236,45 @@ const PageLayout = ({
             {block.continued ? `${featuresTitle} (continued)` : featuresTitle}
           </h3>
           <div data-grid="1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(165px, 1fr))', gap: 'clamp(4px, 0.95vh, 7px)', alignContent: 'start' }}>
-            {block.list.map((f, k) => (
-              <div key={k} style={{ display: 'flex', gap: '9px', alignItems: 'flex-start', background: '#FFFFFF', padding: 'clamp(4px, 0.95vh, 8px) 10px', borderRadius: '10px', border: '1.5px solid #F2DFBC', minWidth: 0 }}>
-                <div style={{ fontSize: 'clamp(1.05rem, 2.4vh, 1.45rem)', lineHeight: 1.15, flexShrink: 0 }}>{f.icon}</div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontWeight: 800, color: '#78350F', fontSize: 'clamp(12.5px, 2.2vh, 15px)', lineHeight: 1.2, overflowWrap: 'anywhere' }}>{f.title}</div>
-                  <div style={{ fontSize: 'clamp(11.5px, 2vh, 13.5px)', color: '#3D2E24', lineHeight: 1.3, fontWeight: 600, overflowWrap: 'anywhere' }}>{f.desc}</div>
+            {block.list.map((f, k) => {
+              const isMountain = f.title === 'Mountains';
+              return (
+                <div
+                  key={k}
+                  onClick={() => {
+                    if (isMountain) setIsMountainsMapOpen(true);
+                  }}
+                  style={{
+                    display: 'flex',
+                    gap: '9px',
+                    alignItems: 'flex-start',
+                    background: isMountain ? 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)' : '#FFFFFF',
+                    padding: 'clamp(4px, 0.95vh, 8px) 10px',
+                    borderRadius: '10px',
+                    border: isMountain ? '1.5px solid #F59E0B' : '1.5px solid #F2DFBC',
+                    minWidth: 0,
+                    cursor: isMountain ? 'pointer' : 'default',
+                    boxShadow: isMountain ? '0 2px 8px rgba(217, 119, 6, 0.12)' : 'none',
+                    transition: 'all 0.15s'
+                  }}
+                  onMouseOver={(e) => {
+                    if (isMountain) e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseOut={(e) => {
+                    if (isMountain) e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <div style={{ fontSize: 'clamp(1.05rem, 2.4vh, 1.45rem)', lineHeight: 1.15, flexShrink: 0 }}>{f.icon}</div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontWeight: 800, color: isMountain ? '#92400E' : '#78350F', fontSize: 'clamp(12.5px, 2.2vh, 15px)', lineHeight: 1.2, overflowWrap: 'anywhere', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      {f.title}
+                      {isMountain && <span style={{ fontSize: '9.5px', background: '#D97706', color: '#FFF', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Map ➔</span>}
+                    </div>
+                    <div style={{ fontSize: 'clamp(11.5px, 2vh, 13.5px)', color: '#3D2E24', lineHeight: 1.3, fontWeight: 600, overflowWrap: 'anywhere' }}>{f.desc}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       );
@@ -319,13 +351,13 @@ const PageLayout = ({
 
         {/* Sub-Page Navigation Bar — only when there is more than one page */}
         {LEFT_PAGES > 1 && (
-        <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', borderTop: '1.5px solid #F2DFBC', paddingTop: '8px', marginTop: '6px' }}>
+        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1.5px solid #F2DFBC', paddingTop: '6px', marginTop: '4px' }}>
           <button
             onClick={() => setLeftPage(n => Math.max(1, n - 1))}
             disabled={leftPage === 1}
             style={{
               fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(12.5px, 2.1vh, 14px)',
-              background: leftPage === 1 ? '#F7F1E2' : '#FFF9F0', color: '#78350F', border: '1.5px solid #F2DFBC', borderRadius: '999px',
+              background: '#FFF9F0', color: '#78350F', border: '1.5px solid #F2DFBC', borderRadius: '999px',
               padding: '6px 16px', cursor: leftPage === 1 ? 'not-allowed' : 'pointer',
               opacity: leftPage === 1 ? 0.35 : 1, transition: 'all 0.2s', whiteSpace: 'nowrap'
             }}
@@ -333,10 +365,18 @@ const PageLayout = ({
             ◀ Back
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 'clamp(12.5px, 2.1vh, 14px)', fontWeight: 800, color: '#78350F', whiteSpace: 'nowrap' }}>
-            <span>Page {leftPage} of {LEFT_PAGES}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             {Array.from({ length: LEFT_PAGES }).map((_, i) => (
-              <span key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: leftPage === i + 1 ? '#F59E0B' : '#F2DFBC' }} />
+              <span
+                key={i}
+                style={{
+                  width: i + 1 === leftPage ? '18px' : '7px',
+                  height: '7px',
+                  borderRadius: '999px',
+                  background: i + 1 === leftPage ? '#D97706' : '#F2DFBC',
+                  transition: 'all 0.2s'
+                }}
+              />
             ))}
           </div>
 
@@ -395,7 +435,32 @@ const PageLayout = ({
            />
         </div>
 
-        <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+        <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {globeMode === 'physical' && (
+            <button
+              onClick={() => setIsMountainsMapOpen(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: 'linear-gradient(135deg, #78350F 0%, #92400E 100%)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '999px',
+                padding: '0.45rem 1.1rem',
+                fontSize: '13px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(146, 64, 14, 0.35)',
+                transition: 'all 0.2s ease',
+                fontFamily: '"Space Grotesk", sans-serif'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <Mountain size={15} color="#FEF08A" /> Explore Mountains of India
+            </button>
+          )}
           <button
             onClick={() => setIsGlobeOpen(true)}
             style={{
@@ -444,6 +509,11 @@ const PageLayout = ({
         </div>
       </div>
     </div>
+
+    {/* Mountains of India Physical Map Modal */}
+    {isMountainsMapOpen && (
+      <IndiaMountainsMapExplorer onClose={() => setIsMountainsMapOpen(false)} />
+    )}
 
     {/* Image Modal */}
     {isImageOpen && (

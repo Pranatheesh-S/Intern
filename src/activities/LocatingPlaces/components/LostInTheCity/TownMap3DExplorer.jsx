@@ -23,7 +23,7 @@ const PLACES = [
   { id: 'AP', x: 835, y: 215, name: 'Apartments', full: 'Sunview Heights Residency', icon: '🏢', type: 'apartment', blurb: 'Main residential lobby entrance of Sunview Heights.' },
   { id: 'PG', x: 1115, y: 215, name: 'Public Garden', full: 'Rosewood Botanical Garden', icon: '🌳', type: 'garden', blurb: 'Botanical greenhouse entrance gate.' },
   { id: 'HO', x: 230, y: 460, name: 'Hospital', full: 'City Care Hospital', icon: '🏥', type: 'hospital', blurb: 'Main emergency entrance & ambulance portico.' },
-  { id: 'NP', x: 690, y: 460, name: 'Town Hall', full: 'Civic Nagar Panchayat Town Hall', icon: '🏛️', type: 'civic', blurb: 'Grand portico steps and entrance columns of Town Hall.' },
+  { id: 'NP', x: 690, y: 460, name: 'Nagar Panchayat', full: 'Nagar Panchayat Office', icon: '🏛️', type: 'civic', blurb: 'Grand portico steps and entrance columns of Nagar Panchayat.' },
   { id: 'BK', x: 1115, y: 460, name: 'Bank', full: 'Apex National Bank', icon: '🏦', type: 'bank', goal: true, blurb: 'Main glass entrance lobby of Apex National Bank.' },
   { id: 'SC', x: 230, y: 680, name: 'School', full: 'Greenwood Public School', icon: '🏫', type: 'school', blurb: 'School main entrance doors by the playground courtyard.' },
   { id: 'MK', x: 690, y: 625, name: 'Market', full: 'Janata Central Bazaar', icon: '🛍️', type: 'market', blurb: 'Central bazaar square entrance among market stalls.' },
@@ -142,6 +142,20 @@ const STREETS = [
   { id: 's11', name: 'HOSPITAL WAY', x: 475, y: 375, angle: -90 },
   { id: 's12', name: 'BANK ROAD', x: 905, y: 630, angle: -90 },
   { id: 's13', name: 'EAST LANE', x: 1325, y: 375, angle: -90 },
+];
+
+/* ── 4. UNIQUE BUILDING LANDMARK BADGES (PERFECT POSITION & HIGHLIGHTED) ── */
+const BUILDING_BADGES = [
+  { id: 'b_rs', placeId: 'RS', name: 'Railway Station', icon: '🚂', x: 180, y: 110, color: '#F59E0B', label: 'RAILWAY STATION' },
+  { id: 'b_pond', placeId: 'POND', name: 'Public Lake Park', icon: '🌳', x: 375, y: 70, color: '#10B981', label: 'PUBLIC LAKE PARK' },
+  { id: 'b_ap', placeId: 'AP', name: 'Sunview Heights', icon: '🏢', x: 835, y: 40, color: '#38BDF8', label: 'SUNVIEW HEIGHTS' },
+  { id: 'b_garden', placeId: 'PG', name: 'Botanical Garden', icon: '🌿', x: 1115, y: 75, color: '#10B981', label: 'BOTANICAL GARDEN' },
+  { id: 'b_ho', placeId: 'HO', name: 'City Hospital', icon: '🏥', x: 230, y: 350, color: '#EF4444', label: 'CITY HOSPITAL' },
+  { id: 'b_th', placeId: 'NP', name: 'Nagar Panchayat', icon: '🏛️', x: 690, y: 360, color: '#F59E0B', label: 'NAGAR PANCHAYAT' },
+  { id: 'b_bk', placeId: 'BK', name: 'Apex National Bank', icon: '🏦', x: 1115, y: 360, color: '#06B6D4', label: 'APEX NATIONAL BANK' },
+  { id: 'b_sc', placeId: 'SC', name: 'Greenwood School', icon: '🏫', x: 230, y: 625, color: '#818CF8', label: 'GREENWOOD SCHOOL' },
+  { id: 'b_mk', placeId: 'MK', name: 'Central Market', icon: '🛍️', x: 690, y: 635, color: '#F59E0B', label: 'CENTRAL MARKET' },
+  { id: 'b_mu', placeId: 'MU', name: 'Heritage Museum', icon: '🏛️', x: 1115, y: 630, color: '#A78BFA', label: 'HERITAGE MUSEUM' }
 ];
 
 function streetBetween(aId, bId) {
@@ -494,15 +508,11 @@ const TOWN_MAP_QUESTIONS = [
   {
     id: 'q1',
     tag: 'Town Landmarks',
-    question: '1. Mark the hospital. Click the Hospital on the map or click below to circle it:',
-    options: [
-      'Click to Mark Hospital on Map (South of Railway Station 🏥)',
-      'East of Rosewood Botanical Garden',
-      'North of Sunview Heights'
-    ],
-    answer: 'Click to Mark Hospital on Map (South of Railway Station 🏥)',
-    right: 'Correct! You have marked the Hospital with an animated circle on the Town Map (South of Railway Station along West Lane 🏥).',
-    wrong: 'Look at the map: The Hospital (🏥) is situated South of the Railway Station along West Lane.'
+    question: '1. Mark the hospital on the Town Map by clicking on the hospital building:',
+    interactiveType: 'map_click',
+    targetLandmark: 'Hospital',
+    right: 'Correct! You have marked the Hospital on the Town Map (South of Railway Station along West Lane 🏥).',
+    wrong: 'Look at the map: The Hospital (🏥) is situated South of the Railway Station along West Lane. Click on the Hospital building!'
   },
   {
     id: 'q2',
@@ -835,6 +845,29 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           100% { transform: scale(0.96); filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.7)); }
         }
 
+        @keyframes hospitalBeaconRing {
+          0% { r: 35px; opacity: 0.9; stroke-width: 3.5px; }
+          60% { opacity: 0.45; stroke-width: 2px; }
+          100% { r: 92px; opacity: 0; stroke-width: 0.5px; }
+        }
+
+        @keyframes hospitalGlowOutline {
+          0% { stroke-dashoffset: 0; opacity: 0.85; }
+          50% { opacity: 1; filter: drop-shadow(0 0 14px #EF4444); }
+          100% { stroke-dashoffset: 32; opacity: 0.85; }
+        }
+
+        @keyframes targetPulse {
+          0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45); }
+          50% { transform: scale(1.015); box-shadow: 0 0 18px 2px rgba(239, 68, 68, 0.3); }
+          100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45); }
+        }
+
+        @keyframes markerBounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-7px); }
+        }
+
         /* ── NATURAL BIPEDAL WALKING ANIMATION SKELETON ── */
 
         /* 1. Torso vertical bounce + slight forward tilt */
@@ -1155,6 +1188,52 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
               })}
             </g>
 
+            {/* ---------- 2.5 Unique Building Landmark Badges (Highlighted Words, No Overlap) ---------- */}
+            <g id="ce-buildings" pointerEvents="none">
+              {BUILDING_BADGES.map(b => {
+                const isCur = curPlace && (curPlace.id === b.placeId || curPlace.name.toLowerCase().includes(b.name.toLowerCase()));
+                const wdt = b.label.length * 6.8 + 30;
+                return (
+                  <g
+                    key={b.id}
+                    transform={`translate(${b.x}, ${b.y})`}
+                    style={{
+                      filter: isCur
+                        ? `drop-shadow(0 0 12px ${b.color}) drop-shadow(0 4px 10px rgba(0,0,0,0.85))`
+                        : 'drop-shadow(0 3px 8px rgba(0,0,0,0.75))',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {/* Outer highlight pill */}
+                    <rect
+                      x={-wdt / 2}
+                      y="-11"
+                      width={wdt}
+                      height="22"
+                      rx="7"
+                      fill="rgba(15, 23, 42, 0.92)"
+                      stroke={isCur ? '#FFFFFF' : b.color}
+                      strokeWidth={isCur ? 2.2 : 1.5}
+                    />
+                    {/* Icon + Highlighted unique building name */}
+                    <text
+                      x="0"
+                      y="4"
+                      textAnchor="middle"
+                      fontSize="9.5"
+                      fontWeight="900"
+                      fill="#FFFFFF"
+                      fontFamily="Space Grotesk, system-ui, sans-serif"
+                      letterSpacing="0.6px"
+                    >
+                      <tspan fill={b.color} style={{ fontSize: '11px', marginRight: '4px' }}>{b.icon} </tspan>
+                      <tspan fill="#FFFFFF">{b.label}</tspan>
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+
             {/* ---------- 3. Clean Route Trail Ribbon ---------- */}
             {trail.length > 1 && (
               <>
@@ -1251,66 +1330,169 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
               );
             })}
 
-            {/* ---------- 5. Interactive Hospital Clickable Hitbox & Mark Circle ---------- */}
-            <rect
-              x="130"
-              y="390"
-              width="200"
-              height="160"
-              fill="rgba(239, 68, 68, 0.001)"
-              cursor="pointer"
+            {/* ---------- 5. Interactive Hospital Clickable Hitbox & Mark Highlights ---------- */}
+            <g
+              style={{ cursor: 'pointer' }}
               onClick={(e) => {
                 e.stopPropagation();
                 setQuizAnswers(a => ({
                   ...a,
-                  q1: 'Click to Mark Hospital on Map (South of Railway Station 🏥)'
+                  q1: true
                 }));
               }}
-              title="Click to Mark & Circle the Hospital (🏥)"
-              style={{ pointerEvents: 'all' }}
-            />
+            >
+              <rect
+                x="115"
+                y="370"
+                width="230"
+                height="180"
+                rx="14"
+                fill={(!quizAnswers.q1 && showQuizModal && quizPage === 0) ? 'rgba(239, 68, 68, 0.08)' : 'rgba(239, 68, 68, 0.001)'}
+                stroke={(!quizAnswers.q1 && showQuizModal && quizPage === 0) ? '#EF4444' : 'transparent'}
+                strokeWidth="2"
+                strokeDasharray={(!quizAnswers.q1 && showQuizModal && quizPage === 0) ? '6 4' : 'none'}
+              >
+                <title>Click to Mark Hospital (🏥)</title>
+              </rect>
+            </g>
 
-            {/* Glowing Animated Red/Coral Circle around Hospital when Marked */}
-            {(quizAnswers.q1 === 'Click to Mark Hospital on Map (South of Railway Station 🏥)' ||
-              quizAnswers.q1 === 'South of Railway Station along West Lane (marked with 🏥)') && (
-              <g transform="translate(230, 480)" pointerEvents="none" style={{ animation: 'hospitalPulse 2.4s ease-in-out infinite' }}>
+            {/* Subtle invitation beacon if Q1 is currently active and hospital is not yet marked */}
+            {(!quizAnswers.q1 && showQuizModal && quizPage === 0) && (
+              <g transform="translate(230, 460)" pointerEvents="none">
                 <circle
-                  r="86"
-                  fill="rgba(239, 68, 68, 0.2)"
-                  stroke="#EF4444"
-                  strokeWidth="4.5"
-                  strokeDasharray="9 6"
-                />
-                <circle
-                  r="74"
+                  r="45"
                   fill="none"
-                  stroke="#FCA5A5"
-                  strokeWidth="2.5"
-                  opacity="0.9"
+                  stroke="#EF4444"
+                  strokeWidth="2"
+                  opacity="0.75"
+                  style={{ animation: 'hospitalBeaconRing 1.8s infinite linear' }}
                 />
-                <g transform="translate(0, -96)">
+                <g transform="translate(0, -82)">
                   <rect
                     x="-75"
-                    y="-15"
+                    y="-12"
                     width="150"
-                    height="28"
-                    rx="8"
-                    fill="#EF4444"
-                    stroke="#FFFFFF"
-                    strokeWidth="2"
-                    style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.6))' }}
+                    height="24"
+                    rx="7"
+                    fill="rgba(15, 23, 42, 0.92)"
+                    stroke="#EF4444"
+                    strokeWidth="1.5"
+                    style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.6))' }}
                   />
                   <text
                     x="0"
                     y="4"
                     textAnchor="middle"
+                    fill="#FCA5A5"
+                    fontSize="10"
+                    fontWeight="800"
+                    fontFamily="Space Grotesk, sans-serif"
+                    letterSpacing="0.4px"
+                  >
+                    👆 CLICK TO MARK 🏥
+                  </text>
+                </g>
+              </g>
+            )}
+
+            {/* Glowing Animated Red/Coral Highlight around Hospital when Marked */}
+            {!!quizAnswers.q1 && (
+              <g pointerEvents="none">
+                {/* Glowing spotlight footprint around hospital building */}
+                <rect
+                  x="114"
+                  y="368"
+                  width="232"
+                  height="182"
+                  rx="14"
+                  fill="rgba(239, 68, 68, 0.18)"
+                  stroke="#EF4444"
+                  strokeWidth="3.5"
+                  strokeDasharray="8 5"
+                  style={{
+                    filter: 'drop-shadow(0 0 14px rgba(239, 68, 68, 0.85))',
+                    animation: 'hospitalGlowOutline 1.5s linear infinite'
+                  }}
+                />
+
+                {/* Corner highlight brackets */}
+                <path d="M 114 390 L 114 368 L 136 368" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
+                <path d="M 324 368 L 346 368 L 346 390" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
+                <path d="M 114 528 L 114 550 L 136 550" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
+                <path d="M 324 550 L 346 550 L 346 528" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
+
+                {/* Expanding radar beacon rings */}
+                <g transform="translate(230, 460)">
+                  <circle
+                    r="55"
+                    fill="none"
+                    stroke="#EF4444"
+                    strokeWidth="2.5"
+                    opacity="0.8"
+                    style={{ animation: 'hospitalBeaconRing 2s infinite ease-out' }}
+                  />
+                  <circle
+                    r="75"
+                    fill="rgba(239, 68, 68, 0.12)"
+                    stroke="#FCA5A5"
+                    strokeWidth="2"
+                    strokeDasharray="6 4"
+                    style={{ animation: 'hospitalPulse 2.4s ease-in-out infinite' }}
+                  />
+                </g>
+
+                {/* 3D Floating Landmark Pin & Badge above Hospital */}
+                <g transform="translate(230, 360)" style={{ animation: 'markerBounce 2.5s ease-in-out infinite' }}>
+                  {/* Pin downward pointer */}
+                  <polygon points="-8,0 8,0 0,14" fill="#DC2626" />
+
+                  {/* Main Badge */}
+                  <rect
+                    x="-92"
+                    y="-34"
+                    width="184"
+                    height="34"
+                    rx="10"
+                    fill="#DC2626"
+                    stroke="#FFFFFF"
+                    strokeWidth="2"
+                    style={{ filter: 'drop-shadow(0 6px 16px rgba(0,0,0,0.65))' }}
+                  />
+                  <text
+                    x="0"
+                    y="-13"
+                    textAnchor="middle"
                     fill="#FFFFFF"
                     fontSize="11.5"
                     fontWeight="900"
                     fontFamily="Space Grotesk, sans-serif"
-                    letterSpacing="0.8px"
+                    letterSpacing="0.6px"
                   >
                     🏥 HOSPITAL MARKED ✓
+                  </text>
+
+                  {/* Mini sub-label tag */}
+                  <rect
+                    x="-74"
+                    y="-50"
+                    width="148"
+                    height="14"
+                    rx="4"
+                    fill="#1E293B"
+                    stroke="#EF4444"
+                    strokeWidth="1"
+                  />
+                  <text
+                    x="0"
+                    y="-40"
+                    textAnchor="middle"
+                    fill="#FDE68A"
+                    fontSize="7.5"
+                    fontWeight="800"
+                    fontFamily="Space Grotesk, sans-serif"
+                    letterSpacing="0.5px"
+                  >
+                    WEST LANE (SOUTH OF RS)
                   </text>
                 </g>
               </g>
@@ -1587,8 +1769,10 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           {/* Active Question Card */}
           {(() => {
             const q = TOWN_MAP_QUESTIONS[quizPage] || TOWN_MAP_QUESTIONS[0];
-            const picked = quizAnswers[q.id] || null;
-            const isCorrect = picked === q.answer;
+            const isMapClick = q.interactiveType === 'map_click' || q.id === 'q1';
+            const isMarked = !!quizAnswers[q.id];
+            const picked = isMapClick ? (isMarked ? 'marked' : null) : (quizAnswers[q.id] || null);
+            const isCorrect = isMapClick ? isMarked : (picked === q.answer);
             const optionLabels = ['A', 'B', 'C'];
 
             return (
@@ -1645,76 +1829,213 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                   </div>
                 </div>
 
-                {/* 3 Options */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  {q.options.map((opt, oIdx) => {
-                    const isOptionPicked = picked === opt;
-                    const isOptionCorrect = opt === q.answer;
-                    let bg = 'rgba(30, 41, 59, 0.6)';
-                    let border = 'rgba(51, 65, 85, 0.9)';
-                    let color = '#F1F5F9';
-                    let badgeBg = '#1E293B';
-                    let badgeColor = '#94A3B8';
+                {/* Question Content: Interactive Map Action (for Q1) OR 3 Multiple Choice Options */}
+                {isMapClick ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {!isMarked ? (
+                      <div style={{
+                        background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(30, 41, 59, 0.8) 100%)',
+                        border: '1.5px dashed rgba(239, 68, 68, 0.65)',
+                        borderRadius: '9px',
+                        padding: '8px 10px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '6px',
+                        animation: 'targetPulse 2s infinite ease-in-out'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{
+                            width: '26px',
+                            height: '26px',
+                            borderRadius: '7px',
+                            background: 'rgba(239, 68, 68, 0.25)',
+                            border: '1.5px solid #EF4444',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '14px',
+                            flexShrink: 0
+                          }}>
+                            🏥
+                          </span>
+                          <div>
+                            <div style={{ fontSize: '11px', fontWeight: 900, color: '#FCA5A5' }}>
+                              Interactive Map Action
+                            </div>
+                            <div style={{ fontSize: '9.5px', color: '#94A3B8', fontWeight: 700 }}>
+                              Click the Hospital building directly on the map
+                            </div>
+                          </div>
+                        </div>
 
-                    if (picked !== null) {
-                      if (isOptionCorrect) {
-                        bg = 'rgba(16, 185, 129, 0.22)';
-                        border = '#10B981';
-                        color = '#FFFFFF';
-                        badgeBg = '#10B981';
-                        badgeColor = '#FFFFFF';
-                      } else if (isOptionPicked) {
-                        bg = 'rgba(239, 68, 68, 0.22)';
-                        border = '#EF4444';
-                        color = '#FCA5A5';
-                        badgeBg = '#EF4444';
-                        badgeColor = '#FFFFFF';
-                      }
-                    }
-
-                    return (
-                      <button
-                        key={opt}
-                        type="button"
-                        onClick={() => setQuizAnswers(a => ({ ...a, [q.id]: opt }))}
-                        style={{
-                          textAlign: 'left',
-                          padding: '7px 10px',
-                          background: bg,
-                          border: `1.5px solid ${border}`,
-                          borderRadius: '8px',
-                          color: color,
-                          fontSize: '11px',
+                        <div style={{
+                          background: 'rgba(15, 23, 42, 0.75)',
+                          borderRadius: '6px',
+                          padding: '5px 8px',
+                          fontSize: '10px',
+                          color: '#E2E8F0',
                           fontWeight: 700,
-                          cursor: 'pointer',
-                          transition: 'all 0.15s ease',
-                          fontFamily: '"Space Grotesk", sans-serif',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          lineHeight: 1.3
-                        }}
-                      >
-                        <span style={{
-                          width: '18px',
-                          height: '18px',
-                          borderRadius: '50%',
-                          background: badgeBg,
-                          color: badgeColor,
-                          fontSize: '9.5px',
-                          fontWeight: 900,
+                          lineHeight: 1.3,
+                          borderLeft: '3px solid #EF4444'
+                        }}>
+                          📍 <b>Clue:</b> South of Railway Station along West Lane (look for the building with the Red Cross 🏥 and ambulance).
+                        </div>
+
+                        <div style={{
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          flexShrink: 0
+                          gap: '6px',
+                          fontSize: '9.5px',
+                          fontWeight: 800,
+                          color: '#F87171',
+                          padding: '4px 6px',
+                          borderRadius: '5px',
+                          background: 'rgba(239, 68, 68, 0.15)'
                         }}>
-                          {optionLabels[oIdx]}
-                        </span>
-                        <span style={{ flex: 1 }}>{opt}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+                          <span style={{
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            background: '#EF4444',
+                            display: 'inline-block',
+                            boxShadow: '0 0 6px #EF4444'
+                          }} />
+                          Tap / click on the Hospital in the map to answer!
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{
+                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(30, 41, 59, 0.8) 100%)',
+                        border: '1.5px solid #10B981',
+                        borderRadius: '9px',
+                        padding: '8px 10px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '6px',
+                        boxShadow: '0 4px 14px rgba(16, 185, 129, 0.2)'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{
+                              width: '26px',
+                              height: '26px',
+                              borderRadius: '7px',
+                              background: '#10B981',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '14px',
+                              flexShrink: 0
+                            }}>
+                              🏥
+                            </span>
+                            <div>
+                              <div style={{ fontSize: '11px', fontWeight: 900, color: '#6EE7B7' }}>
+                                Hospital Marked on Map!
+                              </div>
+                              <div style={{ fontSize: '9px', color: '#CBD5E1', fontWeight: 700 }}>
+                                South of Railway Station along West Lane
+                              </div>
+                            </div>
+                          </div>
+                          <span style={{
+                            background: '#10B981',
+                            color: '#FFFFFF',
+                            fontSize: '8.5px',
+                            fontWeight: 900,
+                            padding: '2px 7px',
+                            borderRadius: '999px'
+                          }}>
+                            ✓ Marked
+                          </span>
+                        </div>
+
+                        <div style={{
+                          fontSize: '9.5px',
+                          color: '#D1FAE5',
+                          fontWeight: 700,
+                          background: 'rgba(16, 185, 129, 0.12)',
+                          padding: '5px 8px',
+                          borderRadius: '6px',
+                          border: '1px solid rgba(16, 185, 129, 0.3)'
+                        }}>
+                          🎯 <b>Building Highlighted:</b> The hospital is highlighted with an animated beacon and landmark badge on the map.
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    {q.options && q.options.map((opt, oIdx) => {
+                      const isOptionPicked = picked === opt;
+                      const isOptionCorrect = opt === q.answer;
+                      let bg = 'rgba(30, 41, 59, 0.6)';
+                      let border = 'rgba(51, 65, 85, 0.9)';
+                      let color = '#F1F5F9';
+                      let badgeBg = '#1E293B';
+                      let badgeColor = '#94A3B8';
+
+                      if (picked !== null) {
+                        if (isOptionCorrect) {
+                          bg = 'rgba(16, 185, 129, 0.22)';
+                          border = '#10B981';
+                          color = '#FFFFFF';
+                          badgeBg = '#10B981';
+                          badgeColor = '#FFFFFF';
+                        } else if (isOptionPicked) {
+                          bg = 'rgba(239, 68, 68, 0.22)';
+                          border = '#EF4444';
+                          color = '#FCA5A5';
+                          badgeBg = '#EF4444';
+                          badgeColor = '#FFFFFF';
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => setQuizAnswers(a => ({ ...a, [q.id]: opt }))}
+                          style={{
+                            textAlign: 'left',
+                            padding: '7px 10px',
+                            background: bg,
+                            border: `1.5px solid ${border}`,
+                            borderRadius: '8px',
+                            color: color,
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease',
+                            fontFamily: '"Space Grotesk", sans-serif',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            lineHeight: 1.3
+                          }}
+                        >
+                          <span style={{
+                            width: '18px',
+                            height: '18px',
+                            borderRadius: '50%',
+                            background: badgeBg,
+                            color: badgeColor,
+                            fontSize: '9.5px',
+                            fontWeight: 900,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0
+                          }}>
+                            {optionLabels[oIdx]}
+                          </span>
+                          <span style={{ flex: 1 }}>{opt}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
 
                 {/* Explanation Card */}
                 {picked ? (
@@ -1743,7 +2064,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                     gap: '5px'
                   }}>
                     <span>💡</span>
-                    <span>{q.id === 'tq1' ? 'Click the Hospital building on the map or select Option A.' : 'Observe the Town Map on the left to find the correct answer.'}</span>
+                    <span>{isMapClick ? 'Click the Hospital building on the map on the left to mark it.' : 'Observe the Town Map on the left to find the correct answer.'}</span>
                   </div>
                 )}
               </div>
@@ -2059,7 +2380,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                 { id: 'AP', name: 'Apartments', icon: '🏢' },
                 { id: 'PG', name: 'Public Garden', icon: '🌳' },
                 { id: 'HO', name: 'Hospital', icon: '🏥' },
-                { id: 'NP', name: 'Town Hall', icon: '🏛️' },
+                { id: 'NP', name: 'Nagar Panchayat', icon: '🏛️' },
                 { id: 'BK', name: 'Apex Bank', icon: '🏦' },
                 { id: 'SC', name: 'School', icon: '🏫' },
                 { id: 'MK', name: 'Market', icon: '🛍️' },

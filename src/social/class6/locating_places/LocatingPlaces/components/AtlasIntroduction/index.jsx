@@ -153,8 +153,9 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
 
       <ChapterBackFooter
         onBack={onBack}
-        nextLabel={isCompleted ? 'Continue' : undefined}
-        onNext={isCompleted ? onNextActivity : undefined}
+        nextLabel="Next Activity"
+        onNext={onNextActivity}
+        nextDisabled={false}
         nextVariant="green"
       />
     </div>
