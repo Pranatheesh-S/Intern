@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Info, CheckCircle2 } from "lucide-react";
 import CinematicSkyFlightCanvas from "./CinematicSkyFlightCanvas";
 
@@ -8,6 +9,17 @@ export default function Stage3_Explore({ onComplete, onNext }) {
   const [isRunning, setIsRunning] = useState(true);
   const [hasTestedSame, setHasTestedSame] = useState(false);
   const [hasTestedDifferent, setHasTestedDifferent] = useState(false);
+  const [activePopup, setActivePopup] = useState(0); // 0: init, 1: test diff, 2: test same, 3: done, null: hidden
+
+  useEffect(() => {
+    if (hasTestedSame && !hasTestedDifferent) {
+      setActivePopup(1);
+    } else if (hasTestedDifferent && !hasTestedSame) {
+      setActivePopup(2);
+    } else if (hasTestedSame && hasTestedDifferent) {
+      setActivePopup(3);
+    }
+  }, [hasTestedSame, hasTestedDifferent]);
 
   const polesMatch = interactionMode === "same";
 
@@ -32,7 +44,8 @@ export default function Stage3_Explore({ onComplete, onNext }) {
       minHeight: 0, 
       overflow: 'hidden', 
       boxSizing: 'border-box',
-      background: 'transparent'
+      background: 'transparent',
+      position: 'relative'
     }}>
       {/* Left Side: Maximized Flight Simulation Canvas */}
       <div style={{ display: "flex", flexDirection: "column", height: '100%', minHeight: 0, width: '100%' }}>
@@ -100,34 +113,7 @@ export default function Stage3_Explore({ onComplete, onNext }) {
             : "💥 DIFFERENT POLES: In-line flight from left to right — Opposite poles (N + S) attract in a straight line!"}
         </div>
 
-        {/* Step-by-Step Interactive Guidance Card */}
-        <div style={{
-          padding: "0.85rem 1rem",
-          background: "#F0FDF4",
-          border: "1.5px solid #A7F3D0",
-          borderRadius: "14px",
-          boxShadow: "0 2px 6px rgba(6, 78, 59, 0.04)"
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", marginBottom: "0.3rem" }}>
-            <Info size={18} color="#065F46" />
-            <span style={{ fontSize: "0.92rem", fontWeight: 900, color: "#064E3B" }}>📋 Step Instructions</span>
-          </div>
-          <p style={{ margin: 0, fontSize: "0.84rem", color: "#334155", lineHeight: "1.45", fontWeight: 700 }}>
-            {!hasTestedSame && !hasTestedDifferent && (
-              <span>👉 <strong>Step 1:</strong> Select <strong>Same Poles</strong> to observe magnetic wing repulsion into separate corridors!</span>
-            )}
-            {hasTestedSame && !hasTestedDifferent && (
-              <span>👉 <strong>Step 2:</strong> Now select <strong>Different Poles</strong> to observe magnetic attraction & mid-air contact!</span>
-            )}
-            {hasTestedDifferent && !hasTestedSame && (
-              <span>👉 <strong>Step 2:</strong> Now select <strong>Same Poles</strong> to observe magnetic wing repulsion into separate corridors!</span>
-            )}
-            {hasTestedSame && hasTestedDifferent && (
-              <span>🎉 <strong>All Explored!</strong> You have tested both magnetic modes. Click <strong>Proceed to Quiz</strong> below!</span>
-            )}
-          </p>
-        </div>
-
+        {/* Instructions popups handled via overlay */}
         {/* Controls Container in Exact Order */}
         <div style={{ 
           padding: "1rem", 
@@ -245,6 +231,92 @@ export default function Stage3_Explore({ onComplete, onNext }) {
           <CheckCircle2 size={18} color="#FFFFFF" /> Proceed to Quiz
         </button>
       </div>
+      
+      {/* Instruction Popups */}
+      <AnimatePresence>
+        {activePopup !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'absolute',
+              top: 0, left: 0, right: 0, bottom: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(2, 6, 23, 0.65)',
+              zIndex: 100,
+              backdropFilter: 'blur(6px)'
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.8, y: 20 }}
+              transition={{ type: 'spring', bounce: 0.5, duration: 0.6 }}
+              style={{
+                background: '#FFFFFF',
+                border: '1.5px solid #A7F3D0',
+                borderRadius: '24px',
+                padding: '2.5rem',
+                maxWidth: '420px',
+                boxShadow: '0 12px 40px rgba(6, 78, 59, 0.2)',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1.25rem'
+              }}
+            >
+              <div style={{ width: '56px', height: '56px', background: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #A7F3D0' }}>
+                <Info size={28} color="#065F46" />
+              </div>
+              
+              <h3 style={{ margin: 0, color: '#064E3B', fontSize: '1.35rem', fontWeight: 900 }}>
+                {activePopup === 0 && "Step 1"}
+                {(activePopup === 1 || activePopup === 2) && "Step 2"}
+                {activePopup === 3 && "All Explored!"}
+              </h3>
+              
+              <p style={{ margin: 0, color: '#334155', fontSize: '1.05rem', fontWeight: 600, lineHeight: 1.5 }}>
+                {activePopup === 0 && (
+                  <>Select <strong>Same Poles</strong> to observe magnetic wing repulsion into separate corridors!</>
+                )}
+                {activePopup === 1 && (
+                  <>Now select <strong>Different Poles</strong> to observe magnetic attraction & mid-air contact!</>
+                )}
+                {activePopup === 2 && (
+                  <>Now select <strong>Same Poles</strong> to observe magnetic wing repulsion into separate corridors!</>
+                )}
+                {activePopup === 3 && (
+                  <>You have tested both magnetic modes. Click <strong>Proceed to Quiz</strong> below!</>
+                )}
+              </p>
+              
+              <button
+                onClick={() => setActivePopup(null)}
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.8rem 2.5rem',
+                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '25px',
+                  fontSize: '1rem',
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
+                  transition: 'transform 0.1s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                Got it! <CheckCircle2 size={18} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

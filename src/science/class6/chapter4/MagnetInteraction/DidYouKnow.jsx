@@ -134,11 +134,11 @@ export default function DidYouKnow() {
         </div>
       )}
 
-      {/* Main Bottom Bar - Rich Brown Theme matching Activity 4.3 */}
+      {/* Main Bottom Bar - Green Gradient Theme matching buttons */}
       <div style={{
-        background: 'linear-gradient(135deg, #78350F 0%, #451A03 100%)',
-        border: '1.5px solid #B45309',
-        boxShadow: '0 4px 16px rgba(69, 26, 3, 0.4)',
+        background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+        border: '1.5px solid #34D399',
+        boxShadow: '0 6px 16px rgba(5, 150, 105, 0.25)',
         borderRadius: '18px',
         padding: '0.6rem 1.25rem',
         display: 'flex',
@@ -159,19 +159,19 @@ export default function DidYouKnow() {
           {facts.map((fact, idx) => (
             <React.Fragment key={idx}>
               {idx > 0 && (
-                <div style={{ width: '1px', height: '60%', backgroundColor: '#B45309' }} />
+                <div style={{ width: '1.5px', height: '60%', backgroundColor: '#FFFFFF', opacity: 0.25 }} />
               )}
               <div
                 onMouseEnter={() => handleMouseEnter(fact)}
                 onMouseLeave={handleMouseLeave}
                 style={{
-                  color: hoveredFact === fact ? '#F59E0B' : '#FFFFFF',
+                  color: hoveredFact === fact ? '#FEF08A' : '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                   cursor: 'pointer',
                   fontSize: '0.88rem',
-                  fontWeight: 800,
+                  fontWeight: 900,
                   padding: '0.4rem 0.6rem',
                   borderRadius: '8px',
                   backgroundColor: 'transparent',
@@ -179,16 +179,16 @@ export default function DidYouKnow() {
                   whiteSpace: 'nowrap'
                 }}
               >
-                <span style={{ fontSize: '1rem', color: hoveredFact === fact ? '#F59E0B' : '#F59E0B' }}>👉</span>
-                <span>{fact.shortTitle}</span>
+                <span style={{ fontSize: '1.1rem', color: hoveredFact === fact ? '#FEF08A' : '#A7F3D0' }}>👉</span>
+                <span style={{ letterSpacing: '0.5px' }}>{fact.shortTitle.toUpperCase()}</span>
               </div>
             </React.Fragment>
           ))}
         </div>
 
         {/* Sparkle Icon */}
-        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem', color: '#F59E0B' }}>
-          <Sparkles size={18} color="#F59E0B" />
+        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem' }}>
+          <Sparkles size={20} color="#FEF08A" />
         </div>
       </div>
     </div>

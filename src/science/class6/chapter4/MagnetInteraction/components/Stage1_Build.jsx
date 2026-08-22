@@ -86,37 +86,68 @@ function TrayItemCard({ step, isPlaced, isUnlocked, renderThumbnail }) {
         touchAction: 'none',
         width: '100%',
         display: 'flex', 
+        flexDirection: 'column',
         alignItems: 'center', 
-        gap: '1rem', 
-        padding: '0.85rem 1rem', 
-        borderRadius: '14px',
+        gap: '0.85rem', 
+        padding: '1.1rem', 
+        borderRadius: '16px',
         background: isPlaced ? '#DCFCE7' : isUnlocked ? '#FFFFFF' : '#F8FAFC',
         border: `1.5px solid ${isPlaced ? '#16A34A' : isUnlocked ? '#A7F3D0' : '#E2E8F0'}`,
         color: '#1E293B',
         cursor: isDisabled ? 'not-allowed' : 'grab',
         transition: 'all 0.2s ease',
         position: 'relative',
+        position: 'relative',
         fontWeight: 800,
-        boxShadow: isUnlocked && !isPlaced ? '0 2px 8px rgba(6, 78, 59, 0.04)' : 'none',
+        boxShadow: isUnlocked && !isPlaced ? '0 4px 12px rgba(6, 78, 59, 0.06)' : 'none',
         userSelect: 'none',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        flex: 1,
+        minHeight: 0
       }}
     >
-      <div style={{ width: '58px', height: '44px', background: '#F0FDF4', border: '1.5px solid #A7F3D0', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, opacity: isUnlocked ? 1 : 0.4, padding: '2px', boxSizing: 'border-box' }}>
+      <div style={{ 
+        width: '100%', 
+        flex: 1,
+        minHeight: 0,
+        background: '#F0FDF4', 
+        border: '1.5px solid #A7F3D0', 
+        borderRadius: '12px', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        flexShrink: 0, 
+        opacity: isUnlocked ? 1 : 0.4, 
+        padding: '1rem', 
+        boxSizing: 'border-box',
+        position: 'relative'
+      }}>
+        <div style={{ 
+          position: 'absolute', 
+          top: '8px', 
+          left: '12px', 
+          fontSize: '1.4rem', 
+          fontWeight: 900, 
+          color: '#065F46',
+          opacity: 0.6
+        }}>
+          {step.id === 'carA' ? '1' : '2'}
+        </div>
         {renderThumbnail(step.id)}
       </div>
-      <div style={{ textAlign: 'left', flex: 1 }}>
-        <div style={{ fontSize: '0.92rem', fontWeight: '900', color: isPlaced ? '#065F46' : '#064E3B' }}>{step.name}</div>
-        <div style={{ fontSize: '0.78rem', fontWeight: 700, color: isPlaced ? '#16A34A' : '#475569' }}>
-          {isPlaced ? 'Placed' : isUnlocked ? 'Drag to sky corridor' : 'Locked'}
+      
+      <div style={{ textAlign: 'center', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+        <div style={{ fontSize: '1.1rem', fontWeight: '900', color: isPlaced ? '#065F46' : '#064E3B' }}>{step.name}</div>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center' }}>
+          {isPlaced ? (
+            <><CheckCircle2 size={18} style={{ color: '#16A34A' }} /> <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#16A34A' }}>Placed</span></>
+          ) : !isUnlocked ? (
+            <><Lock size={16} style={{ color: '#94A3B8' }} /> <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#94A3B8' }}>Locked</span></>
+          ) : (
+            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#475569' }}>Drag to sky corridor</span>
+          )}
         </div>
-      </div>
-      <div style={{ marginLeft: 'auto' }}>
-        {isPlaced ? (
-          <CheckCircle2 size={18} style={{ color: '#16A34A' }} />
-        ) : !isUnlocked ? (
-          <Lock size={16} style={{ color: '#94A3B8' }} />
-        ) : null}
       </div>
     </div>
   );
@@ -163,6 +194,15 @@ export default function Stage1_Build({ onComplete, onNext }) {
   const [activeDraggingId, setActiveDraggingId] = useState(null);
   const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 });
   const [success, setSuccess] = useState(false);
+  const [activePopup, setActivePopup] = useState(0); // 0: carA, 1: carB, 2: observe, null: hidden
+
+  React.useEffect(() => {
+    if (placed.carA && !placed.carB) {
+      setActivePopup(1);
+    } else if (placed.carA && placed.carB) {
+      setActivePopup(2);
+    }
+  }, [placed]);
 
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: { distance: 5 }
@@ -227,6 +267,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
       carB: { x: 470, y: 220 }
     });
     setSuccess(false);
+    setActivePopup(0);
   };
 
   const renderThumbnail = (id) => {
@@ -234,7 +275,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
       <img 
         src="/MagnetInteraction/real_airliner_north_south.png" 
         alt={id === "carA" ? "Airplane A" : "Airplane B"} 
-        style={{ width: '48px', height: 'auto', objectFit: 'contain' }} 
+        style={{ width: '100%', height: '100%', maxHeight: '120px', objectFit: 'contain' }} 
       />
     );
   };
@@ -250,13 +291,14 @@ export default function Stage1_Build({ onComplete, onNext }) {
         minHeight: 0, 
         overflow: 'hidden', 
         boxSizing: 'border-box',
-        background: 'transparent'
+        background: 'transparent',
+        position: 'relative'
       }}>
       
         {/* Main 2-Column Layout (Activity Area on LEFT, Components Container on RIGHT) */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: '1fr 340px', 
+          gridTemplateColumns: '1fr 440px', 
           gap: '1.25rem', 
           flex: 1, 
           height: '100%',
@@ -323,7 +365,6 @@ export default function Stage1_Build({ onComplete, onNext }) {
             </CanvasDroppable>
           </div>
 
-          {/* RIGHT Column: Header Box, Components Tray, Instructions & Proceed Button */}
           <div style={{ 
             background: "#FFFFFF",
             border: "1.5px solid #A7F3D0",
@@ -333,7 +374,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
             display: "flex", 
             flexDirection: "column", 
             minHeight: 0,
-            overflowY: "auto",
+            overflowY: "hidden",
             gap: "0.75rem"
           }}>
             {/* Header Box inside right container */}
@@ -375,11 +416,11 @@ export default function Stage1_Build({ onComplete, onNext }) {
             </div>
 
             {/* Flight Components List */}
-            <div>
-              <h4 style={{ color: "#064E3B", margin: "0 0 0.55rem 0", fontSize: "0.95rem", fontWeight: 900, display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              <h4 style={{ color: "#064E3B", margin: "0 0 0.55rem 0", fontSize: "0.95rem", fontWeight: 900, display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
                 📦 Flight Components
               </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', flex: 1, minHeight: 0 }}>
                 {STEPS.map((step) => (
                   <TrayItemCard 
                     key={step.id} 
@@ -392,25 +433,7 @@ export default function Stage1_Build({ onComplete, onNext }) {
               </div>
             </div>
 
-            {/* Instructions Callout Box */}
-            <div style={{ 
-              marginTop: "auto", 
-              padding: "0.85rem 1rem", 
-              background: "#F0FDF4", 
-              border: "1.5px solid #A7F3D0", 
-              borderRadius: "14px",
-              boxShadow: "0 2px 8px rgba(6, 78, 59, 0.04)"
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", marginBottom: "0.4rem" }}>
-                <Info size={18} color="#065F46" />
-                <span style={{ fontSize: "0.92rem", fontWeight: 900, color: "#064E3B" }}>📋 Instructions</span>
-              </div>
-              <ul style={{ margin: 0, paddingLeft: "1.2rem", fontSize: "0.8rem", color: "#334155", lineHeight: "1.45", fontWeight: 600 }}>
-                <li>Drag <strong>Airplane A</strong> from the tray into the <strong>Left flight corridor</strong>.</li>
-                <li>Drag <strong>Airplane B</strong> into the <strong>Right parallel flight corridor</strong>.</li>
-                <li>Observe the magnetic poles (Front: North [N], Rear: South [S]) before proceeding to test flight interactions!</li>
-              </ul>
-            </div>
+            {/* Popups handled via overlay */}
 
             {/* Proceed to Explore Button (Directly under Instructions) */}
             <button 
@@ -463,6 +486,89 @@ export default function Stage1_Build({ onComplete, onNext }) {
           </div>
         ) : null}
       </DragOverlay>
+
+      {/* Instruction Popups */}
+      <AnimatePresence>
+        {activePopup !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'absolute',
+              top: 0, left: 0, right: 0, bottom: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(2, 6, 23, 0.65)',
+              zIndex: 100,
+              backdropFilter: 'blur(6px)'
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.8, y: 20 }}
+              transition={{ type: 'spring', bounce: 0.5, duration: 0.6 }}
+              style={{
+                background: '#FFFFFF',
+                border: '1.5px solid #A7F3D0',
+                borderRadius: '24px',
+                padding: '2.5rem',
+                maxWidth: '420px',
+                boxShadow: '0 12px 40px rgba(6, 78, 59, 0.2)',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1.25rem'
+              }}
+            >
+              <div style={{ width: '56px', height: '56px', background: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #A7F3D0' }}>
+                <Info size={28} color="#065F46" />
+              </div>
+              
+              <h3 style={{ margin: 0, color: '#064E3B', fontSize: '1.35rem', fontWeight: 900 }}>
+                {activePopup === 0 && "Step 1: Left Airspace"}
+                {activePopup === 1 && "Step 2: Right Airspace"}
+                {activePopup === 2 && "Observation"}
+              </h3>
+              
+              <p style={{ margin: 0, color: '#334155', fontSize: '1.05rem', fontWeight: 600, lineHeight: 1.5 }}>
+                {activePopup === 0 && (
+                  <>Drag <strong>Airplane A</strong> from the tray into the <strong>Left flight corridor</strong>.</>
+                )}
+                {activePopup === 1 && (
+                  <>Drag <strong>Airplane B</strong> into the <strong>Right parallel flight corridor</strong>.</>
+                )}
+                {activePopup === 2 && (
+                  <>Observe the magnetic poles (Front: North [N], Rear: South [S]) before proceeding to test flight interactions!</>
+                )}
+              </p>
+              
+              <button
+                onClick={() => setActivePopup(null)}
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.8rem 2.5rem',
+                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '25px',
+                  fontSize: '1rem',
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
+                  transition: 'transform 0.1s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                Got it! <CheckCircle2 size={18} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </DndContext>
   );
 }

@@ -614,13 +614,13 @@ export default function CinematicSkyFlightCanvas({
           const easeBack = 1 - Math.pow(1 - pBack, 2); // Quick recoil, smooth stop
 
           const meetAX = cssWidth * 0.5 - 130;
-          const pushedAX = cssWidth * 0.5 - 240;
+          const pushedAX = cssWidth * 0.5 - 320; // Increased pushback from 240 to 320
           planeAX = meetAX + (pushedAX - meetAX) * easeBack;
           planeAY = centerY + floatYA;
           planeARoll = Math.PI / 2;
 
           const meetBX = cssWidth * 0.5 + 130;
-          const pushedBX = cssWidth * 0.5 + 240;
+          const pushedBX = cssWidth * 0.5 + 320; // Increased pushback from 240 to 320
           planeBX = meetBX + (pushedBX - meetBX) * easeBack;
           planeBY = centerY + floatYB;
           planeBRoll = -Math.PI / 2;
@@ -634,12 +634,12 @@ export default function CinematicSkyFlightCanvas({
           const pTurn = Math.min(1.0, tTurn / 0.95);
           const easeTurn = 1 - Math.pow(1 - pTurn, 2);
 
-          const pushedAX = cssWidth * 0.5 - 240;
+          const pushedAX = cssWidth * 0.5 - 320;
           planeAX = pushedAX + easeTurn * 30;
           planeAY = centerY - easeTurn * 130;
           planeARoll = Math.PI / 2 - Math.sin(pTurn * Math.PI) * 0.5; // Smooth banking turn
 
-          const pushedBX = cssWidth * 0.5 + 240;
+          const pushedBX = cssWidth * 0.5 + 320;
           planeBX = pushedBX - easeTurn * 30;
           planeBY = centerY + easeTurn * 130;
           planeBRoll = -Math.PI / 2 - Math.sin(pTurn * Math.PI) * 0.5; // Smooth banking turn
@@ -650,13 +650,13 @@ export default function CinematicSkyFlightCanvas({
           const pFwd = Math.min(1.0, tFwd / 2.2);
           const easeFwd = Math.pow(pFwd, 1.25);
 
-          const laneAX = cssWidth * 0.5 - 210;
+          const laneAX = cssWidth * 0.5 - 290; // (pushedAX + 30) = -320 + 30 = -290
           const endAX = cssWidth + 260;
           planeAX = laneAX + (endAX - laneAX) * easeFwd;
           planeAY = centerY - 130 + floatYA;
           planeARoll = Math.PI / 2; // Leveled forward heading to the right
 
-          const laneBX = cssWidth * 0.5 + 210;
+          const laneBX = cssWidth * 0.5 + 290; // (pushedBX - 30) = 320 - 30 = 290
           const endBX = -260;
           planeBX = laneBX + (endBX - laneBX) * easeFwd;
           planeBY = centerY + 130 + floatYB;
