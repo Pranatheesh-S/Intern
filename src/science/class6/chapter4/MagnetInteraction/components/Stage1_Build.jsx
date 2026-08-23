@@ -97,7 +97,6 @@ function TrayItemCard({ step, isPlaced, isUnlocked, renderThumbnail }) {
         cursor: isDisabled ? 'not-allowed' : 'grab',
         transition: 'all 0.2s ease',
         position: 'relative',
-        position: 'relative',
         fontWeight: 800,
         boxShadow: isUnlocked && !isPlaced ? '0 4px 12px rgba(6, 78, 59, 0.06)' : 'none',
         userSelect: 'none',

@@ -3,17 +3,15 @@ import { ArrowLeft, Compass, CheckCircle2, XCircle, ArrowRight, Trophy, Sparkles
 import { motion, AnimatePresence } from 'framer-motion';
 import './FunWithMagnets.css';
 import MazeGame from './MazeGame';
-import GarlandGame from './GarlandGame';
 import CarGame from './CarGame';
 import { useTheme } from '../../../../ThemeContext.jsx';
 import DidYouKnow from '../SuspendedMagnet/DidYouKnow';
 
 const STEPS_NAV = [
   { id: 0, label: "1. Predict" },
-  { id: 1, label: "2. Magnet Garland" },
-  { id: 2, label: "3. Steel Ball Maze" },
-  { id: 3, label: "4. Runaway Cars" },
-  { id: 4, label: "5. Magnet Care & Quiz" }
+  { id: 1, label: "2. Steel Ball Maze" },
+  { id: 2, label: "3. Runaway Cars" },
+  { id: 3, label: "4. Magnet Care & Quiz" }
 ];
 
 export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
@@ -32,7 +30,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
 
   const go = (i) => {
     setStep(i);
-    if (i === 2) {
+    if (i === 1) {
       setShowMazeInstructionModal(true);
     }
   };
@@ -95,18 +93,18 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             </div>
 
             <h1 style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', color: '#064E3B', fontWeight: 900, margin: '0 0 0.5rem 0' }}>
-              Magnets can move & hold objects through magnetic induction.
+              Magnets can exert force and guide objects through materials.
             </h1>
             <p className="lead" style={{ fontSize: 'clamp(0.88rem, 1.5vw, 1.02rem)', lineHeight: '1.45', color: '#334155', margin: '0 0 1rem 0', fontWeight: 600 }}>
-              You can make amazing toys like a <strong>Magnet Garland</strong> or guide a steel ball through a <strong>3D Illustrated Town Map Maze</strong>! Predict: what allows magnetic objects to stick together in a long garland chain attached to a magnet?
+              You can guide a steel ball through a <strong>3D Illustrated Town Map Maze</strong> using a magnet underneath the board! Predict: how can a magnet guide and control a steel ball without touching it directly?
             </p>
             
             <div className="choices" style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
               {[
-                { label: "The objects are covered in sticky glue", ok: false, xp: 0 },
-                { label: "Each attached magnetic object becomes temporarily magnetized by induction", ok: true, xp: 10 },
-                { label: "Gravity pulls them upward", ok: false, xp: 0 },
-                { label: "Static electricity holds them", ok: false, xp: 0 }
+                { label: "The board is covered with sticky adhesive", ok: false, xp: 0 },
+                { label: "Magnetic force acts through non-magnetic materials like the board to attract the steel ball", ok: true, xp: 10 },
+                { label: "Gravity pulls the ball sideways", ok: false, xp: 0 },
+                { label: "Static electricity controls the ball", ok: false, xp: 0 }
               ].map((c, idx) => {
                 const isSelected = predictAns && predictAns.selectedIndex === idx;
                 const isCorrect = c.ok;
@@ -167,27 +165,13 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             
             {predictAns && (
               <div className="reveal show" style={{ marginTop: '0.85rem', padding: '0.85rem 1.15rem', background: '#F0FDF4', borderLeft: `5px solid ${predictAns.correct ? '#16A34A' : '#D97706'}`, border: '1.5px solid #A7F3D0', borderRadius: '16px', color: '#334155', fontWeight: 600, fontSize: '0.92rem' }}>
-                <b style={{ color: predictAns.correct ? '#16A34A' : '#D97706' }}>{predictAns.correct ? '✓ Correct!' : '✗ Not quite.'} Magnetic Induction!</b> When a magnetic object touches a magnet, it becomes a temporary magnet itself, allowing it to hold the next object in a colorful garland!
+                <b style={{ color: predictAns.correct ? '#16A34A' : '#D97706' }}>{predictAns.correct ? '✓ Correct!' : '✗ Not quite.'} Magnetic Force Through Materials!</b> A magnet's invisible magnetic field passes through non-magnetic surfaces, pulling and guiding magnetic objects smoothly across the board!
               </div>
             )}
-            {renderNav(predictAns !== null, "Make Magnet Garland")}
+            {renderNav(predictAns !== null, "Play Steel Ball Maze")}
           </div>
         );
       case 1:
-        return (
-          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <GarlandGame 
-              onPlayMaze={() => go(2)}
-              onComplete={() => {
-                if (!ext.garland) {
-                  setExt(prev => ({ ...prev, garland: true }));
-                  addXP(15);
-                }
-              }} 
-            />
-          </div>
-        );
-      case 2:
         return (
           <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
             {/* INITIAL INSTRUCTION POPUP MODAL */}
@@ -302,7 +286,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                     <button 
                       onClick={() => {
                         setShowMazeSolveModal(false);
-                        go(3);
+                        go(2);
                       }}
                       style={{
                         padding: '1.1rem 3rem',
@@ -328,12 +312,12 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             </AnimatePresence>
           </div>
         );
-      case 3:
+      case 2:
         return (
           <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box' }}>
             <div style={{ width: '100%', maxWidth: '980px', maxHeight: '100%', overflowY: 'auto', background: '#FFFFFF', border: '1.5px solid #A7F3D0', borderRadius: '24px', padding: '1.25rem 1.75rem', boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)', boxSizing: 'border-box' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#D1FAE5', color: '#065F46', padding: '0.35rem 0.85rem', borderRadius: '16px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '1.2px', marginBottom: '0.65rem' }}>
-                <Sparkles size={14} color="#065F46" /> TRICK 2 · RUNAWAY CARS
+                <Sparkles size={14} color="#065F46" /> ACTIVITY 2 · RUNAWAY CARS
               </div>
               <h1 style={{ fontSize: 'clamp(1.2rem, 2vw, 1.5rem)', color: '#064E3B', fontWeight: 900, margin: '0 0 0.4rem 0' }}>
                 Make a toy car flee without touching it.
@@ -392,7 +376,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             </div>
           </div>
         );
-      case 4:
+      case 3:
         return (
           <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box' }}>
             <div style={{ width: '100%', maxWidth: '980px', maxHeight: '100%', overflowY: 'auto', background: '#FFFFFF', border: '1.5px solid #A7F3D0', borderRadius: '24px', padding: '1.25rem 1.75rem', boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)', boxSizing: 'border-box' }}>
@@ -511,7 +495,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                   >
                     <h2 style={{ margin: 0, color: '#064E3B', fontSize: '1.8rem', fontWeight: 900 }}>Activity Completed! 🎉</h2>
                     <p style={{ margin: 0, color: '#334155', fontSize: '1.2rem', lineHeight: '1.5', fontWeight: 600 }}>
-                      Outstanding job! You've mastered magnet garland chains, 3D town map navigation, runaway cars, and magnet care!
+                      Outstanding job! You've mastered 3D town map navigation, runaway cars, and magnet care!
                     </p>
 
                     <button
@@ -630,7 +614,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             <Compass size={24} style={{ color: '#D97706' }} />
             Activity 4.8: Fun with Magnets
           </h2>
-          <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>Class 6 Science — Garland & 3D Town Map Maze Exploration</span>
+          <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>Class 6 Science — 3D Town Map Maze & Runaway Cars Exploration</span>
         </div>
 
         <nav style={{ display: 'flex', gap: '0.4rem', margin: 0 }}>

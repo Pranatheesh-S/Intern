@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCcw, Trophy, Compass, MapPin, CheckCircle2, Sparkles, Navigation, Target } from 'lucide-react';
+import { RotateCcw, Compass, MapPin, CheckCircle2, Sparkles, Navigation, Target, Anchor } from 'lucide-react';
 
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -12,6 +12,7 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+// 3D Underboard Controller Magnet
 function draw3DMagnet(ctx, cx, cy, w, h) {
   ctx.save();
   ctx.translate(cx, cy);
@@ -68,17 +69,63 @@ function draw3DMagnet(ctx, cx, cy, w, h) {
   ctx.restore();
 }
 
+// Draw Top-down Ship with attached magnetic core
+function drawShipWithMagnet(ctx, x, y, size, rotation, shipImg) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotation);
+
+  // 1. Attached Magnetic Core Base mounted on the ship
+  ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetY = 4;
+
+  const magW = size * 0.45;
+  const magH = size * 0.16;
+
+  // North (Red) & South (Blue) Mini Magnet attached to ship deck
+  ctx.fillStyle = "#EF4444";
+  roundRect(ctx, -magW / 2, -magH / 2 + size * 0.05, magW / 2, magH, 3);
+  ctx.fill();
+
+  ctx.fillStyle = "#3B82F6";
+  roundRect(ctx, 0, -magH / 2 + size * 0.05, magW / 2, magH, 3);
+  ctx.fill();
+
+  // 2. Draw Top-down Ship Sprite (Crisp, direct top view, pointing UP)
+  if (shipImg && shipImg.complete && shipImg.naturalWidth > 0) {
+    ctx.shadowBlur = 12;
+    ctx.shadowOffsetY = 6;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    // Ship image points UP (North is 0 angle when rotation adjusted by +PI/2)
+    ctx.save();
+    ctx.rotate(-Math.PI / 2); // Align sprite bow with motion vector
+    ctx.drawImage(shipImg, -size / 2, -size / 2, size, size);
+    ctx.restore();
+  }
+
+  // 3. Magnetic Flux Glow Indicator
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = "rgba(245, 158, 11, 0.7)";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(0, 0, size * 0.38, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
 function drawSteelBall(ctx, x, y, radius) {
   ctx.save();
   ctx.translate(x, y);
 
-  // Drop Shadow
   ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
   ctx.beginPath();
   ctx.ellipse(0, radius * 0.7, radius * 0.8, radius * 0.3, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Outer Chrome Sphere
   const gSteel = ctx.createRadialGradient(-radius * 0.35, -radius * 0.35, radius * 0.1, 0, 0, radius);
   gSteel.addColorStop(0, "#FFFFFF");
   gSteel.addColorStop(0.35, "#E2E8F0");
@@ -93,7 +140,6 @@ function drawSteelBall(ctx, x, y, radius) {
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Specular Highlight
   ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
   ctx.beginPath();
   ctx.arc(-radius * 0.35, -radius * 0.35, radius * 0.3, 0, Math.PI * 2);
@@ -102,68 +148,174 @@ function drawSteelBall(ctx, x, y, radius) {
   ctx.restore();
 }
 
-// Town Waypoints / Landmarks
+// Sea Route Waypoint Landmarks
 const LANDMARKS = [
-  { id: 'airport', name: 'Skyline Airport ✈️', x: 230, y: 350, icon: '✈️' },
-  { id: 'beach', name: 'Sunset Beach 🏖️', x: 170, y: 640, icon: '🏖️' },
-  { id: 'park', name: 'Greenfield Park 🌳', x: 490, y: 470, icon: '🌳' },
-  { id: 'stadium', name: 'City Stadium 🏟️', x: 670, y: 390, icon: '🏟️' },
-  { id: 'hospital', name: 'Central Hospital 🏥', x: 880, y: 390, icon: '🏥' },
-  { id: 'fire_station', name: 'Fire Station 🚒', x: 720, y: 560, icon: '🚒' },
-  { id: 'cineplex', name: 'Star Cineplex 🎬', x: 850, y: 640, icon: '🎬' }
+  { id: 'start', name: 'Lighthouse Base 🏮', x: 215, y: 240, icon: '🏮' },
+  { id: 'seaport', name: 'Seaport & Container Yard ⚓', x: 235, y: 345, icon: '⚓' },
+  { id: 'station', name: 'Nautical Research Station 🛰️', x: 700, y: 280, icon: '🛰️' },
+  { id: 'runway', name: 'Aircraft Runway 🛩️', x: 680, y: 500, icon: '🛩️' },
+  { id: 'oil_rig', name: 'Offshore Oil Rig 🛢️', x: 160, y: 640, icon: '🛢️' },
+  { id: 'goal', name: 'GOAL Shipyard 🏆', x: 810, y: 630, icon: '🏆' }
 ];
 
-// Sequential Missions
+// Sequential Missions through the sea routes
 const MISSIONS = [
   {
     id: 1,
-    title: "Mission 1: Airport to Sunset Beach",
-    desc: "Guide your magnetic object from Skyline Airport through town roads to Sunset Beach 🏖️!",
-    start: 'airport',
-    target: 'beach'
+    title: "Mission 1: Lighthouse to Seaport Yard",
+    desc: "Use the Joystick to pull your ship with the magnet from Lighthouse along the sea route to the Seaport Yard ⚓!",
+    start: 'start',
+    target: 'seaport'
   },
   {
     id: 2,
-    title: "Mission 2: Beach to City Stadium",
-    desc: "Navigate past Greenfield Park to reach the City Stadium 🏟️!",
-    start: 'beach',
-    target: 'stadium'
+    title: "Mission 2: Seaport to Research Station",
+    desc: "Navigate through the upper canals across to the Nautical Research Station 🛰️!",
+    start: 'seaport',
+    target: 'station'
   },
   {
     id: 3,
-    title: "Mission 3: Stadium to Central Hospital",
-    desc: "Follow the avenue right into Central Hospital 🏥!",
-    start: 'stadium',
-    target: 'hospital'
+    title: "Mission 3: Research Station to Runway Island",
+    desc: "Steer down the eastern channel to reach the Aircraft Runway 🛩️!",
+    start: 'station',
+    target: 'runway'
   },
   {
     id: 4,
-    title: "Mission 4: Hospital to Fire Station",
-    desc: "Guide the magnetic toy down the street to the Fire Station 🚒!",
-    start: 'hospital',
-    target: 'fire_station'
+    title: "Mission 4: Runway to Offshore Oil Rig",
+    desc: "Guide your ship along the southern sea route all the way to the Offshore Oil Rig 🛢️!",
+    start: 'runway',
+    target: 'oil_rig'
+  },
+  {
+    id: 5,
+    title: "Mission 5: Oil Rig to GOAL Shipyard",
+    desc: "Navigate the final canal labyrinth and dock at the GOAL Shipyard 🏆!",
+    start: 'oil_rig',
+    target: 'goal'
   }
 ];
 
-// Selectable Magnetic Toy Objects
+// Precise Sea Route Canal Segments / Track Network (Width: 1000, Height: 670)
+const CANAL_TRACKS = [
+  // Start Bridge area
+  { x1: 215, y1: 240, x2: 260, y2: 240 },
+  { x1: 260, y1: 240, x2: 260, y2: 200 },
+  { x1: 260, y1: 200, x2: 325, y2: 200 },
+  
+  // Upper Zig-Zag Channels
+  { x1: 325, y1: 200, x2: 325, y2: 155 },
+  { x1: 325, y1: 155, x2: 385, y2: 155 },
+  { x1: 385, y1: 155, x2: 385, y2: 205 },
+  { x1: 385, y1: 205, x2: 445, y2: 205 },
+  { x1: 445, y1: 205, x2: 445, y2: 155 },
+  { x1: 445, y1: 155, x2: 505, y2: 155 },
+  { x1: 505, y1: 155, x2: 505, y2: 205 },
+  { x1: 505, y1: 205, x2: 570, y2: 205 },
+  { x1: 570, y1: 205, x2: 570, y2: 260 },
+  { x1: 570, y1: 260, x2: 635, y2: 260 },
+  { x1: 635, y1: 260, x2: 700, y2: 280 }, // Leads to Station
+
+  // Central Vertical Connectors
+  { x1: 445, y1: 205, x2: 445, y2: 285 },
+  { x1: 445, y1: 285, x2: 485, y2: 285 },
+  { x1: 485, y1: 285, x2: 485, y2: 355 },
+  { x1: 485, y1: 355, x2: 535, y2: 355 },
+  { x1: 535, y1: 355, x2: 535, y2: 415 },
+
+  // Seaport Canal Branch
+  { x1: 260, y1: 240, x2: 175, y2: 285 },
+  { x1: 175, y1: 285, x2: 175, y2: 380 },
+  { x1: 175, y1: 380, x2: 235, y2: 345 }, // Seaport Dock
+  { x1: 175, y1: 380, x2: 200, y2: 425 },
+  { x1: 200, y1: 425, x2: 265, y2: 425 },
+
+  // Aircraft Runway Branch
+  { x1: 535, y1: 415, x2: 580, y2: 415 },
+  { x1: 580, y1: 415, x2: 580, y2: 355 },
+  { x1: 580, y1: 355, x2: 635, y2: 355 },
+  { x1: 635, y1: 355, x2: 635, y2: 445 },
+  { x1: 635, y1: 445, x2: 680, y2: 500 }, // Runway Dock
+
+  // Oil Rig Southwest Branch
+  { x1: 200, y1: 425, x2: 145, y2: 470 },
+  { x1: 145, y1: 470, x2: 145, y2: 565 },
+  { x1: 145, y1: 565, x2: 215, y2: 565 },
+  { x1: 215, y1: 565, x2: 215, y2: 615 },
+  { x1: 215, y1: 615, x2: 160, y2: 640 }, // Oil Rig
+
+  // South Central Interconnected Canals
+  { x1: 215, y1: 565, x2: 295, y2: 565 },
+  { x1: 295, y1: 565, x2: 295, y2: 510 },
+  { x1: 295, y1: 510, x2: 365, y2: 510 },
+  { x1: 365, y1: 510, x2: 365, y2: 575 },
+  { x1: 365, y1: 575, x2: 425, y2: 575 },
+  { x1: 425, y1: 575, x2: 425, y2: 510 },
+  { x1: 425, y1: 510, x2: 485, y2: 510 },
+  { x1: 485, y1: 510, x2: 485, y2: 580 },
+  { x1: 485, y1: 580, x2: 545, y2: 580 },
+  { x1: 535, y1: 415, x2: 535, y2: 510 },
+  { x1: 535, y1: 510, x2: 485, y2: 510 },
+
+  // Final Southeast Route to GOAL
+  { x1: 545, y1: 580, x2: 605, y2: 580 },
+  { x1: 605, y1: 580, x2: 605, y2: 520 },
+  { x1: 605, y1: 520, x2: 675, y2: 520 },
+  { x1: 675, y1: 520, x2: 675, y2: 605 },
+  { x1: 675, y1: 605, x2: 745, y2: 605 },
+  { x1: 745, y1: 605, x2: 810, y2: 630 } // GOAL
+];
+
+// Project point onto line segment
+function projectPointOnSegment(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lenSq = dx * dx + dy * dy;
+  if (lenSq === 0) return { x: x1, y: y1, distSq: (px - x1) * (px - x1) + (py - y1) * (py - y1), t: 0 };
+
+  let t = ((px - x1) * dx + (py - y1) * dy) / lenSq;
+  t = Math.max(0, Math.min(1, t));
+  const projX = x1 + t * dx;
+  const projY = y1 + t * dy;
+  const distSq = (px - projX) * (px - projX) + (py - projY) * (py - projY);
+  return { x: projX, y: projY, distSq, t, dx, dy };
+}
+
+// Find closest position constrained strictly to sea route canal tracks
+function clampToCanalTracks(px, py, currentX, currentY) {
+  let closest = null;
+  let minDistSq = Infinity;
+
+  CANAL_TRACKS.forEach(track => {
+    const p = projectPointOnSegment(px, py, track.x1, track.y1, track.x2, track.y2);
+    if (p.distSq < minDistSq) {
+      minDistSq = p.distSq;
+      closest = { ...p, track };
+    }
+  });
+
+  return closest;
+}
+
 const AVATAR_OPTIONS = [
-  { id: 'car', label: '🏎️ Sports Car', type: 'image', src: '/FunWithMagnets/toycar.png', size: 48 },
-  { id: 'ball', label: '🔮 Steel Ball', type: 'ball', size: 22 },
-  { id: 'runner', label: '🏃 Mini Man', type: 'image', src: '/FunWithMagnets/toy_runner.png', size: 44 },
-  { id: 'deer', label: '🦌 Cute Deer', type: 'image', src: '/FunWithMagnets/deer.png', size: 46 },
-  { id: 'robot', label: '🤖 Big Toy', type: 'image', src: '/FunWithMagnets/big_toy.png', size: 48 }
+  { id: 'ship', label: '🚢 Magnetic Ship', type: 'ship', src: '/FunWithMagnets/topdown_ship.png', size: 54 },
+  { id: 'ball', label: '🔮 Steel Ball', type: 'ball', size: 20 },
+  { id: 'car', label: '🏎️ Sports Car', type: 'image', src: '/FunWithMagnets/toycar.png', size: 44 }
 ];
 
 export default function MazeGame({ onSolve, isSolved }) {
   const [missionIdx, setMissionIdx] = useState(0);
-  const [selectedAvatar, setSelectedAvatar] = useState('car');
+  const [selectedAvatar, setSelectedAvatar] = useState('ship');
   const [visitedCount, setVisitedCount] = useState(1);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [joystickPos, setJoystickPos] = useState({ x: 0, y: 0, active: false });
 
   const canvasRef = useRef(null);
   const onSolveRef = useRef(onSolve);
   const isSolvedRef = useRef(isSolved);
   const handleResetRef = useRef(null);
+  const joystickVectorRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     onSolveRef.current = onSolve;
@@ -182,14 +334,14 @@ export default function MazeGame({ onSolve, isSolved }) {
     const H = canvas.height;
     const ctx = canvas.getContext("2d");
 
-    // Load background image
+    // Load nautical sea maze background
     const bgImg = new Image();
-    bgImg.src = "/FunWithMagnets/town_map_3d.jpg";
+    bgImg.src = "/FunWithMagnets/nautical_maze.jpg";
 
-    // Load avatar images
+    // Load topdown ship and avatar images
     const avatarImages = {};
     AVATAR_OPTIONS.forEach(opt => {
-      if (opt.type === 'image' && opt.src) {
+      if (opt.src) {
         const img = new Image();
         img.src = opt.src;
         avatarImages[opt.id] = img;
@@ -200,11 +352,11 @@ export default function MazeGame({ onSolve, isSolved }) {
     let animFrame = null;
 
     // Magnet and Avatar Object State
-    let mag = { x: startPoint.x + 30, y: startPoint.y + 30 };
-    let obj = { x: startPoint.x, y: startPoint.y, vx: 0, vy: 0, r: 24, rotation: 0 };
+    let mag = { x: startPoint.x + 35, y: startPoint.y + 35 };
+    let obj = { x: startPoint.x, y: startPoint.y, vx: 0, vy: 0, r: 22, rotation: 0 };
 
     handleResetRef.current = () => {
-      mag = { x: startPoint.x + 30, y: startPoint.y + 30 };
+      mag = { x: startPoint.x + 35, y: startPoint.y + 35 };
       obj.x = startPoint.x;
       obj.y = startPoint.y;
       obj.vx = 0;
@@ -238,84 +390,146 @@ export default function MazeGame({ onSolve, isSolved }) {
     canvas.addEventListener("pointermove", mzMove);
     window.addEventListener("pointerup", mzUp);
 
+    // Keyboard support (Arrows / WASD)
+    const keys = { up: false, down: false, left: false, right: false };
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.up = true;
+      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.down = true;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+    };
+    const handleKeyUp = (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.up = false;
+      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.down = false;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
     function step() {
-      // MAGNETIC ATTRACTION PHYSICS
-      let dx = mag.x - obj.x;
-      let dy = mag.y - obj.y;
-      let dist = Math.hypot(dx, dy) || 1;
+      // 1. Process Joystick & Keyboard inputs to drive controller magnet
+      const jv = joystickVectorRef.current;
+      let moveMagX = jv.x * 6;
+      let moveMagY = jv.y * 6;
 
-      // Smooth magnetic pull so object moves naturally towards magnet
-      const maxSpeed = 14;
-      let targetVx = (dx / dist) * Math.min(maxSpeed, dist * 0.45);
-      let targetVy = (dy / dist) * Math.min(maxSpeed, dist * 0.45);
+      if (keys.up) moveMagY -= 4;
+      if (keys.down) moveMagY += 4;
+      if (keys.left) moveMagX -= 4;
+      if (keys.right) moveMagX += 4;
 
-      obj.vx = obj.vx * 0.45 + targetVx * 0.55;
-      obj.vy = obj.vy * 0.45 + targetVy * 0.55;
-
-      // Update position within canvas bounds
-      obj.x = Math.max(40, Math.min(W - 40, obj.x + obj.vx));
-      obj.y = Math.max(40, Math.min(H - 40, obj.y + obj.vy));
-
-      // Calculate smooth rotation angle facing movement direction
-      if (Math.abs(obj.vx) > 0.5 || Math.abs(obj.vy) > 0.5) {
-        obj.rotation = Math.atan2(obj.vy, obj.vx);
+      if (moveMagX !== 0 || moveMagY !== 0) {
+        mag.x = Math.max(30, Math.min(W - 30, mag.x + moveMagX));
+        mag.y = Math.max(30, Math.min(H - 30, mag.y + moveMagY));
       }
 
-      // 1. Draw 3D Town Map Background
+      // 2. Magnetic Attraction Calculation
+      const dx = mag.x - obj.x;
+      const dy = mag.y - obj.y;
+      const dist = Math.hypot(dx, dy) || 1;
+
+      // Desired velocity towards magnet
+      const maxSpeed = 7.5;
+      const targetSpeed = Math.min(maxSpeed, dist * 0.18);
+      const desiredVx = (dx / dist) * targetSpeed;
+      const desiredVy = (dy / dist) * targetSpeed;
+
+      // Next tentative position
+      const nextX = obj.x + desiredVx;
+      const nextY = obj.y + desiredVy;
+
+      // 3. Strict Sea Route Track Constraint: Snap strictly to canal lines
+      const clamped = clampToCanalTracks(nextX, nextY, obj.x, obj.y);
+      if (clamped) {
+        const moveDist = Math.hypot(clamped.x - obj.x, clamped.y - obj.y);
+        
+        // Update position smoothly along canal
+        obj.x = clamped.x;
+        obj.y = clamped.y;
+
+        // Smooth rotation following the current canal track heading
+        if (moveDist > 0.15) {
+          const trackAngle = Math.atan2(clamped.dy, clamped.dx);
+          // Check motion direction along track
+          const dot = desiredVx * clamped.dx + desiredVy * clamped.dy;
+          const targetHeading = dot >= 0 ? trackAngle : trackAngle + Math.PI;
+
+          let diff = targetHeading - obj.rotation;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          obj.rotation += diff * 0.18;
+        }
+      }
+
+      // 4. Draw Nautical Sea Maze Background
       ctx.clearRect(0, 0, W, H);
       if (bgImg.complete && bgImg.naturalWidth > 0) {
         ctx.drawImage(bgImg, 0, 0, W, H);
       } else {
-        ctx.fillStyle = "#0F172A";
+        ctx.fillStyle = "#0A2440";
         ctx.fillRect(0, 0, W, H);
       }
 
-      // 2. Draw Target Goal Beacon
+      // 5. Draw Glowing Sea Route Canals Guide
+      ctx.save();
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.22)";
+      ctx.lineWidth = 14;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.beginPath();
+      CANAL_TRACKS.forEach(t => {
+        ctx.moveTo(t.x1, t.y1);
+        ctx.lineTo(t.x2, t.y2);
+      });
+      ctx.stroke();
+      ctx.restore();
+
+      // 6. Draw Target Destination Beacon
       ctx.save();
       ctx.translate(targetPoint.x, targetPoint.y);
 
-      // Glowing Aura
-      const targetGlow = ctx.createRadialGradient(0, 0, 5, 0, 0, 48);
-      targetGlow.addColorStop(0, "rgba(245, 158, 11, 0.85)");
+      // Beacon Aura
+      const targetGlow = ctx.createRadialGradient(0, 0, 5, 0, 0, 42);
+      targetGlow.addColorStop(0, "rgba(245, 158, 11, 0.9)");
       targetGlow.addColorStop(0.5, "rgba(239, 68, 68, 0.5)");
       targetGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = targetGlow;
       ctx.beginPath();
-      ctx.arc(0, 0, 48, 0, Math.PI * 2);
+      ctx.arc(0, 0, 42, 0, Math.PI * 2);
       ctx.fill();
 
       // Beacon Disc
       ctx.fillStyle = "#FFFFFF";
       ctx.strokeStyle = "#F59E0B";
-      ctx.lineWidth = 3.5;
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.arc(0, 0, 24, 0, Math.PI * 2);
+      ctx.arc(0, 0, 22, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = "20px system-ui, sans-serif";
+      ctx.font = "18px system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(targetPoint.icon, 0, 1);
 
       // Target Label Pill
       ctx.fillStyle = "#064E3B";
-      roundRect(ctx, -60, -42, 120, 24, 12);
+      roundRect(ctx, -55, -38, 110, 22, 11);
       ctx.fill();
       ctx.strokeStyle = "#A7F3D0";
       ctx.lineWidth = 1.5;
       ctx.stroke();
       ctx.fillStyle = "#FFFFFF";
-      ctx.font = "900 11px system-ui, sans-serif";
-      ctx.fillText("GOAL TARGET 🎯", 0, -30);
+      ctx.font = "900 10px system-ui, sans-serif";
+      ctx.fillText("DESTINATION 🎯", 0, -27);
       ctx.restore();
 
-      // 3. Draw Magnetic Force Line & Flux Rays
-      if (dist < 450) {
+      // 7. Draw Magnetic Flux Line connecting Controller Magnet to Ship
+      if (dist < 400) {
         ctx.save();
         ctx.strokeStyle = "rgba(245, 158, 11, 0.95)";
-        ctx.lineWidth = 3.5;
-        ctx.setLineDash([8, 6]);
+        ctx.lineWidth = 3;
+        ctx.setLineDash([6, 5]);
         ctx.beginPath();
         ctx.moveTo(mag.x, mag.y);
         ctx.lineTo(obj.x, obj.y);
@@ -326,24 +540,26 @@ export default function MazeGame({ onSolve, isSolved }) {
         const midX = (mag.x + obj.x) / 2;
         const midY = (mag.y + obj.y) / 2;
         ctx.beginPath();
-        ctx.arc(midX, midY, 4, 0, Math.PI * 2);
+        ctx.arc(midX, midY, 3.5, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
 
-      // 4. Draw Selected Magnetic Toy Avatar
+      // 8. Draw Selected Avatar (Top-down Ship with attached Magnet)
       const curAvatar = AVATAR_OPTIONS.find(a => a.id === selectedAvatar) || AVATAR_OPTIONS[0];
-      if (curAvatar.type === 'ball') {
+      if (curAvatar.id === 'ship') {
+        const shipImg = avatarImages['ship'];
+        drawShipWithMagnet(ctx, obj.x, obj.y, curAvatar.size, obj.rotation, shipImg);
+      } else if (curAvatar.type === 'ball') {
         drawSteelBall(ctx, obj.x, obj.y, curAvatar.size);
       } else {
         const img = avatarImages[curAvatar.id];
         if (img && img.complete && img.naturalWidth > 0) {
           ctx.save();
           ctx.translate(obj.x, obj.y);
-          // Drop shadow
           ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
-          ctx.shadowBlur = 12;
-          ctx.shadowOffsetY = 6;
+          ctx.shadowBlur = 10;
+          ctx.shadowOffsetY = 5;
           const sz = curAvatar.size;
           ctx.drawImage(img, -sz / 2, -sz / 2, sz, sz);
           ctx.restore();
@@ -352,11 +568,11 @@ export default function MazeGame({ onSolve, isSolved }) {
         }
       }
 
-      // 5. Draw 3D Underboard Magnet
-      draw3DMagnet(ctx, mag.x, mag.y, 115, 34);
+      // 9. Draw Controller Magnet underneath
+      draw3DMagnet(ctx, mag.x, mag.y, 110, 32);
 
-      // 6. Check Mission Completion Goal Hit
-      if (Math.hypot(obj.x - targetPoint.x, obj.y - targetPoint.y) <= 38) {
+      // 10. Destination Goal Reached Check
+      if (Math.hypot(obj.x - targetPoint.x, obj.y - targetPoint.y) <= 36) {
         if (!showCelebration) {
           setShowCelebration(true);
           setVisitedCount(prev => Math.min(prev + 1, LANDMARKS.length));
@@ -385,8 +601,40 @@ export default function MazeGame({ onSolve, isSolved }) {
       canvas.removeEventListener("pointerdown", mzDown);
       canvas.removeEventListener("pointermove", mzMove);
       window.removeEventListener("pointerup", mzUp);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, [missionIdx, selectedAvatar, showCelebration]);
+
+  // Virtual Joystick Handlers
+  const handleJoystickMove = (e) => {
+    const container = e.currentTarget.getBoundingClientRect();
+    const centerX = container.left + container.width / 2;
+    const centerY = container.top + container.height / 2;
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+    let dx = clientX - centerX;
+    let dy = clientY - centerY;
+    const maxRadius = container.width / 2 - 18;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist > maxRadius) {
+      dx = (dx / dist) * maxRadius;
+      dy = (dy / dist) * maxRadius;
+    }
+
+    const normX = dx / maxRadius;
+    const normY = dy / maxRadius;
+
+    setJoystickPos({ x: dx, y: dy, active: true });
+    joystickVectorRef.current = { x: normX, y: normY };
+  };
+
+  const handleJoystickEnd = () => {
+    setJoystickPos({ x: 0, y: 0, active: false });
+    joystickVectorRef.current = { x: 0, y: 0 };
+  };
 
   return (
     <div style={{
@@ -412,7 +660,7 @@ export default function MazeGame({ onSolve, isSolved }) {
         justifyContent: 'space-between',
         pointerEvents: 'none'
       }}>
-        {/* Avatar / Toy Selector Pills */}
+        {/* Avatar / Toy Selector */}
         <div style={{ display: 'flex', gap: '0.4rem', pointerEvents: 'auto', background: 'rgba(255,255,255,0.92)', padding: '4px 8px', borderRadius: '22px', border: '1.5px solid #A7F3D0', boxShadow: '0 4px 14px rgba(6, 78, 59, 0.08)' }}>
           {AVATAR_OPTIONS.map((opt) => (
             <button
@@ -488,6 +736,72 @@ export default function MazeGame({ onSolve, isSolved }) {
         </p>
       </div>
 
+      {/* Bottom Left Virtual Joystick */}
+      <div style={{
+        position: 'absolute',
+        bottom: '18px',
+        left: '20px',
+        zIndex: 40,
+        background: 'rgba(15, 23, 42, 0.85)',
+        backdropFilter: 'blur(10px)',
+        border: '1.5px solid rgba(56, 189, 248, 0.4)',
+        borderRadius: '24px',
+        padding: '10px 14px',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '6px'
+      }}>
+        <span style={{ fontSize: '0.72rem', color: '#7DD3FC', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
+          🕹️ Magnet Joystick
+        </span>
+        <div
+          onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); handleJoystickMove(e); }}
+          onPointerMove={(e) => { if (joystickPos.active) handleJoystickMove(e); }}
+          onPointerUp={handleJoystickEnd}
+          onPointerCancel={handleJoystickEnd}
+          style={{
+            width: '100px',
+            height: '100px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, #1E293B 0%, #0F172A 100%)',
+            border: '2px solid rgba(56, 189, 248, 0.5)',
+            boxShadow: 'inset 0 0 15px rgba(0, 0, 0, 0.6)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            cursor: 'grab',
+            touchAction: 'none'
+          }}
+        >
+          {/* Compass Rings */}
+          <div style={{ position: 'absolute', inset: '10px', borderRadius: '50%', border: '1px dashed rgba(56, 189, 248, 0.25)', pointerEvents: 'none' }} />
+          
+          {/* Moving Knob */}
+          <div style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '50%',
+            background: joystickPos.active ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+            border: '2px solid #FFFFFF',
+            boxShadow: joystickPos.active ? '0 0 16px rgba(245, 158, 11, 0.8)' : '0 4px 12px rgba(0, 0, 0, 0.4)',
+            transform: `translate(${joystickPos.x}px, ${joystickPos.y}px)`,
+            transition: joystickPos.active ? 'none' : 'transform 0.15s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+            color: '#FFFFFF',
+            fontSize: '14px',
+            fontWeight: 900
+          }}>
+            🧲
+          </div>
+        </div>
+      </div>
+
       {/* Bottom Right Places Visited Progress Tracker */}
       <div style={{
         position: 'absolute',
@@ -537,21 +851,21 @@ export default function MazeGame({ onSolve, isSolved }) {
             }}
           >
             <div style={{ fontSize: '2rem', marginBottom: '0.25rem' }}>🎉</div>
-            <h3 style={{ margin: '0 0 0.2rem 0', color: '#065F46', fontSize: '1.3rem', fontWeight: 900 }}>
+            <h3 style={{ margin: '0 0 0.2rem 0', color: '#064E3B', fontSize: '1.3rem', fontWeight: 900 }}>
               Destination Reached!
             </h3>
             <p style={{ margin: 0, color: '#334155', fontSize: '0.9rem', fontWeight: 700 }}>
-              Magnetic force guided your vehicle successfully!
+              Magnetic force successfully guided your ship along the sea route!
             </p>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Full Page 3D Town Map Canvas */}
+      {/* Full Page 3D Sea Route Maze Canvas */}
       <canvas
         ref={canvasRef}
         width={1000}
-        height={720}
+        height={670}
         style={{
           width: '100%',
           height: '100%',
