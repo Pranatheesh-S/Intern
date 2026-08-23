@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, RefreshCw, ChevronRight, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
 
 const STEPS = [
   { id: 'soak',    label: 'Step 1: Soak Seeds',     icon: '💧', desc: 'Hydrate the seeds in water. Watch the seed coats wrinkle, loosen, and swell over a simulated 3-day period.' },
@@ -188,7 +189,7 @@ export default function SeedDissectionLab({ onBackToDashboard }) {
   const currentStep = STEPS[stepIndex];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--page-bg)', color: 'var(--text-primary)', fontFamily: 'system-ui, sans-serif', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundImage: `url(${darkForestBg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat', color: 'var(--text-primary)', fontFamily: 'system-ui, sans-serif', overflow: 'hidden' }}>
       
       {/* Styles for animations */}
       <style>{`

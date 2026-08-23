@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Award, RefreshCw, Scan, FlaskConical } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useTheme } from '../../../../ThemeContext';
+import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
 
 const MYSTERY_PLANTS = [
   {
@@ -243,13 +244,13 @@ export default function PlantDetective({ onBackToDashboard }) {
   };
 
   const isLight = theme === 'light';
-  const containerBg = isLight ? '#ffffff' : '#0a1628';
-  const textColor = isLight ? '#1e293b' : '#e2e8f0';
-  const sidebarBg = isLight ? '#f8fafc' : '#0f1f3d';
+  const containerBg = `url(${darkForestBg}) center/cover no-repeat fixed`;
+  const textColor = isLight ? '#0f172a' : '#ffffff';
+  const sidebarBg = isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(15, 31, 61, 0.88)';
   const borderColor = isLight ? '#cbd5e1' : 'rgba(99,102,241,0.12)';
   const cardBorder = isLight ? '#cbd5e1' : 'rgba(255,255,255,0.05)';
-  const fontColorMuted = isLight ? '#475569' : '#94a3b8';
-  const fontColorFaint = isLight ? '#64748b' : '#475569';
+  const fontColorMuted = isLight ? '#334155' : '#e2e8f0';
+  const fontColorFaint = isLight ? '#475569' : '#cbd5e1';
 
   return (
     <div style={{

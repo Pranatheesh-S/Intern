@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, RefreshCw, Award } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useTheme } from '../../../../ThemeContext';
+import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
 
 const LEAVES = [
   {
@@ -89,10 +90,10 @@ export default function LeafVenationLab({ onBackToDashboard }) {
   const leaf = LEAVES.find(l => l.id === selectedLeaf);
   const doneCount = Object.keys(checked).filter(k => checked[k]).length;
 
-  const containerBg = isLight ? '#f8fafc' : '#0a0f1e';
-  const textColor = isLight ? '#1e293b' : '#f0f9ff';
-  const textMuted = isLight ? '#475569' : '#64748b';
-  const sidebarBg = isLight ? '#ffffff' : '#0f1729';
+  const containerBg = `url(${darkForestBg}) center/cover no-repeat fixed`;
+  const textColor = isLight ? '#0f172a' : '#f0f9ff';
+  const textMuted = isLight ? '#334155' : '#cbd5e1';
+  const sidebarBg = isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(15, 23, 41, 0.88)';
   const sidebarBorder = isLight ? '#e2e8f0' : 'rgba(14,165,233,0.2)';
   const resetBtnBorder = isLight ? '#cbd5e1' : 'rgba(255,255,255,0.1)';
   
