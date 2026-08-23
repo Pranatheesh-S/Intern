@@ -1,26 +1,399 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useMemo, Suspense } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Text, OrbitControls, ContactShadows, Environment } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Hand, RotateCcw, Shapes, CheckCircle, Flag, BookOpen } from 'lucide-react';
+import { Hand, RotateCcw, Shapes, Flag, BookOpen } from 'lucide-react';
+import * as THREE from 'three';
 
-const generateFilings = (count) => {
-  return Array.from({ length: count }, (_, i) => {
-    const width = 6 + Math.random() * 18;
-    const color = Math.random() > 0.5 ? 'rgba(30, 41, 59, 0.75)' : 'rgba(15, 23, 42, 0.8)';
-    return {
-      id: i,
-      x: Math.random() * 560 - 280,
-      y: Math.random() * 340 - 170,
-      rotation: Math.random() * 360,
-      width,
-      color
+// ----------------------------------------------------
+// 1. REALISTIC 3D MAGNET MODELS (PROPORTIONATELY SIZED)
+// ----------------------------------------------------
+
+// A. Bar Magnet (Proportionate: 12.0 x 1.3 x 1.9)
+function BarMagnet3D() {
+  return (
+    <group position={[0, 2.5, 0]}>
+      {/* North Half */}
+      <mesh position={[-3.0, 0, 0]} castShadow receiveShadow>
+        <boxGeometry args={[6.0, 1.3, 1.9]} />
+        <meshStandardMaterial color="#C51E28" roughness={0.55} metalness={0.12} />
+      </mesh>
+      <Text
+        position={[-4.2, 0.66, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        fontSize={0.95}
+        color="#FFFFFF"
+        fontWeight="bold"
+      >
+        N
+      </Text>
+
+      {/* South Half */}
+      <mesh position={[3.0, 0, 0]} castShadow receiveShadow>
+        <boxGeometry args={[6.0, 1.3, 1.9]} />
+        <meshStandardMaterial color="#1848B8" roughness={0.55} metalness={0.12} />
+      </mesh>
+      <Text
+        position={[4.2, 0.66, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        fontSize={0.95}
+        color="#FFFFFF"
+        fontWeight="bold"
+      >
+        S
+      </Text>
+
+      {/* Center Seam */}
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[0.06, 1.31, 1.91]} />
+        <meshStandardMaterial color="#111827" roughness={0.7} />
+      </mesh>
+    </group>
+  );
+}
+
+// B. Realistic Solid 3D Horseshoe Magnet (True U-Shape)
+function HorseshoeMagnet3D() {
+  const { northGeo, southGeo } = useMemo(() => {
+    const extrudeSettings = {
+      depth: 1.3,
+      bevelEnabled: true,
+      bevelSegments: 3,
+      steps: 1,
+      bevelSize: 0.05,
+      bevelThickness: 0.05,
     };
-  });
-};
 
+    // North Half Shape (Left side: X from -3.0 to 0)
+    const nShape = new THREE.Shape();
+    nShape.moveTo(-3.0, -2.6); // Outer pole tip
+    nShape.lineTo(-3.0, 0.2);  // Outer leg start of arch
+    nShape.absarc(0, 0.2, 3.0, Math.PI, Math.PI / 2, true); // Outer arc to (0, 3.2)
+    nShape.lineTo(0, 1.8);     // Line to inner arc apex
+    nShape.absarc(0, 0.2, 1.6, Math.PI / 2, Math.PI, false); // Inner arc to (-1.6, 0.2)
+    nShape.lineTo(-1.6, -2.6); // Inner leg tip
+    nShape.lineTo(-3.0, -2.6); // Close tip
+
+    // South Half Shape (Right side: X from 0 to +3.0)
+    const sShape = new THREE.Shape();
+    sShape.moveTo(0, 3.2);     // Outer arc apex
+    sShape.absarc(0, 0.2, 3.0, Math.PI / 2, 0, true); // Outer arc to (3.0, 0.2)
+    sShape.lineTo(3.0, -2.6);  // Outer pole tip
+    sShape.lineTo(1.6, -2.6);  // Inner pole tip
+    sShape.lineTo(1.6, 0.2);   // Inner leg start of arch
+    sShape.absarc(0, 0.2, 1.6, 0, Math.PI / 2, false); // Inner arc to (0, 1.8)
+    sShape.lineTo(0, 3.2);     // Close at apex
+
+    const nGeo = new THREE.ExtrudeGeometry(nShape, extrudeSettings);
+    const sGeo = new THREE.ExtrudeGeometry(sShape, extrudeSettings);
+
+    // Rotate so extrusion goes along Y axis (thickness 1.3)
+    nGeo.rotateX(-Math.PI / 2);
+    sGeo.rotateX(-Math.PI / 2);
+
+    return { northGeo: nGeo, southGeo: sGeo };
+  }, []);
+
+  return (
+    <group position={[0, 1.8, 0]}>
+      {/* North Half (Red) */}
+      <mesh geometry={northGeo} castShadow receiveShadow>
+        <meshStandardMaterial color="#C51E28" roughness={0.55} metalness={0.12} />
+      </mesh>
+      <Text
+        position={[-2.3, 1.36, 1.6]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        fontSize={0.9}
+        color="#FFFFFF"
+        fontWeight="bold"
+      >
+        N
+      </Text>
+
+      {/* South Half (Blue) */}
+      <mesh geometry={southGeo} castShadow receiveShadow>
+        <meshStandardMaterial color="#1848B8" roughness={0.55} metalness={0.12} />
+      </mesh>
+      <Text
+        position={[2.3, 1.36, 1.6]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        fontSize={0.9}
+        color="#FFFFFF"
+        fontWeight="bold"
+      >
+        S
+      </Text>
+
+      {/* Center Seam dividing the U-arch */}
+      <mesh position={[0, 0.65, -2.5]}>
+        <boxGeometry args={[0.06, 1.32, 1.42]} />
+        <meshStandardMaterial color="#111827" roughness={0.7} />
+      </mesh>
+    </group>
+  );
+}
+
+// C. Realistic Solid 3D Ring Magnet
+function RingMagnet3D() {
+  const { northGeo, southGeo } = useMemo(() => {
+    const extrudeSettings = {
+      depth: 1.3,
+      bevelEnabled: true,
+      bevelSegments: 3,
+      steps: 1,
+      bevelSize: 0.05,
+      bevelThickness: 0.05,
+    };
+
+    // North Half Ring Shape (Left side: X from -2.8 to 0)
+    const nShape = new THREE.Shape();
+    nShape.absarc(0, 0, 2.8, Math.PI / 2, 3 * Math.PI / 2, false);
+    nShape.lineTo(0, -1.4);
+    nShape.absarc(0, 0, 1.4, 3 * Math.PI / 2, Math.PI / 2, true);
+    nShape.lineTo(0, 2.8);
+
+    // South Half Ring Shape (Right side: X from 0 to +2.8)
+    const sShape = new THREE.Shape();
+    sShape.absarc(0, 0, 2.8, -Math.PI / 2, Math.PI / 2, false);
+    sShape.lineTo(0, 1.4);
+    sShape.absarc(0, 0, 1.4, Math.PI / 2, -Math.PI / 2, true);
+    sShape.lineTo(0, -2.8);
+
+    const nGeo = new THREE.ExtrudeGeometry(nShape, extrudeSettings);
+    const sGeo = new THREE.ExtrudeGeometry(sShape, extrudeSettings);
+
+    nGeo.rotateX(-Math.PI / 2);
+    sGeo.rotateX(-Math.PI / 2);
+
+    return { northGeo: nGeo, southGeo: sGeo };
+  }, []);
+
+  return (
+    <group position={[0, 1.8, 0]}>
+      {/* North Half Ring (Red) */}
+      <mesh geometry={northGeo} castShadow receiveShadow>
+        <meshStandardMaterial color="#C51E28" roughness={0.55} metalness={0.12} />
+      </mesh>
+      <Text
+        position={[-2.1, 1.36, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        fontSize={0.9}
+        color="#FFFFFF"
+        fontWeight="bold"
+      >
+        N
+      </Text>
+
+      {/* South Half Ring (Blue) */}
+      <mesh geometry={southGeo} castShadow receiveShadow>
+        <meshStandardMaterial color="#1848B8" roughness={0.55} metalness={0.12} />
+      </mesh>
+      <Text
+        position={[2.1, 1.36, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        fontSize={0.9}
+        color="#FFFFFF"
+        fontWeight="bold"
+      >
+        S
+      </Text>
+
+      {/* Top and Bottom Seams */}
+      <mesh position={[0, 0.65, -2.1]}>
+        <boxGeometry args={[0.06, 1.32, 1.42]} />
+        <meshStandardMaterial color="#111827" roughness={0.7} />
+      </mesh>
+      <mesh position={[0, 0.65, 2.1]}>
+        <boxGeometry args={[0.06, 1.32, 1.42]} />
+        <meshStandardMaterial color="#111827" roughness={0.7} />
+      </mesh>
+    </group>
+  );
+}
+
+// ----------------------------------------------------
+// 2. 3D FILINGS INSTANCED SYSTEM (PERFECTLY FITTED TO PAPER)
+// ----------------------------------------------------
+function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
+  const count = 14000;
+  const meshRef = useRef();
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+
+  // Compute pole points for field simulation
+  const poles = useMemo(() => {
+    if (shape === 'horseshoe') {
+      return { nX: -2.3, nZ: 2.6, sX: 2.3, sZ: 2.6, span: 3.2 };
+    }
+    if (shape === 'ring') {
+      return { nX: -2.1, nZ: 0.0, sX: 2.1, sZ: 0.0, span: 3.2 };
+    }
+    // Bar
+    return { nX: -4.8, nZ: 0.0, sX: 4.8, sZ: 0.0, span: 4.0 };
+  }, [shape]);
+
+  const particles = useMemo(() => {
+    const data = [];
+    const numLines = 85;
+
+    for (let i = 0; i < count; i++) {
+      // Confined strictly to paper bounds (Paper is 26 x 16)
+      const randX = (Math.random() - 0.5) * 23;
+      const randZ = (Math.random() - 0.5) * 13.5;
+      const randomEuler = new THREE.Euler(Math.PI / 2, (Math.random() - 0.5) * Math.PI, 0);
+
+      let targetX, targetZ;
+      const clusterRoll = Math.random();
+
+      if (clusterRoll < 0.42) {
+        // High density clustering directly at poles
+        const isNorth = Math.random() < 0.5;
+        const pX = isNorth ? poles.nX : poles.sX;
+        const pZ = isNorth ? poles.nZ : poles.sZ;
+        const angle = Math.random() * Math.PI * 2;
+        const r = Math.pow(Math.random(), 2.0) * poles.span + 0.2;
+
+        targetX = pX + Math.cos(angle) * r;
+        targetZ = pZ + Math.sin(angle) * r;
+      } else {
+        // Natural magnetic stream loops
+        const lineIdx = Math.floor(Math.random() * numLines);
+        const t = Math.random();
+        const loopR = 1.6 + (lineIdx / numLines) * 8.0;
+        const theta = (t - 0.5) * Math.PI * 0.95;
+
+        const side = Math.random() > 0.5 ? 1 : -1;
+        targetX = Math.sin(theta) * (loopR + Math.sin(t * Math.PI) * 1.6);
+        targetZ = side * Math.cos(theta) * loopR * 0.75 + (Math.random() - 0.5) * 0.25;
+      }
+
+      // Constrain tightly to stay neatly on top of the paper
+      targetX = Math.max(-11.8, Math.min(11.8, targetX));
+      targetZ = Math.max(-6.8, Math.min(6.8, targetZ));
+
+      data.push({
+        originX: randX,
+        originZ: randZ,
+        targetX,
+        targetZ,
+        scale: 0.65 + Math.random() * 0.45,
+        x: randX,
+        y: 11 + Math.random() * 5,
+        z: randZ,
+        floatY: 0.25 + Math.random() * 4.5,
+        q: new THREE.Quaternion().setFromEuler(randomEuler),
+        targetQ: new THREE.Quaternion(),
+        visible: false,
+        delay: Math.random() * 0.9,
+      });
+    }
+    return data;
+  }, [count, poles]);
+
+  const geometry = useMemo(() => new THREE.CylinderGeometry(0.034, 0.034, 0.18, 4), []);
+  const material = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: '#27292D',
+        roughness: 0.78,
+        metalness: 0.88,
+      }),
+    []
+  );
+
+  useFrame((state, delta) => {
+    if (!meshRef.current) return;
+    const dt = Math.min(delta, 0.1);
+    const poleY = shape === 'bar' ? 2.5 : 2.45;
+
+    particles.forEach((p, i) => {
+      if (step === 'initial' && !isSprinkling) {
+        p.visible = false;
+        p.y = 11 + Math.random() * 5;
+        p.x = p.originX;
+        p.z = p.originZ;
+        p.delay = Math.random() * 0.9;
+      }
+
+      // Step 2: Sprinkling down - suspended floating in 3D air around the magnet
+      if (isSprinkling || step === 'scattered') {
+        p.delay -= dt;
+        if (p.delay <= 0) {
+          p.visible = true;
+          if (p.y > p.floatY) {
+            p.y -= dt * 20;
+          } else {
+            p.y = p.floatY;
+          }
+        }
+      }
+
+      if (step === 'tapped' || (isVibrating && step === 'tapped')) {
+        p.x = THREE.MathUtils.lerp(p.x, p.targetX, dt * 5.0);
+        p.z = THREE.MathUtils.lerp(p.z, p.targetZ, dt * 5.0);
+
+        const dxN = p.x - poles.nX;
+        const dyN = p.y - poleY;
+        const dzN = p.z - poles.nZ;
+        const distN = Math.max(0.35, Math.hypot(dxN, dyN, dzN));
+
+        const dxS = p.x - poles.sX;
+        const dyS = p.y - poleY;
+        const dzS = p.z - poles.sZ;
+        const distS = Math.max(0.35, Math.hypot(dxS, dyS, dzS));
+
+        const Bx = dxN / Math.pow(distN, 3) - dxS / Math.pow(distS, 3);
+        const By = dyN / Math.pow(distN, 3) - dyS / Math.pow(distS, 3);
+        const Bz = dzN / Math.pow(distN, 3) - dzS / Math.pow(distS, 3);
+        const Bmag = Math.hypot(Bx, By, Bz);
+
+        if (Bmag > 0.0001) {
+          const dir = new THREE.Vector3(Bx / Bmag, By / Bmag, Bz / Bmag);
+          p.targetQ.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+          p.q.slerp(p.targetQ, dt * 7.5);
+
+          const minDist = Math.min(distN, distS);
+          if (minDist < 3.0) {
+            const spikeHeight = (3.0 - minDist) * 0.75;
+            p.y = THREE.MathUtils.lerp(p.y, 0.03 + spikeHeight * Math.abs(By / Bmag), dt * 6);
+          } else {
+            p.y = THREE.MathUtils.lerp(p.y, 0.03, dt * 6);
+          }
+        }
+      }
+
+      if (p.visible) {
+        dummy.position.set(p.x, p.y, p.z);
+        dummy.quaternion.copy(p.q);
+        dummy.scale.set(p.scale, p.scale, p.scale);
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
+      } else {
+        dummy.position.set(0, -500, 0);
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
+      }
+    });
+
+    meshRef.current.instanceMatrix.needsUpdate = true;
+  });
+
+  return (
+    <instancedMesh
+      ref={meshRef}
+      args={[geometry, material, count]}
+      castShadow
+      receiveShadow
+      frustumCulled={false}
+    />
+  );
+}
+
+// ----------------------------------------------------
+// 3. MAIN COMPONENT
+// ----------------------------------------------------
 export default function Stage3_Sandbox({ onComplete }) {
   const [step, setStep] = useState('initial');
   const [tapCount, setTapCount] = useState(0);
-  const [filings, setFilings] = useState([]);
   const [shape, setShape] = useState('horseshoe'); // 'horseshoe', 'ring', 'bar'
   const [isSprinkling, setIsSprinkling] = useState(false);
   const [isVibrating, setIsVibrating] = useState(false);
@@ -32,572 +405,431 @@ export default function Stage3_Sandbox({ onComplete }) {
 
   const handleScatter = () => {
     setIsSprinkling(true);
-    setFilings([]);
     setTimeout(() => {
-      setFilings(generateFilings(2200));
       setIsSprinkling(false);
       setStep('scattered');
-    }, 900);
+    }, 1100);
   };
 
   const handleTap = () => {
     if (tapCount >= 1) return;
     setIsVibrating(true);
-    setTimeout(() => setIsVibrating(false), 350);
-
     setTapCount(1);
-
-    const clusteredFilings = filings.map(f => {
-      let nx = f.x;
-      let ny = f.y;
-      
-      let poleNx, poleNy, poleSx, poleSy;
-
-      if (shape === 'horseshoe') {
-        poleNx = -45; poleNy = 45;
-        poleSx = 45; poleSy = 45;
-      } else if (shape === 'ring') {
-        poleNx = -60; poleNy = 0;
-        poleSx = 60; poleSy = 0;
-      } else {
-        // bar
-        poleNx = -100; poleNy = 0;
-        poleSx = 100; poleSy = 0;
-      }
-
-      // Pull towards poles
-      const distN = Math.hypot(nx - poleNx, ny - poleNy);
-      const distS = Math.hypot(nx - poleSx, ny - poleSy);
-      
-      const minDist = Math.min(distN, distS);
-      const isNorth = distN < distS;
-      const targetX = isNorth ? poleNx : poleSx;
-      const targetY = isNorth ? poleNy : poleSy;
-
-      let pullFactor = Math.pow(Math.E, -minDist / 90) * 0.75;
-      
-      if (shape === 'bar') {
-        if (Math.abs(nx) < 95 && Math.abs(ny) < 65) {
-           const bodyPull = Math.pow(Math.E, -Math.abs(ny) / 35);
-           ny = ny - ny * bodyPull * 0.45;
-        }
-      } else {
-        if (Math.hypot(nx, ny) < 80) {
-           nx = nx * 0.8 + (Math.random() - 0.5) * 5;
-           ny = ny * 0.8 + (Math.random() - 0.5) * 5;
-        }
-      }
-
-      nx = nx + (targetX - nx) * Math.min(pullFactor, 0.85);
-      ny = ny + (targetY - ny) * Math.min(pullFactor, 0.85);
-
-      // Calculate magnetic field vector B
-      const dxN = nx - poleNx;
-      const dyN = ny - poleNy;
-      const dN3 = Math.pow(dxN * dxN + dyN * dyN, 1.5) || 1;
-      const bxN = dxN / dN3;
-      const byN = dyN / dN3;
-
-      const dxS = nx - poleSx;
-      const dyS = ny - poleSy;
-      const dS3 = Math.pow(dxS * dxS + dyS * dyS, 1.5) || 1;
-      const bxS = -dxS / dS3;
-      const byS = -dyS / dS3;
-
-      const bx = bxN + bxS;
-      const by = byN + byS;
-
-      let angle = Math.atan2(by, bx) * (180 / Math.PI);
-      angle += (Math.random() - 0.5) * 8;
-
-      nx += (Math.random() - 0.5) * 4;
-      ny += (Math.random() - 0.5) * 4;
-
-      return {
-        ...f,
-        x: nx,
-        y: ny,
-        rotation: angle, 
-      };
-    });
-
-    setFilings(clusteredFilings);
     setStep('tapped');
-  };
-
-  const handleFinish = () => {
-    onComplete();
+    setTimeout(() => setIsVibrating(false), 500);
   };
 
   const handleReset = () => {
     setStep('initial');
     setTapCount(0);
-    setFilings([]);
     setIsSprinkling(false);
+    setIsVibrating(false);
   };
 
   return (
-    <div style={{ 
-      padding: '0.5rem', 
-      display: 'flex', 
-      gap: '1.25rem', 
-      height: '100%', 
-      minHeight: 0, 
-      overflow: 'hidden', 
-      boxSizing: 'border-box'
-    }}>
-      {/* Left Side: Activity Interactive Area */}
-      <div style={{ 
-        flex: '1.35', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        justifyContent: 'space-between',
-        alignItems: 'center', 
-        textAlign: 'center', 
-        minWidth: 0,
+    <div
+      style={{
+        padding: '0.5rem',
+        display: 'flex',
+        gap: '1.25rem',
         height: '100%',
-        boxSizing: 'border-box'
-      }}>
-        {/* Content Above Activity Canvas (Left Top Bar) */}
-        <div style={{ 
-          width: '100%',
-          textAlign: 'center',
-          background: '#FFFFFF',
-          padding: '0.65rem 1.25rem',
-          borderRadius: '20px',
-          border: '1.5px solid #A7F3D0',
-          boxShadow: '0 4px 16px rgba(6, 78, 59, 0.06)',
+        minHeight: 0,
+        overflow: 'hidden',
+        boxSizing: 'border-box',
+      }}
+    >
+      {/* Left Side: 3D Scene Interactive Area */}
+      <div
+        style={{
+          flex: '1.8',
+          display: 'flex',
+          flexDirection: 'column',
+          minWidth: 0,
+          height: '100%',
           boxSizing: 'border-box',
-          marginBottom: '0.5rem'
-        }}>
-          <h3 style={{ margin: '0 0 0.2rem 0', fontSize: '1.35rem', fontWeight: 900, color: '#064E3B', letterSpacing: '-0.01em' }}>
-            Sandbox: Magnet Shapes
-          </h3>
-          <p style={{ margin: 0, color: '#475569', fontSize: '0.9rem', fontWeight: 600 }}>
-            {step === 'initial' && '✨ Choose a magnet shape below, then click "Sprinkle Filings".'}
-            {step === 'scattered' && '🖐️ Click directly on the paper board to TAP it and reveal magnetic poles!'}
-            {(step === 'tapped' || step === 'complete') && '🧲 Filings clustered at the poles! Try switching magnet shapes.'}
-          </p>
-        </div>
-
-        {/* Physics Lab Board Canvas */}
-        <motion.div 
-          onClick={() => {
-            if ((step === 'scattered' || step === 'tapped') && tapCount === 0) {
-              handleTap();
-            }
-          }}
-          animate={isVibrating ? { x: [-6, 6, -4, 4, -2, 2, 0], y: [-4, 4, -2, 2, 0] } : {}}
-          transition={{ duration: 0.35 }}
-          whileTap={(step === 'scattered' || step === 'tapped') ? { scale: 0.98 } : {}}
-          style={{ 
-            position: 'relative', 
-            width: '100%', 
+        }}
+      >
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
             flex: 1,
             minHeight: '380px',
             borderRadius: '24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
             overflow: 'hidden',
-            cursor: (step === 'scattered' || step === 'tapped') ? 'pointer' : 'default',
             border: '1.5px solid #A7F3D0',
-            boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)'
+            boxShadow: '0 12px 30px rgba(6, 78, 59, 0.12)',
+            backgroundImage: `url('/MagneticPoles/bg_image.jpg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
           }}
         >
-          {/* Finding Directions Physics Lab Background Image */}
-          <img 
-            src="/SuspendedMagnet/wooden_stand_lab_bg.jpg" 
-            alt="Physics Lab Background" 
-            style={{ 
-              position: 'absolute', 
-              inset: 0, 
-              width: '100%', 
-              height: '100%', 
-              objectFit: 'cover', 
-              filter: 'brightness(1.05) contrast(0.95)',
-              zIndex: 1 
-            }} 
-          />
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255, 255, 255, 0.25)', zIndex: 1, pointerEvents: 'none' }} />
-
-          {/* Transparent White Sheet of Paper matching Iron Filings area width (560px x 340px) */}
-          <div style={{
-            position: 'absolute',
-            width: '560px',
-            maxWidth: '92%',
-            height: '340px',
-            maxHeight: '86%',
-            background: 'rgba(255, 255, 255, 0.82)',
-            backdropFilter: 'blur(3px)',
-            border: '1.5px solid rgba(255, 255, 255, 0.95)',
-            borderRadius: '18px',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.12), inset 0 0 20px rgba(255, 255, 255, 0.6)',
-            zIndex: 2,
-            pointerEvents: 'none',
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'flex-end',
-            padding: '8px 12px'
-          }}>
-            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#475569', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.75 }}>
-              📄 White Paper Sheet
-            </span>
+          {/* Top-left Lab Badge */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 16,
+              left: 20,
+              zIndex: 10,
+              background: 'rgba(255,255,255,0.92)',
+              padding: '6px 14px',
+              borderRadius: '20px',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              color: '#0F172A',
+              backdropFilter: 'blur(8px)',
+              pointerEvents: 'none',
+              border: '1px solid rgba(255,255,255,0.8)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            }}
+          >
+            🧲 3D Interactive Magnet Lab | Drag to Rotate
           </div>
 
-          {/* Animated Shaker Tool Pouring Filings */}
-          <AnimatePresence>
-            {isSprinkling && (
-              <motion.div
-                initial={{ opacity: 0, x: -180, y: -80, rotate: 0 }}
-                animate={{ 
-                  opacity: [0, 1, 1, 0], 
-                  x: [-180, 0, 180], 
-                  y: [-80, -90, -80], 
-                  rotate: [-15, 25, -15, 25] 
-                }}
-                transition={{ duration: 0.9 }}
-                style={{
-                  position: 'absolute',
-                  zIndex: 50,
-                  fontSize: '2.8rem',
-                  filter: 'drop-shadow(0 8px 18px rgba(217, 119, 6, 0.4))',
-                  pointerEvents: 'none'
-                }}
-              >
-                🧂
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Tapping Energy Shockwave Ripple */}
-          <AnimatePresence>
-            {isVibrating && (
-              <motion.div
-                initial={{ scale: 0.2, opacity: 0.9 }}
-                animate={{ scale: 2.4, opacity: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                style={{
-                  position: 'absolute',
-                  width: '220px',
-                  height: '220px',
-                  borderRadius: '50%',
-                  border: '3px solid #D97706',
-                  boxShadow: '0 0 35px #D97706, inset 0 0 25px #D97706',
-                  pointerEvents: 'none',
-                  zIndex: 8
-                }}
+          {/* 3D Canvas Scene matching Stage 1 Camera & Lights */}
+          <Canvas
+            shadows
+            gl={{ alpha: true, antialias: true }}
+            camera={{ position: [0, 24, 30], fov: 45 }}
+            style={{ width: '100%', height: '100%' }}
+          >
+            <Suspense fallback={null}>
+              <ambientLight intensity={0.8} />
+              <directionalLight
+                position={[10, 22, 12]}
+                intensity={1.8}
+                castShadow
+                shadow-mapSize={[2048, 2048]}
+                shadow-bias={-0.0001}
               />
-            )}
-          </AnimatePresence>
+              <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
+              <Environment preset="city" />
 
-          {/* 3D Bar Magnet */}
-          {shape === 'bar' && (
-            <motion.div
-              dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
-              dragElastic={0.1}
-              whileGrab={{ scale: 1.06, cursor: 'grabbing' }}
+              {/* Render Selected 3D Magnet */}
+              {shape === 'bar' && <BarMagnet3D />}
+              {shape === 'horseshoe' && <HorseshoeMagnet3D />}
+              {shape === 'ring' && <RingMagnet3D />}
+
+              {/* Iron Filings Instanced Mesh */}
+              <FilingsSystem3D
+                key={shape}
+                shape={shape}
+                step={step}
+                isSprinkling={isSprinkling}
+                isVibrating={isVibrating}
+              />
+
+              {/* Realistic White Lab Paper Sheet (26 x 0.04 x 16) */}
+              <mesh receiveShadow position={[0, -0.01, 0]}>
+                <boxGeometry args={[26, 0.04, 16]} />
+                <meshStandardMaterial color="#FAF9F6" roughness={0.95} metalness={0.0} />
+              </mesh>
+
+              {/* Soft Drop Shadow under Paper */}
+              <ContactShadows
+                position={[0, -0.08, 0]}
+                opacity={0.65}
+                scale={32}
+                blur={2.2}
+                far={4}
+                color="#000000"
+              />
+
+              <OrbitControls
+                makeDefault
+                maxPolarAngle={Math.PI / 2.15}
+                minPolarAngle={0.15}
+                minDistance={8}
+                maxDistance={45}
+                enablePan={false}
+              />
+            </Suspense>
+          </Canvas>
+        </div>
+      </div>
+
+      {/* Right Side: Control Panel */}
+      <div
+        style={{
+          flex: '0.9',
+          background: '#FFFFFF',
+          border: '1.5px solid #A7F3D0',
+          borderRadius: '20px',
+          padding: '1.4rem 1.5rem',
+          boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          gap: '1.1rem',
+          minWidth: 0,
+          overflowY: 'auto',
+        }}
+      >
+        {/* Step Instructions */}
+        <div
+          style={{
+            background: '#F8FAFC',
+            border: '1.5px solid #CBD5E1',
+            borderRadius: '18px',
+            padding: '1.3rem 1.4rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.6rem',
+            boxShadow: '0 4px 14px rgba(0,0,0,0.03)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.55rem',
+              color: '#064E3B',
+              fontWeight: 900,
+              fontSize: '1.1rem',
+            }}
+          >
+            <BookOpen size={22} color="#047857" />
+            <span>
+              {step === 'initial' && 'Step 1: Choose Shape & Sprinkle'}
+              {step === 'scattered' && 'Step 2: Tap the Paper'}
+              {(step === 'tapped' || step === 'complete') && 'Step 3: Observe Magnetic Poles'}
+            </span>
+          </div>
+          <p style={{ margin: 0, color: '#334155', fontSize: '0.96rem', lineHeight: 1.6, fontWeight: 600 }}>
+            {step === 'initial' && 'Choose a 3D magnet shape below and click "1. Sprinkle" to drop metallic filings.'}
+            {step === 'scattered' && 'Click "2. Tap Paper" to gently vibrate the sheet and align the filings.'}
+            {(step === 'tapped' || step === 'complete') && 'Notice that filings cluster at the poles regardless of the magnet shape!'}
+          </p>
+        </div>
+
+        {/* Magnet Shape Selector Card */}
+        <div
+          style={{
+            background: '#F0FDF4',
+            border: '1.5px solid #A7F3D0',
+            borderRadius: '18px',
+            padding: '1rem 1.25rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.6rem',
+            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.04)',
+          }}
+        >
+          <h4
+            style={{
+              color: '#064E3B',
+              margin: 0,
+              fontSize: '1rem',
+              fontWeight: 900,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+            }}
+          >
+            <Shapes size={18} color="#047857" /> Choose Magnet Shape
+          </h4>
+
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={() => handleShapeChange('horseshoe')}
               style={{
-                position: 'absolute',
-                width: '290px',
-                height: '75px',
+                flex: 1,
+                padding: '0.65rem 0.5rem',
                 borderRadius: '12px',
-                display: 'flex',
-                zIndex: 30,
-                cursor: 'grab',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.35), 0 0 25px rgba(245, 158, 11, 0.35)',
-                overflow: 'hidden',
-                border: '2.5px solid #FFFFFF',
-                background: '#18181B'
+                border: '1.5px solid',
+                borderColor: shape === 'horseshoe' ? '#16A34A' : '#CBD5E1',
+                background: shape === 'horseshoe' ? '#DCFCE7' : '#FFFFFF',
+                color: shape === 'horseshoe' ? '#065F46' : '#1E293B',
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: shape === 'horseshoe' ? '0 2px 8px rgba(22, 163, 74, 0.2)' : 'none',
               }}
             >
-              <div style={{ flex: 1, background: 'linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 10px rgba(255,255,255,0.9)' }}>N</span>
-              </div>
-              <div style={{ width: '5px', background: '#FFFFFF', zIndex: 2 }} />
-              <div style={{ flex: 1, background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#FFFFFF', textShadow: '0 0 10px rgba(255,255,255,0.9)' }}>S</span>
-              </div>
-            </motion.div>
-          )}
+              Horseshoe 🧲
+            </button>
 
-          {shape === 'horseshoe' && (
-            <motion.img 
-              drag
-              dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
-              src="/horse-magnet.png" 
-              alt="Horseshoe Magnet"
+            <button
+              onClick={() => handleShapeChange('ring')}
               style={{
-                position: 'absolute',
-                width: '200px',
-                zIndex: 30,
-                cursor: 'grab',
-                filter: 'drop-shadow(0 12px 25px rgba(0,0,0,0.4))'
+                flex: 1,
+                padding: '0.65rem 0.5rem',
+                borderRadius: '12px',
+                border: '1.5px solid',
+                borderColor: shape === 'ring' ? '#16A34A' : '#CBD5E1',
+                background: shape === 'ring' ? '#DCFCE7' : '#FFFFFF',
+                color: shape === 'ring' ? '#065F46' : '#1E293B',
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: shape === 'ring' ? '0 2px 8px rgba(22, 163, 74, 0.2)' : 'none',
               }}
-              whileGrab={{ cursor: 'grabbing', scale: 1.05 }}
-            />
-          )}
+            >
+              Ring ⭕
+            </button>
 
-          {shape === 'ring' && (
-            <motion.img 
-              drag
-              dragConstraints={{ left: -120, right: 120, top: -80, bottom: 80 }}
-              src="/MagneticPoles/ring_magnet.png" 
-              alt="Ring Magnet"
+            <button
+              onClick={() => handleShapeChange('bar')}
               style={{
-                position: 'absolute',
-                width: '180px',
-                zIndex: 30,
-                cursor: 'grab',
-                filter: 'drop-shadow(0 12px 25px rgba(0,0,0,0.4))'
+                flex: 1,
+                padding: '0.65rem 0.5rem',
+                borderRadius: '12px',
+                border: '1.5px solid',
+                borderColor: shape === 'bar' ? '#16A34A' : '#CBD5E1',
+                background: shape === 'bar' ? '#DCFCE7' : '#FFFFFF',
+                color: shape === 'bar' ? '#065F46' : '#1E293B',
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: shape === 'bar' ? '0 2px 8px rgba(22, 163, 74, 0.2)' : 'none',
               }}
-              whileGrab={{ cursor: 'grabbing', scale: 1.05 }}
-            />
-          )}
+            >
+              Bar 🔲
+            </button>
+          </div>
+        </div>
 
-          {/* Render Filings */}
-          {filings.map((f) => (
-            <motion.div
-              key={f.id}
-              animate={{
-                x: f.x,
-                y: f.y,
-                rotate: f.rotation
-              }}
-              transition={{ type: 'spring', damping: 18, stiffness: 120 }}
-              style={{
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                width: `${f.width}px`,
-                height: '3px',
-                backgroundColor: f.color,
-                borderRadius: '1.5px',
-                pointerEvents: 'none',
-                zIndex: 15
-              }}
-            />
-          ))}
-        </motion.div>
-
-        {/* Action Controls Row under Canvas */}
-        <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'space-between' }}>
-          <button 
-            onClick={handleScatter} 
+        {/* Action Controls */}
+        <div style={{ width: '100%', display: 'flex', gap: '0.65rem' }}>
+          <button
+            onClick={handleScatter}
             disabled={step !== 'initial' || isSprinkling}
-            style={{ 
+            style={{
               flex: 1,
-              padding: '0.85rem 1rem', 
-              fontSize: '0.95rem', 
-              fontWeight: 900, 
+              padding: '0.85rem 0.4rem',
+              fontSize: '0.9rem',
+              fontWeight: 900,
               borderRadius: '14px',
               background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
               color: step === 'initial' ? '#FFFFFF' : '#94A3B8',
-              border: step === 'initial' ? 'none' : '1.5px solid #CBD5E1',
+              border: 'none',
               cursor: step === 'initial' ? 'pointer' : 'not-allowed',
-              opacity: step === 'initial' ? 1 : 0.6,
-              boxShadow: step === 'initial' ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.5rem'
+              gap: '4px',
+              boxShadow: step === 'initial' ? '0 4px 12px rgba(217, 119, 6, 0.25)' : 'none',
             }}
           >
-            🧪 1. Sprinkle Filings
+            🧪 1. Sprinkle
           </button>
-          
-          <button 
+
+          <button
             onClick={handleTap}
             disabled={step !== 'scattered' || tapCount >= 1}
-            style={{ 
+            style={{
               flex: 1,
-              padding: '0.85rem 1rem', 
-              fontSize: '0.95rem', 
-              fontWeight: 900, 
-              borderRadius: '14px', 
-              display: 'flex', 
-              alignItems: 'center', 
+              padding: '0.85rem 0.4rem',
+              fontSize: '0.9rem',
+              fontWeight: 900,
+              borderRadius: '14px',
+              background:
+                step === 'scattered' && tapCount === 0
+                  ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
+                  : '#F1F5F9',
+              color: step === 'scattered' && tapCount === 0 ? '#FFFFFF' : '#94A3B8',
+              border: 'none',
+              cursor: step === 'scattered' && tapCount === 0 ? 'pointer' : 'not-allowed',
+              display: 'flex',
+              alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.6rem',
-              background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
-              color: (step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8',
-              border: (step === 'scattered' && tapCount === 0) ? 'none' : '1.5px solid #CBD5E1',
-              cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'not-allowed',
-              opacity: (step === 'scattered' && tapCount === 0) ? 1 : 0.6,
-              boxShadow: (step === 'scattered' && tapCount === 0) ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none'
+              gap: '4px',
+              boxShadow: step === 'scattered' && tapCount === 0 ? '0 4px 12px rgba(217, 119, 6, 0.25)' : 'none',
             }}
           >
-            <Hand size={20} color={(step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8'} /> 
-            {tapCount === 0 ? '2. Tap Board' : 'Board Tapped ✓'}
+            <Hand size={15} /> {tapCount === 0 ? '2. Tap Paper' : 'Tapped ✓'}
           </button>
-          
-          <button 
+
+          <button
             onClick={handleReset}
             disabled={step === 'initial'}
-            style={{ 
+            style={{
               flex: 1,
-              padding: '0.85rem 1rem', 
-              fontSize: '0.95rem', 
-              fontWeight: 900, 
-              borderRadius: '14px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              gap: '0.6rem',
+              padding: '0.85rem 0.4rem',
+              fontSize: '0.9rem',
+              fontWeight: 900,
+              borderRadius: '14px',
               background: '#FFFFFF',
               color: step !== 'initial' ? '#1E293B' : '#94A3B8',
               border: '1.5px solid #CBD5E1',
               cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
-              opacity: step !== 'initial' ? 1 : 0.6,
-              boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
             }}
           >
-            <RotateCcw size={20} color={step !== 'initial' ? '#1E293B' : '#94A3B8'} /> Reset
+            <RotateCcw size={15} /> Reset
           </button>
-        </div>
-      </div>
-
-      {/* Right Side: Control Panel (Activity 4.3 Reference Theme) */}
-      <div style={{ 
-        flex: '0.95', 
-        background: '#FFFFFF',
-        border: '1.5px solid #A7F3D0',
-        borderRadius: '20px',
-        padding: '1.25rem 1.5rem',
-        boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
-        display: 'flex', 
-        flexDirection: 'column', 
-        justifyContent: 'space-between', 
-        gap: '1rem', 
-        minWidth: 0, 
-        overflowY: 'auto' 
-      }}>
-        <div>
-          {/* Badge Tag & Title */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#D1FAE5', color: '#047857', padding: '0.35rem 0.85rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '0.05em', marginBottom: '0.6rem' }}>
-            🧲 STAGE 3: MAGNET SHAPES
-          </div>
-          <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.5rem', fontWeight: 900, color: '#064E3B' }}>
-            Poles in Different Magnets
-          </h3>
-          <p style={{ margin: '0 0 0.85rem 0', color: '#334155', fontSize: '0.92rem', lineHeight: 1.55, fontWeight: 600 }}>
-            Select different magnet shapes to verify that poles exist in all magnets!
-          </p>
-
-          {/* Magnet Shape Selector Card */}
-          <div style={{ 
-            background: '#F0FDF4', 
-            border: '1.5px solid #A7F3D0', 
-            borderRadius: '16px',
-            padding: '0.9rem 1.15rem',
-            boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)',
-            marginBottom: '0.85rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem'
-          }}>
-            <h4 style={{ color: '#064E3B', margin: 0, fontSize: '0.98rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Shapes size={18} color="#047857" /> Choose Magnet Shape
-            </h4>
-            
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button
-                onClick={() => handleShapeChange('horseshoe')}
-                style={{
-                  flex: 1,
-                  padding: '0.6rem 0.5rem',
-                  borderRadius: '10px',
-                  border: '1.5px solid',
-                  borderColor: shape === 'horseshoe' ? '#16A34A' : '#CBD5E1',
-                  background: shape === 'horseshoe' ? '#DCFCE7' : '#FFFFFF',
-                  color: shape === 'horseshoe' ? '#065F46' : '#1E293B',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                Horseshoe 🧲
-              </button>
-
-              <button
-                onClick={() => handleShapeChange('ring')}
-                style={{
-                  flex: 1,
-                  padding: '0.6rem 0.5rem',
-                  borderRadius: '10px',
-                  border: '1.5px solid',
-                  borderColor: shape === 'ring' ? '#16A34A' : '#CBD5E1',
-                  background: shape === 'ring' ? '#DCFCE7' : '#FFFFFF',
-                  color: shape === 'ring' ? '#065F46' : '#1E293B',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                Ring ⭕
-              </button>
-
-              <button
-                onClick={() => handleShapeChange('bar')}
-                style={{
-                  flex: 1,
-                  padding: '0.6rem 0.5rem',
-                  borderRadius: '10px',
-                  border: '1.5px solid',
-                  borderColor: shape === 'bar' ? '#16A34A' : '#CBD5E1',
-                  background: shape === 'bar' ? '#DCFCE7' : '#FFFFFF',
-                  color: shape === 'bar' ? '#065F46' : '#1E293B',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                Bar 🔲
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Observation Summary Card */}
-        <div style={{ 
-          background: '#F0FDF4', 
-          border: '1.5px solid #A7F3D0', 
-          borderRadius: '16px',
-          padding: '1.15rem',
-          boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.85rem'
-        }}>
-          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.02rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Shapes size={20} color="#D97706" /> 
-            Observation Summary
+        <div
+          style={{
+            background: '#F0FDF4',
+            border: '1.5px solid #A7F3D0',
+            borderRadius: '20px',
+            padding: '1.3rem 1.4rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.85rem',
+            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)',
+          }}
+        >
+          <h4
+            style={{
+              color: '#064E3B',
+              margin: 0,
+              fontSize: '1.1rem',
+              fontWeight: 900,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+            }}
+          >
+            <Shapes size={20} color="#D97706" /> Observation Summary
           </h4>
-          <p style={{ margin: 0, color: '#334155', fontSize: '0.92rem', lineHeight: 1.55, fontWeight: 600 }}>
-            If we repeat this activity with magnets of other shapes, do we get the same pole behavior?
+          <p style={{ margin: 0, color: '#1E293B', fontSize: '0.94rem', lineHeight: 1.55, fontWeight: 700 }}>
+            Do all magnet shapes exhibit the same concentration of magnetic poles?
           </p>
-          <ul style={{ margin: 0, paddingLeft: '1.15rem', color: '#334155', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.88rem', lineHeight: '1.5', fontWeight: 600 }}>
-            <li><strong>Horseshoe Magnet:</strong> Filings cluster at the two ends.</li>
-            <li><strong>Ring Magnet:</strong> Filings cluster at opposite faces/poles.</li>
-            <li><strong>Bar Magnet:</strong> Filings cluster at the two ends.</li>
+          <ul
+            style={{
+              margin: 0,
+              paddingLeft: '1.15rem',
+              color: '#334155',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem',
+              fontSize: '0.88rem',
+              lineHeight: '1.45',
+              fontWeight: 600,
+            }}
+          >
+            <li>
+              <strong>Horseshoe:</strong> Filings cluster tightly at both curved tips.
+            </li>
+            <li>
+              <strong>Ring:</strong> Filings concentrate on opposite pole faces.
+            </li>
+            <li>
+              <strong>Bar:</strong> Filings gather at the two distant ends.
+            </li>
           </ul>
 
-          <div style={{ marginTop: '0.5rem' }}>
-            <p style={{ margin: '0 0 0.75rem 0', color: '#065F46', fontSize: '0.88rem', fontWeight: 800 }}>
-              Conclusion: No matter the shape, every magnet has two poles where attraction is strongest.
-            </p>
-            <button 
-              onClick={() => { if (onComplete) onComplete(); }}
+          <div style={{ marginTop: '0.35rem' }}>
+            <button
+              onClick={() => {
+                if (onComplete) onComplete();
+              }}
               style={{
                 width: '100%',
-                padding: '0.85rem 1.5rem',
-                fontSize: '0.95rem',
+                padding: '0.9rem',
+                fontSize: '1rem',
                 fontWeight: 900,
-                borderRadius: '25px',
+                borderRadius: '16px',
                 background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                 color: '#FFFFFF',
                 border: 'none',
@@ -607,7 +839,6 @@ export default function Stage3_Sandbox({ onComplete }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
-                transition: 'all 0.2s ease'
               }}
             >
               <Flag size={18} color="#FFFFFF" /> Finish Activity & Proceed to Quiz
