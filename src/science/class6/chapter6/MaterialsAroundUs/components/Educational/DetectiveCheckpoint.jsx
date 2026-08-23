@@ -70,10 +70,10 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
   };
 
   return (
-    <div style={{ flex: 1, display: 'flex', gap: '1rem', padding: '1rem', background: 'var(--surface)', overflow: 'hidden', height: '100%', position: 'relative' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 4fr) minmax(0, 6fr)', gap: '1rem', padding: '1rem', background: 'var(--surface)', overflow: 'hidden', height: '100%', position: 'relative' }}>
 
       {/* Left Column: Mission Briefing */}
-      <div style={{ flex: 1, minWidth: '350px', maxWidth: '450px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
 
         <div style={{ height: '100%', background: 'white', borderRadius: '16px', padding: '1.5rem', border: '1px solid var(--border)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--accent)', fontWeight: '800', fontSize: '1.5rem', marginBottom: '1.5rem', alignSelf: 'flex-start' }}>
@@ -84,7 +84,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             {data.dialogue || "Well done, detective! You've explored the Barrier. Now let's verify your understanding and log our discoveries."}
           </p>
 
-          <div style={{ width: '260px', height: '260px', borderRadius: '12px', overflow: 'hidden', border: '2px solid var(--surface)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+          <div style={{ width: '100%', maxWidth: '300px', aspectRatio: '1/1', borderRadius: '12px', overflow: 'hidden', border: '2px solid var(--surface)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
             <img
               src={BLAKE_IMG_URL}
               alt="Chief Blake"
@@ -97,7 +97,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             CHIEF BLAKE
           </div>
 
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', marginTop: 'auto', fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', color: 'var(--text-secondary)', lineHeight: '1.55', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', marginTop: '40px', fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '600', color: 'var(--text-secondary)', lineHeight: '1.55', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}>
             Answer each question carefully. Correct answers will be added to our Case Log.
           </div>
 
@@ -106,7 +106,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
       </div>
 
       {/* Middle Column: Quiz Interface */}
-      <div style={{ flex: 2, background: 'white', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div style={{ background: 'white', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', overflow: 'hidden', height: '100%' }}>
 
         {/* Header */}
         <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

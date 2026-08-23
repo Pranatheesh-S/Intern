@@ -100,7 +100,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       const nextIndex = currentFlowIndex + 1;
       const nextNode = chapterFlow[nextIndex];
       
-      if (nextNode && nextNode.id === 'stage2') {
+      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage7_a')) {
         setShowHandbook(false);
       } else {
         setShowHandbook(true);
@@ -460,6 +460,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 const prevIndex = chapterFlow.findIndex(node => node.title === 'Phase 2: Identification');
                 if (prevIndex !== -1) {
                   setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (currentNode.id === 'stage7_a') {
+                const prevIndex = currentFlowIndex - 1;
+                if (prevIndex >= 0) {
+                  setShowHandbook(true);
                   setCurrentFlowIndex(prevIndex);
                   return;
                 }

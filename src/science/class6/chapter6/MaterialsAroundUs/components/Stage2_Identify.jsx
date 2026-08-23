@@ -61,6 +61,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
   const [scanState, setScanState] = useState('idle'); // 'idle', 'scanning', 'correct', 'incorrect'
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [selectedMaterialOption, setSelectedMaterialOption] = useState(null);
+  const [scanProgress, setScanProgress] = useState(0);
 
   const objectsToScan = [
     {
@@ -150,18 +151,31 @@ export default function Stage2_Identify({ onComplete, addXp }) {
   ];
 
   const handleScanObject = (obj) => {
+    if (scanState === 'scanning') return; // Prevent selecting another object while scanning
     setSelectedObj(obj);
     setSelectedMaterialOption(scannedObjects[obj.id] ? obj.correctMaterial : null);
     setScanState('scanning');
   };
 
   React.useEffect(() => {
-    let timer1, timer2;
+    let timer1, timer2, interval;
     if (scanState === 'scanning') {
+      setScanProgress(0);
+      interval = setInterval(() => {
+        setScanProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            return 100;
+          }
+          return prev + 1;
+        });
+      }, 30); // 100 steps * 30ms = 3000ms
+
       timer1 = setTimeout(() => {
         setScanState('scan_complete');
       }, 3000);
     } else if (scanState === 'scan_complete') {
+      setScanProgress(100);
       timer2 = setTimeout(() => {
         if (selectedObj && scannedObjects[selectedObj.id]) {
           setScanState('correct');
@@ -169,10 +183,13 @@ export default function Stage2_Identify({ onComplete, addXp }) {
           setScanState('awaiting_material');
         }
       }, 1000);
+    } else {
+      setScanProgress(0);
     }
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
+      clearInterval(interval);
     };
   }, [scanState, selectedObj, scannedObjects]);
 
@@ -224,12 +241,14 @@ export default function Stage2_Identify({ onComplete, addXp }) {
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column', 
-            gap: '0.75rem', 
-            padding: '20px', 
+            gap: '1rem', 
+            padding: '24px', 
             background: '#fdfbf7',
-            border: '1px solid #e2d3b9',
+            backgroundImage: 'radial-gradient(#e2d3b9 1px, transparent 1px)',
+            backgroundSize: '20px 20px',
+            border: '2px solid #e2d3b9',
             borderRadius: '16px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+            boxShadow: 'inset 0 0 40px rgba(226, 211, 185, 0.2), 0 4px 12px rgba(0,0,0,0.05)',
             height: '100%',
             minHeight: '100%',
             position: 'relative'
@@ -238,13 +257,14 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             <div style={{ position: 'absolute', top: '10px', left: '10px', width: '10px', height: '10px', borderTop: '2px solid #e2d3b9', borderLeft: '2px solid #e2d3b9' }} />
             <div style={{ position: 'absolute', top: '10px', right: '10px', width: '10px', height: '10px', borderTop: '2px solid #e2d3b9', borderRight: '2px solid #e2d3b9' }} />
 
-            <div style={{ borderBottom: '2px dashed #e2d3b9', paddingBottom: '16px', marginBottom: '8px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Search size={28} color="#3c2415" />
-                <h4 style={{ margin: 0, fontSize: '1.8rem', letterSpacing: '1px', color: '#3c2415', fontWeight: '900' }}>EVIDENCE BOARD</h4>
+            <div style={{ borderBottom: '2px dashed #e2d3b9', paddingBottom: '20px', marginBottom: '12px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Search size={32} color="#3c2415" />
+                <h4 style={{ margin: 0, fontSize: '2rem', letterSpacing: '1px', color: '#3c2415', fontWeight: '900' }}>EVIDENCE BOARD</h4>
               </div>
-              <h3 style={{ margin: 0, fontSize: '1rem', color: '#8b6508', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
-              <div style={{ display: 'inline-block', alignSelf: 'flex-start', background: '#bc4a1a', color: 'white', padding: '4px 12px', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#8b6508', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start', background: '#bc4a1a', color: 'white', padding: '6px 14px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'white' }} />
                 {objectsToScan.length} ITEMS • READY TO SCAN
               </div>
             </div>
@@ -264,7 +284,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 const isScanning = isSelected && scanState === 'scanning';
                 
                 let borderColor = '#e2d3b9';
-                let shadow = '0 2px 6px rgba(0,0,0,0.03)';
+                let shadow = '0 4px 12px rgba(0,0,0,0.04)';
                 let labelText = 'READY TO SCAN';
                 let labelColor = '#5c4033';
                 let bgColor = '#ffffff';
@@ -277,12 +297,12 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   labelColor = '#22c55e';
                 } else if (isScanning) {
                   borderColor = '#bc4a1a';
-                  shadow = '0 0 15px rgba(188, 74, 26, 0.2)';
+                  shadow = '0 0 20px rgba(188, 74, 26, 0.2)';
                   labelText = 'SCANNING...';
                   labelColor = '#bc4a1a';
                 } else if (isSelected) {
                   borderColor = '#bc4a1a';
-                  shadow = '0 4px 12px rgba(188, 74, 26, 0.1)';
+                  shadow = '0 6px 16px rgba(188, 74, 26, 0.15)';
                   labelText = 'SELECTED FOR SCAN';
                   labelColor = '#bc4a1a';
                 }
@@ -298,38 +318,52 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     className={`interactive-tray-item ${isScanned ? 'scanned-item' : ''}`}
                     style={{
                       width: '100%',
-                      padding: '12px',
-                      borderRadius: '12px',
+                      padding: '16px',
+                      borderRadius: '16px',
                       border: `2px solid ${borderColor}`,
                       background: bgColor,
                       display: 'flex',
-                      flexDirection: 'column',
-                      gap: '8px',
+                      flexDirection: 'row',
+                      gap: '12px',
                       cursor: isScanned ? 'default' : 'pointer',
                       boxShadow: shadow,
                       userSelect: 'none',
                       position: 'relative'
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: '#5c4033', fontWeight: '800', letterSpacing: '0.5px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <div style={{ width: '4px', height: '12px', background: '#bc4a1a', borderRadius: '2px' }} />
-                        <span>EVIDENCE {(index + 1).toString().padStart(2, '0')}</span>
+                    {/* Left: Text Content */}
+                    <div style={{ flex: '1 1 65%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '12px', minWidth: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: '#5c4033', fontWeight: '800', letterSpacing: '0.5px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <div style={{ width: '4px', height: '12px', background: '#bc4a1a', borderRadius: '2px' }} />
+                          <span>EVIDENCE {(index + 1).toString().padStart(2, '0')}</span>
+                        </div>
+                        {isScanned && <Check size={16} strokeWidth={3} style={{ color: '#22c55e' }} />}
                       </div>
-                      {isScanned && <Check size={16} strokeWidth={3} style={{ color: '#22c55e' }} />}
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span style={{ fontSize: '1.3rem', fontWeight: '900', color: nameColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{obj.name}</span>
+                        <span style={{ fontSize: '0.95rem', fontWeight: '800', color: labelColor, display: 'flex', alignItems: 'center', gap: '6px', minHeight: '18px' }}>
+                          {isScanning && (
+                             <motion.span
+                               animate={{ opacity: [1, 0.4, 1] }}
+                               transition={{ duration: 1, repeat: Infinity }}
+                               style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#bc4a1a', display: 'inline-block' }}
+                             />
+                          )}
+                          {labelText}
+                        </span>
+                      </div>
                     </div>
 
+                    {/* Right: Image Content */}
                     <div style={{ 
+                      flex: '0 0 35%',
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center', 
-                      width: '100%', 
-                      flex: 1,
-                      minHeight: 0,
-                      borderRadius: '8px', 
-                      background: '#fdfbf7', // subtle warm background for image
                       position: 'relative', 
-                      border: '1px solid #e2d3b9'
+                      minHeight: '80px'
                     }}>
                       {obj.boardImage || obj.image ? (
                         <img 
@@ -337,28 +371,15 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                           alt={obj.name} 
                           style={{ 
                             display: 'block', 
-                            width: '90%', 
-                            height: '90%', 
+                            width: '100%', 
+                            height: '100%', 
                             objectFit: 'contain',
                             objectPosition: 'center',
-                            mixBlendMode: 'multiply'
+                            mixBlendMode: 'multiply',
+                            transform: 'scale(1.25)'
                           }} 
                         />
                       ) : null}
-                    </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      <span style={{ fontSize: '1.2rem', fontWeight: '900', color: nameColor, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{obj.name}</span>
-                      <span style={{ fontSize: '0.9rem', fontWeight: '800', color: labelColor, display: 'flex', alignItems: 'center', gap: '4px', minHeight: '18px' }}>
-                        {isScanning && (
-                           <motion.span
-                             animate={{ opacity: [1, 0.4, 1] }}
-                             transition={{ duration: 1, repeat: Infinity }}
-                             style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#bc4a1a', display: 'inline-block' }}
-                           />
-                        )}
-                        {labelText}
-                      </span>
                     </div>
                   </div>
                 );
@@ -446,18 +467,51 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 
                 {/* Scanning effect */}
                 {scanState === 'scanning' && (
-                  <motion.div
-                    style={{
+                  <>
+                    <motion.div
+                      style={{
+                        position: 'absolute',
+                        top: 0, left: '10%', right: '10%',
+                        height: '4px',
+                        background: 'rgba(56, 189, 248, 0.9)',
+                        boxShadow: '0 0 15px var(--accent), 0 0 30px var(--accent)',
+                        zIndex: 5
+                      }}
+                      animate={{ top: ['0%', '100%', '0%'] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                    />
+                    
+                    {/* Progress Indicator Overlay */}
+                    <div style={{
                       position: 'absolute',
-                      top: 0, left: '10%', right: '10%',
-                      height: '4px',
-                      background: 'rgba(56, 189, 248, 0.9)',
-                      boxShadow: '0 0 15px var(--accent), 0 0 30px var(--accent)',
-                      zIndex: 5
-                    }}
-                    animate={{ top: ['0%', '100%', '0%'] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                  />
+                      top: '72px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '8px',
+                      zIndex: 10,
+                      background: 'rgba(15, 23, 42, 0.8)',
+                      backdropFilter: 'blur(8px)',
+                      padding: '12px 24px',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(56, 189, 248, 0.4)',
+                      boxShadow: '0 8px 32px rgba(56, 189, 248, 0.2)'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', gap: '24px' }}>
+                        <h3 style={{ margin: 0, color: 'rgba(56, 189, 248, 0.9)', fontSize: '0.85rem', fontWeight: '800', letterSpacing: '1px' }}>SCANNER ACTIVE</h3>
+                        <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#ffffff' }}>{scanProgress}%</div>
+                      </div>
+                      
+                      {/* Progress bar */}
+                      <div style={{ width: '100%', minWidth: '200px', height: '6px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${scanProgress}%`, background: 'rgba(56, 189, 248, 0.9)', boxShadow: '0 0 10px rgba(56, 189, 248, 0.5)', transition: 'width 0.1s linear' }} />
+                      </div>
+                      
+                      <h4 style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.75rem', fontWeight: '700', letterSpacing: '1px', alignSelf: 'flex-start' }}>SCANNING...</h4>
+                    </div>
+                  </>
                 )}
               </div>
             )}
