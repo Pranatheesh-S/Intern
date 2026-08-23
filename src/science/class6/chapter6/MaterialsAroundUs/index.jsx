@@ -100,7 +100,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       const nextIndex = currentFlowIndex + 1;
       const nextNode = chapterFlow[nextIndex];
       
-      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage7_a')) {
+      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage7_a' || nextNode.id === 'stage8_a' || nextNode.id === 'stage8_b')) {
         setShowHandbook(false);
       } else {
         setShowHandbook(true);
@@ -474,7 +474,34 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 }
               }
 
-              if (!showHandbook && currentNode.type === 'activity') {
+              if (currentNode.id === 'stage7_b') {
+                const prevIndex = chapterFlow.findIndex(node => node.id === 'stage7_a');
+                if (prevIndex !== -1) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (currentNode.id === 'stage8_a') {
+                const prevIndex = currentFlowIndex - 1;
+                if (prevIndex >= 0) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (currentNode.id === 'stage8_b' || currentNode.id === 'stage8_c') {
+                const prevIndex = currentFlowIndex - 1;
+                if (prevIndex >= 0) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (!showHandbook && currentNode.type === 'activity' && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') {
                 setShowHandbook(true);
               } else if (currentFlowIndex > 0) {
                 const prevIndex = currentFlowIndex - 1;
@@ -514,17 +541,17 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
           {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
             <button 
-              onClick={showHandbook ? () => setShowHandbook(false) : handleNext}
-              disabled={showHandbook ? false : !stageCompleted}
-              className={(showHandbook || stageCompleted) ? 'primary' : 'outline'}
+              onClick={showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c' ? () => setShowHandbook(false) : handleNext}
+              disabled={(showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') ? false : !stageCompleted}
+              className={((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'primary' : 'outline'}
               style={{ 
                 padding: '0.65rem 1.6rem', 
                 fontSize: '1.1rem', 
                 fontWeight: 'bold',
                 gap: '0.65rem', 
                 borderRadius: '10px',
-                opacity: (showHandbook || stageCompleted) ? 1 : 0.5,
-                cursor: (showHandbook || stageCompleted) ? 'pointer' : 'not-allowed',
+                opacity: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 1 : 0.5,
+                cursor: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'pointer' : 'not-allowed',
                 transition: 'all 0.3s',
                 display: 'flex',
                 alignItems: 'center'
