@@ -1,12 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, CheckCircle, RotateCcw, Flag } from 'lucide-react';
+import { Compass, CheckCircle, RotateCcw, Flag, Maximize2, Minimize2 } from 'lucide-react';
 import MagneticNeedleShape from './MagneticNeedleShape';
 
 export default function Stage2_Floating({ onComplete }) {
   const [step, setStep] = useState('initial'); // 'initial', 'floating', 'settled'
   const [rotationAngle, setRotationAngle] = useState(0);
   const [spinCount, setSpinCount] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const handlePlaceCork = () => {
     // Initial spin when placed in water, then settling to 0 (North-South)
@@ -163,36 +184,14 @@ export default function Stage2_Floating({ onComplete }) {
       background: 'transparent'
     }}>
       {/* Left Side: Interactive Area */}
-      <div style={{ flex: '1.65', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', height: '100%', minHeight: 0, boxSizing: 'border-box' }}>
-        {/* Top Header Container */}
-        <div style={{ 
-          width: '100%',
-          textAlign: 'center',
-          background: '#FFFFFF',
-          padding: '0.65rem 1.25rem',
-          borderRadius: '20px',
-          border: '1.5px solid #A7F3D0',
-          boxShadow: '0 4px 16px rgba(6, 78, 59, 0.06)',
-          boxSizing: 'border-box',
-          marginBottom: '0.5rem'
-        }}>
-          <h3 style={{ margin: '0 0 0.15rem 0', fontSize: '1.35rem', fontWeight: 900, color: '#064E3B', letterSpacing: '-0.01em' }}>
-            Floating the Compass (Fig. 4.6)
-          </h3>
-          <p style={{ margin: 0, color: '#475569', fontSize: '0.88rem', fontWeight: 600 }}>
-            {step === 'initial' 
-              ? "Drag the cork into the bowl of water."
-              : "Click the floating cork to spin the compass needle fast and observe it settle North-South!"}
-          </p>
-        </div>
-
+      <div style={{ flex: '1.65', display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, boxSizing: 'border-box' }}>
         {/* Enlarged Canvas Activity Area */}
         <div style={{ 
           position: 'relative', 
           width: '100%', 
           maxWidth: '100%',
           flex: 1, 
-          minHeight: '300px', 
+          minHeight: '380px', 
           background: '#F0FDF4',
           border: '1.5px solid #A7F3D0',
           borderRadius: '24px',
@@ -201,11 +200,11 @@ export default function Stage2_Floating({ onComplete }) {
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          boxShadow: '0 8px 25px rgba(6, 78, 59, 0.08)'
+          boxShadow: '0 12px 30px rgba(6, 78, 59, 0.12)'
         }}>
-          {/* Finding Directions Physics Lab Background Image */}
+          {/* Laboratory Desk Background Image */}
           <img 
-            src="/SuspendedMagnet/wooden_stand_lab_bg.jpg" 
+            src="/MagneticCompass/bg_image.jpg" 
             alt="Physics Lab Background" 
             style={{ 
               position: 'absolute', 
@@ -213,36 +212,67 @@ export default function Stage2_Floating({ onComplete }) {
               width: '100%', 
               height: '100%', 
               objectFit: 'cover', 
-              filter: 'brightness(1.05) contrast(0.95)',
+              filter: 'brightness(1.02) contrast(1.0)',
               zIndex: 1 
             }} 
           />
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255, 255, 255, 0.25)', zIndex: 1, pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0, 0, 0, 0.12)', zIndex: 1, pointerEvents: 'none' }} />
 
-          {/* Transparent White Sheet of Paper */}
-          <div style={{
-            position: 'absolute',
-            width: '560px',
-            maxWidth: '92%',
-            height: '340px',
-            maxHeight: '86%',
-            background: 'rgba(255, 255, 255, 0.82)',
-            backdropFilter: 'blur(3px)',
-            border: '1.5px solid rgba(255, 255, 255, 0.95)',
-            borderRadius: '18px',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.12), inset 0 0 20px rgba(255, 255, 255, 0.6)',
-            zIndex: 2,
-            pointerEvents: 'none',
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'flex-end',
-            padding: '8px 12px'
-          }}>
-            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#475569', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.75 }}>
-              📄 White Paper Sheet
-            </span>
+          {/* Fullscreen Button */}
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            style={{
+              position: 'absolute',
+              top: 16,
+              right: 20,
+              zIndex: 30,
+              background: 'rgba(255,255,255,0.92)',
+              padding: '6px 14px',
+              borderRadius: '20px',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              color: '#0F172A',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255,255,255,0.8)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
+            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+          </button>
+
+          {/* Parchment Paper Box Tray in Activity Area (matching Poles of Magnet) */}
+          <div
+            style={{
+              position: 'absolute',
+              width: '560px',
+              maxWidth: '92%',
+              height: '340px',
+              maxHeight: '84%',
+              backgroundImage: 'url(/MagneticPoles/paper_texture.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              borderRadius: '16px',
+              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.35), inset 0 0 20px rgba(0, 0, 0, 0.15)',
+              border: '2px solid #8B5A2B',
+              zIndex: 2,
+              pointerEvents: 'none',
+              top: 'calc(50% + 20px)',
+              transform: 'translateY(-50%)',
+            }}
+          >
+            {/* Paper Walls visual depth borders */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '8px', background: 'rgba(0,0,0,0.15)' }} />
+            <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '8px', background: 'rgba(0,0,0,0.15)' }} />
+            <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '8px', background: 'rgba(0,0,0,0.15)' }} />
           </div>
-          
+
           {/* Photorealistic 3D Ceramic Water Bowl & Compass Assembly */}
           <div style={{
             width: '380px',
@@ -251,7 +281,8 @@ export default function Stage2_Floating({ onComplete }) {
             zIndex: 10,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            marginTop: '4.8rem'
           }}>
             {/* 3D Water Bowl Image */}
             <img 
@@ -318,7 +349,7 @@ export default function Stage2_Floating({ onComplete }) {
 
           {/* Draggable Cork Disc on Left (Initial Step) */}
           {step === 'initial' && (
-            <div style={{ position: 'absolute', left: '25px', top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}>
+            <div style={{ position: 'absolute', left: '25px', top: '55%', transform: 'translateY(-50%)', zIndex: 30 }}>
               <motion.div
                 drag
                 dragConstraints={{ left: -10, right: 350, top: -120, bottom: 120 }}
@@ -349,11 +380,11 @@ export default function Stage2_Floating({ onComplete }) {
                   background: '#FFFFFF',
                   border: '1.5px solid #A7F3D0',
                   borderRadius: '12px',
-                  padding: '0.3rem 0.4rem',
-                  fontSize: '0.78rem',
+                  padding: '0.35rem 0.5rem',
+                  fontSize: '0.82rem',
                   fontWeight: 900,
                   color: '#064E3B',
-                  boxShadow: '0 4px 10px rgba(6, 78, 59, 0.1)',
+                  boxShadow: '0 4px 10px rgba(6, 78, 59, 0.12)',
                   pointerEvents: 'none',
                   textAlign: 'center'
                 }}>
@@ -362,40 +393,6 @@ export default function Stage2_Floating({ onComplete }) {
               </motion.div>
             </div>
           )}
-        </div>
-
-        {/* Action Controls Button under Activity Canvas (amber-orange) */}
-        <div style={{ marginTop: '0.4rem', width: '100%' }}>
-          <button
-            onClick={step === 'initial' ? handlePlaceCork : handleSpin}
-            style={{
-              width: '100%',
-              padding: '0.75rem 1.5rem',
-              fontSize: '0.98rem',
-              fontWeight: 900,
-              borderRadius: '25px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '0.6rem',
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: '#FFFFFF',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-              transition: 'all 0.25s ease'
-            }}
-          >
-            {step === 'initial' ? (
-              <>
-                <Flag size={18} color="#FFFFFF" /> Float Cork on Water
-              </>
-            ) : (
-              <>
-                <RotateCcw size={18} color="#FFFFFF" /> Spin Needle Fast! 🔄
-              </>
-            )}
-          </button>
         </div>
       </div>
 
@@ -412,10 +409,11 @@ export default function Stage2_Floating({ onComplete }) {
         justifyContent: 'space-between', 
         minWidth: 0, 
         height: '100%',
-        boxSizing: 'border-box' 
+        boxSizing: 'border-box',
+        overflowY: 'auto'
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem' }}>
-          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.22rem', fontWeight: 900, letterSpacing: '-0.01em' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.24rem', fontWeight: 900, letterSpacing: '-0.01em' }}>
             Floating Compass Steps
           </h4>
           
@@ -423,7 +421,7 @@ export default function Stage2_Floating({ onComplete }) {
             <div style={{ 
               display: 'flex', 
               gap: '0.75rem', 
-              alignItems: 'flex-start',
+              alignItems: 'center',
               padding: '0.75rem 0.95rem',
               borderRadius: '14px',
               background: step !== 'initial' ? '#DCFCE7' : '#F0FDF4',
@@ -453,7 +451,7 @@ export default function Stage2_Floating({ onComplete }) {
             <div style={{ 
               display: 'flex', 
               gap: '0.75rem', 
-              alignItems: 'flex-start',
+              alignItems: 'center',
               padding: '0.75rem 0.95rem',
               borderRadius: '14px',
               background: step === 'settled' ? '#DCFCE7' : '#F8FAFC',
@@ -483,7 +481,7 @@ export default function Stage2_Floating({ onComplete }) {
             <div style={{ 
               display: 'flex', 
               gap: '0.75rem', 
-              alignItems: 'flex-start',
+              alignItems: 'center',
               padding: '0.75rem 0.95rem',
               borderRadius: '14px',
               background: spinCount > 0 ? '#DCFCE7' : '#F8FAFC',
@@ -515,45 +513,79 @@ export default function Stage2_Floating({ onComplete }) {
           <div style={{ 
             background: step === 'settled' ? '#F0FDF4' : '#F8FAFC', 
             border: `1.5px solid ${step === 'settled' ? '#A7F3D0' : '#E2E8F0'}`, 
-            padding: '1rem 1.15rem', 
+            padding: '1rem 1.2rem', 
             borderRadius: '16px',
             boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)'
           }}>
-            <h5 style={{ margin: '0 0 0.35rem 0', color: step === 'settled' ? '#064E3B' : '#64748B', fontSize: '1.02rem', fontWeight: 900 }}>
+            <h5 style={{ margin: '0 0 0.35rem 0', color: step === 'settled' ? '#064E3B' : '#64748B', fontSize: '1.04rem', fontWeight: 900 }}>
               🔍 Scientific Observation
             </h5>
-            <p style={{ margin: 0, fontSize: '0.92rem', color: step === 'settled' ? '#1E293B' : '#64748B', lineHeight: '1.55', fontWeight: 600 }}>
+            <p style={{ margin: 0, fontSize: '0.94rem', color: step === 'settled' ? '#1E293B' : '#64748B', lineHeight: '1.5', fontWeight: 600 }}>
               {step === 'settled'
-                ? "No matter how many times you spin the cork, the magnetized needle always comes to rest pointing in the North-South direction. This simple floating device works just like a real magnetic navigation compass!"
+                ? "The magnetized needle always comes to rest pointing North-South, working just like a real magnetic navigation compass!"
                 : "Rotate the needle in different directions and let it settle to observe."}
             </p>
           </div>
         </div>
 
-        {/* Completion Proceed Button (using amber-orange gradient matching back to chapter4) */}
-        <button 
-          onClick={handleFinish} 
-          disabled={step !== 'settled'}
-          style={{ 
-            width: '100%', 
-            padding: '0.95rem 1.6rem', 
-            fontSize: '1.05rem', 
-            fontWeight: 900, 
-            borderRadius: '25px', 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            gap: '0.65rem',
-            background: step === 'settled' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#E2E8F0',
-            color: step === 'settled' ? '#FFFFFF' : '#94A3B8',
-            border: 'none',
-            cursor: step === 'settled' ? 'pointer' : 'not-allowed',
-            boxShadow: step === 'settled' ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
-            transition: 'all 0.25s ease'
-          }}
-        >
-          <CheckCircle size={20} color={step === 'settled' ? "#FFFFFF" : "#94A3B8"} /> Finish Activity & Proceed to Quiz
-        </button>
+        {/* Action Controls Section on Right */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.6rem' }}>
+          <button
+            onClick={step === 'initial' ? handlePlaceCork : handleSpin}
+            style={{
+              width: '100%',
+              padding: '0.85rem 1.5rem',
+              fontSize: '0.98rem',
+              fontWeight: 900,
+              borderRadius: '25px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '0.6rem',
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+              color: '#FFFFFF',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
+              transition: 'all 0.25s ease'
+            }}
+          >
+            {step === 'initial' ? (
+              <>
+                <Flag size={18} color="#FFFFFF" /> Float Cork on Water
+              </>
+            ) : (
+              <>
+                <RotateCcw size={18} color="#FFFFFF" /> Spin Needle Fast! 🔄
+              </>
+            )}
+          </button>
+
+          {/* Completion Proceed Button */}
+          <button 
+            onClick={handleFinish} 
+            disabled={step !== 'settled'}
+            style={{ 
+              width: '100%', 
+              padding: '0.85rem 1.5rem', 
+              fontSize: '0.98rem', 
+              fontWeight: 900, 
+              borderRadius: '25px', 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              gap: '0.65rem',
+              background: step === 'settled' ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' : '#E2E8F0',
+              color: step === 'settled' ? '#FFFFFF' : '#94A3B8',
+              border: 'none',
+              cursor: step === 'settled' ? 'pointer' : 'not-allowed',
+              boxShadow: step === 'settled' ? '0 4px 14px rgba(16, 185, 129, 0.35)' : 'none',
+              transition: 'all 0.25s ease'
+            }}
+          >
+            <CheckCircle size={18} color={step === 'settled' ? "#FFFFFF" : "#94A3B8"} /> Finish Activity & Proceed to Quiz
+          </button>
+        </div>
       </div>
     </div>
   );

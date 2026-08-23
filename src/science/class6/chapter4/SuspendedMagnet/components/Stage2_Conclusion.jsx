@@ -1,11 +1,32 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Navigation, RotateCw, Flag, Compass, Sparkles, Info, ArrowRight } from 'lucide-react';
+import { Navigation, RotateCw, Flag, Compass, Sparkles, Info, ArrowRight, Maximize2, Minimize2 } from 'lucide-react';
 
 export default function Stage2_Conclusion({ onComplete }) {
   const [needleAngle, setNeedleAngle] = useState(0); // 0deg = North
   const [isSpinning, setIsSpinning] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   // Rotate / deflect compass needle on click or button press
   const handleDeflect = () => {
@@ -110,6 +131,35 @@ export default function Stage2_Conclusion({ onComplete }) {
               <Compass size={16} color="#F59E0B" /> COMPASS DIAL ALIGNMENT
             </div>
           </div>
+
+          {/* Fullscreen Button */}
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            style={{
+              position: 'absolute',
+              top: '16px',
+              right: '20px',
+              zIndex: 30,
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.8)',
+              borderRadius: '20px',
+              padding: '6px 14px',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              color: '#0F172A',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
+            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+          </button>
 
           {/* ------------------------------------------------------------- */}
           {/* Photorealistic Antique Brass Pocket Navigation Compass Assembly */}
@@ -512,10 +562,34 @@ export default function Stage2_Conclusion({ onComplete }) {
             color: '#334155', 
             lineHeight: 1.6, 
             fontWeight: 600,
-            margin: '0 0 1.2rem 0'
+            margin: '0 0 0.8rem 0'
           }}>
             A freely suspended bar magnet or compass needle always comes to rest pointing in the <strong style={{ color: '#D97706' }}>North-South direction</strong>. This key property has been used for centuries by sailors and travelers to find directions!
           </p>
+
+          {/* Finding Directions with the Sun Info Card */}
+          <div style={{
+            background: '#FFFBEB',
+            border: '1.5px solid #FDE68A',
+            borderRadius: '16px',
+            padding: '0.85rem 1rem',
+            marginBottom: '1rem',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.65rem',
+            boxShadow: '0 2px 8px rgba(217, 119, 6, 0.06)'
+          }}>
+            <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>☀️</span>
+            <p style={{ 
+              margin: 0, 
+              fontSize: '0.88rem', 
+              color: '#92400E', 
+              lineHeight: 1.5, 
+              fontWeight: 600 
+            }}>
+              Using the Sun's sunrise or sunset position gives an approximate East-West line, helping us find the North-South direction along which the magnet aligns.
+            </p>
+          </div>
 
           {/* Interactive Controls Card */}
           <div style={{ 

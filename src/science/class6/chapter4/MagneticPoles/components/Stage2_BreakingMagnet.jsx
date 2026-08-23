@@ -1,9 +1,111 @@
-import React, { useState, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Text, OrbitControls, ContactShadows, Environment } from '@react-three/drei';
+import { Text, OrbitControls, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Scissors, AlertCircle, CheckCircle, XCircle, ArrowRight, BookOpen, RotateCcw } from 'lucide-react';
+import { Scissors, AlertCircle, CheckCircle, XCircle, ArrowRight, BookOpen, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
 import * as THREE from 'three';
+
+// ---------------------------------------------------------
+// Realistic Parchment Paper Box Enclosure
+// ---------------------------------------------------------
+function PaperBoxEnclosure() {
+  const paperTexture = useTexture('/MagneticPoles/paper_texture.jpg');
+
+  return (
+    <>
+      {/* 1. Bottom Paper Base */}
+      <mesh receiveShadow position={[0, -0.01, 0]}>
+        <boxGeometry args={[26, 0.04, 16]} />
+        <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
+      </mesh>
+
+      {/* 2. Back Paper Wall */}
+      <mesh receiveShadow position={[0, 2.4, -8.0]}>
+        <boxGeometry args={[26, 4.8, 0.04]} />
+        <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
+      </mesh>
+
+      {/* 3. Left Paper Wall */}
+      <mesh receiveShadow position={[-13.0, 2.4, 0]}>
+        <boxGeometry args={[0.04, 4.8, 16]} />
+        <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
+      </mesh>
+
+      {/* 4. Right Paper Wall */}
+      <mesh receiveShadow position={[13.0, 2.4, 0]}>
+        <boxGeometry args={[0.04, 4.8, 16]} />
+        <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
+      </mesh>
+    </>
+  );
+}
+
+// ---------------------------------------------------------
+// Rotatable System for Magnet
+// ---------------------------------------------------------
+function RotatableMagnetGroup({ children }) {
+  const groupRef = useRef();
+  const targetRotationY = useRef(0);
+  const currentRotationY = useRef(0);
+  const isPointerDown = useRef(false);
+  const startX = useRef(0);
+
+  useEffect(() => {
+    const onPointerMove = (e) => {
+      if (!isPointerDown.current) return;
+      const deltaX = e.clientX - startX.current;
+      startX.current = e.clientX;
+      targetRotationY.current += deltaX * 0.012;
+    };
+
+    const onPointerUp = () => {
+      isPointerDown.current = false;
+      document.body.style.cursor = 'auto';
+    };
+
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+    };
+  }, []);
+
+  useFrame((state, delta) => {
+    if (!groupRef.current) return;
+    const dt = Math.min(delta, 0.1);
+    currentRotationY.current = THREE.MathUtils.lerp(currentRotationY.current, targetRotationY.current, dt * 12);
+    groupRef.current.rotation.y = currentRotationY.current;
+  });
+
+  return (
+    <group 
+      ref={groupRef}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        isPointerDown.current = true;
+        startX.current = e.clientX;
+        document.body.style.cursor = 'grabbing';
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = 'grab';
+      }}
+      onPointerOut={() => {
+        if (!isPointerDown.current) {
+          document.body.style.cursor = 'auto';
+        }
+      }}
+    >
+      {/* Invisible hit cylinder around magnet to catch drag gestures */}
+      <mesh visible={false} position={[0, 2.2, 0]}>
+        <cylinderGeometry args={[11, 11, 4.5, 32]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+      {children}
+    </group>
+  );
+}
 
 // 3D Breaking Magnet Component exactly matching Stage 1 Magnet (14.0 x 1.5 x 2.2) and Paper (30 x 0.04 x 18)
 function BreakingMagnet3D({ broken, showPoles }) {
@@ -131,11 +233,72 @@ function BreakingMagnet3D({ broken, showPoles }) {
   );
 }
 
+// ---------------------------------------------------------
+// Smooth Intro Animation Group (Bottom-Left to Center Growth)
+// ---------------------------------------------------------
+function AnimatedLabGroup({ children }) {
+  const groupRef = useRef();
+  const [hasStarted, setHasStarted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setHasStarted(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useFrame((state, delta) => {
+    if (!groupRef.current) return;
+    const dt = Math.min(delta, 0.1);
+
+    // Initial: Positioned on the left tabletop parallel to the compass & ruler on the right
+    const targetX = hasStarted ? 0 : -4.8;
+    const targetY = hasStarted ? -0.5 : -4.2;
+    const targetZ = hasStarted ? 0 : 6.5;
+    const targetScale = hasStarted ? 1.0 : 0.22;
+
+    const speed = 3.4;
+    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, dt * speed);
+    groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, dt * speed);
+    groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, dt * speed);
+
+    const currentScale = groupRef.current.scale.x;
+    const nextScale = THREE.MathUtils.lerp(currentScale, targetScale, dt * speed);
+    groupRef.current.scale.set(nextScale, nextScale, nextScale);
+  });
+
+  return (
+    <group ref={groupRef} position={[-4.8, -4.2, 6.5]} scale={[0.22, 0.22, 0.22]}>
+      {children}
+    </group>
+  );
+}
+
 export default function Stage2_BreakingMagnet({ onComplete }) {
   const [broken, setBroken] = useState(false);
   const [showPoles, setShowPoles] = useState(false);
   const [quizAnswer, setQuizAnswer] = useState(null);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const handleBreak = () => {
     setBroken(true);
@@ -149,14 +312,10 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
     setBroken(false);
     setShowPoles(false);
     setQuizAnswer(null);
-    setShowFeedbackModal(false);
   };
 
   const handleQuizAnswer = (answer) => {
     setQuizAnswer(answer);
-    if (answer === 'no') {
-      setShowFeedbackModal(true);
-    }
   };
 
   const handleNextSection = () => {
@@ -174,96 +333,11 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         overflow: 'hidden',
         boxSizing: 'border-box',
         position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'transparent',
       }}
     >
-      {/* Centered Feedback Pop-up Modal */}
-      <AnimatePresence>
-        {showFeedbackModal && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              zIndex: 1000,
-              background: 'rgba(15, 23, 42, 0.65)',
-              backdropFilter: 'blur(6px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '1.5rem',
-            }}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.8, opacity: 0, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              style={{
-                background: '#FFFFFF',
-                border: '2px solid #6EE7B7',
-                borderRadius: '24px',
-                padding: '2rem 2.2rem',
-                maxWidth: '480px',
-                width: '100%',
-                boxShadow: '0 20px 50px rgba(6, 78, 59, 0.35)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                gap: '1.25rem',
-                position: 'relative',
-              }}
-            >
-              <div
-                style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 8px 20px rgba(16, 185, 129, 0.25)',
-                }}
-              >
-                <CheckCircle size={36} color="#059669" />
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, color: '#064E3B' }}>
-                  Observation Verified!
-                </h3>
-                <p style={{ margin: 0, color: '#334155', fontSize: '1.02rem', lineHeight: 1.6, fontWeight: 700 }}>
-                  🎉 Correct! North and South poles always exist in pairs, even in the smallest pieces of a magnet.
-                </p>
-              </div>
-
-              <button
-                onClick={() => setShowFeedbackModal(false)}
-                style={{
-                  width: '100%',
-                  marginTop: '0.5rem',
-                  padding: '0.85rem 1.5rem',
-                  fontSize: '1rem',
-                  fontWeight: 900,
-                  borderRadius: '14px',
-                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
-                  boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-                }}
-              >
-                OK
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
       {/* Left Side: 3D Canvas Interactive Area matching Stage 1 background and sizing */}
       <div
         style={{
@@ -291,32 +365,41 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
           }}
         >
           {/* Top-left Lab Badge */}
-          <div
+          {/* Small Fullscreen Button */}
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
             style={{
               position: 'absolute',
               top: 16,
               left: 20,
-              zIndex: 10,
-              background: 'rgba(255,255,255,0.92)',
-              padding: '6px 14px',
-              borderRadius: '20px',
-              fontSize: '0.75rem',
-              fontWeight: 800,
+              zIndex: 30,
+              background: 'rgba(255, 255, 255, 0.92)',
+              border: '1px solid rgba(255, 255, 255, 0.85)',
+              borderRadius: '12px',
+              padding: '7px 12px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
               color: '#0F172A',
+              fontSize: '0.78rem',
+              fontWeight: 800,
               backdropFilter: 'blur(8px)',
-              pointerEvents: 'none',
-              border: '1px solid rgba(255,255,255,0.8)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
+              transition: 'all 0.2s ease',
             }}
           >
-            ✂️ Interactive 3D Lab | Drag to Rotate
-          </div>
+            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
+            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+          </button>
 
           {/* 3D Canvas Scene matching Stage 1 Camera, Lighting, and Controls */}
           <Canvas
             shadows
             gl={{ alpha: true, antialias: true }}
-            camera={{ position: [0, 24, 30], fov: 45 }}
+            camera={{ position: [0, 5, 24], fov: 45 }}
             style={{ width: '100%', height: '100%' }}
           >
             <Suspense fallback={null}>
@@ -331,20 +414,22 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
               <Environment preset="city" />
 
-              <BreakingMagnet3D broken={broken} showPoles={showPoles} />
+              <AnimatedLabGroup>
+                <RotatableMagnetGroup>
+                  <BreakingMagnet3D broken={broken} showPoles={showPoles} />
+                </RotatableMagnetGroup>
+                <PaperBoxEnclosure />
 
-              {/* Realistic White Lab Paper Sheet (26 x 0.04 x 16) */}
-              <mesh receiveShadow position={[0, -0.01, 0]}>
-                <boxGeometry args={[26, 0.04, 16]} />
-                <meshStandardMaterial color="#FAF9F6" roughness={0.95} metalness={0.0} />
-              </mesh>
-
-              {/* Soft Drop Shadow under Paper */}
-              <ContactShadows position={[0, -0.08, 0]} opacity={0.65} scale={32} blur={2.2} far={4} color="#000000" />
+                {/* Soft Drop Shadow under Paper */}
+                <ContactShadows position={[0, -0.08, 0]} opacity={0.65} scale={32} blur={2.2} far={4} color="#000000" />
+              </AnimatedLabGroup>
               <OrbitControls
                 makeDefault
-                maxPolarAngle={Math.PI / 2.15}
-                minPolarAngle={0.15}
+                target={[0, 1.2, 0]}
+                minAzimuthAngle={0}
+                maxAzimuthAngle={0}
+                maxPolarAngle={Math.PI / 2.05}
+                minPolarAngle={0.1}
                 minDistance={8}
                 maxDistance={45}
                 enablePan={false}

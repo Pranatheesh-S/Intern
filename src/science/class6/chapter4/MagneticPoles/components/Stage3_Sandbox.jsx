@@ -1,9 +1,111 @@
-import React, { useState, useRef, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Text, OrbitControls, ContactShadows, Environment } from '@react-three/drei';
+import { Text, OrbitControls, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Hand, RotateCcw, Shapes, Flag, BookOpen } from 'lucide-react';
+import { Hand, RotateCcw, Shapes, Flag, BookOpen, Maximize2, Minimize2 } from 'lucide-react';
 import * as THREE from 'three';
+
+// ---------------------------------------------------------
+// Realistic Parchment Paper Box Enclosure
+// ---------------------------------------------------------
+function PaperBoxEnclosure() {
+  const paperTexture = useTexture('/MagneticPoles/paper_texture.jpg');
+
+  return (
+    <>
+      {/* 1. Bottom Paper Base */}
+      <mesh receiveShadow position={[0, -0.01, 0]}>
+        <boxGeometry args={[26, 0.04, 16]} />
+        <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
+      </mesh>
+
+      {/* 2. Back Paper Wall */}
+      <mesh receiveShadow position={[0, 2.4, -8.0]}>
+        <boxGeometry args={[26, 4.8, 0.04]} />
+        <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
+      </mesh>
+
+      {/* 3. Left Paper Wall */}
+      <mesh receiveShadow position={[-13.0, 2.4, 0]}>
+        <boxGeometry args={[0.04, 4.8, 16]} />
+        <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
+      </mesh>
+
+      {/* 4. Right Paper Wall */}
+      <mesh receiveShadow position={[13.0, 2.4, 0]}>
+        <boxGeometry args={[0.04, 4.8, 16]} />
+        <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
+      </mesh>
+    </>
+  );
+}
+
+// ---------------------------------------------------------
+// Rotatable System for Magnet + Iron Filings
+// ---------------------------------------------------------
+function RotatableMagnetGroup({ children }) {
+  const groupRef = useRef();
+  const targetRotationY = useRef(0);
+  const currentRotationY = useRef(0);
+  const isPointerDown = useRef(false);
+  const startX = useRef(0);
+
+  useEffect(() => {
+    const onPointerMove = (e) => {
+      if (!isPointerDown.current) return;
+      const deltaX = e.clientX - startX.current;
+      startX.current = e.clientX;
+      targetRotationY.current += deltaX * 0.012;
+    };
+
+    const onPointerUp = () => {
+      isPointerDown.current = false;
+      document.body.style.cursor = 'auto';
+    };
+
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+    };
+  }, []);
+
+  useFrame((state, delta) => {
+    if (!groupRef.current) return;
+    const dt = Math.min(delta, 0.1);
+    currentRotationY.current = THREE.MathUtils.lerp(currentRotationY.current, targetRotationY.current, dt * 12);
+    groupRef.current.rotation.y = currentRotationY.current;
+  });
+
+  return (
+    <group 
+      ref={groupRef}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        isPointerDown.current = true;
+        startX.current = e.clientX;
+        document.body.style.cursor = 'grabbing';
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = 'grab';
+      }}
+      onPointerOut={() => {
+        if (!isPointerDown.current) {
+          document.body.style.cursor = 'auto';
+        }
+      }}
+    >
+      {/* Invisible hit cylinder around magnet and filings to easily catch drag gestures */}
+      <mesh visible={false} position={[0, 2.2, 0]}>
+        <cylinderGeometry args={[11, 11, 4.5, 32]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+      {children}
+    </group>
+  );
+}
 
 // ----------------------------------------------------
 // 1. REALISTIC 3D MAGNET MODELS (PROPORTIONATELY SIZED)
@@ -211,6 +313,47 @@ function RingMagnet3D() {
   );
 }
 
+// ---------------------------------------------------------
+// Smooth Intro Animation Group (Bottom-Left to Center Growth)
+// ---------------------------------------------------------
+function AnimatedLabGroup({ children }) {
+  const groupRef = useRef();
+  const [hasStarted, setHasStarted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setHasStarted(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useFrame((state, delta) => {
+    if (!groupRef.current) return;
+    const dt = Math.min(delta, 0.1);
+
+    // Initial: Positioned on the left tabletop parallel to the compass & ruler on the right
+    const targetX = hasStarted ? 0 : -4.8;
+    const targetY = hasStarted ? -0.5 : -4.2;
+    const targetZ = hasStarted ? 0 : 6.5;
+    const targetScale = hasStarted ? 1.0 : 0.22;
+
+    const speed = 3.4;
+    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, dt * speed);
+    groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, dt * speed);
+    groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, dt * speed);
+
+    const currentScale = groupRef.current.scale.x;
+    const nextScale = THREE.MathUtils.lerp(currentScale, targetScale, dt * speed);
+    groupRef.current.scale.set(nextScale, nextScale, nextScale);
+  });
+
+  return (
+    <group ref={groupRef} position={[-4.8, -4.2, 6.5]} scale={[0.22, 0.22, 0.22]}>
+      {children}
+    </group>
+  );
+}
+
 // ----------------------------------------------------
 // 2. 3D FILINGS INSTANCED SYSTEM (PERFECTLY FITTED TO PAPER)
 // ----------------------------------------------------
@@ -290,12 +433,14 @@ function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
   }, [count, poles]);
 
   const geometry = useMemo(() => new THREE.CylinderGeometry(0.034, 0.034, 0.18, 4), []);
+  // Deep matte charcoal-black material matching real iron shavings, bold and dark in front & top views
   const material = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: '#27292D',
-        roughness: 0.78,
-        metalness: 0.88,
+        color: '#0A0C10',
+        roughness: 0.92,
+        metalness: 0.05,
+        envMapIntensity: 0.1,
       }),
     []
   );
@@ -397,6 +542,27 @@ export default function Stage3_Sandbox({ onComplete }) {
   const [shape, setShape] = useState('horseshoe'); // 'horseshoe', 'ring', 'bar'
   const [isSprinkling, setIsSprinkling] = useState(false);
   const [isVibrating, setIsVibrating] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const handleShapeChange = (newShape) => {
     setShape(newShape);
@@ -464,33 +630,41 @@ export default function Stage3_Sandbox({ onComplete }) {
             backgroundPosition: 'center',
           }}
         >
-          {/* Top-left Lab Badge */}
-          <div
+          {/* Small Fullscreen Button */}
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
             style={{
               position: 'absolute',
               top: 16,
               left: 20,
-              zIndex: 10,
-              background: 'rgba(255,255,255,0.92)',
-              padding: '6px 14px',
-              borderRadius: '20px',
-              fontSize: '0.75rem',
-              fontWeight: 800,
+              zIndex: 30,
+              background: 'rgba(255, 255, 255, 0.92)',
+              border: '1px solid rgba(255, 255, 255, 0.85)',
+              borderRadius: '12px',
+              padding: '7px 12px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
               color: '#0F172A',
+              fontSize: '0.78rem',
+              fontWeight: 800,
               backdropFilter: 'blur(8px)',
-              pointerEvents: 'none',
-              border: '1px solid rgba(255,255,255,0.8)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
+              transition: 'all 0.2s ease',
             }}
           >
-            🧲 3D Interactive Magnet Lab | Drag to Rotate
-          </div>
+            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
+            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+          </button>
 
           {/* 3D Canvas Scene matching Stage 1 Camera & Lights */}
           <Canvas
             shadows
             gl={{ alpha: true, antialias: true }}
-            camera={{ position: [0, 24, 30], fov: 45 }}
+            camera={{ position: [0, 5, 24], fov: 45 }}
             style={{ width: '100%', height: '100%' }}
           >
             <Suspense fallback={null}>
@@ -505,40 +679,42 @@ export default function Stage3_Sandbox({ onComplete }) {
               <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
               <Environment preset="city" />
 
-              {/* Render Selected 3D Magnet */}
-              {shape === 'bar' && <BarMagnet3D />}
-              {shape === 'horseshoe' && <HorseshoeMagnet3D />}
-              {shape === 'ring' && <RingMagnet3D />}
+              <AnimatedLabGroup>
+                <RotatableMagnetGroup>
+                  {/* Render Selected 3D Magnet */}
+                  {shape === 'bar' && <BarMagnet3D />}
+                  {shape === 'horseshoe' && <HorseshoeMagnet3D />}
+                  {shape === 'ring' && <RingMagnet3D />}
 
-              {/* Iron Filings Instanced Mesh */}
-              <FilingsSystem3D
-                key={shape}
-                shape={shape}
-                step={step}
-                isSprinkling={isSprinkling}
-                isVibrating={isVibrating}
-              />
+                  {/* Iron Filings Instanced Mesh */}
+                  <FilingsSystem3D
+                    key={shape}
+                    shape={shape}
+                    step={step}
+                    isSprinkling={isSprinkling}
+                    isVibrating={isVibrating}
+                  />
+                </RotatableMagnetGroup>
+                <PaperBoxEnclosure />
 
-              {/* Realistic White Lab Paper Sheet (26 x 0.04 x 16) */}
-              <mesh receiveShadow position={[0, -0.01, 0]}>
-                <boxGeometry args={[26, 0.04, 16]} />
-                <meshStandardMaterial color="#FAF9F6" roughness={0.95} metalness={0.0} />
-              </mesh>
-
-              {/* Soft Drop Shadow under Paper */}
-              <ContactShadows
-                position={[0, -0.08, 0]}
-                opacity={0.65}
-                scale={32}
-                blur={2.2}
-                far={4}
-                color="#000000"
-              />
+                {/* Soft Drop Shadow under Paper */}
+                <ContactShadows
+                  position={[0, -0.08, 0]}
+                  opacity={0.65}
+                  scale={32}
+                  blur={2.2}
+                  far={4}
+                  color="#000000"
+                />
+              </AnimatedLabGroup>
 
               <OrbitControls
                 makeDefault
-                maxPolarAngle={Math.PI / 2.15}
-                minPolarAngle={0.15}
+                target={[0, 1.2, 0]}
+                minAzimuthAngle={0}
+                maxAzimuthAngle={0}
+                maxPolarAngle={Math.PI / 2.05}
+                minPolarAngle={0.1}
                 minDistance={8}
                 maxDistance={45}
                 enablePan={false}

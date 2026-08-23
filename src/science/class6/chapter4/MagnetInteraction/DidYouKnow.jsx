@@ -111,12 +111,12 @@ export default function DidYouKnow() {
           transform: 'translateX(-50%)',
           width: '95%',
           maxWidth: '750px',
-          background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)',
-          border: '1.5px solid #CCECE7',
+          background: 'rgba(24, 24, 27, 0.98)',
+          border: '1.5px solid #FACC15',
           borderRadius: '22px',
           padding: '1.25rem 1.75rem',
-          color: '#134E4A',
-          boxShadow: '0 25px 50px rgba(15, 118, 110, 0.15)',
+          color: '#FAFAFA',
+          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.7)',
           zIndex: 100000,
           pointerEvents: 'none',
           backdropFilter: 'blur(16px)',
@@ -124,34 +124,34 @@ export default function DidYouKnow() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
             <span style={{ fontSize: '1.5rem' }}>🧠</span>
-            <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: '#134E4A' }}>
+            <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#FACC15' }}>
               {hoveredFact.title}
             </h4>
           </div>
-          <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#115E59' }}>
+          <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#FAFAFA', fontWeight: 600 }}>
             {renderHighlightedContent(hoveredFact.content, hoveredFact.title, spokenCharIndex)}
           </p>
         </div>
       )}
 
-      {/* Main Bottom Bar - Green Gradient Theme matching buttons */}
+      {/* Main Bottom Bar - Rich Brown Theme matching Activity 4.3 */}
       <div style={{
-        background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-        border: '1.5px solid #34D399',
-        boxShadow: '0 6px 16px rgba(5, 150, 105, 0.25)',
-        borderRadius: '18px',
-        padding: '0.6rem 1.25rem',
+        background: 'linear-gradient(135deg, #78350F 0%, #451A03 100%)',
+        border: '1.5px solid #B45309',
+        boxShadow: '0 4px 18px rgba(69, 26, 3, 0.4)',
+        borderRadius: '20px',
+        padding: '0.5rem 1.25rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
         boxSizing: 'border-box',
-        height: '54px',
-        minHeight: '54px'
+        height: '52px',
+        minHeight: '52px'
       }}>
         {/* Brain Icon */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, paddingRight: '0.75rem' }}>
-          <span style={{ fontSize: '1.4rem' }}>🧠</span>
+          <span style={{ fontSize: '1.35rem' }}>🧠</span>
         </div>
 
         {/* Fact items horizontally */}
@@ -159,36 +159,36 @@ export default function DidYouKnow() {
           {facts.map((fact, idx) => (
             <React.Fragment key={idx}>
               {idx > 0 && (
-                <div style={{ width: '1.5px', height: '60%', backgroundColor: '#FFFFFF', opacity: 0.25 }} />
+                <div style={{ width: '1.5px', height: '55%', backgroundColor: '#92400E' }} />
               )}
               <div
                 onMouseEnter={() => handleMouseEnter(fact)}
                 onMouseLeave={handleMouseLeave}
                 style={{
-                  color: hoveredFact === fact ? '#FEF08A' : '#FFFFFF',
+                  color: hoveredFact === fact ? '#FEF3C7' : '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
+                  gap: '0.45rem',
                   cursor: 'pointer',
                   fontSize: '0.88rem',
-                  fontWeight: 900,
-                  padding: '0.4rem 0.6rem',
-                  borderRadius: '8px',
-                  backgroundColor: 'transparent',
+                  fontWeight: 800,
+                  padding: '0.35rem 0.65rem',
+                  borderRadius: '10px',
+                  backgroundColor: hoveredFact === fact ? 'rgba(254, 243, 199, 0.2)' : 'transparent',
                   transition: 'all 0.2s ease',
                   whiteSpace: 'nowrap'
                 }}
               >
-                <span style={{ fontSize: '1.1rem', color: hoveredFact === fact ? '#FEF08A' : '#A7F3D0' }}>👉</span>
-                <span style={{ letterSpacing: '0.5px' }}>{fact.shortTitle.toUpperCase()}</span>
+                <span style={{ fontSize: '1rem', color: hoveredFact === fact ? '#F59E0B' : '#FAFAFA' }}>👉</span>
+                <span>{fact.shortTitle}</span>
               </div>
             </React.Fragment>
           ))}
         </div>
 
         {/* Sparkle Icon */}
-        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem' }}>
-          <Sparkles size={20} color="#FEF08A" />
+        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem', color: '#F59E0B' }}>
+          <Sparkles size={18} color="#F59E0B" />
         </div>
       </div>
     </div>

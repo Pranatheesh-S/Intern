@@ -1,8 +1,8 @@
-import React, { useState, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, ContactShadows, OrbitControls } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCw, CheckCircle, RotateCcw, ArrowRight, Compass, BookOpen } from 'lucide-react';
+import { RotateCw, CheckCircle, RotateCcw, ArrowRight, Compass, BookOpen, Maximize2, Minimize2 } from 'lucide-react';
 import * as THREE from 'three';
 
 // -------------------------------------------------------------------
@@ -53,15 +53,43 @@ function SuspendedMagnet3D({ targetRotation, isSpinning }) {
           <meshStandardMaterial color="#C51E28" roughness={0.55} metalness={0.15} />
         </mesh>
 
-        {/* North Pole Top White Label */}
+        {/* North Pole Front Face Label */}
+        <Text
+          position={[-3.1, 0, 0.97]}
+          rotation={[0, 0, 0]}
+          fontSize={0.88}
+          color="#FFFFFF"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          North
+        </Text>
+
+        {/* North Pole Back Face Label */}
+        <Text
+          position={[-3.1, 0, -0.97]}
+          rotation={[0, Math.PI, 0]}
+          fontSize={0.88}
+          color="#FFFFFF"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          North
+        </Text>
+
+        {/* North Pole Top Face Label */}
         <Text
           position={[-3.1, 0.69, 0]}
           rotation={[-Math.PI / 2, 0, 0]}
-          fontSize={0.92}
+          fontSize={0.82}
           color="#FFFFFF"
           fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
         >
-          N (North)
+          North
         </Text>
 
         {/* South Half - Bold Ultramarine Blue with Fine Matte Texture */}
@@ -70,15 +98,43 @@ function SuspendedMagnet3D({ targetRotation, isSpinning }) {
           <meshStandardMaterial color="#1848B8" roughness={0.55} metalness={0.15} />
         </mesh>
 
-        {/* South Pole Top White Label */}
+        {/* South Pole Front Face Label */}
+        <Text
+          position={[3.1, 0, 0.97]}
+          rotation={[0, 0, 0]}
+          fontSize={0.88}
+          color="#FFFFFF"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          South
+        </Text>
+
+        {/* South Pole Back Face Label */}
+        <Text
+          position={[3.1, 0, -0.97]}
+          rotation={[0, Math.PI, 0]}
+          fontSize={0.88}
+          color="#FFFFFF"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          South
+        </Text>
+
+        {/* South Pole Top Face Label */}
         <Text
           position={[3.1, 0.69, 0]}
           rotation={[-Math.PI / 2, 0, 0]}
-          fontSize={0.92}
+          fontSize={0.82}
           color="#FFFFFF"
           fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
         >
-          S (South)
+          South
         </Text>
 
         {/* Dark Dividing Seam */}
@@ -106,6 +162,27 @@ export default function Stage1_Experiment({ onComplete }) {
   const [targetRotation, setTargetRotation] = useState(0.25);
   const [quizAnswer, setQuizAnswer] = useState(null);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const handleSpin = () => {
     if (isSpinning) return;
@@ -283,11 +360,40 @@ export default function Stage1_Experiment({ onComplete }) {
             </div>
           </div>
 
+          {/* Fullscreen Button */}
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            style={{
+              position: 'absolute',
+              top: '16px',
+              right: '20px',
+              zIndex: 30,
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.8)',
+              borderRadius: '20px',
+              padding: '6px 14px',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              color: '#0F172A',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
+            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+          </button>
+
           {/* 3D WebGL Canvas */}
           <Canvas
             shadows
             gl={{ alpha: true, antialias: true }}
-            camera={{ position: [0, 1.8, 13.5], fov: 45 }}
+            camera={{ position: [0, 2.0, 19.5], fov: 45 }}
             style={{ width: '100%', height: '100%' }}
           >
             <Suspense fallback={null}>
@@ -306,7 +412,7 @@ export default function Stage1_Experiment({ onComplete }) {
 
               {/* Drop Shadow beneath Magnet on Table */}
               <ContactShadows position={[0, -4.6, 0]} opacity={0.55} scale={16} blur={2.4} far={8} color="#000000" />
-              <OrbitControls makeDefault enablePan={false} maxPolarAngle={Math.PI / 2.1} minPolarAngle={0.2} minDistance={7} maxDistance={24} />
+              <OrbitControls makeDefault enablePan={false} maxPolarAngle={Math.PI / 2.1} minPolarAngle={0.2} minDistance={5} maxDistance={32} />
             </Suspense>
           </Canvas>
         </div>

@@ -94,12 +94,12 @@ export default function DidYouKnow() {
           transform: 'translateX(-50%)',
           width: '95%',
           maxWidth: '700px',
-          background: 'linear-gradient(135deg, #F0FDF9 0%, #E6F7F5 100%)',
-          border: '1.5px solid #CCECE7',
+          background: 'rgba(24, 24, 27, 0.98)',
+          border: '1.5px solid #FACC15',
           borderRadius: '22px',
           padding: '1.25rem 1.75rem',
-          color: '#134E4A',
-          boxShadow: '0 25px 50px rgba(15, 118, 110, 0.15)',
+          color: '#FAFAFA',
+          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.7)',
           zIndex: 100000,
           pointerEvents: 'none',
           backdropFilter: 'blur(16px)',
@@ -107,11 +107,11 @@ export default function DidYouKnow() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
             <span style={{ fontSize: '1.5rem' }}>🧠</span>
-            <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: '#134E4A' }}>
+            <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#FACC15' }}>
               {hoveredFact.title}
             </h4>
           </div>
-          <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#115E59' }}>
+          <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#FAFAFA', fontWeight: 600 }}>
             {renderHighlightedContent(hoveredFact.content, hoveredFact.title, spokenCharIndex)}
           </p>
         </div>
