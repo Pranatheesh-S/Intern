@@ -51,11 +51,11 @@ export default function DidYouKnow() {
     stop();
   };
 
-  // Color-only text karaoke highlighting
+  // Dark green text with vibrant orange for currently reading word only
   const renderHighlightedContent = (content, title, charIndex) => {
     if (!content) return null;
     if (charIndex === undefined || charIndex === null || charIndex < 0) {
-      return <span>{content}</span>;
+      return <span style={{ color: '#064E3B' }}>{content}</span>;
     }
 
     const titleOffset = title ? title.length + 2 : 0;
@@ -70,17 +70,13 @@ export default function DidYouKnow() {
       currentPos = endPos + 1;
 
       const isCurrentWord = adjustedIndex >= startPos && adjustedIndex <= endPos + 2;
-      const isPastWord = adjustedIndex > endPos + 2;
 
-      let color = '#334155';
+      let color = '#064E3B'; // Dark green
       let fontWeight = 600;
 
       if (isCurrentWord) {
-        color = '#D97706'; // Active spoken word
+        color = '#EA580C'; // Orange for reading word only
         fontWeight = 800;
-      } else if (isPastWord) {
-        color = '#064E3B'; // Read word
-        fontWeight = 700;
       }
 
       return (
@@ -89,7 +85,7 @@ export default function DidYouKnow() {
           style={{
             color,
             fontWeight,
-            transition: 'color 0.15s ease',
+            transition: 'color 0.12s ease',
             display: 'inline-block',
             marginRight: '0.25rem'
           }}
@@ -102,39 +98,39 @@ export default function DidYouKnow() {
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
-      {/* Floating Hover Tooltip Card */}
+      {/* Floating Hover Tooltip Card with White Background & Dark Green Text */}
       {hoveredFact && (
         <div style={{
           position: 'absolute',
-          bottom: 'calc(100% + 12px)',
+          bottom: 'calc(100% + 14px)',
           left: '50%',
           transform: 'translateX(-50%)',
           width: '95%',
           maxWidth: '700px',
           background: '#FFFFFF',
           border: '1.5px solid #A7F3D0',
-          borderRadius: '20px',
-          padding: '1.15rem 1.6rem',
+          borderRadius: '22px',
+          padding: '1.25rem 1.75rem',
           color: '#064E3B',
-          boxShadow: '0 15px 35px rgba(6, 78, 59, 0.12)',
+          boxShadow: '0 20px 45px rgba(6, 78, 59, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06)',
           zIndex: 100000,
           pointerEvents: 'none',
-          backdropFilter: 'blur(12px)',
+          backdropFilter: 'blur(16px)',
           transition: 'all 0.25s ease'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.4rem' }}>
-            <span style={{ fontSize: '1.4rem' }}>🧠</span>
-            <h4 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 900, color: '#064E3B' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🧠</span>
+            <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#064E3B' }}>
               {hoveredFact.title}
             </h4>
           </div>
-          <p style={{ margin: 0, fontSize: '0.98rem', lineHeight: '1.6', color: '#334155', fontWeight: 600 }}>
+          <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#064E3B', fontWeight: 600 }}>
             {renderHighlightedContent(hoveredFact.content, hoveredFact.title, spokenCharIndex)}
           </p>
         </div>
       )}
 
-      {/* Main Bottom Bar - Rich Brown Theme */}
+      {/* Main Bottom Bar */}
       <div style={{
         background: 'linear-gradient(135deg, #78350F 0%, #451A03 100%)',
         border: '1.5px solid #B45309',

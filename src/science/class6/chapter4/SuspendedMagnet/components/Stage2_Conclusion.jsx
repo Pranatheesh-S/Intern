@@ -616,7 +616,7 @@ export default function Stage2_Conclusion({ onComplete }) {
                 fontSize: '0.95rem',
                 fontWeight: 900,
                 borderRadius: '14px',
-                background: isSpinning ? '#CBD5E1' : 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+                background: isSpinning ? '#CBD5E1' : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                 color: '#FFFFFF',
                 border: 'none',
                 cursor: isSpinning ? 'not-allowed' : 'pointer',
@@ -624,7 +624,7 @@ export default function Stage2_Conclusion({ onComplete }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
-                boxShadow: isSpinning ? 'none' : '0 4px 14px rgba(5, 150, 105, 0.3)',
+                boxShadow: isSpinning ? 'none' : '0 4px 14px rgba(217, 119, 6, 0.3)',
                 transition: 'all 0.2s ease'
               }}
             >

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Info, CheckCircle2 } from "lucide-react";
+import { Info, CheckCircle2, Maximize2, Minimize2 } from "lucide-react";
 import CinematicSkyFlightCanvas from "./CinematicSkyFlightCanvas";
 
 export default function Stage3_Explore({ onComplete, onNext }) {
@@ -27,6 +27,28 @@ export default function Stage3_Explore({ onComplete, onNext }) {
     setInteractionMode(mode);
     if (mode === "same") setHasTestedSame(true);
     if (mode === "different") setHasTestedDifferent(true);
+  };
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
   };
 
   const handleFinish = () => {
@@ -70,6 +92,36 @@ export default function Stage3_Explore({ onComplete, onNext }) {
             isRunning={isRunning}
             polesMatch={polesMatch}
           />
+
+          {/* Fullscreen Button */}
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            style={{
+              position: 'absolute',
+              top: 14,
+              right: 14,
+              zIndex: 40,
+              background: 'rgba(255, 255, 255, 0.92)',
+              border: '1.5px solid rgba(255, 255, 255, 0.85)',
+              borderRadius: '12px',
+              padding: '6px 12px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '5px',
+              color: '#0F172A',
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {isFullscreen ? <Minimize2 size={14} color="#0F172A" /> : <Maximize2 size={14} color="#0F172A" />}
+            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+          </button>
         </div>
       </div>
 
@@ -297,14 +349,14 @@ export default function Stage3_Explore({ onComplete, onNext }) {
                 style={{
                   marginTop: '0.75rem',
                   padding: '0.8rem 2.5rem',
-                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                   color: '#FFFFFF',
                   border: 'none',
                   borderRadius: '25px',
                   fontSize: '1rem',
                   fontWeight: 900,
                   cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
+                  boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                   transition: 'transform 0.1s ease',
                   display: 'flex',
                   alignItems: 'center',

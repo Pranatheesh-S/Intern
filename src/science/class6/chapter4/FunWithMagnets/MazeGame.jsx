@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCcw, Target } from 'lucide-react';
+import { Target } from 'lucide-react';
 
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -18,7 +18,7 @@ function roundRect(ctx, x, y, w, h, r) {
 function drawBike(ctx, x, y, size, rotation, bodyColor = '#DC2626') {
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(rotation + Math.PI / 2); // Orient forward along travel direction
+  ctx.rotate(rotation + Math.PI / 2); // Orient forward along travel vector
 
   const w = size * 0.44;
   const h = size;
@@ -46,19 +46,18 @@ function drawBike(ctx, x, y, size, rotation, bodyColor = '#DC2626') {
   ctx.fillStyle = "#52525B";
   ctx.fillRect(-w * 0.06, -h * 0.44, w * 0.12, h * 0.22);
 
-  // 3. Dual Exhaust Pipes (Gunmetal & Chrome)
+  // 3. Dual Exhaust Pipes
   ctx.fillStyle = "#3F3F46";
   ctx.fillRect(w * 0.2, h * 0.05, w * 0.12, h * 0.28);
   ctx.fillStyle = "#E4E4E7";
   ctx.fillRect(w * 0.22, h * 0.28, w * 0.08, h * 0.08);
 
-  // 4. Main Aerodynamic Bike Body / Fairing
+  // 4. Main Aerodynamic Bike Body
   ctx.save();
   ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
   ctx.shadowBlur = 8;
   ctx.shadowOffsetY = 2;
 
-  // Body Gradient
   const gBody = ctx.createLinearGradient(-w / 2, 0, w / 2, 0);
   gBody.addColorStop(0, "#DC2626");
   gBody.addColorStop(0.5, "#EF4444");
@@ -130,7 +129,7 @@ function drawBike(ctx, x, y, size, rotation, bodyColor = '#DC2626') {
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
-  // Helmet Tinted Visor
+  // Helmet Visor
   ctx.fillStyle = "#0F172A";
   ctx.beginPath();
   ctx.arc(0, -h * 0.02, helmetR * 0.85, -Math.PI * 0.85, -Math.PI * 0.15);
@@ -163,30 +162,275 @@ function drawBike(ctx, x, y, size, rotation, bodyColor = '#DC2626') {
 }
 
 // -------------------------------------------------------------------
-// 1. Waypoint Node Coordinate System & Adjacency Graph (1000 x 563)
+// Draw Guiding Horseshoe Magnet
+// -------------------------------------------------------------------
+function drawMagnet(ctx, x, y, size, rotation, now) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotation + Math.PI / 2); // Orient forward along travel vector
+
+  const w = size * 0.76;
+  const h = size * 0.85;
+
+  // 1. Magnetic Field Ambient Aura Glow
+  const pulse = 1 + 0.14 * Math.sin(now * 0.008);
+  const glow = ctx.createRadialGradient(0, 0, 4, 0, 0, size * 0.85 * pulse);
+  glow.addColorStop(0, "rgba(56, 189, 248, 0.45)");
+  glow.addColorStop(0.5, "rgba(14, 165, 233, 0.18)");
+  glow.addColorStop(1, "rgba(14, 165, 233, 0)");
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(0, 0, size * 0.85 * pulse, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 2. Soft Dynamic Ground Shadow
+  ctx.save();
+  ctx.fillStyle = "rgba(0, 0, 0, 0.38)";
+  ctx.beginPath();
+  ctx.ellipse(0, 5, w * 0.55, h * 0.36, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // 3. Realistic U-Shaped Horseshoe Magnet
+  const thickness = w * 0.28;
+  const armHeight = h * 0.65;
+  const archRadius = w * 0.48;
+
+  // North Arm (Red / Left)
+  const gNorth = ctx.createLinearGradient(-w / 2, 0, -w / 2 + thickness, 0);
+  gNorth.addColorStop(0, "#EF4444");
+  gNorth.addColorStop(0.5, "#F87171");
+  gNorth.addColorStop(1, "#DC2626");
+
+  // South Arm (Blue / Right)
+  const gSouth = ctx.createLinearGradient(w / 2 - thickness, 0, w / 2, 0);
+  gSouth.addColorStop(0, "#2563EB");
+  gSouth.addColorStop(0.5, "#60A5FA");
+  gSouth.addColorStop(1, "#1D4ED8");
+
+  // Draw North Arm
+  ctx.beginPath();
+  roundRect(ctx, -w / 2, -h * 0.25, thickness, armHeight, 3);
+  ctx.fillStyle = gNorth;
+  ctx.fill();
+
+  // Draw South Arm
+  ctx.beginPath();
+  roundRect(ctx, w / 2 - thickness, -h * 0.25, thickness, armHeight, 3);
+  ctx.fillStyle = gSouth;
+  ctx.fill();
+
+  // Top Curved Arch (Curved Bridge connecting N and S)
+  const gArch = ctx.createLinearGradient(-w / 2, -h * 0.25, w / 2, -h * 0.25);
+  gArch.addColorStop(0, "#DC2626");
+  gArch.addColorStop(0.48, "#475569");
+  gArch.addColorStop(0.52, "#475569");
+  gArch.addColorStop(1, "#1D4ED8");
+
+  ctx.beginPath();
+  ctx.arc(0, -h * 0.25, archRadius, Math.PI, 0, false);
+  ctx.arc(0, -h * 0.25, archRadius - thickness, 0, Math.PI, true);
+  ctx.closePath();
+  ctx.fillStyle = gArch;
+  ctx.fill();
+
+  // Silver / Chrome Pole Tips (Poles)
+  ctx.fillStyle = "#F1F5F9";
+  ctx.strokeStyle = "#94A3B8";
+  ctx.lineWidth = 1;
+  // Left Pole Tip (North)
+  roundRect(ctx, -w / 2, armHeight - h * 0.25 - 6, thickness, 7, 2);
+  ctx.fill();
+  ctx.stroke();
+  // Right Pole Tip (South)
+  roundRect(ctx, w / 2 - thickness, armHeight - h * 0.25 - 6, thickness, 7, 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Pole Labels ('N' and 'S')
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "900 9px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("N", -w / 2 + thickness / 2, -h * 0.02);
+  ctx.fillText("S", w / 2 - thickness / 2, -h * 0.02);
+
+  ctx.restore();
+}
+
+// -------------------------------------------------------------------
+// Draw Animated Magnetic Force Tether / Field Line
+// -------------------------------------------------------------------
+function drawMagneticTether(ctx, magnetX, magnetY, bikeX, bikeY, now) {
+  const dist = Math.hypot(magnetX - bikeX, magnetY - bikeY);
+  if (dist < 4) return;
+
+  ctx.save();
+
+  // 1. Broad soft atmospheric magnetic aura
+  ctx.beginPath();
+  ctx.moveTo(magnetX, magnetY);
+  ctx.lineTo(bikeX, bikeY);
+  ctx.strokeStyle = "rgba(56, 189, 248, 0.22)";
+  ctx.lineWidth = 14;
+  ctx.lineCap = "round";
+  ctx.stroke();
+
+  // 2. Glowing core magnetic beam
+  const pulse = 0.75 + 0.25 * Math.sin(now * 0.01);
+  ctx.beginPath();
+  ctx.moveTo(magnetX, magnetY);
+  ctx.lineTo(bikeX, bikeY);
+  ctx.strokeStyle = `rgba(14, 165, 233, ${0.85 * pulse})`;
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.stroke();
+
+  // 3. Dynamic traveling flux energy dashes (Magnet -> Bike)
+  ctx.beginPath();
+  ctx.moveTo(magnetX, magnetY);
+  ctx.lineTo(bikeX, bikeY);
+  ctx.setLineDash([7, 7]);
+  ctx.lineDashOffset = -now * 0.045;
+  ctx.strokeStyle = "#FFFFFF";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // 4. Flux Particle Energy Sparks
+  const numParticles = 3;
+  for (let i = 1; i <= numParticles; i++) {
+    const pT = ((now * 0.0018 + i / numParticles) % 1);
+    const px = magnetX + (bikeX - magnetX) * pT;
+    const py = magnetY + (bikeY - magnetY) * pT;
+    const pRadius = 2.2 + Math.sin(pT * Math.PI) * 1.8;
+
+    ctx.beginPath();
+    ctx.arc(px, py, pRadius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(186, 230, 253, ${0.95 * Math.sin(pT * Math.PI)})`;
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+// -------------------------------------------------------------------
+// 1. Waypoint Node Coordinate System (Town Grid Map)
 // -------------------------------------------------------------------
 export const WAYPOINT_NODES = [
-  { id: 'lighthouse', name: 'Lighthouse 🏮', x: 160, y: 165, icon: '🏮', neighbors: ['coast_guard', 'observatory', 'seaport'] },
-  { id: 'coast_guard', name: 'Coast Guard Station 🚤', x: 275, y: 95, icon: '🚤', neighbors: ['lighthouse', 'observatory_top'] },
-  { id: 'observatory_top', name: 'North Sea Channel 🌊', x: 472, y: 96, icon: '🌊', neighbors: ['coast_guard', 'windfarm_top', 'observatory'] },
-  { id: 'windfarm_top', name: 'Wind Turbine Point 💨', x: 800, y: 92, icon: '💨', neighbors: ['observatory_top', 'shipyard'] },
-  { id: 'observatory', name: 'Underwater Observatory 🔮', x: 438, y: 178, icon: '🔮', neighbors: ['observatory_top', 'lighthouse', 'shipyard', 'sanctuary'] },
-  { id: 'shipyard', name: 'Shipyard & Dry Dock 🛠️', x: 622, y: 185, icon: '🛠️', neighbors: ['windfarm_top', 'observatory', 'windfarm', 'oil_rig'] },
-  { id: 'windfarm', name: 'Offshore Wind Farm 💨', x: 952, y: 180, icon: '💨', neighbors: ['shipyard', 'aquarium'] },
-  { id: 'seaport', name: 'Seaport & Container Yard ⚓', x: 118, y: 282, icon: '⚓', neighbors: ['lighthouse', 'sanctuary'] },
-  { id: 'sanctuary', name: 'Bird Sanctuary 🦜', x: 256, y: 276, icon: '🦜', neighbors: ['seaport', 'observatory', 'oil_rig', 'marina'] },
-  { id: 'oil_rig', name: 'Offshore Oil Rig 🛢️', x: 586, y: 282, icon: '🛢️', neighbors: ['sanctuary', 'shipyard', 'aquarium', 'aquarium_bottom', 'island'] },
-  { id: 'aquarium', name: 'Ocean Aquarium Research 🐬', x: 792, y: 280, icon: '🐬', neighbors: ['oil_rig', 'windfarm', 'aquarium_right', 'icerock'] },
-  { id: 'aquarium_right', name: 'East Pier 🚢', x: 932, y: 276, icon: '🚢', neighbors: ['aquarium'] },
-  { id: 'marina', name: 'Marina & Boardwalk ⛵', x: 236, y: 468, icon: '⛵', neighbors: ['sanctuary', 'aquarium_bottom'] },
-  { id: 'aquarium_bottom', name: 'South Channel Hub 🌊', x: 450, y: 468, icon: '🌊', neighbors: ['marina', 'oil_rig', 'island'] },
-  { id: 'island', name: 'Tropical Island 🌴', x: 624, y: 375, icon: '🌴', neighbors: ['oil_rig', 'aquarium_bottom', 'icerock'] },
-  { id: 'icerock', name: 'Polar Ice Rock 🧊', x: 796, y: 468, icon: '🧊', neighbors: ['island', 'aquarium'] }
+  // 1. START POINT (Left Top Circle)
+  { 
+    id: 'node_start', 
+    name: 'Start: West Station 🚂', 
+    x: 65, 
+    y: 195, 
+    icon: '🚀', 
+    neighbors: ['node_hospital_top'] 
+  },
+
+  // 2. Hospital North Junction
+  { 
+    id: 'node_hospital_top', 
+    name: 'Hospital North 🏥', 
+    x: 275, 
+    y: 195, 
+    icon: '🏥', 
+    neighbors: ['node_start', 'node_park_west'] 
+  },
+
+  // 3. Park Corner West Junction (Turn to go South)
+  { 
+    id: 'node_park_west', 
+    name: 'Park West Corner 🌲', 
+    x: 360, 
+    y: 195, 
+    icon: '🌲', 
+    neighbors: ['node_hospital_top', 'node_market_top_left'] 
+  },
+
+  // 4. Market North-West Junction
+  { 
+    id: 'node_market_top_left', 
+    name: 'Market North-West 🎪', 
+    x: 360, 
+    y: 365, 
+    icon: '🎪', 
+    neighbors: ['node_park_west', 'node_market_top_mid', 'node_school_south'] 
+  },
+
+  // 5. Market Top Center Street
+  { 
+    id: 'node_market_top_mid', 
+    name: 'Market Top Street 🛒', 
+    x: 450, 
+    y: 365, 
+    icon: '🛒', 
+    neighbors: ['node_market_top_left', 'node_market_top_right'] 
+  },
+
+  // 6. Market North-East Junction
+  { 
+    id: 'node_market_top_right', 
+    name: 'Market North-East 🛍️', 
+    x: 690, 
+    y: 365, 
+    icon: '🛍️', 
+    neighbors: ['node_market_top_mid', 'node_court_north_lane'] 
+  },
+
+  // 7. Court North Lane (Going South towards Destination)
+  { 
+    id: 'node_court_north_lane', 
+    name: 'Court North Lane 🏢', 
+    x: 690, 
+    y: 440, 
+    icon: '🏢', 
+    neighbors: ['node_market_top_right', 'node_court_south_junction'] 
+  },
+
+  // 8. School South Ave (Alternative South Route)
+  { 
+    id: 'node_school_south', 
+    name: 'School South Ave 🎒', 
+    x: 360, 
+    y: 535, 
+    icon: '🎒', 
+    neighbors: ['node_market_top_left', 'node_market_south_mid'] 
+  },
+
+  // 9. Market South Center Street
+  { 
+    id: 'node_market_south_mid', 
+    name: 'Market South Street 🏪', 
+    x: 530, 
+    y: 535, 
+    icon: '🏪', 
+    neighbors: ['node_school_south', 'node_court_south_junction'] 
+  },
+
+  // 10. Court South Road Crossing
+  { 
+    id: 'node_court_south_junction', 
+    name: 'Court South Crossing 🏛️', 
+    x: 690, 
+    y: 535, 
+    icon: '🏛️', 
+    neighbors: ['node_court_north_lane', 'node_market_south_mid', 'node_destination'] 
+  },
+
+  // 11. FINAL DESTINATION (Bottom Right Circle)
+  { 
+    id: 'node_destination', 
+    name: 'Target: Heritage Court 🎯', 
+    x: 885, 
+    y: 535, 
+    icon: '🎯', 
+    neighbors: ['node_court_south_junction'] 
+  }
 ];
 
 const NODES_MAP = Object.fromEntries(WAYPOINT_NODES.map(n => [n.id, n]));
 
-// BFS Pathfinding along connected road nodes
+// BFS Pathfinding strictly along connected road graph
 function findShortestPath(startId, targetId) {
   if (startId === targetId) return [startId];
   const queue = [[startId]];
@@ -211,63 +455,14 @@ function findShortestPath(startId, targetId) {
   return null;
 }
 
-// Sequential Missions
-const MISSIONS = [
+// Single Mission from Start to Final Destination
+export const MISSIONS = [
   {
     id: 1,
-    title: "Mission 1: Lighthouse to Seaport Yard",
-    desc: "Use direction controls or click connected nodes to navigate from the Lighthouse 🏮 to the Seaport & Container Yard ⚓!",
-    start: 'lighthouse',
-    target: 'seaport'
-  },
-  {
-    id: 2,
-    title: "Mission 2: Seaport Yard to Shipyard",
-    desc: "Ride your bike through the channel roads eastward to the Shipyard & Dry Dock 🛠️!",
-    start: 'seaport',
-    target: 'shipyard'
-  },
-  {
-    id: 3,
-    title: "Mission 3: Shipyard to Underwater Observatory",
-    desc: "Steer along the route to reach the glass Underwater Observatory Dome 🔮!",
-    start: 'shipyard',
-    target: 'observatory'
-  },
-  {
-    id: 4,
-    title: "Mission 4: Observatory to Offshore Wind Farm",
-    desc: "Ride east to explore the clean energy Offshore Wind Farm 💨!",
-    start: 'observatory',
-    target: 'windfarm'
-  },
-  {
-    id: 5,
-    title: "Mission 5: Wind Farm to Offshore Oil Rig",
-    desc: "Guide your bike into the Offshore Oil Rig platform 🛢️!",
-    start: 'windfarm',
-    target: 'oil_rig'
-  },
-  {
-    id: 6,
-    title: "Mission 6: Oil Rig to Tropical Island",
-    desc: "Navigate across the roads to reach the lush Tropical Island 🌴!",
-    start: 'oil_rig',
-    target: 'island'
-  },
-  {
-    id: 7,
-    title: "Mission 7: Island to Marina & Boardwalk",
-    desc: "Steer westward past the docks to reach the Marina & Boardwalk ⛵!",
-    start: 'island',
-    target: 'marina'
-  },
-  {
-    id: 8,
-    title: "Mission 8: Marina to Polar Ice Rock",
-    desc: "Embark on the final grand expedition across the route to reach the Polar Ice Rock 🧊!",
-    start: 'marina',
-    target: 'icerock'
+    title: "City Expedition: West Station to Heritage Court",
+    desc: "Drive your sports bike through the designated road street junctions to reach the final destination at Heritage Court 🏛️!",
+    start: 'node_start',
+    target: 'node_destination'
   }
 ];
 
@@ -275,7 +470,7 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
   const [missionIdx, setMissionIdx] = useState(0);
   const [visitedCount, setVisitedCount] = useState(1);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [showMissionPopup, setShowMissionPopup] = useState(true);
+  const [showMissionPopup, setShowMissionPopup] = useState(false);
 
   const canvasRef = useRef(null);
   const onSolveRef = useRef(onSolve);
@@ -320,25 +515,31 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
     const H = canvas.height;
     const ctx = canvas.getContext("2d");
 
-    // Load 3D nautical sea map background
+    // Load 4K town grid map background
     const bgImg = new Image();
-    bgImg.src = "/FunWithMagnets/nautical_grid_map.jpg";
+    bgImg.src = "/FunWithMagnets/town_map_4k.jpg";
 
     let animFrame = null;
     let hoveredNodeId = null;
 
     // Movement & Animation State
     let currentNodeId = currentMission.start;
-    let pathQueue = []; // Array of next node IDs to travel through
+    let pathQueue = []; // Sequence of next nodes along the road
     let isMoving = false;
     let moveStartTime = 0;
-    const MOVE_DURATION = 420; // ms per road segment
+    const MOVE_DURATION = 380; // ms per road segment
 
     let animFrom = { x: startPoint.x, y: startPoint.y };
     let animTo = { x: startPoint.x, y: startPoint.y };
 
     let bike = {
       x: startPoint.x,
+      y: startPoint.y,
+      rotation: 0
+    };
+
+    let magnet = {
+      x: startPoint.x + 72,
       y: startPoint.y,
       rotation: 0
     };
@@ -350,11 +551,15 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
       const startNode = NODES_MAP[currentMission.start] || WAYPOINT_NODES[0];
       bike.x = startNode.x;
       bike.y = startNode.y;
+      bike.rotation = 0;
+      magnet.x = startNode.x + 72;
+      magnet.y = startNode.y;
+      magnet.rotation = 0;
       animFrom = { x: startNode.x, y: startNode.y };
       animTo = { x: startNode.x, y: startNode.y };
     };
 
-    // Helper to start moving to next node in pathQueue
+    // Helper: start travel along the next paved road segment
     const startNextSegment = () => {
       if (pathQueue.length === 0) {
         isMoving = false;
@@ -366,6 +571,7 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
         isMoving = false;
         return;
       }
+
       const cur = NODES_MAP[currentNodeId] || { x: bike.x, y: bike.y };
       animFrom = { x: cur.x, y: cur.y };
       animTo = { x: nextNode.x, y: nextNode.y };
@@ -373,45 +579,43 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
       isMoving = true;
       moveStartTime = performance.now();
 
-      // Set bike rotation to face forward along movement vector
+      // Dynamic rotation strictly facing the road vector
       const dx = nextNode.x - animFrom.x;
       const dy = nextNode.y - animFrom.y;
       if (dx !== 0 || dy !== 0) {
-        bike.rotation = Math.atan2(dy, dx);
+        const moveAngle = Math.atan2(dy, dx);
+        bike.rotation = moveAngle;
+        magnet.rotation = moveAngle;
       }
     };
 
-    // Navigate to a destination node via shortest road path
+    // Move to a specific target node via BFS shortest road path
     const navigateToNode = (targetId) => {
       if (targetId === currentNodeId && !isMoving) return;
       const path = findShortestPath(currentNodeId, targetId);
       if (path && path.length > 1) {
-        pathQueue = path.slice(1); // Exclude current node
+        pathQueue = path.slice(1);
         if (!isMoving) {
           startNextSegment();
         }
       }
     };
 
-    // Directional control movement
+    // Directional control movement (North, South, East, West)
     const moveInDirection = (dir) => {
       const cur = NODES_MAP[currentNodeId];
       if (!cur) return;
 
-      // Find neighbor best matching the direction
-      let bestNeighbor = null;
-      let bestScore = -Infinity;
-
-      // Define direction vector weights in isometric view
-      // UP/NORTH: y decreases (-y), DOWN/SOUTH: y increases (+y)
-      // LEFT/WEST: x decreases (-x), RIGHT/EAST: x increases (+x)
       let targetDx = 0;
       let targetDy = 0;
 
-      if (dir === 'up' || dir === 'north' || dir === 'N') { targetDx = 0.2; targetDy = -1; }
-      else if (dir === 'down' || dir === 'south' || dir === 'S') { targetDx = -0.2; targetDy = 1; }
-      else if (dir === 'left' || dir === 'west' || dir === 'W') { targetDx = -1; targetDy = 0.2; }
-      else if (dir === 'right' || dir === 'east' || dir === 'E') { targetDx = 1; targetDy = -0.2; }
+      if (dir === 'up' || dir === 'north' || dir === 'N') { targetDx = 0; targetDy = -1; }
+      else if (dir === 'down' || dir === 'south' || dir === 'S') { targetDx = 0; targetDy = 1; }
+      else if (dir === 'left' || dir === 'west' || dir === 'W') { targetDx = -1; targetDy = 0; }
+      else if (dir === 'right' || dir === 'east' || dir === 'E') { targetDx = 1; targetDy = 0; }
+
+      let bestNeighbor = null;
+      let bestScore = -Infinity;
 
       cur.neighbors.forEach((nId) => {
         const neighbor = NODES_MAP[nId];
@@ -421,7 +625,6 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
         const dist = Math.hypot(dx, dy);
         if (dist === 0) return;
 
-        // Dot product with normalized direction vector
         const score = (dx / dist) * targetDx + (dy / dist) * targetDy;
         if (score > bestScore) {
           bestScore = score;
@@ -429,7 +632,7 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
         }
       });
 
-      if (bestNeighbor && bestScore > 0.1) {
+      if (bestNeighbor && bestScore > 0.05) {
         if (!isMoving) {
           pathQueue = [bestNeighbor];
           startNextSegment();
@@ -440,44 +643,6 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
     };
 
     handleDirectionMoveRef.current = moveInDirection;
-
-    // Canvas click: click directly on a node to travel there
-    const handleCanvasClick = (e) => {
-      const r = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / r.width;
-      const scaleY = canvas.height / r.height;
-      const clickX = (e.clientX - r.left) * scaleX;
-      const clickY = (e.clientY - r.top) * scaleY;
-
-      // Find clicked node within 32px tolerance
-      for (const node of WAYPOINT_NODES) {
-        if (Math.hypot(clickX - node.x, clickY - node.y) <= 32) {
-          navigateToNode(node.id);
-          break;
-        }
-      }
-    };
-
-    const handleCanvasMouseMove = (e) => {
-      const r = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / r.width;
-      const scaleY = canvas.height / r.height;
-      const mouseX = (e.clientX - r.left) * scaleX;
-      const mouseY = (e.clientY - r.top) * scaleY;
-
-      let found = null;
-      for (const node of WAYPOINT_NODES) {
-        if (Math.hypot(mouseX - node.x, mouseY - node.y) <= 30) {
-          found = node.id;
-          break;
-        }
-      }
-      hoveredNodeId = found;
-      canvas.style.cursor = found ? 'pointer' : 'default';
-    };
-
-    canvas.addEventListener('click', handleCanvasClick);
-    canvas.addEventListener('mousemove', handleCanvasMouseMove);
 
     // Keyboard support (Arrows / WASD)
     const handleKeyDown = (e) => {
@@ -502,21 +667,41 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
     function step() {
       const now = performance.now();
 
-      // 1. Process Smooth Translation along Road Lines
+      // 1. Smooth Interpolation along Paved Road Line (Magnet Leads, Bike Follows)
       if (isMoving) {
         const elapsed = now - moveStartTime;
         const rawT = Math.min(1, elapsed / MOVE_DURATION);
-        // Smoothstep interpolation (ease-in-out)
-        const t = rawT * rawT * (3 - 2 * rawT);
 
-        bike.x = animFrom.x + (animTo.x - animFrom.x) * t;
-        bike.y = animFrom.y + (animTo.y - animFrom.y) * t;
+        const dx = animTo.x - animFrom.x;
+        const dy = animTo.y - animFrom.y;
+        const moveAngle = Math.atan2(dy, dx);
+        const segmentDist = Math.hypot(dx, dy);
+
+        // Magnet leads forward first along the road segment with increased gap
+        const tMagnet = Math.min(1, rawT * 1.25);
+        const smoothTMagnet = tMagnet * tMagnet * (3 - 2 * tMagnet);
+        const leadDist = Math.min(72, segmentDist * 0.55);
+
+        magnet.x = animFrom.x + dx * smoothTMagnet + Math.cos(moveAngle) * leadDist * (1 - smoothTMagnet * 0.3);
+        magnet.y = animFrom.y + dy * smoothTMagnet + Math.sin(moveAngle) * leadDist * (1 - smoothTMagnet * 0.3);
+        magnet.rotation = moveAngle;
+
+        // Bike follows smoothly behind the magnet along the magnetic tether
+        const tBike = Math.max(0, (rawT - 0.1) / 0.9);
+        const smoothTBike = tBike * tBike * (3 - 2 * tBike);
+
+        bike.x = animFrom.x + dx * smoothTBike;
+        bike.y = animFrom.y + dy * smoothTBike;
+        bike.rotation = moveAngle;
 
         if (rawT >= 1) {
           bike.x = animTo.x;
           bike.y = animTo.y;
+          magnet.x = animTo.x + Math.cos(moveAngle) * 72;
+          magnet.y = animTo.y + Math.sin(moveAngle) * 72;
+          magnet.rotation = moveAngle;
 
-          // Check if destination goal reached
+          // Check if destination reached
           if (currentNodeId === targetPoint.id) {
             pathQueue = [];
             isMoving = false;
@@ -538,10 +723,17 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
               }
             }
           } else {
-            // Continue along pathQueue if any nodes remain
             startNextSegment();
           }
         }
+      } else {
+        // Stationary: Magnet hovers ahead of the bike with generous 72px gap & subtle magnetic floating
+        const hoverOffset = 72;
+        const floatWobbleX = Math.cos(now * 0.005) * 2;
+        const floatWobbleY = Math.sin(now * 0.005) * 2;
+        magnet.x = bike.x + Math.cos(bike.rotation) * hoverOffset + floatWobbleX;
+        magnet.y = bike.y + Math.sin(bike.rotation) * hoverOffset + floatWobbleY;
+        magnet.rotation = bike.rotation;
       }
 
       // 2. Draw Background Map
@@ -553,30 +745,26 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
         ctx.fillRect(0, 0, W, H);
       }
 
-      // 3. Draw Interactive Waypoint Node Rings
+      // 3. Draw Interactive Road Waypoint Nodes
       const cur = NODES_MAP[currentNodeId];
       WAYPOINT_NODES.forEach((node) => {
-        const isTarget = node.id === targetPoint.id;
-        const isHovered = node.id === hoveredNodeId;
         const isConnected = cur && cur.neighbors.includes(node.id);
 
         ctx.save();
         ctx.translate(node.x, node.y);
 
-        // Node Glow when Hovered or Connected
-        if (isConnected || isHovered) {
+        if (isConnected) {
           ctx.beginPath();
-          ctx.arc(0, 0, isHovered ? 20 : 16, 0, Math.PI * 2);
-          ctx.fillStyle = isHovered ? "rgba(56, 189, 248, 0.45)" : "rgba(56, 189, 248, 0.2)";
+          ctx.arc(0, 0, 14, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(56, 189, 248, 0.25)";
           ctx.fill();
         }
 
-        // Inner waypoint circle
         ctx.beginPath();
-        ctx.arc(0, 0, 11, 0, Math.PI * 2);
-        ctx.fillStyle = isConnected ? "#0284C7" : (isHovered ? "#38BDF8" : "rgba(14, 165, 233, 0.75)");
+        ctx.arc(0, 0, 9, 0, Math.PI * 2);
+        ctx.fillStyle = isConnected ? "#0284C7" : "rgba(14, 165, 233, 0.8)";
         ctx.fill();
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = 2;
         ctx.strokeStyle = "#FFFFFF";
         ctx.stroke();
 
@@ -587,7 +775,6 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
       ctx.save();
       ctx.translate(targetPoint.x, targetPoint.y);
 
-      // Pulsing Beacon Aura
       const pulseScale = 1 + 0.15 * Math.sin(now * 0.005);
       const targetGlow = ctx.createRadialGradient(0, 0, 4, 0, 0, 36 * pulseScale);
       targetGlow.addColorStop(0, "rgba(245, 158, 11, 0.95)");
@@ -598,7 +785,6 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
       ctx.arc(0, 0, 36 * pulseScale, 0, Math.PI * 2);
       ctx.fill();
 
-      // Beacon Disc
       ctx.fillStyle = "#FFFFFF";
       ctx.strokeStyle = "#F59E0B";
       ctx.lineWidth = 3;
@@ -612,7 +798,6 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
       ctx.textBaseline = "middle";
       ctx.fillText(targetPoint.icon, 0, 1);
 
-      // Target Label Pill
       ctx.fillStyle = "#064E3B";
       roundRect(ctx, -55, -36, 110, 20, 10);
       ctx.fill();
@@ -624,8 +809,14 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
       ctx.fillText("DESTINATION 🎯", 0, -26);
       ctx.restore();
 
-      // 5. Draw Sports Bike
-      drawBike(ctx, bike.x, bike.y, 50, bike.rotation, '#DC2626');
+      // 5. Draw Animated Magnetic Force Line / Tether
+      drawMagneticTether(ctx, magnet.x, magnet.y, bike.x, bike.y, now);
+
+      // 6. Draw Sports Bike on Road
+      drawBike(ctx, bike.x, bike.y, 48, bike.rotation, '#DC2626');
+
+      // 7. Draw Leading Guiding Horseshoe Magnet
+      drawMagnet(ctx, magnet.x, magnet.y, 34, magnet.rotation, now);
 
       animFrame = requestAnimationFrame(step);
     }
@@ -634,8 +825,6 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
 
     return () => {
       cancelAnimationFrame(animFrame);
-      canvas.removeEventListener('click', handleCanvasClick);
-      canvas.removeEventListener('mousemove', handleCanvasMouseMove);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [missionIdx, showCelebration, showMissionPopup]);
@@ -754,7 +943,7 @@ export default function MazeGame({ onSolve, isSolved, onVisitedCountChange, regi
               Destination Reached!
             </h3>
             <p style={{ margin: 0, color: '#334155', fontSize: '0.9rem', fontWeight: 700 }}>
-              Great navigation! Your bike successfully reached the landmark destination!
+              Great navigation! Your bike successfully reached the destination!
             </p>
           </motion.div>
         )}

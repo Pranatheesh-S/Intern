@@ -152,13 +152,13 @@ export default function ChallengeMode({ onComplete }) {
                   alignItems: 'center', 
                   justifyContent: 'center', 
                   gap: '0.5rem',
-                  background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: '30px',
                   fontWeight: 800,
                   cursor: 'pointer',
-                  boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)'
+                  boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)'
                 }}
               >
                 Finish Activity <ArrowRight size={18} color="#ffffff" />
@@ -184,37 +184,37 @@ export default function ChallengeMode({ onComplete }) {
     }}>
       <div style={{ width: '100%', maxWidth: '1050px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', padding: '0 0.5rem' }}>
-          <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', fontSize: '1.1rem', fontWeight: 700 }}>
-            <Trophy size={20} style={{ color: '#facc15' }} /> Predict the Outcome
+          <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#064E3B', fontSize: '1.1rem', fontWeight: 800 }}>
+            <Trophy size={20} style={{ color: '#F59E0B' }} /> Predict the Outcome
           </h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#ffffff', padding: '0.35rem 0.85rem', borderRadius: '20px', border: '1px solid #cbd5e1' }}>
-            <Star size={16} fill="#facc15" color="#facc15" /> 
-            <span style={{ fontWeight: '800', fontSize: '0.9rem', color: '#1e3a8a' }}>{stars} Stars</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#ffffff', padding: '0.35rem 0.85rem', borderRadius: '20px', border: '1.5px solid #A7F3D0' }}>
+            <Star size={16} fill="#F59E0B" color="#F59E0B" /> 
+            <span style={{ fontWeight: '800', fontSize: '0.9rem', color: '#064E3B' }}>{stars} Stars</span>
           </div>
         </div>
 
         <div style={{ 
           background: '#ffffff', 
-          border: '2px solid #818cf8',
+          border: '1.5px solid #A7F3D0',
           borderRadius: '20px', 
           padding: '1.75rem 2.5rem', 
-          boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
+          boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
           width: '100%',
           boxSizing: 'border-box'
         }}>
-          <div style={{ textTransform: 'uppercase', fontSize: '0.85rem', fontWeight: '800', color: '#6366f1', letterSpacing: '0.05em' }}>
+          <div style={{ textTransform: 'uppercase', fontSize: '0.85rem', fontWeight: '900', color: '#D97706', letterSpacing: '0.05em' }}>
             {c.title}
           </div>
           
-          <p style={{ fontSize: '1.2rem', lineHeight: '1.5', margin: 0, padding: '1rem 1.25rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '12px', borderLeft: '5px solid #6366f1', color: '#1e293b', fontWeight: 600 }}>
+          <p style={{ fontSize: '1.15rem', lineHeight: '1.5', margin: 0, padding: '1rem 1.25rem', background: '#F0FDF4', borderRadius: '12px', borderLeft: '5px solid #D97706', border: '1.5px solid #A7F3D0', borderLeftWidth: '5px', color: '#1E293B', fontWeight: 600 }}>
             {c.scenario}
           </p>
 
-          <div style={{ fontWeight: '700', fontSize: '1.1rem', color: '#1e293b' }}>
-            <HelpCircle size={18} style={{ display: 'inline', verticalAlign: 'text-bottom', marginRight: '0.5rem', color: '#6366f1' }}/> 
+          <div style={{ fontWeight: '800', fontSize: '1.1rem', color: '#064E3B' }}>
+            <HelpCircle size={18} style={{ display: 'inline', verticalAlign: 'text-bottom', marginRight: '0.5rem', color: '#D97706' }}/> 
             {c.question}
           </div>
 
@@ -223,23 +223,23 @@ export default function ChallengeMode({ onComplete }) {
               const isSelected = selectedOption === option;
               const isCorrect = option === c.correctAnswer;
               
-              let bg = '#f8fafc';
-              let borderColor = '#cbd5e1';
+              let bg = '#FFFFFF';
+              let borderColor = '#CBD5E1';
               let icon = null;
 
               if (showResult) {
                 if (isCorrect) {
-                  bg = 'rgba(16, 185, 129, 0.12)';
-                  borderColor = '#10b981';
-                  icon = <CheckCircle2 size={20} color="#10b981" />;
+                  bg = '#DCFCE7';
+                  borderColor = '#16A34A';
+                  icon = <CheckCircle2 size={20} color="#16A34A" />;
                 } else if (isSelected) {
-                  bg = 'rgba(239, 68, 68, 0.12)';
-                  borderColor = '#ef4444';
-                  icon = <XCircle size={20} color="#ef4444" />;
+                  bg = '#FEE2E2';
+                  borderColor = '#EF4444';
+                  icon = <XCircle size={20} color="#EF4444" />;
                 }
               } else if (isSelected) {
-                borderColor = '#6366f1';
-                bg = 'rgba(99, 102, 241, 0.08)';
+                borderColor = '#D97706';
+                bg = '#FEF3C7';
               }
 
               return (
@@ -291,14 +291,14 @@ export default function ChallengeMode({ onComplete }) {
                   onClick={handleNext}
                   style={{
                     padding: '0.75rem 2.25rem',
-                    background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '30px',
                     fontSize: '1.15rem',
                     fontWeight: 800,
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
+                    boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)',
                     transition: 'all 0.25s ease',
                     display: 'flex',
                     alignItems: 'center',

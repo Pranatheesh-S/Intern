@@ -550,11 +550,11 @@ export default function Stage2_Floating({ onComplete }) {
               justifyContent: 'center', 
               alignItems: 'center', 
               gap: '0.65rem',
-              background: step === 'settled' ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' : '#E2E8F0',
+              background: step === 'settled' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#E2E8F0',
               color: step === 'settled' ? '#FFFFFF' : '#94A3B8',
               border: 'none',
               cursor: step === 'settled' ? 'pointer' : 'not-allowed',
-              boxShadow: step === 'settled' ? '0 4px 14px rgba(16, 185, 129, 0.35)' : 'none',
+              boxShadow: step === 'settled' ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
               transition: 'all 0.25s ease'
             }}
           >

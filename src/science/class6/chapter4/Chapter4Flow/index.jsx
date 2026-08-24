@@ -185,12 +185,12 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
             onClick={onBackToDashboard}
             className="hud-btn hud-btn-back"
             style={{
-              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
               color: '#ffffff',
               border: 'none',
               borderRadius: '10px',
               fontWeight: 800,
-              boxShadow: '0 4px 14px rgba(244, 63, 94, 0.35)'
+              boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)'
             }}
           >
             <ArrowLeft size={18} color="#ffffff" />
@@ -201,12 +201,12 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
             onClick={() => onLaunchActivity('chapter_4_quiz')}
             className="hud-btn hud-btn-quiz"
             style={{
-              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
               color: '#ffffff',
               border: 'none',
               borderRadius: '10px',
               fontWeight: 800,
-              boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)'
+              boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)'
             }}
           >
             <GraduationCap size={20} color="#ffffff" />

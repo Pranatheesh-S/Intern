@@ -637,7 +637,7 @@ export default function Stage3_Sandbox({ onComplete }) {
             style={{
               position: 'absolute',
               top: 16,
-              left: 20,
+              right: 20,
               zIndex: 30,
               background: 'rgba(255, 255, 255, 0.92)',
               border: '1px solid rgba(255, 255, 255, 0.85)',

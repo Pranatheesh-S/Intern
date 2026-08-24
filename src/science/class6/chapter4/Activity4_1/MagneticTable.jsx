@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { ArrowRight, Sparkles, CheckCircle2, XCircle, Activity, Radio, Search } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ArrowRight, Sparkles, CheckCircle2, XCircle, Activity, Radio, Search, Maximize2, Minimize2 } from 'lucide-react';
 
 const ALL_ITEMS = [
   { id: 'ruler', name: 'Ruler', icon: '📏', material: 'Plastic / Wood', isMagnetic: false, hotspot: { x: 12.0, y: 88.0 }, desc: 'Dielectric polymer' },
@@ -22,7 +22,28 @@ export default function MagneticTable({ onComplete }) {
   const [dragOverCardId, setDragOverCardId] = useState(null);
   const [showInstructionModal, setShowInstructionModal] = useState(true);
   const [showCompletionPopup, setShowCompletionPopup] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const imageRef = useRef(null);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const startScanForItem = (item) => {
     if (scanningItemId || scannedResults[item.id]) return;
@@ -355,6 +376,36 @@ export default function MagneticTable({ onComplete }) {
             }}
           />
 
+          {/* Fullscreen Button */}
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            style={{
+              position: 'absolute',
+              top: 14,
+              right: 14,
+              zIndex: 40,
+              background: 'rgba(255, 255, 255, 0.92)',
+              border: '1.5px solid rgba(255, 255, 255, 0.85)',
+              borderRadius: '12px',
+              padding: '6px 12px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '5px',
+              color: '#0F172A',
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {isFullscreen ? <Minimize2 size={14} color="#0F172A" /> : <Maximize2 size={14} color="#0F172A" />}
+            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+          </button>
+
           {/* Interactive Draggable Object Badges over Image (Disappears once scanned, NO "TEST" word) */}
           {ALL_ITEMS.map((item) => {
             const isScanned = scannedResults[item.id];
@@ -614,11 +665,11 @@ export default function MagneticTable({ onComplete }) {
           <div
             style={{
               backgroundColor: '#FFFFFF',
-              border: '2px solid #A7F3D0',
+              border: '2px solid #FCD34D',
               borderRadius: '28px',
               padding: '2.2rem 2.8rem',
               textAlign: 'center',
-              boxShadow: '0 20px 50px rgba(6, 78, 59, 0.25)',
+              boxShadow: '0 20px 50px rgba(180, 83, 9, 0.2)',
               maxWidth: '520px',
               width: '90%',
               display: 'flex',
@@ -632,21 +683,21 @@ export default function MagneticTable({ onComplete }) {
                 width: '68px',
                 height: '68px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
+                background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 8px 24px rgba(16, 185, 129, 0.3)',
+                boxShadow: '0 8px 24px rgba(217, 119, 6, 0.25)',
               }}
             >
-              <CheckCircle2 size={38} color="#059669" />
+              <CheckCircle2 size={38} color="#D97706" />
             </div>
 
-            <h2 style={{ fontSize: '1.75rem', margin: 0, color: '#064E3B', fontWeight: 900 }}>
+            <h2 style={{ fontSize: '1.75rem', margin: 0, color: '#78350F', fontWeight: 900 }}>
               All 10 Materials Analyzed! 🎉
             </h2>
             <p style={{ color: '#334155', margin: 0, fontSize: '1.05rem', lineHeight: 1.55, fontWeight: 600 }}>
-              You identified <strong style={{ color: '#059669' }}>{magneticCount} Magnetic materials</strong> (Iron, Steel, Nickel) and <strong style={{ color: '#DC2626' }}>{nonMagneticCount} Non-Magnetic materials</strong> (Wood, Plastic, Rubber, Glass, Paper)!
+              You identified <strong style={{ color: '#D97706' }}>{magneticCount} Magnetic materials</strong> (Iron, Steel, Nickel) and <strong style={{ color: '#DC2626' }}>{nonMagneticCount} Non-Magnetic materials</strong> (Wood, Plastic, Rubber, Glass, Paper)!
             </p>
             <button
               onClick={onComplete}

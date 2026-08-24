@@ -96,11 +96,11 @@ export default function MagnetBook({ isOpen, currentPage, totalPages, onNext, on
               </div>
 
               {currentPage < totalPages ? (
-                <button onClick={onNext} style={{ background: '#4338ca', color: 'white', border: 'none', padding: '0.4rem 1.2rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>
+                <button onClick={onNext} style={{ background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', color: 'white', border: 'none', padding: '0.4rem 1.2rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(217, 119, 6, 0.35)', fontWeight: 800 }}>
                   Next <ChevronRight size={18} />
                 </button>
               ) : (
-                <button onClick={onFinish} style={{ background: '#10b981', color: 'white', border: 'none', padding: '0.4rem 1.2rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>
+                <button onClick={onFinish} style={{ background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', color: 'white', border: 'none', padding: '0.4rem 1.2rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', boxShadow: '0 2px 8px rgba(217, 119, 6, 0.35)', fontWeight: 800 }}>
                   Finish <CheckCircle2 size={18} />
                 </button>
               )}

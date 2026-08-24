@@ -8,7 +8,9 @@ import {
   Sparkles,
   Move,
   Layers,
-  Info
+  Info,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 import ExactCompass from '../components/ExactCompass.jsx';
 
@@ -56,6 +58,27 @@ export default function Simulation({ onComplete, onNext }) {
   const [testedNorth, setTestedNorth] = useState(false);
   const [testedSouth, setTestedSouth] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const containerRef = useRef(null);
   const workspaceRef = useRef(null);
@@ -274,7 +297,7 @@ export default function Simulation({ onComplete, onNext }) {
                 padding: '0.95rem',
                 borderRadius: '14px',
                 border: 'none',
-                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                 color: '#fff',
                 fontWeight: 900,
                 fontSize: '1.05rem',
@@ -283,7 +306,7 @@ export default function Simulation({ onComplete, onNext }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
-                boxShadow: '0 6px 20px rgba(16, 185, 129, 0.45)',
+                boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)',
                 transition: 'all 0.25s ease'
               }}
             >
@@ -364,7 +387,7 @@ export default function Simulation({ onComplete, onNext }) {
         <div style={{
           position: 'absolute',
           top: '1rem',
-          right: '1rem',
+          right: '8.8rem',
           background: 'rgba(15, 23, 42, 0.88)',
           border: '1.5px solid rgba(56, 189, 248, 0.35)',
           borderRadius: '16px',
@@ -385,6 +408,36 @@ export default function Simulation({ onComplete, onNext }) {
             🔵 South
           </span>
         </div>
+
+        {/* Fullscreen Button */}
+        <button
+          onClick={toggleFullscreen}
+          title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+          style={{
+            position: 'absolute',
+            top: '1rem',
+            right: '1rem',
+            zIndex: 30,
+            background: 'rgba(255, 255, 255, 0.92)',
+            border: '1.5px solid rgba(255, 255, 255, 0.85)',
+            borderRadius: '14px',
+            padding: '0.4rem 0.85rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            color: '#0F172A',
+            fontSize: '0.78rem',
+            fontWeight: 800,
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
+          <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+        </button>
 
         {/* Workspace Central Arena */}
         <div style={{

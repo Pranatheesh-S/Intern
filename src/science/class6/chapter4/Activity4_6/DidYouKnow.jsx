@@ -37,10 +37,11 @@ export default function DidYouKnow() {
     stop();
   };
 
+  // Dark green text with vibrant orange for currently reading word only
   const renderHighlightedContent = (content, title, charIndex) => {
     if (!content) return null;
     if (charIndex === undefined || charIndex === null || charIndex < 0) {
-      return <span>{content}</span>;
+      return <span style={{ color: '#064E3B' }}>{content}</span>;
     }
 
     const titleOffset = title ? title.length + 2 : 0;
@@ -55,15 +56,13 @@ export default function DidYouKnow() {
       currentPos = endPos + 1;
 
       const isCurrentWord = adjustedIndex >= startPos && adjustedIndex <= endPos + 2;
-      const isPastWord = adjustedIndex > endPos + 2;
 
-      let color = '#cbd5e1';
-      let fontWeight = 500;
+      let color = '#064E3B'; // Dark green
+      let fontWeight = 600;
 
       if (isCurrentWord) {
-        color = '#ff7700'; // Bright Orange active spoken word
-      } else if (isPastWord) {
-        color = '#f1f5f9'; // Bright read word
+        color = '#EA580C'; // Orange for reading word only
+        fontWeight = 800;
       }
 
       return (
@@ -72,7 +71,7 @@ export default function DidYouKnow() {
           style={{
             color,
             fontWeight,
-            transition: 'color 0.15s ease',
+            transition: 'color 0.12s ease',
             display: 'inline-block',
             marginRight: '0.25rem'
           }}
@@ -85,7 +84,7 @@ export default function DidYouKnow() {
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
-      {/* Floating Hover Tooltip Card */}
+      {/* Floating Hover Tooltip Card with White Background & Dark Green Text */}
       {hoveredFact && (
         <div style={{
           position: 'absolute',
@@ -94,12 +93,12 @@ export default function DidYouKnow() {
           transform: 'translateX(-50%)',
           width: '95%',
           maxWidth: '700px',
-          background: 'rgba(24, 24, 27, 0.98)',
-          border: '1.5px solid #FACC15',
+          background: '#FFFFFF',
+          border: '1.5px solid #A7F3D0',
           borderRadius: '22px',
           padding: '1.25rem 1.75rem',
-          color: '#FAFAFA',
-          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.7)',
+          color: '#064E3B',
+          boxShadow: '0 20px 45px rgba(6, 78, 59, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06)',
           zIndex: 100000,
           pointerEvents: 'none',
           backdropFilter: 'blur(16px)',
@@ -107,17 +106,17 @@ export default function DidYouKnow() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
             <span style={{ fontSize: '1.5rem' }}>🧠</span>
-            <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#FACC15' }}>
+            <h4 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#064E3B' }}>
               {hoveredFact.title}
             </h4>
           </div>
-          <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#FAFAFA', fontWeight: 600 }}>
+          <p style={{ margin: 0, fontSize: '1.02rem', lineHeight: '1.65', color: '#064E3B', fontWeight: 600 }}>
             {renderHighlightedContent(hoveredFact.content, hoveredFact.title, spokenCharIndex)}
           </p>
         </div>
       )}
 
-      {/* Main Bottom Bar - Rich Brown Theme matching Activity 4.3 */}
+      {/* Main Bottom Bar */}
       <div style={{
         background: 'linear-gradient(135deg, #78350F 0%, #451A03 100%)',
         border: '1.5px solid #B45309',
