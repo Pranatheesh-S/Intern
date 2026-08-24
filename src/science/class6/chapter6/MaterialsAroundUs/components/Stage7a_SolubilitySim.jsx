@@ -33,6 +33,406 @@ const StirringProgress = () => {
 };
 
 
+
+
+// --- REALISTIC WEBGL LABORATORY SIMULATION ---
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Environment, ContactShadows } from '@react-three/drei';
+import * as THREE from 'three';
+
+const ParticleSystem = ({ selectedSubstance, stirState }) => {
+  const meshRef = React.useRef();
+  const dummy = React.useMemo(() => new THREE.Object3D(), []);
+  
+  const count = React.useMemo(() => {
+    if (!selectedSubstance) return 0;
+    return selectedSubstance.id === 'chalk' ? 1200 :
+           selectedSubstance.id === 'sawdust' ? 400 :
+           600;
+  }, [selectedSubstance]);
+
+  const particles = React.useMemo(() => {
+    if (!selectedSubstance || count === 0) return [];
+    const pts = [];
+    const mat = selectedSubstance.id;
+    for (let i = 0; i < count; i++) {
+      let color;
+      if (mat === 'sand') {
+        const sandColors = ['#E5A93D', '#F4C05B', '#C98528'];
+        color = new THREE.Color(sandColors[Math.floor(Math.random() * sandColors.length)]);
+      } else if (mat === 'sawdust') {
+        const sawdustColors = ['#A66A38', '#8B4513', '#C17A3E'];
+        color = new THREE.Color(sawdustColors[Math.floor(Math.random() * sawdustColors.length)]);
+      } else {
+        color = new THREE.Color('#ffffff');
+      }
+
+      const scaleBase = mat === 'chalk' ? (0.15 + Math.random() * 0.05) : 
+                        mat === 'sawdust' ? (0.05 + Math.random() * 0.03) : 
+                        mat === 'salt' ? (0.22 + Math.random() * 0.08) :
+                        mat === 'sugar' ? (0.20 + Math.random() * 0.08) :
+                        (0.18 + Math.random() * 0.08);
+      
+      pts.push({
+        position: new THREE.Vector3((Math.random() - 0.5) * 0.8, 1.8 + Math.random() * 3.0, (Math.random() - 0.5) * 0.8), // Pour in a vertical stream
+        velocity: new THREE.Vector3((Math.random() - 0.5) * 0.2, -(Math.random() * 4 + 2), (Math.random() - 0.5) * 0.2), // Fast initial downward drop
+        scale: scaleBase,
+        initialScale: scaleBase,
+        material: mat,
+        color: color,
+        rot: new THREE.Vector3(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI),
+        rotV: new THREE.Vector3((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1),
+        floatOffset: Math.random() * 0.4,
+        dissolveRate: 0.15 + Math.random() * 0.4 // Varied dissolution rate for "concentration" fading effect
+      });
+    }
+    return pts;
+  }, [selectedSubstance, count]);
+
+  useFrame((state, delta) => {
+    if (!meshRef.current || particles.length === 0) return;
+    const dt = Math.min(delta, 0.05);
+    const radius = 1.30; // Inside beaker bounds
+    let bottom = -1.75;
+    const top = 1.35; // Stay inside water surface
+
+    particles.forEach((p, i) => {
+        // Dynamic gravity based on particle state
+        let gravity = 1.0;
+        if (p.material === 'sawdust') gravity = -1.5; // Gentle buoyancy to float to surface
+        else if (p.material === 'sand') gravity = 10.0; // Heavy
+        else if (p.material === 'chalk') gravity = 8.0; // Fast settling suspension
+        else if (p.material === 'sugar' || p.material === 'salt') {
+           // If fully dissolved (tiny), suspend them in fluid rather than dropping them
+           gravity = p.scale <= 0.02 ? 0.02 : 10.0; 
+        }
+        
+        p.velocity.y -= gravity * dt;
+        
+        if (stirState === 'stirring') {
+          const cx = p.position.x;
+          const cz = p.position.z;
+          const dist = Math.sqrt(cx*cx + cz*cz);
+          const force = Math.max(0, 1 - dist/radius);
+          
+          // Vortex forces (rotate around Y)
+          p.velocity.x += -cz * 4 * force * dt;
+          p.velocity.z += cx * 4 * force * dt;
+          
+          // Pull inwards to prevent particles from forming a hard ring against the glass
+          p.velocity.x -= cx * 2 * force * dt;
+          p.velocity.z -= cz * 2 * force * dt;
+          
+          // Upward turbulence during stirring
+          if (p.material === 'sand' || p.material === 'chalk') {
+              p.velocity.y += (Math.random() * 3.5) * force * dt; // Lift off bottom
+          } else if (p.material !== 'sawdust') {
+              p.velocity.y += (Math.random() * 2) * force * dt; 
+          }
+        }
+
+        // Dissolution for soluble materials
+        if ((p.material === 'sugar' || p.material === 'salt') && (stirState === 'stirring' || stirState === 'resolved')) {
+          // Shrink progressively based on random dissolveRate until they reach absolute zero
+          p.scale = Math.max(0.0, p.scale - dt * p.dissolveRate);
+        }
+
+        // Damping
+        if (stirState === 'dropping') {
+           p.velocity.x *= 0.95;
+           p.velocity.z *= 0.95;
+           p.velocity.y *= 0.99; // Low vertical drag allows them to fall fast to the bottom
+        } else if (stirState === 'settled') {
+           p.velocity.x *= 0.90;
+           p.velocity.z *= 0.90;
+           p.velocity.y *= 0.95; // Allows gravity to keep them resting naturally on the floor
+           p.rotV.multiplyScalar(0.9);
+        } else {
+           p.velocity.multiplyScalar(0.95);
+        }
+
+      p.position.addScaledVector(p.velocity, dt);
+      p.rot.addScaledVector(p.rotV, dt);
+
+      // Boundaries
+      let pTop = top;
+      if (p.material === 'sawdust') {
+        pTop = 1.45 - p.floatOffset * 0.8; // Rest gently near the water surface (1.5)
+      }
+      
+      if (p.position.y > pTop) {
+        p.position.y = pTop;
+        p.velocity.y *= -0.2;
+      }
+      
+      // Bottom boundary - Create a realistic 3D mound in the center instead of a flat horizontal strip
+      let pBottom = bottom;
+      if (p.material !== 'sawdust') {
+        const distFromCenter = Math.sqrt(p.position.x * p.position.x + p.position.z * p.position.z);
+        const moundFactor = p.material === 'chalk' ? 1.0 : 0.7; // Taller mound for chalk powder
+        const moundHeight = Math.max(0, (1.0 - distFromCenter)) * moundFactor; // Higher in the middle
+        pBottom = bottom + moundHeight + (p.floatOffset * 0.5); 
+      }
+      
+      if (p.position.y < pBottom) {
+        p.position.y = pBottom;
+        p.velocity.y *= -0.2;
+        p.velocity.x *= 0.7;
+        p.velocity.z *= 0.7;
+      }
+      
+      // Cylinder walls
+      const d = Math.sqrt(p.position.x * p.position.x + p.position.z * p.position.z);
+      if (d > radius - 0.05) {
+         const nx = p.position.x / d;
+         const nz = p.position.z / d;
+         p.position.x = nx * (radius - 0.05);
+         p.position.z = nz * (radius - 0.05);
+         p.velocity.x *= -0.5;
+         p.velocity.z *= -0.5;
+      }
+
+      if (p.scale > 0) {
+        dummy.position.copy(p.position);
+        if (p.material === 'sawdust') {
+          // Small, thin, irregular wood flakes
+          dummy.scale.set(p.scale * 2.0, p.scale * 0.25, p.scale * 1.5);
+        } else if (p.material === 'salt' || p.material === 'sugar') {
+          // Angular/irregular crystals
+          dummy.scale.set(p.scale, p.scale * (0.8 + Math.random() * 0.4), p.scale);
+        } else {
+          dummy.scale.setScalar(p.scale);
+        }
+        
+        // Use the particle's stable rotation
+        dummy.rotation.set(p.rot.x, p.rot.y, p.rot.z);
+        
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
+        meshRef.current.setColorAt(i, p.color);
+      } else {
+        dummy.scale.setScalar(0);
+        dummy.updateMatrix();
+        meshRef.current.setMatrixAt(i, dummy.matrix);
+      }
+    });
+
+    meshRef.current.instanceMatrix.needsUpdate = true;
+    meshRef.current.instanceColor.needsUpdate = true;
+  });
+
+  if (!selectedSubstance || count === 0) return null;
+
+  return (
+    <instancedMesh ref={meshRef} args={[null, null, count]} renderOrder={2}>
+      {selectedSubstance.id === 'chalk' ? <sphereGeometry args={[1, 6, 6]} /> :
+       selectedSubstance.id === 'sugar' ? <icosahedronGeometry args={[1, 0]} /> :
+       selectedSubstance.id === 'salt' ? <boxGeometry args={[1, 1, 1]} /> :
+       selectedSubstance.id === 'sand' ? <dodecahedronGeometry args={[1, 0]} /> :
+       <dodecahedronGeometry args={[1, 0]} />}
+       
+      {/* High contrast physical material that respects individual instance colors and 3D lighting */}
+      <meshStandardMaterial 
+        transparent={true} // Forces material into transparent pass so renderOrder applies
+        opacity={1.0}
+        visible={true}
+        roughness={0.6}
+        metalness={0.1}
+        emissive="#ffffff"
+        emissiveIntensity={selectedSubstance.id === 'sand' || selectedSubstance.id === 'sawdust' ? 0.0 : 0.1} 
+        color="#ffffff" 
+        depthWrite={true}
+      />
+    </instancedMesh>
+  );
+};
+
+const StirringRod = ({ stirState }) => {
+  const rodRef = React.useRef();
+  const phase = React.useRef(0);
+  
+  useFrame((state, delta) => {
+    if (!rodRef.current) return;
+    const dt = Math.min(delta, 0.05);
+
+    if (stirState === 'stirring') {
+      phase.current += dt * 8;
+      const r = 0.5;
+      rodRef.current.position.x = Math.cos(phase.current) * r;
+      rodRef.current.position.z = Math.sin(phase.current) * r;
+      rodRef.current.rotation.x = Math.PI / 16;
+      rodRef.current.rotation.z = Math.cos(phase.current) * 0.1;
+      rodRef.current.rotation.x = Math.sin(phase.current) * 0.1 + (Math.PI / 16);
+    } else {
+      phase.current *= 0.95;
+      rodRef.current.position.lerp(new THREE.Vector3(0.3, 0, 0.3), dt * 5);
+      rodRef.current.rotation.x = THREE.MathUtils.lerp(rodRef.current.rotation.x, Math.PI / 12, dt * 5);
+      rodRef.current.rotation.z = THREE.MathUtils.lerp(rodRef.current.rotation.z, Math.PI / 12, dt * 5);
+    }
+  });
+
+  return (
+    <mesh ref={rodRef} position={[0.2, 0.2, 0.2]} rotation={[Math.PI / 12, 0, Math.PI / 12]}>
+      <cylinderGeometry args={[0.04, 0.04, 4.5, 16]} />
+      <meshPhysicalMaterial 
+        transparent
+        transmission={0.95}
+        opacity={1}
+        roughness={0.02}
+        ior={1.52}
+        color="#ffffff"
+        clearcoat={1}
+      />
+    </mesh>
+  );
+};
+
+const Beaker3D = ({ stirState }) => {
+  const waterRef = React.useRef();
+
+  // Create highly accurate laboratory beaker profile
+  const beakerPoints = React.useMemo(() => {
+    const points = [];
+    points.push(new THREE.Vector2(0, -1.95)); // center bottom
+    points.push(new THREE.Vector2(1.3, -1.95)); // bottom flat edge
+    points.push(new THREE.Vector2(1.45, -1.8)); // bottom curve
+    points.push(new THREE.Vector2(1.45, 1.7)); // main wall
+    points.push(new THREE.Vector2(1.6, 1.9)); // rim flare
+    return points;
+  }, []);
+
+  const graduationTexture = React.useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 512, 1024);
+    ctx.fillStyle = 'rgba(180, 190, 200, 0.85)'; // Light gray/neutral, more visible
+    ctx.font = 'bold 36px Arial';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    
+    for (let i = 1; i <= 4; i++) {
+      const y = 1024 - (i * 200) - 100; 
+      ctx.fillRect(100, y - 2, 80, 4);
+      ctx.fillText(`${i * 100} ml`, 85, y);
+    }
+    
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.anisotropy = 16;
+    return tex;
+  }, []);
+
+  useFrame((state) => {
+    if (stirState === 'stirring' && waterRef.current) {
+       const time = state.clock.getElapsedTime();
+       // Violent vortex ripple
+       waterRef.current.rotation.x = -Math.PI / 2 + Math.sin(time * 15) * 0.05;
+       waterRef.current.rotation.y = Math.cos(time * 15) * 0.05;
+       waterRef.current.position.y = 1.5 - Math.sin(time * 8) * 0.02;
+    } else if (waterRef.current) {
+       const time = state.clock.getElapsedTime();
+       // Subtle ripple at rest
+       waterRef.current.rotation.x = -Math.PI / 2 + Math.sin(time * 2) * 0.005;
+       waterRef.current.rotation.y = Math.cos(time * 2) * 0.005;
+       waterRef.current.position.y = 1.5;
+    }
+  });
+
+  return (
+    <group position={[0, -0.2, 0]} scale={[1, 1, 1]}>
+      {/* True Beaker Glass (Simple physical glass) */}
+      <mesh renderOrder={3}>
+        <latheGeometry args={[beakerPoints, 64]} />
+        <meshPhysicalMaterial 
+          color="#ffffff" // Clear glass
+          transparent 
+          opacity={0.15} // Very subtle body
+          roughness={0.05} 
+          metalness={0.1}
+          clearcoat={1.0}
+          clearcoatRoughness={0.0}
+          side={THREE.DoubleSide}
+          depthWrite={false} // Prevent depth occlusion of internal particles
+        />
+      </mesh>
+
+      {/* Graduation Markings */}
+      <mesh position={[0, -0.05, 0]} rotation={[0, -Math.PI / 1.5, 0]} renderOrder={3}>
+        <cylinderGeometry args={[1.42, 1.36, 3.6, 32, 1, true]} />
+        <meshBasicMaterial map={graduationTexture} transparent opacity={0.6} depthWrite={false} side={THREE.DoubleSide} />
+      </mesh>
+
+      {/* Photorealistic Water Volume */}
+      <mesh position={[0, -0.15, 0]} renderOrder={1}>
+        <cylinderGeometry args={[1.4, 1.35, 3.4, 64]} />
+        <meshPhysicalMaterial 
+          transparent={true}
+          opacity={0.4} // Reduced so particles are vibrant
+          roughness={0.1}
+          metalness={0.05}
+          color="#55bbee" // Deeper clear cyan/blue
+          depthWrite={false}
+        />
+      </mesh>
+      
+      {/* Water Surface / Meniscus */}
+      <mesh ref={waterRef} position={[0, 1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+        <circleGeometry args={[1.4, 64]} />
+        <meshPhysicalMaterial 
+          transparent={true}
+          opacity={0.5} // Reduced so surface doesn't wash out particles entering
+          roughness={0.1}
+          metalness={0.05}
+          color="#55bbee" // Deeper clear cyan/blue
+          depthWrite={false}
+        />
+      </mesh>
+      
+      {/* Meniscus / Surface Line */}
+      <mesh position={[0, 1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+        <torusGeometry args={[1.39, 0.015, 16, 64]} />
+        <meshPhysicalMaterial transparent opacity={0.8} color="#ffffff" roughness={0.0} clearcoat={1} depthWrite={false} />
+      </mesh>
+    </group>
+  );
+};
+
+const WebGLBeakerSimulation = ({ selectedSubstance, stirState }) => {
+  return (
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      flex: 1,
+      minHeight: 0,
+      background: 'transparent'
+    }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Canvas camera={{ position: [0, 0.5, 8.5], fov: 40 }} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
+          {/* Photorealistic Studio Lighting */}
+          <ambientLight intensity={0.5} color="#ffffff" />
+          <directionalLight position={[10, 15, 10]} intensity={1.2} color="#ffffff" castShadow />
+          <directionalLight position={[-10, 5, -5]} intensity={0.8} color="#ffffff" />
+          <spotLight position={[0, 15, 0]} intensity={1.0} penumbra={1} angle={0.8} color="#ffffff" />
+          
+          <group scale={[1.15, 1.15, 1.15]} position={[0, -0.05, 0]}>
+            <Beaker3D stirState={stirState} />
+            <StirringRod stirState={stirState} />
+            <ParticleSystem selectedSubstance={selectedSubstance} stirState={stirState} />
+          </group>
+          
+          {/* Neutral studio environment mapping for natural reflections */}
+          <Environment preset="city" />
+          
+          {/* Authentic laboratory surface grounding shadow */}
+          <ContactShadows position={[0, -2.01, 0]} opacity={0.65} scale={10} blur={2.0} far={4} color="#000000" />
+        </Canvas>
+      </div>
+    </div>
+  );
+};
+// -----------------------------------------------------
+
 export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
   const [selectedSubstance, setSelectedSubstance] = useState(null);
   const [stirState, setStirState] = useState('idle'); // idle, stirring, resolved
@@ -73,7 +473,10 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
 
   const handleSelect = (sub) => {
     setSelectedSubstance(sub);
-    setStirState('idle');
+    setStirState('dropping');
+    setTimeout(() => {
+      setStirState(prev => prev === 'dropping' ? 'settled' : prev);
+    }, 1500); // 1.5 seconds to pour and settle
   };
 
   const handleStir = () => {
@@ -123,10 +526,13 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
 
       <div style={{ display: 'flex', flex: 1, minHeight: 0, background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)' }}>
         
-        {/* Main Lab Area */}
-        <div style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)' }}>
-          <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--text-heading)' }}>Materials to Test</div>
+        {/* Left Side: Experiment */}
+        <div style={{ flex: '1 1 50%', minWidth: 0, maxWidth: '50%', padding: '1.5rem', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', boxSizing: 'border-box' }}>
+          
+          <div style={{ marginBottom: '1rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '1rem' }}>
+              Materials to Test
+            </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '0.75rem', marginTop: '1rem' }}>
               {substances.map((sub) => {
                 const isSelected = selectedSubstance?.id === sub.id;
@@ -167,294 +573,63 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
             </div>
           </div>
 
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-            {/* The Beaker */}
-            <div style={{ position: 'relative', width: '200px', height: '240px', display: 'flex', justifyContent: 'center' }}>
-              
-              {/* Back of glass */}
-              <div style={{ position: 'absolute', bottom: 0, width: '160px', height: '200px', background: 'rgba(255,255,255,0.8)', border: '2px solid var(--border)', borderTop: 'none', borderRadius: '0 0 16px 16px' }} />
-              
-              {/* Liquid inside */}
-              <div style={{ 
-                position: 'absolute', bottom: '2px', width: '156px', height: '140px', 
-                background: 'linear-gradient(180deg, rgba(56,189,248,0.3) 0%, rgba(14,165,233,0.6) 100%)', 
-                borderRadius: '0 0 14px 14px',
-                transition: 'all 1s ease-in-out',
-                overflow: 'hidden'
-              }}>
-                {/* Splash Ripples */}
-                <AnimatePresence>
-                  {stirState === 'idle' && selectedSubstance && (
-                    <motion.div
-                      key={`ripple-${selectedSubstance.id}`}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: [0, 0.4, 0], scale: [0.5, 2.5, 3] }}
-                      transition={{ duration: 1.5, repeat: 1, delay: 0.3 }}
-                      style={{
-                        position: 'absolute',
-                        top: 15,
-                        left: '50%',
-                        marginLeft: '-25px',
-                        width: '50px',
-                        height: '15px',
-                        border: '1.5px solid rgba(255,255,255,0.7)',
-                        borderRadius: '50%',
-                        pointerEvents: 'none'
-                      }}
-                    />
-                  )}
-                </AnimatePresence>
+          {/* WebGL 3D Container - flexes to fill available vertical space */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, position: 'relative' }}>
+            <WebGLBeakerSimulation selectedSubstance={selectedSubstance} stirState={stirState} />
+          </div>
 
-                {/* Stirring Center Ripple */}
-                <AnimatePresence>
-                  {stirState === 'stirring' && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: [0, 0.2, 0], scale: [0.8, 1.5, 2] }}
-                      transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
-                      style={{
-                        position: 'absolute',
-                        top: 60,
-                        left: '50%',
-                        marginLeft: '-30px',
-                        width: '60px',
-                        height: '20px',
-                        background: 'radial-gradient(ellipse at center, rgba(255,255,255,0) 40%, rgba(255,255,255,0.3) 60%, rgba(255,255,255,0) 80%)',
-                        borderRadius: '50%',
-                        pointerEvents: 'none',
-                        zIndex: 4
-                      }}
-                    />
-                  )}
-                </AnimatePresence>
-
-                {/* Realistic Particles System */}
-                <AnimatePresence>
-                  {selectedSubstance && (
-                    <motion.div
-                      key={selectedSubstance.id}
-                      initial={{ opacity: 1 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0, transition: { duration: 0.2 } }}
-                      style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
-                    >
-                      {(() => {
-                        const getParticleConfig = (id) => {
-                          switch (id) {
-                            case 'sugar': return { count: 40, color: '#ffffff', minSize: 1.5, maxSize: 3, opacity: 0.85, type: 'crystal' };
-                            case 'salt': return { count: 40, color: '#f8fafc', minSize: 1.2, maxSize: 2.5, opacity: 0.9, type: 'crystal' };
-                            case 'chalk': return { count: 50, color: '#fdfdfd', minSize: 1.5, maxSize: 4, opacity: 0.95, type: 'powder' };
-                            case 'sand': return { count: 45, color: '#a16207', minSize: 1.5, maxSize: 3.5, opacity: 1, type: 'grain' };
-                            case 'sawdust': return { count: 35, color: '#78350f', minSize: 2.5, maxSize: 7, opacity: 0.95, type: 'flake' };
-                            default: return { count: 30, color: '#ccc', minSize: 2, maxSize: 4, opacity: 0.8, type: 'grain' };
-                          }
-                        };
-                        const config = getParticleConfig(selectedSubstance.id);
-                        
-                        return Array.from({ length: config.count }).map((_, i) => {
-                          const size = config.minSize + Math.random() * (config.maxSize - config.minSize);
-                          
-                          // Group assignment for dynamic mixing
-                          const rand = Math.random();
-                          let group = 'center';
-                          if (rand < 0.3) group = 'outer';
-                          else if (rand < 0.6) group = 'bottom';
-                          else if (rand < 0.8) group = 'top';
-
-                          // Start slightly off-center for pouring
-                          const startX = (Math.random() - 0.5) * 40; 
-                          const startY = -100 - Math.random() * 50; 
-                          const fallDelay = Math.random() * 0.5;
-                          
-                          // Final horizontal scatter
-                          const xSpread = (Math.random() - 0.5) * 50;
-                          
-                          let idleY = selectedSubstance.float ? 10 + Math.random() * 5 : 120 + Math.random() * 15;
-                          let resolvedY = idleY;
-                          
-                          if (!selectedSubstance.float && !selectedSubstance.settle && selectedSubstance.type === 'Insoluble') {
-                             idleY = 30 + Math.random() * 90;
-                             resolvedY = idleY;
-                          }
-                          
-                          let borderRadius = '50%';
-                          if (config.type === 'crystal') borderRadius = Math.random() > 0.5 ? '2px' : '1px';
-                          else if (config.type === 'flake') borderRadius = '40% 60% 70% 30% / 40% 50% 60% 50%';
-                          else if (config.type === 'grain') borderRadius = '30% 70% 70% 30% / 30% 30% 70% 70%';
-
-                          const swirlX = [];
-                          const swirlY = [];
-                          const swirlScale = [];
-                          const steps = 12;
-                          // Full seamless loop 0 to 2PI
-                          const baseAngle = Math.random() * Math.PI * 2;
-                          
-                          for(let step=0; step<=steps; step++) {
-                            const progress = step / steps;
-                            const angle = baseAngle + (progress * Math.PI * 2); 
-                            
-                            let radius = 15;
-                            let yCenter = 70;
-
-                            if (group === 'outer') {
-                              radius = 30 + Math.random() * 5;
-                              yCenter = 70;
-                            } else if (group === 'bottom') {
-                              radius = 20;
-                              yCenter = 100 - Math.sin(angle) * 10;
-                            } else if (group === 'top') {
-                              radius = 25;
-                              yCenter = 35 + Math.sin(angle) * 10;
-                            } else {
-                              radius = 10 + Math.random() * 5;
-                              yCenter = 70;
-                            }
-
-                            // 3D elliptical depth mapping
-                            const xPos = Math.cos(angle) * radius;
-                            const yPos = yCenter + Math.sin(angle) * (radius * 0.3); // squashed circle
-                            const depthScale = 1 + (Math.sin(angle) * 0.2); // larger in front, smaller in back
-
-                            swirlX.push(xPos);
-                            swirlY.push(yPos);
-                            swirlScale.push(depthScale);
-                          }
-
-                          let currentAnimate = {};
-                          let currentTransition = {};
-
-                          if (stirState === 'idle') {
-                            currentAnimate = { 
-                              y: idleY, 
-                              x: xSpread,
-                              opacity: config.opacity,
-                              scale: 1,
-                              rotate: Math.random() * 360
-                            };
-                            currentTransition = { 
-                              y: { type: 'spring', damping: 14 + Math.random()*4, stiffness: 40, delay: fallDelay },
-                              x: { type: 'spring', damping: 10 + Math.random()*5, stiffness: 35, delay: fallDelay },
-                              opacity: { duration: 0.1, delay: fallDelay },
-                              rotate: { duration: 2, delay: fallDelay }
-                            };
-                          } else if (stirState === 'stirring') {
-                            currentAnimate = {
-                              y: swirlY,
-                              x: swirlX,
-                              opacity: config.opacity,
-                              scale: swirlScale,
-                              rotate: Math.random() * 720
-                            };
-                            currentTransition = {
-                              duration: 1.5 + Math.random() * 0.5,
-                              ease: "linear",
-                              repeat: Infinity,
-                              times: Array.from({length: steps+1}).map((_, idx) => idx/steps)
-                            };
-                          } else if (stirState === 'resolved') {
-                            const isSoluble = selectedSubstance.type === 'Soluble';
-                            currentAnimate = {
-                              y: resolvedY,
-                              x: xSpread * (isSoluble ? 1.5 : 1),
-                              opacity: isSoluble ? 0 : config.opacity,
-                              scale: isSoluble ? 0.2 : 1,
-                              rotate: Math.random() * 360
-                            };
-                            currentTransition = {
-                              duration: isSoluble ? 2.0 + Math.random() * 1.0 : 1.5,
-                              ease: "easeOut"
-                            };
-                          }
-
-                          return (
-                            <motion.div
-                              key={`${selectedSubstance.id}-${i}`}
-                              initial={{ y: startY, x: startX, opacity: 0, scale: 0.5 }}
-                              animate={currentAnimate}
-                              transition={currentTransition}
-                              style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: '50%',
-                                width: config.type === 'flake' ? size * 1.8 : size,
-                                height: size,
-                                backgroundColor: config.color,
-                                borderRadius: borderRadius,
-                                boxShadow: config.type === 'crystal' ? '0 0 2px rgba(255,255,255,0.6)' : 
-                                           config.type === 'powder' ? '0 0 3px rgba(255,255,255,0.7)' : 'none',
-                                marginLeft: -size / 2,
-                                zIndex: 5
-                              }}
-                            />
-                          );
-                        });
-                      })()}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Realistic Glass Stirring Rod */}
-              <AnimatePresence>
-                {stirState === 'stirring' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -80, x: -30, rotate: 30 }}
-                    animate={{ 
-                      opacity: 1, 
-                      x: [-15, 0, 15, 0, -15],
-                      y: [0, 15, 0, -5, 0],
-                      rotate: [5, 12, 18, 12, 5],
-                      scale: [1, 1.05, 1, 0.95, 1] // Creates 3D depth projection cone
-                    }}
-                    exit={{ opacity: 0, y: -80, x: -30, rotate: 30 }}
-                    transition={{ 
-                      opacity: { duration: 0.3 },
-                      x: { repeat: Infinity, duration: 1.8, ease: "easeInOut" },
-                      y: { repeat: Infinity, duration: 1.8, ease: "easeInOut" },
-                      rotate: { repeat: Infinity, duration: 1.8, ease: "easeInOut" },
-                      scale: { repeat: Infinity, duration: 1.8, ease: "easeInOut" }
-                    }}
-                    style={{ 
-                      position: 'absolute', 
-                      top: '-30px', 
-                      left: '50%',
-                      width: '8px', 
-                      height: '240px', 
-                      background: 'linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.85) 40%, rgba(255,255,255,0.1) 100%)', 
-                      borderRadius: '10px', 
-                      transformOrigin: 'top center',
-                      boxShadow: 'inset -2px 0 4px rgba(0,0,0,0.15), 0 0 6px rgba(255,255,255,0.4)',
-                      zIndex: 10
-                    }}
-                  >
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '14px', background: 'rgba(255,255,255,0.9)', borderRadius: '0 0 10px 10px', boxShadow: 'inset 0 -2px 4px rgba(0,0,0,0.2)' }} />
-                  </motion.div>
+          {/* Dedicated Stir Button Area (Inside document flow) */}
+          <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '48px', flexShrink: 0, gap: '1.5rem' }}>
+            {selectedSubstance && (
+              <>
+                <button
+                  onClick={handleStir}
+                  disabled={stirState === 'stirring' || stirState === 'dropping'}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    padding: '0.75rem 2rem',
+                    background: (stirState === 'stirring' || stirState === 'dropping') ? 'var(--text-light)' : '#f97316',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '24px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: (stirState === 'stirring' || stirState === 'dropping') ? 'default' : 'pointer',
+                    boxShadow: (stirState === 'stirring' || stirState === 'dropping') ? 'none' : '0 4px 6px rgba(249, 115, 22, 0.3)',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  {stirState === 'stirring' ? 'Stirring...' : 'Stir Well'}
+                </button>
+                
+                {stirState === 'resolved' && (
+                  <div style={{
+                    color: selectedSubstance.type === 'Soluble' ? '#16a34a' : '#ea580c',
+                    fontSize: '1.1rem',
+                    fontWeight: 'bold',
+                    background: 'rgba(255, 255, 255, 0.8)',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '8px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                    animation: 'fadeIn 0.3s ease-out'
+                  }}>
+                    {selectedSubstance.type === 'Soluble' ? 'Fully Dissolved' : 'Did Not Dissolve'}
+                  </div>
                 )}
-              </AnimatePresence>
-
-              {/* Front of glass reflection */}
-              <div style={{ position: 'absolute', bottom: 0, width: '160px', height: '200px', borderLeft: '4px solid rgba(255,255,255,0.7)', borderRadius: '0 0 0 16px', pointerEvents: 'none', zIndex: 20 }} />
-            </div>
-
-            {selectedSubstance && stirState === 'idle' && (
-              <button 
-                onClick={handleStir}
-                style={{ marginTop: '20px', background: 'var(--accent)', color: 'white', border: 'none', padding: '10px 24px', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 6px rgba(79, 70, 229, 0.2)' }}
-              >
-                Stir Well
-              </button>
+              </>
             )}
-
             {!selectedSubstance && (
-              <div style={{ marginTop: '20px', color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.95rem', alignSelf: 'center' }}>
                 Select a material to add to the water.
               </div>
             )}
           </div>
         </div>
 
-        {/* Observation Console */}
-        <div style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
+        {/* Right Side: Observation Console */}
+        <div style={{ flex: '1 1 50%', minWidth: 0, maxWidth: '50%', padding: '1.5rem', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
           <h4 style={{ margin: '0 0 1rem 0', color: '#431407', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', fontSize: '1.75rem' }}>
             <Camera size={28} color="#d97706" /> Observation Console
           </h4>
