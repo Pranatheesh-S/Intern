@@ -5,180 +5,7 @@ import * as THREE from 'three';
 import { TextureLoader } from 'three';
 import worldMapUrl from './world-map.jpg';
 
-const Comet = ({ currentTask }) => {
-  const cometRef = useRef();
-  
-  useFrame((state) => {
-    if (currentTask !== 0 || !cometRef.current) return;
-    
-    // Cycle every 8 seconds
-    const time = state.clock.getElapsedTime();
-    const t = (time % 8) / 8;
-    
-    // Move from top-right-far to bottom-left-far
-    const startX = 35; const startY = 20; const startZ = -15;
-    const endX = -35; const endY = -20; const endZ = -5;
-    
-    cometRef.current.position.x = THREE.MathUtils.lerp(startX, endX, t);
-    cometRef.current.position.y = THREE.MathUtils.lerp(startY, endY, t);
-    cometRef.current.position.z = THREE.MathUtils.lerp(startZ, endZ, t);
-    
-    // Face the direction of motion
-    cometRef.current.lookAt(endX, endY, endZ);
-  });
 
-  if (currentTask !== 0) return null;
-
-  return (
-    <group ref={cometRef}>
-      {/* Comet Core */}
-      <Sphere args={[0.15, 16, 16]}>
-        <meshBasicMaterial color="#ffffff" />
-      </Sphere>
-      
-      {/* Inner Tail (Brightest) */}
-      <mesh position={[0, 0, -2]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.25, 0.0, 4, 16]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.6} blending={THREE.AdditiveBlending} depthWrite={false} />
-      </mesh>
-      
-      {/* Mid Tail */}
-      <mesh position={[0, 0, -4]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.35, 0.0, 8, 16]} />
-        <meshBasicMaterial color="#88ccff" transparent opacity={0.3} blending={THREE.AdditiveBlending} depthWrite={false} />
-      </mesh>
-      
-      {/* Outer Tail (Widest, Faintest) */}
-      <mesh position={[0, 0, -6]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.5, 0.0, 12, 16]} />
-        <meshBasicMaterial color="#2266ff" transparent opacity={0.15} blending={THREE.AdditiveBlending} depthWrite={false} />
-      </mesh>
-    </group>
-  );
-};
-
-const AndromedaGalaxy = ({ currentTask }) => {
-  const galaxyRef = useRef();
-  const galaxyMap = useLoader(TextureLoader, '/src/assets/andromeda_galaxy.jpg');
-  
-  if (currentTask !== 5) return null;
-
-  return (
-    <group ref={galaxyRef} position={[-12, 6, -35]} rotation={[0, 0.3, 0.5]}>
-      <mesh>
-        {/* Made the galaxy smaller and static per user request */}
-        <planeGeometry args={[25, 25]} />
-        <meshBasicMaterial 
-          map={galaxyMap} 
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          transparent={true}
-          opacity={0.85}
-        />
-      </mesh>
-    </group>
-  );
-};
-
-const Asteroid = ({ currentTask }) => {
-  const asteroidRef = useRef();
-  const geometryRef = useRef();
-  const asteroidMap = useLoader(TextureLoader, '/src/assets/moon_texture.jpg');
-  
-  useEffect(() => {
-    if (geometryRef.current) {
-      const positions = geometryRef.current.attributes.position;
-      for (let i = 0; i < positions.count; i++) {
-        const vec = new THREE.Vector3().fromBufferAttribute(positions, i);
-        
-        // Procedural noise for craters and bumps
-        const noise = Math.sin(vec.x * 5) * Math.cos(vec.y * 5) * Math.sin(vec.z * 5);
-        // Large structural distortion to make it look like a broken rock fragment
-        const structuralX = Math.sin(vec.x * 2.5) * 0.25;
-        const structuralY = Math.cos(vec.y * 2.5) * 0.25;
-        
-        // Combine noise, large distortions, and a tiny bit of random grit
-        const scalar = 1 + (noise * 0.12) + structuralX + structuralY + ((Math.random() - 0.5) * 0.04);
-        
-        positions.setXYZ(i, vec.x * scalar, vec.y * scalar, vec.z * scalar);
-      }
-      geometryRef.current.computeVertexNormals();
-    }
-  }, []);
-
-  useFrame((state, delta) => {
-    if (currentTask !== 1 || !asteroidRef.current) return;
-    
-    // Cycle every 15 seconds
-    const time = state.clock.getElapsedTime();
-    const t = (time % 15) / 15;
-    
-    // Pass from bottom-left-far to top-right-mid
-    const startX = -25; const startY = -15; const startZ = -12;
-    const endX = 25; const endY = 15; const endZ = 2;
-    
-    asteroidRef.current.position.x = THREE.MathUtils.lerp(startX, endX, t);
-    asteroidRef.current.position.y = THREE.MathUtils.lerp(startY, endY, t);
-    asteroidRef.current.position.z = THREE.MathUtils.lerp(startZ, endZ, t);
-    
-    // Realistic tumbling motion
-    asteroidRef.current.rotation.x += delta * 0.4;
-    asteroidRef.current.rotation.y += delta * 0.2;
-    asteroidRef.current.rotation.z += delta * 0.3;
-  });
-
-  if (currentTask !== 1) return null;
-
-  return (
-    <group ref={asteroidRef}>
-      {/* Base scaling to make it oblong */}
-      <mesh scale={[1.8, 1.2, 1.5]}>
-        {/* High detail icosahedron so we can deform the vertices */}
-        <icosahedronGeometry ref={geometryRef} args={[1, 16]} />
-        <meshStandardMaterial 
-          map={asteroidMap} 
-          color="#8c7b6c" 
-          emissive="#2a221b"
-          roughness={1.0} 
-          metalness={0.2} 
-        />
-      </mesh>
-    </group>
-  );
-};
-
-const OrbitingMoon = ({ visible }) => {
-  const moonGroupRef = useRef();
-  const moonMeshRef = useRef();
-  const moonMap = useLoader(TextureLoader, '/src/assets/moon_texture.jpg');
-  
-  useFrame((state) => {
-    if (!visible) return;
-    if (moonGroupRef.current) {
-      // Slower orbit so it stays in frame
-      moonGroupRef.current.rotation.y = state.clock.elapsedTime * 0.03;
-      moonGroupRef.current.rotation.z = -Math.PI * 0.1; 
-      moonGroupRef.current.rotation.x = Math.PI * 0.05;
-    }
-    if (moonMeshRef.current) {
-      moonMeshRef.current.rotation.y = state.clock.elapsedTime * 0.05;
-    }
-  });
-
-  if (!visible) return null;
-
-  return (
-    <group ref={moonGroupRef}>
-      {/* Start the moon on the LEFT side of the screen (away from the text panel) */}
-      <group rotation={[0, Math.PI * 0.75, 0]}>
-        <mesh ref={moonMeshRef} position={[5, 1.5, 0]}>
-          <sphereGeometry args={[1.3, 64, 64]} />
-          <meshStandardMaterial map={moonMap} color="#ffffff" roughness={0.9} metalness={0.0} />
-        </mesh>
-      </group>
-    </group>
-  );
-};
 
 const FadingLabel = ({ pos, color, text }) => {
   const groupRef = useRef();
@@ -621,14 +448,7 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon, disableMoon }) =
         );
       })()}
 
-      {/* Realistic Moon for Axis/Poles tasks */}
-      <OrbitingMoon visible={!disableMoon && currentTask >= 2 && currentTask <= 4} />
 
-      {/* Realistic Asteroid for Equator task */}
-      <Asteroid currentTask={currentTask} />
-
-      {/* Andromeda Galaxy for Parallels of Latitude */}
-      <AndromedaGalaxy currentTask={currentTask} />
     </group>
   );
 };
@@ -675,9 +495,6 @@ export default function Globe3D({ currentTask, latVal, lonVal, gridLat, gridLon,
         gridLon={gridLon}
         disableMoon={disableMoon}
       />
-      
-      <Comet currentTask={currentTask} />
-      
       <OrbitControls 
         makeDefault
         enableZoom={true} 
