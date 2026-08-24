@@ -5,7 +5,7 @@ import { RotateCcw, Compass, MapPin, CheckCircle2, Sparkles, Navigation, Target,
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
   ctx.arcTo(x + w, y + h, x, y + h, r);
   ctx.arcTo(x, y + h, x, y, r);
   ctx.arcTo(x, y, x + w, y, r);
@@ -75,7 +75,7 @@ function drawShipWithMagnet(ctx, x, y, size, rotation, shipImg) {
   ctx.translate(x, y);
   ctx.rotate(rotation);
 
-  // 1. Attached Magnetic Core Base mounted on the ship
+  // 1. Attached Magnetic Core Base mounted on the ship deck
   ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
   ctx.shadowBlur = 10;
   ctx.shadowOffsetY = 4;
@@ -99,7 +99,6 @@ function drawShipWithMagnet(ctx, x, y, size, rotation, shipImg) {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
-    // Ship image points UP (North is 0 angle when rotation adjusted by +PI/2)
     ctx.save();
     ctx.rotate(-Math.PI / 2); // Align sprite bow with motion vector
     ctx.drawImage(shipImg, -size / 2, -size / 2, size, size);
@@ -108,7 +107,7 @@ function drawShipWithMagnet(ctx, x, y, size, rotation, shipImg) {
 
   // 3. Magnetic Flux Glow Indicator
   ctx.shadowBlur = 0;
-  ctx.strokeStyle = "rgba(245, 158, 11, 0.7)";
+  ctx.strokeStyle = "rgba(245, 158, 11, 0.75)";
   ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.arc(0, 0, size * 0.38, 0, Math.PI * 2);
@@ -148,123 +147,102 @@ function drawSteelBall(ctx, x, y, radius) {
   ctx.restore();
 }
 
-// Sea Route Waypoint Landmarks
+// 9 Exact Nautical Maritime Map Landmarks
 const LANDMARKS = [
-  { id: 'start', name: 'Lighthouse Base 🏮', x: 215, y: 240, icon: '🏮' },
-  { id: 'seaport', name: 'Seaport & Container Yard ⚓', x: 235, y: 345, icon: '⚓' },
-  { id: 'station', name: 'Nautical Research Station 🛰️', x: 700, y: 280, icon: '🛰️' },
-  { id: 'runway', name: 'Aircraft Runway 🛩️', x: 680, y: 500, icon: '🛩️' },
-  { id: 'oil_rig', name: 'Offshore Oil Rig 🛢️', x: 160, y: 640, icon: '🛢️' },
-  { id: 'goal', name: 'GOAL Shipyard 🏆', x: 810, y: 630, icon: '🏆' }
+  { id: 'lighthouse', name: 'Lighthouse 🏮', x: 175, y: 120, icon: '🏮' },
+  { id: 'observatory', name: 'Underwater Observatory 🔮', x: 500, y: 130, icon: '🔮' },
+  { id: 'windfarm', name: 'Offshore Wind Farm 💨', x: 825, y: 130, icon: '💨' },
+  { id: 'seaport', name: 'Seaport & Container Yard ⚓', x: 165, y: 340, icon: '⚓' },
+  { id: 'shipyard', name: 'Shipyard & Dry Dock 🛠️', x: 500, y: 340, icon: '🛠️' },
+  { id: 'oil_rig', name: 'Offshore Oil Rig 🛢️', x: 835, y: 340, icon: '🛢️' },
+  { id: 'marina', name: 'Marina & Boardwalk ⛵', x: 165, y: 515, icon: '⛵' },
+  { id: 'island', name: 'Tropical Island 🌴', x: 500, y: 515, icon: '🌴' },
+  { id: 'icerock', name: 'Ice Rock 🧊', x: 835, y: 515, icon: '🧊' }
 ];
 
-// Sequential Missions through the sea routes
+// Sequential Missions Navigating the 3D Map Grid
 const MISSIONS = [
   {
     id: 1,
     title: "Mission 1: Lighthouse to Seaport Yard",
-    desc: "Use the Joystick to pull your ship with the magnet from Lighthouse along the sea route to the Seaport Yard ⚓!",
-    start: 'start',
+    desc: "Use the Joystick or drag the magnet to guide your ship from the Lighthouse 🏮 south to the Seaport & Container Yard ⚓!",
+    start: 'lighthouse',
     target: 'seaport'
   },
   {
     id: 2,
-    title: "Mission 2: Seaport to Research Station",
-    desc: "Navigate through the upper canals across to the Nautical Research Station 🛰️!",
+    title: "Mission 2: Seaport Yard to Shipyard",
+    desc: "Navigate through the middle channel eastward to the Shipyard & Dry Dock 🛠️!",
     start: 'seaport',
-    target: 'station'
+    target: 'shipyard'
   },
   {
     id: 3,
-    title: "Mission 3: Research Station to Runway Island",
-    desc: "Steer down the eastern channel to reach the Aircraft Runway 🛩️!",
-    start: 'station',
-    target: 'runway'
+    title: "Mission 3: Shipyard to Underwater Observatory",
+    desc: "Steer north along the center sea lane to reach the Underwater Observatory Dome 🔮!",
+    start: 'shipyard',
+    target: 'observatory'
   },
   {
     id: 4,
-    title: "Mission 4: Runway to Offshore Oil Rig",
-    desc: "Guide your ship along the southern sea route all the way to the Offshore Oil Rig 🛢️!",
-    start: 'runway',
-    target: 'oil_rig'
+    title: "Mission 4: Observatory to Offshore Wind Farm",
+    desc: "Sail east to explore the clean energy Offshore Wind Farm 💨!",
+    start: 'observatory',
+    target: 'windfarm'
   },
   {
     id: 5,
-    title: "Mission 5: Oil Rig to GOAL Shipyard",
-    desc: "Navigate the final canal labyrinth and dock at the GOAL Shipyard 🏆!",
+    title: "Mission 5: Wind Farm to Offshore Oil Rig",
+    desc: "Guide your ship south into the deep-sea Offshore Oil Rig platform 🛢️!",
+    start: 'windfarm',
+    target: 'oil_rig'
+  },
+  {
+    id: 6,
+    title: "Mission 6: Oil Rig to Tropical Island",
+    desc: "Navigate across the southern canals to anchor at the lush Tropical Island 🌴!",
     start: 'oil_rig',
-    target: 'goal'
+    target: 'island'
+  },
+  {
+    id: 7,
+    title: "Mission 7: Island to Marina & Boardwalk",
+    desc: "Steer westward past the docks to reach the Marina & Boardwalk ⛵!",
+    start: 'island',
+    target: 'marina'
+  },
+  {
+    id: 8,
+    title: "Mission 8: Marina to Glacial Ice Rock",
+    desc: "Embark on the final grand expedition across the ocean to reach the mysterious Ice Rock 🧊!",
+    start: 'marina',
+    target: 'icerock'
   }
 ];
 
-// Precise Sea Route Canal Segments / Track Network (Width: 1000, Height: 670)
+// Complete 3x3 Sea Lane Grid Tracks (Width: 1000, Height: 563)
 const CANAL_TRACKS = [
-  // Start Bridge area
-  { x1: 215, y1: 240, x2: 260, y2: 240 },
-  { x1: 260, y1: 240, x2: 260, y2: 200 },
-  { x1: 260, y1: 200, x2: 325, y2: 200 },
-  
-  // Upper Zig-Zag Channels
-  { x1: 325, y1: 200, x2: 325, y2: 155 },
-  { x1: 325, y1: 155, x2: 385, y2: 155 },
-  { x1: 385, y1: 155, x2: 385, y2: 205 },
-  { x1: 385, y1: 205, x2: 445, y2: 205 },
-  { x1: 445, y1: 205, x2: 445, y2: 155 },
-  { x1: 445, y1: 155, x2: 505, y2: 155 },
-  { x1: 505, y1: 155, x2: 505, y2: 205 },
-  { x1: 505, y1: 205, x2: 570, y2: 205 },
-  { x1: 570, y1: 205, x2: 570, y2: 260 },
-  { x1: 570, y1: 260, x2: 635, y2: 260 },
-  { x1: 635, y1: 260, x2: 700, y2: 280 }, // Leads to Station
+  // Horizontal Sea Lanes
+  { x1: 175, y1: 120, x2: 825, y2: 120 }, // Top Lane
+  { x1: 165, y1: 205, x2: 835, y2: 205 }, // Upper Mid Lane
+  { x1: 165, y1: 340, x2: 835, y2: 340 }, // Middle Lane
+  { x1: 165, y1: 410, x2: 835, y2: 410 }, // Lower Mid Lane
+  { x1: 165, y1: 515, x2: 835, y2: 515 }, // Bottom Lane
 
-  // Central Vertical Connectors
-  { x1: 445, y1: 205, x2: 445, y2: 285 },
-  { x1: 445, y1: 285, x2: 485, y2: 285 },
-  { x1: 485, y1: 285, x2: 485, y2: 355 },
-  { x1: 485, y1: 355, x2: 535, y2: 355 },
-  { x1: 535, y1: 355, x2: 535, y2: 415 },
+  // Vertical Sea Lanes
+  { x1: 165, y1: 120, x2: 165, y2: 515 }, // Left Col (Lighthouse - Seaport - Marina)
+  { x1: 330, y1: 120, x2: 330, y2: 515 }, // Col 1-2 Interconnector
+  { x1: 500, y1: 120, x2: 500, y2: 515 }, // Center Col (Observatory - Shipyard - Island)
+  { x1: 665, y1: 120, x2: 665, y2: 515 }, // Col 2-3 Interconnector
+  { x1: 835, y1: 120, x2: 835, y2: 515 }, // Right Col (Wind Farm - Oil Rig - Ice Rock)
 
-  // Seaport Canal Branch
-  { x1: 260, y1: 240, x2: 175, y2: 285 },
-  { x1: 175, y1: 285, x2: 175, y2: 380 },
-  { x1: 175, y1: 380, x2: 235, y2: 345 }, // Seaport Dock
-  { x1: 175, y1: 380, x2: 200, y2: 425 },
-  { x1: 200, y1: 425, x2: 265, y2: 425 },
-
-  // Aircraft Runway Branch
-  { x1: 535, y1: 415, x2: 580, y2: 415 },
-  { x1: 580, y1: 415, x2: 580, y2: 355 },
-  { x1: 580, y1: 355, x2: 635, y2: 355 },
-  { x1: 635, y1: 355, x2: 635, y2: 445 },
-  { x1: 635, y1: 445, x2: 680, y2: 500 }, // Runway Dock
-
-  // Oil Rig Southwest Branch
-  { x1: 200, y1: 425, x2: 145, y2: 470 },
-  { x1: 145, y1: 470, x2: 145, y2: 565 },
-  { x1: 145, y1: 565, x2: 215, y2: 565 },
-  { x1: 215, y1: 565, x2: 215, y2: 615 },
-  { x1: 215, y1: 615, x2: 160, y2: 640 }, // Oil Rig
-
-  // South Central Interconnected Canals
-  { x1: 215, y1: 565, x2: 295, y2: 565 },
-  { x1: 295, y1: 565, x2: 295, y2: 510 },
-  { x1: 295, y1: 510, x2: 365, y2: 510 },
-  { x1: 365, y1: 510, x2: 365, y2: 575 },
-  { x1: 365, y1: 575, x2: 425, y2: 575 },
-  { x1: 425, y1: 575, x2: 425, y2: 510 },
-  { x1: 425, y1: 510, x2: 485, y2: 510 },
-  { x1: 485, y1: 510, x2: 485, y2: 580 },
-  { x1: 485, y1: 580, x2: 545, y2: 580 },
-  { x1: 535, y1: 415, x2: 535, y2: 510 },
-  { x1: 535, y1: 510, x2: 485, y2: 510 },
-
-  // Final Southeast Route to GOAL
-  { x1: 545, y1: 580, x2: 605, y2: 580 },
-  { x1: 605, y1: 580, x2: 605, y2: 520 },
-  { x1: 605, y1: 520, x2: 675, y2: 520 },
-  { x1: 675, y1: 520, x2: 675, y2: 605 },
-  { x1: 675, y1: 605, x2: 745, y2: 605 },
-  { x1: 745, y1: 605, x2: 810, y2: 630 } // GOAL
+  // Direct spurs into landmark hubs
+  { x1: 175, y1: 120, x2: 165, y2: 205 },
+  { x1: 500, y1: 130, x2: 500, y2: 205 },
+  { x1: 825, y1: 130, x2: 835, y2: 205 },
+  { x1: 165, y1: 340, x2: 165, y2: 410 },
+  { x1: 500, y1: 340, x2: 500, y2: 410 },
+  { x1: 835, y1: 340, x2: 835, y2: 410 }
 ];
 
 // Project point onto line segment
@@ -283,7 +261,7 @@ function projectPointOnSegment(px, py, x1, y1, x2, y2) {
 }
 
 // Find closest position constrained strictly to sea route canal tracks
-function clampToCanalTracks(px, py, currentX, currentY) {
+function clampToCanalTracks(px, py) {
   let closest = null;
   let minDistSq = Infinity;
 
@@ -299,7 +277,7 @@ function clampToCanalTracks(px, py, currentX, currentY) {
 }
 
 const AVATAR_OPTIONS = [
-  { id: 'ship', label: '🚢 Magnetic Ship', type: 'ship', src: '/FunWithMagnets/topdown_ship.png', size: 54 },
+  { id: 'ship', label: '🚢 Magnetic Ship', type: 'ship', src: '/FunWithMagnets/topdown_ship.png', size: 52 },
   { id: 'ball', label: '🔮 Steel Ball', type: 'ball', size: 20 },
   { id: 'car', label: '🏎️ Sports Car', type: 'image', src: '/FunWithMagnets/toycar.png', size: 44 }
 ];
@@ -334,9 +312,9 @@ export default function MazeGame({ onSolve, isSolved }) {
     const H = canvas.height;
     const ctx = canvas.getContext("2d");
 
-    // Load nautical sea maze background
+    // Load new 3D nautical sea map background
     const bgImg = new Image();
-    bgImg.src = "/FunWithMagnets/nautical_maze.jpg";
+    bgImg.src = "/FunWithMagnets/nautical_sea_map.jpg";
 
     // Load topdown ship and avatar images
     const avatarImages = {};
@@ -439,7 +417,7 @@ export default function MazeGame({ onSolve, isSolved }) {
       const nextY = obj.y + desiredVy;
 
       // 3. Strict Sea Route Track Constraint: Snap strictly to canal lines
-      const clamped = clampToCanalTracks(nextX, nextY, obj.x, obj.y);
+      const clamped = clampToCanalTracks(nextX, nextY);
       if (clamped) {
         const moveDist = Math.hypot(clamped.x - obj.x, clamped.y - obj.y);
         
@@ -450,7 +428,6 @@ export default function MazeGame({ onSolve, isSolved }) {
         // Smooth rotation following the current canal track heading
         if (moveDist > 0.15) {
           const trackAngle = Math.atan2(clamped.dy, clamped.dx);
-          // Check motion direction along track
           const dot = desiredVx * clamped.dx + desiredVy * clamped.dy;
           const targetHeading = dot >= 0 ? trackAngle : trackAngle + Math.PI;
 
@@ -461,7 +438,7 @@ export default function MazeGame({ onSolve, isSolved }) {
         }
       }
 
-      // 4. Draw Nautical Sea Maze Background
+      // 4. Draw Nautical Sea Map Background
       ctx.clearRect(0, 0, W, H);
       if (bgImg.complete && bgImg.naturalWidth > 0) {
         ctx.drawImage(bgImg, 0, 0, W, H);
@@ -865,7 +842,7 @@ export default function MazeGame({ onSolve, isSolved }) {
       <canvas
         ref={canvasRef}
         width={1000}
-        height={670}
+        height={563}
         style={{
           width: '100%',
           height: '100%',
