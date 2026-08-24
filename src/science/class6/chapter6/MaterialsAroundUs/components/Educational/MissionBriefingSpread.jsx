@@ -155,7 +155,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             padding: 4px 16px;
             border-radius: 6px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 1.25rem;
+            font-size: 1.08rem;
             font-weight: bold;
             letter-spacing: 1px;
             box-shadow: 0 3px 6px rgba(0,0,0,0.1);
@@ -164,8 +164,8 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           /* ---------- RIGHT PAGE CONTENT ---------- */
           .mission-header {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 24px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 700;
             letter-spacing: 1.8px;
             color: var(--text-heading);
             margin-bottom: 14px;
@@ -174,23 +174,22 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             gap: 10px;
           }
           .mission-title {
-            font-size: clamp(52px, 6vh, 64px);
+            font-size: clamp(35px, 4.3vh, 46px);
             line-height: 1.15;
             color: var(--text-heading);
-            font-weight: 900;
-            margin: 0 0 24px 0;
+            font-weight: 700;
+            margin: 0 0 22px 0;
             font-family: Georgia, "Times New Roman", serif;
             word-break: keep-all;
           }
           .mission-content {
-            margin-bottom: 24px;
+            margin-bottom: 22px;
             width: 100%;
           }
           .mission-content p {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: clamp(30px, 4vh, 38px);
-            font-weight: 600;
+            font-size: clamp(23px, 2.8vh, 29px);
             line-height: 1.5;
             color: #3b4560;
           }
@@ -205,8 +204,8 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .mission-box h3 {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 22px;
-            font-weight: 800;
+            font-size: 19px;
+            font-weight: 700;
             color: var(--text-heading);
             margin: 0 0 12px 0;
             display: flex;
@@ -216,7 +215,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .mission-box p, .mission-box li {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: clamp(24px, 3vh, 30px);
+            font-size: clamp(20px, 2.5vh, 25px);
             color: var(--text-primary);
             line-height: 1.45;
             font-weight: 600;
@@ -236,16 +235,16 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .meta-label {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 16px;
+            font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
           }
           .meta-value {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 26px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 600;
             color: var(--text-primary);
             display: flex;
             align-items: center;
@@ -253,7 +252,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .meta-stars {
             color: #eab308;
-            font-size: 28px;
+            font-size: 24px;
           }
           .meta-stars.empty {
             color: var(--border);
@@ -267,16 +266,17 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             background: var(--text-heading);
             color: white;
             border: none;
-            padding: 20px 48px;
+            padding: 18px 44px;
             border-radius: 42px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 26px;
-            font-weight: 800;
+            font-size: 22px;
+            font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            justify-content: center;
+            gap: 14px;
+            box-shadow: 0 6px 18px rgba(64,82,160,0.3);
             transition: all 0.2s;
             width: fit-content;
           }
@@ -292,20 +292,21 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .spread-back-btn {
             position: absolute;
-            top: 26px;
-            left: 26px;
+            bottom: 18px;
+            left: 24px;
+            top: auto;
             z-index: 10000;
-            background: white;
+            background: var(--surface);
             border: 2px solid var(--border);
             color: var(--text-primary);
-            padding: 14px 28px;
+            padding: 12px 26px;
             border-radius: 11px;
             display: flex;
             align-items: center;
             gap: 10px;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 22px;
-            font-weight: 800;
+            font-size: 19px;
+            font-weight: bold;
             cursor: pointer;
             box-shadow: 0 5px 14px rgba(0,0,0,0.09);
             transition: all 0.2s;
@@ -341,7 +342,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               transition={{ delay: 0.4 }}
             >
               <div className="speech-speaker">CHIEF BLAKE</div>
-              <p style={{ margin: 0, fontSize: 'clamp(32px, 4vh, 40px)', color: 'var(--text-primary)', lineHeight: '1.45', fontWeight: '700' }}>
+              <p style={{ margin: 0, fontSize: 'clamp(26px, 3vh, 34px)', color: 'var(--text-primary)', lineHeight: '1.45', fontWeight: '500' }}>
                 {data.dialogue || "Good morning, Detective. Headquarters has received an unusual science case. Study your investigation brief carefully before proceeding!"}
               </p>
             </motion.div>
@@ -368,11 +369,11 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
               </div>
               
               <div className="mission-box">
-                <h3><Check size={22} color="#ef4444" /> OBJECTIVES</h3>
+                <h3><Check size={18} color="#ef4444" /> OBJECTIVES</h3>
                 {Array.isArray(data.objective) ? (
                   <ul style={{ margin: 0, paddingLeft: '26px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
                     {data.objective.map((obj, i) => (
-                      <li key={i} style={{ fontSize: 'clamp(24px, 3vh, 30px)', color: 'var(--text-primary)', lineHeight: '1.45', fontWeight: '600' }}>
+                      <li key={i} style={{ fontSize: 'clamp(20px, 2.5vh, 25px)', color: 'var(--text-primary)', lineHeight: '1.45' }}>
                         {obj}
                       </li>
                     ))}
