@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, RefreshCw, Award } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useTheme } from '../../../../ThemeContext';
+import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
 
 const TABLE_PLANTS = [
   { id: 'lemongrass',  name: 'Lemon Grass',   emoji: '🌿', venation: 'parallel',   root: 'fibrous', hint: 'Grass-family plant — narrow leaves, grows in clumps.' },
@@ -25,9 +26,9 @@ export default function VenationRootCorrelationLab({ onBackToDashboard }) {
   const isLight = theme === 'light';
 
   // Theme-specific styles
-  const containerBg = isLight ? '#f8fafc' : '#0d1117';
+  const containerBg = `url(${darkForestBg}) center/cover no-repeat fixed`;
   const textColor = isLight ? '#0f172a' : '#f0f9ff';
-  const headerBg = isLight ? '#ffffff' : '#161b22';
+  const headerBg = isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(22, 27, 34, 0.88)';
   const borderCol = isLight ? '#cbd5e1' : 'rgba(255,255,255,0.05)';
   const sidebarBorder = isLight ? '#e2e8f0' : 'rgba(139,92,246,0.2)';
   const textMuted = isLight ? '#475569' : '#94a3b8';

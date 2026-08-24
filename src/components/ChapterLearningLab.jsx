@@ -18,8 +18,7 @@ import darkForestBg from "../assets/dark_forest_bg.jpg";
 import { useTheme } from "../ThemeContext";
 
 // Content Lessons (Class 6 Chapter 2)
-import IntroductionMindMap from "../science/class6/chapter2/IntroductionMindMap";
-import GroupingBasicsBookSpread from "../science/class6/chapter2/GroupingBasicsBookSpread";
+
 
 // Activities (Class 6 Chapter 2 & 3)
 import VirtualBiodiversityExplorerActivity from "../science/class6/chapter2/VirtualBiodiversityExplorer";
@@ -39,6 +38,10 @@ import fishImg from "../assets/specimens/fish.png";
 import pigeonImg from "../assets/specimens/pigeon.png";
 import snailImg from "../assets/specimens/snail.png";
 import cowImg from "../assets/specimens/cow.png";
+import tulsiImg from "../assets/specimens/tulsi.png";
+import roseImg from "../assets/specimens/rose.png";
+import mangoImg from "../assets/specimens/mango.png";
+import banyanImg from "../assets/specimens/banyan.png";
 
 const LEVEL_QUIZZES = {
   'biodiversity_concept': [
@@ -63,28 +66,7 @@ const LEVEL_QUIZZES = {
       explanation: '• According to the textbook activities for Chapter 2, the observations are organized into specific tables.\n• Table 2.1 is designated for recording observations of plants (stems, leaves, etc.).\n• Table 2.2 is designated for recording observations of animals (where they are found, how they move).'
     }
   ],
-  'grouping_basics_concept': [
-    {
-      q: 'Why do we group plants and animals in science?',
-      opts: [
-        'To prevent them from moving around.',
-        'To make it easier to study their similarities and differences.',
-        'To calculate the exact number of leaves on each tree.'
-      ],
-      correct: 1,
-      explanation: '• Classification is the process of sorting objects or living things into categories based on shared properties.\n• It helps scientists systematically understand the massive variety of life on Earth.\n• By grouping, it becomes easier to identify patterns, compare structures, and study evolutionary relationships.'
-    },
-    {
-      q: 'Which of these is a valid scientific basis for grouping plants?',
-      opts: [
-        'The height and nature of its stem.',
-        'The names given to them by gardeners.',
-        'The total amount of shade they cast at noon.'
-      ],
-      correct: 0,
-      explanation: '• Scientific classification of plants relies on observable, stable physical characteristics.\n• Height, stem thickness, woody nature, and where branching starts are the standard criteria.\n• Using these traits, plants are categorized into Herbs, Shrubs, Trees, Climbers, and Creepers.'
-    }
-  ],
+
   'plant_variety_concept': [
     {
       q: 'Which plant type branches close to the ground and has thin, woody stems?',
@@ -213,35 +195,12 @@ const contentLessonsData = {
       }
     ]
   },
-  'grouping_basics_concept': {
-    title: '2.2 How to Group Plants & Animals?',
-    slides: [
-      {
-        title: 'The Purpose of Classification',
-        content: 'Grouping (classification) is the method of sorting things into groups based on their similarities and differences. It makes it easier to understand, compare, and study the vast diversity of living beings.',
-        bullets: [
-          'Helps in systematic cataloging.',
-          'Reveals relationships between different species.',
-          'Prevents confusion when studying millions of living things.'
-        ]
-      },
-      {
-        title: 'Criteria for Grouping',
-        content: 'Just like you organize books in a schoolbag, scientists group organisms using specific criteria:',
-        bullets: [
-          '🌸 Flowers: Grouping into flowering and non-flowering plants.',
-          '🌿 Stems: Grouping by soft, green vs hard, woody stems.',
-          '🥗 Eating Habits: What they eat and how they feed.',
-          '📍 Place they live: Ground, trees, water, or air.'
-        ]
-      }
-    ]
-  },
+
   'plant_variety_concept': {
     title: '2.2.1-A Plant Classification',
     slides: [
       {
-        title: 'Herbs, Shrubs, and Trees',
+        title: 'Activity 2.4: Let us group',
         content: 'Plants display an incredible range of sizes and forms. We categorize them based on their height, stem thickness, and branch levels:',
         bullets: [
           '🌿 Herbs: Short plants with soft, green, and tender stems that bend easily (e.g. Grass, Tomato, Coriander, Tulsi).',
@@ -416,11 +375,7 @@ const LEVEL_DYK = {
     'A plant is living even when it stays rooted because it grows, breathes, and makes food from sunlight.',
     'Field notebooks like Table 2.1 and 2.2 help scientists compare organisms by their features and behavior.'
   ],
-  grouping_basics_concept: [
-    'Classification helps scientists organise millions of organisms so they can study similarities and differences easily.',
-    'Plants can be grouped by their stem, leaf shape, flower presence, and how they reproduce.',
-    'Animals are grouped by habitat, body parts, and how they move — walk, fly, swim or crawl.'
-  ],
+
   plant_variety_concept: [
     'Trees usually have a single thick trunk, while shrubs have many thin woody branches close to the ground.',
     'Herbs have soft green stems that bend easily and are often used for medicine or cooking.',
@@ -456,22 +411,14 @@ const CHAPTER_2_LEVELS = [
     icon: '🌿',
     activities: [
       { id: 'sec-2-1-act', title: 'Activity 2.1 — Plants (Table 2.1)', activityId: 'virtual_biodiversity', icon: '🌿', desc: 'Record real plants — tap the leaves, stems and flowers.', pg: 'p.11', path: '/activities/class6_chapter2/activity_0.html' },
-      { id: 'sec-2-1-act-2', title: 'Activity 2.1 — Animals (Table 2.2)', activityId: 'virtual_biodiversity', icon: '🐾', desc: 'Where animals live, what they eat and how they move.', pg: 'p.12', path: '/activities/class6_chapter2/activity_1.html' }
-    ]
-  },
-  {
-    id: 'lvl-2',
-    title: '2.2 — How to Group Plants & Animals?',
-    lessonId: 'grouping_basics_concept',
-    icon: '🧩',
-    activities: [
+      { id: 'sec-2-1-act-2', title: 'Activity 2.1 — Animals (Table 2.2)', activityId: 'virtual_biodiversity', icon: '🐾', desc: 'Where animals live, what they eat and how they move.', pg: 'p.12', path: '/activities/class6_chapter2/activity_1.html' },
       { id: 'sec-2-2-act', title: 'Activity 2.2 — Let us appreciate', activityId: 'appreciating_biodiversity', icon: '🎨', desc: 'A live class blackboard reveals biodiversity.', pg: 'p.13', path: '/activities/class6_chapter2/activity_2.html' },
       { id: 'sec-2-3-act', title: 'Activity 2.3: Let Us Group (Card Sorting)', activityId: 'inline_sorting', icon: '🧩', desc: 'The same living things regroup by any feature you pick.', pg: 'p.14–15', path: '/activities/class6_chapter2/activity_3.html' }
     ]
   },
   {
     id: 'lvl-3',
-    title: '2.2.1-A — Herbs, Shrubs & Trees',
+    title: '2.2.1 How to group plants?',
     lessonId: 'plant_variety_concept',
     icon: '🌱',
     activities: [
@@ -722,7 +669,7 @@ function IntroStoryteller({ onComplete, onBack }) {
       ]
     },
     {
-      img: "/Scene3_realistic.png",
+      img: "/Scene5_realistic.png",
       title: "🐦 Listening to Bird Calls",
       text: "Hush! Maniram chacha stops and cups his ear. He mimics a bird song, and suddenly, a beautiful response is heard from the tree canopy! The students learn to listen to the unique calls of birds and respect their home.",
       dialogues: [
@@ -744,7 +691,7 @@ function IntroStoryteller({ onComplete, onBack }) {
       ]
     },
     {
-      img: "/Scene5_realistic.png",
+      img: "/Scene3_realistic.png",
       title: "🐒 Animals in the Canopy",
       text: "A rustle in the branches reveals monkeys jumping from limb to limb, and a tiny squirrel scurrying down a trunk. The forest is alive with creatures of all sizes, each adapted to live in their part of the woods.",
       dialogues: [
@@ -2732,293 +2679,6 @@ export default function ChapterLearningLab({
     );
   };
 
-  // ─── INTERACTIVE LESSON MODULES (LEVELS 2 to 7) ───
-
-  function GroupingBasicsInteractive() {
-    const [criteria, setCriteria] = useState('material');
-    const [placedItems, setPlacedItems] = useState({}); // { itemName: group }
-    const [draggedItem, setDraggedItem] = useState(null);
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [feedback, setFeedback] = useState('');
-
-    const items = [
-      { name: 'Metal Spoon', material: 'Metal', edibility: 'Inedible', icon: '🥄', image: '/spoon_specimen.png', desc: 'Stainless steel.' },
-      { name: 'Red Apple', material: 'Organic', edibility: 'Edible', icon: '🍎', image: '/apple_specimen.png', desc: 'Fresh fruit.' },
-      { name: 'Plastic Toy', material: 'Plastic', edibility: 'Inedible', icon: '🚗', image: '/toy_specimen.png', desc: 'Hard polymer.' },
-      { name: 'Sourdough Bread', material: 'Organic', edibility: 'Edible', icon: '🍞', image: '/bread_specimen.png', desc: 'Baked wheat.' }
-    ];
-
-    useEffect(() => {
-      setPlacedItems({});
-      setFeedback('');
-      setSelectedItem(null);
-    }, [criteria]);
-
-    const handleClassify = (item, group) => {
-      const correctGroup = criteria === 'material' ? item.material : item.edibility;
-      if (group === correctGroup) {
-        setPlacedItems(prev => ({ ...prev, [item.name]: group }));
-        setFeedback(`✅ Correct! ${item.name} classified under ${group}.`);
-        setSelectedItem(null);
-        
-        const nextPlaced = { ...placedItems, [item.name]: group };
-        const allDone = items.every(it => {
-          const corr = criteria === 'material' ? it.material : it.edibility;
-          return nextPlaced[it.name] === corr;
-        });
-        if (allDone) {
-          confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
-        }
-      } else {
-        setFeedback(`❌ Incorrect! ${item.name} does not belong in ${group}. Try again!`);
-      }
-    };
-
-    const handleDragStart = (e, item) => {
-      setDraggedItem(item);
-    };
-
-    const handleDrop = (e, group) => {
-      e.preventDefault();
-      if (draggedItem) {
-        handleClassify(draggedItem, group);
-        setDraggedItem(null);
-      }
-    };
-
-    const handleBinClick = (group) => {
-      if (selectedItem) {
-        handleClassify(selectedItem, group);
-      }
-    };
-
-    const handleReset = () => {
-      setPlacedItems({});
-      setFeedback('');
-      setSelectedItem(null);
-      setDraggedItem(null);
-    };
-
-    const groups = criteria === 'material' ? ['Metal', 'Plastic', 'Organic'] : ['Edible', 'Inedible'];
-    const unplacedItems = items.filter(it => !placedItems[it.name]);
-    const isAllSorted = items.every(it => {
-      const corr = criteria === 'material' ? it.material : it.edibility;
-      return placedItems[it.name] === corr;
-    });
-
-    const getBinStyle = (g) => {
-      switch (g) {
-        case 'Metal': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#475569', labelBg: '#faf6f0' };
-        case 'Plastic': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#d97706', labelBg: '#faf6f0' };
-        case 'Organic': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#059669', labelBg: '#faf6f0' };
-        case 'Edible': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#059669', labelBg: '#faf6f0' };
-        case 'Inedible': return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: '#b91c1c', labelBg: '#faf6f0' };
-        default: return { bg: 'linear-gradient(135deg, #e3c5a8, #cba784)', border: '#a8825f', color: 'var(--navy)', labelBg: '#faf6f0' };
-      }
-    };
-
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'var(--card-bg)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            🔍 Dynamic Classification Board
-          </span>
-          <div style={{ display: 'flex', gap: '0.2rem', background: 'var(--page-bg)', padding: '0.15rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-            <button
-              onClick={() => setCriteria('material')}
-              className="glass-btn"
-              style={{
-                padding: '0.2rem 0.5rem',
-                fontSize: '0.7rem',
-                borderRadius: '6px',
-                border: 'none',
-                background: criteria === 'material' ? 'var(--accent)' : 'transparent',
-                color: criteria === 'material' ? '#fff' : 'var(--text-primary)'
-              }}
-            >
-              By Material
-            </button>
-            <button
-              onClick={() => setCriteria('edibility')}
-              className="glass-btn"
-              style={{
-                padding: '0.2rem 0.5rem',
-                fontSize: '0.7rem',
-                borderRadius: '6px',
-                border: 'none',
-                background: criteria === 'edibility' ? 'var(--accent)' : 'transparent',
-                color: criteria === 'edibility' ? '#fff' : 'var(--text-primary)'
-              }}
-            >
-              By Edibility
-            </button>
-          </div>
-        </div>
-
-        {/* 1. Item pool */}
-        {!isAllSorted ? (
-          <div>
-            <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--navy)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
-              Drag specimens into correct bins:
-            </span>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', width: '100%' }}>
-              {unplacedItems.map(item => {
-                const isSelected = selectedItem?.name === item.name;
-                return (
-                  <div
-                    key={item.name}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, item)}
-                    onClick={() => { setSelectedItem(item); setFeedback(''); }}
-                    style={{
-                      background: isSelected ? 'rgba(99, 102, 241, 0.04)' : 'rgba(255, 255, 255, 0.65)',
-                      border: isSelected ? '2.5px solid var(--accent)' : '1px solid var(--border)',
-                      borderRadius: '12px',
-                      padding: '0.5rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '0.45rem',
-                      cursor: 'grab',
-                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                      boxShadow: isSelected ? '0 8px 16px rgba(99, 102, 241, 0.12)' : '0 2px 8px rgba(0, 0, 0, 0.02)',
-                      textAlign: 'center'
-                    }}
-                  >
-                    <div style={{ 
-                      width: '100%', 
-                      aspectRatio: '1', 
-                      borderRadius: '8px', 
-                      overflow: 'hidden', 
-                      background: '#f8fafc',
-                      border: '1px solid rgba(0,0,0,0.05)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <img 
-                        src={item.image} 
-                        alt={item.name} 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                        draggable={false}
-                      />
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem' }}>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-heading)' }}>{item.name}</span>
-                      <span style={{ fontSize: '0.58rem', color: 'var(--text-muted)', lineHeight: '1.2' }}>{item.desc}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ) : (
-          <div style={{ padding: '0.5rem', background: '#ecfdf5', borderRadius: '10px', border: '1px solid rgba(16,185,129,0.2)', textAlign: 'center' }}>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#16a34a', display: 'block' }}>
-              🎉 Perfect! All items sorted correctly by {criteria === 'material' ? 'Material' : 'Edibility'}.
-            </span>
-            <button onClick={handleReset} className="outline" style={{ fontSize: '11px', padding: '0.2rem 0.6rem', borderRadius: '15px', marginTop: '0.4rem' }}>
-              Reset Board
-            </button>
-          </div>
-        )}
-
-        {/* 2. Trays grid (Cardboard boxes design) */}
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${groups.length}, 1fr)`, gap: '0.75rem', marginTop: '0.25rem' }}>
-          {groups.map(groupName => {
-            const sortedHere = items.filter(it => placedItems[it.name] === groupName);
-            const styleProps = getBinStyle(groupName);
-            const canDrop = !!selectedItem;
-            
-            return (
-              <div
-                key={groupName}
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => handleDrop(e, groupName)}
-                onClick={() => handleBinClick(groupName)}
-                style={{
-                  background: styleProps.bg,
-                  border: `2px solid ${styleProps.border}`,
-                  borderRadius: '16px',
-                  padding: '0.75rem',
-                  minHeight: '160px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  cursor: canDrop ? 'pointer' : 'default',
-                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: 'inset 0 16px 0 #ab855f, inset 0 20px 20px rgba(0,0,0,0.12), inset 0 -8px 0 rgba(0,0,0,0.05), 0 8px 16px rgba(0,0,0,0.04)',
-                  position: 'relative'
-                }}
-              >
-                {/* Taped Postal Sticker Label */}
-                <div style={{
-                  background: styleProps.labelBg,
-                  border: '1px solid rgba(183, 146, 110, 0.4)',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.05), inset 0 1px 0 #fff',
-                  padding: '0.25rem 0.5rem',
-                  borderRadius: '4px',
-                  fontSize: '0.68rem',
-                  fontWeight: '800',
-                  color: styleProps.color,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  textAlign: 'center',
-                  width: 'fit-content',
-                  margin: '0 auto 0.6rem auto',
-                  position: 'relative',
-                  pointerEvents: 'none'
-                }}>
-                  {/* Taped paper sticker strip decoration */}
-                  <div style={{ position: 'absolute', top: '-2px', bottom: '-2px', left: '6px', right: '6px', borderLeft: '2px solid rgba(217, 119, 6, 0.12)', borderRight: '2px solid rgba(217, 119, 6, 0.12)' }} />
-                  {groupName} Bin
-                </div>
-                
-                {/* Items container inside cardboard box */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: 'auto', width: '100%' }}>
-                  {sortedHere.map(item => (
-                    <div
-                      key={item.name}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.9)',
-                        border: '1px solid rgba(183, 146, 110, 0.3)',
-                        borderRadius: '8px',
-                        padding: '0.35rem 0.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.4rem',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
-                      }}
-                    >
-                      <img src={item.image} style={{ width: '18px', height: '18px', borderRadius: '3px', objectFit: 'cover' }} />
-                      <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'var(--navy)' }}>
-                        {item.name}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* 3. Feedback alerts */}
-        {feedback && (
-          <div style={{
-            fontSize: '12px',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            color: feedback.startsWith('✅') ? '#10b981' : '#ef4444',
-            background: feedback.startsWith('✅') ? '#ecfdf5' : '#fef2f2',
-            padding: '0.4rem',
-            borderRadius: '8px',
-            border: `1px solid ${feedback.startsWith('✅') ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`
-          }}>
-            {feedback}
-          </div>
-        )}
-      </div>
-    );
-  }
 
   function PlantVarietyMorpher() {
     const [stage, setStage] = useState(0);
@@ -3035,7 +2695,7 @@ export default function ChapterLearningLab({
         color: '#10b981',
         bg: 'linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(52,211,153,0.02) 100%)',
         desc: 'Herbs are small plants with soft, non-woody stems. They contain a high water concentration in their cells.',
-        imgSrc: '/herb_plant.png',
+        imgSrc: tulsiImg,
         anatomy: (
           <svg width="100" height="100" viewBox="0 0 100 100">
             <defs>
@@ -3085,7 +2745,7 @@ export default function ChapterLearningLab({
         color: '#d97706',
         bg: 'linear-gradient(135deg, rgba(217,119,6,0.06) 0%, rgba(251,191,36,0.02) 100%)',
         desc: 'Shrubs are medium-sized plants with hard stems branching near the ground. They lack a single clear trunk.',
-        imgSrc: '/shrub_plant.png',
+        imgSrc: roseImg,
         anatomy: (
           <svg width="100" height="100" viewBox="0 0 100 100">
             <defs>
@@ -3141,7 +2801,7 @@ export default function ChapterLearningLab({
         color: '#1e3a8a',
         bg: 'linear-gradient(135deg, rgba(30,58,138,0.06) 0%, rgba(59,130,246,0.02) 100%)',
         desc: 'Trees are tall woody plants with a single main supporting trunk. They grow continuously for many years.',
-        imgSrc: '/tree_plant.png',
+        imgSrc: banyanImg,
         anatomy: (
           <svg width="100" height="100" viewBox="0 0 100 100">
             <defs>
@@ -3193,12 +2853,12 @@ export default function ChapterLearningLab({
           <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Tap rings/spots to magnifying cellular details!</span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 100px 100px', gap: '1rem', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 100px', gap: '1rem', alignItems: 'center' }}>
           <div style={{ padding: '0.85rem', borderRadius: '14px', background: stages[stage].bg, border: `1px solid ${stages[stage].color}33`, minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <h4 style={{ margin: '0 0 0.5rem 0', color: stages[stage].color, fontSize: '1.1rem', fontWeight: 'bold' }}>
               {stages[stage].title}
             </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.4' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '14.5px', color: 'var(--text-primary)', lineHeight: '1.5', fontWeight: '500' }}>
               <span><b>Average Height:</b> {stages[stage].height}</span>
               <span><b>Stem Character:</b> {stages[stage].stem}</span>
               <span><b>NCERT Examples:</b> <i>{stages[stage].examples}</i></span>
@@ -3206,50 +2866,10 @@ export default function ChapterLearningLab({
           </div>
           {/* Realistic View */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffffff', borderRadius: '16px', padding: '0.25rem', width: '100px', height: '100px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
-              <img src={stages[stage].imgSrc} alt={stages[stage].title} style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffffff', borderRadius: '16px', padding: '0.25rem', width: '100px', height: '100px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
+              <img src={stages[stage].imgSrc} alt={stages[stage].title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
             </div>
             <span style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: '600' }}>Realistic View</span>
-          </div>
-          {/* Anatomy View */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', position: 'relative' }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              alignItems: 'center', 
-              background: '#ffffff', 
-              borderRadius: '16px', 
-              padding: '0.25rem', 
-              width: '100px', 
-              height: '100px', 
-              border: '2px solid var(--accent)', 
-              boxShadow: '0 4px 15px rgba(99,102,241,0.15)',
-              position: 'relative'
-            }}>
-              {stages[stage].anatomy}
-              
-              {/* Pulsating interactive beacon badge */}
-              <div style={{
-                position: 'absolute',
-                top: '-6px',
-                right: '-6px',
-                background: '#dc2626',
-                color: '#fff',
-                borderRadius: '50%',
-                width: '18px',
-                height: '18px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '9px',
-                fontWeight: 'bold',
-                boxShadow: '0 0 8px rgba(220,38,38,0.6)',
-                animation: 'beacon-pulse 1s infinite'
-              }}>
-                🔍
-              </div>
-            </div>
-            <span style={{ fontSize: '9px', color: 'var(--accent)', fontWeight: 'bold' }}>Cellular Anatomy (Tap)</span>
           </div>
         </div>
 
@@ -3286,12 +2906,13 @@ export default function ChapterLearningLab({
           </div>
         ) : (
           <div style={{
-            background: 'var(--page-bg)',
-            border: '1px dashed var(--border)',
+            background: theme === 'dark' ? 'rgba(30, 41, 59, 0.85)' : 'rgba(241, 245, 249, 0.95)',
+            border: '1.5px solid var(--accent)',
             borderRadius: '8px',
             padding: '0.85rem 1.1rem',
-            fontSize: '12.5px',
-            color: 'var(--text-muted)',
+            fontSize: '13.5px',
+            color: 'var(--text-primary)',
+            fontWeight: '600',
             textAlign: 'center',
             display: 'flex',
             alignItems: 'center',
@@ -3331,7 +2952,7 @@ export default function ChapterLearningLab({
                   </div>
                   <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Tap to view image</span>
                 </div>
-                <div style={{ margin: 0, fontSize: '13px', lineHeight: '1.5', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <div style={{ margin: 0, fontSize: '14px', lineHeight: '1.55', color: 'var(--text-primary)', fontWeight: '500', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <span>🌱 <b>Growth Habit:</b> They creep horizontally along the ground and spread out on the surface of the soil.</span>
                   <span>⚠️ <b>Stem Weakness:</b> Their stems are so thin and fragile that they <b>cannot grow vertically</b> at all, even with external supports.</span>
                   <span>🍉 <b>Fruits:</b> Frequently produce large, heavy fruits (like Watermelon or Pumpkin) that must rest on the ground.</span>
@@ -3366,7 +2987,7 @@ export default function ChapterLearningLab({
                   </div>
                   <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Tap to view image</span>
                 </div>
-                <div style={{ margin: 0, fontSize: '13px', lineHeight: '1.5', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <div style={{ margin: 0, fontSize: '14px', lineHeight: '1.55', color: 'var(--text-primary)', fontWeight: '500', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <span>🎋 <b>Growth Habit:</b> They grow vertically by clasping onto nearby supports (sticks, trees, or walls).</span>
                   <span>🔗 <b>Adaptation:</b> They develop special climbing organs called coiled <b>Tendrils</b> or sticky roots to latch and pull themselves up.</span>
                   <span>☀️ <b>Goal:</b> Climbing allows their leaves to reach higher areas with direct sunlight (e.g., Pea, Grapevine, Money Plant).</span>
@@ -4287,23 +3908,27 @@ export default function ChapterLearningLab({
     const slide = lesson.slides[currentSlideIndex];
     const isLastSlide = currentSlideIndex === totalSlides - 1;
 
+    const isPlantVarietyConcept = lessonId === 'plant_variety_concept';
+
     return (
       <div className="split-frame" style={{ width: '100%', minHeight: '520px' }}>
         {/* LEFT COLUMN: Concept text & slideshow buttons */}
         <div className="frame-page-left">
-          <div className="textbook-eyebrow">{activeLevel.title}</div>
-          <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: '1.4rem' }}>
+          <div className="textbook-eyebrow" style={{ color: '#38bdf8', fontSize: isPlantVarietyConcept ? '1.05rem' : '0.85rem', fontWeight: '800' }}>
+            {activeLevel.title}
+          </div>
+          <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: isPlantVarietyConcept ? '2.1rem' : '1.65rem', color: '#38bdf8', fontWeight: '800' }}>
             {slide.title}
           </h1>
           
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6', margin: '0 0 1rem 0' }}>
+          <p style={{ fontSize: isPlantVarietyConcept ? '1.2rem' : '1.02rem', color: '#fde047', lineHeight: '1.65', margin: '0 0 1rem 0', fontWeight: isPlantVarietyConcept ? '600' : '500' }}>
             {slide.content}
           </p>
 
           {slide.bullets && (
             <ul style={{ margin: '0 0 1.5rem 0', paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               {slide.bullets.map((b, i) => (
-                <li key={i} style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                <li key={i} style={{ fontSize: isPlantVarietyConcept ? '1.1rem' : '0.95rem', color: '#fde047', lineHeight: '1.6', fontWeight: isPlantVarietyConcept ? '600' : '500' }}>
                   {b}
                 </li>
               ))}
@@ -4416,8 +4041,6 @@ export default function ChapterLearningLab({
                 Textbook Reference Visual (Page {slide.image === 'Scientist2' ? '22' : slide.image === 'silent_valley' ? '23' : slide.image === 'Scientist1' ? '27' : slide.image === 'protect_wildlife' ? '28' : '29'})
               </span>
             </div>
-          ) : lessonId === 'grouping_basics_concept' ? (
-            <GroupingBasicsInteractive />
           ) : lessonId === 'plant_variety_concept' ? (
             <PlantVarietyMorpher />
           ) : lessonId === 'venation_roots_concept' ? (
@@ -4647,18 +4270,7 @@ export default function ChapterLearningLab({
         />
       );
     }
-    if (activeContentLesson === 'grouping_basics_concept') {
-      return (
-        <GroupingBasicsBookSpread 
-          onBackToDashboard={(completed) => {
-            if (completed) {
-              setContentLessonProgress(prev => ({ ...prev, [activeContentLesson]: true }));
-            }
-            setActiveContentLesson(null);
-          }}
-        />
-      );
-    }
+
     return renderFullscreenLessonView();
   }
 
@@ -4755,17 +4367,7 @@ export default function ChapterLearningLab({
 
     // Controls
     const handlePrevControl = () => {
-      // Exception: From lvl-2 (How to Group Plants & Animals?), "Previous" always goes specifically to Activity 2.1 Animals focused
-      if (activeLevel.id === 'lvl-2') {
-        setActiveLevelId('lvl-1');
-        setActiveActivityIdx(1);
-        setActivityFocused(true);
-        setShowBriefing(false);
-        setQuizAnswers({});
-        setQuizChecked(false);
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
-        return;
-      }
+
 
       // Exception: From lvl-1 Animals, "Previous" goes to Plants
       if (activeLevel.id === 'lvl-1' && activityFocused === true && activeActivityIdx === 1) {
@@ -4894,10 +4496,10 @@ export default function ChapterLearningLab({
       }
       
       // 6. Check if subheading quiz exists and is completed
-      // Exception: Activity 2.1 → Activity 2.2 navigation must NOT be blocked by the quiz guard
+      // Exception: Chapter 2 (chapterNum === 2) users navigate freely without requiring Checkpoint Quiz restriction
       const isActivity21ToActivity22 = activeLevel.id === 'lvl-1';
       const hasQuiz = LEVEL_QUIZZES[activeLevel.lessonId];
-      if (hasQuiz && !quizChecked && !isActivity21ToActivity22) {
+      if (chapterNum !== 2 && hasQuiz && !quizChecked && !isActivity21ToActivity22) {
         alert("Please complete the Checkpoint Quiz and check your answers first!");
         setTimeout(() => {
           const quizPaneEl = document.getElementById("pane-quiz-window");
@@ -4919,10 +4521,37 @@ export default function ChapterLearningLab({
       }
     };
 
-    // Use dark theme background ONLY for Activity 2.1 (Plants & Animals), Level 2 (How to Group Plants & Animals?) and its Learning Checkpoint
-    const isDarkThemePage = chapterNum === 2 && activeLevel && (
-      (activeLevel.id === 'lvl-1' && (showBriefing || (activityFocused && activeActivity && activeActivity.activityId === 'virtual_biodiversity'))) ||
-      (activeLevel.id === 'lvl-2')
+    // Use dark theme background ONLY for Activity 2.1 (Plants & Animals), Activity 2.2 (Let Us Appreciate), Activity 2.3 (Let Us Group), Activity 2.4 (Herbs/Shrubs/Trees), Activity 2.5 (Leaf Venation), Activity 2.6 (Roots), Activity 2.7 (Relate & Analyse), Activity 2.8 (Seeds), Activity 2.9 (Animal Movement), and Activity 2.10 (Surroundings)
+    const isDarkThemePage = chapterNum === 2 && (
+      (activeLevel && (
+        activeLevel.id === 'lvl-1' ||
+        activeLevel.id === 'lvl-3' ||
+        activeLevel.id === 'lvl-4' ||
+        activeLevel.id === 'lvl-5' ||
+        activeLevel.id === 'lvl-6' ||
+        activeLevel.id === 'lvl-7'
+      )) ||
+      (activeActivitySectionId === 'sec-2-2-act' || 
+       activeActivitySectionId === 'sec-2-3-act' || 
+       activeActivitySectionId === 'sec-2-4-act' || 
+       activeActivitySectionId === 'sec-2-5-act' || 
+       activeActivitySectionId === 'sec-2-6-act' ||
+       activeActivitySectionId === 'sec-2-7-act' ||
+       activeActivitySectionId === 'sec-2-8-act' ||
+       activeActivitySectionId === 'sec-2-9-act' ||
+       activeActivitySectionId === 'sec-2-10-act') ||
+      (activityFocused && activeActivity && (
+        activeActivity.activityId === 'virtual_biodiversity' ||
+        activeActivity.activityId === 'appreciating_biodiversity' ||
+        activeActivity.activityId === 'inline_sorting' ||
+        activeActivity.activityId === 'plant_detective_stem' ||
+        activeActivity.activityId === 'leaf_venation_lab' ||
+        activeActivity.activityId === 'root_systems_lab' ||
+        activeActivity.activityId === 'venation_root_correlation' ||
+        activeActivity.activityId === 'seed_dissection_lab' ||
+        activeActivity.activityId === 'animal_locomotion' ||
+        activeActivity.activityId === 'animal_habitat_matching'
+      ))
     );
     const dynamicBg = isDarkThemePage ? darkForestBg : learningLabBg;
 

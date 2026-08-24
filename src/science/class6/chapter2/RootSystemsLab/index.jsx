@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, RefreshCw, Award } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useTheme } from '../../../../ThemeContext';
+import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
 
 const PLANTS = [
   { id: 'mustard', name: 'Mustard', emoji: '🌼', rootType: 'taproot', rootColor: '#b45309', potColor: '#b45309',
@@ -356,12 +357,12 @@ export default function RootSystemsLab({ onBackToDashboard }) {
   const isWashed = washed[selectedPlant];
   const doneCount = Object.keys(checked).filter(k => checked[k]).length;
 
-  const containerBg = isLight ? '#fdfaf6' : '#1a0f05';
-  const textColor = isLight ? '#451a03' : '#fef3c7';
-  const textMuted = isLight ? '#7c2d12' : '#92400e';
-  const textFaint = isLight ? '#9a3412' : '#78350f';
+  const containerBg = `url(${darkForestBg}) center/cover no-repeat fixed`;
+  const textColor = isLight ? '#0f172a' : '#fef3c7';
+  const textMuted = isLight ? '#334155' : '#cbd5e1';
+  const textFaint = isLight ? '#475569' : '#94a3b8';
   
-  const sidebarBg = isLight ? '#fbf4eb' : '#120b03';
+  const sidebarBg = isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(18, 11, 3, 0.88)';
   const sidebarBorder = isLight ? '#fed7aa' : 'rgba(180,83,9,0.3)';
   const resetBtnBorder = isLight ? '#f97316' : 'rgba(255,255,255,0.1)';
   const resetBtnColor = isLight ? '#ea580c' : '#78350f';
