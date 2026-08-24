@@ -93,30 +93,29 @@ export default function LeafVenationLab({ onBackToDashboard }) {
   const containerBg = `url(${darkForestBg}) center/cover no-repeat fixed`;
   const textColor = isLight ? '#0f172a' : '#f0f9ff';
   const textMuted = isLight ? '#334155' : '#cbd5e1';
-  const sidebarBg = isLight ? 'rgba(255, 255, 255, 0.88)' : 'rgba(15, 23, 41, 0.88)';
-  const sidebarBorder = isLight ? '#e2e8f0' : 'rgba(14,165,233,0.2)';
-  const resetBtnBorder = isLight ? '#cbd5e1' : 'rgba(255,255,255,0.1)';
+  const sidebarBg = isLight ? 'rgba(255, 255, 255, 0.94)' : 'rgba(15, 23, 41, 0.94)';
+  const sidebarBorder = isLight ? '#cbd5e1' : 'rgba(14,165,233,0.3)';
+  const resetBtnBorder = isLight ? '#94a3b8' : 'rgba(255,255,255,0.2)';
   
   const rightBg = !selectedLeaf
     ? (isLight ? '#f8fafc' : '#0a0f1e')
-    : (lit ? '#fef9c3' : (isLight ? '#f1f5f9' : '#0a0f1e'));
+    : (lit ? (isLight ? '#fefce8' : '#1c1917') : (isLight ? '#f1f5f9' : '#0a0f1e'));
 
-  const leafFillOpacity = isLight ? '60' : '40';
-  
-  const classificationBg = isLight ? '#ffffff' : '#0f1729';
-  const classificationBorder = isLight ? '#e2e8f0' : 'rgba(14,165,233,0.15)';
-  const classificationTextMuted = isLight ? '#475569' : '#94a3b8';
-  const classificationTextHighlight = isLight ? '#0f1729' : '#e2e8f0';
+  const classificationBg = isLight ? '#ffffff' : '#0f172a';
+  const classificationBorder = isLight ? '#cbd5e1' : 'rgba(255,255,255,0.12)';
+  const classificationTextMuted = isLight ? '#1e293b' : '#e2e8f0';
+  const classificationTextHighlight = isLight ? '#0284c7' : '#38bdf8';
 
-  const optBg = isLight ? '#f8fafc' : 'rgba(255,255,255,0.03)';
-  const optBorder = isLight ? '#e2e8f0' : 'rgba(255,255,255,0.08)';
-  const optText = isLight ? '#475569' : '#94a3b8';
+  const optBg = isLight ? '#ffffff' : 'rgba(30, 41, 59, 0.7)';
+  const optBorder = isLight ? '#cbd5e1' : 'rgba(148, 163, 184, 0.3)';
+  const optText = isLight ? '#1e293b' : '#f8fafc';
 
-  const doneOverlayBg = isLight ? 'rgba(248, 250, 252, 0.98)' : 'rgba(10,15,30,0.95)';
-  const doneOverlayText = isLight ? '#334155' : '#94a3b8';
-  const doneOverlaySub = isLight ? '#475569' : '#64748b';
+  const doneOverlayBg = isLight ? 'rgba(248, 250, 252, 0.98)' : 'rgba(10,15,30,0.96)';
+  const doneOverlayText = isLight ? '#1e293b' : '#f1f5f9';
+  const doneOverlaySub = isLight ? '#334155' : '#cbd5e1';
   const doneRedoBg = isLight ? '#cbd5e1' : '#334155';
   const doneRedoText = isLight ? '#1e293b' : '#e2e8f0';
+
   const handleCheck = (leafId) => {
     const correct = LEAVES.find(l => l.id === leafId).venation;
     const isRight = answers[leafId] === correct;
@@ -141,107 +140,116 @@ export default function LeafVenationLab({ onBackToDashboard }) {
   return (
     <div style={{ display: 'flex', height: '100%', background: containerBg, color: textColor, fontFamily: 'system-ui, sans-serif', overflow: 'hidden' }}>
       {/* Left — Leaf Specimens Panel */}
-      <aside style={{ width: 240, background: sidebarBg, borderRight: `1px solid ${sidebarBorder}`, padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', overflowY: 'auto' }}>
-        <button onClick={onBackToDashboard} style={{ background: 'none', border: 'none', color: textMuted, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', padding: 0 }}>
-          <ArrowLeft size={14} /> Back
+      <aside style={{ width: 290, background: sidebarBg, borderRight: `1px solid ${sidebarBorder}`, padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.95rem', overflowY: 'auto' }}>
+        <button onClick={onBackToDashboard} style={{ background: 'none', border: 'none', color: isLight ? '#0f172a' : '#cbd5e1', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.05rem', fontWeight: '800', padding: 0 }}>
+          <ArrowLeft size={20} /> Back
         </button>
         <div>
-          <div style={{ fontSize: '0.65rem', color: isLight ? '#0ea5e9' : '#38bdf8', textTransform: 'uppercase', fontWeight: 'bold' }}>Activity 2.5</div>
-          <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: textColor }}>🍃 Leaf Venation Lab</div>
-          <div style={{ fontSize: '0.7rem', color: textMuted, marginTop: '0.2rem' }}>{doneCount}/{LEAVES.length} identified</div>
+          <div style={{ fontSize: '0.95rem', color: isLight ? '#0284c7' : '#38bdf8', textTransform: 'uppercase', fontWeight: '900', letterSpacing: '0.05em' }}>Activity 2.5</div>
+          <div style={{ fontSize: '1.45rem', fontWeight: '900', color: textColor, marginTop: '0.15rem', lineHeight: '1.2' }}>Activity 2.5: Let Us Compare</div>
+          <div style={{ fontSize: '1rem', color: isLight ? '#0f172a' : '#e2e8f0', marginTop: '0.35rem', fontWeight: '800' }}>{doneCount}/{LEAVES.length} identified</div>
         </div>
 
-        <div style={{ height: 4, background: isLight ? '#e2e8f0' : '#1e293b', borderRadius: 4, overflow: 'hidden' }}>
+        <div style={{ height: 8, background: isLight ? '#cbd5e1' : '#1e293b', borderRadius: 4, overflow: 'hidden' }}>
           <div style={{ height: '100%', background: 'linear-gradient(90deg, #0ea5e9, #8b5cf6)', width: `${(doneCount / LEAVES.length) * 100}%`, transition: 'width 0.5s' }} />
         </div>
 
-        <div style={{ fontSize: '0.7rem', color: textMuted, fontStyle: 'italic' }}>Select a leaf specimen, then light it up to see the veins!</div>
+        <div style={{ fontSize: '1.02rem', color: isLight ? '#0f172a' : '#e2e8f0', fontStyle: 'italic', fontWeight: '700', lineHeight: '1.45' }}>Select a leaf specimen, then light it up to see the veins!</div>
 
         {LEAVES.map(l => (
-          <button key={l.id} onClick={() => { setSelectedLeaf(l.id); setLit(false); }} style={{ background: selectedLeaf === l.id ? (isLight ? 'rgba(14,165,233,0.1)' : 'rgba(14,165,233,0.15)') : (isLight ? '#f1f5f9' : 'rgba(255,255,255,0.03)'), border: `1px solid ${checked[l.id] === true ? 'rgba(74,222,128,0.5)' : checked[l.id] === false ? 'rgba(248,113,113,0.4)' : selectedLeaf === l.id ? 'rgba(14,165,233,0.5)' : (isLight ? '#cbd5e1' : 'rgba(255,255,255,0.06)')}`, borderRadius: '10px', padding: '0.6rem 0.75rem', cursor: 'pointer', color: isLight ? '#334155' : '#e2e8f0', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.2s' }}>
-            <span style={{ fontSize: '1.2rem' }}>{l.emoji}</span>
+          <button key={l.id} onClick={() => { setSelectedLeaf(l.id); setLit(false); }} style={{ background: selectedLeaf === l.id ? (isLight ? 'rgba(14,165,233,0.18)' : 'rgba(14,165,233,0.3)') : (isLight ? '#ffffff' : 'rgba(255,255,255,0.08)'), border: `2.5px solid ${checked[l.id] === true ? '#22c55e' : checked[l.id] === false ? '#ef4444' : selectedLeaf === l.id ? '#0ea5e9' : (isLight ? '#94a3b8' : 'rgba(255,255,255,0.18)')}`, borderRadius: '14px', padding: '0.85rem 1rem', cursor: 'pointer', color: isLight ? '#0f172a' : '#f8fafc', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.75rem', transition: 'all 0.2s', boxShadow: selectedLeaf === l.id ? '0 4px 14px rgba(14,165,233,0.25)' : 'none' }}>
+            <span style={{ fontSize: '1.65rem' }}>{l.emoji}</span>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 600 }}>{l.name}</div>
-              {checked[l.id] === true && <div style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: '600' }}>✅ {l.venationType}</div>}
-              {checked[l.id] === false && <div style={{ fontSize: '0.65rem', color: '#dc2626', fontWeight: '600' }}>❌ Try again</div>}
+              <div style={{ fontSize: '1.12rem', fontWeight: 900 }}>{l.name}</div>
+              {checked[l.id] === true && <div style={{ fontSize: '0.92rem', color: isLight ? '#15803d' : '#4ade80', fontWeight: '800' }}>✅ {l.venationType}</div>}
+              {checked[l.id] === false && <div style={{ fontSize: '0.92rem', color: isLight ? '#dc2626' : '#f87171', fontWeight: '800' }}>❌ Try again</div>}
             </div>
           </button>
         ))}
 
-        <button onClick={handleReset} style={{ marginTop: 'auto', background: 'none', border: `1px solid ${resetBtnBorder}`, color: textMuted, padding: '0.4rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
-          <RefreshCw size={12} /> Reset Lab
+        <button onClick={handleReset} style={{ marginTop: 'auto', background: isLight ? '#f1f5f9' : 'rgba(255,255,255,0.1)', border: `2px solid ${resetBtnBorder}`, color: isLight ? '#0f172a' : '#f8fafc', padding: '0.75rem', borderRadius: '12px', cursor: 'pointer', fontSize: '1.02rem', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.45rem' }}>
+          <RefreshCw size={18} /> Reset Lab
         </button>
       </aside>
 
       {/* Right — Lightbox + Classification */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {!selectedLeaf ? (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: textMuted, textAlign: 'center', padding: '2rem' }}>
-            <div style={{ fontSize: '4rem', opacity: 0.3 }}>🍃</div>
-            <div style={{ fontSize: '1.05rem', fontWeight: '600', color: textColor }}>Select a leaf specimen from the panel to begin examining it.</div>
-            <div style={{ fontSize: '0.82rem', color: textMuted }}>Hold each leaf up to the light to see its venation pattern clearly.</div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.25rem', color: isLight ? '#0f172a' : '#f8fafc', textAlign: 'center', padding: '2rem' }}>
+            <div style={{ fontSize: '5.5rem', opacity: 0.6 }}>🍃</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: '900', color: textColor }}>Select a leaf specimen from the panel to begin examining it.</div>
+            <div style={{ fontSize: '1.18rem', color: isLight ? '#0f172a' : '#e2e8f0', fontWeight: '700' }}>Hold each leaf up to the light to see its venation pattern clearly.</div>
           </div>
         ) : (
           <>
             {/* Lightbox area */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: rightBg, transition: 'background 0.5s', padding: '1.5rem', position: 'relative' }}>
-              {lit && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(255,253,200,0.8) 0%, rgba(253,224,71,0.3) 50%, transparent 80%)', pointerEvents: 'none' }} />}
+              {lit && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(255,253,200,0.6) 0%, rgba(253,224,71,0.2) 50%, transparent 80%)', pointerEvents: 'none' }} />}
  
-              <div style={{ position: 'relative', zIndex: 2 }}>
-                <svg width="200" height="200" viewBox="0 0 160 170" style={{ filter: lit ? 'drop-shadow(0 0 20px #fbbf24)' : 'none', transition: 'filter 0.5s' }}>
+              <div style={{ position: 'relative', zIndex: 2, marginBottom: '0.75rem' }}>
+                <svg width="220" height="220" viewBox="0 0 160 170" style={{ filter: lit ? 'drop-shadow(0 0 24px #fbbf24)' : (isLight ? 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))' : 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))'), transition: 'filter 0.5s' }}>
                   <defs>
                     <clipPath id="leaf-shape-clip">
                       <path d={leaf.svgPath} />
                     </clipPath>
                   </defs>
                   {/* Leaf body */}
-                  <path d={leaf.svgPath} fill={lit ? 'rgba(253,224,71,0.6)' : leaf.color + leafFillOpacity} stroke={leaf.color} strokeWidth="2" />
+                  <path d={leaf.svgPath} fill={lit ? '#fef08a' : (isLight ? '#86efac' : '#15803d')} stroke={lit ? '#b45309' : (isLight ? '#15803d' : '#4ade80')} strokeWidth="2.5" />
                   
                   {/* Clipped veins group */}
                   <g clipPath="url(#leaf-shape-clip)">
                     {/* Midrib */}
-                    <path d={leaf.midribPath} stroke={lit ? '#92400e' : leaf.color + '80'} strokeWidth={lit ? 2.5 : 1.5} fill="none" />
+                    <path d={leaf.midribPath} stroke={lit ? '#78350f' : (isLight ? '#14532d' : '#86efac')} strokeWidth={lit ? 3.5 : 2.5} fill="none" />
                     {/* Side veins */}
                     {leaf.veinPaths.map((p, i) => (
-                      <path key={i} d={p} stroke={lit ? '#b45309' : (isLight ? leaf.color + '90' : leaf.color + '50')} strokeWidth={lit ? 1.2 : 0.8} fill="none" opacity={lit ? 1 : 0.6} />
+                      <path key={i} d={p} stroke={lit ? '#92400e' : (isLight ? '#15803d' : '#4ade80')} strokeWidth={lit ? 1.8 : 1.4} fill="none" opacity={1} />
                     ))}
                     {/* Inner net for reticulate */}
                     {lit && leaf.venation === 'reticulate' && leaf.veinPaths.map((p, i) => (
-                      <path key={`net-${i}`} d={p.replace(/Q (\d+) (\d+) (\d+) (\d+)/, (m, cx, cy, ex, ey) => `Q ${parseInt(cx)+8} ${parseInt(cy)-5} ${parseInt(ex)-5} ${parseInt(ey)+5}`)} stroke="#d97706" strokeWidth="0.5" fill="none" opacity="0.5" />
+                      <path key={`net-${i}`} d={p.replace(/Q (\d+) (\d+) (\d+) (\d+)/, (m, cx, cy, ex, ey) => `Q ${parseInt(cx)+8} ${parseInt(cy)-5} ${parseInt(ex)-5} ${parseInt(ey)+5}`)} stroke="#b45309" strokeWidth="1.2" fill="none" opacity="0.8" />
                     ))}
                   </g>
                 </svg>
               </div>
 
-              <div style={{ zIndex: 2, textAlign: 'center' }}>
-                <div style={{ fontSize: '1.1rem', fontWeight: 'bold', color: lit ? '#92400e' : textColor, marginBottom: '0.3rem' }}>{leaf.name}</div>
-                {!lit && <div style={{ fontSize: '0.78rem', color: isLight ? '#334155' : '#64748b', marginBottom: '1rem', maxWidth: '380px' }}>{leaf.desc}</div>}
-                {lit && <div style={{ fontSize: '0.8rem', color: '#92400e', background: 'rgba(255,255,200,0.8)', padding: '0.4rem 0.8rem', borderRadius: '8px', marginBottom: '1rem', fontWeight: '500', border: '1px solid rgba(217,119,6,0.3)' }}>💡 Hint: {leaf.hint}</div>}
-                <button onClick={() => setLit(l => !l)} style={{ background: lit ? '#fbbf24' : (isLight ? '#ffffff' : '#1e293b'), border: `1px solid ${lit ? '#d97706' : (isLight ? '#cbd5e1' : 'rgba(255,255,255,0.15)')}`, color: lit ? '#78350f' : (isLight ? '#334155' : '#94a3b8'), padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold', transition: 'all 0.3s', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+              {/* Text & Control Container with crisp background card for high contrast */}
+              <div style={{ zIndex: 2, textAlign: 'center', background: isLight ? 'rgba(255, 255, 255, 0.98)' : 'rgba(15, 23, 42, 0.96)', backdropFilter: 'blur(12px)', padding: '1.5rem 2.25rem', borderRadius: '20px', border: isLight ? '2.5px solid #94a3b8' : '2.5px solid rgba(255, 255, 255, 0.25)', boxShadow: '0 8px 30px rgba(0,0,0,0.22)', maxWidth: '490px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem' }}>
+                <div style={{ fontSize: '1.6rem', fontWeight: '900', color: isLight ? '#0f172a' : '#ffffff', letterSpacing: '0.02em' }}>{leaf.name}</div>
+                {!lit && <div style={{ fontSize: '1.15rem', color: isLight ? '#0f172a' : '#f8fafc', fontWeight: '700', lineHeight: '1.6' }}>{leaf.desc}</div>}
+                {lit && <div style={{ fontSize: '1.15rem', color: isLight ? '#78350f' : '#fef08a', background: isLight ? '#fef3c7' : 'rgba(217, 119, 6, 0.45)', padding: '0.75rem 1.25rem', borderRadius: '14px', fontWeight: '800', border: '2.5px solid #f59e0b', boxShadow: '0 4px 14px rgba(245, 158, 11, 0.25)' }}>💡 Hint: {leaf.hint}</div>}
+                <button onClick={() => setLit(l => !l)} style={{ background: lit ? '#f59e0b' : (isLight ? '#0f172a' : '#0ea5e9'), border: 'none', color: '#ffffff', padding: '0.85rem 1.85rem', borderRadius: '14px', cursor: 'pointer', fontSize: '1.15rem', fontWeight: '900', transition: 'all 0.3s', boxShadow: '0 4px 16px rgba(0,0,0,0.25)', marginTop: '0.3rem' }}>
                   {lit ? '🔦 Turn Off Light' : '🔦 Hold to Light — See Veins!'}
                 </button>
               </div>
             </div>
 
             {/* Classification panel */}
-            <div style={{ background: classificationBg, borderTop: `1px solid ${classificationBorder}`, padding: '1.25rem 1.5rem' }}>
-              <div style={{ fontSize: '0.78rem', color: classificationTextMuted, marginBottom: '0.75rem', fontWeight: '500' }}>What venation pattern do you see in <strong style={{ color: classificationTextHighlight }}>{leaf.name}</strong>?</div>
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                {OPTIONS.map(opt => (
-                  <button key={opt.id} onClick={() => !checked[selectedLeaf] && setAnswers(a => ({ ...a, [selectedLeaf]: opt.id }))} style={{ background: answers[selectedLeaf] === opt.id ? `${opt.color}22` : optBg, border: `2px solid ${answers[selectedLeaf] === opt.id ? opt.color : optBorder}`, color: answers[selectedLeaf] === opt.id ? opt.color : optText, padding: '0.5rem 1rem', borderRadius: '10px', cursor: checked[selectedLeaf] ? 'default' : 'pointer', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'all 0.2s', fontWeight: answers[selectedLeaf] === opt.id ? '600' : 'normal' }}>
-                    {opt.icon} {opt.label}
-                  </button>
-                ))}
+            <div style={{ background: classificationBg, borderTop: `2.5px solid ${classificationBorder}`, padding: '1.5rem 2.25rem' }}>
+              <div style={{ fontSize: '1.15rem', color: classificationTextMuted, marginBottom: '0.95rem', fontWeight: '800' }}>What venation pattern do you see in <strong style={{ color: classificationTextHighlight, fontSize: '1.25rem', fontWeight: '900' }}>{leaf.name}</strong>?</div>
+              <div style={{ display: 'flex', gap: '1.1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                {OPTIONS.map(opt => {
+                  const isSelected = answers[selectedLeaf] === opt.id;
+                  const isRet = opt.id === 'reticulate';
+                  const activeColor = isRet ? (isLight ? '#581c87' : '#e9d5ff') : (isLight ? '#075985' : '#7dd3fc');
+                  const activeBg = isRet ? (isLight ? '#f3e8ff' : 'rgba(124, 58, 237, 0.4)') : (isLight ? '#e0f2fe' : 'rgba(8, 145, 178, 0.4)');
+                  const activeBorder = isRet ? '#9333ea' : '#0284c7';
+
+                  return (
+                    <button key={opt.id} onClick={() => !checked[selectedLeaf] && setAnswers(a => ({ ...a, [selectedLeaf]: opt.id }))} style={{ background: isSelected ? activeBg : optBg, border: `3px solid ${isSelected ? activeBorder : optBorder}`, color: isSelected ? activeColor : optText, padding: '0.75rem 1.5rem', borderRadius: '16px', cursor: checked[selectedLeaf] ? 'default' : 'pointer', fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.65rem', transition: 'all 0.2s', fontWeight: '800' }}>
+                      <span style={{ fontSize: '1.35rem' }}>{opt.icon}</span> {opt.label}
+                    </button>
+                  );
+                })}
                 {answers[selectedLeaf] && !checked[selectedLeaf] && (
-                  <button onClick={() => handleCheck(selectedLeaf)} style={{ background: '#0ea5e9', border: 'none', color: '#fff', padding: '0.5rem 1.25rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 'bold', boxShadow: '0 2px 4px rgba(14,165,233,0.3)' }}>
+                  <button onClick={() => handleCheck(selectedLeaf)} style={{ background: '#0284c7', border: 'none', color: '#fff', padding: '0.75rem 1.75rem', borderRadius: '14px', cursor: 'pointer', fontSize: '1.15rem', fontWeight: '900', boxShadow: '0 4px 16px rgba(2,132,199,0.45)' }}>
                     Verify ✓
                   </button>
                 )}
-                {checked[selectedLeaf] === true && <span style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '0.85rem' }}>✅ Correct! It's {leaf.venationType} venation.</span>}
+                {checked[selectedLeaf] === true && <span style={{ color: isLight ? '#15803d' : '#4ade80', fontWeight: '900', fontSize: '1.15rem' }}>✅ Correct! It's {leaf.venationType} venation.</span>}
                 {checked[selectedLeaf] === false && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '0.85rem' }}>❌ Not quite. Look at the light pattern again!</span>
-                    <button onClick={() => { setAnswers(a => ({ ...a, [selectedLeaf]: null })); setChecked(c => { const n = { ...c }; delete n[selectedLeaf]; return n; }); }} style={{ background: 'none', border: '1px solid #dc2626', color: '#dc2626', padding: '0.2rem 0.6rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600' }}>Retry</button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <span style={{ color: isLight ? '#dc2626' : '#f87171', fontWeight: '900', fontSize: '1.15rem' }}>❌ Not quite. Look at the light pattern again!</span>
+                    <button onClick={() => { setAnswers(a => ({ ...a, [selectedLeaf]: null })); setChecked(c => { const n = { ...c }; delete n[selectedLeaf]; return n; }); }} style={{ background: 'rgba(220,38,38,0.15)', border: `2px solid ${isLight ? '#dc2626' : '#f87171'}`, color: isLight ? '#dc2626' : '#f87171', padding: '0.4rem 1rem', borderRadius: '10px', cursor: 'pointer', fontSize: '0.98rem', fontWeight: '800' }}>Retry</button>
                   </div>
                 )}
               </div>
@@ -253,19 +261,19 @@ export default function LeafVenationLab({ onBackToDashboard }) {
       {/* All done overlay */}
       {allDone && (
         <div style={{ position: 'absolute', inset: 0, background: doneOverlayBg, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', zIndex: 50, textAlign: 'center', padding: '2rem', transition: 'background 0.5s' }}>
-          <Award size={56} color="#eab308" style={{ filter: 'drop-shadow(0 4px 12px rgba(234,179,8,0.3))' }} />
-          <h2 style={{ color: isLight ? '#d97706' : '#fbbf24', margin: 0, fontSize: '1.75rem', fontWeight: '800' }}>Venation Expert Badge!</h2>
-          <p style={{ color: doneOverlayText, maxWidth: 420, lineHeight: 1.6, fontSize: '0.95rem' }}>
+          <Award size={64} color="#eab308" style={{ filter: 'drop-shadow(0 4px 12px rgba(234,179,8,0.4))' }} />
+          <h2 style={{ color: isLight ? '#b45309' : '#fbbf24', margin: 0, fontSize: '1.9rem', fontWeight: '800' }}>Venation Expert Badge!</h2>
+          <p style={{ color: doneOverlayText, maxWidth: 460, lineHeight: 1.6, fontSize: '1.05rem', fontWeight: '500' }}>
             You correctly identified all 5 leaf venation patterns!<br />
-            <span style={{ color: '#7c3aed', fontWeight: 'bold' }}>Hibiscus, Rose</span> → Reticulate (net-like)<br />
-            <span style={{ color: '#0891b2', fontWeight: 'bold' }}>Banana, Grass, Maize</span> → Parallel (straight lines)
+            <span style={{ color: isLight ? '#6b21a8' : '#c084fc', fontWeight: 'bold' }}>Hibiscus, Rose</span> → Reticulate (net-like)<br />
+            <span style={{ color: isLight ? '#0369a1' : '#38bdf8', fontWeight: 'bold' }}>Banana, Grass, Maize</span> → Parallel (straight lines)
           </p>
-          <p style={{ color: doneOverlaySub, fontSize: '0.82rem', maxWidth: 380, fontStyle: 'italic' }}>
+          <p style={{ color: doneOverlaySub, fontSize: '0.9rem', maxWidth: 420, fontStyle: 'italic', lineHeight: 1.5 }}>
             Remember: Plants with reticulate venation usually have taproots. Plants with parallel venation usually have fibrous roots!
           </p>
           <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-            <button onClick={handleReset} style={{ background: doneRedoBg, border: 'none', color: doneRedoText, padding: '0.65rem 1.75rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600' }}>Redo Lab</button>
-            <button onClick={() => onBackToDashboard('next_activity')} style={{ background: '#0ea5e9', border: 'none', color: '#fff', padding: '0.65rem 1.75rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold', boxShadow: '0 4px 12px rgba(14,165,233,0.3)' }}>Next: Roots Lab ➜</button>
+            <button onClick={handleReset} style={{ background: doneRedoBg, border: 'none', color: doneRedoText, padding: '0.7rem 1.85rem', borderRadius: '10px', cursor: 'pointer', fontSize: '0.92rem', fontWeight: '700' }}>Redo Lab</button>
+            <button onClick={() => onBackToDashboard('next_activity')} style={{ background: '#0284c7', border: 'none', color: '#fff', padding: '0.7rem 1.85rem', borderRadius: '10px', cursor: 'pointer', fontSize: '0.92rem', fontWeight: 'bold', boxShadow: '0 4px 12px rgba(2,132,199,0.3)' }}>Next: Roots Lab ➜</button>
           </div>
         </div>
       )}

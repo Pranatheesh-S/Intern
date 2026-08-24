@@ -13,6 +13,16 @@ import silentValleyImg from "../assets/silent_valley.jpeg";
 import protectWildlifeImg from "../assets/protect_wildlife.jpeg";
 import sacredGrovesImg from "../assets/sacred_groves.jpeg";
 import darkForestBg from "../assets/dark_forest_bg.jpg";
+import dicotLeafImg from "../assets/dicot_leaf.png";
+import monocotLeafImg from "../assets/monocot_leaf.png";
+import taprootImg from "../assets/taproot.png";
+import fibrousImg from "../assets/fibrousroot.png";
+import dicot1Img from "../assets/dicot_1.png";
+import dicot2Img from "../assets/dicot_2.png";
+import dicot3Img from "../assets/dicot_3.png";
+import monocot1Img from "../assets/monocot_1.png";
+import monocot2Img from "../assets/monocot_2.png";
+import monocot3Img from "../assets/monocot_3.png";
 
 // Context
 import { useTheme } from "../ThemeContext";
@@ -219,7 +229,7 @@ const contentLessonsData = {
     ]
   },
   'venation_roots_concept': {
-    title: '2.2.1-B Leaf Venations & Root Systems Correlation',
+    title: 'Activity 2.5: Let Us Compare',
     slides: [
       {
         title: 'Leaf Venation Patterns',
@@ -251,10 +261,10 @@ const contentLessonsData = {
     ]
   },
   'cotyledons_concept': {
-    title: '2.2.1-C Seeds & Cotyledons',
+    title: 'Activity 2.8: Let us compare - Seeds & Cotyledons',
     slides: [
       {
-        title: 'What is a Cotyledon?',
+        title: 'Activity 2.8: Let us compare - Seeds & Cotyledons',
         content: 'Inside a seed coat is the embryo and cotyledons (seed leaves) which store food reserves for the germinating plant:',
         bullets: [
           '🥜 Dicotyledons (Dicots): Seeds that easily split into two halves (e.g. Gram, Chickpea, Pea, Kidney Beans).',
@@ -263,7 +273,7 @@ const contentLessonsData = {
         svg: 'cotyledon'
       },
       {
-        title: 'The Triad Correlation',
+        title: 'Activity 2.8: Let us compare - Seeds & Cotyledons',
         content: 'Combining seeds, venation, and roots, we have two primary plant divisions:',
         bullets: [
           '🌱 Monocots: 1 Cotyledon ⇄ Parallel Venation ⇄ Fibrous Roots (e.g., Wheat, Maize, Grass).',
@@ -427,7 +437,7 @@ const CHAPTER_2_LEVELS = [
   },
   {
     id: 'lvl-4',
-    title: '2.2.1-B — Leaf Venation & Root Systems',
+    title: 'Activity 2.5: Let Us Compare',
     lessonId: 'venation_roots_concept',
     icon: '🍃',
     activities: [
@@ -438,7 +448,7 @@ const CHAPTER_2_LEVELS = [
   },
   {
     id: 'lvl-5',
-    title: '2.2.1-C — Seeds & Cotyledons',
+    title: 'Activity 2.8: Let us compare - Seeds & Cotyledons',
     lessonId: 'cotyledons_concept',
     icon: '🥜',
     activities: [
@@ -1949,11 +1959,7 @@ export default function ChapterLearningLab({
     }
   };
 
-  const handleEnterCheckpoint = () => {
-    setStage("checkpoint");
-  };
-
-  const handleStartLabFromCheckpoint = () => {
+  const handleEnterLabDirectly = () => {
     // Enter lab at Activity 2.1 Plants (lvl-1, activity index 0) with activity focused
     setActiveLevelId("lvl-1");
     setActiveActivityIdx(0);
@@ -2430,8 +2436,8 @@ export default function ChapterLearningLab({
     return (
       <div id="pane-quiz-window" className="glass-panel" style={{ display: (!isFullscreen || activityFocused !== true) ? 'flex' : 'none', flexDirection: 'column', gap: '1.25rem', borderTop: '1px dashed var(--border)', paddingTop: '2.5rem' }}>
         {(!showQuiz || !isCh2SceneQuiz) && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-          <span style={{ fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid var(--border)', paddingBottom: '1rem' }}>
+          <span style={{ fontSize: '1.45rem', fontWeight: '900', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(99,102,241,0.18)', padding: '0.5rem 1.25rem', borderRadius: '12px', border: '2px solid rgba(99,102,241,0.4)', boxShadow: '0 4px 14px rgba(99,102,241,0.2)' }}>
             {showQuiz ? '📝 CHECKPOINT QUIZ' : '💡 DID YOU KNOW?'}
           </span>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -2504,13 +2510,13 @@ export default function ChapterLearningLab({
                       ];
                       const design = colors[idx % colors.length];
                       return (
-                        <div key={idx} style={{ padding: '1.25rem', borderRadius: '16px', background: design.bg, border: `1px solid ${design.border}`, display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
-                          <span style={{ fontSize: '1.5rem', lineHeight: '1' }}>{design.icon}</span>
+                        <div key={idx} style={{ padding: '1.45rem', borderRadius: '20px', background: design.bg, border: `2px solid ${design.border}`, display: 'flex', gap: '1.1rem', alignItems: 'flex-start', boxShadow: '0 6px 18px rgba(0,0,0,0.06)' }}>
+                          <span style={{ fontSize: '1.85rem', lineHeight: '1' }}>{design.icon}</span>
                           <div style={{ flex: 1 }}>
-                            <strong style={{ display: 'block', marginBottom: '0.25rem', color: design.accent, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                            <strong style={{ display: 'block', marginBottom: '0.4rem', color: design.accent, fontSize: '1.05rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                               Fact {idx + 1}
                             </strong>
-                            <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                            <p style={{ margin: 0, fontSize: '1.12rem', color: 'var(--text-heading)', fontWeight: '700', lineHeight: '1.6' }}>
                               {fact}
                             </p>
                           </div>
@@ -2658,13 +2664,13 @@ export default function ChapterLearningLab({
                 ];
                 const design = colors[idx % colors.length];
                 return (
-                  <div key={idx} style={{ padding: '1.25rem', borderRadius: '16px', background: design.bg, border: `1px solid ${design.border}`, display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: '1.5rem', lineHeight: '1' }}>{design.icon}</span>
+                  <div key={idx} style={{ padding: '1.45rem', borderRadius: '20px', background: design.bg, border: `2px solid ${design.border}`, display: 'flex', gap: '1.1rem', alignItems: 'flex-start', boxShadow: '0 6px 18px rgba(0,0,0,0.06)' }}>
+                    <span style={{ fontSize: '1.85rem', lineHeight: '1' }}>{design.icon}</span>
                     <div style={{ flex: 1 }}>
-                      <strong style={{ display: 'block', marginBottom: '0.25rem', color: design.accent, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      <strong style={{ display: 'block', marginBottom: '0.4rem', color: design.accent, fontSize: '1.05rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                         Fact {idx + 1}
                       </strong>
-                      <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                      <p style={{ margin: 0, fontSize: '1.12rem', color: 'var(--text-heading)', fontWeight: '700', lineHeight: '1.6' }}>
                         {fact}
                       </p>
                     </div>
@@ -3042,7 +3048,7 @@ export default function ChapterLearningLab({
           <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             🔗 Venation-Root Correlation Linker
           </span>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-faint)', fontWeight: '500', background: 'var(--accent-bg)', padding: '2px 8px', borderRadius: '12px', border: '1px solid var(--accent-border)' }}>
+          <span style={{ fontSize: '1.05rem', color: '#ffffff', fontWeight: '800', background: 'linear-gradient(135deg, #f59e0b, #d97706)', padding: '0.45rem 1.15rem', borderRadius: '14px', border: '2px solid #92400e', boxShadow: '0 4px 16px rgba(245,158,11,0.5)', textShadow: '0 1px 2px rgba(0,0,0,0.4)' }}>
             👉 Tap matching cards on left & right to link
           </span>
         </div>
@@ -3106,7 +3112,7 @@ export default function ChapterLearningLab({
           </svg>
           {/* Leaves */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Venation</span>
+            <span style={{ fontSize: '0.92rem', fontWeight: '900', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Venation</span>
             
             <button
               onClick={() => selectLeaf('reticulate')}
@@ -3127,58 +3133,11 @@ export default function ChapterLearningLab({
               }}
             >
               <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <svg width="100%" height="100%" viewBox="0 0 120 100" style={{ background: '#f0fdf4', display: 'block' }}>
-                  {/* Grid overlay */}
-                  <defs>
-                    <pattern id="retic-grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(22, 163, 74, 0.05)" strokeWidth="0.5"/>
-                    </pattern>
-                    <linearGradient id="leaf-grad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#86efac" />
-                      <stop offset="100%" stopColor="#22c55e" />
-                    </linearGradient>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#retic-grid)" />
-                  
-                  {/* Specimen Badge */}
-                  <rect x="5" y="5" width="48" height="12" rx="4" fill="rgba(21, 128, 61, 0.1)" stroke="rgba(21, 128, 61, 0.2)" strokeWidth="0.5" />
-                  <text x="8" y="13" fontSize="5" fontWeight="bold" fill="#166534" fontFamily="monospace">REF: DICOT_LEAF</text>
-
-                  {/* Leaf Shadow */}
-                  <path d="M60 15 C35 42, 35 72, 60 88 C85 72, 85 42, 60 15 Z" fill="rgba(0,0,0,0.04)" transform="translate(2, 2)" />
-                  
-                  {/* Leaf Blade */}
-                  <path d="M60 15 C35 42, 35 72, 60 88 C85 72, 85 42, 60 15 Z" fill="url(#leaf-grad)" stroke="#166534" strokeWidth="1.2" />
-
-                  {/* Midrib */}
-                  <path d="M60 15 Q60 50 60 88" fill="none" stroke="#15803d" strokeWidth="2.5" strokeLinecap="round" />
-
-                  {/* Reticulate network of side veins */}
-                  <path d="M60 30 Q45 28 39 32" fill="none" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
-                  <path d="M60 45 Q42 42 37 49" fill="none" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
-                  <path d="M60 60 Q44 58 39 67" fill="none" stroke="#166534" strokeWidth="1.0" strokeLinecap="round" />
-                  <path d="M60 72 Q50 71 46 79" fill="none" stroke="#166534" strokeWidth="0.8" strokeLinecap="round" />
-
-                  <path d="M60 30 Q75 28 81 32" fill="none" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
-                  <path d="M60 45 Q78 42 83 49" fill="none" stroke="#166534" strokeWidth="1.2" strokeLinecap="round" />
-                  <path d="M60 60 Q76 58 81 67" fill="none" stroke="#166534" strokeWidth="1.0" strokeLinecap="round" />
-                  <path d="M60 72 Q70 71 74 79" fill="none" stroke="#166534" strokeWidth="0.8" strokeLinecap="round" />
-
-                  {/* Mesh Reticulation */}
-                  <path d="M39 32 Q35 40 37 49" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
-                  <path d="M37 49 Q39 58 39 67" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
-                  <path d="M48 30 Q45 38 43 45" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
-                  <path d="M49 46 Q47 54 46 60" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
-
-                  <path d="M81 32 Q85 40 83 49" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
-                  <path d="M83 49 Q81 58 81 67" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
-                  <path d="M72 30 Q75 38 77 45" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
-                  <path d="M71 46 Q73 54 74 60" fill="none" stroke="#15803d" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.7" />
-                </svg>
+                <img src={dicotLeafImg} alt="Dicot / Reticulate Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f0fdf4' }} />
               </div>
-              <div style={{ padding: '0.6rem 0.75rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--navy)' }}>Reticulate</span>
-                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Net-like network of veins</span>
+              <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Reticulate</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Net-like network of veins</span>
               </div>
             </button>
             
@@ -3201,46 +3160,18 @@ export default function ChapterLearningLab({
               }}
             >
               <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <svg width="100%" height="100%" viewBox="0 0 120 100" style={{ background: '#f0fdf4', display: 'block' }}>
-                  <rect width="100%" height="100%" fill="url(#retic-grid)" />
-                  
-                  {/* Specimen Badge */}
-                  <rect x="5" y="5" width="48" height="12" rx="4" fill="rgba(21, 128, 61, 0.1)" stroke="rgba(21, 128, 61, 0.2)" strokeWidth="0.5" />
-                  <text x="8" y="13" fontSize="5" fontWeight="bold" fill="#166534" fontFamily="monospace">REF: MONOCOT_LEAF</text>
-
-                  {/* Leaf Shadow */}
-                  <path d="M60 5 C45 35, 45 75, 60 92 C75 75, 75 35, 60 5 Z" fill="rgba(0,0,0,0.04)" transform="translate(2, 2)" />
-                  
-                  {/* Slender leaf blade */}
-                  <path d="M60 5 C45 35, 45 75, 60 92 C75 75, 75 35, 60 5 Z" fill="url(#leaf-grad-parallel)" stroke="#166534" strokeWidth="1.2" />
-                  <defs>
-                    <linearGradient id="leaf-grad-parallel" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#bbf7d0" />
-                      <stop offset="100%" stopColor="#15803d" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* Parallel veins */}
-                  <path d="M60 5 C50 35, 50 75, 60 92" fill="none" stroke="#14532d" strokeWidth="1.5" />
-                  <path d="M60 5 C47 35, 48 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
-                  <path d="M60 5 C53 35, 53 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
-                  <path d="M60 5 C57 35, 57 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
-
-                  <path d="M60 5 C73 35, 72 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
-                  <path d="M60 5 C67 35, 67 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
-                  <path d="M60 5 C63 35, 63 75, 60 92" fill="none" stroke="#166534" strokeWidth="0.75" />
-                </svg>
+                <img src={monocotLeafImg} alt="Monocot / Parallel Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f0fdf4' }} />
               </div>
-              <div style={{ padding: '0.6rem 0.75rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--navy)' }}>Parallel</span>
-                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Veins running side-by-side</span>
+              <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Parallel</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Veins running side-by-side</span>
               </div>
             </button>
           </div>
 
           {/* Roots */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Root System</span>
+            <span style={{ fontSize: '0.92rem', fontWeight: '900', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Root System</span>
             
             <button
               onClick={() => selectRoot('taproot')}
@@ -3261,49 +3192,11 @@ export default function ChapterLearningLab({
               }}
             >
               <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <svg width="100%" height="100%" viewBox="0 0 120 100" style={{ background: '#fdf8f6', display: 'block' }}>
-                  <defs>
-                    <pattern id="tap-soil" width="10" height="10" patternUnits="userSpaceOnUse">
-                      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(120, 53, 4, 0.04)" strokeWidth="0.5"/>
-                    </pattern>
-                    <linearGradient id="taproot-grad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#f97316" />
-                      <stop offset="50%" stopColor="#ea580c" />
-                      <stop offset="100%" stopColor="#b45309" />
-                    </linearGradient>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#tap-soil)" />
-
-                  {/* Specimen Badge */}
-                  <rect x="5" y="5" width="48" height="12" rx="4" fill="rgba(120, 53, 4, 0.1)" stroke="rgba(120, 53, 4, 0.2)" strokeWidth="0.5" />
-                  <text x="8" y="13" fontSize="5" fontWeight="bold" fill="#78350f" fontFamily="monospace">REF: TAP_ROOT</text>
-
-                  {/* Ground surface */}
-                  <line x1="10" y1="20" x2="110" y2="20" stroke="#78350f" strokeWidth="1" strokeDasharray="3,1" />
-                  <path d="M57 10 L63 10 L62 20 L58 20 Z" fill="#15803d" />
-                  
-                  {/* Taproot */}
-                  <path d="M57 20 C57 35, 59 65, 60 85 C61 65, 63 35, 63 20 Z" fill="url(#taproot-grad)" stroke="#78350f" strokeWidth="1" />
-
-                  {/* Lateral roots */}
-                  <path d="M58 28 Q46 32 38 34" fill="none" stroke="#b45309" strokeWidth="1" strokeLinecap="round" />
-                  <path d="M38 34 Q34 38 30 37" fill="none" stroke="#b45309" strokeWidth="0.6" strokeLinecap="round" />
-                  
-                  <path d="M59 42 Q48 48 42 53" fill="none" stroke="#b45309" strokeWidth="1" strokeLinecap="round" />
-                  <path d="M59 56 Q50 63 46 72" fill="none" stroke="#b45309" strokeWidth="0.8" strokeLinecap="round" />
-                  <path d="M60 70 Q54 75 51 81" fill="none" stroke="#b45309" strokeWidth="0.6" strokeLinecap="round" />
-
-                  <path d="M62 28 Q74 32 82 34" fill="none" stroke="#b45309" strokeWidth="1" strokeLinecap="round" />
-                  <path d="M82 34 Q86 38 90 37" fill="none" stroke="#b45309" strokeWidth="0.6" strokeLinecap="round" />
-                  
-                  <path d="M61 42 Q72 48 78 53" fill="none" stroke="#b45309" strokeWidth="1" strokeLinecap="round" />
-                  <path d="M61 56 Q70 63 74 72" fill="none" stroke="#b45309" strokeWidth="0.8" strokeLinecap="round" />
-                  <path d="M60 70 Q66 75 69 81" fill="none" stroke="#b45309" strokeWidth="0.6" strokeLinecap="round" />
-                </svg>
+                <img src={taprootImg} alt="Taproot" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#fdf8f6' }} />
               </div>
-              <div style={{ padding: '0.6rem 0.75rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--navy)' }}>Taproot</span>
-                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>One deep central thick root</span>
+              <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Taproot</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>One deep central thick root</span>
               </div>
             </button>
             
@@ -3326,38 +3219,11 @@ export default function ChapterLearningLab({
               }}
             >
               <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <svg width="100%" height="100%" viewBox="0 0 120 100" style={{ background: '#fdf8f6', display: 'block' }}>
-                  <rect width="100%" height="100%" fill="url(#tap-soil)" />
-
-                  {/* Specimen Badge */}
-                  <rect x="5" y="5" width="48" height="12" rx="4" fill="rgba(120, 53, 4, 0.1)" stroke="rgba(120, 53, 4, 0.2)" strokeWidth="0.5" />
-                  <text x="8" y="13" fontSize="5" fontWeight="bold" fill="#78350f" fontFamily="monospace">REF: FIBROUS_ROOT</text>
-
-                  {/* Ground surface */}
-                  <line x1="10" y1="20" x2="110" y2="20" stroke="#78350f" strokeWidth="1" strokeDasharray="3,1" />
-                  <path d="M55 10 L65 10 L65 20 L55 20 Z" fill="#166534" />
-                  
-                  {/* Fibrous roots */}
-                  <g stroke="#b45309" fill="none" strokeLinecap="round">
-                    <path d="M60 20 Q58 40 56 60 T55 85" strokeWidth="1.2" />
-                    <path d="M58 20 Q61 42 63 65 T64 88" strokeWidth="1.1" />
-                    <path d="M62 20 Q59 38 60 58 T59 82" strokeWidth="1.2" />
-                    
-                    <path d="M57 20 Q48 35 40 50 T32 75" strokeWidth="1.0" />
-                    <path d="M56 20 Q44 32 34 45 T24 68" strokeWidth="0.8" />
-                    <path d="M55 20 Q38 30 26 40 T16 58" strokeWidth="0.8" />
-                    <path d="M58 20 Q52 45 46 65 T41 84" strokeWidth="0.9" />
-
-                    <path d="M63 20 Q72 35 80 50 T88 75" strokeWidth="1.0" />
-                    <path d="M64 20 Q76 32 86 45 T96 68" strokeWidth="0.8" />
-                    <path d="M65 20 Q82 30 94 40 T104 58" strokeWidth="0.8" />
-                    <path d="M62 20 Q68 45 74 65 T79 84" strokeWidth="0.9" />
-                  </g>
-                </svg>
+                <img src={fibrousImg} alt="Fibrous Root" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#fdf8f6' }} />
               </div>
-              <div style={{ padding: '0.6rem 0.75rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--navy)' }}>Fibrous</span>
-                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Cluster of thin threadlike roots</span>
+              <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Fibrous</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Cluster of thin threadlike roots</span>
               </div>
             </button>
           </div>
@@ -3372,137 +3238,6 @@ export default function ChapterLearningLab({
     );
   }
 
-  const DicotSeedSVG = ({ stage }) => {
-    if (stage === 'intact') {
-      return (
-        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '200px', maxHeight: '200px' }}>
-          <defs>
-            <radialGradient id="gramGrad" cx="45%" cy="40%" r="60%">
-              <stop offset="0%" stopColor="#d4a373" />
-              <stop offset="60%" stopColor="#a98467" />
-              <stop offset="100%" stopColor="#6f523b" />
-            </radialGradient>
-          </defs>
-          <ellipse cx="50" cy="85" rx="35" ry="8" fill="rgba(0,0,0,0.15)" />
-          <path d="M 50 15 Q 30 50 32 70 Q 35 85 50 85 Q 65 85 68 70 Q 70 50 50 15 Z" fill="url(#gramGrad)" stroke="#5c4033" strokeWidth="1.2" />
-          <path d="M 48 18 Q 50 25 52 18" fill="none" stroke="#e6ccb2" strokeWidth="1.8" strokeLinecap="round" />
-          <circle cx="50" cy="32" r="4.5" fill="#3d2612" />
-          <circle cx="50" cy="31" r="2" fill="#f5ebe0" opacity="0.8" />
-        </svg>
-      );
-    }
-    if (stage === 'peeled') {
-      return (
-        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '200px', maxHeight: '200px' }}>
-          <defs>
-            <radialGradient id="gramPeeled" cx="45%" cy="40%" r="60%">
-              <stop offset="0%" stopColor="#fefae0" />
-              <stop offset="70%" stopColor="#faedcd" />
-              <stop offset="100%" stopColor="#e9d8a6" />
-            </radialGradient>
-          </defs>
-          <path d="M 12 70 Q 5 50 20 40 T 35 60" fill="none" stroke="#a98467" strokeWidth="2.8" strokeLinecap="round" opacity="0.85" />
-          <path d="M 88 70 Q 95 50 80 40 T 65 60" fill="none" stroke="#a98467" strokeWidth="2.8" strokeLinecap="round" opacity="0.85" />
-          <ellipse cx="50" cy="85" rx="32" ry="8" fill="rgba(0,0,0,0.12)" />
-          <path d="M 50 20 Q 33 50 35 70 Q 38 82 50 82 Q 62 82 65 70 Q 67 50 50 20 Z" fill="url(#gramPeeled)" stroke="#d4a373" strokeWidth="1.2" />
-          <path d="M 50 20 Q 51 50 50 82" fill="none" stroke="#d4a373" strokeWidth="1.8" strokeDasharray="3 2" />
-        </svg>
-      );
-    }
-    return (
-      <svg width="100%" height="100%" viewBox="0 0 160 100" style={{ maxWidth: '340px', maxHeight: '220px' }}>
-        <defs>
-          <radialGradient id="cotyledonGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fefae0" />
-            <stop offset="90%" stopColor="#faedcd" />
-            <stop offset="100%" stopColor="#e9c46a" />
-          </radialGradient>
-        </defs>
-        <ellipse cx="45" cy="88" rx="35" ry="6" fill="rgba(0,0,0,0.1)" />
-        <ellipse cx="115" cy="88" rx="35" ry="6" fill="rgba(0,0,0,0.1)" />
-        <g transform="translate(10, 5)">
-          <path d="M 35 15 Q 10 40 12 65 Q 15 80 35 80 Q 55 80 58 65 Q 60 40 35 15 Z" fill="url(#cotyledonGrad)" stroke="#d4a373" strokeWidth="1.5" />
-          <text x="35" y="50" textAnchor="middle" fontSize="9.5" fill="#a98467" fontWeight="bold" opacity="0.9">Cotyledon 1</text>
-        </g>
-        <g transform="translate(80, 5)">
-          <path d="M 35 15 Q 10 40 12 65 Q 15 80 35 80 Q 55 80 58 65 Q 60 40 35 15 Z" fill="url(#cotyledonGrad)" stroke="#d4a373" strokeWidth="1.5" />
-          <text x="35" y="70" textAnchor="middle" fontSize="9.5" fill="#a98467" fontWeight="bold" opacity="0.9">Cotyledon 2</text>
-          <g transform="translate(10, 38)">
-            <path d="M 12 -5 Q 22 -15 15 -25 Q 10 -15 12 -5" fill="#e9f5db" stroke="#2a9d8f" strokeWidth="0.8" />
-            <path d="M 12 -5 Q 2 -15 9 -25 Q 14 -15 12 -5" fill="#e9f5db" stroke="#2a9d8f" strokeWidth="0.8" />
-            <path d="M 12 -5 Q 15 5 18 15 Q 12 10 12 -5" fill="#ffffff" stroke="#e76f51" strokeWidth="0.8" />
-            <circle cx="12" cy="-5" r="2.5" fill="#f4a261" />
-            <text x="32" y="-18" fontSize="8.5" fill="#2a9d8f" fontWeight="bold">← Plumule (Shoot)</text>
-            <text x="32" y="14" fontSize="8.5" fill="#e76f51" fontWeight="bold">← Radicle (Root)</text>
-          </g>
-        </g>
-      </svg>
-    );
-  };
-
-  const MonocotSeedSVG = ({ stage }) => {
-    if (stage === 'intact') {
-      return (
-        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '200px', maxHeight: '200px' }}>
-          <defs>
-            <linearGradient id="cornGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#ffea00" />
-              <stop offset="70%" stopColor="#ffc300" />
-              <stop offset="100%" stopColor="#ffaa00" />
-            </linearGradient>
-          </defs>
-          <ellipse cx="50" cy="85" rx="30" ry="7" fill="rgba(0,0,0,0.15)" />
-          <path d="M 50 82 L 28 45 Q 26 22 50 20 Q 74 22 72 45 Z" fill="url(#cornGrad)" stroke="#e6b800" strokeWidth="1.2" />
-          <path d="M 50 82 L 35 56 Q 50 48 65 56 Z" fill="#ffffff" opacity="0.55" stroke="#fefae0" strokeWidth="0.5" />
-        </svg>
-      );
-    }
-    if (stage === 'peeled') {
-      return (
-        <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ maxWidth: '200px', maxHeight: '200px' }}>
-          <defs>
-            <linearGradient id="cornPeeled" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#fff3b0" />
-              <stop offset="80%" stopColor="#fec89a" />
-              <stop offset="100%" stopColor="#fca311" />
-            </linearGradient>
-          </defs>
-          <path d="M 28 45 Q 16 30 20 18 Q 30 24 34 38" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.8" strokeLinecap="round" />
-          <ellipse cx="50" cy="85" rx="28" ry="7" fill="rgba(0,0,0,0.12)" />
-          <path d="M 50 82 L 28 45 Q 26 22 50 20 Q 74 22 72 45 Z" fill="url(#cornPeeled)" stroke="#fca311" strokeWidth="1.2" />
-          <path d="M 50 82 L 35 56 Q 50 48 65 56 Z" fill="#ffffff" opacity="0.65" />
-        </svg>
-      );
-    }
-    return (
-      <svg width="100%" height="100%" viewBox="0 0 130 110" style={{ maxWidth: '260px', maxHeight: '220px' }}>
-        <defs>
-          <linearGradient id="endospermGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#ffe494" />
-            <stop offset="100%" stopColor="#ffd166" />
-          </linearGradient>
-          <radialGradient id="scutellumGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="100%" stopColor="#e9ecef" />
-          </radialGradient>
-        </defs>
-        <ellipse cx="65" cy="98" rx="35" ry="6" fill="rgba(0,0,0,0.12)" />
-        <path d="M 65 95 L 38 52 Q 35 24 65 22 Q 95 24 92 52 Z" fill="none" stroke="#fca311" strokeWidth="2.5" />
-        <path d="M 65 23 Q 94 25 91 50 Q 75 42 65 48 Q 55 42 39 50 Q 36 25 65 23 Z" fill="url(#endospermGrad)" stroke="#ffd166" strokeWidth="0.8" />
-        <text x="65" y="36" textAnchor="middle" fontSize="9.5" fill="#ca6702" fontWeight="bold">Endosperm</text>
-        <path d="M 39 50 L 65 94 L 91 50 Q 75 45 65 52 Q 55 45 39 50 Z" fill="url(#scutellumGrad)" stroke="#ced4da" strokeWidth="0.8" />
-        <g transform="translate(65, 70)">
-          <path d="M -4 -10 Q 0 -22 4 -10 Z" fill="#e9f5db" stroke="#2a9d8f" strokeWidth="0.8" />
-          <path d="M -3 3 Q 0 14 3 3 Z" fill="#ffffff" stroke="#e76f51" strokeWidth="0.8" />
-          <circle cx="0" cy="-3" r="2" fill="#adb5bd" />
-          <text x="20" y="-12" fontSize="8" fill="#2a9d8f" fontWeight="bold">← Plumule</text>
-          <text x="20" y="8" fontSize="8" fill="#e76f51" fontWeight="bold">← Radicle</text>
-          <text x="-48" y="2" fontSize="8" fill="#495057" fontWeight="bold">Cotyledon →</text>
-        </g>
-      </svg>
-    );
-  };
-
   function SeedDissector() {
     const [activeSeed, setActiveSeed] = useState('pea');
     const [coatRemoved, setCoatRemoved] = useState(false);
@@ -3514,6 +3249,30 @@ export default function ChapterLearningLab({
       setCoatRemoved(false);
       setSeedSplit(false);
       setStatus('Seed swapped. Open it up to inspect.');
+    };
+
+    const getSeedImage = () => {
+      if (activeSeed === 'pea') {
+        if (!coatRemoved) return dicot1Img;
+        if (!seedSplit) return dicot2Img;
+        return dicot3Img;
+      } else {
+        if (!coatRemoved) return monocot1Img;
+        if (!seedSplit) return monocot2Img;
+        return monocot3Img;
+      }
+    };
+
+    const getSeedAlt = () => {
+      if (activeSeed === 'pea') {
+        if (!coatRemoved) return 'Dicot (Gram) Seed';
+        if (!seedSplit) return 'Dicot (Gram) Peeled Seed';
+        return 'Dicot (Gram) Split Cotyledons';
+      } else {
+        if (!coatRemoved) return 'Monocot (Maize) Seed';
+        if (!seedSplit) return 'Monocot (Maize) Peeled Seed';
+        return 'Monocot (Maize) Split Seed';
+      }
     };
 
     return (
@@ -3542,11 +3301,11 @@ export default function ChapterLearningLab({
 
         {/* Large Image box on Top */}
         <div style={{ display: 'flex', justifyContent: 'center', background: '#fff', borderRadius: '12px', padding: '1rem', border: '1px solid var(--border)', height: '240px', alignItems: 'center', overflow: 'hidden', width: '100%' }}>
-          {activeSeed === 'pea' ? (
-            <DicotSeedSVG stage={!coatRemoved ? 'intact' : !seedSplit ? 'peeled' : 'split'} />
-          ) : (
-            <MonocotSeedSVG stage={!coatRemoved ? 'intact' : !seedSplit ? 'peeled' : 'split'} />
-          )}
+          <img 
+            src={getSeedImage()} 
+            alt={getSeedAlt()}
+            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+          />
         </div>
 
         {/* Action Options at the Bottom (Side by Side) */}
@@ -3600,10 +3359,10 @@ export default function ChapterLearningLab({
     };
 
     const dropzones = [
-      { id: 'swim', label: 'Swim 🏊', theme: { active: '#3b82f6', bg: 'rgba(59, 130, 246, 0.05)', border: 'rgba(59, 130, 246, 0.2)' } },
-      { id: 'fly', label: 'Fly 🦅', theme: { active: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.05)', border: 'rgba(139, 92, 246, 0.2)' } },
-      { id: 'walk', label: 'Walk 🚶', theme: { active: '#f59e0b', bg: 'rgba(245, 158, 11, 0.05)', border: 'rgba(245, 158, 11, 0.2)' } },
-      { id: 'crawl', label: 'Crawl 🐌', theme: { active: '#10b981', bg: 'rgba(16, 185, 129, 0.05)', border: 'rgba(16, 185, 129, 0.2)' } }
+      { id: 'swim', label: 'Swim 🏊', theme: { active: '#38bdf8', bg: 'rgba(56, 189, 248, 0.22)', border: '#38bdf8' } },
+      { id: 'fly', label: 'Fly 🦅', theme: { active: '#a78bfa', bg: 'rgba(167, 139, 250, 0.22)', border: '#a78bfa' } },
+      { id: 'walk', label: 'Walk 🚶', theme: { active: '#fbbf24', bg: 'rgba(251, 191, 36, 0.22)', border: '#fbbf24' } },
+      { id: 'crawl', label: 'Crawl 🐌', theme: { active: '#4ade80', bg: 'rgba(74, 222, 128, 0.22)', border: '#4ade80' } }
     ];
 
     const handleDragStart = (e, animalId) => {
@@ -3637,7 +3396,7 @@ export default function ChapterLearningLab({
     };
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', padding: '1.5rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '24px', border: '1px solid var(--border)', boxShadow: '0 12px 40px rgba(0,0,0,0.03)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', padding: '1.65rem', background: '#071A33', borderRadius: '22px', border: '1.5px solid #1e3a8a', boxShadow: '0 12px 36px rgba(0,0,0,0.45)' }}>
         
         <style>{`
           @keyframes scaleUp {
@@ -3647,24 +3406,24 @@ export default function ChapterLearningLab({
         `}</style>
 
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.6rem' }}>
-          <span style={{ fontSize: '0.88rem', fontWeight: '800', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #1e3a8a', paddingBottom: '0.75rem' }}>
+          <span style={{ fontSize: '1.15rem', fontWeight: '900', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🏃 Locomotion Organ Mapper
           </span>
           <button 
             onClick={handleResetGrid} 
-            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.75rem', fontWeight: 'bold' }}
+            style={{ background: '#0f2744', border: '1.5px solid #1e3a8a', color: '#94a3b8', borderRadius: '8px', padding: '0.35rem 0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.92rem', fontWeight: '800' }}
           >
-            <RefreshCw size={13} /> Reset
+            <RefreshCw size={15} color="#38bdf8" /> Reset
           </button>
         </div>
 
         {/* SPECIMEN TRAY */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>Animal Specimen Tray</span>
-          <div style={{ display: 'flex', gap: '0.75rem', minHeight: '105px', padding: '0.6rem', background: 'rgba(0,0,0,0.02)', borderRadius: '12px', border: '1px dashed var(--border)', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+          <span style={{ fontSize: '1rem', fontWeight: '800', color: '#ffffff' }}>Animal Specimen Tray</span>
+          <div style={{ display: 'flex', gap: '1rem', minHeight: '125px', padding: '0.85rem', background: '#0b2347', borderRadius: '14px', border: '1.5px dashed #1e3a8a', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
             {Object.keys(data).filter(k => !placed[k]).length === 0 ? (
-              <div style={{ fontSize: '0.78rem', color: 'var(--success)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <div style={{ fontSize: '1rem', color: '#4ade80', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                 ✅ All animal specimens successfully placed!
               </div>
             ) : (
@@ -3689,12 +3448,12 @@ export default function ChapterLearningLab({
                       }
                     }}
                     style={{
-                      width: '90px',
-                      height: '90px',
-                      borderRadius: '12px',
-                      background: 'var(--card-bg)',
-                      border: isSelected ? '2px solid var(--accent)' : draggingId === k ? '1px dashed var(--border)' : '1px solid var(--border)',
-                      boxShadow: isSelected ? '0 4px 15px rgba(99, 102, 241, 0.2)' : '0 4px 10px rgba(0,0,0,0.04)',
+                      width: '105px',
+                      height: '110px',
+                      borderRadius: '14px',
+                      background: '#071A33',
+                      border: isSelected ? '2px solid #38bdf8' : draggingId === k ? '1.5px dashed #38bdf8' : '1.5px solid #1e3a8a',
+                      boxShadow: isSelected ? '0 0 16px rgba(56, 189, 248, 0.4)' : '0 4px 12px rgba(0,0,0,0.3)',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -3704,19 +3463,39 @@ export default function ChapterLearningLab({
                       transition: 'all 0.2s',
                       transform: isSelected ? 'scale(1.05)' : 'none',
                       opacity: draggingId === k ? 0.4 : 1,
-                      position: 'relative'
+                      position: 'relative',
+                      padding: '0.4rem'
                     }}
                   >
-                    <img 
-                      src={data[k].image} 
-                      alt={data[k].name} 
-                      style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '8px', pointerEvents: 'none' }} 
-                    />
-                    <span style={{ fontSize: '0.72rem', fontWeight: 'bold', color: 'var(--text-primary)', marginTop: '4px' }}>
+                    <div style={{
+                      width: '100%',
+                      height: '74px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      overflow: 'hidden',
+                      position: 'relative'
+                    }}>
+                      <img 
+                        src={data[k].image} 
+                        alt={data[k].name} 
+                        style={{ 
+                          width: k === 'fish' ? '68px' : '92px', 
+                          height: k === 'fish' ? '68px' : '74px', 
+                          objectFit: 'contain', 
+                          borderRadius: '8px', 
+                          pointerEvents: 'none',
+                          filter: k === 'fish' ? 'none' : 'brightness(1.18) contrast(1.12) drop-shadow(0 3px 8px rgba(0,0,0,0.6))',
+                          transform: k === 'fish' ? 'none' : k === 'cow' ? 'scale(2.35)' : 'scale(2.2)',
+                          transformOrigin: 'center center'
+                        }} 
+                      />
+                    </div>
+                    <span style={{ fontSize: '0.92rem', fontWeight: '800', color: '#ffffff', marginTop: '4px' }}>
                       {data[k].name}
                     </span>
                     {isSelected && (
-                      <div style={{ position: 'absolute', top: -4, right: -4, background: 'var(--accent)', color: '#fff', borderRadius: '50%', width: 14, height: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8px' }}>
+                      <div style={{ position: 'absolute', top: -5, right: -5, background: '#38bdf8', color: '#041226', borderRadius: '50%', width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '900' }}>
                         ✓
                       </div>
                     )}
@@ -3728,20 +3507,20 @@ export default function ChapterLearningLab({
         </div>
 
         {/* DROPZONES GRID */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', flex: 1 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.95rem', flex: 1 }}>
           {dropzones.map(zone => {
             const placedAnimal = Object.keys(placed).find(k => placed[k] === zone.id);
             const isHovered = dragOverZone === zone.id;
             const borderStyle = isHovered 
               ? `2px solid ${zone.theme.active}` 
               : placedAnimal 
-              ? '1px solid var(--success-border)' 
+              ? '1.5px solid #22c55e' 
               : `1.5px dashed ${zone.theme.border}`;
             const bgStyle = isHovered 
               ? zone.theme.bg 
               : placedAnimal 
-              ? 'var(--success-bg)' 
-              : 'rgba(0,0,0,0.01)';
+              ? 'rgba(22, 163, 74, 0.22)' 
+              : '#0b2347';
 
             return (
               <div
@@ -3765,44 +3544,44 @@ export default function ChapterLearningLab({
                   }
                 }}
                 style={{
-                  minHeight: '110px',
+                  minHeight: '120px',
                   borderRadius: '16px',
                   border: borderStyle,
                   background: bgStyle,
-                  padding: '0.75rem',
+                  padding: '0.85rem',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '0.4rem',
+                  gap: '0.5rem',
                   transition: 'all 0.2s',
                   cursor: selectedAnimal ? 'pointer' : 'default',
-                  boxShadow: isHovered ? `0 4px 15px ${zone.theme.bg}` : 'none',
+                  boxShadow: isHovered ? `0 4px 18px ${zone.theme.bg}` : 'none',
                   justifyContent: 'center',
                   alignItems: 'center',
                   textAlign: 'center'
                 }}
               >
-                <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-heading)', display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
+                <div style={{ fontSize: '1.05rem', fontWeight: '900', color: '#ffffff', display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
                   {zone.label}
                 </div>
 
                 {placedAnimal ? (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: '100%', justifyContent: 'flex-start', textAlign: 'left', animation: 'scaleUp 0.3s ease-out' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', width: '100%', justifyContent: 'flex-start', textAlign: 'left', animation: 'scaleUp 0.3s ease-out' }}>
                     <img 
                       src={data[placedAnimal].image} 
                       alt={data[placedAnimal].name} 
-                      style={{ width: '48px', height: '48px', objectFit: 'contain', background: '#fff', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '2px' }} 
+                      style={{ width: '56px', height: '56px', objectFit: 'contain', background: '#ffffff', border: '1.5px solid #1e3a8a', borderRadius: '10px', padding: '3px' }} 
                     />
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        {data[placedAnimal].name} <Check size={14} color="var(--success)" strokeWidth={3} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                      <span style={{ fontSize: '1rem', fontWeight: '900', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        {data[placedAnimal].name} <Check size={16} color="#4ade80" strokeWidth={3.5} />
                       </span>
-                      <span style={{ fontSize: '0.68rem', color: 'var(--success)', fontWeight: '600' }}>
+                      <span style={{ fontSize: '0.88rem', color: '#4ade80', fontWeight: '700' }}>
                         ⚙️ {data[placedAnimal].organ}
                       </span>
                     </div>
                   </div>
                 ) : (
-                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', maxWidth: '120px', lineHeight: 1.3 }}>
+                  <span style={{ fontSize: '0.88rem', color: '#cbd5e1', maxWidth: '140px', lineHeight: 1.4, fontWeight: '600' }}>
                     {selectedAnimal 
                       ? `Tap to place ${data[selectedAnimal].name} here` 
                       : `Drag specimen here`}
@@ -3815,14 +3594,14 @@ export default function ChapterLearningLab({
 
         {/* FEEDBACK BANNER */}
         <div style={{ 
-          padding: '0.7rem 0.9rem', 
+          padding: '0.85rem 1.15rem', 
           borderRadius: '12px', 
-          background: result.startsWith('❌') ? 'var(--danger-bg)' : result.startsWith('🎉') || result.startsWith('✅') ? 'var(--success-bg)' : 'var(--page-bg)', 
-          border: `1px solid ${result.startsWith('❌') ? 'var(--danger-border)' : result.startsWith('🎉') || result.startsWith('✅') ? 'var(--success-border)' : 'var(--border)'}`, 
-          fontSize: '0.78rem', 
-          color: result.startsWith('❌') ? 'var(--danger)' : result.startsWith('🎉') || result.startsWith('✅') ? 'var(--success)' : 'var(--text-secondary)', 
-          fontWeight: result.startsWith('🎉') || result.startsWith('✅') || result.startsWith('❌') ? 'bold' : 'normal',
-          lineHeight: 1.4,
+          background: result.startsWith('❌') ? 'rgba(239, 68, 68, 0.25)' : result.startsWith('🎉') || result.startsWith('✅') ? 'rgba(22, 163, 74, 0.25)' : '#0b2347', 
+          border: `1.5px solid ${result.startsWith('❌') ? '#ef4444' : result.startsWith('🎉') || result.startsWith('✅') ? '#22c55e' : '#1e3a8a'}`, 
+          fontSize: '0.95rem', 
+          color: '#ffffff', 
+          fontWeight: '700',
+          lineHeight: 1.5,
           transition: 'all 0.3s'
         }}>
           {result}
@@ -3914,12 +3693,20 @@ export default function ChapterLearningLab({
       <div className="split-frame" style={{ width: '100%', minHeight: '520px' }}>
         {/* LEFT COLUMN: Concept text & slideshow buttons */}
         <div className="frame-page-left">
-          <div className="textbook-eyebrow" style={{ color: '#38bdf8', fontSize: isPlantVarietyConcept ? '1.05rem' : '0.85rem', fontWeight: '800' }}>
-            {activeLevel.title}
-          </div>
-          <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: isPlantVarietyConcept ? '2.1rem' : '1.65rem', color: '#38bdf8', fontWeight: '800' }}>
-            {slide.title}
-          </h1>
+          {lessonId === 'cotyledons_concept' ? (
+            <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: '1.65rem', color: '#38bdf8', fontWeight: '800' }}>
+              Activity 2.8: Let us compare - Seeds & Cotyledons
+            </h1>
+          ) : (
+            <>
+              <div className="textbook-eyebrow" style={{ color: '#38bdf8', fontSize: isPlantVarietyConcept ? '1.05rem' : '0.85rem', fontWeight: '800' }}>
+                {activeLevel.title}
+              </div>
+              <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: isPlantVarietyConcept ? '2.1rem' : '1.65rem', color: '#38bdf8', fontWeight: '800' }}>
+                {slide.title}
+              </h1>
+            </>
+          )}
           
           <p style={{ fontSize: isPlantVarietyConcept ? '1.2rem' : '1.02rem', color: '#fde047', lineHeight: '1.65', margin: '0 0 1rem 0', fontWeight: isPlantVarietyConcept ? '600' : '500' }}>
             {slide.content}
@@ -4164,94 +3951,9 @@ export default function ChapterLearningLab({
         overflow: 'hidden'
       }}>
         <IntroStoryteller
-          onComplete={handleEnterCheckpoint}
+          onComplete={handleEnterLabDirectly}
           onBack={() => setStage("slogan")}
         />
-      </div>
-    );
-  }
-
-  // Stage: checkpoint (Chapter 2 — Learning Checkpoint before Activity 2.1)
-  if (stage === "checkpoint" && chapterNum === 2) {
-    return (
-      <div style={{
-        position: 'fixed',
-        inset: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundImage: `linear-gradient(rgba(10, 22, 16, 0.65), rgba(10, 22, 16, 0.78)), radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.08), transparent 70%), url(${darkForestBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-        zIndex: 9999,
-        overflowY: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem',
-        boxSizing: 'border-box'
-      }}>
-        <div style={{
-          maxWidth: '680px',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1.5rem'
-        }}>
-          {/* Header */}
-          <div style={{ textAlign: 'center', background: 'var(--card-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
-            <h2 style={{ fontSize: '1.8rem', color: 'var(--text-heading)', margin: 0 }}>Learning Checkpoint</h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Review the activity tips and requirements before proceeding.</p>
-          </div>
-
-          {/* Activity Tip */}
-          <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'flex-start', gap: '1rem', fontSize: '1rem' }}>
-            <span style={{ fontSize: '1.5rem' }}>🌱</span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ fontWeight: 'bold', color: 'var(--text-heading)', fontSize: '1.1rem' }}>Activity Tip</span>
-              <span style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                Focus on the plants and animals in the scene. Use hints if needed, then hold the scanner until it verifies the organism.
-              </span>
-            </div>
-          </div>
-
-          {/* Activities overview */}
-          <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(59, 130, 246, 0.04)', border: '1px solid rgba(59, 130, 246, 0.15)', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent)' }}>
-              <span style={{ fontSize: '1.3rem' }}>📝</span>
-              <span>Upcoming Activities</span>
-            </div>
-            {CHAPTER_2_LEVELS[0].activities.map(act => (
-              <div key={act.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1.25rem', background: '#fff', border: '1px solid var(--border)', borderRadius: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
-                  <span style={{ fontSize: '1.2rem' }}>{act.icon}</span>
-                  <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
-                </div>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{act.pg}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Navigation buttons */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-            <button
-              onClick={() => setStage("scenes")}
-              className="glass-btn primary"
-              style={{ padding: '0.8rem 1.5rem', fontSize: '1rem', fontWeight: '600', background: 'var(--accent)', color: '#fff', border: 'none', boxShadow: '0 4px 12px rgba(99,102,241,0.3)' }}
-            >
-              ← Back
-            </button>
-            <button
-              onClick={handleStartLabFromCheckpoint}
-              className="glass-btn primary"
-              style={{ padding: '0.8rem 2rem', fontSize: '1rem', fontWeight: '600', background: 'var(--accent)', color: '#fff', border: 'none', boxShadow: '0 4px 12px rgba(99,102,241,0.3)' }}
-            >
-              Start Activity 2.1 →
-            </button>
-          </div>
-        </div>
       </div>
     );
   }
@@ -4376,20 +4078,14 @@ export default function ChapterLearningLab({
         return;
       }
       
-      // Exception: From lvl-1 Plants (or any lvl-1 state), "Previous" goes to Learning Checkpoint
+      // Exception: From lvl-1 Plants, "Previous" goes back to scenes
       if (activeLevel.id === 'lvl-1') {
-        setStage("checkpoint");
+        setStage("scenes");
         return;
       }
 
       if (activityFocused === true) {
         setActivityFocused(false);
-        setShowBriefing(true);
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
-        return;
-      }
-      if (showBriefing === true) {
-        setShowBriefing(false);
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
         return;
       }
@@ -4455,13 +4151,7 @@ export default function ChapterLearningLab({
       }
       
       // 2. Focus activity if it isn't focused yet and we just completed slides
-      if (activeLevel.activities.length > 0 && !activityFocused && !showBriefing && activeActivityIdx === 0 && (chapterNum === 2 ? false : activityStatus[activeActivity.id] !== 'done')) {
-        setShowBriefing(true);
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
-        return;
-      }
-      if (showBriefing) {
-        setShowBriefing(false);
+      if (activeLevel.activities.length > 0 && !activityFocused && activeActivityIdx === 0 && (chapterNum === 2 ? false : activityStatus[activeActivity.id] !== 'done')) {
         setActivityFocused(true);
         setActiveActivityIdx(0);
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
@@ -5074,126 +4764,10 @@ export default function ChapterLearningLab({
               )}
             </div>
 
-            {/* 1.5 NEW PANE: Briefing Window */}
-            {chapterNum === 2 && (
-              <div
-                id="pane-briefing-window"
-                style={{
-                  display: showBriefing ? 'flex' : 'none',
-                  flexDirection: 'column',
-                  gap: '1.5rem',
-                  padding: '1rem 0'
-                }}
-              >
-                <div style={{ textAlign: 'center', marginBottom: '0.5rem', background: 'var(--card-bg)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
-                  <h2 style={{ fontSize: '1.8rem', color: 'var(--text-heading)', margin: 0 }}>Learning Checkpoint</h2>
-                  <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>Review the activity tips and requirements before proceeding.</p>
-                </div>
-                
-                {activeLevel.lessonId === 'biodiversity_concept' && (
-                  <div style={{ padding: '1.5rem', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'flex-start', gap: '1rem', fontSize: '1rem' }}>
-                    <span style={{ fontSize: '1.5rem' }}>🌱</span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <span style={{ fontWeight: 'bold', color: 'var(--text-heading)', fontSize: '1.1rem' }}>Activity Tip</span>
-                      <span style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                        Focus on the plants and animals in the scene. Use hints if needed, then hold the scanner until it verifies the organism.
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {activeLevel.activities && activeLevel.activities.length > 0 && (
-                  <div style={{ 
-                    padding: '1.5rem', 
-                    borderRadius: '16px', 
-                    background: 'rgba(59, 130, 246, 0.04)', 
-                    border: '1px solid rgba(59, 130, 246, 0.15)', 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    gap: '1rem',
-                    textAlign: 'left'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent)' }}>
-                      <span style={{ fontSize: '1.3rem' }}>📝</span>
-                      <span>Checkpoint Quiz Requirements</span>
-                    </div>
-                    
-                    <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                      This checkpoint quiz is currently locked. Complete the following required items to unlock it:
-                    </p>
-                    
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
-                      {/* 1. Concept Lesson Status */}
-                      {activeLevel.lessonId && (
-                        <div style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'space-between', 
-                          padding: '0.85rem 1.25rem', 
-                          background: '#fff', 
-                          border: '1px solid var(--border)', 
-                          borderRadius: '12px', 
-                        }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
-                            <span style={{ fontSize: '1.2rem' }}>📖</span>
-                            <span style={{ fontWeight: '600', color: 'var(--navy)' }}>Concept Lesson</span>
-                          </div>
-                          <span style={{ 
-                            fontSize: '0.8rem', 
-                            fontWeight: 'bold', 
-                            color: 'var(--success)',
-                            background: 'rgba(16,185,129,0.1)',
-                            padding: '0.3rem 0.6rem',
-                            borderRadius: '8px'
-                          }}>
-                            ✓ Completed
-                          </span>
-                        </div>
-                      )}
-                      
-                      {/* 2. Activities Status */}
-                      {activeLevel.activities.map(act => {
-                        const isActDone = activityStatus[act.id] === 'done';
-                        return (
-                          <div 
-                            key={act.id}
-                            style={{ 
-                              display: 'flex', 
-                              alignItems: 'center', 
-                              justifyContent: 'space-between', 
-                              padding: '0.85rem 1.25rem', 
-                              background: '#fff', 
-                              border: '1px solid var(--border)', 
-                              borderRadius: '12px', 
-                            }}
-                          >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.95rem' }}>
-                              <span style={{ fontSize: '1.2rem' }}>{act.icon || '🧩'}</span>
-                              <span style={{ fontWeight: '600', color: 'var(--navy)' }}>{act.title}</span>
-                            </div>
-                            <span style={{ 
-                              fontSize: '0.8rem', 
-                              fontWeight: 'bold', 
-                              color: isActDone ? 'var(--success)' : 'var(--accent)',
-                              background: isActDone ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
-                              padding: '0.3rem 0.6rem',
-                              borderRadius: '8px'
-                            }}>
-                              {isActDone ? '✓ Completed' : 'Pending'}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* 2. MIDDLE PANE: Full Interactive Activity Window */}
             {activeLevel.activities && activeLevel.activities.length > 0 && activeLevel.lessonId !== 'vocabulary_glossary' && activeLevel.lessonId !== 'chapter_challenge_overview' && (
               <div id="pane-activity-window" className="glass-panel" style={{ 
-                display: (chapterNum === 2 ? (!showBriefing && activityFocused === true) : (!isFullscreen || activityFocused !== false)) ? 'flex' : 'none', 
+                display: (chapterNum === 2 ? (activityFocused === true) : (!isFullscreen || activityFocused !== false)) ? 'flex' : 'none', 
                 flexDirection: 'column', 
                 gap: '0.75rem',
                 padding: '0.75rem 1rem 1rem 1rem !important',
@@ -5203,10 +4777,26 @@ export default function ChapterLearningLab({
                 borderRadius: '16px !important'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-                  <h4 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <h4 style={{ 
+                    margin: 0, 
+                    fontSize: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '1.4rem' : '1.15rem', 
+                    fontWeight: '900', 
+                    color: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '#38bdf8' : 'var(--text-heading)', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.5rem' 
+                  }}>
                     <span>{activeActivity.title}</span>
                     {activeActivity.pg && (
-                      <span style={{ fontSize: '0.75rem', fontWeight: 'normal', color: 'var(--text-muted)', background: 'var(--border)', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>
+                      <span style={{ 
+                        fontSize: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '0.9rem' : '0.75rem', 
+                        fontWeight: 'bold', 
+                        color: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '#ffffff' : 'var(--text-muted)', 
+                        background: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '#1e3a8a' : 'var(--border)', 
+                        border: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '1px solid #38bdf8' : 'none',
+                        padding: '0.2rem 0.6rem', 
+                        borderRadius: '6px' 
+                      }}>
                         {activeActivity.pg}
                       </span>
                     )}
