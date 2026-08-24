@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Compass, CheckCircle2, XCircle, ArrowRight, Trophy, Sparkles } from 'lucide-react';
+import { ArrowLeft, Compass, CheckCircle2, XCircle, ArrowRight, Trophy, Sparkles, Navigation, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './FunWithMagnets.css';
 import MazeGame from './MazeGame';
@@ -23,6 +23,10 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
   const [showMazeInstructionModal, setShowMazeInstructionModal] = useState(true);
   const [showMazeSolveModal, setShowMazeSolveModal] = useState(false);
   const [showFinalCompletionModal, setShowFinalCompletionModal] = useState(false);
+
+  const [mazeVisitedCount, setMazeVisitedCount] = useState({ count: 1, total: 9 });
+  const mazeResetRef = React.useRef(null);
+  const mazeDirectionMoveRef = React.useRef(null);
 
   const addXP = (n) => {
     setXp(prev => prev + n);
@@ -207,11 +211,11 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                     }}
                   >
                     <h2 style={{ margin: 0, color: '#064E3B', fontSize: '1.8rem', fontWeight: 900 }}>
-                      3D Town Map Steel Ball Maze 🏙️🔮
+                      3D Town Map Bike Maze 🏙️🏍️
                     </h2>
 
                     <p style={{ margin: 0, color: '#334155', fontSize: '1.15rem', lineHeight: '1.5', fontWeight: 600 }}>
-                      Slide the magnet underneath the board or use the <strong>Direction Controls</strong> to guide the 3D chrome steel ball along the asphalt roads from <strong>Railway Station 🚉</strong> to the <strong>Bank 🏛️</strong>!
+                      Drag or use the <strong>Arrow / WASD keys</strong> to guide your <strong>3D Sports Bike 🏍️</strong> along the routes between landmark destinations across the map!
                     </p>
 
                     <button
@@ -243,16 +247,15 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
             {/* Main Edge-to-Edge Canvas Area */}
             <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box' }}>
               <MazeGame 
-                isSolved={ext.maze} 
                 onSolve={() => {
-                  if (!ext.maze) {
-                    setExt(prev => ({...prev, maze: true}));
-                    addXP(16);
-                    setTimeout(() => {
-                      setShowMazeSolveModal(true);
-                    }, 1500);
-                  }
-                }} 
+                  setExt({ ...ext, maze: true });
+                  addXP(200);
+                  setShowMazeSolveModal(true);
+                }}
+                isSolved={ext.maze}
+                onVisitedCountChange={(count, total) => setMazeVisitedCount({ count, total })}
+                registerReset={(fn) => { mazeResetRef.current = fn; }}
+                registerDirectionMove={(fn) => { mazeDirectionMoveRef.current = fn; }}
               />
             </div>
 
@@ -648,8 +651,203 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
         </nav>
       </div>
 
-      <main style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', width: '100%', position: 'relative', zIndex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {renderContent()}
+      <main style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'row', width: '100%', position: 'relative', zIndex: 1, gap: '0.75rem' }}>
+        <div style={{ width: '65%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          {renderContent()}
+        </div>
+        <div style={{ width: '35%', height: '100%', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', background: '#ECFDF5', borderRadius: '20px' }}>
+          {step === 1 && (
+            <>
+              {/* Reset Position Button */}
+              <button
+                onClick={() => mazeResetRef.current && mazeResetRef.current()}
+                style={{
+                  padding: '1rem',
+                  borderRadius: '20px',
+                  border: '2px solid #A7F3D0',
+                  background: '#FFFFFF',
+                  color: '#064E3B',
+                  fontWeight: 900,
+                  fontSize: '1.1rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 8px 24px rgba(6, 78, 59, 0.12)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  transition: 'transform 0.2s',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                <RotateCcw size={20} color="#D97706" /> Reset Mission to Start
+              </button>
+
+              {/* Places Visited Tracker */}
+              <div style={{
+                background: '#FFFFFF',
+                border: '2px solid #A7F3D0',
+                borderRadius: '20px',
+                padding: '1.25rem',
+                boxShadow: '0 8px 24px rgba(6, 78, 59, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+              }}>
+                <div style={{ background: '#D1FAE5', padding: '0.8rem', borderRadius: '50%' }}>
+                  <Navigation size={28} color="#047857" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.95rem', color: '#475569', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Places Visited</div>
+                  <div style={{ fontSize: '1.4rem', color: '#064E3B', fontWeight: 900 }}>
+                    {mazeVisitedCount.count} / {mazeVisitedCount.total} Landmarks
+                  </div>
+                </div>
+              </div>
+
+              {/* Road Navigation Direction Controls */}
+              <div style={{
+                background: '#FFFFFF',
+                border: '2px solid #A7F3D0',
+                borderRadius: '20px',
+                padding: '1.25rem',
+                boxShadow: '0 8px 24px rgba(6, 78, 59, 0.12)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.75rem'
+              }}>
+                <div style={{ fontSize: '0.95rem', color: '#064E3B', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Road Navigation Controls
+                </div>
+
+                {/* D-Pad Layout */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 50px)', gridTemplateRows: 'repeat(3, 50px)', gap: '6px', justifyContent: 'center' }}>
+                  {/* Top / North */}
+                  <div style={{ gridColumn: 2, gridRow: 1 }}>
+                    <button
+                      onClick={() => mazeDirectionMoveRef.current && mazeDirectionMoveRef.current('up')}
+                      title="Move North / Up (W / ↑)"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '12px',
+                        border: '1.5px solid #A7F3D0',
+                        background: '#ECFDF5',
+                        color: '#064E3B',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '1.1rem',
+                        fontWeight: 900,
+                        boxShadow: '0 3px 8px rgba(6, 78, 59, 0.1)',
+                        transition: 'transform 0.15s, background 0.15s'
+                      }}
+                      onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.92)'}
+                      onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    >
+                      ▲
+                    </button>
+                  </div>
+
+                  {/* Left / West */}
+                  <div style={{ gridColumn: 1, gridRow: 2 }}>
+                    <button
+                      onClick={() => mazeDirectionMoveRef.current && mazeDirectionMoveRef.current('left')}
+                      title="Move West / Left (A / ←)"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '12px',
+                        border: '1.5px solid #A7F3D0',
+                        background: '#ECFDF5',
+                        color: '#064E3B',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '1.1rem',
+                        fontWeight: 900,
+                        boxShadow: '0 3px 8px rgba(6, 78, 59, 0.1)',
+                        transition: 'transform 0.15s, background 0.15s'
+                      }}
+                      onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.92)'}
+                      onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    >
+                      ◀
+                    </button>
+                  </div>
+
+                  {/* Center Hub */}
+                  <div style={{ gridColumn: 2, gridRow: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#D1FAE5', color: '#047857', fontSize: '1.3rem', fontWeight: 900 }}>
+                    🏍️
+                  </div>
+
+                  {/* Right / East */}
+                  <div style={{ gridColumn: 3, gridRow: 2 }}>
+                    <button
+                      onClick={() => mazeDirectionMoveRef.current && mazeDirectionMoveRef.current('right')}
+                      title="Move East / Right (D / →)"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '12px',
+                        border: '1.5px solid #A7F3D0',
+                        background: '#ECFDF5',
+                        color: '#064E3B',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '1.1rem',
+                        fontWeight: 900,
+                        boxShadow: '0 3px 8px rgba(6, 78, 59, 0.1)',
+                        transition: 'transform 0.15s, background 0.15s'
+                      }}
+                      onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.92)'}
+                      onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    >
+                      ▶
+                    </button>
+                  </div>
+
+                  {/* Bottom / South */}
+                  <div style={{ gridColumn: 2, gridRow: 3 }}>
+                    <button
+                      onClick={() => mazeDirectionMoveRef.current && mazeDirectionMoveRef.current('down')}
+                      title="Move South / Down (S / ↓)"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '12px',
+                        border: '1.5px solid #A7F3D0',
+                        background: '#ECFDF5',
+                        color: '#064E3B',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '1.1rem',
+                        fontWeight: 900,
+                        boxShadow: '0 3px 8px rgba(6, 78, 59, 0.1)',
+                        transition: 'transform 0.15s, background 0.15s'
+                      }}
+                      onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.92)'}
+                      onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    >
+                      ▼
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ fontSize: '0.8rem', color: '#475569', textAlign: 'center', fontWeight: 600 }}>
+                  Use <strong>Arrow / WASD keys</strong> or <strong>click any waypoint node</strong> on the map!
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </main>
 
       <footer style={{ marginTop: '0.4rem', width: '100%', flexShrink: 0, position: 'relative', zIndex: 99999 }}>

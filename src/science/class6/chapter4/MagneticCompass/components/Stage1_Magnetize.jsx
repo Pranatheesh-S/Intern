@@ -40,6 +40,73 @@ function PaperBoxEnclosure() {
   );
 }
 
+// ---------------------------------------------------------
+// Rotatable Activity Group (Allows left-right rotation of the activity inside the tray)
+// ---------------------------------------------------------
+function RotatableActivityGroup({ children }) {
+  const groupRef = useRef();
+  const targetRotationY = useRef(0);
+  const currentRotationY = useRef(0);
+  const isPointerDown = useRef(false);
+  const startX = useRef(0);
+
+  useEffect(() => {
+    const onPointerMove = (e) => {
+      if (!isPointerDown.current) return;
+      const deltaX = e.clientX - startX.current;
+      startX.current = e.clientX;
+      targetRotationY.current += deltaX * 0.012;
+    };
+
+    const onPointerUp = () => {
+      isPointerDown.current = false;
+      document.body.style.cursor = 'auto';
+    };
+
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+    };
+  }, []);
+
+  useFrame((state, delta) => {
+    if (!groupRef.current) return;
+    const dt = Math.min(delta, 0.1);
+    currentRotationY.current = THREE.MathUtils.lerp(currentRotationY.current, targetRotationY.current, dt * 12);
+    groupRef.current.rotation.y = currentRotationY.current;
+  });
+
+  return (
+    <group 
+      ref={groupRef}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        isPointerDown.current = true;
+        startX.current = e.clientX;
+        document.body.style.cursor = 'grabbing';
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = 'grab';
+      }}
+      onPointerOut={() => {
+        if (!isPointerDown.current) {
+          document.body.style.cursor = 'auto';
+        }
+      }}
+    >
+      {/* Invisible hit cylinder around needle and magnet to catch drag gestures */}
+      <mesh visible={false} position={[0, 2.0, 0]}>
+        <cylinderGeometry args={[10, 10, 5, 32]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+      {children}
+    </group>
+  );
+}
+
 // -------------------------------------------------------------------
 // 1. 3D Bar Magnet Component (Standard Red/Blue Pole Bar Magnet)
 // -------------------------------------------------------------------
@@ -555,33 +622,41 @@ export default function Stage1_Magnetize({ onComplete }) {
                 <pointLight position={[-6, 6, -4]} intensity={0.4} color="#BAE6FD" />
 
                 <group position={[0, -3.2, 0]}>
-                  {/* Parchment Paper Box Enclosure with Side Walls */}
+                  {/* Parchment Paper Box Enclosure with Side Walls (Stationary) */}
                   <PaperBoxEnclosure />
 
-                  {/* 3D Steel Sewing Needle Floating in Air */}
-                  <SewingNeedle3D isMagnetized={isMagnetized} />
+                  {/* Rotatable Activity Group (rotates needle, magnet, and filings inside tray) */}
+                  <RotatableActivityGroup>
+                    {/* 3D Steel Sewing Needle Floating in Air */}
+                    <SewingNeedle3D isMagnetized={isMagnetized} />
 
-                  {/* 3D Stroking Bar Magnet */}
-                  {!isMagnetized && (
-                    <BarMagnet3D
-                      strokeProgress={strokeAnimProgress}
-                      isAutoStroking={isAutoStroking}
+                    {/* 3D Stroking Bar Magnet */}
+                    {!isMagnetized && (
+                      <BarMagnet3D
+                        strokeProgress={strokeAnimProgress}
+                        isAutoStroking={isAutoStroking}
+                      />
+                    )}
+
+                    {/* 3D Iron Filings */}
+                    <NeedleFilings3D
+                      isTesting={isTesting}
+                      isSprinkling={isSprinkling}
+                      isAttracted={isAttracted}
                     />
-                  )}
-
-                  {/* 3D Iron Filings */}
-                  <NeedleFilings3D
-                    isTesting={isTesting}
-                    isSprinkling={isSprinkling}
-                    isAttracted={isAttracted}
-                  />
+                  </RotatableActivityGroup>
                 </group>
 
                 <OrbitControls
-                  enablePan={false}
-                  maxPolarAngle={Math.PI / 2.1}
+                  makeDefault
+                  target={[0, -1.2, 0]}
+                  minAzimuthAngle={0}
+                  maxAzimuthAngle={0}
+                  maxPolarAngle={Math.PI / 2.05}
+                  minPolarAngle={0.1}
                   minDistance={5}
                   maxDistance={30}
+                  enablePan={false}
                 />
               </Suspense>
             </Canvas>

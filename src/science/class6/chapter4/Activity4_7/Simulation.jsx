@@ -19,6 +19,20 @@ import {
   useDroppable, 
   DragOverlay 
 } from '@dnd-kit/core';
+import ExactCompass from '../components/ExactCompass.jsx';
+
+const getBearingName = (deg) => {
+  const norm = ((deg % 360) + 360) % 360;
+  if (norm >= 337.5 || norm < 22.5) return 'N';
+  if (norm >= 22.5 && norm < 67.5) return 'NE';
+  if (norm >= 67.5 && norm < 112.5) return 'E';
+  if (norm >= 112.5 && norm < 157.5) return 'SE';
+  if (norm >= 157.5 && norm < 202.5) return 'S';
+  if (norm >= 202.5 && norm < 247.5) return 'SW';
+  if (norm >= 247.5 && norm < 292.5) return 'W';
+  if (norm >= 292.5 && norm < 337.5) return 'NW';
+  return '';
+};
 
 // Helper: Calculate angle between two points
 const calculateAngle = (cx, cy, px, py) => {
@@ -27,91 +41,6 @@ const calculateAngle = (cx, cy, px, py) => {
   let theta = Math.atan2(dy, dx);
   return theta * (180 / Math.PI);
 };
-
-// Golden Vintage Nautical Compass Component
-const VintageCompass = ({ rotation, scale = 1 }) => (
-  <div style={{
-    transform: `scale(${scale})`,
-    transformOrigin: 'center',
-    position: 'relative',
-    width: '240px',
-    height: '240px',
-    flexShrink: 0,
-    borderRadius: '50%',
-    background: 'radial-gradient(circle, #FFFBEB 0%, #FEF3C7 65%, #DEB887 100%)',
-    border: '10px solid #854D0E',
-    boxShadow: '0 0 0 5px #CA8A04, 0 16px 40px rgba(0,0,0,0.6), inset 0 4px 12px rgba(0,0,0,0.3)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    userSelect: 'none'
-  }}>
-    {/* Compass Cardinal Points */}
-    <span style={{ position: 'absolute', top: 10, fontWeight: 900, color: '#B45309', fontSize: '1.25rem' }}>N</span>
-    <span style={{ position: 'absolute', right: 14, fontWeight: 900, color: '#1E3A8A', fontSize: '1.1rem' }}>E</span>
-    <span style={{ position: 'absolute', bottom: 10, fontWeight: 900, color: '#1E3A8A', fontSize: '1.1rem' }}>S</span>
-    <span style={{ position: 'absolute', left: 14, fontWeight: 900, color: '#1E3A8A', fontSize: '1.1rem' }}>W</span>
-
-    {/* Inner Brass Ring & Tick Accents */}
-    <div style={{
-      width: '190px',
-      height: '190px',
-      borderRadius: '50%',
-      border: '2px dashed #B45309',
-      position: 'absolute',
-      opacity: 0.45
-    }} />
-
-    {/* Rotating Needle */}
-    <motion.div
-      animate={{ rotate: rotation }}
-      transition={{ type: "spring", stiffness: 50, damping: 14 }}
-      style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      {/* North Needle (Red) */}
-      <div style={{
-        position: 'absolute',
-        top: '22px',
-        width: 0,
-        height: 0,
-        borderLeft: '10px solid transparent',
-        borderRight: '10px solid transparent',
-        borderBottom: '98px solid #DC2626',
-        filter: 'drop-shadow(0 3px 5px rgba(0,0,0,0.35))'
-      }} />
-
-      {/* South Needle (Dark Slate/Navy) */}
-      <div style={{
-        position: 'absolute',
-        bottom: '22px',
-        width: 0,
-        height: 0,
-        borderLeft: '10px solid transparent',
-        borderRight: '10px solid transparent',
-        borderTop: '98px solid #1E293B',
-        filter: 'drop-shadow(0 3px 5px rgba(0,0,0,0.35))'
-      }} />
-
-      {/* Center Golden Pin Cap */}
-      <div style={{
-        width: '22px',
-        height: '22px',
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, #FDE047 0%, #D97706 100%)',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
-        border: '2px solid #78350F',
-        zIndex: 5
-      }} />
-    </motion.div>
-  </div>
-);
 
 // High Quality Bar Magnet Component
 const MagnetVisual = ({ isFlipped, isDragging }) => (
@@ -187,7 +116,7 @@ const DraggableCompass = ({ rotation }) => {
       {...listeners} 
       {...attributes}
     >
-      <VintageCompass rotation={rotation} />
+      <ExactCompass rotation={rotation} size={240} />
     </div>
   );
 };
@@ -196,7 +125,7 @@ const SidebarDraggableCompass = () => {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: 'sidebar_compass' });
   return (
     <div ref={setNodeRef} style={{ opacity: isDragging ? 0 : 1, zIndex: 10, cursor: 'grab', touchAction: 'none' }} {...listeners} {...attributes}>
-      <VintageCompass rotation={0} scale={100 / 240} />
+      <ExactCompass rotation={0} size={100} />
     </div>
   );
 };
@@ -268,8 +197,8 @@ const MaterialBlock3D = ({ type, thickness = 1 }) => {
 
 export default function Simulation({ onComplete, onNext }) {
   const [step, setStep] = useState(1);
-  const [magnetPos, setMagnetPos] = useState({ x: 280, y: 300 });
-  const [compassPos, setCompassPos] = useState({ x: 620, y: 300 });
+  const [magnetPos, setMagnetPos] = useState({ x: 200, y: 280 });
+  const [compassPos, setCompassPos] = useState({ x: 560, y: 280 });
   const [isFlipped, setIsFlipped] = useState(false);
   const [needleRotation, setNeedleRotation] = useState(0);
   const [feedback, setFeedback] = useState(null);
@@ -283,6 +212,42 @@ export default function Simulation({ onComplete, onNext }) {
     plastic: null,
     glass: null
   });
+
+  // Automatically ensure clear visual gap between material barrier and magnet/compass
+  useEffect(() => {
+    if (activeMaterial) {
+      const matWidth = 22 + thickness * 16;
+      const requiredDist = 200 + matWidth + 60; // 80 (magnet) + 120 (compass) + matWidth + 60px clearance
+      const dx = compassPos.x - magnetPos.x;
+      const dy = compassPos.y - magnetPos.y;
+      const currentDist = Math.hypot(dx, dy) || 1;
+
+      if (currentDist < requiredDist) {
+        const ws = document.getElementById('simulation-workspace');
+        const rect = ws ? ws.getBoundingClientRect() : { width: 750, height: 500 };
+        const W = rect.width;
+        const H = rect.height;
+
+        const angle = Math.atan2(dy, dx);
+        const midX = (magnetPos.x + compassPos.x) / 2;
+        const midY = (magnetPos.y + compassPos.y) / 2;
+
+        let newMX = midX - Math.cos(angle) * (requiredDist / 2);
+        let newMY = midY - Math.sin(angle) * (requiredDist / 2);
+        let newCX = midX + Math.cos(angle) * (requiredDist / 2);
+        let newCY = midY + Math.sin(angle) * (requiredDist / 2);
+
+        newMX = Math.max(90, Math.min(W - 90, newMX));
+        newMY = Math.max(35, Math.min(H - 35, newMY));
+        newCX = Math.max(130, Math.min(W - 130, newCX));
+        newCY = Math.max(130, Math.min(H - 130, newCY));
+
+        setMagnetPos({ x: newMX, y: newMY });
+        setCompassPos({ x: newCX, y: newCY });
+        setNeedleRotation(getNeedleRotation(newMX, newMY, newCX, newCY, isFlipped));
+      }
+    }
+  }, [activeMaterial, thickness]);
 
   const handleObservation = (material, result) => {
     const newObservations = { ...observations, [material]: result };
@@ -312,11 +277,30 @@ export default function Simulation({ onComplete, onNext }) {
   const distanceModifier = ({ transform, active }) => {
     if (!active || (active.id !== 'bar_magnet' && active.id !== 'compass')) return transform;
 
-    const minDist = activeMaterial ? 160 + (22 + thickness * 16) : 160;
-    let newX = active.id === 'bar_magnet' ? magnetPos.x + transform.x : compassPos.x + transform.x;
-    let newY = active.id === 'bar_magnet' ? magnetPos.y + transform.y : compassPos.y + transform.y;
-    let otherX = active.id === 'bar_magnet' ? compassPos.x : magnetPos.x;
-    let otherY = active.id === 'bar_magnet' ? compassPos.y : magnetPos.y;
+    const ws = document.getElementById('simulation-workspace');
+    const rect = ws ? ws.getBoundingClientRect() : { width: 700, height: 500 };
+    const W = rect.width;
+    const H = rect.height;
+
+    const isMag = active.id === 'bar_magnet';
+    const minX = isMag ? 90 : 130;
+    const maxX = isMag ? Math.max(minX, W - 90) : Math.max(minX, W - 130);
+    const minY = isMag ? 35 : 130;
+    const maxY = isMag ? Math.max(minY, H - 35) : Math.max(minY, H - 130);
+
+    let newX = isMag ? magnetPos.x + transform.x : compassPos.x + transform.x;
+    let newY = isMag ? magnetPos.y + transform.y : compassPos.y + transform.y;
+
+    // Clamp strictly within activity workspace bounds
+    newX = Math.max(minX, Math.min(maxX, newX));
+    newY = Math.max(minY, Math.min(maxY, newY));
+
+    // Minimum distance ensuring clear air gaps on both sides of material barrier
+    const matWidth = 22 + thickness * 16;
+    const minDist = activeMaterial ? (200 + matWidth + 60) : 225;
+
+    let otherX = isMag ? compassPos.x : magnetPos.x;
+    let otherY = isMag ? compassPos.y : magnetPos.y;
 
     const dx = newX - otherX;
     const dy = newY - otherY;
@@ -326,17 +310,20 @@ export default function Simulation({ onComplete, onNext }) {
       const angle = Math.atan2(dy, dx);
       newX = otherX + Math.cos(angle) * minDist;
       newY = otherY + Math.sin(angle) * minDist;
-      return {
-        ...transform,
-        x: active.id === 'bar_magnet' ? newX - magnetPos.x : newX - compassPos.x,
-        y: active.id === 'bar_magnet' ? newY - magnetPos.y : newY - compassPos.y,
-      };
+
+      newX = Math.max(minX, Math.min(maxX, newX));
+      newY = Math.max(minY, Math.min(maxY, newY));
     }
-    return transform;
+
+    return {
+      ...transform,
+      x: isMag ? newX - magnetPos.x : newX - compassPos.x,
+      y: isMag ? newY - magnetPos.y : newY - compassPos.y,
+    };
   };
 
   const getNeedleRotation = (mX, mY, cX, cY, flipped) => {
-    const magnetWidth = 150;
+    const magnetWidth = 160;
     const nPoleX = flipped ? mX + magnetWidth / 4 : mX - magnetWidth / 4;
     const sPoleX = flipped ? mX - magnetWidth / 4 : mX + magnetWidth / 4;
     const poleY = mY;
@@ -345,7 +332,7 @@ export default function Simulation({ onComplete, onNext }) {
     const distS = Math.sqrt((sPoleX - cX) ** 2 + (poleY - cY) ** 2);
     const minDist = Math.min(distN, distS);
 
-    if (minDist > 270) return 0;
+    if (minDist > 450) return 0;
 
     const angleToN = calculateAngle(cX, cY, nPoleX, poleY);
     const angleToS = calculateAngle(cX, cY, sPoleX, poleY);
@@ -354,7 +341,7 @@ export default function Simulation({ onComplete, onNext }) {
     while (targetAngle > 180) targetAngle -= 360;
     while (targetAngle < -180) targetAngle += 360;
 
-    const deflectionFactor = Math.max(0, Math.min(1, 1 - (minDist - 120) / 150));
+    const deflectionFactor = Math.max(0, Math.min(1, 1 - (minDist - 160) / 280));
     return targetAngle * deflectionFactor;
   };
 
@@ -364,10 +351,15 @@ export default function Simulation({ onComplete, onNext }) {
     const { active, delta } = event;
     setDragDelta(delta);
 
-    let mX = magnetPos.x + (active.id === 'bar_magnet' ? delta.x : 0);
-    let mY = magnetPos.y + (active.id === 'bar_magnet' ? delta.y : 0);
-    let cX = compassPos.x + (active.id === 'compass' ? delta.x : 0);
-    let cY = compassPos.y + (active.id === 'compass' ? delta.y : 0);
+    const ws = document.getElementById('simulation-workspace');
+    const rect = ws ? ws.getBoundingClientRect() : { width: 700, height: 500 };
+    const W = rect.width;
+    const H = rect.height;
+
+    let mX = active.id === 'bar_magnet' ? Math.max(90, Math.min(W - 90, magnetPos.x + delta.x)) : magnetPos.x;
+    let mY = active.id === 'bar_magnet' ? Math.max(35, Math.min(H - 35, magnetPos.y + delta.y)) : magnetPos.y;
+    let cX = active.id === 'compass' ? Math.max(130, Math.min(W - 130, compassPos.x + delta.x)) : compassPos.x;
+    let cY = active.id === 'compass' ? Math.max(130, Math.min(H - 130, compassPos.y + delta.y)) : compassPos.y;
 
     setNeedleRotation(getNeedleRotation(mX, mY, cX, cY, isFlipped));
   };
@@ -377,21 +369,47 @@ export default function Simulation({ onComplete, onNext }) {
     setDragDelta({ x: 0, y: 0 });
     const { active, delta } = event;
 
+    const ws = document.getElementById('simulation-workspace');
+    const rect = ws ? ws.getBoundingClientRect() : { width: 700, height: 500 };
+    const W = rect.width;
+    const H = rect.height;
+
     if (active.id === 'sidebar_compass') {
-      setCompassPos({ x: 620, y: 300 });
+      const defaultCX = Math.max(130, Math.min(W - 130, W * 0.72));
+      const defaultCY = Math.max(130, Math.min(H - 130, H * 0.5));
+      setCompassPos({ x: defaultCX, y: defaultCY });
       setStep(2);
       return;
     }
     if (active.id === 'sidebar_magnet') {
-      setMagnetPos({ x: 280, y: 300 });
+      const defaultMX = Math.max(90, Math.min(W - 90, W * 0.25));
+      const defaultMY = Math.max(35, Math.min(H - 35, H * 0.5));
+      setMagnetPos({ x: defaultMX, y: defaultMY });
       setStep(3);
       return;
     }
 
-    let newMX = active.id === 'bar_magnet' ? Math.max(80, Math.min(magnetPos.x + delta.x, 900)) : magnetPos.x;
-    let newMY = active.id === 'bar_magnet' ? Math.max(20, Math.min(magnetPos.y + delta.y, 500)) : magnetPos.y;
-    let newCX = active.id === 'compass' ? Math.max(80, Math.min(compassPos.x + delta.x, 900)) : compassPos.x;
-    let newCY = active.id === 'compass' ? Math.max(20, Math.min(compassPos.y + delta.y, 500)) : compassPos.y;
+    let newMX = active.id === 'bar_magnet' ? Math.max(90, Math.min(W - 90, magnetPos.x + delta.x)) : magnetPos.x;
+    let newMY = active.id === 'bar_magnet' ? Math.max(35, Math.min(H - 35, magnetPos.y + delta.y)) : magnetPos.y;
+    let newCX = active.id === 'compass' ? Math.max(130, Math.min(W - 130, compassPos.x + delta.x)) : compassPos.x;
+    let newCY = active.id === 'compass' ? Math.max(130, Math.min(H - 130, compassPos.y + delta.y)) : compassPos.y;
+
+    const matWidth = 22 + thickness * 16;
+    const minDist = activeMaterial ? (200 + matWidth + 60) : 225;
+    const dx = newCX - newMX;
+    const dy = newCY - newMY;
+    const dist = Math.hypot(dx, dy) || 1;
+
+    if (dist < minDist) {
+      const angle = Math.atan2(dy, dx);
+      if (active.id === 'bar_magnet') {
+        newMX = Math.max(90, Math.min(W - 90, newCX - Math.cos(angle) * minDist));
+        newMY = Math.max(35, Math.min(H - 35, newCY - Math.sin(angle) * minDist));
+      } else {
+        newCX = Math.max(130, Math.min(W - 130, newMX + Math.cos(angle) * minDist));
+        newCY = Math.max(130, Math.min(H - 130, newMY + Math.sin(angle) * minDist));
+      }
+    }
 
     if (active.id === 'bar_magnet') setMagnetPos({ x: newMX, y: newMY });
     if (active.id === 'compass') setCompassPos({ x: newCX, y: newCY });
@@ -406,8 +424,8 @@ export default function Simulation({ onComplete, onNext }) {
   };
 
   const handleReset = () => {
-    setMagnetPos({ x: 280, y: 300 });
-    setCompassPos({ x: 620, y: 300 });
+    setMagnetPos({ x: 200, y: 280 });
+    setCompassPos({ x: 560, y: 280 });
     setIsFlipped(false);
     setNeedleRotation(0);
     setFeedback(null);
@@ -639,20 +657,20 @@ export default function Simulation({ onComplete, onNext }) {
               position: 'absolute',
               top: '1rem',
               left: '1rem',
-              background: 'rgba(15, 23, 42, 0.85)',
-              border: '1px solid #D97706',
-              borderRadius: '20px',
-              padding: '0.3rem 0.75rem',
+              background: 'rgba(255, 253, 245, 0.95)',
+              border: '1.5px solid #EADBB6',
+              borderRadius: '16px',
+              padding: '0.4rem 0.95rem',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
-              color: '#FCD34D',
-              fontSize: '0.75rem',
-              fontWeight: 800,
+              gap: '0.6rem',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
               zIndex: 10
             }}>
-              <CompassIcon size={14} color="#F59E0B" />
-              BEARING: {Math.round((needleRotation % 360 + 360) % 360)}°
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#78350F', fontSize: '0.82rem', fontWeight: 900 }}>
+                <CompassIcon size={16} color="#D97706" />
+                <span>BEARING: <strong style={{ color: '#C2410C' }}>{Math.round((needleRotation % 360 + 360) % 360)}°</strong> {getBearingName(needleRotation)}</span>
+              </div>
             </div>
 
             {/* Draggable Objects Stage */}
@@ -784,9 +802,9 @@ export default function Simulation({ onComplete, onNext }) {
       </div>
 
       <DragOverlay zIndex={2000}>
-        {activeDragId === 'sidebar_compass' && <VintageCompass rotation={0} scale={100 / 240} />}
+        {activeDragId === 'sidebar_compass' && <ExactCompass rotation={0} size={110} />}
         {activeDragId === 'sidebar_magnet' && <MagnetVisual isFlipped={false} isDragging={true} />}
-        {activeDragId === 'compass' && <VintageCompass rotation={needleRotation} />}
+        {activeDragId === 'compass' && <ExactCompass rotation={needleRotation} size={240} />}
         {activeDragId === 'bar_magnet' && <MagnetVisual isFlipped={isFlipped} isDragging={true} />}
       </DragOverlay>
     </DndContext>

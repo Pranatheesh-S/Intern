@@ -247,31 +247,6 @@ export default function Stage2_Floating({ onComplete }) {
             <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
           </button>
 
-          {/* Parchment Paper Box Tray in Activity Area (matching Poles of Magnet) */}
-          <div
-            style={{
-              position: 'absolute',
-              width: '560px',
-              maxWidth: '92%',
-              height: '340px',
-              maxHeight: '84%',
-              backgroundImage: 'url(/MagneticPoles/paper_texture.jpg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              borderRadius: '16px',
-              boxShadow: '0 12px 32px rgba(0, 0, 0, 0.35), inset 0 0 20px rgba(0, 0, 0, 0.15)',
-              border: '2px solid #8B5A2B',
-              zIndex: 2,
-              pointerEvents: 'none',
-              top: 'calc(50% + 20px)',
-              transform: 'translateY(-50%)',
-            }}
-          >
-            {/* Paper Walls visual depth borders */}
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '8px', background: 'rgba(0,0,0,0.15)' }} />
-            <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '8px', background: 'rgba(0,0,0,0.15)' }} />
-            <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '8px', background: 'rgba(0,0,0,0.15)' }} />
-          </div>
 
           {/* Photorealistic 3D Ceramic Water Bowl & Compass Assembly */}
           <div style={{

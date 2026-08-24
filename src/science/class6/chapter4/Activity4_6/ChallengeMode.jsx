@@ -1,34 +1,46 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Star, ArrowRight, HelpCircle, CheckCircle2, XCircle, RotateCcw, Trophy } from 'lucide-react';
 
 const challenges = [
   {
     id: 1,
     title: "Situation 1",
-    scenario: "You bring the North Pole of Magnet A near the North Pole of Magnet B.",
-    question: "Will the compass needle...",
-    options: ["Move towards", "Move away", "Stay still"],
-    correctAnswer: "Move away",
-    explanation: "Like poles repel! The North Pole repels another North Pole."
+    scenario: "You bring the North Pole of a magnet above the line (near the top/North of the compass).",
+    question: "Which compass needle will point towards the North magnet?",
+    options: [
+      "South (Blue) needle points towards it",
+      "North (Red) needle points towards it",
+      "Neither needle moves"
+    ],
+    correctAnswer: "South (Blue) needle points towards it",
+    explanation: "Opposite poles attract! The North magnet attracts the South (Blue) needle and repels the North (Red) needle away."
   },
   {
     id: 2,
     title: "Situation 2",
-    scenario: "You bring the South Pole of a magnet near the North Pole of a compass.",
-    question: "Will the compass needle...",
-    options: ["Move towards", "Move away", "Stay still"],
-    correctAnswer: "Move towards",
-    explanation: "Unlike poles attract! The South Pole attracts the North Pole."
+    scenario: "You bring the South Pole of a magnet above the line (near the top/North of the compass).",
+    question: "Which compass needle will point towards the South magnet?",
+    options: [
+      "North (Red) needle points towards it",
+      "South (Blue) needle points towards it",
+      "Both needles move away"
+    ],
+    correctAnswer: "North (Red) needle points towards it",
+    explanation: "Opposite poles attract! The South magnet attracts the North (Red) needle and repels the South (Blue) needle away."
   },
   {
     id: 3,
     title: "Situation 3",
     scenario: "You move all magnets far away from the compass.",
-    question: "Will the compass needle...",
-    options: ["Move towards", "Move away", "Stay still"],
-    correctAnswer: "Stay still",
-    explanation: "Without a nearby strong magnet, the compass needle will simply point North due to Earth's magnetic field and stay still relative to local objects."
+    question: "How will the compass needle rest naturally?",
+    options: [
+      "North (Red) needle points North (0°)",
+      "South (Blue) needle points North (0°)",
+      "It keeps spinning continuously"
+    ],
+    correctAnswer: "North (Red) needle points North (0°)",
+    explanation: "Without any nearby magnets, the compass aligns with Earth's magnetic field, and the red North needle rests at North (0°)."
   }
 ];
 
@@ -117,7 +129,7 @@ export default function ChallengeMode({ onComplete }) {
                 fontSize: '1rem', 
                 display: 'flex', 
                 alignItems: 'center', 
-                justifyContent: 'center',
+                justifyContent: 'center', 
                 gap: '0.5rem',
                 background: '#ffffff',
                 border: '2px solid #3b82f6',
@@ -138,7 +150,7 @@ export default function ChallengeMode({ onComplete }) {
                   fontSize: '1rem', 
                   display: 'flex', 
                   alignItems: 'center', 
-                  justifyContent: 'center',
+                  justifyContent: 'center', 
                   gap: '0.5rem',
                   background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
                   color: '#ffffff',
@@ -171,20 +183,18 @@ export default function ChallengeMode({ onComplete }) {
       boxSizing: 'border-box' 
     }}>
       <div style={{ width: '100%', maxWidth: '1050px' }}>
-        {/* Top Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', padding: '0 0.5rem' }}>
-          <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 700 }}>
+          <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', fontSize: '1.1rem', fontWeight: 700 }}>
             <Trophy size={20} style={{ color: '#facc15' }} /> Predict the Outcome
           </h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', padding: '0.35rem 0.85rem', borderRadius: '20px', border: '1px solid #cbd5e1' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#ffffff', padding: '0.35rem 0.85rem', borderRadius: '20px', border: '1px solid #cbd5e1' }}>
             <Star size={16} fill="#facc15" color="#facc15" /> 
             <span style={{ fontWeight: '800', fontSize: '0.9rem', color: '#1e3a8a' }}>{stars} Stars</span>
           </div>
         </div>
 
-        {/* Card Container */}
-        <div className="glass-panel" style={{ 
-          background: 'var(--surface)', 
+        <div style={{ 
+          background: '#ffffff', 
           border: '2px solid #818cf8',
           borderRadius: '20px', 
           padding: '1.75rem 2.5rem', 
@@ -199,21 +209,21 @@ export default function ChallengeMode({ onComplete }) {
             {c.title}
           </div>
           
-          <p style={{ fontSize: '1.2rem', lineHeight: '1.5', margin: 0, padding: '1rem 1.25rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '12px', borderLeft: '5px solid #6366f1', color: 'var(--text-heading)', fontWeight: 600 }}>
+          <p style={{ fontSize: '1.2rem', lineHeight: '1.5', margin: 0, padding: '1rem 1.25rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '12px', borderLeft: '5px solid #6366f1', color: '#1e293b', fontWeight: 600 }}>
             {c.scenario}
           </p>
 
-          <div style={{ fontWeight: '700', fontSize: '1.1rem', color: 'var(--text-heading)' }}>
+          <div style={{ fontWeight: '700', fontSize: '1.1rem', color: '#1e293b' }}>
             <HelpCircle size={18} style={{ display: 'inline', verticalAlign: 'text-bottom', marginRight: '0.5rem', color: '#6366f1' }}/> 
             {c.question}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.85rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.85rem' }}>
             {c.options.map((option, idx) => {
               const isSelected = selectedOption === option;
               const isCorrect = option === c.correctAnswer;
               
-              let bg = 'var(--bg)';
+              let bg = '#f8fafc';
               let borderColor = '#cbd5e1';
               let icon = null;
 
@@ -242,7 +252,7 @@ export default function ChallengeMode({ onComplete }) {
                     borderRadius: '12px',
                     background: bg,
                     border: `2px solid ${borderColor}`,
-                    color: 'var(--text)',
+                    color: '#0f172a',
                     fontSize: '1.05rem',
                     fontWeight: '600',
                     cursor: showResult ? 'default' : 'pointer',
@@ -271,7 +281,7 @@ export default function ChallengeMode({ onComplete }) {
                 <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '1.1rem', fontWeight: 800, color: selectedOption === c.correctAnswer ? '#10b981' : '#ef4444' }}>
                   {selectedOption === c.correctAnswer ? 'Brilliant!' : 'Not quite.'}
                 </h4>
-                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.5' }}>
+                <p style={{ margin: 0, color: '#475569', fontSize: '1.05rem', lineHeight: '1.5' }}>
                   {c.explanation}
                 </p>
               </div>

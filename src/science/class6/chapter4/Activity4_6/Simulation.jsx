@@ -7,117 +7,192 @@ import {
   CheckCircle2, 
   Sparkles,
   Move,
-  RefreshCw
+  Layers,
+  Info
 } from 'lucide-react';
+import ExactCompass from '../components/ExactCompass.jsx';
+
+const getBearingName = (deg) => {
+  const norm = ((deg % 360) + 360) % 360;
+  if (norm >= 337.5 || norm < 22.5) return 'N';
+  if (norm >= 22.5 && norm < 67.5) return 'NE';
+  if (norm >= 67.5 && norm < 112.5) return 'E';
+  if (norm >= 112.5 && norm < 157.5) return 'SE';
+  if (norm >= 157.5 && norm < 202.5) return 'S';
+  if (norm >= 202.5 && norm < 247.5) return 'SW';
+  if (norm >= 247.5 && norm < 292.5) return 'W';
+  if (norm >= 292.5 && norm < 337.5) return 'NW';
+  return '';
+};
 
 const STEPS = [
   {
     step: 1,
-    title: "Step 1: Workspace Setup",
-    desc: "Take the magnetic compass and bar magnet. Drag the magnet into the central workspace near the compass."
+    title: "Step 1: Normal Compass",
+    desc: "Look at the compass. With no magnets nearby, the red North needle rests pointing straight to North (0°)."
   },
   {
     step: 2,
-    title: "Step 2: Observe Earth's Polarity",
-    desc: "With the magnet placed at a distance, observe the compass needle pointing naturally towards North (0°)."
+    title: "Step 2: Drag the 🔴 North Magnet",
+    desc: "Drag the 🔴 North Magnet near the compass. Like poles repel, so the red North needle pushes away from it!"
   },
   {
     step: 3,
-    title: "Step 3: Repulsion Test (Like Poles)",
-    desc: "Bring the magnet's North Pole close to the compass North needle. Notice how like poles repel!"
+    title: "Step 3: Drag the 🔵 South Magnet",
+    desc: "Drag the 🔵 South Magnet near the compass. Opposite poles attract, so the red North needle pulls directly towards it!"
   },
   {
     step: 4,
-    title: "Step 4: Attraction Test (Unlike Poles)",
-    desc: "Flip the magnet to bring the South Pole near the compass North needle. Notice how unlike poles attract!"
+    title: "Step 4: Explore Both Magnets",
+    desc: "Move both magnets around the compass. Watch the needle find a balance between being pushed by North and pulled by South!"
   }
 ];
 
 export default function Simulation({ onComplete, onNext }) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [magnetFlipped, setMagnetFlipped] = useState(false); // false: N on left/top, true: S on left/top
   const [compassAngle, setCompassAngle] = useState(0);
-  const [distance, setDistance] = useState(400);
+  const [northDist, setNorthDist] = useState(400);
+  const [southDist, setSouthDist] = useState(400);
+  const [testedNorth, setTestedNorth] = useState(false);
+  const [testedSouth, setTestedSouth] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
   const containerRef = useRef(null);
+  const workspaceRef = useRef(null);
   const compassRef = useRef(null);
-  const magnetRef = useRef(null);
+  const northMagnetRef = useRef(null);
+  const southMagnetRef = useRef(null);
 
-  // Motion values for magnet drag position
-  const magnetX = useMotionValue(220);
-  const magnetY = useMotionValue(0);
+  // Motion values for separate North Magnet position (starting in right tray)
+  const northMagX = useMotionValue(260);
+  const northMagY = useMotionValue(-110);
 
-  // Compute needle deflection based on magnet position and orientation
+  // Motion values for separate South Magnet position (starting in right tray)
+  const southMagX = useMotionValue(260);
+  const southMagY = useMotionValue(110);
+
+  // Vector Physics: Compute compass deflection based on live magnet positions
+  // Polarity Rules:
+  // - North magnet repels North needle tip (pushes it away) and attracts South needle tip (pulls it closer)
+  // - South magnet attracts North needle tip (pulls it closer) and repels South needle tip (pushes it away)
   const updateCompassPhysics = () => {
-    if (!compassRef.current || !magnetRef.current) return;
+    // Relative coordinates directly from motion values (center of workspace is 0,0)
+    const nX = northMagX.get();
+    const nY = northMagY.get();
+    const sX = southMagX.get();
+    const sY = southMagY.get();
 
-    const cRect = compassRef.current.getBoundingClientRect();
-    const mRect = magnetRef.current.getBoundingClientRect();
+    // Constants for Inverse-Square Law Physics:
+    // Earth's natural uniform geomagnetic field pointing North (0°: vector (0, -1) in screen space)
+    const B_EARTH = 1.0;
+    const K_MAGNETIC = 550000; // Strong magnetic coupling constant
+    const EPSILON_SQ = 2500;   // Softening parameter to prevent singularity
+    const R_MAX = 420;         // Interaction cutoff radius in pixels
 
-    const compassCenter = {
-      x: cRect.left + cRect.width / 2,
-      y: cRect.top + cRect.height / 2
-    };
+    let fx = 0;
+    let fy = -B_EARTH; // Start with Earth's natural North vector
 
-    const magnetCenter = {
-      x: mRect.left + mRect.width / 2,
-      y: mRect.top + mRect.height / 2
-    };
+    // 1. North Magnet Contribution (Repels North needle, attracts South needle)
+    const distN = Math.sqrt(nX * nX + nY * nY);
+    setNorthDist(distN);
 
-    const dx = magnetCenter.x - compassCenter.x;
-    const dy = magnetCenter.y - compassCenter.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    setDistance(dist);
+    if (distN < R_MAX) {
+      const windowFalloff = Math.max(0, 1 - distN / R_MAX);
+      const forceMag = (K_MAGNETIC / (distN * distN + EPSILON_SQ)) * windowFalloff * windowFalloff;
 
-    // If magnet is far, natural North (0 deg)
-    if (dist > 350) {
-      setCompassAngle(0);
-      return;
+      // North repels North needle -> force vector points AWAY from North magnet (nX, nY)
+      const unitX = -nX / distN;
+      const unitY = -nY / distN;
+
+      fx += unitX * forceMag;
+      fy += unitY * forceMag;
     }
 
-    // Angle from compass to magnet
-    let angleToMagnet = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+    // 2. South Magnet Contribution (Attracts North needle, repels South needle)
+    const distS = Math.sqrt(sX * sX + sY * sY);
+    setSouthDist(distS);
 
-    // Magnet field influence
-    // If North facing compass: Repels North needle (points opposite: +180 deg)
-    // If South facing compass: Attracts North needle (points directly towards magnet)
-    let targetAngle = magnetFlipped ? angleToMagnet : angleToMagnet + 180;
-    
-    // Proportional influence based on distance
-    const influence = Math.max(0, Math.min(1, (350 - dist) / 200));
-    const finalAngle = targetAngle * influence;
+    if (distS < R_MAX) {
+      const windowFalloff = Math.max(0, 1 - distS / R_MAX);
+      const forceMag = (K_MAGNETIC / (distS * distS + EPSILON_SQ)) * windowFalloff * windowFalloff;
 
-    setCompassAngle(finalAngle);
+      // South attracts North needle -> force vector points TOWARDS South magnet (sX, sY)
+      const unitX = sX / distS;
+      const unitY = sY / distS;
+
+      fx += unitX * forceMag;
+      fy += unitY * forceMag;
+    }
+
+    // Resulting Compass Angle (0 deg = (0, -1) screen up)
+    // Angle in radians from -Y axis clockwise: Math.atan2(fx, -fy)
+    const targetRad = Math.atan2(fx, -fy);
+    const targetDeg = targetRad * (180 / Math.PI);
+    setCompassAngle(targetDeg);
 
     // Step progression checks
-    if (currentStep === 1 && dist < 300) {
-      setCurrentStep(2);
-    } else if (currentStep === 2 && dist < 180 && !magnetFlipped) {
-      setCurrentStep(3);
-    } else if (currentStep === 3 && dist < 180 && magnetFlipped) {
-      setCurrentStep(4);
+    let nTested = testedNorth;
+    let sTested = testedSouth;
+
+    if (distN < 260 && !testedNorth) {
+      setTestedNorth(true);
+      nTested = true;
+      if (currentStep === 2 || currentStep === 1) setCurrentStep(3);
+    }
+
+    if (distS < 260 && !testedSouth) {
+      setTestedSouth(true);
+      sTested = true;
+      if (currentStep === 3 || currentStep === 2 || currentStep === 1) setCurrentStep(4);
+    }
+
+    if (nTested && sTested && !isCompleted) {
       setIsCompleted(true);
       if (onComplete) onComplete();
     }
   };
 
-  const handleFlipMagnet = () => {
-    setMagnetFlipped(!magnetFlipped);
-    if (currentStep === 3 && distance < 200) {
-      setCurrentStep(4);
-      setIsCompleted(true);
-      if (onComplete) onComplete();
-    }
-  };
+  // Subscribe to live motion values so compass reacts continuously on drag
+  useEffect(() => {
+    const unsubNX = northMagX.on('change', updateCompassPhysics);
+    const unsubNY = northMagY.on('change', updateCompassPhysics);
+    const unsubSX = southMagX.on('change', updateCompassPhysics);
+    const unsubSY = southMagY.on('change', updateCompassPhysics);
+
+    // Initial evaluation
+    updateCompassPhysics();
+
+    return () => {
+      unsubNX();
+      unsubNY();
+      unsubSX();
+      unsubSY();
+    };
+  }, [testedNorth, testedSouth, currentStep, isCompleted]);
 
   const handleReset = () => {
     setCurrentStep(1);
-    setMagnetFlipped(false);
-    setCompassAngle(0);
+    setTestedNorth(false);
+    setTestedSouth(false);
     setIsCompleted(false);
-    magnetX.set(220);
-    magnetY.set(0);
+    northMagX.set(260);
+    northMagY.set(-110);
+    southMagX.set(260);
+    southMagY.set(110);
+    setNorthDist(400);
+    setSouthDist(400);
+    setCompassAngle(0);
+  };
+
+  // Realign needle back to normal North and South by returning magnets to home
+  const handleRealignCompass = () => {
+    northMagX.set(260);
+    northMagY.set(-110);
+    southMagX.set(260);
+    southMagY.set(110);
+    setNorthDist(400);
+    setSouthDist(400);
+    setCompassAngle(0);
   };
 
   return (
@@ -127,7 +202,7 @@ export default function Simulation({ onComplete, onNext }) {
         width: '100%',
         height: '100%',
         display: 'grid',
-        gridTemplateColumns: '320px 1fr',
+        gridTemplateColumns: '360px 1fr',
         gap: '1rem',
         padding: '0.5rem',
         boxSizing: 'border-box',
@@ -136,49 +211,51 @@ export default function Simulation({ onComplete, onNext }) {
       }}
     >
       {/* Left Column: Activity Step Instructions */}
-      <div style={{
-        background: 'rgba(255, 255, 255, 0.92)',
+      <div className="custom-scroll" style={{
+        background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(12px)',
         borderRadius: '20px',
         border: '1.5px solid #A7F3D0',
-        padding: '1.25rem',
+        padding: '1.4rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         boxShadow: '0 8px 32px rgba(6, 78, 59, 0.08)',
-        zIndex: 10
+        zIndex: 10,
+        overflowY: 'auto'
       }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-            <CompassIcon size={22} color="#D97706" />
-            <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#064E3B', fontWeight: 900 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.1rem' }}>
+            <CompassIcon size={24} color="#D97706" />
+            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#064E3B', fontWeight: 900 }}>
               Activity 4.6 Steps
             </h3>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {STEPS.map((s) => {
               const isCurrent = currentStep === s.step;
-              const isPast = currentStep > s.step;
+              const isPast = currentStep > s.step || (s.step === 2 && testedNorth) || (s.step === 3 && testedSouth);
 
               return (
                 <div
                   key={s.step}
                   style={{
-                    padding: '0.75rem 0.9rem',
+                    padding: '0.9rem 1.05rem',
                     borderRadius: '14px',
                     background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
-                    border: `1.5px solid ${isCurrent ? '#F59E0B' : isPast ? '#10B981' : '#E2E8F0'}`,
+                    border: `2px solid ${isCurrent ? '#F59E0B' : isPast ? '#10B981' : '#E2E8F0'}`,
+                    boxShadow: isCurrent ? '0 4px 12px rgba(245, 158, 11, 0.15)' : 'none',
                     transition: 'all 0.3s ease'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontWeight: 800, fontSize: '0.85rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#64748B' }}>
+                    <span style={{ fontWeight: 800, fontSize: '0.98rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#475569' }}>
                       {s.title}
                     </span>
-                    {isPast && <CheckCircle2 size={16} color="#10B981" />}
+                    {isPast && <CheckCircle2 size={18} color="#10B981" />}
                   </div>
-                  <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.75rem', color: '#334155', lineHeight: 1.4 }}>
+                  <p style={{ margin: '0.45rem 0 0 0', fontSize: '0.88rem', color: '#1E293B', lineHeight: 1.5, fontWeight: 500 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -188,66 +265,71 @@ export default function Simulation({ onComplete, onNext }) {
         </div>
 
         {/* Step Actions & Navigation */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '1.2rem' }}>
           {isCompleted ? (
             <button
               onClick={onNext}
               style={{
                 width: '100%',
-                padding: '0.8rem',
-                borderRadius: '12px',
+                padding: '0.95rem',
+                borderRadius: '14px',
                 border: 'none',
                 background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
                 color: '#fff',
-                fontWeight: 800,
-                fontSize: '0.9rem',
+                fontWeight: 900,
+                fontSize: '1.05rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
-                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)'
+                boxShadow: '0 6px 20px rgba(16, 185, 129, 0.45)',
+                transition: 'all 0.25s ease'
               }}
             >
-              Proceed to Concept Check <ArrowRight size={16} />
+              Proceed to Concept Check <ArrowRight size={18} />
             </button>
           ) : (
             <button
               onClick={handleReset}
               style={{
                 width: '100%',
-                padding: '0.65rem',
+                padding: '0.75rem',
                 borderRadius: '12px',
                 border: '1.5px solid #CBD5E1',
                 background: '#FFFFFF',
-                color: '#475569',
+                color: '#334155',
                 fontWeight: 700,
-                fontSize: '0.8rem',
+                fontSize: '0.88rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.4rem'
+                gap: '0.45rem',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
               }}
             >
-              <RotateCcw size={14} /> Reset Experiment
+              <RotateCcw size={15} /> Reset Experiment
             </button>
           )}
         </div>
       </div>
 
       {/* Right Column: Nautical Sea Workspace */}
-      <div style={{
-        position: 'relative',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        border: '1.5px solid #A7F3D0',
-        background: 'radial-gradient(ellipse at center, #1E3A8A 0%, #0F172A 100%)',
-        boxShadow: 'inset 0 0 80px rgba(0,0,0,0.5), 0 8px 32px rgba(6, 78, 59, 0.08)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
+      <div 
+        ref={workspaceRef}
+        style={{
+          position: 'relative',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          border: '1.5px solid #A7F3D0',
+          background: 'radial-gradient(ellipse at center, #1E3A8A 0%, #0F172A 100%)',
+          boxShadow: 'inset 0 0 80px rgba(0,0,0,0.5), 0 8px 32px rgba(6, 78, 59, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
         {/* Deep Ocean Waves Grid Pattern */}
         <div style={{
           position: 'absolute',
@@ -262,20 +344,46 @@ export default function Simulation({ onComplete, onNext }) {
           position: 'absolute',
           top: '1rem',
           left: '1rem',
-          background: 'rgba(15, 23, 42, 0.85)',
-          border: '1px solid #D97706',
-          borderRadius: '20px',
-          padding: '0.35rem 0.85rem',
+          background: 'rgba(255, 253, 245, 0.95)',
+          border: '1.5px solid #EADBB6',
+          borderRadius: '16px',
+          padding: '0.4rem 0.95rem',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem',
-          color: '#FCD34D',
-          fontSize: '0.8rem',
+          gap: '0.6rem',
+          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)',
+          zIndex: 20
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#78350F', fontSize: '0.85rem', fontWeight: 900 }}>
+            <CompassIcon size={17} color="#D97706" />
+            <span>BEARING: <strong style={{ color: '#C2410C' }}>{Math.round((compassAngle % 360 + 360) % 360)}°</strong> {getBearingName(compassAngle)}</span>
+          </div>
+        </div>
+
+        {/* Magnet Tray Legend Info */}
+        <div style={{
+          position: 'absolute',
+          top: '1rem',
+          right: '1rem',
+          background: 'rgba(15, 23, 42, 0.88)',
+          border: '1.5px solid rgba(56, 189, 248, 0.35)',
+          borderRadius: '16px',
+          padding: '0.4rem 0.85rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          fontSize: '0.78rem',
+          color: '#E2E8F0',
           fontWeight: 800,
           zIndex: 20
         }}>
-          <CompassIcon size={16} color="#F59E0B" />
-          BEARING: {Math.round((compassAngle % 360 + 360) % 360)}° {Math.abs(compassAngle) < 15 ? 'NORTH' : ''}
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#F87171' }}>
+            🔴 North
+          </span>
+          <span style={{ color: '#64748B' }}>|</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#60A5FA' }}>
+            🔵 South
+          </span>
         </div>
 
         {/* Workspace Central Arena */}
@@ -288,16 +396,10 @@ export default function Simulation({ onComplete, onNext }) {
           justifyContent: 'center'
         }}>
           
-          {/* Golden Vintage Brass Compass Display */}
+          {/* Exact Vintage Brass Compass Display (Click center to return needle to normal North & South) */}
           <div
             ref={compassRef}
             style={{
-              width: '280px',
-              height: '280px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, #FFFBEB 0%, #FEF3C7 65%, #DEB887 100%)',
-              border: '12px solid #854D0E',
-              boxShadow: '0 0 0 6px #CA8A04, 0 16px 40px rgba(0,0,0,0.6), inset 0 4px 12px rgba(0,0,0,0.3)',
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
@@ -305,80 +407,24 @@ export default function Simulation({ onComplete, onNext }) {
               userSelect: 'none'
             }}
           >
-            {/* Compass Cardinal Points */}
-            <span style={{ position: 'absolute', top: 10, fontWeight: 900, color: '#B45309', fontSize: '1.2rem' }}>N</span>
-            <span style={{ position: 'absolute', right: 14, fontWeight: 900, color: '#1E3A8A', fontSize: '1.1rem' }}>E</span>
-            <span style={{ position: 'absolute', bottom: 10, fontWeight: 900, color: '#1E3A8A', fontSize: '1.1rem' }}>S</span>
-            <span style={{ position: 'absolute', left: 14, fontWeight: 900, color: '#1E3A8A', fontSize: '1.1rem' }}>W</span>
-
-            {/* Inner Brass Ring */}
-            <div style={{
-              width: '230px',
-              height: '230px',
-              borderRadius: '50%',
-              border: '2px dashed #B45309',
-              position: 'absolute',
-              opacity: 0.5
-            }} />
-
-            {/* Rotating Needle */}
-            <motion.div
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-              animate={{ rotate: compassAngle }}
-              transition={{ type: 'spring', stiffness: 90, damping: 14 }}
-            >
-              {/* North Needle (Red) */}
-              <div style={{
-                position: 'absolute',
-                top: '26px',
-                width: 0,
-                height: 0,
-                borderLeft: '11px solid transparent',
-                borderRight: '11px solid transparent',
-                borderBottom: '114px solid #DC2626',
-                filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
-              }} />
-
-              {/* South Needle (Dark Blue) */}
-              <div style={{
-                position: 'absolute',
-                bottom: '26px',
-                width: 0,
-                height: 0,
-                borderLeft: '11px solid transparent',
-                borderRight: '11px solid transparent',
-                borderTop: '114px solid #1E293B',
-                filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
-              }} />
-
-              {/* Center Golden Pin Cap */}
-              <div style={{
-                width: '24px',
-                height: '24px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, #FDE047 0%, #D97706 100%)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
-                border: '2px solid #78350F',
-                zIndex: 5
-              }} />
-            </motion.div>
+            <ExactCompass 
+              rotation={compassAngle} 
+              size={320} 
+              onCenterClick={handleRealignCompass} 
+              onClick={handleRealignCompass} 
+            />
           </div>
 
-          {/* Interactive 3D Draggable Bar Magnet */}
+          {/* 🔴 SEPARATE MAGNET 1: NORTH POLE MAGNET (Solid Red with "North") */}
           <motion.div
-            ref={magnetRef}
+            ref={northMagnetRef}
             drag
-            dragConstraints={containerRef}
+            dragConstraints={workspaceRef}
+            dragElastic={0}
+            dragMomentum={false}
             style={{
-              x: magnetX,
-              y: magnetY,
+              x: northMagX,
+              y: northMagY,
               position: 'absolute',
               cursor: 'grab',
               zIndex: 30
@@ -389,86 +435,104 @@ export default function Simulation({ onComplete, onNext }) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: '0.4rem'
+              gap: '0.35rem'
             }}>
-              {/* Magnet Bar Body */}
+              {/* Solid Red Magnet Bar Body with "North" */}
               <div style={{
-                width: '170px',
-                height: '46px',
+                width: '160px',
+                height: '44px',
                 borderRadius: '10px',
+                background: 'linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)',
                 display: 'flex',
-                boxShadow: '0 12px 28px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.3)',
-                overflow: 'hidden',
-                border: '2px solid #334155',
-                position: 'relative'
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 12px 28px rgba(0,0,0,0.5), 0 0 20px rgba(239, 68, 68, 0.45)',
+                border: '2px solid #FCA5A5',
+                color: '#FFFFFF',
+                fontWeight: 900,
+                fontSize: '1.15rem',
+                letterSpacing: '2px',
+                textTransform: 'uppercase',
+                textShadow: '0 2px 4px rgba(0,0,0,0.6)',
+                userSelect: 'none'
               }}>
-                {/* Left Half Pole */}
-                <div style={{
-                  flex: 1,
-                  background: !magnetFlipped ? 'linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)' : 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#FFFFFF',
-                  fontWeight: 900,
-                  fontSize: '1.1rem',
-                  letterSpacing: '1px',
-                  textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                }}>
-                  {!magnetFlipped ? 'N' : 'S'}
-                </div>
-
-                {/* Right Half Pole */}
-                <div style={{
-                  flex: 1,
-                  background: !magnetFlipped ? 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)' : 'linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#FFFFFF',
-                  fontWeight: 900,
-                  fontSize: '1.1rem',
-                  letterSpacing: '1px',
-                  textShadow: '0 1px 3px rgba(0,0,0,0.4)'
-                }}>
-                  {!magnetFlipped ? 'S' : 'N'}
-                </div>
+                North
               </div>
 
-              {/* Magnet Floating Controls */}
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
-                <button
-                  onClick={handleFlipMagnet}
-                  style={{
-                    padding: '0.3rem 0.6rem',
-                    fontSize: '0.75rem',
-                    fontWeight: 800,
-                    borderRadius: '8px',
-                    border: '1px solid #64748B',
-                    background: '#0F172A',
-                    color: '#F8FAFC',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.3rem',
-                    boxShadow: '0 4px 10px rgba(0,0,0,0.3)'
-                  }}
-                >
-                  <RefreshCw size={12} /> Flip Poles
-                </button>
-                <div style={{
-                  padding: '0.3rem 0.6rem',
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  borderRadius: '8px',
-                  background: 'rgba(15, 23, 42, 0.75)',
-                  color: '#94A3B8',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.2rem'
-                }}>
-                  <Move size={12} /> Drag me
-                </div>
+              {/* Drag Prompt */}
+              <div style={{
+                padding: '0.2rem 0.5rem',
+                fontSize: '0.68rem',
+                fontWeight: 700,
+                borderRadius: '6px',
+                background: 'rgba(15, 23, 42, 0.75)',
+                color: '#CBD5E1',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.2rem'
+              }}>
+                <Move size={11} /> Drag North Pole
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 🔵 SEPARATE MAGNET 2: SOUTH POLE MAGNET (Solid Blue with "South") */}
+          <motion.div
+            ref={southMagnetRef}
+            drag
+            dragConstraints={workspaceRef}
+            dragElastic={0}
+            dragMomentum={false}
+            style={{
+              x: southMagX,
+              y: southMagY,
+              position: 'absolute',
+              cursor: 'grab',
+              zIndex: 30
+            }}
+            onDrag={updateCompassPhysics}
+          >
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.35rem'
+            }}>
+              {/* Solid Blue Magnet Bar Body with "South" */}
+              <div style={{
+                width: '160px',
+                height: '44px',
+                borderRadius: '10px',
+                background: 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 12px 28px rgba(0,0,0,0.5), 0 0 20px rgba(59, 130, 246, 0.45)',
+                border: '2px solid #93C5FD',
+                color: '#FFFFFF',
+                fontWeight: 900,
+                fontSize: '1.15rem',
+                letterSpacing: '2px',
+                textTransform: 'uppercase',
+                textShadow: '0 2px 4px rgba(0,0,0,0.6)',
+                userSelect: 'none'
+              }}>
+                South
+              </div>
+
+              {/* Drag Prompt */}
+              <div style={{
+                padding: '0.2rem 0.5rem',
+                fontSize: '0.68rem',
+                fontWeight: 700,
+                borderRadius: '6px',
+                background: 'rgba(15, 23, 42, 0.75)',
+                color: '#CBD5E1',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.2rem'
+              }}>
+                <Move size={11} /> Drag South Pole
               </div>
             </div>
           </motion.div>
