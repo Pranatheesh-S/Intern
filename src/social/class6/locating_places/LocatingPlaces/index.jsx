@@ -10,6 +10,7 @@ import MapSymbols from './components/MapSymbols';
 import CoordinatesPage from './components/CoordinatesPage';
 import TimeZonesPage from './components/TimeZonesPage';
 import ExploreIndiaActivity from './components/LostInTheCity/ExploreIndiaActivity';
+import MiscellaneousPage from './components/MiscellaneousPage';
 
 export default function LocatingPlacesActivity({ onBackToDashboard }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -201,7 +202,10 @@ export default function LocatingPlacesActivity({ onBackToDashboard }) {
               <CoordinatesPage onNextActivity={() => setCurrentStep(8)} onBack={() => setCurrentStep(6)} />
             )}
             {currentStep === 8 && (
-              <TimeZonesPage onNextActivity={handleBackToMainPage} onBack={() => setCurrentStep(7)} />
+              <TimeZonesPage onNextActivity={() => setCurrentStep(9)} onBack={() => setCurrentStep(7)} />
+            )}
+            {currentStep === 9 && (
+              <MiscellaneousPage onBackToDashboard={handleBackToMainPage} onBack={() => setCurrentStep(8)} />
             )}
           </div>
         </>

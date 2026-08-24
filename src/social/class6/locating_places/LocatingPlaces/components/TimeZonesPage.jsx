@@ -51,9 +51,9 @@ const TimeZonesGlobe = ({ step }) => {
   useFrame((state, delta) => {
     if (groupRef.current) {
       if (step === 1) {
-        groupRef.current.rotation.y -= delta * 0.2;
+        groupRef.current.rotation.y += delta * 0.2;
       } else if (step === 2) {
-         groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, -45 * (Math.PI / 180), 0.05);
+         groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, 45 * (Math.PI / 180), 0.05);
       }
     }
   });

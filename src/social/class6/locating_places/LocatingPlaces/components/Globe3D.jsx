@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { OrbitControls, Sphere, Line, useTexture, Html, Cylinder, Stars, Edges } from '@react-three/drei';
 import * as THREE from 'three';
+import { TextureLoader } from 'three';
 import worldMapUrl from './world-map.jpg';
 
 const Comet = ({ currentTask }) => {
@@ -56,7 +57,160 @@ const Comet = ({ currentTask }) => {
   );
 };
 
-const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
+const AndromedaGalaxy = ({ currentTask }) => {
+  const galaxyRef = useRef();
+  const galaxyMap = useLoader(TextureLoader, '/src/assets/andromeda_galaxy.jpg');
+  
+  if (currentTask !== 5) return null;
+
+  return (
+    <group ref={galaxyRef} position={[-12, 6, -35]} rotation={[0, 0.3, 0.5]}>
+      <mesh>
+        {/* Made the galaxy smaller and static per user request */}
+        <planeGeometry args={[25, 25]} />
+        <meshBasicMaterial 
+          map={galaxyMap} 
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          transparent={true}
+          opacity={0.85}
+        />
+      </mesh>
+    </group>
+  );
+};
+
+const Asteroid = ({ currentTask }) => {
+  const asteroidRef = useRef();
+  const geometryRef = useRef();
+  const asteroidMap = useLoader(TextureLoader, '/src/assets/moon_texture.jpg');
+  
+  useEffect(() => {
+    if (geometryRef.current) {
+      const positions = geometryRef.current.attributes.position;
+      for (let i = 0; i < positions.count; i++) {
+        const vec = new THREE.Vector3().fromBufferAttribute(positions, i);
+        
+        // Procedural noise for craters and bumps
+        const noise = Math.sin(vec.x * 5) * Math.cos(vec.y * 5) * Math.sin(vec.z * 5);
+        // Large structural distortion to make it look like a broken rock fragment
+        const structuralX = Math.sin(vec.x * 2.5) * 0.25;
+        const structuralY = Math.cos(vec.y * 2.5) * 0.25;
+        
+        // Combine noise, large distortions, and a tiny bit of random grit
+        const scalar = 1 + (noise * 0.12) + structuralX + structuralY + ((Math.random() - 0.5) * 0.04);
+        
+        positions.setXYZ(i, vec.x * scalar, vec.y * scalar, vec.z * scalar);
+      }
+      geometryRef.current.computeVertexNormals();
+    }
+  }, []);
+
+  useFrame((state, delta) => {
+    if (currentTask !== 1 || !asteroidRef.current) return;
+    
+    // Cycle every 15 seconds
+    const time = state.clock.getElapsedTime();
+    const t = (time % 15) / 15;
+    
+    // Pass from bottom-left-far to top-right-mid
+    const startX = -25; const startY = -15; const startZ = -12;
+    const endX = 25; const endY = 15; const endZ = 2;
+    
+    asteroidRef.current.position.x = THREE.MathUtils.lerp(startX, endX, t);
+    asteroidRef.current.position.y = THREE.MathUtils.lerp(startY, endY, t);
+    asteroidRef.current.position.z = THREE.MathUtils.lerp(startZ, endZ, t);
+    
+    // Realistic tumbling motion
+    asteroidRef.current.rotation.x += delta * 0.4;
+    asteroidRef.current.rotation.y += delta * 0.2;
+    asteroidRef.current.rotation.z += delta * 0.3;
+  });
+
+  if (currentTask !== 1) return null;
+
+  return (
+    <group ref={asteroidRef}>
+      {/* Base scaling to make it oblong */}
+      <mesh scale={[1.8, 1.2, 1.5]}>
+        {/* High detail icosahedron so we can deform the vertices */}
+        <icosahedronGeometry ref={geometryRef} args={[1, 16]} />
+        <meshStandardMaterial 
+          map={asteroidMap} 
+          color="#8c7b6c" 
+          emissive="#2a221b"
+          roughness={1.0} 
+          metalness={0.2} 
+        />
+      </mesh>
+    </group>
+  );
+};
+
+const OrbitingMoon = ({ visible }) => {
+  const moonGroupRef = useRef();
+  const moonMeshRef = useRef();
+  const moonMap = useLoader(TextureLoader, '/src/assets/moon_texture.jpg');
+  
+  useFrame((state) => {
+    if (!visible) return;
+    if (moonGroupRef.current) {
+      // Slower orbit so it stays in frame
+      moonGroupRef.current.rotation.y = state.clock.elapsedTime * 0.03;
+      moonGroupRef.current.rotation.z = -Math.PI * 0.1; 
+      moonGroupRef.current.rotation.x = Math.PI * 0.05;
+    }
+    if (moonMeshRef.current) {
+      moonMeshRef.current.rotation.y = state.clock.elapsedTime * 0.05;
+    }
+  });
+
+  if (!visible) return null;
+
+  return (
+    <group ref={moonGroupRef}>
+      {/* Start the moon on the LEFT side of the screen (away from the text panel) */}
+      <group rotation={[0, Math.PI * 0.75, 0]}>
+        <mesh ref={moonMeshRef} position={[5, 1.5, 0]}>
+          <sphereGeometry args={[1.3, 64, 64]} />
+          <meshStandardMaterial map={moonMap} color="#ffffff" roughness={0.9} metalness={0.0} />
+        </mesh>
+      </group>
+    </group>
+  );
+};
+
+const FadingLabel = ({ pos, color, text }) => {
+  const groupRef = useRef();
+  const divRef = useRef();
+  
+  useFrame((state) => {
+    if (groupRef.current && divRef.current) {
+      const worldPos = new THREE.Vector3();
+      groupRef.current.getWorldPosition(worldPos);
+      const cameraDir = state.camera.position.clone().normalize();
+      const labelNormal = worldPos.clone().normalize();
+      const dot = labelNormal.dot(cameraDir);
+      
+      let opacity = (dot - 0.3) / 0.4;
+      opacity = Math.max(0, Math.min(1, opacity));
+      
+      divRef.current.style.opacity = opacity;
+    }
+  });
+
+  return (
+    <group ref={groupRef} position={pos}>
+      <Html center style={{ pointerEvents: 'none' }}>
+        <div ref={divRef} style={{ color, fontSize: '14px', fontWeight: '900', textShadow: '0 2px 6px rgba(0,0,0,1)', letterSpacing: '0.5px', whiteSpace: 'nowrap', transition: 'opacity 0.1s' }}>
+          {text}
+        </div>
+      </Html>
+    </group>
+  );
+};
+
+const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon, disableMoon }) => {
   const globeRef = useRef();
   
   const colorMap = useTexture(worldMapUrl);
@@ -70,9 +224,13 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
 
   useFrame((state, delta) => {
     if (globeRef.current) {
-      if (currentTask >= 11 && currentTask <= 14) {
-        // Lock rotation exactly so the cuts align perfectly with the camera
+      if (currentTask === 7) {
+        // Lock rotation exactly so the labels align perfectly with the camera
+        // For Task 7: Math.PI puts 90° center.
         globeRef.current.rotation.set(0, Math.PI, 0);
+      } else if (currentTask >= 11 && currentTask <= 14) {
+        // Lock rotation for hemisphere cuts so Prime Meridian splits exactly down the middle
+        globeRef.current.rotation.set(0, 0, 0);
       } else {
         // Gentle, slow auto-rotation
         globeRef.current.rotation.y += delta * 0.08;
@@ -108,12 +266,12 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
     return points;
   };
 
-  const getPosFromLatLng = (lat, lon) => {
+  const getPosFromLatLng = (lat, lon, rMult = 1.02) => {
     const radLat = lat * Math.PI / 180;
     const radLon = (lon + 90) * Math.PI / 180;
-    const x = radius * 1.02 * Math.cos(radLat) * Math.sin(radLon);
-    const y = radius * 1.02 * Math.sin(radLat);
-    const z = radius * 1.02 * Math.cos(radLat) * Math.cos(radLon);
+    const x = radius * rMult * Math.cos(radLat) * Math.sin(radLon);
+    const y = radius * rMult * Math.sin(radLat);
+    const z = radius * rMult * Math.cos(radLat) * Math.cos(radLon);
     return new THREE.Vector3(x, y, z);
   };
   
@@ -134,7 +292,7 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
   };
 
   return (
-    <group ref={globeRef} rotation={[0, Math.PI, 0]}>
+    <group ref={globeRef} rotation={[0, currentTask === 3 ? -Math.PI / 2 : Math.PI, 0]}>
       {/* Base Globe */}
       {(currentTask < 11 || currentTask === 16) && (
         <Sphere args={[radius, 64, 64]}>
@@ -166,6 +324,8 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
       {(currentTask === 3 || currentTask === 6 || currentTask === 10 || currentTask === 16) && (
         <Line points={createLongitudeLine(180)} color="#60a5fa" lineWidth={6} transparent opacity={0.7} />
       )}
+
+
 
       {/* Task 4: Axis and Poles */}
       {currentTask === 4 && (
@@ -200,7 +360,7 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
           {[{lat: 90, label: "90°N"}, {lat: 60, label: "60°N"}, {lat: 30, label: "30°N"}, 
             {lat: 0, label: "0°"}, 
             {lat: -30, label: "30°S"}, {lat: -60, label: "60°S"}, {lat: -90, label: "90°S"}].map((item, idx) => (
-            <Html key={`deg-${idx}`} position={getPosFromLatLng(item.lat, -90)} center style={{ pointerEvents: 'none' }}>
+            <Html key={`deg-${idx}`} position={getPosFromLatLng(item.lat, 90)} center style={{ pointerEvents: 'none' }}>
               <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fbbf24', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold' }}>
                 {item.label}
               </div>
@@ -209,21 +369,34 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
         </group>
       )}
 
+      {/* Task 3: Longitude Degree Labels */}
+      {currentTask === 3 && (
+        <group>
+          {[0, 30, 60, 90, 120, 150, 180, -150, -120, -90, -60, -30].map((lon, idx) => {
+            let label = lon === 0 ? "0°" : lon === 180 ? "180°" : lon > 0 ? `${lon}°E` : `${Math.abs(lon)}°W`;
+            let color = lon === 0 || lon === 180 ? "#ffffff" : lon > 0 ? "#f97316" : "#60a5fa";
+            return (
+              <FadingLabel key={`lon-lbl-${idx}`} pos={getPosFromLatLng(0, lon, 1.15)} color={color} text={label} />
+            );
+          })}
+        </group>
+      )}
+
       {/* Task 6: Orange Pins (NY, Delhi, Tokyo) */}
       {currentTask === 6 && (
         <group>
           <mesh position={getPosFromLatLng(40.7, -74)}><sphereGeometry args={[0.05, 16, 16]} /><meshBasicMaterial color="#f97316" /></mesh>
-          <Html position={getPosFromLatLng(40.7, -74)} center style={{ pointerEvents: 'none' }}>
+          <Html position={getPosFromLatLng(40.7, -74, 1.06)} center occlude style={{ pointerEvents: 'none' }}>
             <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #f97316', transform: 'translateY(-15px)', whiteSpace: 'nowrap' }}>New York (74°W)</div>
           </Html>
 
           <mesh position={getPosFromLatLng(28.6, 77.2)}><sphereGeometry args={[0.05, 16, 16]} /><meshBasicMaterial color="#f97316" /></mesh>
-          <Html position={getPosFromLatLng(28.6, 77.2)} center style={{ pointerEvents: 'none' }}>
+          <Html position={getPosFromLatLng(28.6, 77.2, 1.06)} center occlude style={{ pointerEvents: 'none' }}>
             <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #f97316', transform: 'translateY(-15px)', whiteSpace: 'nowrap' }}>Delhi (77°E)</div>
           </Html>
 
           <mesh position={getPosFromLatLng(35.6, 139.6)}><sphereGeometry args={[0.05, 16, 16]} /><meshBasicMaterial color="#f97316" /></mesh>
-          <Html position={getPosFromLatLng(35.6, 139.6)} center style={{ pointerEvents: 'none' }}>
+          <Html position={getPosFromLatLng(35.6, 139.6, 1.06)} center occlude style={{ pointerEvents: 'none' }}>
             <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid #f97316', transform: 'translateY(-15px)', whiteSpace: 'nowrap' }}>Tokyo (140°E)</div>
           </Html>
         </group>
@@ -288,8 +461,8 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
         
         return (
           <group>
-            <group position={[offset, 0, 0]}>
-              <Sphere args={[radius, 64, 64]}>
+            <group position={[-offset, 0, 0]}>
+              <Sphere args={[radius, 64, 64]} rotation={[0, -Math.PI / 2, 0]}>
                 <meshStandardMaterial map={colorMap} color="#ffffff" emissive="#0f172a" roughness={0.6} metalness={0.1} transparent={true} opacity={0.92} side={THREE.FrontSide} clippingPlanes={[westPlane]} />
               </Sphere>
               <mesh rotation={[0, Math.PI / 2, 0]}>
@@ -299,8 +472,8 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
               </mesh>
             </group>
 
-            <group position={[-offset, 0, 0]}>
-              <Sphere args={[radius, 64, 64]}>
+            <group position={[offset, 0, 0]}>
+              <Sphere args={[radius, 64, 64]} rotation={[0, -Math.PI / 2, 0]}>
                 <meshStandardMaterial map={colorMap} color="#ffffff" emissive="#0f172a" roughness={0.6} metalness={0.1} transparent={true} opacity={0.92} side={THREE.FrontSide} clippingPlanes={[eastPlane]} />
               </Sphere>
               <mesh rotation={[0, Math.PI / 2, 0]}>
@@ -322,7 +495,7 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
         return (
           <group>
             <group position={[0, offset, 0]}>
-              <Sphere args={[radius, 64, 64]}>
+              <Sphere args={[radius, 64, 64]} rotation={[0, -Math.PI / 2, 0]}>
                 <meshStandardMaterial map={colorMap} color="#ffffff" emissive="#0f172a" roughness={0.6} metalness={0.1} transparent={true} opacity={0.92} side={THREE.FrontSide} clippingPlanes={[northPlane]} />
               </Sphere>
               <mesh rotation={[Math.PI / 2, 0, 0]}>
@@ -333,7 +506,7 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
             </group>
 
             <group position={[0, -offset, 0]}>
-              <Sphere args={[radius, 64, 64]}>
+              <Sphere args={[radius, 64, 64]} rotation={[0, -Math.PI / 2, 0]}>
                 <meshStandardMaterial map={colorMap} color="#ffffff" emissive="#0f172a" roughness={0.6} metalness={0.1} transparent={true} opacity={0.92} side={THREE.FrontSide} clippingPlanes={[southPlane]} />
               </Sphere>
               <mesh rotation={[Math.PI / 2, 0, 0]}>
@@ -356,14 +529,15 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
 
         return (
           <group>
-            <group position={[offset, offset, 0]}>
-              <Sphere args={[radius, 64, 64]}>
+            {/* Top-Left: Northern + Western */}
+            <group position={[-offset, offset, 0]}>
+              <Sphere args={[radius, 64, 64]} rotation={[0, -Math.PI / 2, 0]}>
                 <meshStandardMaterial map={colorMap} color="#ffffff" emissive="#0f172a" roughness={0.6} metalness={0.1} transparent={true} opacity={0.92} side={THREE.FrontSide} clippingPlanes={[planeLeft, planeTop]} />
               </Sphere>
               <mesh rotation={[-Math.PI / 2, 0, 0]}>
-                <circleGeometry args={[radius, 32, -Math.PI / 2, Math.PI]} />
+                <circleGeometry args={[radius, 32, Math.PI / 2, Math.PI]} />
                 <meshBasicMaterial color="#0f172a" side={THREE.DoubleSide} polygonOffset={true} polygonOffsetFactor={1} polygonOffsetUnits={1} />
-                <Line points={getCircleOutline(radius, 32, -Math.PI / 2, Math.PI)} color="white" lineWidth={3} />
+                <Line points={getCircleOutline(radius, 32, Math.PI / 2, Math.PI)} color="white" lineWidth={3} />
               </mesh>
               <mesh rotation={[0, Math.PI / 2, 0]}>
                 <circleGeometry args={[radius, 32, 0, Math.PI]} />
@@ -372,14 +546,15 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
               </mesh>
             </group>
             
-            <group position={[-offset, offset, 0]}>
-              <Sphere args={[radius, 64, 64]}>
+            {/* Top-Right: Northern + Eastern */}
+            <group position={[offset, offset, 0]}>
+              <Sphere args={[radius, 64, 64]} rotation={[0, -Math.PI / 2, 0]}>
                 <meshStandardMaterial map={colorMap} color="#ffffff" emissive="#0f172a" roughness={0.6} metalness={0.1} transparent={true} opacity={0.92} side={THREE.FrontSide} clippingPlanes={[planeRight, planeTop]} />
               </Sphere>
               <mesh rotation={[-Math.PI / 2, 0, 0]}>
-                <circleGeometry args={[radius, 32, Math.PI / 2, Math.PI]} />
+                <circleGeometry args={[radius, 32, -Math.PI / 2, Math.PI]} />
                 <meshBasicMaterial color="#0f172a" side={THREE.DoubleSide} polygonOffset={true} polygonOffsetFactor={1} polygonOffsetUnits={1} />
-                <Line points={getCircleOutline(radius, 32, Math.PI / 2, Math.PI)} color="white" lineWidth={3} />
+                <Line points={getCircleOutline(radius, 32, -Math.PI / 2, Math.PI)} color="white" lineWidth={3} />
               </mesh>
               <mesh rotation={[0, Math.PI / 2, 0]}>
                 <circleGeometry args={[radius, 32, 0, Math.PI]} />
@@ -388,14 +563,15 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
               </mesh>
             </group>
 
-            <group position={[offset, -offset, 0]}>
-              <Sphere args={[radius, 64, 64]}>
+            {/* Bottom-Left: Southern + Western */}
+            <group position={[-offset, -offset, 0]}>
+              <Sphere args={[radius, 64, 64]} rotation={[0, -Math.PI / 2, 0]}>
                 <meshStandardMaterial map={colorMap} color="#ffffff" emissive="#0f172a" roughness={0.6} metalness={0.1} transparent={true} opacity={0.92} side={THREE.FrontSide} clippingPlanes={[planeLeft, planeBottom]} />
               </Sphere>
               <mesh rotation={[-Math.PI / 2, 0, 0]}>
-                <circleGeometry args={[radius, 32, -Math.PI / 2, Math.PI]} />
+                <circleGeometry args={[radius, 32, Math.PI / 2, Math.PI]} />
                 <meshBasicMaterial color="#0f172a" side={THREE.DoubleSide} polygonOffset={true} polygonOffsetFactor={1} polygonOffsetUnits={1} />
-                <Line points={getCircleOutline(radius, 32, -Math.PI / 2, Math.PI)} color="white" lineWidth={3} />
+                <Line points={getCircleOutline(radius, 32, Math.PI / 2, Math.PI)} color="white" lineWidth={3} />
               </mesh>
               <mesh rotation={[0, Math.PI / 2, 0]}>
                 <circleGeometry args={[radius, 32, Math.PI, Math.PI]} />
@@ -404,14 +580,15 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
               </mesh>
             </group>
 
-            <group position={[-offset, -offset, 0]}>
-              <Sphere args={[radius, 64, 64]}>
+            {/* Bottom-Right: Southern + Eastern */}
+            <group position={[offset, -offset, 0]}>
+              <Sphere args={[radius, 64, 64]} rotation={[0, -Math.PI / 2, 0]}>
                 <meshStandardMaterial map={colorMap} color="#ffffff" emissive="#0f172a" roughness={0.6} metalness={0.1} transparent={true} opacity={0.92} side={THREE.FrontSide} clippingPlanes={[planeRight, planeBottom]} />
               </Sphere>
               <mesh rotation={[-Math.PI / 2, 0, 0]}>
-                <circleGeometry args={[radius, 32, Math.PI / 2, Math.PI]} />
+                <circleGeometry args={[radius, 32, -Math.PI / 2, Math.PI]} />
                 <meshBasicMaterial color="#0f172a" side={THREE.DoubleSide} polygonOffset={true} polygonOffsetFactor={1} polygonOffsetUnits={1} />
-                <Line points={getCircleOutline(radius, 32, Math.PI / 2, Math.PI)} color="white" lineWidth={3} />
+                <Line points={getCircleOutline(radius, 32, -Math.PI / 2, Math.PI)} color="white" lineWidth={3} />
               </mesh>
               <mesh rotation={[0, Math.PI / 2, 0]}>
                 <circleGeometry args={[radius, 32, Math.PI, Math.PI]} />
@@ -422,27 +599,36 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon }) => {
 
             <Html position={[radius * 1.2, radius * 0.6, 0]} center style={{ pointerEvents: 'none' }}>
               <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '6px 14px', borderRadius: '16px', fontSize: '14px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
-                Northern + Western
+                Northern-Eastern
               </div>
             </Html>
             <Html position={[-radius * 1.2, radius * 0.6, 0]} center style={{ pointerEvents: 'none' }}>
               <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '6px 14px', borderRadius: '16px', fontSize: '14px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
-                Northern + Eastern
+                Northern-Western
               </div>
             </Html>
             <Html position={[radius * 1.2, -radius * 0.6, 0]} center style={{ pointerEvents: 'none' }}>
               <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '6px 14px', borderRadius: '16px', fontSize: '14px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
-                Southern + Western
+                Southern-Eastern
               </div>
             </Html>
             <Html position={[-radius * 1.2, -radius * 0.6, 0]} center style={{ pointerEvents: 'none' }}>
               <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '6px 14px', borderRadius: '16px', fontSize: '14px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
-                Southern + Eastern
+                Southern-Western
               </div>
             </Html>
           </group>
         );
       })()}
+
+      {/* Realistic Moon for Axis/Poles tasks */}
+      <OrbitingMoon visible={!disableMoon && currentTask >= 2 && currentTask <= 4} />
+
+      {/* Realistic Asteroid for Equator task */}
+      <Asteroid currentTask={currentTask} />
+
+      {/* Andromeda Galaxy for Parallels of Latitude */}
+      <AndromedaGalaxy currentTask={currentTask} />
     </group>
   );
 };
@@ -453,7 +639,17 @@ const CameraResetter = ({ currentTask }) => {
     if (controls) {
       controls.reset();
     }
-    camera.position.set(0, 1.5, 6);
+    
+    // Zoom out slightly for Task 7 so all labels (especially 90°) are visible
+    if (currentTask === 7) {
+      camera.position.set(0, 1.5, 6.7);
+    } else if (currentTask === 4) {
+      // Straight-on view for the Poles task to align the axis vertically
+      camera.position.set(0, 0, 6.5);
+    } else {
+      camera.position.set(0, 1.5, 6);
+    }
+    
     camera.lookAt(0, 0, 0);
     camera.zoom = 1;
     camera.updateProjectionMatrix();
@@ -461,22 +657,23 @@ const CameraResetter = ({ currentTask }) => {
   return null;
 };
 
-export default function Globe3D({ currentTask, latVal, lonVal, gridLat, gridLon }) {
+export default function Globe3D({ currentTask, latVal, lonVal, gridLat, gridLon, transparentBg = false, disableMoon = false }) {
   return (
-    <Canvas camera={{ position: [0, 1.5, 6], fov: 45 }} style={{ width: '100%', height: '100%', cursor: 'grab', background: 'black' }} gl={{ localClippingEnabled: true }}>
-      <color attach="background" args={['black']} />
+    <Canvas camera={{ position: [0, 1.5, 6], fov: 45 }} style={{ width: '100%', height: '100%', cursor: 'grab', background: transparentBg ? 'transparent' : 'black' }} gl={{ localClippingEnabled: true }}>
+      {!transparentBg && <color attach="background" args={['black']} />}
       <ambientLight intensity={0.7} />
       <directionalLight position={[10, 15, 10]} intensity={1.5} color="#ffffff" />
       <directionalLight position={[-10, -10, -5]} intensity={1.0} color="#3b82f6" />
       
-      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+      {!transparentBg && <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />}
       
       <Globe 
         currentTask={currentTask} 
         latVal={latVal} 
         lonVal={lonVal} 
         gridLat={gridLat} 
-        gridLon={gridLon} 
+        gridLon={gridLon}
+        disableMoon={disableMoon}
       />
       
       <Comet currentTask={currentTask} />
