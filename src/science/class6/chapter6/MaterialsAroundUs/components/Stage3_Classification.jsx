@@ -557,17 +557,17 @@ export default function Stage3_Classification({ defaultPhase = 'use', onComplete
 
               {/* Error messages overlay / Tips */}
               {errorMessage ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--danger)', fontSize: 'clamp(15px, 2.2vw, 19px)', fontWeight: '600' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: 'var(--danger)', fontSize: 'clamp(13px, 1.8vw, 16px)', fontWeight: '600' }}>
                   <AlertCircle size={16} />
                   <span>{errorMessage}</span>
                 </div>
               ) : allUseSorted ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.6rem 1rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: 'clamp(16px, 2.2vw, 20px)' }}>
-                  <Check size={18} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '0.3rem 0.6rem', borderRadius: '6px', color: 'var(--success)', fontWeight: 'bold', fontSize: 'clamp(13px, 1.8vw, 16px)' }}>
+                  <Check size={16} />
                   <span>All objects grouped successfully! Click "Proceed to next" in the bottom right corner!</span>
                 </div>
               ) : (
-                <div style={{ fontSize: 'clamp(15px, 2.2vw, 19px)', color: 'var(--text-muted)', textAlign: 'center', padding: '0.35rem', background: 'rgba(0,0,0,0.03)', borderRadius: '8px' }}>
+                <div style={{ fontSize: 'clamp(13px, 1.8vw, 16px)', color: 'var(--text-muted)', textAlign: 'center', padding: '0.2rem', background: 'rgba(0,0,0,0.03)', borderRadius: '6px' }}>
                   💡 <strong>Tip:</strong> Drag items from the Evidence Tray directly into the shelves based on where they are used.
                 </div>
               )}

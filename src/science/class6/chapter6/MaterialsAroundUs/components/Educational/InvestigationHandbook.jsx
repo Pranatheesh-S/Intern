@@ -363,22 +363,31 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
           <>
             {/* ================= LEFT PAGE B2 (PAGE 1) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'hidden', borderRight: '1px solid var(--border)' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'calc(var(--text-2xl) * 1.25)', color: 'var(--text-heading)', fontWeight: 'bold', borderBottom: '4px solid var(--accent)', paddingBottom: '6px', display: 'inline-block' }}>
-                How Can We Group Objects?
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'calc(var(--text-2xl) * 1.15)', color: 'var(--text-heading)', fontWeight: 'bold', borderBottom: '4px solid var(--accent)', paddingBottom: '6px', display: 'inline-block' }}>
+                Observe and Identify Appearance of Materials
               </h2>
 
               <div style={{ fontSize: 'clamp(1.30rem, 1.55vw, 1.65rem)', color: 'var(--text-primary)', lineHeight: '1.4', marginBottom: '14px', fontWeight: '600' }}>
-                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>We see many objects around us, such as books, bottles, spoons and toys.</p>
-                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Objects can be grouped based on a common property, such as material, colour, shape or hardness.</p>
-                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>This process is called <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>classification</strong>.</p>
-                <p style={{ margin: '0', fontSize: 'inherit', lineHeight: 'inherit' }}>The same object can belong to different groups depending on the property we choose.</p>
+                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Materials can look different from each other.</p>
+                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Some have shiny surfaces, while others look dull.</p>
+                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>They may also differ in <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>colour</strong> and <strong style={{ color: 'var(--text-heading)', fontWeight: '800' }}>texture</strong>, such as smooth or rough.</p>
               </div>
 
-              <div style={{ marginTop: '6px', background: 'var(--surface)', border: '2px dashed var(--border)', borderRadius: '12px', padding: '12px 18px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: 'calc(var(--text-xl) * 1.3)' }}>💡</div>
+              <div style={{ border: '2px solid var(--accent)', borderRadius: '12px', padding: '16px', background: 'var(--surface)', marginBottom: '14px' }}>
+                <h4 style={{ margin: '0 0 10px 0', color: 'var(--accent)', fontSize: 'calc(var(--text-lg) * 1.15)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  ✨ Lustrous vs Non-lustrous
+                </h4>
+                <div style={{ fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', lineHeight: '1.4', fontWeight: '600' }}>
+                  <p style={{ margin: '0 0 10px 0' }}>Materials with shiny surfaces are called <strong style={{ color: 'var(--accent)', fontWeight: '800' }}>lustrous</strong>. Metals like iron, copper and aluminium are usually lustrous.</p>
+                  <p style={{ margin: '0' }}>Paper, wood and rubber are examples of <strong style={{ color: 'var(--accent)', fontWeight: '800' }}>non-lustrous</strong> materials.</p>
+                </div>
+              </div>
+
+              <div style={{ marginTop: 'auto', background: 'var(--warning-bg)', border: '2px solid var(--warning-border)', borderRadius: '12px', padding: '12px 18px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <div style={{ fontSize: 'calc(var(--text-xl) * 1.3)' }}>📌</div>
                 <div style={{ fontSize: 'calc(var(--text-lg) * 1.3)', color: 'var(--text-heading)', lineHeight: '1.35' }}>
-                  <strong>Remember</strong><br/>
-                  Classification means grouping objects based on a common property.
+                  <strong>Remember!</strong><br/>
+                  Not everything that shines is a metal!
                 </div>
               </div>
             </div>
@@ -386,63 +395,62 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
             {/* ================= RIGHT PAGE B2 (PAGE 2) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: '20px 28px', position: 'relative', display: 'flex', flexDirection: 'column', overflowY: 'hidden' }}>
               <h2 style={{ margin: '0 0 12px 0', fontSize: 'calc(var(--text-2xl) * 1.15)', color: 'var(--text-heading)', fontWeight: 'bold' }}>
-                Case File 02: Scientific Classification
+                Investigation: Group by Appearance
               </h2>
 
               <div style={{ fontSize: 'clamp(1.30rem, 1.55vw, 1.65rem)', color: 'var(--text-primary)', lineHeight: '1.4', marginBottom: '14px', fontWeight: '600' }}>
-                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Your next case is ready!</p>
-                <p style={{ margin: '0 0 10px 0', fontSize: 'inherit', lineHeight: 'inherit' }}>Observe each object and identify the material it is made of.</p>
-                <p style={{ margin: '0', fontSize: 'inherit', lineHeight: 'inherit' }}>Then place each object into the correct material group.</p>
+                <p style={{ margin: '0', fontSize: 'inherit', lineHeight: 'inherit' }}>Materials can be different in the way they look. Let's group them based on how their surface appears when light falls on them.</p>
               </div>
 
-              <div style={{ border: '2px solid var(--success)', borderRadius: '12px', padding: '12px 18px', background: 'var(--success-bg)', display: 'flex', position: 'relative' }}>
+              <div style={{ background: 'var(--warning-bg)', border: '1px solid var(--warning-border)', borderRadius: '12px', padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '14px' }}>
+                <div style={{ fontSize: 'calc(var(--text-xl) * 1.1)' }}>💡</div>
+                <div style={{ fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-heading)', lineHeight: '1.4', fontWeight: '600' }}>
+                  Look carefully under the lamp.<br/>Drag each item to the correct group.
+                </div>
+              </div>
+
+              <div style={{ border: '2px solid var(--success)', borderRadius: '12px', padding: '12px 18px', background: 'var(--success-bg)', display: 'flex', position: 'relative', marginBottom: '14px' }}>
                 <div style={{ flex: 1 }}>
-                  <h4 style={{ margin: '0 0 10px 0', color: 'var(--success)', fontSize: 'calc(var(--text-lg) * 1.22)', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
-                    🎯 MISSION
+                  <h4 style={{ margin: '0 0 10px 0', color: 'var(--success)', fontSize: 'calc(var(--text-lg) * 1.1)', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+                    🎯 MISSION CHECKLIST
                   </h4>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', fontWeight: '600' }}>
-                      <input type="checkbox" checked={true} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.05)', color: 'var(--success)', fontWeight: '600' }}>
+                      <input type="checkbox" checked={true} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '2px' }} />
                       <span>Read the Handbook</span>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', fontWeight: '600' }}>
-                      <input type="checkbox" checked={isB2Phase1Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
-                      <span>Organize objects by purpose</span>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.05)', color: 'var(--success)', fontWeight: '600' }}>
+                      <input type="checkbox" checked={false} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '2px' }} />
+                      <span>Observe the materials</span>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', fontWeight: '600' }}>
-                      <input type="checkbox" checked={isB2Phase2Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
-                      <span>Group objects by material</span>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.05)', color: 'var(--success)', fontWeight: '600' }}>
+                      <input type="checkbox" checked={false} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '2px' }} />
+                      <span>Group by appearance</span>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', lineHeight: '1.4' }}>
-                      <input type="checkbox" checked={isB2Phase3Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
-                      <span>
-                        <strong style={{ display: 'block', fontWeight: '600', color: 'var(--text-primary)' }}>Multi-Property Insights</strong>
-                        <span style={{ fontSize: 'calc(var(--text-base) * 1.18)', color: 'var(--success)', display: 'block', marginTop: '2px', lineHeight: '1.35' }}>
-                          Inspect how the same objects fit into different groups depending on the property we look at.
-                        </span>
-                      </span>
-                    </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', lineHeight: '1.4' }}>
-                      <input type="checkbox" checked={isB2Phase4Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
-                      <span>
-                        <strong style={{ display: 'block', fontWeight: '600', color: 'var(--text-primary)' }}>Activity 6.3: Material Suitability</strong>
-                        <span style={{ fontSize: 'calc(var(--text-base) * 1.18)', color: 'var(--success)', display: 'block', marginTop: '2px', lineHeight: '1.35' }}>
-                          We choose materials based on their properties and the purpose of the object.
-                        </span>
-                      </span>
-                    </label>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.15)', color: 'var(--text-primary)', lineHeight: '1.4' }}>
-                      <input type="checkbox" checked={isB2Phase5Done} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '3px' }} />
-                      <span>
-                        <strong style={{ display: 'block', fontWeight: '600', color: 'var(--text-primary)' }}>Investigation: Sports Equipment Properties</strong>
-                        <span style={{ fontSize: 'calc(var(--text-base) * 1.18)', color: 'var(--success)', display: 'block', marginTop: '2px', lineHeight: '1.35' }}>
-                          Click each ball to analyze its properties and discover how its material matches its purpose.
-                        </span>
-                      </span>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.05)', color: 'var(--success)', fontWeight: '600' }}>
+                      <input type="checkbox" checked={false} readOnly style={{ width: '18px', height: '18px', accentColor: 'var(--success)', marginTop: '2px' }} />
+                      <span>Test with the lamp</span>
                     </label>
                   </div>
                 </div>
               </div>
+
+              <div style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '12px 18px', background: 'var(--surface)', display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>
+                <h4 style={{ margin: '0', color: 'var(--text-heading)', fontSize: 'calc(var(--text-lg) * 1.1)', fontWeight: 'bold' }}>
+                  How to do:
+                </h4>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.05)', color: 'var(--text-primary)', fontWeight: '600' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--accent-bg)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>👆</div> Drag an item from the tray
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.05)', color: 'var(--text-primary)', fontWeight: '600' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--accent-bg)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🎯</div> Drop it in the right group
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: 'calc(var(--text-lg) * 1.05)', color: 'var(--text-primary)', fontWeight: '600' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--accent-bg)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>👁️</div> Click the lamp to observe again
+                </div>
+              </div>
+
+
             </div>
           </>
         ) : (

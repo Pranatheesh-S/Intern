@@ -1,471 +1,719 @@
-import React, { useState } from 'react';
-import { Sparkles, Check, FileText, Lightbulb, LightbulbOff } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { PresentationControls, Environment, ContactShadows, PerspectiveCamera } from '@react-three/drei';
-import * as THREE from 'three';
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, X, RotateCcw } from "lucide-react";
 
-const DeskLamp = ({ lightOn }) => {
-  // Lamp sits to the right of the scene, arm reaching left toward the object
-  // Base center at world origin of the group, positioned via parent group in scene
+import paperImg      from "../../../../../assets/paper image.webp";
+import cardboardImg  from "../../../../../assets/cardboard image.jpg";
+import woodImg       from "../../../../../assets/wood image.webp";
+import copperWireImg from "../../../../../assets/copperwire image.webp";
+import aluminiumImg  from "../../../../../assets/aluminiumrod image.webp";
+import steelSpoonImg from "../../../../../assets/steelspoon image.webp";
+
+const MATERIALS = [
+  { id: "paper",     name: "Paper",         img: paperImg,      isShiny: false,
+    shineFact: "Paper has a rough, fibrous surface that scatters light in all directions — no clear reflection." },
+  { id: "cardboard", name: "Cardboard",     img: cardboardImg,  isShiny: false,
+    shineFact: "Cardboard is coarse and uneven. Light scatters off it without forming a sharp reflection." },
+  { id: "wood",      name: "Wood",          img: woodImg,       isShiny: false,
+    shineFact: "Wood has a rough, porous surface. It absorbs and diffuses light rather than reflecting it clearly." },
+  { id: "copper",    name: "Copper Wire",   img: copperWireImg, isShiny: true,
+    shineFact: "Copper is a metal with a smooth surface. It reflects light sharply, producing a clear bright spot." },
+  { id: "aluminium", name: "Aluminium Rod", img: aluminiumImg,  isShiny: true,
+    shineFact: "Aluminium is a lustrous metal. Its polished surface reflects light strongly and clearly." },
+  { id: "steel",     name: "Steel Spoon",   img: steelSpoonImg, isShiny: true,
+    shineFact: "Stainless steel has a very smooth metallic surface that reflects light clearly — it is lustrous." },
+];
+
+const SHINY_IDS = new Set(MATERIALS.filter(m => m.isShiny).map(m => m.id));
+
+// ── Torch observation modal ────────────────────────────────────────────────────
+const TorchObservation = ({ mat, onDone }) => {
+  const [torchOn, setTorchOn] = useState(false);
+  const [hasObserved, setHasObserved] = useState(false);
+  const [answer, setAnswer] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleToggle = (isOn) => {
+    setTorchOn(isOn);
+    if (isOn) setHasObserved(true);
+  };
+  
+  const handleSubmit = () => { if (answer) setSubmitted(true); };
+  const correct = answer === (mat.isShiny ? "shiny" : "dull");
+
   return (
-    <group>
-      {/* === BASE === */}
-      <mesh position={[0, 0, 0]}>
-        <cylinderGeometry args={[0.9, 1.0, 0.18, 32]} />
-        <meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.4} />
-      </mesh>
-      {/* Base top disc */}
-      <mesh position={[0, 0.12, 0]}>
-        <cylinderGeometry args={[0.45, 0.9, 0.12, 32]} />
-        <meshStandardMaterial color="var(--text-primary)" metalness={0.8} roughness={0.3} />
-      </mesh>
+    <div style={{
+      position: "absolute", inset: 0, zIndex: 50,
+      background: "rgba(8,6,3,0.92)", backdropFilter: "blur(4px)",
+      display: "flex", flexDirection: "column",
+      borderRadius: 16, overflow: "hidden",
+    }}>
+      {/* Header */}
+      <div style={{
+        padding: "0.85rem 1.2rem",
+        background: "linear-gradient(90deg, rgba(161,98,7,0.3), rgba(120,53,15,0.2))",
+        borderBottom: "1px solid rgba(161,98,7,0.3)",
+        display: "flex", alignItems: "center", gap: 12, flexShrink: 0,
+      }}>
+        <span style={{ fontSize: "1.5rem" }}>🔦</span>
+        <div>
+          <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#fde68a" }}>
+            Investigating: {mat.name}
+          </div>
+          <div style={{ fontSize: "0.9rem", color: "#b8a898", marginTop: 2 }}>
+            {hasObserved ? "✓ Observed! Now classify the surface." : "Use the torch to test how light reflects."}
+          </div>
+        </div>
+      </div>
 
-      {/* === LOWER PIVOT / STEM === */}
-      <mesh position={[0, 0.28, 0]}>
-        <cylinderGeometry args={[0.18, 0.18, 0.25, 16]} />
-        <meshStandardMaterial color="#333" metalness={0.9} roughness={0.2} />
-      </mesh>
+      <div style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative" }}>
+        
+        {/* Left: Investigation Area */}
+        <div style={{ flex: 1, position: "relative", padding: "1.5rem" }}>
+          
+          <div style={{
+            position: "relative", width: "100%", height: "100%",
+            borderRadius: 12, overflow: "hidden",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.6)",
+            background: "#111", display: "flex", justifyContent: "center", alignItems: "center"
+          }}>
+            <img src={mat.img} alt={mat.name} draggable="false" style={{
+              width: "100%", height: "100%", objectFit: "contain",
+              filter: torchOn ? "brightness(0.95)" : "brightness(0.5)",
+              transition: "filter 0.2s",
+            }} />
 
-      {/* === LOWER HINGE (horizontal cylinder) === */}
-      <mesh position={[0, 0.4, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.2, 0.2, 0.55, 16]} />
-        <meshStandardMaterial color="var(--text-primary)" metalness={0.9} roughness={0.2} />
-      </mesh>
+            {/* Fixed Torch Icon at Top Center */}
+            <div style={{
+              position: "absolute", top: 0, left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex", flexDirection: "column", alignItems: "center",
+              zIndex: 20,
+              filter: torchOn
+                ? "drop-shadow(0 4px 12px rgba(255,244,100,0.5))"
+                : "drop-shadow(0 2px 6px rgba(0,0,0,0.7))",
+              transition: "filter 0.2s",
+            }}>
+              {/* Torch Handle */}
+              <div style={{
+                width: 20, height: 35,
+                background: "linear-gradient(to right, #334155, #64748b, #334155)",
+                borderBottom: "2px solid #1e293b",
+              }} />
+              {/* Torch Head */}
+              <div style={{
+                width: 44, height: 22,
+                background: "linear-gradient(to right, #475569, #94a3b8, #475569)",
+                clipPath: "polygon(25% 0, 75% 0, 100% 100%, 0 100%)",
+                borderBottom: torchOn ? "3px solid #fef08a" : "3px solid #334155",
+              }} />
+            </div>
 
-      {/* === LOWER ARM - goes up and slightly left === */}
-      {/* Rotation: z=0.25 tilts it slightly left from vertical */}
-      <group position={[0, 0.4, 0]} rotation={[0, 0, -0.25]}>
-        {/* Left strut */}
-        <mesh position={[-0.12, 1.5, 0]}>
-          <cylinderGeometry args={[0.055, 0.055, 3.0, 12]} />
-          <meshStandardMaterial color="var(--text-primary)" metalness={0.7} roughness={0.4} />
-        </mesh>
-        {/* Right strut */}
-        <mesh position={[0.12, 1.5, 0]}>
-          <cylinderGeometry args={[0.055, 0.055, 3.0, 12]} />
-          <meshStandardMaterial color="var(--text-primary)" metalness={0.7} roughness={0.4} />
-        </mesh>
+            {/* Light beam from top-center */}
+            {torchOn && (
+              <div style={{
+                position: "absolute", top: 57, left: "50%",
+                width: "100%", height: "calc(100% - 57px)", transform: "translateX(-50%)",
+                background: "linear-gradient(to bottom, rgba(255,244,180,0.5) 0%, rgba(255,230,120,0.15) 60%, transparent 100%)",
+                pointerEvents: "none",
+                clipPath: "polygon(44% 0%, 56% 0%, 90% 100%, 10% 100%)",
+                zIndex: 10,
+              }} />
+            )}
 
-        {/* === MIDDLE HINGE === */}
-        <mesh position={[0, 3.05, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.22, 0.22, 0.6, 16]} />
-          <meshStandardMaterial color="var(--text-primary)" metalness={0.9} roughness={0.2} />
-        </mesh>
+            {/* Specular Reflection for shiny objects in the center */}
+            {torchOn && mat.isShiny && (
+              <div style={{
+                position: "absolute", top: "55%", left: "50%",
+                width: "35%", paddingBottom: "35%", borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,230,0.4) 30%, transparent 70%)",
+                transform: "translate(-50%,-50%)",
+                filter: "blur(2px)", pointerEvents: "none", zIndex: 15,
+              }} />
+            )}
+            
+            <div style={{
+              position: "absolute", bottom: 0, left: 0, right: 0,
+              padding: "12px 16px",
+              background: "linear-gradient(transparent, rgba(0,0,0,0.85))",
+              fontSize: "1.2rem", fontWeight: 900, color: "#e2d9c8",
+              zIndex: 20,
+            }}>
+              {mat.name}
+            </div>
+          </div>
+        </div>
 
-        {/* === UPPER ARM - bends more to the left and slightly down === */}
-        {/* rotation z=1.1 means it swings ~63deg to the left */}
-        <group position={[0, 3.05, 0]} rotation={[0, 0, 1.1]}>
-          {/* Left strut */}
-          <mesh position={[-0.12, 1.2, 0]}>
-            <cylinderGeometry args={[0.055, 0.055, 2.4, 12]} />
-            <meshStandardMaterial color="var(--text-primary)" metalness={0.7} roughness={0.4} />
-          </mesh>
-          {/* Right strut */}
-          <mesh position={[0.12, 1.2, 0]}>
-            <cylinderGeometry args={[0.055, 0.055, 2.4, 12]} />
-            <meshStandardMaterial color="var(--text-primary)" metalness={0.7} roughness={0.4} />
-          </mesh>
+        {/* Right: Controls Panel */}
+        <div style={{
+          width: "340px", padding: "1.5rem 1rem", borderLeft: "1px solid rgba(255,255,255,0.08)",
+          background: "rgba(0,0,0,0.4)", display: "flex", flexDirection: "column", gap: "1.25rem", overflowY: "auto"
+        }}>
+          
+          <div style={{
+            background: "rgba(0,0,0,0.5)", borderRadius: 12,
+            padding: "1.2rem", border: "1px solid rgba(255,255,255,0.08)",
+          }}>
+            <div style={{ fontSize: "1.1rem", color: "#fde68a", marginBottom: 8, fontWeight: 800 }}>
+              Observation
+            </div>
+            <div style={{ fontSize: "0.95rem", color: "#d6cbbf", lineHeight: 1.5, marginBottom: 20 }}>
+              Turn the torch ON and OFF and observe what happens to the light.
+            </div>
 
-          {/* === HEAD HINGE === */}
-          <mesh position={[0, 2.45, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.18, 0.18, 0.5, 16]} />
-            <meshStandardMaterial color="var(--text-primary)" metalness={0.9} roughness={0.2} />
-          </mesh>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <button
+                onClick={() => handleToggle(true)}
+                style={{
+                  padding: "0.85rem", borderRadius: 10,
+                  background: torchOn ? "linear-gradient(135deg, #f59e0b, #d97706)" : "rgba(245,158,11,0.15)",
+                  color: torchOn ? "#fff" : "#fcd34d", border: torchOn ? "2px solid #f59e0b" : "2px solid rgba(245,158,11,0.3)",
+                  fontSize: "1.1rem", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10
+                }}
+              >
+                🔦 TORCH ON
+              </button>
+              <button
+                onClick={() => handleToggle(false)}
+                style={{
+                  padding: "0.85rem", borderRadius: 10,
+                  background: !torchOn ? "linear-gradient(135deg, #475569, #334155)" : "rgba(71,85,105,0.2)",
+                  color: !torchOn ? "#fff" : "#94a3b8", border: !torchOn ? "2px solid #475569" : "2px solid rgba(71,85,105,0.3)",
+                  fontSize: "1.1rem", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10
+                }}
+              >
+                🔕 TORCH OFF
+              </button>
+            </div>
+          </div>
 
-          {/* === LAMP HEAD (shade pointing down-left at object) === */}
-          {/* rotation z=-1.4 tilts the shade to point left/down */}
-          <group position={[0, 2.45, 0]} rotation={[0, 0, -1.4]}>
-            {/* Shade outer shell - truncated cone open at bottom */}
-            <mesh position={[0, -0.6, 0]}>
-              <cylinderGeometry args={[0.38, 0.9, 1.4, 32, 1, true]} />
-              <meshStandardMaterial color="#252525" metalness={0.6} roughness={0.4} side={THREE.DoubleSide} />
-            </mesh>
-            {/* Shade top cap */}
-            <mesh position={[0, 0.08, 0]}>
-              <cylinderGeometry args={[0.38, 0.38, 0.14, 32]} />
-              <meshStandardMaterial color="#252525" metalness={0.6} roughness={0.4} />
-            </mesh>
-            {/* Inner reflector glow */}
-            <mesh position={[0, -0.6, 0]}>
-              <cylinderGeometry args={[0.36, 0.88, 1.38, 32, 1, true]} />
-              <meshStandardMaterial
-                color={lightOn ? '#fff8e1' : 'var(--text-muted)'}
-                emissive={lightOn ? '#ffedcc' : 'var(--text-primary)'}
-                emissiveIntensity={lightOn ? 1.2 : 0}
-                side={THREE.BackSide}
-              />
-            </mesh>
-            {/* Bulb */}
-            <mesh position={[0, -0.35, 0]}>
-              <sphereGeometry args={[0.28, 32, 32]} />
-              <meshStandardMaterial
-                color={lightOn ? 'var(--surface)' : 'var(--text-muted)'}
-                emissive={lightOn ? '#ffe8b0' : 'var(--text-primary)'}
-                emissiveIntensity={lightOn ? 5 : 0}
-                transparent
-                opacity={lightOn ? 1 : 0.5}
-              />
-            </mesh>
-            {/* Point light from bulb */}
-            <pointLight position={[0, -1, 0]} intensity={lightOn ? 4 : 0} distance={20} color="#ffedcc" castShadow />
-          </group>
-        </group>
-      </group>
-    </group>
+          <div style={{
+            background: "rgba(0,0,0,0.4)", borderRadius: 10, padding: "1rem",
+            border: "1px solid rgba(255,255,255,0.06)",
+            fontSize: "0.95rem", color: "#9a8b7e", lineHeight: 1.5,
+          }}>
+            <div style={{ fontWeight: 800, color: "#b0a090", marginBottom: 8 }}>Watch for:</div>
+            <ul style={{ margin: 0, paddingLeft: "1.4rem" }}>
+              <li style={{ marginBottom: 6 }}>Does a bright spot appear?</li>
+              <li style={{ marginBottom: 6 }}>Is the reflection clear or soft?</li>
+            </ul>
+          </div>
+
+          {/* Classification buttons */}
+          <AnimatePresence>
+            {hasObserved && !submitted && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  display: "flex", flexDirection: "column", gap: "0.75rem",
+                  padding: "1.2rem", background: "rgba(0,0,0,0.5)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)"
+                }}
+              >
+                <div style={{ fontSize: "1rem", fontWeight: 800, color: "#d6cbbf", textAlign: "center", marginBottom: 4 }}>
+                  What did you observe?
+                </div>
+                <div style={{ display: "flex", gap: "0.75rem" }}>
+                  <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    onClick={() => setAnswer("shiny")}
+                    style={{
+                      flex: 1, padding: "0.85rem 0.4rem", borderRadius: 10,
+                      background: answer === "shiny"
+                        ? "linear-gradient(135deg, #ca8a04, #a16207)"
+                        : "rgba(161,98,7,0.15)",
+                      color: answer === "shiny" ? "#fff" : "#fbbf24",
+                      fontWeight: 800, fontSize: "1rem", cursor: "pointer",
+                      border: answer === "shiny" ? "2px solid #ca8a04" : "2px solid rgba(161,98,7,0.3)",
+                    }}>
+                    ✨ Shiny<br/>
+                    <span style={{ fontSize: "0.8rem", fontWeight: 600, opacity: 0.85 }}>Light reflected clearly</span>
+                  </motion.button>
+                  <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    onClick={() => setAnswer("dull")}
+                    style={{
+                      flex: 1, padding: "0.85rem 0.4rem", borderRadius: 10,
+                      background: answer === "dull"
+                        ? "linear-gradient(135deg, #334155, #1e293b)"
+                        : "rgba(51,65,85,0.2)",
+                      color: answer === "dull" ? "#cbd5e1" : "#94a3b8",
+                      fontWeight: 800, fontSize: "1rem", cursor: "pointer",
+                      border: answer === "dull" ? "2px solid #475569" : "2px solid rgba(71,85,105,0.3)",
+                    }}>
+                    🌑 Dull<br/>
+                    <span style={{ fontSize: "0.8rem", fontWeight: 600, opacity: 0.85 }}>No clear reflection</span>
+                  </motion.button>
+                </div>
+                {answer && (
+                  <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    onClick={handleSubmit}
+                    style={{
+                      padding: "0.85rem", borderRadius: 10,
+                      background: "linear-gradient(135deg, #7c3aed, #5b21b6)",
+                      color: "#fff", fontWeight: 800, fontSize: "1rem",
+                      border: "none", cursor: "pointer",
+                      boxShadow: "0 4px 12px rgba(124,58,237,0.4)",
+                      marginTop: 6
+                    }}>
+                    Confirm Observation →
+                  </motion.button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Feedback */}
+          <AnimatePresence>
+            {submitted && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  padding: "1.2rem", borderRadius: 12,
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: correct ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",
+                  display: "flex", flexDirection: "column", gap: "0.85rem",
+                }}
+              >
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  background: correct ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)",
+                  border: "1px solid " + (correct ? "#22c55e" : "#ef4444"),
+                  borderRadius: 8, padding: "10px 14px",
+                }}>
+                  {correct ? <Check size={20} color="#86efac"/> : <X size={20} color="#fca5a5"/>}
+                  <span style={{ fontSize: "1rem", fontWeight: 800, color: correct ? "#86efac" : "#fca5a5" }}>
+                    {correct
+                      ? (mat.isShiny ? "✓ Correct! The " + mat.name + " reflects light clearly." : "✓ Correct! The " + mat.name + " does not reflect light clearly.")
+                      : "Not quite — " + (mat.isShiny ? "this surface is actually shiny." : "this surface is actually dull.")}
+                  </span>
+                </div>
+                <div style={{ fontSize: "0.95rem", color: "#a09080", fontStyle: "italic", lineHeight: 1.5 }}>
+                  {mat.shineFact}
+                </div>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+                  onClick={() => onDone(answer)}
+                  style={{
+                    padding: "0.85rem", borderRadius: 10,
+                    background: "linear-gradient(135deg, #7c3aed, #5b21b6)",
+                    color: "#fff", fontWeight: 800, fontSize: "1rem",
+                    border: "none", cursor: "pointer",
+                  }}>
+                  Next Object →
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 };
 
-
-const MaterialModel = ({ activeObject, lightOn }) => {
-  const shinyMaterialProps = {
-    metalness: lightOn ? 0.9 : 0.2,
-    roughness: lightOn ? 0.1 : 0.8,
-    envMapIntensity: lightOn ? 2 : 0,
-  };
-  const dullMaterialProps = {
-    metalness: 0.1,
-    roughness: 0.9,
-    envMapIntensity: 0,
-  };
-
-  const getModel = () => {
-    switch (activeObject) {
-      case 'paper':
-        return (
-          <mesh>
-            <boxGeometry args={[3, 4, 0.05]} />
-            <meshStandardMaterial color="var(--surface)" {...dullMaterialProps} />
-          </mesh>
-        );
-      case 'cardboard':
-        return (
-          <group>
-            <mesh>
-              <boxGeometry args={[2.5, 2.5, 2.5]} />
-              <meshStandardMaterial color="#c49c71" {...dullMaterialProps} />
-            </mesh>
-            {/* Tape on top */}
-            <mesh position={[0, 1.26, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-               <planeGeometry args={[0.8, 2.5]} />
-               <meshStandardMaterial color="#a07b55" {...dullMaterialProps} />
-            </mesh>
-          </group>
-        );
-      case 'wood':
-        return (
-          <mesh rotation={[Math.PI / 4, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[1, 1, 3.5, 32]} />
-            <meshStandardMaterial color="#8b5a2b" {...dullMaterialProps} />
-          </mesh>
-        );
-      case 'copper':
-        return (
-          <mesh rotation={[Math.PI / 2, Math.PI / 4, 0]}>
-            <torusGeometry args={[1.2, 0.08, 16, 100, Math.PI * 1.75]} />
-            <meshStandardMaterial color="#b87333" {...shinyMaterialProps} />
-          </mesh>
-        );
-      case 'aluminium':
-        return (
-          <mesh rotation={[Math.PI / 4, 0, Math.PI / 4]}>
-            <cylinderGeometry args={[0.4, 0.4, 4, 32]} />
-            <meshStandardMaterial color="var(--border)" {...shinyMaterialProps} />
-          </mesh>
-        );
-      case 'steel':
-        return (
-          <group rotation={[Math.PI / 8, Math.PI / 4, -Math.PI / 6]}>
-            {/* Handle */}
-            <mesh position={[0, -1.7, -0.05]}>
-              <cylinderGeometry args={[0.15, 0.08, 3, 16]} />
-              <meshStandardMaterial color="var(--border)" {...shinyMaterialProps} />
-            </mesh>
-            {/* Bowl */}
-            <mesh position={[0, 1, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[0.8, 0.2, 1.2]}>
-              <sphereGeometry args={[1, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
-              <meshStandardMaterial color="var(--border)" side={THREE.DoubleSide} {...shinyMaterialProps} />
-            </mesh>
-          </group>
-        );
-      default:
-        return null;
-    }
-  };
-
-  return <group>{getModel()}</group>;
+// ── Material card in grid ─────────────────────────────────────────────────────
+const MaterialCard = ({ mat, state, onClick }) => {
+  const isActive = state === "active";
+  const isDone   = state === "done";
+  return (
+    <motion.div
+      layout
+      onClick={() => !isDone && onClick(mat.id)}
+      whileHover={!isDone ? { scale: 1.04, y: -3 } : {}}
+      whileTap={!isDone ? { scale: 0.97 } : {}}
+      style={{
+        position: "relative", borderRadius: 14, overflow: "hidden",
+        display: "flex", flexDirection: "column", height: "100%",
+        cursor: isDone ? "default" : "pointer",
+        border: isActive ? "3px solid #f59e0b"
+               : isDone ? "3px solid " + (mat.isShiny ? "#fbbf24" : "#94a3b8")
+               : "3px solid transparent",
+        transition: "border 0.25s", background: "#1e1a14",
+        boxShadow: isActive
+          ? "0 0 0 4px rgba(245,158,11,0.25), 0 8px 24px rgba(0,0,0,0.5)"
+          : "0 4px 16px rgba(0,0,0,0.45)",
+      }}
+    >
+      <div style={{ position: "relative", flex: 1, minHeight: 0, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", padding: "0.5rem 0.5rem 0", background: "#ffffff" }}>
+        <img src={mat.img} alt={mat.name} style={{
+          width: "100%", height: "100%", objectFit: "contain", borderRadius: 8,
+          objectPosition: "center", display: "block",
+          filter: isDone && mat.isShiny
+            ? "brightness(1.15) contrast(1.08) saturate(1.1)"
+            : isDone ? "brightness(0.88) contrast(1.05)"
+            : "brightness(0.9) contrast(1.05)",
+          transition: "filter 0.4s ease",
+        }} />
+        {isDone && (
+          <div style={{
+            position: "absolute", top: 6, right: 6,
+            background: mat.isShiny ? "rgba(245,158,11,0.92)" : "rgba(100,116,139,0.92)",
+            borderRadius: 20, padding: "2px 8px",
+            fontSize: "0.7rem", fontWeight: 700, color: "#fff",
+            display: "flex", alignItems: "center", gap: 3, backdropFilter: "blur(4px)",
+          }}>
+            {mat.isShiny ? "✨ Shiny" : "🌑 Dull"}
+          </div>
+        )}
+        {isActive && (
+          <motion.div
+            animate={{ opacity: [0.7, 0, 0.7], scale: [1, 1.06, 1] }}
+            transition={{ repeat: Infinity, duration: 1.2 }}
+            style={{
+              position: "absolute", inset: 0, borderRadius: 12,
+              border: "3px solid #fbbf24", pointerEvents: "none",
+            }}
+          />
+        )}
+        {!isDone && !isActive && (
+          <div style={{
+            position: "absolute", inset: 0, borderRadius: 12,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: "rgba(0,0,0,0.25)",
+            opacity: 0, transition: "opacity 0.2s",
+          }} className="hover-show">
+            <span style={{ fontSize: "1.4rem" }}>🔦</span>
+          </div>
+        )}
+      </div>
+      <div style={{
+        textAlign: "center", padding: "8px 4px 10px",
+        fontSize: "0.95rem", fontWeight: 800,
+        color: isDone ? (mat.isShiny ? "#fcd34d" : "#94a3b8") : "#e2d9c8",
+      }}>
+        {mat.name}
+      </div>
+    </motion.div>
+  );
 };
 
-export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
-  const [inspectedObjects, setInspectedObjects] = useState({});
-  const [activeObject, setActiveObject] = useState(null);
-  const [lightOn, setLightOn] = useState(false);
+// ── Final Challenge ───────────────────────────────────────────────────────────
+const FinalChallenge = ({ onSolve }) => {
+  const [selected, setSelected] = useState(new Set());
+  const [submitted, setSubmitted] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
 
-  const objects = [
-    { id: 'paper', name: 'Paper', icon: '📄', isShiny: false, propColour: 'White', propTexture: 'Smooth' },
-    { id: 'cardboard', name: 'Cardboard', icon: '📦', isShiny: false, propColour: 'Brown', propTexture: 'Rough' },
-    { id: 'wood', name: 'Wood', icon: '🪵', isShiny: false, propColour: 'Brown', propTexture: 'Rough' },
-    { id: 'copper', name: 'Copper Wire', icon: '➰', isShiny: true, propColour: 'Reddish', propTexture: 'Smooth' },
-    { id: 'aluminium', name: 'Aluminium Rod', icon: <div style={{ width: '14px', height: '42px', background: 'linear-gradient(to right, var(--text-muted), var(--surface), var(--text-muted))', borderRadius: '4px', transform: 'rotate(20deg)' }} />, isShiny: true, propColour: 'Silver', propTexture: 'Smooth' },
-    { id: 'steel', name: 'Steel Spoon', icon: '🥄', isShiny: true, propColour: 'Silver', propTexture: 'Smooth' }
-  ];
-
-  const handleSelect = (objId) => {
-    setActiveObject(objId);
-    setLightOn(false);
+  const toggle = (id) => {
+    if (submitted) return;
+    setSelected(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
   };
-
-  const handleToggleLight = () => {
-    setLightOn(!lightOn);
-    if (!lightOn && activeObject && !inspectedObjects[activeObject]) {
-      setInspectedObjects(prev => {
-        const next = { ...prev, [activeObject]: true };
-        if (Object.keys(next).length === objects.length) {
-          addXp(50);
-          setTimeout(() => onComplete(), 2000);
-        }
-        return next;
-      });
-    }
+  const submit = () => {
+    const ok = selected.size === SHINY_IDS.size && [...selected].every(id => SHINY_IDS.has(id));
+    setIsCorrect(ok);
+    setSubmitted(true);
+    if (ok) setTimeout(onSolve, 2800);
   };
-
-  const activeObjDetails = objects.find(o => o.id === activeObject);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%' }}>
-      <div className="glass-panel" style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <FileText size={20} style={{ color: 'var(--accent)' }} /> 6.3.1 Observe and Identify Appearance of Materials
+    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+      style={{
+        background: "linear-gradient(135deg, #0f0c07 0%, #1a1508 100%)",
+        border: "2px solid #b45309", borderRadius: 20, padding: "2rem",
+        maxWidth: 520, margin: "0 auto",
+        display: "flex", flexDirection: "column", gap: "1.25rem",
+        boxShadow: "0 12px 48px rgba(0,0,0,0.7)",
+      }}
+    >
+      <div style={{ textAlign: "center" }}>
+        <div style={{ fontSize: "2rem", marginBottom: 4 }}>🕵️</div>
+        <h3 style={{ margin: 0, fontSize: "1.3rem", color: "#fde68a", fontWeight: 900 }}>
+          Shine Detective Challenge
         </h3>
-        <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
-          "Do any of these materials shine when light falls on them?" Select a material, drag to rotate it, turn on the light, and observe.
+        <p style={{ margin: "0.4rem 0 0", fontSize: "0.88rem", color: "#b8a898" }}>
+          Based on your torch observations — which objects were shiny?
         </p>
       </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: 0 }}>
-        {/* Top Row: Materials & Viewer */}
-        <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '1rem', flex: 2, minHeight: 0 }}>
-          {/* Left: Evidence Box */}
-          <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '1rem' }}>
-          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', textAlign: 'center' }}>
-            Materials to Test
-          </h4>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', flex: 1, alignContent: 'start' }}>
-            {objects.map(obj => (
-              <div
-                key={obj.id}
-                onClick={() => handleSelect(obj.id)}
-                style={{
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem',
-                  cursor: 'pointer', position: 'relative',
-                  opacity: activeObject === obj.id ? 1 : 0.6,
-                  transform: activeObject === obj.id ? 'scale(1.1)' : 'scale(1)',
-                  transition: 'all 0.2s',
-                  padding: '0.5rem'
-                }}
-              >
-                <div style={{ 
-                  fontSize: '3rem', 
-                  filter: activeObject === obj.id ? 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))' : 'none',
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '56px'
-                }}>
-                  {obj.icon}
-                </div>
-                <span style={{ fontSize: '0.85rem', fontWeight: activeObject === obj.id ? '600' : '400', color: 'var(--text-primary)', textAlign: 'center' }}>
-                  {obj.name}
-                </span>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem" }}>
+        {MATERIALS.map(mat => {
+          const sel    = selected.has(mat.id);
+          const wrong  = submitted && sel && !mat.isShiny;
+          const missed = submitted && !sel && mat.isShiny;
+          return (
+            <motion.div key={mat.id}
+              whileHover={!submitted ? { scale: 1.04 } : {}}
+              whileTap={!submitted ? { scale: 0.96 } : {}}
+              onClick={() => toggle(mat.id)}
+              style={{
+                borderRadius: 12, overflow: "hidden", cursor: submitted ? "default" : "pointer",
+                border: wrong ? "2px solid #ef4444" : missed ? "2px solid #f59e0b" : sel ? "2px solid #22c55e" : "2px solid rgba(255,255,255,0.1)",
+                background: sel ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)",
+                transition: "all 0.2s", position: "relative",
+              }}
+            >
+              <img src={mat.img} alt={mat.name} draggable="false"
+                style={{ width: "100%", aspectRatio: "1", objectFit: "cover", display: "block",
+                  filter: sel ? "brightness(1.1)" : "brightness(0.75)" }} />
+              <div style={{ padding: "5px 6px", textAlign: "center", fontSize: "0.72rem", fontWeight: 700, color: sel ? "#86efac" : "#9ca3af" }}>
+                {sel && <Check size={11} style={{ marginRight: 3, verticalAlign: "middle" }} />}
+                {mat.name}
               </div>
-            ))}
-          </div>
+              {missed && (
+                <div style={{
+                  position: "absolute", inset: 0, background: "rgba(245,158,11,0.15)",
+                  display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem",
+                }}>✨</div>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+      {submitted ? (
+        isCorrect ? (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ textAlign: "center" }}>
+            <div style={{ fontSize: "2rem", marginBottom: 6 }}>🎉</div>
+            <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#86efac", marginBottom: 6 }}>Case Solved!</div>
+            <p style={{ margin: 0, fontSize: "0.83rem", color: "#a09080", lineHeight: 1.6 }}>
+              Some materials reflect light clearly and appear <strong style={{ color: "#fde68a" }}>shiny</strong>,
+              while others scatter light and appear <strong style={{ color: "#94a3b8" }}>dull</strong>.
+            </p>
+          </motion.div>
+        ) : (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            style={{ background: "rgba(239,68,68,0.1)", border: "1px solid #ef4444", borderRadius: 10, padding: "0.75rem", textAlign: "center" }}>
+            <div style={{ fontSize: "0.85rem", color: "#fca5a5", fontWeight: 700 }}>
+              Not quite! Yellow = ones you missed. Try again!
+            </div>
+            <button onClick={() => { setSelected(new Set()); setSubmitted(false); }}
+              style={{ marginTop: 8, padding: "0.4rem 1.2rem", borderRadius: 8,
+                background: "transparent", border: "1px solid #f87171",
+                color: "#fca5a5", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
+              Try Again
+            </button>
+          </motion.div>
+        )
+      ) : (
+        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          onClick={submit} disabled={selected.size === 0}
+          style={{
+            padding: "0.75rem", borderRadius: 12,
+            background: selected.size === 0 ? "#374151" : "linear-gradient(135deg, #ca8a04, #a16207)",
+            color: selected.size === 0 ? "#6b7280" : "#fff",
+            fontWeight: 800, fontSize: "0.95rem",
+            border: "none", cursor: selected.size === 0 ? "not-allowed" : "pointer",
+            boxShadow: selected.size > 0 ? "0 4px 16px rgba(161,98,7,0.4)" : "none",
+            transition: "all 0.2s",
+          }}>
+          Submit My Answer →
+        </motion.button>
+      )}
+    </motion.div>
+  );
+};
+
+// ── Main component ────────────────────────────────────────────────────────────
+export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
+  const [observations, setObservations]     = useState({});
+  const [activeMat, setActiveMat]           = useState(null);
+  const [challengeSolved, setChallengeSolved] = useState(false);
+
+  const doneCount = Object.keys(observations).length;
+  const allDone   = doneCount === MATERIALS.length;
+
+  const handleCardClick = (id) => {
+    if (observations[id]) return;
+    setActiveMat(id);
+  };
+
+  const handleObservationDone = (answer) => {
+    const mat = MATERIALS.find(m => m.id === activeMat);
+    setObservations(prev => ({
+      ...prev,
+      [activeMat]: { result: mat.isShiny ? "shiny" : "dull", answer },
+    }));
+    setActiveMat(null);
+  };
+
+  const handleChallengeSolved = () => {
+    setChallengeSolved(true);
+    addXp(60);
+    setTimeout(onComplete, 1200);
+  };
+
+  const handleReset = () => {
+    setObservations({});
+    setActiveMat(null);
+    setChallengeSolved(false);
+  };
+
+  const mats = MATERIALS.map(m => ({ ...m }));
+  const activeMaterial = mats.find(m => m.id === activeMat);
+  const showChallengePanel = allDone && !challengeSolved;
+
+  return (
+    <div style={{
+      display: "flex", flexDirection: "column", gap: "0.6rem",
+      width: "100%", height: "100%", overflow: "hidden",
+      fontFamily: "'Inter', 'Segoe UI', sans-serif",
+      position: "relative",
+    }}>
+      {/* Title */}
+      <div className="glass-panel" style={{
+        padding: "1.1rem 1.4rem",
+        border: "1px solid var(--accent-border)",
+        display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0,
+      }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: "1.45rem", color: "var(--text-heading)", fontWeight: 800 }}>
+            🔦 Shine Hunt – Torch Observation Lab
+          </h3>
+          <p style={{ margin: "4px 0 0", fontSize: "0.95rem", color: "#d97706", fontWeight: 600 }}>
+            Shine the torch on each object and observe what happens to the light.
+          </p>
         </div>
+        <button onClick={handleReset} title="Reset Activity"
+          style={{
+            display: "flex", alignItems: "center", gap: 6,
+            padding: "0.4rem 0.9rem", borderRadius: 8,
+            background: "transparent", border: "1px solid var(--border)",
+            color: "var(--text-muted)", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600,
+          }}>
+          <RotateCcw size={14} /> Reset
+        </button>
+      </div>
 
-          {/* Right: 3D Viewer Area */}
-          <div 
-            className="glass-panel" 
-            style={{ 
-              flex: 1, position: 'relative', display: 'flex', flexDirection: 'column', 
-              background: 'radial-gradient(circle at center, var(--text-primary), var(--text-primary))', 
-              border: '2px solid var(--border)', borderRadius: '16px', overflow: 'hidden',
-              boxShadow: 'inset 0 0 30px rgba(0,0,0,0.5)'
-            }}
-          >
-            {activeObject ? (
-              <>
-                {/* Viewer Controls */}
-                <div style={{ position: 'absolute', top: '1rem', left: '1rem', zIndex: 10 }}>
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); handleToggleLight(); }}
-                    className={lightOn ? 'outline' : 'primary'}
-                    style={{ 
-                      padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem',
-                      background: lightOn ? 'rgba(255, 255, 255, 0.1)' : 'var(--accent)',
-                      color: 'white', border: lightOn ? '1px solid rgba(255,255,255,0.3)' : 'none',
-                      boxShadow: lightOn ? 'none' : '0 0 15px rgba(99, 102, 241, 0.6)',
-                      pointerEvents: 'all',
-                      cursor: 'pointer',
-                      backdropFilter: 'blur(4px)'
-                    }}
+      {/* Body */}
+      <div style={{ display: "flex", gap: "0.75rem", flex: 1, minHeight: 0, overflow: "hidden" }}>
+
+        {/* Scene area */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.6rem", minWidth: 0, overflow: "hidden", position: "relative" }}>
+
+          {!showChallengePanel ? (
+            <>
+              <div style={{
+                background: "linear-gradient(135deg, rgba(161,98,7,0.2), rgba(120,53,15,0.15))",
+                border: "1px solid rgba(161,98,7,0.4)", borderRadius: 10,
+                padding: "0.75rem 1rem", fontSize: "1.2rem",
+                color: "#f97316", fontWeight: 700, flexShrink: 0,
+              }}>
+                🔦 Click any material to open the torch observation.{doneCount > 0 ? "  (" + doneCount + "/6 done)" : ""}
+              </div>
+
+              <div style={{
+                flex: 1, minHeight: 0, overflow: "hidden",
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gridTemplateRows: "repeat(2, 1fr)",
+                gap: "0.65rem",
+              }}>
+                {mats.map(mat => {
+                  const state = observations[mat.id] ? "done" : activeMat === mat.id ? "active" : "idle";
+                  return <MaterialCard key={mat.id} mat={mat} state={state} onClick={handleCardClick} />;
+                })}
+              </div>
+
+              {/* Torch observation overlay */}
+              <AnimatePresence>
+                {activeMat && activeMaterial && (
+                  <motion.div
+                    key={"torch-" + activeMat}
+                    initial={{ opacity: 0, scale: 0.97 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.97 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ position: "absolute", inset: 0, zIndex: 30 }}
                   >
-                    {lightOn ? <LightbulbOff size={18} /> : <Lightbulb size={18} color="var(--warning)" />}
-                    {lightOn ? 'Turn Light OFF' : 'Turn Light ON'}
-                  </button>
-                </div>
-                
-                <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10, color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
-                  Drag to rotate
-                </div>
-
-                {/* The 3D Stage */}
-                <div style={{ flex: 1, position: 'relative', cursor: 'grab' }}>
-                  <Canvas camera={{ position: [0, 2, 9], fov: 45 }}>
-                    <ambientLight intensity={lightOn ? 0.6 : 1.5} />
-
-                    {/* Always render all lights, but toggle intensity to prevent shader recompilation flash */}
-                    <spotLight position={[4, 6, 3]} angle={0.4} penumbra={1} intensity={lightOn ? 1 : 0} castShadow />
-                    <Environment preset="studio" />
-
-                    <directionalLight position={[5, 5, 5]} intensity={lightOn ? 0 : 1.5} />
-                    <directionalLight position={[-5, 5, -5]} intensity={lightOn ? 0 : 1} />
-                    <directionalLight position={[0, -5, 0]} intensity={lightOn ? 0 : 0.5} />
-
-                    {/* Material model at center-left with PresentationControls so it rotates independently */}
-                    <PresentationControls
-                      global={false}
-                      cursor={true}
-                      snap={true}
-                      speed={1.5}
-                      zoom={1}
-                      rotation={[0, 0, 0]}
-                      polar={[-Math.PI / 4, Math.PI / 4]}
-                      azimuth={[-Math.PI / 2, Math.PI / 2]}
-                    >
-                      <group position={[-1.5, 0, 0]}>
-                        <MaterialModel activeObject={activeObject} lightOn={lightOn} />
-                      </group>
-                    </PresentationControls>
-
-                    {/* Lamp in world space, base on the right, arm reaching left */}
-                    <group position={[3.2, -2.5, 0]}>
-                      <DeskLamp lightOn={lightOn} />
-                    </group>
-                    <ContactShadows position={[0, -2.5, 0]} opacity={lightOn ? 0.4 : 0.1} scale={10} blur={2} far={4} />
-                  </Canvas>
-                </div>
-
-                {/* Info overlay when light is on */}
-                {lightOn && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                    style={{
-                      position: 'absolute', bottom: '1.5rem', right: '1.5rem',
-                      background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(12px)',
-                      padding: '1rem 1.5rem', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.15)',
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                      color: 'white', display: 'flex', gap: '2rem', fontSize: '0.9rem',
-                      pointerEvents: 'none',
-                      zIndex: 10
-                    }}
-                  >
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <span style={{ color: 'var(--text-muted)', fontWeight: '600' }}>Colour:</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <div style={{ 
-                          width: '14px', height: '14px', borderRadius: '50%', 
-                          background: activeObjDetails.propColour === 'White' ? 'var(--surface)' : 
-                                      activeObjDetails.propColour === 'Brown' ? '#8b4513' : 
-                                      activeObjDetails.propColour === 'Reddish' ? '#cd5c5c' : '#c0c0c0',
-                          boxShadow: '0 0 0 1px rgba(255,255,255,0.2)'
-                        }} />
-                        <span style={{ fontWeight: '500' }}>{activeObjDetails.propColour}</span>
-                      </div>
-                    </div>
-                    
-                    <div style={{ width: '1px', background: 'rgba(255,255,255,0.1)' }} />
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <span style={{ color: 'var(--text-muted)', fontWeight: '600' }}>Texture:</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span style={{ fontWeight: '500' }}>{activeObjDetails.propTexture}</span>
-                        <span style={{ opacity: 0.7 }}>{activeObjDetails.propTexture === 'Smooth' ? '〰️' : '🌫️'}</span>
-                      </div>
-                    </div>
-                    
-                    <div style={{ width: '1px', background: 'rgba(255,255,255,0.1)' }} />
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <span style={{ color: 'var(--text-muted)', fontWeight: '600' }}>Surface:</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span style={{ fontWeight: '500' }}>{activeObjDetails.isShiny ? 'Shiny' : 'Dull'}</span>
-                        <span>{activeObjDetails.isShiny ? '✨' : '🪨'}</span>
-                      </div>
-                    </div>
+                    <TorchObservation mat={activeMaterial} onDone={handleObservationDone} />
                   </motion.div>
                 )}
-              </>
-            ) : (
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '1.1rem', pointerEvents: 'none' }}>
-                Select a material from the Evidence Box
-              </div>
-            )}
-          </div>
+              </AnimatePresence>
+            </>
+          ) : (
+            <div style={{ flex: 1, minHeight: 0, overflow: "auto", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+              <FinalChallenge onSolve={handleChallengeSolved} />
+            </div>
+          )}
         </div>
 
-        {/* Detective Log (Bottom half) */}
-        <div className="glass-panel" style={{ flex: 1.5, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: '220px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px dashed var(--accent)', paddingBottom: '0.5rem', marginBottom: '0.75rem' }}>
-              <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--accent)' }}>
-                🕵️ Detective Log
-              </h4>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                {Object.keys(inspectedObjects).length} / {objects.length} Observed
+        {/* Detective Board */}
+        <div className="glass-panel" style={{
+          width: 210, flexShrink: 0,
+          display: "flex", flexDirection: "column",
+          padding: "0.75rem", overflow: "hidden",
+        }}>
+          <div style={{
+            fontWeight: 900, fontSize: "1.3rem", color: "#f97316",
+            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            paddingBottom: "0.6rem", marginBottom: "0.5rem",
+          }}>
+            🔎 Shine Detective
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", flex: 1, overflow: "auto" }}>
+            {MATERIALS.map(mat => {
+              const obs = observations[mat.id];
+              return (
+                <motion.div key={mat.id} layout style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  background: obs ? (mat.isShiny ? "rgba(251,191,36,0.12)" : "rgba(100,116,139,0.12)") : "rgba(255,255,255,0.04)",
+                  borderRadius: 10, padding: "8px 10px",
+                  border: obs ? "1px solid " + (mat.isShiny ? "rgba(251,191,36,0.3)" : "rgba(100,116,139,0.3)") : "1px solid rgba(255,255,255,0.06)",
+                  transition: "all 0.3s",
+                }}>
+                  <img src={mat.img} alt={mat.name} draggable="false"
+                    style={{ width: 36, height: 36, objectFit: "cover", borderRadius: 6, flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {mat.name}
+                    </div>
+                    <div style={{ fontSize: "0.75rem", marginTop: 2 }}>
+                      {obs ? (
+                        <span style={{ color: mat.isShiny ? "#fcd34d" : "#94a3b8", fontWeight: 700 }}>
+                          {mat.isShiny ? "✨ Shiny" : "🌑 Dull"}
+                        </span>
+                      ) : (
+                        <span style={{ color: "var(--text-muted)" }}>? Not observed</span>
+                      )}
+                    </div>
+                  </div>
+                  {obs && <Check size={13} color={mat.isShiny ? "#fbbf24" : "#64748b"} />}
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Shine Record */}
+          <div style={{
+            marginTop: "0.75rem", padding: "0.6rem 0.75rem",
+            background: "rgba(0,0,0,0.4)", borderRadius: 10,
+            border: "1px solid rgba(255,255,255,0.08)",
+          }}>
+            <div style={{ fontSize: "0.8rem", fontWeight: 800, color: "#e2d9c8", marginBottom: "0.4rem" }}>
+              Shine Record
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", color: "#fde68a", fontWeight: 700 }}>
+                <span>✨ Shiny Objects</span>
+                <span>{Object.values(observations).filter(o => o.result === "shiny").length} / 6</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", color: "#cbd5e1", fontWeight: 700 }}>
+                <span>🌑 Dull Objects</span>
+                <span>{Object.values(observations).filter(o => o.result === "dull").length} / 6</span>
               </div>
             </div>
-            
-            <div style={{ 
-              flex: 1, overflowY: 'auto', paddingRight: '0.5rem',
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem', alignContent: 'start'
-            }}>
-              <AnimatePresence>
-                {Object.keys(inspectedObjects).map(id => {
-                  const obj = objects.find(o => o.id === id);
-                  return (
-                    <motion.div
-                      key={id}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      style={{ 
-                        background: 'var(--surface)', padding: '1rem', borderRadius: '12px', 
-                        borderTop: `4px solid ${obj.isShiny ? 'var(--warning)' : 'var(--text-muted)'}`,
-                        boxShadow: 'var(--card-shadow)',
-                        display: 'flex', flexDirection: 'column', gap: '0.5rem'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold', fontSize: '1rem', color: 'var(--text-heading)' }}>
-                        <span style={{ fontSize: '1.2rem' }}>{obj.icon}</span> {obj.name}
-                      </div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.25rem 0.5rem' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>Colour:</span> <span style={{ fontWeight: '500' }}>{obj.propColour}</span>
-                        <span style={{ color: 'var(--text-muted)' }}>Texture:</span> <span style={{ fontWeight: '500' }}>{obj.propTexture}</span>
-                        <span style={{ color: 'var(--text-muted)' }}>Surface:</span> 
-                        <span style={{ fontWeight: '600', color: obj.isShiny ? 'var(--warning)' : 'inherit' }}>
-                          {obj.isShiny ? 'Shiny' : 'Dull'}
-                        </span>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-              {Object.keys(inspectedObjects).length === 0 && (
-                <div style={{ gridColumn: '1 / -1', color: 'var(--text-muted)', fontStyle: 'italic', textAlign: 'center', padding: '2rem' }}>
-                  Turn on the light to record observations...
-                </div>
-              )}
-            </div>
           </div>
+
+          {allDone && !challengeSolved && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              style={{
+                marginTop: "0.75rem",
+                background: "rgba(124,58,237,0.18)", border: "1px solid rgba(167,139,250,0.4)",
+                borderRadius: 10, padding: "0.6rem 0.75rem",
+                fontSize: "0.75rem", color: "#c4b5fd", fontWeight: 600, lineHeight: 1.4, textAlign: "center",
+              }}>
+              🎯 All observed!<br/>
+              <span style={{ color: "#a78bfa" }}>Final challenge →</span>
+            </motion.div>
+          )}
+          {challengeSolved && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              style={{
+                marginTop: "0.75rem",
+                background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.4)",
+                borderRadius: 10, padding: "0.6rem 0.75rem",
+                fontSize: "0.78rem", color: "#86efac", fontWeight: 700, textAlign: "center",
+              }}>
+              🎉 Case Solved!
+            </motion.div>
+          )}
+        </div>
       </div>
     </div>
   );

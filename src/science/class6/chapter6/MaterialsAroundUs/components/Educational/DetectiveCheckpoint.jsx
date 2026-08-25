@@ -184,7 +184,7 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
                     <div style={{ width: '28px', height: '28px', borderRadius: '50%', border: `2px solid ${iconColor}`, color: iconColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem', flexShrink: 0 }}>
                       {String.fromCharCode(65 + idx)}
                     </div>
-                    <span style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '800', color: 'var(--text-primary)', flex: 1 }}>{opt}</span>
+                    <span style={{ fontSize: 'clamp(17px, 2.5vw, 21px)', fontWeight: '500', color: 'var(--text-primary)', flex: 1 }}>{opt}</span>
                     {isVerified && idx === q.correct && (
                       <div style={{ background: '#22c55e', color: 'white', borderRadius: '50%', padding: '4px' }}>
                         <Check size={16} strokeWidth={3} />

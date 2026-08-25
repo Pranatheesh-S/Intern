@@ -429,6 +429,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
           <button 
             onClick={() => {
+              if (currentNode.id === 'sportsball') {
+                const prevIndex = chapterFlow.findIndex(node => node.id === 'stage5');
+                if (prevIndex !== -1) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
               if (currentNode.id === 'stage5') {
                 const prevIndex = chapterFlow.findIndex(node => node.id === 'stage3_material');
                 if (prevIndex !== -1) {

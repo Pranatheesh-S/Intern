@@ -63,6 +63,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         autoPlay
         loop
         muted
+        disablePictureInPicture
         playsInline
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}
@@ -88,6 +89,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         autoPlay
         loop
         muted
+        disablePictureInPicture
         playsInline
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}
@@ -121,7 +123,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         {/* Tumbler Designer */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '1.15rem' }}>1. Storing Water: The Tumbler Test</span>
+            <span style={{ fontWeight: 'bold', fontSize: '1.4rem' }}>1. Storing Water: The Tumbler Test</span>
           </div>
 
           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
@@ -151,7 +153,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
         {/* Stove Cooking pot */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
           <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '1.15rem' }}>2. Direct Flame: The Cooking Pot</span>
+            <span style={{ fontWeight: 'bold', fontSize: '1.4rem' }}>2. Direct Flame: The Cooking Pot</span>
           </div>
 
           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
