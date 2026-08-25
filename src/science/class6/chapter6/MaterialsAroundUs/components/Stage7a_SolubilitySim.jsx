@@ -46,9 +46,10 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
   
   const count = React.useMemo(() => {
     if (!selectedSubstance) return 0;
-    return selectedSubstance.id === 'chalk' ? 1200 :
-           selectedSubstance.id === 'sawdust' ? 400 :
-           600;
+    return selectedSubstance.id === 'chalk' ? 1800 :
+           selectedSubstance.id === 'sawdust' ? 1500 : // Massive count for tiny fibers
+           selectedSubstance.id === 'sand' ? 3000 : // Massive count for tiny grains
+           1200; // Sugar/Salt
   }, [selectedSubstance]);
 
   const particles = React.useMemo(() => {
@@ -58,32 +59,42 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
     for (let i = 0; i < count; i++) {
       let color;
       if (mat === 'sand') {
-        const sandColors = ['#E5A93D', '#F4C05B', '#C98528'];
+        // pale beige, light tan, warm sandy brown, subtle golden-brown, a few slightly darker grains
+        const sandColors = ['#d7b899', '#c4a482', '#e5c494', '#9e7c5a', '#8b6b4a'];
         color = new THREE.Color(sandColors[Math.floor(Math.random() * sandColors.length)]);
       } else if (mat === 'sawdust') {
-        const sawdustColors = ['#A66A38', '#8B4513', '#C17A3E'];
+        // pale cream, light beige, tan, warm light brown, medium brown
+        const sawdustColors = ['#f5ebdc', '#d8c3a5', '#b38b5d', '#8a623b', '#6b4724'];
         color = new THREE.Color(sawdustColors[Math.floor(Math.random() * sawdustColors.length)]);
+      } else if (mat === 'chalk') {
+        color = new THREE.Color('#F0F0F0'); // Matte white
+      } else if (mat === 'sugar') {
+        color = new THREE.Color('#FAFAFA'); // Slightly off-white crystalline
       } else {
-        color = new THREE.Color('#ffffff');
+        color = new THREE.Color('#FFFFFF'); // Bright white for salt
       }
 
-      const scaleBase = mat === 'chalk' ? (0.15 + Math.random() * 0.05) : 
-                        mat === 'sawdust' ? (0.05 + Math.random() * 0.03) : 
-                        mat === 'salt' ? (0.22 + Math.random() * 0.08) :
-                        mat === 'sugar' ? (0.20 + Math.random() * 0.08) :
-                        (0.18 + Math.random() * 0.08);
+      // Base scales - keep them small enough to look like hundreds of individual grains
+      const scaleBase = mat === 'chalk' ? (0.02 + Math.random() * 0.02) : 
+                        mat === 'sawdust' ? (0.02 + Math.random() * 0.03) : // Tiny fibers/flakes
+                        mat === 'salt' ? (0.03 + Math.random() * 0.02) : 
+                        mat === 'sugar' ? (0.04 + Math.random() * 0.02) : 
+                        (0.015 + Math.random() * 0.015); // Tiny sand grains
       
       pts.push({
-        position: new THREE.Vector3((Math.random() - 0.5) * 0.8, 1.8 + Math.random() * 3.0, (Math.random() - 0.5) * 0.8), // Pour in a vertical stream
-        velocity: new THREE.Vector3((Math.random() - 0.5) * 0.2, -(Math.random() * 4 + 2), (Math.random() - 0.5) * 0.2), // Fast initial downward drop
+        // WIDER spread (radius 1.8) and staggered heights (up to 8.0) so they don't fall as a single blob
+        position: new THREE.Vector3((Math.random() - 0.5) * 1.8, 2.5 + Math.random() * 5.0, (Math.random() - 0.5) * 1.8), 
+        velocity: new THREE.Vector3((Math.random() - 0.5) * 0.5, -(Math.random() * 3 + 2), (Math.random() - 0.5) * 0.5), // Drop vertically
         scale: scaleBase,
         initialScale: scaleBase,
+        baseScaleVec: new THREE.Vector3(0.6 + Math.random() * 0.8, 0.6 + Math.random() * 0.8, 0.6 + Math.random() * 0.8), // Individual random shape variation
         material: mat,
         color: color,
         rot: new THREE.Vector3(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI),
-        rotV: new THREE.Vector3((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1),
+        rotV: new THREE.Vector3((Math.random() - 0.5) * 0.4, (Math.random() - 0.5) * 0.4, (Math.random() - 0.5) * 0.4),
         floatOffset: Math.random() * 0.4,
-        dissolveRate: 0.15 + Math.random() * 0.4 // Varied dissolution rate for "concentration" fading effect
+        isFiber: mat === 'sawdust' ? Math.random() > 0.5 : false,
+        dissolveRate: 0.2 + Math.random() * 0.4 // Varied dissolution rate for "concentration" fading effect
       });
     }
     return pts;
@@ -99,12 +110,15 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
     particles.forEach((p, i) => {
         // Dynamic gravity based on particle state
         let gravity = 1.0;
-        if (p.material === 'sawdust') gravity = -1.5; // Gentle buoyancy to float to surface
-        else if (p.material === 'sand') gravity = 10.0; // Heavy
-        else if (p.material === 'chalk') gravity = 8.0; // Fast settling suspension
-        else if (p.material === 'sugar' || p.material === 'salt') {
-           // If fully dissolved (tiny), suspend them in fluid rather than dropping them
-           gravity = p.scale <= 0.02 ? 0.02 : 10.0; 
+        if (p.material === 'sawdust') {
+            gravity = -2.5; // Stronger buoyancy for sawdust to quickly float up
+        } else if (p.material === 'sand') {
+            gravity = 12.0; // Very heavy
+        } else if (p.material === 'chalk') {
+            gravity = stirState === 'stirring' ? 0.5 : 2.5; // Chalk suspends when stirred, slowly settles otherwise
+        } else if (p.material === 'sugar' || p.material === 'salt') {
+            // Keep dropping until very small, then suspend
+            gravity = p.scale <= 0.01 ? 0.01 : 12.0; 
         }
         
         p.velocity.y -= gravity * dt;
@@ -113,42 +127,47 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
           const cx = p.position.x;
           const cz = p.position.z;
           const dist = Math.sqrt(cx*cx + cz*cz);
-          const force = Math.max(0, 1 - dist/radius);
+          // Stronger vortex force in the center
+          const force = Math.max(0, 1 - (dist / radius) * 0.8);
           
-          // Vortex forces (rotate around Y)
-          p.velocity.x += -cz * 4 * force * dt;
-          p.velocity.z += cx * 4 * force * dt;
+          // Realistic circular swirling motion
+          p.velocity.x += -cz * 8 * force * dt;
+          p.velocity.z += cx * 8 * force * dt;
           
-          // Pull inwards to prevent particles from forming a hard ring against the glass
-          p.velocity.x -= cx * 2 * force * dt;
-          p.velocity.z -= cz * 2 * force * dt;
+          // Centripetal force to keep them from hitting the glass walls too hard
+          p.velocity.x -= cx * 4 * force * dt;
+          p.velocity.z -= cz * 4 * force * dt;
           
-          // Upward turbulence during stirring
-          if (p.material === 'sand' || p.material === 'chalk') {
-              p.velocity.y += (Math.random() * 3.5) * force * dt; // Lift off bottom
+          // Upward turbulence
+          if (p.material === 'sand') {
+              p.velocity.y += (Math.random() * 4.0) * force * dt; // Sand gets picked up slightly
+          } else if (p.material === 'chalk') {
+              p.velocity.y += (Math.random() * 8.0) * force * dt; // Chalk explodes into cloudy suspension
           } else if (p.material !== 'sawdust') {
-              p.velocity.y += (Math.random() * 2) * force * dt; 
+              p.velocity.y += (Math.random() * 5.0) * force * dt; // Solubles mix vigorously
           }
         }
 
         // Dissolution for soluble materials
         if ((p.material === 'sugar' || p.material === 'salt') && (stirState === 'stirring' || stirState === 'resolved')) {
-          // Shrink progressively based on random dissolveRate until they reach absolute zero
-          p.scale = Math.max(0.0, p.scale - dt * p.dissolveRate);
+          // Smooth progressive shrinking
+          p.scale = Math.max(0.0, p.scale - (dt * p.dissolveRate * 0.15));
         }
 
         // Damping
         if (stirState === 'dropping') {
            p.velocity.x *= 0.95;
            p.velocity.z *= 0.95;
-           p.velocity.y *= 0.99; // Low vertical drag allows them to fall fast to the bottom
+           p.velocity.y *= 0.99;
         } else if (stirState === 'settled') {
-           p.velocity.x *= 0.90;
-           p.velocity.z *= 0.90;
-           p.velocity.y *= 0.95; // Allows gravity to keep them resting naturally on the floor
+           p.velocity.x *= 0.85;
+           p.velocity.z *= 0.85;
+           p.velocity.y *= 0.90;
            p.rotV.multiplyScalar(0.9);
-        } else {
-           p.velocity.multiplyScalar(0.95);
+        } else { // stirring or resolved
+           p.velocity.x *= 0.96;
+           p.velocity.z *= 0.96;
+           p.velocity.y *= 0.96;
         }
 
       p.position.addScaledVector(p.velocity, dt);
@@ -169,9 +188,9 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
       let pBottom = bottom;
       if (p.material !== 'sawdust') {
         const distFromCenter = Math.sqrt(p.position.x * p.position.x + p.position.z * p.position.z);
-        const moundFactor = p.material === 'chalk' ? 1.0 : 0.7; // Taller mound for chalk powder
-        const moundHeight = Math.max(0, (1.0 - distFromCenter)) * moundFactor; // Higher in the middle
-        pBottom = bottom + moundHeight + (p.floatOffset * 0.5); 
+        const moundFactor = p.material === 'chalk' ? 0.4 : (p.material === 'sand' ? 0.3 : 0.2); // Flatter mounds for realism
+        const moundHeight = Math.max(0, (1.0 - distFromCenter)) * moundFactor;
+        pBottom = bottom + moundHeight + (p.floatOffset * 0.1); 
       }
       
       if (p.position.y < pBottom) {
@@ -195,13 +214,21 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
       if (p.scale > 0) {
         dummy.position.copy(p.position);
         if (p.material === 'sawdust') {
-          // Small, thin, irregular wood flakes
-          dummy.scale.set(p.scale * 2.0, p.scale * 0.25, p.scale * 1.5);
+          // Highly irregular thin wood flakes, chips and fibers
+          if (p.isFiber) {
+              dummy.scale.set(p.scale * p.baseScaleVec.x * 4.0, p.scale * p.baseScaleVec.y * 0.1, p.scale * p.baseScaleVec.z * 0.1); // Long fiber
+          } else {
+              dummy.scale.set(p.scale * p.baseScaleVec.x * 2.0, p.scale * p.baseScaleVec.y * 0.2, p.scale * p.baseScaleVec.z * 1.5); // Flat flake
+          }
         } else if (p.material === 'salt' || p.material === 'sugar') {
           // Angular/irregular crystals
-          dummy.scale.set(p.scale, p.scale * (0.8 + Math.random() * 0.4), p.scale);
+          dummy.scale.set(p.scale * p.baseScaleVec.x, p.scale * p.baseScaleVec.y, p.scale * p.baseScaleVec.z);
+        } else if (p.material === 'sand') {
+          // Highly random grains
+          dummy.scale.set(p.scale * p.baseScaleVec.x * 1.5, p.scale * p.baseScaleVec.y * 0.8, p.scale * p.baseScaleVec.z * 1.2);
         } else {
-          dummy.scale.setScalar(p.scale);
+          // Chalk (powder)
+          dummy.scale.set(p.scale * p.baseScaleVec.x, p.scale * p.baseScaleVec.y, p.scale * p.baseScaleVec.z);
         }
         
         // Use the particle's stable rotation
@@ -225,22 +252,20 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
 
   return (
     <instancedMesh ref={meshRef} args={[null, null, count]} renderOrder={2}>
-      {selectedSubstance.id === 'chalk' ? <sphereGeometry args={[1, 6, 6]} /> :
-       selectedSubstance.id === 'sugar' ? <icosahedronGeometry args={[1, 0]} /> :
-       selectedSubstance.id === 'salt' ? <boxGeometry args={[1, 1, 1]} /> :
-       selectedSubstance.id === 'sand' ? <dodecahedronGeometry args={[1, 0]} /> :
-       <dodecahedronGeometry args={[1, 0]} />}
+      {selectedSubstance.id === 'sugar' ? <icosahedronGeometry args={[1, 0]} /> :
+       selectedSubstance.id === 'salt' ? <octahedronGeometry args={[1, 0]} /> :
+       selectedSubstance.id === 'chalk' ? <dodecahedronGeometry args={[1, 0]} /> :
+       selectedSubstance.id === 'sand' ? <tetrahedronGeometry args={[1, 0]} /> :
+       <tetrahedronGeometry args={[1, 0]} />} {/* Sawdust - using tetrahedrons scaled irregularly creates jagged splinters and flakes, avoiding rectangular looks */}
        
       {/* High contrast physical material that respects individual instance colors and 3D lighting */}
       <meshStandardMaterial 
-        transparent={true} // Forces material into transparent pass so renderOrder applies
+        transparent={true}
         opacity={1.0}
-        visible={true}
-        roughness={0.6}
-        metalness={0.1}
+        roughness={selectedSubstance.id === 'sand' ? 1.0 : (selectedSubstance.id === 'chalk' || selectedSubstance.id === 'sawdust' ? 1.0 : 0.2)}
+        metalness={selectedSubstance.id === 'sugar' || selectedSubstance.id === 'salt' ? 0.3 : 0.0}
         emissive="#ffffff"
-        emissiveIntensity={selectedSubstance.id === 'sand' || selectedSubstance.id === 'sawdust' ? 0.0 : 0.1} 
-        color="#ffffff" 
+        emissiveIntensity={selectedSubstance.id === 'sand' || selectedSubstance.id === 'sawdust' || selectedSubstance.id === 'chalk' ? 0.0 : 0.1} // Subtle emissive on sugar/salt
         depthWrite={true}
       />
     </instancedMesh>
@@ -272,16 +297,20 @@ const StirringRod = ({ stirState }) => {
   });
 
   return (
-    <mesh ref={rodRef} position={[0.2, 0.2, 0.2]} rotation={[Math.PI / 12, 0, Math.PI / 12]}>
+    <mesh ref={rodRef} position={[0.2, 0.2, 0.2]} rotation={[Math.PI / 12, 0, Math.PI / 12]} renderOrder={5}>
       <cylinderGeometry args={[0.04, 0.04, 4.5, 16]} />
       <meshPhysicalMaterial 
-        transparent
-        transmission={0.95}
+        transparent={true}
+        transmission={0.6} // Reduced transmission to make it visibly distinct from water
         opacity={1}
-        roughness={0.02}
+        roughness={0.1} // Slightly frosted to catch light
+        metalness={0.1}
         ior={1.52}
-        color="#ffffff"
+        color="#f0f8ff" // Subtle blueish-white glass tint
+        emissive="#ffffff"
+        emissiveIntensity={0.05} // Very subtle glow prevents it from disappearing
         clearcoat={1}
+        depthWrite={false}
       />
     </mesh>
   );
@@ -307,14 +336,20 @@ const Beaker3D = ({ stirState }) => {
     canvas.height = 1024;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, 512, 1024);
-    ctx.fillStyle = 'rgba(180, 190, 200, 0.85)'; // Light gray/neutral, more visible
-    ctx.font = 'bold 36px Arial';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; // Bright white, highly visible
+    ctx.font = 'bold 44px Arial';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
     
+    // Add subtle shadow so it remains legible against bright backgrounds
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+    ctx.shadowBlur = 4;
+    ctx.shadowOffsetX = 1;
+    ctx.shadowOffsetY = 1;
+    
     for (let i = 1; i <= 4; i++) {
       const y = 1024 - (i * 200) - 100; 
-      ctx.fillRect(100, y - 2, 80, 4);
+      ctx.fillRect(100, y - 4, 120, 8); // Thicker measurement lines
       ctx.fillText(`${i * 100} ml`, 85, y);
     }
     
@@ -341,26 +376,30 @@ const Beaker3D = ({ stirState }) => {
 
   return (
     <group position={[0, -0.2, 0]} scale={[1, 1, 1]}>
-      {/* True Beaker Glass (Simple physical glass) */}
-      <mesh renderOrder={3}>
+      {/* True Beaker Glass (Realistic Physical Glass) */}
+      <mesh renderOrder={4}>
         <latheGeometry args={[beakerPoints, 64]} />
         <meshPhysicalMaterial 
-          color="#ffffff" // Clear glass
-          transparent 
-          opacity={0.15} // Very subtle body
-          roughness={0.05} 
-          metalness={0.1}
+          color="#ffffff" 
+          transparent={true}
+          transmission={0.95} // High transmission for realism
+          opacity={1.0} // Must be 1 when transmission is used
+          roughness={0.02} 
+          metalness={0.0}
+          ior={1.5}
+          thickness={0.05}
           clearcoat={1.0}
-          clearcoatRoughness={0.0}
+          clearcoatRoughness={0.05}
           side={THREE.DoubleSide}
-          depthWrite={false} // Prevent depth occlusion of internal particles
+          depthWrite={false}
         />
       </mesh>
 
       {/* Graduation Markings */}
-      <mesh position={[0, -0.05, 0]} rotation={[0, -Math.PI / 1.5, 0]} renderOrder={3}>
-        <cylinderGeometry args={[1.42, 1.36, 3.6, 32, 1, true]} />
-        <meshBasicMaterial map={graduationTexture} transparent opacity={0.6} depthWrite={false} side={THREE.DoubleSide} />
+      {/* Placed slightly outside the glass wall (1.46 radius vs 1.45) so transmission doesn't hide it */}
+      <mesh position={[0, -0.05, 0]} rotation={[0, -Math.PI / 1.3, 0]} renderOrder={6}>
+        <cylinderGeometry args={[1.46, 1.46, 3.6, 32, 1, true]} />
+        <meshBasicMaterial map={graduationTexture} transparent={true} opacity={0.9} depthWrite={false} side={THREE.DoubleSide} />
       </mesh>
 
       {/* Photorealistic Water Volume */}
@@ -368,23 +407,23 @@ const Beaker3D = ({ stirState }) => {
         <cylinderGeometry args={[1.4, 1.35, 3.4, 64]} />
         <meshPhysicalMaterial 
           transparent={true}
-          opacity={0.4} // Reduced so particles are vibrant
+          opacity={0.35} // Allows bright contrast for white particles inside
           roughness={0.1}
-          metalness={0.05}
-          color="#55bbee" // Deeper clear cyan/blue
+          metalness={0.1}
+          color="#0ea5e9" // Rich blue water color
           depthWrite={false}
         />
       </mesh>
       
       {/* Water Surface / Meniscus */}
-      <mesh ref={waterRef} position={[0, 1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+      <mesh ref={waterRef} position={[0, 1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={2}>
         <circleGeometry args={[1.4, 64]} />
         <meshPhysicalMaterial 
           transparent={true}
-          opacity={0.5} // Reduced so surface doesn't wash out particles entering
-          roughness={0.1}
-          metalness={0.05}
-          color="#55bbee" // Deeper clear cyan/blue
+          opacity={0.6}
+          roughness={0.05}
+          metalness={0.1}
+          color="#38bdf8"
           depthWrite={false}
         />
       </mesh>
@@ -410,10 +449,10 @@ const WebGLBeakerSimulation = ({ selectedSubstance, stirState }) => {
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Canvas camera={{ position: [0, 0.5, 8.5], fov: 40 }} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
           {/* Photorealistic Studio Lighting */}
-          <ambientLight intensity={0.5} color="#ffffff" />
-          <directionalLight position={[10, 15, 10]} intensity={1.2} color="#ffffff" castShadow />
-          <directionalLight position={[-10, 5, -5]} intensity={0.8} color="#ffffff" />
-          <spotLight position={[0, 15, 0]} intensity={1.0} penumbra={1} angle={0.8} color="#ffffff" />
+          <ambientLight intensity={0.6} color="#ffffff" />
+          <directionalLight position={[10, 15, 10]} intensity={1.5} color="#ffffff" castShadow />
+          <directionalLight position={[-10, 5, -5]} intensity={0.5} color="#e0e0e0" />
+          <spotLight position={[0, 10, 0]} intensity={1.5} penumbra={0.5} angle={0.5} color="#ffffff" />
           
           <group scale={[1.15, 1.15, 1.15]} position={[0, -0.05, 0]}>
             <Beaker3D stirState={stirState} />

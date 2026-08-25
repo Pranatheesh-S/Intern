@@ -177,10 +177,10 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
   }, [isComplete, onComplete]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', color: 'var(--text-primary)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', height: '100%', color: 'var(--text-primary)' }}>
       
       {/* Header */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '800', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Scale size={24} color="var(--accent)" /> Phase 1: How heavy or light?
@@ -191,15 +191,12 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '1.25rem', minHeight: 0 }}>
+      <div style={{ display: 'flex', gap: '1rem', flex: 1, minHeight: 0, alignItems: 'flex-start' }}>
         
-        {/* Lab Area */}
-        <div style={{ flex: 1.5, background: '#fcfaf6', borderRadius: '16px', border: '1px solid #d6c6b4', padding: '1.5rem', display: 'flex', position: 'relative' }}>
-          
-          {/* Left Side: Material Evidence */}
-          <div style={{ width: '50%', flexShrink: 0, display: 'flex', flexDirection: 'column', paddingRight: '1.5rem' }}>
-            <h4 style={{ margin: '0 0 1.5rem 0', fontSize: '1.4rem', fontWeight: '800', color: '#574133', borderBottom: '1px solid #d6c6b4', paddingBottom: '0.5rem' }}>MATERIAL EVIDENCE</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', paddingBottom: '1.5rem' }}>
+        {/* Left Side: Material Evidence */}
+        <div style={{ flex: 0.75, background: '#fcfaf6', borderRadius: '16px', border: '1px solid #d6c6b4', padding: '1rem', display: 'flex', flexDirection: 'column' }}>
+          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: '#574133', borderBottom: '1px solid #d6c6b4', paddingBottom: '0.5rem' }}>MATERIAL EVIDENCE</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingBottom: '0' }}>
               {cups.map(cup => {
                 const isOnScale = currentOnScale?.id === cup.id;
                 const hasBeenWeighed = weighedItems[cup.id];
@@ -213,12 +210,12 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                       opacity: isOnScale ? 0.4 : 1,
                       cursor: isOnScale ? 'default' : 'grab',
                       display: 'flex', alignItems: 'center', gap: '1rem',
-                      background: '#fcf6ea', padding: '0.75rem 1.25rem', borderRadius: '12px', border: '1px solid #c8b6a6',
+                      background: '#fcf6ea', padding: '0.5rem 1rem', borderRadius: '12px', border: '1px solid #c8b6a6',
                       boxShadow: '0 4px 6px rgba(87, 65, 51, 0.08)'
                     }}
                   >
                     <div style={{ 
-                      position: 'relative', width: '4.5rem', height: '5.2rem', 
+                      position: 'relative', width: '3.5rem', height: '4rem', 
                       display: 'flex', justifyContent: 'center', alignItems: 'flex-end', overflow: 'visible', flexShrink: 0
                     }}>
                       <div style={{ position: 'absolute', bottom: '-4px', width: '3.5rem', height: '8px', background: 'rgba(87, 65, 51, 0.15)', borderRadius: '50%', filter: 'blur(2px)' }} />
@@ -237,9 +234,9 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
             </div>
           </div>
 
-          {/* Right Side: Weighing Station */}
-          <div style={{ flex: 1, paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', borderLeft: '2px dashed #d6c6b4' }}>
-            <h4 style={{ margin: '0 0 1.5rem 0', fontSize: '1.4rem', fontWeight: '800', color: '#574133', borderBottom: '1px solid #d6c6b4', paddingBottom: '0.5rem' }}>DIGITAL WEIGHING STATION</h4>
+          {/* Middle: Weighing Station */}
+          <div style={{ flex: 0.75, background: '#fcfaf6', borderRadius: '16px', border: '1px solid #d6c6b4', padding: '1rem', display: 'flex', flexDirection: 'column', alignSelf: 'stretch' }}>
+            <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: '#574133', borderBottom: '1px solid #d6c6b4', paddingBottom: '0.5rem' }}>DIGITAL WEIGHING STATION</h4>
             
             <div 
               style={{ 
@@ -278,13 +275,13 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                       exit={{ y: -20, opacity: 0 }}
                       onClick={handleRemoveFromScale}
                       style={{ 
-                        position: 'absolute', bottom: '6.5625rem', zIndex: 10, cursor: 'pointer',
+                        position: 'absolute', bottom: '5.8rem', zIndex: 10, cursor: 'pointer',
                         display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%'
                       }}
                       title="Click to remove"
                     >
                       <div style={{ 
-                        position: 'relative', width: '6.5rem', height: '7.5rem', 
+                        position: 'relative', width: '5rem', height: '6rem', 
                         display: 'flex', justifyContent: 'center', alignItems: 'flex-end', overflow: 'visible'
                       }}>
                         <RealisticCup material={currentOnScale.id} />
@@ -297,7 +294,7 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 2 }}>
                 {/* Silver Pan */}
                 <div style={{ 
-                  width: '15rem', height: '1.5rem', 
+                  width: '13rem', height: '1.25rem', 
                   background: 'linear-gradient(to bottom, #f3f4f6, #9ca3af)', 
                   borderRadius: '0.5rem 0.5rem 0.25rem 0.25rem', 
                   border: '1px solid #6b7280', 
@@ -308,12 +305,12 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                 
                 {/* Main Body */}
                 <div style={{ 
-                  width: '16.25rem', height: '6.25rem', 
+                  width: '15rem', height: '5rem', 
                   background: 'linear-gradient(to bottom, #e5e7eb, #d1d5db)', 
                   borderRadius: '0.5rem 0.5rem 1.5rem 1.5rem', 
                   border: '1px solid #9ca3af', 
                   boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.2), inset 0 -4px 6px rgba(255,255,255,0.4)',
-                  display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '12px 20px',
+                  display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 16px',
                   position: 'relative', top: '-2px', zIndex: 2
                 }}>
                   {/* Black Front Panel */}
@@ -327,10 +324,10 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                   }}>
                     {/* Screen */}
                     <div style={{ 
-                      width: '8.75rem', height: '2.25rem',
+                      width: '8rem', height: '2rem',
                       background: '#dcfce7', border: '2px inset #4ade80', borderRadius: '0.25rem', 
                       display: 'flex', justifyContent: 'flex-end', alignItems: 'center', 
-                      padding: '0 0.5rem', fontSize: '1.6rem', fontWeight: '800', color: '#064e3b',
+                      padding: '0 0.5rem', fontSize: '1.4rem', fontWeight: '800', color: '#064e3b',
                       boxShadow: 'inset 0 2px 5px rgba(0,0,0,0.1)'
                     }}>
                       {currentOnScale ? `${currentOnScale.mass.toFixed(2)} g` : '0.00 g'}
@@ -347,33 +344,42 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
               </div>
             </div>
           </div>
-        </div>
 
         {/* Observation Console */}
-        <div style={{ flex: 1, background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h4 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '800', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+        <div style={{ flex: 1, background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <h4 style={{ margin: 0, fontSize: '1.3rem', fontWeight: '800', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
             <Info size={20} /> Observation Log
           </h4>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
             {cups.map(cup => {
               const isWeighed = weighedItems[cup.id];
+              const isPebbles = cup.id === 'pebbles';
+              const highlight = isComplete && isPebbles;
               return (
                 <div key={cup.id} style={{ 
-                  background: 'white', padding: '12px', borderRadius: '8px', border: `1px solid ${isWeighed ? '#bbf7d0' : 'var(--border)'}`,
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                  background: highlight ? '#fef3c7' : 'white', 
+                  padding: highlight ? '12px 10px' : '8px 10px', 
+                  borderRadius: '8px', 
+                  border: highlight ? '2px solid #f59e0b' : `1px solid ${isWeighed ? '#bbf7d0' : 'var(--border)'}`,
+                  boxShadow: highlight ? '0 4px 6px -1px rgba(245, 158, 11, 0.2)' : 'none',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  transition: 'all 0.3s'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '45px', height: '55px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ width: '35px', height: '45px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <RealisticCup material={cup.id} />
                     </div>
                     <div>
-                      <div style={{ fontWeight: '800', fontSize: '1.1rem' }}>{cup.label}</div>
-                      <div style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--text-muted)' }}>{cup.material}</div>
+                      <div style={{ fontWeight: highlight ? '900' : '800', fontSize: '1.1rem', color: highlight ? '#92400e' : 'inherit' }}>{cup.label}</div>
+                      <div style={{ fontSize: '1rem', fontWeight: '600', color: highlight ? '#b45309' : 'var(--text-muted)' }}>{cup.material}</div>
                     </div>
                   </div>
-                  <div style={{ fontSize: '1.3rem', fontWeight: '800', color: isWeighed ? '#15803d' : 'var(--text-muted)' }}>
-                    {isWeighed ? `${cup.mass} g` : '?.?? g'}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ fontSize: highlight ? '1.5rem' : '1.3rem', fontWeight: '900', color: highlight ? '#d97706' : (isWeighed ? '#15803d' : 'var(--text-muted)') }}>
+                      {isWeighed ? `${cup.mass} g` : '?.?? g'}
+                    </div>
+                    {highlight && <CheckCircle2 size={24} color="#d97706" />}
                   </div>
                 </div>
               );
@@ -385,10 +391,10 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
       </div>
 
       {/* Footer Progress */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#d97706' }}>
           <Target size={20} />
-          <span style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', fontWeight: '700' }}>Weigh all 3 cups to uncover their mass.</span>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', fontWeight: '700' }}>Weigh all 3 cups to uncover their mass.</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', background: isComplete ? '#dcfce7' : 'var(--surface)', padding: '8px 16px', borderRadius: '20px', border: `1px solid ${isComplete ? '#bbf7d0' : 'var(--border)'}`, transition: 'all 0.3s' }}>
@@ -401,14 +407,22 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
         </div>
       </div>
       {isComplete && (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: '#fcf6ea', padding: '1.5rem', borderRadius: '12px', border: '1px solid #c8b6a6', boxShadow: '0 4px 6px rgba(87, 65, 51, 0.08)', width: '100%' }}>
-          <div style={{ color: '#574133', fontSize: '1.4rem', fontWeight: '900', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <AlertCircle size={24} /> INFERENCE
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: '#fcf6ea', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid #c8b6a6', boxShadow: '0 4px 6px rgba(87, 65, 51, 0.08)', width: '100%', flexShrink: 0 }}>
+          <div style={{ color: '#574133', fontSize: '1.2rem', fontWeight: '900', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AlertCircle size={20} /> INFERENCE
           </div>
-          <p style={{ margin: 0, fontSize: '1.3rem', fontWeight: '700', color: '#574133', lineHeight: '1.6' }}>
+          <p style={{ margin: 0, fontSize: '1.15rem', fontWeight: '700', color: '#574133', lineHeight: '1.5' }}>
             Even though all cups are the same size and half-filled, they have different weights! 
-            The property that makes them heavy or light is called <strong style={{ color: '#d97706', fontWeight: '900', fontSize: '1.4rem' }}>MASS</strong>. Pebbles have the most mass.
+            The property that makes them heavy or light is called <strong style={{ color: '#d97706', fontWeight: '900', fontSize: '1.25rem' }}>MASS</strong>.
           </p>
+          <div style={{ marginTop: '0.75rem', background: '#fef3c7', padding: '0.75rem 1rem', borderRadius: '8px', borderLeft: '4px solid #f59e0b', display: 'inline-flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ fontSize: '1.3rem', fontWeight: '900', color: '#92400e', display: 'flex', alignItems: 'center', gap: '8px' }}>
+               Pebbles — 142.15 g <CheckCircle2 size={18} color="#d97706" />
+            </div>
+            <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#b45309' }}>
+               Pebbles have the most mass.
+            </div>
+          </div>
         </motion.div>
       )}
 
