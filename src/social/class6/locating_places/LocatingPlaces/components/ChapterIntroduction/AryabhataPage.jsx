@@ -16,17 +16,57 @@ const SLIDES = [
 ];
 
 const SLIDE_2_GRID = [
-  { icon: '🌍', badge: 'Key Fact 1 · Earth Shape', title: 'The Earth is a Sphere', desc: 'Not flat — a globe spinning in space surrounded by atmosphere.' },
-  { icon: '🔄', badge: 'Key Fact 2 · Rotation', title: 'Rotation on Axis', desc: 'Earth rotates on its axis daily, giving us day, night & moving stars.' },
-  { icon: '📏', badge: 'Key Fact 3 · Circumference', title: "Earth's Size", desc: "Estimated Earth's size astonishingly close to modern satellite values." },
-  { icon: '🌘', badge: 'Key Fact 4 · Astronomy', title: 'Eclipses & Math', desc: 'Moon shines by reflected light; eclipses by shadows. Gave π ≈ 3.1416.' }
+  {
+    icon: '🌍',
+    badge: 'Key Fact 1 · Earth Shape',
+    title: 'The Earth is a Sphere',
+    desc: 'Stated clearly that the Earth is a round sphere floating in space, surrounded by an envelope of atmosphere rather than resting flat.'
+  },
+  {
+    icon: '🔄',
+    badge: 'Key Fact 2 · Rotation',
+    title: 'Rotation on Axis',
+    desc: 'Discovered that the Earth rotates on its own axis once every day, creating the continuous natural cycle of day, night and moving stars.'
+  },
+  {
+    icon: '📏',
+    badge: 'Key Fact 3 · Circumference',
+    title: "Earth's Dimensions",
+    desc: 'Calculated the circumference and diameter of the spherical Earth, astonishingly close to the measurements obtained by modern satellites.'
+  },
+  {
+    icon: '🌘',
+    badge: 'Key Fact 4 · Astronomy',
+    title: 'Eclipses & Geometry',
+    desc: 'Explained that the Moon shines by reflected sunlight, proved eclipses are cast by planetary shadows, and derived constant π ≈ 3.1416.'
+  }
 ];
 
 const SLIDE_3_GRID = [
-  { icon: '⏳', badge: 'Key Fact 1 · Lifespan', title: '476 – 550 CE', desc: 'Lived about 1,500 years ago in ancient India.' },
-  { icon: '📜', badge: 'Key Fact 2 · Masterpiece', title: 'The Āryabhaṭīya', desc: 'Composed in 499 CE when he was just 23 years old.' },
-  { icon: '🗺', badge: 'Key Fact 3 · Coordinates', title: 'Latitude & Longitude', desc: 'Used coordinate principles to mark exact locations on Earth.' },
-  { icon: '🕰', badge: 'Key Fact 4 · Global Time', title: 'Time & Rotation', desc: "Linked 360° rotation (15° every hour) to global time zones." }
+  {
+    icon: '⏳',
+    badge: 'Key Fact 1 · Classical Era',
+    title: '476 – 550 CE',
+    desc: 'Lived and worked in ancient Kusumapura (Patliputra) over 1,500 years ago during the flourishing golden era of Indian science.'
+  },
+  {
+    icon: '📜',
+    badge: 'Key Fact 2 · Masterpiece',
+    title: 'The Āryabhaṭīya',
+    desc: 'Composed his world-renowned treatise on mathematics and astronomy in 499 CE at the young age of just 23 years.'
+  },
+  {
+    icon: '🗺️',
+    badge: 'Key Fact 3 · Coordinates',
+    title: 'Global Coordinates',
+    desc: 'Pioneered coordinate geometry methods using meridians of longitude and parallels of latitude to define precise locations on Earth.'
+  },
+  {
+    icon: '🕰️',
+    badge: 'Key Fact 4 · Time Systems',
+    title: 'Rotation & Time',
+    desc: "Connected the Earth's 360° rotational geometry (turning 15° every hour) to solar passage and geographical time variations."
+  }
 ];
 
 const TIMELINE = [
@@ -71,29 +111,31 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
 
       {/* ============ LEFT PAGE — fixed blueprint ============ */}
       <div style={{
-        flex: '0 0 44%',
+        flex: '0 0 45%',
         minWidth: 0,
         height: '100%',
         boxSizing: 'border-box',
-        background: 'linear-gradient(160deg, #F7F1E2, #EFE6D2)',
-        padding: '22px 24px',
+        background: 'linear-gradient(160deg, #F7F1E2 0%, #EFE6D2 100%)',
+        borderRight: '1.5px solid #E5D5C0',
+        padding: '24px 28px 20px',
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
         overflow: 'hidden'
       }}>
-        <div>
+        {/* Left Header - Perfectly Parallel Height with Right */}
+        <div style={{ flexShrink: 0, height: '74px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
           <div style={{
             fontFamily: SANS, fontWeight: 800,
-            fontSize: '15px', letterSpacing: '.12em',
+            fontSize: '14.5px', letterSpacing: '.12em',
             textTransform: 'uppercase', color: '#B45309', marginBottom: '6px'
           }}>
             Chapter 1 · Class 6 Social Science
           </div>
           <h1 style={{
             fontFamily: SERIF, fontWeight: 900, color: NAVY,
-            fontSize: 'clamp(24px, 2.2vw, 32px)', lineHeight: 1.1, margin: 0,
-            letterSpacing: '-.01em'
+            fontSize: '26px', lineHeight: 1.2, margin: 0,
+            letterSpacing: '-.01em', whiteSpace: 'nowrap'
           }}>
             Locating Places on the Earth
           </h1>
@@ -115,13 +157,14 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
           <div style={{ fontFamily: SERIF, fontSize: '36px', lineHeight: .5, color: '#C9D4E2' }}>“</div>
           <p style={{
             fontFamily: SERIF, fontStyle: 'italic', fontWeight: 600, color: NAVY,
-            fontSize: '16px', lineHeight: 1.55, margin: '6px 0 10px'
+            fontSize: '16px', lineHeight: 1.55, margin: '6px 0 10px',
+            textAlign: 'justify', textJustify: 'inter-word'
           }}>
             The globe of the Earth stands in space, made up of water, earth, fire and air and is spherical. … It is
             surrounded by all creatures.
           </p>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontFamily: SANS, fontWeight: 800, color: NAVY, fontSize: '15px' }}>— Āryabhaṭa</div>
+            <div style={{ fontFamily: SANS, fontWeight: 800, color: NAVY, fontSize: '15.5px' }}>— Āryabhaṭa</div>
             <div style={{ fontFamily: SANS, color: '#5c6b7a', fontSize: '14px', marginTop: '2px' }}>Āryabhaṭīya · about 500 CE</div>
           </div>
         </div>
@@ -129,21 +172,28 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
 
       {/* ============ RIGHT PAGE — book slide paged ============ */}
       <div style={{
-        flex: 1, minWidth: 0, height: '100%', boxSizing: 'border-box', background: '#fff',
-        padding: '24px 28px 16px',
-        display: 'flex', flexDirection: 'column', overflow: 'hidden'
+        flex: '1 1 55%',
+        minWidth: 0,
+        height: '100%',
+        boxSizing: 'border-box',
+        background: '#fff',
+        padding: '24px 28px 20px',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
       }}>
-        {/* Header */}
-        <div style={{ flexShrink: 0, marginBottom: '18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: SANS, fontWeight: 800, fontSize: '15px', letterSpacing: '.14em', textTransform: 'uppercase', color: AMBER, marginBottom: '4px' }}>
-            <Sparkles size={18} color={AMBER} /> {SLIDES[slide].badge}
+        {/* Right Header - Perfectly Parallel Height with Left */}
+        <div style={{ flexShrink: 0, height: '74px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: SANS, fontWeight: 800, fontSize: '14.5px', letterSpacing: '.14em', textTransform: 'uppercase', color: AMBER, marginBottom: '6px' }}>
+            <Sparkles size={16} color={AMBER} /> {SLIDES[slide].badge}
           </div>
           <h2 style={{
-            display: 'flex', alignItems: 'center', gap: '12px',
+            display: 'flex', alignItems: 'center', gap: '10px',
             fontFamily: SERIF, fontWeight: 900, color: NAVY,
-            fontSize: 'clamp(26px, 2.5vw, 32px)', margin: 0
+            fontSize: '24px', lineHeight: 1.2, margin: 0,
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'
           }}>
-            <BookOpen size={30} color="#3b6ea5" strokeWidth={2.2} />
+            <BookOpen size={26} color="#3b6ea5" strokeWidth={2.2} />
             Historical Facts — {SLIDES[slide].title}
           </h2>
         </div>
@@ -154,28 +204,28 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
 
             {/* SLIDE 0: Overview */}
             {slide === 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%' }}>
                 <div style={{
                   ...cardBase,
                   background: '#F7F1E2',
                   border: '1px solid #F2DFBC',
-                  padding: '26px 30px',
+                  padding: '24px 28px',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '16px',
+                  gap: '14px',
                   boxShadow: '0 4px 16px rgba(60,40,20,.06)'
                 }}>
-                  <h3 style={{ fontFamily: SERIF, fontWeight: 900, color: '#B45309', fontSize: '26px', margin: 0, lineHeight: 1.3 }}>
+                  <h3 style={{ fontFamily: SERIF, fontWeight: 900, color: '#B45309', fontSize: '24px', margin: 0, lineHeight: 1.3 }}>
                     A pioneer of Indian astronomy &amp; mathematics
                   </h3>
-                  <p style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '19px', lineHeight: 1.65, margin: 0 }}>
+                  <p style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '18px', lineHeight: 1.65, margin: 0, textAlign: 'justify', textJustify: 'inter-word' }}>
                     Working around 500 CE (about 1,500 years ago), Āryabhaṭa asked the fundamental questions this chapter explores — what shape is the Earth,
                     why do stars appear to move across the sky, and how do we measure our planet?
                   </p>
-                  <p style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '19px', lineHeight: 1.65, margin: 0 }}>
+                  <p style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '18px', lineHeight: 1.65, margin: 0, textAlign: 'justify', textJustify: 'inter-word' }}>
                     At just 23 years of age, he composed the famous <b style={{ color: '#1A0D05', fontWeight: 800 }}>Āryabhaṭīya</b> in 499 CE.
                   </p>
-                  <p style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '19px', lineHeight: 1.65, margin: 0 }}>
+                  <p style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '18px', lineHeight: 1.65, margin: 0, textAlign: 'justify', textJustify: 'inter-word' }}>
                     It became an important foundational work in Indian mathematics and astronomy, influencing generations of scholars.
                   </p>
                 </div>
@@ -184,25 +234,26 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
 
             {/* SLIDE 1: Shape, Motion & Math */}
             {slide === 1 && (
-              <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gridTemplateRows: 'repeat(2, 1fr)', gap: '16px', height: '100%' }}>
+              <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gridTemplateRows: 'repeat(2, minmax(0, 1fr))', gap: '16px', height: '100%' }}>
                 {SLIDE_2_GRID.map((k) => (
                   <div key={k.title} style={{
                     background: '#FBF3E3', border: '1px solid #F2DFBC', borderRadius: '16px',
-                    padding: '18px 22px', display: 'flex', gap: '12px', alignItems: 'flex-start',
-                    boxShadow: '0 4px 14px rgba(60,40,20,.05)', justifyContent: 'center', flexDirection: 'column'
+                    padding: '18px 22px', display: 'flex', flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 4px 14px rgba(60,40,20,.05)'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                      <span style={{ fontSize: '34px', lineHeight: 1.1, flexShrink: 0 }}>{k.icon}</span>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontFamily: SANS, fontWeight: 800, color: AMBER, fontSize: '14px', letterSpacing: '.06em', textTransform: 'uppercase', lineHeight: 1.2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '32px', lineHeight: 1, flexShrink: 0 }}>{k.icon}</span>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ fontFamily: SANS, fontWeight: 800, color: AMBER, fontSize: '13px', letterSpacing: '.06em', textTransform: 'uppercase', lineHeight: 1.2, whiteSpace: 'nowrap' }}>
                           {k.badge}
                         </div>
-                        <div style={{ fontFamily: SERIF, fontWeight: 900, color: '#2C1A0E', fontSize: '22px', margin: '4px 0 0', lineHeight: 1.25 }}>
+                        <div style={{ fontFamily: SERIF, fontWeight: 900, color: '#2C1A0E', fontSize: '20px', margin: '3px 0 0', lineHeight: 1.25 }}>
                           {k.title}
                         </div>
                       </div>
                     </div>
-                    <div style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '16px', lineHeight: 1.55, textAlign: 'left' }}>
+                    <div style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '15.5px', lineHeight: 1.55, textAlign: 'justify', textJustify: 'inter-word' }}>
                       {k.desc}
                     </div>
                   </div>
@@ -212,25 +263,26 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
 
             {/* SLIDE 2: Coordinates & Time */}
             {slide === 2 && (
-              <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gridTemplateRows: 'repeat(2, 1fr)', gap: '16px', height: '100%' }}>
+              <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gridTemplateRows: 'repeat(2, minmax(0, 1fr))', gap: '16px', height: '100%' }}>
                 {SLIDE_3_GRID.map((k) => (
                   <div key={k.title} style={{
                     background: '#FBF3E3', border: '1px solid #F2DFBC', borderRadius: '16px',
-                    padding: '18px 22px', display: 'flex', gap: '12px', alignItems: 'flex-start',
-                    boxShadow: '0 4px 14px rgba(60,40,20,.05)', justifyContent: 'center', flexDirection: 'column'
+                    padding: '18px 22px', display: 'flex', flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 4px 14px rgba(60,40,20,.05)'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                      <span style={{ fontSize: '34px', lineHeight: 1.1, flexShrink: 0 }}>{k.icon}</span>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontFamily: SANS, fontWeight: 800, color: AMBER, fontSize: '14px', letterSpacing: '.06em', textTransform: 'uppercase', lineHeight: 1.2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '32px', lineHeight: 1, flexShrink: 0 }}>{k.icon}</span>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ fontFamily: SANS, fontWeight: 800, color: AMBER, fontSize: '13px', letterSpacing: '.06em', textTransform: 'uppercase', lineHeight: 1.2, whiteSpace: 'nowrap' }}>
                           {k.badge}
                         </div>
-                        <div style={{ fontFamily: SERIF, fontWeight: 900, color: '#2C1A0E', fontSize: '22px', margin: '4px 0 0', lineHeight: 1.25 }}>
+                        <div style={{ fontFamily: SERIF, fontWeight: 900, color: '#2C1A0E', fontSize: '20px', margin: '3px 0 0', lineHeight: 1.25 }}>
                           {k.title}
                         </div>
                       </div>
                     </div>
-                    <div style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '16px', lineHeight: 1.55, textAlign: 'left' }}>
+                    <div style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '15.5px', lineHeight: 1.55, textAlign: 'justify', textJustify: 'inter-word' }}>
                       {k.desc}
                     </div>
                   </div>
@@ -240,24 +292,23 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
 
             {/* SLIDE 3: Why It Matters & Timeline */}
             {slide === 3 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', justifyContent: 'space-between' }}>
                 <div style={{ ...cardBase, background: '#FDF4E4', border: '1px solid #F2DFBC', padding: '22px 26px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: SERIF, fontWeight: 900, color: AMBER, fontSize: '24px', margin: 0 }}>
-                    <Info size={24} color={AMBER} /> Why this matters for our chapter
+                  <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: SERIF, fontWeight: 900, color: AMBER, fontSize: '22px', margin: 0 }}>
+                    <Info size={22} color={AMBER} /> Why this matters for our chapter
                   </h3>
                   <ul style={{ margin: 0, paddingLeft: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <li style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '18px', lineHeight: 1.6 }}>
-                      A spherical Earth is exactly why we use a globe with latitude and longitude to locate any place.
+                    <li style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '17px', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
+                      A spherical Earth is exactly why we use a globe with latitude and longitude to locate any place accurately.
                     </li>
-                    <li style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '18px', lineHeight: 1.6 }}>
-                      Because the Earth spins once a day (360° in 24 hours), the world turns <b style={{ color: '#1A0D05', fontWeight: 800 }}>15° every hour</b> — the
-                      idea behind time zones and IST.
+                    <li style={{ fontFamily: SANS, fontWeight: 600, color: '#3D2E24', fontSize: '17px', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
+                      Because the Earth spins once a day (360° in 24 hours), the world turns <b style={{ color: '#1A0D05', fontWeight: 800 }}>15° every hour</b> — the fundamental principle behind international time zones and IST.
                     </li>
                   </ul>
                 </div>
 
-                <div style={{ background: '#FAF6EE', border: '1.5px solid #E5D5C0', borderRadius: '16px', padding: '20px 24px', boxShadow: '0 6px 18px rgba(44,26,14,.06)' }}>
-                  <div style={{ fontFamily: SERIF, fontWeight: 900, color: '#2C1A0E', fontSize: '22px', marginBottom: '16px' }}>
+                <div style={{ background: '#FAF6EE', border: '1.5px solid #E5D5C0', borderRadius: '16px', padding: '18px 24px', boxShadow: '0 6px 18px rgba(44,26,14,.06)' }}>
+                  <div style={{ fontFamily: SERIF, fontWeight: 900, color: '#2C1A0E', fontSize: '20px', marginBottom: '14px' }}>
                     Timeline of Āryabhaṭa
                   </div>
                   <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -265,8 +316,8 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
                     {TIMELINE.map(t => (
                       <div key={t.year} style={{ position: 'relative', textAlign: 'center', flex: 1 }}>
                         <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#B45309', margin: '0 auto 8px', border: '3px solid #FAF6EE', boxShadow: '0 3px 8px rgba(180,83,9,0.35)' }} />
-                        <div style={{ fontFamily: MONO, fontWeight: 800, color: '#2C1A0E', fontSize: '18px' }}>{t.year}</div>
-                        <div style={{ fontFamily: SANS, color: '#3D2E24', fontSize: '16px', marginTop: '2px', fontWeight: 600 }}>{t.desc}</div>
+                        <div style={{ fontFamily: MONO, fontWeight: 800, color: '#2C1A0E', fontSize: '17px' }}>{t.year}</div>
+                        <div style={{ fontFamily: SANS, color: '#3D2E24', fontSize: '15px', marginTop: '2px', fontWeight: 600 }}>{t.desc}</div>
                       </div>
                     ))}
                   </div>
@@ -284,7 +335,7 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
         }}>
           {/* Page Indicators */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontFamily: SANS, fontWeight: 700, color: '#5c6b7a', fontSize: '15px' }}>
+            <span style={{ fontFamily: SANS, fontWeight: 700, color: '#5c6b7a', fontSize: '15.5px' }}>
               Slide {slide + 1} of {SLIDES.length}
             </span>
             <span style={{ display: 'inline-flex', gap: '8px' }}>
@@ -317,7 +368,7 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
               }}
               disabled={slide === 0 && !onBack}
               style={{
-                fontFamily: SANS, fontWeight: 700, fontSize: '15px',
+                fontFamily: SANS, fontWeight: 700, fontSize: '15.5px',
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 background: '#0E3556', color: '#fff', border: 'none',
                 borderRadius: '999px', padding: '12px 24px',
@@ -337,7 +388,7 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
               }}
               disabled={isLast && isNextEnabled === false}
               style={{
-                fontFamily: SANS, fontWeight: 700, fontSize: '15px',
+                fontFamily: SANS, fontWeight: 700, fontSize: '15.5px',
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 background: isLast ? '#16a34a' : '#F59E0B', color: '#fff', border: 'none',
                 borderRadius: '999px', padding: '12px 26px',
