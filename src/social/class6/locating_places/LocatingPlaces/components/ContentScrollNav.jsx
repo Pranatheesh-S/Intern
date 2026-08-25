@@ -219,7 +219,7 @@ export function ScrollableWithNav({ children, containerStyle, scrollStyle, class
     setPage(prev => Math.min(prev, uniqueStarts.length - 1));
   }, [collect]);
 
-  // Keep visibility in sync so items outside the active page window never bleed into view or overlap
+  // Ensure all child items stay visible and interactive without artificial hiding
   React.useLayoutEffect(() => {
     const view = viewportRef.current;
     const track = trackRef.current;
@@ -227,35 +227,9 @@ export function ScrollableWithNav({ children, containerStyle, scrollStyle, class
     const kids = Array.from(track.children);
     if (!kids.length) return;
 
-    if (pages.length <= 1) {
-      kids.forEach(k => {
-        k.style.visibility = '';
-        k.style.pointerEvents = '';
-      });
-      return;
-    }
-
-    const curStart = pages[page] || 0;
-    const nextStart = page < pages.length - 1 ? pages[page + 1] : Infinity;
-
-    kids.forEach(kid => {
-      let top = 0, node = kid;
-      while (node && node !== view) {
-        top += node.offsetTop;
-        node = node.offsetParent;
-      }
-      const bottom = top + kid.offsetHeight;
-
-      const isPast = bottom <= curStart + 4;
-      const isFuture = top >= nextStart - 4;
-
-      if (isPast || isFuture) {
-        kid.style.visibility = 'hidden';
-        kid.style.pointerEvents = 'none';
-      } else {
-        kid.style.visibility = '';
-        kid.style.pointerEvents = '';
-      }
+    kids.forEach(k => {
+      k.style.visibility = 'visible';
+      k.style.pointerEvents = 'auto';
     });
   }, [page, pages]);
 

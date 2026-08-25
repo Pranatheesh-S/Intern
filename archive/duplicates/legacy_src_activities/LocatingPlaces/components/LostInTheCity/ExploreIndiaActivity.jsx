@@ -455,7 +455,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
   const [animating, setAnimating] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   
-  const [mapStyle, setMapStyle] = useState('physical');
+  const [mapStyle, setMapStyle] = useState('satellite');
   const [travelMode, setTravelMode] = useState('plane');
   const [activeRoute, setActiveRoute] = useState(null);
   
@@ -611,8 +611,8 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                 borderRadius: '5px',
                 padding: '2px 7px',
                 fontSize: '10.5px',
-                fontWeight: 800,
-                color: travelMode === 'train' ? '#1E40AF' : '#64748B',
+                fontWeight: 900,
+                color: travelMode === 'train' ? '#1E40AF' : '#334155',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -624,7 +624,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
             </button>
           </div>
 
-          <div style={{ display: 'flex', background: '#F1F5F9', padding: '2px', borderRadius: '6px', border: '1px solid #CBD5E1' }}>
+          <div style={{ display: 'flex', background: '#E2E8F0', padding: '2px', borderRadius: '6px', border: '1px solid #94A3B8' }}>
             <button
               onClick={() => setMapStyle('physical')}
               style={{
@@ -633,8 +633,8 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                 borderRadius: '5px',
                 padding: '2px 7px',
                 fontSize: '10.5px',
-                fontWeight: 800,
-                color: mapStyle === 'physical' ? '#166534' : '#64748B',
+                fontWeight: 900,
+                color: mapStyle === 'physical' ? '#166534' : '#334155',
                 cursor: 'pointer'
               }}
               title="Physical Relief Style"
@@ -649,8 +649,8 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                 borderRadius: '5px',
                 padding: '2px 7px',
                 fontSize: '10.5px',
-                fontWeight: 800,
-                color: mapStyle === 'satellite' ? '#0F172A' : '#64748B',
+                fontWeight: 900,
+                color: mapStyle === 'satellite' ? '#0F172A' : '#334155',
                 cursor: 'pointer'
               }}
               title="Satellite Night View"
@@ -694,17 +694,17 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
           🇮🇳
         </div>
         
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: '#FEF3C7', border: '1px solid #FDE68A', padding: '2px 10px', borderRadius: '999px', color: '#92400E', fontSize: '10.5px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>
-          <Sparkles size={11} color="#D97706" /> Interactive National Mission
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: '#FEF3C7', border: '1.2px solid #FDE68A', padding: '3px 12px', borderRadius: '999px', color: '#78350F', fontSize: '11px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>
+          <Sparkles size={12} color="#D97706" /> Interactive National Mission
         </div>
 
-        <h2 style={{ fontFamily: '"Fraunces", serif', color: '#92400E', fontSize: '22px', fontWeight: 900, margin: '0 0 6px 0', lineHeight: 1.2 }}>
+        <h2 style={{ fontFamily: '"Fraunces", serif', color: '#78350F', fontSize: '24px', fontWeight: 900, margin: '0 0 6px 0', lineHeight: 1.2 }}>
           Travel Across India!
         </h2>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '12px', textAlign: 'center', maxWidth: '440px' }}>
-          <p style={{ margin: 0, fontFamily: '"Space Grotesk", sans-serif', color: '#3D2E24', fontSize: '13px', fontWeight: 600, lineHeight: 1.35 }}>
-            Master how compasses point across <span style={{ color: '#D97706', background: '#FEF3C7', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Cardinal (N, S, E, W)</span> and <span style={{ color: '#2563EB', background: '#DBEAFE', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Intermediate Directions (NE, NW, SE, SW)</span>.
+          <p style={{ margin: 0, fontFamily: '"Space Grotesk", sans-serif', color: '#0F172A', fontSize: '13.5px', fontWeight: 700, lineHeight: 1.45 }}>
+            Master how compasses point across <span style={{ color: '#92400E', background: '#FEF3C7', padding: '2px 6px', borderRadius: '4px', fontWeight: 900, border: '1px solid #FDE68A' }}>Cardinal (N, S, E, W)</span> and <span style={{ color: '#1D4ED8', background: '#DBEAFE', padding: '2px 6px', borderRadius: '4px', fontWeight: 900, border: '1px solid #BFDBFE' }}>Intermediate Directions (NE, NW, SE, SW)</span>.
           </p>
         </div>
 
@@ -717,7 +717,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
             padding: '10px 24px',
             borderRadius: '26px',
             fontSize: '13.5px',
-            fontWeight: 800,
+            fontWeight: 900,
             cursor: 'pointer',
             boxShadow: '0 4px 14px rgba(22, 163, 74, 0.35)',
             display: 'inline-flex',
@@ -737,10 +737,10 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         boxShadow: '0 4px 12px rgba(60,40,20,0.05)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-          <span style={{ fontSize: '11px', fontWeight: 800, color: '#78350F', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Compass size={13} color="#D97706" /> 8-Point Compass Trainer
+          <span style={{ fontSize: '11.5px', fontWeight: 900, color: '#78350F', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Compass size={14} color="#D97706" /> 8-Point Compass Trainer
           </span>
-          <span style={{ fontSize: '10px', color: '#64748B', fontWeight: 700 }}>Click any heading to inspect:</span>
+          <span style={{ fontSize: '10.5px', color: '#1E40AF', fontWeight: 800 }}>Click any heading to inspect:</span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '4px', marginBottom: '6px' }}>
@@ -750,12 +750,12 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
               onClick={() => setSelectedCompassDir(cd)}
               style={{
                 background: selectedCompassDir?.dir === cd.dir ? '#FEF3C7' : '#F8FAFC',
-                border: `1.2px solid ${selectedCompassDir?.dir === cd.dir ? '#D97706' : '#E2E8F0'}`,
-                borderRadius: '6px',
-                padding: '4px 6px',
-                fontSize: '10.5px',
-                fontWeight: 800,
-                color: selectedCompassDir?.dir === cd.dir ? '#92400E' : '#334155',
+                border: `1.5px solid ${selectedCompassDir?.dir === cd.dir ? '#D97706' : '#CBD5E1'}`,
+                borderRadius: '8px',
+                padding: '5px 6px',
+                fontSize: '11px',
+                fontWeight: 900,
+                color: selectedCompassDir?.dir === cd.dir ? '#78350F' : '#0F172A',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -763,14 +763,14 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
               }}
             >
               <span>{cd.dir}</span>
-              <span style={{ fontSize: '9px', color: '#64748B' }}>{cd.deg}°</span>
+              <span style={{ fontSize: '9.5px', color: selectedCompassDir?.dir === cd.dir ? '#B45309' : '#2563EB', fontWeight: 800 }}>{cd.deg}°</span>
             </button>
           ))}
         </div>
 
         {selectedCompassDir && (
-          <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', padding: '5px 8px', borderRadius: '6px', fontSize: '11px', color: '#92400E' }}>
-            <strong>{selectedCompassDir.label} ({selectedCompassDir.deg}°):</strong> Points towards {selectedCompassDir.states} from central India.
+          <div style={{ background: '#FFFBEB', border: '1.2px solid #FDE68A', padding: '6px 10px', borderRadius: '8px', fontSize: '11.5px', color: '#78350F', fontWeight: 800 }}>
+            <strong style={{ color: '#92400E' }}>{selectedCompassDir.label} ({selectedCompassDir.deg}°):</strong> Points towards {selectedCompassDir.states} from central India.
           </div>
         )}
       </div>
@@ -852,49 +852,50 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
 
         <div style={{
           background: '#FFFFFF',
-          border: '1.2px solid #F2DFBC',
-          padding: '8px 10px',
-          borderRadius: '10px',
-          marginBottom: '6px',
+          border: '1.5px solid #F2DFBC',
+          padding: '10px 12px',
+          borderRadius: '12px',
+          marginBottom: '8px',
+          boxShadow: '0 2px 8px rgba(60,40,20,0.04)',
           flexShrink: 0
         }}>
-          <div style={{ fontSize: '11px', color: '#92400E', fontWeight: 800, marginBottom: '3px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Landmark size={12} color="#D97706" /> 
+          <div style={{ fontSize: '11.5px', color: '#78350F', fontWeight: 900, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <Landmark size={13} color="#D97706" /> 
             <span>{mission.landmark}</span> • 
-            <span style={{ color: '#1E40AF', background: '#EFF6FF', padding: '1px 5px', borderRadius: '4px', fontWeight: 700 }}>
+            <span style={{ color: '#1D4ED8', background: '#DBEAFE', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
               {mission.highlightTerm}
             </span>
           </div>
           
-          <div style={{ fontSize: '12.5px', color: '#3D2E24', lineHeight: 1.4, fontWeight: 600, fontFamily: '"Space Grotesk", sans-serif' }}>
+          <div style={{ fontSize: '13px', color: '#0F172A', lineHeight: 1.5, fontWeight: 700, fontFamily: '"Space Grotesk", sans-serif' }}>
             {missionIndex === 0 && (
               <p style={{ margin: 0 }}>
-                Departing from coastal <strong style={{ color: '#166534' }}>Chennai (Tamil Nadu)</strong>. Our voyage heads up to <strong style={{ color: '#92400E' }}>Bengaluru (Karnataka)</strong> on the elevated <span style={{ background: '#FEF3C7', padding: '1px 4px', borderRadius: '3px', color: '#B45309' }}>Deccan Plateau</span> (920m elevation).
+                Departing from coastal <strong style={{ color: '#15803D' }}>Chennai (Tamil Nadu)</strong>. Our voyage heads up to <strong style={{ color: '#B45309' }}>Bengaluru (Karnataka)</strong> on the elevated <span style={{ background: '#FEF3C7', padding: '2px 6px', borderRadius: '4px', color: '#92400E', fontWeight: 800, border: '1px solid #FDE68A' }}>Deccan Plateau</span> (920m elevation).
               </p>
             )}
             {missionIndex === 1 && (
               <p style={{ margin: 0 }}>
-                Navigating to financial hub <strong style={{ color: '#92400E' }}>Mumbai (Maharashtra)</strong> on the western <span style={{ background: '#E0F2FE', padding: '1px 4px', borderRadius: '3px', color: '#0369A1' }}>Arabian Sea Coast</span>. Let's compare this distance (~1,300 km) with Bengaluru (~350 km).
+                Navigating to financial hub <strong style={{ color: '#B45309' }}>Mumbai (Maharashtra)</strong> on the western <span style={{ background: '#E0F2FE', padding: '2px 6px', borderRadius: '4px', color: '#0369A1', fontWeight: 800, border: '1px solid #BAE6FD' }}>Arabian Sea Coast</span>. Let's compare this distance (~1,300 km) with Bengaluru (~350 km).
               </p>
             )}
             {missionIndex === 2 && (
               <p style={{ margin: 0 }}>
-                Traveling to our northern coastal neighbor <strong style={{ color: '#92400E' }}>Amaravati (Andhra Pradesh)</strong> along the fertile <span style={{ background: '#E0F2FE', padding: '1px 4px', borderRadius: '3px', color: '#0369A1' }}>Krishna River basin</span>.
+                Traveling to our northern coastal neighbor <strong style={{ color: '#B45309' }}>Amaravati (Andhra Pradesh)</strong> along the fertile <span style={{ background: '#E0F2FE', padding: '2px 6px', borderRadius: '4px', color: '#0369A1', fontWeight: 800, border: '1px solid #BAE6FD' }}>Krishna River basin</span>.
               </p>
             )}
             {missionIndex === 3 && (
               <p style={{ margin: 0 }}>
-                Crossing the eastern seaboard towards <strong style={{ color: '#92400E' }}>Kolkata (West Bengal)</strong> in the historic <span style={{ background: '#DCFCE7', padding: '1px 4px', borderRadius: '3px', color: '#166534' }}>Ganga Delta</span> along the Bay of Bengal.
+                Crossing the eastern seaboard towards <strong style={{ color: '#B45309' }}>Kolkata (West Bengal)</strong> in the historic <span style={{ background: '#DCFCE7', padding: '2px 6px', borderRadius: '4px', color: '#15803D', fontWeight: 800, border: '1px solid #BBF7D0' }}>Ganga Delta</span> along the Bay of Bengal.
               </p>
             )}
             {missionIndex === 4 && (
               <p style={{ margin: 0 }}>
-                Journeying to the royal Pink City <strong style={{ color: '#92400E' }}>Jaipur (Rajasthan)</strong> near the gateway of the golden <span style={{ background: '#FEF3C7', padding: '1px 4px', borderRadius: '3px', color: '#B45309' }}>Thar Desert</span> and Aravalli ranges.
+                Journeying to the royal Pink City <strong style={{ color: '#B45309' }}>Jaipur (Rajasthan)</strong> near the gateway of the golden <span style={{ background: '#FEF3C7', padding: '2px 6px', borderRadius: '4px', color: '#92400E', fontWeight: 800, border: '1px solid #FDE68A' }}>Thar Desert</span> and Aravalli ranges.
               </p>
             )}
             {missionIndex === 5 && (
               <p style={{ margin: 0 }}>
-                Our grand finale brings us to <strong style={{ color: '#92400E' }}>Assam (Dispur)</strong> nestled in the lush tea hills along the mighty <span style={{ background: '#E0F2FE', padding: '1px 4px', borderRadius: '3px', color: '#0369A1' }}>Brahmaputra River valley</span>.
+                Our grand finale brings us to <strong style={{ color: '#B45309' }}>Assam (Dispur)</strong> nestled in the lush tea hills along the mighty <span style={{ background: '#E0F2FE', padding: '2px 6px', borderRadius: '4px', color: '#0369A1', fontWeight: 800, border: '1px solid #BAE6FD' }}>Brahmaputra River valley</span>.
               </p>
             )}
           </div>
@@ -903,74 +904,75 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         {animating ? (
           <div style={{
             background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
-            border: '1.2px solid #38BDF8',
+            border: '1.5px solid #38BDF8',
             padding: '10px 12px',
             borderRadius: '12px',
             color: '#F8FAFC',
             marginBottom: '6px',
+            boxShadow: '0 4px 14px rgba(15,23,42,0.4)',
             flexShrink: 0
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#38BDF8', fontSize: '11px', fontWeight: 900 }}>
-                {travelMode === 'plane' ? <Plane size={13} color="#38BDF8" /> : <Train size={13} color="#38BDF8" />}
-                <span>{travelMode === 'plane' ? 'TURBOFAN JET EN ROUTE' : 'VANDE BHARAT EXPRESS EN ROUTE'}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#38BDF8', fontSize: '11.5px', fontWeight: 900 }}>
+                {travelMode === 'plane' ? <Plane size={14} color="#38BDF8" /> : <Train size={14} color="#38BDF8" />}
+                <span>{travelMode === 'plane' ? '✈️ AIRBUS A350 EN ROUTE' : '🚆 VANDE BHARAT EXPRESS EN ROUTE'}</span>
               </div>
-              <div style={{ fontSize: '10.5px', color: '#FCD34D', fontWeight: 800 }}>
+              <div style={{ fontSize: '11px', color: '#FDE047', fontWeight: 900 }}>
                 Heading: {mission.bearing}° {mission.direction} • {mission.altitude}
               </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', textAlign: 'center', marginBottom: '6px' }}>
-              <div style={{ background: 'rgba(255,255,255,0.06)', padding: '4px', borderRadius: '6px' }}>
-                <div style={{ fontSize: '9px', color: '#94A3B8', fontWeight: 700 }}>ODOMETER</div>
+              <div style={{ background: 'rgba(255,255,255,0.08)', padding: '5px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div style={{ fontSize: '9.5px', color: '#93C5FD', fontWeight: 800, letterSpacing: '0.5px' }}>DISTANCE</div>
                 <div style={{ fontSize: '14px', fontWeight: 900, color: '#38BDF8' }}>{liveDistance} km</div>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.06)', padding: '4px', borderRadius: '6px' }}>
-                <div style={{ fontSize: '9px', color: '#94A3B8', fontWeight: 700 }}>SPEED</div>
+              <div style={{ background: 'rgba(255,255,255,0.08)', padding: '5px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div style={{ fontSize: '9.5px', color: '#93C5FD', fontWeight: 800, letterSpacing: '0.5px' }}>SPEED</div>
                 <div style={{ fontSize: '14px', fontWeight: 900, color: '#34D399' }}>{liveSpeed} km/h</div>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.06)', padding: '4px', borderRadius: '6px' }}>
-                <div style={{ fontSize: '9px', color: '#94A3B8', fontWeight: 700 }}>EST. TIME</div>
-                <div style={{ fontSize: '13px', fontWeight: 900, color: '#FBBF24' }}>
+              <div style={{ background: 'rgba(255,255,255,0.08)', padding: '5px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div style={{ fontSize: '9.5px', color: '#93C5FD', fontWeight: 800, letterSpacing: '0.5px' }}>EST. TIME</div>
+                <div style={{ fontSize: '13.5px', fontWeight: 900, color: '#FBBF24' }}>
                   {travelMode === 'plane' ? mission.flightTime : mission.trainTime}
                 </div>
               </div>
             </div>
 
             <div style={{
-              background: 'rgba(0, 0, 0, 0.4)',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
+              background: 'rgba(0, 0, 0, 0.5)',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
               borderRadius: '6px',
-              padding: '4px 8px',
-              fontSize: '10.5px',
-              color: '#E0F2FE',
+              padding: '5px 9px',
+              fontSize: '11px',
+              color: '#F0F9FF',
               display: 'flex',
               alignItems: 'center',
               gap: '6px'
             }}>
-              <span style={{ fontSize: '12px' }}>🪟</span>
-              <span><strong>Window View:</strong> {mission.windowScene}</span>
+              <span style={{ fontSize: '13px' }}>🪟</span>
+              <span><strong style={{ color: '#38BDF8' }}>Window View:</strong> {mission.windowScene}</span>
             </div>
           </div>
         ) : (
           <div style={{ marginBottom: '6px', flexShrink: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#78350F', fontSize: '12.5px', fontWeight: 900, marginBottom: '5px', fontFamily: '"Space Grotesk", sans-serif' }}>
-              <HelpCircle size={14} color="#D97706" /> {mission.question}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#78350F', fontSize: '13.5px', fontWeight: 900, marginBottom: '6px', fontFamily: '"Space Grotesk", sans-serif' }}>
+              <HelpCircle size={15} color="#D97706" /> {mission.question}
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
               {mission.options.map(opt => {
                 let isSelectedCorrect = feedback?.type === 'success' && opt === mission.correct;
                 let isSelectedWrong = feedback?.type === 'error' && feedback.picked === opt;
                 
                 let optBg = '#FFFFFF';
-                let optBorder = '#E2D2B8';
-                let optColor = '#3D2E24';
+                let optBorder = '#CBD5E1';
+                let optColor = '#0F172A';
 
                 if (isSelectedCorrect) {
                   optBg = '#DCFCE7';
                   optBorder = '#16A34A';
-                  optColor = '#166534';
+                  optColor = '#15803D';
                 } else if (isSelectedWrong) {
                   optBg = '#FEE2E2';
                   optBorder = '#EF4444';
@@ -983,12 +985,12 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                     onClick={() => !animating && !feedback?.type && handleAnswer(opt)}
                     disabled={!!feedback?.type || animating}
                     style={{
-                      padding: '7px 8px',
+                      padding: '8px 10px',
                       background: optBg,
-                      border: `1.2px solid ${optBorder}`,
+                      border: `1.5px solid ${optBorder}`,
                       borderRadius: '8px',
-                      fontSize: '12px',
-                      fontWeight: 800,
+                      fontSize: '13px',
+                      fontWeight: 900,
                       color: optColor,
                       cursor: (!!feedback?.type || animating) ? 'default' : 'pointer',
                       transition: 'all 0.15s',
@@ -997,10 +999,11 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '4px'
+                      gap: '5px',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
                     }}
                   >
-                    <span>🧭</span> {opt}
+                    <span style={{ fontSize: '14px' }}>🧭</span> {opt}
                   </button>
                 );
               })}
@@ -1055,8 +1058,8 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         )}
         
         {missionIndex > 0 && !feedback?.type && !animating && (
-          <div style={{ padding: '5px 8px', background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: '6px', color: '#78350F', fontSize: '11px', fontWeight: 800, textAlign: 'center', fontFamily: '"Space Grotesk", sans-serif', flexShrink: 0 }}>
-            {MISSIONS[missionIndex - 1].learning}
+          <div style={{ padding: '6px 10px', background: '#FEF3C7', border: '1.5px solid #F59E0B', borderRadius: '8px', color: '#78350F', fontSize: '12px', fontWeight: 900, textAlign: 'center', fontFamily: '"Space Grotesk", sans-serif', flexShrink: 0, boxShadow: '0 2px 6px rgba(217,119,6,0.1)' }}>
+            💡 {MISSIONS[missionIndex - 1].learning}
           </div>
         )}
 
@@ -1081,8 +1084,8 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
         <h2 style={{ fontFamily: '"Fraunces", serif', color: '#166534', fontSize: '22px', fontWeight: 900, margin: '0 0 3px 0' }}>
           National Geographic Explorer Certificate!
         </h2>
-        <p style={{ fontFamily: '"Space Grotesk", sans-serif', color: '#3D2E24', fontSize: '13px', fontWeight: 700, marginBottom: '12px', maxWidth: '440px' }}>
-          Congratulations! You completed over <strong>8,350 km</strong> of simulated travel across India using cardinal & intermediate directions.
+        <p style={{ fontFamily: '"Space Grotesk", sans-serif', color: '#0F172A', fontSize: '13.5px', fontWeight: 700, marginBottom: '12px', maxWidth: '440px' }}>
+          Congratulations! You completed over <strong style={{ color: '#166534' }}>8,350 km</strong> of simulated travel across India using cardinal & intermediate directions.
         </p>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', marginBottom: '14px', width: '100%', maxWidth: '460px' }}>
@@ -1098,7 +1101,7 @@ export default function ExploreIndiaActivity({ onBeginChapter, onBack }) {
               <div style={{ fontSize: '10.5px', fontWeight: 900, color: '#166534', display: 'flex', alignItems: 'center', gap: '3px' }}>
                 <CheckCircle size={10} color="#16A34A" /> {m.destination}
               </div>
-              <div style={{ fontSize: '9.5px', color: '#64748B', fontWeight: 700 }}>
+              <div style={{ fontSize: '9.5px', color: '#1D4ED8', fontWeight: 800 }}>
                 {m.direction} • {m.distance} km
               </div>
             </div>

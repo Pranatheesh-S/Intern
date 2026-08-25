@@ -339,11 +339,11 @@ export default function AryabhataPage({ onNext, onBack, isNextEnabled }) {
               style={{
                 fontFamily: SANS, fontWeight: 700, fontSize: '15px',
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
-                background: isLast ? '#16a34a' : '#0E3556', color: '#fff', border: 'none',
+                background: isLast ? '#16a34a' : '#F59E0B', color: '#fff', border: 'none',
                 borderRadius: '999px', padding: '12px 26px',
                 cursor: isLast && isNextEnabled === false ? 'not-allowed' : 'pointer',
                 opacity: isLast && isNextEnabled === false ? 0.45 : 1,
-                boxShadow: isLast ? '0 6px 16px rgba(22,163,74,.3)' : '0 6px 16px rgba(14,42,69,.22)'
+                boxShadow: isLast ? '0 6px 16px rgba(22,163,74,.3)' : '0 6px 16px rgba(245,158,11,.38)'
               }}
             >
               {isLast ? 'Continue' : 'Next'} <ChevronRight size={18} strokeWidth={2.5} />

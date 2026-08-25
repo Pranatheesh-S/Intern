@@ -338,20 +338,20 @@ export default function MapSymbols({ onComplete, onBack }) {
                             onClick={() => setSelectedTraySymbol(isSelected ? null : symbol)}
                             style={{
                               background: '#FFFFFF',
-                              padding: '5px 8px',
+                              padding: '8px 12px',
                               borderRadius: '9px',
                               border: `2px solid ${isSelected ? '#D97706' : '#F2DFBC'}`,
                               cursor: 'grab',
                               display: 'flex',
                               flexDirection: 'column',
                               alignItems: 'center',
+                              justifyContent: 'center',
                               boxShadow: isSelected ? '0 0 0 3px rgba(217,119,6,0.25)' : '0 2px 6px rgba(60,40,20,0.04)',
                               transition: 'all 0.15s'
                             }}
                             whileHover={{ scale: 1.05 }}
                           >
                             <SymbolDisplay Icon={symbol.Icon} width={58} height={28} />
-                            <span style={{ fontSize: '11px', fontWeight: 700, color: '#3D2E24', marginTop: '2px' }}>{symbol.name}</span>
                           </motion.div>
                         );
                       })}

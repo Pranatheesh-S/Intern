@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, RotateCcw, Info, ArrowRight, Lock, AlertCircle } from 'lucide-react';
+import { CheckCircle2, RotateCcw, Info, ArrowRight, Lock, AlertCircle, Maximize2, Minimize2 } from 'lucide-react';
+import MagnetActivityBackground from './MagnetActivityBackground';
 import { 
   DndContext, 
   useDraggable, 
   useDroppable, 
   DragOverlay, 
-  PointerSensor,
+  PointerSensor, 
   TouchSensor, 
   useSensor, 
   useSensors 
 } from '@dnd-kit/core';
-import SupercarShape from './SupercarShape';
 
 const STEPS = [
   {
     id: "carA",
-    name: "Lightning Supercar A (Driver Man)",
-    instruction: "Drag Lightning Supercar A (with Driver Man) and drop it onto the track.",
-    hint: "Drag Lightning Supercar A onto the race track workspace.",
+    name: "Magnetic Airplane A (Left Lane)",
+    instruction: "Drag Airplane A (Front: North [N], Rear: South [S]) onto the left flight corridor.",
+    hint: "Place Airplane A in the left airspace lane.",
   },
   {
     id: "carB",
-    name: "Nitro Supercar B",
-    instruction: "Drag Nitro Supercar B and drop it behind Supercar A.",
-    hint: "Drag Nitro Supercar B onto the race track workspace.",
+    name: "Magnetic Airplane B (Right Lane)",
+    instruction: "Drag Airplane B (Front: North [N], Rear: South [S]) alongside Airplane A into the right flight corridor.",
+    hint: "Place Airplane B in the right airspace lane.",
   }
 ];
 
@@ -37,16 +37,32 @@ function CanvasDroppable({ children }) {
         width: '100%',
         height: '100%',
         position: 'relative',
-        background: isOver ? 'rgba(245, 158, 11, 0.12)' : 'rgba(18, 18, 20, 0.95)',
-        border: `2px dashed ${isOver ? '#F59E0B' : '#3F3F46'}`,
-        borderRadius: '16px',
+        background: '#020617',
+        border: 'none',
+        borderRadius: '24px',
         overflow: 'hidden',
-        boxShadow: 'inset 0 0 25px rgba(0,0,0,0.6)',
+        boxShadow: '0 10px 35px rgba(6, 78, 59, 0.15)',
         transition: 'all 0.2s ease'
       }}
     >
-      <div style={{ position: 'absolute', bottom: '40px', width: '100%', height: '2px', background: '#3F3F46' }} />
-      {children}
+      {/* 3D WebGL / GLSL Infinite Animated Cloud Sea & Volumetric God Rays */}
+      <MagnetActivityBackground />
+      
+      {/* Center Dashed Corridor Divider Beam */}
+      <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        bottom: 0, 
+        left: '50%', 
+        width: '2px', 
+        borderLeft: '2px dashed rgba(255, 255, 255, 0.65)', 
+        transform: 'translateX(-50%)', 
+        zIndex: 2 
+      }} />
+
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%' }}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -70,37 +86,67 @@ function TrayItemCard({ step, isPlaced, isUnlocked, renderThumbnail }) {
         touchAction: 'none',
         width: '100%',
         display: 'flex', 
+        flexDirection: 'column',
         alignItems: 'center', 
-        gap: '1rem', 
-        padding: '0.85rem 1rem', 
-        borderRadius: '14px',
-        background: isPlaced ? 'rgba(34, 197, 94, 0.15)' : isUnlocked ? '#18181B' : 'rgba(24, 24, 27, 0.4)',
-        border: `1.5px solid ${isPlaced ? '#22C55E' : isUnlocked ? '#3F3F46' : 'rgba(63, 63, 70, 0.4)'}`,
-        color: '#FAFAFA',
+        gap: '0.85rem', 
+        padding: '1.1rem', 
+        borderRadius: '16px',
+        background: isPlaced ? '#DCFCE7' : isUnlocked ? '#FFFFFF' : '#F8FAFC',
+        border: `1.5px solid ${isPlaced ? '#16A34A' : isUnlocked ? '#A7F3D0' : '#E2E8F0'}`,
+        color: '#1E293B',
         cursor: isDisabled ? 'not-allowed' : 'grab',
         transition: 'all 0.2s ease',
         position: 'relative',
         fontWeight: 800,
-        boxShadow: isUnlocked && !isPlaced ? '0 4px 14px rgba(0, 0, 0, 0.4)' : 'none',
+        boxShadow: isUnlocked && !isPlaced ? '0 4px 12px rgba(6, 78, 59, 0.06)' : 'none',
         userSelect: 'none',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        flex: 1,
+        minHeight: 0
       }}
     >
-      <div style={{ width: '54px', height: '42px', background: '#27272A', border: '1px solid #3F3F46', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, opacity: isUnlocked ? 1 : 0.4 }}>
+      <div style={{ 
+        width: '100%', 
+        flex: 1,
+        minHeight: 0,
+        background: '#F0FDF4', 
+        border: '1.5px solid #A7F3D0', 
+        borderRadius: '12px', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        flexShrink: 0, 
+        opacity: isUnlocked ? 1 : 0.4, 
+        padding: '1rem', 
+        boxSizing: 'border-box',
+        position: 'relative'
+      }}>
+        <div style={{ 
+          position: 'absolute', 
+          top: '8px', 
+          left: '12px', 
+          fontSize: '1.4rem', 
+          fontWeight: 900, 
+          color: '#065F46',
+          opacity: 0.6
+        }}>
+          {step.id === 'carA' ? '1' : '2'}
+        </div>
         {renderThumbnail(step.id)}
       </div>
-      <div style={{ textAlign: 'left', flex: 1 }}>
-        <div style={{ fontSize: '0.92rem', fontWeight: '800', color: isPlaced ? '#86EFAC' : '#FAFAFA' }}>{step.name}</div>
-        <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 700, color: '#A1A1AA' }}>
-          {isPlaced ? 'Placed' : isUnlocked ? 'Drag to workspace' : 'Locked'}
+      
+      <div style={{ textAlign: 'center', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+        <div style={{ fontSize: '1.1rem', fontWeight: '900', color: isPlaced ? '#065F46' : '#064E3B' }}>{step.name}</div>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center' }}>
+          {isPlaced ? (
+            <><CheckCircle2 size={18} style={{ color: '#16A34A' }} /> <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#16A34A' }}>Placed</span></>
+          ) : !isUnlocked ? (
+            <><Lock size={16} style={{ color: '#94A3B8' }} /> <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#94A3B8' }}>Locked</span></>
+          ) : (
+            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#475569' }}>Drag to sky corridor</span>
+          )}
         </div>
-      </div>
-      <div style={{ marginLeft: 'auto' }}>
-        {isPlaced ? (
-          <CheckCircle2 size={18} style={{ color: '#22C55E' }} />
-        ) : !isUnlocked ? (
-          <Lock size={16} style={{ color: '#71717A' }} />
-        ) : null}
       </div>
     </div>
   );
@@ -119,12 +165,13 @@ function PlacedElement({ id, x, y, children }) {
       {...attributes}
       style={{
         position: 'absolute',
-        left: `${x}px`,
-        top: `${y}px`,
-        cursor: isDragging ? 'grabbing' : 'grab',
+        left: x,
+        top: y,
+        opacity: isDragging ? 0.35 : 1,
         touchAction: 'none',
-        zIndex: isDragging ? 100 : 10,
-        opacity: isDragging ? 0.75 : 1
+        cursor: 'grab',
+        zIndex: isDragging ? 50 : 10,
+        transform: 'translate(-50%, -50%)'
       }}
     >
       {children}
@@ -133,20 +180,36 @@ function PlacedElement({ id, x, y, children }) {
 }
 
 export default function Stage1_Build({ onComplete, onNext }) {
-  const [placed, setPlaced] = useState({ carA: false, carB: false });
-  const [positions, setPositions] = useState({
-    carA: { x: 140, y: 110 },
-    carB: { x: 420, y: 110 }
+  const [placed, setPlaced] = useState({
+    carA: false,
+    carB: false
   });
+
+  const [positions, setPositions] = useState({
+    carA: { x: 190, y: 220 },
+    carB: { x: 470, y: 220 }
+  });
+
   const [activeDraggingId, setActiveDraggingId] = useState(null);
   const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 });
-  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [activePopup, setActivePopup] = useState(0); // 0: carA, 1: carB, 2: observe, null: hidden
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } })
-  );
+  React.useEffect(() => {
+    if (placed.carA && !placed.carB) {
+      setActivePopup(1);
+    } else if (placed.carA && placed.carB) {
+      setActivePopup(2);
+    }
+  }, [placed]);
+
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: { distance: 5 }
+  });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: { delay: 100, tolerance: 5 }
+  });
+  const sensors = useSensors(pointerSensor, touchSensor);
 
   const isStepUnlocked = (stepId) => {
     if (stepId === "carA") return true;
@@ -154,26 +217,8 @@ export default function Stage1_Build({ onComplete, onNext }) {
     return false;
   };
 
-  const placeItem = (itemId) => {
-    if (!isStepUnlocked(itemId)) {
-      setError(`Please drag & drop items in order: 1. Car A (with Driver Man) → 2. Car B.`);
-      return;
-    }
-
-    const nextPlaced = { ...placed, [itemId]: true };
-    setPlaced(nextPlaced);
-    setError(null);
-
-    if (nextPlaced.carA && nextPlaced.carB) {
-      setSuccess(true);
-    }
-  };
-
   const handleDragStart = (event) => {
-    const { active } = event;
-    setActiveDraggingId(active.id);
-    setDragDelta({ x: 0, y: 0 });
-    setError(null);
+    setActiveDraggingId(event.active.id);
   };
 
   const handleDragMove = (event) => {
@@ -181,46 +226,79 @@ export default function Stage1_Build({ onComplete, onNext }) {
   };
 
   const handleDragEnd = (event) => {
-    const { active, delta } = event;
+    const { active, over } = event;
     setActiveDraggingId(null);
     setDragDelta({ x: 0, y: 0 });
 
-    const itemId = active.data.current?.itemId;
-    const source = active.data.current?.source;
+    if (!over || over.id !== 'canvas-droppable') return;
 
-    if (source === 'tray' && itemId) {
-      placeItem(itemId);
-    } else if (source === 'placed' && delta && itemId) {
+    if (active.id.startsWith('tray-')) {
+      const stepId = active.data.current?.itemId;
+      if (!stepId || !isStepUnlocked(stepId)) return;
+
+      const newPlaced = { ...placed, [stepId]: true };
+      setPlaced(newPlaced);
+
+      if (Object.values(newPlaced).every(Boolean)) {
+        setSuccess(true);
+      }
+    } else if (active.id.startsWith('placed-')) {
+      const elementId = active.data.current?.itemId;
+      if (!elementId) return;
+
       setPositions(prev => ({
         ...prev,
-        [itemId]: {
-          x: Math.max(20, Math.min(600, prev[itemId].x + delta.x)),
-          y: Math.max(20, Math.min(220, prev[itemId].y + delta.y))
+        [elementId]: {
+          x: Math.max(80, Math.min(650, prev[elementId].x + event.delta.x)),
+          y: Math.max(80, Math.min(380, prev[elementId].y + event.delta.y))
         }
       }));
     }
   };
 
   const handleReset = () => {
-    setPlaced({ carA: false, carB: false });
-    setPositions({
-      carA: { x: 140, y: 110 },
-      carB: { x: 420, y: 110 }
+    setPlaced({
+      carA: false,
+      carB: false
     });
-    setError(null);
+    setPositions({
+      carA: { x: 190, y: 220 },
+      carB: { x: 470, y: 220 }
+    });
     setSuccess(false);
+    setActivePopup(0);
   };
 
-  const completedCount = Object.values(placed).filter(Boolean).length;
-  const progressPercent = (completedCount / STEPS.length) * 100;
-  const activeStep = STEPS.find((s) => !placed[s.id] && isStepUnlocked(s.id));
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const renderThumbnail = (id) => {
-    switch (id) {
-      case "carA": return <SupercarShape carType="supercarA" width={48} height={28} />;
-      case "carB": return <SupercarShape carType="supercarB" width={48} height={28} />;
-      default: return null;
-    }
+    return (
+      <img 
+        src="/MagnetInteraction/real_airliner_north_south.png" 
+        alt={id === "carA" ? "Airplane A" : "Airplane B"} 
+        style={{ width: '100%', height: '100%', maxHeight: '120px', objectFit: 'contain' }} 
+      />
+    );
   };
 
   return (
@@ -234,264 +312,314 @@ export default function Stage1_Build({ onComplete, onNext }) {
         minHeight: 0, 
         overflow: 'hidden', 
         boxSizing: 'border-box',
-        background: 'transparent'
+        background: 'transparent',
+        position: 'relative'
       }}>
       
-        {/* Top Header Container */}
+        {/* Main 2-Column Layout (Activity Area on LEFT, Components Container on RIGHT) */}
         <div style={{ 
-          width: '100%',
-          textAlign: 'center',
-          background: 'rgba(24, 24, 27, 0.95)',
-          backdropFilter: 'blur(10px)',
-          padding: '0.5rem 1rem',
-          borderRadius: '16px',
-          border: '1.5px solid #3F3F46',
-          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5)',
-          boxSizing: 'border-box',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          display: 'grid', 
+          gridTemplateColumns: '1fr 440px', 
+          gap: '1.25rem', 
+          flex: 1, 
+          height: '100%',
+          minHeight: 0,
+          boxSizing: 'border-box'
         }}>
-          <div style={{ textAlign: 'left' }}>
-            <h3 style={{ margin: '0 0 0.15rem 0', fontSize: '1.35rem', fontWeight: 800, color: '#F59E0B', letterSpacing: '-0.01em' }}>
-              Build the Experiment
-            </h3>
-            <p style={{ margin: 0, color: '#A1A1AA', fontSize: '0.88rem', fontWeight: 700 }}>
-              Assemble the setup with Car A (Driver Man) and Car B as shown in Fig. 4.8.
-            </p>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <div style={{ width: "160px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem", color: "#A1A1AA", fontWeight: 700 }}>
-                <span>Progress</span>
-                <span style={{ color: "#F59E0B", fontWeight: 800 }}>{Math.round(progressPercent)}%</span>
-              </div>
-              <div style={{ width: "100%", height: "8px", background: "#18181B", border: "1px solid #3F3F46", borderRadius: "4px", overflow: "hidden" }}>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progressPercent}%` }}
-                  style={{ height: "100%", background: success ? "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)" : "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)" }}
-                />
-              </div>
-            </div>
-            <button 
-              onClick={handleReset} 
-              style={{ 
-                padding: "0.55rem 0.95rem", 
-                borderRadius: "10px",
-                background: "#18181B",
-                color: "#FAFAFA",
-                border: "1.5px solid #3F3F46",
-                cursor: "pointer",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.4)",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.4rem",
-                fontSize: "0.85rem",
-                fontWeight: 700
-              }} 
-              title="Reset Assembly"
-            >
-              <RotateCcw size={16} color="#FAFAFA" /> Reset
-            </button>
-          </div>
-        </div>
-
-        {/* Main Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "270px 1fr", gap: "1.25rem", flex: 1, minHeight: 0 }}>
-          {/* Left Column: Midnight Carbon 3D Parts Bench Panel */}
+          {/* LEFT Column: Full-Bleed Activity Area (Borderless) */}
           <div style={{ 
-            padding: "1.15rem", 
-            display: "flex", 
-            flexDirection: "column", 
-            gap: "1rem", 
-            background: "rgba(24, 24, 27, 0.95)",
-            backdropFilter: "blur(10px)",
-            border: "1.5px solid #3F3F46",
-            borderRadius: "20px",
-            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.6)",
-            overflowY: "auto",
-            color: "#FAFAFA"
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: 0,
+            overflow: 'hidden',
+            borderRadius: '24px'
           }}>
-            <h4 style={{ margin: 0, borderBottom: "1.5px solid #3F3F46", paddingBottom: "0.6rem", color: "#F59E0B", fontWeight: 800, fontSize: "1.15rem" }}>
-              🧊 3D Parts Bench
-            </h4>
-            
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem", flex: 1 }}>
-              {STEPS.map((step) => {
-                const isPlaced = placed[step.id];
-                const isUnlocked = isStepUnlocked(step.id);
-
-                return (
-                  <TrayItemCard 
-                    key={step.id}
-                    step={step}
-                    isPlaced={isPlaced}
-                    isUnlocked={isUnlocked}
-                    renderThumbnail={renderThumbnail}
-                  />
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Right Column: Drag-and-Drop Workspace Canvas */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", minHeight: 0 }}>
-            <div style={{ 
-              flex: 1, 
-              padding: "1rem 1.25rem", 
-              display: "flex", 
-              flexDirection: "column",
-              background: "rgba(18, 18, 20, 0.95)",
-              border: "1.5px solid #3F3F46",
-              borderRadius: "20px",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
-              minHeight: 0,
-              overflow: "hidden"
-            }}>
-              
-              <AnimatePresence mode="wait">
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    style={{ background: "rgba(239, 68, 68, 0.2)", color: "#FCA5A5", padding: "0.55rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #EF4444", fontWeight: 700 }}
-                  >
-                    <AlertCircle size={18} color="#EF4444" /> {error}
-                  </motion.div>
-                )}
-                {activeStep && !error && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    style={{ background: "#18181B", color: "#F59E0B", padding: "0.55rem 0.85rem", borderRadius: "10px", display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.6rem", fontSize: "0.88rem", border: "1.5px solid #3F3F46", fontWeight: 700 }}
-                  >
-                    <Info size={18} color="#F59E0B" /> {activeStep.hint}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Full Workspace Canvas */}
-              <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
-                <CanvasDroppable>
-                  {/* Lightning Supercar A with Driver Man */}
-                  {placed.carA && (
-                    <PlacedElement 
-                      id="carA" 
-                      x={positions.carA.x + (activeDraggingId === 'placed-carA' ? dragDelta.x : 0)} 
-                      y={positions.carA.y + (activeDraggingId === 'placed-carA' ? dragDelta.y : 0)}
-                    >
-                      <SupercarShape carType="supercarA" poleRight="S" width={230} height={100} />
-                    </PlacedElement>
-                  )}
-
-                  {/* Nitro Supercar B */}
-                  {placed.carB && (
-                    <PlacedElement 
-                      id="carB" 
-                      x={positions.carB.x + (activeDraggingId === 'placed-carB' ? dragDelta.x : 0)} 
-                      y={positions.carB.y + (activeDraggingId === 'placed-carB' ? dragDelta.y : 0)}
-                    >
-                      <SupercarShape carType="supercarB" poleRight="N" width={230} height={100} />
-                    </PlacedElement>
-                  )}
-                </CanvasDroppable>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        {/* Success Modal Pop-up Overlay */}
-        <AnimatePresence>
-          {success && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'rgba(9, 9, 11, 0.85)',
-                backdropFilter: 'blur(8px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 100
-              }}
-            >
-              <motion.div
-                initial={{ scale: 0.8, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.8, y: 20 }}
+            <CanvasDroppable>
+              {/* Fullscreen Button */}
+              <button
+                onClick={toggleFullscreen}
+                title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                 style={{
-                  background: '#18181B',
-                  border: '1.5px solid #3F3F46',
-                  borderRadius: '24px',
-                  padding: '2.25rem 2.75rem',
-                  maxWidth: '520px',
-                  width: '90%',
-                  textAlign: 'center',
-                  boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.2)',
+                  position: 'absolute',
+                  top: 14,
+                  right: 14,
+                  zIndex: 40,
+                  background: 'rgba(255, 255, 255, 0.92)',
+                  border: '1.5px solid rgba(255, 255, 255, 0.85)',
+                  borderRadius: '12px',
+                  padding: '6px 12px',
+                  cursor: 'pointer',
                   display: 'flex',
-                  flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '1.1rem'
+                  justifyContent: 'center',
+                  gap: '5px',
+                  color: '#0F172A',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+                  transition: 'all 0.2s ease',
                 }}
               >
-                <h2 style={{ margin: 0, color: '#FAFAFA', fontSize: '1.8rem', fontWeight: 800 }}>
-                  Setup Complete! 🎉
-                </h2>
+                {isFullscreen ? <Minimize2 size={14} color="#0F172A" /> : <Maximize2 size={14} color="#0F172A" />}
+                <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+              </button>
 
-                <p style={{ margin: 0, color: '#A1A1AA', fontSize: '1.1rem', lineHeight: '1.5', fontWeight: 600 }}>
-                  Excellent! Car A (with Driver Man) and Car B are placed and ready for testing attraction and repulsion.
-                </p>
-
-                <button 
-                  onClick={() => {
-                    onComplete();
-                    onNext();
-                  }} 
-                  style={{ 
-                    marginTop: '0.5rem',
-                    padding: '1.1rem 3rem', 
-                    fontSize: '1.15rem', 
-                    fontWeight: 800, 
-                    borderRadius: '40px', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '0.75rem',
-                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#000000',
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(245, 158, 11, 0.45)',
-                    transition: 'all 0.25s ease'
-                  }}
+              {/* Magnetic Airliner A (Fills Left Airspace Corridor) */}
+              {placed.carA && (
+                <PlacedElement 
+                  id="carA" 
+                  x="25%" 
+                  y="50%"
                 >
-                  Proceed to Explore <ArrowRight size={22} color="#000000" />
-                </button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img 
+                      src="/MagnetInteraction/real_airliner_north_south.png" 
+                      alt="Airplane A" 
+                      style={{ 
+                        width: 'clamp(320px, 36vw, 460px)', 
+                        height: 'auto', 
+                        objectFit: 'contain', 
+                        filter: 'drop-shadow(0 22px 42px rgba(0,0,0,0.65))',
+                        userSelect: 'none',
+                        pointerEvents: 'none'
+                      }} 
+                    />
+                  </div>
+                </PlacedElement>
+              )}
+
+              {/* Magnetic Airliner B (Fills Right Airspace Corridor) */}
+              {placed.carB && (
+                <PlacedElement 
+                  id="carB" 
+                  x="75%" 
+                  y="50%"
+                >
+                  <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img 
+                      src="/MagnetInteraction/real_airliner_north_south.png" 
+                      alt="Airplane B" 
+                      style={{ 
+                        width: 'clamp(320px, 36vw, 460px)', 
+                        height: 'auto', 
+                        objectFit: 'contain', 
+                        filter: 'drop-shadow(0 22px 42px rgba(0,0,0,0.65))',
+                        userSelect: 'none',
+                        pointerEvents: 'none'
+                      }} 
+                    />
+                  </div>
+                </PlacedElement>
+              )}
+            </CanvasDroppable>
+          </div>
+
+          <div style={{ 
+            background: "#FFFFFF",
+            border: "1.5px solid #A7F3D0",
+            borderRadius: "20px",
+            padding: "1rem 1.15rem",
+            boxShadow: "0 6px 20px rgba(6, 78, 59, 0.06)",
+            display: "flex", 
+            flexDirection: "column", 
+            minHeight: 0,
+            overflowY: "hidden",
+            gap: "0.75rem"
+          }}>
+            {/* Header Box inside right container */}
+            <div style={{ 
+              background: "#F0FDF4", 
+              border: "1.5px solid #A7F3D0", 
+              padding: "0.85rem 1rem", 
+              borderRadius: "16px",
+              boxShadow: "0 2px 8px rgba(6, 78, 59, 0.04)",
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center'
+            }}>
+              <h3 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 900, color: '#064E3B', lineHeight: 1.35 }}>
+                ✈️ Build the Experiment: Magnetic Airplanes Setup
+              </h3>
+              <button 
+                onClick={handleReset} 
+                style={{ 
+                  padding: "0.45rem 0.85rem", 
+                  borderRadius: "10px",
+                  background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
+                  color: "#FFFFFF",
+                  border: "none",
+                  cursor: "pointer",
+                  boxShadow: "0 3px 10px rgba(217, 119, 6, 0.35)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                  fontSize: "0.82rem",
+                  fontWeight: 900,
+                  flexShrink: 0,
+                  marginLeft: "0.5rem",
+                  transition: "all 0.2s ease"
+                }} 
+              >
+                <RotateCcw size={14} color="#FFFFFF" /> Reset
+              </button>
+            </div>
+
+            {/* Flight Components List */}
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              <h4 style={{ color: "#064E3B", margin: "0 0 0.55rem 0", fontSize: "0.95rem", fontWeight: 900, display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
+                📦 Flight Components
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', flex: 1, minHeight: 0 }}>
+                {STEPS.map((step) => (
+                  <TrayItemCard 
+                    key={step.id} 
+                    step={step} 
+                    isPlaced={placed[step.id]} 
+                    isUnlocked={isStepUnlocked(step.id)} 
+                    renderThumbnail={renderThumbnail} 
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Popups handled via overlay */}
+
+            {/* Proceed to Explore Button (Directly under Instructions) */}
+            <button 
+              onClick={() => {
+                onComplete();
+                onNext();
+              }}
+              disabled={!success}
+              style={{ 
+                width: '100%',
+                padding: '0.8rem 1.25rem', 
+                fontSize: '0.95rem', 
+                fontWeight: 900, 
+                borderRadius: '16px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '0.6rem',
+                background: success 
+                  ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' 
+                  : '#E2E8F0',
+                color: success ? '#FFFFFF' : '#94A3B8',
+                border: 'none',
+                cursor: success ? 'pointer' : 'not-allowed',
+                boxShadow: success ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
+                transition: 'all 0.25s ease'
+              }}
+            >
+              Proceed to Explore <ArrowRight size={18} color={success ? "#FFFFFF" : "#94A3B8"} />
+            </button>
+          </div>
+
+        </div>
       </div>
 
       <DragOverlay dropAnimation={null}>
         {activeDraggingId && activeDraggingId.startsWith('tray-') ? (
           <div style={{ opacity: 0.9, pointerEvents: "none" }}>
-            {activeDraggingId.includes("carA") && (
-              <SupercarShape carType="supercarA" poleRight="S" width={230} height={100} />
-            )}
-            {activeDraggingId.includes("carB") && (
-              <SupercarShape carType="supercarB" poleRight="N" width={230} height={100} />
-            )}
+            <img 
+              src="/MagnetInteraction/real_airliner_north_south.png" 
+              alt="Dragging Airliner" 
+              style={{ 
+                width: 'clamp(320px, 36vw, 460px)', 
+                height: 'auto', 
+                objectFit: 'contain', 
+                filter: 'drop-shadow(0 22px 42px rgba(0,0,0,0.75))',
+                pointerEvents: 'none'
+              }} 
+            />
           </div>
         ) : null}
       </DragOverlay>
+
+      {/* Instruction Popups */}
+      <AnimatePresence>
+        {activePopup !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'absolute',
+              top: 0, left: 0, right: 0, bottom: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'rgba(2, 6, 23, 0.65)',
+              zIndex: 100,
+              backdropFilter: 'blur(6px)'
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.8, y: 20 }}
+              transition={{ type: 'spring', bounce: 0.5, duration: 0.6 }}
+              style={{
+                background: '#FFFFFF',
+                border: '1.5px solid #A7F3D0',
+                borderRadius: '24px',
+                padding: '2.5rem',
+                maxWidth: '420px',
+                boxShadow: '0 12px 40px rgba(6, 78, 59, 0.2)',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1.25rem'
+              }}
+            >
+              <div style={{ width: '56px', height: '56px', background: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #A7F3D0' }}>
+                <Info size={28} color="#065F46" />
+              </div>
+              
+              <h3 style={{ margin: 0, color: '#064E3B', fontSize: '1.35rem', fontWeight: 900 }}>
+                {activePopup === 0 && "Step 1: Left Airspace"}
+                {activePopup === 1 && "Step 2: Right Airspace"}
+                {activePopup === 2 && "Observation"}
+              </h3>
+              
+              <p style={{ margin: 0, color: '#334155', fontSize: '1.05rem', fontWeight: 600, lineHeight: 1.5 }}>
+                {activePopup === 0 && (
+                  <>Drag <strong>Airplane A</strong> from the tray into the <strong>Left flight corridor</strong>.</>
+                )}
+                {activePopup === 1 && (
+                  <>Drag <strong>Airplane B</strong> into the <strong>Right parallel flight corridor</strong>.</>
+                )}
+                {activePopup === 2 && (
+                  <>Observe the magnetic poles (Front: North [N], Rear: South [S]) before proceeding to test flight interactions!</>
+                )}
+              </p>
+              
+              <button
+                onClick={() => setActivePopup(null)}
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.8rem 2.5rem',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '25px',
+                  fontSize: '1rem',
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
+                  transition: 'transform 0.1s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                Got it! <CheckCircle2 size={18} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </DndContext>
   );
 }

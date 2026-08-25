@@ -53,56 +53,58 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
         background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
+        gap: 'clamp(0.7rem, 1.6vh, 1.1rem)',
         zIndex: 10,
         boxShadow: '4px 0 20px rgba(60,40,20,0.04)',
         minHeight: 0,
         overflow: 'hidden'
       }}>
-        <div>
-        <div style={{ display: 'inline-flex', padding: '0.35rem 0.9rem', background: '#FEF3C7', border: '1px solid #FDE68A', color: '#92400E', borderRadius: '20px', fontSize: '0.8rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.85rem' }}>
+        <div style={{ flexShrink: 0 }}>
+        <div style={{ display: 'inline-flex', padding: '0.35rem 0.9rem', background: '#FEF3C7', border: '1px solid #FDE68A', color: '#92400E', borderRadius: '20px', fontSize: 'clamp(0.82rem, 1.6vh, 0.95rem)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.9rem' }}>
           Understanding Maps
         </div>
 
-        <h1 style={{ fontSize: 'clamp(1.6rem, 2vw, 2rem)', color: '#78350F', margin: '0 0 0.85rem 0', lineHeight: 1.15, fontFamily: '"Fraunces", serif', fontWeight: 900 }}>
+        <h1 style={{ fontSize: 'clamp(1.75rem, 3.6vh, 2.35rem)', color: '#78350F', margin: '0 0 0.9rem 0', lineHeight: 1.15, fontFamily: '"Fraunces", serif', fontWeight: 900 }}>
           Atlas : A Collection of Maps
         </h1>
 
-        <div style={{ fontSize: 'clamp(0.92rem, 1vw, 1rem)', lineHeight: 1.5, marginBottom: '1rem', color: '#3D2E24' }}>
-          <p style={{ margin: '0 0 0.5rem 0', color: '#3D2E24', fontWeight: 600, fontSize: 'inherit', lineHeight: 'inherit' }}>
+        <div style={{ fontSize: 'clamp(1rem, 2.05vh, 1.18rem)', lineHeight: 1.55, color: '#3D2E24' }}>
+          <p style={{ margin: '0 0 0.6rem 0', color: '#3D2E24', fontWeight: 600, fontSize: 'inherit', lineHeight: 'inherit', textAlign: 'justify', textJustify: 'inter-word', hyphens: 'auto' }}>
             An Atlas is a special book that contains many different kinds of maps.
           </p>
-          <p style={{ margin: 0, color: '#3D2E24', fontWeight: 600, fontSize: 'inherit', lineHeight: 'inherit' }}>
+          <p style={{ margin: 0, color: '#3D2E24', fontWeight: 600, fontSize: 'inherit', lineHeight: 'inherit', textAlign: 'justify', textJustify: 'inter-word', hyphens: 'auto' }}>
             Open the Atlas and discover how each map helps us understand the world.
           </p>
         </div>
         </div>
 
-        <div style={{ background: '#FFFFFF', padding: '1.15rem', borderRadius: '14px', border: '1.5px solid #F2DFBC', boxShadow: '0 4px 12px rgba(60,40,20,0.04)' }}>
-          <h3 style={{ margin: '0 0 0.65rem 0', color: '#92400E', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 900 }}>
-            <Compass size={17} color="#D97706" /> Mission
+        <div style={{ background: '#FFFFFF', padding: 'clamp(0.9rem, 2vh, 1.25rem)', borderRadius: '14px', border: '1.5px solid #F2DFBC', boxShadow: '0 4px 12px rgba(60,40,20,0.04)', flex: '1 1 auto', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <h3 style={{ margin: '0 0 0.7rem 0', color: '#92400E', fontSize: 'clamp(0.88rem, 1.75vh, 1rem)', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 900, flexShrink: 0 }}>
+            <Compass size={19} color="#D97706" /> Mission
           </h3>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-              <CheckCircle2 size={18} color={isOpen ? "#16a34a" : "#B45309"} />
-              <div style={{ fontSize: '13.5px', color: '#3D2E24', fontWeight: 700 }}>Explore the Atlas</div>
-            </div>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-              <CheckCircle2 size={18} color={currentPage === 3 ? "#16a34a" : "#B45309"} />
-              <div style={{ fontSize: '13.5px', color: '#3D2E24', fontWeight: 700 }}>Discover 3 Types of Maps</div>
-            </div>
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-              <CheckCircle2 size={18} color={isCompleted ? "#16a34a" : "#B45309"} />
-              <div style={{ fontSize: '13.5px', color: '#3D2E24', fontWeight: 700 }}>Complete the Journey</div>
-            </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.55rem, 1.2vh, 0.8rem)', flex: 1, minHeight: 0 }}>
+            {[
+              { label: 'Explore the Atlas', done: isOpen },
+              { label: 'Discover 3 Types of Maps', done: currentPage === 3 },
+              { label: 'Complete the Journey', done: isCompleted }
+            ].map(step => (
+              <div
+                key={step.label}
+                style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flex: '1 1 0', minHeight: 0, background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '10px', padding: 'clamp(0.5rem, 1.4vh, 0.85rem) 0.85rem' }}
+              >
+                <CheckCircle2 size={20} color={step.done ? '#16a34a' : '#B45309'} style={{ flexShrink: 0 }} />
+                <div style={{ fontSize: 'clamp(14.5px, 2.15vh, 16.5px)', color: '#3D2E24', fontWeight: 700, lineHeight: 1.25 }}>{step.label}</div>
+              </div>
+            ))}
           </div>
         </div>
 
         {!isOpen && (
           <button 
             onClick={() => setIsOpen(true)}
-            style={{ width: '100%', padding: '0.85rem', fontSize: '14px', borderRadius: '12px', background: '#16A34A', color: '#FFFFFF', border: 'none', fontWeight: 800, transition: 'transform 0.2s', cursor: 'pointer', marginTop: '0.85rem', boxShadow: '0 4px 14px rgba(22,163,74,0.35)', fontFamily: '"Space Grotesk", sans-serif' }}
+            style={{ width: '100%', padding: 'clamp(0.9rem, 1.9vh, 1.1rem)', fontSize: 'clamp(15px, 2.2vh, 17px)', borderRadius: '12px', background: '#16A34A', color: '#FFFFFF', border: 'none', fontWeight: 800, transition: 'transform 0.2s', cursor: 'pointer', flexShrink: 0, boxShadow: '0 4px 14px rgba(22,163,74,0.35)', fontFamily: '"Space Grotesk", sans-serif' }}
             onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
             onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
           >
@@ -151,8 +153,9 @@ export default function AtlasIntroduction({ onNextActivity, onBack }) {
 
       <ChapterBackFooter
         onBack={onBack}
-        nextLabel={isCompleted ? 'Continue' : undefined}
-        onNext={isCompleted ? onNextActivity : undefined}
+        nextLabel="Next Activity"
+        onNext={onNextActivity}
+        nextDisabled={false}
         nextVariant="green"
       />
     </div>

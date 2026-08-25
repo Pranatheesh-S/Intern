@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, RefreshCw, Award, Compass, HelpCircle, Check, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
 
 const ANIMALS = [
   {
@@ -203,13 +204,17 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
       gridTemplateColumns: '320px 1fr',
       height: '100%',
       minHeight: '540px',
-      background: '#0f172a',
+      backgroundImage: `url(${darkForestBg})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundRepeat: 'no-repeat',
       color: '#f8fafc',
       fontFamily: 'system-ui, sans-serif'
     }}>
       {/* Sidebar Progress Controller */}
       <aside style={{
-        background: '#1e293b',
+        background: 'rgba(30, 41, 59, 0.88)',
         borderRight: '1px solid rgba(255,255,255,0.05)',
         padding: '1.25rem',
         display: 'flex',

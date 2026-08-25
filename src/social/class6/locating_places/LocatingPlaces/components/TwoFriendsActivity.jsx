@@ -356,7 +356,7 @@ export default function TwoFriendsActivity({ onBack, onNextActivity }) {
                 <ArrowLeft size={16} /> Back
               </button>
               <button className="dark-nav-btn next" onClick={() => activeCase < 4 ? setActiveCase(activeCase + 1) : onNextActivity()} style={{ background: '#10b981', color: '#0f172a', padding: '8px 16px', fontSize: '13px' }}>
-                {activeCase < 4 ? 'Next' : 'Finish'}
+                {activeCase < 4 ? 'Next' : 'Explore Solar System'}
               </button>
             </div>
           </div>

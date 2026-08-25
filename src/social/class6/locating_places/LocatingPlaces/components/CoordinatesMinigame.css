@@ -135,7 +135,7 @@
 
 @keyframes pulseTarget {
   0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-  100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
 }
 
 .coords-mini-hline {

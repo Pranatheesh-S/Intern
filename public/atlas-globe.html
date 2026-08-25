@@ -49,7 +49,17 @@
     box-shadow:0 10px 40px rgba(0,0,0,.45)}
 
   /* ---- top bar ---- */
-  #top{top:14px;left:14px;padding:10px 14px;display:flex;flex-direction:column;gap:8px;max-width:min(480px,calc(100vw - 28px));z-index:20}
+  #top{top:14px;left:14px;padding:10px 14px;display:flex;flex-direction:column;gap:8px;max-width:min(540px,calc(100vw - 28px));z-index:20}
+  html, body { cursor: grab; }
+  html:active, body:active { cursor: grabbing; }
+  .globe-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+  .spin-btn{padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.09);color:#fff;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s ease;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+  .spin-btn:hover{background:rgba(111,196,255,.25);border-color:#6fc4ff;transform:translateY(-1px)}
+  .spin-btn.on{background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);border-color:#38bdf8;box-shadow:0 0 12px rgba(56,189,248,.4)}
+  .spin-btn.on .spin-icon{animation:rotateSpin 4s linear infinite;display:inline-block}
+  @keyframes rotateSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  .spin-fun{background:linear-gradient(135deg, #d97706 0%, #b45309 100%);border-color:#f59e0b}
+  .spin-fun:hover{background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);box-shadow:0 0 12px rgba(245,158,11,.45)}
   .thm-header{display:flex;align-items:center;gap:8px}
   .thm-title{font-size:11px;font-weight:800;color:#6fc4ff;letter-spacing:.1em;text-transform:uppercase}
   .thm-buttons{display:flex;gap:6px;flex-wrap:wrap}
@@ -139,7 +149,15 @@
 
 <div id="top" class="panel">
   <div class="thm-header">
-    <span class="thm-title">THEMATIC MAP</span>
+    <span class="thm-title" id="modeTitle">THEMATIC MAP</span>
+    <div class="globe-actions">
+      <button id="bSpinToggle" class="spin-btn on" title="Toggle Auto-Spin (R)">
+        <span class="spin-icon">🔄</span> <span id="spinBtnText">Spinning</span>
+      </button>
+      <button id="bSpinRandom" class="spin-btn spin-fun" title="Spin and explore a random location">
+        🎲 Spin & Explore
+      </button>
+    </div>
   </div>
   <div class="thm-buttons" id="thm-buttons">
     <button class="thm-btn on" data-t="rain">🌧️ Rainfall</button>
@@ -232,19 +250,35 @@ renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.setSize(innerWidth, innerHeight);
 $("#app").appendChild(renderer.domElement);
 
-/* starfield */
+/* deep space starfield (5000 stars with natural warm/cool stellar spectrum) */
 (function(){
-  const N=2600, pos=new Float32Array(N*3), col=new Float32Array(N*3);
-  for(let i=0;i<N;i++){
-    const t=Math.acos(2*Math.random()-1), f=Math.random()*2*Math.PI, r=900+Math.random()*1600;
-    pos[i*3]=r*Math.sin(t)*Math.cos(f); pos[i*3+1]=r*Math.cos(t); pos[i*3+2]=r*Math.sin(t)*Math.sin(f);
-    const g=.55+Math.random()*.45, b=.9+Math.random()*.1;
-    col[i*3]=g*.92; col[i*3+1]=g*.96; col[i*3+2]=g*b;
+  const count = 5000;
+  const pos = new Float32Array(count * 3);
+  const col = new Float32Array(count * 3);
+  for (let i = 0; i < count * 3; i += 3) {
+    const u = Math.random(), v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+    const r = 1400 + Math.random() * 600;
+    pos[i]   = r * Math.sin(phi) * Math.cos(theta);
+    pos[i+1] = r * Math.sin(phi) * Math.sin(theta);
+    pos[i+2] = r * Math.cos(phi);
+
+    const warm = Math.random() > 0.82;
+    col[i]   = warm ? 1.0 : 0.75 + Math.random() * 0.25;
+    col[i+1] = warm ? 0.88 : 0.88 + Math.random() * 0.12;
+    col[i+2] = warm ? 0.60 : 1.0;
   }
-  const geo=new THREE.BufferGeometry();
-  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
-  scene.add(new THREE.Points(geo,new THREE.PointsMaterial({size:2.1,sizeAttenuation:false,vertexColors:true,transparent:true,opacity:.85})));
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+  const mat = new THREE.PointsMaterial({
+    size: 1.25,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.90,
+  });
+  scene.add(new THREE.Points(geo, mat));
 })();
 
 /* ===================== globe material ===================== */
@@ -316,16 +350,71 @@ const globeMat = new THREE.ShaderMaterial({uniforms:uni, vertexShader:VS, fragme
 const globe = new THREE.Mesh(new THREE.SphereGeometry(R,256,176), globeMat);
 scene.add(globe);
 
-/* atmosphere */
-const atmo = new THREE.Mesh(new THREE.SphereGeometry(R*1.035,64,48), new THREE.ShaderMaterial({
-  transparent:true, side:THREE.BackSide, depthWrite:false, blending:THREE.AdditiveBlending,
-  vertexShader:`varying vec3 vN; void main(){ vN=normalize(normalMatrix*normal);
-    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-  fragmentShader:`varying vec3 vN; void main(){
-    float i=pow(0.72 - dot(vN, vec3(0.,0.,1.)), 2.6);
-    gl_FragColor=vec4(0.30,0.62,1.0,1.0)*clamp(i,0.,1.)*0.85; }`
-}));
+/* volumetric cloud layer from photorealistic globe */
+let cloudsMesh = null;
+loader.load('/interactive-3d-globe/textures/earth-clouds.png', (cTex) => {
+  cTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  cTex.minFilter = THREE.LinearMipMapLinearFilter;
+  const cMat = new THREE.MeshBasicMaterial({
+    map: cTex,
+    transparent: true,
+    opacity: 0.22,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+  cloudsMesh = new THREE.Mesh(new THREE.SphereGeometry(R * 1.006, 192, 192), cMat);
+  scene.add(cloudsMesh);
+});
+
+/* realistic thin-shell atmosphere limb */
+const atmoMat = new THREE.ShaderMaterial({
+  vertexShader: `
+    varying vec3 vNormal;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vNormal;
+    void main() {
+      float fresnel = 1.0 - abs(dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)));
+      float power = pow(fresnel, 4.2);
+      vec3 colSky = vec3(0.25, 0.58, 0.98);
+      gl_FragColor = vec4(colSky, power * 0.48);
+    }
+  `,
+  blending: THREE.NormalBlending,
+  side: THREE.BackSide,
+  transparent: true,
+  depthWrite: false,
+});
+const atmo = new THREE.Mesh(new THREE.SphereGeometry(R * 1.035, 96, 96), atmoMat);
 scene.add(atmo);
+
+/* outer cosmic rim glow */
+const glowMat = new THREE.ShaderMaterial({
+  vertexShader: `
+    varying vec3 vNormal;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vNormal;
+    void main() {
+      float i = pow(0.70 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.2);
+      gl_FragColor = vec4(0.15, 0.50, 1.0, 1.0) * clamp(i, 0.0, 1.0) * 0.40;
+    }
+  `,
+  blending: THREE.AdditiveBlending,
+  side: THREE.BackSide,
+  transparent: true,
+  depthWrite: false,
+});
+const glow = new THREE.Mesh(new THREE.SphereGeometry(R * 1.075, 64, 64), glowMat);
+scene.add(glow);
 
 /* graticule */
 const grat = new THREE.Group(); grat.visible=false; scene.add(grat);
@@ -349,9 +438,11 @@ const GRAT_LB = [
   {n:"Tropic of Capricorn (23½°S)", y:-23.44},
   {n:"Arctic Circle (66½°N)", y:66.56}, {n:"Antarctic Circle (66½°S)", y:-66.56}];
 
-/* ===================== camera controls ===================== */
+/* ===================== camera controls with smooth momentum spin ===================== */
 const cam = {lon:60, lat:18, dist:300, tLon:60, tLat:18, tDist:300};
 let dragging=false, px=0, py=0, autoRot=true, anim=null;
+let spinVelX = 0, spinVelY = 0, lastMoveX = 0, lastMoveY = 0, lastMoveTime = 0;
+
 function applyCam(){
   cam.lon += (cam.tLon-cam.lon)*0.14;
   cam.lat += (cam.tLat-cam.lat)*0.14;
@@ -360,15 +451,33 @@ function applyCam(){
   camera.position.copy(p); camera.lookAt(0,0,0);
 }
 const el = renderer.domElement;
-el.addEventListener('pointerdown', e=>{dragging=true;px=e.clientX;py=e.clientY;el.setPointerCapture(e.pointerId);anim=null;});
-el.addEventListener('pointerup', ()=>dragging=false);
-el.addEventListener('pointerleave', ()=>dragging=false);
+el.addEventListener('pointerdown', e=>{
+  dragging=true; px=e.clientX; py=e.clientY;
+  lastMoveX=e.clientX; lastMoveY=e.clientY;
+  lastMoveTime=performance.now();
+  spinVelX=0; spinVelY=0;
+  el.setPointerCapture(e.pointerId); anim=null;
+});
+el.addEventListener('pointerup', ()=>{ dragging=false; });
+el.addEventListener('pointerleave', ()=>{ dragging=false; });
 el.addEventListener('pointermove', e=>{
   if(dragging){
+    const now = performance.now();
+    const dt = Math.max(1, now - lastMoveTime);
     const k = 0.26*(cam.dist/300);
-    cam.tLon -= (e.clientX-px)*k*1.1; cam.tLat += (e.clientY-py)*k*1.1;
+    const dx = (e.clientX-px)*k*1.1;
+    const dy = (e.clientY-py)*k*1.1;
+    cam.tLon -= dx; cam.tLat += dy;
     cam.tLat = Math.max(-88, Math.min(88, cam.tLat));
-    px=e.clientX; py=e.clientY; moved=true;
+
+    // Calculate fling velocity for natural physical tabletop spin
+    spinVelX = -((e.clientX - lastMoveX) * k * 1.1) / dt * 14;
+    spinVelY = ((e.clientY - lastMoveY) * k * 1.1) / dt * 14;
+
+    px=e.clientX; py=e.clientY;
+    lastMoveX=e.clientX; lastMoveY=e.clientY;
+    lastMoveTime=now;
+    moved=true;
   }
   mouse.x = e.clientX; mouse.y = e.clientY; hoverDirty = true;
 });
@@ -480,9 +589,10 @@ const THEMES = [
 let mode = "thematic", theme = "rain", showLabels = true;
 
 function texFor(){
-  if(mode==="physical") return tex.physical;
+  if(mode==="physical") return tex.photoreal || tex.physical;
   if(mode==="political") return tex.political;
-  return tex[THEMES.find(t=>t.k===theme).src];
+  if(theme==="forest") return tex.photoreal || tex.thm_forest;
+  return tex[THEMES.find(t=>t.k===theme).src] || tex.photoreal;
 }
 let fading = 0;
 function setMode(m, t){
@@ -490,8 +600,16 @@ function setMode(m, t){
   mode = m; if(t) theme = t;
   uni.mapB.value = texFor(); uni.mixv.value = 0; fading = 1;
   const topPanel = $("#top");
+  const thmBtns = $("#thm-buttons");
+  const modeTitle = $("#modeTitle");
   if(topPanel){
-    topPanel.style.display = (mode === "thematic") ? "flex" : "none";
+    topPanel.style.display = "flex";
+  }
+  if(modeTitle){
+    modeTitle.textContent = mode === "physical" ? "PHYSICAL MAP" : (mode === "political" ? "POLITICAL MAP" : "THEMATIC MAP");
+  }
+  if(thmBtns){
+    thmBtns.style.display = (mode === "thematic") ? "flex" : "none";
   }
   document.querySelectorAll('.thm-btn').forEach(b=>b.classList.toggle('on', b.dataset.t===theme));
   drawLegend(); buildLabelSet(); refreshInfo();
@@ -848,7 +966,7 @@ addEventListener('keydown', e=>{
 
 /* ===================== boot ===================== */
 const NEED = ["physical","political","thm_pop","thm_climate","thm_forest","thm_rain","bump"];
-const TOTAL = NEED.length + 2;
+const TOTAL = NEED.length + 4;
 let done = 0, hid = false;
 function hideLoader(){
   if(hid) return; hid = true;
@@ -860,8 +978,11 @@ function step(){
   if(done >= TOTAL) setTimeout(hideLoader, 350);
 }
 NEED.forEach(k=>{ tex[k] = mkTex(ASSETS[k], step); });
+tex.photoreal = mkTex('/interactive-3d-globe/textures/earth-blue-marble.jpg', step);
+tex.bump = mkTex('/interactive-3d-globe/textures/earth-topology.png', step);
 uni.bumpT.value = tex.bump;
-uni.mapA.value = tex.thm_rain; uni.mapB.value = tex.thm_rain;
+const initialTex = texFor();
+uni.mapA.value = initialTex; uni.mapB.value = initialTex;
 
 loadIdMap(ASSETS.country_id, idc, (c,w,h)=>{ idCtx=c; IW=w; IH=h; step(); });
 loadIdMap(ASSETS.adm1_id, idx2, (c)=>{ a1Ctx=c; step(); });
@@ -884,17 +1005,102 @@ drawLegend(); buildLabelSet();
   }catch(e){}
 })();
 
+// Spin Globe Button & Spin and Explore handlers
+const spinToggleBtn = $("#bSpinToggle");
+const spinBtnText = $("#spinBtnText");
+function updateSpinUI(){
+  if(spinToggleBtn) spinToggleBtn.classList.toggle('on', autoRot);
+  if(spinBtnText) spinBtnText.textContent = autoRot ? "Spinning" : "Spin Globe";
+}
+if(spinToggleBtn){
+  spinToggleBtn.onclick = ()=>{
+    autoRot = !autoRot;
+    spinVelX = 0; spinVelY = 0;
+    updateSpinUI();
+  };
+}
+
+const EXPLORE_PLACES = [
+  {n:"India", lon:78.96, lat:20.59, a3:"IND"},
+  {n:"Brazil", lon:-51.92, lat:-14.23, a3:"BRA"},
+  {n:"Indonesia", lon:113.92, lat:-0.78, a3:"IDN"},
+  {n:"Democratic Republic of the Congo", lon:21.75, lat:-4.03, a3:"COD"},
+  {n:"Gabon", lon:11.60, lat:-0.80, a3:"GAB"},
+  {n:"Japan", lon:138.25, lat:36.20, a3:"JPN"},
+  {n:"Finland", lon:25.74, lat:61.92, a3:"FIN"},
+  {n:"Canada", lon:-106.34, lat:56.13, a3:"CAN"},
+  {n:"Mongolia", lon:103.84, lat:46.86, a3:"MNG"},
+  {n:"Oman", lon:55.97, lat:21.51, a3:"OMN"},
+  {n:"Vietnam", lon:108.27, lat:14.05, a3:"VNM"},
+  {n:"Suriname", lon:-56.02, lat:3.91, a3:"SUR"}
+];
+
+const spinRandomBtn = $("#bSpinRandom");
+if(spinRandomBtn){
+  spinRandomBtn.onclick = ()=>{
+    // Accelerated dynamic spin with smooth deceleration landing on an interesting place
+    const pick = EXPLORE_PLACES[Math.floor(Math.random() * EXPLORE_PLACES.length)];
+    const startLon = cam.tLon, startLat = cam.tLat, startDist = cam.tDist;
+    const targetLon = pick.lon + 360 * 2; // 2 full revolutions
+    const targetLat = pick.lat;
+    const targetDist = 210;
+    const startTime = performance.now();
+    const duration = 2400; // ms
+
+    autoRot = false;
+    updateSpinUI();
+    spinVelX = 0; spinVelY = 0;
+
+    anim = ()=>{
+      const now = performance.now();
+      const p = Math.min(1, (now - startTime) / duration);
+      // Quintic ease out for high speed spin easing into precise landing
+      const ease = 1 - Math.pow(1 - p, 4);
+      cam.tLon = startLon + (targetLon - startLon) * ease;
+      cam.tLat = startLat + (targetLat - startLat) * ease;
+      cam.tDist = startDist + (targetDist - startDist) * ease;
+
+      if(p >= 1){
+        anim = null;
+        cam.tLon = pick.lon;
+        focus = {n: pick.n, x: pick.lon, y: pick.lat};
+        if(byA3[pick.a3]){
+          pinned = {c: byA3[pick.a3], r: null};
+          refreshInfo();
+        }
+      }
+    };
+  };
+}
+
 let last=0;
 function tick(t){
   requestAnimationFrame(tick);
-  if(anim) anim();
-  if(autoRot && !dragging && !anim) cam.tLon += 0.09;
+  if(anim) {
+    anim();
+  } else if(dragging) {
+    // handled in pointermove
+  } else {
+    // Physical inertia momentum spin
+    if(Math.abs(spinVelX) > 0.015 || Math.abs(spinVelY) > 0.015){
+      cam.tLon += spinVelX;
+      cam.tLat += spinVelY;
+      cam.tLat = Math.max(-88, Math.min(88, cam.tLat));
+      spinVelX *= 0.94; // natural friction
+      spinVelY *= 0.94;
+    } else if(autoRot) {
+      cam.tLon += 0.11;
+    }
+  }
   applyCam();
   uni.relief.value = (mode==="physical") ? 1.0 : (mode==="political" ? 0.22 : 0.14);
   uni.camDist.value = cam.dist;
   if(fading){
     uni.mixv.value = Math.min(1, uni.mixv.value + 0.075);
     if(uni.mixv.value>=1){ uni.mapA.value = uni.mapB.value; uni.mixv.value=0; fading=0; }
+  }
+  if(cloudsMesh) {
+    cloudsMesh.rotation.y += 0.0003;
   }
   if(t-last > 55){ renderLabels(); updateHover(); last=t; }
   renderer.render(scene, camera);

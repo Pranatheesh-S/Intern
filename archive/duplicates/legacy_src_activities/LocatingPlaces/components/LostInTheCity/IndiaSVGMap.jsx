@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IndiaMapData } from './IndiaMapData';
+import nasaSatelliteImg from './assets/nasa_india_satellite.jpg';
+import realisticAirplaneImg from './assets/realistic_airplane_top.png';
 import { 
   Plane, Compass, Navigation, Sparkles, MapPin, Landmark, 
   Layers, Maximize2, Minimize2, X, Eye, EyeOff, Mountain, Waves, Globe,
@@ -149,21 +151,27 @@ export default function IndiaSVGMap({
     }
   }
 
-  // Animation progress timer
+  // Smooth 60 FPS straight flight animation progress
   useEffect(() => {
     if (!animating) {
       setTravelProgress(0);
       return;
     }
-    let start = Date.now();
-    const duration = 2400;
-    const timer = setInterval(() => {
-      const elapsed = Date.now() - start;
-      const p = Math.min(1, elapsed / duration);
-      setTravelProgress(p);
-      if (p >= 1) clearInterval(timer);
-    }, 16);
-    return () => clearInterval(timer);
+    let start = performance.now();
+    const duration = 2600; // Smooth 2.6s straight flight cruise
+    let rafId;
+
+    const animateFlight = (now) => {
+      const elapsed = now - start;
+      const progress = Math.min(1, elapsed / duration);
+      setTravelProgress(progress);
+      if (progress < 1) {
+        rafId = requestAnimationFrame(animateFlight);
+      }
+    };
+
+    rafId = requestAnimationFrame(animateFlight);
+    return () => cancelAnimationFrame(rafId);
   }, [animating]);
 
   // Handle ESC key to exit fullscreen
@@ -239,51 +247,60 @@ export default function IndiaSVGMap({
   const getStateColor = (id, isDestination, isCompleted, isStart, isHovered) => {
     if (isStart) {
       return {
-        fill: mapStyle === 'satellite' ? '#064e3b' : 'url(#tamilNaduGrad)',
-        stroke: '#16A34A',
-        strokeWidth: 2.2
+        fill: mapStyle === 'satellite' ? '#16A34A' : 'url(#tamilNaduGrad)',
+        fillOpacity: mapStyle === 'satellite' ? 0.75 : 1,
+        stroke: '#22C55E',
+        strokeWidth: 2.5
       };
     }
     if (isDestination && !animating) {
       return {
-        fill: mapStyle === 'satellite' ? '#78350f' : 'url(#destinationGrad)',
-        stroke: '#D97706',
-        strokeWidth: 2.5
+        fill: mapStyle === 'satellite' ? '#D97706' : 'url(#destinationGrad)',
+        fillOpacity: mapStyle === 'satellite' ? 0.75 : 1,
+        stroke: '#F59E0B',
+        strokeWidth: 2.6
       };
     }
     if (isCompleted || (animating && isDestination)) {
       return {
-        fill: mapStyle === 'satellite' ? '#1e3a8a' : 'url(#completedGrad)',
-        stroke: '#3B82F6',
-        strokeWidth: 2
+        fill: mapStyle === 'satellite' ? '#2563EB' : 'url(#completedGrad)',
+        fillOpacity: mapStyle === 'satellite' ? 0.65 : 1,
+        stroke: '#60A5FA',
+        strokeWidth: 2.2
       };
     }
     if (isHovered) {
       return {
-        fill: mapStyle === 'satellite' ? '#1e293b' : '#FEF9C3',
-        stroke: '#CA8A04',
-        strokeWidth: 1.8
+        fill: mapStyle === 'satellite' ? '#EAB308' : '#FEF9C3',
+        fillOpacity: mapStyle === 'satellite' ? 0.55 : 1,
+        stroke: '#FACC15',
+        strokeWidth: 2
       };
     }
 
     if (mapStyle === 'physical') {
       if (['jk', 'la', 'hp', 'ut', 'sk', 'ar'].includes(id)) {
-        return { fill: 'url(#himalayaGrad)', stroke: '#94A3B8', strokeWidth: 1 };
+        return { fill: 'url(#himalayaGrad)', fillOpacity: 1, stroke: '#94A3B8', strokeWidth: 1 };
       }
       if (['rj', 'gj'].includes(id)) {
-        return { fill: 'url(#desertGrad)', stroke: '#FDE68A', strokeWidth: 1 };
+        return { fill: 'url(#desertGrad)', fillOpacity: 1, stroke: '#FDE68A', strokeWidth: 1 };
       }
       if (['pb', 'hr', 'up', 'br', 'wb', 'as', 'ml', 'tr', 'mz', 'nl', 'mn', 'kl', 'ap', 'or'].includes(id)) {
-        return { fill: 'url(#plainsGrad)', stroke: '#86EFAC', strokeWidth: 1 };
+        return { fill: 'url(#plainsGrad)', fillOpacity: 1, stroke: '#86EFAC', strokeWidth: 1 };
       }
-      return { fill: 'url(#plateauGrad)', stroke: '#FED7AA', strokeWidth: 1 };
+      return { fill: 'url(#plateauGrad)', fillOpacity: 1, stroke: '#FED7AA', strokeWidth: 1 };
     }
 
     if (mapStyle === 'satellite') {
-      return { fill: '#0B1528', stroke: '#1E293B', strokeWidth: 1 };
+      return {
+        fill: 'url(#nasaSatellitePattern)',
+        fillOpacity: 1,
+        stroke: 'rgba(255, 255, 255, 0.45)',
+        strokeWidth: 0.95
+      };
     }
 
-    return { fill: '#FFFFFF', stroke: '#CBD5E1', strokeWidth: 1 };
+    return { fill: '#FFFFFF', fillOpacity: 1, stroke: '#CBD5E1', strokeWidth: 1 };
   };
 
   // Render straight vector path with perfectly aligned forward-facing airplane
@@ -360,49 +377,89 @@ export default function IndiaSVGMap({
 
         {/* Moving Straight Forward Airplane / Train */}
         {isLiveAnimation && (
-          <g transform={`translate(${curX}, ${curY}) rotate(${heading})`}>
-            {/* Jet Engine Contrail Particles (trailing straight behind at -X) */}
-            <circle cx="-16" cy="0" r="3.5" fill="#F59E0B" opacity="0.85" filter="blur(1px)" />
-            <circle cx="-28" cy="0" r="2.5" fill="#FBBF24" opacity="0.65" filter="blur(1.5px)" />
-            <circle cx="-42" cy="0" r="1.8" fill="#FDE68A" opacity="0.45" filter="blur(2px)" />
+          <g transform={`translate(${curX}, ${curY})`}>
+            {/* Realistic Ground Altitude Shadow (Offset downwards for 3D cruising altitude effect) */}
+            <g transform={`rotate(${heading})`}>
+              <ellipse
+                cx="-6"
+                cy="16"
+                rx="18"
+                ry="5.5"
+                fill="rgba(0, 0, 0, 0.38)"
+                filter="blur(2.5px)"
+              />
+            </g>
 
-            {travelMode === 'plane' ? (
-              /* Ultra-Realistic Commercial Jet (Constructed pointing FORWARD towards +X / 0°) */
-              <g transform="scale(0.9)">
-                {/* Airplane Body & Swept Wings (Nose at +X=18, Tail at -X=-16) */}
-                <path
-                  d="M 18 0 L 10 3.5 L 2 3.5 L -8 20 L -12 20 L -8 3.5 L -14 3.5 L -18 10 L -21 10 L -19 0 L -21 -10 L -18 -10 L -14 -3.5 L -8 -3.5 L -12 -20 L -8 -20 L 2 -3.5 L 10 -3.5 Z"
-                  fill="#FFFFFF"
-                  stroke="#0F172A"
-                  strokeWidth="1.2"
-                  filter="drop-shadow(0 3px 6px rgba(0,0,0,0.35))"
-                />
-                {/* Cockpit Windshield (facing forward right) */}
-                <polygon points="12,-2 15,-1.5 15,1.5 12,2" fill="#38BDF8" />
-                
-                {/* Underwing Jet Engines */}
-                <rect x="-6" y="-12" width="8" height="3" rx="1.5" fill="#334155" />
-                <rect x="-6" y="9" width="8" height="3" rx="1.5" fill="#334155" />
+            {/* Rotated Aircraft with Wake Turbulence Vapor Contrails */}
+            <g transform={`rotate(${heading})`}>
+              {/* Dual Turbofan Condensation Contrails trailing back */}
+              <line x1="-12" y1="-5.5" x2="-90" y2="-9" stroke="rgba(255, 255, 255, 0.85)" strokeWidth="2.2" strokeLinecap="round" filter="blur(0.8px)" />
+              <line x1="-12" y1="5.5" x2="-90" y2="9" stroke="rgba(255, 255, 255, 0.85)" strokeWidth="2.2" strokeLinecap="round" filter="blur(0.8px)" />
+              <line x1="-10" y1="-5.5" x2="-45" y2="-7" stroke="rgba(186, 230, 253, 0.65)" strokeWidth="1.6" filter="blur(0.4px)" />
+              <line x1="-10" y1="5.5" x2="-45" y2="7" stroke="rgba(186, 230, 253, 0.65)" strokeWidth="1.6" filter="blur(0.4px)" />
 
-                {/* Left Port Wing Navigation Strobe: Red (Top Wing in 0° view) */}
-                <circle cx="-10" cy="-20" r="2" fill="#EF4444" style={{ animation: 'ping 1s infinite' }} />
-                {/* Right Starboard Wing Navigation Strobe: Green (Bottom Wing in 0° view) */}
-                <circle cx="-10" cy="20" r="2" fill="#22C55E" style={{ animation: 'ping 1s infinite' }} />
-                {/* Center Tail Beacon */}
-                <circle cx="-19" cy="0" r="1.8" fill="#F59E0B" />
-              </g>
-            ) : (
-              /* High-Speed Train Cab (Facing forward towards +X) */
-              <g transform="translate(-16, -6) scale(0.9)">
-                <rect x="0" y="0" width="32" height="12" rx="6" fill="#1E3A8A" stroke="#FFFFFF" strokeWidth="1.2" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.35))" />
-                <rect x="4" y="2" width="20" height="8" rx="2" fill="#F8FAFC" />
-                <circle cx="27" cy="6" r="2.2" fill="#38BDF8" />
-                {/* Forward Headlight Beams */}
-                <polygon points="32,4 46,1 46,11 32,8" fill="rgba(254, 240, 138, 0.45)" />
-                <circle cx="31" cy="4" r="1.5" fill="#FEF08A" />
-                <circle cx="31" cy="8" r="1.5" fill="#FEF08A" />
-              </g>
-            )}
+              {travelMode === 'plane' ? (
+                /* Ultra-Realistic Commercial Passenger Jet (Proportional High-Altitude Scale) */
+                <g transform="scale(0.48)">
+                  <image
+                    href={realisticAirplaneImg}
+                    x="-32"
+                    y="-32"
+                    width="64"
+                    height="64"
+                    style={{
+                      filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.55))'
+                    }}
+                  />
+                  {/* Port Wing Red Navigation Light */}
+                  <circle cx="-6" cy="-24" r="2.2" fill="#EF4444" style={{ animation: 'ping 0.8s infinite' }} />
+                  {/* Starboard Wing Green Navigation Light */}
+                  <circle cx="-6" cy="24" r="2.2" fill="#22C55E" style={{ animation: 'ping 0.8s infinite' }} />
+                  {/* Tail White Anti-Collision Strobe */}
+                  <circle cx="-28" cy="0" r="2" fill="#FFFFFF" style={{ animation: 'ping 1.1s infinite' }} />
+                  {/* Top Fuselage Red Rotating Beacon */}
+                  <circle cx="-2" cy="0" r="2" fill="#DC2626" opacity="0.9" />
+                </g>
+              ) : (
+                /* High-Speed Train Cab */
+                <g transform="translate(-14, -5) scale(0.75)">
+                  <rect x="0" y="0" width="30" height="10" rx="5" fill="#1E3A8A" stroke="#FFFFFF" strokeWidth="1.2" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.35))" />
+                  <rect x="4" y="2" width="18" height="6" rx="2" fill="#F8FAFC" />
+                  <circle cx="25" cy="5" r="2" fill="#38BDF8" />
+                  <polygon points="30,3 44,1 44,9 30,7" fill="rgba(254, 240, 138, 0.45)" />
+                  <circle cx="29" cy="3" r="1.3" fill="#FEF08A" />
+                  <circle cx="29" cy="7" r="1.3" fill="#FEF08A" />
+                </g>
+              )}
+            </g>
+
+            {/* Live Flight Telemetry Tag (Remains horizontal and readable) */}
+            <g transform="translate(18, -14)" style={{ pointerEvents: 'none' }}>
+              <rect
+                x="-4"
+                y="-9"
+                width="72"
+                height="16"
+                rx="8"
+                fill="rgba(15, 23, 42, 0.88)"
+                stroke="rgba(56, 189, 248, 0.7)"
+                strokeWidth="1"
+                backdropFilter="blur(6px)"
+                filter="drop-shadow(0 2px 6px rgba(0,0,0,0.4))"
+              />
+              <text
+                x="32"
+                y="2.5"
+                textAnchor="middle"
+                fontSize="8"
+                fontWeight="900"
+                fill="#38BDF8"
+                fontFamily="'Space Grotesk', sans-serif"
+                letterSpacing="0.4px"
+              >
+                ✈️ FL380 • 850k
+              </text>
+            </g>
           </g>
         )}
 
@@ -514,48 +571,14 @@ export default function IndiaSVGMap({
           <span>Base: <strong>Chennai</strong> (13°N, 80°E)</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', flexWrap: 'wrap' }}>
-          <button
-            onClick={() => setShowGraticule(!showGraticule)}
-            style={{
-              background: showGraticule ? '#FEF3C7' : 'transparent',
-              border: '1px solid #FDE68A',
-              borderRadius: '5px',
-              padding: '2px 5px',
-              fontSize: '10px',
-              fontWeight: 800,
-              color: showGraticule ? '#92400E' : '#94A3B8',
-              cursor: 'pointer'
-            }}
-            title="Toggle 23.5°N Tropic of Cancer & Graticule Lines"
-          >
-            🌐 Graticule
-          </button>
-          
-          <button
-            onClick={() => setShowRivers(!showRivers)}
-            style={{
-              background: showRivers ? '#DBEAFE' : 'transparent',
-              border: '1px solid #93C5FD',
-              borderRadius: '5px',
-              padding: '2px 5px',
-              fontSize: '10px',
-              fontWeight: 800,
-              color: showRivers ? '#1E40AF' : '#94A3B8',
-              cursor: 'pointer'
-            }}
-            title="Toggle Major Indian River Systems"
-          >
-            🌊 Rivers
-          </button>
-
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setShowRelief(!showRelief)}
             style={{
               background: showRelief ? '#DCFCE7' : 'transparent',
               border: '1px solid #86EFAC',
               borderRadius: '5px',
-              padding: '2px 5px',
+              padding: '2px 6px',
               fontSize: '10px',
               fontWeight: 800,
               color: showRelief ? '#166534' : '#94A3B8',
@@ -572,7 +595,7 @@ export default function IndiaSVGMap({
               background: showMeridian ? '#F3E8FF' : 'transparent',
               border: '1px solid #D8B4FE',
               borderRadius: '5px',
-              padding: '2px 5px',
+              padding: '2px 6px',
               fontSize: '10px',
               fontWeight: 800,
               color: showMeridian ? '#6B21A8' : '#94A3B8',
@@ -581,29 +604,6 @@ export default function IndiaSVGMap({
             title="Standard Meridian 82.5° E (Indian Standard Time)"
           >
             ⏰ 82.5°E IST
-          </button>
-
-          <button
-            onClick={() => {
-              setRulerMode(!rulerMode);
-              if (rulerMode) {
-                setRulerStart(null);
-                setRulerEnd(null);
-              }
-            }}
-            style={{
-              background: rulerMode ? '#EA580C' : '#FFF7ED',
-              border: `1px solid ${rulerMode ? '#C2410C' : '#FDBA74'}`,
-              borderRadius: '5px',
-              padding: '2px 5px',
-              fontSize: '10px',
-              fontWeight: 800,
-              color: rulerMode ? '#FFFFFF' : '#C2410C',
-              cursor: 'pointer'
-            }}
-            title="Digital Ruler: Click 2 cities to measure distance & bearing"
-          >
-            📏 Ruler
           </button>
 
 
@@ -774,10 +774,14 @@ export default function IndiaSVGMap({
               <stop offset="40%" stopColor="#F59E0B" stopOpacity="0.6" />
               <stop offset="100%" stopColor="#D97706" stopOpacity="0" />
             </radialGradient>
+
+            <pattern id="nasaSatellitePattern" patternUnits="userSpaceOnUse" x="-10" y="-10" width="635" height="705">
+              <image href={nasaSatelliteImg} x="0" y="0" width="635" height="705" preserveAspectRatio="xMidYMid slice" />
+            </pattern>
           </defs>
 
           {/* Oceanic & Graticule Background */}
-          <g opacity={mapStyle === 'satellite' ? 0.25 : 0.9}>
+          <g opacity={mapStyle === 'satellite' ? 0.35 : 0.9}>
             {showGraticule && (
               <g stroke={mapStyle === 'satellite' ? '#334155' : '#0284C7'} strokeWidth="0.75" strokeDasharray="3 6" opacity="0.4">
                 <line x1="-10" y1="180" x2="615" y2="180" />
@@ -816,44 +820,44 @@ export default function IndiaSVGMap({
               </g>
             )}
 
-            <text x="50" y="440" fontSize="11" fontWeight="900" fill={mapStyle === 'satellite' ? '#64748B' : '#0369A1'} letterSpacing="2" opacity="0.75" fontFamily="'Space Grotesk', sans-serif">ARABIAN SEA</text>
-            <text x="360" y="470" fontSize="11" fontWeight="900" fill={mapStyle === 'satellite' ? '#64748B' : '#0369A1'} letterSpacing="2" opacity="0.75" fontFamily="'Space Grotesk', sans-serif">BAY OF BENGAL</text>
-            <text x="180" y="660" fontSize="11" fontWeight="900" fill={mapStyle === 'satellite' ? '#64748B' : '#0369A1'} letterSpacing="2" opacity="0.75" fontFamily="'Space Grotesk', sans-serif">INDIAN OCEAN</text>
+            <text x="50" y="440" fontSize="11.5" fontWeight="900" fill={mapStyle === 'satellite' ? '#38BDF8' : '#0369A1'} letterSpacing="2.5" opacity="0.95" fontFamily="'Space Grotesk', sans-serif" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.6))">ARABIAN SEA</text>
+            <text x="360" y="470" fontSize="11.5" fontWeight="900" fill={mapStyle === 'satellite' ? '#38BDF8' : '#0369A1'} letterSpacing="2.5" opacity="0.95" fontFamily="'Space Grotesk', sans-serif" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.6))">BAY OF BENGAL</text>
+            <text x="180" y="660" fontSize="11.5" fontWeight="900" fill={mapStyle === 'satellite' ? '#38BDF8' : '#0369A1'} letterSpacing="2.5" opacity="0.95" fontFamily="'Space Grotesk', sans-serif" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.6))">INDIAN OCEAN</text>
             
             {showRelief && (
-              <g opacity="0.85">
-                <text x="290" y="32" fontSize="9.5" fontWeight="900" fill={mapStyle === 'satellite' ? '#94A3B8' : '#78350F'} letterSpacing="2" textAnchor="middle" fontFamily="'Space Grotesk', sans-serif">
+              <g opacity="0.95">
+                <text x="290" y="32" fontSize="10" fontWeight="900" fill={mapStyle === 'satellite' ? '#FFFFFF' : '#78350F'} letterSpacing="2.5" textAnchor="middle" fontFamily="'Space Grotesk', sans-serif" filter="drop-shadow(0 2px 5px rgba(0,0,0,0.8))">
                   ▲ THE GREAT HIMALAYAS ▲
                 </text>
-                <text x="110" y="500" fontSize="7.5" fontWeight="900" fill="#15803D" letterSpacing="1" transform="rotate(-65 110 500)" opacity="0.65">
+                <text x="110" y="500" fontSize="8" fontWeight="900" fill="#22C55E" letterSpacing="1" transform="rotate(-65 110 500)" opacity="0.85" filter="drop-shadow(0 1px 3px rgba(0,0,0,0.6))">
                   Western Ghats
                 </text>
-                <text x="340" y="500" fontSize="7.5" fontWeight="900" fill="#15803D" letterSpacing="1" transform="rotate(45 340 500)" opacity="0.65">
+                <text x="340" y="500" fontSize="8" fontWeight="900" fill="#22C55E" letterSpacing="1" transform="rotate(45 340 500)" opacity="0.85" filter="drop-shadow(0 1px 3px rgba(0,0,0,0.6))">
                   Eastern Ghats
                 </text>
               </g>
             )}
 
-            <g transform="translate(245, 615)" opacity="0.75">
-              <ellipse cx="12" cy="16" rx="9" ry="14" fill={mapStyle === 'satellite' ? '#1E293B' : '#E2E8F0'} stroke={mapStyle === 'satellite' ? '#475569' : '#94A3B8'} strokeWidth="1" />
-              <text x="12" y="38" fontSize="8.5" fontWeight="800" fill="#64748B" textAnchor="middle">Sri Lanka</text>
+            <g transform="translate(245, 615)" opacity="0.9">
+              <ellipse cx="12" cy="16" rx="9" ry="14" fill={mapStyle === 'satellite' ? '#1E293B' : '#E2E8F0'} stroke={mapStyle === 'satellite' ? '#38BDF8' : '#94A3B8'} strokeWidth="1.2" />
+              <text x="12" y="38" fontSize="9" fontWeight="900" fill={mapStyle === 'satellite' ? '#93C5FD' : '#64748B'} textAnchor="middle" filter="drop-shadow(0 1px 3px rgba(0,0,0,0.6))">Sri Lanka</text>
             </g>
 
-            <g transform="translate(520, 500)" opacity="0.8">
-              <circle cx="0" cy="0" r="3" fill="#16A34A" />
-              <circle cx="2" cy="12" r="2.5" fill="#16A34A" />
-              <circle cx="4" cy="24" r="3" fill="#16A34A" />
-              <circle cx="5" cy="38" r="2.5" fill="#16A34A" />
-              <text x="-12" y="56" fontSize="7.5" fontWeight="800" fill="#0369A1" fontFamily="'Space Grotesk', sans-serif">
+            <g transform="translate(520, 500)" opacity="0.95">
+              <circle cx="0" cy="0" r="3" fill="#22C55E" />
+              <circle cx="2" cy="12" r="2.5" fill="#22C55E" />
+              <circle cx="4" cy="24" r="3" fill="#22C55E" />
+              <circle cx="5" cy="38" r="2.5" fill="#22C55E" />
+              <text x="-12" y="56" fontSize="8.5" fontWeight="900" fill="#38BDF8" fontFamily="'Space Grotesk', sans-serif" filter="drop-shadow(0 1px 4px rgba(0,0,0,0.7))">
                 Andaman & Nicobar
               </text>
             </g>
 
-            <g transform="translate(110, 565)" opacity="0.8">
-              <circle cx="0" cy="0" r="2.5" fill="#16A34A" />
-              <circle cx="-3" cy="10" r="2" fill="#16A34A" />
-              <circle cx="-2" cy="22" r="2.2" fill="#16A34A" />
-              <text x="-16" y="36" fontSize="7.5" fontWeight="800" fill="#0369A1" fontFamily="'Space Grotesk', sans-serif">
+            <g transform="translate(110, 565)" opacity="0.95">
+              <circle cx="0" cy="0" r="2.5" fill="#22C55E" />
+              <circle cx="-3" cy="10" r="2" fill="#22C55E" />
+              <circle cx="-2" cy="22" r="2.2" fill="#22C55E" />
+              <text x="-16" y="36" fontSize="8.5" fontWeight="900" fill="#38BDF8" fontFamily="'Space Grotesk', sans-serif" filter="drop-shadow(0 1px 4px rgba(0,0,0,0.7))">
                 Lakshadweep
               </text>
             </g>
@@ -874,6 +878,7 @@ export default function IndiaSVGMap({
                   id={`state-${loc.id}`}
                   d={loc.path}
                   fill={style.fill}
+                  fillOpacity={style.fillOpacity !== undefined ? style.fillOpacity : 1}
                   stroke={style.stroke}
                   strokeWidth={style.strokeWidth}
                   strokeLinejoin="round"
@@ -908,42 +913,42 @@ export default function IndiaSVGMap({
 
           {/* Major Indian River Systems Layer */}
           {showRivers && (
-            <g opacity="0.75" pointerEvents="none">
+            <g opacity="0.95" pointerEvents="none">
               <path
                 d="M 210 150 Q 280 200 350 215 T 440 270"
                 fill="none"
-                stroke="#0284C7"
-                strokeWidth="1.8"
-                strokeDasharray="4 2"
-                style={{ animation: 'river-flow 2s linear infinite' }}
-              />
-              <text x="260" y="192" fontSize="7.5" fontWeight="800" fill="#0369A1" fontStyle="italic">Ganga R.</text>
-
-              <path
-                d="M 520 180 Q 480 200 450 240 T 440 270"
-                fill="none"
-                stroke="#0284C7"
+                stroke="#38BDF8"
                 strokeWidth="2"
                 strokeDasharray="4 2"
                 style={{ animation: 'river-flow 2s linear infinite' }}
               />
-              <text x="470" y="175" fontSize="7.5" fontWeight="800" fill="#0369A1" fontStyle="italic">Brahmaputra R.</text>
+              <text x="260" y="192" fontSize="8.5" fontWeight="900" fill="#38BDF8" fontStyle="italic" filter="drop-shadow(0 1px 3px rgba(0,0,0,0.8))">Ganga R.</text>
+
+              <path
+                d="M 520 180 Q 480 200 450 240 T 440 270"
+                fill="none"
+                stroke="#38BDF8"
+                strokeWidth="2.2"
+                strokeDasharray="4 2"
+                style={{ animation: 'river-flow 2s linear infinite' }}
+              />
+              <text x="470" y="175" fontSize="8.5" fontWeight="900" fill="#38BDF8" fontStyle="italic" filter="drop-shadow(0 1px 3px rgba(0,0,0,0.8))">Brahmaputra R.</text>
 
               <path
                 d="M 280 320 Q 200 330 160 325"
                 fill="none"
-                stroke="#0284C7"
-                strokeWidth="1.5"
+                stroke="#38BDF8"
+                strokeWidth="1.8"
               />
-              <text x="195" y="322" fontSize="7.5" fontWeight="800" fill="#0369A1" fontStyle="italic">Narmada R.</text>
+              <text x="195" y="322" fontSize="8.5" fontWeight="900" fill="#38BDF8" fontStyle="italic" filter="drop-shadow(0 1px 3px rgba(0,0,0,0.8))">Narmada R.</text>
 
               <path
                 d="M 180 430 Q 240 450 300 450"
                 fill="none"
-                stroke="#0284C7"
-                strokeWidth="1.5"
+                stroke="#38BDF8"
+                strokeWidth="1.8"
               />
-              <text x="195" y="440" fontSize="7.5" fontWeight="800" fill="#0369A1" fontStyle="italic">Krishna R.</text>
+              <text x="195" y="440" fontSize="8.5" fontWeight="900" fill="#38BDF8" fontStyle="italic" filter="drop-shadow(0 1px 3px rgba(0,0,0,0.8))">Krishna R.</text>
             </g>
           )}
 
@@ -994,24 +999,27 @@ export default function IndiaSVGMap({
           <g>
             {missionIndex >= 0 && (
               <g transform={`translate(${startNode.x}, ${startNode.y})`} style={{ cursor: 'pointer' }} onClick={() => handleCityClick('tn')}>
-                <circle r="22" fill="none" stroke="#16A34A" strokeWidth="1" opacity="0.35" style={{ animation: 'pulse-wave 2.5s infinite' }} />
+                <circle r="22" fill="none" stroke="#16A34A" strokeWidth="1.5" opacity="0.6" style={{ animation: 'pulse-wave 2.5s infinite' }} />
                 <line
                   x1="0"
                   y1="0"
                   x2={26 * Math.cos((radarAngle * Math.PI) / 180)}
                   y2={26 * Math.sin((radarAngle * Math.PI) / 180)}
                   stroke="#16A34A"
-                  strokeWidth="1.2"
-                  opacity="0.6"
+                  strokeWidth="1.5"
+                  opacity="0.8"
                 />
 
-                <circle r="6" fill="#16A34A" stroke="#FFFFFF" strokeWidth="2" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))" />
-                <text x="0" y="3.5" fontSize="8" textAnchor="middle" fill="#FFFFFF" fontWeight="900">★</text>
+                <circle r="7" fill="#16A34A" stroke="#FFFFFF" strokeWidth="2.2" filter="drop-shadow(0 2px 6px rgba(0,0,0,0.4))" />
+                <text x="0" y="3.5" fontSize="9" textAnchor="middle" fill="#FFFFFF" fontWeight="900">★</text>
                 
-                <g transform="translate(14, -6)">
-                  <rect x="0" y="-8" width="94" height="22" rx="6" fill="#DCFCE7" stroke="#16A34A" strokeWidth="1.2" opacity="0.95" />
-                  <text x="6" y="6" fontSize="10" fontWeight="900" fill="#166534" fontFamily="'Space Grotesk', sans-serif">
+                <g transform="translate(14, -8)">
+                  <rect x="0" y="-10" width="104" height="26" rx="7" fill="#DCFCE7" stroke="#16A34A" strokeWidth="1.8" filter="drop-shadow(0 3px 8px rgba(0,0,0,0.3))" />
+                  <text x="6" y="3" fontSize="10.5" fontWeight="900" fill="#166534" fontFamily="'Space Grotesk', sans-serif">
                     Chennai (Base) 📍
+                  </text>
+                  <text x="6" y="12.5" fontSize="8.5" fontWeight="800" fill="#15803D" fontFamily="'Space Grotesk', sans-serif">
+                    Tamil Nadu
                   </text>
                 </g>
               </g>
@@ -1024,7 +1032,26 @@ export default function IndiaSVGMap({
               const city = cityData[m.id];
               if (!node || !city) return null;
 
-              const isShown = isActive || isComp || missionIndex >= missions.length || rulerMode;
+              // Color styles for high contrast visibility
+              let badgeBg = '#FFFFFF';
+              let badgeBorder = '#2563EB';
+              let titleColor = '#0F172A';
+              let subtitleColor = '#1D4ED8';
+              let pinColor = '#2563EB';
+
+              if (isActive) {
+                badgeBg = '#FEF3C7';
+                badgeBorder = '#D97706';
+                titleColor = '#78350F';
+                subtitleColor = '#9A3412';
+                pinColor = '#D97706';
+              } else if (isComp) {
+                badgeBg = '#ECFDF5';
+                badgeBorder = '#10B981';
+                titleColor = '#065F46';
+                subtitleColor = '#047857';
+                pinColor = '#10B981';
+              }
 
               return (
                 <g
@@ -1032,42 +1059,42 @@ export default function IndiaSVGMap({
                   transform={`translate(${node.x}, ${node.y})`}
                   style={{
                     cursor: 'pointer',
-                    opacity: isShown ? 1 : 0.4,
+                    opacity: 1,
                     transition: 'all 0.3s ease'
                   }}
                   onClick={() => handleCityClick(m.id)}
                 >
                   {isActive && !animating && (
                     <>
-                      <circle r="18" fill="none" stroke="#D97706" strokeWidth="1.5" opacity="0.6" style={{ animation: 'ping 1.8s infinite' }} />
-                      <circle r="10" fill="#FEF3C7" opacity="0.7" />
+                      <circle r="20" fill="none" stroke="#D97706" strokeWidth="2" opacity="0.8" style={{ animation: 'ping 1.6s infinite' }} />
+                      <circle r="12" fill="#FEF3C7" opacity="0.8" />
                     </>
                   )}
 
                   <circle
-                    r={isActive ? "7" : "5"}
-                    fill={isActive ? "#D97706" : (isComp ? "#16A34A" : "#64748B")}
+                    r={isActive ? "8" : "6"}
+                    fill={pinColor}
                     stroke="#FFFFFF"
-                    strokeWidth="1.8"
-                    filter="drop-shadow(0 2px 5px rgba(0,0,0,0.3))"
+                    strokeWidth="2"
+                    filter="drop-shadow(0 2px 6px rgba(0,0,0,0.4))"
                   />
 
                   <g transform={`translate(${city.dx}, ${city.dy})`}>
                     <rect
                       x="0"
-                      y="-8"
-                      width="94"
-                      height="24"
-                      rx="6"
-                      fill={isActive ? "#FEF3C7" : (isComp ? "#EFF6FF" : "#FFFFFF")}
-                      stroke={isActive ? "#D97706" : (isComp ? "#3B82F6" : "#CBD5E1")}
-                      strokeWidth={isActive ? "1.5" : "1"}
-                      filter="drop-shadow(0 2px 5px rgba(0,0,0,0.12))"
+                      y="-10"
+                      width="104"
+                      height="27"
+                      rx="7"
+                      fill={badgeBg}
+                      stroke={badgeBorder}
+                      strokeWidth={isActive ? "2" : "1.5"}
+                      filter="drop-shadow(0 3px 8px rgba(0,0,0,0.3))"
                     />
-                    <text x="5" y="3.5" fontSize="9.5" fontWeight="900" fill={isActive ? "#92400E" : (isComp ? "#1E40AF" : "#1E293B")} fontFamily="'Space Grotesk', sans-serif">
+                    <text x="6" y="3" fontSize="10.5" fontWeight="900" fill={titleColor} fontFamily="'Space Grotesk', sans-serif">
                       {city.icon} {city.name}
                     </text>
-                    <text x="5" y="12.5" fontSize="8" fontWeight="700" fill={isActive ? "#B45309" : "#64748B"} fontFamily="'Space Grotesk', sans-serif">
+                    <text x="6" y="13" fontSize="8.5" fontWeight="800" fill={subtitleColor} fontFamily="'Space Grotesk', sans-serif">
                       {city.state}
                     </text>
                   </g>
