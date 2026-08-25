@@ -3,13 +3,13 @@ import { Search, Lightbulb, RefreshCw, Lock, CheckCircle2, ChevronRight, Check, 
 import classroomBg from '../images/clean_classroom.jpg';
 
 const CLASSROOM_OBJECTS = [
-  { id: 'bottle', emoji: '🍶', name: 'Water Bottle', material: 'Metal', desc: 'Strong, durable, and keeps liquids contained without breaking easily.', xPos: 35, yPos: 46 },
-  { id: 'window', emoji: '🪟', name: 'Window Pane', material: 'Glass', desc: 'Transparent material that allows light to pass through while keeping weather out.', xPos: 12, yPos: 28, hitbox: 'rect', w: 18, h: 25 },
-  { id: 'backpack', emoji: '🎒', name: 'Backpack', material: 'Fabric', desc: 'Soft, flexible, and strong material that can hold heavy books without tearing.', xPos: 90, yPos: 63 },
-  { id: 'notebook', emoji: '📓', name: 'Notebook', material: 'Paper', desc: 'Light and easy to carry. Smooth to write on. Can be folded. Made from plant-based material.', xPos: 43, yPos: 65 },
-  { id: 'pen', emoji: '🖊️', name: 'Pen', material: 'Metal', desc: 'Combines a strong barrel for grip and a metal tip for precision ink flow.', xPos: 54, yPos: 65 },
+  { id: 'bottle', emoji: '🍶', name: 'Water Bottle', material: 'Metal', desc: 'Strong, durable, and keeps liquids contained without breaking easily.', xPos: 36, yPos: 46, hitbox: 'rect', w: 5, h: 14 },
+  { id: 'window', emoji: '🪟', name: 'Window Pane', material: 'Glass', desc: 'Transparent material that allows light to pass through while keeping weather out.', xPos: 4, yPos: 30, hitbox: 'rect', w: 8, h: 30 },
+  { id: 'backpack', emoji: '🎒', name: 'Backpack', material: 'Fabric', desc: 'Soft, flexible, and strong material that can hold heavy books without tearing.', xPos: 88, yPos: 63, hitbox: 'rect', w: 14, h: 18 },
+  { id: 'notebook', emoji: '📓', name: 'Notebook', material: 'Paper', desc: 'Light and easy to carry. Smooth to write on. Can be folded. Made from plant-based material.', xPos: 42.5, yPos: 65, hitbox: 'rect', w: 14, h: 8 },
+  { id: 'pen', emoji: '🖊️', name: 'Pen', material: 'Metal', desc: 'Combines a strong barrel for grip and a metal tip for precision ink flow.', xPos: 54.5, yPos: 65, hitbox: 'rect', w: 5, h: 3 },
   { id: 'blackboard', emoji: '⬛', name: 'Blackboard', material: 'Slate', desc: 'A hard, dark rock material that is flat and holds chalk marks easily.', xPos: 50, yPos: 25 },
-  { id: 'duster', emoji: '🧽', name: 'Duster', material: 'Wood', desc: 'A hard wooden back provides a strong grip for the soft felt underneath.', xPos: 58, yPos: 38 }
+  { id: 'duster', emoji: '🧽', name: 'Duster', material: 'Wood', desc: 'A hard wooden back provides a strong grip for the soft felt underneath.', xPos: 58.5, yPos: 37.5, hitbox: 'rect', w: 5, h: 3 }
 ];
 
 const MAGNIFIER_RADIUS = 140;
@@ -126,7 +126,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
     let foundTarget = null;
 
     for (const obj of CLASSROOM_OBJECTS) {
-      if (discovered.includes(obj.id)) continue;
+      // Allow colliding with already discovered objects so they can be inspected again
 
       const { x: objX, y: objY } = getPixelCoordinates(obj.xPos, obj.yPos, width, height);
 
@@ -150,9 +150,21 @@ export default function Stage1_Intro({ onComplete, addXp }) {
     }
 
     if (foundTarget) {
-      if (hoverTarget?.id !== foundTarget.id) {
-        setHoverTarget(foundTarget);
-        startHoldTimer(foundTarget);
+      if (discovered.includes(foundTarget.id)) {
+        // If already discovered, just update the active object to show its bubble immediately
+        if (activeObject?.id !== foundTarget.id) {
+          setActiveObject(foundTarget);
+        }
+        if (hoverTarget) {
+          setHoverTarget(null);
+          clearHoldTimer();
+        }
+      } else {
+        // Not discovered yet, start the scan timer
+        if (hoverTarget?.id !== foundTarget.id) {
+          setHoverTarget(foundTarget);
+          startHoldTimer(foundTarget);
+        }
       }
     } else {
       if (hoverTarget) {
@@ -186,28 +198,31 @@ export default function Stage1_Intro({ onComplete, addXp }) {
     clearHoldTimer();
     setHoverTarget(null);
     setActiveObject(obj);
+    
+    // Progressively add to discovered objects using functional update to guarantee no stale state overwrites
+    setDiscovered(prev => {
+      if (prev.includes(obj.id)) return prev;
+      return [...prev, obj.id];
+    });
+
     setViewState('zoom');
     setHintActive(false);
     playSound('discovery');
   };
 
   const returnToClassroom = () => {
-    if (!discovered.includes(activeObject.id)) {
-      const newDiscovered = [...discovered, activeObject.id];
-      setDiscovered(newDiscovered);
-      
-      if (newDiscovered.length === CLASSROOM_OBJECTS.length) {
-        setTimeout(() => {
-          setViewState('completed');
-          playSound('success');
-        }, 500);
-      } else {
-        setViewState('explore');
-      }
+    // Check if ALL objects have now been discovered
+    // We check against the current length. If this was the last object,
+    // the triggerDiscovery already added it to the `discovered` array.
+    if (discovered.length === CLASSROOM_OBJECTS.length || (discovered.length === CLASSROOM_OBJECTS.length - 1 && !discovered.includes(activeObject.id))) {
+      // In case state hasn't flushed yet, also handle length-1 if activeObject is missing
+      setTimeout(() => {
+        setViewState('completed');
+        playSound('success');
+      }, 500);
     } else {
       setViewState('explore');
     }
-    setActiveObject(null);
   };
 
   const resetActivity = () => {
@@ -226,17 +241,27 @@ export default function Stage1_Intro({ onComplete, addXp }) {
 
   // Zoom Transform logic
   let transformStyle = 'scale(1) translate(0px, 0px)';
+  let transformOriginStyle = 'center';
+
   if (viewState === 'zoom' && activeObject && containerRef.current) {
     const rect = containerRef.current.getBoundingClientRect();
     const { x: objX, y: objY } = getPixelCoordinates(activeObject.xPos, activeObject.yPos, rect.width, rect.height);
     
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
+    const scale = 2.5;
     
-    const translateX = centerX - objX;
-    const translateY = centerY - objY;
+    // Target translation to put the object at the center of the container
+    let finalX = (rect.width / 2) - (objX * scale);
+    let finalY = (rect.height / 2) - (objY * scale);
     
-    transformStyle = `translate(${translateX}px, ${translateY}px) scale(2.5)`;
+    // Clamp the translation so we don't show the black background
+    const minX = rect.width * (1 - scale);
+    const minY = rect.height * (1 - scale);
+    
+    finalX = Math.max(minX, Math.min(0, finalX));
+    finalY = Math.max(minY, Math.min(0, finalY));
+    
+    transformOriginStyle = '0 0';
+    transformStyle = `translate(${finalX}px, ${finalY}px) scale(${scale})`;
   }
 
   // Visual Theme Colors matching reference
@@ -291,7 +316,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
               position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
               transform: transformStyle,
               transition: 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
-              transformOrigin: 'center'
+              transformOrigin: transformOriginStyle
             }}>
               {/* Base Classroom Image */}
               <div style={{
@@ -300,74 +325,161 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                 backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat',
               }} />
 
-              {/* Callouts */}
-              {CLASSROOM_OBJECTS.map(obj => {
-                 const isDiscovered = discovered.includes(obj.id);
-                 const isActive = activeObject?.id === obj.id;
-                 if (!isDiscovered && !isActive) return null;
-
-                 const { x, y } = getMappedCoordinates(obj.xPos, obj.yPos);
-                 
-                 let transformVal = '';
-                 let arrowStyle = {};
-                 
-                 if (obj.xPos > 70) {
-                     // right side -> bubble on left
-                     transformVal = `translate(calc(-100% - 40px), -50%)`;
-                     arrowStyle = { right: '-12px', top: '50%', transform: 'translateY(-50%)', borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: '12px solid #a64d24' };
-                 } else if (obj.xPos < 30) {
-                     // left side -> bubble on right
-                     transformVal = `translate(40px, -50%)`;
-                     arrowStyle = { left: '-12px', top: '50%', transform: 'translateY(-50%)', borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderRight: '12px solid #a64d24' };
-                 } else {
-                     // middle -> bubble above
-                     transformVal = `translate(-50%, calc(-100% - 40px))`;
-                     arrowStyle = { bottom: '-12px', left: '50%', transform: 'translateX(-50%)', borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: '12px solid #a64d24' };
-                 }
-
-                 return (
-                   <div key={`bubble-${obj.id}`} style={{
-                      position: 'absolute',
-                      left: `${x}%`, top: `${y}%`,
-                      transform: `${transformVal} scale(${viewState === 'zoom' ? 0.4 : 1})`,
-                      transition: 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s',
-                      opacity: (isActive && viewState === 'zoom') || isDiscovered ? 1 : 0,
-                      background: '#fdf9f1',
-                      padding: '8px 12px',
-                      borderRadius: '12px',
-                      border: '3px solid #a64d24',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                      zIndex: 30,
-                      pointerEvents: 'none',
-                      display: 'flex', flexDirection: 'column', gap: '2px', minWidth: '100px'
-                   }}>
-                      <div style={{ fontSize: '0.65rem', fontWeight: '800', letterSpacing: '0.5px', color: '#8b6508' }}>OBJECT</div>
-                      <div style={{ fontSize: '1rem', fontWeight: '900', lineHeight: '1', color: '#3c2415' }}>{obj.name}</div>
-                      <div style={{ fontSize: '0.65rem', fontWeight: '800', letterSpacing: '0.5px', color: '#8b6508', marginTop: '6px' }}>MATERIAL</div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: '900', color: '#bc4a1a', lineHeight: '1' }}>{obj.material}</div>
-                      
-                      {/* Inner border arrow mask for clean outline */}
-                      <div style={{
-                          position: 'absolute',
-                          ...arrowStyle,
-                          width: 0, height: 0,
-                          zIndex: 1
-                      }} />
-                      {/* White fill for arrow */}
-                      <div style={{
-                          position: 'absolute',
-                          ...arrowStyle,
-                          borderLeftColor: arrowStyle.borderLeft ? '#fdf9f1' : undefined,
-                          borderRightColor: arrowStyle.borderRight ? '#fdf9f1' : undefined,
-                          borderTopColor: arrowStyle.borderTop ? '#fdf9f1' : undefined,
-                          borderWidth: arrowStyle.borderLeft ? '4px 0 4px 9px' : (arrowStyle.borderRight ? '4px 9px 4px 0' : '9px 4px 0 4px'),
-                          [arrowStyle.borderLeft ? 'right' : (arrowStyle.borderRight ? 'left' : 'bottom')]: '-8px',
-                          zIndex: 2
-                      }} />
-                   </div>
-                 )
-              })}
             </div>
+
+            {/* CALLOUTS (Rendered outside the transform to prevent clipping/scaling bugs) */}
+            {CLASSROOM_OBJECTS.map(obj => {
+               const isActive = activeObject?.id === obj.id;
+               if (!isActive || viewState === 'completed') return null;
+
+               const { x, y } = getMappedCoordinates(obj.xPos, obj.yPos);
+               
+               let basePxX = 0;
+               let basePxY = 0;
+               if (containerSize.width) {
+                 basePxX = (x / 100) * containerSize.width;
+                 basePxY = (y / 100) * containerSize.height;
+               }
+
+               let currentScale = 1;
+               let translateX = 0;
+               let translateY = 0;
+               
+               if (viewState === 'zoom' && activeObject && containerSize.width) {
+                 currentScale = 2.5;
+                 const { x: objX, y: objY } = getPixelCoordinates(activeObject.xPos, activeObject.yPos, containerSize.width, containerSize.height);
+                 
+                 let fX = (containerSize.width / 2) - (objX * currentScale);
+                 let fY = (containerSize.height / 2) - (objY * currentScale);
+                 
+                 const minX = containerSize.width * (1 - currentScale);
+                 const minY = containerSize.height * (1 - currentScale);
+                 
+                 translateX = Math.max(minX, Math.min(0, fX));
+                 translateY = Math.max(minY, Math.min(0, fY));
+               }
+
+               const objectScreenCenterX = basePxX * currentScale + translateX;
+               const objectScreenCenterY = basePxY * currentScale + translateY;
+
+               let halfW = 40;
+               let halfH = 40;
+               if (containerSize.width) {
+                   const scaleFactor = Math.max(containerSize.width / 768, containerSize.height / 1024);
+                   if (obj.hitbox === 'rect') {
+                       halfW = ((obj.w / 100) * 768 * scaleFactor) / 2;
+                       halfH = ((obj.h / 100) * 1024 * scaleFactor) / 2;
+                   } else {
+                       halfW = 60 * scaleFactor;
+                       halfH = 60 * scaleFactor;
+                   }
+               }
+               const zoomedHalfW = halfW * currentScale;
+               const zoomedHalfH = halfH * currentScale;
+
+               const margin = 16;
+               const bubbleEstW = 160;
+               const bubbleEstH = 110;
+               
+               let placement = 'top';
+               const spaceTop = objectScreenCenterY - zoomedHalfH;
+               const spaceBottom = containerSize.height - (objectScreenCenterY + zoomedHalfH);
+               const spaceLeft = objectScreenCenterX - zoomedHalfW;
+               const spaceRight = containerSize.width - (objectScreenCenterX + zoomedHalfW);
+
+               if (spaceTop < bubbleEstH + margin) {
+                   if (spaceBottom >= bubbleEstH + margin) {
+                       placement = 'bottom';
+                   } else if (spaceRight >= bubbleEstW + margin) {
+                       placement = 'right';
+                   } else if (spaceLeft >= bubbleEstW + margin) {
+                       placement = 'left';
+                   } else {
+                       placement = 'bottom';
+                   }
+               } else if (spaceLeft < bubbleEstW / 2 + margin && spaceRight >= bubbleEstW + margin) {
+                   placement = 'right';
+               } else if (spaceRight < bubbleEstW / 2 + margin && spaceLeft >= bubbleEstW + margin) {
+                   placement = 'left';
+               }
+
+               let transformVal = '';
+               let arrowStyle = {};
+               let innerArrowStyle = {};
+               let originStyle = 'center';
+               
+               if (placement === 'right') {
+                   transformVal = `translate(${zoomedHalfW + margin}px, -50%)`;
+                   originStyle = 'left center';
+                   arrowStyle = { left: '-12px', top: '50%', transform: 'translateY(-50%)', borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderRight: '12px solid #a64d24' };
+                   innerArrowStyle = { left: '-8px', top: '50%', transform: 'translateY(-50%)', borderTop: '4px solid transparent', borderBottom: '4px solid transparent', borderRight: '9px solid #fdf9f1' };
+               } else if (placement === 'left') {
+                   transformVal = `translate(calc(-100% - ${zoomedHalfW + margin}px), -50%)`;
+                   originStyle = 'right center';
+                   arrowStyle = { right: '-12px', top: '50%', transform: 'translateY(-50%)', borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: '12px solid #a64d24' };
+                   innerArrowStyle = { right: '-8px', top: '50%', transform: 'translateY(-50%)', borderTop: '4px solid transparent', borderBottom: '4px solid transparent', borderLeft: '9px solid #fdf9f1' };
+               } else if (placement === 'bottom') {
+                   transformVal = `translate(-50%, ${zoomedHalfH + margin}px)`;
+                   originStyle = 'top center';
+                   arrowStyle = { top: '-12px', left: '50%', transform: 'translateX(-50%)', borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '12px solid #a64d24' };
+                   innerArrowStyle = { top: '-8px', left: '50%', transform: 'translateX(-50%)', borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderBottom: '9px solid #fdf9f1' };
+               } else {
+                   transformVal = `translate(-50%, calc(-100% - ${zoomedHalfH + margin}px))`;
+                   originStyle = 'bottom center';
+                   arrowStyle = { bottom: '-12px', left: '50%', transform: 'translateX(-50%)', borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: '12px solid #a64d24' };
+                   innerArrowStyle = { bottom: '-8px', left: '50%', transform: 'translateX(-50%)', borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderTop: '9px solid #fdf9f1' };
+               }
+
+               // Implement dynamic clamping for the translate value
+               // Using CSS calc() to ensure the bubble does not overflow the container bounds
+               // The bubble is anchored at `objectScreenCenterX, objectScreenCenterY`.
+               
+               let leftClamp = '';
+               let topClamp = '';
+               
+               // We will use standard left/top to set the absolute origin of the bubble,
+               // and transform to offset it. Instead of complex calc clamps which can fail,
+               // we will calculate the precise pixel origin so that the bubble doesn't get clipped.
+
+               return (
+                 <div key={`bubble-${obj.id}`} style={{
+                    position: 'absolute',
+                    left: `${objectScreenCenterX}px`, top: `${objectScreenCenterY}px`,
+                    transform: transformVal,
+                    transformOrigin: originStyle,
+                    transition: 'left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    opacity: 1,
+                    background: '#fdf9f1',
+                    padding: '8px 12px',
+                    borderRadius: '12px',
+                    border: '3px solid #a64d24',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                    zIndex: 99999,
+                    pointerEvents: 'none',
+                    display: 'flex', flexDirection: 'column', gap: '2px', minWidth: '100px'
+                 }}>
+                    <div style={{ fontSize: '0.65rem', fontWeight: '800', letterSpacing: '0.5px', color: '#8b6508' }}>OBJECT</div>
+                    <div style={{ fontSize: '1rem', fontWeight: '900', lineHeight: '1', color: '#3c2415' }}>{obj.name}</div>
+                    <div style={{ fontSize: '0.65rem', fontWeight: '800', letterSpacing: '0.5px', color: '#8b6508', marginTop: '6px' }}>MATERIAL</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: '900', color: '#bc4a1a', lineHeight: '1' }}>{obj.material}</div>
+                    
+                    {/* Outer border arrow */}
+                    <div style={{
+                        position: 'absolute',
+                        ...arrowStyle,
+                        width: 0, height: 0,
+                        zIndex: 1
+                    }} />
+                    {/* Inner white fill for arrow */}
+                    <div style={{
+                        position: 'absolute',
+                        ...innerArrowStyle,
+                        width: 0, height: 0,
+                        zIndex: 2
+                    }} />
+                 </div>
+               )
+            })}
 
             {/* Target Circles */}
             {viewState === 'explore' && CLASSROOM_OBJECTS.map((obj) => {
@@ -580,16 +692,22 @@ export default function Stage1_Intro({ onComplete, addXp }) {
                   {CLASSROOM_OBJECTS.map((obj, i) => {
                     const isFound = discovered.includes(obj.id);
                     return (
-                      <div key={obj.id} style={{
-                        display: 'flex', alignItems: 'center', padding: '8px 12px',
-                        background: isFound ? '#f8efd4' : 'transparent',
-                        borderBottom: !isFound ? '2px dashed #e2d3b9' : '2px solid transparent',
-                        borderRadius: isFound ? '12px' : '0', gap: '12px'
-                      }}>
-                        <div style={{ width: '24px', display: 'flex', justifyContent: 'center' }}>
-                          {isFound ? <span style={{ fontSize: '1.4rem' }}>{obj.emoji}</span> : <Lock size={20} color="#a79a83" />}
-                        </div>
-                        
+                      <div 
+                        key={obj.id} 
+                        onClick={() => {
+                          if (isFound) {
+                            setActiveObject(obj);
+                          }
+                        }}
+                        style={{
+                          display: 'flex', alignItems: 'center', padding: '8px 12px',
+                          background: isFound ? '#f8efd4' : 'transparent',
+                          borderBottom: !isFound ? '2px dashed #e2d3b9' : '2px solid transparent',
+                          borderRadius: isFound ? '12px' : '0', gap: '12px',
+                          cursor: isFound ? 'pointer' : 'default',
+                          transition: 'transform 0.2s'
+                        }}
+                      >
                         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.15rem', fontWeight: '800', color: isFound ? '#3c2415' : '#a79a83' }}>
                           <span>{i + 1}.</span>
                           {isFound ? (
