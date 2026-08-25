@@ -72,14 +72,14 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
             </div>
 
             <div style={{ position: 'absolute', bottom: '0.75rem', left: '50%', right: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1.5rem', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#78350F', fontSize: '14px', fontWeight: 800, whiteSpace: 'nowrap', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#78350F', fontSize: '13px', fontWeight: 800, whiteSpace: 'nowrap', flexShrink: 0 }}>
                 <Compass size={16} color="#D97706" style={{ flexShrink: 0 }} />
                 <span>Page {currentPage} of 3</span>
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexShrink: 0 }}>
-                <button onClick={onPrev} disabled={currentPage === 1} style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', padding: '0.4rem 1rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: currentPage === 1 ? 'default' : 'pointer', opacity: currentPage === 1 ? 0 : 1, transition: 'all 0.2s', color: '#78350F', fontWeight: 800, whiteSpace: 'nowrap' }}>
-                  <ChevronLeft size={18} /> Previous
+                <button onClick={onPrev} disabled={currentPage === 1} style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', padding: '0.35rem 0.9rem', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: currentPage === 1 ? 'default' : 'pointer', opacity: currentPage === 1 ? 0 : 1, transition: 'all 0.2s', color: '#78350F', fontSize: '13px', fontWeight: 800, whiteSpace: 'nowrap', fontFamily: '"Space Grotesk", sans-serif' }}>
+                  <ChevronLeft size={16} /> Previous
                 </button>
                 {currentPage < 3 ? (
                   <button
@@ -88,19 +88,20 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
                       background: '#F59E0B',
                       color: 'white',
                       border: 'none',
-                      padding: '0.45rem 1.2rem',
+                      padding: '0.4rem 1.1rem',
                       borderRadius: '20px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.5rem',
+                      gap: '0.4rem',
                       cursor: 'pointer',
                       boxShadow: '0 4px 12px rgba(245,158,11,0.38)',
                       whiteSpace: 'nowrap',
+                      fontSize: '13px',
                       fontWeight: 800,
                       fontFamily: '"Space Grotesk", sans-serif'
                     }}
                   >
-                    Next <ChevronRight size={18} />
+                    Next <ChevronRight size={16} />
                   </button>
                 ) : (
                   <button
@@ -109,19 +110,20 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
                       background: '#16A34A',
                       color: 'white',
                       border: 'none',
-                      padding: '0.45rem 1.2rem',
+                      padding: '0.4rem 1.1rem',
                       borderRadius: '20px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.5rem',
+                      gap: '0.4rem',
                       cursor: 'pointer',
                       boxShadow: '0 4px 12px rgba(22,163,74,0.3)',
                       whiteSpace: 'nowrap',
+                      fontSize: '13px',
                       fontWeight: 800,
                       fontFamily: '"Space Grotesk", sans-serif'
                     }}
                   >
-                    Finish <CheckCircle2 size={18} />
+                    Finish <CheckCircle2 size={16} />
                   </button>
                 )}
               </div>
@@ -146,9 +148,9 @@ export default function AtlasBook({ isOpen, currentPage, onNext, onPrev, onFinis
           }}>
             <div style={{ border: '2px solid #FDE68A', width: '85%', height: '90%', borderRadius: '4px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
               <Compass size={64} color="#FDE68A" style={{ marginBottom: '2rem', opacity: 0.9 }} />
-              <h1 style={{ color: '#FEF3C7', fontSize: '3.5rem', letterSpacing: '6px', margin: 0, fontFamily: '"Fraunces", serif', fontWeight: 900, textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>ATLAS</h1>
+              <h1 style={{ color: '#FEF3C7', fontSize: '3.2rem', letterSpacing: '6px', margin: 0, fontFamily: '"Fraunces", serif', fontWeight: 900, textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>ATLAS</h1>
               <div style={{ height: '2px', width: '60%', backgroundColor: '#FDE68A', margin: '1.5rem 0', opacity: 0.7 }}></div>
-              <div style={{ color: '#FEF3C7', fontSize: '1.2rem', letterSpacing: '4px', opacity: 0.9, fontWeight: 700 }}>A COLLECTION OF MAPS</div>
+              <div style={{ color: '#FEF3C7', fontSize: '1.1rem', letterSpacing: '4px', opacity: 0.9, fontWeight: 700 }}>A COLLECTION OF MAPS</div>
             </div>
           </div>
           
