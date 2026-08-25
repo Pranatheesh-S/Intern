@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Compass, CheckCircle2, XCircle, ArrowRight, Trophy, Sparkles, AlertCircle, MapPin, Milestone, Maximize2, Minimize2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowLeft, Compass, CheckCircle2, XCircle, ArrowRight, Trophy, Sparkles, AlertCircle, MapPin, Milestone, Maximize2, Minimize2, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './FunWithMagnets.css';
-import MazeGame from './MazeGame';
+import MazeGame, { getAvailableDirections, NODES_MAP, playRealisticTrainSound } from './MazeGame';
 import { useTheme } from '../../../../ThemeContext.jsx';
 import DidYouKnow from '../MagneticPoles/DidYouKnow';
 
@@ -21,9 +21,14 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
   const [showMazeSolveModal, setShowMazeSolveModal] = useState(false);
   const [showFinalCompletionModal, setShowFinalCompletionModal] = useState(false);
 
-  const [mazeVisitedCount, setMazeVisitedCount] = useState({ count: 1, total: 9 });
-  const mazeResetRef = React.useRef(null);
-  const mazeDirectionMoveRef = React.useRef(null);
+  const [mazeVisitedCount, setMazeVisitedCount] = useState({ count: 1, total: 14 });
+  const [currentNodeId, setCurrentNodeId] = useState('node_start');
+  const [isMoving, setIsMoving] = useState(false);
+  const [hintDir, setHintDir] = useState(null);
+
+  const mazeResetRef = useRef(null);
+  const mazeDirectionMoveRef = useRef(null);
+  const mazeHintRef = useRef(null);
 
   const addXP = (n) => {
     setXp(prev => prev + n);
@@ -201,15 +206,15 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                 Magnets can exert force and guide objects through materials.
               </h1>
               <p className="lead" style={{ fontSize: 'clamp(0.88rem, 1.5vw, 1.02rem)', lineHeight: '1.45', color: '#334155', margin: '0 0 1rem 0', fontWeight: 600 }}>
-                You can guide a sports bike through a <strong>3D Illustrated Town Map</strong> using a magnet! Predict: how can a magnet guide and control a sports bike without touching it directly?
+                You can guide a walking <strong>City Explorer</strong> across a <strong>3D Town Map</strong> using a leading magnet! Predict: how can a magnet guide and pull a walking explorer without touching directly?
               </p>
               
               <div className="choices" style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
                 {[
                   { label: "The board is covered with sticky adhesive", ok: false, xp: 0 },
-                  { label: "Magnetic force acts through non-magnetic materials like the board to attract the bike", ok: true, xp: 10 },
-                  { label: "Gravity pulls the bike sideways", ok: false, xp: 0 },
-                  { label: "Static electricity controls the bike", ok: false, xp: 0 }
+                  { label: "Magnetic force acts through non-magnetic materials to attract the magnetic badge", ok: true, xp: 10 },
+                  { label: "Gravity pulls the walker sideways", ok: false, xp: 0 },
+                  { label: "Static electricity controls the explorer", ok: false, xp: 0 }
                 ].map((c, idx) => {
                   const isSelected = predictAns && predictAns.selectedIndex === idx;
                   const isCorrect = c.ok;
@@ -329,8 +334,14 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                   }}
                   isSolved={ext.maze}
                   onVisitedCountChange={(count, total) => setMazeVisitedCount({ count, total })}
+                  onNodeChange={(nodeId, moving) => {
+                    setCurrentNodeId(nodeId);
+                    setIsMoving(moving);
+                  }}
+                  hintDir={hintDir}
                   registerReset={(fn) => { mazeResetRef.current = fn; }}
                   registerDirectionMove={(fn) => { mazeDirectionMoveRef.current = fn; }}
+                  registerHint={(fn) => { mazeHintRef.current = fn; }}
                 />
 
                 {/* Fullscreen Button */}
@@ -388,7 +399,7 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                       >
                         <h2 style={{ margin: 0, color: '#064E3B', fontSize: '1.8rem', fontWeight: 900 }}>Destination Reached! 🎯🎉</h2>
                         <p style={{ margin: 0, color: '#334155', fontSize: '1.15rem', lineHeight: '1.5', fontWeight: 600 }}>
-                          Outstanding navigation! The magnet smoothly pulled the sports bike across the town grid to the Heritage Court beacon!
+                          Outstanding navigation! The magnet smoothly guided the magnetic train (1 Engine + 1 Compartment) across the 3D railway grid to the destination beacon!
                         </p>
                         <button 
                           onClick={() => {
@@ -462,93 +473,279 @@ export default function FunWithMagnets({ onBackToDashboard, onComplete }) {
                     • Matching poles push away from each other (repel), while opposite poles pull toward each other (attract).
                   </p>
                   <p style={{ margin: 0 }}>
-                    • By aiming the opposite pole at the vehicle's magnet, an invisible pull is created.
+                    • By aiming the opposite pole at the train engine's magnetic nose sensor, an invisible magnetic pull is created.
                   </p>
                   <p style={{ margin: 0 }}>
-                    • Moving your magnet slowly backward pulls the vehicle along with it without any direct physical touch.
+                    • Moving your magnet ahead pulls the train smoothly along the track path without physical contact.
                   </p>
                 </div>
               </div>
 
-              {/* Observation & Steering Box */}
-              <div style={{ 
-                background: '#F0FDF4', 
-                border: '1.5px solid #A7F3D0', 
-                borderRadius: '16px', 
-                padding: '0.85rem 1rem', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '0.65rem',
-                boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#064E3B', fontWeight: 900, fontSize: '0.88rem' }}>
-                  <AlertCircle size={18} color="#D97706" />
-                  <span>City Expedition: West Station to Heritage Court</span>
-                </div>
-                <p style={{ margin: 0, color: '#1E293B', fontSize: '0.82rem', lineHeight: 1.4, fontWeight: 600 }}>
-                  Drive your sports bike through the designated road street junctions to reach the final destination at Heritage Court 🏛️!
-                </p>
+              {/* Fixed D-Pad HUD Control Box */}
+              {(() => {
+                const availableDirs = getAvailableDirections(currentNodeId);
+                const currentStationName = NODES_MAP[currentNodeId]?.shortName || 'Grand';
 
-                {/* Compact D-Pad Direction Buttons */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', marginTop: '0.1rem' }}>
-                  <button
-                    onClick={() => mazeDirectionMoveRef.current && mazeDirectionMoveRef.current('up')}
-                    style={{ padding: '0.35rem 1.4rem', borderRadius: '8px', border: '1.5px solid #A7F3D0', background: '#ECFDF5', color: '#064E3B', fontWeight: 900, fontSize: '0.82rem', cursor: 'pointer' }}
-                  >
-                    ▲ North
-                  </button>
-                  <div style={{ display: 'flex', gap: '0.6rem' }}>
+                return (
+                  <div style={{ 
+                    background: '#0F172A', 
+                    border: '2px solid #38BDF8', 
+                    borderRadius: '18px', 
+                    padding: '0.9rem 1rem', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: '0.65rem',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)'
+                  }}>
+                    {/* Header */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '0.45rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#BAE6FD', fontWeight: 900, fontSize: '0.82rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                        <Compass size={15} color="#38BDF8" />
+                        <span>D-PAD HUD CONTROLS</span>
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: 800, background: 'rgba(56, 189, 248, 0.15)', padding: '2px 8px', borderRadius: '8px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                        Station: {currentStationName}
+                      </div>
+                    </div>
+
+                    {/* 3x3 D-Pad Buttons Matrix */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(3, 48px)',
+                      gridTemplateRows: 'repeat(3, 48px)',
+                      gap: '6px',
+                      margin: '0.1rem auto',
+                      justifyContent: 'center',
+                      opacity: isMoving ? 0.6 : 1
+                    }}>
+                      {/* NORTH */}
+                      <button
+                        type="button"
+                        disabled={isMoving || !availableDirs['N']}
+                        onClick={() => {
+                          playRealisticTrainSound();
+                          if (mazeDirectionMoveRef.current) mazeDirectionMoveRef.current('up');
+                        }}
+                        style={{
+                          gridColumn: 2,
+                          background: availableDirs['N'] ? '#1E293B' : '#0B1120',
+                          color: availableDirs['N'] ? '#FFFFFF' : '#475569',
+                          border: `2px solid ${hintDir === 'N' ? '#F59E0B' : (availableDirs['N'] ? '#38BDF8' : '#334155')}`,
+                          borderRadius: '14px',
+                          fontSize: '13px',
+                          fontWeight: 900,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: (isMoving || !availableDirs['N']) ? 'not-allowed' : 'pointer',
+                          boxShadow: hintDir === 'N' ? '0 0 14px #F59E0B' : (availableDirs['N'] ? '0 4px 10px rgba(56,189,248,0.25)' : 'none'),
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <span style={{ fontSize: '11px', lineHeight: 1 }}>▲</span>
+                        <span style={{ fontSize: '12px', lineHeight: 1, marginTop: '2px' }}>N</span>
+                      </button>
+
+                      {/* WEST */}
+                      <button
+                        type="button"
+                        disabled={isMoving || !availableDirs['W']}
+                        onClick={() => {
+                          playRealisticTrainSound();
+                          if (mazeDirectionMoveRef.current) mazeDirectionMoveRef.current('left');
+                        }}
+                        style={{
+                          gridColumn: 1,
+                          gridRow: 2,
+                          background: availableDirs['W'] ? '#1E293B' : '#0B1120',
+                          color: availableDirs['W'] ? '#FFFFFF' : '#475569',
+                          border: `2px solid ${hintDir === 'W' ? '#F59E0B' : (availableDirs['W'] ? '#38BDF8' : '#334155')}`,
+                          borderRadius: '14px',
+                          fontSize: '13px',
+                          fontWeight: 900,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: (isMoving || !availableDirs['W']) ? 'not-allowed' : 'pointer',
+                          boxShadow: hintDir === 'W' ? '0 0 14px #F59E0B' : (availableDirs['W'] ? '0 4px 10px rgba(56,189,248,0.25)' : 'none'),
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <span style={{ fontSize: '11px', lineHeight: 1 }}>◀</span>
+                        <span style={{ fontSize: '12px', lineHeight: 1, marginTop: '2px' }}>W</span>
+                      </button>
+
+                      {/* CENTER STATION BADGE */}
+                      <div style={{
+                        gridColumn: 2,
+                        gridRow: 2,
+                        background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+                        borderRadius: '14px',
+                        display: 'grid',
+                        placeItems: 'center',
+                        fontSize: '10.5px',
+                        fontWeight: 900,
+                        color: '#FFFFFF',
+                        textAlign: 'center',
+                        padding: '2px',
+                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2), 0 4px 10px rgba(2,132,199,0.3)'
+                      }}>
+                        {currentStationName}
+                      </div>
+
+                      {/* EAST */}
+                      <button
+                        type="button"
+                        disabled={isMoving || !availableDirs['E']}
+                        onClick={() => {
+                          playRealisticTrainSound();
+                          if (mazeDirectionMoveRef.current) mazeDirectionMoveRef.current('right');
+                        }}
+                        style={{
+                          gridColumn: 3,
+                          gridRow: 2,
+                          background: availableDirs['E'] ? '#1E293B' : '#0B1120',
+                          color: availableDirs['E'] ? '#FFFFFF' : '#475569',
+                          border: `2px solid ${hintDir === 'E' ? '#F59E0B' : (availableDirs['E'] ? '#38BDF8' : '#334155')}`,
+                          borderRadius: '14px',
+                          fontSize: '13px',
+                          fontWeight: 900,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: (isMoving || !availableDirs['E']) ? 'not-allowed' : 'pointer',
+                          boxShadow: hintDir === 'E' ? '0 0 14px #F59E0B' : (availableDirs['E'] ? '0 4px 10px rgba(56,189,248,0.25)' : 'none'),
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <span style={{ fontSize: '11px', lineHeight: 1 }}>▶</span>
+                        <span style={{ fontSize: '12px', lineHeight: 1, marginTop: '2px' }}>E</span>
+                      </button>
+
+                      {/* SOUTH */}
+                      <button
+                        type="button"
+                        disabled={isMoving || !availableDirs['S']}
+                        onClick={() => {
+                          playRealisticTrainSound();
+                          if (mazeDirectionMoveRef.current) mazeDirectionMoveRef.current('down');
+                        }}
+                        style={{
+                          gridColumn: 2,
+                          gridRow: 3,
+                          background: availableDirs['S'] ? '#1E293B' : '#0B1120',
+                          color: availableDirs['S'] ? '#FFFFFF' : '#475569',
+                          border: `2px solid ${hintDir === 'S' ? '#F59E0B' : (availableDirs['S'] ? '#38BDF8' : '#334155')}`,
+                          borderRadius: '14px',
+                          fontSize: '13px',
+                          fontWeight: 900,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: (isMoving || !availableDirs['S']) ? 'not-allowed' : 'pointer',
+                          boxShadow: hintDir === 'S' ? '0 0 14px #F59E0B' : (availableDirs['S'] ? '0 4px 10px rgba(56,189,248,0.25)' : 'none'),
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <span style={{ fontSize: '11px', lineHeight: 1 }}>▼</span>
+                        <span style={{ fontSize: '12px', lineHeight: 1, marginTop: '2px' }}>S</span>
+                      </button>
+                    </div>
+
+                    {/* Action Buttons: Hint & Reset */}
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (mazeHintRef.current) {
+                            const nextDir = mazeHintRef.current();
+                            setHintDir(nextDir);
+                            setTimeout(() => setHintDir(null), 2500);
+                          }
+                        }}
+                        disabled={isMoving}
+                        style={{
+                          flex: 1,
+                          background: '#38BDF8',
+                          border: 'none',
+                          padding: '6px 10px',
+                          borderRadius: '10px',
+                          fontSize: '0.78rem',
+                          color: '#0F172A',
+                          fontWeight: 900,
+                          cursor: isMoving ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '4px',
+                          boxShadow: '0 3px 8px rgba(56,189,248,0.25)'
+                        }}
+                      >
+                        💡 Hint
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (mazeResetRef.current) mazeResetRef.current();
+                          setHintDir(null);
+                        }}
+                        disabled={isMoving}
+                        style={{
+                          flex: 1,
+                          background: '#334155',
+                          border: 'none',
+                          padding: '6px 10px',
+                          borderRadius: '10px',
+                          fontSize: '0.78rem',
+                          color: '#FFFFFF',
+                          fontWeight: 800,
+                          cursor: isMoving ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        <RotateCcw size={12} /> Reset
+                      </button>
+                    </div>
+
+                    <div style={{ fontSize: '0.7rem', color: '#94A3B8', textAlign: 'center', fontWeight: 600 }}>
+                      Keyboard <strong>Arrow / WASD keys</strong> or click any node circle!
+                    </div>
+
+                    {/* Proceed Button */}
                     <button
-                      onClick={() => mazeDirectionMoveRef.current && mazeDirectionMoveRef.current('left')}
-                      style={{ padding: '0.35rem 1.1rem', borderRadius: '8px', border: '1.5px solid #A7F3D0', background: '#ECFDF5', color: '#064E3B', fontWeight: 900, fontSize: '0.82rem', cursor: 'pointer' }}
+                      onClick={() => go(2)}
+                      disabled={!ext.maze}
+                      style={{ 
+                        width: '100%', 
+                        padding: '0.7rem', 
+                        fontSize: '0.88rem', 
+                        fontWeight: 900, 
+                        borderRadius: '12px', 
+                        background: ext.maze ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#1E293B', 
+                        color: ext.maze ? '#FFFFFF' : '#64748B', 
+                        border: ext.maze ? 'none' : '1px solid #334155', 
+                        cursor: ext.maze ? 'pointer' : 'not-allowed', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        gap: '0.45rem',
+                        boxShadow: ext.maze ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
+                        transition: 'all 0.25s ease',
+                        marginTop: '0.15rem'
+                      }}
                     >
-                      ◀ West
-                    </button>
-                    <button
-                      onClick={() => mazeDirectionMoveRef.current && mazeDirectionMoveRef.current('right')}
-                      style={{ padding: '0.35rem 1.1rem', borderRadius: '8px', border: '1.5px solid #A7F3D0', background: '#ECFDF5', color: '#064E3B', fontWeight: 900, fontSize: '0.82rem', cursor: 'pointer' }}
-                    >
-                      East ▶
+                      Proceed to Magnet Care <ArrowRight size={15} color={ext.maze ? '#FFFFFF' : '#64748B'} />
                     </button>
                   </div>
-                  <button
-                    onClick={() => mazeDirectionMoveRef.current && mazeDirectionMoveRef.current('down')}
-                    style={{ padding: '0.35rem 1.4rem', borderRadius: '8px', border: '1.5px solid #A7F3D0', background: '#ECFDF5', color: '#064E3B', fontWeight: 900, fontSize: '0.82rem', cursor: 'pointer' }}
-                  >
-                    ▼ South
-                  </button>
-                </div>
-
-                <div style={{ fontSize: '0.72rem', color: '#64748B', textAlign: 'center', fontWeight: 600 }}>
-                  Keyboard <strong>Arrow / WASD keys</strong> or click any node circle!
-                </div>
-
-                {/* Proceed Button */}
-                <button
-                  onClick={() => go(2)}
-                  disabled={!ext.maze}
-                  style={{ 
-                    width: '100%', 
-                    padding: '0.75rem', 
-                    fontSize: '0.92rem', 
-                    fontWeight: 900, 
-                    borderRadius: '14px', 
-                    background: ext.maze ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9', 
-                    color: ext.maze ? '#FFFFFF' : '#94A3B8', 
-                    border: ext.maze ? 'none' : '1.5px solid #CBD5E1', 
-                    cursor: ext.maze ? 'pointer' : 'not-allowed', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center', 
-                    gap: '0.45rem',
-                    boxShadow: ext.maze ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
-                    transition: 'all 0.25s ease',
-                    marginTop: '0.2rem'
-                  }}
-                >
-                  Proceed to Magnet Care <ArrowRight size={16} color={ext.maze ? '#FFFFFF' : '#94A3B8'} />
-                </button>
-              </div>
+                );
+              })()}
             </div>
           </>
         )}

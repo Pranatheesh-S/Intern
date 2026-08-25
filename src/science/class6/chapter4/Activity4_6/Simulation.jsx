@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
 import { 
   RotateCcw, 
@@ -7,10 +7,12 @@ import {
   CheckCircle2, 
   Sparkles,
   Move,
-  Layers,
-  Info,
   Maximize2,
-  Minimize2
+  Minimize2,
+  RefreshCw,
+  Play,
+  Pause,
+  Navigation
 } from 'lucide-react';
 import ExactCompass from '../components/ExactCompass.jsx';
 
@@ -31,35 +33,98 @@ const STEPS = [
   {
     step: 1,
     title: "Step 1: Normal Compass",
-    desc: "Look at the compass. With no magnets nearby, the red North needle rests pointing straight to North (0°)."
+    desc: "With no magnets nearby, the compass aligns with Earth's magnetic field and the red needle points North (0°)."
   },
   {
     step: 2,
-    title: "Step 2: Drag the 🔴 North Magnet",
-    desc: "Drag the 🔴 North Magnet near the compass. Like poles repel, so the red North needle pushes away from it!"
+    title: "Step 2: Combined Bar Magnet at West",
+    desc: "Place the magnet at West. Notice how the closer pole strongly influences the needle (repels like pole, attracts opposite pole)."
   },
   {
     step: 3,
-    title: "Step 3: Drag the 🔵 South Magnet",
-    desc: "Drag the 🔵 South Magnet near the compass. Opposite poles attract, so the red North needle pulls directly towards it!"
+    title: "Step 3: Orbit from West → North → East → South",
+    desc: "As the magnet orbits and rotates around the compass, the needle continuously turns to track the magnetic field."
   },
   {
     step: 4,
-    title: "Step 4: Explore Both Magnets",
-    desc: "Move both magnets around the compass. Watch the needle find a balance between being pushed by North and pulled by South!"
+    title: "Step 4: Flip Magnet Polarity",
+    desc: "Click 'Flip Magnet' to reverse the poles (N ↔ S). Watch the compass needle completely reverse its attraction and repulsion!"
   }
 ];
+
+// Web Audio API Sound Synthesizer for Magnetic Clicks & Whoosh
+function playMagneticSound(type = 'snap') {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+
+    const now = ctx.currentTime;
+    if (type === 'snap') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(480, now);
+      osc.frequency.exponentialRampToValueAtTime(160, now + 0.08);
+
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    } else if (type === 'whoosh') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(320, now + 0.2);
+      osc.frequency.exponentialRampToValueAtTime(120, now + 0.45);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(600, now);
+
+      gain.gain.setValueAtTime(0.01, now);
+      gain.gain.linearRampToValueAtTime(0.18, now + 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.45);
+    }
+  } catch (e) {}
+}
 
 export default function Simulation({ onComplete, onNext }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [compassAngle, setCompassAngle] = useState(0);
-  const [northDist, setNorthDist] = useState(400);
-  const [southDist, setSouthDist] = useState(400);
-  const [testedNorth, setTestedNorth] = useState(false);
-  const [testedSouth, setTestedSouth] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false); // false: Left=S, Right=N; true: Left=N, Right=S
+  const [magnetRotation, setMagnetRotation] = useState(0); // in degrees
+  const [isOrbiting, setIsOrbiting] = useState(false);
+  const [currentStation, setCurrentStation] = useState('west'); // 'west', 'north', 'east', 'south', 'custom'
+  const [activeInteraction, setActiveInteraction] = useState('Repelling'); // 'Repelling' | 'Attracting'
   const [isCompleted, setIsCompleted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  // Trajectory exploration tracker
+  const [testedOrbit, setTestedOrbit] = useState(false);
+  const [testedFlip, setTestedFlip] = useState(false);
+
+  const containerRef = useRef(null);
+  const workspaceRef = useRef(null);
+  const orbitAnimRef = useRef(null);
+
+  // Motion values for combined Bar Magnet position (center of workspace is 0,0)
+  const magX = useMotionValue(-230);
+  const magY = useMotionValue(0);
+
+  // Fullscreen Handler
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -71,152 +136,244 @@ export default function Simulation({ onComplete, onNext }) {
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        console.error(`Fullscreen request failed: ${err.message}`);
       });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
     }
   };
 
-  const containerRef = useRef(null);
-  const workspaceRef = useRef(null);
-  const compassRef = useRef(null);
-  const northMagnetRef = useRef(null);
-  const southMagnetRef = useRef(null);
+  // -------------------------------------------------------------------
+  // Vector Physics: Inverse-Square Law Magnetic Interaction
+  // -------------------------------------------------------------------
+  const updateCompassPhysics = useCallback(() => {
+    const x = magX.get();
+    const y = magY.get();
+    const rad = (magnetRotation * Math.PI) / 180;
 
-  // Motion values for separate North Magnet position (starting in right tray)
-  const northMagX = useMotionValue(260);
-  const northMagY = useMotionValue(-110);
+    // Bar magnet length is 160px, half-span of each pole is 46px from center
+    const POLE_OFFSET = 46;
+    const p1X = x + POLE_OFFSET * Math.cos(rad);
+    const p1Y = y + POLE_OFFSET * Math.sin(rad);
+    const p2X = x - POLE_OFFSET * Math.cos(rad);
+    const p2Y = y - POLE_OFFSET * Math.sin(rad);
 
-  // Motion values for separate South Magnet position (starting in right tray)
-  const southMagX = useMotionValue(260);
-  const southMagY = useMotionValue(110);
+    // If not flipped: Pole 1 (Right) is North, Pole 2 (Left) is South
+    // If flipped:     Pole 1 (Right) is South, Pole 2 (Left) is North
+    const nX = isFlipped ? p2X : p1X;
+    const nY = isFlipped ? p2Y : p1Y;
+    const sX = isFlipped ? p1X : p2X;
+    const sY = isFlipped ? p1Y : p2Y;
 
-  // Vector Physics: Compute compass deflection based on live magnet positions
-  // Polarity Rules:
-  // - North magnet repels North needle tip (pushes it away) and attracts South needle tip (pulls it closer)
-  // - South magnet attracts North needle tip (pulls it closer) and repels South needle tip (pushes it away)
-  const updateCompassPhysics = () => {
-    // Relative coordinates directly from motion values (center of workspace is 0,0)
-    const nX = northMagX.get();
-    const nY = northMagY.get();
-    const sX = southMagX.get();
-    const sY = southMagY.get();
-
-    // Constants for Inverse-Square Law Physics:
-    // Earth's natural uniform geomagnetic field pointing North (0°: vector (0, -1) in screen space)
-    const B_EARTH = 1.0;
-    const K_MAGNETIC = 550000; // Strong magnetic coupling constant
-    const EPSILON_SQ = 2500;   // Softening parameter to prevent singularity
-    const R_MAX = 420;         // Interaction cutoff radius in pixels
+    // Physical Constants:
+    const B_EARTH = 1.0;       // Earth's natural geomagnetic North field (0, -1)
+    const K_MAGNETIC = 650000; // Strong bar magnet dipole moment
+    const EPSILON_SQ = 2400;   // Softening constant
+    const R_MAX = 520;         // Influence boundary
 
     let fx = 0;
-    let fy = -B_EARTH; // Start with Earth's natural North vector
+    let fy = -B_EARTH;
 
-    // 1. North Magnet Contribution (Repels North needle, attracts South needle)
+    // 1. North Pole Force on Compass Red North Needle (Repels North needle tip)
     const distN = Math.sqrt(nX * nX + nY * nY);
-    setNorthDist(distN);
-
     if (distN < R_MAX) {
-      const windowFalloff = Math.max(0, 1 - distN / R_MAX);
-      const forceMag = (K_MAGNETIC / (distN * distN + EPSILON_SQ)) * windowFalloff * windowFalloff;
-
-      // North repels North needle -> force vector points AWAY from North magnet (nX, nY)
-      const unitX = -nX / distN;
-      const unitY = -nY / distN;
-
-      fx += unitX * forceMag;
-      fy += unitY * forceMag;
+      const falloff = Math.max(0, 1 - distN / R_MAX);
+      const forceN = (K_MAGNETIC / (distN * distN + EPSILON_SQ)) * falloff * falloff;
+      // Repel North needle -> force points AWAY from North pole (nX, nY)
+      fx += (-nX / distN) * forceN;
+      fy += (-nY / distN) * forceN;
     }
 
-    // 2. South Magnet Contribution (Attracts North needle, repels South needle)
+    // 2. South Pole Force on Compass Red North Needle (Attracts North needle tip)
     const distS = Math.sqrt(sX * sX + sY * sY);
-    setSouthDist(distS);
-
     if (distS < R_MAX) {
-      const windowFalloff = Math.max(0, 1 - distS / R_MAX);
-      const forceMag = (K_MAGNETIC / (distS * distS + EPSILON_SQ)) * windowFalloff * windowFalloff;
-
-      // South attracts North needle -> force vector points TOWARDS South magnet (sX, sY)
-      const unitX = sX / distS;
-      const unitY = sY / distS;
-
-      fx += unitX * forceMag;
-      fy += unitY * forceMag;
+      const falloff = Math.max(0, 1 - distS / R_MAX);
+      const forceS = (K_MAGNETIC / (distS * distS + EPSILON_SQ)) * falloff * falloff;
+      // Attract North needle -> force points TOWARDS South pole (sX, sY)
+      fx += (sX / distS) * forceS;
+      fy += (sY / distS) * forceS;
     }
 
-    // Resulting Compass Angle (0 deg = (0, -1) screen up)
-    // Angle in radians from -Y axis clockwise: Math.atan2(fx, -fy)
+    // Resulting Compass Angle (0° = (0, -1) North / Top)
     const targetRad = Math.atan2(fx, -fy);
     const targetDeg = targetRad * (180 / Math.PI);
     setCompassAngle(targetDeg);
 
-    // Step progression checks
-    let nTested = testedNorth;
-    let sTested = testedSouth;
+    // Active interaction indicator for pedagogical clarity
+    const closestIsNorth = distN < distS;
+    setActiveInteraction(closestIsNorth ? '🔴 North Repelling' : '🔵 South Attracting');
 
-    if (distN < 260 && !testedNorth) {
-      setTestedNorth(true);
-      nTested = true;
-      if (currentStep === 2 || currentStep === 1) setCurrentStep(3);
+    // Progression triggers
+    if (Math.hypot(x, y) < 320 && currentStep === 1) {
+      setCurrentStep(2);
+    }
+  }, [isFlipped, magnetRotation, currentStep]);
+
+  // Subscribe to live motion values
+  useEffect(() => {
+    const unsubX = magX.on('change', updateCompassPhysics);
+    const unsubY = magY.on('change', updateCompassPhysics);
+    updateCompassPhysics();
+    return () => {
+      unsubX();
+      unsubY();
+    };
+  }, [magX, magY, updateCompassPhysics]);
+
+  // -------------------------------------------------------------------
+  // Automated Smooth Orbital Tour: West → North → East → South → West
+  // -------------------------------------------------------------------
+  const startOrbitalSequence = useCallback((options = {}) => {
+    if (orbitAnimRef.current) {
+      cancelAnimationFrame(orbitAnimRef.current);
     }
 
-    if (distS < 260 && !testedSouth) {
-      setTestedSouth(true);
-      sTested = true;
-      if (currentStep === 3 || currentStep === 2 || currentStep === 1) setCurrentStep(4);
-    }
+    setIsOrbiting(true);
+    playMagneticSound('whoosh');
 
-    if (nTested && sTested && !isCompleted) {
+    const R = 230; // Orbital orbit radius around compass
+    const DURATION = 7000; // 7 seconds full orbit
+    const startTime = performance.now();
+
+    // Start angle is 180° (West). It sweeps clockwise: 180° (West) -> 90° (North) -> 0° (East) -> -90° (South) -> -180° (West)
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / DURATION, 1);
+
+      // Smooth easeInOut curve
+      const ease = progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      // Angle phi from π (West) to -π (West, full 360 loop)
+      const phi = Math.PI - ease * 2 * Math.PI;
+
+      // Position: (-Y is up in screen coordinates)
+      const curX = R * Math.cos(phi);
+      const curY = -R * Math.sin(phi);
+
+      // Magnet rotation: Keep the inner pole facing directly towards compass center (0,0)
+      // At West (phi = π): rotation = 0° (right pole points East towards center)
+      // At North (phi = π/2): rotation = 90° (right pole points South towards center)
+      // At East (phi = 0): rotation = 180° (right pole points West towards center)
+      // At South (phi = -π/2): rotation = 270° (right pole points North towards center)
+      const phiDeg = (phi * 180) / Math.PI;
+      const rot = (180 - phiDeg + 360) % 360;
+
+      magX.set(curX);
+      magY.set(curY);
+      setMagnetRotation(rot);
+
+      // Update current station label
+      if (progress < 0.22) setCurrentStation('west');
+      else if (progress < 0.48) setCurrentStation('north');
+      else if (progress < 0.73) setCurrentStation('east');
+      else if (progress < 0.95) setCurrentStation('south');
+      else setCurrentStation('west');
+
+      if (progress < 1) {
+        orbitAnimRef.current = requestAnimationFrame(animate);
+      } else {
+        setIsOrbiting(false);
+        setCurrentStation('west');
+        setTestedOrbit(true);
+        if (currentStep < 4) setCurrentStep(4);
+        if (options.onFinish) options.onFinish();
+      }
+    };
+
+    orbitAnimRef.current = requestAnimationFrame(animate);
+  }, [magX, magY, currentStep]);
+
+  // Clean up animation on unmount
+  useEffect(() => {
+    return () => {
+      if (orbitAnimRef.current) cancelAnimationFrame(orbitAnimRef.current);
+    };
+  }, []);
+
+  // -------------------------------------------------------------------
+  // Flip Magnet & Auto-Tour Action
+  // -------------------------------------------------------------------
+  const handleFlipMagnet = () => {
+    playMagneticSound('snap');
+    const nextFlipped = !isFlipped;
+    setIsFlipped(nextFlipped);
+    setTestedFlip(true);
+
+    if (currentStep <= 3) {
+      setCurrentStep(4);
+    }
+    if (!isCompleted) {
       setIsCompleted(true);
       if (onComplete) onComplete();
     }
+
+    // Automatically place magnet at West and execute orbital sequence
+    startOrbitalSequence();
   };
 
-  // Subscribe to live motion values so compass reacts continuously on drag
-  useEffect(() => {
-    const unsubNX = northMagX.on('change', updateCompassPhysics);
-    const unsubNY = northMagY.on('change', updateCompassPhysics);
-    const unsubSX = southMagX.on('change', updateCompassPhysics);
-    const unsubSY = southMagY.on('change', updateCompassPhysics);
+  // -------------------------------------------------------------------
+  // Jump to Cardinal Station (West, North, East, South)
+  // -------------------------------------------------------------------
+  const jumpToStation = (station) => {
+    if (orbitAnimRef.current) cancelAnimationFrame(orbitAnimRef.current);
+    setIsOrbiting(false);
+    playMagneticSound('snap');
 
-    // Initial evaluation
-    updateCompassPhysics();
+    const R = 230;
+    if (station === 'west') {
+      magX.set(-R);
+      magY.set(0);
+      setMagnetRotation(0);
+      setCurrentStation('west');
+    } else if (station === 'north') {
+      magX.set(0);
+      magY.set(-R);
+      setMagnetRotation(90);
+      setCurrentStation('north');
+    } else if (station === 'east') {
+      magX.set(R);
+      magY.set(0);
+      setMagnetRotation(180);
+      setCurrentStation('east');
+    } else if (station === 'south') {
+      magX.set(0);
+      magY.set(R);
+      setMagnetRotation(270);
+      setCurrentStation('south');
+    }
+  };
 
-    return () => {
-      unsubNX();
-      unsubNY();
-      unsubSX();
-      unsubSY();
-    };
-  }, [testedNorth, testedSouth, currentStep, isCompleted]);
-
+  // Reset Experiment
   const handleReset = () => {
+    if (orbitAnimRef.current) cancelAnimationFrame(orbitAnimRef.current);
+    setIsOrbiting(false);
+    setIsFlipped(false);
+    setMagnetRotation(0);
+    magX.set(-230);
+    magY.set(0);
+    setCurrentStation('west');
     setCurrentStep(1);
-    setTestedNorth(false);
-    setTestedSouth(false);
+    setTestedOrbit(false);
+    setTestedFlip(false);
     setIsCompleted(false);
-    northMagX.set(260);
-    northMagY.set(-110);
-    southMagX.set(260);
-    southMagY.set(110);
-    setNorthDist(400);
-    setSouthDist(400);
     setCompassAngle(0);
   };
 
-  // Realign needle back to normal North and South by returning magnets to home
+  // Return needle to normal North & South
   const handleRealignCompass = () => {
-    northMagX.set(260);
-    northMagY.set(-110);
-    southMagX.set(260);
-    southMagY.set(110);
-    setNorthDist(400);
-    setSouthDist(400);
+    if (orbitAnimRef.current) cancelAnimationFrame(orbitAnimRef.current);
+    setIsOrbiting(false);
+    magX.set(-230);
+    magY.set(0);
+    setMagnetRotation(0);
+    setCurrentStation('west');
     setCompassAngle(0);
   };
+
+  // Closest pole to compass center for badge visual
+  const closestPole = isFlipped ? 'South (🔵)' : 'North (🔴)';
 
   return (
     <div 
@@ -225,7 +382,7 @@ export default function Simulation({ onComplete, onNext }) {
         width: '100%',
         height: '100%',
         display: 'grid',
-        gridTemplateColumns: '360px 1fr',
+        gridTemplateColumns: '370px 1fr',
         gap: '1rem',
         padding: '0.5rem',
         boxSizing: 'border-box',
@@ -233,13 +390,13 @@ export default function Simulation({ onComplete, onNext }) {
         position: 'relative'
       }}
     >
-      {/* Left Column: Activity Step Instructions */}
+      {/* Left Column: Activity Step Instructions & Controls */}
       <div className="custom-scroll" style={{
         background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(12px)',
         borderRadius: '20px',
         border: '1.5px solid #A7F3D0',
-        padding: '1.4rem',
+        padding: '1.25rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -248,97 +405,240 @@ export default function Simulation({ onComplete, onNext }) {
         overflowY: 'auto'
       }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.1rem' }}>
-            <CompassIcon size={24} color="#D97706" />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#064E3B', fontWeight: 900 }}>
-              Activity 4.6 Steps
-            </h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+              <CompassIcon size={22} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.18rem', color: '#064E3B', fontWeight: 900 }}>
+                Activity 4.6 Lab
+              </h3>
+            </div>
+            <span style={{
+              background: '#FEF3C7',
+              color: '#92400E',
+              fontWeight: 900,
+              fontSize: '0.75rem',
+              padding: '0.2rem 0.55rem',
+              borderRadius: '8px',
+              border: '1px solid #FDE68A'
+            }}>
+              Step {currentStep} of 4
+            </span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          {/* Interactive Steps Carousel */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             {STEPS.map((s) => {
               const isCurrent = currentStep === s.step;
-              const isPast = currentStep > s.step || (s.step === 2 && testedNorth) || (s.step === 3 && testedSouth);
+              const isPast = currentStep > s.step || (s.step === 3 && testedOrbit) || (s.step === 4 && testedFlip);
 
               return (
                 <div
                   key={s.step}
                   style={{
-                    padding: '0.9rem 1.05rem',
-                    borderRadius: '14px',
+                    padding: '0.75rem 0.9rem',
+                    borderRadius: '12px',
                     background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
-                    border: `2px solid ${isCurrent ? '#F59E0B' : isPast ? '#10B981' : '#E2E8F0'}`,
+                    border: `1.5px solid ${isCurrent ? '#F59E0B' : isPast ? '#10B981' : '#E2E8F0'}`,
                     boxShadow: isCurrent ? '0 4px 12px rgba(245, 158, 11, 0.15)' : 'none',
                     transition: 'all 0.3s ease'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontWeight: 800, fontSize: '0.98rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#475569' }}>
+                    <span style={{ fontWeight: 800, fontSize: '0.9rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#475569' }}>
                       {s.title}
                     </span>
-                    {isPast && <CheckCircle2 size={18} color="#10B981" />}
+                    {isPast && <CheckCircle2 size={16} color="#10B981" />}
                   </div>
-                  <p style={{ margin: '0.45rem 0 0 0', fontSize: '0.88rem', color: '#1E293B', lineHeight: 1.5, fontWeight: 500 }}>
+                  <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.8rem', color: '#1E293B', lineHeight: 1.45, fontWeight: 500 }}>
                     {s.desc}
                   </p>
                 </div>
               );
             })}
           </div>
+
+          {/* Live Status Diagnostic Card */}
+          <div style={{
+            marginTop: '0.85rem',
+            padding: '0.75rem',
+            background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+            borderRadius: '14px',
+            border: '1.5px solid #38BDF8',
+            color: '#FFFFFF',
+            fontSize: '0.78rem'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ color: '#94A3B8', fontWeight: 700 }}>Facing Pole:</span>
+              <strong style={{ color: isFlipped ? '#60A5FA' : '#F87171' }}>
+                {isFlipped ? '🔵 South Pole (S)' : '🔴 North Pole (N)'}
+              </strong>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ color: '#94A3B8', fontWeight: 700 }}>Cardinal Station:</span>
+              <strong style={{ color: '#FDE047', textTransform: 'uppercase' }}>{currentStation}</strong>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: '#94A3B8', fontWeight: 700 }}>Needle Response:</span>
+              <strong style={{ color: '#34D399' }}>{activeInteraction}</strong>
+            </div>
+          </div>
         </div>
 
-        {/* Step Actions & Navigation */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '1.2rem' }}>
-          {isCompleted ? (
+        {/* Primary Action Controls */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginTop: '0.85rem' }}>
+          {/* Main Flip Magnet Button */}
+          <button
+            type="button"
+            onClick={handleFlipMagnet}
+            disabled={isOrbiting}
+            style={{
+              width: '100%',
+              padding: '0.85rem',
+              borderRadius: '14px',
+              border: 'none',
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+              color: '#FFFFFF',
+              fontWeight: 900,
+              fontSize: '0.98rem',
+              cursor: isOrbiting ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.55rem',
+              boxShadow: '0 4px 14px rgba(217, 119, 6, 0.4)',
+              transition: 'all 0.2s ease',
+              opacity: isOrbiting ? 0.7 : 1
+            }}
+          >
+            <RefreshCw size={18} className={isOrbiting ? 'animate-spin' : ''} />
+            Flip Magnet & Auto-Orbit (N ↔ S)
+          </button>
+
+          {/* Cardinal Stations Quick Jump Matrix */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '4px' }}>
             <button
-              onClick={onNext}
+              type="button"
+              onClick={() => jumpToStation('west')}
+              disabled={isOrbiting}
               style={{
-                width: '100%',
-                padding: '0.95rem',
-                borderRadius: '14px',
-                border: 'none',
-                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                color: '#fff',
-                fontWeight: 900,
-                fontSize: '1.05rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)',
-                transition: 'all 0.25s ease'
+                padding: '0.4rem 0',
+                borderRadius: '8px',
+                border: currentStation === 'west' ? '2px solid #F59E0B' : '1px solid #CBD5E1',
+                background: currentStation === 'west' ? '#FEF3C7' : '#F8FAFC',
+                color: currentStation === 'west' ? '#92400E' : '#334155',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                cursor: 'pointer'
               }}
             >
-              Proceed to Concept Check <ArrowRight size={18} />
+              🧭 West
             </button>
-          ) : (
             <button
+              type="button"
+              onClick={() => jumpToStation('north')}
+              disabled={isOrbiting}
+              style={{
+                padding: '0.4rem 0',
+                borderRadius: '8px',
+                border: currentStation === 'north' ? '2px solid #F59E0B' : '1px solid #CBD5E1',
+                background: currentStation === 'north' ? '#FEF3C7' : '#F8FAFC',
+                color: currentStation === 'north' ? '#92400E' : '#334155',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
+              🧭 North
+            </button>
+            <button
+              type="button"
+              onClick={() => jumpToStation('east')}
+              disabled={isOrbiting}
+              style={{
+                padding: '0.4rem 0',
+                borderRadius: '8px',
+                border: currentStation === 'east' ? '2px solid #F59E0B' : '1px solid #CBD5E1',
+                background: currentStation === 'east' ? '#FEF3C7' : '#F8FAFC',
+                color: currentStation === 'east' ? '#92400E' : '#334155',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
+              🧭 East
+            </button>
+            <button
+              type="button"
+              onClick={() => jumpToStation('south')}
+              disabled={isOrbiting}
+              style={{
+                padding: '0.4rem 0',
+                borderRadius: '8px',
+                border: currentStation === 'south' ? '2px solid #F59E0B' : '1px solid #CBD5E1',
+                background: currentStation === 'south' ? '#FEF3C7' : '#F8FAFC',
+                color: currentStation === 'south' ? '#92400E' : '#334155',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
+              🧭 South
+            </button>
+          </div>
+
+          {/* Reset & Proceed Buttons */}
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <button
+              type="button"
               onClick={handleReset}
               style={{
-                width: '100%',
-                padding: '0.75rem',
-                borderRadius: '12px',
+                flex: 1,
+                padding: '0.55rem',
+                borderRadius: '10px',
                 border: '1.5px solid #CBD5E1',
                 background: '#FFFFFF',
                 color: '#334155',
                 fontWeight: 700,
-                fontSize: '0.88rem',
+                fontSize: '0.8rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.45rem',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                gap: '0.35rem'
               }}
             >
-              <RotateCcw size={15} /> Reset Experiment
+              <RotateCcw size={14} /> Reset
             </button>
-          )}
+
+            {isCompleted && (
+              <button
+                type="button"
+                onClick={onNext}
+                style={{
+                  flex: 1.4,
+                  padding: '0.55rem',
+                  borderRadius: '10px',
+                  border: 'none',
+                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  color: '#FFFFFF',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.35rem',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                }}
+              >
+                Next Step <ArrowRight size={14} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Right Column: Nautical Sea Workspace */}
+      {/* Right Column: Nautical Sea Workspace Arena */}
       <div 
         ref={workspaceRef}
         style={{
@@ -362,6 +662,48 @@ export default function Simulation({ onComplete, onNext }) {
           backgroundSize: '24px 24px'
         }} />
 
+        {/* Orbit Path Guide Ring Overlay (Dotted Arc) */}
+        <svg
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            zIndex: 5
+          }}
+        >
+          {/* Circular Orbit Ring (R=230) */}
+          <circle
+            cx="50%"
+            cy="50%"
+            r="230"
+            fill="none"
+            stroke="#38BDF8"
+            strokeWidth="1.5"
+            strokeDasharray="6 8"
+            opacity="0.4"
+          />
+
+          {/* Cardinal Markers on Ring */}
+          <g transform="translate(50%, 50%)">
+            {/* West Marker */}
+            <circle cx="-230" cy="0" r="5" fill="#38BDF8" opacity="0.8" />
+            <text x="-248" y="4" textAnchor="end" fill="#93C5FD" fontSize="11" fontWeight="800" fontFamily="sans-serif">WEST</text>
+
+            {/* North Marker */}
+            <circle cx="0" cy="-230" r="5" fill="#38BDF8" opacity="0.8" />
+            <text x="0" y="-242" textAnchor="middle" fill="#93C5FD" fontSize="11" fontWeight="800" fontFamily="sans-serif">NORTH</text>
+
+            {/* East Marker */}
+            <circle cx="230" cy="0" r="5" fill="#38BDF8" opacity="0.8" />
+            <text x="248" y="4" textAnchor="start" fill="#93C5FD" fontSize="11" fontWeight="800" fontFamily="sans-serif">EAST</text>
+
+            {/* South Marker */}
+            <circle cx="0" cy="230" r="5" fill="#38BDF8" opacity="0.8" />
+            <text x="0" y="252" textAnchor="middle" fill="#93C5FD" fontSize="11" fontWeight="800" fontFamily="sans-serif">SOUTH</text>
+          </g>
+        </svg>
+
         {/* Live Bearing Top Badge */}
         <div style={{
           position: 'absolute',
@@ -374,7 +716,7 @@ export default function Simulation({ onComplete, onNext }) {
           display: 'flex',
           alignItems: 'center',
           gap: '0.6rem',
-          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)',
+          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
           zIndex: 20
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#78350F', fontSize: '0.85rem', fontWeight: 900 }}>
@@ -383,30 +725,32 @@ export default function Simulation({ onComplete, onNext }) {
           </div>
         </div>
 
-        {/* Magnet Tray Legend Info */}
+        {/* Live Interaction Badge (Repel vs Attract) */}
         <div style={{
           position: 'absolute',
           top: '1rem',
           right: '8.8rem',
-          background: 'rgba(15, 23, 42, 0.88)',
-          border: '1.5px solid rgba(56, 189, 248, 0.35)',
+          background: 'rgba(15, 23, 42, 0.92)',
+          border: '1.5px solid rgba(56, 189, 248, 0.4)',
           borderRadius: '16px',
           padding: '0.4rem 0.85rem',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.75rem',
+          gap: '0.6rem',
           fontSize: '0.78rem',
           color: '#E2E8F0',
           fontWeight: 800,
           zIndex: 20
         }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#F87171' }}>
-            🔴 North
-          </span>
-          <span style={{ color: '#64748B' }}>|</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#60A5FA' }}>
-            🔵 South
-          </span>
+          <span style={{
+            display: 'inline-block',
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: isFlipped ? '#3B82F6' : '#EF4444',
+            boxShadow: `0 0 8px ${isFlipped ? '#3B82F6' : '#EF4444'}`
+          }} />
+          <span>{activeInteraction}</span>
         </div>
 
         {/* Fullscreen Button */}
@@ -439,7 +783,7 @@ export default function Simulation({ onComplete, onNext }) {
           <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
         </button>
 
-        {/* Workspace Central Arena */}
+        {/* Central Arena: Compass + Single Combined Bar Magnet */}
         <div style={{
           position: 'relative',
           width: '100%',
@@ -449,15 +793,15 @@ export default function Simulation({ onComplete, onNext }) {
           justifyContent: 'center'
         }}>
           
-          {/* Exact Vintage Brass Compass Display (Click center to return needle to normal North & South) */}
+          {/* Antique Brass Compass Display */}
           <div
-            ref={compassRef}
             style={{
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              userSelect: 'none'
+              userSelect: 'none',
+              zIndex: 10
             }}
           >
             <ExactCompass 
@@ -468,19 +812,20 @@ export default function Simulation({ onComplete, onNext }) {
             />
           </div>
 
-          {/* 🔴 SEPARATE MAGNET 1: NORTH POLE MAGNET (Solid Red with "North") */}
+          {/* 🧲 COMBINED DUAL-POLE BAR MAGNET (Red North + Blue South in One Body) */}
           <motion.div
-            ref={northMagnetRef}
-            drag
+            drag={!isOrbiting}
             dragConstraints={workspaceRef}
             dragElastic={0}
             dragMomentum={false}
             style={{
-              x: northMagX,
-              y: northMagY,
+              x: magX,
+              y: magY,
+              rotate: magnetRotation,
               position: 'absolute',
-              cursor: 'grab',
-              zIndex: 30
+              cursor: isOrbiting ? 'default' : 'grab',
+              zIndex: 30,
+              userSelect: 'none'
             }}
             onDrag={updateCompassPhysics}
           >
@@ -490,102 +835,96 @@ export default function Simulation({ onComplete, onNext }) {
               alignItems: 'center',
               gap: '0.35rem'
             }}>
-              {/* Solid Red Magnet Bar Body with "North" */}
-              <div style={{
-                width: '160px',
-                height: '44px',
-                borderRadius: '10px',
-                background: 'linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 12px 28px rgba(0,0,0,0.5), 0 0 20px rgba(239, 68, 68, 0.45)',
-                border: '2px solid #FCA5A5',
-                color: '#FFFFFF',
-                fontWeight: 900,
-                fontSize: '1.15rem',
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-                textShadow: '0 2px 4px rgba(0,0,0,0.6)',
-                userSelect: 'none'
-              }}>
-                North
+              {/* 3D Realistic Combined Bar Magnet Body */}
+              <div 
+                onClick={!isOrbiting ? handleFlipMagnet : undefined}
+                title="Click to Flip Polarity (N ↔ S)"
+                style={{
+                  width: '160px',
+                  height: '46px',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  overflow: 'hidden',
+                  boxShadow: '0 16px 36px rgba(0,0,0,0.6), 0 0 24px rgba(56, 189, 248, 0.35)',
+                  border: '2px solid rgba(255,255,255,0.85)',
+                  position: 'relative',
+                  cursor: isOrbiting ? 'default' : 'pointer',
+                  transition: 'transform 0.15s ease'
+                }}
+              >
+                {/* Left Half (South if normal, North if flipped) */}
+                <div style={{
+                  flex: 1,
+                  background: isFlipped
+                    ? 'linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)'
+                    : 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#FFFFFF',
+                  fontWeight: 900,
+                  fontSize: '1.2rem',
+                  letterSpacing: '1.5px',
+                  textShadow: '0 2px 4px rgba(0,0,0,0.6)',
+                  borderRight: '1.5px solid rgba(255,255,255,0.4)'
+                }}>
+                  {isFlipped ? 'N' : 'S'}
+                </div>
+
+                {/* Central Metallic Chrome Joint Seam */}
+                <div style={{
+                  width: '6px',
+                  background: 'linear-gradient(180deg, #FFFFFF 0%, #94A3B8 50%, #475569 100%)',
+                  boxShadow: 'inset 0 0 2px rgba(0,0,0,0.5)',
+                  zIndex: 2
+                }} />
+
+                {/* Right Half (North if normal, South if flipped) */}
+                <div style={{
+                  flex: 1,
+                  background: isFlipped
+                    ? 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)'
+                    : 'linear-gradient(180deg, #EF4444 0%, #B91C1C 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#FFFFFF',
+                  fontWeight: 900,
+                  fontSize: '1.2rem',
+                  letterSpacing: '1.5px',
+                  textShadow: '0 2px 4px rgba(0,0,0,0.6)',
+                  borderLeft: '1.5px solid rgba(255,255,255,0.4)'
+                }}>
+                  {isFlipped ? 'S' : 'N'}
+                </div>
+
+                {/* Top Glass Specular Highlight Sheen */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '42%',
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 100%)',
+                  pointerEvents: 'none'
+                }} />
               </div>
 
-              {/* Drag Prompt */}
+              {/* Magnet Quick Drag / Flip Pill */}
               <div style={{
-                padding: '0.2rem 0.5rem',
+                padding: '0.2rem 0.55rem',
                 fontSize: '0.68rem',
-                fontWeight: 700,
+                fontWeight: 800,
                 borderRadius: '6px',
-                background: 'rgba(15, 23, 42, 0.75)',
-                color: '#CBD5E1',
+                background: 'rgba(15, 23, 42, 0.85)',
+                color: '#E2E8F0',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.2rem'
+                gap: '0.25rem',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.4)'
               }}>
-                <Move size={11} /> Drag North Pole
-              </div>
-            </div>
-          </motion.div>
-
-          {/* 🔵 SEPARATE MAGNET 2: SOUTH POLE MAGNET (Solid Blue with "South") */}
-          <motion.div
-            ref={southMagnetRef}
-            drag
-            dragConstraints={workspaceRef}
-            dragElastic={0}
-            dragMomentum={false}
-            style={{
-              x: southMagX,
-              y: southMagY,
-              position: 'absolute',
-              cursor: 'grab',
-              zIndex: 30
-            }}
-            onDrag={updateCompassPhysics}
-          >
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.35rem'
-            }}>
-              {/* Solid Blue Magnet Bar Body with "South" */}
-              <div style={{
-                width: '160px',
-                height: '44px',
-                borderRadius: '10px',
-                background: 'linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 12px 28px rgba(0,0,0,0.5), 0 0 20px rgba(59, 130, 246, 0.45)',
-                border: '2px solid #93C5FD',
-                color: '#FFFFFF',
-                fontWeight: 900,
-                fontSize: '1.15rem',
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-                textShadow: '0 2px 4px rgba(0,0,0,0.6)',
-                userSelect: 'none'
-              }}>
-                South
-              </div>
-
-              {/* Drag Prompt */}
-              <div style={{
-                padding: '0.2rem 0.5rem',
-                fontSize: '0.68rem',
-                fontWeight: 700,
-                borderRadius: '6px',
-                background: 'rgba(15, 23, 42, 0.75)',
-                color: '#CBD5E1',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.2rem'
-              }}>
-                <Move size={11} /> Drag South Pole
+                <Move size={10} /> Drag or Click to Flip
               </div>
             </div>
           </motion.div>
