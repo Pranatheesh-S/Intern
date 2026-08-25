@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { ArrowLeft, Play, X, ChevronLeft, ChevronRight, Volume2, VolumeX, RefreshCw, Check } from "lucide-react";
 import CoverPage from "./CoverPage";
 import SloganPage from "./SloganPage";
@@ -13,6 +13,7 @@ import silentValleyImg from "../assets/silent_valley.jpeg";
 import protectWildlifeImg from "../assets/protect_wildlife.jpeg";
 import sacredGrovesImg from "../assets/sacred_groves.jpeg";
 import darkForestBg from "../assets/dark_forest_bg.jpg";
+import completedCh2Bg from "../assets/2_completed.png";
 import dicotLeafImg from "../assets/dicot_leaf.png";
 import monocotLeafImg from "../assets/monocot_leaf.png";
 import taprootImg from "../assets/taproot.png";
@@ -23,6 +24,14 @@ import dicot3Img from "../assets/dicot_3.png";
 import monocot1Img from "../assets/monocot_1.png";
 import monocot2Img from "../assets/monocot_2.png";
 import monocot3Img from "../assets/monocot_3.png";
+import herbTulsiImg from "../assets/tulsi_cropped_raw.png";
+import shrubHibiscusImg from "../assets/hibiscus_cropped_raw.png";
+import tree1Img from "../assets/tree_1.png";
+import treeCanopyImg from "../assets/wildlife/tree_canopy.jpg";
+import spiderMonkeyImg from "../assets/wildlife/spider_monkey.jpg";
+import chickpeaSplitImg from "../assets/chickpea_split.png";
+import maizeCutImg from "../assets/maize_cut.png";
+import scaredImg from "../assets/scared.png";
 
 // Context
 import { useTheme } from "../ThemeContext";
@@ -1092,88 +1101,263 @@ function VocabularyGlossary({ onMatchComplete }) {
   const [flippedCardId, setFlippedCardId] = useState(null);
   
   const terms = [
-    { id: 'habitat', word: 'Habitat', desc: 'The natural home or environment of a plant, animal, or other organism.', eg: 'A pond is the habitat for frogs and lotus plants.', icon: '🏡' },
-    { id: 'adaptation', word: 'Adaptation', desc: 'A physical or behavioral feature that helps an organism survive in its habitat.', eg: 'Camels have broad padded feet to walk on hot desert sand.', icon: '🐫' },
-    { id: 'herbs', word: 'Herbs', desc: 'Small plants with soft, green, and tender stems that bend easily.', eg: 'Grass, coriander, tomato, and tulsi are common herbs.', icon: '🌿' },
-    { id: 'shrubs', word: 'Shrubs', desc: 'Medium-sized plants with thin, woody stems branching out close to the ground.', eg: 'Hibiscus, rose, and lemon plants grow as shrubs.', icon: '🌹' },
-    { id: 'trees', word: 'Trees', desc: 'Tall plants with thick, hard, woody trunks branching high above the ground.', eg: 'Mango, neem, pine, and banyan trees grow tall.', icon: '🌳' },
-    { id: 'reticulate', word: 'Reticulate Venation', desc: 'A net-like pattern of veins on both sides of the leaf midrib.', eg: 'Hibiscus, sadabahar, and rose leaves show net venation.', icon: '🕸️' },
-    { id: 'parallel', word: 'Parallel Venation', desc: 'Veins running parallel to each other from the base of the leaf to the tip.', eg: 'Grass, wheat, maize, and banana leaves have parallel veins.', icon: '📏' },
-    { id: 'taproot', word: 'Taproot System', desc: 'A single, thick primary root growing deep vertically, with smaller side branches.', eg: 'Mustard, carrots, and chickpea plants have taproots.', icon: '🥕' },
-    { id: 'fibrous', word: 'Fibrous Roots', desc: 'A bunch of thin, equal-sized roots arising together from the base of the stem.', eg: 'Grass, wheat, onions, and maize have fibrous root systems.', icon: '🌾' },
-    { id: 'monocot', word: 'Monocot', desc: 'A seed with a single cotyledon (seed leaf) that cannot be split into two halves.', eg: 'Maize, wheat, and rice seeds are monocots.', icon: '🌽' },
-    { id: 'dicot', word: 'Dicot', desc: 'A seed with two cotyledons (seed leaves) that easily split into two halves.', eg: 'Gram, peas, almonds, and kidney beans are dicot seeds.', icon: '🫘' },
-    { id: 'sacred', word: 'Sacred Groves', desc: 'Traditionally protected forest patches guarded by local communities for wildlife conservation.', eg: 'Sacred groves in the Western Ghats protect unique plants and animals.', icon: '🏹' }
+    { id: 'habitat', word: 'Habitat', desc: 'The natural home or environment of a plant, animal, or other organism.', eg: 'A pond is the habitat for frogs and lotus plants.', image: treeCanopyImg },
+    { id: 'adaptation', word: 'Adaptation', desc: 'A physical or behavioral feature that helps an organism survive in its habitat.', eg: 'Camels have broad padded feet to walk on hot desert sand.', image: spiderMonkeyImg },
+    { id: 'herbs', word: 'Herbs', desc: 'Small plants with soft, green, and tender stems that bend easily.', eg: 'Grass, coriander, tomato, and tulsi are common herbs.', image: herbTulsiImg },
+    { id: 'shrubs', word: 'Shrubs', desc: 'Medium-sized plants with thin, woody stems branching out close to the ground.', eg: 'Hibiscus, rose, and lemon plants grow as shrubs.', image: shrubHibiscusImg },
+    { id: 'trees', word: 'Trees', desc: 'Tall plants with thick, hard, woody trunks branching high above the ground.', eg: 'Mango, neem, pine, and banyan trees grow tall.', image: tree1Img },
+    { id: 'reticulate', word: 'Reticulate Venation', desc: 'A net-like pattern of veins on both sides of the leaf midrib.', eg: 'Hibiscus, sadabahar, and rose leaves show net venation.', image: dicotLeafImg },
+    { id: 'parallel', word: 'Parallel Venation', desc: 'Veins running parallel to each other from the base of the leaf to the tip.', eg: 'Grass, wheat, maize, and banana leaves have parallel veins.', image: monocotLeafImg },
+    { id: 'taproot', word: 'Taproot System', desc: 'A single, thick primary root growing deep vertically, with smaller side branches.', eg: 'Mustard, carrots, and chickpea plants have taproots.', image: taprootImg },
+    { id: 'fibrous', word: 'Fibrous Roots', desc: 'A bunch of thin, equal-sized roots arising together from the base of the stem.', eg: 'Grass, wheat, onions, and maize have fibrous root systems.', image: fibrousImg },
+    { id: 'monocot', word: 'Monocot', desc: 'A seed with a single cotyledon (seed leaf) that cannot be split into two halves.', eg: 'Maize, wheat, and rice seeds are monocots.', image: maizeCutImg },
+    { id: 'dicot', word: 'Dicot', desc: 'A seed with two cotyledons (seed leaves) that easily split into two halves.', eg: 'Gram, peas, almonds, and kidney beans are dicot seeds.', image: chickpeaSplitImg },
+    { id: 'sacred', word: 'Sacred Groves', desc: 'Traditionally protected forest patches guarded by local communities for wildlife conservation.', eg: 'Sacred groves in the Western Ghats protect unique plants and animals.', image: scaredImg }
   ];
 
-  // Match Game State
-  const [gameShuffled, setGameShuffled] = useState([]);
-  const [selectedTerm, setSelectedTerm] = useState(null);
+  // 2-Column Match Game State
+  const [gameDefs, setGameDefs] = useState([]);
+  const [gameWords, setGameWords] = useState([]);
+  const [selectedDef, setSelectedDef] = useState(null);
+  const [selectedWord, setSelectedWord] = useState(null);
   const [matchedPairs, setMatchedPairs] = useState([]);
+  const [errorPair, setErrorPair] = useState(null); // { defId, wordId }
   const [attempts, setAttempts] = useState(0);
+
+  const containerRef = useRef(null);
+  const defRefs = useRef({});
+  const wordRefs = useRef({});
+  const [lines, setLines] = useState([]);
+
+  // Initialize or reset game with 6 definitions and deranged words
+  const initGame = useCallback(() => {
+    const pool = [...terms].sort(() => 0.5 - Math.random()).slice(0, 6);
+    const defs = pool.map((t, idx) => ({ id: t.id, text: t.desc, num: idx + 1 }));
+    
+    const wordsBase = pool.map(t => ({ id: t.id, text: t.word }));
+    let shuffled = [...wordsBase].sort(() => 0.5 - Math.random());
+    let safety = 0;
+    while (safety < 30 && shuffled.some((w, i) => w.id === defs[i].id)) {
+      shuffled = [...wordsBase].sort(() => 0.5 - Math.random());
+      safety++;
+    }
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const words = shuffled.map((w, idx) => ({ ...w, letter: letters[idx] }));
+
+    setGameDefs(defs);
+    setGameWords(words);
+    setMatchedPairs([]);
+    setSelectedDef(null);
+    setSelectedWord(null);
+    setErrorPair(null);
+    setAttempts(0);
+  }, []);
 
   useEffect(() => {
     if (activeTab === 'game') {
-      const pool = [...terms].sort(() => 0.5 - Math.random()).slice(0, 6);
-      const termsPool = pool.map(t => ({ id: t.id, text: t.word, type: 'term' }));
-      const defsPool = pool.map(t => ({ id: t.id, text: t.desc, type: 'def' }));
-      setGameShuffled([...termsPool, ...defsPool].sort(() => 0.5 - Math.random()));
-      setMatchedPairs([]);
-      setSelectedTerm(null);
-      setAttempts(0);
+      initGame();
     }
-  }, [activeTab]);
+  }, [activeTab, initGame]);
 
-  const handleCardClick = (card) => {
-    if (matchedPairs.includes(card.id)) return;
-    
-    if (!selectedTerm) {
-      setSelectedTerm(card);
-    } else {
-      if (selectedTerm.type !== card.type && selectedTerm.id === card.id) {
-        const newMatches = [...matchedPairs, card.id];
-        setMatchedPairs(newMatches);
-        setSelectedTerm(null);
-        confetti({ particleCount: 40, spread: 40, origin: { y: 0.8 } });
-        if (newMatches.length === 6 && onMatchComplete) {
-          onMatchComplete();
-        }
-      } else {
-        setAttempts(a => a + 1);
-        setSelectedTerm(card);
+  // Update SVG connection lines dynamically
+  const updateLines = useCallback(() => {
+    if (!containerRef.current) return;
+    const cRect = containerRef.current.getBoundingClientRect();
+    const newLines = [];
+
+    matchedPairs.forEach(id => {
+      const dEl = defRefs.current[id];
+      const wEl = wordRefs.current[id];
+      if (dEl && wEl) {
+        const dRect = dEl.getBoundingClientRect();
+        const wRect = wEl.getBoundingClientRect();
+        newLines.push({
+          id: `matched-${id}`,
+          x1: dRect.right - cRect.left,
+          y1: dRect.top + dRect.height / 2 - cRect.top,
+          x2: wRect.left - cRect.left,
+          y2: wRect.top + wRect.height / 2 - cRect.top,
+          status: 'matched'
+        });
       }
+    });
+
+    if (errorPair) {
+      const dEl = defRefs.current[errorPair.defId];
+      const wEl = wordRefs.current[errorPair.wordId];
+      if (dEl && wEl) {
+        const dRect = dEl.getBoundingClientRect();
+        const wRect = wEl.getBoundingClientRect();
+        newLines.push({
+          id: 'error-line',
+          x1: dRect.right - cRect.left,
+          y1: dRect.top + dRect.height / 2 - cRect.top,
+          x2: wRect.left - cRect.left,
+          y2: wRect.top + wRect.height / 2 - cRect.top,
+          status: 'error'
+        });
+      }
+    }
+
+    setLines(newLines);
+  }, [matchedPairs, errorPair]);
+
+  useEffect(() => {
+    updateLines();
+    const handleResize = () => updateLines();
+    window.addEventListener('resize', handleResize);
+    const timer = setTimeout(updateLines, 60);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timer);
+    };
+  }, [updateLines, gameDefs, gameWords, activeTab]);
+
+  // Matching logic
+  const handleDefClick = (defId) => {
+    if (matchedPairs.includes(defId) || errorPair) return;
+    if (selectedDef === defId) {
+      setSelectedDef(null);
+      return;
+    }
+    setSelectedDef(defId);
+    if (selectedWord) {
+      evaluateMatch(defId, selectedWord);
+    }
+  };
+
+  const handleWordClick = (wordId) => {
+    if (matchedPairs.includes(wordId) || errorPair) return;
+    if (selectedWord === wordId) {
+      setSelectedWord(null);
+      return;
+    }
+    setSelectedWord(wordId);
+    if (selectedDef) {
+      evaluateMatch(selectedDef, wordId);
+    }
+  };
+
+  const evaluateMatch = (dId, wId) => {
+    if (dId === wId) {
+      const newMatched = [...matchedPairs, dId];
+      setMatchedPairs(newMatched);
+      setSelectedDef(null);
+      setSelectedWord(null);
+      confetti({ particleCount: 35, spread: 45, origin: { y: 0.7 } });
+      if (newMatched.length === 6 && onMatchComplete) {
+        onMatchComplete();
+      }
+    } else {
+      setAttempts(a => a + 1);
+      setErrorPair({ defId: dId, wordId: wId });
+      setTimeout(() => {
+        setErrorPair(null);
+        setSelectedDef(null);
+        setSelectedWord(null);
+      }, 600);
     }
   };
 
   return (
-    <div className="split-frame" style={{ width: '100%', minHeight: '480px' }}>
+    <div className="split-frame" style={{ width: '100%', minHeight: '520px', gap: '1.25rem' }}>
       {/* LEFT COLUMN: Controls & Info */}
-      <div className="frame-page-left">
-        <div className="textbook-eyebrow">Class 6 Science · Chapter 2</div>
-        <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: '1.6rem' }}>
-          Key Vocabulary
-        </h1>
-        
-        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6', margin: '0 0 1.5rem 0' }}>
-          Mastering scientific terms is key to understanding the diversity of plants and animals. Use this interactive pane to study glossary words or test yourself.
-        </p>
+      <div className="frame-page-left" style={{
+        background: 'linear-gradient(145deg, rgba(12, 28, 62, 0.94) 0%, rgba(8, 18, 42, 0.96) 100%)',
+        border: '1.5px solid rgba(56, 189, 248, 0.3)',
+        borderRadius: '14px',
+        padding: '1.35rem 1.5rem',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        minHeight: '100%',
+        boxSizing: 'border-box',
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
+        backdropFilter: 'blur(12px)'
+      }}>
+        <div>
+          <div style={{ 
+            fontSize: '0.88rem', 
+            fontWeight: '800', 
+            color: '#38bdf8', 
+            textTransform: 'uppercase', 
+            letterSpacing: '0.06em',
+            marginBottom: '0.45rem',
+            textShadow: '0 2px 8px rgba(56, 189, 248, 0.3)'
+          }}>
+            Class 6 Science · Chapter 2
+          </div>
+
+          <h1 style={{ 
+            fontFamily: 'var(--serif-font)', 
+            margin: '0 0 0.85rem 0', 
+            fontSize: '1.75rem',
+            fontWeight: '900',
+            color: '#38bdf8',
+            textShadow: '0 2px 12px rgba(56, 189, 248, 0.4)',
+            letterSpacing: '0.01em'
+          }}>
+            Key Vocabulary
+          </h1>
+          
+          <p style={{ 
+            fontSize: '0.98rem', 
+            color: '#fde047', 
+            fontWeight: '600',
+            lineHeight: '1.6', 
+            margin: '0 0 1.25rem 0',
+            textShadow: '0 1px 6px rgba(0, 0, 0, 0.5)'
+          }}>
+            Mastering scientific terms is key to understanding the diversity of plants and animals. Use this interactive pane to study glossary words or test yourself.
+          </p>
+        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: 'auto' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: '800', color: '#bae6fd', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Choose Mode:
           </span>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.65rem' }}>
             <button 
               onClick={() => setActiveTab('glossary')}
-              className={activeTab === 'glossary' ? 'primary' : 'outline'}
-              style={{ flex: 1, padding: '0.5rem', fontSize: '0.85rem', borderRadius: '8px' }}
+              style={{
+                flex: 1,
+                padding: '0.65rem 0.85rem',
+                fontSize: '0.92rem',
+                fontWeight: '800',
+                borderRadius: '9px',
+                cursor: 'pointer',
+                background: activeTab === 'glossary' 
+                  ? 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)' 
+                  : 'rgba(255, 255, 255, 0.06)',
+                border: activeTab === 'glossary' 
+                  ? '1.5px solid #38bdf8' 
+                  : '1.5px solid rgba(56, 189, 248, 0.25)',
+                color: '#ffffff',
+                boxShadow: activeTab === 'glossary' ? '0 4px 14px rgba(14, 165, 233, 0.4)' : 'none',
+                transition: 'all 0.2s ease'
+              }}
             >
               📖 Glossary
             </button>
             <button 
               onClick={() => setActiveTab('game')}
-              className={activeTab === 'game' ? 'primary' : 'outline'}
-              style={{ flex: 1, padding: '0.5rem', fontSize: '0.85rem', borderRadius: '8px' }}
+              style={{
+                flex: 1,
+                padding: '0.65rem 0.85rem',
+                fontSize: '0.92rem',
+                fontWeight: '800',
+                borderRadius: '9px',
+                cursor: 'pointer',
+                background: activeTab === 'game' 
+                  ? 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)' 
+                  : 'rgba(255, 255, 255, 0.06)',
+                border: activeTab === 'game' 
+                  ? '1.5px solid #38bdf8' 
+                  : '1.5px solid rgba(56, 189, 248, 0.25)',
+                color: '#ffffff',
+                boxShadow: activeTab === 'game' ? '0 4px 14px rgba(14, 165, 233, 0.4)' : 'none',
+                transition: 'all 0.2s ease'
+              }}
             >
               🎮 Match Game
             </button>
@@ -1182,31 +1366,60 @@ function VocabularyGlossary({ onMatchComplete }) {
 
         {activeTab === 'game' && (
           <div style={{
-            background: 'var(--card-bg)',
-            border: '1px solid var(--border)',
+            background: 'rgba(14, 165, 233, 0.12)',
+            border: '1.5px solid rgba(56, 189, 248, 0.35)',
             borderRadius: '10px',
-            padding: '0.75rem 1rem',
+            padding: '0.85rem 1rem',
             marginTop: '1.25rem',
-            fontSize: '13px'
+            fontSize: '0.9rem',
+            color: '#f8fafc'
           }}>
-            <span style={{ fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>Match Game Progress:</span>
-            <span>Matched: <b>{matchedPairs.length} / 6</b> pairs</span>
-            <span style={{ marginLeft: '12px' }}>Attempts: <b>{attempts}</b></span>
+            <span style={{ fontWeight: '800', color: '#38bdf8', display: 'block', marginBottom: '6px' }}>Match Game Progress:</span>
+            <span>Matched: <b style={{ color: '#34d399', transition: 'all 0.3s ease' }}>{matchedPairs.length} / 6</b> pairs</span>
+            <span style={{ marginLeft: '14px' }}>Attempts: <b style={{ color: '#fde047', transition: 'all 0.3s ease' }}>{attempts}</b></span>
           </div>
         )}
       </div>
 
       {/* RIGHT COLUMN: Grid Space */}
-      <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0, border: '1px solid var(--border)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
-          <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-muted)' }}>
-            {activeTab === 'glossary' ? '📕 Interactive Textbook Glossary' : '🎯 Definition Matcher'}
-          </span>
+      <div className="frame-page-right" style={{ 
+        background: 'linear-gradient(145deg, rgba(8, 22, 52, 0.94) 0%, rgba(4, 12, 32, 0.96) 100%)',
+        border: '1.5px solid rgba(56, 189, 248, 0.3)',
+        borderRadius: '14px',
+        padding: '1.15rem 1.35rem',
+        display: 'flex', 
+        flexDirection: 'column', 
+        minHeight: 0, 
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(12px)'
+      }}>
+        {/* Main Matcher / Glossary Header */}
+        <div style={{ 
+          borderBottom: '2px solid rgba(56, 189, 248, 0.3)', 
+          paddingBottom: '0.65rem', 
+          marginBottom: '0.85rem' 
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ 
+              fontSize: '1.15rem', 
+              fontWeight: '900', 
+              color: '#38bdf8',
+              textShadow: '0 2px 8px rgba(56, 189, 248, 0.35)',
+              letterSpacing: '0.01em'
+            }}>
+              {activeTab === 'glossary' ? '📕 Interactive Textbook Glossary' : '🎯 Definition Matcher'}
+            </span>
+          </div>
+          {activeTab === 'game' && (
+            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.86rem', color: '#94a3b8', fontWeight: '500' }}>
+              Match each definition with the correct scientific term.
+            </p>
+          )}
         </div>
 
         <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
           {activeTab === 'glossary' ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.85rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.95rem' }}>
               {terms.map(t => {
                 const isFlipped = flippedCardId === t.id;
                 return (
@@ -1214,33 +1427,64 @@ function VocabularyGlossary({ onMatchComplete }) {
                     key={t.id}
                     onClick={() => setFlippedCardId(isFlipped ? null : t.id)}
                     style={{
-                      background: isFlipped ? 'var(--accent-glow, rgba(99, 102, 241, 0.05))' : 'var(--card-bg)',
-                      border: isFlipped ? '1.5px solid var(--accent)' : '1px solid var(--border)',
+                      background: isFlipped 
+                        ? 'linear-gradient(135deg, rgba(16, 42, 88, 0.95) 0%, rgba(10, 26, 62, 0.98) 100%)' 
+                        : 'linear-gradient(135deg, rgba(14, 34, 76, 0.9) 0%, rgba(8, 22, 52, 0.95) 100%)',
+                      border: isFlipped ? '1.5px solid #38bdf8' : '1.5px solid rgba(56, 189, 248, 0.28)',
                       borderRadius: '12px',
-                      padding: '1.25rem',
+                      padding: '0.85rem',
                       cursor: 'pointer',
-                      transition: 'all 0.25s ease',
-                      minHeight: '130px',
+                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                      minHeight: '160px',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                      boxShadow: isFlipped ? '0 0 16px rgba(56, 189, 248, 0.3)' : '0 4px 14px rgba(0,0,0,0.35)'
                     }}
                   >
                     {isFlipped ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '100%' }}>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                          <strong>Def:</strong> {t.desc}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', height: '100%' }}>
+                        <span style={{ fontSize: '0.92rem', color: '#f8fafc', lineHeight: '1.5', fontWeight: 500 }}>
+                          <strong style={{ color: '#38bdf8' }}>Def:</strong> {t.desc}
                         </span>
-                        <span style={{ fontSize: '0.78rem', color: 'var(--success)', fontStyle: 'italic', marginTop: 'auto' }}>
+                        <span style={{ fontSize: '0.82rem', color: '#34d399', fontStyle: 'italic', fontWeight: 600, marginTop: 'auto' }}>
                           Ex: {t.eg}
                         </span>
                       </div>
                     ) : (
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', height: '100%', padding: '0.5rem 0' }}>
-                        <span style={{ fontSize: '2.5rem' }}>{t.icon}</span>
-                        <span style={{ fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--text-heading)', textAlign: 'center' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
+                        <div style={{
+                          width: '100%',
+                          height: '110px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          border: '1px solid rgba(56, 189, 248, 0.25)',
+                          background: 'rgba(6, 16, 38, 0.85)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '6px',
+                          boxSizing: 'border-box',
+                          marginBottom: '0.65rem'
+                        }}>
+                          <img 
+                            src={t.image} 
+                            alt={t.word} 
+                            style={{ 
+                              maxWidth: '100%', 
+                              maxHeight: '100%', 
+                              width: 'auto', 
+                              height: 'auto', 
+                              objectFit: 'contain', 
+                              display: 'block' 
+                            }} 
+                          />
+                        </div>
+                        <span style={{ fontSize: '0.98rem', fontWeight: '800', color: '#ffffff', textAlign: 'center', lineHeight: '1.2' }}>
                           {t.word}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: '#7dd3fc', fontWeight: '600', marginTop: '0.25rem' }}>
+                          Click for definition ↻
                         </span>
                       </div>
                     )}
@@ -1249,56 +1493,330 @@ function VocabularyGlossary({ onMatchComplete }) {
               })}
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0.85rem' }}>
-              {gameShuffled.map((card, idx) => {
-                const isMatched = matchedPairs.includes(card.id);
-                const isSelected = selectedTerm && selectedTerm.id === card.id && selectedTerm.type === card.type;
-                
-                return (
-                  <button
-                    key={idx}
-                    disabled={isMatched}
-                    onClick={() => handleCardClick(card)}
-                    style={{
-                      padding: '1rem',
-                      borderRadius: '10px',
-                      border: isMatched 
-                        ? '1.5px solid var(--success-border, #10b981)' 
-                        : isSelected 
-                          ? '2px solid var(--accent)' 
-                          : '1.5px solid var(--border)',
-                      background: isMatched 
-                        ? 'rgba(16, 185, 129, 0.08)' 
-                        : isSelected 
-                          ? 'rgba(99, 102, 241, 0.06)' 
-                          : 'var(--card-bg)',
-                      color: isMatched ? 'var(--success)' : 'var(--text-primary)',
-                      cursor: isMatched ? 'default' : 'pointer',
-                      textAlign: 'left',
-                      fontSize: '0.85rem',
-                      transition: 'all 0.2s ease',
-                      opacity: isMatched ? 0.65 : 1,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      minHeight: '75px',
-                      boxSizing: 'border-box',
-                      width: '100%'
-                    }}
-                  >
-                    <span style={{ fontSize: '1.1rem', background: card.type === 'term' ? 'rgba(99,102,241,0.1)' : 'rgba(245,158,11,0.1)', padding: '4px 8px', borderRadius: '4px', color: card.type === 'term' ? 'var(--accent)' : 'var(--warning)', fontWeight: 'bold' }}>
-                      {card.type === 'term' ? 'W' : 'D'}
-                    </span>
-                    <span style={{ flex: 1, lineHeight: '1.35', whiteSpace: 'normal', overflow: 'visible' }}>{card.text}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-          {matchedPairs.length === 6 && (
-            <div style={{ marginTop: '1.5rem', textAlign: 'center', padding: '1.5rem', background: 'rgba(16, 185, 129, 0.08)', borderRadius: '12px', border: '1px solid var(--success)' }}>
-              <h4 style={{ margin: 0, color: 'var(--success)', fontSize: '1.2rem' }}>🎉 Excellent Job! Vocabulary Mastered!</h4>
-              <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>You successfully matched all terms. Click Next in the top controls to proceed.</p>
+            <div ref={containerRef} style={{ position: 'relative', display: 'flex', flexDirection: 'column', minHeight: '440px', gap: '0.75rem' }}>
+              {/* SVG Connector Overlay */}
+              <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 10 }}>
+                {lines.map(line => {
+                  const cX = (line.x1 + line.x2) / 2;
+                  const pathData = `M ${line.x1} ${line.y1} C ${cX} ${line.y1}, ${cX} ${line.y2}, ${line.x2} ${line.y2}`;
+                  return (
+                    <path
+                      key={line.id}
+                      d={pathData}
+                      fill="none"
+                      stroke={line.status === 'matched' ? '#10b981' : '#ef4444'}
+                      strokeWidth={line.status === 'matched' ? '3.5' : '2.5'}
+                      strokeDasharray={line.status === 'error' ? '6 4' : 'none'}
+                      style={{
+                        transition: 'all 0.25s ease',
+                        filter: line.status === 'matched' ? 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.7))' : 'drop-shadow(0 0 6px rgba(239, 68, 68, 0.7))'
+                      }}
+                    />
+                  );
+                })}
+              </svg>
+
+              {/* 2-Column Matching Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 36px 1fr', gap: '0.5rem', flex: 1, alignItems: 'stretch' }}>
+                {/* LEFT COLUMN: DEFINITIONS */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '6px', 
+                    padding: '0.15rem 0.35rem', 
+                    fontSize: '0.85rem', 
+                    fontWeight: '900', 
+                    color: '#fbbf24', 
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    <span style={{ 
+                      width: '20px', 
+                      height: '20px', 
+                      borderRadius: '50%', 
+                      background: 'rgba(251, 191, 36, 0.2)', 
+                      border: '1.5px solid #fbbf24',
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      fontSize: '0.75rem',
+                      fontWeight: '900',
+                      color: '#fbbf24'
+                    }}>D</span>
+                    DEFINITIONS
+                  </div>
+
+                  {gameDefs.map((def) => {
+                    const isMatched = matchedPairs.includes(def.id);
+                    const isSelected = selectedDef === def.id;
+                    const isError = errorPair && errorPair.defId === def.id;
+
+                    return (
+                      <div
+                        key={def.id}
+                        ref={el => defRefs.current[def.id] = el}
+                        onClick={() => handleDefClick(def.id)}
+                        style={{
+                          position: 'relative',
+                          flex: 1,
+                          minHeight: '54px',
+                          padding: '0.55rem 0.85rem',
+                          borderRadius: '10px',
+                          cursor: isMatched ? 'default' : 'pointer',
+                          border: isMatched 
+                            ? '1.5px solid #10b981' 
+                            : isError 
+                              ? '2px solid #ef4444' 
+                              : isSelected 
+                                ? '2px solid #fde047' 
+                                : '1.5px solid rgba(56, 189, 248, 0.25)',
+                          background: isMatched 
+                            ? 'rgba(16, 185, 129, 0.12)' 
+                            : isError 
+                              ? 'rgba(239, 68, 68, 0.25)' 
+                              : isSelected 
+                                ? 'linear-gradient(135deg, rgba(20, 50, 110, 0.95), rgba(12, 34, 80, 0.95))' 
+                                : 'linear-gradient(135deg, rgba(14, 34, 76, 0.88), rgba(8, 22, 52, 0.92))',
+                          boxShadow: isSelected 
+                            ? '0 0 14px rgba(253, 224, 71, 0.4)' 
+                            : isMatched 
+                              ? '0 0 10px rgba(16, 185, 129, 0.2)' 
+                              : '0 2px 8px rgba(0,0,0,0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.65rem',
+                          opacity: isMatched ? 0.75 : 1,
+                          animation: isError ? 'matcher-shake 0.45s ease' : isMatched ? 'pulse-success 0.3s ease' : 'none',
+                          transition: 'border 0.2s, background 0.2s, box-shadow 0.2s'
+                        }}
+                      >
+                        {/* Yellow circular number badge */}
+                        <div style={{
+                          width: '24px',
+                          height: '24px',
+                          borderRadius: '50%',
+                          background: isMatched ? '#10b981' : '#f59e0b',
+                          color: isMatched ? '#ffffff' : '#000000',
+                          fontWeight: '900',
+                          fontSize: '0.8rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                        }}>
+                          {isMatched ? '✓' : def.num}
+                        </div>
+
+                        <div style={{ flex: 1, fontSize: '0.82rem', color: '#ffffff', fontWeight: '600', lineHeight: '1.3' }}>
+                          {def.text}
+                        </div>
+
+                        {/* Right connection anchor node */}
+                        <div style={{
+                          width: '12px',
+                          height: '12px',
+                          borderRadius: '50%',
+                          background: isMatched ? '#10b981' : isSelected ? '#fde047' : '#38bdf8',
+                          border: '2px solid #07152f',
+                          boxShadow: isSelected ? '0 0 10px #fde047' : isMatched ? '0 0 8px #10b981' : 'none',
+                          position: 'absolute',
+                          right: '-6px',
+                          top: 'calc(50% - 6px)',
+                          zIndex: 2,
+                          transition: 'all 0.2s ease'
+                        }} />
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* CENTER INSTRUCTION COLUMN */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', opacity: 0.65 }}>
+                  <span style={{ fontSize: '1.2rem', color: '#38bdf8' }}>↔</span>
+                  <span style={{ fontSize: '0.65rem', color: '#7dd3fc', fontWeight: '700', textTransform: 'uppercase', writingMode: 'vertical-rl', letterSpacing: '0.12em' }}>
+                    Connect
+                  </span>
+                </div>
+
+                {/* RIGHT COLUMN: WORDS (TERMS) */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '6px', 
+                    padding: '0.15rem 0.35rem', 
+                    fontSize: '0.85rem', 
+                    fontWeight: '900', 
+                    color: '#38bdf8', 
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    <span style={{ 
+                      width: '20px', 
+                      height: '20px', 
+                      borderRadius: '4px', 
+                      background: 'rgba(56, 189, 248, 0.2)', 
+                      border: '1.5px solid #38bdf8',
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      fontSize: '0.75rem',
+                      fontWeight: '900',
+                      color: '#38bdf8'
+                    }}>W</span>
+                    WORDS (TERMS)
+                  </div>
+
+                  {gameWords.map((word) => {
+                    const isMatched = matchedPairs.includes(word.id);
+                    const isSelected = selectedWord === word.id;
+                    const isError = errorPair && errorPair.wordId === word.id;
+
+                    return (
+                      <div
+                        key={word.id}
+                        ref={el => wordRefs.current[word.id] = el}
+                        onClick={() => handleWordClick(word.id)}
+                        style={{
+                          position: 'relative',
+                          flex: 1,
+                          minHeight: '54px',
+                          padding: '0.55rem 0.85rem',
+                          borderRadius: '10px',
+                          cursor: isMatched ? 'default' : 'pointer',
+                          border: isMatched 
+                            ? '1.5px solid #10b981' 
+                            : isError 
+                              ? '2px solid #ef4444' 
+                              : isSelected 
+                                ? '2px solid #38bdf8' 
+                                : '1.5px solid rgba(56, 189, 248, 0.25)',
+                          background: isMatched 
+                            ? 'rgba(16, 185, 129, 0.12)' 
+                            : isError 
+                              ? 'rgba(239, 68, 68, 0.25)' 
+                              : isSelected 
+                                ? 'linear-gradient(135deg, rgba(14, 55, 120, 0.95), rgba(8, 38, 90, 0.95))' 
+                                : 'linear-gradient(135deg, rgba(14, 34, 76, 0.88), rgba(8, 22, 52, 0.92))',
+                          boxShadow: isSelected 
+                            ? '0 0 14px rgba(56, 189, 248, 0.4)' 
+                            : isMatched 
+                              ? '0 0 10px rgba(16, 185, 129, 0.2)' 
+                              : '0 2px 8px rgba(0,0,0,0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.65rem',
+                          opacity: isMatched ? 0.75 : 1,
+                          animation: isError ? 'matcher-shake 0.45s ease' : isMatched ? 'pulse-success 0.3s ease' : 'none',
+                          transition: 'border 0.2s, background 0.2s, box-shadow 0.2s'
+                        }}
+                      >
+                        {/* Left connection anchor node */}
+                        <div style={{
+                          width: '12px',
+                          height: '12px',
+                          borderRadius: '50%',
+                          background: isMatched ? '#10b981' : isSelected ? '#38bdf8' : '#38bdf8',
+                          border: '2px solid #07152f',
+                          boxShadow: isSelected ? '0 0 10px #38bdf8' : isMatched ? '0 0 8px #10b981' : 'none',
+                          position: 'absolute',
+                          left: '-6px',
+                          top: 'calc(50% - 6px)',
+                          zIndex: 2,
+                          transition: 'all 0.2s ease'
+                        }} />
+
+                        {/* Cyan square letter badge */}
+                        <div style={{
+                          width: '24px',
+                          height: '24px',
+                          borderRadius: '5px',
+                          background: isMatched ? '#10b981' : '#0284c7',
+                          color: '#ffffff',
+                          fontWeight: '900',
+                          fontSize: '0.8rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                        }}>
+                          {isMatched ? '✓' : word.letter}
+                        </div>
+
+                        <div style={{ flex: 1, fontSize: '0.92rem', color: '#ffffff', fontWeight: '800' }}>
+                          {word.text}
+                        </div>
+
+                        {isMatched && (
+                          <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: '800' }}>🔒</span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* MATCH FEEDBACK & SUCCESS BANNER */}
+              {matchedPairs.length === 6 && (
+                <div style={{ marginTop: '0.5rem', textAlign: 'center', padding: '0.65rem 1rem', background: 'rgba(16, 185, 129, 0.15)', borderRadius: '10px', border: '1.5px solid #10b981' }}>
+                  <h4 style={{ margin: 0, color: '#34d399', fontSize: '1.05rem', fontWeight: 900 }}>🎉 Excellent Job! All Terms Matched!</h4>
+                </div>
+              )}
+
+              {/* BOTTOM LEGEND & RESET */}
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                borderTop: '1px solid rgba(56, 189, 248, 0.2)', 
+                paddingTop: '0.65rem', 
+                marginTop: 'auto', 
+                fontSize: '0.8rem' 
+              }}>
+                <div style={{ display: 'flex', gap: '1.15rem', alignItems: 'center', color: '#bae6fd', fontWeight: '600' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ color: '#10b981', fontWeight: '900' }}>✓</span> Correct Match
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ color: '#ef4444', fontWeight: '900' }}>✕</span> Wrong Match
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span>🔒</span> Matched
+                  </span>
+                </div>
+                <button 
+                  onClick={initGame}
+                  style={{
+                    padding: '0.4rem 0.85rem',
+                    borderRadius: '7px',
+                    fontSize: '0.82rem',
+                    fontWeight: '700',
+                    background: 'rgba(56, 189, 248, 0.12)',
+                    border: '1px solid rgba(56, 189, 248, 0.35)',
+                    color: '#38bdf8',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  ↻ Reset Game
+                </button>
+              </div>
+
+              <style>{`
+                @keyframes matcher-shake {
+                  0%, 100% { transform: translateX(0); }
+                  20%, 60% { transform: translateX(-6px); }
+                  40%, 80% { transform: translateX(6px); }
+                }
+                @keyframes pulse-success {
+                  0% { transform: scale(1); }
+                  50% { transform: scale(1.02); }
+                  100% { transform: scale(1); }
+                }
+              `}</style>
             </div>
           )}
         </div>
@@ -1308,50 +1826,87 @@ function VocabularyGlossary({ onMatchComplete }) {
 }
 
 function SummaryPane({ lessonId }) {
-    const summaries = {
+  const summaries = {
     vocabulary_glossary: [
-        "Classification is the process of sorting living things into groups based on shared properties, making them easier to study.",
-        "Plants are primarily classified by their stems into Herbs (soft, green), Shrubs (thin, woody, branching at base), and Trees (thick, woody trunk).",
-        "There is a strong correlation between a plant's leaf vein pattern (venation) and its root structure.",
-        "Reticulate (net-like) venation is typically paired with a Taproot system (one main root).",
-        "Parallel (straight line) venation is typically paired with a Fibrous root system (a bundle of thin roots)."
+      "Classification is the process of sorting living things into groups based on shared properties, making them easier to study.",
+      "Plants are primarily classified by their stems into Herbs (soft, green), Shrubs (thin, woody, branching at base), and Trees (thick, woody trunk).",
+      "There is a strong correlation between a plant's leaf vein pattern (venation) and its root structure.",
+      "Reticulate (net-like) venation is typically paired with a Taproot system (one main root).",
+      "Parallel (straight line) venation is typically paired with a Fibrous root system (a bundle of thin roots)."
     ],
     chapter_challenge_overview: [
-        "Seeds are classified by their number of seed leaves (cotyledons): Monocots (one) and Dicots (two).",
-        "The Monocot/Dicot classification links directly to venation and root type, forming a complete predictive model for plant traits.",
-        "Animals are grouped based on their mode of movement (locomotion) like walking, flying, or swimming, and their natural home (habitat).",
-        "Adaptation refers to special features that help organisms survive in their specific environment, such as a camel's hump or a polar bear's thick fur.",
-        "Conserving biodiversity through methods like protecting Sacred Groves is vital for ecological balance."
+      "Seeds are classified by their number of seed leaves (cotyledons): Monocots (one) and Dicots (two).",
+      "The Monocot/Dicot classification links directly to venation and root type, forming a complete predictive model for plant traits.",
+      "Animals are grouped based on their mode of movement (locomotion) like walking, flying, or swimming, and their natural home (habitat).",
+      "Adaptation refers to special features that help organisms survive in their specific environment, such as a camel's hump or a polar bear's thick fur.",
+      "Conserving biodiversity through methods like protecting Sacred Groves is vital for ecological balance."
     ]
-    };
+  };
 
-    const summaryPoints = summaries[lessonId] || [];
+  const summaryPoints = summaries[lessonId] || [];
 
-    return (
-    <div id="pane-summary-window" className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', borderTop: '1px dashed var(--border)', paddingTop: '2.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-        <span style={{ fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Key Takeaways
+  return (
+    <div id="pane-summary-window" className="glass-panel" style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      gap: '1.25rem', 
+      background: 'linear-gradient(145deg, rgba(12, 28, 62, 0.94) 0%, rgba(6, 16, 38, 0.96) 100%)',
+      border: '1.5px solid rgba(56, 189, 248, 0.3)',
+      borderRadius: '14px',
+      padding: '1.5rem 1.75rem',
+      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
+      backdropFilter: 'blur(12px)',
+      marginTop: '1rem'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid rgba(56, 189, 248, 0.3)', paddingBottom: '0.85rem' }}>
+        <span style={{ 
+          fontSize: '1.25rem', 
+          fontWeight: '900', 
+          color: '#38bdf8', 
+          textTransform: 'uppercase', 
+          letterSpacing: '0.06em',
+          textShadow: '0 2px 10px rgba(56, 189, 248, 0.35)'
+        }}>
+          KEY TAKEAWAYS
         </span>
-        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            Chapter Summary
+        <span style={{ 
+          fontSize: '0.92rem', 
+          fontWeight: '700',
+          color: '#bae6fd',
+          background: 'rgba(14, 165, 233, 0.15)',
+          border: '1px solid rgba(56, 189, 248, 0.3)',
+          padding: '0.3rem 0.85rem',
+          borderRadius: '6px'
+        }}>
+          Chapter Summary
         </span>
-        </div>
-        <ul style={{ margin: 0, paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      </div>
+      <ul style={{ margin: 0, paddingLeft: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.9rem', listStyle: 'none' }}>
         {summaryPoints.map((point, i) => (
-            <li key={i} style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-            {point}
-            </li>
+          <li key={i} style={{ 
+            fontSize: '1rem', 
+            color: '#f8fafc', 
+            fontWeight: '500',
+            lineHeight: '1.7',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.75rem'
+          }}>
+            <span style={{ color: '#38bdf8', fontSize: '1.2rem', lineHeight: '1.3', flexShrink: 0 }}>•</span>
+            <span>{point}</span>
+          </li>
         ))}
-        </ul>
+      </ul>
     </div>
-    );
+  );
 }
 
-function ChapterChallengeOverview() {
+function ChapterChallengeOverview({ onBack, onComplete, onViewSummary }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const celebrationSpokenRef = useRef(false);
 
   const chapterChallengeQuestions = [
     {
@@ -1721,38 +2276,241 @@ function ChapterChallengeOverview() {
       setSelectedAnswer(null);
       setIsAnswered(false);
     } else {
-      // Handle quiz completion
-      setCurrentQuestionIndex(0);
-      setSelectedAnswer(null);
-      setIsAnswered(false);
-       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      // Completed all 25 questions!
+      setIsCompleted(true);
+      if (onComplete) onComplete();
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
     }
   };
 
+  useEffect(() => {
+    if (isCompleted && !celebrationSpokenRef.current) {
+      celebrationSpokenRef.current = true;
+      const completionMsg = "Chapter 2 Completed! 25 out of 25 challenges completed, 100%. Excellent work! You have successfully completed all the Chapter 2 challenges.";
+      speakWithProfile(completionMsg, 'Dr. Raghu', false);
+    }
+  }, [isCompleted]);
+
   const currentQuestion = chapterChallengeQuestions[currentQuestionIndex];
 
+  if (isCompleted) {
+    return (
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        minHeight: '560px',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        backgroundImage: `url(${completedCh2Bg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: '2.5rem 1.5rem',
+        boxSizing: 'border-box',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25)'
+      }}>
+        {/* Floating Header & Progress Banner (Clean, minimal, NO dark overlays, NO navy tint, NO blur) */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          margin: '0 auto',
+          maxWidth: '820px',
+          width: '100%'
+        }}>
+          {/* Central Completion Heading */}
+          <h1 style={{
+            fontFamily: 'var(--serif-font)',
+            fontSize: '2.4rem',
+            fontWeight: '900',
+            color: '#fbbf24',
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+            margin: '0 0 0.5rem 0',
+            textShadow: '0 2px 16px rgba(0, 0, 0, 0.95), 0 0 24px rgba(0, 0, 0, 0.85), 0 0 12px rgba(251, 191, 36, 0.6)'
+          }}>
+            CHAPTER 2 COMPLETED!
+          </h1>
+
+          {/* 100% Progress & Challenge Count - Minimal clean pill */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '1.25rem',
+            background: 'rgba(0, 0, 0, 0.45)',
+            border: '1.5px solid rgba(255, 255, 255, 0.25)',
+            borderRadius: '50px',
+            padding: '0.45rem 1.65rem',
+            margin: '0.6rem 0',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
+          }}>
+            {/* Circular gauge */}
+            <div style={{ position: 'relative', width: '48px', height: '48px' }}>
+              <svg width="48" height="48" viewBox="0 0 48 48" style={{ transform: 'rotate(-90deg)' }}>
+                <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="4.5" />
+                <circle 
+                  cx="24" cy="24" r="20" 
+                  fill="none" 
+                  stroke="#10b981" 
+                  strokeWidth="4.5" 
+                  strokeLinecap="round" 
+                  strokeDasharray="125.6" 
+                  strokeDashoffset="0"
+                  style={{ filter: 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.8))' }}
+                />
+              </svg>
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.82rem',
+                fontWeight: '900',
+                color: '#34d399'
+              }}>
+                100%
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'left' }}>
+              <span style={{
+                fontSize: '1.45rem',
+                fontWeight: '900',
+                color: '#ffffff',
+                lineHeight: '1.1',
+                letterSpacing: '0.02em',
+                textShadow: '0 1px 4px rgba(0, 0, 0, 0.8)'
+              }}>
+                25 / 25
+              </span>
+              <span style={{
+                fontSize: '0.95rem',
+                fontWeight: '700',
+                color: '#38bdf8',
+                marginLeft: '0.75rem',
+                letterSpacing: '0.02em',
+                textShadow: '0 1px 4px rgba(0, 0, 0, 0.8)'
+              }}>
+                Challenges Completed — 100%
+              </span>
+            </div>
+          </div>
+
+          {/* Encouraging Message */}
+          <p style={{
+            fontSize: '1.2rem',
+            fontWeight: '700',
+            color: '#ffffff',
+            lineHeight: '1.5',
+            margin: '0.6rem 0 1.25rem 0',
+            textShadow: '0 2px 12px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.85)'
+          }}>
+            “Excellent work! You have successfully completed all the Chapter 2 challenges.”
+          </p>
+        </div>
+
+        {/* Bottom Action Area with ONLY Back to Chapters */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto', paddingTop: '1.5rem' }}>
+          <button
+            onClick={() => {
+              if (onBack) {
+                onBack();
+              }
+            }}
+            style={{
+              padding: '0.95rem 2.75rem',
+              fontSize: '1.1rem',
+              fontWeight: '800',
+              borderRadius: '14px',
+              cursor: 'pointer',
+              background: 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)',
+              border: '1.5px solid #38bdf8',
+              color: '#ffffff',
+              boxShadow: '0 6px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(14, 165, 233, 0.5)',
+              transition: 'all 0.25s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.6rem'
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(14, 165, 233, 0.7)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(14, 165, 233, 0.5)'; }}
+          >
+            🏠 Back to Chapters
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="split-frame" style={{ width: '100%', minHeight: '480px', background: 'var(--card-bg)' }}>
+    <div className="split-frame" style={{ width: '100%', minHeight: '480px', gap: '1.25rem' }}>
       {/* LEFT PANE: Question, Metadata */}
-      <div className="frame-page-left" style={{ background: 'rgba(85, 62, 51, 0.25)', padding: '2rem', display: 'flex', flexDirection: 'column' }}>
-        <div className="textbook-eyebrow" style={{ color: 'var(--accent-text)'}}>Chapter Challenge - Question {currentQuestion.id} of {chapterChallengeQuestions.length}</div>
-        <h2 style={{ fontFamily: 'var(--serif-font)', margin: '0.5rem 0 1rem 0', fontSize: '0.95rem', color: 'var(--text-heading)', whiteSpace: 'pre-line', fontWeight: '500', lineHeight: '1.7' }}>
+      <div className="frame-page-left" style={{ 
+        background: 'linear-gradient(145deg, rgba(12, 28, 62, 0.94) 0%, rgba(8, 18, 42, 0.96) 100%)', 
+        border: '1.5px solid rgba(56, 189, 248, 0.3)',
+        borderRadius: '14px',
+        padding: '1.5rem 1.75rem', 
+        display: 'flex', 
+        flexDirection: 'column',
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
+        backdropFilter: 'blur(12px)'
+      }}>
+        <div style={{ 
+          fontSize: '1.15rem', 
+          fontWeight: '900', 
+          color: '#fbbf24', 
+          textTransform: 'uppercase', 
+          letterSpacing: '0.05em',
+          textShadow: '0 0 12px rgba(251, 191, 36, 0.5), 0 2px 8px rgba(0, 0, 0, 0.5)',
+          borderBottom: '2px solid rgba(251, 191, 36, 0.35)', 
+          paddingBottom: '0.65rem', 
+          marginBottom: '1rem' 
+        }}>
+          CHAPTER CHALLENGE - QUESTION {currentQuestion.id} OF {chapterChallengeQuestions.length}
+        </div>
+        <h2 style={{ 
+          fontFamily: 'var(--serif-font)', 
+          margin: '0 0 1.25rem 0', 
+          fontSize: '1.18rem', 
+          color: '#ffffff', 
+          whiteSpace: 'pre-line', 
+          fontWeight: '600', 
+          lineHeight: '1.75',
+          textShadow: '0 1px 4px rgba(0, 0, 0, 0.6)'
+        }}>
           {currentQuestion.question}
         </h2>
         
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', fontSize: '0.7rem', marginBottom: '1.5rem' }}>
-            <span style={{background: 'rgba(0,0,0,0.1)', padding: '0.2rem 0.5rem', borderRadius: '10px'}}><b>Difficulty:</b> {currentQuestion.difficulty}</span>
-            <span style={{background: 'rgba(0,0,0,0.1)', padding: '0.2rem 0.5rem', borderRadius: '10px'}}><b>Concept:</b> {currentQuestion.concept}</span>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', fontSize: '0.82rem', marginTop: 'auto', paddingTop: '1rem' }}>
+            <span style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#bae6fd', padding: '0.3rem 0.75rem', borderRadius: '8px', fontWeight: '600' }}><b style={{ color: '#38bdf8' }}>Difficulty:</b> {currentQuestion.difficulty}</span>
+            <span style={{ background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', color: '#bae6fd', padding: '0.3rem 0.75rem', borderRadius: '8px', fontWeight: '600' }}><b style={{ color: '#38bdf8' }}>Concept:</b> {currentQuestion.concept}</span>
         </div>
       </div>
 
       {/* RIGHT PANE: Options + Explanation */}
-      <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1rem', padding: '2rem', transition: 'all 0.3s ease-in-out' }}>
+      <div className="frame-page-right" style={{ 
+        background: 'linear-gradient(145deg, rgba(8, 22, 52, 0.94) 0%, rgba(4, 12, 32, 0.96) 100%)',
+        border: '1.5px solid rgba(56, 189, 248, 0.3)',
+        borderRadius: '14px',
+        padding: '1.5rem 1.75rem', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'center', 
+        gap: '1rem', 
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(12px)',
+        transition: 'all 0.3s ease-in-out' 
+      }}>
         {/* Options container that moves up altogether when answered */}
         <div style={{ 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '0.75rem', 
+          gap: '0.85rem', 
           transform: isAnswered ? 'translateY(-10px)' : 'none', 
           transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)' 
         }}>
@@ -1762,25 +2520,33 @@ function ChapterChallengeOverview() {
             let buttonStyle = {
               display: 'block',
               width: '100%',
-              padding: '1rem 1.25rem',
-              border: '2px solid var(--border)',
+              padding: '1.1rem 1.35rem',
+              border: '1.5px solid rgba(56, 189, 248, 0.35)',
               borderRadius: '12px',
               textAlign: 'left',
-              background: 'var(--page-bg)',
-              cursor: 'pointer',
+              background: 'linear-gradient(135deg, rgba(14, 34, 76, 0.95) 0%, rgba(8, 22, 52, 0.98) 100%)',
+              color: '#fbbf24',
+              fontWeight: '700',
+              fontSize: '1.08rem',
+              cursor: isAnswered ? 'default' : 'pointer',
               transition: 'all 0.2s ease',
-              fontSize: '0.9rem'
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.35)',
+              lineHeight: '1.4'
             };
 
             if (isAnswered) {
               if (isCorrect) {
-                buttonStyle.background = 'rgba(16, 185, 129, 0.1)';
-                buttonStyle.borderColor = 'var(--success)';
+                buttonStyle.background = 'linear-gradient(135deg, rgba(6, 78, 59, 0.95) 0%, rgba(4, 47, 46, 0.98) 100%)';
+                buttonStyle.borderColor = '#10b981';
+                buttonStyle.color = '#34d399';
+                buttonStyle.boxShadow = '0 0 16px rgba(16, 185, 129, 0.4)';
               } else if (isSelected) {
-                buttonStyle.background = 'rgba(239, 68, 68, 0.1)';
-                buttonStyle.borderColor = 'var(--danger)';
+                buttonStyle.background = 'linear-gradient(135deg, rgba(127, 29, 29, 0.95) 0%, rgba(69, 10, 10, 0.98) 100%)';
+                buttonStyle.borderColor = '#ef4444';
+                buttonStyle.color = '#f87171';
+                buttonStyle.boxShadow = '0 0 16px rgba(239, 68, 68, 0.4)';
               } else {
-                 buttonStyle.opacity = 0.6;
+                 buttonStyle.opacity = 0.5;
               }
             }
 
@@ -1795,27 +2561,29 @@ function ChapterChallengeOverview() {
         {/* Explanation appears below, sliding/opening down */}
         {isAnswered && (
           <div style={{ 
-            background: 'rgba(0,0,0,0.04)', 
+            background: 'rgba(6, 16, 38, 0.85)', 
             borderRadius: '12px', 
-            padding: '1rem', 
+            padding: '1.15rem 1.25rem', 
             maxHeight: '260px', 
             overflowY: 'auto',
-            border: '1px solid var(--border-light)',
+            border: '1.5px solid rgba(56, 189, 248, 0.3)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.5rem',
+            gap: '0.65rem',
             animation: 'fadeIn 0.3s ease-out'
           }}>
-            <h4 style={{ margin: 0, color: 'var(--accent-text)', fontSize: '0.9rem' }}>Explanation</h4>
+            <h4 style={{ margin: 0, color: '#38bdf8', fontSize: '1rem', fontWeight: '800' }}>Explanation</h4>
             <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {currentQuestion.explanation.map((point, i) => (
                 <li 
                   key={i} 
                   className="explanation-point-animated"
                   style={{ 
-                    fontSize: '0.82rem', 
-                    color: 'var(--text-secondary)', 
-                    lineHeight: '1.5',
+                    fontSize: '0.92rem', 
+                    color: '#f8fafc', 
+                    lineHeight: '1.6',
+                    fontWeight: '500',
                     animationDelay: `${i * 0.25}s` 
                   }}
                 >
@@ -1829,13 +2597,19 @@ function ChapterChallengeOverview() {
               className="primary" 
               style={{ 
                 marginTop: '0.75rem', 
-                padding: '0.6rem 1.25rem', 
+                padding: '0.65rem 1.35rem', 
                 borderRadius: '20px', 
-                fontSize: '0.8rem',
+                fontSize: '0.88rem',
+                fontWeight: '800',
+                background: 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)',
+                border: '1.5px solid #38bdf8',
+                color: '#ffffff',
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(14, 165, 233, 0.4)',
                 alignSelf: 'flex-end'
               }}
             >
-              {currentQuestionIndex < chapterChallengeQuestions.length - 1 ? 'Next Question →' : 'Finish Quiz'}
+              {currentQuestionIndex < chapterChallengeQuestions.length - 1 ? 'Next Question →' : 'Finish Quiz ✓'}
             </button>
           </div>
         )}
@@ -4211,7 +4985,7 @@ export default function ChapterLearningLab({
       }
     };
 
-    // Use dark theme background ONLY for Activity 2.1 (Plants & Animals), Activity 2.2 (Let Us Appreciate), Activity 2.3 (Let Us Group), Activity 2.4 (Herbs/Shrubs/Trees), Activity 2.5 (Leaf Venation), Activity 2.6 (Roots), Activity 2.7 (Relate & Analyse), Activity 2.8 (Seeds), Activity 2.9 (Animal Movement), and Activity 2.10 (Surroundings)
+    // Use dark theme background for Chapter 2 activities, Key Vocabulary / Glossary, and Chapter Challenge
     const isDarkThemePage = chapterNum === 2 && (
       (activeLevel && (
         activeLevel.id === 'lvl-1' ||
@@ -4219,7 +4993,9 @@ export default function ChapterLearningLab({
         activeLevel.id === 'lvl-4' ||
         activeLevel.id === 'lvl-5' ||
         activeLevel.id === 'lvl-6' ||
-        activeLevel.id === 'lvl-7'
+        activeLevel.id === 'lvl-7' ||
+        activeLevel.id === 'lvl-8' ||
+        activeLevel.id === 'lvl-9'
       )) ||
       (activeActivitySectionId === 'sec-2-2-act' || 
        activeActivitySectionId === 'sec-2-3-act' || 
@@ -4229,7 +5005,9 @@ export default function ChapterLearningLab({
        activeActivitySectionId === 'sec-2-7-act' ||
        activeActivitySectionId === 'sec-2-8-act' ||
        activeActivitySectionId === 'sec-2-9-act' ||
-       activeActivitySectionId === 'sec-2-10-act') ||
+       activeActivitySectionId === 'sec-2-10-act' ||
+       activeActivitySectionId === 'sec-2-13-act' ||
+       activeActivitySectionId === 'sec-2-14-act') ||
       (activityFocused && activeActivity && (
         activeActivity.activityId === 'virtual_biodiversity' ||
         activeActivity.activityId === 'appreciating_biodiversity' ||
@@ -4733,11 +5511,26 @@ export default function ChapterLearningLab({
             >
               {/* Lesson pane header — overlaid on image for biodiversity, normal otherwise */}
               {activeLevel.lessonId !== 'biodiversity_concept' && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                  <span style={{ 
+                    fontSize: '1.28rem', 
+                    fontWeight: '900', 
+                    color: '#38bdf8', 
+                    textTransform: 'uppercase', 
+                    letterSpacing: '0.08em',
+                    textShadow: '0 0 16px rgba(56, 189, 248, 0.65), 0 2px 10px rgba(56, 189, 248, 0.45)'
+                  }}>
                     Lesson Pane
                   </span>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <span style={{ 
+                    fontSize: '0.85rem', 
+                    fontWeight: '700',
+                    color: '#bae6fd',
+                    background: 'rgba(14, 165, 233, 0.15)',
+                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    padding: '0.2rem 0.65rem',
+                    borderRadius: '6px'
+                  }}>
                     Level {activeLevelIdx + 1} of {totalLevels}
                   </span>
                 </div>
@@ -4758,7 +5551,18 @@ export default function ChapterLearningLab({
                   }}
                 />
               ) : activeLevel.lessonId === 'chapter_challenge_overview' ? (
-                <ChapterChallengeOverview />
+                <ChapterChallengeOverview 
+                  onBack={handleExitLab}
+                  onViewSummary={() => {
+                    setActiveLevelId('lvl-8');
+                    setActiveActivityIdx(0);
+                    setActiveSlide(0);
+                    setActivityFocused(false);
+                  }}
+                  onComplete={() => {
+                    setContentLessonProgress(prev => ({ ...prev, chapter_challenge_overview: true }));
+                  }}
+                />
               ) : (
                 renderLessonPaneInline(activeLevel.lessonId)
               )}
@@ -4779,21 +5583,22 @@ export default function ChapterLearningLab({
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
                   <h4 style={{ 
                     margin: 0, 
-                    fontSize: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '1.4rem' : '1.15rem', 
+                    fontSize: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '1.4rem' : '1.15rem', 
                     fontWeight: '900', 
-                    color: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '#38bdf8' : 'var(--text-heading)', 
+                    color: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '#38bdf8' : 'var(--text-heading)', 
                     display: 'flex', 
                     alignItems: 'center', 
-                    gap: '0.5rem' 
+                    gap: '0.5rem',
+                    textShadow: (activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '0 2px 10px rgba(56, 189, 248, 0.35)' : 'none'
                   }}>
                     <span>{activeActivity.title}</span>
                     {activeActivity.pg && (
                       <span style={{ 
-                        fontSize: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '0.9rem' : '0.75rem', 
+                        fontSize: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '0.9rem' : '0.75rem', 
                         fontWeight: 'bold', 
-                        color: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '#ffffff' : 'var(--text-muted)', 
-                        background: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '#1e3a8a' : 'var(--border)', 
-                        border: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab') ? '1px solid #38bdf8' : 'none',
+                        color: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '#ffffff' : 'var(--text-muted)', 
+                        background: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '#1e3a8a' : 'var(--border)', 
+                        border: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '1px solid #38bdf8' : 'none',
                         padding: '0.2rem 0.6rem', 
                         borderRadius: '6px' 
                       }}>
@@ -4885,8 +5690,10 @@ export default function ChapterLearningLab({
 
             {/* 3. BOTTOM PANE: Quiz & DYK Pane */}
             <div style={{ display: (chapterNum === 2 ? (!showBriefing && (activityFocused === null || activityFocused === false)) : (!isFullscreen || activityFocused !== true)) ? 'flex' : 'none', flexDirection: 'column', gap: '0.75rem' }}>
-              {(activeLevel.lessonId === 'vocabulary_glossary' || activeLevel.lessonId === 'chapter_challenge_overview')
+              {activeLevel.lessonId === 'vocabulary_glossary'
                   ? <SummaryPane lessonId={activeLevel.lessonId} />
+                  : activeLevel.lessonId === 'chapter_challenge_overview'
+                  ? null
                   : renderQuizAndDykPane(activeLevel.lessonId)
               }
             </div>

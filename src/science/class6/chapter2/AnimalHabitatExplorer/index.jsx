@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
-import { ArrowLeft, RefreshCw, Award, Compass, HelpCircle, Check, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Award, Compass, HelpCircle, Check, CheckCircle2, GripVertical, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
+
+import spiderMonkeyImg from '../../../../assets/wildlife/spider_monkey.jpg';
+import goldenMahseerImg from '../../../../assets/wildlife/golden_mahseer.jpg';
+import girCowImg from '../../../../assets/wildlife/gir_cow.jpg';
+import leopardFrogImg from '../../../../assets/wildlife/leopard_frog.jpg';
+import jungleCrowImg from '../../../../assets/wildlife/jungle_crow.jpg';
+
+import treeCanopyImg from '../../../../assets/wildlife/tree_canopy.jpg';
+import freshwaterPondImg from '../../../../assets/wildlife/freshwater_pond.jpg';
+import openGrasslandImg from '../../../../assets/wildlife/open_grassland.jpg';
+import pondShorelineImg from '../../../../assets/wildlife/pond_shoreline.jpg';
+import nestingBranchesImg from '../../../../assets/wildlife/nesting_branches.jpg';
 
 const ANIMALS = [
   {
@@ -14,7 +26,9 @@ const ANIMALS = [
     movement: 'climb',
     movementLabel: 'Climbing/Swinging',
     hint: 'Lives high up in branches and loves sweet forest berries.',
-    svgIndex: 0
+    svgIndex: 0,
+    image: spiderMonkeyImg,
+    tag: 'Arboreal Climber'
   },
   {
     id: 'fish',
@@ -26,7 +40,9 @@ const ANIMALS = [
     movement: 'swim',
     movementLabel: 'Swimming using fins',
     hint: 'Breathes through gills, lives entirely underwater.',
-    svgIndex: 1
+    svgIndex: 1,
+    image: goldenMahseerImg,
+    tag: 'Freshwater Swimmer'
   },
   {
     id: 'cow',
@@ -38,7 +54,9 @@ const ANIMALS = [
     movement: 'walk',
     movementLabel: 'Walking on four hooves',
     hint: 'Grazes on large plains and walks on sturdy hooves.',
-    svgIndex: 2
+    svgIndex: 2,
+    image: girCowImg,
+    tag: 'Grassland Grazer'
   },
   {
     id: 'frog',
@@ -50,7 +68,9 @@ const ANIMALS = [
     movement: 'hop',
     movementLabel: 'Leaping/Hopping',
     hint: 'Likes moist banks, hops to catch bugs with a sticky tongue.',
-    svgIndex: 3
+    svgIndex: 3,
+    image: leopardFrogImg,
+    tag: 'Amphibious Leaper'
   },
   {
     id: 'crow',
@@ -62,16 +82,18 @@ const ANIMALS = [
     movement: 'fly',
     movementLabel: 'Flying with wings',
     hint: 'Nests on topmost branches, flies long distances searching for grains.',
-    svgIndex: 4
+    svgIndex: 4,
+    image: jungleCrowImg,
+    tag: 'Aerial Forager'
   }
 ];
 
 const HABITATS = [
-  { id: 'tree_canopy', name: 'Tree Canopy' },
-  { id: 'pond', name: 'Freshwater Pond' },
-  { id: 'grassland', name: 'Open Grassland' },
-  { id: 'pond_shore', name: 'Pond Shoreline' },
-  { id: 'branches', name: 'Nesting Branches' }
+  { id: 'tree_canopy', name: 'Tree Canopy', image: treeCanopyImg, desc: 'Dense upper tree foliage & fruit branches' },
+  { id: 'pond', name: 'Freshwater Pond', image: freshwaterPondImg, desc: 'Aquatic freshwater ecosystem' },
+  { id: 'grassland', name: 'Open Grassland', image: openGrasslandImg, desc: 'Expansive sunlit plains & grazing pastures' },
+  { id: 'pond_shore', name: 'Pond Shoreline', image: pondShorelineImg, desc: 'Moist shoreline wetland & damp bank' },
+  { id: 'branches', name: 'Nesting Branches', image: nestingBranchesImg, desc: 'High forest canopy branches & perches' }
 ];
 
 const FOODS = [
@@ -214,13 +236,15 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
     }}>
       {/* Sidebar Progress Controller */}
       <aside style={{
-        background: 'rgba(30, 41, 59, 0.88)',
-        borderRight: '1px solid rgba(255,255,255,0.05)',
-        padding: '1.25rem',
+        background: 'rgba(8, 20, 45, 0.94)',
+        backdropFilter: 'blur(16px)',
+        borderRight: '1.5px solid rgba(56, 189, 248, 0.25)',
+        padding: '1.35rem 1.25rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        boxShadow: '4px 0 24px rgba(0,0,0,0.4)'
       }}>
         <div>
           {/* Header Back Button */}
@@ -232,100 +256,157 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
               color: '#38bdf8',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
+              gap: '0.45rem',
               cursor: 'pointer',
-              fontSize: '0.85rem',
+              fontSize: '0.95rem',
+              fontWeight: 700,
               padding: 0,
-              marginBottom: '1rem'
+              marginBottom: '1.25rem'
             }}
           >
-            <ArrowLeft size={16} /> Back to Chapters
+            <ArrowLeft size={18} /> Back to Chapters
           </button>
 
           {/* Mission Deck */}
           <div style={{
-            background: 'rgba(56, 189, 248, 0.08)',
-            borderLeft: '3px solid #38bdf8',
-            padding: '0.75rem',
-            borderRadius: '0 8px 8px 0',
-            marginBottom: '1.25rem'
+            background: 'rgba(14, 165, 233, 0.14)',
+            borderLeft: '4px solid #38bdf8',
+            padding: '0.9rem 1rem',
+            borderRadius: '0 10px 10px 0',
+            marginBottom: '1.5rem',
+            boxShadow: '0 4px 14px rgba(0,0,0,0.25)'
           }}>
-            <strong style={{ color: '#bae6fd', fontSize: '0.75rem', textTransform: 'uppercase', display: 'block', marginBottom: '0.2rem' }}>
+            <strong style={{ color: '#38bdf8', fontSize: '0.9rem', fontWeight: 900, textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem', letterSpacing: '0.06em' }}>
               Phase {phase} of 3:
             </strong>
-            <span style={{ fontSize: '0.8rem', lineHeight: '1.4' }}>
+            <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#f8fafc', lineHeight: '1.5', display: 'block' }}>
               {phase === 1 && 'Drag animals to their native environment match boxes.'}
               {phase === 2 && 'Deliver the correct nutritional diet to each animal.'}
               {phase === 3 && 'Identify adaptations by selecting the correct mode of movement.'}
             </span>
           </div>
 
-          {/* Phase Indicators */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
+          {/* Vertical Progress Timeline */}
+          <div style={{ display: 'flex', flexDirection: 'column', position: 'relative', marginBottom: '1.75rem' }}>
+            {/* Step 1: Habitat Match */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.8rem',
-              color: phase >= 1 ? '#38bdf8' : '#64748b',
-              fontWeight: phase === 1 ? 'bold' : 'normal'
+              gap: '0.75rem',
+              fontSize: phase === 1 ? '1.05rem' : '0.95rem',
+              color: phase >= 1 ? '#ffffff' : '#64748b',
+              fontWeight: phase === 1 ? 900 : 700,
+              background: phase === 1 ? 'rgba(14, 165, 233, 0.2)' : 'transparent',
+              border: phase === 1 ? '1.5px solid #38bdf8' : '1.5px solid transparent',
+              borderRadius: '10px',
+              padding: '0.6rem 0.75rem',
+              boxShadow: phase === 1 ? '0 0 16px rgba(56, 189, 248, 0.3)' : 'none',
+              transition: 'all 0.2s ease'
             }}>
               <div style={{
-                width: '18px',
-                height: '18px',
+                width: '26px',
+                height: '26px',
                 borderRadius: '50%',
-                background: phase > 1 ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
-                border: '1px solid #0ea5e9',
+                background: phase > 1 ? '#0ea5e9' : (phase === 1 ? '#0284c7' : 'rgba(255,255,255,0.05)'),
+                border: phase >= 1 ? '2px solid #38bdf8' : '1.5px solid rgba(255,255,255,0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '0.7rem'
-              }}>1</div>
-              <span>Habitat Match</span>
+                fontSize: '0.85rem',
+                fontWeight: 900,
+                color: '#ffffff',
+                boxShadow: phase === 1 ? '0 0 10px rgba(56, 189, 248, 0.5)' : 'none'
+              }}>
+                {phase > 1 ? <Check size={14} color="#ffffff" /> : '1'}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>1 Habitat Match</span>
+                {phase === 1 && (
+                  <span style={{ fontSize: '0.75rem', color: '#7dd3fc', fontWeight: 600 }}>Active Step: Classify 5 Animals</span>
+                )}
+              </div>
             </div>
 
+            {/* Connecting line */}
+            <div style={{ width: '2px', height: '14px', background: phase > 1 ? '#0ea5e9' : 'rgba(56, 189, 248, 0.2)', marginLeft: '19px' }} />
+
+            {/* Step 2: Dietary Feeding */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.8rem',
-              color: phase >= 2 ? '#38bdf8' : '#64748b',
-              fontWeight: phase === 2 ? 'bold' : 'normal'
+              gap: '0.75rem',
+              fontSize: phase === 2 ? '1.05rem' : '0.95rem',
+              color: phase >= 2 ? '#ffffff' : '#94a3b8',
+              fontWeight: phase === 2 ? 900 : 700,
+              background: phase === 2 ? 'rgba(14, 165, 233, 0.2)' : 'transparent',
+              border: phase === 2 ? '1.5px solid #38bdf8' : '1.5px solid transparent',
+              borderRadius: '10px',
+              padding: '0.6rem 0.75rem',
+              boxShadow: phase === 2 ? '0 0 16px rgba(56, 189, 248, 0.3)' : 'none',
+              transition: 'all 0.2s ease'
             }}>
               <div style={{
-                width: '18px',
-                height: '18px',
+                width: '26px',
+                height: '26px',
                 borderRadius: '50%',
-                background: phase > 2 ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
-                border: '1px solid #0ea5e9',
+                background: phase > 2 ? '#0ea5e9' : (phase === 2 ? '#0284c7' : 'rgba(255,255,255,0.05)'),
+                border: phase >= 2 ? '2px solid #38bdf8' : '1.5px solid rgba(255,255,255,0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '0.7rem'
-              }}>2</div>
-              <span>Dietary Feeding</span>
+                fontSize: '0.85rem',
+                fontWeight: 900,
+                color: '#ffffff',
+                boxShadow: phase === 2 ? '0 0 10px rgba(56, 189, 248, 0.5)' : 'none'
+              }}>
+                {phase > 2 ? <Check size={14} color="#ffffff" /> : '2'}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>2 Dietary Feeding</span>
+                {phase === 2 && (
+                  <span style={{ fontSize: '0.75rem', color: '#7dd3fc', fontWeight: 600 }}>Active Step: Deliver Diets</span>
+                )}
+              </div>
             </div>
 
+            {/* Connecting line */}
+            <div style={{ width: '2px', height: '14px', background: phase > 2 ? '#0ea5e9' : 'rgba(56, 189, 248, 0.2)', marginLeft: '19px' }} />
+
+            {/* Step 3: Locomotion Adaptation */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.8rem',
-              color: phase >= 3 ? '#38bdf8' : '#64748b',
-              fontWeight: phase === 3 ? 'bold' : 'normal'
+              gap: '0.75rem',
+              fontSize: phase === 3 ? '1.05rem' : '0.95rem',
+              color: phase >= 3 ? '#ffffff' : '#94a3b8',
+              fontWeight: phase === 3 ? 900 : 700,
+              background: phase === 3 ? 'rgba(14, 165, 233, 0.2)' : 'transparent',
+              border: phase === 3 ? '1.5px solid #38bdf8' : '1.5px solid transparent',
+              borderRadius: '10px',
+              padding: '0.6rem 0.75rem',
+              boxShadow: phase === 3 ? '0 0 16px rgba(56, 189, 248, 0.3)' : 'none',
+              transition: 'all 0.2s ease'
             }}>
               <div style={{
-                width: '18px',
-                height: '18px',
+                width: '26px',
+                height: '26px',
                 borderRadius: '50%',
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid #0ea5e9',
+                background: phase >= 3 ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
+                border: phase >= 3 ? '2px solid #38bdf8' : '1.5px solid rgba(255,255,255,0.2)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '0.7rem'
+                fontSize: '0.85rem',
+                fontWeight: 900,
+                color: '#ffffff',
+                boxShadow: phase >= 3 ? '0 0 10px rgba(56, 189, 248, 0.5)' : 'none'
               }}>3</div>
-              <span>Locomotion Adaptation</span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>3 Locomotion Adaptation</span>
+                {phase === 3 && (
+                  <span style={{ fontSize: '0.75rem', color: '#7dd3fc', fontWeight: 600 }}>Active Step: Movement Modes</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -341,22 +422,28 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
             }
             style={{
               width: '100%',
-              background: '#0ea5e9',
-              border: 'none',
+              background: 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)',
+              border: '1px solid #38bdf8',
               color: '#ffffff',
-              padding: '0.6rem',
-              borderRadius: '6px',
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
+              padding: '0.85rem 1rem',
+              borderRadius: '10px',
+              fontSize: '1rem',
+              fontWeight: 800,
               cursor: 'pointer',
+              boxShadow: '0 4px 16px rgba(14, 165, 233, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
               opacity: (
                 (phase === 1 && !isHabitatPhaseDone) ||
                 (phase === 2 && !isFeedingPhaseDone) ||
                 (phase === 3 && !isMovementPhaseDone)
-              ) ? 0.4 : 1
+              ) ? 0.45 : 1,
+              transition: 'all 0.2s ease'
             }}
           >
-            {phase === 3 ? 'Get Certificate' : 'Proceed to Next Phase'}
+            {phase === 3 ? 'Get Certificate' : 'Proceed to Next Phase →'}
           </button>
 
           <button
@@ -364,12 +451,14 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
             style={{
               background: 'none',
               border: 'none',
-              color: '#64748b',
-              fontSize: '0.75rem',
+              color: '#94a3b8',
+              fontSize: '0.85rem',
+              fontWeight: 700,
               cursor: 'pointer',
               width: '100%',
               textAlign: 'center',
-              marginTop: '0.5rem'
+              marginTop: '0.75rem',
+              transition: 'color 0.2s'
             }}
           >
             Reset Adventure
@@ -379,7 +468,7 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
 
       {/* Main Sandbox Interactive Field */}
       <main style={{
-        padding: '1.5rem',
+        padding: '1.25rem 1.5rem',
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
@@ -387,19 +476,39 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
       }}>
         {/* Phase 1 Canvas */}
         {phase === 1 && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '1.5rem', height: '100%' }}>
-            {/* Left: Animal Source cards list */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'calc(40% - 0.75rem) calc(60% - 0.75rem)', gap: '1.5rem', height: '100%' }}>
+            {/* Left: Animal Source cards list (40% width) */}
             <div style={{
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.05)',
-              borderRadius: '12px',
+              background: 'linear-gradient(145deg, rgba(12, 28, 62, 0.92) 0%, rgba(8, 18, 42, 0.95) 100%)',
+              border: '1.5px solid rgba(56, 189, 248, 0.28)',
+              borderRadius: '14px',
               padding: '1.25rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem'
+              gap: '1rem',
+              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
+              backdropFilter: 'blur(12px)'
             }}>
-              <h3 style={{ margin: 0, fontSize: '1rem', color: '#38bdf8' }}>Drag Animals</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.75rem' }}>
+              <div>
+                <h3 style={{
+                  margin: 0,
+                  fontSize: '1.25rem',
+                  fontWeight: 900,
+                  color: '#38bdf8',
+                  textShadow: '0 2px 8px rgba(56, 189, 248, 0.3)',
+                  letterSpacing: '0.02em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem'
+                }}>
+                  <span>🐾</span> Drag Animals
+                </h3>
+                <span style={{ fontSize: '0.85rem', color: '#94a3b8', display: 'block', marginTop: '0.2rem' }}>
+                  Drag each species to its matching native habitat
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', overflowY: 'auto' }}>
                 {ANIMALS.map(animal => {
                   const isMatched = matches[animal.id] !== null;
                   if (isMatched) return null;
@@ -410,32 +519,98 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
                       draggable
                       onDragStart={(e) => handleDragStartAnimal(e, animal.id)}
                       style={{
-                        background: '#334155',
-                        border: '1.5px solid #475569',
-                        padding: '0.75rem',
-                        borderRadius: '8px',
+                        background: 'linear-gradient(135deg, rgba(20, 48, 98, 0.92) 0%, rgba(10, 26, 62, 0.96) 100%)',
+                        border: '1.5px solid rgba(56, 189, 248, 0.35)',
+                        borderRadius: '12px',
+                        padding: '0.65rem 0.85rem',
                         cursor: 'grab',
-                        textAlign: 'center',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '0.75rem',
+                        boxShadow: '0 4px 14px rgba(0,0,0,0.35)',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
                       }}
                     >
-                      {animal.name}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{
+                          width: '58px',
+                          height: '46px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          border: '1px solid rgba(56, 189, 248, 0.35)',
+                          flexShrink: 0,
+                          background: '#0a1936'
+                        }}>
+                          <img 
+                            src={animal.image} 
+                            alt={animal.name} 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+                          />
+                        </div>
+                        <div>
+                          <strong style={{ fontSize: '0.98rem', fontWeight: 800, color: '#ffffff', display: 'block', lineHeight: '1.2' }}>
+                            {animal.name}
+                          </strong>
+                          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#7dd3fc', marginTop: '0.2rem', display: 'block' }}>
+                            {animal.tag}
+                          </span>
+                        </div>
+                      </div>
+                      <GripVertical size={18} color="rgba(56, 189, 248, 0.6)" style={{ flexShrink: 0 }} />
                     </div>
                   );
                 })}
+
+                {isHabitatPhaseDone && (
+                  <div style={{
+                    padding: '1rem',
+                    borderRadius: '10px',
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    border: '1.5px solid #10b981',
+                    textAlign: 'center',
+                    color: '#34d399',
+                    fontWeight: 700,
+                    fontSize: '0.9rem'
+                  }}>
+                    ✓ All 5 species matched to native habitats!
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Right: Drop targets list */}
+            {/* Right: Drop targets list (60% width - Realistic habitat cards) */}
             <div style={{
+              background: 'linear-gradient(145deg, rgba(8, 22, 52, 0.94) 0%, rgba(4, 12, 32, 0.96) 100%)',
+              border: '1.5px solid rgba(56, 189, 248, 0.35)',
+              borderRadius: '14px',
+              padding: '1.25rem 1.35rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.75rem',
-              overflowY: 'auto'
+              gap: '0.85rem',
+              overflowY: 'auto',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+              backdropFilter: 'blur(12px)'
             }}>
-              <h3 style={{ margin: 0, fontSize: '1rem', color: '#fbbf24' }}>Environments</h3>
+              <div>
+                <h3 style={{
+                  margin: 0,
+                  fontSize: '1.35rem',
+                  fontWeight: 900,
+                  color: '#38bdf8',
+                  textShadow: '0 2px 10px rgba(56, 189, 248, 0.35)',
+                  letterSpacing: '0.02em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  <span>🗺️</span> Environments
+                </h3>
+                <span style={{ fontSize: '0.85rem', color: '#94a3b8', display: 'block', marginTop: '0.2rem' }}>
+                  Target ecological zones & living surroundings (Table 2.6)
+                </span>
+              </div>
+
               {HABITATS.map(hab => {
                 // Find if an animal is matching this habitat
                 const matchedAnimalId = Object.keys(matches).find(k => matches[k] === hab.id);
@@ -447,37 +622,93 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={(e) => handleDropHabitat(e, hab.id)}
                     style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1.5px dashed rgba(255,255,255,0.15)',
-                      borderRadius: '10px',
-                      padding: '1rem',
-                      textAlign: 'center',
-                      minHeight: '70px',
+                      background: animal 
+                        ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(14, 165, 233, 0.14) 100%)' 
+                        : 'rgba(12, 28, 65, 0.88)',
+                      border: animal 
+                        ? '1.5px solid #10b981' 
+                        : '1.5px dashed rgba(56, 189, 248, 0.45)',
+                      borderRadius: '12px',
+                      padding: '0.65rem 0.95rem',
+                      minHeight: '66px',
                       display: 'flex',
-                      flexDirection: 'column',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      transition: 'all 0.2s ease'
+                      justifyContent: 'space-between',
+                      gap: '1rem',
+                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: animal ? '0 0 16px rgba(16, 185, 129, 0.25)' : '0 4px 12px rgba(0,0,0,0.25)'
                     }}
                   >
-                    {animal ? (
+                    {/* Left: Real Habitat photograph & details */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <div style={{
-                        background: 'rgba(14, 165, 233, 0.15)',
-                        border: '1px solid #0ea5e9',
-                        padding: '0.4rem 0.8rem',
-                        borderRadius: '6px',
-                        color: '#38bdf8',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem'
+                        width: '68px',
+                        height: '46px',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        border: '1px solid rgba(56, 189, 248, 0.3)',
+                        flexShrink: 0,
+                        background: '#0a1936'
                       }}>
-                        <Check size={14} /> {animal.name} → {hab.name}
+                        <img 
+                          src={hab.image} 
+                          alt={hab.name} 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+                        />
                       </div>
-                    ) : (
-                      <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Drop animal here for {hab.name}</span>
-                    )}
+                      <div>
+                        <strong style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', display: 'block' }}>
+                          {hab.name}
+                        </strong>
+                        <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginTop: '0.15rem' }}>
+                          {hab.desc}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Right: Drop Target / Matched Animal Photo & Status */}
+                    <div>
+                      {animal ? (
+                        <div style={{
+                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(14, 165, 233, 0.2) 100%)',
+                          border: '1.5px solid #10b981',
+                          padding: '0.4rem 0.75rem',
+                          borderRadius: '8px',
+                          color: '#ffffff',
+                          fontSize: '0.92rem',
+                          fontWeight: 800,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          boxShadow: '0 0 12px rgba(16, 185, 129, 0.35)'
+                        }}>
+                          <CheckCircle2 size={16} color="#34d399" />
+                          <div style={{
+                            width: '32px',
+                            height: '24px',
+                            borderRadius: '4px',
+                            overflow: 'hidden',
+                            border: '1px solid #34d399'
+                          }}>
+                            <img src={animal.image} alt={animal.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          </div>
+                          <span>{animal.name}</span>
+                        </div>
+                      ) : (
+                        <div style={{
+                          background: 'rgba(14, 165, 233, 0.08)',
+                          border: '1.5px dashed rgba(56, 189, 248, 0.45)',
+                          borderRadius: '8px',
+                          padding: '0.45rem 0.85rem',
+                          color: '#bae6fd',
+                          fontSize: '0.88rem',
+                          fontWeight: 700,
+                          whiteSpace: 'nowrap'
+                        }}>
+                          Drop animal here
+                        </div>
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -542,14 +773,26 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
                       background: isFed ? 'rgba(52, 211, 153, 0.08)' : 'rgba(255,255,255,0.03)',
                       border: isFed ? '1px solid #10b981' : '1px dashed rgba(255,255,255,0.1)',
                       borderRadius: '8px',
-                      padding: '0.75rem 1rem',
+                      padding: '0.6rem 0.9rem',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      fontSize: '0.8rem'
+                      fontSize: '0.85rem'
                     }}
                   >
-                    <strong>{animal.name}</strong>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <div style={{
+                        width: '34px',
+                        height: '28px',
+                        borderRadius: '5px',
+                        overflow: 'hidden',
+                        border: '1px solid rgba(56, 189, 248, 0.3)',
+                        flexShrink: 0
+                      }}>
+                        <img src={animal.image} alt={animal.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+                      <strong>{animal.name}</strong>
+                    </div>
                     {isFed ? (
                       <span style={{ color: '#34d399', fontWeight: 'bold' }}>✓ Fed {animal.foodLabel}</span>
                     ) : (
@@ -564,9 +807,21 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
 
         {/* Phase 3 Canvas */}
         {phase === 3 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto' }}>
-            <h3 style={{ margin: 0, fontSize: '1rem', color: '#38bdf8' }}>Select Locomotion Adaptation</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', overflowY: 'auto' }}>
+            <h3 style={{
+              margin: 0,
+              fontSize: '1.35rem',
+              fontWeight: 900,
+              color: '#38bdf8',
+              textShadow: '0 2px 10px rgba(56, 189, 248, 0.35)',
+              letterSpacing: '0.02em',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              Select Locomotion Adaptation
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {ANIMALS.map(animal => {
                 const isCorrect = locomotion[animal.id] === animal.movement;
 
@@ -574,36 +829,62 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
                   <div
                     key={animal.id}
                     style={{
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid rgba(255,255,255,0.05)',
-                      borderRadius: '10px',
-                      padding: '1rem',
+                      background: 'linear-gradient(135deg, rgba(12, 28, 62, 0.95) 0%, rgba(8, 18, 42, 0.97) 100%)',
+                      border: '1.5px solid rgba(56, 189, 248, 0.28)',
+                      borderRadius: '12px',
+                      padding: '1.15rem 1.35rem',
                       display: 'grid',
-                      gridTemplateColumns: '150px 1fr 120px',
+                      gridTemplateColumns: '220px 1fr 140px',
                       alignItems: 'center',
-                      gap: '1rem'
+                      gap: '1.25rem',
+                      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.45)',
+                      backdropFilter: 'blur(12px)'
                     }}
                   >
-                    <div>
-                      <strong>{animal.name}</strong>
-                      <span style={{ display: 'block', fontSize: '0.7rem', color: '#64748b' }}>In: {animal.habitatLabel}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <div style={{
+                        width: '46px',
+                        height: '38px',
+                        borderRadius: '6px',
+                        overflow: 'hidden',
+                        border: '1px solid rgba(56, 189, 248, 0.35)',
+                        flexShrink: 0,
+                        background: '#0a1936'
+                      }}>
+                        <img src={animal.image} alt={animal.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+                      <div>
+                        <strong style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', display: 'block', letterSpacing: '0.01em' }}>
+                          {animal.name}
+                        </strong>
+                        <span style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#7dd3fc', marginTop: '0.2rem' }}>
+                          In: {animal.habitatLabel}
+                        </span>
+                      </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
                       {MOVEMENTS.map(mode => (
                         <button
                           key={mode.id}
                           onClick={() => handleSelectMovement(animal.id, mode.id)}
                           style={{
                             background: locomotion[animal.id] === mode.id 
-                              ? (mode.id === animal.movement ? '#10b981' : '#ef4444')
-                              : 'rgba(255,255,255,0.03)',
-                            border: '1px solid rgba(255,255,255,0.1)',
+                              ? (mode.id === animal.movement ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)' : 'linear-gradient(135deg, #b91c1c 0%, #ef4444 100%)')
+                              : 'linear-gradient(180deg, rgba(26, 54, 105, 0.85) 0%, rgba(15, 32, 68, 0.9) 100%)',
+                            border: locomotion[animal.id] === mode.id
+                              ? (mode.id === animal.movement ? '1.5px solid #34d399' : '1.5px solid #f87171')
+                              : '1.5px solid rgba(56, 189, 248, 0.35)',
                             color: '#ffffff',
-                            padding: '0.35rem 0.6rem',
-                            borderRadius: '6px',
-                            fontSize: '0.7rem',
-                            cursor: 'pointer'
+                            padding: '0.55rem 0.95rem',
+                            borderRadius: '8px',
+                            fontSize: '0.85rem',
+                            fontWeight: locomotion[animal.id] === mode.id ? 800 : 700,
+                            cursor: 'pointer',
+                            boxShadow: locomotion[animal.id] === mode.id
+                              ? (mode.id === animal.movement ? '0 0 14px rgba(52, 211, 153, 0.5)' : '0 0 14px rgba(239, 68, 68, 0.5)')
+                              : '0 2px 8px rgba(0, 0, 0, 0.25)',
+                            transition: 'all 0.2s ease'
                           }}
                         >
                           {mode.name}
@@ -611,13 +892,19 @@ export default function AnimalHabitatExplorer({ onBackToDashboard, initialPhase 
                       ))}
                     </div>
 
-                    <div style={{ textAlign: 'right', fontSize: '0.75rem' }}>
+                    <div style={{ textAlign: 'right', fontSize: '0.9rem' }}>
                       {isCorrect ? (
-                        <span style={{ color: '#34d399', fontWeight: 'bold' }}>✓ Adapt Ready</span>
+                        <span style={{ color: '#34d399', fontWeight: 800, fontSize: '0.95rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                          ✓ Adapt Ready
+                        </span>
                       ) : locomotion[animal.id] !== null ? (
-                        <span style={{ color: '#f87171' }}>✗ Incorrect</span>
+                        <span style={{ color: '#f87171', fontWeight: 800, fontSize: '0.95rem' }}>
+                          ✗ Incorrect
+                        </span>
                       ) : (
-                        <span style={{ color: '#64748b' }}>Select mode</span>
+                        <span style={{ color: '#bae6fd', fontWeight: 700, fontSize: '0.9rem', background: 'rgba(56, 189, 248, 0.12)', padding: '0.35rem 0.7rem', borderRadius: '6px', border: '1px solid rgba(56, 189, 248, 0.3)', display: 'inline-block' }}>
+                          Select mode
+                        </span>
                       )}
                     </div>
                   </div>
