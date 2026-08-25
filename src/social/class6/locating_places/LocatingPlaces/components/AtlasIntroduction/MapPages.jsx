@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Lightbulb, X, Globe2, Image as ImageIcon, Maximize2, Minimize2, Mountain } from 'lucide-react';
-import physicalImg from './assets/physical-map-real.jpg';
+import physicalImg from './assets/printed_physical_map.jpeg';
 import politicalImg from './assets/political.png';
 import thematicMapImg from './assets/thematic-map.jpeg';
 import ContentScrollNav, { useScrollNav } from '../ContentScrollNav';
@@ -146,23 +146,47 @@ const PageLayout = ({
       let firstChunk = true;
       let guard = 0;
       while (rest.length && guard++ < 24) {
+        if (cur.some(b => b.type === 'features')) {
+          flush();
+        }
         const avail = left - (cur.length ? m.gap : 0) - m.chrome + m.rowGap;
         let rows = Math.floor(avail / (m.tile + m.rowGap));
         if (rows < 1) {
           if (cur.length) { flush(); continue; }
-          rows = 1;                                  // never loop on an empty page
+          rows = 1; // never loop on an empty page
         }
-        const take = maxPerChunk ? Math.min(rows * m.cols, maxPerChunk) : rows * m.cols;
+        const take = Math.max(1, maxPerChunk ? Math.min(rows * m.cols, maxPerChunk) : rows * m.cols);
         const chunk = rest.slice(0, take);
         rest = rest.slice(take);
         place({ type: 'features', list: chunk, continued: !firstChunk }, featuresH(chunk.length));
         firstChunk = false;
+        if (rest.length) {
+          flush();
+        }
       }
 
       place({ type: 'colors' }, m.colors);
       place({ type: 'why' }, m.why);
       flush();
-      return pages;
+
+      // Post-merge safeguard: guarantee each page has at most ONE consolidated features box
+      const mergedPages = pages.map(pg => {
+        const featBlocks = pg.filter(b => b.type === 'features');
+        if (featBlocks.length <= 1) return pg;
+        const combinedList = featBlocks.flatMap(b => b.list);
+        const firstFeatIndex = pg.findIndex(b => b.type === 'features');
+        const isContinued = featBlocks[0].continued;
+        return pg.reduce((acc, b, idx) => {
+          if (b.type !== 'features') {
+            acc.push(b);
+          } else if (idx === firstFeatIndex) {
+            acc.push({ type: 'features', list: combinedList, continued: isContinued });
+          }
+          return acc;
+        }, []);
+      });
+
+      return mergedPages;
     };
 
     const chunkCount = pgs => pgs.reduce((n, pg) => n + pg.filter(b => b.type === 'features').length, 0);
@@ -501,7 +525,7 @@ const PageLayout = ({
           </div>
 
           <img
-            src={imageSrc || (globeMode === 'physical' ? '/maps/physical_map.jpg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
+            src={imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
             alt={title}
             style={{
               maxWidth: '100%',
@@ -513,7 +537,7 @@ const PageLayout = ({
             onError={(e) => {
               if (e.currentTarget.dataset.retried) return;
               e.currentTarget.dataset.retried = 'true';
-              if (globeMode === 'physical') e.currentTarget.src = '/maps/physical_map.jpg';
+              if (globeMode === 'physical') e.currentTarget.src = '/maps/printed_physical_map.jpeg';
               else if (globeMode === 'political') e.currentTarget.src = '/maps/political_map.png';
               else e.currentTarget.src = '/maps/thematic_map.jpg';
             }}
@@ -701,7 +725,7 @@ const PageLayout = ({
             overflow: 'auto'
           }}>
             <img
-              src={imageSrc || (globeMode === 'physical' ? '/maps/physical_map.jpg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
+              src={imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
               alt={title}
               style={{
                 maxWidth: '100%',
@@ -714,7 +738,7 @@ const PageLayout = ({
               onError={(e) => {
                 if (e.currentTarget.dataset.retried) return;
                 e.currentTarget.dataset.retried = 'true';
-                if (globeMode === 'physical') e.currentTarget.src = '/maps/physical_map.jpg';
+                if (globeMode === 'physical') e.currentTarget.src = '/maps/printed_physical_map.jpeg';
                 else if (globeMode === 'political') e.currentTarget.src = '/maps/political_map.png';
                 else e.currentTarget.src = '/maps/thematic_map.jpg';
               }}
