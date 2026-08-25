@@ -10,6 +10,7 @@ import VenationRootCorrelationLab from "../science/class6/chapter2/VenationRootC
 import SeedDissectionLab from "../science/class6/chapter2/SeedDissectionLab";
 import AnimalHabitatExplorerActivity from "../science/class6/chapter2/AnimalHabitatExplorer";
 import { useTheme } from "../ThemeContext";
+import ErrorBoundary from "./ErrorBoundary";
 
 export default function LabWorkspace({
   classNum,
@@ -739,7 +740,9 @@ export default function LabWorkspace({
                     <span style={{ fontSize: "11px", color: "var(--item-text-muted)", fontWeight: "bold" }}>Scroll down to play with our custom simulation!</span>
               </div>
               <div style={{ width: "100%", padding: "0 1.5rem 3rem 1.5rem", boxSizing: "border-box" }}>
-                {renderCustomSandbox()}
+                <ErrorBoundary>
+                  {renderCustomSandbox()}
+                </ErrorBoundary>
               </div>
             </div>
           )}

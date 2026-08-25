@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, OrbitControls, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Hand, RotateCcw, Shapes, Flag, BookOpen, Maximize2, Minimize2 } from 'lucide-react';
+import { Hand, RotateCcw, Shapes, Flag, BookOpen, Maximize2, Minimize2, CheckCircle, ArrowRight } from 'lucide-react';
 import * as THREE from 'three';
 
 // ---------------------------------------------------------
@@ -724,15 +724,15 @@ export default function Stage3_Sandbox({ onComplete }) {
         </div>
       </div>
 
-      {/* Right Side: Control Panel */}
+      {/* Right Side: Control Panel (Activity 4.3 Theme) */}
       <div
         style={{
-          flex: '0.9',
+          flex: '1.15',
           background: '#FFFFFF',
-          border: '1.5px solid #A7F3D0',
-          borderRadius: '20px',
-          padding: '1.4rem 1.5rem',
-          boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
+          border: '2px solid #A7F3D0',
+          borderRadius: '24px',
+          padding: '1.5rem 1.6rem',
+          boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -741,217 +741,280 @@ export default function Stage3_Sandbox({ onComplete }) {
           overflowY: 'auto',
         }}
       >
-        {/* Step Instructions */}
-        <div
-          style={{
-            background: '#F8FAFC',
-            border: '1.5px solid #CBD5E1',
-            borderRadius: '18px',
-            padding: '1.3rem 1.4rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.6rem',
-            boxShadow: '0 4px 14px rgba(0,0,0,0.03)',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.55rem',
-              color: '#064E3B',
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <Shapes size={26} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900 }}>
+                Stage 3: Other Magnet Shapes
+              </h3>
+            </div>
+            <span style={{
+              background: '#FEF3C7',
+              color: '#92400E',
               fontWeight: 900,
-              fontSize: '1.1rem',
-            }}
-          >
-            <BookOpen size={22} color="#047857" />
-            <span>
-              {step === 'initial' && 'Step 1: Choose Shape & Sprinkle'}
-              {step === 'scattered' && 'Step 2: Tap the Paper'}
-              {(step === 'tapped' || step === 'complete') && 'Step 3: Observe Magnetic Poles'}
+              fontSize: '0.85rem',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '12px',
+              border: '1.5px solid #FDE68A'
+            }}>
+              Step {step === 'tapped' ? 3 : step === 'scattered' ? 2 : 1} of 3
             </span>
           </div>
-          <p style={{ margin: 0, color: '#334155', fontSize: '0.96rem', lineHeight: 1.6, fontWeight: 600 }}>
-            {step === 'initial' && 'Choose a 3D magnet shape below and click "1. Sprinkle" to drop metallic filings.'}
-            {step === 'scattered' && 'Click "2. Tap Paper" to gently vibrate the sheet and align the filings.'}
-            {(step === 'tapped' || step === 'complete') && 'Notice that filings cluster at the poles regardless of the magnet shape!'}
-          </p>
-        </div>
 
-        {/* Magnet Shape Selector Card */}
-        <div
-          style={{
-            background: '#F0FDF4',
-            border: '1.5px solid #A7F3D0',
-            borderRadius: '18px',
-            padding: '1rem 1.25rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.6rem',
-            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.04)',
-          }}
-        >
-          <h4
+          {/* All 3 Steps Visible From Initial Load */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {[
+              {
+                stepNum: 1,
+                title: '1. Choose Magnet Shape',
+                desc: 'Select Horseshoe, Ring, or Bar magnet and click "1. Sprinkle".'
+              },
+              {
+                stepNum: 2,
+                title: '2. Tap Paper Sheet',
+                desc: 'Click "2. Tap Paper" to gently vibrate the sheet and align iron filings.'
+              },
+              {
+                stepNum: 3,
+                title: '3. Observe Pole Concentrations',
+                desc: 'Observe that filings cluster at magnetic poles regardless of shape.'
+              }
+            ].map((s) => {
+              const currentStepNum = step === 'tapped' ? 3 : step === 'scattered' ? 2 : 1;
+              const isCurrent = currentStepNum === s.stepNum;
+              const isPast = currentStepNum > s.stepNum;
+
+              return (
+                <div
+                  key={s.stepNum}
+                  style={{
+                    padding: '0.95rem 1.15rem',
+                    borderRadius: '16px',
+                    background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
+                    border: isCurrent 
+                      ? '2.5px solid #F59E0B' 
+                      : isPast 
+                      ? '2px solid #10B981' 
+                      : '2px solid #CBD5E1',
+                    boxShadow: isCurrent 
+                      ? '0 6px 18px rgba(245, 158, 11, 0.2)' 
+                      : isPast 
+                      ? '0 4px 12px rgba(16, 185, 129, 0.12)' 
+                      : '0 2px 8px rgba(0,0,0,0.03)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span style={{
+                        width: '26px',
+                        height: '26px',
+                        borderRadius: '50%',
+                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        color: '#FFFFFF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.85rem',
+                        fontWeight: 900,
+                        flexShrink: 0
+                      }}>
+                        {s.stepNum}
+                      </span>
+                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                        {s.title}
+                      </span>
+                    </div>
+                    {isPast && <CheckCircle size={20} color="#10B981" />}
+                  </div>
+                  <p style={{ margin: '0.38rem 0 0 0', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                    {s.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Magnet Shape Selector Card */}
+          <div
             style={{
-              color: '#064E3B',
-              margin: 0,
-              fontSize: '1rem',
-              fontWeight: 900,
+              background: '#F0FDF4',
+              border: '2px solid #A7F3D0',
+              borderRadius: '20px',
+              padding: '1.1rem 1.3rem',
               display: 'flex',
-              alignItems: 'center',
-              gap: '0.45rem',
+              flexDirection: 'column',
+              gap: '0.75rem',
+              boxShadow: '0 4px 14px rgba(6, 78, 59, 0.04)',
             }}
           >
-            <Shapes size={18} color="#047857" /> Choose Magnet Shape
-          </h4>
-
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button
-              onClick={() => handleShapeChange('horseshoe')}
+            <h4
               style={{
-                flex: 1,
-                padding: '0.65rem 0.5rem',
-                borderRadius: '12px',
-                border: '1.5px solid',
-                borderColor: shape === 'horseshoe' ? '#16A34A' : '#CBD5E1',
-                background: shape === 'horseshoe' ? '#DCFCE7' : '#FFFFFF',
-                color: shape === 'horseshoe' ? '#065F46' : '#1E293B',
-                fontWeight: 800,
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                boxShadow: shape === 'horseshoe' ? '0 2px 8px rgba(22, 163, 74, 0.2)' : 'none',
+                color: '#064E3B',
+                margin: 0,
+                fontSize: '1.05rem',
+                fontWeight: 900,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
               }}
             >
-              Horseshoe 🧲
+              <Shapes size={20} color="#047857" /> Choose Magnet Shape
+            </h4>
+
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                onClick={() => handleShapeChange('horseshoe')}
+                style={{
+                  flex: 1,
+                  padding: '0.8rem 0.5rem',
+                  borderRadius: '14px',
+                  border: '2px solid',
+                  borderColor: shape === 'horseshoe' ? '#16A34A' : '#CBD5E1',
+                  background: shape === 'horseshoe' ? '#DCFCE7' : '#FFFFFF',
+                  color: shape === 'horseshoe' ? '#065F46' : '#1E293B',
+                  fontWeight: 900,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: shape === 'horseshoe' ? '0 3px 10px rgba(22, 163, 74, 0.25)' : 'none',
+                }}
+              >
+                Horseshoe 🧲
+              </button>
+
+              <button
+                onClick={() => handleShapeChange('ring')}
+                style={{
+                  flex: 1,
+                  padding: '0.8rem 0.5rem',
+                  borderRadius: '14px',
+                  border: '2px solid',
+                  borderColor: shape === 'ring' ? '#16A34A' : '#CBD5E1',
+                  background: shape === 'ring' ? '#DCFCE7' : '#FFFFFF',
+                  color: shape === 'ring' ? '#065F46' : '#1E293B',
+                  fontWeight: 900,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: shape === 'ring' ? '0 3px 10px rgba(22, 163, 74, 0.25)' : 'none',
+                }}
+              >
+                Ring ⭕
+              </button>
+
+              <button
+                onClick={() => handleShapeChange('bar')}
+                style={{
+                  flex: 1,
+                  padding: '0.8rem 0.5rem',
+                  borderRadius: '14px',
+                  border: '2px solid',
+                  borderColor: shape === 'bar' ? '#16A34A' : '#CBD5E1',
+                  background: shape === 'bar' ? '#DCFCE7' : '#FFFFFF',
+                  color: shape === 'bar' ? '#065F46' : '#1E293B',
+                  fontWeight: 900,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: shape === 'bar' ? '0 3px 10px rgba(22, 163, 74, 0.25)' : 'none',
+                }}
+              >
+                Bar 🔲
+              </button>
+            </div>
+          </div>
+
+          {/* Action Controls */}
+          <div style={{ width: '100%', display: 'flex', gap: '0.75rem' }}>
+            <button
+              onClick={handleScatter}
+              disabled={step !== 'initial' || isSprinkling}
+              style={{
+                flex: 1,
+                padding: '0.95rem 0.5rem',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                borderRadius: '16px',
+                background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
+                color: step === 'initial' ? '#FFFFFF' : '#94A3B8',
+                border: 'none',
+                cursor: step === 'initial' ? 'pointer' : 'not-allowed',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                boxShadow: step === 'initial' ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              🧪 1. Sprinkle
             </button>
 
             <button
-              onClick={() => handleShapeChange('ring')}
+              onClick={handleTap}
+              disabled={step !== 'scattered' || tapCount >= 1}
               style={{
                 flex: 1,
-                padding: '0.65rem 0.5rem',
-                borderRadius: '12px',
-                border: '1.5px solid',
-                borderColor: shape === 'ring' ? '#16A34A' : '#CBD5E1',
-                background: shape === 'ring' ? '#DCFCE7' : '#FFFFFF',
-                color: shape === 'ring' ? '#065F46' : '#1E293B',
-                fontWeight: 800,
-                fontSize: '0.85rem',
-                cursor: 'pointer',
+                padding: '0.95rem 0.5rem',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                borderRadius: '16px',
+                background:
+                  step === 'scattered' && tapCount === 0
+                    ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
+                    : '#F1F5F9',
+                color: step === 'scattered' && tapCount === 0 ? '#FFFFFF' : '#94A3B8',
+                border: 'none',
+                cursor: step === 'scattered' && tapCount === 0 ? 'pointer' : 'not-allowed',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                boxShadow: step === 'scattered' && tapCount === 0 ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
                 transition: 'all 0.2s ease',
-                boxShadow: shape === 'ring' ? '0 2px 8px rgba(22, 163, 74, 0.2)' : 'none',
               }}
             >
-              Ring ⭕
+              <Hand size={17} /> {tapCount === 0 ? '2. Tap Paper' : 'Tapped ✓'}
             </button>
 
             <button
-              onClick={() => handleShapeChange('bar')}
+              onClick={handleReset}
+              disabled={step === 'initial'}
               style={{
                 flex: 1,
-                padding: '0.65rem 0.5rem',
-                borderRadius: '12px',
-                border: '1.5px solid',
-                borderColor: shape === 'bar' ? '#16A34A' : '#CBD5E1',
-                background: shape === 'bar' ? '#DCFCE7' : '#FFFFFF',
-                color: shape === 'bar' ? '#065F46' : '#1E293B',
-                fontWeight: 800,
-                fontSize: '0.85rem',
-                cursor: 'pointer',
+                padding: '0.95rem 0.5rem',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                borderRadius: '16px',
+                background: '#FFFFFF',
+                color: step !== 'initial' ? '#1E293B' : '#94A3B8',
+                border: '1.5px solid #CBD5E1',
+                cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
                 transition: 'all 0.2s ease',
-                boxShadow: shape === 'bar' ? '0 2px 8px rgba(22, 163, 74, 0.2)' : 'none',
               }}
             >
-              Bar 🔲
+              <RotateCcw size={17} /> Reset
             </button>
           </div>
-        </div>
-
-        {/* Action Controls */}
-        <div style={{ width: '100%', display: 'flex', gap: '0.65rem' }}>
-          <button
-            onClick={handleScatter}
-            disabled={step !== 'initial' || isSprinkling}
-            style={{
-              flex: 1,
-              padding: '0.85rem 0.4rem',
-              fontSize: '0.9rem',
-              fontWeight: 900,
-              borderRadius: '14px',
-              background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
-              color: step === 'initial' ? '#FFFFFF' : '#94A3B8',
-              border: 'none',
-              cursor: step === 'initial' ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-              boxShadow: step === 'initial' ? '0 4px 12px rgba(217, 119, 6, 0.25)' : 'none',
-            }}
-          >
-            🧪 1. Sprinkle
-          </button>
-
-          <button
-            onClick={handleTap}
-            disabled={step !== 'scattered' || tapCount >= 1}
-            style={{
-              flex: 1,
-              padding: '0.85rem 0.4rem',
-              fontSize: '0.9rem',
-              fontWeight: 900,
-              borderRadius: '14px',
-              background:
-                step === 'scattered' && tapCount === 0
-                  ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
-                  : '#F1F5F9',
-              color: step === 'scattered' && tapCount === 0 ? '#FFFFFF' : '#94A3B8',
-              border: 'none',
-              cursor: step === 'scattered' && tapCount === 0 ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-              boxShadow: step === 'scattered' && tapCount === 0 ? '0 4px 12px rgba(217, 119, 6, 0.25)' : 'none',
-            }}
-          >
-            <Hand size={15} /> {tapCount === 0 ? '2. Tap Paper' : 'Tapped ✓'}
-          </button>
-
-          <button
-            onClick={handleReset}
-            disabled={step === 'initial'}
-            style={{
-              flex: 1,
-              padding: '0.85rem 0.4rem',
-              fontSize: '0.9rem',
-              fontWeight: 900,
-              borderRadius: '14px',
-              background: '#FFFFFF',
-              color: step !== 'initial' ? '#1E293B' : '#94A3B8',
-              border: '1.5px solid #CBD5E1',
-              cursor: step !== 'initial' ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-            }}
-          >
-            <RotateCcw size={15} /> Reset
-          </button>
         </div>
 
         {/* Observation Summary Card */}
         <div
           style={{
             background: '#F0FDF4',
-            border: '1.5px solid #A7F3D0',
+            border: '2px solid #A7F3D0',
             borderRadius: '20px',
             padding: '1.3rem 1.4rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.85rem',
+            gap: '0.9rem',
             boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)',
           }}
         >
@@ -959,28 +1022,28 @@ export default function Stage3_Sandbox({ onComplete }) {
             style={{
               color: '#064E3B',
               margin: 0,
-              fontSize: '1.1rem',
+              fontSize: '1.18rem',
               fontWeight: 900,
               display: 'flex',
               alignItems: 'center',
-              gap: '0.45rem',
+              gap: '0.55rem',
             }}
           >
-            <Shapes size={20} color="#D97706" /> Observation Summary
+            <Shapes size={22} color="#D97706" /> Observation Summary
           </h4>
-          <p style={{ margin: 0, color: '#1E293B', fontSize: '0.94rem', lineHeight: 1.55, fontWeight: 700 }}>
+          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 700 }}>
             Do all magnet shapes exhibit the same concentration of magnetic poles?
           </p>
           <ul
             style={{
               margin: 0,
-              paddingLeft: '1.15rem',
+              paddingLeft: '1.25rem',
               color: '#334155',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.35rem',
-              fontSize: '0.88rem',
-              lineHeight: '1.45',
+              gap: '0.45rem',
+              fontSize: '0.94rem',
+              lineHeight: '1.5',
               fontWeight: 600,
             }}
           >
@@ -988,36 +1051,37 @@ export default function Stage3_Sandbox({ onComplete }) {
               <strong>Horseshoe:</strong> Filings cluster tightly at both curved tips.
             </li>
             <li>
-              <strong>Ring:</strong> Filings concentrate on opposite pole faces.
+              <strong>Ring:</strong> Filings concentrate on opposite circular pole faces.
             </li>
             <li>
-              <strong>Bar:</strong> Filings gather at the two distant ends.
+              <strong>Bar:</strong> Filings gather heavily at the two distant ends.
             </li>
           </ul>
 
-          <div style={{ marginTop: '0.35rem' }}>
+          <div style={{ marginTop: '0.4rem' }}>
             <button
               onClick={() => {
                 if (onComplete) onComplete();
               }}
               style={{
                 width: '100%',
-                padding: '0.9rem',
-                fontSize: '1rem',
+                padding: '1rem',
+                fontSize: '1.05rem',
                 fontWeight: 900,
                 borderRadius: '16px',
                 background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                 color: '#FFFFFF',
                 border: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
+                boxShadow: '0 4px 16px rgba(217, 119, 6, 0.4)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.5rem',
+                gap: '0.55rem',
+                transition: 'all 0.25s ease',
               }}
             >
-              <Flag size={18} color="#FFFFFF" /> Finish Activity & Proceed to Quiz
+              <Flag size={20} color="#FFFFFF" /> Finish Activity & Proceed to Quiz
             </button>
           </div>
         </div>

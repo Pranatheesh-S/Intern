@@ -439,15 +439,15 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         </div>
       </div>
 
-      {/* Right Side: Control Panel */}
+      {/* Right Side: Control Panel (Activity 4.3 Theme) */}
       <div
         style={{
-          flex: '0.9',
+          flex: '1.15',
           background: '#FFFFFF',
-          border: '1.5px solid #A7F3D0',
-          borderRadius: '20px',
-          padding: '1.4rem 1.5rem',
-          boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
+          border: '2px solid #A7F3D0',
+          borderRadius: '24px',
+          padding: '1.5rem 1.6rem',
+          boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -456,234 +456,292 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
           overflowY: 'auto',
         }}
       >
-        {/* Step Instructions */}
-        <div
-          style={{
-            background: '#F8FAFC',
-            border: '1.5px solid #CBD5E1',
-            borderRadius: '18px',
-            padding: '1.3rem 1.4rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.6rem',
-            boxShadow: '0 4px 14px rgba(0,0,0,0.03)',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.55rem',
-              color: '#064E3B',
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <Scissors size={26} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900 }}>
+                Stage 2: Breaking Magnet
+              </h3>
+            </div>
+            <span style={{
+              background: '#FEF3C7',
+              color: '#92400E',
               fontWeight: 900,
-              fontSize: '1.1rem',
-            }}
-          >
-            <BookOpen size={22} color="#047857" />
-            <span>
-              {!broken && 'Step 1: Break the Magnet'}
-              {broken && !showPoles && 'Step 2: Reveal New Poles'}
-              {broken && showPoles && 'Step 3: Make Your Observation'}
+              fontSize: '0.85rem',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '12px',
+              border: '1.5px solid #FDE68A'
+            }}>
+              Step {broken && showPoles ? 3 : broken ? 2 : 1} of 3
             </span>
           </div>
-          <p style={{ margin: 0, color: '#334155', fontSize: '0.96rem', lineHeight: 1.6, fontWeight: 600 }}>
-            {!broken && 'Click the "1. Break" button below to cut the 3D magnet directly in half.'}
-            {broken && !showPoles && 'Click the "2. Show Poles" button to reveal magnetic polarity at the newly cut ends.'}
-            {broken && showPoles && 'Notice that each half automatically forms a complete magnet with North (N) and South (S) poles.'}
-          </p>
-        </div>
 
-        {/* Action Controls */}
-        <div style={{ width: '100%', display: 'flex', gap: '0.65rem' }}>
-          <button
-            onClick={handleBreak}
-            disabled={broken}
-            style={{
-              flex: 1,
-              padding: '0.85rem 0.4rem',
-              fontSize: '0.9rem',
-              fontWeight: 900,
-              borderRadius: '14px',
-              background: !broken ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
-              color: !broken ? '#FFFFFF' : '#94A3B8',
-              border: 'none',
-              cursor: !broken ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-              boxShadow: !broken ? '0 4px 12px rgba(217, 119, 6, 0.25)' : 'none',
-            }}
-          >
-            <Scissors size={15} /> 1. Break
-          </button>
+          {/* All 3 Steps Visible From Initial Load */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {[
+              {
+                stepNum: 1,
+                title: '1. Break the Bar Magnet',
+                desc: 'Click "1. Break" to cut the 3D bar magnet directly in half.'
+              },
+              {
+                stepNum: 2,
+                title: '2. Reveal New Magnetic Poles',
+                desc: 'Click "2. Show Poles" to reveal magnetic polarity at the newly cut inner ends.'
+              },
+              {
+                stepNum: 3,
+                title: '3. Observe Magnetic Dipoles',
+                desc: 'Notice that each half automatically forms a complete magnet with North (N) and South (S) poles.'
+              }
+            ].map((s) => {
+              const currentStepNum = broken && showPoles ? 3 : broken ? 2 : 1;
+              const isCurrent = currentStepNum === s.stepNum;
+              const isPast = currentStepNum > s.stepNum || (s.stepNum === 3 && broken && showPoles && quizAnswer === 'no');
 
-          <button
-            onClick={handleShowPoles}
-            disabled={!broken || showPoles}
-            style={{
-              flex: 1,
-              padding: '0.85rem 0.4rem',
-              fontSize: '0.9rem',
-              fontWeight: 900,
-              borderRadius: '14px',
-              background: broken && !showPoles ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
-              color: broken && !showPoles ? '#FFFFFF' : '#94A3B8',
-              border: 'none',
-              cursor: broken && !showPoles ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-              boxShadow: broken && !showPoles ? '0 4px 12px rgba(217, 119, 6, 0.25)' : 'none',
-            }}
-          >
-            🧲 {showPoles ? 'Poles Shown ✓' : '2. Show Poles'}
-          </button>
+              return (
+                <div
+                  key={s.stepNum}
+                  style={{
+                    padding: '0.95rem 1.15rem',
+                    borderRadius: '16px',
+                    background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
+                    border: isCurrent 
+                      ? '2.5px solid #F59E0B' 
+                      : isPast 
+                      ? '2px solid #10B981' 
+                      : '2px solid #CBD5E1',
+                    boxShadow: isCurrent 
+                      ? '0 6px 18px rgba(245, 158, 11, 0.2)' 
+                      : isPast 
+                      ? '0 4px 12px rgba(16, 185, 129, 0.12)' 
+                      : '0 2px 8px rgba(0,0,0,0.03)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span style={{
+                        width: '26px',
+                        height: '26px',
+                        borderRadius: '50%',
+                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        color: '#FFFFFF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.85rem',
+                        fontWeight: 900,
+                        flexShrink: 0
+                      }}>
+                        {s.stepNum}
+                      </span>
+                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                        {s.title}
+                      </span>
+                    </div>
+                    {isPast && <CheckCircle size={20} color="#10B981" />}
+                  </div>
+                  <p style={{ margin: '0.38rem 0 0 0', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                    {s.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
 
-          <button
-            onClick={handleReset}
-            disabled={!broken}
-            style={{
-              flex: 1,
-              padding: '0.85rem 0.4rem',
-              fontSize: '0.9rem',
-              fontWeight: 900,
-              borderRadius: '14px',
-              background: '#FFFFFF',
-              color: broken ? '#1E293B' : '#94A3B8',
-              border: '1.5px solid #CBD5E1',
-              cursor: broken ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-            }}
-          >
-            <RotateCcw size={15} /> Reset
-          </button>
+          {/* Action Controls */}
+          <div style={{ width: '100%', display: 'flex', gap: '0.75rem', marginTop: '0.2rem' }}>
+            <button
+              onClick={handleBreak}
+              disabled={broken}
+              style={{
+                flex: 1,
+                padding: '0.95rem 0.5rem',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                borderRadius: '16px',
+                background: !broken ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
+                color: !broken ? '#FFFFFF' : '#94A3B8',
+                border: 'none',
+                cursor: !broken ? 'pointer' : 'not-allowed',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                boxShadow: !broken ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <Scissors size={17} /> 1. Break
+            </button>
+
+            <button
+              onClick={handleShowPoles}
+              disabled={!broken || showPoles}
+              style={{
+                flex: 1,
+                padding: '0.95rem 0.5rem',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                borderRadius: '16px',
+                background: broken && !showPoles ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9',
+                color: broken && !showPoles ? '#FFFFFF' : '#94A3B8',
+                border: 'none',
+                cursor: broken && !showPoles ? 'pointer' : 'not-allowed',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                boxShadow: broken && !showPoles ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              🧲 {showPoles ? 'Poles Shown ✓' : '2. Show Poles'}
+            </button>
+
+            <button
+              onClick={handleReset}
+              disabled={!broken}
+              style={{
+                flex: 1,
+                padding: '0.95rem 0.5rem',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                borderRadius: '16px',
+                background: '#FFFFFF',
+                color: broken ? '#1E293B' : '#94A3B8',
+                border: '1.5px solid #CBD5E1',
+                cursor: broken ? 'pointer' : 'not-allowed',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <RotateCcw size={17} /> Reset
+            </button>
+          </div>
         </div>
 
         {/* Observation & Conclusion Quiz */}
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+        <div
+          style={{
+            background: '#F0FDF4',
+            border: '2px solid #A7F3D0',
+            borderRadius: '20px',
+            padding: '1.3rem 1.4rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.9rem',
+            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)',
+          }}
+        >
+          <h4
             style={{
-              background: '#F0FDF4',
-              border: '1.5px solid #A7F3D0',
-              borderRadius: '20px',
-              padding: '1.3rem 1.4rem',
+              color: '#064E3B',
+              margin: 0,
+              fontSize: '1.18rem',
+              fontWeight: 900,
               display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem',
-              boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)',
+              alignItems: 'center',
+              gap: '0.55rem',
             }}
           >
-            <h4
+            <AlertCircle size={24} color="#D97706" /> Observation & Conclusion
+          </h4>
+          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 700 }}>
+            Based on what happens when a magnet breaks, is it possible to obtain a magnet with only a single pole?
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <button
+              onClick={() => handleQuizAnswer('yes')}
               style={{
-                color: '#064E3B',
-                margin: 0,
-                fontSize: '1.12rem',
-                fontWeight: 900,
+                padding: '0.95rem 1.2rem',
+                textAlign: 'left',
+                fontSize: '0.98rem',
+                fontWeight: 800,
+                borderRadius: '14px',
+                cursor: 'pointer',
+                background: quizAnswer === 'yes' ? '#FEE2E2' : '#FFFFFF',
+                borderColor: quizAnswer === 'yes' ? '#EF4444' : '#CBD5E1',
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                color: quizAnswer === 'yes' ? '#991B1B' : '#0F172A',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
+                justifyContent: 'space-between',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                transition: 'all 0.2s ease',
               }}
             >
-              <AlertCircle size={22} color="#D97706" /> Observation & Conclusion
-            </h4>
-            <p style={{ margin: 0, color: '#1E293B', fontSize: '0.96rem', lineHeight: 1.55, fontWeight: 700 }}>
-              Based on what happens when a magnet breaks, is it possible to obtain a magnet with only a single pole?
-            </p>
+              <span>A) Yes, we can isolate a single North or South pole</span>
+              {quizAnswer === 'yes' && <XCircle size={20} color="#EF4444" />}
+            </button>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <button
+              onClick={() => handleQuizAnswer('no')}
+              style={{
+                padding: '0.95rem 1.2rem',
+                textAlign: 'left',
+                fontSize: '0.98rem',
+                fontWeight: 800,
+                borderRadius: '14px',
+                cursor: 'pointer',
+                background: quizAnswer === 'no' ? '#DCFCE7' : '#FFFFFF',
+                borderColor: quizAnswer === 'no' ? '#16A34A' : '#CBD5E1',
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                color: quizAnswer === 'no' ? '#065F46' : '#0F172A',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <span>B) No, a single isolated pole cannot exist</span>
+              {quizAnswer === 'no' && <CheckCircle size={20} color="#16A34A" />}
+            </button>
+          </div>
+
+          {/* Proceed Button */}
+          {(() => {
+            const isReadyToProceed = broken && showPoles && quizAnswer === 'no';
+            return (
               <button
-                onClick={() => handleQuizAnswer('yes')}
+                onClick={handleNextSection}
+                disabled={!isReadyToProceed}
                 style={{
-                  padding: '0.9rem 1.1rem',
-                  textAlign: 'left',
-                  fontSize: '0.92rem',
-                  fontWeight: 800,
-                  borderRadius: '14px',
-                  cursor: 'pointer',
-                  background: quizAnswer === 'yes' ? '#FEE2E2' : '#FFFFFF',
-                  borderColor: quizAnswer === 'yes' ? '#EF4444' : '#CBD5E1',
-                  borderWidth: '1.5px',
-                  borderStyle: 'solid',
-                  color: quizAnswer === 'yes' ? '#991B1B' : '#0F172A',
+                  width: '100%',
+                  padding: '1rem',
+                  fontSize: '1.05rem',
+                  fontWeight: 900,
+                  borderRadius: '16px',
+                  background: isReadyToProceed
+                    ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
+                    : '#F1F5F9',
+                  color: isReadyToProceed ? '#FFFFFF' : '#94A3B8',
+                  border: isReadyToProceed ? 'none' : '1.5px solid #CBD5E1',
+                  cursor: isReadyToProceed ? 'pointer' : 'not-allowed',
+                  boxShadow: isReadyToProceed ? '0 4px 16px rgba(217, 119, 6, 0.4)' : 'none',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                  transition: 'all 0.2s ease',
+                  justifyContent: 'center',
+                  gap: '0.55rem',
+                  transition: 'all 0.25s ease',
                 }}
               >
-                <span>A) Yes, we can isolate a single North or South pole</span>
-                {quizAnswer === 'yes' && <XCircle size={18} color="#EF4444" />}
+                Proceed to Stage 3{' '}
+                <ArrowRight size={20} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
               </button>
-
-              <button
-                onClick={() => handleQuizAnswer('no')}
-                style={{
-                  padding: '0.9rem 1.1rem',
-                  textAlign: 'left',
-                  fontSize: '0.92rem',
-                  fontWeight: 800,
-                  borderRadius: '14px',
-                  cursor: 'pointer',
-                  background: quizAnswer === 'no' ? '#DCFCE7' : '#FFFFFF',
-                  borderColor: quizAnswer === 'no' ? '#16A34A' : '#CBD5E1',
-                  borderWidth: '1.5px',
-                  borderStyle: 'solid',
-                  color: quizAnswer === 'no' ? '#065F46' : '#0F172A',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                <span>B) No, a single isolated pole cannot exist</span>
-                {quizAnswer === 'no' && <CheckCircle size={18} color="#16A34A" />}
-              </button>
-            </div>
-
-            {/* Proceed Button */}
-            {(() => {
-              const isReadyToProceed = broken && showPoles && quizAnswer === 'no';
-              return (
-                <button
-                  onClick={handleNextSection}
-                  disabled={!isReadyToProceed}
-                  style={{
-                    width: '100%',
-                    padding: '0.9rem',
-                    fontSize: '1rem',
-                    fontWeight: 900,
-                    borderRadius: '16px',
-                    background: isReadyToProceed
-                      ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
-                      : '#F1F5F9',
-                    color: isReadyToProceed ? '#FFFFFF' : '#94A3B8',
-                    border: isReadyToProceed ? 'none' : '1.5px solid #CBD5E1',
-                    cursor: isReadyToProceed ? 'pointer' : 'not-allowed',
-                    boxShadow: isReadyToProceed ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.45rem',
-                    transition: 'all 0.25s ease',
-                  }}
-                >
-                  Proceed to Stage 3{' '}
-                  <ArrowRight size={18} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
-                </button>
-              );
-            })()}
-          </motion.div>
-        </AnimatePresence>
+            );
+          })()}
+        </div>
       </div>
     </div>
   );

@@ -20,6 +20,7 @@ import {
 import natureForestSound from './assets/nature_forest_sound.mp3';
 import { useTheme } from './ThemeContext.jsx';
 import VerticalLevelMap from './components/VerticalLevelMap';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 const ElectricSwitchActivity = lazy(() => import('./science/class7/chapter3/ElectricSwitch'));
 const ElectricCircuitActivity = lazy(() => import('./science/class7/chapter3/ElectricCircuit'));
 const ActivityTemplate = lazy(() => import('./activities/ActivityTemplate'));
@@ -2922,11 +2923,12 @@ export default function App() {
 
       {/* Main Workspace content */}
       <main className={`content-wrapper ${isFullscreen ? 'fullscreen-lab' : ''}`} style={{ padding: isFullscreen ? 0 : undefined }}>
-        <Suspense fallback={
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', color: 'var(--text-muted)' }}>
-            Loading activity...
-          </div>
-        }>
+        <ErrorBoundary>
+          <Suspense fallback={
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', color: 'var(--text-muted)' }}>
+              Loading activity...
+            </div>
+          }>
         {/* HIERARCHICAL ROUTER */}
         {activeSubject === null ? (
           renderSubjectSelector()
@@ -3141,6 +3143,7 @@ export default function App() {
           )
         ) : null}
         </Suspense>
+        </ErrorBoundary>
       </main>
 
       {/* Ambient background music element */}

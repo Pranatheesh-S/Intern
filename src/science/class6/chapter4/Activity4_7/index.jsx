@@ -12,9 +12,9 @@ export default function Activity4_7({ onBackToDashboard, onComplete }) {
   const [questionsCompleted, setQuestionsCompleted] = useState(false);
 
   const tabs = [
-    { id: 'simulation', label: '1. Interactive Lab', icon: TestTube2 },
-    { id: 'questions', label: '2. Concept Check', icon: BookOpen, disabled: !simCompleted },
-    { id: 'challenge', label: '3. Challenge Mode', icon: Trophy, disabled: !questionsCompleted }
+    { id: 'simulation', label: '1. Interactive Lab', icon: TestTube2, done: simCompleted },
+    { id: 'questions', label: '2. Concept Check', icon: BookOpen, done: questionsCompleted },
+    { id: 'challenge', label: '3. Challenge Mode', icon: Trophy, done: false }
   ];
 
   return (
@@ -114,11 +114,9 @@ export default function Activity4_7({ onBackToDashboard, onComplete }) {
             return (
               <button
                 key={tab.id}
-                onClick={() => !tab.disabled && setActiveTab(tab.id)}
-                disabled={tab.disabled}
+                onClick={() => setActiveTab(tab.id)}
                 style={{
-                  opacity: tab.disabled ? 0.45 : 1,
-                  cursor: tab.disabled ? 'not-allowed' : 'pointer',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.4rem',
@@ -127,13 +125,13 @@ export default function Activity4_7({ onBackToDashboard, onComplete }) {
                   fontWeight: 800,
                   borderRadius: '25px',
                   background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F8FAFC',
-                  color: isActive ? '#FFFFFF' : tab.disabled ? '#94A3B8' : '#334155',
+                  color: isActive ? '#FFFFFF' : '#334155',
                   border: isActive ? 'none' : '1.5px solid #CBD5E1',
                   boxShadow: isActive ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={16} color={isActive ? '#FFFFFF' : tab.disabled ? '#94A3B8' : '#334155'} />
+                <Icon size={16} color={isActive ? '#FFFFFF' : '#334155'} />
                 {tab.label}
               </button>
             );

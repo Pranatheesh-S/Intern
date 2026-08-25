@@ -629,12 +629,12 @@ export default function Stage1_Investigate({ onComplete }) {
 
       {/* Control Panel (Activity 4.3 Theme) */}
       <div style={{ 
-        flex: '0.9', 
+        flex: '1.15', 
         background: '#FFFFFF', 
-        border: '1.5px solid #A7F3D0', 
-        borderRadius: '20px', 
-        padding: '1.4rem 1.5rem', 
-        boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)', 
+        border: '2px solid #A7F3D0', 
+        borderRadius: '24px', 
+        padding: '1.5rem 1.6rem', 
+        boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
@@ -642,220 +642,287 @@ export default function Stage1_Investigate({ onComplete }) {
         minWidth: 0,
         overflowY: 'auto' 
       }}>
-        {/* Dynamic Instructions Card (Prominent & Larger) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <BookOpen size={26} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900 }}>
+                Stage 1: Investigation
+              </h3>
+            </div>
+            <span style={{
+              background: '#FEF3C7',
+              color: '#92400E',
+              fontWeight: 900,
+              fontSize: '0.85rem',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '12px',
+              border: '1.5px solid #FDE68A'
+            }}>
+              Step {(step === 'tapped' || step === 'complete') ? 3 : step === 'scattered' ? 2 : 1} of 3
+            </span>
+          </div>
+
+          {/* All 3 Steps Visible From Initial Load */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {[
+              {
+                stepNum: 1,
+                title: '1. Sprinkle Iron Filings',
+                desc: 'Spread iron filings evenly across the paper surface around the magnet.'
+              },
+              {
+                stepNum: 2,
+                title: '2. Tap Paper Sheet',
+                desc: 'Gently tap the sheet to allow iron filings to align along magnetic field lines.'
+              },
+              {
+                stepNum: 3,
+                title: '3. Observe Magnetic Poles',
+                desc: 'Observe where filings cluster the most and answer the observation question.'
+              }
+            ].map((s) => {
+              const currentStepNum = (step === 'tapped' || step === 'complete') ? 3 : step === 'scattered' ? 2 : 1;
+              const isCurrent = currentStepNum === s.stepNum;
+              const isPast = currentStepNum > s.stepNum || (s.stepNum === 3 && step === 'complete');
+
+              return (
+                <div
+                  key={s.stepNum}
+                  style={{
+                    padding: '0.95rem 1.15rem',
+                    borderRadius: '16px',
+                    background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
+                    border: isCurrent 
+                      ? '2.5px solid #F59E0B' 
+                      : isPast 
+                      ? '2px solid #10B981' 
+                      : '2px solid #CBD5E1',
+                    boxShadow: isCurrent 
+                      ? '0 6px 18px rgba(245, 158, 11, 0.2)' 
+                      : isPast 
+                      ? '0 4px 12px rgba(16, 185, 129, 0.12)' 
+                      : '0 2px 8px rgba(0,0,0,0.03)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span style={{
+                        width: '26px',
+                        height: '26px',
+                        borderRadius: '50%',
+                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        color: '#FFFFFF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.85rem',
+                        fontWeight: 900,
+                        flexShrink: 0
+                      }}>
+                        {s.stepNum}
+                      </span>
+                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                        {s.title}
+                      </span>
+                    </div>
+                    {isPast && <CheckCircle size={20} color="#10B981" />}
+                  </div>
+                  <p style={{ margin: '0.38rem 0 0 0', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                    {s.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Action Buttons */}
+          <div style={{ width: '100%', display: 'flex', gap: '0.75rem', marginTop: '0.2rem' }}>
+            <button
+              onClick={handleScatter}
+              disabled={step !== 'initial' || isSprinkling}
+              style={{ 
+                flex: 1, 
+                padding: '0.95rem 0.5rem', 
+                fontSize: '0.98rem', 
+                fontWeight: 900, 
+                borderRadius: '16px', 
+                background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9', 
+                color: step === 'initial' ? '#FFFFFF' : '#94A3B8', 
+                border: 'none', 
+                cursor: step === 'initial' ? 'pointer' : 'not-allowed', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '5px',
+                boxShadow: step === 'initial' ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              🧪 1. Sprinkle
+            </button>
+            
+            <button
+              onClick={handleTap}
+              disabled={step !== 'scattered' || tapCount >= 1}
+              style={{ 
+                flex: 1, 
+                padding: '0.95rem 0.5rem', 
+                fontSize: '0.98rem', 
+                fontWeight: 900, 
+                borderRadius: '16px', 
+                background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9', 
+                color: (step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8', 
+                border: 'none', 
+                cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'not-allowed', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '5px',
+                boxShadow: (step === 'scattered' && tapCount === 0) ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Hand size={17} /> {tapCount === 0 ? '2. Tap Paper' : 'Tapped ✓'}
+            </button>
+            
+            <button
+              onClick={handleReset}
+              disabled={step === 'initial'}
+              style={{ 
+                flex: 1, 
+                padding: '0.95rem 0.5rem', 
+                fontSize: '0.98rem', 
+                fontWeight: 900, 
+                borderRadius: '16px', 
+                background: '#FFFFFF', 
+                color: step !== 'initial' ? '#1E293B' : '#94A3B8', 
+                border: '1.5px solid #CBD5E1', 
+                cursor: step !== 'initial' ? 'pointer' : 'not-allowed', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '5px',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <RotateCcw size={17} /> Reset
+            </button>
+          </div>
+        </div>
+
+        {/* Observation Quiz Pop-up Card */}
         <div style={{ 
-          background: '#F8FAFC', 
-          border: '1.5px solid #CBD5E1', 
-          borderRadius: '18px', 
+          background: '#F0FDF4', 
+          border: '2px solid #A7F3D0', 
+          borderRadius: '20px', 
           padding: '1.3rem 1.4rem', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '0.6rem',
-          boxShadow: '0 4px 14px rgba(0,0,0,0.03)'
+          gap: '0.9rem',
+          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', color: '#064E3B', fontWeight: 900, fontSize: '1.1rem' }}>
-            <BookOpen size={22} color="#047857" />
-            <span>
-              {step === 'initial' && 'Step 1: Sprinkle Filings'}
-              {step === 'scattered' && 'Step 2: Tap the Paper'}
-              {(step === 'tapped' || step === 'complete') && 'Step 3: Make Your Observation'}
-            </span>
-          </div>
-          <p style={{ margin: 0, color: '#334155', fontSize: '0.96rem', lineHeight: 1.6, fontWeight: 600 }}>
-            {step === 'initial' && 'Click the "1. Sprinkle" button below to spread iron filings evenly on the paper sheet.'}
-            {step === 'scattered' && 'Click the "2. Tap Paper" button to gently tap the sheet and watch how the filings align.'}
-            {(step === 'tapped' || step === 'complete') && 'Notice where the filings cluster the most, then answer the question below.'}
+          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.18rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+            <AlertCircle size={24} color="#D97706" /> Observation Question
+          </h4>
+          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 700 }}>
+            Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
           </p>
-        </div>
 
-        {/* Action Buttons */}
-        <div style={{ width: '100%', display: 'flex', gap: '0.65rem' }}>
-          <button
-            onClick={handleScatter}
-            disabled={step !== 'initial' || isSprinkling}
-            style={{ 
-              flex: 1, 
-              padding: '0.85rem 0.4rem', 
-              fontSize: '0.9rem', 
-              fontWeight: 900, 
-              borderRadius: '14px', 
-              background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9', 
-              color: step === 'initial' ? '#FFFFFF' : '#94A3B8', 
-              border: 'none', 
-              cursor: step === 'initial' ? 'pointer' : 'not-allowed', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              gap: '4px',
-              boxShadow: step === 'initial' ? '0 4px 12px rgba(217, 119, 6, 0.25)' : 'none'
-            }}
-          >
-            🧪 1. Sprinkle
-          </button>
-          
-          <button
-            onClick={handleTap}
-            disabled={step !== 'scattered' || tapCount >= 1}
-            style={{ 
-              flex: 1, 
-              padding: '0.85rem 0.4rem', 
-              fontSize: '0.9rem', 
-              fontWeight: 900, 
-              borderRadius: '14px', 
-              background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9', 
-              color: (step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8', 
-              border: 'none', 
-              cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'not-allowed', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              gap: '4px',
-              boxShadow: (step === 'scattered' && tapCount === 0) ? '0 4px 12px rgba(217, 119, 6, 0.25)' : 'none'
-            }}
-          >
-            <Hand size={15} /> {tapCount === 0 ? '2. Tap Paper' : 'Tapped ✓'}
-          </button>
-          
-          <button
-            onClick={handleReset}
-            disabled={step === 'initial'}
-            style={{ 
-              flex: 1, 
-              padding: '0.85rem 0.4rem', 
-              fontSize: '0.9rem', 
-              fontWeight: 900, 
-              borderRadius: '14px', 
-              background: '#FFFFFF', 
-              color: step !== 'initial' ? '#1E293B' : '#94A3B8', 
-              border: '1.5px solid #CBD5E1', 
-              cursor: step !== 'initial' ? 'pointer' : 'not-allowed', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              gap: '4px' 
-            }}
-          >
-            <RotateCcw size={15} /> Reset
-          </button>
-        </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <button
+              onClick={() => handleQuizAnswer('uniformly')}
+              style={{ 
+                padding: '0.95rem 1.2rem', 
+                textAlign: 'left', 
+                fontSize: '0.98rem', 
+                fontWeight: 800, 
+                borderRadius: '14px', 
+                cursor: 'pointer', 
+                background: quizAnswer === 'uniformly' ? '#FEE2E2' : '#FFFFFF', 
+                borderColor: quizAnswer === 'uniformly' ? '#EF4444' : '#CBD5E1', 
+                borderWidth: '2px', 
+                borderStyle: 'solid', 
+                color: quizAnswer === 'uniformly' ? '#991B1B' : '#0F172A', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <span>A) Filings stick uniformly all over</span>
+              {quizAnswer === 'uniformly' && <XCircle size={20} color="#EF4444" />}
+            </button>
 
-        {/* Observation Quiz Pop-up Card (Matching Image Design) */}
-        <AnimatePresence>
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{ 
-              background: '#F0FDF4', 
-              border: '1.5px solid #A7F3D0', 
-              borderRadius: '20px', 
-              padding: '1.3rem 1.4rem', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              gap: '1rem',
-              boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)'
-            }}
-          >
-            <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.12rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <AlertCircle size={22} color="#D97706" /> Observation Question
-            </h4>
-            <p style={{ margin: 0, color: '#1E293B', fontSize: '0.96rem', lineHeight: 1.55, fontWeight: 700 }}>
-              Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
-            </p>
+            <button
+              onClick={() => handleQuizAnswer('ends')}
+              style={{ 
+                padding: '0.95rem 1.2rem', 
+                textAlign: 'left', 
+                fontSize: '0.98rem', 
+                fontWeight: 800, 
+                borderRadius: '14px', 
+                cursor: 'pointer', 
+                background: (quizAnswer === 'ends' || step === 'complete') ? '#DCFCE7' : '#FFFFFF', 
+                borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#16A34A' : '#CBD5E1', 
+                borderWidth: '2px', 
+                borderStyle: 'solid', 
+                color: (quizAnswer === 'ends' || step === 'complete') ? '#065F46' : '#0F172A', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <span>B) Most filings cluster at the two ends (Poles)</span>
+              {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={20} color="#16A34A" />}
+            </button>
+          </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          {/* Always-visible Proceed Button */}
+          {(() => {
+            const isReadyToProceed = tapCount >= 1 && (quizAnswer === 'ends' || step === 'complete');
+            return (
               <button
-                onClick={() => handleQuizAnswer('uniformly')}
+                onClick={onComplete}
+                disabled={!isReadyToProceed}
                 style={{ 
-                  padding: '0.9rem 1.1rem', 
-                  textAlign: 'left', 
-                  fontSize: '0.92rem', 
-                  fontWeight: 800, 
-                  borderRadius: '14px', 
-                  cursor: 'pointer', 
-                  background: quizAnswer === 'uniformly' ? '#FEE2E2' : '#FFFFFF', 
-                  borderColor: quizAnswer === 'uniformly' ? '#EF4444' : '#CBD5E1', 
-                  borderWidth: '1.5px', 
-                  borderStyle: 'solid', 
-                  color: quizAnswer === 'uniformly' ? '#991B1B' : '#0F172A', 
+                  width: '100%', 
+                  padding: '1rem', 
+                  fontSize: '1.05rem', 
+                  fontWeight: 900, 
+                  borderRadius: '16px', 
+                  background: isReadyToProceed 
+                    ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' 
+                    : '#F1F5F9', 
+                  color: isReadyToProceed 
+                    ? '#FFFFFF' 
+                    : '#94A3B8', 
+                  border: isReadyToProceed 
+                    ? 'none' 
+                    : '1.5px solid #CBD5E1', 
+                  cursor: isReadyToProceed 
+                    ? 'pointer' 
+                    : 'not-allowed', 
                   display: 'flex', 
                   alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                  transition: 'all 0.2s ease'
+                  justifyContent: 'center', 
+                  gap: '0.55rem',
+                  boxShadow: isReadyToProceed 
+                    ? '0 4px 16px rgba(217, 119, 6, 0.4)' 
+                    : 'none',
+                  transition: 'all 0.25s ease'
                 }}
               >
-                <span>A) Filings stick uniformly all over</span>
-                {quizAnswer === 'uniformly' && <XCircle size={18} color="#EF4444" />}
+                Proceed to Stage 2 <ArrowRight size={20} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
               </button>
-
-              <button
-                onClick={() => handleQuizAnswer('ends')}
-                style={{ 
-                  padding: '0.9rem 1.1rem', 
-                  textAlign: 'left', 
-                  fontSize: '0.92rem', 
-                  fontWeight: 800, 
-                  borderRadius: '14px', 
-                  cursor: 'pointer', 
-                  background: (quizAnswer === 'ends' || step === 'complete') ? '#DCFCE7' : '#FFFFFF', 
-                  borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#16A34A' : '#CBD5E1', 
-                  borderWidth: '1.5px', 
-                  borderStyle: 'solid', 
-                  color: (quizAnswer === 'ends' || step === 'complete') ? '#065F46' : '#0F172A', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                <span>B) Most filings cluster at the two ends (Poles)</span>
-                {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={18} color="#16A34A" />}
-              </button>
-            </div>
-
-            {/* Always-visible Proceed Button (enabled only after completing activity AND answering correctly) */}
-            {(() => {
-              const isReadyToProceed = tapCount >= 1 && (quizAnswer === 'ends' || step === 'complete');
-              return (
-                <button
-                  onClick={onComplete}
-                  disabled={!isReadyToProceed}
-                  style={{ 
-                    width: '100%', 
-                    padding: '0.9rem', 
-                    fontSize: '1rem', 
-                    fontWeight: 900, 
-                    borderRadius: '16px', 
-                    background: isReadyToProceed 
-                      ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' 
-                      : '#F1F5F9', 
-                    color: isReadyToProceed 
-                      ? '#FFFFFF' 
-                      : '#94A3B8', 
-                    border: isReadyToProceed 
-                      ? 'none' 
-                      : '1.5px solid #CBD5E1', 
-                    cursor: isReadyToProceed 
-                      ? 'pointer' 
-                      : 'not-allowed', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center', 
-                    gap: '0.45rem',
-                    boxShadow: isReadyToProceed 
-                      ? '0 4px 14px rgba(217, 119, 6, 0.35)' 
-                      : 'none',
-                    transition: 'all 0.25s ease'
-                  }}
-                >
-                  Proceed to Stage 2 <ArrowRight size={18} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
-                </button>
-              );
-            })()}
-          </motion.div>
-        </AnimatePresence>
+            );
+          })()}
+        </div>
       </div>
     </div>
   );

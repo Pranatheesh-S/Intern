@@ -98,7 +98,7 @@ const CARDS_DATA = [
   {
     num: "09",
     id: "sci6-ch4-sec45-fun-with-magnets",
-    title: "FUN: MAZE RUN",
+    title: "FUN WITH MAGNETS",
     sub: "Maze & runaway cars",
     color: "#d97706",
     glow: "rgba(217, 119, 6, 0.25)",
