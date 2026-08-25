@@ -269,7 +269,7 @@ export default function Questions({ onComplete, onNext }) {
               
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.6rem' }}>
                 <button
-                  onClick={handleNextQuestion}
+                  onClick={handleNext}
                   style={{
                     padding: '0.75rem 2rem',
                     background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',

@@ -372,130 +372,131 @@ export default function Stage2_Floating({ onComplete }) {
       </div>
 
       {/* Right Side: Step-by-Step Guide & Observations (Filled spacious typography) */}
+      {/* Right Side: Step-by-Step Interactive Guide */}
       <div style={{ 
-        flex: '0.95', 
+        flex: '1.15', 
         background: '#FFFFFF',
-        border: '1.5px solid #A7F3D0',
-        borderRadius: '22px',
-        padding: '1.25rem 1.35rem',
-        boxShadow: '0 6px 20px rgba(6, 78, 59, 0.06)',
+        border: '2px solid #A7F3D0',
+        borderRadius: '24px',
+        padding: '1.5rem 1.6rem',
+        boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)',
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
         minWidth: 0, 
         height: '100%',
         boxSizing: 'border-box',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        gap: '1rem'
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.24rem', fontWeight: 900, letterSpacing: '-0.01em' }}>
-            Floating Compass Steps
-          </h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <Compass size={26} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900 }}>
+                Stage 2: Make a Compass
+              </h3>
+            </div>
+            <span style={{
+              background: '#FEF3C7',
+              color: '#92400E',
+              fontWeight: 900,
+              fontSize: '0.85rem',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '12px',
+              border: '1.5px solid #FDE68A'
+            }}>
+              Step {step === 'settled' ? (spinCount > 0 ? 3 : 2) : 1} of 3
+            </span>
+          </div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-            <div style={{ 
-              display: 'flex', 
-              gap: '0.75rem', 
-              alignItems: 'center',
-              padding: '0.75rem 0.95rem',
-              borderRadius: '14px',
-              background: step !== 'initial' ? '#DCFCE7' : '#F0FDF4',
-              border: `1.5px solid ${step !== 'initial' ? '#16A34A' : '#A7F3D0'}`
-            }}>
-              <span style={{ 
-                width: '26px', 
-                height: '26px', 
-                borderRadius: '50%', 
-                background: step !== 'initial' ? '#16A34A' : '#D97706',
-                color: '#FFF', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                fontSize: '0.85rem',
-                fontWeight: 900,
-                flexShrink: 0
-              }}>1</span>
-              <div>
-                <strong style={{ color: '#064E3B', fontSize: '0.98rem' }}>Float on Water:</strong>
-                <p style={{ margin: '0.15rem 0 0 0', color: '#475569', fontSize: '0.88rem', lineHeight: '1.4' }}>
-                  Insert the magnetized needle into the light cork and place it in the water bowl.
-                </p>
-              </div>
-            </div>
+          {/* Step Cards Visible from Initial Load */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {[
+              {
+                stepNum: 1,
+                title: '1. Float Cork on Water',
+                desc: 'Insert the magnetized needle into the light cork and place it gently in the water bowl.'
+              },
+              {
+                stepNum: 2,
+                title: '2. Observe Natural Alignment',
+                desc: 'The floating needle freely rotates on the water surface and settles pointing North-South.'
+              },
+              {
+                stepNum: 3,
+                title: '3. Rotate & Verify Stability',
+                desc: 'Spin the needle in random directions — it always returns steadily to the North-South line!'
+              }
+            ].map((s) => {
+              const currentStepNum = step === 'settled' ? (spinCount > 0 ? 3 : 2) : 1;
+              const isCurrent = currentStepNum === s.stepNum;
+              const isPast = currentStepNum > s.stepNum || (s.stepNum === 1 && step !== 'initial') || (s.stepNum === 2 && step === 'settled');
 
-            <div style={{ 
-              display: 'flex', 
-              gap: '0.75rem', 
-              alignItems: 'center',
-              padding: '0.75rem 0.95rem',
-              borderRadius: '14px',
-              background: step === 'settled' ? '#DCFCE7' : '#F8FAFC',
-              border: `1.5px solid ${step === 'settled' ? '#16A34A' : '#CBD5E1'}`
-            }}>
-              <span style={{ 
-                width: '26px', 
-                height: '26px', 
-                borderRadius: '50%', 
-                background: step === 'settled' ? '#16A34A' : '#94A3B8',
-                color: '#FFF', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                fontSize: '0.85rem',
-                fontWeight: 900,
-                flexShrink: 0
-              }}>2</span>
-              <div>
-                <strong style={{ color: '#064E3B', fontSize: '0.98rem' }}>Observe Alignment:</strong>
-                <p style={{ margin: '0.15rem 0 0 0', color: '#475569', fontSize: '0.88rem', lineHeight: '1.4' }}>
-                  The floating needle freely rotates and settles pointing along the North-South line.
-                </p>
-              </div>
-            </div>
-
-            <div style={{ 
-              display: 'flex', 
-              gap: '0.75rem', 
-              alignItems: 'center',
-              padding: '0.75rem 0.95rem',
-              borderRadius: '14px',
-              background: spinCount > 0 ? '#DCFCE7' : '#F8FAFC',
-              border: `1.5px solid ${spinCount > 0 ? '#16A34A' : '#CBD5E1'}`
-            }}>
-              <span style={{ 
-                width: '26px', 
-                height: '26px', 
-                borderRadius: '50%', 
-                background: spinCount > 0 ? '#16A34A' : '#94A3B8',
-                color: '#FFF', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                fontSize: '0.85rem',
-                fontWeight: 900,
-                flexShrink: 0
-              }}>3</span>
-              <div>
-                <strong style={{ color: '#064E3B', fontSize: '0.98rem' }}>Rotate & Test:</strong>
-                <p style={{ margin: '0.15rem 0 0 0', color: '#475569', fontSize: '0.88rem', lineHeight: '1.4' }}>
-                  Spin the needle in any random direction — it always returns directly to North-South!
-                </p>
-              </div>
-            </div>
+              return (
+                <div
+                  key={s.stepNum}
+                  style={{
+                    padding: '0.95rem 1.15rem',
+                    borderRadius: '16px',
+                    background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
+                    border: isCurrent 
+                      ? '2.5px solid #F59E0B' 
+                      : isPast 
+                      ? '2px solid #10B981' 
+                      : '2px solid #CBD5E1',
+                    boxShadow: isCurrent 
+                      ? '0 6px 18px rgba(245, 158, 11, 0.2)' 
+                      : isPast 
+                      ? '0 4px 12px rgba(16, 185, 129, 0.12)' 
+                      : '0 2px 8px rgba(0,0,0,0.03)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span style={{
+                        width: '26px',
+                        height: '26px',
+                        borderRadius: '50%',
+                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        color: '#FFFFFF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.85rem',
+                        fontWeight: 900,
+                        flexShrink: 0
+                      }}>
+                        {s.stepNum}
+                      </span>
+                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                        {s.title}
+                      </span>
+                    </div>
+                    {isPast && <CheckCircle size={20} color="#10B981" />}
+                  </div>
+                  <p style={{ margin: '0.38rem 0 0 0', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                    {s.desc}
+                  </p>
+                </div>
+              );
+            })}
           </div>
 
           {/* Observation Alert Card */}
           <div style={{ 
             background: step === 'settled' ? '#F0FDF4' : '#F8FAFC', 
-            border: `1.5px solid ${step === 'settled' ? '#A7F3D0' : '#E2E8F0'}`, 
-            padding: '1rem 1.2rem', 
-            borderRadius: '16px',
-            boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)'
+            border: `2px solid ${step === 'settled' ? '#A7F3D0' : '#CBD5E1'}`, 
+            padding: '1.25rem 1.4rem', 
+            borderRadius: '20px',
+            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)'
           }}>
-            <h5 style={{ margin: '0 0 0.35rem 0', color: step === 'settled' ? '#064E3B' : '#64748B', fontSize: '1.04rem', fontWeight: 900 }}>
+            <h5 style={{ margin: '0 0 0.45rem 0', color: step === 'settled' ? '#064E3B' : '#64748B', fontSize: '1.15rem', fontWeight: 900 }}>
               🔍 Scientific Observation
             </h5>
-            <p style={{ margin: 0, fontSize: '0.94rem', color: step === 'settled' ? '#1E293B' : '#64748B', lineHeight: '1.5', fontWeight: 600 }}>
+            <p style={{ margin: 0, fontSize: '0.98rem', color: step === 'settled' ? '#1E293B' : '#64748B', lineHeight: 1.55, fontWeight: 600 }}>
               {step === 'settled'
                 ? "The magnetized needle always comes to rest pointing North-South, working just like a real magnetic navigation compass!"
                 : "Rotate the needle in different directions and let it settle to observe."}
@@ -504,19 +505,19 @@ export default function Stage2_Floating({ onComplete }) {
         </div>
 
         {/* Action Controls Section on Right */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.6rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.4rem' }}>
           <button
             onClick={step === 'initial' ? handlePlaceCork : handleSpin}
             style={{
               width: '100%',
-              padding: '0.85rem 1.5rem',
-              fontSize: '0.98rem',
+              padding: '0.95rem 1.5rem',
+              fontSize: '1.05rem',
               fontWeight: 900,
-              borderRadius: '25px',
+              borderRadius: '20px',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              gap: '0.6rem',
+              gap: '0.65rem',
               background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
               color: '#FFFFFF',
               border: 'none',
@@ -527,11 +528,11 @@ export default function Stage2_Floating({ onComplete }) {
           >
             {step === 'initial' ? (
               <>
-                <Flag size={18} color="#FFFFFF" /> Float Cork on Water
+                <Flag size={20} color="#FFFFFF" /> Float Cork on Water
               </>
             ) : (
               <>
-                <RotateCcw size={18} color="#FFFFFF" /> Spin Needle Fast! 🔄
+                <RotateCcw size={20} color="#FFFFFF" /> Spin Needle Fast! 🔄
               </>
             )}
           </button>
@@ -542,10 +543,10 @@ export default function Stage2_Floating({ onComplete }) {
             disabled={step !== 'settled'}
             style={{ 
               width: '100%', 
-              padding: '0.85rem 1.5rem', 
-              fontSize: '0.98rem', 
+              padding: '0.95rem 1.5rem', 
+              fontSize: '1.05rem', 
               fontWeight: 900, 
-              borderRadius: '25px', 
+              borderRadius: '20px', 
               display: 'flex', 
               justifyContent: 'center', 
               alignItems: 'center', 
@@ -554,11 +555,11 @@ export default function Stage2_Floating({ onComplete }) {
               color: step === 'settled' ? '#FFFFFF' : '#94A3B8',
               border: 'none',
               cursor: step === 'settled' ? 'pointer' : 'not-allowed',
-              boxShadow: step === 'settled' ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
+              boxShadow: step === 'settled' ? '0 4px 16px rgba(217, 119, 6, 0.4)' : 'none',
               transition: 'all 0.25s ease'
             }}
           >
-            <CheckCircle size={18} color={step === 'settled' ? "#FFFFFF" : "#94A3B8"} /> Finish Activity & Proceed to Quiz
+            <CheckCircle size={20} color={step === 'settled' ? "#FFFFFF" : "#94A3B8"} /> Finish Activity & Proceed to Quiz
           </button>
         </div>
       </div>

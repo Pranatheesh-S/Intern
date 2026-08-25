@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, useMotionValue } from 'framer-motion';
+import { motion, useMotionValue, AnimatePresence } from 'framer-motion';
 import { 
   RotateCcw, 
   ArrowRight, 
@@ -12,7 +12,9 @@ import {
   RefreshCw,
   Play,
   Pause,
-  Navigation
+  Navigation,
+  HelpCircle,
+  X
 } from 'lucide-react';
 import ExactCompass from '../components/ExactCompass.jsx';
 
@@ -29,6 +31,45 @@ const getBearingName = (deg) => {
   return '';
 };
 
+const ACTION_POPUP_DATA = {
+  1: {
+    step: 1,
+    badge: "Step 1 of 4",
+    title: "Action 1: Observe Natural Compass Alignment",
+    icon: "🧭",
+    instruction: "With no magnets placed near the compass, observe how Earth's geomagnetic field naturally points the red needle toward North (0° / Bearing: 0° N).",
+    actionPrompt: "Observe initial North alignment",
+    btnLabel: "Got it! Let's Bring Magnet ➔"
+  },
+  2: {
+    step: 2,
+    badge: "Step 2 of 4",
+    title: "Action 2: Move Bar Magnet Around Compass",
+    icon: "🧲",
+    instruction: "Drag the Bar Magnet along the circular orbit (or click the West, North, East, South buttons) to see how the compass needle deflects in real time!",
+    actionPrompt: "Drag magnet or click cardinal stations",
+    btnLabel: "Got it! Dragging Magnet ➔"
+  },
+  3: {
+    step: 3,
+    badge: "Step 3 of 4",
+    title: "Action 3: Flip Magnet Polarity",
+    icon: "🔄",
+    instruction: "Click 'Flip Magnet' to reverse the poles (N ↔ S). Watch the magnet automatically orbit through North → East → South → West while pausing at each station!",
+    actionPrompt: "Click 'Flip Magnet' to start auto-tour",
+    btnLabel: "Got it! Let's Flip Magnet ➔"
+  },
+  4: {
+    step: 4,
+    badge: "Action 4 of 4",
+    title: "Action 4: Observation Complete",
+    icon: "🎯",
+    instruction: "Unlike magnetic poles attract (South attracts North) and like poles repel! You're now ready to test your knowledge in the Challenge Mode & Questions!",
+    actionPrompt: "Proceed to next learning stage",
+    btnLabel: "Proceed to Concept Check ➔"
+  }
+};
+
 const STEPS = [
   {
     step: 1,
@@ -42,13 +83,13 @@ const STEPS = [
   },
   {
     step: 3,
-    title: "Step 3: Orbit from West → North → East → South",
-    desc: "As the magnet orbits and rotates around the compass, the needle continuously turns to track the magnetic field."
+    title: "Step 3: Orbit through North → East → South → West",
+    desc: "Observe how the compass needle continuously turns as the magnet visits and pauses at each cardinal direction."
   },
   {
     step: 4,
     title: "Step 4: Flip Magnet Polarity",
-    desc: "Click 'Flip Magnet' to reverse the poles (N ↔ S). Watch the compass needle completely reverse its attraction and repulsion!"
+    desc: "Click 'Flip Magnet' to reverse poles (N ↔ S). The magnet will automatically move to North (wait), East (wait), South (wait), and West (wait)!"
   }
 ];
 
@@ -108,9 +149,21 @@ export default function Simulation({ onComplete, onNext }) {
   const [magnetRotation, setMagnetRotation] = useState(0); // in degrees
   const [isOrbiting, setIsOrbiting] = useState(false);
   const [currentStation, setCurrentStation] = useState('west'); // 'west', 'north', 'east', 'south', 'custom'
+  const [tourStatus, setTourStatus] = useState('');
   const [activeInteraction, setActiveInteraction] = useState('Repelling'); // 'Repelling' | 'Attracting'
   const [isCompleted, setIsCompleted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [currentActionStep, setCurrentActionStep] = useState(1);
+  const [showActionModal, setShowActionModal] = useState(true);
+
+  const handleAdvanceAction = () => {
+    setShowActionModal(false);
+    if (currentActionStep === 1) {
+      setCurrentActionStep(2);
+    } else if (currentActionStep === 4) {
+      if (onNext) onNext();
+    }
+  };
 
   // Trajectory exploration tracker
   const [testedOrbit, setTestedOrbit] = useState(false);
@@ -221,7 +274,7 @@ export default function Simulation({ onComplete, onNext }) {
   }, [magX, magY, updateCompassPhysics]);
 
   // -------------------------------------------------------------------
-  // Automated Smooth Orbital Tour: West → North → East → South → West
+  // Automated 4-Station Tour: North (wait) → East (wait) → South (wait) → West (settle)
   // -------------------------------------------------------------------
   const startOrbitalSequence = useCallback((options = {}) => {
     if (orbitAnimRef.current) {
@@ -231,59 +284,182 @@ export default function Simulation({ onComplete, onNext }) {
     setIsOrbiting(true);
     playMagneticSound('whoosh');
 
-    const R = 230; // Orbital orbit radius around compass
-    const DURATION = 7000; // 7 seconds full orbit
-    const startTime = performance.now();
+    const R = 230; // Orbital radius
+    const startX = magX.get();
+    const startY = magY.get();
+    const startRot = magnetRotation;
+    const isAlreadyAtWest = Math.hypot(startX - (-R), startY - 0) < 20;
 
-    // Start angle is 180° (West). It sweeps clockwise: 180° (West) -> 90° (North) -> 0° (East) -> -90° (South) -> -180° (West)
+    const MOVE_DUR = 1000;
+    const PAUSE_DUR = 1300;
+
+    const segments = [
+      // 1. Move to North
+      {
+        type: 'move',
+        station: 'north',
+        fromPhi: isAlreadyAtWest ? Math.PI : Math.atan2(-startY, startX),
+        toPhi: Math.PI / 2,
+        duration: MOVE_DUR,
+        status: '🧭 Moving to North Station...',
+        useDirectInterpolation: !isAlreadyAtWest
+      },
+      // 2. Pause at North
+      {
+        type: 'pause',
+        station: 'north',
+        phi: Math.PI / 2,
+        x: 0,
+        y: -R,
+        rot: 90,
+        duration: PAUSE_DUR,
+        status: '⏸️ Paused at North Station — Observing needle response'
+      },
+      // 3. Move to East
+      {
+        type: 'move',
+        station: 'east',
+        fromPhi: Math.PI / 2,
+        toPhi: 0,
+        duration: MOVE_DUR,
+        status: '🧭 Moving to East Station...'
+      },
+      // 4. Pause at East
+      {
+        type: 'pause',
+        station: 'east',
+        phi: 0,
+        x: R,
+        y: 0,
+        rot: 180,
+        duration: PAUSE_DUR,
+        status: '⏸️ Paused at East Station — Observing needle response'
+      },
+      // 5. Move to South
+      {
+        type: 'move',
+        station: 'south',
+        fromPhi: 0,
+        toPhi: -Math.PI / 2,
+        duration: MOVE_DUR,
+        status: '🧭 Moving to South Station...'
+      },
+      // 6. Pause at South
+      {
+        type: 'pause',
+        station: 'south',
+        phi: -Math.PI / 2,
+        x: 0,
+        y: R,
+        rot: 270,
+        duration: PAUSE_DUR,
+        status: '⏸️ Paused at South Station — Observing needle response'
+      },
+      // 7. Move to West
+      {
+        type: 'move',
+        station: 'west',
+        fromPhi: -Math.PI / 2,
+        toPhi: -Math.PI,
+        duration: MOVE_DUR,
+        status: '🧭 Moving to West Station...'
+      },
+      // 8. Settle at West
+      {
+        type: 'pause',
+        station: 'west',
+        phi: -Math.PI,
+        x: -R,
+        y: 0,
+        rot: 0,
+        duration: 600,
+        status: '✅ Station Tour Complete at West Station'
+      }
+    ];
+
+    let accum = 0;
+    const timeline = segments.map((seg) => {
+      const start = accum;
+      const end = start + seg.duration;
+      accum = end;
+      return { ...seg, start, end };
+    });
+
+    const totalDuration = accum;
+    const startTime = performance.now();
+    let lastSegIndex = -1;
+
     const animate = (currentTime) => {
       const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / DURATION, 1);
 
-      // Smooth easeInOut curve
-      const ease = progress < 0.5
-        ? 2 * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-      // Angle phi from π (West) to -π (West, full 360 loop)
-      const phi = Math.PI - ease * 2 * Math.PI;
-
-      // Position: (-Y is up in screen coordinates)
-      const curX = R * Math.cos(phi);
-      const curY = -R * Math.sin(phi);
-
-      // Magnet rotation: Keep the inner pole facing directly towards compass center (0,0)
-      // At West (phi = π): rotation = 0° (right pole points East towards center)
-      // At North (phi = π/2): rotation = 90° (right pole points South towards center)
-      // At East (phi = 0): rotation = 180° (right pole points West towards center)
-      // At South (phi = -π/2): rotation = 270° (right pole points North towards center)
-      const phiDeg = (phi * 180) / Math.PI;
-      const rot = (180 - phiDeg + 360) % 360;
-
-      magX.set(curX);
-      magY.set(curY);
-      setMagnetRotation(rot);
-
-      // Update current station label
-      if (progress < 0.22) setCurrentStation('west');
-      else if (progress < 0.48) setCurrentStation('north');
-      else if (progress < 0.73) setCurrentStation('east');
-      else if (progress < 0.95) setCurrentStation('south');
-      else setCurrentStation('west');
-
-      if (progress < 1) {
-        orbitAnimRef.current = requestAnimationFrame(animate);
-      } else {
-        setIsOrbiting(false);
+      if (elapsed >= totalDuration) {
+        magX.set(-R);
+        magY.set(0);
+        setMagnetRotation(0);
         setCurrentStation('west');
+        setTourStatus('');
+        setIsOrbiting(false);
         setTestedOrbit(true);
         if (currentStep < 4) setCurrentStep(4);
+        if (currentActionStep === 3) {
+          setCurrentActionStep(4);
+          setShowActionModal(true);
+        }
         if (options.onFinish) options.onFinish();
+        return;
       }
+
+      let activeIdx = timeline.findIndex(seg => elapsed >= seg.start && elapsed < seg.end);
+      if (activeIdx === -1) activeIdx = timeline.length - 1;
+      const seg = timeline[activeIdx];
+
+      if (activeIdx !== lastSegIndex) {
+        lastSegIndex = activeIdx;
+        if (seg.type === 'pause') {
+          playMagneticSound('snap');
+        } else {
+          playMagneticSound('whoosh');
+        }
+      }
+
+      setTourStatus(seg.status);
+      setCurrentStation(seg.station);
+
+      if (seg.type === 'pause') {
+        magX.set(seg.x);
+        magY.set(seg.y);
+        setMagnetRotation(seg.rot);
+      } else {
+        const segElapsed = elapsed - seg.start;
+        const progress = Math.min(segElapsed / seg.duration, 1);
+        const ease = progress < 0.5
+          ? 2 * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+        if (seg.useDirectInterpolation) {
+          const curX = startX + (0 - startX) * ease;
+          const curY = startY + (-R - startY) * ease;
+          const curRot = startRot + (90 - startRot) * ease;
+          magX.set(curX);
+          magY.set(curY);
+          setMagnetRotation(curRot);
+        } else {
+          const curPhi = seg.fromPhi + (seg.toPhi - seg.fromPhi) * ease;
+          const curX = R * Math.cos(curPhi);
+          const curY = -R * Math.sin(curPhi);
+          const phiDeg = (curPhi * 180) / Math.PI;
+          const curRot = (180 - phiDeg + 360) % 360;
+          magX.set(curX);
+          magY.set(curY);
+          setMagnetRotation(curRot);
+        }
+      }
+
+      orbitAnimRef.current = requestAnimationFrame(animate);
     };
 
     orbitAnimRef.current = requestAnimationFrame(animate);
-  }, [magX, magY, currentStep]);
+  }, [magX, magY, magnetRotation, currentStep]);
 
   // Clean up animation on unmount
   useEffect(() => {
@@ -309,7 +485,7 @@ export default function Simulation({ onComplete, onNext }) {
       if (onComplete) onComplete();
     }
 
-    // Automatically place magnet at West and execute orbital sequence
+    // Automatically trigger North -> wait -> East -> wait -> South -> wait -> West
     startOrbitalSequence();
   };
 
@@ -319,6 +495,7 @@ export default function Simulation({ onComplete, onNext }) {
   const jumpToStation = (station) => {
     if (orbitAnimRef.current) cancelAnimationFrame(orbitAnimRef.current);
     setIsOrbiting(false);
+    setTourStatus('');
     playMagneticSound('snap');
 
     const R = 230;
@@ -343,12 +520,18 @@ export default function Simulation({ onComplete, onNext }) {
       setMagnetRotation(270);
       setCurrentStation('south');
     }
+
+    if (currentActionStep === 2) {
+      setCurrentActionStep(3);
+      setShowActionModal(true);
+    }
   };
 
   // Reset Experiment
   const handleReset = () => {
     if (orbitAnimRef.current) cancelAnimationFrame(orbitAnimRef.current);
     setIsOrbiting(false);
+    setTourStatus('');
     setIsFlipped(false);
     setMagnetRotation(0);
     magX.set(-230);
@@ -359,12 +542,15 @@ export default function Simulation({ onComplete, onNext }) {
     setTestedFlip(false);
     setIsCompleted(false);
     setCompassAngle(0);
+    setCurrentActionStep(1);
+    setShowActionModal(true);
   };
 
   // Return needle to normal North & South
   const handleRealignCompass = () => {
     if (orbitAnimRef.current) cancelAnimationFrame(orbitAnimRef.current);
     setIsOrbiting(false);
+    setTourStatus('');
     magX.set(-230);
     magY.set(0);
     setMagnetRotation(0);
@@ -382,9 +568,9 @@ export default function Simulation({ onComplete, onNext }) {
         width: '100%',
         height: '100%',
         display: 'grid',
-        gridTemplateColumns: '370px 1fr',
-        gap: '1rem',
-        padding: '0.5rem',
+        gridTemplateColumns: '460px 1fr',
+        gap: '1.25rem',
+        padding: '0.65rem',
         boxSizing: 'border-box',
         overflow: 'hidden',
         position: 'relative'
@@ -392,41 +578,65 @@ export default function Simulation({ onComplete, onNext }) {
     >
       {/* Left Column: Activity Step Instructions & Controls */}
       <div className="custom-scroll" style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(12px)',
-        borderRadius: '20px',
-        border: '1.5px solid #A7F3D0',
-        padding: '1.25rem',
+        background: 'rgba(255, 255, 255, 0.97)',
+        backdropFilter: 'blur(14px)',
+        borderRadius: '24px',
+        border: '2px solid #A7F3D0',
+        padding: '1.6rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        boxShadow: '0 8px 32px rgba(6, 78, 59, 0.08)',
+        boxShadow: '0 10px 36px rgba(6, 78, 59, 0.09)',
         zIndex: 10,
         overflowY: 'auto'
       }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-              <CompassIcon size={22} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.18rem', color: '#064E3B', fontWeight: 900 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <CompassIcon size={28} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.45rem', color: '#064E3B', fontWeight: 900, letterSpacing: '-0.02em' }}>
                 Activity 4.6 Lab
               </h3>
             </div>
-            <span style={{
-              background: '#FEF3C7',
-              color: '#92400E',
-              fontWeight: 900,
-              fontSize: '0.75rem',
-              padding: '0.2rem 0.55rem',
-              borderRadius: '8px',
-              border: '1px solid #FDE68A'
-            }}>
-              Step {currentStep} of 4
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+              <button
+                type="button"
+                onClick={() => setShowActionModal(true)}
+                style={{
+                  background: '#ECFDF5',
+                  color: '#065F46',
+                  border: '1.5px solid #A7F3D0',
+                  borderRadius: '12px',
+                  padding: '0.35rem 0.85rem',
+                  fontSize: '0.86rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  boxShadow: '0 2px 6px rgba(6, 78, 59, 0.06)'
+                }}
+                title="View action guidance"
+              >
+                <span>💡 Action Step {currentActionStep} Guide</span>
+              </button>
+              <span style={{
+                background: '#FEF3C7',
+                color: '#92400E',
+                fontWeight: 900,
+                fontSize: '0.86rem',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '12px',
+                border: '1.5px solid #FDE68A'
+              }}>
+                Step {currentStep} of 4
+              </span>
+            </div>
           </div>
 
-          {/* Interactive Steps Carousel */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          {/* All 4 Interactive Steps Fully Visible from Initial Load */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {STEPS.map((s) => {
               const isCurrent = currentStep === s.step;
               const isPast = currentStep > s.step || (s.step === 3 && testedOrbit) || (s.step === 4 && testedFlip);
@@ -435,21 +645,46 @@ export default function Simulation({ onComplete, onNext }) {
                 <div
                   key={s.step}
                   style={{
-                    padding: '0.75rem 0.9rem',
-                    borderRadius: '12px',
+                    padding: '1.05rem 1.35rem',
+                    borderRadius: '18px',
                     background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
-                    border: `1.5px solid ${isCurrent ? '#F59E0B' : isPast ? '#10B981' : '#E2E8F0'}`,
-                    boxShadow: isCurrent ? '0 4px 12px rgba(245, 158, 11, 0.15)' : 'none',
+                    border: isCurrent 
+                      ? '2.5px solid #F59E0B' 
+                      : isPast 
+                      ? '2px solid #10B981' 
+                      : '2px solid #CBD5E1',
+                    boxShadow: isCurrent 
+                      ? '0 6px 20px rgba(245, 158, 11, 0.22)' 
+                      : isPast
+                      ? '0 4px 12px rgba(16, 185, 129, 0.12)'
+                      : '0 2px 8px rgba(0,0,0,0.03)',
                     transition: 'all 0.3s ease'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontWeight: 800, fontSize: '0.9rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#475569' }}>
-                      {s.title}
-                    </span>
-                    {isPast && <CheckCircle2 size={16} color="#10B981" />}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        color: '#FFFFFF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.85rem',
+                        fontWeight: 900,
+                        flexShrink: 0
+                      }}>
+                        {s.step}
+                      </span>
+                      <span style={{ fontWeight: 900, fontSize: '1.12rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                        {s.title}
+                      </span>
+                    </div>
+                    {isPast && <CheckCircle2 size={22} color="#10B981" />}
                   </div>
-                  <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.8rem', color: '#1E293B', lineHeight: 1.45, fontWeight: 500 }}>
+                  <p style={{ margin: '0.45rem 0 0 0', fontSize: '0.96rem', color: '#1E293B', lineHeight: 1.55, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -459,33 +694,46 @@ export default function Simulation({ onComplete, onNext }) {
 
           {/* Live Status Diagnostic Card */}
           <div style={{
-            marginTop: '0.85rem',
-            padding: '0.75rem',
+            padding: '1.15rem 1.4rem',
             background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
-            borderRadius: '14px',
-            border: '1.5px solid #38BDF8',
+            borderRadius: '20px',
+            border: '2px solid #38BDF8',
             color: '#FFFFFF',
-            fontSize: '0.78rem'
+            boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.98rem' }}>
               <span style={{ color: '#94A3B8', fontWeight: 700 }}>Facing Pole:</span>
-              <strong style={{ color: isFlipped ? '#60A5FA' : '#F87171' }}>
+              <strong style={{ color: isFlipped ? '#60A5FA' : '#F87171', fontSize: '1.05rem' }}>
                 {isFlipped ? '🔵 South Pole (S)' : '🔴 North Pole (N)'}
               </strong>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.98rem' }}>
               <span style={{ color: '#94A3B8', fontWeight: 700 }}>Cardinal Station:</span>
-              <strong style={{ color: '#FDE047', textTransform: 'uppercase' }}>{currentStation}</strong>
+              <strong style={{ color: '#FDE047', textTransform: 'uppercase', fontSize: '1.05rem' }}>{currentStation}</strong>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: tourStatus ? '8px' : '0', fontSize: '0.98rem' }}>
               <span style={{ color: '#94A3B8', fontWeight: 700 }}>Needle Response:</span>
-              <strong style={{ color: '#34D399' }}>{activeInteraction}</strong>
+              <strong style={{ color: '#34D399', fontSize: '1.05rem' }}>{activeInteraction}</strong>
             </div>
+            {tourStatus && (
+              <div style={{ 
+                marginTop: '10px', 
+                padding: '8px 14px', 
+                background: 'rgba(56, 189, 248, 0.2)', 
+                borderRadius: '12px', 
+                border: '1.5px solid rgba(56, 189, 248, 0.5)', 
+                color: '#BAE6FD', 
+                fontWeight: 900,
+                fontSize: '0.94rem'
+              }}>
+                {tourStatus}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Primary Action Controls */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginTop: '0.85rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '1.25rem' }}>
           {/* Main Flip Magnet Button */}
           <button
             type="button"
@@ -493,42 +741,43 @@ export default function Simulation({ onComplete, onNext }) {
             disabled={isOrbiting}
             style={{
               width: '100%',
-              padding: '0.85rem',
-              borderRadius: '14px',
+              padding: '1.15rem',
+              borderRadius: '20px',
               border: 'none',
               background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
               color: '#FFFFFF',
               fontWeight: 900,
-              fontSize: '0.98rem',
+              fontSize: '1.12rem',
               cursor: isOrbiting ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.55rem',
-              boxShadow: '0 4px 14px rgba(217, 119, 6, 0.4)',
-              transition: 'all 0.2s ease',
+              gap: '0.75rem',
+              boxShadow: '0 6px 22px rgba(217, 119, 6, 0.45)',
+              transition: 'all 0.25s ease',
               opacity: isOrbiting ? 0.7 : 1
             }}
           >
-            <RefreshCw size={18} className={isOrbiting ? 'animate-spin' : ''} />
-            Flip Magnet & Auto-Orbit (N ↔ S)
+            <RefreshCw size={22} className={isOrbiting ? 'animate-spin' : ''} />
+            {isOrbiting ? 'Auto-Touring (N → E → S → W)...' : 'Flip Magnet (Auto-Tour: N → E → S → W)'}
           </button>
 
           {/* Cardinal Stations Quick Jump Matrix */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '4px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
             <button
               type="button"
               onClick={() => jumpToStation('west')}
               disabled={isOrbiting}
               style={{
-                padding: '0.4rem 0',
-                borderRadius: '8px',
-                border: currentStation === 'west' ? '2px solid #F59E0B' : '1px solid #CBD5E1',
+                padding: '0.8rem 0',
+                borderRadius: '14px',
+                border: currentStation === 'west' ? '2.5px solid #F59E0B' : '1.5px solid #CBD5E1',
                 background: currentStation === 'west' ? '#FEF3C7' : '#F8FAFC',
-                color: currentStation === 'west' ? '#92400E' : '#334155',
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                cursor: 'pointer'
+                color: currentStation === 'west' ? '#92400E' : '#1E293B',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
               }}
             >
               🧭 West
@@ -538,14 +787,15 @@ export default function Simulation({ onComplete, onNext }) {
               onClick={() => jumpToStation('north')}
               disabled={isOrbiting}
               style={{
-                padding: '0.4rem 0',
-                borderRadius: '8px',
-                border: currentStation === 'north' ? '2px solid #F59E0B' : '1px solid #CBD5E1',
+                padding: '0.8rem 0',
+                borderRadius: '14px',
+                border: currentStation === 'north' ? '2.5px solid #F59E0B' : '1.5px solid #CBD5E1',
                 background: currentStation === 'north' ? '#FEF3C7' : '#F8FAFC',
-                color: currentStation === 'north' ? '#92400E' : '#334155',
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                cursor: 'pointer'
+                color: currentStation === 'north' ? '#92400E' : '#1E293B',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
               }}
             >
               🧭 North
@@ -555,14 +805,15 @@ export default function Simulation({ onComplete, onNext }) {
               onClick={() => jumpToStation('east')}
               disabled={isOrbiting}
               style={{
-                padding: '0.4rem 0',
-                borderRadius: '8px',
-                border: currentStation === 'east' ? '2px solid #F59E0B' : '1px solid #CBD5E1',
+                padding: '0.8rem 0',
+                borderRadius: '14px',
+                border: currentStation === 'east' ? '2.5px solid #F59E0B' : '1.5px solid #CBD5E1',
                 background: currentStation === 'east' ? '#FEF3C7' : '#F8FAFC',
-                color: currentStation === 'east' ? '#92400E' : '#334155',
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                cursor: 'pointer'
+                color: currentStation === 'east' ? '#92400E' : '#1E293B',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
               }}
             >
               🧭 East
@@ -572,14 +823,15 @@ export default function Simulation({ onComplete, onNext }) {
               onClick={() => jumpToStation('south')}
               disabled={isOrbiting}
               style={{
-                padding: '0.4rem 0',
-                borderRadius: '8px',
-                border: currentStation === 'south' ? '2px solid #F59E0B' : '1px solid #CBD5E1',
+                padding: '0.8rem 0',
+                borderRadius: '14px',
+                border: currentStation === 'south' ? '2.5px solid #F59E0B' : '1.5px solid #CBD5E1',
                 background: currentStation === 'south' ? '#FEF3C7' : '#F8FAFC',
-                color: currentStation === 'south' ? '#92400E' : '#334155',
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                cursor: 'pointer'
+                color: currentStation === 'south' ? '#92400E' : '#1E293B',
+                fontSize: '0.98rem',
+                fontWeight: 900,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
               }}
             >
               🧭 South
@@ -587,27 +839,28 @@ export default function Simulation({ onComplete, onNext }) {
           </div>
 
           {/* Reset & Proceed Buttons */}
-          <div style={{ display: 'flex', gap: '6px' }}>
+          <div style={{ display: 'flex', gap: '10px' }}>
             <button
               type="button"
               onClick={handleReset}
               style={{
                 flex: 1,
-                padding: '0.55rem',
-                borderRadius: '10px',
+                padding: '0.85rem',
+                borderRadius: '16px',
                 border: '1.5px solid #CBD5E1',
                 background: '#FFFFFF',
-                color: '#334155',
-                fontWeight: 700,
-                fontSize: '0.8rem',
+                color: '#1E293B',
+                fontWeight: 900,
+                fontSize: '1rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.35rem'
+                gap: '0.5rem',
+                transition: 'all 0.2s ease'
               }}
             >
-              <RotateCcw size={14} /> Reset
+              <RotateCcw size={18} /> Reset
             </button>
 
             {isCompleted && (
@@ -616,22 +869,23 @@ export default function Simulation({ onComplete, onNext }) {
                 onClick={onNext}
                 style={{
                   flex: 1.4,
-                  padding: '0.55rem',
-                  borderRadius: '10px',
+                  padding: '0.85rem',
+                  borderRadius: '16px',
                   border: 'none',
                   background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
                   color: '#FFFFFF',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
+                  fontWeight: 900,
+                  fontSize: '1.02rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.35rem',
-                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                  gap: '0.5rem',
+                  boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)',
+                  transition: 'all 0.2s ease'
                 }}
               >
-                Next Step <ArrowRight size={14} />
+                Next Step <ArrowRight size={18} />
               </button>
             )}
           </div>
@@ -662,7 +916,7 @@ export default function Simulation({ onComplete, onNext }) {
           backgroundSize: '24px 24px'
         }} />
 
-        {/* Orbit Path Guide Ring Overlay (Dotted Arc) */}
+        {/* Orbit Path Guide Ring Overlay (Clean Dotted Arc) */}
         <svg
           style={{
             position: 'absolute',
@@ -681,27 +935,8 @@ export default function Simulation({ onComplete, onNext }) {
             stroke="#38BDF8"
             strokeWidth="1.5"
             strokeDasharray="6 8"
-            opacity="0.4"
+            opacity="0.35"
           />
-
-          {/* Cardinal Markers on Ring */}
-          <g transform="translate(50%, 50%)">
-            {/* West Marker */}
-            <circle cx="-230" cy="0" r="5" fill="#38BDF8" opacity="0.8" />
-            <text x="-248" y="4" textAnchor="end" fill="#93C5FD" fontSize="11" fontWeight="800" fontFamily="sans-serif">WEST</text>
-
-            {/* North Marker */}
-            <circle cx="0" cy="-230" r="5" fill="#38BDF8" opacity="0.8" />
-            <text x="0" y="-242" textAnchor="middle" fill="#93C5FD" fontSize="11" fontWeight="800" fontFamily="sans-serif">NORTH</text>
-
-            {/* East Marker */}
-            <circle cx="230" cy="0" r="5" fill="#38BDF8" opacity="0.8" />
-            <text x="248" y="4" textAnchor="start" fill="#93C5FD" fontSize="11" fontWeight="800" fontFamily="sans-serif">EAST</text>
-
-            {/* South Marker */}
-            <circle cx="0" cy="230" r="5" fill="#38BDF8" opacity="0.8" />
-            <text x="0" y="252" textAnchor="middle" fill="#93C5FD" fontSize="11" fontWeight="800" fontFamily="sans-serif">SOUTH</text>
-          </g>
         </svg>
 
         {/* Live Bearing Top Badge */}
@@ -828,6 +1063,12 @@ export default function Simulation({ onComplete, onNext }) {
               userSelect: 'none'
             }}
             onDrag={updateCompassPhysics}
+            onDragEnd={() => {
+              if (currentActionStep === 2) {
+                setCurrentActionStep(3);
+                setShowActionModal(true);
+              }
+            }}
           >
             <div style={{
               display: 'flex',
@@ -931,6 +1172,164 @@ export default function Simulation({ onComplete, onNext }) {
 
         </div>
       </div>
+
+      {/* Contextual Single-Action Guidance Pop-Up Modal */}
+      <AnimatePresence>
+        {showActionModal && ACTION_POPUP_DATA[currentActionStep] && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(6, 78, 59, 0.45)',
+              backdropFilter: 'blur(8px)',
+              zIndex: 100,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1.5rem'
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.88, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.92, y: 10, opacity: 0 }}
+              transition={{ type: 'spring', damping: 24, stiffness: 320 }}
+              style={{
+                background: '#FFFFFF',
+                borderRadius: '26px',
+                border: '2px solid #A7F3D0',
+                boxShadow: '0 25px 60px -12px rgba(6, 78, 59, 0.35)',
+                width: '100%',
+                maxWidth: '560px',
+                padding: '2.2rem 2.4rem',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.25rem'
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowActionModal(false)}
+                style={{
+                  position: 'absolute',
+                  top: '1.2rem',
+                  right: '1.2rem',
+                  background: '#F1F5F9',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: '#64748B',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <X size={18} />
+              </button>
+
+              {/* Step Badge & Icon Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                <div style={{
+                  width: '54px',
+                  height: '54px',
+                  borderRadius: '16px',
+                  background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+                  border: '2px solid #F59E0B',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '2rem',
+                  boxShadow: '0 4px 14px rgba(245, 158, 11, 0.25)'
+                }}>
+                  {ACTION_POPUP_DATA[currentActionStep].icon}
+                </div>
+                <div>
+                  <span style={{
+                    fontSize: '0.78rem',
+                    fontWeight: 900,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    color: '#D97706',
+                    background: '#FEF3C7',
+                    padding: '3px 10px',
+                    borderRadius: '10px',
+                    border: '1px solid #FCD34D'
+                  }}>
+                    {ACTION_POPUP_DATA[currentActionStep].badge}
+                  </span>
+                  <h3 style={{ margin: '4px 0 0 0', fontSize: '1.28rem', fontWeight: 900, color: '#064E3B' }}>
+                    {ACTION_POPUP_DATA[currentActionStep].title}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Instruction Content Card */}
+              <div style={{
+                background: '#F0FDF4',
+                border: '1.5px solid #A7F3D0',
+                borderLeft: '5px solid #D97706',
+                borderRadius: '16px',
+                padding: '1.15rem 1.35rem',
+                color: '#1E293B',
+                fontSize: '1.02rem',
+                lineHeight: 1.55,
+                fontWeight: 600
+              }}>
+                {ACTION_POPUP_DATA[currentActionStep].instruction}
+              </div>
+
+              {/* Action Hint Prompt */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '0.85rem',
+                color: '#065F46',
+                fontWeight: 800,
+                background: '#ECFDF5',
+                padding: '0.5rem 0.9rem',
+                borderRadius: '12px'
+              }}>
+                <span>👉</span>
+                <span><strong>Next Action:</strong> {ACTION_POPUP_DATA[currentActionStep].actionPrompt}</span>
+              </div>
+
+              {/* Action Button */}
+              <button
+                onClick={handleAdvanceAction}
+                style={{
+                  padding: '0.9rem 1.6rem',
+                  borderRadius: '16px',
+                  border: 'none',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  color: '#FFFFFF',
+                  fontWeight: 900,
+                  fontSize: '1.05rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 6px 20px rgba(217, 119, 6, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.55rem',
+                  transition: 'all 0.2s ease',
+                  marginTop: '0.25rem'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.02)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+              >
+                {ACTION_POPUP_DATA[currentActionStep].btnLabel}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

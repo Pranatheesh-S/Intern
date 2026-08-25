@@ -269,7 +269,7 @@ export default function Questions({ onComplete, onNext }) {
               
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.6rem' }}>
                 <button
-                  onClick={handleNextQuestion}
+                  onClick={handleNext}
                   style={{
                     padding: '0.75rem 2rem',
                     background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
@@ -289,7 +289,7 @@ export default function Questions({ onComplete, onNext }) {
                     e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
-                  {currentQuestion === questions.length - 1 ? 'Proceed to Challenge Mode' : 'Next Question'}
+                  {currentQuestion === questions.length - 1 ? 'Finish & View Score' : 'Next Question'}
                 </button>
               </div>
             </div>

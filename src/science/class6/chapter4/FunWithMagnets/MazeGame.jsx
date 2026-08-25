@@ -199,6 +199,21 @@ export const MISSIONS = [
   }
 ];
 
+// -------------------------------------------------------------------
+// Building Front Lawn Nameplates for Isometric Town Blocks
+// -------------------------------------------------------------------
+export const BUILDING_NAMEPLATES = [
+  { id: 'bld_1', name: 'Magnetic Science Lab', icon: '🔬', x: 252, y: 172 },
+  { id: 'bld_2', name: 'Central Hospital', icon: '🏥', x: 500, y: 172 },
+  { id: 'bld_3', name: 'Corporate Sky Towers', icon: '🏢', x: 755, y: 172 },
+  { id: 'bld_4', name: 'Cargo Logistics Hub', icon: '📦', x: 242, y: 326 },
+  { id: 'bld_5', name: 'Grand Central Plaza', icon: '🏛️', x: 500, y: 326 },
+  { id: 'bld_6', name: 'Innovation Tech Park', icon: '🌐', x: 765, y: 326 },
+  { id: 'bld_7', name: 'Botanical Bio-Dome', icon: '🌿', x: 228, y: 484 },
+  { id: 'bld_8', name: 'MagLev Train Depot', icon: '🚂', x: 500, y: 484 },
+  { id: 'bld_9', name: 'Destination Terminal', icon: '🎯', x: 785, y: 484 },
+];
+
 // Helper: Direction mapping for D-Pad
 export function getAvailableDirections(nodeId) {
   const node = NODES_MAP[nodeId];
@@ -234,111 +249,167 @@ function getAudioContext() {
 }
 
 // -------------------------------------------------------------------
-// High-Volume Realistic Train Engine & Track Rail Sound Synthesizer
+// Realistic Classic High-Voltage Electric Arc & Tesla Lightning Synthesizer
 // -------------------------------------------------------------------
-export function playRealisticTrainSound() {
+export function playElectricLightningSound(duration = 2.3) {
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
-
     const now = ctx.currentTime;
 
-    // 1. Heavy Locomotive Diesel / Electric Traction Motor Rumble
-    const rumbleOsc = ctx.createOscillator();
-    const rumbleGain = ctx.createGain();
-    const rumbleFilter = ctx.createBiquadFilter();
+    // Master Gain & Limiter Envelope
+    const masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(0.01, now);
+    masterGain.gain.linearRampToValueAtTime(0.75, now + 0.04);
+    masterGain.gain.setValueAtTime(0.65, now + duration - 0.25);
+    masterGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
-    rumbleOsc.type = 'sawtooth';
-    rumbleOsc.frequency.setValueAtTime(68, now);
-    rumbleOsc.frequency.exponentialRampToValueAtTime(125, now + 0.45);
-    rumbleOsc.frequency.exponentialRampToValueAtTime(75, now + 1.05);
+    // Distortion WaveShaper for authentic vintage electrical arc saturation
+    const waveShaper = ctx.createWaveShaper();
+    const curve = new Float32Array(256);
+    for (let i = 0; i < 256; i++) {
+      const x = (i * 2) / 256 - 1;
+      // Hyperbolic distortion curve for rich electrical harmonics
+      curve[i] = Math.tanh(x * 2.8);
+    }
+    waveShaper.curve = curve;
+    waveShaper.oversample = '4x';
 
-    rumbleFilter.type = 'lowpass';
-    rumbleFilter.frequency.setValueAtTime(320, now);
-    rumbleFilter.Q.setValueAtTime(3.8, now);
+    // 1. Initial High-Voltage Arc Strike (Sharp "SNAP / ZAP" Transient)
+    const snapOsc = ctx.createOscillator();
+    const snapGain = ctx.createGain();
+    const snapFilter = ctx.createBiquadFilter();
 
-    rumbleGain.gain.setValueAtTime(0.01, now);
-    rumbleGain.gain.linearRampToValueAtTime(0.65, now + 0.08);
-    rumbleGain.gain.setValueAtTime(0.55, now + 0.75);
-    rumbleGain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+    snapOsc.type = 'sawtooth';
+    snapOsc.frequency.setValueAtTime(3200, now);
+    snapOsc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
 
-    rumbleOsc.connect(rumbleFilter);
-    rumbleFilter.connect(rumbleGain);
-    rumbleGain.connect(ctx.destination);
+    snapFilter.type = 'bandpass';
+    snapFilter.frequency.setValueAtTime(3500, now);
+    snapFilter.frequency.exponentialRampToValueAtTime(450, now + 0.12);
+    snapFilter.Q.setValueAtTime(4.5, now);
 
-    rumbleOsc.start(now);
-    rumbleOsc.stop(now + 1.1);
+    snapGain.gain.setValueAtTime(0.9, now);
+    snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
 
-    // 2. High-Energy Steel Wheel on Rail "Click-Clack, Click-Clack" Track Clatter Beats
-    const chugTimes = [0.0, 0.16, 0.35, 0.52, 0.72, 0.90];
-    chugTimes.forEach((offset, idx) => {
-      const beatTime = now + offset;
+    snapOsc.connect(snapFilter);
+    snapFilter.connect(snapGain);
+    snapGain.connect(masterGain);
 
-      // Realistic noise friction burst
-      const bufferSize = Math.floor(ctx.sampleRate * 0.085);
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const output = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        output[i] = Math.random() * 2 - 1;
+    snapOsc.start(now);
+    snapOsc.stop(now + 0.15);
+
+    // 2. FM-Modulated Jacob's Ladder Electric Arc Carrier (Classic Buzzing)
+    // Carrier: 110Hz (Dual 55Hz / 110Hz harmonics)
+    const carrierOsc = ctx.createOscillator();
+    carrierOsc.type = 'sawtooth';
+    carrierOsc.frequency.setValueAtTime(110, now);
+
+    // FM Modulator: Creates rapid, fluttering electrical plasma instability
+    const modOsc = ctx.createOscillator();
+    const modGain = ctx.createGain();
+    modOsc.type = 'sawtooth';
+    modOsc.frequency.setValueAtTime(42, now);
+    modOsc.frequency.linearRampToValueAtTime(68, now + duration * 0.5);
+    modOsc.frequency.linearRampToValueAtTime(35, now + duration);
+
+    modGain.gain.setValueAtTime(65, now);
+    modGain.gain.linearRampToValueAtTime(95, now + duration * 0.5);
+    modGain.gain.linearRampToValueAtTime(40, now + duration);
+
+    modOsc.connect(carrierOsc.frequency);
+
+    // Secondary sub-octave buzz (55Hz mains sub)
+    const subOsc = ctx.createOscillator();
+    subOsc.type = 'square';
+    subOsc.frequency.setValueAtTime(55, now);
+
+    // Resonance Bandpass for electrical bite
+    const arcFilter = ctx.createBiquadFilter();
+    arcFilter.type = 'bandpass';
+    arcFilter.frequency.setValueAtTime(850, now);
+    arcFilter.Q.setValueAtTime(3.2, now);
+
+    const arcGain = ctx.createGain();
+    arcGain.gain.setValueAtTime(0.55, now);
+
+    carrierOsc.connect(arcFilter);
+    subOsc.connect(arcFilter);
+    arcFilter.connect(waveShaper);
+    waveShaper.connect(arcGain);
+    arcGain.connect(masterGain);
+
+    carrierOsc.start(now);
+    subOsc.start(now);
+    modOsc.start(now);
+    carrierOsc.stop(now + duration);
+    subOsc.stop(now + duration);
+    modOsc.stop(now + duration);
+
+    // 3. Continuous Stochastic Micro-Spark Static Crackling (Continuous Sizzle)
+    const sparkBufferSize = Math.floor(ctx.sampleRate * duration);
+    const sparkBuffer = ctx.createBuffer(1, sparkBufferSize, ctx.sampleRate);
+    const sparkData = sparkBuffer.getChannelData(0);
+    for (let i = 0; i < sparkBufferSize; i++) {
+      // Stochastic electric pulses: sparse, high-amplitude spikes
+      const r = Math.random();
+      if (r > 0.96) {
+        sparkData[i] = (Math.random() * 2 - 1) * 0.95;
+      } else if (r > 0.91) {
+        sparkData[i] = (Math.random() * 2 - 1) * 0.45;
+      } else {
+        sparkData[i] = 0;
       }
+    }
 
-      const noiseSource = ctx.createBufferSource();
-      noiseSource.buffer = buffer;
+    const sparkSource = ctx.createBufferSource();
+    sparkSource.buffer = sparkBuffer;
 
-      const noiseFilter = ctx.createBiquadFilter();
-      noiseFilter.type = 'bandpass';
-      noiseFilter.frequency.setValueAtTime(idx % 2 === 0 ? 920 : 1380, beatTime);
-      noiseFilter.Q.setValueAtTime(4.2, beatTime);
+    const sparkFilter = ctx.createBiquadFilter();
+    sparkFilter.type = 'highpass';
+    sparkFilter.frequency.setValueAtTime(1800, now);
+    sparkFilter.Q.setValueAtTime(2.0, now);
 
-      const noiseGain = ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.75, beatTime);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, beatTime + 0.08);
+    const sparkGain = ctx.createGain();
+    sparkGain.gain.setValueAtTime(0.42, now);
+    sparkGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
-      noiseSource.connect(noiseFilter);
-      noiseFilter.connect(noiseGain);
-      noiseGain.connect(ctx.destination);
+    sparkSource.connect(sparkFilter);
+    sparkFilter.connect(sparkGain);
+    sparkGain.connect(masterGain);
 
-      noiseSource.start(beatTime);
-      noiseSource.stop(beatTime + 0.085);
+    sparkSource.start(now);
+    sparkSource.stop(now + duration);
 
-      // Low-end steel rail joint impact thud
-      const thudOsc = ctx.createOscillator();
-      const thudGain = ctx.createGain();
-      thudOsc.type = 'triangle';
-      thudOsc.frequency.setValueAtTime(idx % 2 === 0 ? 150 : 190, beatTime);
-      thudOsc.frequency.exponentialRampToValueAtTime(52, beatTime + 0.075);
+    // 4. Resonant High-Voltage Sizzle (2.8 kHz Bandpass Shimmer)
+    const sizzleOsc = ctx.createOscillator();
+    const sizzleFilter = ctx.createBiquadFilter();
+    const sizzleGain = ctx.createGain();
 
-      thudGain.gain.setValueAtTime(0.6, beatTime);
-      thudGain.gain.exponentialRampToValueAtTime(0.001, beatTime + 0.075);
+    sizzleOsc.type = 'sawtooth';
+    sizzleOsc.frequency.setValueAtTime(280, now);
 
-      thudOsc.connect(thudGain);
-      thudGain.connect(ctx.destination);
+    sizzleFilter.type = 'bandpass';
+    sizzleFilter.frequency.setValueAtTime(2800, now);
+    sizzleFilter.Q.setValueAtTime(5.0, now);
 
-      thudOsc.start(beatTime);
-      thudOsc.stop(beatTime + 0.08);
-    });
+    sizzleGain.gain.setValueAtTime(0.2, now);
 
-    // 3. Electric Traction Whir / Rail Whine
-    const whirOsc = ctx.createOscillator();
-    const whirGain = ctx.createGain();
-    whirOsc.type = 'sine';
-    whirOsc.frequency.setValueAtTime(440, now);
-    whirOsc.frequency.exponentialRampToValueAtTime(720, now + 0.45);
-    whirOsc.frequency.exponentialRampToValueAtTime(540, now + 0.98);
+    sizzleOsc.connect(sizzleFilter);
+    sizzleFilter.connect(sizzleGain);
+    sizzleGain.connect(masterGain);
 
-    whirGain.gain.setValueAtTime(0.01, now);
-    whirGain.gain.linearRampToValueAtTime(0.35, now + 0.1);
-    whirGain.gain.setValueAtTime(0.28, now + 0.72);
-    whirGain.gain.exponentialRampToValueAtTime(0.001, now + 1.05);
+    sizzleOsc.start(now);
+    sizzleOsc.stop(now + duration);
 
-    whirOsc.connect(whirGain);
-    whirGain.connect(ctx.destination);
-
-    whirOsc.start(now);
-    whirOsc.stop(now + 1.05);
+    masterGain.connect(ctx.destination);
 
   } catch (err) {}
 }
+
+// Backward-compatibility aliases
+export const playRealisticTrainSound = playElectricLightningSound;
+export const playElectricZapSound = playElectricLightningSound;
 
 // -------------------------------------------------------------------
 // 3. SVG Realistic Magnetic Train Sprite (1 Engine + 1 Compartment)
@@ -479,7 +550,7 @@ const MagneticTrainSprite = ({ x, y, rotation, isMoving, now }) => {
           <circle cx="16.5" cy="2.5" r="1.5" fill="#FFFFFF" stroke="#FEF08A" strokeWidth="0.8" style={{ filter: 'drop-shadow(0 0 4px #FFFFFF)' }} />
 
           {/* Front Magnetic Levitation Receiver Sensor (Nose Tip) */}
-          <circle cx="19" cy="0" r={3 * pulse} fill="#38BDF8" stroke="#FFFFFF" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 6px #38BDF8)' }} />
+          <circle cx="19" cy="0" r={3 * pulse} fill="#FACC15" stroke="#FFFFFF" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 6px #FACC15)' }} />
           <circle cx="19" cy="0" r="1.3" fill="#FFFFFF" />
         </g>
       </g>
@@ -488,145 +559,316 @@ const MagneticTrainSprite = ({ x, y, rotation, isMoving, now }) => {
 };
 
 // -------------------------------------------------------------------
-// 4. SVG Guiding Horseshoe Magnet Sprite
+// 4. Miniature Isometric Electric Pole Sprite (Starting, Destination, and Possible Next Nodes)
 // -------------------------------------------------------------------
-const HorseshoeMagnetSprite = ({ x, y, rotation, now }) => {
-  const w = 28;
-  const h = 32;
-  const thickness = 8;
-  const pulse = 1 + 0.12 * Math.sin(now * 0.008);
-  const deg = (rotation * 180 / Math.PI) + 90;
+const ElectricPoleSprite = ({ 
+  x, 
+  y, 
+  isConnected, 
+  isStart,
+  isTarget, 
+  isCurrent, 
+  isActiveMovingTarget,
+  now, 
+  onClick 
+}) => {
+  const isSpecial = isStart || isTarget;
+
+  // If not a connected node, not the moving target, and not start/target milestone, do not render
+  if (!isConnected && !isActiveMovingTarget && !isSpecial) {
+    return null;
+  }
+
+  // Sizing & scaling: Start and Destination poles are slightly bigger (1.35x)
+  const scale = isSpecial ? 1.35 : 1.0;
 
   return (
-    <g transform={`translate(${x}, ${y})`}>
-      <ellipse cx="0" cy="0" rx={28 * pulse} ry={28 * pulse} fill="url(#magnetAuraGrad)" pointerEvents="none" />
-      <ellipse cx="0" cy="5" rx={w * 0.55} ry={h * 0.36} fill="rgba(0,0,0,0.35)" style={{ filter: 'blur(2px)' }} />
+    <g 
+      transform={`translate(${x}, ${y}) scale(${scale})`}
+      onClick={onClick}
+      style={{ cursor: isConnected ? 'pointer' : 'default' }}
+    >
+      {/* 1. Ground Footprint Shadow */}
+      <ellipse
+        cx="0"
+        cy="2"
+        rx={isSpecial ? 9 : 7}
+        ry={isSpecial ? 3.8 : 3}
+        fill="rgba(15, 23, 42, 0.45)"
+        style={{ filter: 'blur(0.8px)' }}
+      />
 
-      <g transform={`rotate(${deg})`}>
-        <rect x={-w / 2} y={-h * 0.25} width={thickness} height={h * 0.65} rx="3" fill="url(#northArmGrad)" />
-        <rect x={w / 2 - thickness} y={-h * 0.25} width={thickness} height={h * 0.65} rx="3" fill="url(#southArmGrad)" />
+      {/* 2. Metallic Base Anchor Plate */}
+      <rect
+        x={isSpecial ? "-5.5" : "-4.5"}
+        y="-1"
+        width={isSpecial ? "11" : "9"}
+        height={isSpecial ? "2.8" : "2.5"}
+        rx="1"
+        fill="#334155"
+        stroke="#1E293B"
+        strokeWidth="0.5"
+      />
+      <circle cx="-2.5" cy="0.2" r="0.5" fill="#94A3B8" />
+      <circle cx="2.5" cy="0.2" r="0.5" fill="#94A3B8" />
 
-        <path
-          d={`M ${-w / 2} ${-h * 0.25} 
-             A ${w * 0.48} ${w * 0.48} 0 0 1 ${w / 2} ${-h * 0.25} 
-             L ${w / 2 - thickness} ${-h * 0.25} 
-             A ${w * 0.48 - thickness} ${w * 0.48 - thickness} 0 0 0 ${-w / 2 + thickness} ${-h * 0.25} Z`}
-          fill="url(#archBridgeGrad)"
+      {/* 3. Small Isometric Steel Pole / Pylon Mast */}
+      <g>
+        {/* Tapered Mast Column */}
+        <polygon
+          points="-2,-1 2,-1 1,-19 -1,-19"
+          fill="url(#poleSteelGrad)"
+          stroke="#1E293B"
+          strokeWidth="0.5"
         />
 
-        <rect x={-w / 2} y={h * 0.4 - 7} width={thickness} height="7" rx="2" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="0.8" />
-        <rect x={w / 2 - thickness} y={h * 0.4 - 7} width={thickness} height="7" rx="2" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="0.8" />
+        {/* Chiseled Center Highlight Ridge */}
+        <line x1="0" y1="-1" x2="0" y2="-19" stroke="rgba(255,255,255,0.35)" strokeWidth="0.4" />
 
-        <text x={-w / 2 + thickness / 2} y={-h * 0.02} fill="#FFFFFF" fontSize="9" fontWeight="900" textAnchor="middle" dominantBaseline="middle">N</text>
-        <text x={w / 2 - thickness / 2} y={-h * 0.02} fill="#FFFFFF" fontSize="9" fontWeight="900" textAnchor="middle" dominantBaseline="middle">S</text>
+        {/* Dual Ceramic Insulator Crossarms */}
+        <line x1="-5" y1="-13" x2="5" y2="-13" stroke="#475569" strokeWidth="1.1" strokeLinecap="round" />
+        <circle cx="-4.2" cy="-13" r="1.1" fill="#D97706" stroke="#78350F" strokeWidth="0.3" />
+        <circle cx="4.2" cy="-13" r="1.1" fill="#D97706" stroke="#78350F" strokeWidth="0.3" />
+
+        {/* Tesla Induction Ring Torus */}
+        <ellipse
+          cx="0"
+          cy="-19"
+          rx="3.2"
+          ry="1.6"
+          fill="#475569"
+          stroke="#1E293B"
+          strokeWidth="0.5"
+        />
+
+        {/* Top Glowing Yellow Light & Emitter Lamp */}
+        <g pointerEvents="none">
+          {/* Ambient Warm Yellow Radial Glow (Extra bright & large for start/destination) */}
+          <circle
+            cx="0"
+            cy="-21"
+            r={isSpecial ? (13 + Math.sin(now * 0.007) * 2.5) : (6 + Math.sin(now * 0.008) * 0.8)}
+            fill={isSpecial ? "rgba(250, 204, 21, 0.65)" : "rgba(250, 204, 21, 0.45)"}
+            style={{ filter: isSpecial ? 'blur(3px)' : 'blur(1.5px)' }}
+          />
+
+          {isSpecial && (
+            <circle
+              cx="0"
+              cy="-21"
+              r={7.5 + Math.sin(now * 0.012) * 1.5}
+              fill="rgba(254, 240, 138, 0.8)"
+              style={{ filter: 'blur(1.5px)' }}
+            />
+          )}
+
+          {/* Luminous Yellow Light Bulb Core */}
+          <circle
+            cx="0"
+            cy="-21"
+            r={isSpecial ? 4.2 : 3.2}
+            fill="url(#yellowLightBulbGrad)"
+            stroke={isSpecial ? "#FFFFFF" : "#F59E0B"}
+            strokeWidth={isSpecial ? "0.9" : "0.6"}
+            style={{ filter: isSpecial ? 'drop-shadow(0 0 6px #FACC15)' : 'drop-shadow(0 0 4px #FACC15)' }}
+          />
+
+          {/* White-Hot Filament Glint */}
+          <circle cx="0" cy="-21" r={isSpecial ? 1.8 : 1.3} fill="#FFFFFF" />
+          <circle cx="-0.8" cy="-21.8" r={isSpecial ? 0.9 : 0.6} fill="#FFFFFF" opacity="0.9" />
+
+          {/* Continuous Pulsing Wave Ring for Start / Destination */}
+          {isSpecial && (
+            <circle
+              cx="0"
+              cy="-21"
+              r={6 + ((now * 0.012) % 7)}
+              fill="none"
+              stroke="#FEF08A"
+              strokeWidth="0.8"
+              opacity={1 - ((now * 0.012) % 7) / 7}
+            />
+          )}
+        </g>
       </g>
+
+      {/* Milestone Badge on Top of Start / Destination Pole */}
+      {isStart && (
+        <g transform="translate(0, -32)" pointerEvents="none">
+          <rect x="-24" y="-6.5" width="48" height="13" rx="6.5" fill="#064E3B" stroke="#34D399" strokeWidth="1.1" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))' }} />
+          <text x="0" y="3" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="900" fontFamily="system-ui, sans-serif">
+            START 🚩
+          </text>
+        </g>
+      )}
+
+      {isTarget && (
+        <g transform="translate(0, -32)" pointerEvents="none">
+          <rect x="-35" y="-6.5" width="70" height="13" rx="6.5" fill="#78350F" stroke="#FACC15" strokeWidth="1.2" style={{ filter: 'drop-shadow(0 2px 5px rgba(245,158,11,0.5))' }} />
+          <text x="0" y="3" textAnchor="middle" fill="#FEF08A" fontSize="6.8" fontWeight="900" fontFamily="system-ui, sans-serif">
+            DESTINATION 🎯
+          </text>
+        </g>
+      )}
     </g>
   );
 };
 
 // -------------------------------------------------------------------
-// 5. SVG Animated Magnetic Flux Tether & Flowing Energy Particles
+// 5. Realistic Yellow Electrifying Lightning Energy Line (Pulls the Train)
 // -------------------------------------------------------------------
-const MagneticFluxTetherSprite = ({ magnetX, magnetY, trainX, trainY, now }) => {
-  const dist = Math.hypot(magnetX - trainX, magnetY - trainY);
-  if (dist < 4) return null;
+const ElectricLightningTether = ({ poleX, poleY, trainX, trainY, trainRotation, isDest, now }) => {
+  // Start from top emitter of target electric pole (adjusted for larger destination pole)
+  const x1 = poleX;
+  const y1 = isDest ? poleY - 28.3 : poleY - 21;
 
-  const pulse = 0.75 + 0.25 * Math.sin(now * 0.01);
-  const dashOffset = -now * 0.045;
+  // End at front magnetic receiver sensor of leading train locomotive
+  const x2 = trainX + Math.cos(trainRotation) * 33;
+  const y2 = trainY + Math.sin(trainRotation) * 33;
 
-  const numParticles = 4;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const dist = Math.hypot(dx, dy);
+
+  if (dist < 6) return null;
+
+  const ux = dx / dist;
+  const uy = dy / dist;
+  const nx = -uy;
+  const ny = ux;
+
+  // Generate 8-segment procedural crackling lightning path
+  const numSegs = 8;
+  const mainPoints = [`${x1.toFixed(1)},${y1.toFixed(1)}`];
+  const forkPoints1 = [];
+
+  for (let i = 1; i < numSegs; i++) {
+    const t = i / numSegs;
+    // High-frequency animated chaotic lightning jitter
+    const noise = Math.sin(now * 0.05 + i * 3.7) * 0.55 + Math.sin(now * 0.11 + i * 7.1) * 0.45;
+    const envelope = Math.sin(t * Math.PI);
+    const maxDisplace = Math.min(7, dist * 0.08) * envelope;
+    const offset = noise * maxDisplace;
+
+    const px = x1 + ux * (dist * t) + nx * offset;
+    const py = y1 + uy * (dist * t) + ny * offset;
+    mainPoints.push(`${px.toFixed(1)},${py.toFixed(1)}`);
+
+    // Micro forked branch in the middle
+    if (i === 3 || i === 4) {
+      const forkOffset = offset + (Math.sin(now * 0.08 + i) * 6 + 4);
+      forkPoints1.push(`${(x1 + ux * (dist * t) + nx * forkOffset).toFixed(1)},${(y1 + uy * (dist * t) + ny * forkOffset).toFixed(1)}`);
+    }
+  }
+  mainPoints.push(`${x2.toFixed(1)},${y2.toFixed(1)}`);
+
+  const mainPath = `M ${mainPoints.join(' L ')}`;
+
+  // Streaming magnetic electric energy particles (Flowing from Pole -> Train Nose to signify PULL)
   const particles = [];
-  for (let i = 1; i <= numParticles; i++) {
-    const pT = (now * 0.0016 + i / numParticles) % 1;
-    const px = magnetX + (trainX - magnetX) * pT;
-    const py = magnetY + (trainY - magnetY) * pT;
-    const pr = 2.5 + Math.sin(pT * Math.PI) * 2;
-    const opacity = Math.sin(pT * Math.PI) * 0.95;
+  const numParticles = 6;
+  for (let i = 0; i < numParticles; i++) {
+    // Flowing gracefully from 0 (pole) to 1 (train)
+    const pT = ((now * 0.0012 + i / numParticles) % 1);
+    const pNoise = Math.sin(now * 0.03 + i * 2.1) * 3 * Math.sin(pT * Math.PI);
+    const px = x1 + ux * (dist * pT) + nx * pNoise;
+    const py = y1 + uy * (dist * pT) + ny * pNoise;
+    const pr = 1.8 + Math.sin(pT * Math.PI) * 1.8;
+    const opacity = Math.sin(pT * Math.PI);
     particles.push({ px, py, pr, opacity, key: i });
   }
 
   return (
     <g pointerEvents="none">
-      <line x1={magnetX} y1={magnetY} x2={trainX} y2={trainY} stroke="rgba(56, 189, 248, 0.25)" strokeWidth="14" strokeLinecap="round" />
-      <line x1={magnetX} y1={magnetY} x2={trainX} y2={trainY} stroke={`rgba(14, 165, 233, ${0.85 * pulse})`} strokeWidth="4" strokeLinecap="round" />
-      <line
-        x1={magnetX}
-        y1={magnetY}
-        x2={trainX}
-        y2={trainY}
-        stroke="#FFFFFF"
-        strokeWidth="2"
-        strokeDasharray="7 7"
-        strokeDashoffset={dashOffset}
+      {/* 1. Luminous Soft Yellow Atmospheric Glow Tube */}
+      <path
+        d={mainPath}
+        fill="none"
+        stroke="#F59E0B"
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.3"
+        style={{ filter: 'blur(2px)' }}
       />
+
+      {/* 2. Secondary Energetic Yellow Lightning Core Arc */}
+      <path
+        d={mainPath}
+        fill="none"
+        stroke="#FACC15"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{ filter: 'drop-shadow(0 0 3px #FACC15)' }}
+      />
+
+      {/* 3. Micro Forked Branch Bolts */}
+      {forkPoints1.length > 0 && (
+        <path
+          d={`M ${mainPoints[2]} L ${forkPoints1.join(' L ')}`}
+          fill="none"
+          stroke="#FEF08A"
+          strokeWidth="1.1"
+          strokeLinecap="round"
+          opacity="0.75"
+        />
+      )}
+
+      {/* 4. White-Hot Plasma Filament Line */}
+      <path
+        d={mainPath}
+        fill="none"
+        stroke="#FFFFFF"
+        strokeWidth="0.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.95"
+      />
+
+      {/* 5. Streaming Magnetic Flow Particles */}
       {particles.map(p => (
-        <circle key={p.key} cx={p.px} cy={p.py} r={p.pr} fill="#BAE6FD" opacity={p.opacity} style={{ filter: 'drop-shadow(0 0 4px #38BDF8)' }} />
+        <circle
+          key={p.key}
+          cx={p.px}
+          cy={p.py}
+          r={p.pr}
+          fill="#FFFFFF"
+          stroke="#FEF08A"
+          strokeWidth="0.6"
+          opacity={p.opacity}
+          style={{ filter: 'drop-shadow(0 0 3px #FACC15)' }}
+        />
       ))}
+
+      {/* 6. Train Nose Receiver Ionization Corona Ring */}
+      <circle
+        cx={x2}
+        cy={y2}
+        r={4 + Math.sin(now * 0.03) * 1.5}
+        fill="rgba(250, 204, 21, 0.4)"
+        stroke="#FFFFFF"
+        strokeWidth="1.2"
+        style={{ filter: 'drop-shadow(0 0 5px #FACC15)' }}
+      />
+      <circle cx={x2} cy={y2} r="1.5" fill="#FFFFFF" />
+
+      {/* 7. Pole Top Emitter High-Voltage Spark Burst */}
+      <circle
+        cx={x1}
+        cy={y1}
+        r={3.5 + Math.sin(now * 0.025) * 1.2}
+        fill="rgba(254, 240, 138, 0.6)"
+        stroke="#FFFFFF"
+        strokeWidth="1"
+        style={{ filter: 'drop-shadow(0 0 4px #F59E0B)' }}
+      />
     </g>
   );
 };
 
 // -------------------------------------------------------------------
-// 6. LIVE COMPASS WITH HIGHLIGHTED CARDINAL WORD HUD
-// -------------------------------------------------------------------
-const LiveCompassHUD = ({ angle = 0, currentDir = 'E' }) => {
-  const norm = (angle % 360 + 360) % 360;
-  let activeCardinal = currentDir || 'E';
-  if (norm >= 315 || norm < 45) activeCardinal = 'E';
-  else if (norm >= 45 && norm < 135) activeCardinal = 'S';
-  else if (norm >= 135 && norm < 225) activeCardinal = 'W';
-  else if (norm >= 225 && norm < 315) activeCardinal = 'N';
-
-  const dirFullNames = { N: 'NORTH', E: 'EAST', S: 'SOUTH', W: 'WEST' };
-
-  return (
-    <div style={{
-      position: 'absolute',
-      top: '16px',
-      right: '18px',
-      zIndex: 20,
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      background: 'rgba(15, 23, 42, 0.92)',
-      backdropFilter: 'blur(8px)',
-      border: '2px solid #38BDF8',
-      borderRadius: '16px',
-      padding: '6px 14px 6px 10px',
-      boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-      pointerEvents: 'none'
-    }}>
-      <svg width="44" height="44" viewBox="-24 -24 48 48" style={{ display: 'block', overflow: 'visible' }}>
-        <circle r="21" fill="#1E293B" stroke="#475569" strokeWidth="2" />
-
-        <g transform={`rotate(${angle})`} style={{ transition: 'transform 0.25s ease-out' }}>
-          <polygon points="0,-18 4.5,0 0,-2" fill="#EF4444" />
-          <polygon points="0,-18 -4.5,0 0,-2" fill="#F87171" />
-          <polygon points="0,18 4.5,0 0,2" fill="#94A3B8" />
-          <polygon points="0,18 -4.5,0 0,2" fill="#CBD5E1" />
-          <circle r="3.5" fill="#38BDF8" stroke="#0F172A" strokeWidth="1" />
-        </g>
-
-        <text x="0" y="-12" textAnchor="middle" fontSize="7.5" fontWeight="900" fill={activeCardinal === 'N' ? '#FEF08A' : '#EF4444'}>N</text>
-        <text x="0" y="18" textAnchor="middle" fontSize="7.5" fontWeight="900" fill={activeCardinal === 'S' ? '#FEF08A' : '#94A3B8'}>S</text>
-        <text x="-14" y="3" textAnchor="middle" fontSize="7" fontWeight="900" fill={activeCardinal === 'W' ? '#FEF08A' : '#94A3B8'}>W</text>
-        <text x="14" y="3" textAnchor="middle" fontSize="7" fontWeight="900" fill={activeCardinal === 'E' ? '#FEF08A' : '#94A3B8'}>E</text>
-      </svg>
-
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ fontSize: '9px', fontWeight: 700, color: '#94A3B8', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-          Live Compass
-        </div>
-        <div style={{ fontSize: '13px', fontWeight: 900, color: '#38BDF8', letterSpacing: '0.08em', textShadow: '0 0 10px rgba(56, 189, 248, 0.6)' }}>
-          HEADING: {dirFullNames[activeCardinal]}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// -------------------------------------------------------------------
-// 7. MAIN INTERACTIVE MAZE COMPONENT (SVG/DOM LAYERED ARCHITECTURE)
+// 6. MAIN INTERACTIVE MAZE COMPONENT (SVG/DOM LAYERED ARCHITECTURE)
 // -------------------------------------------------------------------
 export default function MazeGame({ 
   onSolve, 
@@ -646,6 +888,7 @@ export default function MazeGame({
   // Train and magnet animation state
   const [now, setNow] = useState(0);
   const [visitedHistory, setVisitedHistory] = useState(['node_0_0']);
+  const [traversedSegments, setTraversedSegments] = useState([]);
   const [trainState, setTrainState] = useState({
     x: WAYPOINT_NODES[0].x,
     y: WAYPOINT_NODES[0].y,
@@ -674,8 +917,8 @@ export default function MazeGame({
   const animFromRef = useRef({ x: startPoint.x, y: startPoint.y, angle: 0 });
   const animToRef = useRef({ x: startPoint.x, y: startPoint.y, angle: 0 });
   
-  // Smooth Stately Speed: 1050ms per segment for realistic train dynamics
-  const MOVE_DURATION = 1050;
+  // Smooth Slow Stately Speed: 2300ms per segment for majestic magnetic pull dynamics
+  const MOVE_DURATION = 2300;
 
   useEffect(() => {
     onSolveRef.current = onSolve;
@@ -699,6 +942,7 @@ export default function MazeGame({
     animFromRef.current = { x: startNode.x, y: startNode.y, angle: 0 };
     animToRef.current = { x: startNode.x, y: startNode.y, angle: 0 };
     setVisitedHistory([startNode.id]);
+    setTraversedSegments([]);
 
     setTrainState({
       x: startNode.x,
@@ -750,8 +994,9 @@ export default function MazeGame({
     isMovingRef.current = true;
     moveStartTimeRef.current = performance.now();
 
-    // Play high-volume realistic train sound immediately when movement starts
+    // Play high-volume realistic train sound & electric zap immediately when movement starts
     playRealisticTrainSound();
+    playElectricZapSound();
 
     setTrainState(prev => ({ ...prev, isMoving: true }));
     setVisitedHistory(prev => (prev.includes(nextId) ? prev : [...prev, nextId]));
@@ -918,6 +1163,19 @@ export default function MazeGame({
         if (rawT >= 1) {
           const finalX = animToRef.current.x;
           const finalY = animToRef.current.y;
+          const segFromX = animFromRef.current.x;
+          const segFromY = animFromRef.current.y;
+
+          if (Math.hypot(finalX - segFromX, finalY - segFromY) > 2) {
+            setTraversedSegments(prev => {
+              const alreadyHas = prev.some(s =>
+                (Math.hypot(s.x1 - segFromX, s.y1 - segFromY) < 3 && Math.hypot(s.x2 - finalX, s.y2 - finalY) < 3) ||
+                (Math.hypot(s.x1 - finalX, s.y1 - finalY) < 3 && Math.hypot(s.x2 - segFromX, s.y2 - segFromY) < 3)
+              );
+              if (alreadyHas) return prev;
+              return [...prev, { x1: segFromX, y1: segFromY, x2: finalX, y2: finalY, id: `${segFromX}_${segFromY}_${finalX}_${finalY}` }];
+            });
+          }
 
           setTrainState({
             x: finalX,
@@ -980,20 +1238,6 @@ export default function MazeGame({
     return () => cancelAnimationFrame(animFrameRef.current);
   }, [trainState.x, trainState.y, trainState.rotation, missionIdx, showCelebration]);
 
-  const compassAngleDeg = (trainState.rotation * 180 / Math.PI);
-
-  // Dynamic live path covered by the train (including the currently traversed segment)
-  const dynamicCoveredPathPoints = (() => {
-    const pts = visitedHistory
-      .slice(0, -1)
-      .map(id => NODES_MAP[id])
-      .filter(Boolean)
-      .map(n => `${n.x},${n.y}`);
-    
-    pts.push(`${trainState.x.toFixed(1)},${trainState.y.toFixed(1)}`);
-    return pts.join(' ');
-  })();
-
   return (
     <div style={{
       width: '100%',
@@ -1008,10 +1252,7 @@ export default function MazeGame({
       overflow: 'hidden'
     }}>
 
-      {/* 1. Live Compass HUD (Top-Right of Map) */}
-      <LiveCompassHUD angle={compassAngleDeg} />
-
-      {/* 2. Mission Briefing Pop-up */}
+      {/* 1. Mission Briefing Pop-up */}
       <AnimatePresence>
         {showMissionPopup && (
           <div style={{
@@ -1157,6 +1398,36 @@ export default function MazeGame({
             <stop offset="100%" stopColor="#0EA5E9" stopOpacity="0" />
           </radialGradient>
 
+          {/* Electric Pole Gradients */}
+          <linearGradient id="poleSteelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#475569" />
+            <stop offset="30%" stopColor="#94A3B8" />
+            <stop offset="70%" stopColor="#64748B" />
+            <stop offset="100%" stopColor="#334155" />
+          </linearGradient>
+
+          <radialGradient id="poleEmitterGrad" cx="35%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="35%" stopColor="#FEF08A" />
+            <stop offset="70%" stopColor="#F59E0B" />
+            <stop offset="100%" stopColor="#B45309" />
+          </radialGradient>
+
+          {/* Glowing Yellow Light Bulb Gradient */}
+          <radialGradient id="yellowLightBulbGrad" cx="35%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="35%" stopColor="#FEF08A" />
+            <stop offset="75%" stopColor="#FACC15" />
+            <stop offset="100%" stopColor="#D97706" />
+          </radialGradient>
+
+          {/* Lightning Gradients */}
+          <radialGradient id="yellowLightningGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#FEF08A" stopOpacity="0.9" />
+            <stop offset="40%" stopColor="#FACC15" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#F59E0B" stopOpacity="0" />
+          </radialGradient>
+
           {/* Train Gradients */}
           <linearGradient id="trainEngineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#1E293B" />
@@ -1189,85 +1460,146 @@ export default function MazeGame({
           preserveAspectRatio="none"
         />
 
-        {/* 2. White Dotted Path Line Covered by Train */}
-        {dynamicCoveredPathPoints && (
-          <g pointerEvents="none">
-            {/* Soft luminous underlay */}
-            <polyline
-              points={dynamicCoveredPathPoints}
-              fill="none"
-              stroke="rgba(255, 255, 255, 0.35)"
-              strokeWidth="6.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ filter: 'blur(2px)' }}
-            />
-            {/* Crisp High-Contrast White Dotted Line */}
-            <polyline
-              points={dynamicCoveredPathPoints}
-              fill="none"
-              stroke="#FFFFFF"
-              strokeWidth="3.5"
-              strokeDasharray="4 8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ filter: 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.9))' }}
-            />
-          </g>
-        )}
+        {/* 1b. Building Front Lawn Nameplates */}
+        <g pointerEvents="none">
+          {BUILDING_NAMEPLATES.map((bld) => (
+            <g key={bld.id} transform={`translate(${bld.x}, ${bld.y})`}>
+              {/* Ground Anchor Shadow */}
+              <ellipse cx="0" cy="8" rx="34" ry="3.5" fill="rgba(15, 23, 42, 0.4)" style={{ filter: 'blur(1px)' }} />
+              
+              {/* Lawn Stake Post */}
+              <line x1="0" y1="2" x2="0" y2="8" stroke="#334155" strokeWidth="1.5" />
+              
+              {/* Nameplate Badge Plate */}
+              <rect
+                x="-54"
+                y="-8"
+                width="108"
+                height="15"
+                rx="7.5"
+                fill="rgba(15, 23, 42, 0.88)"
+                stroke="#38BDF8"
+                strokeWidth="1"
+                style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.45))' }}
+              />
+              
+              {/* Icon */}
+              <text x="-44" y="3" fontSize="8">{bld.icon}</text>
+              
+              {/* Building Name Text */}
+              <text
+                x="-33"
+                y="3"
+                textAnchor="start"
+                fill="#F8FAFC"
+                fontSize="6.8"
+                fontWeight="800"
+                fontFamily="system-ui, -apple-system, sans-serif"
+                letterSpacing="0.02em"
+              >
+                {bld.name}
+              </text>
+            </g>
+          ))}
+        </g>
 
-        {/* 3. Interactive Nodes Over Orange Dots (16 Waypoint Dots) */}
+        {/* 2. White Dotted Path Line Strictly Confined to Traversed Railway Tracks */}
+        <g pointerEvents="none">
+          {/* Completed Track Segments */}
+          {traversedSegments.map((seg) => (
+            <g key={seg.id}>
+              {/* Soft luminous underlay */}
+              <line
+                x1={seg.x1}
+                y1={seg.y1}
+                x2={seg.x2}
+                y2={seg.y2}
+                stroke="rgba(255, 255, 255, 0.35)"
+                strokeWidth="6"
+                strokeLinecap="round"
+                style={{ filter: 'blur(2px)' }}
+              />
+              {/* Crisp High-Contrast White Dotted Line strictly on tracks */}
+              <line
+                x1={seg.x1}
+                y1={seg.y1}
+                x2={seg.x2}
+                y2={seg.y2}
+                stroke="#FFFFFF"
+                strokeWidth="3.2"
+                strokeDasharray="4 8"
+                strokeLinecap="round"
+                style={{ filter: 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.9))' }}
+              />
+            </g>
+          ))}
+
+          {/* Active Currently Traversed Track Segment */}
+          {trainState.isMoving && animFromRef.current && (
+            <g key="live-active-track-segment">
+              <line
+                x1={animFromRef.current.x}
+                y1={animFromRef.current.y}
+                x2={trainState.x}
+                y2={trainState.y}
+                stroke="rgba(255, 255, 255, 0.35)"
+                strokeWidth="6"
+                strokeLinecap="round"
+                style={{ filter: 'blur(2px)' }}
+              />
+              <line
+                x1={animFromRef.current.x}
+                y1={animFromRef.current.y}
+                x2={trainState.x}
+                y2={trainState.y}
+                stroke="#FFFFFF"
+                strokeWidth="3.2"
+                strokeDasharray="4 8"
+                strokeLinecap="round"
+                style={{ filter: 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.9))' }}
+              />
+            </g>
+          )}
+        </g>
+
+        {/* 3. Interactive Electric Poles (Starting, Destination, and Possible Next Nodes) */}
         {WAYPOINT_NODES.map((node) => {
           const isConnected = NODES_MAP[currentNodeIdRef.current]?.neighbors.includes(node.id);
           const isCurrent = currentNodeIdRef.current === node.id;
           const isVisited = visitedHistory.includes(node.id);
+          const isStart = node.id === currentMission.start;
+          const isTarget = node.id === targetPoint.id;
+          const isActiveMovingTarget = trainState.isMoving && animToRef.current && (animToRef.current.x === node.x && animToRef.current.y === node.y);
 
           return (
-            <g
+            <ElectricPoleSprite
               key={node.id}
-              transform={`translate(${node.x}, ${node.y})`}
-              onClick={() => navigateToNode(node.id)}
-              style={{ cursor: isConnected ? 'pointer' : 'default' }}
-            >
-              {/* Active Pulse Ring over Orange Dot */}
-              {isConnected && (
-                <circle
-                  cx="0"
-                  cy="0"
-                  r={10 + 2 * Math.sin(now * 0.008)}
-                  fill="rgba(56, 189, 248, 0.3)"
-                  stroke="#38BDF8"
-                  strokeWidth="1.5"
-                />
-              )}
-
-              {/* Waypoint Indicator Circle */}
-              <circle
-                cx="0"
-                cy="0"
-                r="6"
-                fill={isCurrent ? '#0284C7' : (isConnected ? '#38BDF8' : (isVisited ? '#059669' : '#F59E0B'))}
-                stroke="#FFFFFF"
-                strokeWidth="1.5"
-                opacity={isConnected || isCurrent ? 1 : 0.65}
-              />
-            </g>
+              x={node.x}
+              y={node.y}
+              isConnected={isConnected}
+              isActiveMovingTarget={isActiveMovingTarget}
+              isStart={isStart}
+              isCurrent={isCurrent}
+              isVisited={isVisited}
+              isTarget={isTarget}
+              now={now}
+              onClick={() => isConnected && navigateToNode(node.id)}
+            />
           );
         })}
 
-        {/* 4. Target Destination Beacon over Destination Orange Dot (node_3_3) */}
-        <g transform={`translate(${targetPoint.x}, ${targetPoint.y})`}>
-          <circle cx="0" cy="0" r={24 + 3 * Math.sin(now * 0.006)} fill="rgba(245, 158, 11, 0.35)" />
-          <circle cx="0" cy="0" r="15" fill="#FFFFFF" stroke="#F59E0B" strokeWidth="2.5" />
-          <text x="0" y="4.5" textAnchor="middle" fontSize="12">{targetPoint.icon}</text>
-
-          <g transform="translate(0, -24)" pointerEvents="none">
-            <rect x="-46" y="-8" width="92" height="16" rx="8" fill="#064E3B" stroke="#A7F3D0" strokeWidth="1.5" />
-            <text x="0" y="3" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="900" fontFamily="system-ui, sans-serif">
-              DESTINATION 🎯
-            </text>
-          </g>
-        </g>
+        {/* 4. Active Yellow Electrifying Lightning Energy Line Pulling the Train */}
+        {trainState.isMoving && animToRef.current && (
+          <ElectricLightningTether
+            poleX={animToRef.current.x}
+            poleY={animToRef.current.y}
+            trainX={trainState.x}
+            trainY={trainState.y}
+            trainRotation={trainState.rotation}
+            isDest={animToRef.current.x === targetPoint.x && animToRef.current.y === targetPoint.y}
+            now={now}
+          />
+        )}
 
         {/* 5. Realistic Magnetic Train Sprite (1 Engine + 1 Compartment) */}
         <MagneticTrainSprite
