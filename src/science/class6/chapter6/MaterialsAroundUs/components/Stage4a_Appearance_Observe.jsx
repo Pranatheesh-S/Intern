@@ -43,24 +43,24 @@ const TorchObservation = ({ mat, onDone }) => {
 
   return (
     <div style={{
-      position: "absolute", inset: 0, zIndex: 50,
-      background: "rgba(8,6,3,0.92)", backdropFilter: "blur(4px)",
+      width: "100%", height: "100%",
       display: "flex", flexDirection: "column",
       borderRadius: 16, overflow: "hidden",
+      background: "rgba(0,0,0,0.2)",
     }}>
       {/* Header */}
       <div style={{
-        padding: "0.85rem 1.2rem",
+        padding: "1rem 1.5rem",
         background: "linear-gradient(90deg, rgba(161,98,7,0.3), rgba(120,53,15,0.2))",
         borderBottom: "1px solid rgba(161,98,7,0.3)",
-        display: "flex", alignItems: "center", gap: 12, flexShrink: 0,
+        display: "flex", alignItems: "center", gap: 16, flexShrink: 0,
       }}>
-        <span style={{ fontSize: "1.5rem" }}>🔦</span>
+        <span style={{ fontSize: "2rem" }}>🔦</span>
         <div>
-          <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#fde68a" }}>
+          <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "#fde68a", letterSpacing: "0.5px" }}>
             Investigating: {mat.name}
           </div>
-          <div style={{ fontSize: "0.9rem", color: "#b8a898", marginTop: 2 }}>
+          <div style={{ fontSize: "1.2rem", color: "#b8a898", marginTop: 4 }}>
             {hasObserved ? "✓ Observed! Now classify the surface." : "Use the torch to test how light reflects."}
           </div>
         </div>
@@ -123,20 +123,34 @@ const TorchObservation = ({ mat, onDone }) => {
 
             {/* Specular Reflection for shiny objects in the center */}
             {torchOn && mat.isShiny && (
-              <div style={{
-                position: "absolute", top: "55%", left: "50%",
-                width: "35%", paddingBottom: "35%", borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,230,0.4) 30%, transparent 70%)",
-                transform: "translate(-50%,-50%)",
-                filter: "blur(2px)", pointerEvents: "none", zIndex: 15,
-              }} />
+              <>
+                <div style={{
+                  position: "absolute", top: "55%", left: "50%",
+                  width: "35%", paddingBottom: "35%", borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,230,0.4) 30%, transparent 70%)",
+                  transform: "translate(-50%,-50%)",
+                  filter: "blur(2px)", pointerEvents: "none", zIndex: 15,
+                }} />
+                {/* Blinking Sparkle Effect next to the object */}
+                <motion.div
+                  animate={{ opacity: [0.3, 1, 0.3], scale: [0.9, 1.2, 0.9] }}
+                  transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                  style={{
+                    position: "absolute", top: "40%", left: "70%",
+                    fontSize: "4rem", zIndex: 35,
+                    filter: "drop-shadow(0 0 12px rgba(251, 191, 36, 0.8))"
+                  }}
+                >
+                  ✨
+                </motion.div>
+              </>
             )}
             
             <div style={{
               position: "absolute", bottom: 0, left: 0, right: 0,
-              padding: "12px 16px",
+              padding: "16px 20px",
               background: "linear-gradient(transparent, rgba(0,0,0,0.85))",
-              fontSize: "1.2rem", fontWeight: 900, color: "#e2d9c8",
+              fontSize: "1.8rem", fontWeight: 900, color: "#e2d9c8", letterSpacing: "1px",
               zIndex: 20,
             }}>
               {mat.name}
@@ -144,31 +158,31 @@ const TorchObservation = ({ mat, onDone }) => {
           </div>
         </div>
 
-        {/* Right: Controls Panel */}
+        {/* Middle: Controls Panel */}
         <div style={{
-          width: "340px", padding: "1.5rem 1rem", borderLeft: "1px solid rgba(255,255,255,0.08)",
-          background: "rgba(0,0,0,0.4)", display: "flex", flexDirection: "column", gap: "1.25rem", overflowY: "auto"
+          width: "400px", padding: "1rem 1.25rem", borderLeft: "1px solid rgba(255,255,255,0.08)",
+          background: "rgba(0,0,0,0.4)", display: "flex", flexDirection: "column", gap: "0.8rem", overflowY: "hidden"
         }}>
           
           <div style={{
             background: "rgba(0,0,0,0.5)", borderRadius: 12,
-            padding: "1.2rem", border: "1px solid rgba(255,255,255,0.08)",
+            padding: "1rem", border: "1px solid rgba(255,255,255,0.08)",
           }}>
-            <div style={{ fontSize: "1.1rem", color: "#fde68a", marginBottom: 8, fontWeight: 800 }}>
+            <div style={{ fontSize: "1.4rem", color: "#fde68a", marginBottom: 6, fontWeight: 900 }}>
               Observation
             </div>
-            <div style={{ fontSize: "0.95rem", color: "#d6cbbf", lineHeight: 1.5, marginBottom: 20 }}>
+            <div style={{ fontSize: "1.2rem", color: "#d6cbbf", lineHeight: 1.4, marginBottom: 12 }}>
               Turn the torch ON and OFF and observe what happens to the light.
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <button
                 onClick={() => handleToggle(true)}
                 style={{
-                  padding: "0.85rem", borderRadius: 10,
+                  padding: "0.75rem", borderRadius: 10,
                   background: torchOn ? "linear-gradient(135deg, #f59e0b, #d97706)" : "rgba(245,158,11,0.15)",
                   color: torchOn ? "#fff" : "#fcd34d", border: torchOn ? "2px solid #f59e0b" : "2px solid rgba(245,158,11,0.3)",
-                  fontSize: "1.1rem", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10
+                  fontSize: "1.3rem", fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10
                 }}
               >
                 🔦 TORCH ON
@@ -176,10 +190,10 @@ const TorchObservation = ({ mat, onDone }) => {
               <button
                 onClick={() => handleToggle(false)}
                 style={{
-                  padding: "0.85rem", borderRadius: 10,
+                  padding: "0.75rem", borderRadius: 10,
                   background: !torchOn ? "linear-gradient(135deg, #475569, #334155)" : "rgba(71,85,105,0.2)",
                   color: !torchOn ? "#fff" : "#94a3b8", border: !torchOn ? "2px solid #475569" : "2px solid rgba(71,85,105,0.3)",
-                  fontSize: "1.1rem", fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10
+                  fontSize: "1.3rem", fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10
                 }}
               >
                 🔕 TORCH OFF
@@ -188,14 +202,14 @@ const TorchObservation = ({ mat, onDone }) => {
           </div>
 
           <div style={{
-            background: "rgba(0,0,0,0.4)", borderRadius: 10, padding: "1rem",
+            background: "rgba(0,0,0,0.4)", borderRadius: 10, padding: "0.85rem 1.25rem",
             border: "1px solid rgba(255,255,255,0.06)",
-            fontSize: "0.95rem", color: "#9a8b7e", lineHeight: 1.5,
+            fontSize: "1.15rem", color: "#9a8b7e", lineHeight: 1.4,
           }}>
-            <div style={{ fontWeight: 800, color: "#b0a090", marginBottom: 8 }}>Watch for:</div>
-            <ul style={{ margin: 0, paddingLeft: "1.4rem" }}>
-              <li style={{ marginBottom: 6 }}>Does a bright spot appear?</li>
-              <li style={{ marginBottom: 6 }}>Is the reflection clear or soft?</li>
+            <div style={{ fontWeight: 800, color: "#b0a090", marginBottom: 6 }}>Watch for:</div>
+            <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+              <li style={{ marginBottom: 4 }}>Does a bright spot appear?</li>
+              <li style={{ marginBottom: 4 }}>Is the reflection clear or soft?</li>
             </ul>
           </div>
 
@@ -206,41 +220,41 @@ const TorchObservation = ({ mat, onDone }) => {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{
-                  display: "flex", flexDirection: "column", gap: "0.75rem",
-                  padding: "1.2rem", background: "rgba(0,0,0,0.5)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)"
+                  display: "flex", flexDirection: "column", gap: "0.65rem",
+                  padding: "0.85rem 1rem", background: "rgba(0,0,0,0.5)", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)"
                 }}
               >
-                <div style={{ fontSize: "1rem", fontWeight: 800, color: "#d6cbbf", textAlign: "center", marginBottom: 4 }}>
+                <div style={{ fontSize: "1.35rem", fontWeight: 900, color: "#d6cbbf", textAlign: "center", marginBottom: 2 }}>
                   What did you observe?
                 </div>
                 <div style={{ display: "flex", gap: "0.75rem" }}>
                   <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                     onClick={() => setAnswer("shiny")}
                     style={{
-                      flex: 1, padding: "0.85rem 0.4rem", borderRadius: 10,
+                      flex: 1, padding: "0.65rem 0.4rem", borderRadius: 10,
                       background: answer === "shiny"
                         ? "linear-gradient(135deg, #ca8a04, #a16207)"
                         : "rgba(161,98,7,0.15)",
                       color: answer === "shiny" ? "#fff" : "#fbbf24",
-                      fontWeight: 800, fontSize: "1rem", cursor: "pointer",
+                      fontWeight: 900, fontSize: "1.3rem", cursor: "pointer",
                       border: answer === "shiny" ? "2px solid #ca8a04" : "2px solid rgba(161,98,7,0.3)",
                     }}>
                     ✨ Shiny<br/>
-                    <span style={{ fontSize: "0.8rem", fontWeight: 600, opacity: 0.85 }}>Light reflected clearly</span>
+                    <span style={{ fontSize: "1.05rem", fontWeight: 700, opacity: 0.85 }}>Light reflected clearly</span>
                   </motion.button>
                   <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                     onClick={() => setAnswer("dull")}
                     style={{
-                      flex: 1, padding: "0.85rem 0.4rem", borderRadius: 10,
+                      flex: 1, padding: "0.65rem 0.4rem", borderRadius: 10,
                       background: answer === "dull"
                         ? "linear-gradient(135deg, #334155, #1e293b)"
                         : "rgba(51,65,85,0.2)",
                       color: answer === "dull" ? "#cbd5e1" : "#94a3b8",
-                      fontWeight: 800, fontSize: "1rem", cursor: "pointer",
+                      fontWeight: 900, fontSize: "1.3rem", cursor: "pointer",
                       border: answer === "dull" ? "2px solid #475569" : "2px solid rgba(71,85,105,0.3)",
                     }}>
                     🌑 Dull<br/>
-                    <span style={{ fontSize: "0.8rem", fontWeight: 600, opacity: 0.85 }}>No clear reflection</span>
+                    <span style={{ fontSize: "1.05rem", fontWeight: 700, opacity: 0.85 }}>No clear reflection</span>
                   </motion.button>
                 </div>
                 {answer && (
@@ -248,12 +262,12 @@ const TorchObservation = ({ mat, onDone }) => {
                     whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     onClick={handleSubmit}
                     style={{
-                      padding: "0.85rem", borderRadius: 10,
+                      padding: "0.75rem", borderRadius: 10,
                       background: "linear-gradient(135deg, #7c3aed, #5b21b6)",
-                      color: "#fff", fontWeight: 800, fontSize: "1rem",
+                      color: "#fff", fontWeight: 900, fontSize: "1.3rem",
                       border: "none", cursor: "pointer",
                       boxShadow: "0 4px 12px rgba(124,58,237,0.4)",
-                      marginTop: 6
+                      marginTop: 4
                     }}>
                     Confirm Observation →
                   </motion.button>
@@ -269,10 +283,10 @@ const TorchObservation = ({ mat, onDone }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{
-                  padding: "1.2rem", borderRadius: 12,
+                  padding: "1rem", borderRadius: 12,
                   border: "1px solid rgba(255,255,255,0.08)",
                   background: correct ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",
-                  display: "flex", flexDirection: "column", gap: "0.85rem",
+                  display: "flex", flexDirection: "column", gap: "0.75rem",
                 }}
               >
                 <div style={{
@@ -281,14 +295,14 @@ const TorchObservation = ({ mat, onDone }) => {
                   border: "1px solid " + (correct ? "#22c55e" : "#ef4444"),
                   borderRadius: 8, padding: "10px 14px",
                 }}>
-                  {correct ? <Check size={20} color="#86efac"/> : <X size={20} color="#fca5a5"/>}
-                  <span style={{ fontSize: "1rem", fontWeight: 800, color: correct ? "#86efac" : "#fca5a5" }}>
+                  {correct ? <Check size={24} color="#86efac"/> : <X size={24} color="#fca5a5"/>}
+                  <span style={{ fontSize: "1.25rem", fontWeight: 900, color: correct ? "#86efac" : "#fca5a5", lineHeight: 1.3 }}>
                     {correct
                       ? (mat.isShiny ? "✓ Correct! The " + mat.name + " reflects light clearly." : "✓ Correct! The " + mat.name + " does not reflect light clearly.")
                       : "Not quite — " + (mat.isShiny ? "this surface is actually shiny." : "this surface is actually dull.")}
                   </span>
                 </div>
-                <div style={{ fontSize: "0.95rem", color: "#a09080", fontStyle: "italic", lineHeight: 1.5 }}>
+                <div style={{ fontSize: "1.15rem", color: "#a09080", fontStyle: "italic", lineHeight: 1.4 }}>
                   {mat.shineFact}
                 </div>
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
@@ -296,8 +310,8 @@ const TorchObservation = ({ mat, onDone }) => {
                   style={{
                     padding: "0.85rem", borderRadius: 10,
                     background: "linear-gradient(135deg, #7c3aed, #5b21b6)",
-                    color: "#fff", fontWeight: 800, fontSize: "1rem",
-                    border: "none", cursor: "pointer",
+                    color: "#fff", fontWeight: 900, fontSize: "1.35rem",
+                    border: "none", cursor: "pointer", marginTop: 4
                   }}>
                   Next Object →
                 </motion.button>
@@ -333,9 +347,9 @@ const MaterialCard = ({ mat, state, onClick }) => {
           : "0 4px 16px rgba(0,0,0,0.45)",
       }}
     >
-      <div style={{ position: "relative", flex: 1, minHeight: 0, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", padding: "0.5rem 0.5rem 0", background: "#ffffff" }}>
+      <div style={{ position: "relative", flex: 1, minHeight: 0, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", padding: "0.5rem", background: "transparent" }}>
         <img src={mat.img} alt={mat.name} style={{
-          width: "100%", height: "100%", objectFit: "contain", borderRadius: 8,
+          width: "100%", height: "100%", objectFit: "contain",
           objectPosition: "center", display: "block",
           filter: isDone && mat.isShiny
             ? "brightness(1.15) contrast(1.08) saturate(1.1)"
@@ -345,11 +359,12 @@ const MaterialCard = ({ mat, state, onClick }) => {
         }} />
         {isDone && (
           <div style={{
-            position: "absolute", top: 6, right: 6,
+            position: "absolute", top: 12, right: 12,
             background: mat.isShiny ? "rgba(245,158,11,0.92)" : "rgba(100,116,139,0.92)",
-            borderRadius: 20, padding: "2px 8px",
-            fontSize: "0.7rem", fontWeight: 700, color: "#fff",
-            display: "flex", alignItems: "center", gap: 3, backdropFilter: "blur(4px)",
+            borderRadius: 24, padding: "6px 16px",
+            fontSize: "1.35rem", fontWeight: 900, color: "#fff",
+            display: "flex", alignItems: "center", gap: 6, backdropFilter: "blur(4px)",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
           }}>
             {mat.isShiny ? "✨ Shiny" : "🌑 Dull"}
           </div>
@@ -371,13 +386,13 @@ const MaterialCard = ({ mat, state, onClick }) => {
             background: "rgba(0,0,0,0.25)",
             opacity: 0, transition: "opacity 0.2s",
           }} className="hover-show">
-            <span style={{ fontSize: "1.4rem" }}>🔦</span>
+            <span style={{ fontSize: "2.5rem" }}>🔦</span>
           </div>
         )}
       </div>
       <div style={{
-        textAlign: "center", padding: "8px 4px 10px",
-        fontSize: "0.95rem", fontWeight: 800,
+        textAlign: "center", padding: "12px 6px 16px",
+        fontSize: "1.5rem", fontWeight: 900,
         color: isDone ? (mat.isShiny ? "#fcd34d" : "#94a3b8") : "#e2d9c8",
       }}>
         {mat.name}
@@ -547,42 +562,33 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
     }}>
       {/* Title */}
       <div className="glass-panel" style={{
-        padding: "1.1rem 1.4rem",
+        padding: "0.85rem 1.25rem",
         border: "1px solid var(--accent-border)",
         display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0,
       }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: "1.45rem", color: "var(--text-heading)", fontWeight: 800 }}>
+          <h3 style={{ margin: 0, fontSize: "1.6rem", color: "var(--text-heading)", fontWeight: 900 }}>
             🔦 Shine Hunt – Torch Observation Lab
           </h3>
-          <p style={{ margin: "4px 0 0", fontSize: "0.95rem", color: "#d97706", fontWeight: 600 }}>
+          <p style={{ margin: "4px 0 0", fontSize: "1.1rem", color: "#d97706", fontWeight: 700 }}>
             Shine the torch on each object and observe what happens to the light.
           </p>
         </div>
-        <button onClick={handleReset} title="Reset Activity"
-          style={{
-            display: "flex", alignItems: "center", gap: 6,
-            padding: "0.4rem 0.9rem", borderRadius: 8,
-            background: "transparent", border: "1px solid var(--border)",
-            color: "var(--text-muted)", cursor: "pointer", fontSize: "0.8rem", fontWeight: 600,
-          }}>
-          <RotateCcw size={14} /> Reset
-        </button>
       </div>
 
       {/* Body */}
-      <div style={{ display: "flex", gap: "0.75rem", flex: 1, minHeight: 0, overflow: "hidden" }}>
+      <div style={{ display: "flex", gap: "0.6rem", flex: 1, minHeight: 0, overflow: "hidden" }}>
 
         {/* Scene area */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.6rem", minWidth: 0, overflow: "hidden", position: "relative" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.5rem", minWidth: 0, overflow: "hidden", position: "relative" }}>
 
           {!showChallengePanel ? (
             <>
               <div style={{
                 background: "linear-gradient(135deg, rgba(161,98,7,0.2), rgba(120,53,15,0.15))",
                 border: "1px solid rgba(161,98,7,0.4)", borderRadius: 10,
-                padding: "0.75rem 1rem", fontSize: "1.2rem",
-                color: "#f97316", fontWeight: 700, flexShrink: 0,
+                padding: "0.65rem 1rem", fontSize: "1.1rem",
+                color: "#d97706", fontWeight: 800, flexShrink: 0,
               }}>
                 🔦 Click any material to open the torch observation.{doneCount > 0 ? "  (" + doneCount + "/6 done)" : ""}
               </div>
@@ -600,7 +606,7 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                 })}
               </div>
 
-              {/* Torch observation overlay */}
+              {/* Torch observation inline replacing grid */}
               <AnimatePresence>
                 {activeMat && activeMaterial && (
                   <motion.div
@@ -625,45 +631,45 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
 
         {/* Detective Board */}
         <div className="glass-panel" style={{
-          width: 210, flexShrink: 0,
+          width: 340, flexShrink: 0,
           display: "flex", flexDirection: "column",
-          padding: "0.75rem", overflow: "hidden",
+          padding: "1rem", overflow: "hidden",
         }}>
           <div style={{
-            fontWeight: 900, fontSize: "1.3rem", color: "#f97316",
+            fontWeight: 900, fontSize: "1.6rem", color: "#d97706",
             borderBottom: "1px solid rgba(255,255,255,0.1)",
-            paddingBottom: "0.6rem", marginBottom: "0.5rem",
+            paddingBottom: "0.5rem", marginBottom: "0.5rem",
           }}>
             🔎 Shine Detective
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", flex: 1, overflow: "auto" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem", flex: 1, overflow: "hidden" }}>
             {MATERIALS.map(mat => {
               const obs = observations[mat.id];
               return (
                 <motion.div key={mat.id} layout style={{
-                  display: "flex", alignItems: "center", gap: 10,
+                  display: "flex", alignItems: "center", gap: 14,
                   background: obs ? (mat.isShiny ? "rgba(251,191,36,0.12)" : "rgba(100,116,139,0.12)") : "rgba(255,255,255,0.04)",
-                  borderRadius: 10, padding: "8px 10px",
+                  borderRadius: 14, padding: "8px 14px",
                   border: obs ? "1px solid " + (mat.isShiny ? "rgba(251,191,36,0.3)" : "rgba(100,116,139,0.3)") : "1px solid rgba(255,255,255,0.06)",
                   transition: "all 0.3s",
                 }}>
                   <img src={mat.img} alt={mat.name} draggable="false"
-                    style={{ width: 36, height: 36, objectFit: "cover", borderRadius: 6, flexShrink: 0 }} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    style={{ width: 52, height: 52, objectFit: "cover", borderRadius: 10, flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                    <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {mat.name}
                     </div>
-                    <div style={{ fontSize: "0.75rem", marginTop: 2 }}>
+                    <div style={{ fontSize: "1.1rem", marginTop: 4 }}>
                       {obs ? (
-                        <span style={{ color: mat.isShiny ? "#fcd34d" : "#94a3b8", fontWeight: 700 }}>
+                        <span style={{ color: mat.isShiny ? "#fcd34d" : "#94a3b8", fontWeight: 800 }}>
                           {mat.isShiny ? "✨ Shiny" : "🌑 Dull"}
                         </span>
                       ) : (
-                        <span style={{ color: "var(--text-muted)" }}>? Not observed</span>
+                        <span style={{ color: "var(--text-muted)", fontWeight: 700 }}>? Not observed</span>
                       )}
                     </div>
                   </div>
-                  {obs && <Check size={13} color={mat.isShiny ? "#fbbf24" : "#64748b"} />}
+                  {obs && <Check size={22} color={mat.isShiny ? "#fbbf24" : "#64748b"} />}
                 </motion.div>
               );
             })}
@@ -671,19 +677,19 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
 
           {/* Shine Record */}
           <div style={{
-            marginTop: "0.75rem", padding: "0.6rem 0.75rem",
-            background: "rgba(0,0,0,0.4)", borderRadius: 10,
+            marginTop: "0.75rem", padding: "1rem 1.25rem",
+            background: "rgba(0,0,0,0.4)", borderRadius: 14,
             border: "1px solid rgba(255,255,255,0.08)",
           }}>
-            <div style={{ fontSize: "0.8rem", fontWeight: 800, color: "#e2d9c8", marginBottom: "0.4rem" }}>
+            <div style={{ fontSize: "1.35rem", fontWeight: 900, color: "#e2d9c8", marginBottom: "0.75rem" }}>
               Shine Record
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", color: "#fde68a", fontWeight: 700 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.25rem", color: "#fde68a", fontWeight: 800 }}>
                 <span>✨ Shiny Objects</span>
                 <span>{Object.values(observations).filter(o => o.result === "shiny").length} / 6</span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", color: "#cbd5e1", fontWeight: 700 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.25rem", color: "#cbd5e1", fontWeight: 800 }}>
                 <span>🌑 Dull Objects</span>
                 <span>{Object.values(observations).filter(o => o.result === "dull").length} / 6</span>
               </div>
@@ -693,10 +699,10 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
           {allDone && !challengeSolved && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               style={{
-                marginTop: "0.75rem",
+                marginTop: "0.85rem",
                 background: "rgba(124,58,237,0.18)", border: "1px solid rgba(167,139,250,0.4)",
-                borderRadius: 10, padding: "0.6rem 0.75rem",
-                fontSize: "0.75rem", color: "#c4b5fd", fontWeight: 600, lineHeight: 1.4, textAlign: "center",
+                borderRadius: 12, padding: "0.85rem",
+                fontSize: "1.1rem", color: "#c4b5fd", fontWeight: 800, lineHeight: 1.4, textAlign: "center",
               }}>
               🎯 All observed!<br/>
               <span style={{ color: "#a78bfa" }}>Final challenge →</span>
@@ -705,10 +711,10 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
           {challengeSolved && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               style={{
-                marginTop: "0.75rem",
+                marginTop: "0.85rem",
                 background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.4)",
-                borderRadius: 10, padding: "0.6rem 0.75rem",
-                fontSize: "0.78rem", color: "#86efac", fontWeight: 700, textAlign: "center",
+                borderRadius: 12, padding: "0.85rem",
+                fontSize: "1.2rem", color: "#86efac", fontWeight: 800, textAlign: "center",
               }}>
               🎉 Case Solved!
             </motion.div>
