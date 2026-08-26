@@ -175,7 +175,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
         </div>
 
         {/* Center Panel: Scrubbing Station */}
-        <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', padding: '1rem' }}>
+        <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', padding: '1rem', minHeight: 0 }}>
           <h4 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem' }}>
             <Activity size={18} /> 🔬 Scrubbing Station
           </h4>
@@ -185,7 +185,7 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
 
           <div 
             style={{ 
-              flex: 1, 
+              flex: 1, minHeight: 100,
               background: 'var(--surface)', 
               borderRadius: '12px', 
               display: 'flex', 
@@ -254,45 +254,45 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
           </div>
 
           {/* Progress Bar */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: isScrubbed ? 'var(--success)' : 'var(--text-muted)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.4rem', color: isScrubbed ? 'var(--success)' : 'var(--text-muted)' }}>
               <span>Surface Restored: {Math.floor(progress)}%</span>
               {isScrubbed && <span style={{ fontWeight: 'bold' }}>✨ Complete</span>}
             </div>
-            <div style={{ width: '100%', height: '8px', background: 'var(--surface)', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ width: '100%', height: '16px', background: 'var(--surface)', borderRadius: '8px', overflow: 'hidden' }}>
               <div style={{ width: `${progress}%`, height: '100%', background: isScrubbed ? 'var(--success)' : 'var(--accent)', transition: 'width 0.2s, background 0.3s' }} />
             </div>
           </div>
 
           {/* Think Like a Scientist Box */}
-          <div style={{ background: 'rgba(251, 191, 36, 0.1)', borderLeft: '4px solid #fbbf24', padding: '0.75rem', borderRadius: '4px', marginTop: '0.5rem' }}>
-            <h5 style={{ margin: '0 0 0.25rem 0', color: '#b45309', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+          <div style={{ background: 'rgba(251, 191, 36, 0.1)', borderLeft: '6px solid #fbbf24', padding: '0.75rem 1.25rem', borderRadius: '6px', marginTop: '1rem' }}>
+            <h5 style={{ margin: '0 0 0.5rem 0', color: '#b45309', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.4rem' }}>
               💡 Think Like a Scientist
             </h5>
-            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              <strong>Why did the metal look dull before scrubbing?</strong> Air and moisture can make some metal surfaces lose their lustre. Scrubbing can remove the dull outer layer and reveal the surface underneath.
+            <p style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+              Scrubbing removes the dull outer layer and reveals the brighter surface underneath.
             </p>
           </div>
         </div>
 
         {/* Right Panel: Evidence Panel */}
-        <div className="glass-panel" style={{ flex: '0 0 380px', display: 'flex', flexDirection: 'column', gap: '1.25rem', border: '1px solid var(--border)', overflowY: 'auto', padding: '1.25rem' }}>
+        <div className="glass-panel" style={{ flex: '0 0 380px', display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', overflow: 'hidden', padding: '1rem' }}>
           <h4 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.3rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
             <Search size={22} /> What do you observe?
           </h4>
 
           {/* Before/After Visual */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface)', padding: '1.25rem', borderRadius: '8px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
-              <span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>BEFORE</span>
-              <div style={{ width: '80px', height: '80px', borderRadius: '4px', background: activeMat.baseBg }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface)', padding: '0.5rem 1rem', borderRadius: '8px', flexShrink: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>BEFORE</span>
+              <div style={{ width: '50px', height: '50px', borderRadius: '4px', background: activeMat.baseBg }}>
                 <div style={{ width: '100%', height: '100%', opacity: 0.5, background: activeMat.overlayBg }} />
               </div>
             </div>
-            <ArrowRight size={32} style={{ color: 'var(--text-muted)' }} />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
-              <span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>AFTER</span>
-              <div style={{ width: '80px', height: '80px', borderRadius: '4px', background: activeMat.shinyBg, position: 'relative', overflow: 'hidden' }}>
+            <ArrowRight size={24} style={{ color: 'var(--text-muted)' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>AFTER</span>
+              <div style={{ width: '50px', height: '50px', borderRadius: '4px', background: activeMat.shinyBg, position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: activeMat.baseBg, opacity: 1 - (progress/100) }}>
                   <div style={{ width: '100%', height: '100%', opacity: 0.5, background: activeMat.overlayBg }} />
                 </div>
@@ -300,18 +300,18 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '1.1rem', flex: 1 }}>
-            <div style={{ background: 'var(--surface)', padding: '1.25rem', borderRadius: '8px', flex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '1.1rem', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+            <div style={{ background: 'var(--surface)', padding: '0.75rem 1.25rem', borderRadius: '8px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <strong style={{ color: 'var(--text-muted)' }}>Before Scrubbing:</strong>
-              <ul style={{ margin: '0.5rem 0 0 1.5rem', padding: 0, color: 'var(--text-secondary)' }}>
+              <ul style={{ margin: '0.25rem 0 0 1.5rem', padding: 0, color: 'var(--text-secondary)' }}>
                 <li>Appearance: Dull</li>
                 <li>Surface: {activeMat.isMetal ? 'Oxidized/Rusty' : 'Rough/Bark'}</li>
               </ul>
             </div>
             
-            <div style={{ background: 'var(--surface)', padding: '1.25rem', borderRadius: '8px', opacity: isScrubbed ? 1 : 0.5, transition: 'opacity 0.3s', flex: 1 }}>
+            <div style={{ background: 'var(--surface)', padding: '0.75rem 1.25rem', borderRadius: '8px', opacity: isScrubbed ? 1 : 0.5, transition: 'opacity 0.3s', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <strong style={{ color: isScrubbed ? 'var(--text-primary)' : 'var(--text-muted)' }}>After Scrubbing:</strong>
-              <ul style={{ margin: '0.5rem 0 0 1.5rem', padding: 0, color: 'var(--text-secondary)' }}>
+              <ul style={{ margin: '0.25rem 0 0 1.5rem', padding: 0, color: 'var(--text-secondary)' }}>
                 <li>Appearance: {isScrubbed ? (activeMat.shouldShine ? 'Brighter' : 'Cleaner, but still dull') : '?'}</li>
                 <li>Surface: {isScrubbed ? 'Cleaner' : '?'}</li>
               </ul>
@@ -323,12 +323,12 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              style={{ marginTop: 'auto', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '1.25rem', borderRadius: '8px' }}
+              style={{ marginTop: 'auto', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '1rem 1.25rem', borderRadius: '8px', flexShrink: 0 }}
             >
-              <h5 style={{ margin: '0 0 0.5rem 0', color: '#2563eb', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '1.15rem' }}>
+              <h5 style={{ margin: '0 0 0.5rem 0', color: '#2563eb', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '1.4rem' }}>
                 🕵️ Detective Observation
               </h5>
-              <p style={{ margin: '0 0 1rem 0', fontSize: '1.05rem', color: 'var(--text-primary)', fontWeight: 'bold' }}>
+              <p style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', color: 'var(--text-primary)', fontWeight: 'bold' }}>
                 What changed after scrubbing?
               </p>
               
@@ -336,21 +336,21 @@ export default function Stage4_LustreHardness({ onComplete, addXp }) {
                 <button 
                   className={currentObservation === 'brighter' ? 'primary' : 'outline'}
                   onClick={() => handleObservation(activeScrubTarget, 'brighter')}
-                  style={{ padding: '0.75rem', fontSize: '1.05rem' }}
+                  style={{ padding: '0.75rem', fontSize: '1.2rem' }}
                 >
                   ✨ Became brighter
                 </button>
                 <button 
                   className={currentObservation === 'dull' ? 'primary' : 'outline'}
                   onClick={() => handleObservation(activeScrubTarget, 'dull')}
-                  style={{ padding: '0.75rem', fontSize: '1.05rem' }}
+                  style={{ padding: '0.75rem', fontSize: '1.2rem' }}
                 >
                   ○ Stayed dull
                 </button>
               </div>
 
               {currentObservation && (
-                <div style={{ marginTop: '1rem', fontSize: '1.05rem', color: currentObservation === (activeMat.shouldShine ? 'brighter' : 'dull') ? 'var(--success)' : 'var(--danger)' }}>
+                <div style={{ marginTop: '1rem', fontSize: '1.1rem', color: currentObservation === (activeMat.shouldShine ? 'brighter' : 'dull') ? 'var(--success)' : 'var(--danger)' }}>
                   {currentObservation === (activeMat.shouldShine ? 'brighter' : 'dull') 
                     ? <><strong>✨ Surface Revealed!</strong><br />You removed the dull outer layer. {activeMat.shouldShine ? 'The surface is now brighter and more lustrous.' : 'As expected, wood does not become shiny.'}</>
                     : <><strong>Hmm, look closely.</strong><br />{activeMat.shouldShine ? 'Did the metal become shiny underneath?' : 'Did the wood actually become shiny like a metal?'}</>
