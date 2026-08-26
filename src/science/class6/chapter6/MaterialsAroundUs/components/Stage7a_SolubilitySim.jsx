@@ -46,10 +46,10 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
   
   const count = React.useMemo(() => {
     if (!selectedSubstance) return 0;
-    return selectedSubstance.id === 'chalk' ? 1800 :
-           selectedSubstance.id === 'sawdust' ? 1500 : // Massive count for tiny fibers
-           selectedSubstance.id === 'sand' ? 3000 : // Massive count for tiny grains
-           1200; // Sugar/Salt
+    return selectedSubstance.id === 'chalk' ? 2500 :
+           selectedSubstance.id === 'sawdust' ? 2000 :
+           selectedSubstance.id === 'sand' ? 4000 :
+           1500; // Sugar/Salt
   }, [selectedSubstance]);
 
   const particles = React.useMemo(() => {
@@ -82,9 +82,9 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
                         (0.015 + Math.random() * 0.015); // Tiny sand grains
       
       pts.push({
-        // WIDER spread (radius 1.8) and staggered heights (up to 8.0) so they don't fall as a single blob
-        position: new THREE.Vector3((Math.random() - 0.5) * 1.8, 2.5 + Math.random() * 5.0, (Math.random() - 0.5) * 1.8), 
-        velocity: new THREE.Vector3((Math.random() - 0.5) * 0.5, -(Math.random() * 3 + 2), (Math.random() - 0.5) * 0.5), // Drop vertically
+        // WIDER spread (radius 1.5) and higher staggered heights (up to 9.5) so they fall dynamically into frame
+        position: new THREE.Vector3((Math.random() - 0.5) * 1.5, 3.5 + Math.random() * 6.0, (Math.random() - 0.5) * 1.5), 
+        velocity: new THREE.Vector3((Math.random() - 0.5) * 0.5, -(Math.random() * 4 + 3), (Math.random() - 0.5) * 0.5), // Faster drop
         scale: scaleBase,
         initialScale: scaleBase,
         baseScaleVec: new THREE.Vector3(0.6 + Math.random() * 0.8, 0.6 + Math.random() * 0.8, 0.6 + Math.random() * 0.8), // Individual random shape variation
@@ -253,19 +253,19 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
   return (
     <instancedMesh ref={meshRef} args={[null, null, count]} renderOrder={2}>
       {selectedSubstance.id === 'sugar' ? <icosahedronGeometry args={[1, 0]} /> :
-       selectedSubstance.id === 'salt' ? <octahedronGeometry args={[1, 0]} /> :
+       selectedSubstance.id === 'salt' ? <icosahedronGeometry args={[1, 0]} /> :
        selectedSubstance.id === 'chalk' ? <dodecahedronGeometry args={[1, 0]} /> :
        selectedSubstance.id === 'sand' ? <tetrahedronGeometry args={[1, 0]} /> :
-       <tetrahedronGeometry args={[1, 0]} />} {/* Sawdust - using tetrahedrons scaled irregularly creates jagged splinters and flakes, avoiding rectangular looks */}
+       <tetrahedronGeometry args={[1, 0]} />} 
        
       {/* High contrast physical material that respects individual instance colors and 3D lighting */}
       <meshStandardMaterial 
         transparent={true}
-        opacity={1.0}
+        opacity={selectedSubstance.id === 'chalk' ? 0.7 : 1.0}
         roughness={selectedSubstance.id === 'sand' ? 1.0 : (selectedSubstance.id === 'chalk' || selectedSubstance.id === 'sawdust' ? 1.0 : 0.2)}
         metalness={selectedSubstance.id === 'sugar' || selectedSubstance.id === 'salt' ? 0.3 : 0.0}
         emissive="#ffffff"
-        emissiveIntensity={selectedSubstance.id === 'sand' || selectedSubstance.id === 'sawdust' || selectedSubstance.id === 'chalk' ? 0.0 : 0.1} // Subtle emissive on sugar/salt
+        emissiveIntensity={selectedSubstance.id === 'sand' || selectedSubstance.id === 'sawdust' || selectedSubstance.id === 'chalk' ? 0.0 : 0.15}
         depthWrite={true}
       />
     </instancedMesh>
@@ -301,14 +301,16 @@ const StirringRod = ({ stirState }) => {
       <cylinderGeometry args={[0.04, 0.04, 4.5, 16]} />
       <meshPhysicalMaterial 
         transparent={true}
-        transmission={0.6} // Reduced transmission to make it visibly distinct from water
+        transmission={0.9} 
         opacity={1}
-        roughness={0.1} // Slightly frosted to catch light
+        roughness={0.02} 
         metalness={0.1}
-        ior={1.52}
-        color="#f0f8ff" // Subtle blueish-white glass tint
+        ior={1.55}
+        color="#ffffff" 
+        attenuationColor="#e0f2fe"
+        attenuationDistance={2.0}
         emissive="#ffffff"
-        emissiveIntensity={0.05} // Very subtle glow prevents it from disappearing
+        emissiveIntensity={0.02}
         clearcoat={1}
         depthWrite={false}
       />
@@ -382,16 +384,18 @@ const Beaker3D = ({ stirState }) => {
         <meshPhysicalMaterial 
           color="#ffffff" 
           transparent={true}
-          transmission={0.95} // High transmission for realism
-          opacity={1.0} // Must be 1 when transmission is used
+          transmission={0.98} // High transmission for realism
+          opacity={1.0} 
           roughness={0.02} 
-          metalness={0.0}
-          ior={1.5}
-          thickness={0.05}
+          metalness={0.05}
+          ior={1.52}
+          thickness={0.08}
           clearcoat={1.0}
           clearcoatRoughness={0.05}
           side={THREE.DoubleSide}
           depthWrite={false}
+          attenuationColor="#ffffff"
+          attenuationDistance={10}
         />
       </mesh>
 
@@ -407,10 +411,10 @@ const Beaker3D = ({ stirState }) => {
         <cylinderGeometry args={[1.4, 1.35, 3.4, 64]} />
         <meshPhysicalMaterial 
           transparent={true}
-          opacity={0.35} // Allows bright contrast for white particles inside
-          roughness={0.1}
-          metalness={0.1}
-          color="#0ea5e9" // Rich blue water color
+          opacity={0.4}
+          roughness={0.05}
+          metalness={0.05}
+          color="#0ea5e9"
           depthWrite={false}
         />
       </mesh>
@@ -437,6 +441,29 @@ const Beaker3D = ({ stirState }) => {
   );
 };
 
+const SceneRig = ({ stirState, selectedSubstance }) => {
+  const groupRef = React.useRef();
+  
+  useFrame((state) => {
+    if (groupRef.current) {
+      // Subtle parallax/tilt effect based on mouse position
+      groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, (state.mouse.x * Math.PI) / 16, 0.05);
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -(state.mouse.y * Math.PI) / 32, 0.05);
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {/* Scaled safely to 1.25 and shifted UP to perfectly balance top rim and bottom shadow inside the camera view */}
+      <group scale={[1.25, 1.25, 1.25]} position={[0, 0.2, 0]}>
+        <Beaker3D stirState={stirState} />
+        <StirringRod stirState={stirState} />
+        <ParticleSystem selectedSubstance={selectedSubstance} stirState={stirState} />
+      </group>
+    </group>
+  );
+};
+
 const WebGLBeakerSimulation = ({ selectedSubstance, stirState }) => {
   return (
     <div style={{
@@ -444,27 +471,35 @@ const WebGLBeakerSimulation = ({ selectedSubstance, stirState }) => {
       width: '100%',
       flex: 1,
       minHeight: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       background: 'transparent'
     }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Canvas camera={{ position: [0, 0.5, 8.5], fov: 40 }} style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
+      <div style={{ 
+        position: 'relative', 
+        width: '100%', 
+        maxWidth: '400px',
+        height: '100%',
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center' 
+      }}>
+        {/* Camera shifted slightly down to y:0.2 to balance the extra visual weight of the bottom shadow */}
+        <Canvas camera={{ position: [0, 0.2, 8.5], fov: 40 }} style={{ width: '100%', height: '100%' }}>
           {/* Photorealistic Studio Lighting */}
           <ambientLight intensity={0.6} color="#ffffff" />
           <directionalLight position={[10, 15, 10]} intensity={1.5} color="#ffffff" castShadow />
           <directionalLight position={[-10, 5, -5]} intensity={0.5} color="#e0e0e0" />
           <spotLight position={[0, 10, 0]} intensity={1.5} penumbra={0.5} angle={0.5} color="#ffffff" />
           
-          <group scale={[1.15, 1.15, 1.15]} position={[0, -0.05, 0]}>
-            <Beaker3D stirState={stirState} />
-            <StirringRod stirState={stirState} />
-            <ParticleSystem selectedSubstance={selectedSubstance} stirState={stirState} />
-          </group>
+          <SceneRig stirState={stirState} selectedSubstance={selectedSubstance} />
           
           {/* Neutral studio environment mapping for natural reflections */}
           <Environment preset="city" />
           
-          {/* Authentic laboratory surface grounding shadow */}
-          <ContactShadows position={[0, -2.01, 0]} opacity={0.65} scale={10} blur={2.0} far={4} color="#000000" />
+          {/* Authentic laboratory surface grounding shadow properly positioned at the beaker base (0.2 + (1.25 * -1.95) = -2.24) */}
+          <ContactShadows position={[0, -2.24, 0]} opacity={0.65} scale={10} blur={2.0} far={4} color="#000000" />
         </Canvas>
       </div>
     </div>
@@ -730,12 +765,39 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
       </div>
 
       {/* Footer Progress */}
-      <div style={{ background: '#fdfbf7', border: '1px solid #e7e5e4', borderRadius: '16px', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+      <div style={{ 
+        background: '#fdfbf7', 
+        border: '1px solid #e7e5e4', 
+        borderRadius: '12px', 
+        padding: '12px 24px', 
+        minHeight: '64px',
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+        flexShrink: 0
+      }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#d97706' }}>
-          <div style={{ background: '#fefce8', padding: '8px', borderRadius: '50%' }}>
-            <Target size={24} />
+          <div style={{ background: '#fefce8', padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Target size={20} />
           </div>
-          <span style={{ color: '#431407', fontSize: '1.15rem', fontWeight: 'bold' }}>Test all 5 materials to see if they are soluble or insoluble.</span>
+          <span style={{ color: '#431407', fontSize: '1.05rem', fontWeight: 'bold' }}>Test all 5 materials to see if they are soluble or insoluble.</span>
+        </div>
+
+        <div style={{ 
+          fontSize: '1rem', 
+          fontWeight: 'bold', 
+          color: obsCount === substances.length ? '#16a34a' : '#57534e',
+          background: obsCount === substances.length ? '#dcfce7' : '#f5f5f4',
+          padding: '6px 12px',
+          borderRadius: '16px',
+          border: `1px solid ${obsCount === substances.length ? '#bbf7d0' : '#e7e5e4'}`,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px'
+        }}>
+          {obsCount === substances.length && <span>✓</span>}
+          {obsCount} / {substances.length} Tested
         </div>
       </div>
 
