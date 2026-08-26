@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, useMotionValue, useVelocity, useSpring, useTransform } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, useMotionValue, useVelocity, useSpring, useTransform, animate } from 'framer-motion';
 import { RealisticCup } from './RealisticCup';
 
 export const DraggableCup = ({ cup, isWeighed, onDrop, disabled }) => {
@@ -17,16 +17,31 @@ export const DraggableCup = ({ cup, isWeighed, onDrop, disabled }) => {
   const rotateX = useTransform(smoothVelocityY, [-1000, 1000], [10, -10]);
   
   const [isDragging, setIsDragging] = useState(false);
+
+  // When this cup is NO LONGER on the scale (i.e. replaced by another cup),
+  // animate it back to its original slot.
+  useEffect(() => {
+    if (!isWeighed) {
+      animate(x, 0, { type: 'spring', stiffness: 400, damping: 30 });
+      animate(y, 0, { type: 'spring', stiffness: 400, damping: 30 });
+    }
+  }, [isWeighed, x, y]);
   
   const handleDragEnd = (event, info) => {
     setIsDragging(false);
     
     // Find elements under the cursor drop point
     const elements = document.elementsFromPoint(info.point.x, info.point.y);
-    const isOverScale = elements.some(el => el.getAttribute('data-droptarget') === 'scale');
+    const isOverScale = elements.some(el => el?.getAttribute?.('data-droptarget') === 'scale');
 
     if (isOverScale && !disabled && !isWeighed) {
       onDrop(cup.id);
+      // Successful drop: DO NOT snap back! We leave x and y where they are so 
+      // layoutId can transition perfectly from the cursor position.
+    } else {
+      // Failed drop: return to source card
+      animate(x, 0, { type: 'spring', stiffness: 500, damping: 35 });
+      animate(y, 0, { type: 'spring', stiffness: 500, damping: 35 });
     }
   };
   
@@ -43,47 +58,55 @@ export const DraggableCup = ({ cup, isWeighed, onDrop, disabled }) => {
         }}
       />
       
-      <motion.div
-        drag={!disabled && !isWeighed}
-        dragSnapToOrigin={true}
-        dragElastic={0.2}
-        onDragStart={() => setIsDragging(true)}
-        onDragEnd={handleDragEnd}
-        style={{
-          x, y,
-          rotateX, rotateY,
-          scale: isDragging ? 1.05 : 1,
-          z: isDragging ? 50 : 0,
-          cursor: (disabled || isWeighed) ? 'default' : (isDragging ? 'grabbing' : 'grab'),
-          touchAction: 'none',
-          perspective: 1000,
-          transformStyle: 'preserve-3d',
-          zIndex: isDragging ? 100 : 1,
-          width: '100%',
-          height: '100%',
-          opacity: isWeighed ? 0.4 : 1,
-          userSelect: 'none'
-        }}
-        whileHover={{ scale: (disabled || isWeighed) ? 1 : 1.02 }}
-        whileTap={{ scale: (disabled || isWeighed) ? 1 : 1.05 }}
-      >
-        <RealisticCup material={cup.id} velocityX={smoothVelocityX} />
-        
-        {/* Dynamic Contact Shadow that follows the cup */}
-        <motion.div 
+      {isWeighed ? (
+        // Faded placeholder left behind on the card
+        <div style={{ width: '100%', height: '100%', opacity: 0.3, filter: 'grayscale(0.8)', pointerEvents: 'none' }}>
+          <RealisticCup material={cup.id} velocityX={0} />
+        </div>
+      ) : (
+        <motion.div
+          layoutId={`cup-transition-${cup.id}`}
+          drag={!disabled}
+          dragSnapToOrigin={false}
+          dragElastic={0.1}
+          dragMomentum={false} // Stop immediately when let go
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={handleDragEnd}
           style={{
-            position: 'absolute',
-            bottom: -15, left: '10%', right: '10%', height: '12px',
-            background: 'rgba(0,0,0,0.4)',
-            borderRadius: '50%',
-            filter: isDragging ? 'blur(8px)' : 'blur(4px)',
-            opacity: isDragging ? 0.3 : 0,
-            scale: isDragging ? 1.2 : 0.8,
-            pointerEvents: 'none',
-            transition: 'all 0.2s ease-out'
+            x, y,
+            rotateX, rotateY,
+            scale: isDragging ? 1.05 : 1,
+            z: isDragging ? 50 : 0,
+            cursor: disabled ? 'default' : (isDragging ? 'grabbing' : 'grab'),
+            touchAction: 'none',
+            perspective: 1000,
+            transformStyle: 'preserve-3d',
+            zIndex: isDragging ? 100 : 1,
+            width: '100%',
+            height: '100%',
+            userSelect: 'none'
           }}
-        />
-      </motion.div>
+          whileHover={{ scale: disabled ? 1 : 1.02 }}
+          whileTap={{ scale: disabled ? 1 : 1.05 }}
+        >
+          <RealisticCup material={cup.id} velocityX={smoothVelocityX} />
+          
+          {/* Dynamic Contact Shadow that follows the cup */}
+          <motion.div 
+            style={{
+              position: 'absolute',
+              bottom: -15, left: '10%', right: '10%', height: '12px',
+              background: 'rgba(0,0,0,0.4)',
+              borderRadius: '50%',
+              filter: isDragging ? 'blur(8px)' : 'blur(4px)',
+              opacity: isDragging ? 0.3 : 0,
+              scale: isDragging ? 1.2 : 0.8,
+              pointerEvents: 'none',
+              transition: 'all 0.2s ease-out'
+            }}
+          />
+        </motion.div>
+      )}
     </div>
   );
 };

@@ -3,42 +3,8 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 import { RealisticCup } from './RealisticCup';
 
 export const WeighingScale = ({ currentCupOnScale, mass }) => {
-  const containerRef = useRef(null);
-  
-  // Cursor parallax tracking
-  const mouseX = useMotionValue(0.5);
-  const mouseY = useMotionValue(0.5);
-  
-  const springConfig = { damping: 30, stiffness: 200, mass: 1 };
-  const smoothMouseX = useSpring(mouseX, springConfig);
-  const smoothMouseY = useSpring(mouseY, springConfig);
-  
-  // Parallax constraints: ±3 degrees, centered around 20 degrees X tilt
-  const rotateY = useTransform(smoothMouseX, [0, 1], [-3, 3]);
-  const rotateX = useTransform(smoothMouseY, [0, 1], [23, 17]); 
-
-  const handleMouseMove = (e) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
-    const y = Math.min(Math.max((e.clientY - rect.top) / rect.height, 0), 1);
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0.5);
-    mouseY.set(0.5);
-  };
-
-  // Dynamic platform depth based on mass (max depth around 5, idle at 20)
-  const targetZ = currentCupOnScale ? Math.max(8, 20 - (mass / 12)) : 20;
-
   return (
     <div 
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       style={{ 
         position: 'relative', 
         width: '100%', 
@@ -47,210 +13,168 @@ export const WeighingScale = ({ currentCupOnScale, mass }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        perspective: '1200px',
-        paddingTop: '40px' // Space for the cup
+        background: 'linear-gradient(180deg, #3a3b3d 0%, #2a2a2c 40%, #1a1a1b 100%)',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.5)'
       }}
     >
-      <motion.div 
-        data-droptarget="scale"
-        style={{
-          position: 'relative',
-          width: '260px',
-          height: '200px',
-          transformStyle: 'preserve-3d',
-          rotateX,
-          rotateY
-        }}
-      >
-        {/* Soft Ambient Shadow Beneath the Machine */}
+      {/* Horizontal Wall Seam for background depth */}
+      <div style={{
+        position: 'absolute',
+        top: '35%',
+        left: 0, right: 0,
+        height: '4px',
+        background: 'linear-gradient(90deg, #1f1f21, #3f4044, #1f1f21)',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.5)'
+      }} />
+
+      {/* Scale Assembly */}
+      <div style={{ position: 'relative', width: '380px', height: '260px', marginTop: '20px' }}>
+        
+        {/* Ambient shadow on desk */}
         <div style={{
-          position: 'absolute',
-          bottom: '-30px',
-          left: '-20px',
-          right: '-20px',
-          height: '60px',
-          background: 'rgba(0,0,0,0.15)',
-          borderRadius: '50%',
-          filter: 'blur(20px)',
-          transform: 'translateZ(-40px)',
-          pointerEvents: 'none'
+          position: 'absolute', bottom: '-20px', left: '20px', right: '20px', height: '50px',
+          background: 'rgba(0,0,0,0.8)', borderRadius: '50%', filter: 'blur(15px)'
         }} />
 
-        {/* Scale Body */}
+        {/* Scale Body Base (White Plastic) */}
         <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(135deg, #f8f9fa, #e9ecef)',
-          borderRadius: '24px',
-          border: '1px solid #ffffff',
-          boxShadow: '0 20px 0 #cbd5e1, 0 30px 40px rgba(0,0,0,0.3)', // Physical thickness and ambient shadow
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          paddingBottom: '20px'
+          position: 'absolute', inset: 0,
+          background: 'radial-gradient(ellipse at center 30%, #ffffff 0%, #e6e6e6 60%, #cccccc 100%)',
+          borderRadius: '40px 40px 50px 50px',
+          boxShadow: 'inset 0 4px 10px white, inset 0 -15px 20px rgba(0,0,0,0.1), 0 15px 0 #b3b3b3, 0 25px 20px rgba(0,0,0,0.5)',
+          border: '1px solid #d9d9d9'
         }}>
           
-          {/* Display & Buttons Section */}
+          {/* Front Bevel/Panel Area */}
           <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '85%',
-            background: '#dee2e6',
-            padding: '12px 16px',
-            borderRadius: '12px',
-            boxShadow: 'inset 0 3px 6px rgba(0,0,0,0.15), 0 2px 0 rgba(255,255,255,0.9)',
-            transform: 'translateZ(2px)' // Extrude slightly from body
+            position: 'absolute', bottom: '15px', left: '5%', right: '5%', height: '110px',
+            background: 'linear-gradient(180deg, #eeeeee 0%, #d4d4d4 100%)',
+            borderRadius: '10px 10px 30px 30px',
+            boxShadow: 'inset 0 2px 5px rgba(255,255,255,0.8), inset 0 -2px 5px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.05)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 15px'
           }}>
-            
-            {/* Recessed LCD Display */}
-            <div style={{
-              background: '#212529',
-              padding: '5px',
-              borderRadius: '8px',
-              boxShadow: 'inset 0 4px 6px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.6)',
-              width: '135px'
-            }}>
+            {/* Branding */}
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', padding: '0 10px', marginBottom: '10px' }}>
+              <span style={{ color: '#c8102e', fontWeight: '900', fontSize: '15px', letterSpacing: '1px', fontFamily: 'Arial, sans-serif' }}>OHAUS</span>
+              <span style={{ color: '#444', fontWeight: '800', fontSize: '13px', letterSpacing: '0.5px', fontFamily: 'Arial, sans-serif' }}>SCOUT</span>
+            </div>
+
+            {/* LCD and Buttons Row */}
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', padding: '0' }}>
+              
+              {/* LCD Screen */}
               <div style={{
-                background: 'linear-gradient(180deg, #9ae6b4, #68d391)', // Soft green LCD
+                width: '210px', height: '65px',
+                background: '#8a9b8e', // off-green LCD background
                 borderRadius: '4px',
-                padding: '8px 10px',
-                boxShadow: 'inset 0 3px 10px rgba(0,0,0,0.25)',
-                display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
+                border: '2px solid #a3a3a3',
+                boxShadow: 'inset 2px 4px 10px rgba(0,0,0,0.4), 0 1px 1px rgba(255,255,255,0.8)',
+                display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
+                padding: '10px 15px',
+                position: 'relative',
                 overflow: 'hidden'
               }}>
-                <span style={{ 
-                  fontFamily: "'Courier New', Courier, monospace",
-                  fontSize: '1.3rem',
-                  fontWeight: 'bold',
-                  color: '#1a202c',
-                  whiteSpace: 'nowrap',
-                  textShadow: '0 0 4px rgba(39, 103, 73, 0.4)'
-                }}>
-                  {mass ? `${mass.toFixed(2)} g` : '0.00 g'}
-                </span>
+                 {/* LCD Glass reflection */}
+                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '45%', background: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%)', pointerEvents: 'none' }} />
+                 
+                 {/* Digit reading */}
+                 <span style={{ 
+                   fontFamily: "'Courier New', Courier, monospace", // Fallback digital-like font
+                   fontSize: '2.5rem', 
+                   color: '#1a1f1c', 
+                   fontWeight: 'bold',
+                   letterSpacing: '1px',
+                   zIndex: 1,
+                   textShadow: '1px 1px 0px rgba(255,255,255,0.1)'
+                 }}>
+                   {mass ? `${mass.toFixed(2)} g` : '0.00 g'}
+                 </span>
+              </div>
+
+              {/* Physical Buttons */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <button style={{
+                  width: '85px', height: '28px',
+                  background: 'linear-gradient(180deg, #d32f2f, #b71c1c)',
+                  border: '1px solid #7f0000', borderRadius: '4px',
+                  color: 'white', fontSize: '11px', fontWeight: 'bold',
+                  boxShadow: '0 3px 0 #7f0000, 0 4px 5px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.4)',
+                  cursor: 'default',
+                  fontFamily: 'Arial, sans-serif'
+                }}>ON/TARE</button>
+                <button style={{
+                  width: '85px', height: '28px',
+                  background: 'linear-gradient(180deg, #e0e0e0, #bdbdbd)',
+                  border: '1px solid #9e9e9e', borderRadius: '4px',
+                  color: '#333', fontSize: '11px', fontWeight: 'bold',
+                  boxShadow: '0 3px 0 #888, 0 4px 5px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.8)',
+                  cursor: 'default',
+                  fontFamily: 'Arial, sans-serif'
+                }}>UNIT</button>
               </div>
             </div>
-
-            {/* Physical Buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <button style={{
-                background: 'linear-gradient(to bottom, #f97316, #ea580c)',
-                border: 'none',
-                borderRadius: '6px',
-                color: 'white',
-                fontSize: '0.7rem',
-                fontWeight: 'bold',
-                padding: '6px 10px',
-                boxShadow: '0 4px 0 #c2410c, 0 5px 6px rgba(0,0,0,0.3)',
-                cursor: 'pointer',
-                transform: 'translateY(0)',
-                transition: 'all 0.1s'
-              }} onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(4px)'; e.currentTarget.style.boxShadow = '0 0 0 #c2410c, 0 1px 2px rgba(0,0,0,0.2)' }}
-                 onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 0 #c2410c, 0 5px 6px rgba(0,0,0,0.3)' }}>
-                ON/TARE
-              </button>
-              <button style={{
-                background: 'linear-gradient(to bottom, #e5e7eb, #9ca3af)',
-                border: 'none',
-                borderRadius: '6px',
-                color: '#1f2937',
-                fontSize: '0.7rem',
-                fontWeight: 'bold',
-                padding: '6px 10px',
-                boxShadow: '0 4px 0 #6b7280, 0 5px 6px rgba(0,0,0,0.3)',
-                cursor: 'pointer',
-                transition: 'all 0.1s'
-              }} onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(4px)'; e.currentTarget.style.boxShadow = '0 0 0 #6b7280, 0 1px 2px rgba(0,0,0,0.2)' }}
-                 onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 0 #6b7280, 0 5px 6px rgba(0,0,0,0.3)' }}>
-                UNIT
-              </button>
-            </div>
-
           </div>
         </div>
 
-        {/* Weighing Platform (Pan) */}
-        <motion.div
-          animate={{ 
-            translateZ: targetZ, // Depress downwards based on weight
-          }}
-          transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-          style={{
-            position: 'absolute',
-            top: '15px',
-            left: '50%',
-            marginLeft: '-80px', // half of width
-            width: '160px',
-            height: '85px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #f1f5f9, #cbd5e1)', // Metallic light gray
-            border: '2px solid #ffffff',
-            boxShadow: '0 6px 0 #94a3b8, 0 12px 15px rgba(0,0,0,0.25)', // Platform thickness
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transformStyle: 'preserve-3d'
-          }}
-        >
-          {/* Subtle inner pan bevel */}
-          <div style={{
-            width: '90%', height: '80%', borderRadius: '50%',
-            border: '1px solid rgba(255,255,255,0.7)',
-            boxShadow: 'inset 0 3px 6px rgba(0,0,0,0.08)'
-          }} />
-          
-          {/* Container for the Cup, placed ON the pan.
-              We rotateX counter to the dynamic container rotation, 
-              so the cup stands straight up. */}
-          <motion.div style={{ 
-            position: 'absolute', 
-            top: '50%', 
-            left: '50%', 
-            x: '-50%',
-            y: '-50%',
-            rotateX: useTransform(rotateX, v => -v), // counter-rotate
-            transformStyle: 'preserve-3d' 
-          }}>
-            <AnimatePresence>
-              {currentCupOnScale && (
-                <motion.div
-                  key={currentCupOnScale}
-                  initial={{ y: -70, opacity: 0, scale: 1.05 }}
-                  animate={{ y: -50, opacity: 1, scale: 1 }} // y:-50 to sit on the platform
-                  exit={{ y: -30, opacity: 0, scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                  style={{ 
-                    position: 'relative', 
-                    width: '80px', 
-                    height: '100px',
-                    transformStyle: 'preserve-3d'
-                  }}
-                >
-                  {/* The actual cup */}
-                  <RealisticCup material={currentCupOnScale} />
-                  
-                  {/* Tight contact shadow strictly underneath the cup */}
-                  <div style={{
-                    position: 'absolute', 
-                    bottom: '-8px', 
-                    left: '15%', 
-                    right: '15%', 
-                    height: '14px',
-                    background: 'rgba(0,0,0,0.4)', 
-                    borderRadius: '50%', 
-                    filter: 'blur(3px)',
-                    zIndex: -1
-                  }} />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        </motion.div>
-      </motion.div>
+        {/* The Stainless Steel Pan (Ellipse perspective) */}
+        <div style={{
+          position: 'absolute',
+          top: '-15px', left: '50%', transform: 'translateX(-50%)',
+          width: '260px', height: '110px', 
+          background: 'linear-gradient(135deg, #e6e9ec 0%, #b8c1c8 40%, #f5f7f9 60%, #9ca8b2 100%)',
+          borderRadius: '50%',
+          border: '1px solid #fff',
+          boxShadow: 'inset 0 0 15px rgba(0,0,0,0.1), 0 5px 0 #89959e, 0 12px 15px rgba(0,0,0,0.4)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+           {/* Inner pan recession */}
+           <div style={{
+             position: 'absolute', inset: '6px',
+             borderRadius: '50%',
+             background: 'linear-gradient(135deg, #d1d8df 0%, #e6e9ec 50%, #b8c1c8 100%)',
+             boxShadow: 'inset 0 3px 8px rgba(0,0,0,0.2), 0 1px 1px rgba(255,255,255,0.8)'
+           }} />
+           
+           {/* Purely functional, invisible drop target and anchor point */}
+           <div 
+             data-droptarget="scale"
+             style={{
+               position: 'absolute', top: '50%', left: '50%',
+               width: '1px', height: '1px'
+             }}
+           >
+             <AnimatePresence>
+               {currentCupOnScale && (
+                 <motion.div
+                   key={currentCupOnScale}
+                   layoutId={`cup-transition-${currentCupOnScale}`}
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   exit={{ opacity: 0 }}
+                   transition={{ type: 'spring', stiffness: 600, damping: 40 }}
+                   style={{
+                     position: 'absolute',
+                     bottom: '0px', // Bottom perfectly touches the pan center (y=0)
+                     left: '-40px', // Center horizontally (width is 80px)
+                     width: '80px', height: '100px',
+                     zIndex: 10
+                   }}
+                 >
+                    <RealisticCup material={currentCupOnScale} />
+                    
+                    {/* Realistic Contact Shadow on the metal pan */}
+                    <div style={{
+                      position: 'absolute', bottom: '-4px', left: '15%', right: '15%', height: '8px',
+                      background: 'rgba(0,0,0,0.5)', borderRadius: '50%', filter: 'blur(3px)', zIndex: -1
+                    }} />
+                 </motion.div>
+               )}
+             </AnimatePresence>
+           </div>
+        </div>
+      </div>
     </div>
   );
 };
