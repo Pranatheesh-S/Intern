@@ -6,6 +6,7 @@ import { DraggableCup } from './Stage8a_Mass_Components/DraggableCup';
 import { WeighingScale } from './Stage8a_Mass_Components/WeighingScale';
 
 export default function Stage8a_Mass({ onComplete, addXp }) {
+  // HMR Trigger
   const [weighedItems, setWeighedItems] = useState({});
   const [currentOnScale, setCurrentOnScale] = useState(null);
 

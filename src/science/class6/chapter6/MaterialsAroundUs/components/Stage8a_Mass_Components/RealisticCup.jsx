@@ -36,7 +36,7 @@ export const RealisticCup = ({ material, velocityX = null }) => {
         
         {/* Subtle drop shadow for pebbles */}
         <filter id="pebbleShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="1" stdDeviation="0.5" floodOpacity="0.3" />
+          <feDropShadow dx="0" dy="1.5" stdDeviation="0.8" floodOpacity="0.5" />
         </filter>
       </defs>
 
@@ -71,7 +71,7 @@ export const RealisticCup = ({ material, velocityX = null }) => {
           {/* Sand Surface Line */}
           <path d="M 20 70 Q 35 67, 50 71 T 80 69" fill="none" stroke="#a46b34" strokeWidth="1.5" opacity="0.8"/>
           {/* Inner shadow for volume */}
-          <path d="M 20 70 L 25 75 L 25 102 A 25 6 0 0 0 75 102 L 75 75 L 80 70 L 80 105 A 30 8 0 0 1 20 105 Z" fill="rgba(0,0,0,0.1)" />
+          <path d="M 20 70 L 25 75 L 25 102 A 25 6 0 0 0 75 102 L 75 75 L 80 70 L 80 105 A 30 8 0 0 1 20 105 Z" fill="rgba(0,0,0,0.2)" />
         </motion.g>
       )}
 
@@ -149,12 +149,12 @@ export const RealisticCup = ({ material, velocityX = null }) => {
       <path d="M 18 45 A 32 9 0 0 0 82 45" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
       
       {/* Left Highlight */}
-      <path d="M 23 55 L 23 95" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="3" strokeLinecap="round" />
+      <path d="M 23 55 L 23 95" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round" filter="blur(0.5px)" />
       {/* Right Edge Glow */}
-      <path d="M 77 55 L 77 95" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" />
+      <path d="M 77 55 L 77 95" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" filter="blur(0.5px)" />
       
       {/* Bottom Curve Highlight */}
-      <path d="M 28 103 A 22 6 0 0 0 72 103" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" />
+      <path d="M 28 103 A 22 6 0 0 0 72 103" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" filter="blur(0.5px)" />
     </svg>
   );
 };

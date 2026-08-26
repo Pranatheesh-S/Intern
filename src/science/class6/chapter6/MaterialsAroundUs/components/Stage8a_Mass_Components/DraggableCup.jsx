@@ -13,8 +13,8 @@ export const DraggableCup = ({ cup, isWeighed, onDrop, disabled }) => {
   const smoothVelocityY = useSpring(velocityY, { damping: 50, stiffness: 400 });
 
   // Rotate based on velocity
-  const rotateY = useTransform(smoothVelocityX, [-1000, 1000], [-15, 15]);
-  const rotateX = useTransform(smoothVelocityY, [-1000, 1000], [15, -15]);
+  const rotateY = useTransform(smoothVelocityX, [-1000, 1000], [-10, 10]);
+  const rotateX = useTransform(smoothVelocityY, [-1000, 1000], [10, -10]);
   
   const [isDragging, setIsDragging] = useState(false);
   
@@ -73,13 +73,14 @@ export const DraggableCup = ({ cup, isWeighed, onDrop, disabled }) => {
         <motion.div 
           style={{
             position: 'absolute',
-            bottom: -15, left: '15%', right: '15%', height: '12px',
-            background: 'rgba(0,0,0,0.3)',
+            bottom: -15, left: '10%', right: '10%', height: '12px',
+            background: 'rgba(0,0,0,0.4)',
             borderRadius: '50%',
-            filter: 'blur(4px)',
-            opacity: isDragging ? 0.6 : 0,
-            scale: isDragging ? 0.8 : 1,
-            pointerEvents: 'none'
+            filter: isDragging ? 'blur(8px)' : 'blur(4px)',
+            opacity: isDragging ? 0.3 : 0,
+            scale: isDragging ? 1.2 : 0.8,
+            pointerEvents: 'none',
+            transition: 'all 0.2s ease-out'
           }}
         />
       </motion.div>
