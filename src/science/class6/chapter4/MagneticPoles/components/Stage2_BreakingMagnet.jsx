@@ -252,10 +252,10 @@ function AnimatedLabGroup({ children }) {
     const dt = Math.min(delta, 0.1);
 
     // Initial: Positioned on the left tabletop parallel to the compass & ruler on the right
-    const targetX = hasStarted ? 0 : -4.8;
-    const targetY = hasStarted ? -0.5 : -4.2;
-    const targetZ = hasStarted ? 0 : 6.5;
-    const targetScale = hasStarted ? 1.0 : 0.22;
+    const targetX = hasStarted ? 0 : -5.8;
+    const targetY = hasStarted ? -0.5 : -3.5;
+    const targetZ = hasStarted ? 0 : 0.5;
+    const targetScale = hasStarted ? 0.88 : 0.10;
 
     const speed = 3.4;
     groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, dt * speed);
@@ -268,7 +268,7 @@ function AnimatedLabGroup({ children }) {
   });
 
   return (
-    <group ref={groupRef} position={[-4.8, -4.2, 6.5]} scale={[0.22, 0.22, 0.22]}>
+    <group ref={groupRef} position={[-5.8, -3.5, 0.5]} scale={[0.10, 0.10, 0.10]}>
       {children}
     </group>
   );
@@ -443,11 +443,11 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
       <div
         style={{
           flex: '1.15',
-          background: '#FFFFFF',
-          border: '2px solid #A7F3D0',
+          background: '#FFFBEB',
+          border: 'none',
           borderRadius: '24px',
           padding: '1.5rem 1.6rem',
-          boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)',
+          boxShadow: 'none',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -505,19 +505,10 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 <div
                   key={s.stepNum}
                   style={{
-                    padding: '0.95rem 1.15rem',
-                    borderRadius: '16px',
-                    background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
-                    border: isCurrent 
-                      ? '2.5px solid #F59E0B' 
-                      : isPast 
-                      ? '2px solid #10B981' 
-                      : '2px solid #CBD5E1',
-                    boxShadow: isCurrent 
-                      ? '0 6px 18px rgba(245, 158, 11, 0.2)' 
-                      : isPast 
-                      ? '0 4px 12px rgba(16, 185, 129, 0.12)' 
-                      : '0 2px 8px rgba(0,0,0,0.03)',
+                    padding: '0.35rem 0',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
                     transition: 'all 0.3s ease'
                   }}
                 >
@@ -544,7 +535,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                     </div>
                     {isPast && <CheckCircle size={20} color="#10B981" />}
                   </div>
-                  <p style={{ margin: '0.38rem 0 0 0', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                  <p style={{ margin: '0.2rem 0 0 2.25rem', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -630,14 +621,10 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         {/* Observation & Conclusion Quiz */}
         <div
           style={{
-            background: '#F0FDF4',
-            border: '2px solid #A7F3D0',
-            borderRadius: '20px',
-            padding: '1.3rem 1.4rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.9rem',
-            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)',
+            gap: '0.85rem',
+            paddingTop: '0.35rem'
           }}
         >
           <h4

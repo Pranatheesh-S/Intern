@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen, Maximize2, Minimize2 } from 'lucide-react';
+import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen, Maximize2, Minimize2, Play, Square } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
@@ -184,10 +184,10 @@ function AnimatedLabGroup({ children }) {
     const dt = Math.min(delta, 0.1);
 
     // Initial: Positioned on the left tabletop parallel to the compass & ruler on the right
-    const targetX = hasStarted ? 0 : -4.8;
-    const targetY = hasStarted ? -0.5 : -4.2;
-    const targetZ = hasStarted ? 0 : 6.5;
-    const targetScale = hasStarted ? 1.0 : 0.22;
+    const targetX = hasStarted ? 0 : -5.8;
+    const targetY = hasStarted ? -0.5 : -3.5;
+    const targetZ = hasStarted ? 0 : 0.5;
+    const targetScale = hasStarted ? 0.88 : 0.10;
 
     const speed = 3.4;
     groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, dt * speed);
@@ -200,7 +200,7 @@ function AnimatedLabGroup({ children }) {
   });
 
   return (
-    <group ref={groupRef} position={[-4.8, -4.2, 6.5]} scale={[0.22, 0.22, 0.22]}>
+    <group ref={groupRef} position={[-5.8, -3.5, 0.5]} scale={[0.10, 0.10, 0.10]}>
       {children}
     </group>
   );
@@ -415,25 +415,93 @@ export default function Stage1_Investigate({ onComplete }) {
     }
   };
 
-  const handleScatter = () => {
-    setIsSprinkling(true);
-    setTimeout(() => {
-      setIsSprinkling(false);
-      setStep('scattered');
-    }, 1100);
+  const [isRunning, setIsRunning] = useState(false);
+  const autoTimeoutsRef = useRef([]);
+
+  const clearAutoTimeouts = () => {
+    autoTimeoutsRef.current.forEach((t) => clearTimeout(t));
+    autoTimeoutsRef.current = [];
   };
 
-  const handleTap = () => {
-    if (tapCount >= 1) return;
-    setIsVibrating(true);
-    setTimeout(() => {
-      setIsVibrating(false);
-      setTapCount(1);
-      setStep('tapped');
-    }, 350);
+  useEffect(() => {
+    return () => clearAutoTimeouts();
+  }, []);
+
+  const handleStart = () => {
+    clearAutoTimeouts();
+    setIsRunning(true);
+
+    if (step === 'initial') {
+      setIsSprinkling(true);
+      const t1 = setTimeout(() => {
+        setIsSprinkling(false);
+        setStep('scattered');
+
+        const t2 = setTimeout(() => {
+          setIsVibrating(true);
+          const t3 = setTimeout(() => {
+            setIsVibrating(false);
+            setTapCount(1);
+            setStep('tapped');
+            setIsRunning(false);
+          }, 450);
+          autoTimeoutsRef.current.push(t3);
+        }, 700);
+        autoTimeoutsRef.current.push(t2);
+      }, 1200);
+      autoTimeoutsRef.current.push(t1);
+    } else if (step === 'scattered') {
+      setIsVibrating(true);
+      const t = setTimeout(() => {
+        setIsVibrating(false);
+        setTapCount(1);
+        setStep('tapped');
+        setIsRunning(false);
+      }, 450);
+      autoTimeoutsRef.current.push(t);
+    } else {
+      // If already tapped, replay whole sequence smoothly
+      setStep('initial');
+      setTapCount(0);
+      setIsSprinkling(true);
+      const t1 = setTimeout(() => {
+        setIsSprinkling(false);
+        setStep('scattered');
+
+        const t2 = setTimeout(() => {
+          setIsVibrating(true);
+          const t3 = setTimeout(() => {
+            setIsVibrating(false);
+            setTapCount(1);
+            setStep('tapped');
+            setIsRunning(false);
+          }, 450);
+          autoTimeoutsRef.current.push(t3);
+        }, 700);
+        autoTimeoutsRef.current.push(t2);
+      }, 1200);
+      autoTimeoutsRef.current.push(t1);
+    }
+  };
+
+  const handleStop = () => {
+    clearAutoTimeouts();
+    setIsRunning(false);
+    setIsSprinkling(false);
+    setIsVibrating(false);
+  };
+
+  const handleToggleStartStop = () => {
+    if (isRunning) {
+      handleStop();
+    } else {
+      handleStart();
+    }
   };
 
   const handleReset = () => {
+    clearAutoTimeouts();
+    setIsRunning(false);
     setStep('initial');
     setTapCount(0);
     setQuizAnswer(null);
@@ -630,11 +698,11 @@ export default function Stage1_Investigate({ onComplete }) {
       {/* Control Panel (Activity 4.3 Theme) */}
       <div style={{ 
         flex: '1.15', 
-        background: '#FFFFFF', 
-        border: '2px solid #A7F3D0', 
+        background: '#FFFBEB', 
+        border: 'none', 
         borderRadius: '24px', 
         padding: '1.5rem 1.6rem', 
-        boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)', 
+        boxShadow: 'none', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
@@ -691,19 +759,10 @@ export default function Stage1_Investigate({ onComplete }) {
                 <div
                   key={s.stepNum}
                   style={{
-                    padding: '0.95rem 1.15rem',
-                    borderRadius: '16px',
-                    background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
-                    border: isCurrent 
-                      ? '2.5px solid #F59E0B' 
-                      : isPast 
-                      ? '2px solid #10B981' 
-                      : '2px solid #CBD5E1',
-                    boxShadow: isCurrent 
-                      ? '0 6px 18px rgba(245, 158, 11, 0.2)' 
-                      : isPast 
-                      ? '0 4px 12px rgba(16, 185, 129, 0.12)' 
-                      : '0 2px 8px rgba(0,0,0,0.03)',
+                    padding: '0.35rem 0',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
                     transition: 'all 0.3s ease'
                   }}
                 >
@@ -730,7 +789,7 @@ export default function Stage1_Investigate({ onComplete }) {
                     </div>
                     {isPast && <CheckCircle size={20} color="#10B981" />}
                   </div>
-                  <p style={{ margin: '0.38rem 0 0 0', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                  <p style={{ margin: '0.2rem 0 0 2.25rem', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -738,59 +797,46 @@ export default function Stage1_Investigate({ onComplete }) {
             })}
           </div>
 
-          {/* Action Buttons */}
+          {/* Action Buttons: Unified Start/Stop Toggle & Reset */}
           <div style={{ width: '100%', display: 'flex', gap: '0.75rem', marginTop: '0.2rem' }}>
             <button
-              onClick={handleScatter}
-              disabled={step !== 'initial' || isSprinkling}
+              onClick={handleToggleStartStop}
               style={{ 
-                flex: 1, 
-                padding: '0.95rem 0.5rem', 
-                fontSize: '0.98rem', 
+                flex: 2, 
+                padding: '0.95rem 1rem', 
+                fontSize: '1.02rem', 
                 fontWeight: 900, 
                 borderRadius: '16px', 
-                background: step === 'initial' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9', 
-                color: step === 'initial' ? '#FFFFFF' : '#94A3B8', 
+                background: isRunning 
+                  ? 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)' 
+                  : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', 
+                color: '#FFFFFF', 
                 border: 'none', 
-                cursor: step === 'initial' ? 'pointer' : 'not-allowed', 
+                cursor: 'pointer', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                gap: '5px',
-                boxShadow: step === 'initial' ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
+                gap: '8px',
+                boxShadow: isRunning 
+                  ? '0 4px 14px rgba(239, 68, 68, 0.35)' 
+                  : '0 4px 14px rgba(217, 119, 6, 0.35)',
                 transition: 'all 0.2s ease'
               }}
             >
-              🧪 1. Sprinkle
-            </button>
-            
-            <button
-              onClick={handleTap}
-              disabled={step !== 'scattered' || tapCount >= 1}
-              style={{ 
-                flex: 1, 
-                padding: '0.95rem 0.5rem', 
-                fontSize: '0.98rem', 
-                fontWeight: 900, 
-                borderRadius: '16px', 
-                background: (step === 'scattered' && tapCount === 0) ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F1F5F9', 
-                color: (step === 'scattered' && tapCount === 0) ? '#FFFFFF' : '#94A3B8', 
-                border: 'none', 
-                cursor: (step === 'scattered' && tapCount === 0) ? 'pointer' : 'not-allowed', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                gap: '5px',
-                boxShadow: (step === 'scattered' && tapCount === 0) ? '0 4px 14px rgba(217, 119, 6, 0.3)' : 'none',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <Hand size={17} /> {tapCount === 0 ? '2. Tap Paper' : 'Tapped ✓'}
+              {isRunning ? (
+                <>
+                  <Square size={18} fill="#FFFFFF" color="#FFFFFF" /> Stop Investigation
+                </>
+              ) : (
+                <>
+                  <Play size={18} fill="#FFFFFF" color="#FFFFFF" /> {step === 'tapped' || step === 'complete' ? 'Replay Investigation' : 'Start Investigation'}
+                </>
+              )}
             </button>
             
             <button
               onClick={handleReset}
-              disabled={step === 'initial'}
+              disabled={step === 'initial' && !isRunning}
               style={{ 
                 flex: 1, 
                 padding: '0.95rem 0.5rem', 
@@ -798,13 +844,14 @@ export default function Stage1_Investigate({ onComplete }) {
                 fontWeight: 900, 
                 borderRadius: '16px', 
                 background: '#FFFFFF', 
-                color: step !== 'initial' ? '#1E293B' : '#94A3B8', 
+                color: (step !== 'initial' || isRunning) ? '#1E293B' : '#94A3B8', 
                 border: '1.5px solid #CBD5E1', 
-                cursor: step !== 'initial' ? 'pointer' : 'not-allowed', 
+                cursor: (step !== 'initial' || isRunning) ? 'pointer' : 'not-allowed', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                gap: '5px',
+                gap: '6px',
+                boxShadow: (step !== 'initial' || isRunning) ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
                 transition: 'all 0.2s ease'
               }}
             >
@@ -813,16 +860,12 @@ export default function Stage1_Investigate({ onComplete }) {
           </div>
         </div>
 
-        {/* Observation Quiz Pop-up Card */}
+        {/* Observation Quiz */}
         <div style={{ 
-          background: '#F0FDF4', 
-          border: '2px solid #A7F3D0', 
-          borderRadius: '20px', 
-          padding: '1.3rem 1.4rem', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '0.9rem',
-          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)'
+          gap: '0.85rem',
+          paddingTop: '0.35rem'
         }}>
           <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.18rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
             <AlertCircle size={24} color="#D97706" /> Observation Question

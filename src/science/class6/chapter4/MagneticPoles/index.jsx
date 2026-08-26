@@ -54,47 +54,18 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
       overflow: 'hidden',
       boxSizing: 'border-box',
       padding: '0.65rem 0.85rem',
-      backgroundColor: '#ECFDF5',
+      backgroundColor: '#FFFFFF',
       position: 'relative',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
-      {/* Soft Decorative Ambient Background Glows */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: '-10%',
-          left: '10%',
-          width: '500px',
-          height: '500px',
-          background: 'radial-gradient(circle, rgba(167, 243, 208, 0.45) 0%, rgba(236, 253, 245, 0) 70%)',
-          pointerEvents: 'none',
-          zIndex: 0
-        }}
-      />
-      <div 
-        style={{
-          position: 'absolute',
-          bottom: '-10%',
-          right: '10%',
-          width: '500px',
-          height: '500px',
-          background: 'radial-gradient(circle, rgba(253, 230, 138, 0.35) 0%, rgba(236, 253, 245, 0) 70%)',
-          pointerEvents: 'none',
-          zIndex: 0
-        }}
-      />
 
-      {/* Top Header Bar matching Activity 4.3 styling */}
+      {/* Top Header Bar */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
-        padding: '0.65rem 1.25rem',
-        marginBottom: '0.65rem',
-        background: '#FFFFFF',
-        border: '2px solid #A7F3D0',
-        borderRadius: '24px',
-        boxShadow: '0 6px 24px rgba(6, 78, 59, 0.07)',
+        padding: '0.2rem 0.5rem',
+        marginBottom: '0.5rem',
         flexShrink: 0,
         position: 'relative',
         zIndex: 100
@@ -153,10 +124,10 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
                   fontSize: '0.92rem',
                   fontWeight: 900,
                   borderRadius: '25px',
-                  background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F8FAFC',
+                  background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
                   color: isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#334155',
                   border: isActive ? 'none' : '1.5px solid #CBD5E1',
-                  boxShadow: isActive ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
+                  boxShadow: isActive ? '0 4px 14px rgba(217, 119, 6, 0.35)' : '0 2px 8px rgba(0,0,0,0.05)',
                   transition: 'all 0.2s ease'
                 }}
               >
