@@ -52,6 +52,7 @@ const CurvesRegionsLabActivity = lazy(() => import('./maths/class6/chapter4/Curv
 const AnglesLabActivity = lazy(() => import('./maths/class6/chapter4/AnglesLab'));
 const PolygonsLabActivity = lazy(() => import('./maths/class6/chapter4/PolygonsLab'));
 const CirclesLabActivity = lazy(() => import('./maths/class6/chapter4/CirclesLab'));
+const Class6MathsChapter1 = lazy(() => import('./maths/class6/chapter1'));
 const VirtualBiodiversityExplorerActivity = lazy(() => import('./science/class6/chapter2/VirtualBiodiversityExplorer'));
 const PlantDetectiveActivity = lazy(() => import('./science/class6/chapter2/PlantDetective'));
 const AnimalHabitatExplorerActivity = lazy(() => import('./science/class6/chapter2/AnimalHabitatExplorer'));
@@ -519,7 +520,7 @@ export default function App() {
           }}
         >
           <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--success-bg)', color: 'var(--success)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px' }}>
-            1 CHAPTER ACTIVE
+            2 CHAPTERS ACTIVE
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -1139,6 +1140,48 @@ export default function App() {
           gap: '1.25rem'
         }}>
           {CLASS_6_MATHS_CHAPTERS.map(chapter => {
+            if (chapter.num === 1) {
+              return (
+                <div
+                  key={chapter.num}
+                  className="glass-panel"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    padding: '1.5rem',
+                    border: '1px solid var(--accent-border)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--accent-bg)', color: 'var(--accent-text)', fontSize: '0.7rem', fontWeight: 'bold', padding: '0.25rem 0.75rem', borderBottomLeftRadius: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Active Chapter
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <BookOpen size={20} style={{ color: 'var(--accent-text)', marginTop: '0.25rem' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-heading)' }}>Chapter {chapter.num}</h3>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--accent-text)', fontWeight: '500' }}>{chapter.title}</p>
+                    </div>
+                  </div>
+
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.5', flex: 1 }}>
+                    Explore patterns in numbers, visualise sequences, and understand the fundamentals of mathematics.
+                  </p>
+
+                  <button
+                    onClick={() => navigateTo('class6_maths', 'chapter1')}
+                    className="primary"
+                    style={{ width: '100%', gap: '0.35rem', justifyContent: 'center', fontSize: '0.85rem', padding: '0.6rem' }}
+                  >
+                     Open Chapter <ArrowRight size={14} />
+                  </button>
+                </div>
+              );
+            }
+
             if (chapter.num === 4) {
               return (
                 <div
@@ -3122,7 +3165,9 @@ export default function App() {
             renderClass7SocialWing()
           )
         ) : activeSubject === 'class6_maths' ? (
-          activeActivity === 'line_segment_lab' ? (
+          activeActivity === 'chapter1' ? (
+            <Class6MathsChapter1 onBackToDashboard={() => navigateTo('class6_maths', null)} />
+          ) : activeActivity === 'line_segment_lab' ? (
             <LineSegmentLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
           ) : activeActivity === 'parallel_intersecting_lab' ? (
             <ParallelIntersectingLabActivity onBackToDashboard={() => navigateTo('class6_maths', 'chapter4')} />
