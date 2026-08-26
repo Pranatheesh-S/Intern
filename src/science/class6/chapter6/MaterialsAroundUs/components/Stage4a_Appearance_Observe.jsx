@@ -9,6 +9,14 @@ import copperWireImg from "../../../../../assets/copperwire image.webp";
 import aluminiumImg  from "../../../../../assets/aluminiumrod image.webp";
 import steelSpoonImg from "../../../../../assets/steelspoon image.webp";
 
+// WhichSide Activity specific imports
+import glassMarbleImg from "../../../../../assets/glassmarble image.jpg";
+import goldCoinImg    from "../../../../../assets/goldcoin image.jpg";
+import plasticRulerImg from "../../../../../assets/plasticruler image.jpg";
+import rubberBandImg  from "../../../../../assets/rubberband image.webp";
+import cdImg          from "../../../../../assets/cd image.jpg";
+import pencilImg      from "../../../../../assets/pencil image.jpg";
+
 const MATERIALS = [
   { id: "paper",     name: "Paper",         img: paperImg,      isShiny: false,
     shineFact: "Paper has a rough, fibrous surface that scatters light in all directions — no clear reflection." },
@@ -26,6 +34,16 @@ const MATERIALS = [
 
 const SHINY_IDS = new Set(MATERIALS.filter(m => m.isShiny).map(m => m.id));
 
+const WHICH_SIDE_MATERIALS = [
+  { id: "goldcoin", name: "Gold Coin", img: goldCoinImg, isShiny: true },
+  { id: "glassmarble", name: "Glass Marble", img: glassMarbleImg, isShiny: true },
+  { id: "cd", name: "CD", img: cdImg, isShiny: true },
+  { id: "plasticruler", name: "Plastic Ruler", img: plasticRulerImg, isShiny: false },
+  { id: "rubberband", name: "Rubber Band", img: rubberBandImg, isShiny: false },
+  { id: "pencil", name: "Pencil", img: pencilImg, isShiny: false },
+];
+
+const WHICH_SIDE_SHINY_IDS = new Set(WHICH_SIDE_MATERIALS.filter(m => m.isShiny).map(m => m.id));
 // ── Torch observation modal ────────────────────────────────────────────────────
 const TorchObservation = ({ mat, onDone }) => {
   const [torchOn, setTorchOn] = useState(false);
@@ -467,114 +485,169 @@ const MaterialCard = ({ mat, state, onClick }) => {
   );
 };
 
-// ── Final Challenge ───────────────────────────────────────────────────────────
-const FinalChallenge = ({ onSolve }) => {
-  const [selected, setSelected] = useState(new Set());
-  const [submitted, setSubmitted] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
+// ── Which Side Activity (Drag & Drop) ───────────────────────────────────────
+const WhichSideActivity = ({ onSolve }) => {
+  const [unplaced, setUnplaced] = useState(WHICH_SIDE_MATERIALS.map(m => m.id));
+  const [shinyGroup, setShinyGroup] = useState([]);
+  const [dullGroup, setDullGroup] = useState([]);
+  const [errorIds, setErrorIds] = useState(new Set());
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  const toggle = (id) => {
-    if (submitted) return;
-    setSelected(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const handleDragStart = (e, id) => {
+    e.dataTransfer.setData("mat_id", id);
   };
-  const submit = () => {
-    const ok = selected.size === SHINY_IDS.size && [...selected].every(id => SHINY_IDS.has(id));
-    setIsCorrect(ok);
-    setSubmitted(true);
-    if (ok) setTimeout(onSolve, 2800);
+
+  const handleDrop = (e, zone) => {
+    e.preventDefault();
+    if (isSuccess) return;
+    const id = e.dataTransfer.getData("mat_id");
+    if (!id) return;
+    
+    setUnplaced(prev => prev.filter(x => x !== id));
+    setShinyGroup(prev => prev.filter(x => x !== id));
+    setDullGroup(prev => prev.filter(x => x !== id));
+
+    if (zone === "unplaced") setUnplaced(prev => [...prev, id]);
+    if (zone === "shiny") setShinyGroup(prev => [...prev, id]);
+    if (zone === "dull") setDullGroup(prev => [...prev, id]);
+    
+    setErrorIds(prev => {
+      const n = new Set(prev);
+      n.delete(id);
+      return n;
+    });
+  };
+
+  const handleDragOver = (e) => e.preventDefault();
+
+  useEffect(() => {
+    if (unplaced.length === 0 && shinyGroup.length + dullGroup.length === WHICH_SIDE_MATERIALS.length) {
+      const errors = new Set();
+      shinyGroup.forEach(id => {
+        if (!WHICH_SIDE_SHINY_IDS.has(id)) errors.add(id);
+      });
+      dullGroup.forEach(id => {
+        if (WHICH_SIDE_SHINY_IDS.has(id)) errors.add(id);
+      });
+      
+      if (errors.size === 0) {
+        setIsSuccess(true);
+        setTimeout(onSolve, 2000);
+      } else {
+        setErrorIds(errors);
+      }
+    }
+  }, [unplaced.length, shinyGroup.length, dullGroup.length]);
+
+  const renderCard = (id) => {
+    const mat = WHICH_SIDE_MATERIALS.find(m => m.id === id);
+    if (!mat) return null;
+    const isError = errorIds.has(id);
+    return (
+      <motion.div
+        key={id}
+        draggable={!isSuccess}
+        onDragStart={(e) => handleDragStart(e, id)}
+        whileHover={!isSuccess ? { scale: 1.05 } : {}}
+        whileTap={!isSuccess ? { scale: 0.95 } : {}}
+        style={{
+          width: 80, height: 90,
+          background: "#fff", borderRadius: 10,
+          border: isError ? "2px solid #ef4444" : "1px solid #e5e7eb",
+          boxShadow: isError ? "0 0 8px rgba(239,68,68,0.5)" : "0 4px 6px rgba(0,0,0,0.05)",
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          gap: 8, cursor: isSuccess ? "default" : "grab",
+          backgroundColor: isError ? "#fef2f2" : "#fff",
+        }}
+      >
+        <img src={mat.img} alt={mat.name} draggable="false" style={{ width: 40, height: 40, objectFit: "contain", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }} />
+        <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#4a3525", textAlign: "center", lineHeight: 1.1 }}>{mat.name}</div>
+      </motion.div>
+    );
   };
 
   return (
-    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+    <motion.div
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
       style={{
-        background: "linear-gradient(135deg, #0f0c07 0%, #1a1508 100%)",
-        border: "2px solid #b45309", borderRadius: 20, padding: "2rem",
-        maxWidth: 520, margin: "0 auto",
-        display: "flex", flexDirection: "column", gap: "1.25rem",
-        boxShadow: "0 12px 48px rgba(0,0,0,0.7)",
+        background: "#fff", borderRadius: 20, padding: "2.5rem",
+        width: 700, maxWidth: "90vw",
+        boxShadow: "0 24px 48px rgba(0,0,0,0.3)",
+        display: "flex", flexDirection: "column", gap: "2rem",
+        fontFamily: "'Inter', sans-serif"
       }}
     >
       <div style={{ textAlign: "center" }}>
-        <div style={{ fontSize: "2rem", marginBottom: 4 }}>🕵️</div>
-        <h3 style={{ margin: 0, fontSize: "1.3rem", color: "#fde68a", fontWeight: 900 }}>
-          Shine Detective Challenge
-        </h3>
-        <p style={{ margin: "0.4rem 0 0", fontSize: "0.88rem", color: "#b8a898" }}>
-          Based on your torch observations — which objects were shiny?
+        <h2 style={{ margin: 0, fontSize: "2.2rem", fontWeight: 900, color: "#4a3525", fontFamily: "'Merriweather', 'Georgia', serif" }}>
+          Which Side?
+        </h2>
+        <p style={{ margin: "10px 0 0", fontSize: "1.1rem", fontWeight: 700, color: "#6b5c51" }}>
+          Drag each object to the side where it belongs.
+        </p>
+        <p style={{ margin: "4px 0 0", fontSize: "0.95rem", color: "#8a7b6f" }}>
+          Can you identify which materials are shiny and which are dull?
         </p>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem" }}>
-        {MATERIALS.map(mat => {
-          const sel    = selected.has(mat.id);
-          const wrong  = submitted && sel && !mat.isShiny;
-          const missed = submitted && !sel && mat.isShiny;
-          return (
-            <motion.div key={mat.id}
-              whileHover={!submitted ? { scale: 1.04 } : {}}
-              whileTap={!submitted ? { scale: 0.96 } : {}}
-              onClick={() => toggle(mat.id)}
-              style={{
-                borderRadius: 12, overflow: "hidden", cursor: submitted ? "default" : "pointer",
-                border: wrong ? "2px solid #ef4444" : missed ? "2px solid #f59e0b" : sel ? "2px solid #22c55e" : "2px solid rgba(255,255,255,0.1)",
-                background: sel ? "rgba(34,197,94,0.1)" : "rgba(255,255,255,0.04)",
-                transition: "all 0.2s", position: "relative",
-              }}
-            >
-              <img src={mat.img} alt={mat.name} draggable="false"
-                style={{ width: "100%", aspectRatio: "1", objectFit: "cover", display: "block",
-                  filter: sel ? "brightness(1.1)" : "brightness(0.75)" }} />
-              <div style={{ padding: "5px 6px", textAlign: "center", fontSize: "0.72rem", fontWeight: 700, color: sel ? "#86efac" : "#9ca3af" }}>
-                {sel && <Check size={11} style={{ marginRight: 3, verticalAlign: "middle" }} />}
-                {mat.name}
-              </div>
-              {missed && (
-                <div style={{
-                  position: "absolute", inset: 0, background: "rgba(245,158,11,0.15)",
-                  display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem",
-                }}>✨</div>
-              )}
-            </motion.div>
-          );
-        })}
+
+      <div
+        onDragOver={handleDragOver}
+        onDrop={(e) => handleDrop(e, "unplaced")}
+        style={{
+          minHeight: 110, display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1rem",
+          padding: "1rem", borderRadius: 12, background: "rgba(0,0,0,0.02)"
+        }}
+      >
+        {unplaced.map(renderCard)}
       </div>
-      {submitted ? (
-        isCorrect ? (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "2rem", marginBottom: 6 }}>🎉</div>
-            <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#86efac", marginBottom: 6 }}>Case Solved!</div>
-            <p style={{ margin: 0, fontSize: "0.83rem", color: "#a09080", lineHeight: 1.6 }}>
-              Some materials reflect light clearly and appear <strong style={{ color: "#fde68a" }}>shiny</strong>,
-              while others scatter light and appear <strong style={{ color: "#94a3b8" }}>dull</strong>.
-            </p>
-          </motion.div>
-        ) : (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            style={{ background: "rgba(239,68,68,0.1)", border: "1px solid #ef4444", borderRadius: 10, padding: "0.75rem", textAlign: "center" }}>
-            <div style={{ fontSize: "0.85rem", color: "#fca5a5", fontWeight: 700 }}>
-              Not quite! Yellow = ones you missed. Try again!
-            </div>
-            <button onClick={() => { setSelected(new Set()); setSubmitted(false); }}
-              style={{ marginTop: 8, padding: "0.4rem 1.2rem", borderRadius: 8,
-                background: "transparent", border: "1px solid #f87171",
-                color: "#fca5a5", cursor: "pointer", fontSize: "0.82rem", fontWeight: 700 }}>
-              Try Again
-            </button>
-          </motion.div>
-        )
-      ) : (
-        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-          onClick={submit} disabled={selected.size === 0}
+
+      <div style={{ display: "flex", gap: "1.5rem" }}>
+        <div
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, "shiny")}
           style={{
-            padding: "0.75rem", borderRadius: 12,
-            background: selected.size === 0 ? "#374151" : "linear-gradient(135deg, #ca8a04, #a16207)",
-            color: selected.size === 0 ? "#6b7280" : "#fff",
-            fontWeight: 800, fontSize: "0.95rem",
-            border: "none", cursor: selected.size === 0 ? "not-allowed" : "pointer",
-            boxShadow: selected.size > 0 ? "0 4px 16px rgba(161,98,7,0.4)" : "none",
-            transition: "all 0.2s",
-          }}>
-          Submit My Answer →
-        </motion.button>
+            flex: 1, minHeight: 220, borderRadius: 16,
+            border: "2px dashed #facc15", background: "rgba(250,204,21,0.05)",
+            padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem",
+            alignItems: "center"
+          }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#d97706", letterSpacing: "1px" }}>✨ SHINY</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#b45309", marginTop: 4 }}>Lustrous materials</div>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.75rem", width: "100%" }}>
+            {shinyGroup.map(renderCard)}
+          </div>
+        </div>
+
+        <div
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, "dull")}
+          style={{
+            flex: 1, minHeight: 220, borderRadius: 16,
+            border: "2px dashed #9ca3af", background: "rgba(156,163,175,0.05)",
+            padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem",
+            alignItems: "center"
+          }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#4b5563", letterSpacing: "1px" }}>○ DULL</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#6b7280", marginTop: 4 }}>Non-lustrous materials</div>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.75rem", width: "100%" }}>
+            {dullGroup.map(renderCard)}
+          </div>
+        </div>
+      </div>
+      
+      {isSuccess && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          style={{ textAlign: "center", color: "#16a34a", fontWeight: 900, fontSize: "1.2rem" }}
+        >
+          🎉 Excellent! You classified them perfectly.
+        </motion.div>
       )}
     </motion.div>
   );
@@ -648,7 +721,6 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
         {/* Scene area */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.5rem", minWidth: 0, overflow: "hidden", position: "relative" }}>
 
-          {!showChallengePanel ? (
             <>
               <div style={{
                 background: "linear-gradient(135deg, rgba(161,98,7,0.2), rgba(120,53,15,0.15))",
@@ -688,11 +760,6 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
                 )}
               </AnimatePresence>
             </>
-          ) : (
-            <div style={{ flex: 1, minHeight: 0, overflow: "auto", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-              <FinalChallenge onSolve={handleChallengeSolved} />
-            </div>
-          )}
         </div>
 
         {/* Detective Board */}
@@ -787,6 +854,22 @@ export default function Stage4a_Appearance_Observe({ onComplete, addXp }) {
           )}
         </div>
       </div>
+      
+      {/* Modal Overlay for Which Side Activity */}
+      <AnimatePresence>
+        {showChallengePanel && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            style={{
+              position: "absolute", inset: 0, zIndex: 100,
+              background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)",
+              display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem"
+            }}
+          >
+            <WhichSideActivity onSolve={handleChallengeSolved} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
