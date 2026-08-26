@@ -22,12 +22,16 @@ class VoiceService {
     this.audioCache = new Map();
     this.apiKey = import.meta.env?.VITE_ELEVENLABS_API_KEY || 'sk_89333167c269941029cede7412d8b1f9a0e6be96812de5cc';
     this.defaultVoiceId = import.meta.env?.VITE_ELEVENLABS_VOICE_ID || ELEVENLABS_VOICES.teacher;
+    this.sessionIdCounter = 0;
+    this.currentSessionId = null;
   }
 
   /**
-   * Stop any playing audio immediately across all engines
+   * Stop any playing audio immediately across all engines and invalidate any pending async playback
    */
   stop() {
+    this.currentSessionId = null; // Invalidate any pending async audio tasks
+
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
@@ -35,11 +39,19 @@ class VoiceService {
     if (this.currentAudio) {
       this.currentAudio.pause();
       this.currentAudio.currentTime = 0;
+      this.currentAudio.src = '';
       this.currentAudio = null;
     }
     if (this.fallbackTimer) {
       clearInterval(this.fallbackTimer);
       this.fallbackTimer = null;
+    }
+    if (this.currentUtterance) {
+      this.currentUtterance.onstart = null;
+      this.currentUtterance.onboundary = null;
+      this.currentUtterance.onend = null;
+      this.currentUtterance.onerror = null;
+      this.currentUtterance = null;
     }
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -102,6 +114,9 @@ class VoiceService {
   async speak({ text, audioUrl, voiceId, role = 'teacher', onBoundary, onEnd, onError }) {
     this.stop();
 
+    const sessionId = ++this.sessionIdCounter;
+    this.currentSessionId = sessionId;
+
     const selectedVoiceId = voiceId || ELEVENLABS_VOICES[role] || this.defaultVoiceId;
 
     // Refresh API key dynamically if user created .env file
@@ -121,8 +136,10 @@ class VoiceService {
           audio.addEventListener('ended', () => {
             if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
             this.currentAudio = null;
-            if (onBoundary) onBoundary(text.length);
-            if (onEnd) onEnd();
+            if (this.currentSessionId === sessionId) {
+              if (onBoundary) onBoundary(text.length);
+              if (onEnd) onEnd();
+            }
           });
 
           audio.addEventListener('error', (err) => {
@@ -132,6 +149,9 @@ class VoiceService {
           });
 
           audio.src = audioUrl;
+          if (this.currentSessionId !== sessionId) {
+            return;
+          }
           this.currentAudio = audio;
           this.startAudioKaraokeLoop(audio, text, onBoundary);
 
@@ -139,52 +159,67 @@ class VoiceService {
         });
 
         await playPromise;
-        console.log(`[VoiceService] Playing MP3 asset: ${audioUrl}`);
+        if (this.currentSessionId !== sessionId) {
+          audio.pause();
+          return;
+        }
         return;
       } catch (err) {
-        console.warn(`[VoiceService] MP3 asset "${audioUrl}" not playable/found, attempting WebSpeech fallback...`);
+        if (this.currentSessionId !== sessionId) return;
         this.currentAudio = null;
       }
     }
 
+    if (this.currentSessionId !== sessionId) return;
+
     // ── APPROACH B / FALLBACK ──
-    this.fallbackToLiveOrBrowser({ text, voiceId: selectedVoiceId, role, onBoundary, onEnd, onError });
+    this.fallbackToLiveOrBrowser({ text, voiceId: selectedVoiceId, role, onBoundary, onEnd, onError, sessionId });
   }
 
   /**
    * Handle Approach B (ElevenLabs Dynamic API) or Web Speech Fallback
    */
-  async fallbackToLiveOrBrowser({ text, voiceId, role, onBoundary, onEnd, onError }) {
+  async fallbackToLiveOrBrowser({ text, voiceId, role, onBoundary, onEnd, onError, sessionId }) {
+    if (this.currentSessionId !== sessionId) return;
+
     // Attempt Approach B: ElevenLabs Live API if API Key is configured
     if (this.apiKey) {
-      console.log(`[VoiceService] Attempting Approach B (Live ElevenLabs API with Voice: ${voiceId})...`);
       try {
         const streamUrl = await this.fetchElevenLabsStream(text, voiceId, role);
+        if (this.currentSessionId !== sessionId) return;
+
         if (streamUrl) {
           const audio = new Audio(streamUrl);
+          if (this.currentSessionId !== sessionId) return;
+
           this.currentAudio = audio;
 
           audio.addEventListener('ended', () => {
             if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
             this.currentAudio = null;
-            if (onBoundary) onBoundary(text.length);
-            if (onEnd) onEnd();
+            if (this.currentSessionId === sessionId) {
+              if (onBoundary) onBoundary(text.length);
+              if (onEnd) onEnd();
+            }
           });
 
           this.startAudioKaraokeLoop(audio, text, onBoundary);
           await audio.play();
-          console.log('[VoiceService] Successfully playing ElevenLabs live audio stream!');
+          if (this.currentSessionId !== sessionId) {
+            audio.pause();
+            return;
+          }
           return;
         }
       } catch (err) {
-        console.warn('[VoiceService] ElevenLabs API call failed, falling back to browser WebSpeech:', err);
+        if (this.currentSessionId !== sessionId) return;
       }
-    } else {
-      console.info('[VoiceService] No ElevenLabs API Key in .env (VITE_ELEVENLABS_API_KEY). Using WebSpeech Fallback.');
     }
 
+    if (this.currentSessionId !== sessionId) return;
+
     // Fallback: Browser Native Web Speech API with Indian accent voices
-    this.speakBrowserWebSpeech({ text, role, onBoundary, onEnd, onError });
+    this.speakBrowserWebSpeech({ text, role, onBoundary, onEnd, onError, sessionId });
   }
 
   /**
@@ -205,34 +240,29 @@ class VoiceService {
     };
 
     if (role === 'girl' || voiceId === 'Dk3lflqf310KiWVmwB9F') {
-      // 👧 Reshma (Cute Indian Girl — Voice ID: Dk3lflqf310KiWVmwB9F)
-      // Soft, sweet, gentle tone with smooth cadence and clear pronunciation
-      voice_settings = {
-        stability: 0.55,        // Balanced for smooth, soft, natural cadence
-        similarity_boost: 0.75, // High clarity & accurate pronunciation
-        style: 0.05,            // Gentle, sweet, natural tone without forcefulness
-        use_speaker_boost: false // Clean audio without hiss
-      };
-    } else if (role === 'teacher' || voiceId === 'Ps8lsQuJKZHMxxDU1tff') {
-      // 👩‍🏫 Teacher / Narrator (Warm Indian Lady — Voice ID: Ps8lsQuJKZHMxxDU1tff)
-      // Soft, encouraging, calm educational delivery with crystal-clear pronunciation
-      voice_settings = {
-        stability: 0.60,        // Smooth, soft, grounded delivery
-        similarity_boost: 0.80, // Crystal-clear articulation and pronunciation
-        style: 0.00,            // Warm, soft, comforting tone
-        use_speaker_boost: false // Clean audio without hiss
-      };
-    } else if (role === 'ancient_man') {
-      // ⛵ Ancient Sailor (Deep Storytelling Male Voice)
       voice_settings = {
         stability: 0.55,
         similarity_boost: 0.75,
-        style: 0.02,
+        style: 0.05,
+        use_speaker_boost: false
+      };
+    } else if (role === 'teacher' || voiceId === 'Ps8lsQuJKZHMxxDU1tff') {
+      voice_settings = {
+        stability: 0.60,
+        similarity_boost: 0.80,
+        style: 0.00,
+        use_speaker_boost: false
+      };
+    } else if (role === 'ancient_man' || voiceId === 'JBFqnCBsd6RMkjVDRZzb') {
+      voice_settings = {
+        stability: 0.65,
+        similarity_boost: 0.75,
+        style: 0.00,
         use_speaker_boost: false
       };
     }
 
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream`, {
       method: 'POST',
       headers: {
         'Accept': 'audio/mpeg',
@@ -241,14 +271,13 @@ class VoiceService {
       },
       body: JSON.stringify({
         text,
-        model_id: 'eleven_turbo_v2_5', // High-fidelity, natural conversational speech model
+        model_id: 'eleven_turbo_v2_5',
         voice_settings
       })
     });
 
     if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`ElevenLabs API HTTP ${response.status}: ${errText}`);
+      throw new Error(`ElevenLabs API error: ${response.status} ${response.statusText}`);
     }
 
     const blob = await response.blob();
@@ -258,13 +287,16 @@ class VoiceService {
   }
 
   /**
-   * Web Speech API Native Fallback - Tuned for Indian English accent, slow speed, and high volume
+   * High-Fidelity Browser Web Speech Engine (Approach C / Fallback)
+   * Tuned specifically with Indian English voices, slow educational cadence, and word-by-word karaoke
    */
-  speakBrowserWebSpeech({ text, role = 'teacher', onBoundary, onEnd, onError }) {
+  speakBrowserWebSpeech({ text, role = 'teacher', onBoundary, onEnd, onError, sessionId }) {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      if (onError) onError(new Error('Speech Synthesis not supported'));
+      if (onEnd) onEnd();
       return;
     }
+
+    if (this.currentSessionId !== sessionId) return;
 
     const synth = window.speechSynthesis;
     synth.cancel();
@@ -275,37 +307,35 @@ class VoiceService {
     const voices = synth.getVoices();
 
     let selectedVoice = null;
+
     if (role === 'girl') {
-      // Reshma (Indian Girl)
       selectedVoice = voices.find(v => {
         const lang = (v.lang || '').toLowerCase();
         const name = (v.name || '').toLowerCase();
-        return lang.includes('en-in') || lang.includes('hi-in') || name.includes('neerja') || name.includes('heera') || name.includes('india');
-      }) || voices.find(v => (v.name || '').toLowerCase().includes('female'));
-      utterance.pitch = 1.10;
-      utterance.rate = 0.78; // Slow reading speed for clear pronunciation
+        return (lang.includes('en-in') || lang.includes('hi-in')) && (name.includes('heera') || name.includes('veena') || name.includes('girl') || name.includes('female'));
+      }) || voices.find(v => (v.name || '').toLowerCase().includes('zira') || (v.name || '').toLowerCase().includes('female'));
+      utterance.pitch = 1.25;
+      utterance.rate = 0.82;
     } else if (role === 'ancient_man') {
-      // Ancient Sailor (Indian Man)
       selectedVoice = voices.find(v => {
         const lang = (v.lang || '').toLowerCase();
         const name = (v.name || '').toLowerCase();
-        return (lang.includes('en-in') || lang.includes('hi-in') || name.includes('ravi') || name.includes('prabhat') || name.includes('india')) || name.includes('male');
-      }) || voices.find(v => (v.name || '').toLowerCase().includes('male'));
-      utterance.pitch = 0.90;
-      utterance.rate = 0.75; // Slow, deep reading speed
+        return (lang.includes('en-in') || lang.includes('hi-in')) && (name.includes('ravi') || name.includes('prabhat') || name.includes('male'));
+      }) || voices.find(v => (v.name || '').toLowerCase().includes('david') || (v.name || '').toLowerCase().includes('male'));
+      utterance.pitch = 0.78;
+      utterance.rate = 0.75;
     } else {
-      // Teacher / Narrator (Indian Woman)
       selectedVoice = voices.find(v => {
         const lang = (v.lang || '').toLowerCase();
         const name = (v.name || '').toLowerCase();
         return lang.includes('en-in') || lang.includes('hi-in') || name.includes('neerja') || name.includes('heera') || name.includes('kalyani') || name.includes('india');
       }) || voices.find(v => (v.name || '').toLowerCase().includes('female'));
       utterance.pitch = 1.0;
-      utterance.rate = 0.78; // Slow, clear educational reading speed
+      utterance.rate = 0.78;
     }
 
     if (selectedVoice) utterance.voice = selectedVoice;
-    utterance.volume = 1.0; // Maximum loudness
+    utterance.volume = 1.0;
 
     const wordList = text.split(' ');
     let charAcc = 0;
@@ -320,24 +350,36 @@ class VoiceService {
     let isSpeakingStarted = false;
 
     utterance.onstart = () => {
+      if (this.currentSessionId !== sessionId) {
+        synth.cancel();
+        return;
+      }
       isSpeakingStarted = true;
       lastBoundaryTime = Date.now();
       if (onBoundary) onBoundary(0);
     };
 
     utterance.onboundary = (event) => {
+      if (this.currentSessionId !== sessionId) {
+        synth.cancel();
+        return;
+      }
       isSpeakingStarted = true;
       lastBoundaryTime = Date.now();
       if (onBoundary && typeof event.charIndex === 'number' && event.charIndex >= 0) {
         onBoundary(event.charIndex);
-        // Sync currentWordIdx with actual event charIndex
         const idx = wordPositions.findIndex(p => p >= event.charIndex);
         if (idx !== -1) currentWordIdx = idx;
       }
     };
 
-    // Punctuation-aware fallback timer (Calibrated for slow 0.78x rate)
     this.fallbackTimer = setInterval(() => {
+      if (this.currentSessionId !== sessionId) {
+        clearInterval(this.fallbackTimer);
+        this.fallbackTimer = null;
+        synth.cancel();
+        return;
+      }
       if (isSpeakingStarted && currentWordIdx < wordList.length) {
         const currentWord = wordList[currentWordIdx] || '';
         const hasPunctuation = /[,.!?;:]/.test(currentWord);
@@ -359,8 +401,10 @@ class VoiceService {
         this.fallbackTimer = null;
       }
       this.currentUtterance = null;
-      if (onBoundary) onBoundary(text.length);
-      if (onEnd) onEnd();
+      if (this.currentSessionId === sessionId) {
+        if (onBoundary) onBoundary(text.length);
+        if (onEnd) onEnd();
+      }
     };
 
     utterance.onerror = (err) => {
@@ -369,7 +413,9 @@ class VoiceService {
         this.fallbackTimer = null;
       }
       this.currentUtterance = null;
-      if (onError) onError(err);
+      if (this.currentSessionId === sessionId && onError) {
+        onError(err);
+      }
     };
 
     synth.speak(utterance);

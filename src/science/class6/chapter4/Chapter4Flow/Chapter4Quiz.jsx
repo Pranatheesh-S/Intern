@@ -319,24 +319,24 @@ export default function Chapter4Quiz({ onComplete }) {
             onClick={() => { if (onComplete) onComplete(score); }}
             style={{
               padding: '1.1rem 3rem',
-              backgroundColor: '#2563eb',
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
               color: '#ffffff',
               border: 'none',
               borderRadius: '40px',
               fontSize: '1.15rem',
               fontWeight: 800,
               cursor: 'pointer',
-              boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+              boxShadow: '0 6px 20px rgba(217, 119, 6, 0.4)',
               transition: 'all 0.25s ease',
               marginTop: '0.5rem'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'scale(1.03)';
-              e.currentTarget.style.backgroundColor = '#1d4ed8';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(217, 119, 6, 0.6)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.backgroundColor = '#2563eb';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(217, 119, 6, 0.4)';
             }}
           >
             Finish Activity
@@ -360,20 +360,20 @@ export default function Chapter4Quiz({ onComplete }) {
     }}>
       <div style={{ width: '100%', maxWidth: '1050px', display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
         {/* Top Bar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', padding: '0 0.5rem', flexShrink: 0 }}>
-          <h3 style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)', fontWeight: 700 }}>Test Your Knowledge</h3>
-          <div style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 1.3vw, 1rem)', fontWeight: 600 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', padding: '0 0.5rem', flexShrink: 0 }}>
+          <h3 style={{ margin: 0, color: '#064E3B', fontSize: 'clamp(0.95rem, 1.4vw, 1.1rem)', fontWeight: 900 }}>Test Your Knowledge</h3>
+          <div style={{ color: '#047857', fontSize: 'clamp(0.85rem, 1.3vw, 1rem)', fontWeight: 800 }}>
             Question {currentQuestion + 1} of {quizData.length}
           </div>
         </div>
 
         {/* Main Quiz Card */}
         <div className="glass-panel" style={{ 
-          background: 'var(--surface)', 
-          border: '2px solid #818cf8',
+          background: '#FFFFFF', 
+          border: '1.5px solid #A7F3D0', 
           borderRadius: '20px', 
           padding: '1.25rem 1.75rem', 
-          boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
+          boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.85rem',
@@ -384,35 +384,39 @@ export default function Chapter4Quiz({ onComplete }) {
           boxSizing: 'border-box'
         }}>
           {/* Title */}
-          <h3 style={{ margin: 0, color: '#6366f1', fontSize: 'clamp(1.15rem, 1.8vw, 1.45rem)', fontWeight: 800 }}>
+          <h3 style={{ margin: 0, color: '#064E3B', fontSize: 'clamp(1.15rem, 1.8vw, 1.45rem)', fontWeight: 900 }}>
             {currentQ.title}
           </h3>
 
           {/* Question Text */}
-          <p style={{ margin: 0, fontSize: 'clamp(0.95rem, 1.5vw, 1.15rem)', lineHeight: '1.45', fontWeight: 600, color: 'var(--text-heading)' }}>
+          <p style={{ margin: 0, fontSize: 'clamp(0.95rem, 1.5vw, 1.15rem)', lineHeight: '1.45', fontWeight: 600, color: '#334155' }}>
             {currentQ.question}
           </p>
 
           {/* Option Buttons */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             {currentQ.options.map((option, index) => {
-              let bgColor = 'var(--bg)';
-              let borderColor = '#cbd5e1';
+              let bgColor = '#FFFFFF';
+              let borderColor = '#CBD5E1';
+              let textColor = '#1E293B';
               let icon = null;
 
               if (showResult) {
                 if (index === currentQ.correctIndex) {
-                  bgColor = 'rgba(16, 185, 129, 0.12)';
-                  borderColor = '#10b981';
-                  icon = <CheckCircle size={22} color="#10b981" />;
+                  bgColor = '#DCFCE7';
+                  borderColor = '#16A34A';
+                  textColor = '#065F46';
+                  icon = <CheckCircle size={22} color="#16A34A" />;
                 } else if (index === selectedOption) {
-                  bgColor = 'rgba(239, 68, 68, 0.12)';
-                  borderColor = '#ef4444';
-                  icon = <XCircle size={22} color="#ef4444" />;
+                  bgColor = '#FEE2E2';
+                  borderColor = '#EF4444';
+                  textColor = '#991B1B';
+                  icon = <XCircle size={22} color="#EF4444" />;
                 }
               } else if (index === selectedOption) {
-                borderColor = '#6366f1';
-                bgColor = 'rgba(99, 102, 241, 0.08)';
+                borderColor = '#D97706';
+                bgColor = '#FEF3C7';
+                textColor = '#92400E';
               }
 
               return (
@@ -425,16 +429,17 @@ export default function Chapter4Quiz({ onComplete }) {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '0.9rem 1.35rem',
+                    padding: '0.85rem 1.35rem',
                     borderRadius: '12px',
                     background: bgColor,
-                    border: `2px solid ${borderColor}`,
-                    color: 'var(--text)',
+                    border: `1.5px solid ${borderColor}`,
+                    color: textColor,
                     cursor: showResult ? 'default' : 'pointer',
                     textAlign: 'left',
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
+                    fontSize: '1.05rem',
+                    fontWeight: 700,
                     transition: 'all 0.25s ease',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
                     opacity: showResult && index !== currentQ.correctIndex && index !== selectedOption ? 0.6 : 1
                   }}
                 >
@@ -448,9 +453,9 @@ export default function Chapter4Quiz({ onComplete }) {
           {/* Explanation & Next Question Button */}
           {showResult && (
             <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <div style={{ padding: '1rem 1.35rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '14px', borderLeft: '5px solid #6366f1' }}>
-                <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '1.1rem', fontWeight: 800, color: '#6366f1' }}>Explanation</h4>
-                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.5' }}>{currentQ.explanation}</p>
+              <div style={{ padding: '1rem 1.35rem', background: '#F0FDF4', borderRadius: '14px', border: '1.5px solid #A7F3D0', borderLeft: '5px solid #D97706' }}>
+                <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '1.1rem', fontWeight: 900, color: '#064E3B' }}>Explanation</h4>
+                <p style={{ margin: 0, color: '#334155', fontSize: '1.05rem', lineHeight: '1.5', fontWeight: 600 }}>{currentQ.explanation}</p>
               </div>
               
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -458,14 +463,14 @@ export default function Chapter4Quiz({ onComplete }) {
                   onClick={handleNext}
                   style={{
                     padding: '0.75rem 2.25rem',
-                    background: 'linear-gradient(135deg, #ff7700 0%, #ea580c 100%)',
+                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '30px',
                     fontSize: '1.15rem',
-                    fontWeight: 800,
+                    fontWeight: 900,
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(255, 119, 0, 0.45)',
+                    boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)',
                     transition: 'all 0.25s ease'
                   }}
                   onMouseEnter={(e) => {

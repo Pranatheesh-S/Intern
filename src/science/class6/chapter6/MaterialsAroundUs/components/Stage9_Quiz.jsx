@@ -276,7 +276,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
                     }}>
                       {alphabet[idx]}
                     </div>
-                    <div style={{ fontSize: 'clamp(18px, 2.5vw, 22px)', color: 'var(--text-primary)', fontWeight: isSelected ? '800' : '600' }}>
+                    <div style={{ fontSize: 'clamp(18px, 2.5vw, 22px)', color: 'var(--text-primary)', fontWeight: isSelected ? '600' : '500' }}>
                       {option}
                     </div>
                   </div>

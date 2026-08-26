@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinematic Sunset Flight Animation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #020617;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    #canvas-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 30%, transparent 40%, rgba(15, 23, 42, 0.4) 75%, rgba(2, 6, 23, 0.85) 100%);
+      z-index: 10;
+    }
+    .sun-flare {
+      position: absolute;
+      top: 18%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(254, 240, 138, 0.6) 0%, rgba(251, 146, 60, 0.3) 35%, rgba(244, 63, 94, 0.1) 60%, transparent 80%);
+      pointer-events: none;
+      z-index: 5;
+      mix-blend-mode: screen;
+      filter: blur(10px);
+    }
+    .hud-overlay {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px 24px;
+      border-radius: 30px;
+      color: #F8FAFC;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      z-index: 20;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .hud-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .badge-north {
+      background: rgba(239, 68, 68, 0.25);
+      border: 1px solid #EF4444;
+      color: #FCA5A5;
+    }
+    .badge-south {
+      background: rgba(59, 130, 246, 0.25);
+      border: 1px solid #3B82F6;
+      color: #93C5FD;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="flightCanvas"></canvas>
+    <div class="sun-flare"></div>
+    <div class="vignette"></div>
+    <div class="hud-overlay">
+      <span class="hud-badge badge-north">🔴 LEFT WING: NORTH</span>
+      <span>✈️ ALTITUDE: 36,000 FT • SUNSET CRUISE</span>
+      <span class="hud-badge badge-south">🔵 RIGHT WING: SOUTH</span>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('flightCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Aircraft Sprite Image
+    const jetImage = new Image();
+    jetImage.src = '/MagnetInteraction/sunset_magnetic_flight.jpg';
+    let imageLoaded = false;
+    jetImage.onload = () => {
+      imageLoaded = true;
+    };
+
+    // Cloud particles for 3D rolling sea
+    const cloudCount = 180;
+    const clouds = [];
+    for (let i = 0; i < cloudCount; i++) {
+      clouds.push({
+        x: (Math.random() - 0.5) * 2000,
+        y: 250 + Math.random() * 500,
+        z: Math.random() * 1500,
+        radius: 70 + Math.random() * 120,
+        speed: 4 + Math.random() * 2,
+        opacity: 0.35 + Math.random() * 0.45,
+        hue: Math.random() > 0.5 ? '#FDBA74' : '#F43F5E',
+        roughness: Math.random() * Math.PI * 2
+      });
+    }
+
+    // Engine heat shimmer & contrail particles
+    const contrails = [];
+    for (let i = 0; i < 90; i++) {
+      contrails.push({
+        xOffset: i % 2 === 0 ? -95 : 95,
+        y: 0,
+        age: Math.random() * 80,
+        maxAge: 80,
+        size: 8 + Math.random() * 14,
+        alpha: 0.7
+      });
+    }
+
+    let time = 0;
+
+    function drawSky() {
+      // Atmospheric Sunset Sky Gradient
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, height);
+      skyGrad.addColorStop(0, '#0F172A');     // Deep space twilight
+      skyGrad.addColorStop(0.2, '#1E293B');   // Upper atmosphere
+      skyGrad.addColorStop(0.35, '#38BDF8');  // Azure blue
+      skyGrad.addColorStop(0.48, '#FDBA74');  // Golden hour haze
+      skyGrad.addColorStop(0.55, '#FB923C');  // Deep orange horizon
+      skyGrad.addColorStop(0.65, '#E11D48');  // Crimson sunline
+      skyGrad.addColorStop(0.75, '#4C1D95');  // Twilight under-glow
+      skyGrad.addColorStop(1, '#0F172A');     // Low altitude shadow
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // Distant Radiant Sun Orb
+      const sunX = width / 2;
+      const sunY = height * 0.28;
+      const sunGrad = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 280);
+      sunGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+      sunGrad.addColorStop(0.15, 'rgba(254, 240, 138, 0.9)');
+      sunGrad.addColorStop(0.4, 'rgba(251, 146, 60, 0.5)');
+      sunGrad.addColorStop(0.7, 'rgba(244, 63, 94, 0.2)');
+      sunGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = sunGrad;
+      ctx.beginPath();
+      ctx.arc(sunX, sunY, 280, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Volumetric Crepuscular Sun Rays
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      for (let i = -6; i <= 6; i++) {
+        const rayAngle = (i * 0.08) + Math.sin(time * 0.5 + i) * 0.01;
+        const rayGrad = ctx.createLinearGradient(sunX, sunY, sunX + Math.sin(rayAngle) * 800, sunY + Math.cos(rayAngle) * 800);
+        rayGrad.addColorStop(0, 'rgba(254, 240, 138, 0.25)');
+        rayGrad.addColorStop(0.6, 'rgba(251, 146, 60, 0.08)');
+        rayGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = rayGrad;
+        ctx.beginPath();
+        ctx.moveTo(sunX, sunY);
+        ctx.lineTo(sunX + Math.sin(rayAngle - 0.04) * 900, sunY + Math.cos(rayAngle - 0.04) * 900);
+        ctx.lineTo(sunX + Math.sin(rayAngle + 0.04) * 900, sunY + Math.cos(rayAngle + 0.04) * 900);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawRollingClouds() {
+      const fov = 350;
+      const horizonY = height * 0.42;
+
+      // Sort clouds by depth (furthest to nearest)
+      clouds.sort((a, b) => b.z - a.z);
+
+      for (let c of clouds) {
+        // Move clouds backwards towards camera
+        c.z -= c.speed * (1 + (height > 800 ? 0.3 : 0));
+        if (c.z < 10) {
+          c.z = 1500;
+          c.x = (Math.random() - 0.5) * 2200;
+          c.y = 220 + Math.random() * 450;
+        }
+
+        // 3D Perspective Projection
+        const scale = fov / (fov + c.z);
+        const screenX = width / 2 + c.x * scale;
+        const screenY = horizonY + c.y * scale;
+        const screenRadius = c.radius * scale * 1.8;
+
+        if (screenY < height + screenRadius && screenX > -screenRadius && screenX < width + screenRadius) {
+          const cloudGrad = ctx.createRadialGradient(
+            screenX, screenY - screenRadius * 0.4, screenRadius * 0.1,
+            screenX, screenY, screenRadius
+          );
+          
+          // Sunlit top edge, golden midtone, violet ambient underbelly
+          cloudGrad.addColorStop(0, 'rgba(255, 255, 255, ' + (c.opacity * 0.95) + ')');
+          cloudGrad.addColorStop(0.35, 'rgba(253, 186, 116, ' + (c.opacity * 0.75) + ')');
+          cloudGrad.addColorStop(0.7, 'rgba(244, 63, 94, ' + (c.opacity * 0.45) + ')');
+          cloudGrad.addColorStop(1, 'rgba(30, 27, 75, 0)');
+
+          ctx.fillStyle = cloudGrad;
+          ctx.beginPath();
+          ctx.arc(screenX, screenY, screenRadius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    function drawContrails(planeCenterX, planeCenterY) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      for (let p of contrails) {
+        p.age += 1;
+        if (p.age > p.maxAge) {
+          p.age = 0;
+          p.y = 0;
+        }
+
+        const progress = p.age / p.maxAge;
+        const currentY = planeCenterY + 40 + progress * 320;
+        const currentX = planeCenterX + p.xOffset * (1 + progress * 0.35) + Math.sin(progress * 4 + time * 2) * 2;
+        const currentSize = p.size * (1 + progress * 3.5);
+        const currentAlpha = (1 - progress) * p.alpha * 0.6;
+
+        const cGrad = ctx.createRadialGradient(currentX, currentY, 0, currentX, currentY, currentSize);
+        cGrad.addColorStop(0, `rgba(255, 255, 255, ${currentAlpha})`);
+        cGrad.addColorStop(0.5, `rgba(253, 186, 116, ${currentAlpha * 0.6})`);
+        cGrad.addColorStop(1, 'rgba(251, 146, 60, 0)');
+
+        ctx.fillStyle = cGrad;
+        ctx.beginPath();
+        ctx.arc(currentX, currentY, currentSize, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawAircraft() {
+      // Natural flight breathing physics (smooth pitch & floating altitude micro-movements)
+      const floatY = Math.sin(time * 1.4) * 8 + Math.cos(time * 0.7) * 4;
+      const floatX = Math.sin(time * 0.8) * 5;
+      const rollAngle = Math.sin(time * 0.9) * 0.018;
+
+      const planeCenterX = width / 2 + floatX;
+      const planeCenterY = height * 0.54 + floatY;
+
+      // Draw jet engine contrails trailing into clouds
+      drawContrails(planeCenterX, planeCenterY);
+
+      ctx.save();
+      ctx.translate(planeCenterX, planeCenterY);
+      ctx.rotate(rollAngle);
+
+      if (imageLoaded) {
+        // High Resolution Sunset Jet Artwork Rendering
+        const targetWidth = Math.min(width * 0.72, 620);
+        const aspect = jetImage.width / jetImage.height;
+        const targetHeight = targetWidth / aspect;
+
+        // Aircraft ambient drop shadow on clouds below
+        ctx.save();
+        ctx.filter = 'blur(16px)';
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.45)';
+        ctx.beginPath();
+        ctx.ellipse(0, 70, targetWidth * 0.42, 35, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Draw main airliner
+        ctx.drawImage(jetImage, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
+
+        // Golden hour rim light shimmer along the fuselage spine
+        ctx.globalCompositeOperation = 'overlay';
+        const rimGrad = ctx.createLinearGradient(0, -targetHeight / 2, 0, targetHeight / 2);
+        rimGrad.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+        rimGrad.addColorStop(0.5, 'rgba(254, 240, 138, 0.3)');
+        rimGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = rimGrad;
+        ctx.fillRect(-targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
+
+      } else {
+        // Fallback procedural jet silhouette while loading
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.moveTo(0, -120);
+        ctx.lineTo(25, -20);
+        ctx.lineTo(180, 20);
+        ctx.lineTo(170, 45);
+        ctx.lineTo(25, 30);
+        ctx.lineTo(20, 110);
+        ctx.lineTo(70, 140);
+        ctx.lineTo(60, 155);
+        ctx.lineTo(0, 145);
+        ctx.lineTo(-60, 155);
+        ctx.lineTo(-70, 140);
+        ctx.lineTo(-20, 110);
+        ctx.lineTo(-25, 30);
+        ctx.lineTo(-170, 45);
+        ctx.lineTo(-180, 20);
+        ctx.lineTo(-25, -20);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    function animate() {
+      time += 0.02;
+      ctx.clearRect(0, 0, width, height);
+
+      drawSky();
+      drawRollingClouds();
+      drawAircraft();
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Lightbulb, X, Globe2, Image as ImageIcon, Maximize2, Minimize2, Mountain } from 'lucide-react';
-import physicalImg from './assets/physical-map-v2.jpeg';
+import physicalImg from './assets/printed_physical_map.jpeg';
 import politicalImg from './assets/political.png';
-import rainfallImg from './assets/thematic-map.jpeg';
+import thematicMapImg from './assets/thematic-map.jpeg';
 import ContentScrollNav, { useScrollNav } from '../ContentScrollNav';
 import IndiaMountainsMapExplorer from './IndiaMountainsMapExplorer';
 
@@ -33,6 +33,7 @@ const PageLayout = ({
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [isGlobeOpen, setIsGlobeOpen] = useState(false);
   const [isMountainsMapOpen, setIsMountainsMapOpen] = useState(false);
+  const [mountainsCategory, setMountainsCategory] = useState('all');
   const [isGlobeFull, setIsGlobeFull] = useState(false);
   const [leftPage, setLeftPage] = useState(1);
   const globePanelRef = useRef(null);
@@ -145,23 +146,47 @@ const PageLayout = ({
       let firstChunk = true;
       let guard = 0;
       while (rest.length && guard++ < 24) {
+        if (cur.some(b => b.type === 'features')) {
+          flush();
+        }
         const avail = left - (cur.length ? m.gap : 0) - m.chrome + m.rowGap;
         let rows = Math.floor(avail / (m.tile + m.rowGap));
         if (rows < 1) {
           if (cur.length) { flush(); continue; }
-          rows = 1;                                  // never loop on an empty page
+          rows = 1; // never loop on an empty page
         }
-        const take = maxPerChunk ? Math.min(rows * m.cols, maxPerChunk) : rows * m.cols;
+        const take = Math.max(1, maxPerChunk ? Math.min(rows * m.cols, maxPerChunk) : rows * m.cols);
         const chunk = rest.slice(0, take);
         rest = rest.slice(take);
         place({ type: 'features', list: chunk, continued: !firstChunk }, featuresH(chunk.length));
         firstChunk = false;
+        if (rest.length) {
+          flush();
+        }
       }
 
       place({ type: 'colors' }, m.colors);
       place({ type: 'why' }, m.why);
       flush();
-      return pages;
+
+      // Post-merge safeguard: guarantee each page has at most ONE consolidated features box
+      const mergedPages = pages.map(pg => {
+        const featBlocks = pg.filter(b => b.type === 'features');
+        if (featBlocks.length <= 1) return pg;
+        const combinedList = featBlocks.flatMap(b => b.list);
+        const firstFeatIndex = pg.findIndex(b => b.type === 'features');
+        const isContinued = featBlocks[0].continued;
+        return pg.reduce((acc, b, idx) => {
+          if (b.type !== 'features') {
+            acc.push(b);
+          } else if (idx === firstFeatIndex) {
+            acc.push({ type: 'features', list: combinedList, continued: isContinued });
+          }
+          return acc;
+        }, []);
+      });
+
+      return mergedPages;
     };
 
     const chunkCount = pgs => pgs.reduce((n, pg) => n + pg.filter(b => b.type === 'features').length, 0);
@@ -217,60 +242,88 @@ const PageLayout = ({
   // shared card chrome
   const pageCol = { display: 'flex', flexDirection: 'column', gap: 'clamp(6px, 1.4vh, 10px)', flex: 1, minHeight: 0 };
   const cardBase = { border: '1.5px solid #F2DFBC', borderRadius: '14px', boxShadow: '0 2px 8px rgba(60,40,20,0.03)' };
-  const headStyle = { fontSize: 'clamp(14px, 2.5vh, 16.5px)', color: '#78350F', marginTop: 0, fontWeight: 900, fontFamily: '"Fraunces", serif', flexShrink: 0 };
+  const headStyle = { fontSize: 'clamp(13px, 2.3vh, 15.5px)', color: '#78350F', marginTop: 0, fontWeight: 900, fontFamily: '"Fraunces", serif', flexShrink: 0 };
 
   const renderBlock = (block, i, probe) => {
     if (block.type === 'whatIs') {
       return (
-        <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFFFFF', padding: 'clamp(7px, 1.5vh, 11px) 14px', flexShrink: 0 }}>
-          <h3 style={{ ...headStyle, marginBottom: '4px' }}>{whatIsTitle}</h3>
-          {whatIs.map((p, k) => <p key={k} style={{ margin: k > 0 ? '4px 0 0 0' : 0, color: '#3D2E24', fontSize: 'clamp(12.5px, 2.2vh, 15px)', lineHeight: 1.45, fontWeight: 600 }}>{p}</p>)}
+        <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFFFFF', padding: 'clamp(8px, 1.5vh, 12px) 14px', flexShrink: 0 }}>
+          <h3 style={{ ...headStyle, marginBottom: '6px' }}>{whatIsTitle}</h3>
+          {whatIs.map((p, k) => (
+            <p
+              key={k}
+              style={{
+                margin: k > 0 ? '6px 0 0 0' : 0,
+                color: '#3D2E24',
+                fontSize: 'clamp(11.5px, 2.0vh, 14px)',
+                lineHeight: 1.5,
+                fontWeight: 600,
+                textAlign: 'justify',
+                textJustify: 'inter-word'
+              }}
+            >
+              {p}
+            </p>
+          ))}
         </div>
       );
     }
 
     if (block.type === 'features') {
       return (
-        <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFF9F0', padding: 'clamp(7px, 1.5vh, 11px) 12px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+        <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFF9F0', padding: 'clamp(8px, 1.5vh, 12px) 12px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ ...headStyle, marginBottom: 'clamp(5px, 1.1vh, 8px)' }}>
             {block.continued ? `${featuresTitle} (continued)` : featuresTitle}
           </h3>
           <div data-grid="1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(165px, 1fr))', gap: 'clamp(4px, 0.95vh, 7px)', alignContent: 'start' }}>
             {block.list.map((f, k) => {
-              const isMountain = f.title === 'Mountains';
+              const featureCategoryMap = {
+                'Mountains': 'mountains',
+                'Plains': 'plains',
+                'Rivers': 'rivers',
+                'Deserts': 'deserts',
+                'Forests': 'forests',
+                'Plateaus': 'plateaus'
+              };
+              const targetCategory = featureCategoryMap[f.title];
+              const isInteractive = Boolean(targetCategory);
+
               return (
                 <div
                   key={k}
                   onClick={() => {
-                    if (isMountain) setIsMountainsMapOpen(true);
+                    if (isInteractive) {
+                      setMountainsCategory(targetCategory);
+                      setIsMountainsMapOpen(true);
+                    }
                   }}
                   style={{
                     display: 'flex',
                     gap: '9px',
                     alignItems: 'flex-start',
-                    background: isMountain ? 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)' : '#FFFFFF',
-                    padding: 'clamp(4px, 0.95vh, 8px) 10px',
+                    background: isInteractive ? 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)' : '#FFFFFF',
+                    padding: 'clamp(5px, 1.05vh, 9px) 10px',
                     borderRadius: '10px',
-                    border: isMountain ? '1.5px solid #F59E0B' : '1.5px solid #F2DFBC',
+                    border: isInteractive ? '1.5px solid #F59E0B' : '1.5px solid #F2DFBC',
                     minWidth: 0,
-                    cursor: isMountain ? 'pointer' : 'default',
-                    boxShadow: isMountain ? '0 2px 8px rgba(217, 119, 6, 0.12)' : 'none',
+                    cursor: isInteractive ? 'pointer' : 'default',
+                    boxShadow: isInteractive ? '0 2px 8px rgba(217, 119, 6, 0.12)' : 'none',
                     transition: 'all 0.15s'
                   }}
                   onMouseOver={(e) => {
-                    if (isMountain) e.currentTarget.style.transform = 'translateY(-1px)';
+                    if (isInteractive) e.currentTarget.style.transform = 'translateY(-1px)';
                   }}
                   onMouseOut={(e) => {
-                    if (isMountain) e.currentTarget.style.transform = 'translateY(0)';
+                    if (isInteractive) e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  <div style={{ fontSize: 'clamp(1.05rem, 2.4vh, 1.45rem)', lineHeight: 1.15, flexShrink: 0 }}>{f.icon}</div>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontWeight: 800, color: isMountain ? '#92400E' : '#78350F', fontSize: 'clamp(12.5px, 2.2vh, 15px)', lineHeight: 1.2, overflowWrap: 'anywhere', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <div style={{ fontSize: 'clamp(0.98rem, 2.2vh, 1.35rem)', lineHeight: 1.15, flexShrink: 0 }}>{f.icon}</div>
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div style={{ fontWeight: 800, color: isInteractive ? '#92400E' : '#78350F', fontSize: 'clamp(11.5px, 2.0vh, 14px)', lineHeight: 1.2, overflowWrap: 'anywhere', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       {f.title}
-                      {isMountain && <span style={{ fontSize: '9.5px', background: '#D97706', color: '#FFF', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>Map ➔</span>}
+                      {isInteractive && <span style={{ fontSize: '8.5px', background: '#D97706', color: '#FFF', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>3D Map ➔</span>}
                     </div>
-                    <div style={{ fontSize: 'clamp(11.5px, 2vh, 13.5px)', color: '#3D2E24', lineHeight: 1.3, fontWeight: 600, overflowWrap: 'anywhere' }}>{f.desc}</div>
+                    <div style={{ fontSize: 'clamp(10.5px, 1.85vh, 12.5px)', color: '#3D2E24', lineHeight: 1.35, fontWeight: 600, overflowWrap: 'anywhere', textAlign: 'justify', textJustify: 'inter-word' }}>{f.desc}</div>
                   </div>
                 </div>
               );
@@ -282,13 +335,13 @@ const PageLayout = ({
 
     if (block.type === 'colors') {
       return (
-        <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFFFFF', padding: 'clamp(7px, 1.5vh, 11px) 14px', flexShrink: 0 }}>
+        <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFFFFF', padding: 'clamp(8px, 1.5vh, 12px) 14px', flexShrink: 0 }}>
           <h3 style={{ ...headStyle, marginBottom: '6px' }}>{colorsTitle}</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(165px, 1fr))', gap: 'clamp(4px, 0.95vh, 7px)' }}>
             {colors.map((c, k) => (
               <div key={k} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', minWidth: 0 }}>
-                <span style={{ fontSize: 'clamp(14px, 2.5vh, 16.5px)', lineHeight: 1.3, flexShrink: 0 }}>{c.color}</span>
-                <span style={{ fontSize: 'clamp(12.5px, 2.2vh, 15px)', color: '#3D2E24', fontWeight: 600, lineHeight: 1.3, overflowWrap: 'anywhere' }}>{c.desc}</span>
+                <span style={{ fontSize: 'clamp(13px, 2.3vh, 15.5px)', lineHeight: 1.3, flexShrink: 0 }}>{c.color}</span>
+                <span style={{ fontSize: 'clamp(11.5px, 2.0vh, 14px)', color: '#3D2E24', fontWeight: 600, lineHeight: 1.35, overflowWrap: 'anywhere', textAlign: 'justify', textJustify: 'inter-word' }}>{c.desc}</span>
               </div>
             ))}
           </div>
@@ -297,17 +350,17 @@ const PageLayout = ({
     }
 
     return (
-      <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFF9F0', padding: 'clamp(7px, 1.5vh, 12px) 14px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+      <div key={i} data-p={probe} style={{ ...cardBase, background: '#FFF9F0', padding: 'clamp(8px, 1.5vh, 12px) 14px', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
         <h3 style={{ ...headStyle, marginBottom: '6px' }}>{whyUseTitle}</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.9vh, 7px)' }}>
           {whyUse.map((w, k) => (
             <div key={k} style={{ background: '#FFFFFF', border: '1.5px solid #F2DFBC', padding: 'clamp(5px, 1.1vh, 9px) 10px', borderRadius: '8px', display: 'flex', alignItems: 'flex-start', gap: '10px', minWidth: 0 }}>
-              <span style={{ fontSize: 'clamp(14px, 2.5vh, 16.5px)', lineHeight: 1.3, flexShrink: 0 }}>{w.icon}</span>
-              <span style={{ fontSize: 'clamp(12.5px, 2.2vh, 15px)', color: '#3D2E24', fontWeight: 600, lineHeight: 1.3, overflowWrap: 'anywhere' }}>{w.desc}</span>
+              <span style={{ fontSize: 'clamp(13px, 2.3vh, 15.5px)', lineHeight: 1.3, flexShrink: 0 }}>{w.icon}</span>
+              <span style={{ fontSize: 'clamp(11.5px, 2.0vh, 14px)', color: '#3D2E24', fontWeight: 600, lineHeight: 1.35, overflowWrap: 'anywhere', textAlign: 'justify', textJustify: 'inter-word' }}>{w.desc}</span>
             </div>
           ))}
         </div>
-        <div style={{ marginTop: 'clamp(6px, 1.3vh, 10px)', paddingTop: '8px', borderTop: '1.5px dashed #F2DFBC', color: '#92400E', fontSize: 'clamp(12px, 2.05vh, 14px)', lineHeight: 1.35, fontWeight: 700, flexShrink: 0 }}>
+        <div style={{ marginTop: 'clamp(6px, 1.3vh, 10px)', paddingTop: '8px', borderTop: '1.5px dashed #F2DFBC', color: '#92400E', fontSize: 'clamp(11px, 1.9vh, 13px)', lineHeight: 1.4, fontWeight: 700, flexShrink: 0, textAlign: 'justify', textJustify: 'inter-word' }}>
           💡 {funFact}
         </div>
       </div>
@@ -318,16 +371,16 @@ const PageLayout = ({
     <>
       <div style={{ display: 'flex', width: '100%', height: '100%', padding: 0, boxSizing: 'border-box', minHeight: 0 }}>
       
-      {/* Left Page (Text) — Zero-scroll, zero-overlap paged structure */}
-      <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', borderRight: '2px solid #F2DFBC', padding: '1rem 1.25rem', boxSizing: 'border-box', overflow: 'hidden', justifyContent: 'space-between', background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)' }}>
+      {/* Left Page (Text) — Parallel Symmetrical Padding matching Right Page */}
+      <div style={{ flex: '1 1 50%', minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column', borderRight: '2px solid #F2DFBC', padding: '1rem 1.25rem 3.6rem 1.25rem', boxSizing: 'border-box', overflow: 'hidden', justifyContent: 'space-between', background: 'linear-gradient(160deg, #FFF9F0 0%, #FBF3E3 100%)' }}>
         
         {/* Header */}
         <div style={{ flexShrink: 0, marginBottom: '6px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FEF3C7', border: '1px solid #FDE68A', padding: '3px 10px', borderRadius: '999px', color: '#92400E', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FEF3C7', border: '1px solid #FDE68A', padding: '3px 10px', borderRadius: '999px', color: '#92400E', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>
             Chapter 1 • Atlas Introduction
           </div>
-          <h2 style={{ fontSize: 'clamp(1.3rem, 3vh, 1.8rem)', color: '#78350F', margin: '0 0 0.2rem 0', fontFamily: '"Fraunces", serif', fontWeight: 900, lineHeight: 1.15 }}>{title}</h2>
-          <div style={{ fontSize: 'clamp(12.5px, 2.2vh, 15px)', color: '#92400E', fontWeight: 700, lineHeight: 1.3 }}>{subtitle}</div>
+          <h2 style={{ fontSize: 'clamp(1.2rem, 2.7vh, 1.65rem)', color: '#78350F', margin: '0 0 0.2rem 0', fontFamily: '"Fraunces", serif', fontWeight: 900, lineHeight: 1.15 }}>{title}</h2>
+          <div style={{ fontSize: 'clamp(11.5px, 2.0vh, 14px)', color: '#92400E', fontWeight: 700, lineHeight: 1.35, textAlign: 'justify', textJustify: 'inter-word' }}>{subtitle}</div>
         </div>
 
         {/* Page Content Viewport — packed sub-pages, never scrolls */}
@@ -356,9 +409,9 @@ const PageLayout = ({
             onClick={() => setLeftPage(n => Math.max(1, n - 1))}
             disabled={leftPage === 1}
             style={{
-              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(12.5px, 2.1vh, 14px)',
+              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.9vh, 13px)',
               background: '#FFF9F0', color: '#78350F', border: '1.5px solid #F2DFBC', borderRadius: '999px',
-              padding: '6px 16px', cursor: leftPage === 1 ? 'not-allowed' : 'pointer',
+              padding: '5px 14px', cursor: leftPage === 1 ? 'not-allowed' : 'pointer',
               opacity: leftPage === 1 ? 0.35 : 1, transition: 'all 0.2s', whiteSpace: 'nowrap'
             }}
           >
@@ -384,10 +437,10 @@ const PageLayout = ({
             onClick={() => setLeftPage(n => Math.min(LEFT_PAGES, n + 1))}
             disabled={leftPage === LEFT_PAGES}
             style={{
-              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(12.5px, 2.1vh, 14px)',
+              fontFamily: '"Space Grotesk", sans-serif', fontWeight: 800, fontSize: 'clamp(11.5px, 1.9vh, 13px)',
               background: leftPage === LEFT_PAGES ? '#F7F1E2' : '#F59E0B', color: leftPage === LEFT_PAGES ? '#78350F' : '#FFFFFF',
               border: `1.5px solid ${leftPage === LEFT_PAGES ? '#F2DFBC' : '#F59E0B'}`, borderRadius: '999px',
-              padding: '6px 16px', cursor: leftPage === LEFT_PAGES ? 'not-allowed' : 'pointer',
+              padding: '5px 14px', cursor: leftPage === LEFT_PAGES ? 'not-allowed' : 'pointer',
               opacity: leftPage === LEFT_PAGES ? 0.35 : 1, transition: 'all 0.2s', whiteSpace: 'nowrap'
             }}
           >
@@ -398,10 +451,12 @@ const PageLayout = ({
 
       </div>
 
-      {/* Right Page (Image Activity) — Bottom padding 3.8rem ensures no overlap with AtlasBook footer */}
-      <div style={{ flex: '1 1 50%', minWidth: 0, padding: '1rem 1.25rem 3.8rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 0, overflow: 'hidden', boxSizing: 'border-box', background: 'linear-gradient(160deg, #F7F1E2 0%, #EFE6D2 100%)' }}>
+      {/* Right Page (Printed Map View & Activities) — Parallel Symmetrical Padding 3.6rem */}
+      <div style={{ flex: '1 1 50%', minWidth: 0, padding: '1rem 1.25rem 3.6rem 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', minHeight: 0, overflow: 'hidden', boxSizing: 'border-box', background: 'linear-gradient(160deg, #F7F1E2 0%, #EFE6D2 100%)' }}>
+        
+        {/* PRINTED MAP CONTAINER */}
         <div
-          onClick={() => setIsGlobeOpen(true)}
+          onClick={() => setIsImageOpen(true)}
           style={{
             cursor: 'pointer',
             width: '100%',
@@ -411,132 +466,284 @@ const PageLayout = ({
             borderRadius: '16px',
             overflow: 'hidden',
             border: '2px solid #F2DFBC',
-            boxShadow: '0 8px 30px rgba(60,40,20,0.06)',
-            background: '#FFF9F0',
+            boxShadow: '0 8px 30px rgba(60,40,20,0.08)',
+            background: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '12px',
-            boxSizing: 'border-box'
+            padding: '8px',
+            boxSizing: 'border-box',
+            transition: 'all 0.2s ease'
           }}
-          onMouseOver={(e) => e.currentTarget.style.borderColor = '#D97706'}
-          onMouseOut={(e) => e.currentTarget.style.borderColor = '#F2DFBC'}
+          onMouseOver={(e) => {
+            e.currentTarget.style.borderColor = '#D97706';
+            e.currentTarget.style.boxShadow = '0 12px 36px rgba(217, 119, 6, 0.15)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.borderColor = '#F2DFBC';
+            e.currentTarget.style.boxShadow = '0 8px 30px rgba(60,40,20,0.08)';
+          }}
+          title="Click to view full high-resolution printed map"
         >
-           <img
-             src={imageSrc}
-             alt={title}
-             style={{
-               maxWidth: '100%',
-               maxHeight: '100%',
-               objectFit: 'contain',
-               borderRadius: '8px',
-               display: 'block'
-             }}
-           />
+          {/* Header Tag */}
+          <div style={{
+            position: 'absolute',
+            top: '8px',
+            left: '8px',
+            background: 'rgba(15, 23, 42, 0.85)',
+            backdropFilter: 'blur(4px)',
+            color: '#FDE68A',
+            padding: '3px 8px',
+            borderRadius: '6px',
+            fontSize: '8.5px',
+            fontWeight: 800,
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+          }}>
+            <ImageIcon size={11} /> Printed {title}
+          </div>
+
+          <div style={{
+            position: 'absolute',
+            bottom: '8px',
+            right: '8px',
+            background: 'rgba(15, 23, 42, 0.75)',
+            color: '#FFF',
+            padding: '2px 7px',
+            borderRadius: '5px',
+            fontSize: '8px',
+            fontWeight: 700,
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '3px'
+          }}>
+            <Maximize2 size={10} /> Click to Enlarge
+          </div>
+
+          <img
+            src={imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
+            alt={title}
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+              objectFit: 'contain',
+              borderRadius: '8px',
+              display: 'block'
+            }}
+            onError={(e) => {
+              if (e.currentTarget.dataset.retried) return;
+              e.currentTarget.dataset.retried = 'true';
+              if (globeMode === 'physical') e.currentTarget.src = '/maps/printed_physical_map.jpeg';
+              else if (globeMode === 'political') e.currentTarget.src = '/maps/political_map.png';
+              else e.currentTarget.src = '/maps/thematic_map.jpg';
+            }}
+          />
         </div>
 
-        <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'center' }}>
+        {/* INTERACTIVE CONTROLS */}
+        <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.45rem', flexShrink: 0, width: '100%' }}>
           {globeMode === 'physical' && (
             <button
               onClick={() => setIsMountainsMapOpen(true)}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 gap: '0.4rem',
                 background: 'linear-gradient(135deg, #78350F 0%, #92400E 100%)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '999px',
-                padding: '0.45rem 1.1rem',
-                fontSize: '13px',
+                padding: '0.4rem 1rem',
+                fontSize: '11.5px',
                 fontWeight: 800,
                 cursor: 'pointer',
                 boxShadow: '0 2px 8px rgba(146, 64, 14, 0.35)',
                 transition: 'all 0.2s ease',
+                fontFamily: '"Space Grotesk", sans-serif',
+                whiteSpace: 'nowrap'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <Mountain size={15} color="#FEF08A" /> Explore Natural Features 3D Map
+            </button>
+          )}
+
+          {/* Parallel Side-by-Side Action Buttons */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.6rem',
+            width: '100%',
+            maxWidth: '380px'
+          }}>
+            <button
+              onClick={() => setIsGlobeOpen(true)}
+              style={{
+                flex: '1 1 0',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                background: '#0E3556',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '999px',
+                padding: '0.42rem 0.6rem',
+                fontSize: '11px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(14, 53, 86, 0.2)',
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
                 fontFamily: '"Space Grotesk", sans-serif'
               }}
               onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
               onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
-              <Mountain size={15} color="#FEF08A" /> Explore Mountains of India
+              <Globe2 size={15} /> View on 3D Globe
             </button>
-          )}
-          <button
-            onClick={() => setIsGlobeOpen(true)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              background: '#0E3556',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '999px',
-              padding: '0.45rem 1.2rem',
-              fontSize: '13px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(14, 53, 86, 0.2)',
-              transition: 'all 0.2s ease',
-              fontFamily: '"Space Grotesk", sans-serif'
-            }}
-            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-          >
-            <Globe2 size={15} /> View on 3D Globe
-          </button>
-          <button
-            onClick={() => setIsImageOpen(true)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              background: '#0E3556',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '999px',
-              padding: '0.45rem 1rem',
-              fontSize: '13px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(14, 53, 86, 0.2)',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-          >
-            <ImageIcon size={15} /> View printed map
-          </button>
+            <button
+              onClick={() => setIsImageOpen(true)}
+              style={{
+                flex: '1 1 0',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                background: '#D97706',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '999px',
+                padding: '0.42rem 0.6rem',
+                fontSize: '11px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(217, 119, 6, 0.3)',
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
+                fontFamily: '"Space Grotesk", sans-serif'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <ImageIcon size={15} /> View Full Printed Map
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    {/* Mountains of India Physical Map Modal */}
+    {/* Natural Features 3D Map Explorer Modal */}
     {isMountainsMapOpen && (
-      <IndiaMountainsMapExplorer onClose={() => setIsMountainsMapOpen(false)} />
+      <IndiaMountainsMapExplorer 
+        initialCategory={mountainsCategory}
+        onClose={() => setIsMountainsMapOpen(false)} 
+      />
     )}
 
-    {/* Image Modal */}
+    {/* High-Resolution Printed Map Modal */}
     {isImageOpen && (
       <div
         onClick={() => setIsImageOpen(false)}
         style={{
-          position: 'fixed', inset: 0, zIndex: 9999,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(5px)',
+          position: 'fixed', inset: 0, zIndex: 99999,
+          background: 'rgba(15, 23, 42, 0.88)', backdropFilter: 'blur(8px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer'
+          cursor: 'pointer', padding: '16px'
         }}
       >
-        <button
-          onClick={() => setIsImageOpen(false)}
-          style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(0,0,0,0.5)', border: 'none', color: 'white', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', zIndex: 10001, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-        >
-          <X size={32} />
-        </button>
         <div
           onClick={(e) => e.stopPropagation()}
-          style={{ position: 'relative', background: 'white', padding: '0.5rem', borderRadius: '12px', cursor: 'default', display: 'inline-block' }}
+          style={{
+            position: 'relative',
+            width: 'min(1100px, 94vw)',
+            maxHeight: '92vh',
+            background: '#FFFFFF',
+            borderRadius: '16px',
+            boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
+            border: '2px solid #F2DFBC',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            cursor: 'default'
+          }}
         >
-          <img src={imageSrc} alt={title} style={{ maxWidth: '70vw', maxHeight: '70vh', objectFit: 'contain', borderRadius: '8px', display: 'block' }} />
+          {/* Modal Header */}
+          <div style={{
+            height: '48px',
+            background: 'linear-gradient(90deg, #1C1917 0%, #292524 100%)',
+            color: '#FFF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 16px',
+            borderBottom: '2.5px solid #D97706',
+            flexShrink: 0
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 900, fontSize: '14px' }}>
+              <ImageIcon size={18} color="#F59E0B" /> Printed {title} • NCERT Class 6 Atlas Reference
+            </div>
+            <button
+              onClick={() => setIsImageOpen(false)}
+              style={{
+                background: 'rgba(255,255,255,0.15)',
+                border: 'none',
+                color: '#FFF',
+                cursor: 'pointer',
+                width: '30px',
+                height: '30px',
+                borderRadius: '50%',
+                display: 'grid',
+                placeItems: 'center',
+                transition: 'background 0.15s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.8)'}
+              onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+              title="Close (Esc)"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Map Viewer Body */}
+          <div style={{
+            flex: 1,
+            minHeight: 0,
+            padding: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#FAF5EB',
+            overflow: 'auto'
+          }}>
+            <img
+              src={imageSrc || (globeMode === 'physical' ? '/maps/printed_physical_map.jpeg' : globeMode === 'political' ? '/maps/political_map.png' : '/maps/thematic_map.jpg')}
+              alt={title}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '75vh',
+                objectFit: 'contain',
+                borderRadius: '10px',
+                boxShadow: '0 6px 24px rgba(0,0,0,0.15)',
+                border: '1px solid #E2D4B7'
+              }}
+              onError={(e) => {
+                if (e.currentTarget.dataset.retried) return;
+                e.currentTarget.dataset.retried = 'true';
+                if (globeMode === 'physical') e.currentTarget.src = '/maps/printed_physical_map.jpeg';
+                else if (globeMode === 'political') e.currentTarget.src = '/maps/political_map.png';
+                else e.currentTarget.src = '/maps/thematic_map.jpg';
+              }}
+            />
+          </div>
         </div>
       </div>
     )}
@@ -619,7 +826,7 @@ export const PhysicalMapPage = ({ onFullyViewed }) => (
   <PageLayout 
     onFullyViewed={onFullyViewed}
     title="Physical Maps"
-    subtitle="Maps that show Earth's natural features"
+    subtitle="Maps that show Earth's natural features and varied landforms"
     imageSrc={physicalImg}
     globeMode="physical"
     callouts={[
@@ -631,37 +838,37 @@ export const PhysicalMapPage = ({ onFullyViewed }) => (
       { icon: '⛰', label: 'Plateau', top: '50%', left: '25%' }
     ]}
     whatIs={[
-      "A Physical Map shows the natural features of the Earth.",
-      "It helps us understand how the land looks without showing roads, cities, or political boundaries."
+      "A Physical Map illustrates the natural features and physical landforms of the Earth.",
+      "It helps us understand topography and landscape elevation without showing human-made roads, cities, or administrative boundaries."
     ]}
     whatIsTitle="What is a Physical Map?"
     featuresTitle="Natural Features on a Physical Map"
     features={[
-      { icon: '🏔', title: 'Mountains', desc: 'High land areas.' },
-      { icon: '🏞', title: 'Plains', desc: 'Flat land suitable for farming.' },
-      { icon: '🌊', title: 'Rivers', desc: 'Flowing water bodies.' },
-      { icon: '🏜', title: 'Deserts', desc: 'Dry areas with very little rainfall.' },
-      { icon: '🌳', title: 'Forests', desc: 'Areas covered with many trees.' },
-      { icon: '⛰', title: 'Plateaus', desc: 'High flat lands.' }
+      { icon: '🏔', title: 'Mountains', desc: 'Prominent elevated landforms rising high above the surrounding landscape.' },
+      { icon: '🏞', title: 'Plains', desc: 'Expansive flat lowlands highly suitable for agriculture and settlements.' },
+      { icon: '🌊', title: 'Rivers', desc: 'Natural flowing water channels traveling across terrains toward oceans.' },
+      { icon: '🏜', title: 'Deserts', desc: 'Arid land areas that experience very low annual precipitation.' },
+      { icon: '🌳', title: 'Forests', desc: 'Lush green landscapes covered with dense trees and rich vegetation.' },
+      { icon: '⛰', title: 'Plateaus', desc: 'Extensive elevated flat tablelands bounded by steeper slopes.' }
     ]}
     colorsTitle="Colours Used on Physical Maps"
     colors={[
-      { color: '🟢', desc: 'Plains and lowlands' },
-      { color: '🟤', desc: 'Mountains and highlands' },
-      { color: '🔵', desc: 'Rivers, lakes and oceans' },
-      { color: '🟡', desc: 'Plateaus or higher plains' }
+      { color: '🟢', desc: 'Green represents plains, river basins, and fertile lowlands.' },
+      { color: '🟤', desc: 'Brown shades indicate mountain ranges and elevated highland regions.' },
+      { color: '🔵', desc: 'Blue illustrates water bodies including rivers, lakes, seas, and oceans.' },
+      { color: '🟡', desc: 'Yellow indicates plateaus, tablelands, and elevated plains.' }
     ]}
     whyUseTitle="Why are Physical Maps Useful?"
     whyUse={[
-      { icon: '🏕', desc: 'Planning a trip' },
-      { icon: '🌾', desc: 'Learning about landforms' },
-      { icon: '🏞', desc: 'Understanding rivers and mountains' }
+      { icon: '🏕', desc: 'Planning travel expeditions and exploring outdoor routes' },
+      { icon: '🌾', desc: 'Studying physical geography and diverse natural landforms' },
+      { icon: '🏞', desc: 'Understanding water drainage systems and mountain ranges' }
     ]}
     remember={[
       "Physical Maps show Nature.",
       "They help us identify mountains, rivers, plains, forests and deserts."
     ]}
-    funFact="The Himalayas appear as brown regions on most physical maps because they are very high mountains."
+    funFact="The Himalayas appear as prominent dark brown regions on physical maps because they are among the highest mountain systems on Earth."
   />
 );
 
@@ -669,7 +876,7 @@ export const PoliticalMapPage = ({ onFullyViewed }) => (
   <PageLayout 
     onFullyViewed={onFullyViewed}
     title="Political Maps"
-    subtitle="Maps that show countries, states and boundaries."
+    subtitle="Maps that show countries, states, cities and administrative boundaries"
     imageSrc={politicalImg}
     globeMode="political"
     callouts={[
@@ -680,36 +887,36 @@ export const PoliticalMapPage = ({ onFullyViewed }) => (
       { icon: '🌎', label: 'Country', top: '25%', left: '25%' }
     ]}
     whatIs={[
-      "A Political Map shows the boundaries of countries, states, and cities.",
-      "It helps us understand administrative regions made by humans."
+      "A Political Map displays the demarcated boundaries of countries, states, and cities.",
+      "It helps us understand human-made governance divisions, provincial territories, and administrative capitals across regions."
     ]}
     whatIsTitle="What is a Political Map?"
     featuresTitle="What Can We See?"
     features={[
-      { icon: '🌎', title: 'Countries', desc: 'Nations of the world.' },
-      { icon: '🗺', title: 'States', desc: 'Regions within a country.' },
-      { icon: '📍', title: 'Capitals', desc: 'Centers of government.' },
-      { icon: '🏙', title: 'Cities', desc: 'Major human settlements.' },
-      { icon: '➖', title: 'Boundaries', desc: 'Lines separating places.' }
+      { icon: '🌎', title: 'Countries', desc: 'Sovereign nations and recognized territories across the world.' },
+      { icon: '🗺', title: 'States', desc: 'Administrative divisions and regional provinces within a nation.' },
+      { icon: '📍', title: 'Capitals', desc: 'Principal administrative headquarters and governmental seats.' },
+      { icon: '🏙', title: 'Cities', desc: 'Major urban settlements, commercial hubs, and population centers.' },
+      { icon: '➖', title: 'Boundaries', desc: 'Official demarcation lines that separate states and sovereign nations.' }
     ]}
     colorsTitle="Common Symbols"
     colors={[
-      { color: '⭐️', desc: 'Capital city' },
-      { color: '⚫️', desc: 'Major city' },
-      { color: '➖', desc: 'International boundary' },
-      { color: '〰️', desc: 'State boundary' }
+      { color: '⭐️', desc: 'Special star symbols designate national and state capital cities.' },
+      { color: '⚫️', desc: 'Solid dots designate major commercial cities and municipal centers.' },
+      { color: '➖', desc: 'Thick dash-dot lines demarcate recognized international borders.' },
+      { color: '〰️', desc: 'Dashed line styles represent provincial and state administrative boundaries.' }
     ]}
     whyUseTitle="Why Do We Use Political Maps?"
     whyUse={[
-      { icon: '🏫', desc: 'Learning about countries' },
-      { icon: '✈️', desc: 'Knowing which state a city is in' },
-      { icon: '🗺', desc: 'Understanding borders' }
+      { icon: '🏫', desc: 'Learning political geography and administrative divisions of countries' },
+      { icon: '✈️', desc: 'Locating which state or province a destination city is located within' },
+      { icon: '🗺', desc: 'Understanding international relations and geopolitical borders' }
     ]}
     remember={[
       "Political Maps show places made by people.",
       "They help us locate countries, states, cities and their borders."
     ]}
-    funFact="India has 28 states and 8 Union Territories."
+    funFact="India currently comprises 28 states and 8 Union Territories, each demarcated with distinct administrative boundaries."
   />
 );
 
@@ -717,45 +924,49 @@ export const ThematicMapPage = ({ onFullyViewed }) => (
   <PageLayout 
     onFullyViewed={onFullyViewed}
     title="Thematic Maps"
-    subtitle="Maps that show one special topic."
-    imageSrc={rainfallImg}
+    subtitle="Maps that show one special topic or data theme (e.g., Soils, Rainfall, Crops)"
+    imageSrc={thematicMapImg}
     globeMode="thematic"
     globeTheme="rain"
     callouts={[
-      { icon: '🌧', label: 'High Rainfall', top: '35%', left: '25%' },
-      { icon: '🌤', label: 'Low Rainfall', top: '65%', left: '45%' },
-      { icon: '📊', label: 'Legend', top: '80%', left: '80%' }
+      { icon: '🌱', label: 'Alluvial Soil', top: '33%', left: '42%' },
+      { icon: '🧱', label: 'Black Soil', top: '50%', left: '30%' },
+      { icon: '🔴', label: 'Red & Yellow Soil', top: '56%', left: '50%' },
+      { icon: '📊', label: 'Soil Legend', top: '75%', left: '72%' }
     ]}
     whatIs={[
-      "A Thematic Map focuses on a single topic or theme.",
-      "Instead of showing landforms or borders, it shows specific data like weather, population, or crops."
+      "A Thematic Map focuses on a single specific subject, theme, or statistical distribution.",
+      "Instead of general landforms or borders, it presents specialized geographic data such as soil varieties, rainfall amounts, mineral wealth, or agricultural zones."
     ]}
     whatIsTitle="What is a Thematic Map?"
-    featuresTitle="What Can We Learn?"
+    featuresTitle="What Can We Learn from Thematic Maps?"
     features={[
-      { icon: '🌧', title: 'Rainfall', desc: 'How much it rains.' },
-      { icon: '🌡', title: 'Temperature', desc: 'How hot or cold it is.' },
-      { icon: '👥', title: 'Population', desc: 'Where people live.' },
-      { icon: '🌾', title: 'Crops', desc: 'What grows where.' },
-      { icon: '🌳', title: 'Forests', desc: 'Types of vegetation.' }
+      { icon: '🌱', title: 'Soil Types', desc: 'Distribution of fertile Alluvial, Black, Red, and Laterite soils.' },
+      { icon: '🌧', title: 'Rainfall', desc: 'Annual precipitation patterns and monsoon distribution across regions.' },
+      { icon: '🌡', title: 'Temperature', desc: 'Climatic zones, heat variations, and regional temperature ranges.' },
+      { icon: '🌾', title: 'Crops & Agriculture', desc: 'Major agricultural regions cultivating rice, wheat, and cotton crops.' },
+      { icon: '🌳', title: 'Forests & Wildlife', desc: 'Vegetation distribution including tropical evergreen and deciduous forests.' }
     ]}
     colorsTitle="Colours and Legends"
     colors={[
-      { color: '📊', desc: 'Legends explain the colors used.' },
-      { color: '🟦', desc: 'Dark blue might mean heavy rain.' },
-      { color: '🟨', desc: 'Yellow might mean low rain.' },
-      { color: '🔴', desc: 'Red might mean high temperature.' }
+      { color: '📊', desc: 'Map legends explain what each distinct colour and pattern represents.' },
+      { color: '🟩', desc: 'Light green shades highlight fertile Alluvial soils across river plains.' },
+      { color: '⬛️', desc: 'Dark grey represents fertile Black Cotton soil across the Deccan plateau.' },
+      { color: '🟥', desc: 'Red and yellow tones indicate soils formed over crystalline rocks.' },
+      { color: '🌲', desc: 'Deep green indicates Mountain and Forest soils across northern ranges.' },
+      { color: '🟨', desc: 'Yellow indicates Laterite soils developed under intense tropical rainfall.' },
+      { color: '🏜️', desc: 'Beige shades represent Arid and Desert soils across the Thar region.' }
     ]}
     whyUseTitle="Why Do We Use Thematic Maps?"
     whyUse={[
-      { icon: '☔️', desc: 'Understanding climate' },
-      { icon: '📈', desc: 'Seeing where most people live' },
-      { icon: '🚜', desc: 'Finding the best places to farm' }
+      { icon: '🚜', desc: 'Selecting suitable agricultural crops based on regional soil and climate' },
+      { icon: '☔️', desc: 'Planning water management and predicting seasonal monsoon patterns' },
+      { icon: '📈', desc: 'Analyzing natural resources, mineral reserves, and population density' }
     ]}
     remember={[
       "One map, one main idea.",
-      "Thematic maps use colors and legends to explain specific data."
+      "Thematic maps use distinct colors and a legend box to explain specific distribution data."
     ]}
-    funFact="A rainfall map and a population map of the same place can look completely different because each focuses on a different topic."
+    funFact="A soil map and a rainfall map of India cover the exact same geographic boundary, yet each reveals a completely distinct layer of scientific information!"
   />
 );

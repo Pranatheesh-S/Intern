@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Magnet, ArrowRight, Volume2, VolumeX, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Magnet, ArrowRight, Volume2, VolumeX, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
 import { voiceService, ELEVENLABS_VOICES } from '../../../../services/elevenLabsService';
 
 export default function IntroMagnets({ onBackToDashboard, onComplete }) {
@@ -11,8 +11,29 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
   const [visibleLineCount, setVisibleLineCount] = useState(1);
   const [spokenCharIndex, setSpokenCharIndex] = useState(-1);
   const [hasFinishedAudio, setHasFinishedAudio] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const delayTimerRef = useRef(null);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const scenes = [
     {
@@ -691,20 +712,76 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
             {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
             {isMuted ? 'Voice Muted' : 'Voice ON'}
           </button>
-        </div>
-      )}
 
-      {/* Bottom Left Controls */}
-      {currentPage > 1 && (
-        <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', display: 'flex', gap: '1rem', zIndex: 99999 }}>
           <button
-            onClick={handleBack}
-            style={{ padding: '0.75rem 1.5rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', color: 'white', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            onClick={toggleFullscreen}
+            style={{
+              padding: '0.6rem 1.1rem',
+              borderRadius: '30px',
+              border: '1px solid rgba(255,255,255,0.4)',
+              background: 'rgba(0,0,0,0.75)',
+              backdropFilter: 'blur(8px)',
+              color: 'white',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              fontSize: '0.85rem',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
+            }}
+            title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
           >
-            <ArrowLeft size={16} /> Back
+            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+            {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
           </button>
         </div>
       )}
+
+      {/* Bottom Left Controls - Always present, matching Next button styling & navigating to Chapter 4 flow on page 1 */}
+      <div style={{ 
+        position: 'absolute', 
+        bottom: '1.25rem', 
+        left: '1.25rem', 
+        display: 'flex', 
+        zIndex: 99999 
+      }}>
+        <button
+          onClick={() => {
+            stopSpeech();
+            if (currentPage > 1) {
+              handleBack();
+            } else if (onBackToDashboard) {
+              onBackToDashboard();
+            }
+          }}
+          style={{ 
+            padding: '0.75rem 2rem', 
+            borderRadius: '30px', 
+            border: '1px solid rgba(255,255,255,0.3)', 
+            background: 'rgba(0,0,0,0.65)', 
+            backdropFilter: 'blur(6px)', 
+            color: 'white', 
+            cursor: 'pointer', 
+            fontWeight: 'bold', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.5rem',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.05)';
+            e.currentTarget.style.background = 'rgba(0,0,0,0.85)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.background = 'rgba(0,0,0,0.65)';
+          }}
+        >
+          <ArrowLeft size={16} /> Back
+        </button>
+      </div>
 
       {/* Controls */}
       {currentPage < scenes.length ? (
@@ -737,7 +814,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
               padding: '1.1rem 2.75rem', 
               borderRadius: '40px', 
               border: 'none', 
-              background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', 
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', 
               color: '#ffffff', 
               cursor: 'pointer', 
               fontWeight: 800,
@@ -745,16 +822,16 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
-              boxShadow: '0 8px 25px rgba(244, 63, 94, 0.45)',
+              boxShadow: '0 8px 25px rgba(217, 119, 6, 0.45)',
               transition: 'all 0.25s ease'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'scale(1.05)';
-              e.currentTarget.style.boxShadow = '0 12px 30px rgba(244, 63, 94, 0.65)';
+              e.currentTarget.style.boxShadow = '0 12px 30px rgba(217, 119, 6, 0.65)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(244, 63, 94, 0.45)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(217, 119, 6, 0.45)';
             }}
           >
             Finish Story <ArrowRight size={24} color="#ffffff" />
@@ -798,7 +875,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                 fontSize: '1.15rem',
                 fontWeight: 800,
                 borderRadius: '40px',
-                background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                 color: '#ffffff',
                 border: 'none',
                 cursor: 'pointer',
@@ -806,7 +883,7 @@ export default function IntroMagnets({ onBackToDashboard, onComplete }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.75rem',
-                boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
+                boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)',
                 transition: 'all 0.25s ease',
                 marginTop: '0.5rem'
               }}

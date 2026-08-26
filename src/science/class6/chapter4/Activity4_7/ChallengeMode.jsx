@@ -140,13 +140,13 @@ export default function ChallengeMode({ onComplete }) {
                   alignItems: 'center', 
                   justifyContent: 'center',
                   gap: '0.5rem',
-                  background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: '30px',
                   fontWeight: 800,
                   cursor: 'pointer',
-                  boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)'
+                  boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)'
                 }}
               >
                 Finish Activity <ArrowRight size={18} color="#ffffff" />
@@ -167,69 +167,133 @@ export default function ChallengeMode({ onComplete }) {
       flexDirection: 'column', 
       alignItems: 'center', 
       justifyContent: 'center', 
-      padding: '1rem 0.5rem', 
+      padding: '1.5rem 1rem', 
       boxSizing: 'border-box' 
     }}>
-      <div style={{ width: '100%', maxWidth: '1050px' }}>
+      <div style={{ width: '100%', maxWidth: '1180px' }}>
         {/* Top Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', padding: '0 0.5rem' }}>
-          <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '1.1rem', fontWeight: 700 }}>
-            <Trophy size={20} style={{ color: '#facc15' }} /> Predict the Outcome
-          </h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface)', padding: '0.35rem 0.85rem', borderRadius: '20px', border: '1px solid #cbd5e1' }}>
-            <Star size={16} fill="#facc15" color="#facc15" /> 
-            <span style={{ fontWeight: '800', fontSize: '0.9rem', color: '#1e3a8a' }}>{stars} Stars</span>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          marginBottom: '1.25rem', 
+          padding: '0 0.75rem' 
+        }}>
+          <h2 style={{ 
+            margin: 0, 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.75rem', 
+            color: '#064E3B', 
+            fontSize: '1.65rem', 
+            fontWeight: 900,
+            letterSpacing: '-0.02em'
+          }}>
+            <Trophy size={30} style={{ color: '#F59E0B' }} /> Predict the Outcome
+          </h2>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.65rem', 
+            background: '#FFFFFF', 
+            padding: '0.6rem 1.4rem', 
+            borderRadius: '25px', 
+            border: '2px solid #A7F3D0',
+            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.06)'
+          }}>
+            <Star size={24} fill="#F59E0B" color="#F59E0B" /> 
+            <span style={{ fontWeight: 900, fontSize: '1.18rem', color: '#064E3B' }}>{stars} Stars</span>
           </div>
         </div>
 
-        {/* Card Container */}
+        {/* Main Card Container */}
         <div className="glass-panel" style={{ 
-          background: 'var(--surface)', 
-          border: '2px solid #818cf8',
-          borderRadius: '20px', 
-          padding: '1.75rem 2.5rem', 
-          boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
+          background: '#FFFFFF', 
+          border: '2px solid #A7F3D0',
+          borderRadius: '28px', 
+          padding: '2.75rem 3.25rem', 
+          boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '1rem',
+          gap: '1.6rem',
           width: '100%',
           boxSizing: 'border-box'
         }}>
-          <div style={{ textTransform: 'uppercase', fontSize: '0.85rem', fontWeight: '800', color: '#6366f1', letterSpacing: '0.05em' }}>
+          {/* Situation Title Badge */}
+          <div style={{ 
+            display: 'inline-flex',
+            alignItems: 'center',
+            alignSelf: 'flex-start',
+            textTransform: 'uppercase', 
+            fontSize: '1.05rem', 
+            fontWeight: 900, 
+            color: '#D97706', 
+            letterSpacing: '0.08em',
+            background: '#FEF3C7',
+            padding: '0.5rem 1.25rem',
+            borderRadius: '16px',
+            border: '1.5px solid #FCD34D'
+          }}>
             {c.title}
           </div>
           
-          <p style={{ fontSize: '1.2rem', lineHeight: '1.5', margin: 0, padding: '1rem 1.25rem', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '12px', borderLeft: '5px solid #6366f1', color: 'var(--text-heading)', fontWeight: 600 }}>
+          {/* Situation Scenario Text Box */}
+          <div style={{ 
+            fontSize: '1.45rem', 
+            lineHeight: 1.6, 
+            margin: 0, 
+            padding: '1.5rem 2rem', 
+            background: '#F0FDF4', 
+            borderRadius: '20px', 
+            border: '2px solid #A7F3D0', 
+            borderLeft: '6px solid #D97706', 
+            color: '#0F172A', 
+            fontWeight: 700,
+            letterSpacing: '-0.01em'
+          }}>
             {c.scenario}
-          </p>
-
-          <div style={{ fontWeight: '700', fontSize: '1.1rem', color: 'var(--text-heading)' }}>
-            <HelpCircle size={18} style={{ display: 'inline', verticalAlign: 'text-bottom', marginRight: '0.5rem', color: '#6366f1' }}/> 
-            {c.question}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.85rem' }}>
+          {/* Question Text */}
+          <div style={{ 
+            fontWeight: 900, 
+            fontSize: '1.38rem', 
+            color: '#064E3B', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.75rem' 
+          }}>
+            <HelpCircle size={26} style={{ color: '#D97706', flexShrink: 0 }} /> 
+            <span>{c.question}</span>
+          </div>
+
+          {/* Options Grid */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+            gap: '1.25rem' 
+          }}>
             {c.options.map((option, idx) => {
               const isSelected = selectedOption === option;
               const isCorrect = option === c.correctAnswer;
               
-              let bg = 'var(--bg)';
-              let borderColor = '#cbd5e1';
+              let bg = '#FFFFFF';
+              let borderColor = '#CBD5E1';
               let icon = null;
 
               if (showResult) {
                 if (isCorrect) {
-                  bg = 'rgba(16, 185, 129, 0.12)';
-                  borderColor = '#10b981';
-                  icon = <CheckCircle2 size={20} color="#10b981" />;
+                  bg = '#DCFCE7';
+                  borderColor = '#16A34A';
+                  icon = <CheckCircle2 size={26} color="#16A34A" />;
                 } else if (isSelected) {
-                  bg = 'rgba(239, 68, 68, 0.12)';
-                  borderColor = '#ef4444';
-                  icon = <XCircle size={20} color="#ef4444" />;
+                  bg = '#FEE2E2';
+                  borderColor = '#EF4444';
+                  icon = <XCircle size={26} color="#EF4444" />;
                 }
               } else if (isSelected) {
-                borderColor = '#6366f1';
-                bg = 'rgba(99, 102, 241, 0.08)';
+                borderColor = '#D97706';
+                bg = '#FEF3C7';
               }
 
               return (
@@ -238,19 +302,33 @@ export default function ChallengeMode({ onComplete }) {
                   onClick={() => handlePredict(option)}
                   disabled={showResult}
                   style={{
-                    padding: '0.9rem 1.35rem',
-                    borderRadius: '12px',
+                    padding: '1.4rem 1.85rem',
+                    borderRadius: '20px',
                     background: bg,
-                    border: `2px solid ${borderColor}`,
-                    color: 'var(--text)',
-                    fontSize: '1.05rem',
-                    fontWeight: '600',
+                    border: `2.5px solid ${borderColor}`,
+                    color: '#0F172A',
+                    fontSize: '1.28rem',
+                    fontWeight: 800,
                     cursor: showResult ? 'default' : 'pointer',
                     transition: 'all 0.25s ease',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    opacity: showResult && !isCorrect && !isSelected ? 0.6 : 1
+                    gap: '0.75rem',
+                    boxShadow: isSelected ? '0 6px 20px rgba(217, 119, 6, 0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
+                    opacity: showResult && !isCorrect && !isSelected ? 0.55 : 1
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!showResult) {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = '#D97706';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!showResult && !isSelected) {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.borderColor = '#CBD5E1';
+                    }
                   }}
                 >
                   <span>{option}</span>
@@ -260,18 +338,25 @@ export default function ChallengeMode({ onComplete }) {
             })}
           </div>
 
+          {/* Feedback & Explanation Box */}
           {showResult && (
-            <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ 
-                padding: '1rem 1.35rem', 
+                padding: '1.5rem 2rem', 
                 background: selectedOption === c.correctAnswer ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)', 
-                borderRadius: '14px',
-                borderLeft: `5px solid ${selectedOption === c.correctAnswer ? '#10b981' : '#ef4444'}`
+                borderRadius: '20px',
+                border: `2px solid ${selectedOption === c.correctAnswer ? '#10b981' : '#ef4444'}`,
+                borderLeftWidth: '6px'
               }}>
-                <h4 style={{ margin: '0 0 0.35rem 0', fontSize: '1.1rem', fontWeight: 800, color: selectedOption === c.correctAnswer ? '#10b981' : '#ef4444' }}>
-                  {selectedOption === c.correctAnswer ? 'Brilliant!' : 'Not quite.'}
+                <h4 style={{ 
+                  margin: '0 0 0.4rem 0', 
+                  fontSize: '1.38rem', 
+                  fontWeight: 900, 
+                  color: selectedOption === c.correctAnswer ? '#047857' : '#DC2626' 
+                }}>
+                  {selectedOption === c.correctAnswer ? '🎉 Brilliant Prediction!' : '❌ Not quite!'}
                 </h4>
-                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.5' }}>
+                <p style={{ margin: 0, color: '#334155', fontSize: '1.22rem', lineHeight: 1.55, fontWeight: 600 }}>
                   {c.explanation}
                 </p>
               </div>
@@ -280,24 +365,24 @@ export default function ChallengeMode({ onComplete }) {
                 <button
                   onClick={handleNext}
                   style={{
-                    padding: '0.75rem 2.25rem',
-                    background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)',
+                    padding: '1.05rem 3rem',
+                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '30px',
-                    fontSize: '1.15rem',
-                    fontWeight: 800,
+                    fontSize: '1.28rem',
+                    fontWeight: 900,
                     cursor: 'pointer',
-                    boxShadow: '0 6px 20px rgba(244, 63, 94, 0.45)',
+                    boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)',
                     transition: 'all 0.25s ease',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.5rem'
+                    gap: '0.65rem'
                   }}
                   onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
                 >
-                  {currentChallenge < challenges.length - 1 ? 'Next Challenge' : 'See Final Score'} <ArrowRight size={18} color="#ffffff" />
+                  {currentChallenge < challenges.length - 1 ? 'Next Challenge' : 'See Final Score'} <ArrowRight size={24} color="#ffffff" />
                 </button>
               </div>
             </div>

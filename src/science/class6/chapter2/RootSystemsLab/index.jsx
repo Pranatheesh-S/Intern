@@ -4,6 +4,28 @@ import confetti from 'canvas-confetti';
 import { useTheme } from '../../../../ThemeContext';
 import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
 
+// Excavation view (plant in pot / before digging)
+import mustard1Img from '../../../../assets/mustard_1.png';
+import grass1Img from '../../../../assets/grass_1.png';
+import hib1Img from '../../../../assets/hib_1.png';
+import marigold1Img from '../../../../assets/marigold_1.png';
+import wheat1Img from '../../../../assets/wheat_1.png';
+
+// Fully dug state
+import mustard2Img from '../../../../assets/mustard_2.png';
+import grass2Img from '../../../../assets/grass_2.png';
+import hib2Img from '../../../../assets/hib_2.png';
+import marigold2Img from '../../../../assets/marigold_2.png';
+import wheat2Img from '../../../../assets/wheat_2.png';
+
+// Root close-up (washed)
+import tap1Img from '../../../../assets/tap_1.png';
+import fib1Img from '../../../../assets/fib_1.png';
+
+const PLANT_IMG_1 = { mustard: mustard1Img, grass: grass1Img, hibiscus: hib1Img, marigold: marigold1Img, wheat: wheat1Img };
+const PLANT_IMG_2 = { mustard: mustard2Img, grass: grass2Img, hibiscus: hib2Img, marigold: marigold2Img, wheat: wheat2Img };
+const ROOT_CLOSE_IMG = { taproot: tap1Img, fibrous: fib1Img };
+
 const PLANTS = [
   { id: 'mustard', name: 'Mustard', emoji: '🌼', rootType: 'taproot', rootColor: '#b45309', potColor: '#b45309',
     desc: 'One thick main root (taproot) going deep into the soil, with many small side roots branching from it.',
@@ -447,82 +469,81 @@ export default function RootSystemsLab({ onBackToDashboard }) {
   return (
     <div style={{ display: 'flex', height: '100%', background: containerBg, color: textColor, fontFamily: 'system-ui, sans-serif', overflow: 'hidden' }}>
       {/* Left — Plant list */}
-      <aside style={{ width: 220, background: sidebarBg, borderRight: `1px solid ${sidebarBorder}`, padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', overflowY: 'auto' }}>
-        <button onClick={onBackToDashboard} style={{ background: 'none', border: 'none', color: textMuted, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8rem', padding: 0 }}>
-          <ArrowLeft size={14} /> Back
+      <aside style={{ width: 280, background: sidebarBg, borderRight: `1px solid ${sidebarBorder}`, padding: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.9rem', overflowY: 'auto' }}>
+        <button onClick={onBackToDashboard} style={{ background: 'none', border: 'none', color: isLight ? '#0f172a' : '#cbd5e1', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '1rem', fontWeight: '800', padding: 0 }}>
+          <ArrowLeft size={18} /> Back
         </button>
         <div>
-          <div style={{ fontSize: '0.65rem', color: isLight ? '#f97316' : '#f59e0b', textTransform: 'uppercase', fontWeight: 'bold' }}>Activity 2.6</div>
-          <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: textColor }}>⛏️ Root Excavation Station</div>
-          <div style={{ fontSize: '0.7rem', color: textMuted, marginTop: '0.2rem' }}>{doneCount}/{PLANTS.length} identified</div>
+          <div style={{ fontSize: '0.95rem', color: '#38bdf8', textTransform: 'uppercase', fontWeight: '900', letterSpacing: '0.06em', background: 'rgba(14, 165, 233, 0.18)', padding: '0.35rem 0.8rem', borderRadius: '8px', border: '1.5px solid rgba(56, 189, 248, 0.4)', display: 'inline-block', marginBottom: '0.4rem', boxShadow: '0 2px 10px rgba(14, 165, 233, 0.25)' }}>Activity 2.6</div>
+          <div style={{ fontSize: '1.45rem', fontWeight: '900', color: textColor, lineHeight: '1.25' }}>⛏️ Root Excavation Station</div>
+          <div style={{ fontSize: '1rem', color: isLight ? '#0f172a' : '#fef3c7', marginTop: '0.35rem', fontWeight: '800' }}>{doneCount}/{PLANTS.length} identified</div>
         </div>
-        <div style={{ height: 4, background: progressTrackBg, borderRadius: 4, overflow: 'hidden' }}>
+        <div style={{ height: 7, background: progressTrackBg, borderRadius: 4, overflow: 'hidden' }}>
           <div style={{ height: '100%', background: 'linear-gradient(90deg, #f59e0b, #84cc16)', width: `${(doneCount / PLANTS.length) * 100}%`, transition: 'width 0.5s' }} />
         </div>
-        <div style={{ fontSize: '0.7rem', color: textFaint, fontStyle: 'italic' }}>Select a plant → dig it up → wash roots → classify!</div>
+        <div style={{ fontSize: '1.02rem', color: isLight ? '#0f172a' : '#e2e8f0', fontStyle: 'italic', fontWeight: '700', lineHeight: '1.45' }}>Select a plant → dig it up → wash roots → classify!</div>
         {PLANTS.map(p => (
-          <button key={p.id} onClick={() => setSelectedPlant(p.id)} style={{ background: selectedPlant === p.id ? (isLight ? '#fed7aa' : 'rgba(180,83,9,0.2)') : (isLight ? '#ffffff' : 'rgba(255,255,255,0.03)'), border: `1px solid ${checked[p.id] === true ? 'rgba(132,204,22,0.5)' : checked[p.id] === false ? 'rgba(248,113,113,0.4)' : selectedPlant === p.id ? 'rgba(245,158,11,0.5)' : (isLight ? '#fed7aa' : 'rgba(255,255,255,0.06)')}`, borderRadius: '10px', padding: '0.75rem 0.9rem', cursor: 'pointer', color: textColor, textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.6rem', transition: 'all 0.2s' }}>
-            <span style={{ fontSize: '1.4rem' }}>{p.emoji}</span>
+          <button key={p.id} onClick={() => setSelectedPlant(p.id)} style={{ background: selectedPlant === p.id ? (isLight ? '#fed7aa' : 'rgba(180,83,9,0.3)') : (isLight ? '#ffffff' : 'rgba(255,255,255,0.08)'), border: `2.5px solid ${checked[p.id] === true ? '#22c55e' : checked[p.id] === false ? '#ef4444' : selectedPlant === p.id ? '#f59e0b' : (isLight ? '#fed7aa' : 'rgba(255,255,255,0.18)')}`, borderRadius: '12px', padding: '0.85rem 1rem', cursor: 'pointer', color: textColor, textAlign: 'left', display: 'flex', alignItems: 'center', gap: '0.75rem', transition: 'all 0.2s', boxShadow: selectedPlant === p.id ? '0 4px 14px rgba(245,158,11,0.25)' : 'none' }}>
+            <span style={{ fontSize: '1.65rem' }}>{p.emoji}</span>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '0.92rem', fontWeight: 600 }}>{p.name}</div>
-              {checked[p.id] === true && <div style={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 'bold', marginTop: '0.15rem' }}>✅ {p.rootType === 'taproot' ? 'Taproot' : 'Fibrous'}</div>}
-              {digProgress[p.id] >= 100 && !checked[p.id] && <div style={{ fontSize: '0.78rem', color: isLight ? '#ea580c' : '#f59e0b', fontWeight: 'bold', marginTop: '0.15rem' }}>⛏️ Dug up</div>}
+              <div style={{ fontSize: '1.18rem', fontWeight: 900, color: isLight ? '#0f172a' : '#f8fafc' }}>{p.name}</div>
+              {checked[p.id] === true && <div style={{ fontSize: '0.92rem', color: isLight ? '#15803d' : '#4ade80', fontWeight: '800', marginTop: '0.15rem' }}>✅ {p.rootType === 'taproot' ? 'Taproot' : 'Fibrous'}</div>}
+              {digProgress[p.id] >= 100 && !checked[p.id] && <div style={{ fontSize: '0.92rem', color: isLight ? '#ea580c' : '#f59e0b', fontWeight: '800', marginTop: '0.15rem' }}>⛏️ Dug up</div>}
             </div>
           </button>
         ))}
-        <button onClick={handleReset} style={{ marginTop: 'auto', background: 'none', border: `1px solid ${resetBtnBorder}`, color: resetBtnColor, padding: '0.4rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', fontWeight: 'bold' }}>
-          <RefreshCw size={12} /> Reset Lab
+        <button onClick={handleReset} style={{ marginTop: 'auto', background: isLight ? '#f1f5f9' : 'rgba(255,255,255,0.1)', border: `2px solid ${resetBtnBorder}`, color: isLight ? '#0f172a' : '#fef3c7', padding: '0.65rem', borderRadius: '10px', cursor: 'pointer', fontSize: '1.02rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', fontWeight: '800' }}>
+          <RefreshCw size={16} /> Reset Lab
         </button>
       </aside>
 
       {/* Main workbench */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         {!selectedPlant ? (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: textFaint, textAlign: 'center', padding: '2rem' }}>
-            <div style={{ fontSize: '3rem', opacity: 0.4 }}>⛏️</div>
-            <div style={{ fontSize: '1rem', color: textMuted, fontWeight: 'bold' }}>Select a potted plant from the left panel</div>
-            <div style={{ fontSize: '0.8rem' }}>You'll dig it up, wash the roots, and classify them!</div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+            <div style={{ background: '#0f172a', border: '2.5px solid #0284c7', boxShadow: '0 8px 32px rgba(2, 132, 199, 0.35)', padding: '2.2rem 3rem', borderRadius: '24px', maxWidth: '560px', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ fontSize: '4.5rem', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))' }}>⛏️</div>
+              <div style={{ fontSize: '1.45rem', color: '#facc15', fontWeight: '900', letterSpacing: '0.01em', lineHeight: '1.3' }}>Select a potted plant from the left panel</div>
+              <div style={{ fontSize: '1.15rem', color: '#fef08a', fontWeight: '800', lineHeight: '1.5' }}>You'll dig it up, wash the roots, and classify them!</div>
+            </div>
           </div>
         ) : (
-          <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ fontSize: '2rem' }}>{plant.emoji}</span>
+              <span style={{ fontSize: '2.4rem', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.3))' }}>{plant.emoji}</span>
               <div>
-                <div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: textColor }}>{plant.name}</div>
-                <div style={{ fontSize: '0.75rem', color: textMuted }}>Potted Herb Specimen</div>
+                <div style={{ fontWeight: '900', fontSize: '1.55rem', color: textColor }}>{plant.name}</div>
+                <div style={{ fontSize: '1.02rem', color: isLight ? '#0f172a' : '#e2e8f0', fontWeight: '700' }}>Potted Herb Specimen</div>
               </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               {/* Dig Scene */}
-              <div style={{ background: cardBg, borderRadius: '16px', padding: '1.25rem', border: `1px solid ${cardBorder}` }}>
-                <div style={{ fontSize: '0.75rem', color: isLight ? '#ea580c' : '#f59e0b', fontWeight: 'bold', marginBottom: '1rem', textTransform: 'uppercase' }}>⛏️ Excavation View</div>
-                <div style={{ position: 'relative', height: 200, background: excavationViewBg, borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                  {/* Plant above ground */}
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, display: 'flex', justifyContent: 'center', paddingTop: '0.5rem', zIndex: 4 }}>
-                    <PlantShootSVG plantId={selectedPlant} />
+              <div style={{ background: cardBg, borderRadius: '18px', padding: '1.4rem', border: `2px solid ${cardBorder}`, boxShadow: '0 6px 20px rgba(0,0,0,0.15)' }}>
+                <div style={{ fontSize: '1.02rem', color: isLight ? '#ea580c' : '#f59e0b', fontWeight: '900', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>⛏️ Excavation View</div>
+                <div style={{ position: 'relative', height: 210, background: excavationViewBg, borderRadius: '14px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                  {/* Plant above ground — realistic asset */}
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '0.25rem', zIndex: 4, filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.35))' }}>
+                    {isFullyDug
+                      ? <img src={PLANT_IMG_2[selectedPlant]} alt={plant.name + ' fully dug'} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', objectPosition: 'center bottom' }} />
+                      : <img src={PLANT_IMG_1[selectedPlant]} alt={plant.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', objectPosition: 'center bottom' }} />
+                    }
                   </div>
                   {/* Soil layers */}
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: `${100 - progress}%`, background: soilGradient, transition: 'height 0.15s', borderTop: `2px solid ${soilBorder}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: '0.25rem', fontSize: '0.65rem', color: '#ffedd5', fontWeight: 'bold', zIndex: 2 }}>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: `${100 - progress}%`, background: soilGradient, transition: 'height 0.15s', borderTop: `3px solid ${soilBorder}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: '0.35rem', fontSize: '0.85rem', color: '#ffedd5', fontWeight: '900', zIndex: 2 }}>
                     {progress < 100 && progress > 0 && '🪱 Soil...'}
                   </div>
-                  {/* Roots revealed */}
-                  {progress > 20 && (
-                    <div style={{ position: 'absolute', top: '108px', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 1, opacity: Math.min(1, (progress - 20) / 40), transition: 'opacity 0.15s' }}>
-                      <PlantRootSVG plantId={selectedPlant} color={plant.rootColor} isWashed={false} />
-                    </div>
-                  )}
                 </div>
                 {/* Dig progress */}
-                <div style={{ height: 6, background: progressTrackBg, borderRadius: 4, overflow: 'hidden', margin: '0.75rem 0' }}>
+                <div style={{ height: 8, background: progressTrackBg, borderRadius: 4, overflow: 'hidden', margin: '0.9rem 0' }}>
                   <div style={{ height: '100%', background: 'linear-gradient(90deg, #f59e0b, #84cc16)', width: `${progress}%`, transition: 'width 0.1s', borderRadius: 4 }} />
                 </div>
-                <div style={{ display: 'flex', gap: '0.75rem' }}>
-                  <button onClick={handleDig} disabled={isFullyDug || digging === selectedPlant} style={{ flex: 1, background: isFullyDug ? buttonDugBg : '#f59e0b', border: 'none', color: isFullyDug ? buttonDugText : '#1a0f05', padding: '0.6rem', borderRadius: '8px', cursor: isFullyDug ? 'default' : 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                <div style={{ display: 'flex', gap: '0.85rem' }}>
+                  <button onClick={handleDig} disabled={isFullyDug || digging === selectedPlant} style={{ flex: 1, background: isFullyDug ? buttonDugBg : '#f59e0b', border: 'none', color: isFullyDug ? buttonDugText : '#1a0f05', padding: '0.75rem 1.25rem', borderRadius: '12px', cursor: isFullyDug ? 'default' : 'pointer', fontSize: '1.08rem', fontWeight: '900', boxShadow: '0 4px 14px rgba(0,0,0,0.2)' }}>
                     {isFullyDug ? '✅ Fully Dug!' : digging === selectedPlant ? '⛏️ Digging...' : '⛏️ Dig!'}
                   </button>
                   {isFullyDug && !isWashed && (
-                    <button onClick={handleWash} style={{ flex: 1, background: '#0ea5e9', border: 'none', color: '#fff', padding: '0.6rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                    <button onClick={handleWash} style={{ flex: 1, background: '#0ea5e9', border: 'none', color: '#fff', padding: '0.75rem 1.25rem', borderRadius: '12px', cursor: 'pointer', fontSize: '1.08rem', fontWeight: '900', boxShadow: '0 4px 14px rgba(14,165,233,0.4)' }}>
                       💧 Wash Roots
                     </button>
                   )}
@@ -530,18 +551,22 @@ export default function RootSystemsLab({ onBackToDashboard }) {
               </div>
 
               {/* Root Close-up */}
-              <div style={{ background: cardBg, borderRadius: '16px', padding: '1.25rem', border: `1px solid ${isWashed ? 'rgba(132,204,22,0.3)' : cardBorder}`, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ fontSize: '0.75rem', color: isWashed ? '#16a34a' : textFaint, fontWeight: 'bold', textTransform: 'uppercase' }}>
+              <div style={{ background: cardBg, borderRadius: '18px', padding: '1.4rem', border: `2px solid ${isWashed ? 'rgba(132,204,22,0.5)' : cardBorder}`, display: 'flex', flexDirection: 'column', gap: '1rem', boxShadow: '0 6px 20px rgba(0,0,0,0.15)' }}>
+                <div style={{ fontSize: '1.02rem', color: isWashed ? '#16a34a' : textFaint, fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   {isWashed ? '🔬 Root Close-Up (Washed)' : '🪣 Wash the roots to examine'}
                 </div>
-                {!isFullyDug && <div style={{ color: textFaint, fontSize: '0.8rem', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '500' }}>Dig up the plant first!</div>}
-                {isFullyDug && !isWashed && <div style={{ color: textMuted, fontSize: '0.8rem', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '500' }}>Click "Wash Roots" to clean them for examination.</div>}
+                {!isFullyDug && <div style={{ color: textFaint, fontSize: '1.02rem', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700' }}>Dig up the plant first!</div>}
+                {isFullyDug && !isWashed && <div style={{ color: isLight ? '#0f172a' : '#f8fafc', fontSize: '1.02rem', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700' }}>Click "Wash Roots" to clean them for examination.</div>}
                 {isWashed && (
                   <>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                      <PlantRootSVG plantId={selectedPlant} color={plant.rootColor} isWashed={true} />
+                    <div style={{ display: 'flex', justifyContent: 'center', filter: 'drop-shadow(0 6px 16px rgba(0,0,0,0.45))' }}>
+                      <img
+                        src={ROOT_CLOSE_IMG[plant.rootType]}
+                        alt={plant.rootType === 'taproot' ? 'Taproot close-up' : 'Fibrous root close-up'}
+                        style={{ maxHeight: '180px', maxWidth: '100%', objectFit: 'contain' }}
+                      />
                     </div>
-                    <div style={{ background: closeUpDescBg, borderRadius: '8px', padding: '0.75rem', fontSize: '0.8rem', color: closeUpDescText, lineHeight: 1.5, border: `1px solid ${sidebarBorder}`, fontWeight: '500' }}>{plant.desc}</div>
+                    <div style={{ background: closeUpDescBg, borderRadius: '12px', padding: '0.9rem 1.1rem', fontSize: '1.12rem', color: closeUpDescText, lineHeight: 1.6, border: `2px solid ${sidebarBorder}`, fontWeight: '700' }}>{plant.desc}</div>
                   </>
                 )}
               </div>
@@ -549,27 +574,27 @@ export default function RootSystemsLab({ onBackToDashboard }) {
 
             {/* Classification */}
             {isWashed && (
-              <div style={{ background: cardBg, borderRadius: '12px', padding: '1.25rem', border: `1px solid ${sidebarBorder}` }}>
-                <div style={{ fontSize: '0.95rem', color: classificationAlertText, marginBottom: '0.85rem', fontWeight: '600' }}>
-                  Based on what you observed — classify the root system of <strong>{plant.name}</strong>:
+              <div style={{ background: cardBg, borderRadius: '16px', padding: '1.5rem', border: `2px solid ${sidebarBorder}`, boxShadow: '0 6px 20px rgba(0,0,0,0.15)' }}>
+                <div style={{ fontSize: '1.15rem', color: classificationAlertText, marginBottom: '0.95rem', fontWeight: '800' }}>
+                  Based on what you observed — classify the root system of <strong style={{ fontSize: '1.25rem', fontWeight: '900' }}>{plant.name}</strong>:
                 </div>
-                <div style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
                   {ROOT_LABELS.map(opt => (
-                    <button key={opt.id} onClick={() => !checked[selectedPlant] && setAnswers(a => ({ ...a, [selectedPlant]: opt.id }))} style={{ background: answers[selectedPlant] === opt.id ? `${opt.color}22` : optBg, border: `2px solid ${answers[selectedPlant] === opt.id ? opt.color : optBorder}`, color: answers[selectedPlant] === opt.id ? opt.color : optText, padding: '0.6rem 1.2rem', borderRadius: '10px', cursor: checked[selectedPlant] ? 'default' : 'pointer', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.2s', fontWeight: answers[selectedPlant] === opt.id ? '600' : 'normal' }}>
+                    <button key={opt.id} onClick={() => !checked[selectedPlant] && setAnswers(a => ({ ...a, [selectedPlant]: opt.id }))} style={{ background: answers[selectedPlant] === opt.id ? `${opt.color}25` : optBg, border: `3px solid ${answers[selectedPlant] === opt.id ? opt.color : optBorder}`, color: answers[selectedPlant] === opt.id ? opt.color : optText, padding: '0.75rem 1.4rem', borderRadius: '14px', cursor: checked[selectedPlant] ? 'default' : 'pointer', fontSize: '1.12rem', display: 'flex', alignItems: 'center', gap: '0.6rem', transition: 'all 0.2s', fontWeight: '800' }}>
                       {opt.icon} {opt.label}
-                      <span style={{ fontSize: '0.85rem', opacity: 0.75 }}>— {opt.desc}</span>
+                      <span style={{ fontSize: '0.95rem', opacity: 0.85, fontWeight: '700' }}>— {opt.desc}</span>
                     </button>
                   ))}
                   {answers[selectedPlant] && !checked[selectedPlant] && (
-                    <button onClick={() => handleCheck(selectedPlant)} style={{ background: '#f59e0b', border: 'none', color: '#1a0f05', padding: '0.6rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.95rem', fontWeight: 'bold' }}>
+                    <button onClick={() => handleCheck(selectedPlant)} style={{ background: '#f59e0b', border: 'none', color: '#1a0f05', padding: '0.75rem 1.75rem', borderRadius: '12px', cursor: 'pointer', fontSize: '1.15rem', fontWeight: '900', boxShadow: '0 4px 14px rgba(245,158,11,0.4)' }}>
                       Verify ✓
                     </button>
                   )}
-                  {checked[selectedPlant] === true && <span style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '0.95rem' }}>✅ Correct!</span>}
+                  {checked[selectedPlant] === true && <span style={{ color: '#16a34a', fontWeight: '900', fontSize: '1.15rem' }}>✅ Correct!</span>}
                   {checked[selectedPlant] === false && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '0.95rem' }}>❌ Look at the root diagram again.</span>
-                      <button onClick={() => { setAnswers(a => ({ ...a, [selectedPlant]: null })); setChecked(c => { const n = { ...c }; delete n[selectedPlant]; return n; }); }} style={{ background: 'none', border: '1px solid #dc2626', color: '#dc2626', padding: '0.3rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 'bold' }}>Retry</button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <span style={{ color: '#dc2626', fontWeight: '900', fontSize: '1.15rem' }}>❌ Look at the root diagram again.</span>
+                      <button onClick={() => { setAnswers(a => ({ ...a, [selectedPlant]: null })); setChecked(c => { const n = { ...c }; delete n[selectedPlant]; return n; }); }} style={{ background: 'rgba(220,38,38,0.15)', border: '2px solid #dc2626', color: '#dc2626', padding: '0.4rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.95rem', fontWeight: '800' }}>Retry</button>
                     </div>
                   )}
                 </div>

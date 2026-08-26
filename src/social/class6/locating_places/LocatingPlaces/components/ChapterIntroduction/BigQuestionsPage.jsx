@@ -144,7 +144,7 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
               boxShadow: '0 4px 14px rgba(60,40,20,0.05)',
               flexShrink: 0
             }}>
-              <p style={{ fontSize: '15px', color: '#3D2E24', lineHeight: 1.5, margin: 0, fontWeight: 600 }}>
+              <p style={{ fontSize: '15px', color: '#3D2E24', lineHeight: 1.5, margin: 0, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
                 Your home has an address, and so does every place on Earth. In this chapter you will learn how maps locate places, how latitude and longitude give each one an exact address, and why the time on the clock changes as you travel.
               </p>
             </div>
@@ -214,7 +214,7 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
 
                     {isOpen && (
                       <div style={{ marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <p style={{ margin: 0, color: '#3D2E24', fontSize: '14.5px', lineHeight: 1.5, fontWeight: 600 }}>
+                        <p style={{ margin: 0, color: '#3D2E24', fontSize: '14.5px', lineHeight: 1.5, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
                           {card.question}
                         </p>
                         <div>
@@ -235,7 +235,7 @@ export default function BigQuestionsPage({ onBack, onMissionUnlock, onBeginChapt
                 <h4 style={{ color: '#92400E', fontSize: '13px', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 800 }}>
                   Mission
                 </h4>
-                <p style={{ color: '#78350F', fontSize: '14.5px', lineHeight: 1.45, margin: 0, fontWeight: 600 }}>
+                <p style={{ color: '#78350F', fontSize: '14.5px', lineHeight: 1.45, margin: 0, fontWeight: 600, textAlign: 'justify', textJustify: 'inter-word' }}>
                   By the end of this chapter, you will be able to locate places on Earth, read maps confidently, and understand how coordinates and time help us navigate our world.
                 </p>
               </div>

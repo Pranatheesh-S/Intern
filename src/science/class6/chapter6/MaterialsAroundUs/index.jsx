@@ -100,7 +100,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       const nextIndex = currentFlowIndex + 1;
       const nextNode = chapterFlow[nextIndex];
       
-      if (nextNode && nextNode.id === 'stage2') {
+      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage7_a' || nextNode.id === 'stage8_a' || nextNode.id === 'stage8_b')) {
         setShowHandbook(false);
       } else {
         setShowHandbook(true);
@@ -422,13 +422,22 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           <button 
             onClick={onBackToDashboard} 
             className="outline" 
-            style={{ padding: '0.65rem 1.35rem', fontSize: '1.05rem', fontWeight: 'bold', gap: '0.6rem', borderRadius: '10px', display: 'flex', alignItems: 'center' }}
+            style={{ padding: '0.85rem 1.6rem', fontSize: '1.3rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', display: 'flex', alignItems: 'center' }}
           >
-            <ArrowLeft size={20} /> Dashboard
+            <ArrowLeft size={24} /> Dashboard
           </button>
 
           <button 
             onClick={() => {
+              if (currentNode.id === 'sportsball') {
+                const prevIndex = chapterFlow.findIndex(node => node.id === 'stage5');
+                if (prevIndex !== -1) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
               if (currentNode.id === 'stage5') {
                 const prevIndex = chapterFlow.findIndex(node => node.id === 'stage3_material');
                 if (prevIndex !== -1) {
@@ -456,7 +465,43 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 }
               }
 
-              if (!showHandbook && currentNode.type === 'activity') {
+              if (currentNode.id === 'stage7_a') {
+                const prevIndex = currentFlowIndex - 1;
+                if (prevIndex >= 0) {
+                  setShowHandbook(true);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (currentNode.id === 'stage7_b') {
+                const prevIndex = chapterFlow.findIndex(node => node.id === 'stage7_a');
+                if (prevIndex !== -1) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (currentNode.id === 'stage8_a') {
+                const prevIndex = currentFlowIndex - 1;
+                if (prevIndex >= 0) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (currentNode.id === 'stage8_b' || currentNode.id === 'stage8_c') {
+                const prevIndex = currentFlowIndex - 1;
+                if (prevIndex >= 0) {
+                  setShowHandbook(false);
+                  setCurrentFlowIndex(prevIndex);
+                  return;
+                }
+              }
+
+              if (!showHandbook && currentNode.type === 'activity' && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') {
                 setShowHandbook(true);
               } else if (currentFlowIndex > 0) {
                 const prevIndex = currentFlowIndex - 1;
@@ -472,9 +517,9 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               }
             }}
             className="outline"
-            style={{ padding: '0.65rem 1.35rem', fontSize: '1.05rem', fontWeight: 'bold', gap: '0.6rem', borderRadius: '10px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center' }}
+            style={{ padding: '0.85rem 1.6rem', fontSize: '1.3rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center' }}
           >
-            <ArrowLeft size={20} /> Back
+            <ArrowLeft size={24} /> Back
           </button>
         </div>
 
@@ -489,30 +534,30 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               setStageCompleted(false);
             }}
             className="outline"
-            style={{ padding: '0.65rem 1.35rem', fontSize: '1.05rem', fontWeight: 'bold', gap: '0.6rem', borderRadius: '10px', color: 'var(--danger)', borderColor: 'var(--danger-border)', display: 'flex', alignItems: 'center' }}
+            style={{ padding: '0.85rem 1.6rem', fontSize: '1.3rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--danger)', borderColor: 'var(--danger-border)', display: 'flex', alignItems: 'center' }}
           >
-            <RefreshCw size={18} /> Reset Activity
+            <RefreshCw size={22} /> Reset Activity
           </button>
 
           {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
             <button 
-              onClick={showHandbook ? () => setShowHandbook(false) : handleNext}
-              disabled={showHandbook ? false : !stageCompleted}
-              className={(showHandbook || stageCompleted) ? 'primary' : 'outline'}
+              onClick={showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c' ? () => setShowHandbook(false) : handleNext}
+              disabled={(showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') ? false : !stageCompleted}
+              className={((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'primary' : 'outline'}
               style={{ 
-                padding: '0.65rem 1.6rem', 
-                fontSize: '1.1rem', 
+                padding: '0.85rem 1.8rem', 
+                fontSize: '1.35rem', 
                 fontWeight: 'bold',
-                gap: '0.65rem', 
+                gap: '0.75rem', 
                 borderRadius: '10px',
-                opacity: (showHandbook || stageCompleted) ? 1 : 0.5,
-                cursor: (showHandbook || stageCompleted) ? 'pointer' : 'not-allowed',
+                opacity: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 1 : 0.5,
+                cursor: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'pointer' : 'not-allowed',
                 transition: 'all 0.3s',
                 display: 'flex',
                 alignItems: 'center'
               }}
             >
-              Proceed to next <ArrowRight size={22} />
+              Proceed to next <ArrowRight size={26} />
             </button>
           )}
         </div>

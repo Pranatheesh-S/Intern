@@ -790,19 +790,19 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           gridArea,
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           gap: isCompact ? '0px' : '2px',
-          border: off ? '1.5px dashed #334155' : '2px solid #F59E0B',
+          border: off ? '1.5px dashed #CBD5E1' : 'none',
           background: off
-            ? 'rgba(15,23,42,0.6)'
-            : 'linear-gradient(145deg, #D97706 0%, #B45309 100%)',
-          color: off ? '#64748B' : '#FFFFFF',
-          opacity: off ? 0.35 : 1,
+            ? '#F8FAFC'
+            : 'linear-gradient(145deg, #F59E0B 0%, #D97706 100%)',
+          color: off ? '#94A3B8' : '#FFFFFF',
+          opacity: off ? 0.45 : 1,
           borderRadius: '12px',
           padding: isCompact ? '6px 2px' : '10px 4px',
           cursor: off ? 'not-allowed' : 'pointer',
           pointerEvents: off ? 'none' : 'auto',
           fontWeight: 800,
           transition: 'all 0.15s ease',
-          boxShadow: off ? 'none' : '0 4px 14px rgba(217,119,6,0.4)',
+          boxShadow: off ? 'none' : '0 4px 14px rgba(217,119,6,0.35)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
@@ -833,7 +833,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
         padding: isMapOnlyFullscreen ? 0 : '14px',
         gap: isMapOnlyFullscreen ? 0 : '14px',
         overflow: 'hidden',
-        background: isMapOnlyFullscreen ? '#090D16' : '#0B1120',
+        background: isMapOnlyFullscreen ? '#FFFDF7' : '#F7F1E2',
         fontFamily: '"Space Grotesk", sans-serif',
         boxSizing: 'border-box'
       }}
@@ -991,10 +991,10 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           height: '100%',
           position: 'relative',
           minWidth: 0,
-          background: '#090D16',
+          background: '#FFFBEB',
           borderRadius: isMapOnlyFullscreen ? 0 : '18px',
-          border: isMapOnlyFullscreen ? 'none' : '2px solid rgba(245, 158, 11, 0.28)',
-          boxShadow: isMapOnlyFullscreen ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05)',
+          border: isMapOnlyFullscreen ? 'none' : '2px solid #FDE68A',
+          boxShadow: isMapOnlyFullscreen ? 'none' : '0 6px 24px rgba(180, 83, 9, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.6)',
           overflow: 'hidden',
           cursor: 'default'
         }}
@@ -1012,12 +1012,12 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
-          background: 'rgba(15, 23, 42, 0.94)',
+          background: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(245, 158, 11, 0.4)',
+          border: '1.5px solid #FDE68A',
           borderRadius: '12px',
           padding: '4px 6px',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.6)'
+          boxShadow: '0 4px 16px rgba(60,40,20,0.08)'
         }}>
           {/* Zoom Out Button */}
           <button
@@ -1025,9 +1025,9 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
             onClick={handleZoomOut}
             title="Zoom Out (−)"
             style={{
-              background: '#1E293B',
-              border: '1px solid #475569',
-              color: '#F59E0B',
+              background: '#FFFBEB',
+              border: '1px solid #FCD34D',
+              color: '#B45309',
               cursor: 'pointer',
               width: '28px',
               height: '28px',
@@ -1044,7 +1044,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           </button>
 
           {/* Zoom Level Indicator */}
-          <span style={{ fontSize: '11px', fontWeight: 800, color: '#F1F5F9', minWidth: '38px', textAlign: 'center', userSelect: 'none' }}>
+          <span style={{ fontSize: '11px', fontWeight: 800, color: '#78350F', minWidth: '38px', textAlign: 'center', userSelect: 'none' }}>
             {Math.round(zoom * 100)}%
           </span>
 
@@ -1054,9 +1054,9 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
             onClick={handleZoomIn}
             title="Zoom In (+)"
             style={{
-              background: '#1E293B',
-              border: '1px solid #475569',
-              color: '#F59E0B',
+              background: '#FFFBEB',
+              border: '1px solid #FCD34D',
+              color: '#B45309',
               cursor: 'pointer',
               width: '28px',
               height: '28px',
@@ -1078,9 +1078,9 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
             onClick={handleResetView}
             title="Reset View"
             style={{
-              background: '#1E293B',
-              border: '1px solid #475569',
-              color: '#94A3B8',
+              background: '#FFFBEB',
+              border: '1px solid #FDE68A',
+              color: '#78350F',
               cursor: 'pointer',
               width: '28px',
               height: '28px',
@@ -1096,7 +1096,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
             ⟲
           </button>
 
-          <div style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.2)', margin: '0 2px' }} />
+          <div style={{ width: '1px', height: '18px', background: 'rgba(217,119,6,0.2)', margin: '0 2px' }} />
 
           {/* Fullscreen Toggle Symbol Button */}
           <button
@@ -1647,17 +1647,17 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
-          background: 'rgba(15,23,42,0.92)',
-          border: '1px solid rgba(245,158,11,0.4)',
+          background: 'rgba(255, 255, 255, 0.95)',
+          border: '1.5px solid #FDE68A',
           borderRadius: '14px',
           padding: '8px 16px',
           backdropFilter: 'blur(8px)',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+          boxShadow: '0 6px 20px rgba(60, 40, 20, 0.1)',
           zIndex: 110
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <svg width="34" height="34" viewBox="-20 -20 40 40">
-              <circle r="18" fill="#1E293B" stroke="#475569" strokeWidth="1.5" />
+              <circle r="18" fill="#FFFBEB" stroke="#FDE68A" strokeWidth="1.5" />
               <g transform={`rotate(${{ N: 0, E: 90, S: 180, W: 270 }[heading]})`} style={{ transition: 'transform 0.25s ease' }}>
                 <polygon points="0,-14 4,0 0,-1" fill="#EF4444" />
                 <polygon points="0,-14 -4,0 0,-1" fill="#F87171" />
@@ -1666,16 +1666,16 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
               </g>
             </svg>
             <div>
-              <div style={{ fontSize: '9px', fontWeight: 800, color: '#94A3B8', letterSpacing: '1px' }}>HEADING</div>
-              <div style={{ fontSize: '14px', fontWeight: 900, color: '#F59E0B' }}>{DIR_WORD[heading].toUpperCase()}</div>
+              <div style={{ fontSize: '9px', fontWeight: 800, color: '#92400E', letterSpacing: '1px' }}>HEADING</div>
+              <div style={{ fontSize: '14px', fontWeight: 900, color: '#B45309' }}>{DIR_WORD[heading].toUpperCase()}</div>
             </div>
           </div>
 
-          <div style={{ width: '1px', height: '24px', background: '#334155' }} />
+          <div style={{ width: '1px', height: '24px', background: '#FDE68A' }} />
 
           <div>
-            <div style={{ fontSize: '9px', fontWeight: 800, color: '#94A3B8', letterSpacing: '1px' }}>CORRIDOR</div>
-            <div style={{ fontSize: '13px', fontWeight: 800, color: '#F1F5F9' }}>{activeStreet}</div>
+            <div style={{ fontSize: '9px', fontWeight: 800, color: '#92400E', letterSpacing: '1px' }}>CORRIDOR</div>
+            <div style={{ fontSize: '13px', fontWeight: 800, color: '#1E293B' }}>{activeStreet}</div>
           </div>
         </div>
       </div>
@@ -1686,10 +1686,10 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           width: 'clamp(340px, 26vw, 390px)',
           flexShrink: 0,
           height: '100%',
-          background: 'linear-gradient(165deg, #1E293B 0%, #0F172A 100%)',
+          background: 'linear-gradient(165deg, #FFFDF8 0%, #FEF3C7 100%)',
           borderRadius: '16px',
-          border: '2px solid rgba(245, 158, 11, 0.4)',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+          border: '2px solid #FDE68A',
+          boxShadow: '0 8px 24px rgba(180, 83, 9, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
           display: isMapOnlyFullscreen ? 'none' : 'flex',
           flexDirection: 'column',
           padding: '10px 12px',
@@ -1699,20 +1699,21 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
         }}>
           {/* Header */}
           <div style={{
-            background: 'linear-gradient(145deg, rgba(245,158,11,0.2) 0%, rgba(217,119,6,0.08) 100%)',
-            border: '1.5px solid rgba(245,158,11,0.5)',
+            background: '#FFFFFF',
+            border: '1.5px solid #FDE68A',
             borderRadius: '10px',
             padding: '6px 10px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            flexShrink: 0
+            flexShrink: 0,
+            boxShadow: '0 2px 8px rgba(60,40,20,0.04)'
           }}>
             <div>
-              <div style={{ fontSize: '8.5px', fontWeight: 900, color: '#F59E0B', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '8.5px', fontWeight: 900, color: '#B45309', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
                 📝 MAP ACTIVITY QUESTIONS
               </div>
-              <div style={{ fontSize: '11.5px', fontWeight: 900, color: '#FFFFFF', marginTop: '1px' }}>
+              <div style={{ fontSize: '11.5px', fontWeight: 900, color: '#1E293B', marginTop: '1px' }}>
                 Question {quizPage + 1} of {TOWN_MAP_QUESTIONS.length}
               </div>
             </div>
@@ -1721,13 +1722,13 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
               onClick={() => setShowQuizModal(false)}
               title="Return to Direction Controls"
               style={{
-                background: '#0F172A',
-                border: '1.5px solid rgba(245,158,11,0.5)',
+                background: '#FEF3C7',
+                border: '1px solid #FDE68A',
                 borderRadius: '7px',
                 padding: '3px 8px',
                 fontSize: '9.5px',
                 fontWeight: 800,
-                color: '#FDE68A',
+                color: '#92400E',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
               }}
@@ -1754,7 +1755,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                       ? '#F59E0B'
                       : isAnswered
                       ? '#10B981'
-                      : '#334155',
+                      : '#E2E8F0',
                     border: 'none',
                     padding: 0,
                     cursor: 'pointer',
@@ -1782,12 +1783,12 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                background: '#0F172A',
-                border: `1.5px solid ${isCorrect ? '#10B981' : picked ? '#EF4444' : '#334155'}`,
+                background: '#FFFFFF',
+                border: `1.5px solid ${isCorrect ? '#10B981' : picked ? '#EF4444' : '#FDE68A'}`,
                 borderRadius: '12px',
                 padding: '9px 11px',
                 gap: '6px',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
+                boxShadow: '0 2px 10px rgba(60,40,20,0.05)',
                 overflow: 'hidden'
               }}>
                 {/* Question Header & Category */}
@@ -1795,8 +1796,9 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                       <span style={{
-                        background: '#F59E0B',
-                        color: '#1E293B',
+                        background: '#FEF3C7',
+                        color: '#92400E',
+                        border: '1px solid #FDE68A',
                         fontSize: '9px',
                         fontWeight: 900,
                         padding: '1px 6px',
@@ -1805,15 +1807,15 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                       }}>
                         Q{quizPage + 1}
                       </span>
-                      <span style={{ fontSize: '9px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 800, color: '#78350F', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                         {q.tag}
                       </span>
                     </div>
                     {picked && (
                       <span style={{
-                        background: isCorrect ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
+                        background: isCorrect ? '#ECFDF5' : '#FEF2F2',
                         border: `1px solid ${isCorrect ? '#10B981' : '#EF4444'}`,
-                        color: isCorrect ? '#6EE7B7' : '#FCA5A5',
+                        color: isCorrect ? '#065F46' : '#991B1B',
                         fontSize: '9px',
                         fontWeight: 900,
                         padding: '1px 7px',
@@ -1824,7 +1826,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                     )}
                   </div>
 
-                  <div style={{ fontSize: '11.5px', fontWeight: 800, color: '#FFFFFF', lineHeight: 1.35 }}>
+                  <div style={{ fontSize: '11.5px', fontWeight: 800, color: '#1E293B', lineHeight: 1.35 }}>
                     {q.question}
                   </div>
                 </div>
@@ -1834,8 +1836,8 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {!isMarked ? (
                       <div style={{
-                        background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(30, 41, 59, 0.8) 100%)',
-                        border: '1.5px dashed rgba(239, 68, 68, 0.65)',
+                        background: '#FEF2F2',
+                        border: '1.5px dashed #EF4444',
                         borderRadius: '9px',
                         padding: '8px 10px',
                         display: 'flex',
@@ -1848,7 +1850,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                             width: '26px',
                             height: '26px',
                             borderRadius: '7px',
-                            background: 'rgba(239, 68, 68, 0.25)',
+                            background: '#FEE2E2',
                             border: '1.5px solid #EF4444',
                             display: 'flex',
                             alignItems: 'center',
@@ -1859,24 +1861,25 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                             🏥
                           </span>
                           <div>
-                            <div style={{ fontSize: '11px', fontWeight: 900, color: '#FCA5A5' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 900, color: '#991B1B' }}>
                               Interactive Map Action
                             </div>
-                            <div style={{ fontSize: '9.5px', color: '#94A3B8', fontWeight: 700 }}>
+                            <div style={{ fontSize: '9.5px', color: '#78350F', fontWeight: 700 }}>
                               Click the Hospital building directly on the map
                             </div>
                           </div>
                         </div>
 
                         <div style={{
-                          background: 'rgba(15, 23, 42, 0.75)',
+                          background: '#FFFFFF',
                           borderRadius: '6px',
                           padding: '5px 8px',
                           fontSize: '10px',
-                          color: '#E2E8F0',
+                          color: '#3D2E24',
                           fontWeight: 700,
                           lineHeight: 1.3,
-                          borderLeft: '3px solid #EF4444'
+                          borderLeft: '3px solid #EF4444',
+                          border: '1px solid #FEE2E2'
                         }}>
                           📍 <b>Clue:</b> South of Railway Station along West Lane (look for the building with the Red Cross 🏥 and ambulance).
                         </div>
@@ -1888,32 +1891,31 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                           gap: '6px',
                           fontSize: '9.5px',
                           fontWeight: 800,
-                          color: '#F87171',
+                          color: '#B91C1C',
                           padding: '4px 6px',
                           borderRadius: '5px',
-                          background: 'rgba(239, 68, 68, 0.15)'
+                          background: '#FEE2E2'
                         }}>
                           <span style={{
                             width: '6px',
                             height: '6px',
                             borderRadius: '50%',
                             background: '#EF4444',
-                            display: 'inline-block',
-                            boxShadow: '0 0 6px #EF4444'
+                            display: 'inline-block'
                           }} />
                           Tap / click on the Hospital in the map to answer!
                         </div>
                       </div>
                     ) : (
                       <div style={{
-                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(30, 41, 59, 0.8) 100%)',
+                        background: '#ECFDF5',
                         border: '1.5px solid #10B981',
                         borderRadius: '9px',
                         padding: '8px 10px',
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '6px',
-                        boxShadow: '0 4px 14px rgba(16, 185, 129, 0.2)'
+                        boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15)'
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1922,6 +1924,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                               height: '26px',
                               borderRadius: '7px',
                               background: '#10B981',
+                              color: '#FFFFFF',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -1931,10 +1934,10 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                               🏥
                             </span>
                             <div>
-                              <div style={{ fontSize: '11px', fontWeight: 900, color: '#6EE7B7' }}>
+                              <div style={{ fontSize: '11px', fontWeight: 900, color: '#065F46' }}>
                                 Hospital Marked on Map!
                               </div>
-                              <div style={{ fontSize: '9px', color: '#CBD5E1', fontWeight: 700 }}>
+                              <div style={{ fontSize: '9px', color: '#047857', fontWeight: 700 }}>
                                 South of Railway Station along West Lane
                               </div>
                             </div>
@@ -1953,12 +1956,12 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
 
                         <div style={{
                           fontSize: '9.5px',
-                          color: '#D1FAE5',
+                          color: '#065F46',
                           fontWeight: 700,
-                          background: 'rgba(16, 185, 129, 0.12)',
+                          background: '#D1FAE5',
                           padding: '5px 8px',
                           borderRadius: '6px',
-                          border: '1px solid rgba(16, 185, 129, 0.3)'
+                          border: '1px solid #A7F3D0'
                         }}>
                           🎯 <b>Building Highlighted:</b> The hospital is highlighted with an animated beacon and landmark badge on the map.
                         </div>
@@ -1970,23 +1973,23 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                     {q.options && q.options.map((opt, oIdx) => {
                       const isOptionPicked = picked === opt;
                       const isOptionCorrect = opt === q.answer;
-                      let bg = 'rgba(30, 41, 59, 0.6)';
-                      let border = 'rgba(51, 65, 85, 0.9)';
-                      let color = '#F1F5F9';
-                      let badgeBg = '#1E293B';
-                      let badgeColor = '#94A3B8';
+                      let bg = '#FFFBEB';
+                      let border = '#FDE68A';
+                      let color = '#78350F';
+                      let badgeBg = '#FEF3C7';
+                      let badgeColor = '#92400E';
 
                       if (picked !== null) {
                         if (isOptionCorrect) {
-                          bg = 'rgba(16, 185, 129, 0.22)';
+                          bg = '#ECFDF5';
                           border = '#10B981';
-                          color = '#FFFFFF';
+                          color = '#065F46';
                           badgeBg = '#10B981';
                           badgeColor = '#FFFFFF';
                         } else if (isOptionPicked) {
-                          bg = 'rgba(239, 68, 68, 0.22)';
+                          bg = '#FEF2F2';
                           border = '#EF4444';
-                          color = '#FCA5A5';
+                          color = '#991B1B';
                           badgeBg = '#EF4444';
                           badgeColor = '#FFFFFF';
                         }
@@ -2042,23 +2045,23 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                   <div style={{
                     padding: '6px 9px',
                     borderRadius: '7px',
-                    background: isCorrect ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                    border: `1px solid ${isCorrect ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+                    background: isCorrect ? '#ECFDF5' : '#FEF2F2',
+                    border: `1px solid ${isCorrect ? '#10B981' : '#EF4444'}`,
                     fontSize: '10px',
                     fontWeight: 700,
-                    color: isCorrect ? '#6EE7B7' : '#FCA5A5',
+                    color: isCorrect ? '#065F46' : '#991B1B',
                     lineHeight: 1.35
                   }}>
                     {isCorrect ? `✓ ${q.right}` : `✗ ${q.wrong}`}
                   </div>
                 ) : (
                   <div style={{
-                    background: 'rgba(15, 23, 42, 0.6)',
-                    border: '1px dashed #334155',
+                    background: '#FFFBEB',
+                    border: '1px dashed #FDE68A',
                     borderRadius: '7px',
                     padding: '5px 8px',
                     fontSize: '9.5px',
-                    color: '#94A3B8',
+                    color: '#78350F',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '5px'
@@ -2077,7 +2080,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '6px',
-            borderTop: '1px solid #334155',
+            borderTop: '1px solid #FDE68A',
             paddingTop: '6px',
             flexShrink: 0
           }}>
@@ -2089,9 +2092,9 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                 fontFamily: '"Space Grotesk", sans-serif',
                 fontWeight: 800,
                 fontSize: '10px',
-                background: '#0F172A',
-                color: '#94A3B8',
-                border: '1px solid #475569',
+                background: '#FEF3C7',
+                color: '#78350F',
+                border: '1px solid #FDE68A',
                 borderRadius: '7px',
                 padding: '5px 10px',
                 cursor: quizPage === 0 ? 'not-allowed' : 'pointer',
@@ -2109,7 +2112,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                     width: '6px',
                     height: '6px',
                     borderRadius: '50%',
-                    background: i === quizPage ? '#F59E0B' : '#334155',
+                    background: i === quizPage ? '#F59E0B' : '#E2E8F0',
                     transition: 'all 0.2s ease'
                   }}
                 />
@@ -2125,7 +2128,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                   fontWeight: 800,
                   fontSize: '10px',
                   background: '#F59E0B',
-                  color: '#0F172A',
+                  color: '#FFFFFF',
                   border: 'none',
                   borderRadius: '7px',
                   padding: '5px 12px',
@@ -2164,10 +2167,10 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
           width: 'clamp(340px, 26vw, 390px)',
           flexShrink: 0,
           height: '100%',
-          background: 'linear-gradient(165deg, #1E293B 0%, #0F172A 100%)',
+          background: 'linear-gradient(165deg, #FFFDF8 0%, #FEF3C7 100%)',
           borderRadius: '16px',
-          border: '2px solid rgba(245, 158, 11, 0.3)',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+          border: '2px solid #FDE68A',
+          boxShadow: '0 8px 24px rgba(180, 83, 9, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
           display: (isMapOnlyFullscreen || hideSidebar) ? 'none' : 'flex',
           flexDirection: 'column',
           padding: '8px 10px',
@@ -2177,23 +2180,23 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
         }}>
           {/* 1. Mission Card */}
           <div style={{
-            background: won
-              ? 'linear-gradient(145deg, rgba(6,78,59,0.9), rgba(6,95,70,0.9))'
-              : 'linear-gradient(145deg, rgba(245,158,11,0.18), rgba(30,41,59,0.8))',
-            border: `1.5px solid ${won ? '#10B981' : 'rgba(245,158,11,0.45)'}`,
+            background: won ? '#ECFDF5' : '#FFFFFF',
+            border: `1.5px solid ${won ? '#10B981' : '#FDE68A'}`,
             borderRadius: '10px',
             padding: '6px 8px',
-            flexShrink: 0
+            flexShrink: 0,
+            boxShadow: '0 2px 8px rgba(60, 40, 20, 0.04)'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '8.5px', fontWeight: 900, color: won ? '#6EE7B7' : '#F59E0B', letterSpacing: '0.8px' }}>
+              <span style={{ fontSize: '8.5px', fontWeight: 900, color: won ? '#065F46' : '#B45309', letterSpacing: '0.8px' }}>
                 🎯 NAVIGATION MISSION
               </span>
               <span style={{
                 fontSize: '8.5px',
                 fontWeight: 800,
-                color: won ? '#6EE7B7' : '#94A3B8',
-                background: 'rgba(15,23,42,0.6)',
+                color: won ? '#065F46' : '#92400E',
+                background: won ? '#D1FAE5' : '#FEF3C7',
+                border: `1px solid ${won ? '#A7F3D0' : '#FDE68A'}`,
                 padding: '1px 5px',
                 borderRadius: '4px'
               }}>
@@ -2201,10 +2204,10 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
               </span>
             </div>
 
-            <div style={{ fontSize: '11px', fontWeight: 700, color: '#F8FAFC', marginTop: '2px', lineHeight: 1.3 }}>
+            <div style={{ fontSize: '11px', fontWeight: 700, color: '#3D2E24', marginTop: '2px', lineHeight: 1.3 }}>
               {won
                 ? '🎉 Mission Complete! You reached the Bank.'
-                : <>Walk from <b>Railway Station</b> to <b>Bank</b>.</>}
+                : <>Walk from <b style={{ color: '#78350F' }}>Railway Station</b> to <b style={{ color: '#78350F' }}>Bank</b>.</>}
             </div>
 
             {won && (
@@ -2237,25 +2240,26 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
 
           {/* 2. Current Location Card */}
           <div style={{
-            background: 'rgba(15, 23, 42, 0.75)',
-            border: '1px solid #334155',
+            background: '#FFFFFF',
+            border: '1.5px solid #FDE68A',
             borderRadius: '10px',
             padding: '5px 8px',
-            flexShrink: 0
+            flexShrink: 0,
+            boxShadow: '0 2px 8px rgba(60, 40, 20, 0.04)'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#94A3B8', letterSpacing: '0.8px' }}>📍 CURRENT LOCATION</span>
-              <span style={{ fontSize: '8.5px', fontWeight: 800, color: '#F59E0B', background: 'rgba(245,158,11,0.2)', padding: '1px 5px', borderRadius: '4px' }}>
+              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#92400E', letterSpacing: '0.8px' }}>📍 CURRENT LOCATION</span>
+              <span style={{ fontSize: '8.5px', fontWeight: 800, color: '#92400E', background: '#FEF3C7', border: '1px solid #FDE68A', padding: '1px 5px', borderRadius: '4px' }}>
                 {activeStreet}
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
               <span style={{ fontSize: '17px', flexShrink: 0 }}>{curPlace.icon}</span>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: '11.5px', fontWeight: 900, color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <div style={{ fontSize: '11.5px', fontWeight: 900, color: '#1E293B', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {curPlace.name}
                 </div>
-                <div style={{ fontSize: '9px', color: '#94A3B8', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <div style={{ fontSize: '9px', color: '#64748B', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {curPlace.full}
                 </div>
               </div>
@@ -2264,21 +2268,22 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
 
           {/* 3. Direction Controls (D-pad) */}
           <div style={{
-            background: 'rgba(15, 23, 42, 0.75)',
-            border: '1px solid #334155',
+            background: '#FFFFFF',
+            border: '1.5px solid #FDE68A',
             borderRadius: '10px',
             padding: '5px 8px',
-            flexShrink: 0
+            flexShrink: 0,
+            boxShadow: '0 2px 8px rgba(60, 40, 20, 0.04)'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isSidebarDpadMinimized ? '0' : '3px' }}>
-              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#94A3B8', letterSpacing: '0.8px' }}>🧭 DIRECTION CONTROLS</span>
+              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#92400E', letterSpacing: '0.8px' }}>🧭 DIRECTION CONTROLS</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <button
                   type="button"
                   onClick={reset}
                   style={{
-                    background: 'transparent', border: '1px solid #475569', borderRadius: '4px',
-                    color: '#94A3B8', fontSize: '8.5px', fontWeight: 700, padding: '1px 4px', cursor: 'pointer'
+                    background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: '4px',
+                    color: '#92400E', fontSize: '8.5px', fontWeight: 700, padding: '1px 5px', cursor: 'pointer'
                   }}
                 >
                   ↺ Reset
@@ -2288,8 +2293,8 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                   onClick={() => setIsSidebarDpadMinimized(v => !v)}
                   title={isSidebarDpadMinimized ? "Expand Controls" : "Minimize Controls"}
                   style={{
-                    background: '#0F172A', border: '1px solid #475569', borderRadius: '4px',
-                    color: '#CBD5E1', fontSize: '8.5px', fontWeight: 700, padding: '1px 4px', cursor: 'pointer'
+                    background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: '4px',
+                    color: '#92400E', fontSize: '8.5px', fontWeight: 700, padding: '1px 5px', cursor: 'pointer'
                   }}
                 >
                   {isSidebarDpadMinimized ? '➕' : '➖'}
@@ -2321,8 +2326,8 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
 
           {/* 4. Places Visited Grid */}
           <div style={{
-            background: 'rgba(15, 23, 42, 0.75)',
-            border: '1px solid #334155',
+            background: '#FFFFFF',
+            border: '1.5px solid #FDE68A',
             borderRadius: '10px',
             padding: '5px 8px',
             flex: 1,
@@ -2330,10 +2335,11 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            boxShadow: '0 2px 8px rgba(60, 40, 20, 0.04)'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#F59E0B', letterSpacing: '0.8px' }}>
+              <span style={{ fontSize: '8.5px', fontWeight: 900, color: '#B45309', letterSpacing: '0.8px' }}>
                 📍 PLACES VISITED
               </span>
               <span style={{
@@ -2341,11 +2347,11 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                 fontWeight: 800,
                 color: [
                   'RS', 'AP', 'PG', 'HO', 'NP', 'BK', 'SC', 'MK', 'MU'
-                ].filter(id => visited[id]).length === 9 ? '#34D399' : '#94A3B8',
-                background: 'rgba(30, 41, 59, 0.8)',
+                ].filter(id => visited[id]).length === 9 ? '#065F46' : '#92400E',
+                background: '#FEF3C7',
+                border: '1px solid #FDE68A',
                 padding: '1px 5px',
-                borderRadius: '4px',
-                border: '1px solid rgba(255,255,255,0.08)'
+                borderRadius: '4px'
               }}>
                 {[
                   'RS', 'AP', 'PG', 'HO', 'NP', 'BK', 'SC', 'MK', 'MU'
@@ -2354,7 +2360,7 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
             </div>
 
             {/* Progress Bar */}
-            <div style={{ width: '100%', height: '3px', background: '#1E293B', borderRadius: '2px', overflow: 'hidden', marginBottom: '4px' }}>
+            <div style={{ width: '100%', height: '3px', background: '#FEF3C7', borderRadius: '2px', overflow: 'hidden', marginBottom: '4px' }}>
               <div style={{
                 width: `${([
                   'RS', 'AP', 'PG', 'HO', 'NP', 'BK', 'SC', 'MK', 'MU'
@@ -2400,22 +2406,22 @@ const TownMap3DExplorer = ({ onComplete, onNext, hideSidebar = false }) => {
                       fontSize: '9.5px',
                       fontWeight: isVisited || isCurrent ? 800 : 600,
                       background: isCurrent
-                        ? 'rgba(245, 158, 11, 0.25)'
+                        ? '#FEF3C7'
                         : isVisited
-                        ? 'rgba(16, 185, 129, 0.15)'
-                        : 'rgba(30, 41, 59, 0.5)',
+                        ? '#ECFDF5'
+                        : '#F8FAFC',
                       border: `1px solid ${
                         isCurrent
                           ? '#F59E0B'
                           : isVisited
-                          ? 'rgba(52, 211, 153, 0.4)'
-                          : 'rgba(51, 65, 85, 0.5)'
+                          ? '#A7F3D0'
+                          : '#E2E8F0'
                       }`,
                       color: isCurrent
-                        ? '#FDE68A'
+                        ? '#92400E'
                         : isVisited
-                        ? '#6EE7B7'
-                        : '#94A3B8',
+                        ? '#065F46'
+                        : '#64748B',
                       transition: 'all 0.25s ease',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
