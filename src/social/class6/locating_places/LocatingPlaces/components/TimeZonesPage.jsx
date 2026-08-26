@@ -344,10 +344,10 @@ export default function TimeZonesPage({ onNextActivity, onBack }) {
                 TIME ZONES
               </div>
               <div className="coords-content">
-                <div className="coords-task-container" style={{ justifyContent: 'flex-start', paddingTop: '10px' }}>
+                <div className="coords-task-container" style={{ justifyContent: 'flex-start', paddingTop: '74px' }}>
                   <div className="coords-hero" style={{ padding: '32px' }}>
                     <h3 style={{ marginBottom: '20px', fontSize: '28px' }}>Understanding Time Zones</h3>
-                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>
+                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7', textAlign: 'justify' }}>
                       Let’s make the globe rotate again from west to east — that is how our planet spins around its axis, making a full turn every 24 hours. A full turn is 360°, so this means 15° per hour (15 × 24 = 360).
                     </p>
                     <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>

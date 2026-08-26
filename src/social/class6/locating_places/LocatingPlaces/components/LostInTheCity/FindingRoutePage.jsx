@@ -6,7 +6,6 @@ import townMapFig from './assets/town_map_fig1.jpg';
 import townMapStraightFig from './assets/town_map_straight_3d.jpg';
 import CityExplorerMap from './CityExplorerMap';
 import TownMap3DExplorer from './TownMap3DExplorer';
-import TownMapFPPTPP from './TownMapFPPTPP';
 
 /* ── 1. CLASSIC GRID MAP CONFIG (Fig. 1.1) ─────────────────────── */
 const N_CLASSIC = {
@@ -524,22 +523,22 @@ const LiveCompassHUD = ({ angle = 0, currentDir = 'N' }) => {
       display: 'flex',
       alignItems: 'center',
       gap: '10px',
-      background: 'rgba(15, 23, 42, 0.94)',
+      background: 'rgba(255, 255, 255, 0.95)',
       backdropFilter: 'blur(8px)',
-      border: '2px solid #F5A623',
+      border: '2px solid #FDE68A',
       borderRadius: '16px',
       padding: '6px 14px 6px 10px',
-      boxShadow: '0 8px 24px rgba(0,0,0,0.35)'
+      boxShadow: '0 6px 20px rgba(60, 40, 20, 0.1)'
     }}>
       <svg width="44" height="44" viewBox="-24 -24 48 48" style={{ display: 'block', overflow: 'visible' }}>
-        <circle r="21" fill="#1E293B" stroke="#475569" strokeWidth="2" />
+        <circle r="21" fill="#FFFBEB" stroke="#FDE68A" strokeWidth="2" />
 
         <g transform={`rotate(${angle})`} style={{ transition: 'transform 0.25s ease-out' }}>
           <polygon points="0,-18 4.5,0 0,-2" fill="#EF4444" />
           <polygon points="0,-18 -4.5,0 0,-2" fill="#F87171" />
           <polygon points="0,18 4.5,0 0,2" fill="#94A3B8" />
           <polygon points="0,18 -4.5,0 0,2" fill="#CBD5E1" />
-          <circle r="3.5" fill="#F5A623" stroke="#0F172A" strokeWidth="1" />
+          <circle r="3.5" fill="#F59E0B" stroke="#FFFFFF" strokeWidth="1" />
         </g>
 
         <text
@@ -547,8 +546,7 @@ const LiveCompassHUD = ({ angle = 0, currentDir = 'N' }) => {
           textAnchor="middle"
           fontSize="7.5"
           fontWeight="900"
-          fill={activeCardinal === 'N' ? '#FEF08A' : '#EF4444'}
-          style={activeCardinal === 'N' ? { filter: 'drop-shadow(0 0 4px #FEF08A)' } : {}}
+          fill={activeCardinal === 'N' ? '#B45309' : '#EF4444'}
         >
           N
         </text>
@@ -557,8 +555,7 @@ const LiveCompassHUD = ({ angle = 0, currentDir = 'N' }) => {
           textAnchor="middle"
           fontSize="7.5"
           fontWeight="900"
-          fill={activeCardinal === 'S' ? '#FEF08A' : '#94A3B8'}
-          style={activeCardinal === 'S' ? { filter: 'drop-shadow(0 0 4px #FEF08A)' } : {}}
+          fill={activeCardinal === 'S' ? '#B45309' : '#94A3B8'}
         >
           S
         </text>
@@ -567,8 +564,7 @@ const LiveCompassHUD = ({ angle = 0, currentDir = 'N' }) => {
           textAnchor="middle"
           fontSize="7"
           fontWeight="900"
-          fill={activeCardinal === 'W' ? '#FEF08A' : '#94A3B8'}
-          style={activeCardinal === 'W' ? { filter: 'drop-shadow(0 0 4px #FEF08A)' } : {}}
+          fill={activeCardinal === 'W' ? '#B45309' : '#94A3B8'}
         >
           W
         </text>
@@ -577,23 +573,21 @@ const LiveCompassHUD = ({ angle = 0, currentDir = 'N' }) => {
           textAnchor="middle"
           fontSize="7"
           fontWeight="900"
-          fill={activeCardinal === 'E' ? '#FEF08A' : '#94A3B8'}
-          style={activeCardinal === 'E' ? { filter: 'drop-shadow(0 0 4px #FEF08A)' } : {}}
+          fill={activeCardinal === 'E' ? '#B45309' : '#94A3B8'}
         >
           E
         </text>
       </svg>
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ fontSize: '9px', fontWeight: 700, color: '#94A3B8', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+        <div style={{ fontSize: '9px', fontWeight: 800, color: '#92400E', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
           Live Compass
         </div>
         <div style={{
           fontSize: '13px',
           fontWeight: 900,
-          color: '#FEF08A',
-          letterSpacing: '0.08em',
-          textShadow: '0 0 10px rgba(254, 240, 138, 0.6)'
+          color: '#B45309',
+          letterSpacing: '0.08em'
         }}>
           HEADING: {dirFullNames[activeCardinal]}
         </div>
@@ -845,7 +839,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
   const [townCompletion, setTownCompletion] = useState(null);
 
   useEffect(() => {
-    if (!['3d', 'city', 'classic', 'fpp'].includes(mapMode)) {
+    if (!['3d', 'city', 'classic'].includes(mapMode)) {
       setMapMode('3d');
     }
   }, [mapMode]);
@@ -1259,23 +1253,6 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
               >
                 🏙️ City Explorer
               </button>
-              <button
-                type="button"
-                onClick={() => { setMapMode('fpp'); }}
-                style={{
-                  border: 'none',
-                  background: (mapMode === 'fpp') ? '#7C3AED' : 'transparent',
-                  color: (mapMode === 'fpp') ? '#ffffff' : '#5B21B6',
-                  padding: '7px 16px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s'
-                }}
-              >
-                👁️ FPP Realistic View
-              </button>
             </div>
 
             {/* LIVE COMPASS HUD: DISPLAYED ONLY ON 3D ILLUSTRATED MAP */}
@@ -1284,7 +1261,7 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
             )}
 
             {/* ── MODE 1: 3D ILLUSTRATED MAP ── */}
-            {(mapMode === '3d' || (mapMode !== 'city' && mapMode !== 'classic' && mapMode !== 'fpp')) && (
+            {(mapMode === '3d' || (mapMode !== 'city' && mapMode !== 'classic')) && (
               <div style={{ position: 'absolute', inset: 0, paddingTop: '58px', background: '#F7F1E2' }}>
                 <TownMap3DExplorer
                   hideSidebar={false}
@@ -1306,20 +1283,6 @@ export default function FindingRoutePage({ onMissionUnlock, onBeginChapter, onBa
                 <CityExplorerMap
                   onComplete={() => {
                     setWinCity(true);
-                    if (onMissionUnlock) onMissionUnlock();
-                  }}
-                  onNext={() => {
-                    if (onBeginChapter) onBeginChapter();
-                  }}
-                />
-              </div>
-            )}
-
-            {/* ── MODE 3: FPP REALISTIC VIEW ── */}
-            {mapMode === 'fpp' && (
-              <div style={{ position: 'absolute', inset: 0, paddingTop: '58px', background: '#0F172A' }}>
-                <TownMapFPPTPP
-                  onComplete={() => {
                     if (onMissionUnlock) onMissionUnlock();
                   }}
                   onNext={() => {

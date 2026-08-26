@@ -121,7 +121,7 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon, disableMoon }) =
   return (
     <group ref={globeRef} rotation={[0, currentTask === 3 ? -Math.PI / 2 : Math.PI, 0]}>
       {/* Base Globe */}
-      {(currentTask < 11 || currentTask === 16) && (
+      {(currentTask < 11 || currentTask === 16 || currentTask === 21) && (
         <Sphere args={[radius, 64, 64]}>
           <meshStandardMaterial map={colorMap} roughness={0.6} metalness={0.1} />
         </Sphere>
@@ -133,7 +133,7 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon, disableMoon }) =
       ))}
       
       {/* Graticule - Meridians */}
-      {(currentTask === 3 || currentTask === 6 || currentTask === 10 || currentTask === 16) && meridians.map((points, idx) => (
+      {(currentTask === 3 || currentTask === 6 || currentTask === 10 || currentTask === 16 || currentTask === 21) && meridians.map((points, idx) => (
         <Line key={`lon-${idx}`} points={points} color="#ffffff" lineWidth={2.5} transparent opacity={0.7} />
       ))}
 
@@ -143,7 +143,7 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon, disableMoon }) =
       ) : null}
 
       {/* Prime Meridian */}
-      {(currentTask === 2 || currentTask === 3 || currentTask === 6 || currentTask === 10 || currentTask === 16) && (
+      {(currentTask === 2 || currentTask === 3 || currentTask === 6 || currentTask === 10 || currentTask === 16 || currentTask === 21) && (
         <Line points={createLongitudeLine(0)} color="#fbbf24" lineWidth={7.5} />
       )}
 
@@ -252,6 +252,11 @@ const Globe = ({ currentTask, latVal, lonVal, gridLat, gridLon, disableMoon }) =
             <sphereGeometry args={[0.08, 16, 16]} />
             <meshBasicMaterial color="#ef4444" />
           </mesh>
+          <Html position={getPosFromLatLng(23.2, 75.8, 1.06)} center occlude style={{ pointerEvents: 'none' }}>
+            <div style={{ background: 'rgba(30,41,59,0.9)', color: '#fff', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', border: '1px solid #ef4444', transform: 'translateY(-20px)', whiteSpace: 'nowrap' }}>
+              Ujjayini (75.8°E)
+            </div>
+          </Html>
         </group>
       )}
       

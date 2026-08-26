@@ -720,7 +720,7 @@ const stepsData = [
       <span key="2"><strong>Longitude</strong> is exactly this — a measure of how far <strong>east or west</strong> of the Prime Meridian a place is.<br/><br/><span style={{opacity: 0.8}}>(Latitude measured distance <strong>north–south</strong>; longitude measures it <strong>east–west</strong>.)</span></span>
     ],
     keyIdea: <span key="ki9">Longitude measures your distance <strong>east or west</strong> of the Prime Meridian.</span>,
-    task: 2, lon: 0 
+    task: 21, lon: 0 
   },
   {
     stepNum: 10,
@@ -847,16 +847,16 @@ export default function CoordinatesPage({ onNextActivity, onBack }) {
                 UNDERSTANDING COORDINATES
               </div>
               <div className="coords-content">
-                <div className="coords-task-container" style={{ justifyContent: 'flex-start', paddingTop: '10px' }}>
+                <div className="coords-task-container" style={{ justifyContent: 'flex-start', paddingTop: '80px' }}>
                   <div className="coords-hero" style={{ padding: '32px' }}>
-                    <h3 style={{ marginBottom: '20px', fontSize: '28px' }}>Understanding Coordinates</h3>
-                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>
+                    <h3 style={{ marginBottom: '20px', fontSize: '28px' }}>Finding the Exact Spot</h3>
+                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7', textAlign: 'justify' }}>
                       Imagine a big market with neat rows of shops. If you tell a friend, "Meet me at the 7th shop in the 5th row," they can find you instantly.
                     </p>
-                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7' }}>
+                    <p style={{ marginBottom: '20px', fontSize: '18px', lineHeight: '1.7', textAlign: 'justify' }}>
                       Similarly, in a game of chess, players record their moves using letters (a-h) and numbers (1-8). By saying "d4", they pinpoint one exact square on the board.
                     </p>
-                    <p style={{ fontSize: '18px', lineHeight: '1.7' }}>
+                    <p style={{ fontSize: '18px', lineHeight: '1.7', textAlign: 'justify' }}>
                       To locate a place precisely, we always need <strong>two pieces of information</strong> to form a coordinate.
                     </p>
                   </div>

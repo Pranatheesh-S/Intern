@@ -3,11 +3,11 @@ import './CoordinatesMinigame.css';
 import worldMapUrl from './world-map.jpg';
 
 const cities = [
-  { name: "Delhi", lat: 28.6, lon: 77.2, desc: "Capital of India" },
-  { name: "Mumbai", lat: 19.1, lon: 72.9, desc: "Financial capital of India" },
-  { name: "Kolkata", lat: 22.6, lon: 88.4, desc: "City of Joy" },
-  { name: "Singapore", lat: 1.3, lon: 103.8, desc: "Island city-state in SE Asia" },
-  { name: "Paris", lat: 48.9, lon: 2.3, desc: "Capital of France" }
+  { name: "Delhi", lat: 28.6, lon: 77.2, desc: "Capital of India", flag: "🇮🇳", funFact: "Delhi's Red Fort was built by the same emperor who commissioned the Taj Mahal!" },
+  { name: "Mumbai", lat: 19.1, lon: 72.9, desc: "Financial capital of India", flag: "🇮🇳", funFact: "Mumbai was originally an archipelago of seven separate islands!" },
+  { name: "Kolkata", lat: 22.6, lon: 88.4, desc: "City of Joy", flag: "🇮🇳", funFact: "Kolkata has the oldest operating electric tram network in Asia." },
+  { name: "Singapore", lat: 1.3, lon: 103.8, desc: "Island city-state in SE Asia", flag: "🇸🇬", funFact: "Singapore consists of one main island and 63 smaller satellite islands." },
+  { name: "Paris", lat: 48.9, lon: 2.3, desc: "Capital of France", flag: "🇫🇷", funFact: "The Eiffel Tower was originally intended to be a temporary installation!" }
 ];
 
 export default function CoordinatesMinigame({ onComplete, onBack }) {
@@ -16,19 +16,25 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
   const [userLon, setUserLon] = useState(0);
   const [modalState, setModalState] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const currentCity = cities[currentCityIndex];
 
   const getTop = (lat) => `${((90 - lat) / 180) * 100}%`;
-  
   const getLeft = (lon) => `${((lon + 180) / 360) * 100}%`;
 
+  const latDiff = Math.abs(userLat - currentCity.lat);
+  const lonDiff = Math.abs(userLon - currentCity.lon);
+  const totalDiff = Math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
+  
+  let tempClass = "cold";
+  if (totalDiff < 12) tempClass = "hot";
+  else if (totalDiff < 40) tempClass = "warm";
+
   const handleConfirm = () => {
-    const latDiff = Math.abs(userLat - currentCity.lat);
-    const lonDiff = Math.abs(userLon - currentCity.lon);
-    
     if (latDiff <= 6 && lonDiff <= 6) {
       setModalState('correct');
+      setShowCelebration(true);
     } else {
       setModalState('incorrect');
     }
@@ -36,6 +42,7 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
 
   const handleNextCity = () => {
     setModalState(null);
+    setShowCelebration(false);
     if (currentCityIndex < cities.length - 1) {
       setCurrentCityIndex(c => c + 1);
       setUserLat(0);
@@ -54,7 +61,6 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
     let x = e.clientX - rect.left;
     let y = e.clientY - rect.top;
     
-    // Clamp to map boundaries
     x = Math.max(0, Math.min(x, rect.width));
     y = Math.max(0, Math.min(y, rect.height));
 
@@ -93,7 +99,7 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
             </button>
           )}
           <div className="coords-mini-chapter">CHAPTER 1 &bull; CLASS 6 SOCIAL SCIENCE</div>
-          <div className="coords-mini-title">Locating Places<br/>on the Earth</div>
+          <div className="coords-mini-title">Locating Places on the Earth</div>
         </div>
         
         <div 
@@ -103,7 +109,7 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          style={{ touchAction: 'none', cursor: 'default' }}
+          style={{ touchAction: 'none', cursor: 'crosshair' }}
         >
           <button 
             className="fullscreen-btn" 
@@ -119,6 +125,18 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
           </button>
           <img src={worldMapUrl} alt="World Map" className="coords-mini-map-image" style={{ pointerEvents: 'none', userSelect: 'none', WebkitUserSelect: 'none' }} draggable="false" />
           
+          {/* Axis Labels */}
+          {[-60, -30, 0, 30, 60].map(lat => (
+            <div key={`lat-${lat}`} className="map-axis-label lat-label" style={{ top: getTop(lat) }}>
+              {lat === 0 ? '0°' : `${Math.abs(lat)}°${lat > 0 ? 'N' : 'S'}`}
+            </div>
+          ))}
+          {[-150, -90, -30, 30, 90, 150].map(lon => (
+            <div key={`lon-${lon}`} className="map-axis-label lon-label" style={{ left: getLeft(lon) }}>
+              {lon === 0 ? '0°' : `${Math.abs(lon)}°${lon > 0 ? 'E' : 'W'}`}
+            </div>
+          ))}
+
           {/* Static Reference Lines */}
           <div className="coords-mini-equator" style={{ top: '50%' }}></div>
           <div className="coords-mini-prime-meridian" style={{ left: '50%' }}></div>
@@ -126,12 +144,13 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
           {/* Target */}
           <div className="coords-mini-target" style={{ top: getTop(currentCity.lat), left: getLeft(currentCity.lon) }}>
             <div className="target-pulse"></div>
+            {showCelebration && <div className="celebration-ripple"></div>}
           </div>
 
           {/* User Crosshairs */}
-          <div className="coords-mini-hline" style={{ top: getTop(userLat) }}></div>
-          <div className="coords-mini-vline" style={{ left: getLeft(userLon) }}></div>
-          <div className="coords-mini-user-point" style={{ top: getTop(userLat), left: getLeft(userLon) }}></div>
+          <div className={`coords-mini-hline ${tempClass}`} style={{ top: getTop(userLat) }}></div>
+          <div className={`coords-mini-vline ${tempClass}`} style={{ left: getLeft(userLon) }}></div>
+          <div className={`coords-mini-user-point ${tempClass}`} style={{ top: getTop(userLat), left: getLeft(userLon) }}></div>
         </div>
       </div>
 
@@ -149,7 +168,7 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
 
         <div className="coords-mini-city-card">
           <div className="city-card-top">
-            <h2>Find {currentCity.name}</h2>
+            <h2>Find {currentCity.name} <span className="city-flag">{currentCity.flag}</span></h2>
             <div className="city-counter">{currentCityIndex + 1} / {cities.length}</div>
           </div>
           <p className="city-target-desc">
@@ -159,29 +178,40 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
 
         <div className="coords-mini-sliders">
           <div className="slider-row">
-            <label>Latitude: {userLat}&deg;</label>
-            <label>Longitude: {userLon}&deg;</label>
+            <label>Latitude</label>
+            <label>Longitude</label>
           </div>
           
           <div className="slider-row inputs">
-            <input 
-              type="range" 
-              min="-90" 
-              max="90" 
-              value={userLat} 
-              onChange={(e) => setUserLat(Number(e.target.value))} 
-              className="styled-slider lat-slider" 
-              style={{ background: `linear-gradient(to right, #ef4444 ${((userLat + 90) / 180) * 100}%, #e2e8f0 ${((userLat + 90) / 180) * 100}%)` }}
-            />
-            <input 
-              type="range" 
-              min="-180" 
-              max="180" 
-              value={userLon} 
-              onChange={(e) => setUserLon(Number(e.target.value))} 
-              className="styled-slider lon-slider" 
-              style={{ background: `linear-gradient(to right, #38bdf8 ${((userLon + 180) / 360) * 100}%, #e2e8f0 ${((userLon + 180) / 360) * 100}%)` }}
-            />
+            <div className="slider-wrapper">
+              <div className="slider-tooltip lat-tooltip" style={{ left: `${((userLat + 90) / 180) * 100}%` }}>
+                {Math.abs(userLat)}&deg;{userLat >= 0 ? 'N' : 'S'}
+              </div>
+              <input 
+                type="range" 
+                min="-90" 
+                max="90" 
+                value={userLat} 
+                onChange={(e) => setUserLat(Number(e.target.value))} 
+                className="styled-slider lat-slider" 
+                style={{ background: `linear-gradient(to right, #ef4444 ${((userLat + 90) / 180) * 100}%, #e2e8f0 ${((userLat + 90) / 180) * 100}%)` }}
+              />
+            </div>
+            
+            <div className="slider-wrapper">
+              <div className="slider-tooltip lon-tooltip" style={{ left: `${((userLon + 180) / 360) * 100}%` }}>
+                {Math.abs(userLon)}&deg;{userLon >= 0 ? 'E' : 'W'}
+              </div>
+              <input 
+                type="range" 
+                min="-180" 
+                max="180" 
+                value={userLon} 
+                onChange={(e) => setUserLon(Number(e.target.value))} 
+                className="styled-slider lon-slider" 
+                style={{ background: `linear-gradient(to right, #38bdf8 ${((userLon + 180) / 360) * 100}%, #e2e8f0 ${((userLon + 180) / 360) * 100}%)` }}
+              />
+            </div>
           </div>
         </div>
 
@@ -201,6 +231,9 @@ export default function CoordinatesMinigame({ onComplete, onBack }) {
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
                 <h2>Correct!</h2>
+                <div className="modal-fun-fact">
+                  <strong>Fun Fact about {currentCity.name}:</strong> {currentCity.funFact}
+                </div>
                 <p>You found {currentCity.name}. {currentCityIndex < cities.length - 1 ? "Let's find the next one!" : "Mission Accomplished!"}</p>
                 <button className="modal-btn-success" onClick={handleNextCity}>Continue</button>
               </>

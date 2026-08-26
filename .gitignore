@@ -2,3 +2,5 @@ node_modules
 dist
 .claude
 .rembg-env/
+scratch/
+scratch_*

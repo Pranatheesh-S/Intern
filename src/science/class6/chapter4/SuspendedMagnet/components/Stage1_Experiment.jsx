@@ -420,12 +420,12 @@ export default function Stage1_Experiment({ onComplete }) {
 
       {/* Right Side: Guide & Control Panel */}
       <div style={{
-        flex: '0.9',
+        flex: '1.15',
         background: '#FFFFFF',
-        border: '1.5px solid #A7F3D0',
-        borderRadius: '20px',
-        padding: '1.4rem 1.5rem',
-        boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
+        border: '2px solid #A7F3D0',
+        borderRadius: '24px',
+        padding: '1.5rem 1.6rem',
+        boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -433,166 +433,233 @@ export default function Stage1_Experiment({ onComplete }) {
         minWidth: 0,
         overflowY: 'auto'
       }}>
-        {/* Complete Instructions Upfront in Initial Stage */}
-        <div style={{
-          background: '#F8FAFC',
-          border: '1.5px solid #CBD5E1',
-          borderRadius: '18px',
-          padding: '1.2rem 1.3rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.75rem',
-          boxShadow: '0 4px 14px rgba(0,0,0,0.03)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', color: '#064E3B', fontWeight: 900, fontSize: '1.05rem' }}>
-            <BookOpen size={20} color="#047857" />
-            <span>Activity Instructions</span>
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
-              <span style={{ background: '#E0F2FE', color: '#0369A1', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', fontWeight: 800, flexShrink: 0 }}>1</span>
-              <span>Click <strong>"Rotate Magnet"</strong> to spin the suspended 3D bar magnet.</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <BookOpen size={26} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900 }}>
+                Stage 1: Experiment
+              </h3>
             </div>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
-              <span style={{ background: '#E0F2FE', color: '#0369A1', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', fontWeight: 800, flexShrink: 0 }}>2</span>
-              <span>Observe which direction the red North pole and blue South pole point when the magnet settles at rest.</span>
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
-              <span style={{ background: '#E0F2FE', color: '#0369A1', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', fontWeight: 800, flexShrink: 0 }}>3</span>
-              <span>Answer the <strong>Quick Check</strong> question below to confirm your observation!</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Controls Row */}
-        <div style={{ width: '100%', display: 'flex', gap: '0.65rem' }}>
-          <button
-            onClick={handleSpin}
-            disabled={isSpinning}
-            style={{
-              flex: 1.4,
-              padding: '0.85rem 1rem',
-              fontSize: '0.92rem',
+            <span style={{
+              background: '#FEF3C7',
+              color: '#92400E',
               fontWeight: 900,
-              borderRadius: '14px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: isSpinning ? '#CBD5E1' : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: isSpinning ? '#64748B' : '#FFFFFF',
-              border: 'none',
-              cursor: isSpinning ? 'not-allowed' : 'pointer',
-              boxShadow: isSpinning ? 'none' : '0 4px 14px rgba(217, 119, 6, 0.35)',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <RotateCw size={17} className={isSpinning ? 'spin-anim' : ''} /> {isSpinning ? 'Spinning...' : 'Rotate Magnet'}
-          </button>
+              fontSize: '0.85rem',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '12px',
+              border: '1.5px solid #FDE68A'
+            }}>
+              Step {spinCount >= 1 ? (quizAnswer === 'yes' ? 3 : 2) : 1} of 3
+            </span>
+          </div>
 
-          <button
-            onClick={handleReset}
-            style={{
-              flex: 0.8,
-              padding: '0.85rem 0.8rem',
-              fontSize: '0.88rem',
-              fontWeight: 800,
-              borderRadius: '14px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '0.4rem',
-              background: '#FFFFFF',
-              color: '#1E293B',
-              border: '1.5px solid #CBD5E1',
-              cursor: 'pointer',
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)'
-            }}
-          >
-            <RotateCcw size={16} color="#1E293B" /> Restart
-          </button>
+          {/* All 3 Steps Visible From Initial Load */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {[
+              {
+                stepNum: 1,
+                title: '1. Rotate Suspended Magnet',
+                desc: 'Click "Rotate Magnet" to spin the freely suspended 3D bar magnet.'
+              },
+              {
+                stepNum: 2,
+                title: '2. Observe Natural Alignment',
+                desc: 'Watch the magnet oscillate and settle pointing in the North-South direction.'
+              },
+              {
+                stepNum: 3,
+                title: '3. Verify Quick Check',
+                desc: 'Answer the Quick Check question below to confirm your observation.'
+              }
+            ].map((s) => {
+              const currentStepNum = spinCount >= 1 ? (quizAnswer === 'yes' ? 3 : 2) : 1;
+              const isCurrent = currentStepNum === s.stepNum;
+              const isPast = currentStepNum > s.stepNum || (s.stepNum === 3 && quizAnswer === 'yes');
+
+              return (
+                <div
+                  key={s.stepNum}
+                  style={{
+                    padding: '0.95rem 1.15rem',
+                    borderRadius: '16px',
+                    background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
+                    border: isCurrent 
+                      ? '2.5px solid #F59E0B' 
+                      : isPast 
+                      ? '2px solid #10B981' 
+                      : '2px solid #CBD5E1',
+                    boxShadow: isCurrent 
+                      ? '0 6px 18px rgba(245, 158, 11, 0.2)' 
+                      : isPast 
+                      ? '0 4px 12px rgba(16, 185, 129, 0.12)' 
+                      : '0 2px 8px rgba(0,0,0,0.03)',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span style={{
+                        width: '26px',
+                        height: '26px',
+                        borderRadius: '50%',
+                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        color: '#FFFFFF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.85rem',
+                        fontWeight: 900,
+                        flexShrink: 0
+                      }}>
+                        {s.stepNum}
+                      </span>
+                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                        {s.title}
+                      </span>
+                    </div>
+                    {isPast && <CheckCircle size={20} color="#10B981" />}
+                  </div>
+                  <p style={{ margin: '0.38rem 0 0 0', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                    {s.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Action Controls Row */}
+          <div style={{ width: '100%', display: 'flex', gap: '0.75rem', marginTop: '0.2rem' }}>
+            <button
+              onClick={handleSpin}
+              disabled={isSpinning}
+              style={{
+                flex: 1.4,
+                padding: '0.95rem 1rem',
+                fontSize: '1rem',
+                fontWeight: 900,
+                borderRadius: '16px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '0.55rem',
+                background: isSpinning ? '#CBD5E1' : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                color: isSpinning ? '#64748B' : '#FFFFFF',
+                border: 'none',
+                cursor: isSpinning ? 'not-allowed' : 'pointer',
+                boxShadow: isSpinning ? 'none' : '0 4px 14px rgba(217, 119, 6, 0.35)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <RotateCw size={18} className={isSpinning ? 'spin-anim' : ''} /> {isSpinning ? 'Spinning...' : 'Rotate Magnet'}
+            </button>
+
+            <button
+              onClick={handleReset}
+              style={{
+                flex: 0.8,
+                padding: '0.95rem 0.8rem',
+                fontSize: '0.95rem',
+                fontWeight: 900,
+                borderRadius: '16px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '0.45rem',
+                background: '#FFFFFF',
+                color: '#1E293B',
+                border: '1.5px solid #CBD5E1',
+                cursor: 'pointer',
+                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <RotateCcw size={17} color="#1E293B" /> Restart
+            </button>
+          </div>
         </div>
 
-        {/* Observation Question */}
+        {/* Observation Question Card */}
         <div style={{
           background: '#F0FDF4',
-          border: '1.5px solid #A7F3D0',
-          padding: '1.1rem 1.2rem',
-          borderRadius: '18px',
+          border: '2px solid #A7F3D0',
+          padding: '1.25rem 1.4rem',
+          borderRadius: '20px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.75rem'
+          gap: '0.9rem',
+          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)'
         }}>
-          <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#064E3B', lineHeight: 1.4 }}>
+          <div style={{ fontSize: '1.02rem', fontWeight: 800, color: '#064E3B', lineHeight: 1.55 }}>
             Quick Check: Does a freely suspended magnet always settle in the North-South direction?
           </div>
-          <div style={{ display: 'flex', gap: '0.6rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
             <button
               onClick={() => handleQuizAnswer('yes')}
               style={{
                 flex: 1,
-                padding: '0.7rem 0.5rem',
-                borderRadius: '12px',
-                fontSize: '0.9rem',
-                fontWeight: 800,
+                padding: '0.85rem 0.6rem',
+                borderRadius: '14px',
+                fontSize: '0.98rem',
+                fontWeight: 900,
                 cursor: 'pointer',
                 background: quizAnswer === 'yes' ? '#059669' : '#FFFFFF',
                 color: quizAnswer === 'yes' ? '#FFFFFF' : '#1E293B',
-                border: quizAnswer === 'yes' ? '1.5px solid #059669' : '1.5px solid #CBD5E1',
+                border: quizAnswer === 'yes' ? '2px solid #059669' : '1.5px solid #CBD5E1',
                 boxShadow: quizAnswer === 'yes' ? '0 4px 12px rgba(5, 150, 105, 0.25)' : 'none',
                 transition: 'all 0.2s ease'
               }}
             >
-              Yes, Always!
+              Yes, Always! ✓
             </button>
             <button
               onClick={() => handleQuizAnswer('no')}
               style={{
                 flex: 1,
-                padding: '0.7rem 0.5rem',
-                borderRadius: '12px',
-                fontSize: '0.9rem',
-                fontWeight: 800,
+                padding: '0.85rem 0.6rem',
+                borderRadius: '14px',
+                fontSize: '0.98rem',
+                fontWeight: 900,
                 cursor: 'pointer',
                 background: quizAnswer === 'no' ? '#EF4444' : '#FFFFFF',
                 color: quizAnswer === 'no' ? '#FFFFFF' : '#1E293B',
-                border: quizAnswer === 'no' ? '1.5px solid #EF4444' : '1.5px solid #CBD5E1',
+                border: quizAnswer === 'no' ? '2px solid #EF4444' : '1.5px solid #CBD5E1',
                 transition: 'all 0.2s ease'
               }}
             >
-              No
+              No ✗
             </button>
           </div>
-        </div>
 
-        {/* Footer Navigation */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>
-            Stage 1 of 2 ● ○
-          </span>
+          {/* Proceed Button */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.4rem' }}>
+            <span style={{ fontSize: '0.88rem', color: '#047857', fontWeight: 800 }}>
+              Stage 1 of 2 ● ○
+            </span>
 
-          <button
-            onClick={onComplete}
-            disabled={!isCompleted}
-            style={{
-              padding: '0.85rem 2rem',
-              fontSize: '0.95rem',
-              fontWeight: 900,
-              borderRadius: '30px',
-              background: isCompleted ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#E2E8F0',
-              color: isCompleted ? '#FFFFFF' : '#94A3B8',
-              border: 'none',
-              cursor: isCompleted ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              boxShadow: isCompleted ? '0 4px 15px rgba(217, 119, 6, 0.4)' : 'none',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            Next <ArrowRight size={18} color={isCompleted ? '#FFFFFF' : '#94A3B8'} />
-          </button>
+            <button
+              onClick={onComplete}
+              disabled={!isCompleted}
+              style={{
+                padding: '0.85rem 2.2rem',
+                fontSize: '1rem',
+                fontWeight: 900,
+                borderRadius: '20px',
+                background: isCompleted ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#E2E8F0',
+                color: isCompleted ? '#FFFFFF' : '#94A3B8',
+                border: 'none',
+                cursor: isCompleted ? 'pointer' : 'not-allowed',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                boxShadow: isCompleted ? '0 4px 15px rgba(217, 119, 6, 0.4)' : 'none',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Next <ArrowRight size={18} color={isCompleted ? '#FFFFFF' : '#94A3B8'} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
