@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen, Maximize2, Minimize2, Play, Square } from 'lucide-react';
+import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen, Maximize2, Minimize2, Play, Square, Plus, Minus } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
@@ -168,14 +168,14 @@ function Magnet3D() {
 // ---------------------------------------------------------
 // Smooth Intro Animation Group (Bottom-Left to Center Growth)
 // ---------------------------------------------------------
-function AnimatedLabGroup({ children }) {
+function AnimatedLabGroup({ children, zoomScale = 1.0 }) {
   const groupRef = useRef();
   const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasStarted(true);
-    }, 1000);
+    }, 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -185,11 +185,11 @@ function AnimatedLabGroup({ children }) {
 
     // Initial: Positioned on the left tabletop parallel to the compass & ruler on the right
     const targetX = hasStarted ? 0 : -5.8;
-    const targetY = hasStarted ? -0.5 : -3.5;
+    const targetY = hasStarted ? -0.4 : -3.5;
     const targetZ = hasStarted ? 0 : 0.5;
-    const targetScale = hasStarted ? 0.88 : 0.10;
+    const targetScale = (hasStarted ? 0.50 : 0.08) * zoomScale;
 
-    const speed = 3.4;
+    const speed = 3.6;
     groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, dt * speed);
     groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, dt * speed);
     groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, dt * speed);
@@ -200,7 +200,7 @@ function AnimatedLabGroup({ children }) {
   });
 
   return (
-    <group ref={groupRef} position={[-5.8, -3.5, 0.5]} scale={[0.10, 0.10, 0.10]}>
+    <group ref={groupRef} position={[-5.8, -3.5, 0.5]} scale={[0.08, 0.08, 0.08]}>
       {children}
     </group>
   );
@@ -394,6 +394,11 @@ export default function Stage1_Investigate({ onComplete }) {
   const [isSprinkling, setIsSprinkling] = useState(false);
   const [isVibrating, setIsVibrating] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [zoomScale, setZoomScale] = useState(1.0);
+
+  const handleZoomIn = () => setZoomScale((z) => Math.min(2.0, +(z + 0.15).toFixed(2)));
+  const handleZoomOut = () => setZoomScale((z) => Math.max(0.45, +(z - 0.15).toFixed(2)));
+  const handleResetZoom = () => setZoomScale(1.0);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -587,7 +592,7 @@ export default function Stage1_Investigate({ onComplete }) {
                   fontSize: '1rem',
                   fontWeight: 900,
                   borderRadius: '14px',
-                  background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
                   color: '#FFFFFF',
                   border: 'none',
                   cursor: 'pointer',
@@ -595,7 +600,7 @@ export default function Stage1_Investigate({ onComplete }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.4rem',
-                  boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)'
+                  boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)'
                 }}
               >
                 OK
@@ -615,47 +620,146 @@ export default function Stage1_Investigate({ onComplete }) {
             minHeight: '380px', 
             borderRadius: '24px', 
             overflow: 'hidden', 
-            border: '1.5px solid #BAE6FD', 
-            boxShadow: '0 12px 30px rgba(2, 132, 199, 0.10)',
+            border: '1.5px solid #A7F3D0', 
+            boxShadow: '0 12px 30px rgba(6, 78, 59, 0.12)',
             backgroundImage: `url('/MagneticPoles/bg_image.jpg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
         >
-          {/* Small Fullscreen Button */}
-          <button
-            onClick={toggleFullscreen}
-            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+          {/* Floating Controls HUD: Zoom In / Zoom Out / Reset Scale / Fullscreen */}
+          <div
             style={{
               position: 'absolute',
-              top: 16,
-              right: 20,
+              top: 14,
+              right: 16,
               zIndex: 30,
-              background: 'rgba(255, 255, 255, 0.92)',
-              border: '1px solid rgba(255, 255, 255, 0.85)',
-              borderRadius: '12px',
-              padding: '7px 12px',
-              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
               gap: '6px',
-              color: '#0F172A',
-              fontSize: '0.78rem',
-              fontWeight: 800,
-              backdropFilter: 'blur(8px)',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
-              transition: 'all 0.2s ease',
+              background: 'rgba(15, 23, 42, 0.78)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '16px',
+              padding: '4px 8px',
+              backdropFilter: 'blur(12px)',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.22)',
             }}
           >
-            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
-            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
-          </button>
+            {/* Zoom Out */}
+            <button
+              onClick={handleZoomOut}
+              title="Make Smaller (Zoom Out)"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: 'none',
+                borderRadius: '10px',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <Minus size={16} color="#FFFFFF" />
+            </button>
+
+            {/* Scale % Display / Click to Reset */}
+            <button
+              onClick={handleResetZoom}
+              title="Click to Reset Size to 100%"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#F8FAFC',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                fontFamily: "'Inter', sans-serif",
+                padding: '0 6px',
+                minWidth: '52px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              {Math.round(zoomScale * 100)}%
+            </button>
+
+            {/* Zoom In */}
+            <button
+              onClick={handleZoomIn}
+              title="Make Bigger (Zoom In)"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: 'none',
+                borderRadius: '10px',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <Plus size={16} color="#FFFFFF" />
+            </button>
+
+            {/* Reset Scale Button */}
+            <button
+              onClick={handleResetZoom}
+              title="Reset Object Size"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: 'none',
+                borderRadius: '10px',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <RotateCcw size={14} color="#FFFFFF" />
+            </button>
+
+            <div style={{ width: '1px', height: '18px', background: 'rgba(255, 255, 255, 0.22)', margin: '0 2px' }} />
+
+            {/* Fullscreen Button */}
+            <button
+              onClick={toggleFullscreen}
+              title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: 'none',
+                borderRadius: '10px',
+                padding: '6px 10px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                color: '#FFFFFF',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                fontFamily: "'Inter', sans-serif",
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {isFullscreen ? <Minimize2 size={15} color="#FFFFFF" /> : <Maximize2 size={15} color="#FFFFFF" />}
+              <span>{isFullscreen ? 'Exit' : 'Fullscreen'}</span>
+            </button>
+          </div>
 
           <Canvas 
             shadows 
             gl={{ alpha: true, antialias: true }} 
-            camera={{ position: [0, 5, 24], fov: 45 }}
+            camera={{ position: [0, 5.5, 25], fov: 42 }}
           >
             <Suspense fallback={null}>
               <ambientLight intensity={0.8} />
@@ -669,7 +773,7 @@ export default function Stage1_Investigate({ onComplete }) {
               <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
               <Environment preset="city" />
 
-              <AnimatedLabGroup>
+              <AnimatedLabGroup zoomScale={zoomScale}>
                 <RotatableMagnetGroup>
                   <Magnet3D />
                   <FilingsSystem step={step} isSprinkling={isSprinkling} isVibrating={isVibrating} />
@@ -681,7 +785,7 @@ export default function Stage1_Investigate({ onComplete }) {
               </AnimatedLabGroup>
               <OrbitControls
                 makeDefault
-                target={[0, 1.2, 0]}
+                target={[0, 0.8, 0]}
                 minAzimuthAngle={0}
                 maxAzimuthAngle={0}
                 maxPolarAngle={Math.PI / 2.05}
@@ -695,36 +799,38 @@ export default function Stage1_Investigate({ onComplete }) {
         </div>
       </div>
 
-      {/* Control Panel (Activity 4.3 First Page Blue Theme) */}
+      {/* Control Panel (Activity 4.3 Theme - Champagne Background) */}
       <div style={{ 
         flex: '1.15', 
-        background: '#F0F9FF', 
-        border: '1.5px solid #BAE6FD', 
+        background: '#F7E7CE', 
+        border: '1.5px solid #E6D2AC', 
         borderRadius: '24px', 
         padding: '1.5rem 1.6rem', 
-        boxShadow: '0 8px 24px rgba(2, 132, 199, 0.06)', 
+        boxShadow: '0 4px 20px rgba(180, 140, 90, 0.12)', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
         gap: '1.1rem', 
         minWidth: 0,
-        overflowY: 'auto' 
+        overflowY: 'auto',
+        fontFamily: "'Inter', sans-serif"
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <BookOpen size={26} color="#0284C7" />
-              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#0C4A6E', fontWeight: 900 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+              <BookOpen size={28} color="#0284C7" />
+              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#0F172A', fontFamily: "'Inter', sans-serif", fontWeight: 800 }}>
                 Stage 1: Investigation
               </h3>
             </div>
             <span style={{
               background: '#E0F2FE',
               color: '#0369A1',
-              fontWeight: 900,
-              fontSize: '0.85rem',
-              padding: '0.35rem 0.75rem',
+              fontWeight: 800,
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '0.96rem',
+              padding: '0.4rem 0.85rem',
               borderRadius: '12px',
               border: '1.5px solid #BAE6FD'
             }}>
@@ -733,7 +839,7 @@ export default function Stage1_Investigate({ onComplete }) {
           </div>
 
           {/* All 3 Steps Visible From Initial Load */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {[
               {
                 stepNum: 1,
@@ -762,34 +868,40 @@ export default function Stage1_Investigate({ onComplete }) {
                     padding: '0.35rem 0',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '0.2rem',
+                    gap: '0.25rem',
                     transition: 'all 0.3s ease'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <span style={{
-                        width: '26px',
-                        height: '26px',
+                        width: '30px',
+                        height: '30px',
                         borderRadius: '50%',
                         background: isCurrent ? '#0284C7' : isPast ? '#059669' : '#64748B',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '0.85rem',
-                        fontWeight: 900,
+                        fontSize: '1rem',
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 800,
                         flexShrink: 0
                       }}>
                         {s.stepNum}
                       </span>
-                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#0369A1' : isPast ? '#065F46' : '#1E293B' }}>
+                      <span style={{ 
+                        fontWeight: 800, 
+                        fontSize: '1.22rem', 
+                        fontFamily: "'Inter', sans-serif",
+                        color: isCurrent ? '#0369A1' : isPast ? '#065F46' : '#1E293B' 
+                      }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={20} color="#10B981" />}
+                    {isPast && <CheckCircle size={22} color="#10B981" />}
                   </div>
-                  <p style={{ margin: '0.2rem 0 0 2.25rem', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.06rem', color: '#475569', lineHeight: 1.6, fontWeight: 500, fontFamily: "'Inter', sans-serif" }}>
                     {s.desc}
                   </p>
                 </div>
@@ -803,9 +915,10 @@ export default function Stage1_Investigate({ onComplete }) {
               onClick={handleToggleStartStop}
               style={{ 
                 flex: 2, 
-                padding: '0.95rem 1rem', 
-                fontSize: '1.02rem', 
-                fontWeight: 900, 
+                padding: '1.05rem 1rem', 
+                fontSize: '1.14rem', 
+                fontWeight: 800, 
+                fontFamily: "'Inter', sans-serif",
                 borderRadius: '16px', 
                 background: isRunning 
                   ? 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)' 
@@ -825,11 +938,11 @@ export default function Stage1_Investigate({ onComplete }) {
             >
               {isRunning ? (
                 <>
-                  <Square size={18} fill="#FFFFFF" color="#FFFFFF" /> Stop Investigation
+                  <Square size={20} fill="#FFFFFF" color="#FFFFFF" /> Stop Investigation
                 </>
               ) : (
                 <>
-                  <Play size={18} fill="#FFFFFF" color="#FFFFFF" /> {step === 'tapped' || step === 'complete' ? 'Replay Investigation' : 'Start Investigation'}
+                  <Play size={20} fill="#FFFFFF" color="#FFFFFF" /> {step === 'tapped' || step === 'complete' ? 'Replay Investigation' : 'Start Investigation'}
                 </>
               )}
             </button>
@@ -839,9 +952,10 @@ export default function Stage1_Investigate({ onComplete }) {
               disabled={step === 'initial' && !isRunning}
               style={{ 
                 flex: 1, 
-                padding: '0.95rem 0.5rem', 
-                fontSize: '0.98rem', 
-                fontWeight: 900, 
+                padding: '1.05rem 0.6rem', 
+                fontSize: '1.06rem', 
+                fontWeight: 800, 
+                fontFamily: "'Inter', sans-serif",
                 borderRadius: '16px', 
                 background: '#FFFFFF', 
                 color: (step !== 'initial' || isRunning) ? '#1E293B' : '#94A3B8', 
@@ -855,7 +969,7 @@ export default function Stage1_Investigate({ onComplete }) {
                 transition: 'all 0.2s ease'
               }}
             >
-              <RotateCcw size={17} /> Reset
+              <RotateCcw size={18} /> Reset
             </button>
           </div>
         </div>
@@ -864,24 +978,25 @@ export default function Stage1_Investigate({ onComplete }) {
         <div style={{ 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '0.85rem',
+          gap: '0.9rem',
           paddingTop: '0.35rem'
         }}>
-          <h4 style={{ color: '#0C4A6E', margin: 0, fontSize: '1.18rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-            <AlertCircle size={24} color="#0284C7" /> Observation Question
+          <h4 style={{ color: '#0F172A', margin: 0, fontSize: '1.32rem', fontWeight: 800, fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <AlertCircle size={26} color="#0284C7" /> Observation Question
           </h4>
-          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 700 }}>
+          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.16rem', lineHeight: 1.62, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
             Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <button
               onClick={() => handleQuizAnswer('uniformly')}
               style={{ 
-                padding: '0.95rem 1.2rem', 
+                padding: '1.05rem 1.3rem', 
                 textAlign: 'left', 
-                fontSize: '0.98rem', 
-                fontWeight: 800, 
+                fontSize: '1.1rem', 
+                fontWeight: 700, 
+                fontFamily: "'Inter', sans-serif",
                 borderRadius: '14px', 
                 cursor: 'pointer', 
                 background: quizAnswer === 'uniformly' ? '#FEE2E2' : '#FFFFFF', 
@@ -897,16 +1012,17 @@ export default function Stage1_Investigate({ onComplete }) {
               }}
             >
               <span>A) Filings stick uniformly all over</span>
-              {quizAnswer === 'uniformly' && <XCircle size={20} color="#EF4444" />}
+              {quizAnswer === 'uniformly' && <XCircle size={22} color="#EF4444" />}
             </button>
 
             <button
               onClick={() => handleQuizAnswer('ends')}
               style={{ 
-                padding: '0.95rem 1.2rem', 
+                padding: '1.05rem 1.3rem', 
                 textAlign: 'left', 
-                fontSize: '0.98rem', 
-                fontWeight: 800, 
+                fontSize: '1.1rem', 
+                fontWeight: 700, 
+                fontFamily: "'Inter', sans-serif",
                 borderRadius: '14px', 
                 cursor: 'pointer', 
                 background: (quizAnswer === 'ends' || step === 'complete') ? '#DCFCE7' : '#FFFFFF', 
@@ -922,7 +1038,7 @@ export default function Stage1_Investigate({ onComplete }) {
               }}
             >
               <span>B) Most filings cluster at the two ends (Poles)</span>
-              {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={20} color="#16A34A" />}
+              {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={22} color="#16A34A" />}
             </button>
           </div>
 
@@ -935,9 +1051,10 @@ export default function Stage1_Investigate({ onComplete }) {
                 disabled={!isReadyToProceed}
                 style={{ 
                   width: '100%', 
-                  padding: '1rem', 
-                  fontSize: '1.05rem', 
-                  fontWeight: 900, 
+                  padding: '1.08rem', 
+                  fontSize: '1.15rem', 
+                  fontWeight: 800, 
+                  fontFamily: "'Inter', sans-serif",
                   borderRadius: '16px', 
                   background: isReadyToProceed 
                     ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' 
@@ -954,14 +1071,14 @@ export default function Stage1_Investigate({ onComplete }) {
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center', 
-                  gap: '0.55rem',
+                  gap: '0.6rem',
                   boxShadow: isReadyToProceed 
                     ? '0 4px 16px rgba(2, 132, 199, 0.4)' 
                     : 'none',
                   transition: 'all 0.25s ease'
                 }}
               >
-                Proceed to Stage 2 <ArrowRight size={20} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
+                Proceed to Stage 2 <ArrowRight size={22} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
               </button>
             );
           })()}

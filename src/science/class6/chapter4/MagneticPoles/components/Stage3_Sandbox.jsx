@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, OrbitControls, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Hand, RotateCcw, Shapes, Flag, BookOpen, Maximize2, Minimize2, CheckCircle, ArrowRight, Play, Square } from 'lucide-react';
+import { Hand, RotateCcw, Shapes, Flag, BookOpen, Maximize2, Minimize2, CheckCircle, ArrowRight, Play, Square, Plus, Minus } from 'lucide-react';
 import * as THREE from 'three';
 
 // ---------------------------------------------------------
@@ -316,14 +316,14 @@ function RingMagnet3D() {
 // ---------------------------------------------------------
 // Smooth Intro Animation Group (Bottom-Left to Center Growth)
 // ---------------------------------------------------------
-function AnimatedLabGroup({ children }) {
+function AnimatedLabGroup({ children, zoomScale = 1.0 }) {
   const groupRef = useRef();
   const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasStarted(true);
-    }, 1000);
+    }, 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -333,11 +333,11 @@ function AnimatedLabGroup({ children }) {
 
     // Initial: Positioned on the left tabletop parallel to the compass & ruler on the right
     const targetX = hasStarted ? 0 : -5.8;
-    const targetY = hasStarted ? -0.5 : -3.5;
+    const targetY = hasStarted ? -0.4 : -3.5;
     const targetZ = hasStarted ? 0 : 0.5;
-    const targetScale = hasStarted ? 0.88 : 0.10;
+    const targetScale = (hasStarted ? 0.50 : 0.08) * zoomScale;
 
-    const speed = 3.4;
+    const speed = 3.6;
     groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, dt * speed);
     groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, dt * speed);
     groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, dt * speed);
@@ -348,7 +348,7 @@ function AnimatedLabGroup({ children }) {
   });
 
   return (
-    <group ref={groupRef} position={[-5.8, -3.5, 0.5]} scale={[0.10, 0.10, 0.10]}>
+    <group ref={groupRef} position={[-5.8, -3.5, 0.5]} scale={[0.08, 0.08, 0.08]}>
       {children}
     </group>
   );
@@ -543,6 +543,11 @@ export default function Stage3_Sandbox({ onComplete }) {
   const [isSprinkling, setIsSprinkling] = useState(false);
   const [isVibrating, setIsVibrating] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [zoomScale, setZoomScale] = useState(1.0);
+
+  const handleZoomIn = () => setZoomScale((z) => Math.min(2.0, +(z + 0.15).toFixed(2)));
+  const handleZoomOut = () => setZoomScale((z) => Math.max(0.45, +(z - 0.15).toFixed(2)));
+  const handleResetZoom = () => setZoomScale(1.0);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -699,41 +704,140 @@ export default function Stage3_Sandbox({ onComplete }) {
             backgroundPosition: 'center',
           }}
         >
-          {/* Small Fullscreen Button */}
-          <button
-            onClick={toggleFullscreen}
-            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+          {/* Floating Controls HUD: Zoom In / Zoom Out / Reset Scale / Fullscreen */}
+          <div
             style={{
               position: 'absolute',
-              top: 16,
-              right: 20,
+              top: 14,
+              right: 16,
               zIndex: 30,
-              background: 'rgba(255, 255, 255, 0.92)',
-              border: '1px solid rgba(255, 255, 255, 0.85)',
-              borderRadius: '12px',
-              padding: '7px 12px',
-              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
               gap: '6px',
-              color: '#0F172A',
-              fontSize: '0.78rem',
-              fontWeight: 800,
-              backdropFilter: 'blur(8px)',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
-              transition: 'all 0.2s ease',
+              background: 'rgba(15, 23, 42, 0.78)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '16px',
+              padding: '4px 8px',
+              backdropFilter: 'blur(12px)',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.22)',
             }}
           >
-            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
-            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
-          </button>
+            {/* Zoom Out */}
+            <button
+              onClick={handleZoomOut}
+              title="Make Smaller (Zoom Out)"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: 'none',
+                borderRadius: '10px',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <Minus size={16} color="#FFFFFF" />
+            </button>
+
+            {/* Scale % Display / Click to Reset */}
+            <button
+              onClick={handleResetZoom}
+              title="Click to Reset Size to 100%"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#F8FAFC',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                fontFamily: "'Inter', sans-serif",
+                padding: '0 6px',
+                minWidth: '52px',
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              {Math.round(zoomScale * 100)}%
+            </button>
+
+            {/* Zoom In */}
+            <button
+              onClick={handleZoomIn}
+              title="Make Bigger (Zoom In)"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: 'none',
+                borderRadius: '10px',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <Plus size={16} color="#FFFFFF" />
+            </button>
+
+            {/* Reset Scale Button */}
+            <button
+              onClick={handleResetZoom}
+              title="Reset Object Size"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: 'none',
+                borderRadius: '10px',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <RotateCcw size={14} color="#FFFFFF" />
+            </button>
+
+            <div style={{ width: '1px', height: '18px', background: 'rgba(255, 255, 255, 0.22)', margin: '0 2px' }} />
+
+            {/* Fullscreen Button */}
+            <button
+              onClick={toggleFullscreen}
+              title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: 'none',
+                borderRadius: '10px',
+                padding: '6px 10px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                color: '#FFFFFF',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                fontFamily: "'Inter', sans-serif",
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {isFullscreen ? <Minimize2 size={15} color="#FFFFFF" /> : <Maximize2 size={15} color="#FFFFFF" />}
+              <span>{isFullscreen ? 'Exit' : 'Fullscreen'}</span>
+            </button>
+          </div>
 
           {/* 3D Canvas Scene matching Stage 1 Camera & Lights */}
           <Canvas
             shadows
             gl={{ alpha: true, antialias: true }}
-            camera={{ position: [0, 5, 24], fov: 45 }}
+            camera={{ position: [0, 5.5, 25], fov: 42 }}
             style={{ width: '100%', height: '100%' }}
           >
             <Suspense fallback={null}>
@@ -748,7 +852,7 @@ export default function Stage3_Sandbox({ onComplete }) {
               <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
               <Environment preset="city" />
 
-              <AnimatedLabGroup>
+              <AnimatedLabGroup zoomScale={zoomScale}>
                 <RotatableMagnetGroup>
                   {/* Render Selected 3D Magnet */}
                   {shape === 'bar' && <BarMagnet3D />}
@@ -776,10 +880,9 @@ export default function Stage3_Sandbox({ onComplete }) {
                   color="#000000"
                 />
               </AnimatedLabGroup>
-
               <OrbitControls
                 makeDefault
-                target={[0, 1.2, 0]}
+                target={[0, 0.8, 0]}
                 minAzimuthAngle={0}
                 maxAzimuthAngle={0}
                 maxPolarAngle={Math.PI / 2.05}
@@ -793,47 +896,49 @@ export default function Stage3_Sandbox({ onComplete }) {
         </div>
       </div>
 
-      {/* Right Side: Control Panel (Activity 4.3 Theme) */}
+      {/* Right Side: Control Panel (Activity 4.3 Theme - Champagne Background) */}
       <div
         style={{
           flex: '1.15',
-          background: '#FFFBEB',
-          border: 'none',
+          background: '#F7E7CE',
+          border: '1.5px solid #E6D2AC',
           borderRadius: '24px',
           padding: '1.5rem 1.6rem',
-          boxShadow: 'none',
+          boxShadow: '0 4px 20px rgba(180, 140, 90, 0.12)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           gap: '1.1rem',
           minWidth: 0,
           overflowY: 'auto',
+          fontFamily: "'Inter', sans-serif"
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <Shapes size={26} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+              <Shapes size={28} color="#0284C7" />
+              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#0F172A', fontFamily: "'Inter', sans-serif", fontWeight: 800 }}>
                 Stage 3: Other Magnet Shapes
               </h3>
             </div>
             <span style={{
-              background: '#FEF3C7',
-              color: '#92400E',
-              fontWeight: 900,
-              fontSize: '0.85rem',
-              padding: '0.35rem 0.75rem',
+              background: '#E0F2FE',
+              color: '#0369A1',
+              fontWeight: 800,
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '0.96rem',
+              padding: '0.4rem 0.85rem',
               borderRadius: '12px',
-              border: '1.5px solid #FDE68A'
+              border: '1.5px solid #BAE6FD'
             }}>
               Step {step === 'tapped' ? 3 : step === 'scattered' ? 2 : 1} of 3
             </span>
           </div>
 
           {/* All 3 Steps Visible From Initial Load */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
             {[
               {
                 stepNum: 1,
@@ -862,34 +967,40 @@ export default function Stage3_Sandbox({ onComplete }) {
                     padding: '0.35rem 0',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '0.2rem',
+                    gap: '0.25rem',
                     transition: 'all 0.3s ease'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <span style={{
-                        width: '26px',
-                        height: '26px',
+                        width: '30px',
+                        height: '30px',
                         borderRadius: '50%',
-                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        background: isCurrent ? '#0284C7' : isPast ? '#059669' : '#64748B',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '0.85rem',
-                        fontWeight: 900,
+                        fontSize: '1rem',
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 800,
                         flexShrink: 0
                       }}>
                         {s.stepNum}
                       </span>
-                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                      <span style={{ 
+                        fontWeight: 800, 
+                        fontSize: '1.22rem', 
+                        fontFamily: "'Inter', sans-serif",
+                        color: isCurrent ? '#0369A1' : isPast ? '#065F46' : '#1E293B' 
+                      }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={20} color="#10B981" />}
+                    {isPast && <CheckCircle size={22} color="#10B981" />}
                   </div>
-                  <p style={{ margin: '0.2rem 0 0 2.25rem', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.06rem', color: '#475569', lineHeight: 1.6, fontWeight: 500, fontFamily: "'Inter', sans-serif" }}>
                     {s.desc}
                   </p>
                 </div>
@@ -902,22 +1013,23 @@ export default function Stage3_Sandbox({ onComplete }) {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.65rem',
+              gap: '0.75rem',
               padding: '0.2rem 0',
             }}
           >
             <h4
               style={{
-                color: '#064E3B',
+                color: '#0F172A',
                 margin: 0,
-                fontSize: '1.05rem',
-                fontWeight: 900,
+                fontSize: '1.18rem',
+                fontWeight: 800,
+                fontFamily: "'Inter', sans-serif",
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
+                gap: '0.55rem',
               }}
             >
-              <Shapes size={20} color="#047857" /> Choose Magnet Shape
+              <Shapes size={22} color="#0284C7" /> Choose Magnet Shape
             </h4>
 
             <div style={{ display: 'flex', gap: '0.65rem' }}>
@@ -925,17 +1037,18 @@ export default function Stage3_Sandbox({ onComplete }) {
                 onClick={() => handleShapeChange('horseshoe')}
                 style={{
                   flex: 1,
-                  padding: '0.8rem 0.5rem',
+                  padding: '0.88rem 0.6rem',
                   borderRadius: '14px',
                   border: '2px solid',
-                  borderColor: shape === 'horseshoe' ? '#16A34A' : '#CBD5E1',
-                  background: shape === 'horseshoe' ? '#DCFCE7' : '#FFFFFF',
-                  color: shape === 'horseshoe' ? '#065F46' : '#1E293B',
-                  fontWeight: 900,
-                  fontSize: '0.95rem',
+                  borderColor: shape === 'horseshoe' ? '#0284C7' : '#CBD5E1',
+                  background: shape === 'horseshoe' ? '#E0F2FE' : '#FFFFFF',
+                  color: shape === 'horseshoe' ? '#0369A1' : '#1E293B',
+                  fontWeight: 800,
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: '1.08rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: shape === 'horseshoe' ? '0 3px 10px rgba(22, 163, 74, 0.25)' : 'none',
+                  boxShadow: shape === 'horseshoe' ? '0 3px 10px rgba(2, 132, 199, 0.25)' : 'none',
                 }}
               >
                 Horseshoe 🧲
@@ -945,17 +1058,18 @@ export default function Stage3_Sandbox({ onComplete }) {
                 onClick={() => handleShapeChange('ring')}
                 style={{
                   flex: 1,
-                  padding: '0.8rem 0.5rem',
+                  padding: '0.88rem 0.6rem',
                   borderRadius: '14px',
                   border: '2px solid',
-                  borderColor: shape === 'ring' ? '#16A34A' : '#CBD5E1',
-                  background: shape === 'ring' ? '#DCFCE7' : '#FFFFFF',
-                  color: shape === 'ring' ? '#065F46' : '#1E293B',
-                  fontWeight: 900,
-                  fontSize: '0.95rem',
+                  borderColor: shape === 'ring' ? '#0284C7' : '#CBD5E1',
+                  background: shape === 'ring' ? '#E0F2FE' : '#FFFFFF',
+                  color: shape === 'ring' ? '#0369A1' : '#1E293B',
+                  fontWeight: 800,
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: '1.08rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: shape === 'ring' ? '0 3px 10px rgba(22, 163, 74, 0.25)' : 'none',
+                  boxShadow: shape === 'ring' ? '0 3px 10px rgba(2, 132, 199, 0.25)' : 'none',
                 }}
               >
                 Ring ⭕
@@ -965,17 +1079,18 @@ export default function Stage3_Sandbox({ onComplete }) {
                 onClick={() => handleShapeChange('bar')}
                 style={{
                   flex: 1,
-                  padding: '0.8rem 0.5rem',
+                  padding: '0.88rem 0.6rem',
                   borderRadius: '14px',
                   border: '2px solid',
-                  borderColor: shape === 'bar' ? '#16A34A' : '#CBD5E1',
-                  background: shape === 'bar' ? '#DCFCE7' : '#FFFFFF',
-                  color: shape === 'bar' ? '#065F46' : '#1E293B',
-                  fontWeight: 900,
-                  fontSize: '0.95rem',
+                  borderColor: shape === 'bar' ? '#0284C7' : '#CBD5E1',
+                  background: shape === 'bar' ? '#E0F2FE' : '#FFFFFF',
+                  color: shape === 'bar' ? '#0369A1' : '#1E293B',
+                  fontWeight: 800,
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: '1.08rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: shape === 'bar' ? '0 3px 10px rgba(22, 163, 74, 0.25)' : 'none',
+                  boxShadow: shape === 'bar' ? '0 3px 10px rgba(2, 132, 199, 0.25)' : 'none',
                 }}
               >
                 Bar 🔲
@@ -989,13 +1104,14 @@ export default function Stage3_Sandbox({ onComplete }) {
               onClick={handleToggleStartStop}
               style={{
                 flex: 2,
-                padding: '0.95rem 1rem',
-                fontSize: '1.02rem',
-                fontWeight: 900,
+                padding: '1.05rem 1rem',
+                fontSize: '1.14rem',
+                fontWeight: 800,
+                fontFamily: "'Inter', sans-serif",
                 borderRadius: '16px',
                 background: isRunning
                   ? 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)'
-                  : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  : 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
                 color: '#FFFFFF',
                 border: 'none',
                 cursor: 'pointer',
@@ -1005,17 +1121,17 @@ export default function Stage3_Sandbox({ onComplete }) {
                 gap: '8px',
                 boxShadow: isRunning
                   ? '0 4px 14px rgba(239, 68, 68, 0.35)'
-                  : '0 4px 14px rgba(217, 119, 6, 0.35)',
+                  : '0 4px 14px rgba(2, 132, 199, 0.35)',
                 transition: 'all 0.2s ease',
               }}
             >
               {isRunning ? (
                 <>
-                  <Square size={18} fill="#FFFFFF" color="#FFFFFF" /> Stop Investigation
+                  <Square size={20} fill="#FFFFFF" color="#FFFFFF" /> Stop Investigation
                 </>
               ) : (
                 <>
-                  <Play size={18} fill="#FFFFFF" color="#FFFFFF" /> {step === 'tapped' ? 'Replay Investigation' : 'Start Investigation'}
+                  <Play size={20} fill="#FFFFFF" color="#FFFFFF" /> {step === 'tapped' ? 'Replay Investigation' : 'Start Investigation'}
                 </>
               )}
             </button>
@@ -1025,9 +1141,10 @@ export default function Stage3_Sandbox({ onComplete }) {
               disabled={step === 'initial' && !isRunning}
               style={{
                 flex: 1,
-                padding: '0.95rem 0.5rem',
-                fontSize: '0.98rem',
-                fontWeight: 900,
+                padding: '1.05rem 0.6rem',
+                fontSize: '1.06rem',
+                fontWeight: 800,
+                fontFamily: "'Inter', sans-serif",
                 borderRadius: '16px',
                 background: '#FFFFFF',
                 color: (step !== 'initial' || isRunning) ? '#1E293B' : '#94A3B8',
@@ -1041,7 +1158,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                 transition: 'all 0.2s ease',
               }}
             >
-              <RotateCcw size={17} /> Reset
+              <RotateCcw size={18} /> Reset
             </button>
           </div>
         </div>
@@ -1051,47 +1168,49 @@ export default function Stage3_Sandbox({ onComplete }) {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.85rem',
+            gap: '0.9rem',
             paddingTop: '0.35rem',
           }}
         >
           <h4
             style={{
-              color: '#064E3B',
+              color: '#0F172A',
               margin: 0,
-              fontSize: '1.18rem',
-              fontWeight: 900,
+              fontSize: '1.32rem',
+              fontWeight: 800,
+              fontFamily: "'Inter', sans-serif",
               display: 'flex',
               alignItems: 'center',
-              gap: '0.55rem',
+              gap: '0.6rem',
             }}
           >
-            <Shapes size={22} color="#D97706" /> Observation Summary
+            <Shapes size={24} color="#0284C7" /> Observation Summary
           </h4>
-          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 700 }}>
+          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.16rem', lineHeight: 1.62, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
             Do all magnet shapes exhibit the same concentration of magnetic poles?
           </p>
           <ul
             style={{
               margin: 0,
-              paddingLeft: '1.25rem',
-              color: '#334155',
+              paddingLeft: '1.35rem',
+              color: '#475569',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.45rem',
-              fontSize: '0.94rem',
-              lineHeight: '1.5',
-              fontWeight: 600,
+              gap: '0.5rem',
+              fontSize: '1.06rem',
+              lineHeight: '1.6',
+              fontWeight: 500,
+              fontFamily: "'Inter', sans-serif"
             }}
           >
             <li>
-              <strong>Horseshoe:</strong> Filings cluster tightly at both curved tips.
+              <strong style={{ color: '#0F172A' }}>Horseshoe:</strong> Filings cluster tightly at both curved tips.
             </li>
             <li>
-              <strong>Ring:</strong> Filings concentrate on opposite circular pole faces.
+              <strong style={{ color: '#0F172A' }}>Ring:</strong> Filings concentrate on opposite circular pole faces.
             </li>
             <li>
-              <strong>Bar:</strong> Filings gather heavily at the two distant ends.
+              <strong style={{ color: '#0F172A' }}>Bar:</strong> Filings gather heavily at the two distant ends.
             </li>
           </ul>
 
@@ -1102,23 +1221,24 @@ export default function Stage3_Sandbox({ onComplete }) {
               }}
               style={{
                 width: '100%',
-                padding: '1rem',
-                fontSize: '1.05rem',
-                fontWeight: 900,
+                padding: '1.08rem',
+                fontSize: '1.15rem',
+                fontWeight: 800,
+                fontFamily: "'Inter', sans-serif",
                 borderRadius: '16px',
-                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
                 color: '#FFFFFF',
                 border: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 4px 16px rgba(217, 119, 6, 0.4)',
+                boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.55rem',
+                gap: '0.6rem',
                 transition: 'all 0.25s ease',
               }}
             >
-              <Flag size={20} color="#FFFFFF" /> Finish Activity & Proceed to Quiz
+              <Flag size={22} color="#FFFFFF" /> Finish Activity & Proceed to Quiz
             </button>
           </div>
         </div>

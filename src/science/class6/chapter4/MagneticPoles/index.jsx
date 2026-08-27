@@ -45,31 +45,28 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
 
   return (
     <div style={{ 
-      width: '100%', 
-      height: 'calc(100vh - 16px)', 
-      maxHeight: '100vh', 
-      margin: '0 auto', 
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw', 
+      height: '100vh', 
+      zIndex: 101,
       display: 'flex', 
       flexDirection: 'column', 
       overflow: 'hidden',
       boxSizing: 'border-box',
       padding: '0.65rem 0.85rem',
       backgroundColor: '#FFFFFF',
-      position: 'relative',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
     }}>
 
-      {/* Top Header Bar */}
+      {/* Top Header Bar (Orange Theme) */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
-        padding: '0.65rem 1.25rem',
-        marginBottom: '0.65rem',
-        background: '#FFFFFF',
-        border: activeTab === 'investigate' ? '2px solid #BAE6FD' : '2px solid #A7F3D0',
-        borderRadius: '24px',
-        boxShadow: activeTab === 'investigate' ? '0 6px 24px rgba(2, 132, 199, 0.08)' : '0 6px 24px rgba(6, 78, 59, 0.07)',
+        padding: '0.2rem 0.5rem',
+        marginBottom: '0.5rem',
         flexShrink: 0,
         position: 'relative',
         zIndex: 100
@@ -82,19 +79,16 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
             padding: '0.6rem 1.15rem', 
             fontSize: '0.92rem', 
             gap: '0.5rem',
-            background: activeTab === 'investigate' 
-              ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' 
-              : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+            background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
             color: '#FFFFFF',
             border: 'none',
             borderRadius: '14px',
-            fontWeight: 900,
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            boxShadow: activeTab === 'investigate' 
-              ? '0 4px 14px rgba(2, 132, 199, 0.35)' 
-              : '0 4px 14px rgba(217, 119, 6, 0.35)',
+            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
             transition: 'all 0.2s ease'
           }}
         >
@@ -106,33 +100,34 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
           <h2 style={{ 
             margin: 0, 
             fontSize: '1.42rem', 
-            fontWeight: 900, 
+            fontWeight: 800, 
+            fontFamily: "'Inter', sans-serif",
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
             gap: '0.65rem', 
-            color: activeTab === 'investigate' ? '#0C4A6E' : '#064E3B', 
+            color: '#0F172A', 
             letterSpacing: '-0.02em' 
           }}>
-            <Compass size={28} style={{ color: activeTab === 'investigate' ? '#0284C7' : '#D97706' }} />
+            <Compass size={28} style={{ color: '#D97706' }} />
             Activity 4.3: Poles of Magnet
           </h2>
           <span style={{ 
             fontSize: '0.88rem', 
-            color: activeTab === 'investigate' ? '#0369A1' : '#047857', 
-            fontWeight: 800 
+            color: '#D97706', 
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 700 
           }}>
             Class 6 Science — Observe iron filings & magnetic poles
           </span>
         </div>
 
         {/* Right: Tabbed Navigation Bar */}
-        <nav className="tabs-container" style={{ display: 'flex', gap: '0.5rem', margin: 0 }}>
+        <nav className="tabs-container" style={{ display: 'flex', gap: '0.5rem', margin: 0, background: '#FFFBEB', border: '1.5px solid #FDE68A', borderRadius: '28px', padding: '0.25rem' }}>
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isCompleted = progress[tab.id];
             const isActive = activeTab === tab.id;
-            const isBlueTheme = activeTab === 'investigate';
             
             return (
               <button
@@ -145,22 +140,15 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.45rem',
-                  padding: '0.6rem 1.15rem',
+                  padding: '0.55rem 1.1rem',
                   fontSize: '0.92rem',
-                  fontWeight: 900,
-                  borderRadius: '25px',
-                  background: isActive 
-                    ? (isBlueTheme 
-                        ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' 
-                        : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)') 
-                    : '#FFFFFF',
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 800,
+                  borderRadius: '24px',
+                  background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
                   color: isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#334155',
                   border: isActive ? 'none' : '1.5px solid #CBD5E1',
-                  boxShadow: isActive 
-                    ? (isBlueTheme 
-                        ? '0 4px 14px rgba(2, 132, 199, 0.35)' 
-                        : '0 4px 14px rgba(217, 119, 6, 0.35)') 
-                    : '0 2px 8px rgba(0,0,0,0.05)',
+                  boxShadow: isActive ? '0 4px 14px rgba(217, 119, 6, 0.35)' : '0 2px 8px rgba(0,0,0,0.04)',
                   transition: 'all 0.2s ease'
                 }}
               >
