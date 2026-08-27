@@ -64,8 +64,12 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
-        padding: '0.2rem 0.5rem',
-        marginBottom: '0.5rem',
+        padding: '0.65rem 1.25rem',
+        marginBottom: '0.65rem',
+        background: '#FFFFFF',
+        border: activeTab === 'investigate' ? '2px solid #BAE6FD' : '2px solid #A7F3D0',
+        borderRadius: '24px',
+        boxShadow: activeTab === 'investigate' ? '0 6px 24px rgba(2, 132, 199, 0.08)' : '0 6px 24px rgba(6, 78, 59, 0.07)',
         flexShrink: 0,
         position: 'relative',
         zIndex: 100
@@ -78,7 +82,9 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
             padding: '0.6rem 1.15rem', 
             fontSize: '0.92rem', 
             gap: '0.5rem',
-            background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+            background: activeTab === 'investigate' 
+              ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' 
+              : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
             color: '#FFFFFF',
             border: 'none',
             borderRadius: '14px',
@@ -86,7 +92,9 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
+            boxShadow: activeTab === 'investigate' 
+              ? '0 4px 14px rgba(2, 132, 199, 0.35)' 
+              : '0 4px 14px rgba(217, 119, 6, 0.35)',
             transition: 'all 0.2s ease'
           }}
         >
@@ -95,11 +103,27 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
 
         {/* Center: Title & Subtitle */}
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '1.42rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.65rem', color: '#064E3B', letterSpacing: '-0.02em' }}>
-            <Compass size={28} style={{ color: '#D97706' }} />
+          <h2 style={{ 
+            margin: 0, 
+            fontSize: '1.42rem', 
+            fontWeight: 900, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '0.65rem', 
+            color: activeTab === 'investigate' ? '#0C4A6E' : '#064E3B', 
+            letterSpacing: '-0.02em' 
+          }}>
+            <Compass size={28} style={{ color: activeTab === 'investigate' ? '#0284C7' : '#D97706' }} />
             Activity 4.3: Poles of Magnet
           </h2>
-          <span style={{ fontSize: '0.88rem', color: '#047857', fontWeight: 800 }}>Class 6 Science — Observe iron filings & magnetic poles</span>
+          <span style={{ 
+            fontSize: '0.88rem', 
+            color: activeTab === 'investigate' ? '#0369A1' : '#047857', 
+            fontWeight: 800 
+          }}>
+            Class 6 Science — Observe iron filings & magnetic poles
+          </span>
         </div>
 
         {/* Right: Tabbed Navigation Bar */}
@@ -108,6 +132,7 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
             const Icon = tab.icon;
             const isCompleted = progress[tab.id];
             const isActive = activeTab === tab.id;
+            const isBlueTheme = activeTab === 'investigate';
             
             return (
               <button
@@ -124,10 +149,18 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
                   fontSize: '0.92rem',
                   fontWeight: 900,
                   borderRadius: '25px',
-                  background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
+                  background: isActive 
+                    ? (isBlueTheme 
+                        ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' 
+                        : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)') 
+                    : '#FFFFFF',
                   color: isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#334155',
                   border: isActive ? 'none' : '1.5px solid #CBD5E1',
-                  boxShadow: isActive ? '0 4px 14px rgba(217, 119, 6, 0.35)' : '0 2px 8px rgba(0,0,0,0.05)',
+                  boxShadow: isActive 
+                    ? (isBlueTheme 
+                        ? '0 4px 14px rgba(2, 132, 199, 0.35)' 
+                        : '0 4px 14px rgba(217, 119, 6, 0.35)') 
+                    : '0 2px 8px rgba(0,0,0,0.05)',
                   transition: 'all 0.2s ease'
                 }}
               >

@@ -587,7 +587,7 @@ export default function Stage1_Investigate({ onComplete }) {
                   fontSize: '1rem',
                   fontWeight: 900,
                   borderRadius: '14px',
-                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
                   color: '#FFFFFF',
                   border: 'none',
                   cursor: 'pointer',
@@ -595,7 +595,7 @@ export default function Stage1_Investigate({ onComplete }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.4rem',
-                  boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)'
+                  boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)'
                 }}
               >
                 OK
@@ -615,8 +615,8 @@ export default function Stage1_Investigate({ onComplete }) {
             minHeight: '380px', 
             borderRadius: '24px', 
             overflow: 'hidden', 
-            border: '1.5px solid #A7F3D0', 
-            boxShadow: '0 12px 30px rgba(6, 78, 59, 0.12)',
+            border: '1.5px solid #BAE6FD', 
+            boxShadow: '0 12px 30px rgba(2, 132, 199, 0.10)',
             backgroundImage: `url('/MagneticPoles/bg_image.jpg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
@@ -695,14 +695,14 @@ export default function Stage1_Investigate({ onComplete }) {
         </div>
       </div>
 
-      {/* Control Panel (Activity 4.3 Theme) */}
+      {/* Control Panel (Activity 4.3 First Page Blue Theme) */}
       <div style={{ 
         flex: '1.15', 
-        background: '#FFFBEB', 
-        border: 'none', 
+        background: '#F0F9FF', 
+        border: '1.5px solid #BAE6FD', 
         borderRadius: '24px', 
         padding: '1.5rem 1.6rem', 
-        boxShadow: 'none', 
+        boxShadow: '0 8px 24px rgba(2, 132, 199, 0.06)', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
@@ -714,19 +714,19 @@ export default function Stage1_Investigate({ onComplete }) {
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <BookOpen size={26} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900 }}>
+              <BookOpen size={26} color="#0284C7" />
+              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#0C4A6E', fontWeight: 900 }}>
                 Stage 1: Investigation
               </h3>
             </div>
             <span style={{
-              background: '#FEF3C7',
-              color: '#92400E',
+              background: '#E0F2FE',
+              color: '#0369A1',
               fontWeight: 900,
               fontSize: '0.85rem',
               padding: '0.35rem 0.75rem',
               borderRadius: '12px',
-              border: '1.5px solid #FDE68A'
+              border: '1.5px solid #BAE6FD'
             }}>
               Step {(step === 'tapped' || step === 'complete') ? 3 : step === 'scattered' ? 2 : 1} of 3
             </span>
@@ -772,7 +772,7 @@ export default function Stage1_Investigate({ onComplete }) {
                         width: '26px',
                         height: '26px',
                         borderRadius: '50%',
-                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        background: isCurrent ? '#0284C7' : isPast ? '#059669' : '#64748B',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
@@ -783,7 +783,7 @@ export default function Stage1_Investigate({ onComplete }) {
                       }}>
                         {s.stepNum}
                       </span>
-                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#0369A1' : isPast ? '#065F46' : '#1E293B' }}>
                         {s.title}
                       </span>
                     </div>
@@ -809,7 +809,7 @@ export default function Stage1_Investigate({ onComplete }) {
                 borderRadius: '16px', 
                 background: isRunning 
                   ? 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)' 
-                  : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', 
+                  : 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)', 
                 color: '#FFFFFF', 
                 border: 'none', 
                 cursor: 'pointer', 
@@ -819,7 +819,7 @@ export default function Stage1_Investigate({ onComplete }) {
                 gap: '8px',
                 boxShadow: isRunning 
                   ? '0 4px 14px rgba(239, 68, 68, 0.35)' 
-                  : '0 4px 14px rgba(217, 119, 6, 0.35)',
+                  : '0 4px 14px rgba(2, 132, 199, 0.35)',
                 transition: 'all 0.2s ease'
               }}
             >
@@ -867,8 +867,8 @@ export default function Stage1_Investigate({ onComplete }) {
           gap: '0.85rem',
           paddingTop: '0.35rem'
         }}>
-          <h4 style={{ color: '#064E3B', margin: 0, fontSize: '1.18rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-            <AlertCircle size={24} color="#D97706" /> Observation Question
+          <h4 style={{ color: '#0C4A6E', margin: 0, fontSize: '1.18rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+            <AlertCircle size={24} color="#0284C7" /> Observation Question
           </h4>
           <p style={{ margin: 0, color: '#1E293B', fontSize: '1.02rem', lineHeight: 1.55, fontWeight: 700 }}>
             Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
@@ -940,7 +940,7 @@ export default function Stage1_Investigate({ onComplete }) {
                   fontWeight: 900, 
                   borderRadius: '16px', 
                   background: isReadyToProceed 
-                    ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' 
+                    ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' 
                     : '#F1F5F9', 
                   color: isReadyToProceed 
                     ? '#FFFFFF' 
@@ -956,7 +956,7 @@ export default function Stage1_Investigate({ onComplete }) {
                   justifyContent: 'center', 
                   gap: '0.55rem',
                   boxShadow: isReadyToProceed 
-                    ? '0 4px 16px rgba(217, 119, 6, 0.4)' 
+                    ? '0 4px 16px rgba(2, 132, 199, 0.4)' 
                     : 'none',
                   transition: 'all 0.25s ease'
                 }}
