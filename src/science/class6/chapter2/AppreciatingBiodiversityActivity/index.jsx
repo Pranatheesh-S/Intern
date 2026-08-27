@@ -171,18 +171,18 @@ const QUIZ_QUESTIONS = [
   }
 ];
 
-export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) {
+export default function AppreciatingBiodiversityActivity({ onBackToDashboard, subStep, onSubStepChange }) {
   const { theme } = useTheme();
   
   // Tabs and general phases
-  const [activeTab, setActiveTab] = useState('board'); // board | quiz
-  const [phase, setPhase] = useState('timer'); // timer | pick | board | completed
+  const [activeTab, setActiveTab] = useState(subStep === 'quiz' ? 'quiz' : 'board'); // board | quiz
+  const [phase, setPhase] = useState(subStep === 'board' ? 'board' : 'timer'); // timer | pick | board | completed
   
   const [timer, setTimer] = useState(10);
   const [timerRunning, setTimerRunning] = useState(false);
   const [selectedPlant, setSelectedPlant] = useState('');
   const [selectedAnimal, setSelectedAnimal] = useState('');
-  const [boardCards, setBoardCards] = useState([]);
+  const [boardCards, setBoardCards] = useState((subStep === 'board' || subStep === 'quiz') ? [{ name: 'You', plant: 'Tulsi', animal: 'Peacock', isMe: true }, ...CLASSMATES] : []);
   
   // Quiz state
   const [currentQIndex, setCurrentQIndex] = useState(0);
@@ -191,6 +191,21 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
   const [quizAnswers, setQuizAnswers] = useState({});
 
   const timerRef = useRef(null);
+
+  useEffect(() => {
+    if (subStep === 'board') {
+      setActiveTab('board');
+      setPhase('board');
+      setBoardCards(prev => prev.length > 0 ? prev : [{ name: 'You', plant: selectedPlant || 'Tulsi', animal: selectedAnimal || 'Peacock', isMe: true }, ...CLASSMATES]);
+    } else if (subStep === 'quiz') {
+      setActiveTab('quiz');
+      setPhase('board');
+      setBoardCards(prev => prev.length > 0 ? prev : [{ name: 'You', plant: selectedPlant || 'Tulsi', animal: selectedAnimal || 'Peacock', isMe: true }, ...CLASSMATES]);
+    } else if (subStep === 'appreciate') {
+      setActiveTab('board');
+      if (phase === 'board') setPhase('timer');
+    }
+  }, [subStep]);
 
   useEffect(() => {
     if (timerRunning && timer > 0) {
@@ -213,6 +228,7 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
     const all = [myCard, ...CLASSMATES];
     setBoardCards(all);
     setPhase('board');
+    if (onSubStepChange) onSubStepChange('board');
     confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
   };
 
@@ -430,7 +446,10 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
           }}>
             <button 
               className={activeTab === 'board' ? 'on' : ''} 
-              onClick={() => setActiveTab('board')}
+              onClick={() => {
+                setActiveTab('board');
+                if (onSubStepChange) onSubStepChange('board');
+              }}
               style={{ 
                 flex: 1,
                 padding: '8px', 
@@ -458,6 +477,7 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                   alert('Please submit your memory card first to unlock the quiz!');
                 } else {
                   setActiveTab('quiz');
+                  if (onSubStepChange) onSubStepChange('quiz');
                 }
               }}
               style={{ 
