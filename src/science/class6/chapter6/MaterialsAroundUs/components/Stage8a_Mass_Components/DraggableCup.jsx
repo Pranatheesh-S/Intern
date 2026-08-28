@@ -1,111 +1,192 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useVelocity, useSpring, useTransform, animate } from 'framer-motion';
+import { createPortal } from 'react-dom';
 import { RealisticCup } from './RealisticCup';
 
-export const DraggableCup = ({ cup, isWeighed, onDrop, disabled }) => {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const velocityX = useVelocity(x);
-  const velocityY = useVelocity(y);
-
-  // Smooth velocity for tilt
-  const smoothVelocityX = useSpring(velocityX, { damping: 50, stiffness: 400 });
-  const smoothVelocityY = useSpring(velocityY, { damping: 50, stiffness: 400 });
-
-  // Rotate based on velocity
-  const rotateY = useTransform(smoothVelocityX, [-1000, 1000], [-10, 10]);
-  const rotateX = useTransform(smoothVelocityY, [-1000, 1000], [10, -10]);
-  
+export const DraggableCup = ({ cup, isWeighed, onDragStart, onDrop, onDragPosition, disabled }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
+  const grabOffsetRef = useRef({ x: 40, y: 50 }); // Center of 80x100 cup
+  const dragVelocityX = useRef(0);
+  const lastPointerRef = useRef({ x: 0, time: Date.now() });
 
-  // When this cup is NO LONGER on the scale (i.e. replaced by another cup),
-  // animate it back to its original slot.
-  useEffect(() => {
-    if (!isWeighed) {
-      animate(x, 0, { type: 'spring', stiffness: 400, damping: 30 });
-      animate(y, 0, { type: 'spring', stiffness: 400, damping: 30 });
+  // Spring velocity smoothing for liquid/material tilt in portal
+  const velocityXMotion = useMotionValue(0);
+  const smoothVelocityX = useSpring(velocityXMotion, { damping: 40, stiffness: 300 });
+  const rotateZ = useTransform(smoothVelocityX, [-600, 600], [-3.5, 3.5]);
+
+  const checkScaleOverlap = (clientX, clientY) => {
+    const scaleEl = document.querySelector('[data-droptarget="scale"]');
+    if (scaleEl) {
+      const scaleRect = scaleEl.getBoundingClientRect();
+      const cupWidth = 80;
+      const cupHeight = 100;
+      const cupLeft = clientX - grabOffsetRef.current.x;
+      const cupTop = clientY - grabOffsetRef.current.y;
+      const cupRight = cupLeft + cupWidth;
+      const cupBottom = cupTop + cupHeight;
+      
+      const isOver = !(
+        cupRight < scaleRect.left || 
+        cupLeft > scaleRect.right || 
+        cupBottom < scaleRect.top || 
+        cupTop > scaleRect.bottom
+      );
+      if (isOver) return true;
     }
-  }, [isWeighed, x, y]);
-  
-  const handleDragEnd = (event, info) => {
-    setIsDragging(false);
     
-    // Find elements under the cursor drop point
-    const elements = document.elementsFromPoint(info.point.x, info.point.y);
-    const isOverScale = elements.some(el => el?.getAttribute?.('data-droptarget') === 'scale');
-
-    if (isOverScale && !disabled && !isWeighed) {
-      onDrop(cup.id);
-      // Successful drop: DO NOT snap back! We leave x and y where they are so 
-      // layoutId can transition perfectly from the cursor position.
-    } else {
-      // Failed drop: return to source card
-      animate(x, 0, { type: 'spring', stiffness: 500, damping: 35 });
-      animate(y, 0, { type: 'spring', stiffness: 500, damping: 35 });
-    }
+    const elements = document.elementsFromPoint(clientX, clientY);
+    return elements.some(el => el?.getAttribute?.('data-droptarget') === 'scale');
   };
-  
+
+  const handlePointerDown = (e) => {
+    if (disabled || isWeighed) return;
+
+    // Capture initial grab location relative to the cup element
+    const rect = e.currentTarget.getBoundingClientRect();
+    grabOffsetRef.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+
+    setDragPos({
+      x: e.clientX - grabOffsetRef.current.x,
+      y: e.clientY - grabOffsetRef.current.y
+    });
+
+    lastPointerRef.current = { x: e.clientX, time: Date.now() };
+    setIsDragging(true);
+    if (onDragStart) onDragStart();
+
+    const onPointerMove = (moveEvent) => {
+      const currentX = moveEvent.clientX;
+      const currentY = moveEvent.clientY;
+      const now = Date.now();
+      const dt = Math.max(1, now - lastPointerRef.current.time);
+      const dx = currentX - lastPointerRef.current.x;
+      
+      const currentVelX = (dx / dt) * 1000;
+      velocityXMotion.set(currentVelX);
+      lastPointerRef.current = { x: currentX, time: now };
+
+      setDragPos({
+        x: currentX - grabOffsetRef.current.x,
+        y: currentY - grabOffsetRef.current.y
+      });
+
+      if (onDragPosition) {
+        const isOver = checkScaleOverlap(currentX, currentY);
+        onDragPosition(isOver);
+      }
+    };
+
+    const onPointerUp = (upEvent) => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
+
+      setIsDragging(false);
+      velocityXMotion.set(0);
+      if (onDragPosition) onDragPosition(false);
+
+      const isOver = checkScaleOverlap(upEvent.clientX, upEvent.clientY);
+      if (isOver && !disabled && !isWeighed) {
+        onDrop(cup.id);
+      }
+    };
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
+  };
+
   return (
     <div style={{ position: 'relative', width: '80px', height: '100px', margin: '0 auto' }}>
-      {/* Background shadow for the slot when cup is removed or being dragged */}
+      {/* Resting shadow on the card */}
       <div 
         style={{
           position: 'absolute',
-          bottom: -5, left: '10%', right: '10%', height: '10px',
-          background: 'rgba(0,0,0,0.1)',
+          bottom: -4, left: '15%', right: '15%', height: '8px',
+          background: 'rgba(87, 65, 51, 0.15)',
           borderRadius: '50%',
-          filter: 'blur(2px)',
+          filter: 'blur(3px)',
+          opacity: isDragging ? 0.8 : (isWeighed ? 0.2 : 0.4),
+          transition: 'opacity 0.2s'
         }}
       />
       
       {isWeighed ? (
-        // Faded placeholder left behind on the card
-        <div style={{ width: '100%', height: '100%', opacity: 0.3, filter: 'grayscale(0.8)', pointerEvents: 'none' }}>
+        <div style={{ width: '100%', height: '100%', opacity: 0.45, filter: 'saturate(0.8)', pointerEvents: 'none' }}>
           <RealisticCup material={cup.id} velocityX={0} />
         </div>
       ) : (
-        <motion.div
-          layoutId={`cup-transition-${cup.id}`}
-          drag={!disabled}
-          dragSnapToOrigin={false}
-          dragElastic={0.1}
-          dragMomentum={false} // Stop immediately when let go
-          onDragStart={() => setIsDragging(true)}
-          onDragEnd={handleDragEnd}
-          style={{
-            x, y,
-            rotateX, rotateY,
-            scale: isDragging ? 1.05 : 1,
-            z: isDragging ? 50 : 0,
-            cursor: disabled ? 'default' : (isDragging ? 'grabbing' : 'grab'),
-            touchAction: 'none',
-            perspective: 1000,
-            transformStyle: 'preserve-3d',
-            zIndex: isDragging ? 100 : 1,
-            width: '100%',
-            height: '100%',
-            userSelect: 'none'
-          }}
-          whileHover={{ scale: disabled ? 1 : 1.02 }}
-          whileTap={{ scale: disabled ? 1 : 1.05 }}
-        >
-          <RealisticCup material={cup.id} velocityX={smoothVelocityX} />
-          
-          {/* Dynamic Contact Shadow that follows the cup */}
-          <motion.div 
+        <>
+          {/* Card Anchor Cup */}
+          <div
+            onPointerDown={handlePointerDown}
             style={{
-              position: 'absolute',
-              bottom: -15, left: '10%', right: '10%', height: '12px',
-              background: 'rgba(0,0,0,0.4)',
-              borderRadius: '50%',
-              filter: isDragging ? 'blur(8px)' : 'blur(4px)',
-              opacity: isDragging ? 0.3 : 0,
-              scale: isDragging ? 1.2 : 0.8,
-              pointerEvents: 'none',
-              transition: 'all 0.2s ease-out'
+              width: '100%',
+              height: '100%',
+              cursor: disabled ? 'default' : (isDragging ? 'grabbing' : 'grab'),
+              touchAction: 'none',
+              userSelect: 'none',
+              opacity: isDragging ? 0 : 1, // Hidden on the card while actively rendered in top-level portal
+              transition: 'opacity 0.1s'
             }}
-          />
-        </motion.div>
+          >
+            {/* Extended grab area */}
+            <div style={{ position: 'absolute', top: '-25px', bottom: '-25px', left: '-25px', right: '-25px', background: 'transparent' }} />
+            <RealisticCup material={cup.id} velocityX={0} />
+          </div>
+
+          {/* Top-Level Drag Layer Portal: Renders directly under document.body with max z-index */}
+          {isDragging && createPortal(
+            <div
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                pointerEvents: 'none',
+                zIndex: 999999,
+                overflow: 'hidden'
+              }}
+            >
+              <motion.div
+                style={{
+                  position: 'absolute',
+                  left: dragPos.x,
+                  top: dragPos.y,
+                  width: '80px',
+                  height: '100px',
+                  rotateZ,
+                  scale: 1.08,
+                  filter: 'drop-shadow(0 15px 20px rgba(0,0,0,0.35))',
+                  transformOrigin: '50% 50%',
+                  pointerEvents: 'none'
+                }}
+              >
+                <RealisticCup material={cup.id} velocityX={smoothVelocityX} />
+                
+                {/* Dynamic diffuse lift shadow attached to the floating cup */}
+                <div 
+                  style={{
+                    position: 'absolute',
+                    bottom: -16,
+                    left: '10%', right: '10%',
+                    height: 14,
+                    background: 'rgba(0,0,0,0.35)',
+                    borderRadius: '50%',
+                    filter: 'blur(8px)',
+                    transform: 'scale(1.2)'
+                  }}
+                />
+              </motion.div>
+            </div>,
+            document.body
+          )}
+        </>
       )}
     </div>
   );
