@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen, Maximize2, Minimize2, Play, Square, Plus, Minus } from 'lucide-react';
+import { AlertCircle, CheckCircle, XCircle, Hand, RotateCcw, ArrowRight, BookOpen, Maximize2, Minimize2, Play, Pause, Plus, Minus } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
+import '../MagneticPoles.css';
 
 // ---------------------------------------------------------
 // Realistic Parchment Paper Box Enclosure
@@ -420,99 +421,106 @@ export default function Stage1_Investigate({ onComplete }) {
     }
   };
 
-  const [isRunning, setIsRunning] = useState(false);
-  const autoTimeoutsRef = useRef([]);
+  const [isPaused, setIsPaused] = useState(false);
+  const isPausedRef = useRef(false);
+  isPausedRef.current = isPaused;
+  const loopTimeoutRef = useRef(null);
 
-  const clearAutoTimeouts = () => {
-    autoTimeoutsRef.current.forEach((t) => clearTimeout(t));
-    autoTimeoutsRef.current = [];
+  const clearLoopTimers = () => {
+    if (loopTimeoutRef.current) {
+      clearTimeout(loopTimeoutRef.current);
+      loopTimeoutRef.current = null;
+    }
   };
 
-  useEffect(() => {
-    return () => clearAutoTimeouts();
-  }, []);
+  const startLoopSequence = (fromStep = 'initial') => {
+    clearLoopTimers();
+    if (isPausedRef.current) return;
 
-  const handleStart = () => {
-    clearAutoTimeouts();
-    setIsRunning(true);
-
-    if (step === 'initial') {
-      setIsSprinkling(true);
-      const t1 = setTimeout(() => {
-        setIsSprinkling(false);
-        setStep('scattered');
-
-        const t2 = setTimeout(() => {
-          setIsVibrating(true);
-          const t3 = setTimeout(() => {
-            setIsVibrating(false);
-            setTapCount(1);
-            setStep('tapped');
-            setIsRunning(false);
-          }, 450);
-          autoTimeoutsRef.current.push(t3);
-        }, 700);
-        autoTimeoutsRef.current.push(t2);
-      }, 1200);
-      autoTimeoutsRef.current.push(t1);
-    } else if (step === 'scattered') {
-      setIsVibrating(true);
-      const t = setTimeout(() => {
-        setIsVibrating(false);
-        setTapCount(1);
-        setStep('tapped');
-        setIsRunning(false);
-      }, 450);
-      autoTimeoutsRef.current.push(t);
-    } else {
-      // If already tapped, replay whole sequence smoothly
+    if (fromStep === 'initial') {
       setStep('initial');
-      setTapCount(0);
       setIsSprinkling(true);
-      const t1 = setTimeout(() => {
+      setIsVibrating(false);
+
+      loopTimeoutRef.current = setTimeout(() => {
+        if (isPausedRef.current) return;
         setIsSprinkling(false);
         setStep('scattered');
 
-        const t2 = setTimeout(() => {
+        loopTimeoutRef.current = setTimeout(() => {
+          if (isPausedRef.current) return;
           setIsVibrating(true);
-          const t3 = setTimeout(() => {
+
+          loopTimeoutRef.current = setTimeout(() => {
+            if (isPausedRef.current) return;
             setIsVibrating(false);
-            setTapCount(1);
+            setTapCount((prev) => Math.max(prev, 1));
             setStep('tapped');
-            setIsRunning(false);
-          }, 450);
-          autoTimeoutsRef.current.push(t3);
-        }, 700);
-        autoTimeoutsRef.current.push(t2);
-      }, 1200);
-      autoTimeoutsRef.current.push(t1);
-    }
-  };
 
-  const handleStop = () => {
-    clearAutoTimeouts();
-    setIsRunning(false);
-    setIsSprinkling(false);
-    setIsVibrating(false);
-  };
+            // Remain in tapped state displaying pole clustering for 3.5s before repeating
+            loopTimeoutRef.current = setTimeout(() => {
+              if (isPausedRef.current) return;
+              startLoopSequence('initial');
+            }, 3500);
+          }, 500);
+        }, 800);
+      }, 1400);
+    } else if (fromStep === 'scattered') {
+      setIsSprinkling(false);
+      setStep('scattered');
 
-  const handleToggleStartStop = () => {
-    if (isRunning) {
-      handleStop();
+      loopTimeoutRef.current = setTimeout(() => {
+        if (isPausedRef.current) return;
+        setIsVibrating(true);
+
+        loopTimeoutRef.current = setTimeout(() => {
+          if (isPausedRef.current) return;
+          setIsVibrating(false);
+          setTapCount((prev) => Math.max(prev, 1));
+          setStep('tapped');
+
+          loopTimeoutRef.current = setTimeout(() => {
+            if (isPausedRef.current) return;
+            startLoopSequence('initial');
+          }, 3500);
+        }, 500);
+      }, 800);
     } else {
-      handleStart();
+      // If currently tapped, allow brief observation then loop
+      loopTimeoutRef.current = setTimeout(() => {
+        if (isPausedRef.current) return;
+        startLoopSequence('initial');
+      }, 2500);
     }
+  };
+
+  // Continuous autoplay on entry
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+    if (!isPaused) {
+      startLoopSequence(step === 'initial' ? 'initial' : step);
+    } else {
+      clearLoopTimers();
+      setIsSprinkling(false);
+      setIsVibrating(false);
+    }
+    return () => clearLoopTimers();
+  }, [isPaused]);
+
+  const handleTogglePause = () => {
+    setIsPaused((prev) => !prev);
   };
 
   const handleReset = () => {
-    clearAutoTimeouts();
-    setIsRunning(false);
-    setStep('initial');
+    clearLoopTimers();
+    setIsPaused(false);
+    isPausedRef.current = false;
     setTapCount(0);
     setQuizAnswer(null);
     setShowFeedbackModal(false);
     setIsSprinkling(false);
     setIsVibrating(false);
+    startLoopSequence('initial');
   };
 
   const handleQuizAnswer = (answer) => {
@@ -565,17 +573,17 @@ export default function Stage1_Investigate({ onComplete }) {
                 width: '64px',
                 height: '64px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
+                background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 8px 20px rgba(16, 185, 129, 0.25)'
+                boxShadow: '0 8px 20px rgba(217, 119, 6, 0.25)'
               }}>
-                <CheckCircle size={36} color="#059669" />
+                <CheckCircle size={36} color="#D97706" />
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, color: '#064E3B' }}>
+                <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, color: '#92400E' }}>
                   Observation Verified!
                 </h3>
                 <p style={{ margin: 0, color: '#334155', fontSize: '1.02rem', lineHeight: 1.6, fontWeight: 700 }}>
@@ -799,40 +807,39 @@ export default function Stage1_Investigate({ onComplete }) {
         </div>
       </div>
 
-      {/* Control Panel (Activity 4.3 Theme - Cream Background) */}
+      {/* Control Panel (Unified Warm Orange Theme) */}
       <div style={{ 
         flex: '1.15', 
-        background: '#FFFDD0', 
-        border: '1.5px solid #EFE4B0', 
+        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+        border: '1.5px solid #FDE68A', 
         borderRadius: '24px', 
         padding: '1.5rem 1.6rem', 
-        boxShadow: '0 4px 20px rgba(180, 160, 100, 0.08)', 
+        boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
         gap: '1.1rem', 
         minWidth: 0,
         overflowY: 'auto',
-        fontFamily: "'Inter', sans-serif"
+        fontFamily: 'system-ui, -apple-system, sans-serif'
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
-              <BookOpen size={28} color="#0284C7" />
-              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#0F172A', fontFamily: "'Inter', sans-serif", fontWeight: 800 }}>
+              <BookOpen size={28} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#92400E', fontWeight: 900 }}>
                 Stage 1: Investigation
               </h3>
             </div>
             <span style={{
-              background: '#E0F2FE',
-              color: '#0369A1',
+              background: '#FEF3C7',
+              color: '#B45309',
               fontWeight: 800,
-              fontFamily: "'Inter', sans-serif",
-              fontSize: '0.96rem',
-              padding: '0.4rem 0.85rem',
+              fontSize: '0.92rem',
+              padding: '0.35rem 0.85rem',
               borderRadius: '12px',
-              border: '1.5px solid #BAE6FD'
+              border: '1.5px solid #FDE68A'
             }}>
               Step {(step === 'tapped' || step === 'complete') ? 3 : step === 'scattered' ? 2 : 1} of 3
             </span>
@@ -878,13 +885,12 @@ export default function Stage1_Investigate({ onComplete }) {
                         width: '30px',
                         height: '30px',
                         borderRadius: '50%',
-                        background: isCurrent ? '#0284C7' : isPast ? '#059669' : '#64748B',
+                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#D97706' : '#64748B',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '1rem',
-                        fontFamily: "'Inter', sans-serif",
+                        fontSize: '0.95rem',
                         fontWeight: 800,
                         flexShrink: 0
                       }}>
@@ -892,16 +898,15 @@ export default function Stage1_Investigate({ onComplete }) {
                       </span>
                       <span style={{ 
                         fontWeight: 800, 
-                        fontSize: '1.22rem', 
-                        fontFamily: "'Inter', sans-serif",
-                        color: isCurrent ? '#0369A1' : isPast ? '#065F46' : '#1E293B' 
+                        fontSize: '1.18rem', 
+                        color: isCurrent ? '#92400E' : isPast ? '#B45309' : '#1E293B' 
                       }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={22} color="#10B981" />}
+                    {isPast && <CheckCircle size={22} color="#D97706" />}
                   </div>
-                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.06rem', color: '#475569', lineHeight: 1.6, fontWeight: 500, fontFamily: "'Inter', sans-serif" }}>
+                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.02rem', color: '#78350F', lineHeight: 1.55, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -909,20 +914,17 @@ export default function Stage1_Investigate({ onComplete }) {
             })}
           </div>
 
-          {/* Action Buttons: Unified Start/Stop Toggle & Reset */}
+          {/* Action Buttons: Pause / Resume & Reset */}
           <div style={{ width: '100%', display: 'flex', gap: '0.75rem', marginTop: '0.2rem' }}>
             <button
-              onClick={handleToggleStartStop}
+              onClick={handleTogglePause}
+              className="gold-glow-btn"
               style={{ 
                 flex: 2, 
-                padding: '1.05rem 1rem', 
-                fontSize: '1.14rem', 
-                fontWeight: 800, 
-                fontFamily: "'Inter', sans-serif",
+                padding: '1rem 1rem', 
+                fontSize: '1.1rem', 
+                fontWeight: 900, 
                 borderRadius: '16px', 
-                background: isRunning 
-                  ? 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)' 
-                  : 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)', 
                 color: '#FFFFFF', 
                 border: 'none', 
                 cursor: 'pointer', 
@@ -930,42 +932,37 @@ export default function Stage1_Investigate({ onComplete }) {
                 alignItems: 'center', 
                 justifyContent: 'center', 
                 gap: '8px',
-                boxShadow: isRunning 
-                  ? '0 4px 14px rgba(239, 68, 68, 0.35)' 
-                  : '0 4px 14px rgba(2, 132, 199, 0.35)',
                 transition: 'all 0.2s ease'
               }}
             >
-              {isRunning ? (
+              {!isPaused ? (
                 <>
-                  <Square size={20} fill="#FFFFFF" color="#FFFFFF" /> Stop Investigation
+                  <Pause size={20} fill="#FFFFFF" color="#FFFFFF" /> Pause Investigation
                 </>
               ) : (
                 <>
-                  <Play size={20} fill="#FFFFFF" color="#FFFFFF" /> {step === 'tapped' || step === 'complete' ? 'Replay Investigation' : 'Start Investigation'}
+                  <Play size={20} fill="#FFFFFF" color="#FFFFFF" /> Resume Investigation
                 </>
               )}
             </button>
             
             <button
               onClick={handleReset}
-              disabled={step === 'initial' && !isRunning}
               style={{ 
                 flex: 1, 
-                padding: '1.05rem 0.6rem', 
-                fontSize: '1.06rem', 
+                padding: '1rem 0.6rem', 
+                fontSize: '1.02rem', 
                 fontWeight: 800, 
-                fontFamily: "'Inter', sans-serif",
                 borderRadius: '16px', 
                 background: '#FFFFFF', 
-                color: (step !== 'initial' || isRunning) ? '#1E293B' : '#94A3B8', 
-                border: '1.5px solid #CBD5E1', 
-                cursor: (step !== 'initial' || isRunning) ? 'pointer' : 'not-allowed', 
+                color: '#92400E', 
+                border: '1.5px solid #FDE68A', 
+                cursor: 'pointer', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
                 gap: '6px',
-                boxShadow: (step !== 'initial' || isRunning) ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                 transition: 'all 0.2s ease'
               }}
             >
@@ -978,32 +975,31 @@ export default function Stage1_Investigate({ onComplete }) {
         <div style={{ 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '0.9rem',
+          gap: '0.85rem',
           paddingTop: '0.35rem'
         }}>
-          <h4 style={{ color: '#0F172A', margin: 0, fontSize: '1.32rem', fontWeight: 800, fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <AlertCircle size={26} color="#0284C7" /> Observation Question
+          <h4 style={{ color: '#92400E', margin: 0, fontSize: '1.28rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <AlertCircle size={24} color="#D97706" /> Observation Question
           </h4>
-          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.16rem', lineHeight: 1.62, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+          <p style={{ margin: 0, color: '#78350F', fontSize: '1.12rem', lineHeight: 1.6, fontWeight: 600 }}>
             Do the iron filings stick uniformly all over the magnet, or do they stick more at specific places?
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             <button
               onClick={() => handleQuizAnswer('uniformly')}
               style={{ 
-                padding: '1.05rem 1.3rem', 
+                padding: '0.95rem 1.2rem', 
                 textAlign: 'left', 
-                fontSize: '1.1rem', 
+                fontSize: '1.05rem', 
                 fontWeight: 700, 
-                fontFamily: "'Inter', sans-serif",
                 borderRadius: '14px', 
                 cursor: 'pointer', 
                 background: quizAnswer === 'uniformly' ? '#FEE2E2' : '#FFFFFF', 
-                borderColor: quizAnswer === 'uniformly' ? '#EF4444' : '#CBD5E1', 
-                borderWidth: '2px', 
+                borderColor: quizAnswer === 'uniformly' ? '#EF4444' : '#FDE68A', 
+                borderWidth: '1.5px', 
                 borderStyle: 'solid', 
-                color: quizAnswer === 'uniformly' ? '#991B1B' : '#0F172A', 
+                color: quizAnswer === 'uniformly' ? '#991B1B' : '#78350F', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between',
@@ -1018,18 +1014,17 @@ export default function Stage1_Investigate({ onComplete }) {
             <button
               onClick={() => handleQuizAnswer('ends')}
               style={{ 
-                padding: '1.05rem 1.3rem', 
+                padding: '0.95rem 1.2rem', 
                 textAlign: 'left', 
-                fontSize: '1.1rem', 
+                fontSize: '1.05rem', 
                 fontWeight: 700, 
-                fontFamily: "'Inter', sans-serif",
                 borderRadius: '14px', 
                 cursor: 'pointer', 
-                background: (quizAnswer === 'ends' || step === 'complete') ? '#DCFCE7' : '#FFFFFF', 
-                borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#16A34A' : '#CBD5E1', 
-                borderWidth: '2px', 
+                background: (quizAnswer === 'ends' || step === 'complete') ? '#FEF3C7' : '#FFFFFF', 
+                borderColor: (quizAnswer === 'ends' || step === 'complete') ? '#D97706' : '#FDE68A', 
+                borderWidth: '1.5px', 
                 borderStyle: 'solid', 
-                color: (quizAnswer === 'ends' || step === 'complete') ? '#065F46' : '#0F172A', 
+                color: (quizAnswer === 'ends' || step === 'complete') ? '#92400E' : '#78350F', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between',
@@ -1038,7 +1033,7 @@ export default function Stage1_Investigate({ onComplete }) {
               }}
             >
               <span>B) Most filings cluster at the two ends (Poles)</span>
-              {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={22} color="#16A34A" />}
+              {(quizAnswer === 'ends' || step === 'complete') && <CheckCircle size={22} color="#D97706" />}
             </button>
           </div>
 
@@ -1049,15 +1044,15 @@ export default function Stage1_Investigate({ onComplete }) {
               <button
                 onClick={onComplete}
                 disabled={!isReadyToProceed}
+                className={isReadyToProceed ? 'gold-glow-btn' : ''}
                 style={{ 
                   width: '100%', 
-                  padding: '1.08rem', 
-                  fontSize: '1.15rem', 
-                  fontWeight: 800, 
-                  fontFamily: "'Inter', sans-serif",
+                  padding: '1rem', 
+                  fontSize: '1.1rem', 
+                  fontWeight: 900, 
                   borderRadius: '16px', 
                   background: isReadyToProceed 
-                    ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' 
+                    ? undefined 
                     : '#F1F5F9', 
                   color: isReadyToProceed 
                     ? '#FFFFFF' 
@@ -1072,13 +1067,10 @@ export default function Stage1_Investigate({ onComplete }) {
                   alignItems: 'center', 
                   justifyContent: 'center', 
                   gap: '0.6rem',
-                  boxShadow: isReadyToProceed 
-                    ? '0 4px 16px rgba(2, 132, 199, 0.4)' 
-                    : 'none',
                   transition: 'all 0.25s ease'
                 }}
               >
-                Proceed to Stage 2 <ArrowRight size={22} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
+                Proceed to Stage 2 <ArrowRight size={20} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
               </button>
             );
           })()}

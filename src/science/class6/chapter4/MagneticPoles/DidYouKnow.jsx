@@ -97,7 +97,7 @@ export default function DidYouKnow() {
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ position: 'relative', width: '100%', fontFamily: "system-ui, -apple-system, sans-serif" }}>
       {/* Floating Hover Tooltip Card */}
       {hoveredFact && (
         <div style={{
@@ -106,11 +106,11 @@ export default function DidYouKnow() {
           left: '50%',
           transform: 'translateX(-50%)',
           width: '95%',
-          maxWidth: '740px',
+          maxWidth: '820px',
           background: '#FFFFFF',
           border: '1.5px solid #FDE68A',
           borderRadius: '24px',
-          padding: '1.4rem 1.9rem',
+          padding: '1.5rem 2rem',
           color: '#1E293B',
           boxShadow: '0 20px 45px rgba(69, 26, 3, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08)',
           zIndex: 100000,
@@ -118,36 +118,36 @@ export default function DidYouKnow() {
           backdropFilter: 'blur(16px)',
           transition: 'all 0.25s ease'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.6rem' }}>
-            <span style={{ fontSize: '1.65rem' }}>🧠</span>
-            <h4 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 800, fontFamily: "'Inter', sans-serif", color: '#78350F' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.65rem' }}>
+            <span style={{ fontSize: '2.4rem' }}>🧠</span>
+            <h4 style={{ margin: 0, fontSize: '2.4rem', fontWeight: 900, color: '#92400E', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
               {hoveredFact.title}
             </h4>
           </div>
-          <p style={{ margin: 0, fontSize: '1.18rem', lineHeight: '1.7', color: '#1E293B', fontFamily: "'Inter', sans-serif", fontWeight: 600 }}>
+          <p style={{ margin: 0, fontSize: '1.25rem', lineHeight: '1.7', color: '#78350F', fontWeight: 600 }}>
             {renderHighlightedContent(hoveredFact.content, hoveredFact.title, spokenCharIndex)}
           </p>
         </div>
       )}
 
-      {/* Main Bottom Bar (Brown Background with Increased Font Sizes) */}
+      {/* Main Bottom Bar */}
       <div style={{
         background: 'linear-gradient(135deg, #78350F 0%, #451A03 100%)',
         border: '1.5px solid #B45309',
         boxShadow: '0 4px 18px rgba(69, 26, 3, 0.35)',
         borderRadius: '20px',
-        padding: '0.5rem 1.25rem',
+        padding: '0.4rem 1.25rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
         boxSizing: 'border-box',
-        height: '56px',
-        minHeight: '56px'
+        height: '58px',
+        minHeight: '58px'
       }}>
         {/* Brain Icon */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, paddingRight: '0.75rem' }}>
-          <span style={{ fontSize: '1.55rem' }}>🧠</span>
+          <span style={{ fontSize: '1.75rem' }}>🧠</span>
         </div>
 
         {/* Fact items horizontally */}
@@ -164,19 +164,18 @@ export default function DidYouKnow() {
                   color: hoveredFact === fact ? '#FEF3C7' : '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
+                  gap: '0.55rem',
                   cursor: 'pointer',
-                  fontSize: '1.12rem',
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 800,
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '10px',
+                  fontSize: '1.65rem',
+                  fontWeight: 900,
+                  padding: '0.25rem 0.65rem',
+                  borderRadius: '12px',
                   backgroundColor: hoveredFact === fact ? 'rgba(254, 243, 199, 0.2)' : 'transparent',
                   transition: 'all 0.2s ease',
                   whiteSpace: 'nowrap'
                 }}
               >
-                <span style={{ fontSize: '1.25rem', color: hoveredFact === fact ? '#F59E0B' : '#FAFAFA' }}>👉</span>
+                <span style={{ fontSize: '1.5rem', color: hoveredFact === fact ? '#F59E0B' : '#FAFAFA' }}>👉</span>
                 <span>{fact.shortTitle}</span>
               </div>
             </React.Fragment>
@@ -185,7 +184,7 @@ export default function DidYouKnow() {
 
         {/* Sparkle Icon */}
         <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, paddingLeft: '0.5rem', color: '#F59E0B' }}>
-          <Sparkles size={22} color="#F59E0B" />
+          <Sparkles size={24} color="#F59E0B" />
         </div>
       </div>
     </div>

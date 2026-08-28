@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CheckCircle, XCircle } from 'lucide-react';
+import './Activity4_1.css';
 
 const quizData = [
   {
@@ -122,17 +123,10 @@ export default function Quiz({ onComplete }) {
 
           <button
             onClick={() => { if (onComplete) onComplete(score); }}
+            className="gold-glow-btn"
             style={{
               padding: '0.85rem 2.5rem',
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: '#FFFFFF',
-              border: 'none',
-              borderRadius: '30px',
               fontSize: '1.05rem',
-              fontWeight: 900,
-              cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-              transition: 'all 0.25s ease',
               marginTop: '0.5rem'
             }}
           >
@@ -255,17 +249,10 @@ export default function Quiz({ onComplete }) {
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.6rem' }}>
                 <button
                   onClick={handleNext}
+                  className="gold-glow-btn"
                   style={{
                     padding: '0.75rem 2rem',
-                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    borderRadius: '25px',
-                    fontSize: '0.96rem',
-                    fontWeight: 900,
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-                    transition: 'all 0.25s ease'
+                    fontSize: '0.96rem'
                   }}
                 >
                   {currentQuestion === quizData.length - 1 ? 'Finish Quiz' : 'Next Question'}

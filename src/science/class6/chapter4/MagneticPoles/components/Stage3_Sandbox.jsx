@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, OrbitControls, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Hand, RotateCcw, Shapes, Flag, BookOpen, Maximize2, Minimize2, CheckCircle, ArrowRight, Play, Square, Plus, Minus } from 'lucide-react';
+import { Hand, RotateCcw, Shapes, Flag, BookOpen, Maximize2, Minimize2, CheckCircle, ArrowRight, Play, Pause, Plus, Minus } from 'lucide-react';
 import * as THREE from 'three';
+import '../MagneticPoles.css';
 
 // ---------------------------------------------------------
 // Realistic Parchment Paper Box Enclosure
@@ -569,101 +570,114 @@ export default function Stage3_Sandbox({ onComplete }) {
     }
   };
 
-  const [isRunning, setIsRunning] = useState(false);
-  const autoTimeoutsRef = useRef([]);
+  const [isPaused, setIsPaused] = useState(false);
+  const isPausedRef = useRef(false);
+  isPausedRef.current = isPaused;
+  const loopTimeoutRef = useRef(null);
 
-  const clearAutoTimeouts = () => {
-    autoTimeoutsRef.current.forEach((t) => clearTimeout(t));
-    autoTimeoutsRef.current = [];
+  const clearLoopTimers = () => {
+    if (loopTimeoutRef.current) {
+      clearTimeout(loopTimeoutRef.current);
+      loopTimeoutRef.current = null;
+    }
   };
 
+  const startLoopSequence = (fromStep = 'initial') => {
+    clearLoopTimers();
+    if (isPausedRef.current) return;
+
+    if (fromStep === 'initial') {
+      setStep('initial');
+      setIsSprinkling(true);
+      setIsVibrating(false);
+
+      loopTimeoutRef.current = setTimeout(() => {
+        if (isPausedRef.current) return;
+        setIsSprinkling(false);
+        setStep('scattered');
+
+        loopTimeoutRef.current = setTimeout(() => {
+          if (isPausedRef.current) return;
+          setIsVibrating(true);
+
+          loopTimeoutRef.current = setTimeout(() => {
+            if (isPausedRef.current) return;
+            setIsVibrating(false);
+            setTapCount((prev) => Math.max(prev, 1));
+            setStep('tapped');
+
+            // Remain at tapped state displaying pole clustering for 3.5s before repeating
+            loopTimeoutRef.current = setTimeout(() => {
+              if (isPausedRef.current) return;
+              startLoopSequence('initial');
+            }, 3500);
+          }, 500);
+        }, 800);
+      }, 1400);
+    } else if (fromStep === 'scattered') {
+      setIsSprinkling(false);
+      setStep('scattered');
+
+      loopTimeoutRef.current = setTimeout(() => {
+        if (isPausedRef.current) return;
+        setIsVibrating(true);
+
+        loopTimeoutRef.current = setTimeout(() => {
+          if (isPausedRef.current) return;
+          setIsVibrating(false);
+          setTapCount((prev) => Math.max(prev, 1));
+          setStep('tapped');
+
+          loopTimeoutRef.current = setTimeout(() => {
+            if (isPausedRef.current) return;
+            startLoopSequence('initial');
+          }, 3500);
+        }, 500);
+      }, 800);
+    } else {
+      loopTimeoutRef.current = setTimeout(() => {
+        if (isPausedRef.current) return;
+        startLoopSequence('initial');
+      }, 2500);
+    }
+  };
+
+  // Continuous autoplay on entry
   useEffect(() => {
-    return () => clearAutoTimeouts();
-  }, []);
+    isPausedRef.current = isPaused;
+    if (!isPaused) {
+      startLoopSequence(step === 'initial' ? 'initial' : step);
+    } else {
+      clearLoopTimers();
+      setIsSprinkling(false);
+      setIsVibrating(false);
+    }
+    return () => clearLoopTimers();
+  }, [isPaused]);
 
   const handleShapeChange = (newShape) => {
     setShape(newShape);
-    handleReset();
-  };
-
-  const handleStart = () => {
-    clearAutoTimeouts();
-    setIsRunning(true);
-
-    if (step === 'initial') {
-      setIsSprinkling(true);
-      const t1 = setTimeout(() => {
-        setIsSprinkling(false);
-        setStep('scattered');
-
-        const t2 = setTimeout(() => {
-          setIsVibrating(true);
-          const t3 = setTimeout(() => {
-            setIsVibrating(false);
-            setTapCount(1);
-            setStep('tapped');
-            setIsRunning(false);
-          }, 450);
-          autoTimeoutsRef.current.push(t3);
-        }, 700);
-        autoTimeoutsRef.current.push(t2);
-      }, 1200);
-      autoTimeoutsRef.current.push(t1);
-    } else if (step === 'scattered') {
-      setIsVibrating(true);
-      const t = setTimeout(() => {
-        setIsVibrating(false);
-        setTapCount(1);
-        setStep('tapped');
-        setIsRunning(false);
-      }, 450);
-      autoTimeoutsRef.current.push(t);
-    } else {
-      setStep('initial');
-      setTapCount(0);
-      setIsSprinkling(true);
-      const t1 = setTimeout(() => {
-        setIsSprinkling(false);
-        setStep('scattered');
-
-        const t2 = setTimeout(() => {
-          setIsVibrating(true);
-          const t3 = setTimeout(() => {
-            setIsVibrating(false);
-            setTapCount(1);
-            setStep('tapped');
-            setIsRunning(false);
-          }, 450);
-          autoTimeoutsRef.current.push(t3);
-        }, 700);
-        autoTimeoutsRef.current.push(t2);
-      }, 1200);
-      autoTimeoutsRef.current.push(t1);
-    }
-  };
-
-  const handleStop = () => {
-    clearAutoTimeouts();
-    setIsRunning(false);
-    setIsSprinkling(false);
-    setIsVibrating(false);
-  };
-
-  const handleToggleStartStop = () => {
-    if (isRunning) {
-      handleStop();
-    } else {
-      handleStart();
-    }
-  };
-
-  const handleReset = () => {
-    clearAutoTimeouts();
-    setIsRunning(false);
-    setStep('initial');
+    clearLoopTimers();
+    setIsPaused(false);
+    isPausedRef.current = false;
     setTapCount(0);
     setIsSprinkling(false);
     setIsVibrating(false);
+    startLoopSequence('initial');
+  };
+
+  const handleTogglePause = () => {
+    setIsPaused((prev) => !prev);
+  };
+
+  const handleReset = () => {
+    clearLoopTimers();
+    setIsPaused(false);
+    isPausedRef.current = false;
+    setTapCount(0);
+    setIsSprinkling(false);
+    setIsVibrating(false);
+    startLoopSequence('initial');
   };
 
   return (
@@ -896,42 +910,41 @@ export default function Stage3_Sandbox({ onComplete }) {
         </div>
       </div>
 
-      {/* Right Side: Control Panel (Activity 4.3 Theme - Cream Background) */}
+      {/* Right Side: Control Panel (Unified Warm Orange Theme) */}
       <div
         style={{
           flex: '1.15',
-          background: '#FFFDD0',
-          border: '1.5px solid #EFE4B0',
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+          border: '1.5px solid #FDE68A',
           borderRadius: '24px',
           padding: '1.5rem 1.6rem',
-          boxShadow: '0 4px 20px rgba(180, 160, 100, 0.08)',
+          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           gap: '1.1rem',
           minWidth: 0,
           overflowY: 'auto',
-          fontFamily: "'Inter', sans-serif"
+          fontFamily: 'system-ui, -apple-system, sans-serif'
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
-              <Shapes size={28} color="#0284C7" />
-              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#0F172A', fontFamily: "'Inter', sans-serif", fontWeight: 800 }}>
+              <Shapes size={28} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#92400E', fontWeight: 900 }}>
                 Stage 3: Other Magnet Shapes
               </h3>
             </div>
             <span style={{
-              background: '#E0F2FE',
-              color: '#0369A1',
+              background: '#FEF3C7',
+              color: '#B45309',
               fontWeight: 800,
-              fontFamily: "'Inter', sans-serif",
-              fontSize: '0.96rem',
-              padding: '0.4rem 0.85rem',
+              fontSize: '0.92rem',
+              padding: '0.35rem 0.85rem',
               borderRadius: '12px',
-              border: '1.5px solid #BAE6FD'
+              border: '1.5px solid #FDE68A'
             }}>
               Step {step === 'tapped' ? 3 : step === 'scattered' ? 2 : 1} of 3
             </span>
@@ -977,13 +990,12 @@ export default function Stage3_Sandbox({ onComplete }) {
                         width: '30px',
                         height: '30px',
                         borderRadius: '50%',
-                        background: isCurrent ? '#0284C7' : isPast ? '#059669' : '#64748B',
+                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#D97706' : '#64748B',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '1rem',
-                        fontFamily: "'Inter', sans-serif",
+                        fontSize: '0.95rem',
                         fontWeight: 800,
                         flexShrink: 0
                       }}>
@@ -991,16 +1003,15 @@ export default function Stage3_Sandbox({ onComplete }) {
                       </span>
                       <span style={{ 
                         fontWeight: 800, 
-                        fontSize: '1.22rem', 
-                        fontFamily: "'Inter', sans-serif",
-                        color: isCurrent ? '#0369A1' : isPast ? '#065F46' : '#1E293B' 
+                        fontSize: '1.18rem', 
+                        color: isCurrent ? '#92400E' : isPast ? '#B45309' : '#1E293B' 
                       }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={22} color="#10B981" />}
+                    {isPast && <CheckCircle size={22} color="#D97706" />}
                   </div>
-                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.06rem', color: '#475569', lineHeight: 1.6, fontWeight: 500, fontFamily: "'Inter', sans-serif" }}>
+                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.02rem', color: '#78350F', lineHeight: 1.55, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -1019,17 +1030,16 @@ export default function Stage3_Sandbox({ onComplete }) {
           >
             <h4
               style={{
-                color: '#0F172A',
+                color: '#92400E',
                 margin: 0,
                 fontSize: '1.18rem',
-                fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
+                fontWeight: 900,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.55rem',
               }}
             >
-              <Shapes size={22} color="#0284C7" /> Choose Magnet Shape
+              <Shapes size={22} color="#D97706" /> Choose Magnet Shape
             </h4>
 
             <div style={{ display: 'flex', gap: '0.65rem' }}>
@@ -1037,18 +1047,17 @@ export default function Stage3_Sandbox({ onComplete }) {
                 onClick={() => handleShapeChange('horseshoe')}
                 style={{
                   flex: 1,
-                  padding: '0.88rem 0.6rem',
+                  padding: '0.85rem 0.6rem',
                   borderRadius: '14px',
-                  border: '2px solid',
-                  borderColor: shape === 'horseshoe' ? '#0284C7' : '#CBD5E1',
-                  background: shape === 'horseshoe' ? '#E0F2FE' : '#FFFFFF',
-                  color: shape === 'horseshoe' ? '#0369A1' : '#1E293B',
+                  border: '1.5px solid',
+                  borderColor: shape === 'horseshoe' ? '#D97706' : '#FDE68A',
+                  background: shape === 'horseshoe' ? '#FEF3C7' : '#FFFFFF',
+                  color: shape === 'horseshoe' ? '#92400E' : '#1E293B',
                   fontWeight: 800,
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: '1.08rem',
+                  fontSize: '1.05rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: shape === 'horseshoe' ? '0 3px 10px rgba(2, 132, 199, 0.25)' : 'none',
+                  boxShadow: shape === 'horseshoe' ? '0 3px 10px rgba(217, 119, 6, 0.25)' : 'none',
                 }}
               >
                 Horseshoe 🧲
@@ -1058,18 +1067,17 @@ export default function Stage3_Sandbox({ onComplete }) {
                 onClick={() => handleShapeChange('ring')}
                 style={{
                   flex: 1,
-                  padding: '0.88rem 0.6rem',
+                  padding: '0.85rem 0.6rem',
                   borderRadius: '14px',
-                  border: '2px solid',
-                  borderColor: shape === 'ring' ? '#0284C7' : '#CBD5E1',
-                  background: shape === 'ring' ? '#E0F2FE' : '#FFFFFF',
-                  color: shape === 'ring' ? '#0369A1' : '#1E293B',
+                  border: '1.5px solid',
+                  borderColor: shape === 'ring' ? '#D97706' : '#FDE68A',
+                  background: shape === 'ring' ? '#FEF3C7' : '#FFFFFF',
+                  color: shape === 'ring' ? '#92400E' : '#1E293B',
                   fontWeight: 800,
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: '1.08rem',
+                  fontSize: '1.05rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: shape === 'ring' ? '0 3px 10px rgba(2, 132, 199, 0.25)' : 'none',
+                  boxShadow: shape === 'ring' ? '0 3px 10px rgba(217, 119, 6, 0.25)' : 'none',
                 }}
               >
                 Ring ⭕
@@ -1079,18 +1087,17 @@ export default function Stage3_Sandbox({ onComplete }) {
                 onClick={() => handleShapeChange('bar')}
                 style={{
                   flex: 1,
-                  padding: '0.88rem 0.6rem',
+                  padding: '0.85rem 0.6rem',
                   borderRadius: '14px',
-                  border: '2px solid',
-                  borderColor: shape === 'bar' ? '#0284C7' : '#CBD5E1',
-                  background: shape === 'bar' ? '#E0F2FE' : '#FFFFFF',
-                  color: shape === 'bar' ? '#0369A1' : '#1E293B',
+                  border: '1.5px solid',
+                  borderColor: shape === 'bar' ? '#D97706' : '#FDE68A',
+                  background: shape === 'bar' ? '#FEF3C7' : '#FFFFFF',
+                  color: shape === 'bar' ? '#92400E' : '#1E293B',
                   fontWeight: 800,
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: '1.08rem',
+                  fontSize: '1.05rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: shape === 'bar' ? '0 3px 10px rgba(2, 132, 199, 0.25)' : 'none',
+                  boxShadow: shape === 'bar' ? '0 3px 10px rgba(217, 119, 6, 0.25)' : 'none',
                 }}
               >
                 Bar 🔲
@@ -1098,20 +1105,17 @@ export default function Stage3_Sandbox({ onComplete }) {
             </div>
           </div>
 
-          {/* Action Controls: Unified Start/Stop Toggle & Reset */}
+          {/* Action Controls: Pause / Resume & Reset */}
           <div style={{ width: '100%', display: 'flex', gap: '0.75rem' }}>
             <button
-              onClick={handleToggleStartStop}
+              onClick={handleTogglePause}
+              className="gold-glow-btn"
               style={{
                 flex: 2,
-                padding: '1.05rem 1rem',
-                fontSize: '1.14rem',
-                fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
+                padding: '1rem 1rem',
+                fontSize: '1.1rem',
+                fontWeight: 900,
                 borderRadius: '16px',
-                background: isRunning
-                  ? 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)'
-                  : 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
                 color: '#FFFFFF',
                 border: 'none',
                 cursor: 'pointer',
@@ -1119,42 +1123,37 @@ export default function Stage3_Sandbox({ onComplete }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                boxShadow: isRunning
-                  ? '0 4px 14px rgba(239, 68, 68, 0.35)'
-                  : '0 4px 14px rgba(2, 132, 199, 0.35)',
                 transition: 'all 0.2s ease',
               }}
             >
-              {isRunning ? (
+              {!isPaused ? (
                 <>
-                  <Square size={20} fill="#FFFFFF" color="#FFFFFF" /> Stop Investigation
+                  <Pause size={20} fill="#FFFFFF" color="#FFFFFF" /> Pause Investigation
                 </>
               ) : (
                 <>
-                  <Play size={20} fill="#FFFFFF" color="#FFFFFF" /> {step === 'tapped' ? 'Replay Investigation' : 'Start Investigation'}
+                  <Play size={20} fill="#FFFFFF" color="#FFFFFF" /> Resume Investigation
                 </>
               )}
             </button>
 
             <button
               onClick={handleReset}
-              disabled={step === 'initial' && !isRunning}
               style={{
                 flex: 1,
-                padding: '1.05rem 0.6rem',
-                fontSize: '1.06rem',
+                padding: '1rem 0.6rem',
+                fontSize: '1.02rem',
                 fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
                 borderRadius: '16px',
                 background: '#FFFFFF',
-                color: (step !== 'initial' || isRunning) ? '#1E293B' : '#94A3B8',
-                border: '1.5px solid #CBD5E1',
-                cursor: (step !== 'initial' || isRunning) ? 'pointer' : 'not-allowed',
+                color: '#92400E',
+                border: '1.5px solid #FDE68A',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '6px',
-                boxShadow: (step !== 'initial' || isRunning) ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                 transition: 'all 0.2s ease',
               }}
             >
@@ -1168,69 +1167,62 @@ export default function Stage3_Sandbox({ onComplete }) {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.9rem',
+            gap: '0.85rem',
             paddingTop: '0.35rem',
           }}
         >
           <h4
             style={{
-              color: '#0F172A',
+              color: '#92400E',
               margin: 0,
-              fontSize: '1.32rem',
-              fontWeight: 800,
-              fontFamily: "'Inter', sans-serif",
+              fontSize: '1.28rem',
+              fontWeight: 900,
               display: 'flex',
               alignItems: 'center',
               gap: '0.6rem',
             }}
           >
-            <Shapes size={24} color="#0284C7" /> Observation Summary
+            <Shapes size={24} color="#D97706" /> Observation Summary
           </h4>
-          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.16rem', lineHeight: 1.62, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+          <p style={{ margin: 0, color: '#78350F', fontSize: '1.12rem', lineHeight: 1.6, fontWeight: 600 }}>
             Do all magnet shapes exhibit the same concentration of magnetic poles?
           </p>
           <ul
             style={{
               margin: 0,
               paddingLeft: '1.35rem',
-              color: '#475569',
+              color: '#78350F',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.5rem',
-              fontSize: '1.06rem',
-              lineHeight: '1.6',
-              fontWeight: 500,
-              fontFamily: "'Inter', sans-serif"
+              gap: '0.45rem',
+              fontSize: '1.02rem',
+              lineHeight: '1.55',
+              fontWeight: 600,
             }}
           >
             <li>
-              <strong style={{ color: '#0F172A' }}>Horseshoe:</strong> Filings cluster tightly at both curved tips.
+              <strong style={{ color: '#92400E' }}>Horseshoe:</strong> Filings cluster tightly at both curved tips.
             </li>
             <li>
-              <strong style={{ color: '#0F172A' }}>Ring:</strong> Filings concentrate on opposite circular pole faces.
+              <strong style={{ color: '#92400E' }}>Ring:</strong> Filings concentrate on opposite circular pole faces.
             </li>
             <li>
-              <strong style={{ color: '#0F172A' }}>Bar:</strong> Filings gather heavily at the two distant ends.
+              <strong style={{ color: '#92400E' }}>Bar:</strong> Filings gather heavily at the two distant ends.
             </li>
           </ul>
 
-          <div style={{ marginTop: '0.4rem' }}>
+          <div style={{ marginTop: '0.35rem' }}>
             <button
               onClick={() => {
                 if (onComplete) onComplete();
               }}
+              className="gold-glow-btn"
               style={{
                 width: '100%',
-                padding: '1.08rem',
-                fontSize: '1.15rem',
-                fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
+                padding: '1rem',
+                fontSize: '1.1rem',
+                fontWeight: 900,
                 borderRadius: '16px',
-                background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
-                color: '#FFFFFF',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -1238,7 +1230,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                 transition: 'all 0.25s ease',
               }}
             >
-              <Flag size={22} color="#FFFFFF" /> Finish Activity & Proceed to Quiz
+              <Flag size={20} color="#FFFFFF" /> Finish Activity & Proceed to Quiz
             </button>
           </div>
         </div>

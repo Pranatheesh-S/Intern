@@ -384,14 +384,6 @@ export default function Stage2_Conclusion({ onComplete }) {
             <button onClick={() => setActiveMode('compass')} style={{ background: activeMode === 'compass' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : 'rgba(15, 23, 42, 0.78)', border: activeMode === 'compass' ? '1.5px solid #FDE68A' : '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '7px 14px', fontSize: '0.82rem', fontWeight: 900, color: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', backdropFilter: 'blur(8px)', transition: 'all 0.2s ease' }}><Compass size={16} /> 3D Magnetic Compass</button>
             <button onClick={() => setActiveMode('sun')} style={{ background: activeMode === 'sun' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : 'rgba(15, 23, 42, 0.78)', border: activeMode === 'sun' ? '1.5px solid #FDE68A' : '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '7px 14px', fontSize: '0.82rem', fontWeight: 900, color: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', backdropFilter: 'blur(8px)', transition: 'all 0.2s ease' }}><Sun size={16} /> 3D Sun & Shadow Finder</button>
           </div>
-          <div style={{ position: 'absolute', top: '14px', right: '16px', zIndex: 30, display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(15, 23, 42, 0.78)', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '4px 8px', backdropFilter: 'blur(12px)', boxShadow: '0 8px 24px rgba(0, 0, 0, 0.22)' }}>
-            <button onClick={handleZoomOut} style={{ background: 'rgba(255, 255, 255, 0.12)', border: 'none', borderRadius: '10px', width: '32px', height: '32px', color: '#FFFFFF', cursor: 'pointer' }}><Minus size={16} /></button>
-            <button onClick={handleResetZoom} style={{ background: 'transparent', border: 'none', color: '#F8FAFC', fontSize: '0.82rem', fontWeight: 800, padding: '0 6px', minWidth: '52px', cursor: 'pointer' }}>{Math.round(zoomScale * 100)}%</button>
-            <button onClick={handleZoomIn} style={{ background: 'rgba(255, 255, 255, 0.12)', border: 'none', borderRadius: '10px', width: '32px', height: '32px', color: '#FFFFFF', cursor: 'pointer' }}><Plus size={16} /></button>
-            <button onClick={handleResetZoom} style={{ background: 'rgba(255, 255, 255, 0.12)', border: 'none', borderRadius: '10px', width: '32px', height: '32px', color: '#FFFFFF', cursor: 'pointer' }}><RotateCcw size={14} /></button>
-            <div style={{ width: '1px', height: '18px', background: 'rgba(255, 255, 255, 0.22)', margin: '0 2px' }} />
-            <button onClick={toggleFullscreen} style={{ background: 'rgba(255, 255, 255, 0.12)', border: 'none', borderRadius: '10px', padding: '6px 10px', color: '#FFFFFF', fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer' }}>{isFullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}</button>
-          </div>
           <div style={{ position: 'absolute', bottom: '16px', left: '16px', right: '16px', zIndex: 30, display: 'flex', justifyContent: 'space-between', alignItems: 'center', pointerEvents: 'none' }}>
             {activeMode === 'compass' ? (
               <div style={{ display: 'flex', gap: '8px', pointerEvents: 'auto' }}>
@@ -426,42 +418,58 @@ export default function Stage2_Conclusion({ onComplete }) {
           </Canvas>
         </div>
       </div>
-      <div style={{ flex: '1.15', background: '#FFFDD0', border: '1.5px solid #EFE4B0', borderRadius: '24px', padding: '1.6rem 1.6rem', boxShadow: '0 4px 20px rgba(180, 160, 100, 0.08)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1.2rem', minWidth: 0, height: '100%', boxSizing: 'border-box', overflowY: 'auto' }}>
+      <div style={{ 
+        flex: '1.15', 
+        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+        border: '1.5px solid #FDE68A', 
+        borderRadius: '24px', 
+        padding: '1.6rem 1.6rem', 
+        boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'space-between', 
+        gap: '1.2rem', 
+        minWidth: 0, 
+        height: '100%', 
+        boxSizing: 'border-box', 
+        overflowY: 'auto',
+        fontFamily: 'system-ui, -apple-system, sans-serif'
+      }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', background: '#D1FAE5', padding: '0.4rem 0.9rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 800, color: '#065F46', alignSelf: 'flex-start' }}><Sparkles size={16} color="#059669" /> EXPERIMENT CONCLUSION</div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', background: '#DCFCE7', border: '1.5px solid #86EFAC', padding: '0.4rem 0.9rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 800, color: '#15803D', alignSelf: 'flex-start' }}><Sparkles size={16} color="#059669" /> EXPERIMENT CONCLUSION</div>
           <h2 style={{ fontSize: '1.65rem', fontWeight: 900, color: '#064E3B', margin: 0, lineHeight: 1.25, letterSpacing: '-0.02em' }}>How a Compass Works</h2>
-          <p style={{ fontSize: '1.05rem', color: '#334155', lineHeight: 1.65, fontWeight: 600, margin: 0 }}>A freely suspended bar magnet or compass needle always comes to rest pointing in the <strong style={{ color: '#D97706' }}>North-South direction</strong>. This fundamental property has guided navigators, explorers, and travelers across the globe for centuries!</p>
+          <p style={{ fontSize: '1.05rem', color: '#065F46', lineHeight: 1.65, fontWeight: 600, margin: 0 }}>A freely suspended bar magnet or compass needle always comes to rest pointing in the <strong style={{ color: '#D97706' }}>North-South direction</strong>. This fundamental property has guided navigators, explorers, and travelers across the globe for centuries!</p>
           
-          <div style={{ background: '#FFFBEB', border: '2px solid #FDE68A', borderRadius: '20px', padding: '1.15rem 1.35rem', display: 'flex', alignItems: 'flex-start', gap: '0.85rem', boxShadow: '0 4px 14px rgba(217, 119, 6, 0.08)' }}>
+          <div style={{ background: '#FFFBEB', border: '1.5px solid #FDE68A', borderRadius: '20px', padding: '1.15rem 1.35rem', display: 'flex', alignItems: 'flex-start', gap: '0.85rem', boxShadow: '0 4px 14px rgba(217, 119, 6, 0.08)' }}>
             <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>☀️</span>
-            <p style={{ margin: 0, fontSize: '0.98rem', color: '#92400E', lineHeight: 1.6, fontWeight: 600 }}>Using the Sun's sunrise (East) and sunset (West) positions provides an astronomical East-West reference line, verifying that the magnetic needle points precisely along the North-South axis.</p>
+            <p style={{ margin: 0, fontSize: '0.98rem', color: '#065F46', lineHeight: 1.6, fontWeight: 600 }}>Using the Sun's sunrise (East) and sunset (West) positions provides an astronomical East-West reference line, verifying that the magnetic needle points precisely along the North-South axis.</p>
           </div>
 
-          <div style={{ background: '#F0FDF4', border: '2px solid #A7F3D0', borderRadius: '20px', padding: '1.25rem 1.35rem', boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)' }}>
-            <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#047857', letterSpacing: '0.5px', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Compass size={18} color="#047857" /> COMPASS CONTROLS
+          <div style={{ background: '#FFFFFF', border: '1.5px solid #FDE68A', borderRadius: '20px', padding: '1.25rem 1.35rem', boxShadow: '0 4px 14px rgba(217, 119, 6, 0.05)' }}>
+            <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#064E3B', letterSpacing: '0.5px', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Compass size={18} color="#059669" /> COMPASS CONTROLS
             </div>
-            <p style={{ fontSize: '0.98rem', color: '#1E293B', fontWeight: 600, margin: '0 0 0.9rem 0', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '0.98rem', color: '#065F46', fontWeight: 600, margin: '0 0 0.9rem 0', lineHeight: 1.5 }}>
               Tap below to deflect the needle or bring a secondary magnet close:
             </p>
             <button
               onClick={handleDeflect}
               disabled={isSpinning}
+              className={!isSpinning ? 'gold-glow-btn' : ''}
               style={{
                 width: '100%',
                 padding: '1.05rem 1.2rem',
                 fontSize: '1.08rem',
                 fontWeight: 900,
                 borderRadius: '16px',
-                background: isSpinning ? '#CBD5E1' : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                color: '#FFFFFF',
+                background: isSpinning ? '#F1F5F9' : undefined,
+                color: isSpinning ? '#94A3B8' : '#FFFFFF',
                 border: 'none',
                 cursor: isSpinning ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.65rem',
-                boxShadow: isSpinning ? 'none' : '0 4px 16px rgba(217, 119, 6, 0.35)',
                 transition: 'all 0.2s ease'
               }}
             >
@@ -475,7 +483,7 @@ export default function Stage2_Conclusion({ onComplete }) {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderTop: '2px solid #F1F5F9',
+          borderTop: '1.5px solid #FDE68A',
           paddingTop: '1rem'
         }}>
           <span style={{ fontSize: '0.95rem', color: '#047857', fontWeight: 800 }}>
@@ -484,19 +492,18 @@ export default function Stage2_Conclusion({ onComplete }) {
 
           <button
             onClick={onComplete}
+            className="gold-glow-btn"
             style={{
               padding: '0.95rem 2.2rem',
               fontSize: '1.05rem',
               fontWeight: 900,
               borderRadius: '25px',
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
               color: '#FFFFFF',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '0.55rem',
-              boxShadow: '0 4px 16px rgba(217, 119, 6, 0.4)',
               transition: 'all 0.2s ease'
             }}
           >

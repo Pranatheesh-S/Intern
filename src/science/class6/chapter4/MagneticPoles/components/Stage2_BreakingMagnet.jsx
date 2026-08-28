@@ -4,6 +4,7 @@ import { Text, OrbitControls, ContactShadows, Environment, useTexture } from '@r
 import { motion, AnimatePresence } from 'framer-motion';
 import { Scissors, AlertCircle, CheckCircle, XCircle, ArrowRight, BookOpen, RotateCcw, Maximize2, Minimize2, Plus, Minus } from 'lucide-react';
 import * as THREE from 'three';
+import '../MagneticPoles.css';
 
 // ---------------------------------------------------------
 // Realistic Parchment Paper Box Enclosure
@@ -543,42 +544,41 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         </div>
       </div>
 
-      {/* Right Side: Control Panel (Activity 4.3 Theme - Cream Background) */}
+      {/* Right Side: Control Panel (Unified Warm Orange Theme) */}
       <div
         style={{
           flex: '1.15',
-          background: '#FFFDD0',
-          border: '1.5px solid #EFE4B0',
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+          border: '1.5px solid #FDE68A',
           borderRadius: '24px',
           padding: '1.5rem 1.6rem',
-          boxShadow: '0 4px 20px rgba(180, 160, 100, 0.08)',
+          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           gap: '1.1rem',
           minWidth: 0,
           overflowY: 'auto',
-          fontFamily: "'Inter', sans-serif"
+          fontFamily: 'system-ui, -apple-system, sans-serif'
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
-              <Scissors size={28} color="#0284C7" />
-              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#0F172A', fontFamily: "'Inter', sans-serif", fontWeight: 800 }}>
+              <Scissors size={28} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#92400E', fontWeight: 900 }}>
                 Stage 2: Breaking Magnet
               </h3>
             </div>
             <span style={{
-              background: '#E0F2FE',
-              color: '#0369A1',
+              background: '#FEF3C7',
+              color: '#B45309',
               fontWeight: 800,
-              fontFamily: "'Inter', sans-serif",
-              fontSize: '0.96rem',
-              padding: '0.4rem 0.85rem',
+              fontSize: '0.92rem',
+              padding: '0.35rem 0.85rem',
               borderRadius: '12px',
-              border: '1.5px solid #BAE6FD'
+              border: '1.5px solid #FDE68A'
             }}>
               Step {broken && showPoles ? 3 : broken ? 2 : 1} of 3
             </span>
@@ -624,13 +624,12 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                         width: '30px',
                         height: '30px',
                         borderRadius: '50%',
-                        background: isCurrent ? '#0284C7' : isPast ? '#059669' : '#64748B',
+                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#D97706' : '#64748B',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '1rem',
-                        fontFamily: "'Inter', sans-serif",
+                        fontSize: '0.95rem',
                         fontWeight: 800,
                         flexShrink: 0
                       }}>
@@ -638,16 +637,15 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                       </span>
                       <span style={{ 
                         fontWeight: 800, 
-                        fontSize: '1.22rem', 
-                        fontFamily: "'Inter', sans-serif",
-                        color: isCurrent ? '#0369A1' : isPast ? '#065F46' : '#1E293B' 
+                        fontSize: '1.18rem', 
+                        color: isCurrent ? '#92400E' : isPast ? '#B45309' : '#1E293B' 
                       }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={22} color="#10B981" />}
+                    {isPast && <CheckCircle size={22} color="#D97706" />}
                   </div>
-                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.06rem', color: '#475569', lineHeight: 1.6, fontWeight: 500, fontFamily: "'Inter', sans-serif" }}>
+                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.02rem', color: '#78350F', lineHeight: 1.55, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -660,14 +658,14 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
             <button
               onClick={handleBreak}
               disabled={broken}
+              className={!broken ? 'gold-glow-btn' : ''}
               style={{
                 flex: 1,
-                padding: '1.05rem 0.6rem',
-                fontSize: '1.14rem',
-                fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
+                padding: '1rem 0.6rem',
+                fontSize: '1.08rem',
+                fontWeight: 900,
                 borderRadius: '16px',
-                background: !broken ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' : '#F1F5F9',
+                background: !broken ? undefined : '#F1F5F9',
                 color: !broken ? '#FFFFFF' : '#94A3B8',
                 border: 'none',
                 cursor: !broken ? 'pointer' : 'not-allowed',
@@ -675,7 +673,6 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '5px',
-                boxShadow: !broken ? '0 4px 14px rgba(2, 132, 199, 0.3)' : 'none',
                 transition: 'all 0.2s ease',
               }}
             >
@@ -685,14 +682,14 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
             <button
               onClick={handleShowPoles}
               disabled={!broken || showPoles}
+              className={broken && !showPoles ? 'gold-glow-btn' : ''}
               style={{
                 flex: 1,
-                padding: '1.05rem 0.6rem',
-                fontSize: '1.14rem',
-                fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
+                padding: '1rem 0.6rem',
+                fontSize: '1.08rem',
+                fontWeight: 900,
                 borderRadius: '16px',
-                background: broken && !showPoles ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' : '#F1F5F9',
+                background: broken && !showPoles ? undefined : '#F1F5F9',
                 color: broken && !showPoles ? '#FFFFFF' : '#94A3B8',
                 border: 'none',
                 cursor: broken && !showPoles ? 'pointer' : 'not-allowed',
@@ -700,7 +697,6 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '5px',
-                boxShadow: broken && !showPoles ? '0 4px 14px rgba(2, 132, 199, 0.3)' : 'none',
                 transition: 'all 0.2s ease',
               }}
             >
@@ -712,19 +708,19 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               disabled={!broken}
               style={{
                 flex: 1,
-                padding: '1.05rem 0.6rem',
-                fontSize: '1.06rem',
+                padding: '1rem 0.6rem',
+                fontSize: '1.02rem',
                 fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
                 borderRadius: '16px',
                 background: '#FFFFFF',
-                color: broken ? '#1E293B' : '#94A3B8',
-                border: '1.5px solid #CBD5E1',
+                color: broken ? '#92400E' : '#94A3B8',
+                border: '1.5px solid #FDE68A',
                 cursor: broken ? 'pointer' : 'not-allowed',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '5px',
+                boxShadow: broken ? '0 2px 8px rgba(0,0,0,0.04)' : 'none',
                 transition: 'all 0.2s ease',
               }}
             >
@@ -738,44 +734,42 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.9rem',
+            gap: '0.85rem',
             paddingTop: '0.35rem'
           }}
         >
           <h4
             style={{
-              color: '#0F172A',
+              color: '#92400E',
               margin: 0,
-              fontSize: '1.32rem',
-              fontWeight: 800,
-              fontFamily: "'Inter', sans-serif",
+              fontSize: '1.28rem',
+              fontWeight: 900,
               display: 'flex',
               alignItems: 'center',
               gap: '0.6rem',
             }}
           >
-            <AlertCircle size={26} color="#0284C7" /> Observation & Conclusion
+            <AlertCircle size={24} color="#D97706" /> Observation & Conclusion
           </h4>
-          <p style={{ margin: 0, color: '#1E293B', fontSize: '1.16rem', lineHeight: 1.62, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+          <p style={{ margin: 0, color: '#78350F', fontSize: '1.12rem', lineHeight: 1.6, fontWeight: 600 }}>
             Based on what happens when a magnet breaks, is it possible to obtain a magnet with only a single pole?
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             <button
               onClick={() => handleQuizAnswer('yes')}
               style={{
-                padding: '1.05rem 1.3rem',
+                padding: '0.95rem 1.2rem',
                 textAlign: 'left',
-                fontSize: '1.1rem',
+                fontSize: '1.05rem',
                 fontWeight: 700,
-                fontFamily: "'Inter', sans-serif",
                 borderRadius: '14px',
                 cursor: 'pointer',
                 background: quizAnswer === 'yes' ? '#FEE2E2' : '#FFFFFF',
-                borderColor: quizAnswer === 'yes' ? '#EF4444' : '#CBD5E1',
-                borderWidth: '2px',
+                borderColor: quizAnswer === 'yes' ? '#EF4444' : '#FDE68A',
+                borderWidth: '1.5px',
                 borderStyle: 'solid',
-                color: quizAnswer === 'yes' ? '#991B1B' : '#0F172A',
+                color: quizAnswer === 'yes' ? '#991B1B' : '#78350F',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -790,18 +784,17 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
             <button
               onClick={() => handleQuizAnswer('no')}
               style={{
-                padding: '1.05rem 1.3rem',
+                padding: '0.95rem 1.2rem',
                 textAlign: 'left',
-                fontSize: '1.1rem',
+                fontSize: '1.05rem',
                 fontWeight: 700,
-                fontFamily: "'Inter', sans-serif",
                 borderRadius: '14px',
                 cursor: 'pointer',
-                background: quizAnswer === 'no' ? '#DCFCE7' : '#FFFFFF',
-                borderColor: quizAnswer === 'no' ? '#16A34A' : '#CBD5E1',
-                borderWidth: '2px',
+                background: quizAnswer === 'no' ? '#FEF3C7' : '#FFFFFF',
+                borderColor: quizAnswer === 'no' ? '#D97706' : '#FDE68A',
+                borderWidth: '1.5px',
                 borderStyle: 'solid',
-                color: quizAnswer === 'no' ? '#065F46' : '#0F172A',
+                color: quizAnswer === 'no' ? '#92400E' : '#78350F',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -810,7 +803,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               }}
             >
               <span>B) No, a single isolated pole cannot exist</span>
-              {quizAnswer === 'no' && <CheckCircle size={22} color="#16A34A" />}
+              {quizAnswer === 'no' && <CheckCircle size={22} color="#D97706" />}
             </button>
           </div>
 
@@ -821,20 +814,19 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               <button
                 onClick={handleNextSection}
                 disabled={!isReadyToProceed}
+                className={isReadyToProceed ? 'gold-glow-btn' : ''}
                 style={{
                   width: '100%',
-                  padding: '1.08rem',
-                  fontSize: '1.15rem',
-                  fontWeight: 800,
-                  fontFamily: "'Inter', sans-serif",
+                  padding: '1rem',
+                  fontSize: '1.1rem',
+                  fontWeight: 900,
                   borderRadius: '16px',
                   background: isReadyToProceed
-                    ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)'
+                    ? undefined
                     : '#F1F5F9',
                   color: isReadyToProceed ? '#FFFFFF' : '#94A3B8',
                   border: isReadyToProceed ? 'none' : '1.5px solid #CBD5E1',
                   cursor: isReadyToProceed ? 'pointer' : 'not-allowed',
-                  boxShadow: isReadyToProceed ? '0 4px 16px rgba(2, 132, 199, 0.4)' : 'none',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -843,7 +835,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 }}
               >
                 Proceed to Stage 3{' '}
-                <ArrowRight size={22} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
+                <ArrowRight size={20} color={isReadyToProceed ? '#FFFFFF' : '#94A3B8'} />
               </button>
             );
           })()}

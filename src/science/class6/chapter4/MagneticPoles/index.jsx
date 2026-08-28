@@ -6,6 +6,7 @@ import Stage2_BreakingMagnet from './components/Stage2_BreakingMagnet';
 import Stage3_Sandbox from './components/Stage3_Sandbox';
 import Quiz from './Quiz';
 import DidYouKnow from './DidYouKnow';
+import './MagneticPoles.css';
 
 export default function MagneticPolesActivity({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('investigate');
@@ -57,10 +58,10 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
       boxSizing: 'border-box',
       padding: '0.65rem 0.85rem',
       backgroundColor: '#FFFFFF',
-      fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
+      fontFamily: "system-ui, -apple-system, sans-serif"
     }}>
 
-      {/* Top Header Bar (Orange Theme) */}
+      {/* Top Header Bar */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
@@ -74,22 +75,14 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
         {/* Left: Back Button */}
         <button 
           onClick={onBackToDashboard} 
+          className="gold-glow-btn"
           style={{ 
             position: 'relative', zIndex: 100,
-            padding: '0.6rem 1.15rem', 
-            fontSize: '0.92rem', 
+            padding: '0.6rem 1.25rem', 
+            fontSize: '0.9rem', 
             gap: '0.5rem',
-            background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-            color: '#FFFFFF',
-            border: 'none',
             borderRadius: '14px',
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 800,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-            transition: 'all 0.2s ease'
+            textDecoration: 'none'
           }}
         >
           <ArrowLeft size={18} color="#FFFFFF" /> Back to Chapter 4
@@ -99,23 +92,21 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <h2 style={{ 
             margin: 0, 
-            fontSize: '1.42rem', 
-            fontWeight: 800, 
-            fontFamily: "'Inter', sans-serif",
+            fontSize: '1.35rem', 
+            fontWeight: 900, 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
             gap: '0.65rem', 
-            color: '#0F172A', 
-            letterSpacing: '-0.02em' 
+            color: '#92400E', 
+            letterSpacing: '-0.01em' 
           }}>
-            <Compass size={28} style={{ color: '#D97706' }} />
+            <Compass size={26} style={{ color: '#D97706' }} />
             Activity 4.3: Poles of Magnet
           </h2>
           <span style={{ 
-            fontSize: '0.88rem', 
-            color: '#D97706', 
-            fontFamily: "'Inter', sans-serif",
+            fontSize: '0.82rem', 
+            color: '#B45309', 
             fontWeight: 700 
           }}>
             Class 6 Science — Observe iron filings & magnetic poles
@@ -134,6 +125,7 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
                 key={tab.id}
                 onClick={() => !tab.locked && setActiveTab(tab.id)}
                 disabled={tab.locked}
+                className={isActive ? 'gold-glow-btn' : ''}
                 style={{
                   opacity: tab.locked ? 0.45 : 1,
                   cursor: tab.locked ? 'not-allowed' : 'pointer',
@@ -141,22 +133,18 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
                   alignItems: 'center',
                   gap: '0.45rem',
                   padding: '0.55rem 1.1rem',
-                  fontSize: '0.92rem',
-                  fontFamily: "'Inter', sans-serif",
+                  fontSize: '0.88rem',
                   fontWeight: 800,
                   borderRadius: '24px',
-                  background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
+                  background: isActive ? undefined : '#FFFFFF',
                   color: isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#334155',
                   border: isActive ? 'none' : '1.5px solid #CBD5E1',
-                  boxShadow: isActive ? '0 4px 14px rgba(217, 119, 6, 0.35)' : '0 2px 8px rgba(0,0,0,0.04)',
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={18} color={isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#334155'} />
+                <Icon size={16} color={isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#D97706'} />
                 <span>{tab.name}</span>
-                {isCompleted && (
-                  <CheckCircle size={16} style={{ color: isActive ? '#FFFFFF' : '#16A34A', marginLeft: '0.2rem' }} />
-                )}
+                {isCompleted && !isActive && <CheckCircle size={14} color="#D97706" />}
               </button>
             );
           })}
