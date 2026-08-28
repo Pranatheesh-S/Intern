@@ -150,17 +150,19 @@ const MagnetVisual = ({ isFlipped, isTesting }) => (
    - Cardboard = Corrugated Kraft Shipping Carton Box with Tape & Stamps
 -------------------------------------------------------------- */
 
+const BARRIER_HEIGHT = 420;
+
 // Standard material thickness width calculator for physical clearance & collision
 const getMaterialWidth = (type, thickness) => {
-  if (type === 'wood') return 150 + thickness * 22;
-  if (type === 'cardboard') return 130 + thickness * 24;
-  return 110 + thickness * 18;
+  if (type === 'wood') return 360 + thickness * 20;
+  if (type === 'cardboard') return 280 + thickness * 20;
+  return 240 + thickness * 18;
 };
 
 // 3D WebGL Material Barrier Visual Renderer
 const MaterialBarrierVisual = ({ type, thickness = 1 }) => {
   const width = getMaterialWidth(type, thickness);
-  const height = 300;
+  const height = BARRIER_HEIGHT;
   return <Barrier3DCanvas type={type} thickness={thickness} width={width} height={height} />;
 };
 
@@ -298,37 +300,31 @@ export default function Simulation({ onComplete, onNext }) {
 
   // Geometry calculations
   const matWidth = getMaterialWidth(activeMaterial, thickness);
-  const barrierRightEdge = centerX + matWidth / 2;
-  const barrierLeftEdge = centerX - matWidth / 2;
+  const obstacleHalfWidth = activeMaterial === 'wood' ? (42 + thickness * 5) : activeMaterial === 'cardboard' ? (48 + thickness * 6) : (38 + thickness * 5);
+  const barrierRightEdge = centerX + obstacleHalfWidth;
+  const barrierLeftEdge = centerX - obstacleHalfWidth;
 
   // Compass dynamic placement with auto gap
-  const targetRightCompassX = workspaceSize.width - COMPASS_RADIUS - 45;
+  const targetRightCompassX = workspaceSize.width - COMPASS_RADIUS - 35;
   const dynamicCompassX = Math.max(barrierRightEdge + MIN_OBJECT_COMPASS_GAP + COMPASS_RADIUS, targetRightCompassX);
 
-  // Maximum Magnet Approach X
-  const maxMagnetX = barrierLeftEdge - MIN_MAGNET_GAP - 105;
+  // Maximum Magnet Approach X (allows dragging right up close to the tree barrier)
+  const maxMagnetX = Math.min(centerX - obstacleHalfWidth - 15 - 105, 270);
 
   const getNeedleRotation = (mX, mY, cX, cY, flipped) => {
-    const magnetWidth = 210;
-    const nPoleX = flipped ? mX + magnetWidth / 4 : mX - magnetWidth / 4;
-    const sPoleX = flipped ? mX - magnetWidth / 4 : mX + magnetWidth / 4;
-    const poleY = cY;
+    const magnetTipX = mX + 105; // Right pole tip of magnet facing compass
+    const distToCompass = Math.max(60, cX - magnetTipX);
 
-    const distN = Math.sqrt((nPoleX - cX) ** 2 + (poleY - cY) ** 2);
-    const distS = Math.sqrt((sPoleX - cX) ** 2 + (poleY - cY) ** 2);
-    const minDist = Math.min(distN, distS);
-
-    if (minDist > 750) return 0;
-
-    const angleToN = calculateAngle(cX, cY, nPoleX, poleY);
-    const angleToS = calculateAngle(cX, cY, sPoleX, poleY);
-
-    let targetAngle = distN < distS ? angleToN + 90 : angleToS - 90;
-    while (targetAngle > 180) targetAngle -= 360;
-    while (targetAngle < -180) targetAngle += 360;
-
-    const deflectionFactor = Math.max(0, Math.min(1, 1 - (minDist - 180) / 450));
-    return targetAngle * deflectionFactor;
+    // Normal resting needle is at 0 degrees.
+    // As the magnet approaches the non-magnetic tree barrier, the field penetrates through it,
+    // vigorously deflecting the compass needle!
+    const maxDeflection = flipped ? -72 : 72;
+    
+    // Proximity factor: 0 when far (dist > 580), smoothly scaling to 1.0 when close to barrier
+    const proximity = Math.max(0, Math.min(1, (580 - distToCompass) / 320));
+    const smoothFactor = Math.sin((proximity * Math.PI) / 2); // Smooth sinusoidal ease-in-out
+    
+    return maxDeflection * smoothFactor;
   };
 
   // Update needle angle on state changes
@@ -340,7 +336,7 @@ export default function Simulation({ onComplete, onNext }) {
   const handleTestCurrentObject = () => {
     setIsTesting(true);
     // Glide magnet smoothly toward object
-    const targetX = Math.min(maxMagnetX, 235);
+    const targetX = maxMagnetX;
     setMagnetX(targetX);
 
     setTimeout(() => {
@@ -370,14 +366,14 @@ export default function Simulation({ onComplete, onNext }) {
   const handleNextObject = () => {
     const nextIdx = (selectedMaterialIndex + 1) % MATERIALS.length;
     setSelectedMaterialIndex(nextIdx);
-    setMagnetX(135);
+    setMagnetX(120);
     setFeedback(null);
   };
 
   // Select specific object
   const handleSelectObject = (idx) => {
     setSelectedMaterialIndex(idx);
-    setMagnetX(135);
+    setMagnetX(120);
     setFeedback(null);
     if (currentActionStep === 1) {
       triggerNextActionStep(2, 2000);
@@ -397,12 +393,12 @@ export default function Simulation({ onComplete, onNext }) {
     if (!isDraggingRef.current || !workspaceContainerRef.current) return;
     const rect = workspaceContainerRef.current.getBoundingClientRect();
     const clientX = e.clientX - rect.left;
-    const minX = 115;
+    const minX = 90;
     const clampedX = Math.max(minX, Math.min(maxMagnetX, clientX));
     setMagnetX(clampedX);
 
     // If dragged close to the barrier, trigger deflection observation
-    if (clampedX >= Math.min(maxMagnetX - 15, 205)) {
+    if (clampedX >= maxMagnetX - 45) {
       if (observations[activeMaterial] !== 'deflects') {
         const updated = { ...observations, [activeMaterial]: 'deflects' };
         setObservations(updated);
@@ -498,15 +494,15 @@ export default function Simulation({ onComplete, onNext }) {
       
       {/* Left Column: Automatic Object Selection & Testing Hub */}
       <div className="custom-scroll" style={{
-        background: 'rgba(255, 255, 255, 0.97)',
+        background: 'linear-gradient(145deg, #FAF8F5 0%, #F4EFEA 100%)',
         backdropFilter: 'blur(14px)',
         borderRadius: '24px',
-        border: '2px solid #A7F3D0',
+        border: '2px solid #E5DDD3',
         padding: '1.6rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        boxShadow: '0 10px 36px rgba(6, 78, 59, 0.09)',
+        boxShadow: '0 10px 36px rgba(110, 95, 80, 0.08)',
         zIndex: 10,
         overflowY: 'auto'
       }}>
@@ -610,10 +606,10 @@ export default function Simulation({ onComplete, onNext }) {
 
           {/* Active Object Testing Controls */}
           <div style={{ 
-            background: '#F0FDF4', 
+            background: 'linear-gradient(145deg, #FDFBF8 0%, #F3EEE7 100%)', 
             borderRadius: '20px', 
             padding: '1.2rem 1.4rem', 
-            border: '2px solid #BBF7D0',
+            border: '1.5px solid #E2D9CC',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.85rem'
@@ -622,7 +618,7 @@ export default function Simulation({ onComplete, onNext }) {
               <span style={{ fontSize: '0.98rem', fontWeight: 900, color: '#14532D' }}>
                 Active: {activeMaterialObj.name}
               </span>
-              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#047857', background: '#FFFFFF', padding: '3px 10px', borderRadius: '12px', border: '1px solid #A7F3D0' }}>
+              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#047857', background: '#FFFFFF', padding: '3px 10px', borderRadius: '12px', border: '1px solid #E2D9CC' }}>
                 Barrier Thickness: {thickness}
               </span>
             </div>
@@ -740,13 +736,13 @@ export default function Simulation({ onComplete, onNext }) {
         {/* Top Header Stage Bar */}
         <div style={{ 
           padding: '0.5rem 1rem', 
-          background: '#FFFFFF', 
-          border: '1.5px solid #A7F3D0', 
+          background: 'linear-gradient(145deg, #FAF8F5 0%, #F4EFEA 100%)', 
+          border: '1.5px solid #E5DDD3', 
           borderRadius: '16px', 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.04)'
+          boxShadow: '0 4px 14px rgba(110, 95, 80, 0.06)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <span style={{ fontSize: '1.2rem' }}>{activeMaterialObj.icon}</span>
@@ -907,7 +903,7 @@ export default function Simulation({ onComplete, onNext }) {
                 style={{
                   position: 'absolute',
                   left: centerX - (matWidth / 2),
-                  top: centerY - 150,
+                  top: centerY - (BARRIER_HEIGHT / 2),
                   zIndex: 15,
                   pointerEvents: 'none'
                 }}

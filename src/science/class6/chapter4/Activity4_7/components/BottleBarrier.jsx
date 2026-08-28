@@ -4,10 +4,11 @@ import { useTexture } from '@react-three/drei';
 
 /**
  * 3D PET Plastic Spring Water Bottle Barrier Component
- * - Rich vibrant blue internal water volume
- * - Cleaned up shell geometry without protruding fins
- * - Sharp, saturated shrink-wrap label (toneMapped: false)
+ * - Bright, vibrant cyan water with realistic refraction
+ * - Clean translucent shell geometry
+ * - Sharp, saturated shrink-wrap label
  * - Dynamic thickness scaling along X/Z axes
+ * - IMPROVED: Brighter colors, more realistic materials
  */
 export default function BottleBarrier({ thickness = 1 }) {
   // Load local label and cap textures
@@ -74,36 +75,38 @@ export default function BottleBarrier({ thickness = 1 }) {
 
   return (
     <group position={[0, -1.2, 0]} scale={[scaleX, 1, scaleZ]}>
-      {/* ─── 1. Outer Translucent PET Plastic Shell ─── */}
+      {/* ─── 1. Outer Translucent PET Plastic Shell (Brighter) ─── */}
       <mesh castShadow receiveShadow>
         <latheGeometry args={[bottlePts, 64]} />
         <meshPhysicalMaterial
-          color="#ffffff"
-          transmission={0.96}
+          color="#f8fafc"
+          transmission={0.95}
           opacity={1.0}
           transparent={true}
-          roughness={0.03}
+          roughness={0.02}
           ior={1.54}
           thickness={0.4}
-          specularIntensity={1.0}
+          specularIntensity={1.2}
           specularColor="#ffffff"
           clearcoat={1.0}
-          clearcoatRoughness={0.02}
+          clearcoatRoughness={0.01}
         />
       </mesh>
 
-      {/* ─── 2. Vivid Rich Cyan Spring Water Volume ─── */}
+      {/* ─── 2. Vivid Bright Cyan Spring Water Volume ─── */}
       <mesh position={[0, 0, 0]}>
         <latheGeometry args={[waterPts, 64]} />
         <meshPhysicalMaterial
-          color="#0284c7"
-          transmission={0.75}
+          color="#00d4ff"
+          emissive="#00a8cc"
+          emissiveIntensity={0.15}
+          transmission={0.85}
           transparent={true}
-          opacity={0.95}
-          roughness={0.05}
+          opacity={0.98}
+          roughness={0.04}
           ior={1.333}
           thickness={0.7}
-          specularIntensity={0.9}
+          specularIntensity={1.1}
         />
       </mesh>
 
@@ -112,35 +115,36 @@ export default function BottleBarrier({ thickness = 1 }) {
         <cylinderGeometry args={[0.533, 0.533, 0.76, 64, 1, true]} />
         <meshStandardMaterial
           map={labelMap}
-          roughness={0.18}
-          metalness={0.05}
+          roughness={0.15}
+          metalness={0.08}
           toneMapped={false}
           side={THREE.DoubleSide}
         />
       </mesh>
 
-      {/* ─── 4. Ribbed Polypropylene Screw Cap ─── */}
+      {/* ─── 4. Ribbed Polypropylene Screw Cap (White) ─── */}
       <mesh position={[0, 2.74, 0]} castShadow>
         <cylinderGeometry args={[0.20, 0.20, 0.16, 48]} />
         <meshStandardMaterial
           map={capMap}
           bumpMap={capMap}
           bumpScale={0.03}
-          roughness={0.35}
-          metalness={0.1}
+          roughness={0.3}
+          metalness={0.12}
+          color="#f5f5f5"
         />
       </mesh>
 
-      {/* Tamper-Evident Safety Ring */}
+      {/* Tamper-Evident Safety Ring (Bright Cyan) */}
       <mesh position={[0, 2.63, 0]}>
         <cylinderGeometry args={[0.205, 0.205, 0.04, 48]} />
-        <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.05} />
+        <meshStandardMaterial color="#00d4ff" roughness={0.35} metalness={0.08} />
       </mesh>
 
       {/* Ground Contact Shadow */}
       <mesh position={[0, -0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.55, 32]} />
-        <meshBasicMaterial color="#020617" transparent opacity={0.45} />
+        <meshBasicMaterial color="#020617" transparent opacity={0.25} />
       </mesh>
     </group>
   );

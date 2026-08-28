@@ -799,14 +799,14 @@ export default function Stage1_Investigate({ onComplete }) {
         </div>
       </div>
 
-      {/* Control Panel (Activity 4.3 Theme - Champagne Background) */}
+      {/* Control Panel (Activity 4.3 Theme - Cream Background) */}
       <div style={{ 
         flex: '1.15', 
-        background: '#F7E7CE', 
-        border: '1.5px solid #E6D2AC', 
+        background: '#FFFDD0', 
+        border: '1.5px solid #EFE4B0', 
         borderRadius: '24px', 
         padding: '1.5rem 1.6rem', 
-        boxShadow: '0 4px 20px rgba(180, 140, 90, 0.12)', 
+        boxShadow: '0 4px 20px rgba(180, 160, 100, 0.08)', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 

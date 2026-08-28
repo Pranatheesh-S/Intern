@@ -46,7 +46,7 @@ const BADGE_CONFIG = {
   cardboard: { title: '📦 Corrugated Shipping Box (Cardboard)', bg: 'linear-gradient(135deg, #B45309 0%, #92400E 100%)', border: '#FDE68A' }
 };
 
-export default function Barrier3DCanvas({ type = 'wood', thickness = 1, width = 220, height = 300 }) {
+export default function Barrier3DCanvas({ type = 'wood', thickness = 1, width = 360, height = 420 }) {
   const badge = BADGE_CONFIG[type] || BADGE_CONFIG.wood;
 
   return (
@@ -58,12 +58,13 @@ export default function Barrier3DCanvas({ type = 'wood', thickness = 1, width = 
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      userSelect: 'none'
+      userSelect: 'none',
+      background: 'transparent'
     }}>
       {/* Top Floating Material Tag Badge */}
       <div style={{
         position: 'absolute',
-        top: '-24px',
+        top: '-18px',
         background: badge.bg,
         color: '#FFFFFF',
         padding: '5px 14px',
@@ -96,46 +97,67 @@ export default function Barrier3DCanvas({ type = 'wood', thickness = 1, width = 
         <div style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
           <Canvas
             shadows
-            camera={{ position: [0, 1.1, 4.8], fov: 42 }}
+            camera={{ position: [0, 0.95, 4.4], fov: 44 }}
             gl={{
               antialias: true,
               alpha: true,
-              powerPreference: 'high-performance'
+              powerPreference: 'high-performance',
+              tone: 'aces' // Better tone mapping
             }}
             style={{ width: '100%', height: '100%', background: 'transparent' }}
           >
             <Suspense fallback={<BarrierLoader />}>
-              {/* Studio Environment Map for Specular Highlights & Glass Transmission */}
-              <Environment preset="city" />
+              {/* Premium Studio Environment Map for Specular Highlights & Glass Transmission */}
+              <Environment preset="studio" intensity={1.2} />
 
-              {/* Studio Ambient Base Light */}
-              <ambientLight intensity={0.85} />
+              {/* Studio Ambient Light - INCREASED for brightness */}
+              <ambientLight intensity={1.4} color="#ffffff" />
 
-              {/* Key Directional Light with Soft Shadows */}
+              {/* Primary Key Directional Light - Stronger & Larger */}
               <directionalLight
-                position={[6, 9, 6]}
-                intensity={1.8}
+                position={[8, 10, 8]}
+                intensity={2.5}
                 castShadow
-                shadow-mapSize-width={1024}
-                shadow-mapSize-height={1024}
-                shadow-bias={-0.0001}
+                shadow-mapSize-width={2048}
+                shadow-mapSize-height={2048}
+                shadow-bias={-0.0002}
+                color="#ffffff"
               />
 
-              {/* Cool Sky Fill Light */}
-              <directionalLight position={[-6, 2, 4]} intensity={0.9} color="#e0f2fe" />
+              {/* Bright Cool Sky Fill Light - More intense */}
+              <directionalLight 
+                position={[-8, 4, 6]} 
+                intensity={1.6} 
+                color="#e0f2fe" 
+              />
 
-              {/* Warm Studio Rim Light */}
-              <directionalLight position={[0, 5, -6]} intensity={1.1} color="#fef08a" />
+              {/* Warm Studio Rim Light - Enhanced */}
+              <directionalLight 
+                position={[0, 6, -8]} 
+                intensity={1.4} 
+                color="#fef3c7" 
+              />
 
-              {/* Bottom Ground Bounce Light */}
-              <directionalLight position={[0, -4, 2]} intensity={0.4} color="#f1f5f9" />
+              {/* Bottom Ground Bounce Light - More realistic */}
+              <directionalLight 
+                position={[0, -3, 3]} 
+                intensity={0.7} 
+                color="#f1f5f9" 
+              />
 
-              {/* Realistic Ground Contact Shadows */}
+              {/* Additional left-side accent light for more depth */}
+              <pointLight
+                position={[-6, 3, 0]}
+                intensity={1.2}
+                color="#dbeafe"
+              />
+
+              {/* Realistic Ground Contact Shadows - Less dark */}
               <ContactShadows
                 position={[0, -1.05, 0]}
-                opacity={0.6}
+                opacity={0.4}
                 scale={4.0}
-                blur={1.5}
+                blur={2.0}
                 far={3.5}
                 color="#0f172a"
               />

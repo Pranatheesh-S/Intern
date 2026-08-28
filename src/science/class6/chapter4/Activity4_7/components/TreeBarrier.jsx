@@ -42,8 +42,8 @@ function generateOakBarkTexture() {
   return texture;
 }
 
-// ─── 2. Ultra-Dense Vibrant Multi-Tone Foliage Sprig Texture ───
-function generateLushLeafSprigTexture() {
+// ─── 2. Deep Dark Green Foliage Leaf Texture ───
+function generateDarkGreenLeafTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
   canvas.height = 512;
@@ -65,9 +65,9 @@ function generateLushLeafSprigTexture() {
     ctx.bezierCurveTo(-55, -20, -45, -60, 0, -90);
     ctx.fill();
 
-    // Leaf vein
-    ctx.strokeStyle = 'rgba(254, 240, 138, 0.45)';
-    ctx.lineWidth = 2.5;
+    // Subtle dark vein highlight
+    ctx.strokeStyle = 'rgba(134, 239, 172, 0.35)';
+    ctx.lineWidth = 2.2;
     ctx.beginPath();
     ctx.moveTo(0, -80);
     ctx.lineTo(0, 80);
@@ -75,15 +75,16 @@ function generateLushLeafSprigTexture() {
     ctx.restore();
   };
 
-  // Dense multi-leaf cluster with rich forest & lime tones
-  drawOakLeaf(256, 256, 0, 1.25, '#15803d');
-  drawOakLeaf(175, 275, -0.65, 1.1, '#166534');
-  drawOakLeaf(337, 275, 0.65, 1.1, '#15803d');
-  drawOakLeaf(256, 145, 0.2, 1.15, '#22c55e');
-  drawOakLeaf(205, 385, -0.35, 0.95, '#14532d');
-  drawOakLeaf(307, 385, 0.35, 0.95, '#16a34a');
-  drawOakLeaf(135, 195, -0.9, 0.9, '#15803d');
-  drawOakLeaf(377, 195, 0.9, 0.9, '#4ade80');
+  // Deep rich dark green palette for dense foliage
+  drawOakLeaf(256, 256, 0, 1.25, '#0a2f14');     // Deepest forest green
+  drawOakLeaf(175, 275, -0.65, 1.1, '#0d3d1a');  // Dark emerald
+  drawOakLeaf(337, 275, 0.65, 1.1, '#0a2f14');   // Deepest forest green
+  drawOakLeaf(256, 145, 0.2, 1.15, '#14532d');   // Rich dark green
+  drawOakLeaf(205, 385, -0.35, 0.95, '#06200d'); // Midnight green shadow
+  drawOakLeaf(307, 385, 0.35, 0.95, '#0f4620');  // Dark pine green
+  drawOakLeaf(135, 195, -0.9, 0.9, '#0d3d1a');   // Dark emerald
+  drawOakLeaf(377, 195, 0.9, 0.9, '#166534');    // Deep moss green
+  drawOakLeaf(256, 85, -0.15, 0.9, '#14532d');   // Top accent
 
   const tex = new THREE.CanvasTexture(canvas);
   return tex;
@@ -91,54 +92,100 @@ function generateLushLeafSprigTexture() {
 
 export default function TreeBarrier({ thickness = 1 }) {
   const barkMap = useMemo(() => generateOakBarkTexture(), []);
-  const leafMap = useMemo(() => generateLushLeafSprigTexture(), []);
-  const canopyRef = useRef();
+  const leafMap = useMemo(() => generateDarkGreenLeafTexture(), []);
+  const treeGroupRef = useRef();
+  const foliageRef = useRef();
 
-  // ─── 650 Multi-Layered Natural Canopy Leaf Cards ───
-  const foliageLeaves = useMemo(() => {
+  // ─── Lush Foliage Clusters with Abundant Left and Right Canopy ───
+  const leafClusters = useMemo(() => {
+    // Generous canopy clusters focusing on left and right flanks + top apex
+    const clusterCenters = [
+      // Left side clusters (abundant & lush)
+      { center: [-0.65, 2.05, 0.15], radius: 0.48, count: 50 },  // Far-left branch tip
+      { center: [-0.42, 1.75, 0.25], radius: 0.44, count: 42 },  // Mid-left lower branch
+      { center: [-0.52, 2.35, -0.1], radius: 0.46, count: 45 },  // Left upper canopy crown
+      { center: [-0.75, 1.90, -0.2], radius: 0.42, count: 38 },  // Left rear flank
+
+      // Right side clusters (abundant & lush)
+      { center: [0.68, 2.10, -0.12], radius: 0.48, count: 50 },  // Far-right branch tip
+      { center: [0.45, 1.78, 0.22], radius: 0.44, count: 42 },   // Mid-right lower branch
+      { center: [0.55, 2.38, 0.1], radius: 0.46, count: 45 },    // Right upper canopy crown
+      { center: [0.78, 1.92, 0.18], radius: 0.42, count: 38 },   // Right front flank
+
+      // Center, Front & Apex canopy
+      { center: [0.05, 2.65, 0.0], radius: 0.52, count: 55 },    // Top apex crown
+      { center: [0.08, 1.85, 0.52], radius: 0.46, count: 48 },   // Front-center main bough
+      { center: [-0.22, 1.98, 0.45], radius: 0.42, count: 40 },  // Front-left canopy
+      { center: [0.25, 2.02, 0.46], radius: 0.42, count: 40 },   // Front-right canopy
+      { center: [0.02, 2.25, 0.50], radius: 0.44, count: 42 },   // Front upper bough
+
+      // Backside clusters (lush & balanced for 360-degree rotation)
+      { center: [0.0, 2.05, -0.55], radius: 0.48, count: 50 },   // Rear center main bough
+      { center: [-0.35, 2.15, -0.48], radius: 0.45, count: 44 }, // Rear-left canopy
+      { center: [0.38, 2.18, -0.45], radius: 0.45, count: 44 },  // Rear-right canopy
+      { center: [-0.15, 2.50, -0.38], radius: 0.46, count: 46 }, // Rear upper crown
+      { center: [0.22, 1.80, -0.50], radius: 0.42, count: 38 }   // Rear lower branch
+    ];
+
     const cards = [];
-    const count = 650;
-    for (let i = 0; i < count; i++) {
-      const phi = Math.acos(-1 + (2 * i) / count);
-      const theta = Math.sqrt(count * Math.PI) * phi;
+    clusterCenters.forEach((c) => {
+      for (let i = 0; i < c.count; i++) {
+        const phi = Math.acos(-1 + (2 * i) / c.count);
+        const theta = Math.sqrt(c.count * Math.PI) * phi;
+        const rad = c.radius * (0.62 + Math.random() * 0.48);
 
-      // Volumetric multi-lobe egg profile filling both surface and interior
-      const depthFactor = 0.55 + Math.random() * 0.55;
-      const radX = (0.75 + Math.random() * 0.35) * depthFactor;
-      const radY = (1.1 + Math.random() * 0.45) * depthFactor;
-      const radZ = (0.75 + Math.random() * 0.35) * depthFactor;
+        const x = c.center[0] + rad * Math.sin(phi) * Math.cos(theta);
+        const y = c.center[1] + rad * Math.cos(phi) * 0.88;
+        const z = c.center[2] + rad * Math.sin(phi) * Math.sin(theta);
 
-      const x = radX * Math.sin(phi) * Math.cos(theta);
-      const y = radY * Math.cos(phi) + 2.25;
-      const z = radZ * Math.sin(phi) * Math.sin(theta);
-      const scale = 0.5 + Math.random() * 0.35;
+        cards.push({
+          pos: [x, y, z],
+          rot: [Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI],
+          scale: 0.46 + Math.random() * 0.22
+        });
+      }
+    });
 
-      cards.push({
-        pos: [x, y, z],
-        rot: [Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI],
-        scale
-      });
-    }
     return cards;
   }, []);
 
-  // Subtle wind sway animation
+  // Subtle natural wind sway
   useFrame((state) => {
-    if (canopyRef.current) {
+    if (foliageRef.current) {
       const t = state.clock.getElapsedTime();
-      canopyRef.current.rotation.z = Math.sin(t * 1.1) * 0.012;
-      canopyRef.current.rotation.x = Math.cos(t * 0.8) * 0.009;
+      foliageRef.current.rotation.z = Math.sin(t * 1.1) * 0.012;
+      foliageRef.current.rotation.x = Math.cos(t * 0.8) * 0.008;
     }
   });
 
-  const scaleX = 0.85 + thickness * 0.15;
-  const scaleZ = 0.85 + thickness * 0.15;
+  const scaleX = 0.95 + thickness * 0.15;
+  const scaleY = 1.0;
+  const scaleZ = 0.95 + thickness * 0.15;
 
   return (
-    <group position={[0, -1.5, 0]} scale={[scaleX, 1, scaleZ]}>
-      {/* ─── 1. Main Oak Trunk (Warm Brown Wood) ─── */}
-      <mesh position={[0, 0.85, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.22, 0.35, 1.4, 32]} />
+    <group ref={treeGroupRef} position={[0, -1.35, 0]} scale={[scaleX, scaleY, scaleZ]}>
+      
+      {/* ─── 1. Sprawling Buttress Roots (Directly on ground, bottom disc removed) ─── */}
+      <mesh position={[-0.24, 0.15, 0.18]} rotation={[0.42, -0.6, -0.38]} castShadow>
+        <cylinderGeometry args={[0.07, 0.16, 0.65, 16]} />
+        <meshStandardMaterial map={barkMap} roughness={0.9} color="#78350f" />
+      </mesh>
+      <mesh position={[0.26, 0.13, 0.15]} rotation={[0.38, 0.72, 0.42]} castShadow>
+        <cylinderGeometry args={[0.07, 0.15, 0.62, 16]} />
+        <meshStandardMaterial map={barkMap} roughness={0.9} color="#78350f" />
+      </mesh>
+      <mesh position={[0.02, 0.13, -0.26]} rotation={[-0.48, 0.12, 0.1]} castShadow>
+        <cylinderGeometry args={[0.08, 0.17, 0.6, 16]} />
+        <meshStandardMaterial map={barkMap} roughness={0.9} color="#78350f" />
+      </mesh>
+      <mesh position={[-0.28, 0.11, -0.12]} rotation={[-0.22, -1.15, -0.4]} castShadow>
+        <cylinderGeometry args={[0.06, 0.14, 0.55, 16]} />
+        <meshStandardMaterial map={barkMap} roughness={0.9} color="#78350f" />
+      </mesh>
+
+      {/* ─── 2. Main Sturdy Oak Trunk ─── */}
+      <mesh position={[0, 0.75, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.18, 0.32, 1.35, 32]} />
         <meshStandardMaterial
           map={barkMap}
           roughness={0.88}
@@ -147,54 +194,90 @@ export default function TreeBarrier({ thickness = 1 }) {
         />
       </mesh>
 
-      {/* ─── 2. Sprawling Base Roots ─── */}
-      {/* Root Flare 1 (Front-Left) */}
-      <mesh position={[-0.22, 0.14, 0.16]} rotation={[0.4, -0.6, -0.35]} castShadow>
-        <cylinderGeometry args={[0.07, 0.16, 0.65, 16]} />
-        <meshStandardMaterial map={barkMap} roughness={0.92} color="#78350f" />
-      </mesh>
-
-      {/* Root Flare 2 (Front-Right) */}
-      <mesh position={[0.24, 0.12, 0.14]} rotation={[0.35, 0.7, 0.4]} castShadow>
-        <cylinderGeometry args={[0.07, 0.15, 0.62, 16]} />
-        <meshStandardMaterial map={barkMap} roughness={0.92} color="#78350f" />
-      </mesh>
-
-      {/* Root Flare 3 (Back-Center) */}
-      <mesh position={[0.0, 0.12, -0.24]} rotation={[-0.45, 0.1, 0.1]} castShadow>
-        <cylinderGeometry args={[0.08, 0.17, 0.6, 16]} />
-        <meshStandardMaterial map={barkMap} roughness={0.92} color="#78350f" />
-      </mesh>
-
-      {/* Root Flare 4 (Side-Left) */}
-      <mesh position={[-0.26, 0.1, -0.1]} rotation={[-0.2, -1.1, -0.38]} castShadow>
-        <cylinderGeometry args={[0.06, 0.14, 0.55, 16]} />
-        <meshStandardMaterial map={barkMap} roughness={0.92} color="#78350f" />
-      </mesh>
-
-      {/* Natural Dark Earth/Soil Mound */}
-      <mesh position={[0, 0.02, 0]} receiveShadow>
-        <cylinderGeometry args={[0.55, 0.72, 0.08, 32]} />
-        <meshStandardMaterial color="#271810" roughness={0.98} />
-      </mesh>
-
-      {/* ─── 3. Upper Branch Scaffolding ─── */}
-      <mesh position={[0, 1.7, 0]} rotation={[0.08, 0.1, 0.05]} castShadow>
-        <cylinderGeometry args={[0.1, 0.2, 1.1, 16]} />
-        <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
-      </mesh>
-      <mesh position={[-0.22, 1.58, 0.06]} rotation={[0.2, 0.35, 0.6]} castShadow>
-        <cylinderGeometry args={[0.07, 0.13, 0.95, 16]} />
-        <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
-      </mesh>
-      <mesh position={[0.24, 1.62, -0.05]} rotation={[-0.15, -0.4, -0.55]} castShadow>
-        <cylinderGeometry args={[0.07, 0.13, 0.95, 16]} />
+      {/* Trunk Middle Knot / Fork Core */}
+      <mesh position={[0.02, 1.35, 0]} castShadow>
+        <sphereGeometry args={[0.19, 16, 16]} />
         <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
       </mesh>
 
-      {/* ─── 4. Dense Lush Green Leaf Canopy (650 Leaf Cards) ─── */}
-      <group ref={canopyRef}>
-        {foliageLeaves.map((leaf, idx) => (
+      {/* ─── 3. Prominent Spreading 3D Branches ─── */}
+      
+      {/* Primary Branch 1: Sweeping Left Branch */}
+      <group position={[-0.08, 1.38, 0.02]} rotation={[0.18, 0.25, 0.68]}>
+        <mesh position={[0, 0.38, 0]} castShadow>
+          <cylinderGeometry args={[0.09, 0.14, 0.82, 16]} />
+          <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+        </mesh>
+        {/* Left Sub-Branch 1 */}
+        <mesh position={[-0.06, 0.68, 0.08]} rotation={[0.25, 0.4, 0.45]} castShadow>
+          <cylinderGeometry args={[0.05, 0.08, 0.58, 12]} />
+          <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+        </mesh>
+        {/* Left Sub-Branch 2 (Outer Reach) */}
+        <mesh position={[0.04, 0.55, -0.12]} rotation={[-0.2, -0.3, -0.35]} castShadow>
+          <cylinderGeometry args={[0.04, 0.07, 0.48, 12]} />
+          <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+        </mesh>
+      </group>
+
+      {/* Primary Branch 2: Sweeping Right Branch */}
+      <group position={[0.08, 1.40, -0.02]} rotation={[-0.14, -0.32, -0.65]}>
+        <mesh position={[0, 0.40, 0]} castShadow>
+          <cylinderGeometry args={[0.09, 0.14, 0.85, 16]} />
+          <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+        </mesh>
+        {/* Right Sub-Branch 1 */}
+        <mesh position={[0.07, 0.72, -0.06]} rotation={[-0.2, -0.35, -0.42]} castShadow>
+          <cylinderGeometry args={[0.05, 0.08, 0.60, 12]} />
+          <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+        </mesh>
+        {/* Right Sub-Branch 2 (Outer Reach) */}
+        <mesh position={[-0.05, 0.58, 0.12]} rotation={[0.22, 0.3, 0.38]} castShadow>
+          <cylinderGeometry args={[0.04, 0.07, 0.50, 12]} />
+          <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+        </mesh>
+      </group>
+
+      {/* Primary Branch 3: Front-Reaching Branch */}
+      <group position={[0.02, 1.36, 0.06]} rotation={[0.62, 0.1, -0.15]}>
+        <mesh position={[0, 0.32, 0]} castShadow>
+          <cylinderGeometry args={[0.08, 0.12, 0.68, 16]} />
+          <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+        </mesh>
+        {/* Secondary Fork */}
+        <mesh position={[0.05, 0.56, 0.04]} rotation={[0.3, 0.4, 0.3]} castShadow>
+          <cylinderGeometry args={[0.04, 0.07, 0.42, 12]} />
+          <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+        </mesh>
+      </group>
+
+      {/* Primary Branch 4: Back-Left Branch */}
+      <group position={[-0.04, 1.42, -0.06]} rotation={[-0.55, -0.5, 0.38]}>
+        <mesh position={[0, 0.36, 0]} castShadow>
+          <cylinderGeometry args={[0.08, 0.12, 0.74, 16]} />
+          <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+        </mesh>
+      </group>
+
+      {/* Central Upper Trunk Extension leading to Apex */}
+      <mesh position={[0.01, 1.82, 0]} rotation={[0.04, 0.08, 0.02]} castShadow>
+        <cylinderGeometry args={[0.09, 0.15, 0.88, 16]} />
+        <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+      </mesh>
+
+      {/* Top Apex Sub-Branches */}
+      <mesh position={[-0.08, 2.22, 0.04]} rotation={[0.15, 0.2, 0.35]} castShadow>
+        <cylinderGeometry args={[0.04, 0.08, 0.55, 12]} />
+        <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+      </mesh>
+      <mesh position={[0.08, 2.24, -0.03]} rotation={[-0.12, -0.2, -0.32]} castShadow>
+        <cylinderGeometry args={[0.04, 0.08, 0.55, 12]} />
+        <meshStandardMaterial map={barkMap} roughness={0.9} color="#854d0e" />
+      </mesh>
+
+      {/* ─── 4. Dense Dark Green Foliage Clusters (Lush on Left & Right) ─── */}
+      <group ref={foliageRef}>
+        {leafClusters.map((leaf, idx) => (
           <mesh
             key={idx}
             position={leaf.pos}
@@ -202,18 +285,19 @@ export default function TreeBarrier({ thickness = 1 }) {
             scale={[leaf.scale, leaf.scale, leaf.scale]}
             castShadow
           >
-            <planeGeometry args={[0.75, 0.75]} />
+            <planeGeometry args={[0.66, 0.66]} />
             <meshStandardMaterial
               map={leafMap}
               transparent={true}
               alphaTest={0.32}
               side={THREE.DoubleSide}
-              roughness={0.42}
+              roughness={0.4}
               depthWrite={true}
             />
           </mesh>
         ))}
       </group>
+
     </group>
   );
 }
