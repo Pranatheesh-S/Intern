@@ -1,252 +1,337 @@
 import React, { useState, useEffect } from 'react';
-import { Hand, CheckCircle, Lightbulb, ChevronsDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Hand, Search, Box, CheckCircle, Lightbulb } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+import cottonNormalImg from '../../../../../assets/hardness/cotton_normal.jpg';
+import cottonPressedImg from '../../../../../assets/hardness/cotton_pressed.gif';
+import spongeNormalImg from '../../../../../assets/hardness/sponge_normal.jpg';
+import spongePressedImg from '../../../../../assets/hardness/sponge_pressed.gif';
+import eraserNormalImg from '../../../../../assets/hardness/eraser_normal.jpg';
+import eraserPressedImg from '../../../../../assets/hardness/eraser_pressed.gif';
+import stoneNormalImg from '../../../../../assets/hardness/stone_normal.jpg';
+import stonePressedImg from '../../../../../assets/hardness/stone_pressed.gif';
+import ironNormalImg from '../../../../../assets/hardness/iron_normal.jpg';
+import ironPressedImg from '../../../../../assets/hardness/iron_pressed.gif';
+
+import iconCotton from '../../../../../assets/hardness/icon_cotton.jpg';
+import iconSponge from '../../../../../assets/hardness/icon_sponge.jpg';
+import iconRubber from '../../../../../assets/hardness/icon_rubber.jpg';
+import iconStone from '../../../../../assets/hardness/icon_stone.jpg';
+import iconIron from '../../../../../assets/hardness/icon_iron.jpg';
+
+const materialsData = {
+  'Cotton': iconCotton,
+  'Sponge': iconSponge,
+  'Rubber': iconRubber,
+  'Stone': iconStone,
+  'Iron': iconIron
+};
+
+const objectsData = [
+  { 
+    id: 1, 
+    name: 'Cotton Ball', 
+    image: cottonNormalImg, 
+    pressedImage: cottonPressedImg,
+    hardness: 'soft', 
+    correctMaterial: 'Cotton',
+    options: ['Cotton', 'Sponge', 'Stone'],
+    clue: 'It is soft, fluffy, and comes from a plant. It easily changes shape.'
+  },
+  { 
+    id: 2, 
+    name: 'Washing Sponge', 
+    image: spongeNormalImg, 
+    pressedImage: spongePressedImg,
+    hardness: 'soft', 
+    correctMaterial: 'Sponge',
+    options: ['Rubber', 'Sponge', 'Iron'],
+    clue: 'It is very porous, absorbs water easily, and springs back when pressed.'
+  },
+  { 
+    id: 3, 
+    name: 'Eraser', 
+    image: eraserNormalImg, 
+    pressedImage: eraserPressedImg,
+    hardness: 'soft', 
+    correctMaterial: 'Rubber',
+    options: ['Stone', 'Iron', 'Rubber'],
+    clue: 'It can bend and deform slightly under pressure, and is used to rub out marks.'
+  },
+  { 
+    id: 4, 
+    name: 'Stone', 
+    image: stoneNormalImg, 
+    pressedImage: stonePressedImg,
+    hardness: 'hard', 
+    correctMaterial: 'Stone',
+    options: ['Sponge', 'Cotton', 'Stone'],
+    clue: 'It is a hard, natural material found in the ground or rivers that does not change shape.'
+  },
+  { 
+    id: 5, 
+    name: 'Iron Rod', 
+    image: ironNormalImg, 
+    pressedImage: ironPressedImg,
+    hardness: 'hard', 
+    correctMaterial: 'Iron',
+    options: ['Iron', 'Rubber', 'Cotton'],
+    clue: 'It is a strong, rigid metal used in construction that will not compress.'
+  }
+];
 
 export default function Stage4c_Hardness_Observe({ onComplete, addXp }) {
-  const items = [
-    { id: 'cotton', name: 'Cotton Ball', type: 'soft', resultText: 'It got compressed easily.', icon: <div style={{ width: '50px', height: '50px', background: 'radial-gradient(circle at 30% 30%, var(--surface), var(--border))', borderRadius: '50%', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />, color: '#22c55e', bg: '#dcfce7', blockBg: '#bbf7d0', blockRadius: '20px' },
-    { id: 'sponge', name: 'Washing Sponge', type: 'soft', resultText: 'It was pressed down. It is soft.', icon: '🧽', color: '#22c55e', bg: '#dcfce7', blockBg: '#86efac', blockRadius: '8px' },
-    { id: 'eraser', name: 'Eraser', type: 'soft', resultText: 'It changed shape slightly.', icon: (
-      <svg width="50" height="50" viewBox="0 0 50 50">
-        <g transform="rotate(-15 25 25)">
-          <rect x="6" y="16" width="38" height="18" rx="4" fill="#fda4af" />
-          <rect x="6" y="16" width="38" height="12" rx="4" fill="#fecdd3" />
-          <rect x="16" y="16" width="18" height="18" fill="var(--accent)" />
-          <rect x="16" y="16" width="18" height="12" fill="var(--border)" />
-        </g>
-      </svg>
-    ), color: '#22c55e', bg: '#dcfce7', blockBg: 'var(--border)', blockRadius: '4px' },
-    { id: 'stone', name: 'River Stone', type: 'hard', resultText: 'It did not change shape.', icon: '🪨', color: '#ef4444', bg: '#fee2e2', blockBg: 'var(--text-muted)', blockRadius: '12px' },
-    { id: 'iron', name: 'Iron Rod', type: 'hard', resultText: 'It did not change shape at all.', icon: <div style={{ width: '55px', height: '18px', background: 'linear-gradient(180deg, var(--border), var(--surface), var(--text-muted))', borderRadius: '4px', transform: 'rotate(20deg)', boxShadow: '0 4px 6px rgba(0,0,0,0.2)' }} />, color: '#ef4444', bg: '#fee2e2', blockBg: 'var(--text-muted)', blockRadius: '0px' }
-  ];
+  const [selectedId, setSelectedId] = useState(1);
+  const [isHolding, setIsHolding] = useState(false);
+  const [progress, setProgress] = useState(
+    objectsData.reduce((acc, obj) => {
+      acc[obj.id] = { status: 'untouched', wrongAttempts: 0 };
+      return acc;
+    }, {})
+  );
 
-  const [testedItems, setTestedItems] = useState({});
-  const [activeAnim, setActiveAnim] = useState(null);
-  const [placedItems, setPlacedItems] = useState({ soft: [], hard: [] });
+  const activeObj = objectsData.find(o => o.id === selectedId);
+  const activeState = progress[selectedId];
 
-  const handlePress = (id) => {
-    if (activeAnim) return;
-    setActiveAnim(id);
-    setTimeout(() => {
-      setTestedItems(prev => {
-        if (!prev[id]) addXp(10);
-        return { ...prev, [id]: true };
-      });
-      // Automatically place the item
-      const item = items.find(i => i.id === id);
-      setPlacedItems(prev => {
-        if (prev[item.type].includes(id)) return prev;
-        return { ...prev, [item.type]: [...prev[item.type], id] };
-      });
-      setActiveAnim(null);
-    }, 1000);
+  // Press & Hold Timer
+  useEffect(() => {
+    let timer;
+    if (isHolding && activeState.status === 'untouched') {
+      timer = setTimeout(() => {
+        setProgress(prev => ({
+          ...prev,
+          [selectedId]: { ...prev[selectedId], status: 'observed' }
+        }));
+        setIsHolding(false);
+        addXp(15);
+      }, 6500); // 6.5 seconds hold for the animation/video to play
+    }
+    return () => clearTimeout(timer);
+  }, [isHolding, selectedId, activeState.status, addXp]);
+
+  // Completion check
+  const completedCount = Object.values(progress).filter(p => p.status === 'completed').length;
+  useEffect(() => {
+    if (completedCount === objectsData.length) {
+      onComplete();
+    }
+  }, [completedCount, onComplete]);
+
+  const handlePointerDown = (e) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setIsHolding(true);
   };
 
-  const allTested = Object.keys(testedItems).length === items.length;
-  const allPlaced = placedItems.soft.length === 3 && placedItems.hard.length === 2;
+  const handlePointerUp = (e) => {
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    setIsHolding(false);
+  };
 
-  useEffect(() => {
-    if (allTested && allPlaced) {
-      setTimeout(() => onComplete(), 1500);
+  const handleAnswer = (selectedMat) => {
+    if (selectedMat === activeObj.correctMaterial) {
+      setProgress(prev => ({
+        ...prev,
+        [selectedId]: { ...prev[selectedId], status: 'completed' }
+      }));
+      addXp(20);
+      
+      // Auto-advance if not all completed
+      if (completedCount + 1 < objectsData.length) {
+         setTimeout(() => {
+            const nextId = objectsData.find(o => progress[o.id].status !== 'completed' && o.id !== selectedId)?.id;
+            if (nextId) setSelectedId(nextId);
+         }, 1500);
+      }
+    } else {
+      setProgress(prev => ({
+        ...prev,
+        [selectedId]: { ...prev[selectedId], wrongAttempts: prev[selectedId].wrongAttempts + 1 }
+      }));
     }
-  }, [allTested, allPlaced, onComplete]);
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
-      {/* Top Header & Tip */}
-      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Hand size={24} style={{ color: 'var(--accent)' }} /> Observe Hardness: Press Test
-          </h3>
-          <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-            Before we perform advanced scratch tests, detectives test materials by simply pressing them. Press each object with your hand and observe what happens.
-          </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-            <Lightbulb size={16} color="#eab308" /> Click <strong>"Press"</strong> on each material to test it. Watch carefully and compare!
-          </div>
-        </div>
-        
-        <div style={{ width: '280px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ca8a04', fontWeight: 'bold', fontSize: '0.95rem' }}>
-            <Lightbulb size={18} /> Detective Tip
-          </div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-            If a material changes shape easily, it is <strong>soft</strong>. If it does not change shape, it is <strong>hard</strong>.
-          </div>
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '1rem', width: '100%', overflow: 'hidden' }}>
+      
+      {/* Header */}
+      <div className="glass-panel" style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: '0.25rem', border: '1px solid var(--accent-border)', padding: '1rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          🕵️ Material Detective – Press & Identify
+        </h3>
+        <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-secondary)' }}>
+          Press each object, observe what happens and identify the material it is made of.
+        </p>
       </div>
 
-      {/* Materials Row */}
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
-        {items.map(item => {
-          const isTesting = activeAnim === item.id;
-          const isTested = testedItems[item.id];
-          const isPlaced = placedItems.soft.includes(item.id) || placedItems.hard.includes(item.id);
-
-          return (
-            <div key={item.id} style={{ 
-              flex: 1, 
-              border: `1px solid ${isTested ? item.color : 'var(--border)'}`, 
-              borderRadius: '12px', 
-              padding: '1rem 0.5rem', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              gap: '1rem',
-              background: '#fff',
-              position: 'relative',
-              opacity: isPlaced ? 0.5 : 1
-            }}>
-              {/* Item Name */}
-              <div style={{ fontSize: '1rem', fontWeight: 'bold', color: isTested ? item.color : 'var(--text-primary)' }}>
-                {item.name}
-              </div>
-
-              {/* Animation Box containing the actual Object Icon */}
-              <div 
-                style={{ 
-                  width: '100%', height: '140px', 
-                  border: `1px solid ${isTested ? item.color : 'var(--border)'}`,
-                  borderRadius: '8px',
-                  background: isTested ? item.bg : 'var(--surface)',
-                  position: 'relative',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  paddingBottom: '1rem',
-                  overflow: 'hidden',
-                  cursor: 'default'
-                }}>
-                
-                {/* Arrows */}
-                <div style={{ position: 'absolute', top: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <AnimatePresence>
-                    {isTesting && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 5 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ repeat: Infinity, duration: 0.5 }}
-                      >
-                        <ChevronsDown size={24} color={item.color} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Hand */}
-                <motion.div
-                  animate={{ y: isTesting ? 45 : 0 }}
-                  transition={{ duration: 0.3, yoyo: Infinity }}
-                  style={{ position: 'absolute', top: '10px', zIndex: 10 }}
-                >
-                  <Hand size={48} color="#eab308" fill="#fde047" style={{ transform: 'rotate(-15deg)' }} />
-                </motion.div>
-
-                {/* The Actual Material Icon */}
-                <motion.div
-                  animate={isTesting ? (item.type === 'soft' ? { scaleY: 0.5, scaleX: 1.2, y: 15 } : { y: [0, 2, 0, 2, 0] }) : { scaleY: 1, scaleX: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
+      <div style={{ display: 'flex', gap: '1rem', width: '100%', flex: 1, minHeight: 0 }}>
+        {/* Left Panel */}
+        <div className="glass-panel" style={{ flex: '0 0 280px', display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)', padding: '1rem', overflowY: 'auto' }}>
+          <h4 style={{ margin: 0, fontSize: '1.25rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
+            Objects to Investigate ({completedCount} / 5)
+          </h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {objectsData.map(obj => {
+              const isCompleted = progress[obj.id].status === 'completed';
+              const isSelected = selectedId === obj.id;
+              return (
+                <div 
+                  key={obj.id}
+                  onClick={() => { if (!isHolding) setSelectedId(obj.id); }}
                   style={{
-                    fontSize: '4rem', 
-                    filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.15))',
-                    transformOrigin: 'bottom',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '10px'
+                    display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem',
+                    border: isSelected ? '2px solid var(--accent)' : '1px solid var(--border)',
+                    borderRadius: '8px', cursor: isHolding ? 'not-allowed' : 'pointer',
+                    background: isSelected ? 'var(--accent-bg)' : isCompleted ? '#f0fdf4' : 'var(--surface)',
+                    opacity: isHolding && !isSelected ? 0.6 : 1
                   }}
                 >
-                  {item.icon}
-                </motion.div>
-              </div>
-
-              {/* Press Button / Result */}
-              <div style={{ height: '95px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', width: '100%', padding: '0 0.5rem' }}>
-                {isTested ? (
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ background: item.color, color: 'white', padding: '2px 12px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '2px' }}>
-                      {item.type === 'soft' ? 'Soft' : 'Hard'}
-                    </div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textAlign: 'center', lineHeight: '1.2' }}>
-                      {item.resultText}
-                    </div>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: isCompleted ? 'var(--success)' : 'var(--accent)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 'bold', flexShrink: 0 }}>
+                    {isCompleted ? '✓' : obj.id}
                   </div>
-                ) : (
-                  <div style={{ flex: 1 }}></div>
-                )}
-                
-                <button 
-                  onClick={() => handlePress(item.id)}
-                  disabled={activeAnim !== null}
-                  style={{
-                    background: 'var(--accent)', color: 'white', border: 'none',
-                    padding: '0.4rem 1.5rem', borderRadius: '20px',
-                    fontWeight: 'bold', cursor: activeAnim ? 'not-allowed' : 'pointer',
-                    fontSize: '0.9rem', width: '100%',
-                    boxShadow: '0 2px 4px rgba(59,130,246,0.3)',
-                    marginTop: '0.25rem'
-                  }}
-                >
-                  Press
-                </button>
+                  <img src={obj.image} alt={obj.name} style={{ width: '45px', height: '35px', objectFit: 'cover', borderRadius: '6px' }} />
+                  <span style={{ fontWeight: 'bold', flex: 1, fontSize: '1.1rem' }}>{obj.name}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Center Panel */}
+        <div className="glass-panel" style={{ flex: '1', display: 'flex', flexDirection: 'column', alignItems: 'center', border: '1px solid var(--border)', padding: '1.5rem', position: 'relative', overflowY: 'auto' }}>
+          
+          <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+            <Search size={22} style={{ color: 'var(--text-muted)' }} /> 
+            <span style={{ fontWeight: 'bold', fontSize: '1.3rem', color: 'var(--text-primary)' }}>Investigation {selectedId} of 5</span>
+          </div>
+          <div style={{ width: '100%', fontSize: '1.3rem', marginBottom: '1.5rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+            Current Object: <span style={{ color: 'var(--accent)' }}>{activeObj.name}</span>
+          </div>
+
+          <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '1.5rem', background: '#f8fafc', borderRadius: '12px', overflow: 'hidden' }}>
+            <img 
+              src={isHolding ? activeObj.pressedImage : activeObj.image} 
+              alt={activeObj.name}
+              style={{ 
+                maxWidth: '90%', maxHeight: '90%', objectFit: 'contain', borderRadius: '8px',
+                transition: 'transform 0.5s ease-in-out',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+              }} 
+            />
+            
+            {/* Visual Timer Bar */}
+            {isHolding && activeState.status === 'untouched' && (
+              <div style={{ position: 'absolute', bottom: '20px', width: '60%', height: '8px', background: 'rgba(0,0,0,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+                <motion.div 
+                  initial={{ width: 0 }} 
+                  animate={{ width: '100%' }} 
+                  transition={{ duration: 6.5, ease: 'linear' }}
+                  style={{ height: '100%', background: 'var(--success)' }}
+                />
+              </div>
+            )}
+          </div>
+
+          {activeState.status === 'untouched' && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <p style={{ fontWeight: 'bold', fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Press the object and observe carefully.</p>
+              <button 
+                onPointerDown={handlePointerDown}
+                onPointerUp={handlePointerUp}
+                onPointerLeave={handlePointerUp}
+                style={{ 
+                  background: 'var(--success)', color: 'white', padding: '1rem 3rem', borderRadius: '12px', fontSize: '1.4rem', fontWeight: 'bold', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem', boxShadow: '0 4px 14px rgba(34, 197, 94, 0.4)', transition: 'transform 0.1s', transform: isHolding ? 'scale(0.95)' : 'scale(1)'
+                }}
+              >
+                <Hand size={26} fill="white" /> PRESS & HOLD
+              </button>
+            </div>
+          )}
+
+          {(activeState.status === 'observed' || activeState.status === 'completed') && (
+            <div style={{ width: '100%', borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', animation: 'fadeIn 0.5s' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem', fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                <Box size={22} /> What material is this object made of?
+              </div>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '1.1rem' }}>Choose the correct option.</p>
+              
+              <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'center' }}>
+                {activeObj.options.map((opt, i) => {
+                  const isCorrect = opt === activeObj.correctMaterial;
+                  const showCorrect = activeState.status === 'completed' && isCorrect;
+                  
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => handleAnswer(opt)}
+                      disabled={activeState.status === 'completed'}
+                      style={{
+                        flex: 1, maxWidth: '200px', display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem',
+                        border: showCorrect ? '2px solid var(--success)' : '1px solid var(--border)',
+                        borderRadius: '12px', background: showCorrect ? 'var(--success-bg)' : 'var(--surface)',
+                        cursor: activeState.status === 'completed' ? 'default' : 'pointer',
+                        boxShadow: '0 2px 5px rgba(0,0,0,0.05)', transition: 'all 0.2s'
+                      }}
+                      className={activeState.status === 'completed' ? '' : 'hover-lift'}
+                    >
+                      <img src={materialsData[opt]} alt={opt} style={{ width: '45px', height: '45px', objectFit: 'contain', borderRadius: '4px', background: 'white' }} />
+                      <span style={{ fontWeight: 'bold', flex: 1, textAlign: 'left', fontSize: '1.1rem', color: 'var(--text-primary)' }}>{opt}</span>
+                      {showCorrect && <CheckCircle size={24} color="var(--success)" />}
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          );
-        })}
-      </div>
-
-      {/* Auto-Sorting Observation Section */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-heading)', fontWeight: 'bold' }}>
-          <span style={{ fontSize: '1.2rem' }}>🔍</span> My Observation
-        </div>
-        <div style={{ fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
-          As you test the materials, they will be automatically sorted into the correct boxes based on their properties.
+          )}
         </div>
 
-        <div style={{ display: 'flex', gap: '2rem', marginTop: '0.5rem' }}>
-          {/* Soft Drop Zone */}
-          <div style={{ flex: 1, border: '2px dashed #22c55e', borderRadius: '12px', background: '#f0fdf4', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
-            <div style={{ color: '#15803d', fontWeight: 'bold', marginBottom: '1rem' }}>Soft (Easily Compressed)</div>
-            {placedItems.soft.length === 0 ? (
-              <div style={{ color: '#86efac', margin: 'auto' }}>Awaiting soft materials...</div>
+        {/* Right Panel */}
+        <div style={{ flex: '0 0 320px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem', border: '1px solid var(--border)' }}>
+            <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 0 1rem 0', fontSize: '1.25rem' }}>
+              <Search size={22} /> Material Observation
+            </h4>
+            {(activeState.status === 'observed' || activeState.status === 'completed') ? (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: activeObj.hardness === 'soft' ? 'var(--success)' : 'var(--danger)', marginBottom: '0.5rem' }}>
+                  Result: {activeObj.hardness.toUpperCase()}
+                </div>
+                <p style={{ margin: '0 0 1.5rem 0', color: 'var(--text-primary)', fontSize: '1.15rem', lineHeight: 1.4 }}>
+                  {activeObj.hardness === 'soft' ? 'It changed shape easily when pressed.' : 'It was difficult to change its shape when pressed.'}
+                </p>
+                <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: activeObj.hardness === 'soft' ? '#dcfce7' : '#fee2e2', color: activeObj.hardness === 'soft' ? '#15803d' : '#b91c1c', padding: '0.5rem 2rem', borderRadius: '99px', fontWeight: 'bold', fontSize: '1.2rem' }}>
+                  {activeObj.hardness.toUpperCase()}
+                </div>
+              </motion.div>
             ) : (
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {placedItems.soft.map(id => {
-                  const item = items.find(i => i.id === id);
-                  return <div key={id} style={{ fontSize: '2rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{item.icon}</div>;
-                })}
-              </div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '1.1rem', fontStyle: 'italic' }}>Press the object to reveal the observation.</div>
             )}
           </div>
 
-          {/* Hard Drop Zone */}
-          <div style={{ flex: 1, border: '2px dashed #ef4444', borderRadius: '12px', background: '#fef2f2', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', minHeight: '120px' }}>
-            <div style={{ color: '#b91c1c', fontWeight: 'bold', marginBottom: '1rem' }}>Hard (Difficult to Compress)</div>
-            {placedItems.hard.length === 0 ? (
-              <div style={{ color: '#fca5a5', margin: 'auto' }}>Awaiting hard materials...</div>
+          <div className="glass-panel" style={{ borderRadius: '12px', padding: '1.5rem', border: '1px solid var(--border)' }}>
+            <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 0 1rem 0', color: '#b45309', fontSize: '1.25rem' }}>
+              <Lightbulb size={22} /> Need a clue?
+            </h4>
+            {activeState.status !== 'untouched' && activeState.wrongAttempts > 0 ? (
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ margin: 0, color: 'var(--text-primary)', lineHeight: 1.5, fontSize: '1.15rem', background: '#fef3c7', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid #f59e0b' }}>
+                {activeObj.clue}
+              </motion.p>
             ) : (
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {placedItems.hard.map(id => {
-                  const item = items.find(i => i.id === id);
-                  return <div key={id} style={{ fontSize: '2rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{item.icon}</div>;
-                })}
-              </div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '1.1rem', fontStyle: 'italic' }}>Clues will appear here if you need help after attempting an answer.</div>
             )}
           </div>
         </div>
       </div>
-
-      {/* Completion Toast */}
-      {allPlaced && (
-         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem', borderRadius: '8px', color: 'var(--success)', textAlign: 'center', fontWeight: 'bold' }}>
-           <CheckCircle size={20} style={{ display: 'inline', marginBottom: '-4px', marginRight: '5px' }} />
-           Excellent classification! We are ready for the advanced scratch test.
-         </motion.div>
-      )}
+      
+      <style>{`
+        .hover-lift:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }
