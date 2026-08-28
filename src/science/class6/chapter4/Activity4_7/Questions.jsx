@@ -106,10 +106,10 @@ export default function Questions({ onComplete, onNext }) {
           width: '90%', 
           padding: '2.5rem 3rem', 
           textAlign: 'center', 
-          background: '#ffffff', 
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
           borderRadius: '30px', 
-          border: '1px solid #cbd5e1',
-          boxShadow: '0 15px 40px rgba(0,0,0,0.18)',
+          border: '1.5px solid #FDE68A',
+          boxShadow: '0 8px 30px rgba(217, 119, 6, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -126,26 +126,14 @@ export default function Questions({ onComplete, onNext }) {
               if (onComplete) onComplete(score);
               if (onNext) onNext();
             }}
+            className="gold-glow-btn"
             style={{
-              padding: '1.1rem 3rem',
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: '#ffffff',
-              border: 'none',
+              padding: '1rem 3rem',
               borderRadius: '40px',
               fontSize: '1.15rem',
-              fontWeight: 800,
+              fontWeight: 900,
               cursor: 'pointer',
-              boxShadow: '0 6px 20px rgba(217, 119, 6, 0.4)',
-              transition: 'all 0.25s ease',
               marginTop: '0.5rem'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.03)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(217, 119, 6, 0.6)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(217, 119, 6, 0.4)';
             }}
           >
             Proceed to Challenge
@@ -178,11 +166,11 @@ export default function Questions({ onComplete, onNext }) {
 
         {/* Main Quiz Card matching Poles of Magnet */}
         <div className="glass-panel" style={{ 
-          background: '#FFFFFF', 
-          border: '1.5px solid #A7F3D0',
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+          border: '1.5px solid #FDE68A',
           borderRadius: '20px', 
           padding: '1.25rem 1.75rem', 
-          boxShadow: '0 6px 20px rgba(6, 78, 59, 0.08)',
+          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.75rem',
@@ -270,23 +258,13 @@ export default function Questions({ onComplete, onNext }) {
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.6rem' }}>
                 <button
                   onClick={handleNext}
+                  className="gold-glow-btn"
                   style={{
-                    padding: '0.75rem 2rem',
-                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#FFFFFF',
-                    border: 'none',
+                    padding: '0.8rem 2.2rem',
                     borderRadius: '25px',
-                    fontSize: '0.96rem',
+                    fontSize: '1rem',
                     fontWeight: 900,
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-                    transition: 'all 0.25s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.03)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
+                    cursor: 'pointer'
                   }}
                 >
                   {currentQuestion === questions.length - 1 ? 'Finish & View Score' : 'Next Question'}

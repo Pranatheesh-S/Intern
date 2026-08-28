@@ -5,6 +5,7 @@ import Simulation from './Simulation';
 import Questions from './Questions';
 import ChallengeMode from './ChallengeMode';
 import DidYouKnow from './DidYouKnow';
+import './Activity4_7.css';
 
 export default function Activity4_7({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('simulation');
@@ -47,20 +48,16 @@ export default function Activity4_7({ onBackToDashboard, onComplete }) {
         {/* Left Column: Back Button */}
         <button 
           onClick={onBackToDashboard}
+          className="gold-glow-btn"
           style={{ 
             position: 'relative', zIndex: 100,
-            padding: '0.5rem 1rem', 
-            fontSize: '0.85rem', 
+            padding: '0.55rem 1.15rem', 
+            fontSize: '0.88rem', 
             gap: '0.45rem',
-            background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-            color: '#FFFFFF',
-            border: 'none',
-            borderRadius: '12px',
-            fontWeight: 900,
+            borderRadius: '16px',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
             transition: 'all 0.2s ease'
           }}
         >
@@ -77,7 +74,7 @@ export default function Activity4_7({ onBackToDashboard, onComplete }) {
         </div>
 
         {/* Right Column: Active Navigation Tabs */}
-        <nav className="tabs-container" style={{ display: 'flex', gap: '0.4rem', margin: 0 }}>
+        <nav className="tabs-container" style={{ display: 'flex', gap: '0.4rem', margin: 0, background: '#FFFBEB', border: '1.5px solid #FDE68A', borderRadius: '28px', padding: '0.25rem' }}>
           {tabs.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -86,23 +83,23 @@ export default function Activity4_7({ onBackToDashboard, onComplete }) {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
+                className={isActive ? 'gold-glow-btn' : ''}
                 style={{
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  padding: '0.5rem 1rem',
+                  padding: '0.5rem 1.1rem',
                   fontSize: '0.85rem',
                   fontWeight: 800,
-                  borderRadius: '25px',
-                  background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F8FAFC',
+                  borderRadius: '24px',
+                  background: isActive ? undefined : '#FFFFFF',
                   color: isActive ? '#FFFFFF' : '#334155',
                   border: isActive ? 'none' : '1.5px solid #CBD5E1',
-                  boxShadow: isActive ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={16} color={isActive ? '#FFFFFF' : '#334155'} />
+                <Icon size={16} color={isActive ? '#FFFFFF' : '#059669'} />
                 {tab.label}
               </button>
             );

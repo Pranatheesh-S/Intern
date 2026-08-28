@@ -494,39 +494,41 @@ export default function Simulation({ onComplete, onNext }) {
       
       {/* Left Column: Automatic Object Selection & Testing Hub */}
       <div className="custom-scroll" style={{
-        background: 'linear-gradient(145deg, #FAF8F5 0%, #F4EFEA 100%)',
+        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
         backdropFilter: 'blur(14px)',
         borderRadius: '24px',
-        border: '2px solid #E5DDD3',
-        padding: '1.6rem',
+        border: '1.5px solid #FDE68A',
+        padding: '1.75rem 1.65rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        boxShadow: '0 10px 36px rgba(110, 95, 80, 0.08)',
+        boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
         zIndex: 10,
         overflowY: 'auto'
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', height: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.35rem', height: '100%', justifyContent: 'space-between' }}>
           
           {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <ShieldCheck size={28} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900, letterSpacing: '-0.02em' }}>
-                Material Barrier Testing
-              </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <ShieldCheck size={32} color="#D97706" />
+                <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#064E3B', fontWeight: 900, letterSpacing: '-0.02em' }}>
+                  Material Barrier Testing
+                </h3>
+              </div>
+              <span style={{ fontSize: '0.88rem', background: '#DCFCE7', color: '#15803D', padding: '5px 12px', borderRadius: '14px', fontWeight: 900, border: '1.5px solid #86EFAC' }}>
+                Auto-Slide
+              </span>
             </div>
-            <span style={{ fontSize: '0.82rem', background: '#ECFDF5', color: '#047857', padding: '4px 10px', borderRadius: '14px', fontWeight: 800, border: '1.5px solid #A7F3D0' }}>
-              Auto-Slide Stage
-            </span>
+
+            <p style={{ margin: 0, fontSize: '1.05rem', color: '#065F46', lineHeight: 1.6, fontWeight: 600 }}>
+              Select an object to slide it into the center. Observe how the magnetic field passes through each non-magnetic barrier to deflect the compass needle.
+            </p>
           </div>
 
-          <p style={{ margin: 0, fontSize: '0.96rem', color: '#475569', lineHeight: 1.55, fontWeight: 600 }}>
-            Select an object to slide it into the center. Test how magnetic field passes through each non-magnetic barrier to deflect the compass needle.
-          </p>
-
-          {/* Material Barrier Cards List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, justifyContent: 'space-around' }}>
+          {/* Material Barrier Cards List (Expanded & Larger Typography) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem', flex: 1, justifyContent: 'space-around', margin: '0.35rem 0' }}>
             {MATERIALS.map((mat, idx) => {
               const isSelected = selectedMaterialIndex === idx;
               const isObserved = observations[mat.id] === 'deflects';
@@ -539,63 +541,63 @@ export default function Simulation({ onComplete, onNext }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '0.95rem 1.25rem',
-                    borderRadius: '18px',
-                    border: isSelected ? '2.5px solid #F59E0B' : '1.5px solid #E2E8F0',
-                    background: isSelected ? '#FEF3C7' : '#F8FAFC',
+                    padding: '1.15rem 1.35rem',
+                    borderRadius: '20px',
+                    border: isSelected ? '2.5px solid #F59E0B' : '1.5px solid #FDE68A',
+                    background: isSelected ? '#FEF3C7' : '#FFFFFF',
                     cursor: 'pointer',
-                    boxShadow: isSelected ? '0 6px 18px rgba(245, 158, 11, 0.22)' : '0 2px 6px rgba(0,0,0,0.02)',
+                    boxShadow: isSelected ? '0 6px 18px rgba(245, 158, 11, 0.22)' : '0 2px 8px rgba(217, 119, 6, 0.04)',
                     transition: 'all 0.25s ease',
                     textAlign: 'left'
                   }}
                   onMouseEnter={(e) => {
                     if (!isSelected) {
-                      e.currentTarget.style.borderColor = '#A7F3D0';
-                      e.currentTarget.style.background = '#F0FDF4';
+                      e.currentTarget.style.borderColor = '#F59E0B';
+                      e.currentTarget.style.background = '#FFFBEB';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected) {
-                      e.currentTarget.style.borderColor = '#E2E8F0';
-                      e.currentTarget.style.background = '#F8FAFC';
+                      e.currentTarget.style.borderColor = '#FDE68A';
+                      e.currentTarget.style.background = '#FFFFFF';
                     }
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{
-                      width: '46px',
-                      height: '46px',
-                      borderRadius: '14px',
-                      background: isSelected ? '#FDE68A' : '#FFFFFF',
-                      border: isSelected ? '1.5px solid #F59E0B' : '1px solid #CBD5E1',
+                      width: '52px',
+                      height: '52px',
+                      borderRadius: '16px',
+                      background: isSelected ? '#FDE68A' : '#FEF3C7',
+                      border: isSelected ? '2px solid #F59E0B' : '1.5px solid #FDE68A',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '1.75rem',
+                      fontSize: '2rem',
                       flexShrink: 0
                     }}>
                       {mat.icon}
                     </div>
                     <div>
-                      <div style={{ fontWeight: 900, fontSize: '1.05rem', color: isSelected ? '#92400E' : '#1E293B' }}>
+                      <div style={{ fontWeight: 900, fontSize: '1.2rem', color: isSelected ? '#92400E' : '#064E3B' }}>
                         {mat.name}
                       </div>
-                      <div style={{ fontSize: '0.84rem', color: '#64748B', fontWeight: 600, marginTop: '2px' }}>
+                      <div style={{ fontSize: '0.94rem', color: '#64748B', fontWeight: 700, marginTop: '3px' }}>
                         {mat.materialName}
                       </div>
                     </div>
                   </div>
 
                   {isObserved ? (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.82rem', fontWeight: 900, color: '#15803D', background: '#DCFCE7', padding: '5px 11px', borderRadius: '12px', border: '1.5px solid #86EFAC' }}>
-                      <CheckCircle2 size={15} color="#16A34A" /> Deflects
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.92rem', fontWeight: 900, color: '#15803D', background: '#DCFCE7', padding: '7px 14px', borderRadius: '14px', border: '1.5px solid #86EFAC' }}>
+                      <CheckCircle2 size={17} color="#16A34A" /> Deflects
                     </span>
                   ) : isSelected ? (
-                    <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#B45309', background: '#FDE68A', padding: '5px 11px', borderRadius: '12px', border: '1px solid #F59E0B' }}>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#92400E', background: '#FDE68A', padding: '7px 14px', borderRadius: '14px', border: '1.5px solid #F59E0B' }}>
                       Active Object
                     </span>
                   ) : (
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8' }}>
+                    <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#94A3B8', padding: '6px 12px' }}>
                       Ready to Test
                     </span>
                   )}
@@ -604,62 +606,26 @@ export default function Simulation({ onComplete, onNext }) {
             })}
           </div>
 
-          {/* Active Object Testing Controls */}
-          <div style={{ 
-            background: 'linear-gradient(145deg, #FDFBF8 0%, #F3EEE7 100%)', 
-            borderRadius: '20px', 
-            padding: '1.2rem 1.4rem', 
-            border: '1.5px solid #E2D9CC',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.85rem'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.98rem', fontWeight: 900, color: '#14532D' }}>
-                Active: {activeMaterialObj.name}
-              </span>
-              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#047857', background: '#FFFFFF', padding: '3px 10px', borderRadius: '12px', border: '1px solid #E2D9CC' }}>
-                Barrier Thickness: {thickness}
-              </span>
-            </div>
-
-            {/* Thickness Slider */}
-            <div>
-              <input 
-                type="range" 
-                min="1" 
-                max="5" 
-                value={thickness} 
-                onChange={(e) => handleThicknessChange(Number(e.target.value))} 
-                style={{ width: '100%', cursor: 'pointer', accentColor: '#D97706', height: '8px' }} 
-              />
-            </div>
-          </div>
-
-
-        </div>
-
-        {/* Bottom Hub Actions */}
-        <div style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {allCompleted ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+          {/* Bottom Proceed Action when all tested */}
+          {allCompleted && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.4rem' }}>
               <button
                 onClick={() => setShowTakeawayModal(true)}
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
-                  borderRadius: '12px',
-                  border: '1.5px solid #FCD34D',
-                  background: '#FFFBEB',
+                  padding: '0.85rem',
+                  borderRadius: '14px',
+                  border: '1.5px solid #FDE68A',
+                  background: '#FFFFFF',
                   color: '#92400E',
                   fontWeight: 900,
-                  fontSize: '0.86rem',
+                  fontSize: '0.94rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.45rem',
-                  boxShadow: '0 2px 8px rgba(245, 158, 11, 0.15)'
+                  boxShadow: '0 2px 8px rgba(245, 158, 11, 0.12)'
                 }}
               >
                 💡 View Key Scientific Takeaway
@@ -667,63 +633,22 @@ export default function Simulation({ onComplete, onNext }) {
 
               <button
                 onClick={onNext}
+                className="gold-glow-btn"
                 style={{
                   width: '100%',
-                  padding: '0.85rem',
-                  borderRadius: '14px',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                  color: '#FFFFFF',
+                  padding: '1.05rem 1.6rem',
+                  borderRadius: '18px',
+                  fontSize: '1.12rem',
                   fontWeight: 900,
-                  fontSize: '0.98rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.5rem',
-                  boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4)',
+                  gap: '0.55rem',
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Sparkles size={18} /> Proceed to Concept Check <ArrowRight size={18} />
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button
-                onClick={flipMagnet}
-                style={{
-                  flex: 1,
-                  padding: '0.55rem',
-                  borderRadius: '10px',
-                  border: '1.5px solid #FCD34D',
-                  background: '#FFFBEB',
-                  color: '#92400E',
-                  fontWeight: 800,
-                  fontSize: '0.76rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '4px'
-                }}
-              >
-                <RotateCcw size={13} /> Flip Poles (N ↔ S)
-              </button>
-              <button
-                onClick={handleReset}
-                style={{
-                  padding: '0.55rem 0.8rem',
-                  borderRadius: '10px',
-                  border: '1.5px solid #CBD5E1',
-                  background: '#FFFFFF',
-                  color: '#475569',
-                  fontWeight: 700,
-                  fontSize: '0.76rem',
-                  cursor: 'pointer'
-                }}
-              >
-                Reset
+                <Sparkles size={20} /> Proceed to Concept Check <ArrowRight size={20} />
               </button>
             </div>
           )}
@@ -736,13 +661,13 @@ export default function Simulation({ onComplete, onNext }) {
         {/* Top Header Stage Bar */}
         <div style={{ 
           padding: '0.5rem 1rem', 
-          background: 'linear-gradient(145deg, #FAF8F5 0%, #F4EFEA 100%)', 
-          border: '1.5px solid #E5DDD3', 
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+          border: '1.5px solid #FDE68A', 
           borderRadius: '16px', 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          boxShadow: '0 4px 14px rgba(110, 95, 80, 0.06)'
+          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <span style={{ fontSize: '1.2rem' }}>{activeMaterialObj.icon}</span>
@@ -773,19 +698,16 @@ export default function Simulation({ onComplete, onNext }) {
             </button>
             <button
               onClick={flipMagnet}
+              className="gold-glow-btn"
               style={{
-                padding: '0.4rem 0.9rem',
-                fontSize: '0.78rem',
-                fontWeight: 800,
+                padding: '0.45rem 1rem',
+                fontSize: '0.82rem',
+                fontWeight: 900,
                 borderRadius: '18px',
-                border: 'none',
-                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                color: '#FFFFFF',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.35rem',
-                boxShadow: '0 3px 10px rgba(217, 119, 6, 0.3)'
+                gap: '0.35rem'
               }}
             >
               <RotateCcw size={13} /> Flip Magnet
@@ -1130,21 +1052,18 @@ export default function Simulation({ onComplete, onNext }) {
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.2rem' }}>
                 <button
                   onClick={() => setShowActionModal(false)}
+                  className="gold-glow-btn"
                   style={{
                     width: '100%',
-                    padding: '0.8rem 1.6rem',
+                    padding: '0.85rem 1.6rem',
                     borderRadius: '25px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#FFFFFF',
+                    fontSize: '0.95rem',
                     fontWeight: 900,
-                    fontSize: '0.92rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.4rem',
-                    boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                     transition: 'all 0.2s ease'
                   }}
                 >
@@ -1293,21 +1212,18 @@ export default function Simulation({ onComplete, onNext }) {
                     setShowTakeawayModal(false);
                     if (onNext) onNext();
                   }}
+                  className="gold-glow-btn"
                   style={{
                     flex: 1.4,
-                    padding: '0.9rem',
+                    padding: '0.95rem',
                     borderRadius: '25px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#FFFFFF',
+                    fontSize: '1rem',
                     fontWeight: 900,
-                    fontSize: '0.96rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.45rem',
-                    boxShadow: '0 6px 20px rgba(217, 119, 6, 0.4)',
                     transition: 'all 0.2s ease'
                   }}
                 >

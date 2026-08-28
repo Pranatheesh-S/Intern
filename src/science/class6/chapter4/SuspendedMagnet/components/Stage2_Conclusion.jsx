@@ -1,492 +1,651 @@
-import React, { useState, useRef, useEffect, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Text, ContactShadows, OrbitControls } from '@react-three/drei';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { RotateCw, Compass, Sparkles, ArrowRight, Maximize2, Minimize2, Sun, Plus, Minus, RotateCcw } from 'lucide-react';
-import * as THREE from 'three';
+import { Navigation, RotateCw, Flag, Compass, Sparkles, Info, ArrowRight, Maximize2, Minimize2 } from 'lucide-react';
 
-// -------------------------------------------------------------------
-// 1. 3D Precision Marine Compass Scene Components
-// -------------------------------------------------------------------
-
-// 3D Vintage Antique Brass Pocket Compass Casing & Dial
-function BrassCompass3D({ needleAngle, isSpinning }) {
-  const needleGroupRef = useRef();
-  const currentAngleRef = useRef(0);
-
-  useFrame((state, delta) => {
-    if (!needleGroupRef.current) return;
-    const dt = Math.min(delta, 0.1);
-    currentAngleRef.current = THREE.MathUtils.lerp(
-      currentAngleRef.current,
-      (needleAngle * Math.PI) / 180,
-      dt * 7
-    );
-    needleGroupRef.current.rotation.y = -currentAngleRef.current;
-  });
-
-  return (
-    <group position={[0, -0.2, 0]}>
-      {/* 1. Heavy Polished Wood / Brass Navigator Table Base */}
-      <mesh position={[0, -1.8, 0]} receiveShadow>
-        <cylinderGeometry args={[7.2, 7.5, 0.4, 48]} />
-        <meshStandardMaterial color="#5C2D12" roughness={0.7} metalness={0.08} />
-      </mesh>
-
-      {/* 2. Heavy Antique Brass Outer Compass Casing */}
-      <mesh position={[0, -0.6, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[5.2, 5.4, 1.8, 48]} />
-        <meshStandardMaterial color="#D97706" roughness={0.3} metalness={0.88} />
-      </mesh>
-
-      {/* Stepped Upper Bezel with Knurled Texture */}
-      <mesh position={[0, 0.35, 0]} castShadow>
-        <cylinderGeometry args={[5.4, 5.2, 0.35, 48]} />
-        <meshStandardMaterial color="#F59E0B" roughness={0.25} metalness={0.9} />
-      </mesh>
-
-      {/* Top Lanyard Brass Hanging Loop */}
-      <mesh position={[0, 0.35, -5.7]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.9, 0.18, 16, 32]} />
-        <meshStandardMaterial color="#D97706" roughness={0.3} metalness={0.88} />
-      </mesh>
-
-      {/* 3. Aged Parchment / Porcelain Dial Face */}
-      <mesh position={[0, 0.32, 0]} receiveShadow>
-        <cylinderGeometry args={[4.6, 4.6, 0.1, 48]} />
-        <meshStandardMaterial color="#FDF8EC" roughness={0.85} metalness={0.02} />
-      </mesh>
-
-      {/* Concentric Calibration Rings */}
-      <mesh position={[0, 0.38, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[4.2, 4.25, 64]} />
-        <meshBasicMaterial color="#78350F" opacity={0.7} transparent />
-      </mesh>
-      <mesh position={[0, 0.38, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[3.2, 3.24, 64]} />
-        <meshBasicMaterial color="#B45309" opacity={0.5} transparent />
-      </mesh>
-      <mesh position={[0, 0.38, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[1.5, 1.54, 64]} />
-        <meshBasicMaterial color="#D97706" opacity={0.4} transparent />
-      </mesh>
-
-      {/* 4. Cardinal & Degree Markings on Dial */}
-      {/* North Indicator (Red Arrow Crown + N) */}
-      <group position={[0, 0.39, -3.4]}>
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <coneGeometry args={[0.38, 0.7, 3]} />
-          <meshStandardMaterial color="#DC2626" roughness={0.3} />
-        </mesh>
-        <Text
-          position={[0, 0.02, -0.6]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          fontSize={0.75}
-          color="#DC2626"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          N
-        </Text>
-      </group>
-
-      {/* South Indicator (Blue Arrow + S) */}
-      <group position={[0, 0.39, 3.4]}>
-        <mesh rotation={[-Math.PI / 2, 0, Math.PI]}>
-          <coneGeometry args={[0.38, 0.7, 3]} />
-          <meshStandardMaterial color="#2563EB" roughness={0.3} />
-        </mesh>
-        <Text
-          position={[0, 0.02, 0.6]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          fontSize={0.75}
-          color="#2563EB"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          S
-        </Text>
-      </group>
-
-      {/* East Indicator (Amber Arrow + E) */}
-      <group position={[3.4, 0.39, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, -Math.PI / 2]}>
-          <coneGeometry args={[0.32, 0.6, 3]} />
-          <meshStandardMaterial color="#92400E" roughness={0.3} />
-        </mesh>
-        <Text
-          position={[0.55, 0.02, 0]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          fontSize={0.68}
-          color="#92400E"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          E
-        </Text>
-      </group>
-
-      {/* West Indicator (Amber Arrow + W) */}
-      <group position={[-3.4, 0.39, 0]}>
-        <mesh rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
-          <coneGeometry args={[0.32, 0.6, 3]} />
-          <meshStandardMaterial color="#92400E" roughness={0.3} />
-        </mesh>
-        <Text
-          position={[-0.55, 0.02, 0]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          fontSize={0.68}
-          color="#92400E"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          W
-        </Text>
-      </group>
-
-      {/* 5. 3D Magnetic Needle Floating on Jeweled Pivot */}
-      <group ref={needleGroupRef} position={[0, 0.55, 0]}>
-        {/* North Pointer Half (Carmine Red Diamond) */}
-        <mesh position={[0, 0, -1.8]} rotation={[-Math.PI / 2, 0, 0]} castShadow>
-          <coneGeometry args={[0.35, 3.4, 4]} />
-          <meshStandardMaterial
-            color="#DC2626"
-            roughness={0.35}
-            metalness={0.25}
-            emissive="#7F1D1D"
-            emissiveIntensity={0.25}
-          />
-        </mesh>
-
-        {/* North Needle Phosphorescent Tip Pip */}
-        <mesh position={[0, 0.05, -3.3]}>
-          <sphereGeometry args={[0.12, 12, 12]} />
-          <meshStandardMaterial color="#FDE047" emissive="#FACC15" emissiveIntensity={0.8} />
-        </mesh>
-
-        {/* South Pointer Half (Cobalt Blue Diamond) */}
-        <mesh position={[0, 0, 1.8]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-          <coneGeometry args={[0.35, 3.4, 4]} />
-          <meshStandardMaterial
-            color="#1D4ED8"
-            roughness={0.35}
-            metalness={0.25}
-            emissive="#1E3A8A"
-            emissiveIntensity={0.25}
-          />
-        </mesh>
-
-        {/* Central Brass Cap & Ruby Pivot Jewel */}
-        <mesh position={[0, 0.1, 0]} castShadow>
-          <cylinderGeometry args={[0.48, 0.48, 0.28, 24]} />
-          <meshStandardMaterial color="#F59E0B" roughness={0.2} metalness={0.9} />
-        </mesh>
-        <mesh position={[0, 0.26, 0]}>
-          <sphereGeometry args={[0.22, 16, 16]} />
-          <meshStandardMaterial color="#E11D48" roughness={0.15} metalness={0.6} />
-        </mesh>
-      </group>
-
-      {/* 6. Convex Glass Crystal Cover Dome */}
-      <mesh position={[0, 0.65, 0]}>
-        <sphereGeometry args={[4.8, 32, 16, 0, Math.PI * 2, 0, 0.45]} />
-        <meshPhysicalMaterial
-          color="#FFFFFF"
-          transparent
-          opacity={0.22}
-          roughness={0.05}
-          transmission={0.9}
-          thickness={0.5}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-// Interactive 3D Bar Magnet Nearby to Test Needle Deflection
-function NearbyInfluencingMagnet({ position }) {
-  return (
-    <group position={position}>
-      {/* North Pole Half */}
-      <mesh position={[0, 0, -1.2]} castShadow receiveShadow>
-        <boxGeometry args={[0.9, 0.8, 2.4]} />
-        <meshStandardMaterial color="#DC2626" roughness={0.4} metalness={0.2} />
-      </mesh>
-      <Text
-        position={[0, 0.42, -1.2]}
-        rotation={[-Math.PI / 2, 0, 0]}
-        fontSize={0.45}
-        color="#FFFFFF"
-        fontWeight="bold"
-      >
-        N
-      </Text>
-
-      {/* South Pole Half */}
-      <mesh position={[0, 0, 1.2]} castShadow receiveShadow>
-        <boxGeometry args={[0.9, 0.8, 2.4]} />
-        <meshStandardMaterial color="#1D4ED8" roughness={0.4} metalness={0.2} />
-      </mesh>
-      <Text
-        position={[0, 0.42, 1.2]}
-        rotation={[-Math.PI / 2, 0, 0]}
-        fontSize={0.45}
-        color="#FFFFFF"
-        fontWeight="bold"
-      >
-        S
-      </Text>
-
-      {/* Center Brass Collar */}
-      <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[0.94, 0.84, 0.4]} />
-        <meshStandardMaterial color="#F59E0B" roughness={0.25} metalness={0.88} />
-      </mesh>
-    </group>
-  );
-}
-
-// -------------------------------------------------------------------
-// 2. 3D Sun & Shadow Horizon Simulation (Ancient Direction Finding)
-// -------------------------------------------------------------------
-function SunShadowHorizon3D({ timeOfDay }) {
-  const sunAngle = (timeOfDay - 0.5) * Math.PI; 
-  const sunElevation = Math.sin((timeOfDay * Math.PI)); 
-
-  const sunX = -Math.sin(sunAngle) * 14;
-  const sunY = Math.max(1.2, sunElevation * 12);
-  const sunZ = -Math.cos(sunAngle) * 3; 
-
-  return (
-    <group position={[0, 0, 0]}>
-      <ambientLight intensity={0.45 + sunElevation * 0.4} />
-      <directionalLight
-        position={[sunX, sunY, sunZ]}
-        intensity={1.8 + sunElevation * 0.8}
-        castShadow
-        shadow-mapSize={[2048, 2048]}
-        shadow-bias={-0.0001}
-      />
-
-      <group position={[sunX, sunY, sunZ]}>
-        <mesh>
-          <sphereGeometry args={[1.4, 24, 24]} />
-          <meshBasicMaterial color="#FDE047" />
-        </mesh>
-        <mesh>
-          <sphereGeometry args={[2.2, 24, 24]} />
-          <meshBasicMaterial color="#F59E0B" transparent opacity={0.35} blending={THREE.AdditiveBlending} depthWrite={false} />
-        </mesh>
-      </group>
-
-      <mesh receiveShadow position={[0, -2.0, 0]}>
-        <boxGeometry args={[22, 0.4, 16]} />
-        <meshStandardMaterial color="#E2E8F0" roughness={0.9} />
-      </mesh>
-
-      <mesh position={[0, -1.78, 0]}>
-        <boxGeometry args={[16, 0.02, 0.12]} />
-        <meshBasicMaterial color="#D97706" />
-      </mesh>
-      <mesh position={[0, -1.78, 0]}>
-        <boxGeometry args={[0.12, 0.02, 12]} />
-        <meshBasicMaterial color="#059669" />
-      </mesh>
-
-      <Text position={[7.5, -1.75, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.7} color="#D97706" fontWeight="bold">
-        EAST ☀️ (Sunrise)
-      </Text>
-      <Text position={[-7.5, -1.75, 0]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.7} color="#D97706" fontWeight="bold">
-        WEST 🌅 (Sunset)
-      </Text>
-      <Text position={[0, -1.75, -5.5]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.75} color="#DC2626" fontWeight="bold">
-        NORTH (N)
-      </Text>
-      <Text position={[0, -1.75, 5.5]} rotation={[-Math.PI / 2, 0, 0]} fontSize={0.75} color="#2563EB" fontWeight="bold">
-        SOUTH (S)
-      </Text>
-
-      <group position={[0, -1.8, 0]}>
-        <mesh position={[0, 0.05, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[1.2, 1.4, 0.1, 32]} />
-          <meshStandardMaterial color="#6B7280" roughness={0.7} />
-        </mesh>
-
-        <mesh position={[0, 2.2, 0]} castShadow>
-          <cylinderGeometry args={[0.15, 0.18, 4.4, 16]} />
-          <meshStandardMaterial color="#0F172A" roughness={0.4} metalness={0.6} />
-        </mesh>
-
-        <mesh position={[0, 4.4, 0]} castShadow>
-          <sphereGeometry args={[0.3, 16, 16]} />
-          <meshStandardMaterial color="#F59E0B" roughness={0.2} metalness={0.9} />
-        </mesh>
-      </group>
-    </group>
-  );
-}
-
-// -------------------------------------------------------------------
-// 3. Main Stage 2 Component
-// -------------------------------------------------------------------
 export default function Stage2_Conclusion({ onComplete }) {
-  const [activeMode, setActiveMode] = useState('compass'); 
-  const [needleAngle, setNeedleAngle] = useState(0); 
+  const [needleAngle, setNeedleAngle] = useState(0); // 0deg = North
   const [isSpinning, setIsSpinning] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [zoomScale, setZoomScale] = useState(1.0);
-  const [hasMagnetNearby, setHasMagnetNearby] = useState(false);
-  const [magnetPos] = useState([6.5, 0.2, 0]);
-  const [timeOfDay, setTimeOfDay] = useState(0.5); 
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    const handleFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
   const toggleFullscreen = () => {
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-    else document.exitFullscreen();
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
   };
 
-  const handleZoomIn = () => setZoomScale((z) => Math.min(1.8, +(z + 0.15).toFixed(2)));
-  const handleZoomOut = () => setZoomScale((z) => Math.max(0.5, +(z - 0.15).toFixed(2)));
-  const handleResetZoom = () => setZoomScale(1.0);
-
+  // Rotate / deflect compass needle on click or button press
   const handleDeflect = () => {
     if (isSpinning) return;
     setIsSpinning(true);
-    const randomImpulse = (Math.random() > 0.5 ? 1 : -1) * (360 + Math.random() * 360);
-    setNeedleAngle(randomImpulse);
+    const randomOffset = (Math.random() > 0.5 ? 1 : -1) * (360 + Math.random() * 360);
+    setNeedleAngle(randomOffset);
 
     setTimeout(() => {
-      setNeedleAngle(hasMagnetNearby ? 58 : 0); 
+      setNeedleAngle(0); // Settles back straight to North (0deg)
       setIsSpinning(false);
-    }, 2200);
+    }, 2000);
   };
 
-  const handleToggleMagnet = () => {
-    const nextState = !hasMagnetNearby;
-    setHasMagnetNearby(nextState);
-    setNeedleAngle(nextState ? 64 : 0);
+  const handleMouseMove = (e) => {
+    if (isSpinning || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = e.clientX - cx;
+    const dy = e.clientY - cy;
+
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    const deflection = (angle / 180) * 22;
+    setNeedleAngle(deflection);
+  };
+
+  const handleMouseLeave = () => {
+    if (!isSpinning) {
+      setNeedleAngle(0); // Settle back straight to North
+    }
   };
 
   return (
-    <div style={{ padding: '0.5rem', display: 'flex', gap: '1.25rem', height: '100%', minHeight: 0, overflow: 'hidden', boxSizing: 'border-box', position: 'relative', fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <div style={{ flex: '1.8', display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', boxSizing: 'border-box' }}>
-        <div style={{ position: 'relative', width: '100%', flex: 1, minHeight: '380px', borderRadius: '24px', border: '1.5px solid #A7F3D0', overflow: 'hidden', boxShadow: '0 12px 30px rgba(6, 78, 59, 0.12)', backgroundImage: `url('/SuspendedMagnet/wooden_stand_lab_bg.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-          <div style={{ position: 'absolute', top: '14px', left: '16px', zIndex: 30, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button onClick={() => setActiveMode('compass')} style={{ background: activeMode === 'compass' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : 'rgba(15, 23, 42, 0.78)', border: activeMode === 'compass' ? '1.5px solid #FDE68A' : '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '7px 14px', fontSize: '0.82rem', fontWeight: 900, color: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', backdropFilter: 'blur(8px)', transition: 'all 0.2s ease' }}><Compass size={16} /> 3D Magnetic Compass</button>
-            <button onClick={() => setActiveMode('sun')} style={{ background: activeMode === 'sun' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : 'rgba(15, 23, 42, 0.78)', border: activeMode === 'sun' ? '1.5px solid #FDE68A' : '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '7px 14px', fontSize: '0.82rem', fontWeight: 900, color: '#FFFFFF', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', backdropFilter: 'blur(8px)', transition: 'all 0.2s ease' }}><Sun size={16} /> 3D Sun & Shadow Finder</button>
+    <div style={{ 
+      padding: '0.5rem 1rem', 
+      display: 'flex', 
+      gap: '1.25rem', 
+      height: '100%', 
+      minHeight: 0, 
+      overflow: 'hidden', 
+      boxSizing: 'border-box',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'transparent'
+    }}>
+      {/* Left Side: Interactive Realistic Compass Lab Scene */}
+      <div style={{ 
+        flex: '1.75', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        minWidth: 0,
+        height: '100%',
+        boxSizing: 'border-box'
+      }}>
+        {/* Scene Container with High-Detail Realistic Vintage Brass Magnetic Compass Instrument */}
+        <div 
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          style={{ 
+            position: 'relative', 
+            width: '100%', 
+            maxWidth: '100%', 
+            flex: 1, 
+            minHeight: '380px', 
+            borderRadius: '24px',
+            border: '1.5px solid #A7F3D0',
+            overflow: 'hidden',
+            boxShadow: '0 12px 30px rgba(6, 78, 59, 0.12)',
+            backgroundImage: `url('/SuspendedMagnet/wooden_stand_lab_bg.jpg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {/* Top Left Floating Badge Overlay */}
+          <div style={{
+            position: 'absolute',
+            top: '16px',
+            left: '20px',
+            zIndex: 30,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}>
+            <div style={{
+              background: 'linear-gradient(135deg, #78350F 0%, #451A03 100%)',
+              border: '1.5px solid #B45309',
+              borderRadius: '20px',
+              padding: '0.4rem 0.9rem',
+              fontSize: '0.82rem',
+              fontWeight: 900,
+              color: '#FFFFFF',
+              boxShadow: '0 4px 14px rgba(69, 26, 3, 0.4)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem'
+            }}>
+              <Compass size={16} color="#F59E0B" /> COMPASS DIAL ALIGNMENT
+            </div>
           </div>
-          <div style={{ position: 'absolute', bottom: '16px', left: '16px', right: '16px', zIndex: 30, display: 'flex', justifyContent: 'space-between', alignItems: 'center', pointerEvents: 'none' }}>
-            {activeMode === 'compass' ? (
-              <div style={{ display: 'flex', gap: '8px', pointerEvents: 'auto' }}>
-                <button onClick={handleDeflect} disabled={isSpinning} style={{ background: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255, 255, 255, 0.25)', borderRadius: '12px', padding: '8px 14px', color: '#FFFFFF', fontSize: '0.82rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', backdropFilter: 'blur(8px)' }}><RotateCw size={14} className={isSpinning ? 'spin-anim' : ''} /> <span>Deflect</span></button>
-                <button onClick={handleToggleMagnet} style={{ background: hasMagnetNearby ? 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)' : 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255, 255, 255, 0.25)', borderRadius: '12px', padding: '8px 14px', color: '#FFFFFF', fontSize: '0.82rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', backdropFilter: 'blur(8px)' }}><span>🧲 {hasMagnetNearby ? 'Remove Magnet' : 'Bring Magnet'}</span></button>
+
+          {/* Fullscreen Button */}
+          <button
+            onClick={toggleFullscreen}
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+            style={{
+              position: 'absolute',
+              top: '16px',
+              right: '20px',
+              zIndex: 30,
+              background: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.8)',
+              borderRadius: '20px',
+              padding: '6px 14px',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              color: '#0F172A',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
+            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+          </button>
+
+          {/* ------------------------------------------------------------- */}
+          {/* Photorealistic Antique Brass Pocket Navigation Compass Assembly */}
+          {/* ------------------------------------------------------------- */}
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            
+            {/* Top Brass Lanyard Loop / Ring */}
+            <div style={{
+              width: '54px',
+              height: '36px',
+              borderRadius: '50% 50% 0 0',
+              border: '7px solid #B45309',
+              borderBottom: 'none',
+              background: 'transparent',
+              marginBottom: '-8px',
+              zIndex: 15,
+              boxShadow: '0 -4px 12px rgba(0,0,0,0.4), inset 0 2px 4px #FDE68A',
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+            }}>
+              {/* Loop Mount Hinge Pin */}
+              <div style={{
+                position: 'absolute',
+                bottom: '-4px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '18px',
+                height: '8px',
+                borderRadius: '4px',
+                background: 'linear-gradient(180deg, #FDE68A 0%, #B45309 100%)',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.5)'
+              }} />
+            </div>
+
+            {/* Heavy Brass Outer Casing (370px) */}
+            <motion.div
+              animate={{ scale: isSpinning ? 1.03 : 1 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+              style={{
+                position: 'relative',
+                width: '370px',
+                height: '370px',
+                borderRadius: '50%',
+                // Machined brass multi-tier metallic gradient
+                background: 'radial-gradient(circle, #FDE047 0%, #D97706 30%, #92400E 65%, #451A03 100%)',
+                padding: '16px',
+                boxShadow: '0 35px 80px rgba(0,0,0,0.7), 0 10px 25px rgba(0,0,0,0.5), inset 0 2px 6px #FEF08A, inset 0 -6px 12px #271302',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 20,
+                cursor: 'pointer',
+                boxSizing: 'border-box'
+              }}
+              onClick={handleDeflect}
+            >
+              {/* Milled Knurled Outer Edge Ring */}
+              <div style={{
+                position: 'absolute',
+                inset: '5px',
+                borderRadius: '50%',
+                border: '3px dashed #78350F',
+                opacity: 0.65,
+                pointerEvents: 'none'
+              }} />
+
+              {/* Stepped Polished Brass Bezel Inner Rim */}
+              <div style={{
+                position: 'absolute',
+                inset: '12px',
+                borderRadius: '50%',
+                border: '4px solid #B45309',
+                boxShadow: 'inset 0 4px 10px rgba(0,0,0,0.6), 0 2px 6px #FEF08A',
+                pointerEvents: 'none'
+              }} />
+
+              {/* 8 Brass Casing Fastener Rivets */}
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+                <div
+                  key={deg}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: '100%',
+                    height: '100%',
+                    transform: `translate(-50%, -50%) rotate(${deg}deg)`,
+                    pointerEvents: 'none'
+                  }}
+                >
+                  <div style={{
+                    position: 'absolute',
+                    top: '4px',
+                    left: 'calc(50% - 4px)',
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at 35% 35%, #FEF08A 0%, #D97706 60%, #451A03 100%)',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.6)'
+                  }} />
+                </div>
+              ))}
+
+              {/* Aged Parchment Dial Face */}
+              <div style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, #FFFDF8 0%, #FBF6E9 55%, #ECE2C8 90%, #DACBB0 100%)',
+                border: '3px solid #1E293B',
+                boxShadow: 'inset 0 0 30px rgba(69, 26, 3, 0.35), inset 0 4px 12px rgba(0,0,0,0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden'
+              }}>
+                {/* Concentric Azimuth Calibration Circles */}
+                <svg width="330" height="330" viewBox="0 0 330 330" style={{ position: 'absolute', inset: 0 }}>
+                  {/* Outer & Inner Guideline Rings */}
+                  <circle cx="165" cy="165" r="148" fill="none" stroke="#78350F" strokeWidth="1.5" />
+                  <circle cx="165" cy="165" r="132" fill="none" stroke="#78350F" strokeWidth="1.2" />
+                  <circle cx="165" cy="165" r="126" fill="none" stroke="#B45309" strokeWidth="0.8" strokeDasharray="2 3" />
+                  <circle cx="165" cy="165" r="68" fill="none" stroke="#94A3B8" strokeWidth="0.8" strokeDasharray="3 3" />
+                  <circle cx="165" cy="165" r="32" fill="none" stroke="#D97706" strokeWidth="1.0" />
+
+                  {/* 16-Point Antique Nautical Compass Rose Star */}
+                  {/* Primary Points */}
+                  <polygon points="165,34 175,155 165,165 155,155" fill="#B91C1C" />
+                  <polygon points="165,34 165,165 155,155" fill="#DC2626" />
+                  <polygon points="165,296 175,175 165,165 155,175" fill="#1E40AF" />
+                  <polygon points="165,296 165,165 155,175" fill="#2563EB" />
+                  <polygon points="296,165 175,175 165,165 175,155" fill="#92400E" />
+                  <polygon points="296,165 165,165 175,155" fill="#B45309" />
+                  <polygon points="34,165 155,175 165,165 155,155" fill="#92400E" />
+                  <polygon points="34,165 165,165 155,155" fill="#B45309" />
+
+                  {/* Secondary Intercardinal Points */}
+                  <polygon points="258,72 172,160 165,165 160,158" fill="#451A03" opacity="0.8" />
+                  <polygon points="258,72 165,165 160,158" fill="#78350F" opacity="0.8" />
+                  <polygon points="72,258 158,170 165,165 170,172" fill="#451A03" opacity="0.8" />
+                  <polygon points="72,258 165,165 170,172" fill="#78350F" opacity="0.8" />
+                  <polygon points="72,72 158,160 165,165 160,172" fill="#451A03" opacity="0.8" />
+                  <polygon points="72,72 165,165 160,172" fill="#78350F" opacity="0.8" />
+                  <polygon points="258,258 172,170 165,165 170,158" fill="#451A03" opacity="0.8" />
+                  <polygon points="258,258 165,165 170,158" fill="#78350F" opacity="0.8" />
+
+                  {/* North Fleur-de-Lis Arrow Crown */}
+                  <path d="M 165,18 C 160,26 154,28 158,34 C 162,33 164,30 165,26 C 166,30 168,33 172,34 C 176,28 170,26 165,18 Z" fill="#DC2626" />
+                </svg>
+
+                {/* 360-Degree Radial Precision Tick Marks */}
+                {Array.from({ length: 72 }).map((_, idx) => {
+                  const deg = idx * 5;
+                  const isMajor = deg % 30 === 0;
+                  const isMedium = deg % 10 === 0;
+
+                  return (
+                    <div
+                      key={deg}
+                      style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        width: '100%',
+                        height: '100%',
+                        transform: `translate(-50%, -50%) rotate(${deg}deg)`,
+                        pointerEvents: 'none'
+                      }}
+                    >
+                      <div style={{
+                        position: 'absolute',
+                        top: '4px',
+                        left: isMajor ? 'calc(50% - 1.5px)' : 'calc(50% - 0.75px)',
+                        width: isMajor ? '3px' : isMedium ? '1.8px' : '1px',
+                        height: isMajor ? '16px' : isMedium ? '11px' : '6px',
+                        background: isMajor ? '#0F172A' : isMedium ? '#78350F' : '#94A3B8',
+                        borderRadius: '1px'
+                      }} />
+                    </div>
+                  );
+                })}
+
+                {/* Degree Numbers around Ring (0, 30, 60 ... 330) */}
+                {[
+                  { deg: 0, label: '0°' },
+                  { deg: 30, label: '30°' },
+                  { deg: 60, label: '60°' },
+                  { deg: 90, label: '90°' },
+                  { deg: 120, label: '120°' },
+                  { deg: 150, label: '150°' },
+                  { deg: 180, label: '180°' },
+                  { deg: 210, label: '210°' },
+                  { deg: 240, label: '240°' },
+                  { deg: 270, label: '270°' },
+                  { deg: 300, label: '300°' },
+                  { deg: 330, label: '330°' }
+                ].map(({ deg, label }) => {
+                  const rad = (deg - 90) * (Math.PI / 180);
+                  const radius = 120;
+                  const x = Math.cos(rad) * radius;
+                  const y = Math.sin(rad) * radius;
+
+                  return (
+                    <span
+                      key={deg}
+                      style={{
+                        position: 'absolute',
+                        transform: `translate(${x}px, ${y}px)`,
+                        fontSize: '9px',
+                        fontWeight: 900,
+                        color: '#78350F',
+                        fontFamily: 'serif',
+                        pointerEvents: 'none'
+                      }}
+                    >
+                      {label}
+                    </span>
+                  );
+                })}
+
+                {/* Prominent Vintage Cardinal Letters */}
+                {/* NORTH */}
+                <div style={{ position: 'absolute', top: '24px', left: 'calc(50% - 15px)', width: '30px', height: '26px', background: '#EF4444', borderRadius: '6px', color: '#FFFFFF', fontWeight: 900, fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 3px 8px rgba(239,68,68,0.45)', zIndex: 12 }}>
+                  N
+                </div>
+
+                {/* SOUTH */}
+                <div style={{ position: 'absolute', bottom: '24px', left: 'calc(50% - 15px)', width: '30px', height: '26px', background: '#3B82F6', borderRadius: '6px', color: '#FFFFFF', fontWeight: 900, fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 3px 8px rgba(59,130,246,0.45)', zIndex: 12 }}>
+                  S
+                </div>
+
+                {/* EAST */}
+                <div style={{ position: 'absolute', right: '24px', top: 'calc(50% - 13px)', width: '26px', height: '26px', background: '#064E3B', borderRadius: '50%', color: '#FFFFFF', fontWeight: 900, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 12 }}>
+                  E
+                </div>
+
+                {/* WEST */}
+                <div style={{ position: 'absolute', left: '24px', top: 'calc(50% - 13px)', width: '26px', height: '26px', background: '#064E3B', borderRadius: '50%', color: '#FFFFFF', fontWeight: 900, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 12 }}>
+                  W
+                </div>
+
+                {/* Intercardinal Labels */}
+                <span style={{ position: 'absolute', top: '64px', right: '64px', fontSize: '12px', fontWeight: 900, color: '#78350F' }}>NE</span>
+                <span style={{ position: 'absolute', top: '64px', left: '64px', fontSize: '12px', fontWeight: 900, color: '#78350F' }}>NW</span>
+                <span style={{ position: 'absolute', bottom: '64px', right: '64px', fontSize: '12px', fontWeight: 900, color: '#78350F' }}>SE</span>
+                <span style={{ position: 'absolute', bottom: '64px', left: '64px', fontSize: '12px', fontWeight: 900, color: '#78350F' }}>SW</span>
+
+                {/* --------------------------------------------------------- */}
+                {/* 3D Chiseled Magnetic Needle Assembly with Jewel Pivot */}
+                {/* --------------------------------------------------------- */}
+                <motion.div
+                  animate={{ rotate: needleAngle }}
+                  transition={isSpinning ? { duration: 2.0, ease: 'easeOut' } : { type: 'spring', stiffness: 90, damping: 14 }}
+                  style={{
+                    position: 'relative',
+                    width: '32px',
+                    height: '260px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 25,
+                    filter: 'drop-shadow(0 14px 22px rgba(0,0,0,0.55))'
+                  }}
+                >
+                  {/* North Faceted Pointer (Enamelled Crimson) */}
+                  <div style={{
+                    width: 0,
+                    height: 0,
+                    borderLeft: '15px solid transparent',
+                    borderRight: '15px solid transparent',
+                    borderBottom: '130px solid #DC2626',
+                    position: 'relative',
+                    filter: 'drop-shadow(0 0 6px rgba(220, 38, 38, 0.6))'
+                  }}>
+                    {/* Left Specular Bevel Highlight */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '25px',
+                      left: '-15px',
+                      width: '15px',
+                      height: '105px',
+                      background: 'rgba(255, 255, 255, 0.38)',
+                      clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+                    }} />
+                    {/* North Label Badge */}
+                    <span style={{ position: 'absolute', top: '70px', left: '-6px', color: '#FFFFFF', fontSize: '0.95rem', fontWeight: 900, textShadow: '0 1px 3px #000' }}>N</span>
+                  </div>
+
+                  {/* Central Polished Brass Pivot Jewel Cap with Screw Mount */}
+                  <div style={{
+                    position: 'absolute',
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at 35% 35%, #FEF08A 0%, #D97706 60%, #78350F 100%)',
+                    border: '2.5px solid #FFFFFF',
+                    boxShadow: '0 6px 14px rgba(0,0,0,0.7), inset 0 2px 4px rgba(255,255,255,0.9)',
+                    zIndex: 30,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    {/* Ruby Pivot Jewel Inset */}
+                    <div style={{
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '50%',
+                      background: 'radial-gradient(circle at 30% 30%, #FDA4AF 0%, #BE123C 70%, #4C0519 100%)',
+                      boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.8)'
+                    }} />
+                  </div>
+
+                  {/* South Faceted Pointer (Enamelled Sapphire Blue) */}
+                  <div style={{
+                    width: 0,
+                    height: 0,
+                    borderLeft: '15px solid transparent',
+                    borderRight: '15px solid transparent',
+                    borderTop: '130px solid #2563EB',
+                    position: 'relative',
+                    filter: 'drop-shadow(0 0 6px rgba(37, 99, 235, 0.6))'
+                  }}>
+                    {/* Left Specular Bevel Highlight */}
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '25px',
+                      left: '-15px',
+                      width: '15px',
+                      height: '105px',
+                      background: 'rgba(255, 255, 255, 0.38)',
+                      clipPath: 'polygon(100% 100%, 0 0, 100% 0)'
+                    }} />
+                    {/* South Label Badge */}
+                    <span style={{ position: 'absolute', bottom: '70px', left: '-5px', color: '#FFFFFF', fontSize: '0.95rem', fontWeight: 900, textShadow: '0 1px 3px #000' }}>S</span>
+                  </div>
+                </motion.div>
+
+                {/* Curved Convex Glass Highlight Sheen */}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0) 65%)',
+                  pointerEvents: 'none',
+                  zIndex: 35
+                }} />
               </div>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(15, 23, 42, 0.88)', border: '1px solid rgba(255, 255, 255, 0.25)', borderRadius: '16px', padding: '8px 16px', backdropFilter: 'blur(10px)', pointerEvents: 'auto' }}>
-                <span style={{ color: '#FDE047', fontSize: '0.82rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '4px' }}><Sun size={15} /> Time:</span>
-                <input type="range" min="0.05" max="0.95" step="0.01" value={timeOfDay} onChange={(e) => setTimeOfDay(parseFloat(e.target.value))} style={{ width: '140px', accentColor: '#F59E0B', cursor: 'pointer' }} />
-                <span style={{ color: '#FFFFFF', fontSize: '0.8rem', fontWeight: 800, minWidth: '95px' }}>{timeOfDay < 0.35 ? '🌅 Sunrise' : timeOfDay > 0.65 ? '🌇 Sunset' : '☀️ Solar Noon'}</span>
-              </div>
-            )}
+            </motion.div>
           </div>
-          <Canvas shadows gl={{ alpha: true, antialias: true }} camera={{ position: [0, 8.5, 14], fov: 45 }}>
-            <Suspense fallback={null}>
-              <ambientLight intensity={0.9} />
-              <directionalLight position={[10, 20, 10]} intensity={1.8} castShadow shadow-mapSize={[2048, 2048]} />
-              <group scale={[zoomScale * 0.95, zoomScale * 0.95, zoomScale * 0.95]}>
-                {activeMode === 'compass' ? (
-                  <>
-                    <BrassCompass3D needleAngle={needleAngle} isSpinning={isSpinning} />
-                    {hasMagnetNearby && <NearbyInfluencingMagnet position={magnetPos} />}
-                    <ContactShadows position={[0, -2.0, 0]} opacity={0.65} scale={18} blur={2.4} far={8} />
-                  </>
-                ) : (
-                  <SunShadowHorizon3D timeOfDay={timeOfDay} />
-                )}
-              </group>
-              <OrbitControls makeDefault enablePan={false} maxPolarAngle={Math.PI / 2.1} minPolarAngle={0.15} minDistance={6} maxDistance={35} />
-            </Suspense>
-          </Canvas>
         </div>
       </div>
+
+      {/* Right Side: Guide & Control Panel (Enlarged Spacious Typography) */}
       <div style={{ 
-        flex: '1.15', 
+        flex: '1.05', 
         background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
         border: '1.5px solid #FDE68A', 
         borderRadius: '24px', 
-        padding: '1.6rem 1.6rem', 
+        padding: '1.5rem 1.65rem', 
         boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
-        gap: '1.2rem', 
+        gap: '1.15rem',
         minWidth: 0, 
         height: '100%', 
         boxSizing: 'border-box', 
-        overflowY: 'auto',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
+        overflowY: 'auto' 
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', background: '#DCFCE7', border: '1.5px solid #86EFAC', padding: '0.4rem 0.9rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 800, color: '#15803D', alignSelf: 'flex-start' }}><Sparkles size={16} color="#059669" /> EXPERIMENT CONCLUSION</div>
-          <h2 style={{ fontSize: '1.65rem', fontWeight: 900, color: '#064E3B', margin: 0, lineHeight: 1.25, letterSpacing: '-0.02em' }}>How a Compass Works</h2>
-          <p style={{ fontSize: '1.05rem', color: '#065F46', lineHeight: 1.65, fontWeight: 600, margin: 0 }}>A freely suspended bar magnet or compass needle always comes to rest pointing in the <strong style={{ color: '#D97706' }}>North-South direction</strong>. This fundamental property has guided navigators, explorers, and travelers across the globe for centuries!</p>
-          
-          <div style={{ background: '#FFFBEB', border: '1.5px solid #FDE68A', borderRadius: '20px', padding: '1.15rem 1.35rem', display: 'flex', alignItems: 'flex-start', gap: '0.85rem', boxShadow: '0 4px 14px rgba(217, 119, 6, 0.08)' }}>
-            <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>☀️</span>
-            <p style={{ margin: 0, fontSize: '0.98rem', color: '#065F46', lineHeight: 1.6, fontWeight: 600 }}>Using the Sun's sunrise (East) and sunset (West) positions provides an astronomical East-West reference line, verifying that the magnetic needle points precisely along the North-South axis.</p>
+          {/* Kicker Badge */}
+          <div style={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            gap: '0.5rem', 
+            background: '#DCFCE7', 
+            padding: '0.45rem 1rem', 
+            borderRadius: '20px', 
+            fontSize: '0.94rem', 
+            fontWeight: 900, 
+            color: '#15803D', 
+            border: '1.5px solid #86EFAC',
+            letterSpacing: '0.5px',
+            alignSelf: 'flex-start'
+          }}>
+            <Sparkles size={18} color="#10B981" /> EXPERIMENT CONCLUSION
           </div>
 
-          <div style={{ background: '#FFFFFF', border: '1.5px solid #FDE68A', borderRadius: '20px', padding: '1.25rem 1.35rem', boxShadow: '0 4px 14px rgba(217, 119, 6, 0.05)' }}>
-            <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#064E3B', letterSpacing: '0.5px', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Compass size={18} color="#059669" /> COMPASS CONTROLS
-            </div>
-            <p style={{ fontSize: '0.98rem', color: '#065F46', fontWeight: 600, margin: '0 0 0.9rem 0', lineHeight: 1.5 }}>
-              Tap below to deflect the needle or bring a secondary magnet close:
+          <h2 style={{ 
+            fontSize: '1.75rem', 
+            fontWeight: 900, 
+            color: '#064E3B', 
+            margin: 0,
+            lineHeight: 1.25,
+            letterSpacing: '-0.02em'
+          }}>
+            How a Compass Works
+          </h2>
+
+          <p style={{ 
+            fontSize: '1.12rem', 
+            color: '#065F46', 
+            lineHeight: 1.7, 
+            fontWeight: 700,
+            margin: 0
+          }}>
+            A freely suspended bar magnet or compass needle always comes to rest pointing in the <strong style={{ color: '#D97706', fontWeight: 900 }}>North-South direction</strong>. This fundamental property has guided navigators, explorers, and travelers across the globe for centuries!
+          </p>
+
+          {/* Finding Directions with the Sun Info Card */}
+          <div style={{
+            background: '#FFFFFF',
+            border: '1.5px solid #FDE68A',
+            borderRadius: '20px',
+            padding: '1.25rem 1.45rem',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '0.95rem',
+            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.06)'
+          }}>
+            <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>☀️</span>
+            <p style={{ 
+              margin: 0, 
+              fontSize: '1.06rem', 
+              color: '#78350F', 
+              lineHeight: 1.65, 
+              fontWeight: 700 
+            }}>
+              Using the Sun's sunrise or sunset position gives an approximate East-West reference line, allowing us to accurately identify the North-South axis along which the magnet settles.
             </p>
+          </div>
+
+          {/* Interactive Controls Card */}
+          <div style={{ 
+            background: '#FFFFFF', 
+            border: '1.5px solid #FDE68A', 
+            borderRadius: '20px', 
+            padding: '1.3rem 1.45rem',
+            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.06)'
+          }}>
+            <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#064E3B', letterSpacing: '0.5px', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+              <Compass size={20} color="#D97706" /> COMPASS CONTROLS
+            </div>
+
+            <p style={{ fontSize: '1.05rem', color: '#065F46', fontWeight: 700, margin: '0 0 0.95rem 0', lineHeight: 1.55 }}>
+              Tap the button or hover over the compass dial to deflect the magnetized needle:
+            </p>
+
             <button
               onClick={handleDeflect}
               disabled={isSpinning}
               className={!isSpinning ? 'gold-glow-btn' : ''}
               style={{
                 width: '100%',
-                padding: '1.05rem 1.2rem',
-                fontSize: '1.08rem',
+                padding: '1.1rem 1.4rem',
+                fontSize: '1.18rem',
                 fontWeight: 900,
-                borderRadius: '16px',
-                background: isSpinning ? '#F1F5F9' : undefined,
-                color: isSpinning ? '#94A3B8' : '#FFFFFF',
-                border: 'none',
+                borderRadius: '18px',
+                background: isSpinning ? '#CBD5E1' : undefined,
+                color: isSpinning ? '#64748B' : '#FFFFFF',
+                border: isSpinning ? 'none' : undefined,
                 cursor: isSpinning ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.65rem',
-                transition: 'all 0.2s ease'
+                gap: '0.7rem',
+                boxShadow: isSpinning ? 'none' : undefined,
+                transition: 'all 0.2s ease',
+                fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
               }}
             >
-              <RotateCw size={20} className={isSpinning ? 'spin-anim' : ''} /> {isSpinning ? 'Deflecting Needle...' : 'Deflect Compass Needle'}
+              <RotateCw size={22} className={isSpinning ? 'spin-anim' : ''} /> {isSpinning ? 'Deflecting Needle...' : 'Deflect Compass Needle'}
             </button>
           </div>
         </div>
 
         {/* Bottom Navigation */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
           alignItems: 'center',
           borderTop: '1.5px solid #FDE68A',
-          paddingTop: '1rem'
+          paddingTop: '0.9rem'
         }}>
-          <span style={{ fontSize: '0.95rem', color: '#047857', fontWeight: 800 }}>
+          <span style={{ fontSize: '1.02rem', color: '#047857', fontWeight: 800, fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
             Stage 2 of 2 ● ●
           </span>
 
@@ -494,20 +653,19 @@ export default function Stage2_Conclusion({ onComplete }) {
             onClick={onComplete}
             className="gold-glow-btn"
             style={{
-              padding: '0.95rem 2.2rem',
-              fontSize: '1.05rem',
+              padding: '1.05rem 2.6rem',
+              fontSize: '1.18rem',
               fontWeight: 900,
-              borderRadius: '25px',
-              color: '#FFFFFF',
-              border: 'none',
+              borderRadius: '24px',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.55rem',
-              transition: 'all 0.2s ease'
+              gap: '0.6rem',
+              transition: 'all 0.2s ease',
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
             }}
           >
-            Proceed to Quiz <ArrowRight size={20} color="#FFFFFF" />
+            Proceed to Quiz <ArrowRight size={22} color="#FFFFFF" />
           </button>
         </div>
       </div>

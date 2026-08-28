@@ -98,7 +98,7 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
             alignItems: 'center', 
             justifyContent: 'center', 
             gap: '0.65rem', 
-            color: '#92400E', 
+            color: '#064E3B', 
             letterSpacing: '-0.01em' 
           }}>
             <Compass size={26} style={{ color: '#D97706' }} />
@@ -106,7 +106,7 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
           </h2>
           <span style={{ 
             fontSize: '0.82rem', 
-            color: '#B45309', 
+            color: '#047857', 
             fontWeight: 700 
           }}>
             Class 6 Science — Observe iron filings & magnetic poles
@@ -142,9 +142,9 @@ export default function MagneticPolesActivity({ onBackToDashboard, onComplete })
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={16} color={isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#D97706'} />
+                <Icon size={16} color={isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#059669'} />
                 <span>{tab.name}</span>
-                {isCompleted && !isActive && <CheckCircle size={14} color="#D97706" />}
+                {isCompleted && !isActive && <CheckCircle size={14} color="#10B981" />}
               </button>
             );
           })}

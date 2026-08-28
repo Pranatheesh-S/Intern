@@ -50,7 +50,7 @@ export default function SuspendedMagnetActivity({ onBackToDashboard, onComplete 
       boxSizing: 'border-box',
       padding: '0.65rem 0.85rem',
       backgroundColor: '#FFFFFF',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
     }}>
 
       {/* Top Header Bar */}

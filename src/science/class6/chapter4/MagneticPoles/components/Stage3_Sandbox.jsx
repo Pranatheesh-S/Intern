@@ -2,18 +2,30 @@ import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, OrbitControls, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Hand, RotateCcw, Shapes, Flag, BookOpen, Maximize2, Minimize2, CheckCircle, ArrowRight, Play, Pause, Plus, Minus } from 'lucide-react';
+import { Hand, RotateCcw, Shapes, Flag, BookOpen, CheckCircle, ArrowRight, Play, Pause } from 'lucide-react';
 import * as THREE from 'three';
 import '../MagneticPoles.css';
 
 // ---------------------------------------------------------
 // Realistic Parchment Paper Box Enclosure
 // ---------------------------------------------------------
-function PaperBoxEnclosure() {
+function PaperBoxEnclosure({ isVibrating, isPaused }) {
   const paperTexture = useTexture('/MagneticPoles/paper_texture.jpg');
+  const paperGroupRef = useRef();
+
+  useFrame((state) => {
+    if (!paperGroupRef.current || isPaused) return;
+    if (isVibrating) {
+      paperGroupRef.current.position.y = Math.sin(state.clock.elapsedTime * 90) * 0.035;
+      paperGroupRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 70) * 0.003;
+    } else {
+      paperGroupRef.current.position.y = 0;
+      paperGroupRef.current.rotation.z = 0;
+    }
+  });
 
   return (
-    <>
+    <group ref={paperGroupRef}>
       {/* 1. Bottom Paper Base */}
       <mesh receiveShadow position={[0, -0.01, 0]}>
         <boxGeometry args={[26, 0.04, 16]} />
@@ -37,7 +49,7 @@ function PaperBoxEnclosure() {
         <boxGeometry args={[0.04, 4.8, 16]} />
         <meshStandardMaterial map={paperTexture} roughness={0.95} metalness={0.0} />
       </mesh>
-    </>
+    </group>
   );
 }
 
@@ -314,6 +326,13 @@ function RingMagnet3D() {
   );
 }
 
+function ChosenMagnet3D({ shape }) {
+  if (shape === 'bar') return <BarMagnet3D />;
+  if (shape === 'horseshoe') return <HorseshoeMagnet3D />;
+  if (shape === 'ring') return <RingMagnet3D />;
+  return <HorseshoeMagnet3D />;
+}
+
 // ---------------------------------------------------------
 // Smooth Intro Animation Group (Bottom-Left to Center Growth)
 // ---------------------------------------------------------
@@ -358,21 +377,20 @@ function AnimatedLabGroup({ children, zoomScale = 1.0 }) {
 // ----------------------------------------------------
 // 2. 3D FILINGS INSTANCED SYSTEM (PERFECTLY FITTED TO PAPER)
 // ----------------------------------------------------
-function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
+function FilingsSystem({ step, isSprinkling, isVibrating, shape, cycleKey, isPaused }) {
   const count = 14000;
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const lastCycleRef = useRef(-1);
 
-  // Compute pole points for field simulation
+  // Poles coordinates calculated per shape
   const poles = useMemo(() => {
     if (shape === 'horseshoe') {
-      return { nX: -2.3, nZ: 2.6, sX: 2.3, sZ: 2.6, span: 3.2 };
+      return { nX: -2.3, nZ: 2.2, sX: 2.3, sZ: 2.2, span: 3.5 };
+    } else if (shape === 'ring') {
+      return { nX: 0, nZ: -1.6, sX: 0, sZ: 1.6, span: 3.0 };
     }
-    if (shape === 'ring') {
-      return { nX: -2.1, nZ: 0.0, sX: 2.1, sZ: 0.0, span: 3.2 };
-    }
-    // Bar
-    return { nX: -4.8, nZ: 0.0, sX: 4.8, sZ: 0.0, span: 4.0 };
+    return { nX: -4.8, nZ: 0, sX: 4.8, sZ: 0, span: 4.0 };
   }, [shape]);
 
   const particles = useMemo(() => {
@@ -380,16 +398,15 @@ function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
     const numLines = 85;
 
     for (let i = 0; i < count; i++) {
-      // Confined strictly to paper bounds (Paper is 26 x 16)
       const randX = (Math.random() - 0.5) * 23;
       const randZ = (Math.random() - 0.5) * 13.5;
       const randomEuler = new THREE.Euler(Math.PI / 2, (Math.random() - 0.5) * Math.PI, 0);
+      const initialQ = new THREE.Quaternion().setFromEuler(randomEuler);
 
       let targetX, targetZ;
       const clusterRoll = Math.random();
 
       if (clusterRoll < 0.42) {
-        // High density clustering directly at poles
         const isNorth = Math.random() < 0.5;
         const pX = isNorth ? poles.nX : poles.sX;
         const pZ = isNorth ? poles.nZ : poles.sZ;
@@ -399,7 +416,6 @@ function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
         targetX = pX + Math.cos(angle) * r;
         targetZ = pZ + Math.sin(angle) * r;
       } else {
-        // Natural magnetic stream loops
         const lineIdx = Math.floor(Math.random() * numLines);
         const t = Math.random();
         const loopR = 1.6 + (lineIdx / numLines) * 8.0;
@@ -410,7 +426,6 @@ function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
         targetZ = side * Math.cos(theta) * loopR * 0.75 + (Math.random() - 0.5) * 0.25;
       }
 
-      // Constrain tightly to stay neatly on top of the paper
       targetX = Math.max(-11.8, Math.min(11.8, targetX));
       targetZ = Math.max(-6.8, Math.min(6.8, targetZ));
 
@@ -421,20 +436,20 @@ function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
         targetZ,
         scale: 0.65 + Math.random() * 0.45,
         x: randX,
-        y: 11 + Math.random() * 5,
+        y: 8 + Math.random() * 4.5,
         z: randZ,
-        floatY: 0.25 + Math.random() * 4.5,
-        q: new THREE.Quaternion().setFromEuler(randomEuler),
+        floatY: 0.04,
+        initialQ,
+        q: new THREE.Quaternion().copy(initialQ),
         targetQ: new THREE.Quaternion(),
         visible: false,
-        delay: Math.random() * 0.9,
+        delay: Math.random() * 0.75,
       });
     }
     return data;
   }, [count, poles]);
 
   const geometry = useMemo(() => new THREE.CylinderGeometry(0.034, 0.034, 0.18, 4), []);
-  // Deep matte charcoal-black material matching real iron shavings, bold and dark in front & top views
   const material = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
@@ -447,35 +462,53 @@ function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
   );
 
   useFrame((state, delta) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || isPaused) return;
     const dt = Math.min(delta, 0.1);
     const poleY = shape === 'bar' ? 2.5 : 2.45;
 
-    particles.forEach((p, i) => {
-      if (step === 'initial' && !isSprinkling) {
+    if (lastCycleRef.current !== cycleKey) {
+      lastCycleRef.current = cycleKey;
+      particles.forEach((p) => {
         p.visible = false;
-        p.y = 11 + Math.random() * 5;
         p.x = p.originX;
         p.z = p.originZ;
-        p.delay = Math.random() * 0.9;
-      }
+        p.y = 8 + Math.random() * 4.5;
+        p.q.copy(p.initialQ);
+        p.delay = Math.random() * 0.75;
+      });
+    }
 
-      // Step 2: Sprinkling down - suspended floating in 3D air around the magnet
-      if (isSprinkling || step === 'scattered') {
+    particles.forEach((p, i) => {
+      // 1. Sprinkling down
+      if (isSprinkling || step === 'initial') {
         p.delay -= dt;
         if (p.delay <= 0) {
           p.visible = true;
-          if (p.y > p.floatY) {
-            p.y -= dt * 20;
+          if (p.y > 0.04) {
+            p.y -= dt * 18;
           } else {
-            p.y = p.floatY;
+            p.y = 0.04;
           }
+          p.x = p.originX;
+          p.z = p.originZ;
+          p.q.copy(p.initialQ);
         }
       }
 
+      // 2. Scattered on paper
+      if (step === 'scattered') {
+        p.visible = true;
+        p.y = 0.04;
+        p.x = p.originX;
+        p.z = p.originZ;
+        p.q.copy(p.initialQ);
+      }
+
+      // 3. Tapped - align along magnetic poles
       if (step === 'tapped' || (isVibrating && step === 'tapped')) {
-        p.x = THREE.MathUtils.lerp(p.x, p.targetX, dt * 5.0);
-        p.z = THREE.MathUtils.lerp(p.z, p.targetZ, dt * 5.0);
+        p.visible = true;
+        p.x = THREE.MathUtils.lerp(p.x, p.targetX, dt * 5.2);
+        p.z = THREE.MathUtils.lerp(p.z, p.targetZ, dt * 5.2);
 
         const dxN = p.x - poles.nX;
         const dyN = p.y - poleY;
@@ -500,9 +533,9 @@ function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
           const minDist = Math.min(distN, distS);
           if (minDist < 3.0) {
             const spikeHeight = (3.0 - minDist) * 0.75;
-            p.y = THREE.MathUtils.lerp(p.y, 0.03 + spikeHeight * Math.abs(By / Bmag), dt * 6);
+            p.y = THREE.MathUtils.lerp(p.y, 0.04 + spikeHeight * Math.abs(By / Bmag), dt * 6);
           } else {
-            p.y = THREE.MathUtils.lerp(p.y, 0.03, dt * 6);
+            p.y = THREE.MathUtils.lerp(p.y, 0.04, dt * 6);
           }
         }
       }
@@ -539,121 +572,77 @@ function FilingsSystem3D({ shape, step, isSprinkling, isVibrating }) {
 // ----------------------------------------------------
 export default function Stage3_Sandbox({ onComplete }) {
   const [step, setStep] = useState('initial');
+  const [cycleKey, setCycleKey] = useState(0);
   const [tapCount, setTapCount] = useState(0);
   const [shape, setShape] = useState('horseshoe'); // 'horseshoe', 'ring', 'bar'
   const [isSprinkling, setIsSprinkling] = useState(false);
   const [isVibrating, setIsVibrating] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [zoomScale, setZoomScale] = useState(1.0);
-
-  const handleZoomIn = () => setZoomScale((z) => Math.min(2.0, +(z + 0.15).toFixed(2)));
-  const handleZoomOut = () => setZoomScale((z) => Math.max(0.45, +(z - 0.15).toFixed(2)));
-  const handleResetZoom = () => setZoomScale(1.0);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
 
   const [isPaused, setIsPaused] = useState(false);
   const isPausedRef = useRef(false);
   isPausedRef.current = isPaused;
-  const loopTimeoutRef = useRef(null);
+
+  const phaseRef = useRef('sprinkle'); // 'sprinkle', 'scattered', 'tapping', 'observing'
+  const phaseStartTimeRef = useRef(Date.now());
+  const remainingMsRef = useRef(1800);
+  const timeoutRef = useRef(null);
 
   const clearLoopTimers = () => {
-    if (loopTimeoutRef.current) {
-      clearTimeout(loopTimeoutRef.current);
-      loopTimeoutRef.current = null;
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
   };
 
-  const startLoopSequence = (fromStep = 'initial') => {
-    clearLoopTimers();
+  const advanceToNextPhase = (completedPhase) => {
     if (isPausedRef.current) return;
+    if (completedPhase === 'sprinkle') {
+      executePhase('scattered', 800);
+    } else if (completedPhase === 'scattered') {
+      executePhase('tapping', 750);
+    } else if (completedPhase === 'tapping') {
+      executePhase('observing', 3500);
+    } else if (completedPhase === 'observing') {
+      executePhase('sprinkle', 1800);
+    }
+  };
 
-    if (fromStep === 'initial') {
+  const executePhase = (phase, duration) => {
+    clearLoopTimers();
+    phaseRef.current = phase;
+    remainingMsRef.current = duration;
+    phaseStartTimeRef.current = Date.now();
+
+    if (phase === 'sprinkle') {
+      setCycleKey((k) => k + 1);
       setStep('initial');
       setIsSprinkling(true);
       setIsVibrating(false);
-
-      loopTimeoutRef.current = setTimeout(() => {
-        if (isPausedRef.current) return;
-        setIsSprinkling(false);
-        setStep('scattered');
-
-        loopTimeoutRef.current = setTimeout(() => {
-          if (isPausedRef.current) return;
-          setIsVibrating(true);
-
-          loopTimeoutRef.current = setTimeout(() => {
-            if (isPausedRef.current) return;
-            setIsVibrating(false);
-            setTapCount((prev) => Math.max(prev, 1));
-            setStep('tapped');
-
-            // Remain at tapped state displaying pole clustering for 3.5s before repeating
-            loopTimeoutRef.current = setTimeout(() => {
-              if (isPausedRef.current) return;
-              startLoopSequence('initial');
-            }, 3500);
-          }, 500);
-        }, 800);
-      }, 1400);
-    } else if (fromStep === 'scattered') {
-      setIsSprinkling(false);
+    } else if (phase === 'scattered') {
       setStep('scattered');
-
-      loopTimeoutRef.current = setTimeout(() => {
-        if (isPausedRef.current) return;
-        setIsVibrating(true);
-
-        loopTimeoutRef.current = setTimeout(() => {
-          if (isPausedRef.current) return;
-          setIsVibrating(false);
-          setTapCount((prev) => Math.max(prev, 1));
-          setStep('tapped');
-
-          loopTimeoutRef.current = setTimeout(() => {
-            if (isPausedRef.current) return;
-            startLoopSequence('initial');
-          }, 3500);
-        }, 500);
-      }, 800);
-    } else {
-      loopTimeoutRef.current = setTimeout(() => {
-        if (isPausedRef.current) return;
-        startLoopSequence('initial');
-      }, 2500);
-    }
-  };
-
-  // Continuous autoplay on entry
-  useEffect(() => {
-    isPausedRef.current = isPaused;
-    if (!isPaused) {
-      startLoopSequence(step === 'initial' ? 'initial' : step);
-    } else {
-      clearLoopTimers();
+      setIsSprinkling(false);
+      setIsVibrating(false);
+    } else if (phase === 'tapping') {
+      setStep('tapped');
+      setIsSprinkling(false);
+      setIsVibrating(true);
+      setTapCount((prev) => Math.max(prev, 1));
+    } else if (phase === 'observing') {
+      setStep('tapped');
       setIsSprinkling(false);
       setIsVibrating(false);
     }
+
+    timeoutRef.current = setTimeout(() => {
+      advanceToNextPhase(phase);
+    }, duration);
+  };
+
+  // Start continuous loop on initial mount
+  useEffect(() => {
+    executePhase('sprinkle', 1800);
     return () => clearLoopTimers();
-  }, [isPaused]);
+  }, []);
 
   const handleShapeChange = (newShape) => {
     setShape(newShape);
@@ -661,13 +650,29 @@ export default function Stage3_Sandbox({ onComplete }) {
     setIsPaused(false);
     isPausedRef.current = false;
     setTapCount(0);
-    setIsSprinkling(false);
-    setIsVibrating(false);
-    startLoopSequence('initial');
+    executePhase('sprinkle', 1800);
   };
 
   const handleTogglePause = () => {
-    setIsPaused((prev) => !prev);
+    if (!isPaused) {
+      // Pausing: calculate remaining time for current phase
+      clearLoopTimers();
+      const elapsed = Date.now() - phaseStartTimeRef.current;
+      remainingMsRef.current = Math.max(50, remainingMsRef.current - elapsed);
+      setIsPaused(true);
+      isPausedRef.current = true;
+    } else {
+      // Resuming: continue remaining time of current phase
+      setIsPaused(false);
+      isPausedRef.current = false;
+      phaseStartTimeRef.current = Date.now();
+      const currentPhase = phaseRef.current;
+      const rem = remainingMsRef.current;
+
+      timeoutRef.current = setTimeout(() => {
+        advanceToNextPhase(currentPhase);
+      }, rem);
+    }
   };
 
   const handleReset = () => {
@@ -675,9 +680,7 @@ export default function Stage3_Sandbox({ onComplete }) {
     setIsPaused(false);
     isPausedRef.current = false;
     setTapCount(0);
-    setIsSprinkling(false);
-    setIsVibrating(false);
-    startLoopSequence('initial');
+    executePhase('sprinkle', 1800);
   };
 
   return (
@@ -718,135 +721,6 @@ export default function Stage3_Sandbox({ onComplete }) {
             backgroundPosition: 'center',
           }}
         >
-          {/* Floating Controls HUD: Zoom In / Zoom Out / Reset Scale / Fullscreen */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 14,
-              right: 16,
-              zIndex: 30,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: 'rgba(15, 23, 42, 0.78)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '16px',
-              padding: '4px 8px',
-              backdropFilter: 'blur(12px)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.22)',
-            }}
-          >
-            {/* Zoom Out */}
-            <button
-              onClick={handleZoomOut}
-              title="Make Smaller (Zoom Out)"
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                border: 'none',
-                borderRadius: '10px',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFFFFF',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <Minus size={16} color="#FFFFFF" />
-            </button>
-
-            {/* Scale % Display / Click to Reset */}
-            <button
-              onClick={handleResetZoom}
-              title="Click to Reset Size to 100%"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#F8FAFC',
-                fontSize: '0.82rem',
-                fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
-                padding: '0 6px',
-                minWidth: '52px',
-                cursor: 'pointer',
-                textAlign: 'center',
-              }}
-            >
-              {Math.round(zoomScale * 100)}%
-            </button>
-
-            {/* Zoom In */}
-            <button
-              onClick={handleZoomIn}
-              title="Make Bigger (Zoom In)"
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                border: 'none',
-                borderRadius: '10px',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFFFFF',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <Plus size={16} color="#FFFFFF" />
-            </button>
-
-            {/* Reset Scale Button */}
-            <button
-              onClick={handleResetZoom}
-              title="Reset Object Size"
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                border: 'none',
-                borderRadius: '10px',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFFFFF',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <RotateCcw size={14} color="#FFFFFF" />
-            </button>
-
-            <div style={{ width: '1px', height: '18px', background: 'rgba(255, 255, 255, 0.22)', margin: '0 2px' }} />
-
-            {/* Fullscreen Button */}
-            <button
-              onClick={toggleFullscreen}
-              title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                border: 'none',
-                borderRadius: '10px',
-                padding: '6px 10px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '5px',
-                color: '#FFFFFF',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
-                transition: 'all 0.2s ease',
-              }}
-            >
-              {isFullscreen ? <Minimize2 size={15} color="#FFFFFF" /> : <Maximize2 size={15} color="#FFFFFF" />}
-              <span>{isFullscreen ? 'Exit' : 'Fullscreen'}</span>
-            </button>
-          </div>
-
           {/* 3D Canvas Scene matching Stage 1 Camera & Lights */}
           <Canvas
             shadows
@@ -866,23 +740,12 @@ export default function Stage3_Sandbox({ onComplete }) {
               <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
               <Environment preset="city" />
 
-              <AnimatedLabGroup zoomScale={zoomScale}>
+              <AnimatedLabGroup zoomScale={1.0}>
                 <RotatableMagnetGroup>
-                  {/* Render Selected 3D Magnet */}
-                  {shape === 'bar' && <BarMagnet3D />}
-                  {shape === 'horseshoe' && <HorseshoeMagnet3D />}
-                  {shape === 'ring' && <RingMagnet3D />}
-
-                  {/* Iron Filings Instanced Mesh */}
-                  <FilingsSystem3D
-                    key={shape}
-                    shape={shape}
-                    step={step}
-                    isSprinkling={isSprinkling}
-                    isVibrating={isVibrating}
-                  />
+                  <ChosenMagnet3D shape={shape} />
+                  <FilingsSystem step={step} isSprinkling={isSprinkling} isVibrating={isVibrating} shape={shape} cycleKey={cycleKey} isPaused={isPaused} />
                 </RotatableMagnetGroup>
-                <PaperBoxEnclosure />
+                <PaperBoxEnclosure isVibrating={isVibrating} isPaused={isPaused} />
 
                 {/* Soft Drop Shadow under Paper */}
                 <ContactShadows
@@ -932,21 +795,21 @@ export default function Stage3_Sandbox({ onComplete }) {
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
-              <Shapes size={28} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#92400E', fontWeight: 900 }}>
+              <Shapes size={28} color="#059669" />
+              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#064E3B', fontWeight: 900 }}>
                 Stage 3: Other Magnet Shapes
               </h3>
             </div>
             <span style={{
-              background: '#FEF3C7',
-              color: '#B45309',
-              fontWeight: 800,
+              background: '#DCFCE7',
+              color: '#15803D',
+              fontWeight: 900,
               fontSize: '0.92rem',
               padding: '0.35rem 0.85rem',
               borderRadius: '12px',
-              border: '1.5px solid #FDE68A'
+              border: '1.5px solid #86EFAC'
             }}>
-              Step {step === 'tapped' ? 3 : step === 'scattered' ? 2 : 1} of 3
+              Step {step === 'tapped' ? 3 : (step === 'scattered' || isVibrating) ? 2 : 1} of 3
             </span>
           </div>
 
@@ -969,7 +832,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                 desc: 'Observe that filings cluster at magnetic poles regardless of shape.'
               }
             ].map((s) => {
-              const currentStepNum = step === 'tapped' ? 3 : step === 'scattered' ? 2 : 1;
+              const currentStepNum = step === 'tapped' ? 3 : (step === 'scattered' || isVibrating) ? 2 : 1;
               const isCurrent = currentStepNum === s.stepNum;
               const isPast = currentStepNum > s.stepNum;
 
@@ -990,7 +853,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                         width: '30px',
                         height: '30px',
                         borderRadius: '50%',
-                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#D97706' : '#64748B',
+                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#059669' : '#64748B',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
@@ -1004,14 +867,14 @@ export default function Stage3_Sandbox({ onComplete }) {
                       <span style={{ 
                         fontWeight: 800, 
                         fontSize: '1.18rem', 
-                        color: isCurrent ? '#92400E' : isPast ? '#B45309' : '#1E293B' 
+                        color: isCurrent ? '#064E3B' : isPast ? '#047857' : '#334155' 
                       }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={22} color="#D97706" />}
+                    {isPast && <CheckCircle size={22} color="#059669" />}
                   </div>
-                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.02rem', color: '#78350F', lineHeight: 1.55, fontWeight: 600 }}>
+                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.02rem', color: '#065F46', lineHeight: 1.55, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -1030,7 +893,7 @@ export default function Stage3_Sandbox({ onComplete }) {
           >
             <h4
               style={{
-                color: '#92400E',
+                color: '#064E3B',
                 margin: 0,
                 fontSize: '1.18rem',
                 fontWeight: 900,
@@ -1039,7 +902,7 @@ export default function Stage3_Sandbox({ onComplete }) {
                 gap: '0.55rem',
               }}
             >
-              <Shapes size={22} color="#D97706" /> Choose Magnet Shape
+              <Shapes size={22} color="#059669" /> Choose Magnet Shape
             </h4>
 
             <div style={{ display: 'flex', gap: '0.65rem' }}>
@@ -1050,14 +913,14 @@ export default function Stage3_Sandbox({ onComplete }) {
                   padding: '0.85rem 0.6rem',
                   borderRadius: '14px',
                   border: '1.5px solid',
-                  borderColor: shape === 'horseshoe' ? '#D97706' : '#FDE68A',
-                  background: shape === 'horseshoe' ? '#FEF3C7' : '#FFFFFF',
-                  color: shape === 'horseshoe' ? '#92400E' : '#1E293B',
+                  borderColor: shape === 'horseshoe' ? '#10B981' : '#FDE68A',
+                  background: shape === 'horseshoe' ? '#DCFCE7' : '#FFFFFF',
+                  color: shape === 'horseshoe' ? '#064E3B' : '#065F46',
                   fontWeight: 800,
                   fontSize: '1.05rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: shape === 'horseshoe' ? '0 3px 10px rgba(217, 119, 6, 0.25)' : 'none',
+                  boxShadow: shape === 'horseshoe' ? '0 3px 10px rgba(16, 185, 129, 0.25)' : 'none',
                 }}
               >
                 Horseshoe 🧲
@@ -1070,14 +933,14 @@ export default function Stage3_Sandbox({ onComplete }) {
                   padding: '0.85rem 0.6rem',
                   borderRadius: '14px',
                   border: '1.5px solid',
-                  borderColor: shape === 'ring' ? '#D97706' : '#FDE68A',
-                  background: shape === 'ring' ? '#FEF3C7' : '#FFFFFF',
-                  color: shape === 'ring' ? '#92400E' : '#1E293B',
+                  borderColor: shape === 'ring' ? '#10B981' : '#FDE68A',
+                  background: shape === 'ring' ? '#DCFCE7' : '#FFFFFF',
+                  color: shape === 'ring' ? '#064E3B' : '#065F46',
                   fontWeight: 800,
                   fontSize: '1.05rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: shape === 'ring' ? '0 3px 10px rgba(217, 119, 6, 0.25)' : 'none',
+                  boxShadow: shape === 'ring' ? '0 3px 10px rgba(16, 185, 129, 0.25)' : 'none',
                 }}
               >
                 Ring ⭕
@@ -1090,14 +953,14 @@ export default function Stage3_Sandbox({ onComplete }) {
                   padding: '0.85rem 0.6rem',
                   borderRadius: '14px',
                   border: '1.5px solid',
-                  borderColor: shape === 'bar' ? '#D97706' : '#FDE68A',
-                  background: shape === 'bar' ? '#FEF3C7' : '#FFFFFF',
-                  color: shape === 'bar' ? '#92400E' : '#1E293B',
+                  borderColor: shape === 'bar' ? '#10B981' : '#FDE68A',
+                  background: shape === 'bar' ? '#DCFCE7' : '#FFFFFF',
+                  color: shape === 'bar' ? '#064E3B' : '#065F46',
                   fontWeight: 800,
                   fontSize: '1.05rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: shape === 'bar' ? '0 3px 10px rgba(217, 119, 6, 0.25)' : 'none',
+                  boxShadow: shape === 'bar' ? '0 3px 10px rgba(16, 185, 129, 0.25)' : 'none',
                 }}
               >
                 Bar 🔲
@@ -1173,7 +1036,7 @@ export default function Stage3_Sandbox({ onComplete }) {
         >
           <h4
             style={{
-              color: '#92400E',
+              color: '#064E3B',
               margin: 0,
               fontSize: '1.28rem',
               fontWeight: 900,
@@ -1182,16 +1045,16 @@ export default function Stage3_Sandbox({ onComplete }) {
               gap: '0.6rem',
             }}
           >
-            <Shapes size={24} color="#D97706" /> Observation Summary
+            <Shapes size={24} color="#059669" /> Observation Summary
           </h4>
-          <p style={{ margin: 0, color: '#78350F', fontSize: '1.12rem', lineHeight: 1.6, fontWeight: 600 }}>
+          <p style={{ margin: 0, color: '#065F46', fontSize: '1.12rem', lineHeight: 1.6, fontWeight: 600 }}>
             Do all magnet shapes exhibit the same concentration of magnetic poles?
           </p>
           <ul
             style={{
               margin: 0,
               paddingLeft: '1.35rem',
-              color: '#78350F',
+              color: '#065F46',
               display: 'flex',
               flexDirection: 'column',
               gap: '0.45rem',
@@ -1201,13 +1064,13 @@ export default function Stage3_Sandbox({ onComplete }) {
             }}
           >
             <li>
-              <strong style={{ color: '#92400E' }}>Horseshoe:</strong> Filings cluster tightly at both curved tips.
+              <strong style={{ color: '#064E3B' }}>Horseshoe:</strong> Filings cluster tightly at both curved tips.
             </li>
             <li>
-              <strong style={{ color: '#92400E' }}>Ring:</strong> Filings concentrate on opposite circular pole faces.
+              <strong style={{ color: '#064E3B' }}>Ring:</strong> Filings concentrate on opposite circular pole faces.
             </li>
             <li>
-              <strong style={{ color: '#92400E' }}>Bar:</strong> Filings gather heavily at the two distant ends.
+              <strong style={{ color: '#064E3B' }}>Bar:</strong> Filings gather heavily at the two distant ends.
             </li>
           </ul>
 

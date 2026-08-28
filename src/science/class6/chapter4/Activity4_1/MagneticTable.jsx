@@ -107,18 +107,18 @@ export default function MagneticTable({ onComplete }) {
     const isMag = item.isMagnetic;
     const isDragOver = dragOverCardId === item.id;
 
-    let cardBg = 'linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%)';
-    let cardBorder = '1.5px solid #E2E8F0';
-    let cardShadow = '0 3px 12px rgba(0, 0, 0, 0.04)';
-    let nameColor = '#0F172A';
-    let subColor = '#475569';
+    let cardBg = '#FFFFFF';
+    let cardBorder = '1.5px solid #FDE68A';
+    let cardShadow = '0 3px 12px rgba(217, 119, 6, 0.05)';
+    let nameColor = '#064E3B';
+    let subColor = '#065F46';
 
     if (isDragOver) {
       cardBg = 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)';
       cardBorder = '2px dashed #0284C7';
       cardShadow = '0 0 20px rgba(2, 132, 199, 0.4)';
     } else if (isScanning) {
-      cardBg = 'linear-gradient(135deg, #F0FDF4 0%, #E0F2FE 100%)';
+      cardBg = 'linear-gradient(135deg, #FEF3C7 0%, #E0F2FE 100%)';
       cardBorder = '2px solid #0284C7';
       cardShadow = '0 0 20px rgba(2, 132, 199, 0.35)';
     } else if (isScanned) {
@@ -200,59 +200,41 @@ export default function MagneticTable({ onComplete }) {
           </>
         )}
 
-        {/* Top Section: Squircle Avatar + Item Title + Material Tag + Status Badge */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 3, width: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', minWidth: 0 }}>
-            {/* 3D Squircle Icon Frame */}
-            <div style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '11px',
-              background: isScanned 
-                ? (isMag ? 'linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%)' : 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)')
-                : 'linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.35rem',
-              boxShadow: isScanned
-                ? (isMag ? '0 2px 8px rgba(22, 163, 74, 0.25)' : '0 2px 8px rgba(220, 38, 38, 0.2)')
-                : '0 2px 6px rgba(0, 0, 0, 0.06)',
-              border: isScanned
-                ? (isMag ? '1px solid #86EFAC' : '1px solid #FCA5A5')
-                : '1px solid #E2E8F0',
-              flexShrink: 0
-            }}>
-              {item.icon}
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-              <span style={{ fontWeight: 900, fontSize: '0.98rem', color: nameColor, lineHeight: '1.15', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {item.name}
-              </span>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                <span style={{
-                  fontSize: '0.72rem',
-                  color: subColor,
-                  fontWeight: 700,
-                  background: 'rgba(255, 255, 255, 0.85)',
-                  padding: '1px 6px',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(0,0,0,0.06)'
-                }}>
-                  {item.material}
-                </span>
-              </div>
-            </div>
+        {/* Top/Center Section: Centered Large Emoji + Status Badge */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 3, width: '100%', padding: '0.2rem 0' }}>
+          {/* Centered Large 3D Squircle Emoji */}
+          <div style={{
+            width: '52px',
+            height: '52px',
+            borderRadius: '16px',
+            background: isScanned 
+              ? (isMag ? 'linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%)' : 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)')
+              : '#FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '2.2rem',
+            boxShadow: isScanned
+              ? (isMag ? '0 4px 12px rgba(22, 163, 74, 0.25)' : '0 4px 12px rgba(220, 38, 38, 0.2)')
+              : '0 3px 10px rgba(217, 119, 6, 0.08)',
+            border: isScanned
+              ? (isMag ? '1.5px solid #86EFAC' : '1.5px solid #FCA5A5')
+              : '1.5px solid #FDE68A',
+            flexShrink: 0
+          }}>
+            {item.icon}
           </div>
 
           {/* Right Status Pill */}
           {isScanned ? (
             <div
               style={{
-                padding: '4px 9px',
+                position: 'absolute',
+                top: '-2px',
+                right: 0,
+                padding: '3px 8px',
                 borderRadius: '10px',
-                fontSize: '0.78rem',
+                fontSize: '0.76rem',
                 fontWeight: 900,
                 display: 'flex',
                 alignItems: 'center',
@@ -260,7 +242,7 @@ export default function MagneticTable({ onComplete }) {
                 background: isMag ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)' : 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
                 color: '#FFFFFF',
                 boxShadow: isMag ? '0 2px 8px rgba(22, 163, 74, 0.35)' : '0 2px 8px rgba(220, 38, 38, 0.35)',
-                flexShrink: 0,
+                zIndex: 4
               }}
             >
               {isMag ? <CheckCircle2 size={13} color="#FFFFFF" /> : <XCircle size={13} color="#FFFFFF" />}
@@ -269,7 +251,10 @@ export default function MagneticTable({ onComplete }) {
           ) : isScanning ? (
             <div
               style={{
-                fontSize: '0.76rem',
+                position: 'absolute',
+                top: '-2px',
+                right: 0,
+                fontSize: '0.78rem',
                 fontWeight: 900,
                 color: '#0284C7',
                 display: 'flex',
@@ -278,7 +263,8 @@ export default function MagneticTable({ onComplete }) {
                 background: '#E0F2FE',
                 padding: '3px 8px',
                 borderRadius: '8px',
-                border: '1px solid #7DD3FC'
+                border: '1px solid #7DD3FC',
+                zIndex: 4
               }}
             >
               <Activity size={13} className="animate-spin" />
@@ -287,21 +273,21 @@ export default function MagneticTable({ onComplete }) {
           ) : null}
         </div>
 
-        {/* Middle / Bottom Interactive Bay */}
+        {/* Middle / Bottom Interactive Bay: Object Name Alone */}
         <div style={{ marginTop: '0.35rem', zIndex: 3 }}>
           {isScanning ? (
             /* Live Spectrogram Waveform */
             <div style={{
               background: 'rgba(2, 132, 199, 0.08)',
               border: '1px solid rgba(2, 132, 199, 0.25)',
-              borderRadius: '8px',
-              padding: '0.3rem 0.55rem',
+              borderRadius: '10px',
+              padding: '0.35rem 0.65rem',
               display: 'flex',
               alignItems: 'center',
               gap: '6px'
             }}>
-              <span style={{ fontSize: '0.72rem', color: '#0284C7', fontWeight: 900, letterSpacing: '0.3px' }}>ANALYZING:</span>
-              <div style={{ display: 'flex', gap: '3px', flex: 1, alignItems: 'flex-end', height: '12px' }}>
+              <span style={{ fontSize: '0.78rem', color: '#0284C7', fontWeight: 900, letterSpacing: '0.3px' }}>ANALYZING:</span>
+              <div style={{ display: 'flex', gap: '3px', flex: 1, alignItems: 'flex-end', height: '14px' }}>
                 {[40, 85, 50, 100, 70, 90, 45, 80, 60, 95].map((h, i) => (
                   <div
                     key={i}
@@ -324,66 +310,57 @@ export default function MagneticTable({ onComplete }) {
               justifyContent: 'space-between',
               background: isMag ? 'rgba(22, 163, 74, 0.12)' : 'rgba(220, 38, 38, 0.08)',
               border: isMag ? '1px solid rgba(22, 163, 74, 0.25)' : '1px solid rgba(220, 38, 38, 0.2)',
-              borderRadius: '8px',
-              padding: '0.28rem 0.55rem'
+              borderRadius: '10px',
+              padding: '0.32rem 0.65rem'
             }}>
               <span style={{
-                fontSize: '0.76rem',
+                fontSize: '0.84rem',
                 color: isMag ? '#15803D' : '#991B1B',
-                fontWeight: 800,
+                fontWeight: 900,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px'
+                gap: '6px'
               }}>
-                {isMag ? '🧲 Attracted to Magnet' : '🛡️ No Attraction (Inert)'}
+                <span style={{ fontSize: '1.15rem' }}>{isMag ? '🧲' : '🛡️'}</span>
+                <span>{isMag ? 'Attracted' : 'No Attraction'}</span>
               </span>
               <span style={{
-                fontSize: '0.68rem',
+                fontSize: '0.74rem',
                 color: isMag ? '#166534' : '#7F1D1D',
-                fontWeight: 700,
+                fontWeight: 800,
                 background: 'rgba(255, 255, 255, 0.85)',
-                padding: '1px 6px',
-                borderRadius: '4px'
+                padding: '2px 8px',
+                borderRadius: '6px'
               }}>
                 {item.desc}
               </span>
             </div>
           ) : (
-            /* Unscanned State: Futuristic Target Cradle Sensor Bay */
+            /* Unscanned State: Object Name Alone with 🎯 Icon */
             <div style={{
               background: isDragOver
                 ? 'linear-gradient(135deg, #BAE6FD 0%, #7DD3FC 100%)'
-                : 'linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%)',
-              border: isDragOver ? '2px dashed #0284C7' : '1.5px dashed #CBD5E1',
-              borderRadius: '9px',
-              padding: '0.35rem 0.6rem',
+                : '#FFFFFF',
+              border: isDragOver ? '2px dashed #0284C7' : '1.5px dashed #FDE68A',
+              borderRadius: '10px',
+              padding: '0.4rem 0.65rem',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
               transition: 'all 0.2s ease',
               boxShadow: isDragOver ? '0 0 12px rgba(2, 132, 199, 0.35)' : 'none'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <span style={{ fontSize: '0.85rem' }}>🎯</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', width: '100%' }}>
+                <span style={{ fontSize: '1.25rem' }}>🎯</span>
                 <span style={{
-                  fontSize: '0.78rem',
-                  fontWeight: 800,
-                  color: isDragOver ? '#0369A1' : '#64748B'
+                  fontSize: '0.98rem',
+                  fontWeight: 900,
+                  color: isDragOver ? '#0369A1' : '#064E3B',
+                  letterSpacing: '0.2px'
                 }}>
-                  {isDragOver ? 'Release to Scan!' : 'Drop Slot'}
+                  {item.name}
                 </span>
               </div>
-              <span style={{
-                fontSize: '0.68rem',
-                fontWeight: 700,
-                color: isDragOver ? '#0284C7' : '#94A3B8',
-                background: isDragOver ? '#FFFFFF' : 'rgba(255,255,255,0.9)',
-                padding: '2px 7px',
-                borderRadius: '6px',
-                border: '1px solid rgba(0,0,0,0.06)'
-              }}>
-                Sensor Bay
-              </span>
             </div>
           )}
         </div>
@@ -405,17 +382,17 @@ export default function MagneticTable({ onComplete }) {
         position: 'relative',
       }}
     >
-      {/* LEFT SIDE: EXPERIMENT TABLE IMAGE (FULL HEIGHT) */}
+      {/* LEFT SIDE: EXPERIMENT TABLE IMAGE (Warm Amber Theme) */}
       <div
         style={{
           flex: '2.1',
           minWidth: 0,
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#FFFFFF',
-          borderRadius: '18px',
-          border: '1.5px solid #A7F3D0',
-          boxShadow: '0 4px 20px rgba(6, 78, 59, 0.06)',
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+          borderRadius: '24px',
+          border: '1.5px solid #FDE68A',
+          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
           overflow: 'hidden',
           position: 'relative',
         }}
@@ -423,22 +400,22 @@ export default function MagneticTable({ onComplete }) {
         {/* Header */}
         <div
           style={{
-            padding: '0.5rem 1rem',
-            borderBottom: '1.5px solid #A7F3D0',
-            backgroundColor: '#F0FDF4',
+            padding: '0.6rem 1.1rem',
+            borderBottom: '1.5px solid #FDE68A',
+            background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             flexShrink: 0,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1rem' }}>🔬</span>
-            <h3 style={{ margin: 0, fontSize: '0.94rem', fontWeight: 800, color: '#064E3B' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+            <span style={{ fontSize: '1.15rem' }}>🔬</span>
+            <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#064E3B' }}>
               Experiment Table: Drag & Drop Items to the Scanner
             </h3>
           </div>
-          <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#064E3B' }}>
+          <div style={{ fontSize: '0.88rem', fontWeight: 900, color: '#064E3B' }}>
             Tested: <strong style={{ color: '#D97706' }}>{scannedCount}</strong> / 10
           </div>
         </div>
@@ -553,16 +530,16 @@ export default function MagneticTable({ onComplete }) {
         </div>
       </div>
 
-      {/* RIGHT SIDE: LIGHT THEMED LINEAR GRADIENT SCANNER HUB */}
+      {/* RIGHT SIDE: WARM AMBER THEMED LINEAR GRADIENT SCANNER HUB */}
       <div
         style={{
           flex: '1.05',
           display: 'flex',
           flexDirection: 'column',
-          background: 'linear-gradient(145deg, #FFFFFF 0%, #F0FDF4 50%, #ECFEFF 100%)',
-          border: '1.5px solid #A7F3D0',
-          borderRadius: '18px',
-          boxShadow: '0 6px 24px rgba(6, 78, 59, 0.08)',
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+          border: '1.5px solid #FDE68A',
+          borderRadius: '24px',
+          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
           overflow: 'hidden',
           boxSizing: 'border-box',
           height: '100%',
@@ -571,31 +548,31 @@ export default function MagneticTable({ onComplete }) {
         {/* Scanner HUD Header */}
         <div
           style={{
-            padding: '0.6rem 0.85rem',
-            background: 'linear-gradient(135deg, #ECFDF5 0%, #E0F2FE 100%)',
-            borderBottom: '1.5px solid #A7F3D0',
+            padding: '0.65rem 0.95rem',
+            background: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)',
+            borderBottom: '1.5px solid #FDE68A',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.4rem',
+            gap: '0.45rem',
             flexShrink: 0,
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <Radio size={18} color="#0284C7" className="animate-pulse" />
-              <span style={{ fontSize: '0.98rem', fontWeight: 900, color: '#064E3B', letterSpacing: '0.4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Radio size={20} color="#D97706" className="animate-pulse" />
+              <span style={{ fontSize: '1.05rem', fontWeight: 900, color: '#064E3B', letterSpacing: '0.4px' }}>
                 MAGNETIC SPECTROMETER
               </span>
             </div>
             <span
               style={{
-                fontSize: '0.78rem',
-                fontWeight: 800,
+                fontSize: '0.82rem',
+                fontWeight: 900,
                 padding: '3px 10px',
                 borderRadius: '14px',
-                background: isComplete ? '#DCFCE7' : '#E0F2FE',
-                border: isComplete ? '1px solid #16A34A' : '1px solid #0284C7',
-                color: isComplete ? '#16A34A' : '#0284C7',
+                background: isComplete ? '#DCFCE7' : '#FEF3C7',
+                border: isComplete ? '1.5px solid #16A34A' : '1.5px solid #F59E0B',
+                color: isComplete ? '#16A34A' : '#D97706',
               }}
             >
               {isComplete ? 'ALL SCANNED ✓' : `${scannedCount}/10 TESTED`}
@@ -675,12 +652,12 @@ export default function MagneticTable({ onComplete }) {
         >
           <div
             style={{
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #A7F3D0',
+              background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+              border: '2px solid #FDE68A',
               borderRadius: '28px',
               padding: '2.2rem 2.8rem',
               textAlign: 'center',
-              boxShadow: '0 20px 50px rgba(6, 78, 59, 0.2)',
+              boxShadow: '0 20px 50px rgba(217, 119, 6, 0.2)',
               maxWidth: '520px',
               width: '90%',
               display: 'flex',
@@ -694,20 +671,20 @@ export default function MagneticTable({ onComplete }) {
                 width: '64px',
                 height: '64px',
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)',
+                background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 8px 20px rgba(16, 185, 129, 0.2)',
+                boxShadow: '0 8px 20px rgba(217, 119, 6, 0.2)',
               }}
             >
-              <Sparkles size={34} color="#059669" />
+              <Sparkles size={34} color="#D97706" />
             </div>
 
             <h2 style={{ fontSize: '1.6rem', margin: 0, color: '#064E3B', fontWeight: 900 }}>
               Magnetic Material Scanner 🧲
             </h2>
-            <p style={{ margin: 0, color: '#475569', fontSize: '1.05rem', lineHeight: 1.55, fontWeight: 600 }}>
+            <p style={{ margin: 0, color: '#065F46', fontSize: '1.05rem', lineHeight: 1.55, fontWeight: 700 }}>
               Drag an object from the experiment table and drop it onto its matching slot on the right to scan its magnetic properties!
             </p>
 
@@ -742,12 +719,12 @@ export default function MagneticTable({ onComplete }) {
         >
           <div
             style={{
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #FCD34D',
+              background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+              border: '2px solid #FDE68A',
               borderRadius: '28px',
               padding: '2.2rem 2.8rem',
               textAlign: 'center',
-              boxShadow: '0 20px 50px rgba(180, 83, 9, 0.2)',
+              boxShadow: '0 20px 50px rgba(217, 119, 6, 0.2)',
               maxWidth: '520px',
               width: '90%',
               display: 'flex',
@@ -771,10 +748,10 @@ export default function MagneticTable({ onComplete }) {
               <CheckCircle2 size={38} color="#D97706" />
             </div>
 
-            <h2 style={{ fontSize: '1.75rem', margin: 0, color: '#78350F', fontWeight: 900 }}>
+            <h2 style={{ fontSize: '1.75rem', margin: 0, color: '#064E3B', fontWeight: 900 }}>
               All 10 Materials Analyzed! 🎉
             </h2>
-            <p style={{ color: '#334155', margin: 0, fontSize: '1.05rem', lineHeight: 1.55, fontWeight: 600 }}>
+            <p style={{ color: '#065F46', margin: 0, fontSize: '1.05rem', lineHeight: 1.55, fontWeight: 700 }}>
               You identified <strong style={{ color: '#D97706' }}>{magneticCount} Magnetic materials</strong> (Iron, Steel, Nickel) and <strong style={{ color: '#DC2626' }}>{nonMagneticCount} Non-Magnetic materials</strong> (Wood, Plastic, Rubber, Glass, Paper)!
             </p>
             <button

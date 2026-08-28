@@ -79,7 +79,7 @@ export default function Quiz({ onComplete }) {
           width: '90%', 
           padding: '2.5rem 3rem', 
           textAlign: 'center', 
-          background: '#FFFFFF', 
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
           borderRadius: '24px', 
           border: '1.5px solid #FDE68A',
           boxShadow: '0 8px 30px rgba(217, 119, 6, 0.08)',
@@ -87,7 +87,7 @@ export default function Quiz({ onComplete }) {
           flexDirection: 'column',
           alignItems: 'center',
           gap: '1.25rem',
-          fontFamily: 'system-ui, -apple-system, sans-serif'
+          fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
         }}>
           <h2 style={{ fontSize: '1.8rem', margin: 0, color: '#064E3B', fontWeight: 900 }}>Quiz Completed! 🎉</h2>
           
@@ -101,7 +101,8 @@ export default function Quiz({ onComplete }) {
             style={{
               padding: '0.9rem 2.8rem',
               fontSize: '1.1rem',
-              marginTop: '0.6rem'
+              marginTop: '0.6rem',
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
             }}
           >
             Finish Activity
@@ -122,7 +123,7 @@ export default function Quiz({ onComplete }) {
       padding: '0.5rem 1rem', 
       overflow: 'hidden',
       boxSizing: 'border-box',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
     }}>
       <div style={{ width: '100%', maxWidth: '1100px', display: 'flex', flexDirection: 'column' }}>
         {/* Top Bar */}
@@ -135,7 +136,7 @@ export default function Quiz({ onComplete }) {
 
         {/* Main Quiz Card */}
         <div style={{ 
-          background: '#FFFFFF', 
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
           border: '1.5px solid #FDE68A',
           borderRadius: '24px', 
           padding: '1.8rem 2.4rem', 

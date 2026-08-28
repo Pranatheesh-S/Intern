@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, OrbitControls, ContactShadows, Environment, useTexture } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Scissors, AlertCircle, CheckCircle, XCircle, ArrowRight, BookOpen, RotateCcw, Maximize2, Minimize2, Plus, Minus } from 'lucide-react';
+import { Scissors, AlertCircle, CheckCircle, XCircle, ArrowRight, BookOpen, RotateCcw } from 'lucide-react';
 import * as THREE from 'three';
 import '../MagneticPoles.css';
 
@@ -279,32 +279,6 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
   const [broken, setBroken] = useState(false);
   const [showPoles, setShowPoles] = useState(false);
   const [quizAnswer, setQuizAnswer] = useState(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [zoomScale, setZoomScale] = useState(1.0);
-
-  const handleZoomIn = () => setZoomScale((z) => Math.min(2.0, +(z + 0.15).toFixed(2)));
-  const handleZoomOut = () => setZoomScale((z) => Math.max(0.45, +(z - 0.15).toFixed(2)));
-  const handleResetZoom = () => setZoomScale(1.0);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
 
   const handleBreak = () => {
     setBroken(true);
@@ -370,136 +344,6 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
             backgroundPosition: 'center',
           }}
         >
-          {/* Top-left Lab Badge */}
-          {/* Floating Controls HUD: Zoom In / Zoom Out / Reset Scale / Fullscreen */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 14,
-              right: 16,
-              zIndex: 30,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: 'rgba(15, 23, 42, 0.78)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '16px',
-              padding: '4px 8px',
-              backdropFilter: 'blur(12px)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.22)',
-            }}
-          >
-            {/* Zoom Out */}
-            <button
-              onClick={handleZoomOut}
-              title="Make Smaller (Zoom Out)"
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                border: 'none',
-                borderRadius: '10px',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFFFFF',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <Minus size={16} color="#FFFFFF" />
-            </button>
-
-            {/* Scale % Display / Click to Reset */}
-            <button
-              onClick={handleResetZoom}
-              title="Click to Reset Size to 100%"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#F8FAFC',
-                fontSize: '0.82rem',
-                fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
-                padding: '0 6px',
-                minWidth: '52px',
-                cursor: 'pointer',
-                textAlign: 'center',
-              }}
-            >
-              {Math.round(zoomScale * 100)}%
-            </button>
-
-            {/* Zoom In */}
-            <button
-              onClick={handleZoomIn}
-              title="Make Bigger (Zoom In)"
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                border: 'none',
-                borderRadius: '10px',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFFFFF',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <Plus size={16} color="#FFFFFF" />
-            </button>
-
-            {/* Reset Scale Button */}
-            <button
-              onClick={handleResetZoom}
-              title="Reset Object Size"
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                border: 'none',
-                borderRadius: '10px',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#FFFFFF',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <RotateCcw size={14} color="#FFFFFF" />
-            </button>
-
-            <div style={{ width: '1px', height: '18px', background: 'rgba(255, 255, 255, 0.22)', margin: '0 2px' }} />
-
-            {/* Fullscreen Button */}
-            <button
-              onClick={toggleFullscreen}
-              title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-              style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                border: 'none',
-                borderRadius: '10px',
-                padding: '6px 10px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '5px',
-                color: '#FFFFFF',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                fontFamily: "'Inter', sans-serif",
-                transition: 'all 0.2s ease',
-              }}
-            >
-              {isFullscreen ? <Minimize2 size={15} color="#FFFFFF" /> : <Maximize2 size={15} color="#FFFFFF" />}
-              <span>{isFullscreen ? 'Exit' : 'Fullscreen'}</span>
-            </button>
-          </div>
-
           {/* 3D Canvas Scene matching Stage 1 Camera, Lighting, and Controls */}
           <Canvas
             shadows
@@ -519,7 +363,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               <directionalLight position={[-10, 10, -10]} intensity={0.4} color="#93C5FD" />
               <Environment preset="city" />
 
-              <AnimatedLabGroup zoomScale={zoomScale}>
+              <AnimatedLabGroup zoomScale={1.0}>
                 <RotatableMagnetGroup>
                   <BreakingMagnet3D broken={broken} showPoles={showPoles} />
                 </RotatableMagnetGroup>
@@ -566,19 +410,19 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
-              <Scissors size={28} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#92400E', fontWeight: 900 }}>
+              <Scissors size={28} color="#059669" />
+              <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#064E3B', fontWeight: 900 }}>
                 Stage 2: Breaking Magnet
               </h3>
             </div>
             <span style={{
-              background: '#FEF3C7',
-              color: '#B45309',
-              fontWeight: 800,
+              background: '#DCFCE7',
+              color: '#15803D',
+              fontWeight: 900,
               fontSize: '0.92rem',
               padding: '0.35rem 0.85rem',
               borderRadius: '12px',
-              border: '1.5px solid #FDE68A'
+              border: '1.5px solid #86EFAC'
             }}>
               Step {broken && showPoles ? 3 : broken ? 2 : 1} of 3
             </span>
@@ -624,7 +468,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                         width: '30px',
                         height: '30px',
                         borderRadius: '50%',
-                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#D97706' : '#64748B',
+                        background: isCurrent ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : isPast ? '#059669' : '#64748B',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
@@ -638,14 +482,14 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                       <span style={{ 
                         fontWeight: 800, 
                         fontSize: '1.18rem', 
-                        color: isCurrent ? '#92400E' : isPast ? '#B45309' : '#1E293B' 
+                        color: isCurrent ? '#064E3B' : isPast ? '#047857' : '#334155' 
                       }}>
                         {s.title}
                       </span>
                     </div>
-                    {isPast && <CheckCircle size={22} color="#D97706" />}
+                    {isPast && <CheckCircle size={22} color="#059669" />}
                   </div>
-                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.02rem', color: '#78350F', lineHeight: 1.55, fontWeight: 600 }}>
+                  <p style={{ margin: '0.2rem 0 0 2.5rem', fontSize: '1.02rem', color: '#065F46', lineHeight: 1.55, fontWeight: 600 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -740,7 +584,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
         >
           <h4
             style={{
-              color: '#92400E',
+              color: '#064E3B',
               margin: 0,
               fontSize: '1.28rem',
               fontWeight: 900,
@@ -749,9 +593,9 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               gap: '0.6rem',
             }}
           >
-            <AlertCircle size={24} color="#D97706" /> Observation & Conclusion
+            <AlertCircle size={24} color="#059669" /> Observation & Conclusion
           </h4>
-          <p style={{ margin: 0, color: '#78350F', fontSize: '1.12rem', lineHeight: 1.6, fontWeight: 600 }}>
+          <p style={{ margin: 0, color: '#065F46', fontSize: '1.12rem', lineHeight: 1.6, fontWeight: 600 }}>
             Based on what happens when a magnet breaks, is it possible to obtain a magnet with only a single pole?
           </p>
 
@@ -769,7 +613,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 borderColor: quizAnswer === 'yes' ? '#EF4444' : '#FDE68A',
                 borderWidth: '1.5px',
                 borderStyle: 'solid',
-                color: quizAnswer === 'yes' ? '#991B1B' : '#78350F',
+                color: quizAnswer === 'yes' ? '#991B1B' : '#065F46',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -790,11 +634,11 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
                 fontWeight: 700,
                 borderRadius: '14px',
                 cursor: 'pointer',
-                background: quizAnswer === 'no' ? '#FEF3C7' : '#FFFFFF',
-                borderColor: quizAnswer === 'no' ? '#D97706' : '#FDE68A',
+                background: quizAnswer === 'no' ? '#DCFCE7' : '#FFFFFF',
+                borderColor: quizAnswer === 'no' ? '#10B981' : '#FDE68A',
                 borderWidth: '1.5px',
                 borderStyle: 'solid',
-                color: quizAnswer === 'no' ? '#92400E' : '#78350F',
+                color: quizAnswer === 'no' ? '#064E3B' : '#065F46',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -803,7 +647,7 @@ export default function Stage2_BreakingMagnet({ onComplete }) {
               }}
             >
               <span>B) No, a single isolated pole cannot exist</span>
-              {quizAnswer === 'no' && <CheckCircle size={22} color="#D97706" />}
+              {quizAnswer === 'no' && <CheckCircle size={22} color="#10B981" />}
             </button>
           </div>
 
