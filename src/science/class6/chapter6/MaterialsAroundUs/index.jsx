@@ -71,10 +71,15 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
   const toggleNode = (id) => setExpandedNodes(prev => ({ ...prev, [id]: !prev[id] }));
 
   const [playSuccess] = useSound('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3', { volume: 0.5 });
-  
+
+  // Pour Water activity (stage8_b) must be completely silent — no audio of any kind.
+  const isSilentStage = () => chapterFlow[currentFlowIndex]?.id === 'stage8_b';
+
   const addXp = (amount) => {
     setXp(prev => prev + amount);
-    try { playSuccess(); } catch (e) {}
+    if (!isSilentStage()) {
+      try { playSuccess(); } catch (e) {}
+    }
   };
 
   const handleNext = () => {
@@ -208,7 +213,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                       disabled={isLocked}
                       onClick={() => {
                         if (!isLocked) {
-                          try { playSuccess(); } catch (e) {}
+                          if (!isSilentStage()) { try { playSuccess(); } catch (e) {} }
                           if (item.type === 'mission') {
                             setShowHandbook(true);
                           } else {
