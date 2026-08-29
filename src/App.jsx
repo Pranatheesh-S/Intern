@@ -107,19 +107,20 @@ export default function App() {
   }, [activeActivity]);
 
   const [isAudioPlaying, setIsAudioPlaying] = useState(true);
+  const [isChapter2SoundButtonVisible, setIsChapter2SoundButtonVisible] = useState(true);
   const audioRef = useRef(null);
 
   useEffect(() => {
     if (!audioRef.current) return;
     audioRef.current.volume = 0.15; // Ambient background sound level
-    if (activeActivity === 'chapter2' && isAudioPlaying) {
+    if (activeActivity === 'chapter2' && isChapter2SoundButtonVisible && isAudioPlaying) {
       audioRef.current.play().catch(err => {
         console.log("Audio autoplay blocked by browser, waiting for interaction", err);
       });
     } else {
       audioRef.current.pause();
     }
-  }, [activeActivity, isAudioPlaying]);
+  }, [activeActivity, isChapter2SoundButtonVisible, isAudioPlaying]);
 
 
   useEffect(() => {
@@ -3076,6 +3077,7 @@ export default function App() {
             <Chapter2LearningLab 
               onBack={() => navigateTo('class6', null)}
               onHeaderVisibilityChange={(visible) => setHideHeader(!visible)}
+              onSoundButtonVisibilityChange={(visible) => setIsChapter2SoundButtonVisible(visible)}
             />
           ) : activeActivity === 'chapter3' ? (
             <Chapter3LearningLab 
@@ -3206,8 +3208,8 @@ export default function App() {
           zIndex: 999999 
         }}
       >
-        {/* Music Toggle Control (only for Chapter 2) */}
-        {activeActivity === 'chapter2' && (
+        {/* Music Toggle Control (only for Chapter 2 Cover, Slogan, and Scenes) */}
+        {activeActivity === 'chapter2' && isChapter2SoundButtonVisible && (
           <button
             onClick={() => setIsAudioPlaying(prev => !prev)}
             style={{

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { X, RefreshCw, Volume2, CheckCircle, ChevronRight, Award, ArrowLeft, BookOpen, Target, Eye, ArrowRight } from 'lucide-react';
+import { X, RefreshCw, Volume2, CheckCircle, ChevronRight, Award, ArrowLeft, BookOpen, Target, Eye, ArrowRight, Sprout, Leaf, Flower2, Sparkles, Footprints, Lightbulb } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import activityPlantsImage from '../../../../assets/2.1_plant.png';
 import activityAnimalsImage from '../../../../assets/activity_2.1 animals.png';
@@ -10,6 +10,7 @@ import hibiscusImage from '../../../../assets/hibiscus.png';
 import tulsiImage from '../../../../assets/tulsi.png';
 import neemImage from '../../../../assets/neem.png';
 import { useTheme } from '../../../../ThemeContext.jsx';
+import { sounds } from './utils/soundEffects';
 
 import frogImg from '../../../../assets/frog.png';
 import antImg from '../../../../assets/ant.png';
@@ -32,6 +33,103 @@ const PLANT_CROPPED_IMAGES = {
   Hibiscus: hibiscusImage,
   Neem: neemImage,
   Sunflower: sunflowerImage,
+};
+
+const PLANT_BUTTON_THEMES = {
+  hibiscus: {
+    bg: 'linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%)',
+    border: '1px solid rgba(244, 63, 94, 0.35)',
+    color: '#881337',
+    shadow: '0 2px 8px rgba(225, 29, 72, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #fecdd3 0%, #fda4af 100%)'
+  },
+  tulsi: {
+    bg: 'linear-gradient(135deg, #e6f4ea 0%, #d1fae5 100%)',
+    border: '1px solid rgba(16, 185, 129, 0.35)',
+    color: '#064e3b',
+    shadow: '0 2px 8px rgba(16, 185, 129, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)'
+  },
+  grass: {
+    bg: 'linear-gradient(135deg, #ecfccb 0%, #d9f99d 100%)',
+    border: '1px solid rgba(132, 204, 22, 0.35)',
+    color: '#365314',
+    shadow: '0 2px 8px rgba(132, 204, 22, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #d9f99d 0%, #bef264 100%)'
+  },
+  neem: {
+    bg: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+    border: '1px solid rgba(34, 197, 94, 0.35)',
+    color: '#14532d',
+    shadow: '0 2px 8px rgba(34, 197, 94, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #bbf7d0 0%, #86efac 100%)'
+  },
+  rose: {
+    bg: 'linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%)',
+    border: '1px solid rgba(251, 113, 133, 0.35)',
+    color: '#9f1239',
+    shadow: '0 2px 8px rgba(244, 63, 94, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%)'
+  },
+  sunflower: {
+    bg: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
+    border: '1px solid rgba(234, 179, 8, 0.35)',
+    color: '#713f12',
+    shadow: '0 2px 8px rgba(234, 179, 8, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #fef08a 0%, #fde047 100%)'
+  }
+};
+
+const ANIMAL_BUTTON_THEMES = {
+  crow: {
+    bg: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+    border: '1px solid rgba(71, 85, 105, 0.35)',
+    color: '#1e293b',
+    shadow: '0 2px 8px rgba(71, 85, 105, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)'
+  },
+  sparrow: {
+    bg: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+    border: '1px solid rgba(180, 83, 9, 0.35)',
+    color: '#78350f',
+    shadow: '0 2px 8px rgba(180, 83, 9, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #fde68a 0%, #fcd34d 100%)'
+  },
+  cow: {
+    bg: 'linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%)',
+    border: '1px solid rgba(194, 65, 12, 0.35)',
+    color: '#7c2d12',
+    shadow: '0 2px 8px rgba(194, 65, 12, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #fed7aa 0%, #fdba74 100%)'
+  },
+  squirrel: {
+    bg: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
+    border: '1px solid rgba(202, 138, 4, 0.35)',
+    color: '#713f12',
+    shadow: '0 2px 8px rgba(202, 138, 4, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #fef08a 0%, #fde047 100%)'
+  },
+  butterfly: {
+    bg: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)',
+    border: '1px solid rgba(147, 51, 234, 0.35)',
+    color: '#581c87',
+    shadow: '0 2px 8px rgba(147, 51, 234, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%)'
+  },
+  frog: {
+    bg: 'linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%)',
+    border: '1px solid rgba(13, 148, 136, 0.35)',
+    color: '#134e4a',
+    shadow: '0 2px 8px rgba(13, 148, 136, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #99f6e4 0%, #5eead4 100%)'
+  },
+  ant: {
+    bg: 'linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%)',
+    border: '1px solid rgba(225, 29, 72, 0.35)',
+    color: '#881337',
+    shadow: '0 2px 8px rgba(225, 29, 72, 0.12)',
+    hoverBg: 'linear-gradient(135deg, #fecdd3 0%, #fda4af 100%)'
+  }
 };
 
 const ANIMAL_IMAGE_ASSETS = {
@@ -420,13 +518,26 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
   const hoveredTargetRef = useRef(null);
   const mousePosRef = useRef({ x: 0, y: 0 });
 
-  // Clean up Speech and Intervals
+  // Clean up Speech and Intervals - Silence guard for p.11 (typeFilter === 'plant')
   useEffect(() => {
+    if (typeFilter === 'plant') {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      sounds.setMuted(true);
+      sounds.stopSpeech();
+    } else {
+      sounds.setMuted(false);
+    }
     return () => {
-      window.speechSynthesis.cancel();
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      sounds.stopSpeech();
+      sounds.setMuted(false);
       clearInterval(holdIntervalRef.current);
     };
-  }, []);
+  }, [typeFilter]);
 
   // Update container size dynamically to keep scanner coordinates precise
   useEffect(() => {
@@ -603,40 +714,122 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
       <div className="split-frame" style={{ flex: 1, height: 0 }}>
         {/* ============ LEFT COLUMN: LESSON & JOURNAL ============ */}
-        <div className="frame-page-left">
-          <div className="textbook-eyebrow">Activity 2.1 · {typeFilter === 'plant' ? 'Plants Walk' : 'Animals Walk'}</div>
-          <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)' }}>
-            {typeFilter === 'plant' ? '🌿 Virtual Plants Walk' : '🐾 Virtual Animals Walk'}
-          </h1>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '13.5px', color: '#ffffff', lineHeight: '1.5' }}>
-            <p style={{ color: '#ffffff' }}>
-              Join <b>Dr. Raghu</b> and <b>Maniram chacha</b> as we venture into the neighborhood and school garden to catalog the {typeFilter === 'plant' ? 'plant life' : 'animal life'} in our area!
-            </p>
-            {typeFilter === 'plant' ? (
-              <>
-                <p style={{ color: '#ffffff' }}>
+        <div 
+          className="frame-page-left act21-dark-left" 
+          style={{ 
+            background: '#123D2A',
+            display: 'flex', 
+            flexDirection: 'column', 
+            height: '100%',
+            boxSizing: 'border-box',
+            justifyContent: 'space-between'
+          }}
+        >
+          {typeFilter === 'plant' ? (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+              justifyContent: 'space-around',
+              minHeight: 0,
+              paddingBottom: '1rem'
+            }}>
+              <div>
+                <div className="textbook-eyebrow" style={{ marginBottom: '0.35rem', fontSize: '1.25rem', fontWeight: '700', letterSpacing: '0.15em' }}>
+                  Activity 2.1 · Plants Walk
+                </div>
+                <h1 className="textbook-title" style={{ 
+                  fontFamily: 'var(--serif-font)',
+                  color: '#ffffff',
+                  fontSize: 'clamp(1.75rem, 2.2vw, 2.15rem)',
+                  fontWeight: '900',
+                  lineHeight: '1.2',
+                  textShadow: '0 2px 12px rgba(0,0,0,0.6)',
+                  letterSpacing: '0.01em',
+                  margin: '0 0 0.5rem 0'
+                }}>
+                  🌿 Virtual Plants Walk
+                </h1>
+              </div>
+
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '1.5rem'
+              }}>
+                <p style={{ 
+                  color: '#fbbf24', 
+                  margin: 0, 
+                  fontSize: 'clamp(1.18rem, 1.45vw, 1.32rem)', 
+                  lineHeight: '1.75',
+                  letterSpacing: '0.01em'
+                }}>
+                  Join <b style={{ fontWeight: 'bold', color: '#fbbf24' }}>Dr. Raghu</b> and <b style={{ fontWeight: 'bold', color: '#fbbf24' }}>Maniram chacha</b> as we venture into the neighborhood and school garden to catalog the <b style={{ fontWeight: 'bold', color: '#fbbf24' }}>plant life</b> in our area!
+                </p>
+                <p style={{ 
+                  color: '#fbbf24', 
+                  margin: 0, 
+                  fontSize: 'clamp(1.18rem, 1.45vw, 1.32rem)', 
+                  lineHeight: '1.75',
+                  letterSpacing: '0.01em'
+                }}>
                   Your objective is to observe different plant types (herbs, shrubs, trees, and water lilies). When you spot an organism on the right, <b>click and hold</b> your scanner lens on it to examine its details.
                 </p>
-                <p style={{ color: '#ffffff' }}>
-                  You must then complete the <b>Verification MCQ</b> to confirm your observation and document it in your field notebook.
+              </div>
+            </div>
+          ) : (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+              justifyContent: 'space-around',
+              minHeight: 0,
+              paddingBottom: '0.5rem'
+            }}>
+              <div>
+                <div className="textbook-eyebrow" style={{ marginBottom: '0.35rem', fontSize: '1.25rem', fontWeight: '700', letterSpacing: '0.15em' }}>
+                  Activity 2.1 · Animals Walk
+                </div>
+                <h1 className="textbook-title" style={{ 
+                  fontFamily: 'var(--serif-font)',
+                  color: '#ffffff',
+                  fontSize: 'clamp(1.75rem, 2.2vw, 2.15rem)',
+                  fontWeight: '900',
+                  lineHeight: '1.2',
+                  textShadow: '0 2px 12px rgba(0,0,0,0.6)',
+                  letterSpacing: '0.01em',
+                  margin: '0 0 0.5rem 0'
+                }}>
+                  🐾 Virtual Animals Walk
+                </h1>
+              </div>
+              
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '1.25rem'
+              }}>
+                <p style={{ 
+                  color: '#fbbf24', 
+                  margin: 0, 
+                  fontSize: 'clamp(1.12rem, 1.35vw, 1.25rem)', 
+                  lineHeight: '1.7',
+                  letterSpacing: '0.01em'
+                }}>
+                  Join <b style={{ fontWeight: 'bold', color: '#fbbf24' }}>Dr. Raghu</b> and <b style={{ fontWeight: 'bold', color: '#fbbf24' }}>Maniram chacha</b> as we venture into the neighborhood and school garden to catalog the <b style={{ fontWeight: 'bold', color: '#fbbf24' }}>animal life</b> in our area!
                 </p>
-              </>
-            ) : (
-              <>
-                <p style={{ color: '#ffffff' }}>
+                <p style={{ 
+                  color: '#fbbf24', 
+                  margin: 0, 
+                  fontSize: 'clamp(1.12rem, 1.35vw, 1.25rem)', 
+                  lineHeight: '1.7',
+                  letterSpacing: '0.01em'
+                }}>
                   Your objective is to observe different animals and their behaviours. When you spot an animal on the right, <b>click and hold</b> your scanner lens directly on it to examine its details.
                 </p>
-                <p style={{ color: '#ffffff' }}>
-                  You must then complete the <b>Verification MCQ</b> to confirm your observation and document it in your field notebook.
-                </p>
-              </>
-            )}
-          </div>
-
-          <div className="textbook-explore" style={{ marginTop: '1.25rem' }}>
-            ✏️ <b>Your Mission:</b> {typeFilter === 'plant' ? <>Scan and identify all <b>{filteredTargets.length} target plant species</b> to complete Table 2.1 in your journal. Toggle hints if you need help finding them.</> : <>Observe all <b>{filteredTargets.length} target animal species</b> to complete Table 2.2 in your journal.</>}
-          </div>
+              </div>
+            </div>
+          )}
 
           {/* Scanned Organism Verification Pane */}
           {scannedOrganism && (
@@ -725,19 +918,6 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
           <div style={{ marginTop: 'auto', paddingTop: '1.25rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
             {typeFilter === 'plant' ? (
               <>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                  <span style={{ fontSize: '12.5px', fontWeight: 'bold', color: 'var(--navy)' }}>
-                    Field Journal Progress
-                  </span>
-                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: notebook.length >= filteredTargets.length ? '#16a34a' : 'var(--accent)' }}>
-                    {notebook.length} / {filteredTargets.length} Logged
-                  </span>
-                </div>
-                
-                <div style={{ width: '100%', height: '8px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden', marginBottom: '1rem' }}>
-                  <div style={{ height: '100%', background: notebook.length >= filteredTargets.length ? '#10b981' : 'var(--accent)', width: `${(notebook.length / Math.max(1, filteredTargets.length)) * 100}%`, transition: 'width 0.4s ease' }} />
-                </div>
-
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button onClick={() => setShowHints(h => !h)} className="outline" style={{ flex: 1, padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Eye size={14} /> {showHints ? 'Hide Hints' : 'Show Hints'}
@@ -757,36 +937,65 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                       marginTop: '0.75rem', 
                       borderRadius: '8px', 
                       fontSize: '13px', 
+                      fontWeight: 'bold', 
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      gap: '0.5rem',
+                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                    }}
+                  >
+                    Continue to Animals (Table 2.2) <ChevronRight size={16} />
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button onClick={() => setShowHints(h => !h)} className="outline" style={{ flex: 1, padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Eye size={14} /> {showHints ? 'Hide Hints' : 'Show Hints'}
+                  </button>
+                  <button onClick={handleReset} className="outline" style={{ padding: '0.45rem', fontSize: '12.5px', borderRadius: '8px', gap: '0.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <RefreshCw size={13} /> Reset
+                  </button>
+                </div>
+
+                {notebook.length >= filteredTargets.length && (
+                  <button 
+                    onClick={onNextSection || onBackToDashboard} 
+                    className="primary" 
+                    style={{ 
+                      width: '100%', 
+                      padding: '0.6rem', 
+                      marginTop: '0.75rem', 
+                      borderRadius: '8px', 
+                      fontSize: '13px', 
+                      fontWeight: 'bold',
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center', 
                       gap: '0.35rem', 
-                      background: '#16a34a', 
-                      boxShadow: '0 4px 12px rgba(22,163,74,0.25)' 
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)' 
                     }}
                   >
-                    🎉 Walk Completed! Proceed to Animals Walk <ArrowRight size={14} />
+                    🎉 Walk Completed! Proceed to Next Activity <ArrowRight size={14} />
                   </button>
                 )}
               </>
-            ) : null}
+            )}
           </div>
         </div>
 
         {/* ============ RIGHT COLUMN: WORKSPACE ============ */}
-        <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.25rem', borderBottom: '1px solid var(--cardline)', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--mut)' }}>
-              🎯 neighbourhood &amp; school garden map
-            </span>
-          </div>
-
+        <div className="frame-page-right" style={{ display: 'flex', flexDirection: 'column', minHeight: 0, paddingTop: 0 }}>
           <div style={{ 
             flex: 1, 
             minHeight: 0, 
             position: 'relative', 
             borderRadius: '12px', 
-            border: '1px solid var(--cardline)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
             background: '#090d16',
             display: 'flex',
             alignItems: 'center',
@@ -841,7 +1050,8 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 style={{ 
                   width: '100%', 
                   height: '100%', 
-                  objectFit: 'cover', 
+                  objectFit: typeFilter === 'animal' ? 'contain' : 'cover', 
+                  objectPosition: 'center',
                   display: 'block', 
                   pointerEvents: 'none', 
                   userSelect: 'none' 
@@ -850,9 +1060,11 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               />
 
               {/* Gold hint rings */}
-              {showHints && typeFilter === 'plant' && filteredTargets.map(t => {
-                const logged = notebook.includes(t.id);
-                if (logged) return null;
+              {showHints && filteredTargets.map(t => {
+                const isAnimal = typeFilter === 'animal';
+                const ringSize = isAnimal 
+                  ? { width: '56px', height: '56px' }
+                  : { width: '36px', height: '36px' };
                 return (
                   <div
                     key={`hint-${t.id}`}
@@ -861,14 +1073,13 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                       left: `${t.x}%`,
                       top: `${t.y}%`,
                       transform: 'translate(-50%, -50%)',
-                      width: '32px',
-                      height: '32px',
                       borderRadius: '50%',
-                      border: '2.5px solid #f59e0b',
-                      boxShadow: '0 0 8px #f59e0b',
+                      border: '3px solid #FFD54A',
+                      boxShadow: '0 0 16px rgba(255, 213, 74, 0.9), inset 0 0 8px rgba(255, 213, 74, 0.4)',
                       animation: 'hintGlow 1.5s infinite ease-in-out',
                       pointerEvents: 'none',
                       zIndex: 8,
+                      ...ringSize
                     }}
                   />
                 );
@@ -966,25 +1177,53 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
               {filteredTargets.map(t => {
                 const logged = notebook.includes(t.id);
+                const isPlant = typeFilter === 'plant';
+                const theme = isPlant 
+                  ? (PLANT_BUTTON_THEMES[t.id.toLowerCase()] || PLANT_BUTTON_THEMES.tulsi) 
+                  : (ANIMAL_BUTTON_THEMES[t.id.toLowerCase()] || ANIMAL_BUTTON_THEMES.sparrow);
+                
                 return (
-                  <span key={t.id} style={{
-                    fontSize: '13px',
-                    padding: '0.4rem 0.85rem',
-                    borderRadius: '8px',
-                    border: '1px solid var(--cardline)',
-                    background: logged ? '#ecfdf5' : '#f8fafc',
-                    color: logged ? '#10b981' : 'var(--mut)',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontWeight: logged ? '600' : '500',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease'
-                  }} onClick={() => typeFilter === 'plant' ? setInfoCardPlant(t) : setInfoCardAnimal(t)}>
-                    <span>{t.emoji}</span>
-                    <span>{t.popupName || t.name.split(' ')[0]}</span>
-                    {logged && <CheckCircle size={12} />}
-                  </span>
+                  <button 
+                    key={t.id} 
+                    style={{
+                      fontSize: '14px',
+                      padding: '0.45rem 0.85rem',
+                      borderRadius: '10px',
+                      border: theme.border,
+                      background: theme.bg,
+                      color: theme.color,
+                      boxShadow: theme.shadow,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      transition: 'all 0.18s ease',
+                      outline: 'none',
+                      userSelect: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (theme) {
+                        e.currentTarget.style.background = theme.hoverBg;
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.18)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (theme) {
+                        e.currentTarget.style.background = theme.bg;
+                        e.currentTarget.style.transform = 'translateY(0px)';
+                        e.currentTarget.style.boxShadow = theme.shadow;
+                      }
+                    }}
+                    onClick={() => typeFilter === 'plant' ? setInfoCardPlant(t) : setInfoCardAnimal(t)}
+                  >
+                    <span style={{ fontSize: '16px' }}>{t.emoji}</span>
+                    <span style={{ color: theme.color, fontWeight: '700' }}>
+                      {t.popupName || t.name.split(' ')[0]}
+                    </span>
+                    {isPlant && logged && <CheckCircle size={14} color={theme.color} strokeWidth={2.5} />}
+                  </button>
                 );
               })}
             </div>
@@ -1037,9 +1276,9 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 top: '1.25rem',
                 right: '1.25rem',
                 zIndex: 100,
-                background: 'rgba(15, 23, 42, 0.15)',
-                border: '1px solid rgba(15, 23, 42, 0.25)',
-                color: '#0f172a',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
                 width: '42px',
                 height: '42px',
                 borderRadius: '50%',
@@ -1087,7 +1326,7 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
               />
             </div>
 
-            {/* RIGHT SIDE — Existing Observation Content (35% width, Light-Grey Frosted Glass Panel) */}
+            {/* RIGHT SIDE — Observation Content (35% width, Dark Navy #071B3D Panel) */}
             <div 
               style={{
                 width: '35%',
@@ -1099,64 +1338,227 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 boxSizing: 'border-box',
-                background: 'rgba(248, 250, 252, 0.95)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
-                boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)'
+                background: '#071B3D',
+                borderLeft: '1px solid rgba(34, 197, 94, 0.25)',
+                boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.3)'
               }}
             >
               {/* Header */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid rgba(15, 23, 42, 0.12)', paddingBottom: '0.85rem', paddingTop: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid rgba(34, 197, 94, 0.25)', paddingBottom: '0.85rem', paddingTop: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                   <span style={{ fontSize: '2.5rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{infoCardPlant.emoji}</span>
                   <div>
-                    <h2 style={{ margin: 0, fontSize: '1.95rem', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.02em', lineHeight: '1.2' }}>
+                    <h2 style={{ margin: 0, fontSize: '1.95rem', fontWeight: '800', color: '#ffffff', letterSpacing: '-0.02em', lineHeight: '1.2' }}>
                       {infoCardPlant.name}
                     </h2>
-                    <span style={{ fontSize: '13px', color: '#14532d', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                    <span style={{ fontSize: '13px', color: '#4ade80', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
                       Textbook Table 2.1 — Observations
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Observation Details Table — Raised Bright White Cards */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem', flex: 1, justifyContent: 'space-around', margin: '1.25rem 0' }}>
-                <div style={{ background: '#ffffff', padding: '1rem 1.25rem', borderRadius: '12px', borderLeft: '5px solid #16a34a', border: '1px solid rgba(15, 23, 42, 0.14)', borderLeftWidth: '5px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)' }}>
-                  <div style={{ fontSize: '13.5px', color: '#15803d', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.6px' }}>
-                    • Stem
+              {/* Observation Details Table — Modern Botanical Information Cards */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', flex: 1, justifyContent: 'space-around', margin: '1rem 0' }}>
+                {/* 1. STEM CARD */}
+                <div style={{ 
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: 'linear-gradient(135deg, #f0fbf5 0%, #e3f6ec 100%)', 
+                  padding: '1rem 1.25rem', 
+                  borderRadius: '16px', 
+                  border: '1px solid rgba(22, 163, 74, 0.28)', 
+                  boxShadow: '0 4px 16px rgba(22, 163, 74, 0.08), 0 1px 4px rgba(0, 0, 0, 0.03)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1.15rem'
+                }}>
+                  {/* Left 52px circular green icon */}
+                  <div style={{
+                    width: '52px',
+                    height: '52px',
+                    minWidth: '52px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(22, 163, 74, 0.35)',
+                    position: 'relative',
+                    zIndex: 2
+                  }}>
+                    <Sprout color="#ffffff" size={26} strokeWidth={2.4} />
                   </div>
-                  <div style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', lineHeight: '1.45' }}>
-                    {infoCardPlant.tableInfo?.stem || '—'}
+
+                  {/* Content (Heading + Description) */}
+                  <div style={{ position: 'relative', zIndex: 2, flex: 1 }}>
+                    <div style={{ fontSize: '13px', color: '#15803d', fontWeight: '900', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.8px' }}>
+                      • STEM
+                    </div>
+                    <div style={{ background: '#071B3D', borderRadius: '7px', padding: '8px 12px', color: '#FFFFFF', fontWeight: '700', fontSize: '15px', lineHeight: '1.45' }}>
+                      {infoCardPlant.tableInfo?.stem || '—'}
+                    </div>
                   </div>
+
+                  {/* Right faint botanical silhouette */}
+                  <svg width="120" height="120" viewBox="0 0 100 100" fill="none" stroke="#16a34a" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', right: '-15px', top: '50%', transform: 'translateY(-50%)', opacity: 0.14, pointerEvents: 'none', zIndex: 1 }}>
+                    <path d="M50 95 V25" />
+                    <path d="M50 65 Q30 55 20 35 Q40 40 50 65" fill="#16a34a" />
+                    <path d="M50 45 Q70 35 80 15 Q60 20 50 45" fill="#16a34a" />
+                    <path d="M50 25 Q35 15 30 5 Q45 8 50 25" fill="#16a34a" />
+                  </svg>
                 </div>
 
-                <div style={{ background: '#ffffff', padding: '1rem 1.25rem', borderRadius: '12px', borderLeft: '5px solid #2563eb', border: '1px solid rgba(15, 23, 42, 0.14)', borderLeftWidth: '5px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)' }}>
-                  <div style={{ fontSize: '13.5px', color: '#1d4ed8', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.6px' }}>
-                    • Leaves
+                {/* 2. LEAVES CARD */}
+                <div style={{ 
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: 'linear-gradient(135deg, #f2f9ff 0%, #e2f2fe 100%)', 
+                  padding: '1rem 1.25rem', 
+                  borderRadius: '16px', 
+                  border: '1px solid rgba(37, 99, 235, 0.28)', 
+                  boxShadow: '0 4px 16px rgba(37, 99, 235, 0.08), 0 1px 4px rgba(0, 0, 0, 0.03)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1.15rem'
+                }}>
+                  {/* Left 52px circular blue icon */}
+                  <div style={{
+                    width: '52px',
+                    height: '52px',
+                    minWidth: '52px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35)',
+                    position: 'relative',
+                    zIndex: 2
+                  }}>
+                    <Leaf color="#ffffff" size={26} strokeWidth={2.4} />
                   </div>
-                  <div style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', lineHeight: '1.45' }}>
-                    {infoCardPlant.tableInfo?.leaves || '—'}
+
+                  {/* Content (Heading + Description) */}
+                  <div style={{ position: 'relative', zIndex: 2, flex: 1 }}>
+                    <div style={{ fontSize: '13px', color: '#1d4ed8', fontWeight: '900', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.8px' }}>
+                      • LEAVES
+                    </div>
+                    <div style={{ background: '#071B3D', borderRadius: '7px', padding: '8px 12px', color: '#FFFFFF', fontWeight: '700', fontSize: '15px', lineHeight: '1.45' }}>
+                      {infoCardPlant.tableInfo?.leaves || '—'}
+                    </div>
                   </div>
+
+                  {/* Right faint botanical silhouette */}
+                  <svg width="120" height="120" viewBox="0 0 100 100" fill="none" stroke="#2563eb" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', right: '-15px', top: '50%', transform: 'translateY(-50%)', opacity: 0.14, pointerEvents: 'none', zIndex: 1 }}>
+                    <path d="M15 85 Q20 20 85 15 Q80 80 15 85 Z" fill="#2563eb" />
+                    <path d="M15 85 Q50 50 85 15" stroke="#ffffff" strokeWidth="2.5" />
+                    <path d="M40 60 Q55 58 65 45" stroke="#ffffff" strokeWidth="2" />
+                    <path d="M55 45 Q70 43 80 30" stroke="#ffffff" strokeWidth="2" />
+                    <path d="M30 70 Q45 75 55 70" stroke="#ffffff" strokeWidth="2" />
+                  </svg>
                 </div>
 
-                <div style={{ background: '#ffffff', padding: '1rem 1.25rem', borderRadius: '12px', borderLeft: '5px solid #db2777', border: '1px solid rgba(15, 23, 42, 0.14)', borderLeftWidth: '5px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)' }}>
-                  <div style={{ fontSize: '13.5px', color: '#be185d', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.6px' }}>
-                    • Flowers
+                {/* 3. FLOWERS CARD */}
+                <div style={{ 
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: 'linear-gradient(135deg, #fdf4f9 0%, #fbe8f3 100%)', 
+                  padding: '1rem 1.25rem', 
+                  borderRadius: '16px', 
+                  border: '1px solid rgba(219, 39, 119, 0.28)', 
+                  boxShadow: '0 4px 16px rgba(219, 39, 119, 0.08), 0 1px 4px rgba(0, 0, 0, 0.03)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1.15rem'
+                }}>
+                  {/* Left 52px circular pink/magenta icon */}
+                  <div style={{
+                    width: '52px',
+                    height: '52px',
+                    minWidth: '52px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #db2777 0%, #be185d 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(219, 39, 119, 0.35)',
+                    position: 'relative',
+                    zIndex: 2
+                  }}>
+                    <Flower2 color="#ffffff" size={26} strokeWidth={2.4} />
                   </div>
-                  <div style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', lineHeight: '1.45' }}>
-                    {infoCardPlant.tableInfo?.flowers || '—'}
+
+                  {/* Content (Heading + Description) */}
+                  <div style={{ position: 'relative', zIndex: 2, flex: 1 }}>
+                    <div style={{ fontSize: '13px', color: '#be185d', fontWeight: '900', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.8px' }}>
+                      • FLOWERS
+                    </div>
+                    <div style={{ background: '#071B3D', borderRadius: '7px', padding: '8px 12px', color: '#FFFFFF', fontWeight: '700', fontSize: '15px', lineHeight: '1.45' }}>
+                      {infoCardPlant.tableInfo?.flowers || '—'}
+                    </div>
                   </div>
+
+                  {/* Right faint botanical silhouette */}
+                  <svg width="120" height="120" viewBox="0 0 100 100" fill="#db2777" style={{ position: 'absolute', right: '-15px', top: '50%', transform: 'translateY(-50%)', opacity: 0.14, pointerEvents: 'none', zIndex: 1 }}>
+                    <circle cx="50" cy="50" r="14" fill="#be185d" />
+                    <ellipse cx="50" cy="20" rx="12" ry="18" />
+                    <ellipse cx="50" cy="80" rx="12" ry="18" />
+                    <ellipse cx="20" cy="50" rx="18" ry="12" />
+                    <ellipse cx="80" cy="50" rx="18" ry="12" />
+                    <ellipse cx="28" cy="28" rx="14" ry="14" transform="rotate(45 28 28)" />
+                    <ellipse cx="72" cy="28" rx="14" ry="14" transform="rotate(-45 72 28)" />
+                    <ellipse cx="28" cy="72" rx="14" ry="14" transform="rotate(-45 28 72)" />
+                    <ellipse cx="72" cy="72" rx="14" ry="14" transform="rotate(45 72 72)" />
+                  </svg>
                 </div>
 
-                <div style={{ background: '#ffffff', padding: '1rem 1.25rem', borderRadius: '12px', borderLeft: '5px solid #d97706', border: '1px solid rgba(15, 23, 42, 0.14)', borderLeftWidth: '5px', boxShadow: '0 6px 18px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)' }}>
-                  <div style={{ fontSize: '13.5px', color: '#b45309', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.6px' }}>
-                    • Any other observations / features
+                {/* 4. ANY OTHER OBSERVATIONS / FEATURES CARD */}
+                <div style={{ 
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: 'linear-gradient(135deg, #fffdf0 0%, #fef8d8 100%)', 
+                  padding: '1rem 1.25rem', 
+                  borderRadius: '16px', 
+                  border: '1px solid rgba(217, 119, 6, 0.28)', 
+                  boxShadow: '0 4px 16px rgba(217, 119, 6, 0.08), 0 1px 4px rgba(0, 0, 0, 0.03)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1.15rem'
+                }}>
+                  {/* Left 52px circular orange/golden icon */}
+                  <div style={{
+                    width: '52px',
+                    height: '52px',
+                    minWidth: '52px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(217, 119, 6, 0.35)',
+                    position: 'relative',
+                    zIndex: 2
+                  }}>
+                    <Sparkles color="#ffffff" size={26} strokeWidth={2.4} />
                   </div>
-                  <div style={{ fontSize: '18px', color: '#0f172a', fontWeight: '700', lineHeight: '1.45' }}>
-                    {infoCardPlant.tableInfo?.notes || infoCardPlant.tableInfo?.other || '—'}
+
+                  {/* Content (Heading + Description) */}
+                  <div style={{ position: 'relative', zIndex: 2, flex: 1 }}>
+                    <div style={{ fontSize: '13px', color: '#b45309', fontWeight: '900', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.8px' }}>
+                      • ANY OTHER OBSERVATIONS / FEATURES
+                    </div>
+                    <div style={{ background: '#071B3D', borderRadius: '7px', padding: '8px 12px', color: '#FFFFFF', fontWeight: '700', fontSize: '15px', lineHeight: '1.45' }}>
+                      {infoCardPlant.tableInfo?.notes || infoCardPlant.tableInfo?.other || '—'}
+                    </div>
                   </div>
+
+                  {/* Right faint botanical silhouette */}
+                  <svg width="120" height="120" viewBox="0 0 100 100" fill="#d97706" style={{ position: 'absolute', right: '-15px', top: '50%', transform: 'translateY(-50%)', opacity: 0.14, pointerEvents: 'none', zIndex: 1 }}>
+                    <path d="M50 0 L60 38 L98 50 L60 62 L50 100 L40 62 L2 50 L40 38 Z" />
+                    <circle cx="75" cy="22" r="7" />
+                    <circle cx="25" cy="78" r="5" />
+                  </svg>
                 </div>
               </div>
 
@@ -1227,11 +1629,11 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 top: '1.25rem',
                 right: '1.25rem',
                 zIndex: 100,
-                background: 'rgba(15, 23, 42, 0.15)',
-                border: '1px solid rgba(15, 23, 42, 0.25)',
-                color: '#0f172a',
-                width: '42px',
-                height: '42px',
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                color: '#ffffff',
+                width: '44px',
+                height: '44px',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -1239,14 +1641,15 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 cursor: 'pointer',
                 fontSize: '22px',
                 fontWeight: 'bold',
-                backdropFilter: 'blur(4px)',
-                transition: 'all 0.2s ease'
+                backdropFilter: 'blur(8px)',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)'
               }}
             >
               ✕
             </button>
 
-            {/* LEFT SIDE — Actual Existing Asset Image of Scanned Animal (65% width) */}
+            {/* LEFT SIDE — Animal Image (65% width, maximum available space matching Plant Observation layout) */}
             <div 
               style={{
                 width: '65%',
@@ -1255,10 +1658,10 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '1.5rem',
-                background: 'linear-gradient(135deg, #090d16 0%, #1e293b 100%)',
-                borderRight: '1px solid rgba(34, 211, 238, 0.3)',
+                padding: '1rem',
                 boxSizing: 'border-box',
+                background: 'linear-gradient(135deg, #090d16 0%, #1e293b 100%)',
+                borderRight: '1px solid rgba(56, 189, 248, 0.3)',
                 overflow: 'hidden'
               }}
             >
@@ -1266,81 +1669,143 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 src={infoCardAnimal.img || ANIMAL_IMAGE_ASSETS[infoCardAnimal.id] || ANIMAL_IMAGE_ASSETS[infoCardAnimal.name]} 
                 alt={infoCardAnimal.name} 
                 style={{ 
+                  width: '100%',
+                  height: '100%',
                   maxWidth: '100%', 
                   maxHeight: '100%', 
                   objectFit: 'contain', 
-                  borderRadius: '16px',
+                  objectPosition: 'center',
                   filter: 'drop-shadow(0 15px 35px rgba(0, 0, 0, 0.75))'
                 }} 
               />
             </div>
 
-            {/* RIGHT SIDE — Animal Name & Short Description (35% width) */}
+            {/* RIGHT SIDE — Animal Observation Details (35% width, Deep Navy #071B3D) */}
             <div 
               style={{
                 width: '35%',
                 flex: '0 0 35%',
                 height: '100%',
                 overflowY: 'auto',
-                padding: '2rem 1.8rem 1.5rem',
+                padding: '2.2rem 2rem 1.75rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 boxSizing: 'border-box',
-                background: 'rgba(248, 250, 252, 0.95)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
-                boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)'
+                background: '#071B3D',
+                borderLeft: '1px solid rgba(56, 189, 248, 0.25)',
+                boxShadow: '-10px 0 35px rgba(0, 0, 0, 0.4)'
               }}
             >
-              <div>
-                {/* Header */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', borderBottom: '2px solid rgba(15, 23, 42, 0.12)', paddingBottom: '1rem', paddingTop: '0.5rem', marginBottom: '1.25rem' }}>
-                  <span style={{ fontSize: '2.6rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{infoCardAnimal.emoji}</span>
-                  <div>
-                    <h2 style={{ margin: 0, fontSize: '2.1rem', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.02em', lineHeight: '1.2' }}>
-                      {infoCardAnimal.popupName || infoCardAnimal.name}
-                    </h2>
-                    <span style={{ fontSize: '13px', color: '#0284c7', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                      Textbook Table 2.2 — Animal Observation
-                    </span>
-                  </div>
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem', borderBottom: '2px solid rgba(56, 189, 248, 0.25)', paddingBottom: '1.1rem', paddingTop: '0.25rem' }}>
+                <span style={{ fontSize: '3rem', lineHeight: '1', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{infoCardAnimal.emoji}</span>
+                <div>
+                  <h2 style={{ margin: 0, fontSize: '2.25rem', fontWeight: '900', color: '#ffffff', letterSpacing: '-0.02em', lineHeight: '1.2' }}>
+                    {infoCardAnimal.popupName || infoCardAnimal.name}
+                  </h2>
+                  <span style={{ fontSize: '13.5px', color: '#38bdf8', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                    Textbook Table 2.2 — Animal Observation
+                  </span>
                 </div>
+              </div>
 
-                {/* Description Box */}
+              {/* Observation Cards Container — Vertically Balanced to Fill Space */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.35rem', flex: 1, justifyContent: 'space-around', margin: '1.25rem 0' }}>
+                {/* 1. Animal Description & Behavior Card */}
                 <div style={{
-                  background: '#ffffff',
-                  padding: '1.25rem 1.5rem',
-                  borderRadius: '14px',
-                  borderLeft: '6px solid #0284c7',
-                  border: '1px solid rgba(15, 23, 42, 0.14)',
-                  borderLeftWidth: '6px',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)'
+                  background: 'linear-gradient(135deg, #102A4C 0%, #0a1c36 100%)',
+                  padding: '1.45rem 1.65rem',
+                  borderRadius: '18px',
+                  border: '1.5px solid rgba(56, 189, 248, 0.45)',
+                  borderLeft: '7px solid #38BDF8',
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35), 0 0 18px rgba(56, 189, 248, 0.12)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
                 }}>
-                  <div style={{ fontSize: '13px', color: '#0369a1', fontWeight: '800', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.6px' }}>
-                    • Animal Description &amp; Behavior
+                  {/* Subtle Habitat Watermark Pattern */}
+                  <div style={{
+                    position: 'absolute',
+                    right: '-15px',
+                    bottom: '-15px',
+                    opacity: 0.06,
+                    pointerEvents: 'none',
+                    color: '#38BDF8'
+                  }}>
+                    <Footprints size={120} />
                   </div>
-                  <div style={{ fontSize: '17px', color: '#0f172a', fontWeight: '600', lineHeight: '1.55' }}>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+                    <div style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '50%',
+                      background: 'rgba(56, 189, 248, 0.16)',
+                      border: '1.5px solid rgba(56, 189, 248, 0.4)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <Footprints size={22} color="#38BDF8" />
+                    </div>
+                    <div style={{ fontSize: '20px', color: '#38BDF8', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                      • ANIMAL DESCRIPTION &amp; BEHAVIOR
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '20px', color: '#FFFFFF', fontWeight: '700', lineHeight: '1.48', position: 'relative', zIndex: 1 }}>
                     {infoCardAnimal.details}
                   </div>
                 </div>
 
-                {/* Key Facts */}
+                {/* 2. Did You Know Card */}
                 <div style={{
-                  marginTop: '1.25rem',
-                  background: '#f0fdf4',
-                  padding: '1.15rem 1.35rem',
-                  borderRadius: '14px',
-                  borderLeft: '6px solid #16a34a',
-                  border: '1px solid rgba(22, 163, 74, 0.2)',
-                  borderLeftWidth: '6px',
-                  boxShadow: '0 6px 18px rgba(0, 0, 0, 0.04)'
+                  background: 'linear-gradient(135deg, #103B3A 0%, #082625 100%)',
+                  padding: '1.45rem 1.65rem',
+                  borderRadius: '18px',
+                  border: '1.5px solid rgba(34, 197, 94, 0.45)',
+                  borderLeft: '7px solid #22C55E',
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35), 0 0 18px rgba(34, 197, 94, 0.12)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
                 }}>
-                  <div style={{ fontSize: '13px', color: '#15803d', fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.6px' }}>
-                    💡 Did You Know?
+                  {/* Subtle Habitat Watermark Pattern */}
+                  <div style={{
+                    position: 'absolute',
+                    right: '-15px',
+                    bottom: '-15px',
+                    opacity: 0.06,
+                    pointerEvents: 'none',
+                    color: '#4ADE80'
+                  }}>
+                    <Lightbulb size={120} />
                   </div>
-                  <div style={{ fontSize: '15px', color: '#166534', fontWeight: '600', lineHeight: '1.5' }}>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+                    <div style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '50%',
+                      background: 'rgba(34, 197, 94, 0.16)',
+                      border: '1.5px solid rgba(34, 197, 94, 0.4)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <Lightbulb size={22} color="#4ADE80" />
+                    </div>
+                    <div style={{ fontSize: '20px', color: '#4ADE80', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                      💡 DID YOU KNOW?
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '20px', color: '#FFFFFF', fontWeight: '700', lineHeight: '1.48', position: 'relative', zIndex: 1 }}>
                     {infoCardAnimal.fact}
                   </div>
                 </div>
@@ -1351,19 +1816,19 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
                 onClick={() => setInfoCardAnimal(null)}
                 style={{
                   width: '100%',
-                  padding: '0.9rem',
-                  borderRadius: '10px',
-                  background: '#0284c7',
+                  padding: '1.1rem',
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                   color: '#ffffff',
                   fontWeight: 'bold',
-                  fontSize: '15px',
+                  fontSize: '16px',
                   border: 'none',
                   cursor: 'pointer',
-                  marginTop: '1.5rem',
-                  boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)'
+                  boxShadow: '0 4px 18px rgba(16, 185, 129, 0.4)',
+                  transition: 'all 0.2s ease'
                 }}
               >
-                ✓ Close Card
+                ✓ Close &amp; Select Another Animal
               </button>
             </div>
           </div>
@@ -1372,8 +1837,8 @@ export default function VirtualBiodiversityExplorer({ onBackToDashboard, typeFil
 
       <style>{`
         @keyframes hintGlow {
-          0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.65; }
-          50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; box-shadow: 0 0 12px #f59e0b, inset 0 0 6px #f59e0b; }
+          0%, 100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.8; box-shadow: 0 0 14px rgba(255, 213, 74, 0.9), inset 0 0 8px rgba(255, 213, 74, 0.4); }
+          50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; box-shadow: 0 0 22px rgba(255, 213, 74, 1), inset 0 0 12px rgba(255, 213, 74, 0.6); }
         }
       `}</style>
 

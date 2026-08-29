@@ -24,7 +24,7 @@ const CHAPTER_2_ACTIVITIES = [
   { icon: '🏆', title: 'Chapter Challenge — enhance our learning', desc: 'The chapter\'s own exercises — Venn sort, flowchart logic, scored.', pg: 'p.31–33', path: '/activities/class6_chapter2/activity_14.html', sectionHeader: 'Chapter Challenge — Let us enhance our learning', activityId: null }
 ];
 
-export default function Chapter2LearningLab({ onBack, onHeaderVisibilityChange }) {
+export default function Chapter2LearningLab({ onBack, onHeaderVisibilityChange, onSoundButtonVisibilityChange }) {
   return (
     <ChapterLearningLab 
       classNum={6}
@@ -38,6 +38,7 @@ export default function Chapter2LearningLab({ onBack, onHeaderVisibilityChange }
       activities={CHAPTER_2_ACTIVITIES}
       onBack={onBack}
       onHeaderVisibilityChange={onHeaderVisibilityChange}
+      onSoundButtonVisibilityChange={onSoundButtonVisibilityChange}
       coverBgImage={null}
       coverBgVideo={coverBgVideo}
       learningLabBg={learningLabBg}

@@ -4,90 +4,58 @@ import confetti from 'canvas-confetti';
 import { useTheme } from '../../../../ThemeContext.jsx';
 
 import tulsiImg from '../../../../assets/specimens/tulsi.png';
-import neemImg from '../../../../assets/specimens/neem.png';
 import roseImg from '../../../../assets/specimens/rose.png';
-import sunflowerImg from '../../../../assets/specimens/sunflower.png';
-import mangoImg from '../../../../assets/specimens/mango.png';
-import bananaImg from '../../../../assets/specimens/banana.png';
-import bambooImg from '../../../../assets/specimens/bamboo.png';
-import marigoldImg from '../../../../assets/specimens/marigold.png';
-import peepalImg from '../../../../assets/specimens/peepal.png';
-import lotusImg from '../../../../assets/specimens/lotus.png';
-import hibiscusImg from '../../../../assets/specimens/hibiscus.png';
 import grassImg from '../../../../assets/specimens/grass.png';
-import cactusImg from '../../../../assets/specimens/cactus.png';
+import neemImg from '../../../../assets/specimens/neem.png';
+import peepalImg from '../../../../assets/specimens/peepal.png';
 import jasmineImg from '../../../../assets/specimens/jasmine.png';
-import coconutImg from '../../../../assets/specimens/coconut.png';
 
-import crowImg from '../../../../assets/specimens/crow.png';
-import butterflyImg from '../../../../assets/specimens/butterfly.png';
-import antImg from '../../../../assets/specimens/ant.png';
-import frogImg from '../../../../assets/specimens/frog.png';
-import pigeonImg from '../../../../assets/specimens/pigeon.png';
-import sparrowImg from '../../../../assets/specimens/sparrow.png';
-import dogImg from '../../../../assets/specimens/dog.png';
-import cowImg from '../../../../assets/specimens/cow.png';
-import squirrelImg from '../../../../assets/specimens/squirrel.png';
-import peacockImg from '../../../../assets/specimens/peacock.png';
-import dragonflyImg from '../../../../assets/specimens/dragonfly.png';
-import snailImg from '../../../../assets/specimens/snail.png';
-import fishImg from '../../../../assets/specimens/fish.png';
-import beeImg from '../../../../assets/specimens/bee.png';
-import rabbitImg from '../../../../assets/specimens/rabbit.png';
+import crowImg from '../../assets/crow.png';
+import cowImg from '../../assets/brown_cow.png';
+import frogImg from '../../assets/frog.png';
+import squirrelImg from '../../assets/squirrel.png';
+import antImg from '../../assets/ant.png';
+import sparrowImg from '../../assets/sparrow.png';
 
 import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
 
-const PLANTS = ['Tulsi', 'Neem', 'Rose', 'Sunflower', 'Mango', 'Banana', 'Bamboo', 'Marigold', 'Peepal', 'Lotus', 'Hibiscus', 'Grass', 'Cactus', 'Jasmine', 'Coconut'];
-const ANIMALS = ['Crow', 'Butterfly', 'Ant', 'Frog', 'Pigeon', 'Sparrow', 'Dog', 'Cow', 'Squirrel', 'Peacock', 'Dragonfly', 'Snail', 'Fish', 'Bee', 'Rabbit'];
+const PLANTS = ['Tulsi', 'Rose', 'Grass', 'Neem', 'Peepal', 'Jasmine'];
+const ANIMALS = ['Crow', 'Cow', 'Frog', 'Squirrel', 'Ant', 'Sparrow'];
 
-const PLANT_EMOJIS = { Tulsi:'🌿', Neem:'🌳', Rose:'🌹', Sunflower:'🌻', Mango:'🥭', Banana:'🍌', Bamboo:'🎋', Marigold:'🌼', Peepal:'🌲', Lotus:'🪷', Hibiscus:'🌺', Grass:'🌱', Cactus:'🌵', Jasmine:'🤍', Coconut:'🥥' };
-const ANIMAL_EMOJIS = { Crow:'🐦‍⬛', Butterfly:'🦋', Ant:'🐜', Frog:'🐸', Pigeon:'🕊️', Sparrow:'🐦', Dog:'🐕', Cow:'🐄', Squirrel:'🐿️', Peacock:'🦚', Dragonfly:'🦗', Snail:'🐌', Fish:'🐟', Bee:'🐝', Rabbit:'🐇' };
+const PLANT_EMOJIS = { Tulsi: '🌿', Rose: '🌹', Grass: '🌱', Neem: '🌳', Peepal: '🌲', Jasmine: '🤍' };
+const ANIMAL_EMOJIS = { Crow: '🐦‍⬛', Cow: '🐄', Frog: '🐸', Squirrel: '🐿️', Ant: '🐜', Sparrow: '🐦' };
 
 const PLANT_IMAGES = {
   Tulsi: tulsiImg,
-  Neem: neemImg,
   Rose: roseImg,
-  Sunflower: sunflowerImg,
-  Mango: mangoImg,
-  Banana: bananaImg,
-  Bamboo: bambooImg,
-  Marigold: marigoldImg,
-  Peepal: peepalImg,
-  Lotus: lotusImg,
-  Hibiscus: hibiscusImg,
   Grass: grassImg,
-  Cactus: cactusImg,
-  Jasmine: jasmineImg,
-  Coconut: coconutImg
+  Neem: neemImg,
+  Peepal: peepalImg,
+  Jasmine: jasmineImg
 };
 
 const ANIMAL_IMAGES = {
   Crow: crowImg,
-  Butterfly: butterflyImg,
-  Ant: antImg,
-  Frog: frogImg,
-  Pigeon: pigeonImg,
-  Sparrow: sparrowImg,
-  Dog: dogImg,
   Cow: cowImg,
+  Frog: frogImg,
   Squirrel: squirrelImg,
-  Peacock: peacockImg,
-  Dragonfly: dragonflyImg,
-  Snail: snailImg,
-  Fish: fishImg,
-  Bee: beeImg,
-  Rabbit: rabbitImg
+  Ant: antImg,
+  Sparrow: sparrowImg
 };
 
 const CLASSMATES = [
-  { name:'Aarav', plant:'Mango', animal:'Peacock' }, { name:'Priya', plant:'Lotus', animal:'Butterfly' },
-  { name:'Rahul', plant:'Neem', animal:'Crow' }, { name:'Diya', plant:'Tulsi', animal:'Bee' },
-  { name:'Karan', plant:'Rose', animal:'Rabbit' }, { name:'Ananya', plant:'Sunflower', animal:'Sparrow' },
-  { name:'Vikram', plant:'Peepal', animal:'Squirrel' }, { name:'Meera', plant:'Hibiscus', animal:'Butterfly' },
-  { name:'Arjun', plant:'Coconut', animal:'Fish' }, { name:'Sana', plant:'Bamboo', animal:'Dragonfly' },
-  { name:'Rohan', plant:'Marigold', animal:'Frog' }, { name:'Tanya', plant:'Grass', animal:'Ant' },
-  { name:'Nikhil', plant:'Jasmine', animal:'Pigeon' }, { name:'Isha', plant:'Banana', animal:'Dog' },
-  { name:'Amit', plant:'Cactus', animal:'Snail' },
+  { name: 'Rahul', plant: 'Neem', animal: 'Crow' },
+  { name: 'Diya', plant: 'Tulsi', animal: 'Cow' },
+  { name: 'Karan', plant: 'Rose', animal: 'Frog' },
+  { name: 'Ananya', plant: 'Grass', animal: 'Sparrow' },
+  { name: 'Vikram', plant: 'Peepal', animal: 'Squirrel' },
+  { name: 'Tanya', plant: 'Jasmine', animal: 'Ant' },
+  { name: 'Aarav', plant: 'Tulsi', animal: 'Crow' },
+  { name: 'Priya', plant: 'Rose', animal: 'Squirrel' },
+  { name: 'Rohan', plant: 'Neem', animal: 'Frog' },
+  { name: 'Nikhil', plant: 'Peepal', animal: 'Cow' },
+  { name: 'Meera', plant: 'Grass', animal: 'Sparrow' },
+  { name: 'Isha', plant: 'Jasmine', animal: 'Ant' }
 ];
 
 const QUIZ_QUESTIONS = [
@@ -333,66 +301,71 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
 
       <div className="split-frame" style={{ flex: 1, minHeight: 0, gridTemplateColumns: phase === 'pick' ? '1fr' : undefined, padding: '1rem', gap: '1.25rem' }}>
         
-        {/* ============ LEFT COLUMN: CONTEXT & STATS ============ */}
+        {/* ============ LEFT COLUMN: CONTEXT & STATS (Dark Green Theme #123D2A) ============ */}
         {phase !== 'pick' && (
           <div className="frame-page-left" style={{
-            background: 'rgba(15, 23, 42, 0.88)',
+            backgroundColor: '#123D2A',
             backdropFilter: 'blur(16px)',
-            border: '1.5px solid rgba(255, 255, 255, 0.2)',
+            border: '1.5px solid rgba(52, 211, 153, 0.4)',
             borderRadius: '20px',
-            padding: '2.5rem 2rem',
-            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.5)'
+            padding: '2.25rem 2rem',
+            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.45)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.35rem'
           }}>
-            <div className="textbook-eyebrow" style={{ color: '#38bdf8', fontWeight: '800', letterSpacing: '0.06em' }}>
-              Activity 2.2 · Let Us Appreciate
-            </div>
-            <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', color: '#38bdf8', textShadow: '0 2px 10px rgba(0,0,0,0.6)', fontWeight: '800' }}>
-              Ecosystem Appreciation
-            </h1>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem', fontSize: '16.5px', color: '#fde047', lineHeight: '1.65', fontWeight: '500' }}>
-              <p style={{ margin: 0 }}>
-                Appreciating and conserving biodiversity is vital for our survival. Every living thing in a habitat is connected.
-              </p>
-              <p style={{ margin: 0 }}>
-                During our nature walk, different students notice and remember different plants and animals. When we compile our observations together, we discover a much richer variety of life than any single person could find alone.
-              </p>
+            <div>
+              <div className="textbook-eyebrow" style={{ color: '#FFD21F', fontWeight: '800', fontSize: '18px', letterSpacing: '0.06em', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
+                Activity 2.2 · Let Us Appreciate
+              </div>
+              <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', color: '#FFFFFF', textShadow: '0 2px 10px rgba(0,0,0,0.6)', fontWeight: '900', fontSize: '2.35rem', margin: '0.35rem 0 1.1rem 0' }}>
+                Ecosystem Appreciation
+              </h1>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '16px', color: '#FFD700', lineHeight: '1.6', fontWeight: '700' }}>
+                <p style={{ margin: 0, color: '#FFD700', fontSize: '16px' }}>
+                  Appreciating and conserving biodiversity is vital for our survival. Every living thing in a habitat is connected.
+                </p>
+                <p style={{ margin: 0, color: '#FFD700', fontSize: '16px' }}>
+                  During our nature walk, different students notice and remember different plants and animals. When we compile our observations together, we discover a much richer variety of life than any single person could find alone.
+                </p>
+              </div>
             </div>
 
             {boardCards.length > 0 ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1.25rem' }}>
-                <span style={{ fontSize: '12.5px', fontWeight: '800', color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.25rem' }}>
+                <span style={{ fontSize: '13.5px', fontWeight: '800', color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                   📊 Memory Board Statistics
                 </span>
                 <div className="textbook-grid" style={{ marginBottom: 0 }}>
-                  <div className="textbook-fact" style={{ background: 'rgba(30, 41, 59, 0.95)', border: '1.5px solid rgba(255, 255, 255, 0.2)' }}>
-                    <div className="lab" style={{ color: '#38bdf8', fontWeight: '800' }}>Total Logs</div>
-                    <div className="v" style={{ color: '#ffffff', fontWeight: '800' }}>{totalCards} entries</div>
-                    <div className="note" style={{ color: '#fde047', fontWeight: '600' }}>Your card + classmates</div>
+                  <div className="textbook-fact" style={{ background: '#ffffff', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
+                    <div className="lab" style={{ color: '#059669', fontWeight: '800' }}>Total Logs</div>
+                    <div className="v" style={{ color: '#064e3b', fontWeight: '800' }}>{totalCards} entries</div>
+                    <div className="note" style={{ color: '#047857', fontWeight: '600' }}>Your card + classmates</div>
                   </div>
-                  <div className="textbook-fact" style={{ background: 'rgba(30, 41, 59, 0.95)', border: '1.5px solid rgba(255, 255, 255, 0.2)' }}>
-                    <div className="lab" style={{ color: '#4ade80', fontWeight: '800' }}>Unique Species</div>
-                    <div className="v" style={{ color: '#ffffff', fontWeight: '800' }}>{uniquePlants + uniqueAnimals} types</div>
-                    <div className="note" style={{ color: '#fde047', fontWeight: '600' }}>Plants: {uniquePlants}, Animals: {uniqueAnimals}</div>
+                  <div className="textbook-fact" style={{ background: '#ffffff', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
+                    <div className="lab" style={{ color: '#047857', fontWeight: '800' }}>Unique Species</div>
+                    <div className="v" style={{ color: '#064e3b', fontWeight: '800' }}>{uniquePlants + uniqueAnimals} types</div>
+                    <div className="note" style={{ color: '#047857', fontWeight: '600' }}>Plants: {uniquePlants}, Animals: {uniqueAnimals}</div>
                   </div>
                 </div>
-                <div className="textbook-explore" style={{ marginTop: '0.5rem', background: 'rgba(30, 41, 59, 0.95)', borderLeft: '4px solid #fde047', border: '1.5px solid rgba(255, 255, 255, 0.2)', borderLeftWidth: '4px', color: '#fef08a', fontSize: '15px' }}>
-                  ✏️ <b style={{ color: '#fde047' }}>Next step:</b> Switch to the <b style={{ color: '#fde047' }}>Ecosystem Quiz</b> tab on the right to test your knowledge of species interdependence!
+                <div className="textbook-explore" style={{ marginTop: '0.25rem', background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)', borderLeft: '5px solid #eab308', border: '1.5px solid #fde047', borderLeftWidth: '5px', color: '#713f12', fontSize: '17px', fontWeight: '700', borderRadius: '12px', padding: '1.15rem 1.35rem', boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)' }}>
+                  ✏️ <b style={{ color: '#854d0e' }}>Next step:</b> Switch to the <b style={{ color: '#854d0e' }}>Ecosystem Quiz</b> tab on the right to test your knowledge of species interdependence!
                 </div>
               </div>
             ) : (
-              <div className="textbook-explore" style={{ marginTop: '1.5rem', background: 'rgba(30, 41, 59, 0.95)', borderLeft: '4px solid #fde047', border: '1.5px solid rgba(255, 255, 255, 0.2)', borderLeftWidth: '4px', color: '#fef08a', fontSize: '15px' }}>
-                ✏️ <b style={{ color: '#fde047' }}>Reflection challenge:</b> Close your eyes for 10 seconds. Think of one plant and one animal from your walk, then add them to the virtual class board.
+              <div className="textbook-explore" style={{ marginTop: '0.25rem', background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)', borderLeft: '5px solid #eab308', border: '1.5px solid #fde047', borderLeftWidth: '5px', color: '#713f12', fontSize: '17px', fontWeight: '700', borderRadius: '12px', padding: '1.25rem 1.4rem', boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)', lineHeight: '1.55' }}>
+                ✏️ <b style={{ color: '#854d0e' }}>Reflection challenge:</b> Close your eyes for 10 seconds. Think of one plant and one animal from your walk, then add them to the virtual class board.
               </div>
             )}
 
             {phase === 'completed' && (
-              <div style={{ marginTop: 'auto', paddingTop: '1.25rem', borderTop: '1px solid rgba(255,255,255,0.15)' }}>
-                <div style={{ background: 'rgba(6, 78, 59, 0.85)', border: '1.5px solid #10b981', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#34d399', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid rgba(52, 211, 153, 0.3)' }}>
+                <div style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)', border: '1.5px solid #10b981', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#047857', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     🎉 Activity Completed!
                   </span>
-                  <span style={{ fontSize: '12px', color: '#e2e8f0' }}>
+                  <span style={{ fontSize: '12px', color: '#065f46' }}>
                     You got {Object.values(quizAnswers).filter(Boolean).length} / 8 questions correct on the Interdependence checkup!
                   </span>
                   <button onClick={() => onBackToDashboard('next_activity')} className="primary" style={{ background: 'linear-gradient(135deg, #10b981, #059669)', borderColor: '#10b981', width: '100%', fontSize: '13.5px', padding: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '0.5rem', color: '#ffffff', fontWeight: 'bold' }}>
@@ -547,14 +520,23 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                     <div style={{ width: '100%', background: 'rgba(15, 23, 42, 0.85)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.15)', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left', boxShadow: '0 8px 30px rgba(0,0,0,0.2)' }}>
                       
                       {/* Expanded header block with nice big font */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', paddingBottom: '0.75rem' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', paddingBottom: '0.85rem' }}>
                         <span style={{ fontSize: '0.72rem', fontWeight: '800', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Goal</span>
                         <h2 style={{ margin: 0, fontFamily: 'var(--serif-font)', color: '#ffffff', fontSize: '24px', fontWeight: 'bold' }}>
-                          Ecosystem Reflection: Pick 1 Plant & 1 Animal
+                          Ecosystem Reflection: Pick 1 Plant &amp; 1 Animal
                         </h2>
-                        <p style={{ margin: 0, fontSize: '0.88rem', color: '#e2e8f0' }}>
-                          Choose the specimens you observed during your nature walk to contribute to the shared Class Board.
-                        </p>
+                        <div style={{
+                          background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)',
+                          border: '1.5px solid #fde047',
+                          borderLeft: '4px solid #eab308',
+                          borderRadius: '10px',
+                          padding: '0.75rem 1rem',
+                          boxShadow: '0 2px 8px rgba(234, 179, 8, 0.15)'
+                        }}>
+                          <p style={{ margin: 0, fontSize: '1.05rem', fontWeight: 'bold', color: '#713f12', lineHeight: '1.45' }}>
+                            Choose the specimens you observed during your nature walk to contribute to the shared Class Board.
+                          </p>
+                        </div>
                       </div>
 
                       {/* Side-by-side Plants and Animals */}
@@ -563,7 +545,7 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                         {/* Plants Column */}
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                           <label style={{ fontSize: '11px', color: '#a7f3d0', fontWeight: 'bold', display: 'block', letterSpacing: '0.05em' }}>SELECT A PLANT</label>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', maxHeight: '500px', overflowY: 'auto', padding: '8px', border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.9)' }} className="hide-scrollbar">
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', padding: '10px', border: '2px solid #eab308', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.9)', boxShadow: '0 0 12px rgba(234, 179, 8, 0.25)' }} className="hide-scrollbar">
                             {PLANTS.map(p => {
                               const isSelected = selectedPlant === p;
                               return (
@@ -577,7 +559,7 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                                     gap: '6px',
                                     padding: '0.5rem',
                                     borderRadius: '10px',
-                                    border: isSelected ? '2px solid #34d399' : '1px solid rgba(255, 255, 255, 0.15)',
+                                    border: isSelected ? '2px solid #10b981' : '1px solid rgba(255, 255, 255, 0.15)',
                                     background: isSelected ? 'rgba(16, 185, 129, 0.25)' : 'rgba(51, 65, 85, 0.8)',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s ease',
@@ -599,7 +581,7 @@ export default function AppreciatingBiodiversityActivity({ onBackToDashboard }) 
                         {/* Animals Column */}
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                           <label style={{ fontSize: '11px', color: '#fef08a', fontWeight: 'bold', display: 'block', letterSpacing: '0.05em' }}>SELECT AN ANIMAL</label>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', maxHeight: '500px', overflowY: 'auto', padding: '8px', border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.9)' }} className="hide-scrollbar">
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', padding: '10px', border: '2px solid #eab308', borderRadius: '10px', background: 'rgba(30, 41, 59, 0.9)', boxShadow: '0 0 12px rgba(234, 179, 8, 0.25)' }} className="hide-scrollbar">
                             {ANIMALS.map(a => {
                               const isSelected = selectedAnimal === a;
                               return (

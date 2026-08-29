@@ -33,6 +33,7 @@ import spiderMonkeyImg from "../assets/wildlife/spider_monkey.jpg";
 import chickpeaSplitImg from "../assets/chickpea_split.png";
 import maizeCutImg from "../assets/maize_cut.png";
 import scaredImg from "../assets/scared.png";
+import sce5Img from "../assets/sce_5.png";
 
 // Context
 import { useTheme } from "../ThemeContext";
@@ -710,17 +711,68 @@ function speakWithProfile(text, characterName, muteFlag, onEndCallback, onErrorC
   return utt;
 }
 
+function speakIndianMaleNarrator(text, muteFlag, onEndCallback, onErrorCallback) {
+  if (muteFlag || !('speechSynthesis' in window)) return null;
+  window.speechSynthesis.cancel();
+
+  // Natural pacing & educational pauses for Class 6 students
+  let spokenText = text
+    .replace(/—/g, ', ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const utt = new SpeechSynthesisUtterance(spokenText);
+  utt.pitch = 0.98; // Natural, resonant adult male educator pitch
+  utt.rate = 0.88;  // Clear, moderate pacing for Class 6 comprehension
+  utt.volume = 1.0;
+
+  if (onEndCallback) utt.onend = onEndCallback;
+  if (onErrorCallback) utt.onerror = onErrorCallback;
+
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    // 1. Prioritize Indian English male voices (en-IN, hi-IN, Prabhat, Ravi, etc.)
+    const indianVoices = voices.filter(v => 
+      (v.lang && (v.lang.toLowerCase().includes('en-in') || v.lang.toLowerCase().includes('hi-in') || v.lang.toLowerCase().includes('in'))) ||
+      /india|indian|hindi|prabhat|ravi|veena|heera|neerja/i.test(v.name)
+    );
+
+    let matchedVoice = null;
+    if (indianVoices.length > 0) {
+      // Find explicitly male Indian voice first (e.g. Prabhat, Ravi, Male)
+      matchedVoice = indianVoices.find(v => /prabhat|ravi|male/i.test(v.name) && !/female|heera|neerja|veena/i.test(v.name));
+      if (!matchedVoice) {
+        matchedVoice = indianVoices.find(v => !/female|heera|neerja|veena/i.test(v.name));
+      }
+      if (!matchedVoice) {
+        matchedVoice = indianVoices[0];
+      }
+    }
+
+    // 2. Fallback to natural clear English male narrator voice if no Indian voice is installed
+    if (!matchedVoice) {
+      const englishMaleVoices = voices.filter(v => 
+        v.lang && v.lang.startsWith('en') &&
+        /male|david|mark|guy|james|george|alex|daniel|natural|online/i.test(v.name) &&
+        !/female|zira|samantha|victoria|susan|karen|jessica|jenny/i.test(v.name)
+      );
+      matchedVoice = englishMaleVoices[0] || voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0];
+    }
+
+    if (matchedVoice) {
+      utt.voice = matchedVoice;
+    }
+  }
+
+  window.speechSynthesis.speak(utt);
+  return utt;
+}
+
 function IntroStoryteller({ onComplete, onBack }) {
   const [currentScene, setCurrentScene] = useState(0);
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [narrationVisible, setNarrationVisible] = useState(false);
-  const [typedChars, setTypedChars] = useState(0);
-  const [isDialogueDone, setIsDialogueDone] = useState(false);
   const [dialogueStep, setDialogueStep] = useState(0);
-  const [isTypingDone, setIsTypingDone] = useState(false);
   const [isNarrationMuted, setIsNarrationMuted] = useState(false);
-  const typeTimerRef = useRef(null);
-  const narrationTimerRef = useRef(null);
   const dialogueTimerRef = useRef(null);
   const { theme = 'dark' } = useTheme() || {};
 
@@ -736,10 +788,8 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "🌱 The Nature Walk Begins",
       text: "Dr Raghu and Maniram chacha lead the students out of the classroom into a nearby patch of forest. The air is fresh and filled with the scent of wet soil and leaves. The kids are excited to discover what secrets the nature walk holds!",
       dialogues: [
-        // Dr. Raghu on left — popup moved downward away from face
-        { character: "Dr. Raghu",      avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!",    top: '16%', left: '3%',  side: 'right' },
-        // Maniram Chacha on centre-right — popup moved downward away from face
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!",            top: '20%', left: '52%', side: 'left'  }
+        { character: "Dr. Raghu",      avatar: "👨‍🔬", text: "Observe carefully — every living thing has a story to tell!",    top: '5%', left: '3%',  side: 'left' },
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "I know every tree here, children. Come, follow me!",            top: '5%', right: '3%', side: 'right' }
       ]
     },
     {
@@ -747,8 +797,7 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "🌿 Observing Diverse Plants",
       text: "As they walk, they observe different kinds of plants. Some are small herbs growing close to the ground, others are bushy shrubs, and some are grand trees with thick trunks. Dr Raghu reminds them to observe gently without plucking any leaves or flowers.",
       dialogues: [
-        // Dr. Raghu — popup moved downward away from face
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '18%', left: '54%', side: 'left' }
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "This herb has a soft green stem. Can you feel how different it is from this woody shrub?", top: '5%', right: '3%', side: 'right' }
       ]
     },
     {
@@ -756,21 +805,17 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "🐦 Listening to Bird Calls",
       text: "Hush! Maniram chacha stops and cups his ear. He mimics a bird song, and suddenly, a beautiful response is heard from the tree canopy! The students learn to listen to the unique calls of birds and respect their home.",
       dialogues: [
-        // Maniram popup — moved downward away from face
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵",              top: '16%', left: '3%',  side: 'right' },
-        // Priya popup — moved downward away from face
-        { character: "Priya",          avatar: "👧",    text: "It replied! The bird actually replied to chacha!",             top: '20%', left: '54%', side: 'left'  }
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "Shhh... *cups ear* ...listen... coo-koo-koo! 🎵",              top: '11%', left: '19%', side: 'right' },
+        { character: "Priya",          avatar: "👧",    text: "It replied! The bird actually replied to chacha!",             top: '4%',  right: '3%', side: 'right' }
       ]
     },
     {
-      img: "/Scene4_realistic.png",
+      img: sce5Img,
       title: "🦋 Fluttering Insects & Butterflies",
       text: "Near a cluster of wildflowers, butterflies and bees are busy gathering nectar. The students watch closely as a butterfly unfolds its delicate wings. They notice how insects play a vital role in helping flowers grow.",
       dialogues: [
-        // Arjun popup — moved downward away from face
-        { character: "Arjun",     avatar: "👦",    text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '20%', left: '54%', side: 'left'  },
-        // Dr. Raghu popup — moved downward away from face
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.",         top: '16%', left: '3%',  side: 'right' }
+        { character: "Arjun",     avatar: "👦",    text: "Sir! That butterfly keeps visiting the same flower again and again!", top: '4%', right: '3%', side: 'right' },
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Yes — that is pollination! Insects help flowers reproduce.",         top: '4%', left: '3%',  side: 'left' }
       ]
     },
     {
@@ -778,8 +823,7 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "🐒 Animals in the Canopy",
       text: "A rustle in the branches reveals monkeys jumping from limb to limb, and a tiny squirrel scurrying down a trunk. The forest is alive with creatures of all sizes, each adapted to live in their part of the woods.",
       dialogues: [
-        // Maniram popup — moved downward away from face
-        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '16%', left: '3%', side: 'right' }
+        { character: "Maniram Chacha", avatar: "🧑‍🌾", text: "See that monkey? The treetops are its home — its habitat!", top: '4%', right: '3%', side: 'right' }
       ]
     },
     {
@@ -787,8 +831,7 @@ function IntroStoryteller({ onComplete, onBack }) {
       title: "📋 Recording in the Table",
       text: "The students take out their notebooks to record their observations in Tables 2.1 and 2.2. They separate their findings into plants and animals, marveling at the incredible diversity of life surrounding them!",
       dialogues: [
-        // Dr. Raghu popup — moved downward away from face
-        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '18%', left: '54%', side: 'left' }
+        { character: "Dr. Raghu", avatar: "👨‍🔬", text: "Table 2.1 for plants, Table 2.2 for animals. Compare your findings with your classmates!", top: '5%', right: '3%', side: 'right' }
       ]
     }
   ];
@@ -800,126 +843,55 @@ function IntroStoryteller({ onComplete, onBack }) {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
-    clearTimeout(narrationTimerRef.current);
-    clearTimeout(typeTimerRef.current);
     clearTimeout(dialogueTimerRef.current);
-    setNarrationVisible(false);
-    setTypedChars(0);
-    setIsDialogueDone(false);
-    setIsTypingDone(false);
     setDialogueStep(0);
     setImgLoaded(false);
-    return () => {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      clearTimeout(narrationTimerRef.current);
-      clearTimeout(typeTimerRef.current);
-      clearTimeout(dialogueTimerRef.current);
-    };
-  }, [currentScene]);
 
-  useEffect(() => {
-    if (!isDialogueDone) return;
-    narrationTimerRef.current = setTimeout(() => setNarrationVisible(true), 250);
-    const text = scene.text;
-    let i = 0;
-    const type = () => {
-      if (i < text.length) {
-        i++;
-        setTypedChars(i);
-        typeTimerRef.current = setTimeout(type, 22);
-      } else {
-        setIsTypingDone(true);
-      }
-    };
-    typeTimerRef.current = setTimeout(type, 450);
-    return () => clearTimeout(typeTimerRef.current);
-  }, [isDialogueDone, currentScene]);
-
-  useEffect(() => {
-    let active = true;
-    let fallbackTimer = null;
-
-    if (dialogueStep < scene.dialogues.length) {
-      const dlg = scene.dialogues[dialogueStep];
-      const nextStep = () => {
-        if (active) {
-          clearTimeout(fallbackTimer);
-          clearTimeout(dialogueTimerRef.current);
-          setDialogueStep(p => p + 1);
-        }
-      };
-
-      // Generous fallback timeout (minimum 10s or 160ms per char) to ensure audio is NEVER cut off prematurely
-      const fallbackDuration = Math.max(10000, dlg.text.length * 160 + 4000);
-
-      if (!isNarrationMuted && 'speechSynthesis' in window) {
-        const handleEnd = () => {
-          if (active) {
-            clearTimeout(fallbackTimer);
-            clearTimeout(dialogueTimerRef.current);
-            // Wait 600ms comfortable natural pause after speech finishes 100% cleanly before advancing
-            dialogueTimerRef.current = setTimeout(nextStep, 600);
-          }
-        };
-
+    // Speak center information box narration with Indian male teacher voice immediately as scene opens
+    let speakTimer = null;
+    if (!isNarrationMuted && 'speechSynthesis' in window) {
+      speakTimer = setTimeout(() => {
         const doSpeak = () => {
-          if (!active) return;
-          const utt = speakWithProfile(dlg.text, dlg.character, isNarrationMuted, handleEnd, handleEnd);
-          if (!utt) {
-            dialogueTimerRef.current = setTimeout(nextStep, Math.max(2500, dlg.text.length * 80));
-          } else {
-            fallbackTimer = setTimeout(handleEnd, fallbackDuration);
-          }
+          speakIndianMaleNarrator(scene.text, isNarrationMuted);
         };
-
         const voices = window.speechSynthesis.getVoices();
         if (voices.length > 0) {
           doSpeak();
         } else {
           window.speechSynthesis.onvoiceschanged = () => { doSpeak(); };
-          fallbackTimer = setTimeout(handleEnd, fallbackDuration);
         }
-      } else {
-        dialogueTimerRef.current = setTimeout(nextStep, Math.max(2500, dlg.text.length * 80));
-      }
-    } else if (scene.dialogues.length > 0) {
-      dialogueTimerRef.current = setTimeout(() => {
-        if (active) setIsDialogueDone(true);
-      }, 500);
-    } else {
-      setIsDialogueDone(true);
+      }, 100);
+    }
+
+    return () => {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      clearTimeout(dialogueTimerRef.current);
+      if (speakTimer) clearTimeout(speakTimer);
+    };
+  }, [currentScene, isNarrationMuted]);
+
+  useEffect(() => {
+    let active = true;
+
+    if (dialogueStep < scene.dialogues.length) {
+      const dlg = scene.dialogues[dialogueStep];
+      const nextStep = () => {
+        if (active) {
+          clearTimeout(dialogueTimerRef.current);
+          setDialogueStep(p => p + 1);
+        }
+      };
+
+      // Character dialogue boxes display silently (no character voice audio) for natural reading duration
+      const readingDuration = Math.max(2200, Math.min(3800, dlg.text.length * 45));
+      dialogueTimerRef.current = setTimeout(nextStep, readingDuration);
     }
 
     return () => {
       active = false;
-      clearTimeout(fallbackTimer);
       clearTimeout(dialogueTimerRef.current);
     };
-  }, [dialogueStep, currentScene, isNarrationMuted]);
-
-  const skipTyping = () => {
-    clearTimeout(typeTimerRef.current);
-    clearTimeout(dialogueTimerRef.current);
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    setDialogueStep(scene.dialogues.length);
-    setIsDialogueDone(true);
-    setNarrationVisible(true);
-    setTypedChars(scene.text.length);
-    setIsTypingDone(true);
-  };
-
-  const replayNarration = (e) => {
-    e.stopPropagation();
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    clearTimeout(narrationTimerRef.current);
-    clearTimeout(typeTimerRef.current);
-    clearTimeout(dialogueTimerRef.current);
-    setDialogueStep(0);
-    setIsDialogueDone(false);
-    setNarrationVisible(false);
-    setTypedChars(0);
-    setIsTypingDone(false);
-  };
+  }, [dialogueStep, currentScene]);
 
   const toggleMute = (e) => {
     e.stopPropagation();
@@ -934,7 +906,6 @@ function IntroStoryteller({ onComplete, onBack }) {
 
   return (
     <div
-      onClick={!isTypingDone ? skipTyping : undefined}
       style={{
         position: 'relative',
         width: '100vw',
@@ -943,7 +914,7 @@ function IntroStoryteller({ onComplete, onBack }) {
         overflow: 'hidden',
         boxShadow: 'none',
         background: '#0a1220',
-        cursor: !isTypingDone ? 'pointer' : 'default',
+        cursor: 'default',
         border: 'none',
         display: 'flex',
         alignItems: 'center',
@@ -984,8 +955,6 @@ function IntroStoryteller({ onComplete, onBack }) {
         }} />
 
         {scene.dialogues.map((dlg, idx) => {
-          // Show popup from the moment its voice STARTS (dialogueStep >= idx),
-          // not after it ends (dialogueStep > idx). This synchronises text + voice.
           const isVisible = dialogueStep >= idx && imgLoaded;
           return (
             <div key={idx} style={{
@@ -1087,8 +1056,8 @@ function IntroStoryteller({ onComplete, onBack }) {
         display: 'flex', justifyContent: 'center',
         padding: '0 1rem 1.1rem',
         zIndex: 14,
-        transform: narrationVisible ? 'translateY(0)' : 'translateY(110%)',
-        transition: 'transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1)'
+        transform: 'translateY(0)',
+        transition: 'transform 0.3s ease'
       }}>
         <div style={{
           width: '100%', maxWidth: '780px',
@@ -1104,14 +1073,6 @@ function IntroStoryteller({ onComplete, onBack }) {
             <span style={{ fontSize: '1.28rem', fontWeight: '800', color: '#5C4033', letterSpacing: '-0.01em' }}>
               {scene.title}
             </span>
-            {!isTypingDone && (
-              <button onClick={(e) => { e.stopPropagation(); skipTyping(); }} style={{
-                fontSize: '0.72rem', fontWeight: '600', padding: '0.22rem 0.65rem',
-                borderRadius: '6px', border: '1px solid rgba(139, 69, 19, 0.4)',
-                background: 'rgba(0,0,0,0.07)', color: '#5C4033',
-                cursor: 'pointer', transition: 'all 0.2s'
-              }}>Skip ▶▶</button>
-            )}
           </div>
 
           <p style={{
@@ -1119,10 +1080,7 @@ function IntroStoryteller({ onComplete, onBack }) {
             color: '#523418', lineHeight: '1.68', fontWeight: '500',
             minHeight: '3.2em', fontFamily: "'Georgia', 'Times New Roman', serif"
           }}>
-            {scene.text.slice(0, typedChars)}
-            {!isTypingDone && (
-              <span style={{ opacity: 0.8, animation: 'intro-blink 0.65s steps(1) infinite' }}>|</span>
-            )}
+            {scene.text}
           </p>
 
           <div style={{ display: 'flex', gap: '0.55rem', alignItems: 'center', justifyContent: 'center' }}>
@@ -1152,10 +1110,6 @@ function IntroStoryteller({ onComplete, onBack }) {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes intro-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-      `}</style>
     </div>
   );
 }
@@ -2679,6 +2633,7 @@ export default function ChapterLearningLab({
   activities,
   onBack,
   onHeaderVisibilityChange,
+  onSoundButtonVisibilityChange,
   coverBgImage,
   coverBgVideo,
   learningLabBg,
@@ -2704,6 +2659,13 @@ export default function ChapterLearningLab({
 
   // Level Map Auto-hide States
   const [isLevelMapOpen, setIsLevelMapOpen] = useState(false);
+
+  useEffect(() => {
+    if (chapterNum === 2) {
+      const isBeforeOrAtScenes = stage === 'cover' || stage === 'slogan' || stage === 'scenes';
+      onSoundButtonVisibilityChange?.(isBeforeOrAtScenes);
+    }
+  }, [chapterNum, stage, onSoundButtonVisibilityChange]);
   const hoverTimeoutRef = useRef(null);
 
   const handleLevelMapEnter = () => {
@@ -2744,6 +2706,9 @@ export default function ChapterLearningLab({
   const [challengeQuestionIdx, setChallengeQuestionIdx] = useState(0);
 
   const goToChapter2Step = (targetIndex) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
     if (targetIndex < 0) {
       onBack();
       return;
@@ -2802,6 +2767,17 @@ export default function ChapterLearningLab({
       setIsChapter2Completed(false);
     }
   }, [activeLevelId, chapterNum, stage]);
+
+  // Strict Silence Guard for Activity 2.1 — Plants (Table 2.1) — p.11
+  const isCh2PlantsP11 = chapterNum === 2 && stage === 'lab' && activeLevelId === 'lvl-1' && activeActivityIdx === 0;
+
+  useEffect(() => {
+    if (isCh2PlantsP11) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+  }, [isCh2PlantsP11]);
 
   useEffect(() => {
     if (onHeaderVisibilityChange) {
@@ -3734,36 +3710,47 @@ export default function ChapterLearningLab({
     ];
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', padding: '1.5rem', background: 'var(--card-bg)', backdropFilter: 'blur(10px)', borderRadius: '24px', border: '1px solid var(--border)', boxShadow: '0 10px 40px rgba(0,0,0,0.03)' }}>
-        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.65rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '1.25rem', 
+        width: '100%', 
+        padding: '1.5rem', 
+        background: 'linear-gradient(145deg, rgba(246, 252, 248, 0.97) 0%, rgba(236, 247, 241, 0.95) 100%)', 
+        backdropFilter: 'blur(16px)', 
+        borderRadius: '20px', 
+        border: '1.5px solid rgba(167, 243, 208, 0.85)', 
+        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.35)' 
+      }}>
+        <div style={{ borderBottom: '1.5px solid rgba(167, 243, 208, 0.85)', paddingBottom: '0.65rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.9rem', fontWeight: '800', color: '#047857', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
             🔬 Plant Growth Form Morpher
           </span>
-          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Tap rings/spots to magnifying cellular details!</span>
+          <span style={{ fontSize: '12px', color: '#065f46', fontWeight: '700' }}>Tap rings/spots to magnifying cellular details!</span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 100px', gap: '1rem', alignItems: 'center' }}>
-          <div style={{ padding: '0.85rem', borderRadius: '14px', background: stages[stage].bg, border: `1px solid ${stages[stage].color}33`, minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', color: stages[stage].color, fontSize: '1.1rem', fontWeight: 'bold' }}>
+          <div style={{ padding: '0.85rem 1rem', borderRadius: '14px', background: stages[stage].bg, border: `1.5px solid ${stages[stage].color}44`, minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '0 2px 8px rgba(6, 78, 59, 0.05)' }}>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: stages[stage].color, fontSize: '1.15rem', fontWeight: '800' }}>
               {stages[stage].title}
             </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '14.5px', color: 'var(--text-primary)', lineHeight: '1.5', fontWeight: '500' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '14.5px', color: '#064e3b', lineHeight: '1.5', fontWeight: '700' }}>
               <span><b>Average Height:</b> {stages[stage].height}</span>
               <span><b>Stem Character:</b> {stages[stage].stem}</span>
-              <span><b>NCERT Examples:</b> <i>{stages[stage].examples}</i></span>
+              <span><b>NCERT Examples:</b> <i style={{ color: '#047857' }}>{stages[stage].examples}</i></span>
             </div>
           </div>
           {/* Realistic View */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffffff', borderRadius: '16px', padding: '0.25rem', width: '100px', height: '100px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffffff', borderRadius: '16px', padding: '0.25rem', width: '100px', height: '100px', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 4px 12px rgba(6, 78, 59, 0.08)', overflow: 'hidden' }}>
               <img src={stages[stage].imgSrc} alt={stages[stage].title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
             </div>
-            <span style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: '600' }}>Realistic View</span>
+            <span style={{ fontSize: '10px', color: '#047857', fontWeight: '800' }}>Realistic View</span>
           </div>
         </div>
 
         {/* Morph Slider */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', background: '#f8fafc', padding: '0.85rem 1.25rem', borderRadius: '14px', border: '1px solid var(--cardline)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', background: '#ffffff', padding: '0.85rem 1.25rem', borderRadius: '14px', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 2px 8px rgba(6, 78, 59, 0.04)' }}>
           <input 
             type="range" 
             min="0" 
@@ -3772,41 +3759,47 @@ export default function ChapterLearningLab({
             onChange={(e) => { setStage(parseInt(e.target.value)); setActiveHotspot(null); }} 
             style={{ width: '100%', accentColor: stages[stage].color, cursor: 'pointer', height: '6px', borderRadius: '3px' }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: 'bold', color: 'var(--text-muted)' }}>
-            <span style={{ color: stage === 0 ? 'var(--accent)' : 'inherit', transition: 'color 0.2s' }}>Herb</span>
-            <span style={{ color: stage === 1 ? 'var(--accent)' : 'inherit', transition: 'color 0.2s' }}>Shrub</span>
-            <span style={{ color: stage === 2 ? 'var(--accent)' : 'inherit', transition: 'color 0.2s' }}>Tree</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '800', color: '#064e3b' }}>
+            <span style={{ color: stage === 0 ? '#047857' : 'inherit', transition: 'color 0.2s' }}>Herb</span>
+            <span style={{ color: stage === 1 ? '#d97706' : 'inherit', transition: 'color 0.2s' }}>Shrub</span>
+            <span style={{ color: stage === 2 ? '#1e3a8a' : 'inherit', transition: 'color 0.2s' }}>Tree</span>
           </div>
         </div>
 
         {/* Hotspot details panel */}
         {activeHotspot ? (
           <div style={{
-            background: 'rgba(99,102,241,0.04)',
-            borderLeft: '4px solid var(--accent)',
-            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)',
+            borderLeft: '4px solid #eab308',
+            border: '1.5px solid #fde047',
+            borderLeftWidth: '4px',
+            borderRadius: '10px',
             padding: '0.85rem 1.1rem',
-            fontSize: '13px',
-            lineHeight: '1.5',
+            fontSize: '13.5px',
+            lineHeight: '1.55',
+            boxShadow: '0 2px 8px rgba(234, 179, 8, 0.15)',
             animation: 'fadeIn 0.25s ease-out'
           }}>
-            <strong style={{ color: 'var(--navy)', display: 'block', marginBottom: '0.25rem' }}>{activeHotspot.title}</strong>
-            <p style={{ margin: 0, color: 'var(--text-secondary)', whiteSpace: 'pre-line' }}>{activeHotspot.text}</p>
+            <strong style={{ color: '#854d0e', display: 'block', marginBottom: '0.25rem', fontWeight: '800' }}>{activeHotspot.title}</strong>
+            <p style={{ margin: 0, color: '#713f12', whiteSpace: 'pre-line', fontWeight: '700' }}>{activeHotspot.text}</p>
           </div>
         ) : (
           <div style={{
-            background: theme === 'dark' ? 'rgba(30, 41, 59, 0.85)' : 'rgba(241, 245, 249, 0.95)',
-            border: '1.5px solid var(--accent)',
-            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #fefce8 0%, #fef9c3 100%)',
+            borderLeft: '4px solid #eab308',
+            border: '1.5px solid #fde047',
+            borderLeftWidth: '4px',
+            borderRadius: '10px',
             padding: '0.85rem 1.1rem',
             fontSize: '13.5px',
-            color: 'var(--text-primary)',
-            fontWeight: '600',
+            color: '#713f12',
+            fontWeight: '700',
             textAlign: 'center',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px'
+            gap: '8px',
+            boxShadow: '0 2px 8px rgba(234, 179, 8, 0.15)'
           }}>
             <span>🔍</span>
             <span><b>Directions:</b> Tap the glowing rings or points in the <b>Cellular Anatomy</b> view above to inspect growth details!</span>
@@ -3814,34 +3807,34 @@ export default function ChapterLearningLab({
         )}
 
         {/* Climbers vs Creepers comparative panel (Upgraded for high visual visibility & interactive 3D flips) */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', borderTop: '1px solid var(--border)', paddingTop: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', borderTop: '1.5px solid rgba(167, 243, 208, 0.85)', paddingTop: '1.25rem' }}>
           
           {/* Creeper Card Flip Container */}
           <div className="flip-card-container" onClick={() => setCreeperFlipped(f => !f)}>
             <div className={`flip-card-inner ${creeperFlipped ? 'flipped' : ''}`}>
               
               {/* Front Side: Visual */}
-              <div className="flip-card-front" style={{ border: '1px solid rgba(245, 158, 11, 0.25)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
+              <div className="flip-card-front" style={{ border: '1.5px solid rgba(245, 158, 11, 0.5)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', borderRadius: '14px' }}>
                 <img src={creeperImg} alt="Creeper" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.75))', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1rem', color: '#fff' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
                     <span style={{ fontSize: '1.3rem' }}>🍉</span>
                     <strong style={{ fontSize: '15px' }}>Creepers (Spread on Ground)</strong>
                   </div>
-                  <span style={{ fontSize: '11px', opacity: 0.85, textTransform: 'uppercase', letterSpacing: '0.05em' }}>👉 Tap to read details</span>
+                  <span style={{ fontSize: '11px', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '700' }}>👉 Tap to read details</span>
                 </div>
               </div>
 
               {/* Back Side: Details */}
-              <div className="flip-card-back" style={{ background: theme === 'dark' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(245, 158, 11, 0.03)', border: '1px solid rgba(245, 158, 11, 0.25)', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(245, 158, 11, 0.1)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
+              <div className="flip-card-back" style={{ background: '#ffffff', border: '1.5px solid rgba(245, 158, 11, 0.45)', borderRadius: '14px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem', boxShadow: '0 4px 14px rgba(0,0,0,0.08)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(245, 158, 11, 0.2)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontSize: '1.3rem' }}>🍉</span>
-                    <strong style={{ fontSize: '15px', color: '#b45309' }}>Creepers (Spread on Ground)</strong>
+                    <strong style={{ fontSize: '15px', color: '#b45309', fontWeight: '800' }}>Creepers (Spread on Ground)</strong>
                   </div>
-                  <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Tap to view image</span>
+                  <span style={{ fontSize: '10px', color: '#854d0e', textTransform: 'uppercase', fontWeight: '700' }}>Tap to view image</span>
                 </div>
-                <div style={{ margin: 0, fontSize: '14px', lineHeight: '1.55', color: 'var(--text-primary)', fontWeight: '500', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <div style={{ margin: 0, fontSize: '13.5px', lineHeight: '1.55', color: '#064e3b', fontWeight: '700', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <span>🌱 <b>Growth Habit:</b> They creep horizontally along the ground and spread out on the surface of the soil.</span>
                   <span>⚠️ <b>Stem Weakness:</b> Their stems are so thin and fragile that they <b>cannot grow vertically</b> at all, even with external supports.</span>
                   <span>🍉 <b>Fruits:</b> Frequently produce large, heavy fruits (like Watermelon or Pumpkin) that must rest on the ground.</span>
@@ -3856,27 +3849,27 @@ export default function ChapterLearningLab({
             <div className={`flip-card-inner ${climberFlipped ? 'flipped' : ''}`}>
               
               {/* Front Side: Visual */}
-              <div className="flip-card-front" style={{ border: '1px solid rgba(59, 130, 246, 0.25)', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }}>
+              <div className="flip-card-front" style={{ border: '1.5px solid rgba(2, 132, 199, 0.5)', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', borderRadius: '14px' }}>
                 <img src={climberImg} alt="Climber" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.75))', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1rem', color: '#fff' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
                     <span style={{ fontSize: '1.3rem' }}>🍇</span>
                     <strong style={{ fontSize: '15px' }}>Climbers (Climb Up Support)</strong>
                   </div>
-                  <span style={{ fontSize: '11px', opacity: 0.85, textTransform: 'uppercase', letterSpacing: '0.05em' }}>👉 Tap to read details</span>
+                  <span style={{ fontSize: '11px', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '700' }}>👉 Tap to read details</span>
                 </div>
               </div>
 
               {/* Back Side: Details */}
-              <div className="flip-card-back" style={{ background: theme === 'dark' ? 'rgba(59, 130, 246, 0.08)' : 'rgba(59, 130, 246, 0.03)', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(59, 130, 246, 0.1)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
+              <div className="flip-card-back" style={{ background: '#ffffff', border: '1.5px solid rgba(2, 132, 199, 0.45)', borderRadius: '14px', padding: '1.1rem', display: 'flex', flexDirection: 'column', gap: '0.65rem', boxShadow: '0 4px 14px rgba(0,0,0,0.08)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(2, 132, 199, 0.2)', paddingBottom: '0.4rem', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontSize: '1.3rem' }}>🍇</span>
-                    <strong style={{ fontSize: '15px', color: '#1e3a8a' }}>Climbers (Climb Up Support)</strong>
+                    <strong style={{ fontSize: '15px', color: '#0369a1', fontWeight: '800' }}>Climbers (Climb Up Support)</strong>
                   </div>
-                  <span style={{ fontSize: '9px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Tap to view image</span>
+                  <span style={{ fontSize: '10px', color: '#0284c7', textTransform: 'uppercase', fontWeight: '700' }}>Tap to view image</span>
                 </div>
-                <div style={{ margin: 0, fontSize: '14px', lineHeight: '1.55', color: 'var(--text-primary)', fontWeight: '500', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <div style={{ margin: 0, fontSize: '13.5px', lineHeight: '1.55', color: '#064e3b', fontWeight: '700', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <span>🎋 <b>Growth Habit:</b> They grow vertically by clasping onto nearby supports (sticks, trees, or walls).</span>
                   <span>🔗 <b>Adaptation:</b> They develop special climbing organs called coiled <b>Tendrils</b> or sticky roots to latch and pull themselves up.</span>
                   <span>☀️ <b>Goal:</b> Climbing allows their leaves to reach higher areas with direct sunlight (e.g., Pea, Grapevine, Money Plant).</span>
@@ -4737,11 +4730,41 @@ export default function ChapterLearningLab({
     return (
       <div className="split-frame" style={{ width: '100%', minHeight: '560px' }}>
         {/* LEFT COLUMN: Concept text & slideshow buttons */}
-        <div className="frame-page-left" style={isGroupingAnimalsConcept ? { padding: '1.25rem 1.4rem' } : undefined}>
+        <div 
+          className={`frame-page-left ${isPlantVarietyConcept ? 'act24-mint-left' : ''}`} 
+          style={isGroupingAnimalsConcept ? { padding: '1.25rem 1.4rem' } : undefined}
+        >
           {lessonId === 'cotyledons_concept' ? (
             <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: '1.65rem', color: '#38bdf8', fontWeight: '800' }}>
               Activity 2.8: Let us compare - Seeds & Cotyledons
             </h1>
+          ) : isPlantVarietyConcept ? (
+            <div>
+              <div className="textbook-eyebrow" style={{ 
+                fontSize: '15px', 
+                color: '#065f46', 
+                fontWeight: '800', 
+                letterSpacing: '0.06em',
+                display: 'inline-block',
+                background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
+                border: '1.5px solid #10b981',
+                padding: '0.35rem 0.85rem',
+                borderRadius: '8px',
+                boxShadow: '0 2px 6px rgba(16, 185, 129, 0.15)',
+                marginBottom: '0.5rem'
+              }}>
+                {activeLevel.title}
+              </div>
+              <h1 className="textbook-title" style={{
+                fontFamily: 'var(--serif-font)',
+                margin: '0 0 0.85rem 0',
+                fontSize: '2.2rem',
+                color: '#064e3b',
+                fontWeight: '800'
+              }}>
+                {slide.title}
+              </h1>
+            </div>
           ) : (
             <>
               <div className="textbook-eyebrow" style={{ color: '#38bdf8', fontSize: isGroupingAnimalsConcept ? '0.96rem' : (isEnlargedTextConcept ? '1.05rem' : '0.85rem'), fontWeight: '800', marginBottom: isGroupingAnimalsConcept ? '0.35rem' : undefined }}>
@@ -4761,10 +4784,10 @@ export default function ChapterLearningLab({
           
           <p style={{
             fontSize: isGroupingAnimalsConcept ? (isScientistSlide ? '1.02rem' : '1.12rem') : (isScientistSlide ? '1.05rem' : (isEnlargedTextConcept ? '1.22rem' : '1.02rem')),
-            color: '#fde047',
+            color: isPlantVarietyConcept ? '#064e3b' : '#fde047',
             lineHeight: isGroupingAnimalsConcept ? '1.5' : (isScientistSlide ? '1.45' : '1.65'),
             margin: isGroupingAnimalsConcept ? '0 0 0.75rem 0' : '0 0 0.85rem 0',
-            fontWeight: isGroupingAnimalsConcept ? '700' : (isEnlargedTextConcept ? '700' : '500'),
+            fontWeight: (isGroupingAnimalsConcept || isPlantVarietyConcept) ? '700' : (isEnlargedTextConcept ? '700' : '500'),
             textShadow: (isAdaptationsConcept || isGroupingAnimalsConcept) ? '0 1px 3px rgba(0,0,0,0.6)' : 'none'
           }}>
             {slide.content}
@@ -4781,9 +4804,9 @@ export default function ChapterLearningLab({
               {slide.bullets.map((b, i) => (
                 <li key={i} style={{
                   fontSize: isGroupingAnimalsConcept ? (isScientistSlide ? '0.94rem' : '1.04rem') : (isScientistSlide ? '0.98rem' : (isEnlargedTextConcept ? '1.14rem' : '0.95rem')),
-                  color: '#fde047',
+                  color: isPlantVarietyConcept ? '#064e3b' : '#fde047',
                   lineHeight: isGroupingAnimalsConcept ? '1.48' : (isScientistSlide ? '1.4' : '1.6'),
-                  fontWeight: isGroupingAnimalsConcept ? '700' : (isEnlargedTextConcept ? '700' : '500'),
+                  fontWeight: (isGroupingAnimalsConcept || isPlantVarietyConcept) ? '700' : (isEnlargedTextConcept ? '700' : '500'),
                   textShadow: (isAdaptationsConcept || isGroupingAnimalsConcept) ? '0 1px 3px rgba(0,0,0,0.6)' : 'none'
                 }}>
                   {b}
@@ -4792,46 +4815,58 @@ export default function ChapterLearningLab({
             </ul>
           )}
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginTop: 'auto', paddingTop: isGroupingAnimalsConcept ? '0.75rem' : '1rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginTop: 'auto', paddingTop: isGroupingAnimalsConcept ? '0.75rem' : '1rem', borderTop: isPlantVarietyConcept ? '1.5px solid rgba(167, 243, 208, 0.7)' : '1px solid rgba(0,0,0,0.06)' }}>
             <div style={{ display: 'flex', gap: '0.35rem' }}>
-              <button
-                onClick={() => {
-                  if (isReading) {
-                    handleStopSpeech();
-                  } else {
-                    handleReadAloud(`${slide.title}. ${slide.content || ''}. ${slide.bullets ? slide.bullets.join('. ') : ''}`);
-                  }
-                }}
-                className="outline"
-                style={{
-                  fontSize: '0.75rem',
-                  padding: '0.35rem 0.65rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  borderRadius: '20px',
-                  background: isReading ? 'rgba(99,102,241,0.08)' : 'transparent',
-                  borderColor: isReading ? 'var(--accent)' : 'var(--border)',
-                  color: isReading ? 'var(--accent)' : 'var(--text-primary)',
-                  fontWeight: '600',
-                  transition: 'all 0.2s ease'
-                }}
-                title={isReading ? "Stop Reading" : "Read Aloud"}
-              >
-                {isReading ? <VolumeX size={13} /> : <Volume2 size={13} />}
-                <span>{isReading ? 'Stop' : 'Read'}</span>
-              </button>
+              {chapterNum !== 2 && (
+                <button
+                  onClick={() => {
+                    if (isReading) {
+                      handleStopSpeech();
+                    } else {
+                      handleReadAloud(`${slide.title}. ${slide.content || ''}. ${slide.bullets ? slide.bullets.join('. ') : ''}`);
+                    }
+                  }}
+                  className="outline"
+                  style={{
+                    fontSize: '0.75rem',
+                    padding: '0.35rem 0.65rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    borderRadius: '20px',
+                    background: isReading ? 'rgba(99,102,241,0.08)' : 'transparent',
+                    borderColor: isReading ? 'var(--accent)' : 'var(--border)',
+                    color: isReading ? 'var(--accent)' : 'var(--text-primary)',
+                    fontWeight: '600',
+                    transition: 'all 0.2s ease'
+                  }}
+                  title={isReading ? "Stop Reading" : "Read Aloud"}
+                >
+                  {isReading ? <VolumeX size={13} /> : <Volume2 size={13} />}
+                  <span>{isReading ? 'Stop' : 'Read'}</span>
+                </button>
+              )}
             </div>
 
             <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginRight: '0.2rem' }}>
+              <span style={{ fontSize: '0.75rem', color: isPlantVarietyConcept ? '#047857' : 'var(--text-muted)', fontWeight: isPlantVarietyConcept ? '700' : 'normal', marginRight: '0.2rem' }}>
                 Slide {currentSlideIndex + 1} of {totalSlides}
               </span>
               {currentSlideIndex > 0 && (
                 <button
                   onClick={() => { handleStopSpeech(); setActiveSlide(prev => Math.max(0, prev - 1)); }}
                   className="outline"
-                  style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', borderRadius: '20px' }}
+                  style={{ 
+                    padding: '0.35rem 0.8rem', 
+                    fontSize: '0.75rem', 
+                    borderRadius: '20px',
+                    ...(isPlantVarietyConcept ? {
+                      border: '1.5px solid #10b981',
+                      color: '#065f46',
+                      fontWeight: '800',
+                      background: '#ffffff'
+                    } : {})
+                  }}
                 >
                   Prev
                 </button>
@@ -4848,7 +4883,16 @@ export default function ChapterLearningLab({
                     setActivityFocused(true);
                   }}
                   className="primary"
-                  style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', borderRadius: '20px' }}
+                  style={{ 
+                    padding: '0.35rem 0.8rem', 
+                    fontSize: '0.75rem', 
+                    borderRadius: '20px',
+                    ...(isPlantVarietyConcept ? {
+                      background: 'linear-gradient(135deg, #059669, #047857)',
+                      borderColor: '#059669',
+                      fontWeight: '800'
+                    } : {})
+                  }}
                 >
                   Activity ➔
                 </button>
@@ -4857,7 +4901,16 @@ export default function ChapterLearningLab({
                   disabled={slide.isQuiz && !quizChecked}
                   onClick={() => { handleStopSpeech(); setActiveSlide(prev => prev + 1); }}
                   className="primary"
-                  style={{ padding: '0.35rem 0.8rem', fontSize: '0.75rem', borderRadius: '20px' }}
+                  style={{ 
+                    padding: '0.35rem 0.8rem', 
+                    fontSize: '0.75rem', 
+                    borderRadius: '20px',
+                    ...(isPlantVarietyConcept ? {
+                      background: 'linear-gradient(135deg, #059669, #047857)',
+                      borderColor: '#059669',
+                      fontWeight: '800'
+                    } : {})
+                  }}
                 >
                   Next
                 </button>
@@ -5520,6 +5573,25 @@ export default function ChapterLearningLab({
               backdrop-filter: blur(8px) !important;
               border: 1px solid rgba(255, 255, 255, 0.12) !important;
             }
+            .frame-page-left.appreciate-dark-left {
+              background: #123D2A !important;
+              backdrop-filter: blur(16px) !important;
+              border: 1.5px solid rgba(52, 211, 153, 0.4) !important;
+            }
+            .frame-page-left.act21-dark-left {
+              background: #123D2A !important;
+            }
+            .frame-page-left.act23-mint-left {
+              background: linear-gradient(145deg, rgba(246, 252, 248, 0.97) 0%, rgba(236, 247, 241, 0.95) 100%) !important;
+            }
+            .frame-page-right.act23-mint-right {
+              background: linear-gradient(145deg, rgba(246, 252, 248, 0.97) 0%, rgba(236, 247, 241, 0.95) 100%) !important;
+            }
+            .frame-page-left.act24-mint-left {
+              background: linear-gradient(145deg, rgba(246, 252, 248, 0.97) 0%, rgba(236, 247, 241, 0.95) 100%) !important;
+              border: 1.5px solid rgba(167, 243, 208, 0.85) !important;
+              box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35) !important;
+            }
           ` : ''}
           
           /* Chapter 2 specific header hover effect */
@@ -5919,22 +5991,16 @@ export default function ChapterLearningLab({
               )}
 
               {activeLevel.lessonId === 'biodiversity_concept' ? (
-                <IntroStoryteller 
-                  onComplete={() => {
-                    if (chapterNum === 2) {
-                      goToChapter2Step(3);
-                    } else {
+                chapterNum === 2 ? null : (
+                  <IntroStoryteller 
+                    onComplete={() => {
                       setContentLessonProgress(prev => ({ ...prev, biodiversity_concept: true }));
                       setActivityFocused(true);
                       setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
-                    }
-                  }} 
-                  onBack={() => {
-                    if (chapterNum === 2) {
-                      goToChapter2Step(1);
-                    }
-                  }}
-                />
+                    }} 
+                    onBack={() => {}}
+                  />
+                )
               ) : activeLevel.lessonId === 'vocabulary_glossary' ? (
                 <VocabularyGlossary 
                   onMatchComplete={() => {
@@ -5983,22 +6049,22 @@ export default function ChapterLearningLab({
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
                   <h4 style={{ 
                     margin: 0, 
-                    fontSize: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '1.4rem' : '1.15rem', 
+                    fontSize: (activeActivity.id === 'sec-2-1-act' || activeActivity.id === 'sec-2-1-act-2' || activeActivity.id === 'sec-2-2-act' || activeActivity.activityId === 'appreciating_biodiversity' || activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '1.45rem' : '1.15rem', 
                     fontWeight: '900', 
-                    color: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '#38bdf8' : 'var(--text-heading)', 
+                    color: (activeActivity.id === 'sec-2-1-act' || activeActivity.id === 'sec-2-1-act-2' || activeActivity.id === 'sec-2-2-act' || activeActivity.activityId === 'appreciating_biodiversity' || activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '#38bdf8' : 'var(--text-heading)', 
                     display: 'flex', 
                     alignItems: 'center', 
                     gap: '0.5rem',
-                    textShadow: (activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '0 2px 10px rgba(56, 189, 248, 0.35)' : 'none'
+                    textShadow: (activeActivity.id === 'sec-2-1-act' || activeActivity.id === 'sec-2-1-act-2' || activeActivity.id === 'sec-2-2-act' || activeActivity.activityId === 'appreciating_biodiversity' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '0 2px 12px rgba(56, 189, 248, 0.45)' : 'none'
                   }}>
                     <span>{activeActivity.title}</span>
                     {activeActivity.pg && (
                       <span style={{ 
-                        fontSize: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '0.9rem' : '0.75rem', 
+                        fontSize: (activeActivity.id === 'sec-2-1-act' || activeActivity.id === 'sec-2-1-act-2' || activeActivity.id === 'sec-2-2-act' || activeActivity.activityId === 'appreciating_biodiversity' || activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '0.9rem' : '0.75rem', 
                         fontWeight: 'bold', 
-                        color: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '#ffffff' : 'var(--text-muted)', 
-                        background: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '#1e3a8a' : 'var(--border)', 
-                        border: (activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '1px solid #38bdf8' : 'none',
+                        color: (activeActivity.id === 'sec-2-1-act' || activeActivity.id === 'sec-2-1-act-2' || activeActivity.id === 'sec-2-2-act' || activeActivity.activityId === 'appreciating_biodiversity' || activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '#ffffff' : 'var(--text-muted)', 
+                        background: (activeActivity.id === 'sec-2-1-act' || activeActivity.id === 'sec-2-1-act-2' || activeActivity.id === 'sec-2-2-act' || activeActivity.activityId === 'appreciating_biodiversity' || activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '#1e3a8a' : 'var(--border)', 
+                        border: (activeActivity.id === 'sec-2-1-act' || activeActivity.id === 'sec-2-1-act-2' || activeActivity.id === 'sec-2-2-act' || activeActivity.activityId === 'appreciating_biodiversity' || activeActivity.id === 'sec-2-8-act' || activeActivity.activityId === 'seed_dissection_lab' || activeActivity.id === 'sec-2-9-act' || activeActivity.activityId === 'animal_locomotion' || activeActivity.id === 'sec-2-10-act' || activeActivity.activityId === 'animal_habitat_matching') ? '1px solid #38bdf8' : 'none',
                         padding: '0.2rem 0.6rem', 
                         borderRadius: '6px' 
                       }}>
