@@ -8,10 +8,35 @@ import PatternsInNumbers from './PatternsInNumbers';
 import NumberSequencesTable from './NumberSequencesTable';
 import VisualisingSequences from './VisualisingSequences';
 import RelationsAmongSequences from './RelationsAmongSequences';
-import PatternsInShapes from './PatternsInShapes';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import * as THREE from 'three';
+import ErrorBoundary from '../../../components/ErrorBoundary';
+import PatternsInShapes, {
+  Table3Polygons3D,
+  Table3CompleteGraphs3D,
+  Table3StackedSquares3D,
+  Table3StackedTriangles3D,
+  Table3KochSnowflake3D,
+  PhotorealisticStackedTrianglesBridge3D,
+  POLYGONS_DATA,
+  COMPLETE_GRAPHS_MODULAR_DATA
+} from './PatternsInShapes';
 import ShapesToNumbers from './ShapesToNumbers';
 import RealLifeMathLab from './RealLifeMathLab';
 import ChapterQuizAndSolutions from './ChapterQuizAndSolutions';
+import {
+  BotanicalFlower3D,
+  MarketProduce3D,
+  CalendarDesk3D,
+  CelestialOrrery3D,
+  AncientManuscript3D,
+  VoxelCube3D,
+  GnomonPuzzle3D,
+  DetectiveVaultDesk3D,
+  QuizPhotorealisticLab3D,
+  PhotorealisticViralHandshakeNetwork3D
+} from './RealisticMath3D';
 import { PASTEL_THEMES, SEQUENCES, QUIZ_QUESTIONS } from './data';
 import './MathsChapter1Dark.css';
 
@@ -93,6 +118,123 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       activeEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
   }, [currentStep]);
+
+  const renderTopShowcase = () => {
+    if (currentStep === 5) {
+      const activeShapeActivity = currentSlide;
+      return (
+        <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0, borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)', marginBottom: '1rem' }}>
+          <ErrorBoundary fallback={<div style={{ color: '#0f172a', padding: '1.2rem', fontWeight: '800' }}>3D Studio initializing...</div>}>
+            <Canvas camera={{ position: [0, 0.1, 3.2], fov: 45 }} shadows dpr={[1, 2]}>
+              <ambientLight intensity={1.9} />
+              <directionalLight position={[6, 12, 8]} intensity={2.5} castShadow />
+              <directionalLight position={[-6, -4, -4]} intensity={1.3} color="#ffffff" />
+              <pointLight position={[0, 6, 6]} intensity={1.5} color="#ffffff" />
+
+              <group scale={0.65}>
+              {activeShapeActivity === 1 && (
+                <Table3Polygons3D
+                  polygon={POLYGONS_DATA[polygonIdx || 0] || POLYGONS_DATA[0]}
+                  placedEdges={placedPolyEdges}
+                  viewMode={viewMode}
+                />
+              )}
+              {activeShapeActivity === 2 && (
+                <Table3CompleteGraphs3D
+                  graph={COMPLETE_GRAPHS_MODULAR_DATA[graphIdx || 0] || COMPLETE_GRAPHS_MODULAR_DATA[0]}
+                  activeComponentIds={activeComponentIds}
+                />
+              )}
+              {activeShapeActivity === 3 && (
+                <Table3StackedSquares3D
+                  rows={squareSize}
+                  placedLayers={placedSquareLayers}
+                />
+              )}
+              {activeShapeActivity === 4 && (
+                <Table3StackedTriangles3D
+                  rows={triangleRows}
+                  placedRows={placedTriLayers}
+                />
+              )}
+              {activeShapeActivity === 5 && (
+                <Table3KochSnowflake3D
+                  depth={kochDepth}
+                />
+              )}
+              </group>
+
+              <OrbitControls enablePan={false} maxDistance={6} minDistance={1.8} />
+            </Canvas>
+          </ErrorBoundary>
+
+          <div style={{ position: 'absolute', top: '12px', left: '14px', background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(6px)', padding: '5px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', color: '#0f172a', fontSize: '0.82rem', fontWeight: '800', pointerEvents: 'none', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)' }}>
+            {activeShapeActivity === 1 ? (viewMode === 'real' ? '🌍 Real-World 3D Object' : '📐 Geometric Regular Polygon 3D') : activeShapeActivity === 2 ? '✈️ 3D Direct City Flight Network (Airways)' : activeShapeActivity === 3 ? '🎨 3D Handcrafted Ceramic Heritage Tiles' : activeShapeActivity === 4 ? '🎱 3D Billiards 15-Ball Triangle Rack' : '🔲 3D Studio · Drag to Orbit'}
+          </div>
+        </div>
+      );
+    }
+
+    if (currentStep === 6) {
+      return (
+        <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0, borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)', marginBottom: '1rem' }}>
+          <ErrorBoundary>
+            <Canvas camera={{ position: [0, 2.2, 3.8], fov: 44 }}>
+              <ambientLight intensity={1.8} />
+              <directionalLight position={[10, 12, 6]} intensity={2.4} castShadow />
+              {currentSlide === 1 && <PhotorealisticStackedTrianglesBridge3D rows={s2nTriRows} />}
+              {currentSlide === 2 && <Table3KochSnowflake3D depth={s2nKochIter} />}
+              <OrbitControls enablePan={false} maxDistance={7} minDistance={2} />
+            </Canvas>
+          </ErrorBoundary>
+        </div>
+      );
+    }
+
+    if (currentStep === 7) {
+      return (
+        <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0, borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)', marginBottom: '1rem' }}>
+          <ErrorBoundary>
+            <Canvas camera={{ position: [0, 0.8, 4.2], fov: 45 }}>
+              <ambientLight intensity={2.0} />
+              <group scale={0.65}>
+              {currentSlide === 1 && <CalendarDesk3D selectedCenter={labSelectedCenter} />}
+              {currentSlide === 2 && <MarketProduce3D kgPotatoes={labKgPotatoes} kgTomatoes={labKgTomatoes} checkoutStep={checkoutStep} onCheckoutComplete={() => setCheckoutStep(0)} />}
+              {currentSlide === 3 && <BotanicalFlower3D flowerKey={labSelectedFlower} />}
+              {currentSlide === 4 && <PhotorealisticViralHandshakeNetwork3D viralRounds={labViralRounds} />}
+              </group>
+              <OrbitControls enablePan={true} enableZoom={true} maxDistance={8} minDistance={1.4} />
+            </Canvas>
+          </ErrorBoundary>
+        </div>
+      );
+    }
+
+    if (currentStep === 8) {
+      return (
+        <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0, borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)', marginBottom: '1rem' }}>
+          <ErrorBoundary>
+            <Canvas camera={{ position: [0, 1.2, 4.2], fov: 45 }}>
+              <ambientLight intensity={1.8} />
+              <group scale={0.65}>
+              <QuizPhotorealisticLab3D
+                activeQuestionId={activeQuizQuestionId}
+                isSubmitted={isQuizSubmitted}
+                score={quizScore}
+                totalClues={QUIZ_QUESTIONS.length}
+                currentSlide={currentSlide}
+                userAnswer={quizAnswers[activeQuizQuestionId]}
+              />
+              </group>
+              <OrbitControls enablePan={true} enableZoom={true} minDistance={1.4} maxDistance={8} />
+            </Canvas>
+          </ErrorBoundary>
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div style={{
@@ -232,58 +374,70 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
         ) : currentStep === 4 ? (
           <RelationsAmongSequences onNext={() => { setCurrentStep(5); setCurrentSlide(1); }} />
         ) : currentStep === 5 ? (
-          <PatternsInShapes
-            activeActivity={currentSlide}
-            setActiveActivity={(id) => setCurrentSlide(id)}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            polygonIdx={polygonIdx}
-            setPolygonIdx={setPolygonIdx}
-            placedPolyEdges={placedPolyEdges}
-            setPlacedPolyEdges={setPlacedPolyEdges}
-            graphIdx={graphIdx}
-            setGraphIdx={setGraphIdx}
-            activeComponentIds={activeComponentIds}
-            setActiveComponentIds={setActiveComponentIds}
-            squareSize={squareSize}
-            setSquareSize={setSquareSize}
-            placedSquareLayers={placedSquareLayers}
-            setPlacedSquareLayers={setPlacedSquareLayers}
-            triangleRows={triangleRows}
-            setTriangleRows={setTriangleRows}
-            placedTriLayers={placedTriLayers}
-            setPlacedTriLayers={setPlacedTriLayers}
-            kochDepth={kochDepth}
-            setKochDepth={setKochDepth}
-          />
+          <>
+            {renderTopShowcase()}
+            <PatternsInShapes
+              activeActivity={currentSlide}
+              setActiveActivity={(id) => setCurrentSlide(id)}
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              polygonIdx={polygonIdx}
+              setPolygonIdx={setPolygonIdx}
+              placedPolyEdges={placedPolyEdges}
+              setPlacedPolyEdges={setPlacedPolyEdges}
+              graphIdx={graphIdx}
+              setGraphIdx={setGraphIdx}
+              activeComponentIds={activeComponentIds}
+              setActiveComponentIds={setActiveComponentIds}
+              squareSize={squareSize}
+              setSquareSize={setSquareSize}
+              placedSquareLayers={placedSquareLayers}
+              setPlacedSquareLayers={setPlacedSquareLayers}
+              triangleRows={triangleRows}
+              setTriangleRows={setTriangleRows}
+              placedTriLayers={placedTriLayers}
+              setPlacedTriLayers={setPlacedTriLayers}
+              kochDepth={kochDepth}
+              setKochDepth={setKochDepth}
+            />
+          </>
         ) : currentStep === 6 ? (
-          <ShapesToNumbers 
-            currentSlide={currentSlide}
-            s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
-            s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
-            s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
-            s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
-          />
+          <>
+            {renderTopShowcase()}
+            <ShapesToNumbers 
+              currentSlide={currentSlide}
+              s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
+              s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
+              s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
+              s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
+            />
+          </>
         ) : currentStep === 7 ? (
-          <RealLifeMathLab 
-            currentSlide={currentSlide}
-            labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
-            labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
-            labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
-            labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
-            labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
-            checkoutStep={checkoutStep}
-            onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
-          />
+          <>
+            {renderTopShowcase()}
+            <RealLifeMathLab 
+              currentSlide={currentSlide}
+              labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
+              labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
+              labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
+              labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
+              labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
+              checkoutStep={checkoutStep}
+              onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
+            />
+          </>
         ) : (
-          <ChapterQuizAndSolutions 
-            currentSlide={currentSlide}
-            quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
-            isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
-            quizScore={quizScore}
-            activeQuizQuestionId={activeQuizQuestionId}
-            setActiveQuizQuestionId={setActiveQuizQuestionId}
-          />
+          <>
+            {renderTopShowcase()}
+            <ChapterQuizAndSolutions 
+              currentSlide={currentSlide}
+              quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
+              isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
+              quizScore={quizScore}
+              activeQuizQuestionId={activeQuizQuestionId}
+              setActiveQuizQuestionId={setActiveQuizQuestionId}
+            />
+          </>
         )}
       </div>
     </div>
