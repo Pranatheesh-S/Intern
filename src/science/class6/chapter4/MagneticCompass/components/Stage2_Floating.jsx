@@ -62,7 +62,7 @@ export default function Stage2_Floating({ onComplete }) {
               animate={{ scale: [0.6, 2.6], opacity: [0.85, 0] }}
               transition={{ duration: step === 'floating' ? 0.9 : 2.2, repeat: Infinity, ease: 'easeOut' }}
               style={{ 
-                position: 'absolute', top: -75, left: -75, width: 150, height: 150, 
+                position: 'absolute', top: -95, left: -95, width: 190, height: 190, 
                 borderRadius: '50%', border: '2.5px solid rgba(255, 255, 255, 0.9)',
                 boxShadow: '0 0 14px rgba(56, 189, 248, 0.7)',
                 pointerEvents: 'none' 
@@ -73,7 +73,7 @@ export default function Stage2_Floating({ onComplete }) {
               animate={{ scale: [0.4, 2.0], opacity: [0.75, 0] }}
               transition={{ duration: step === 'floating' ? 0.9 : 2.2, delay: 0.35, repeat: Infinity, ease: 'easeOut' }}
               style={{ 
-                position: 'absolute', top: -75, left: -75, width: 150, height: 150, 
+                position: 'absolute', top: -95, left: -95, width: 190, height: 190, 
                 borderRadius: '50%', border: '2px solid rgba(186, 230, 253, 0.8)',
                 pointerEvents: 'none' 
               }}
@@ -104,10 +104,10 @@ export default function Stage2_Floating({ onComplete }) {
             title={isInteractive && step === 'settled' ? "Click to rapidly spin the compass needle!" : ""}
           >
             {/* 3D Cork Disc Assembly */}
-            <div style={{ position: 'absolute', width: 76, height: 76, left: -38, top: -38, transformStyle: 'preserve-3d' }}>
+            <div style={{ position: 'absolute', width: 96, height: 96, left: -48, top: -48, transformStyle: 'preserve-3d' }}>
               {/* Soft Water Shadow */}
               <div style={{ 
-                position: 'absolute', width: 84, height: 84, left: -4, top: -4, 
+                position: 'absolute', width: 106, height: 106, left: -5, top: -5, 
                 borderRadius: '50%', background: 'rgba(3, 105, 161, 0.55)', 
                 filter: 'blur(8px)', transform: 'translateZ(-4px)' 
               }} />
@@ -136,8 +136,8 @@ export default function Stage2_Floating({ onComplete }) {
                 pointerEvents: 'none'
               }}>
                 <MagneticNeedleShape 
-                  width={200} 
-                  height={26} 
+                  width={260} 
+                  height={34} 
                   orientation="horizontal"
                   isGlowing={true} 
                 />
@@ -197,16 +197,16 @@ export default function Stage2_Floating({ onComplete }) {
           />
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(0, 0, 0, 0.12)', zIndex: 1, pointerEvents: 'none' }} />
 
-          {/* Photorealistic 3D Ceramic Water Bowl & Compass Assembly (Proportionate Size) */}
+          {/* Photorealistic 3D Ceramic Water Bowl & Compass Assembly (Enlarged & Proportionate Size) */}
           <div style={{
-            width: '320px',
-            height: '290px',
+            width: '420px',
+            height: '380px',
             position: 'relative',
             zIndex: 10,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: '3.5rem'
+            marginTop: '1rem'
           }}>
             {/* 3D Water Bowl Image */}
             <img 
@@ -222,32 +222,32 @@ export default function Stage2_Floating({ onComplete }) {
 
             {/* 3D High-Contrast Cardinal Direction Markers (N, S, E, W) */}
             <div style={{ 
-              position: 'absolute', top: 22, left: '50%', transform: 'translateX(-50%)',
-              fontWeight: 900, color: '#EF4444', fontSize: '1.35rem', 
+              position: 'absolute', top: 26, left: '50%', transform: 'translateX(-50%)',
+              fontWeight: 900, color: '#EF4444', fontSize: '1.4rem', 
               textShadow: '0 0 10px rgba(239, 68, 68, 0.8), 0 2px 4px rgba(0,0,0,0.8)',
               background: '#FFFFFF', padding: '1px 8px', borderRadius: '12px', border: '1.5px solid #EF4444',
               zIndex: 25
             }}>N</div>
 
             <div style={{ 
-              position: 'absolute', bottom: 22, left: '50%', transform: 'translateX(-50%)',
-              fontWeight: 900, color: '#3B82F6', fontSize: '1.35rem', 
+              position: 'absolute', bottom: 26, left: '50%', transform: 'translateX(-50%)',
+              fontWeight: 900, color: '#3B82F6', fontSize: '1.4rem', 
               textShadow: '0 0 10px rgba(59, 130, 246, 0.8), 0 2px 4px rgba(0,0,0,0.8)',
               background: '#FFFFFF', padding: '1px 8px', borderRadius: '12px', border: '1.5px solid #3B82F6',
               zIndex: 25
             }}>S</div>
 
             <div style={{ 
-              position: 'absolute', top: '50%', left: 16, transform: 'translateY(-50%)',
-              fontWeight: 900, color: '#1E293B', fontSize: '1.25rem', 
+              position: 'absolute', top: '50%', left: 20, transform: 'translateY(-50%)',
+              fontWeight: 900, color: '#1E293B', fontSize: '1.3rem', 
               textShadow: '0 2px 4px rgba(0,0,0,0.4)',
               background: '#FFFFFF', padding: '1px 6px', borderRadius: '10px', border: '1.5px solid #CBD5E1',
               zIndex: 25
             }}>W</div>
 
             <div style={{ 
-              position: 'absolute', top: '50%', right: 16, transform: 'translateY(-50%)',
-              fontWeight: 900, color: '#1E293B', fontSize: '1.25rem', 
+              position: 'absolute', top: '50%', right: 20, transform: 'translateY(-50%)',
+              fontWeight: 900, color: '#1E293B', fontSize: '1.3rem', 
               textShadow: '0 2px 4px rgba(0,0,0,0.4)',
               background: '#FFFFFF', padding: '1px 6px', borderRadius: '10px', border: '1.5px solid #CBD5E1',
               zIndex: 25
@@ -273,7 +273,7 @@ export default function Stage2_Floating({ onComplete }) {
 
           {/* Draggable Cork Disc on Left (Initial Step) */}
           {step === 'initial' && (
-            <div style={{ position: 'absolute', left: '25px', top: '55%', transform: 'translateY(-50%)', zIndex: 30 }}>
+            <div style={{ position: 'absolute', left: '20px', top: '55%', transform: 'translateY(-50%)', zIndex: 30 }}>
               <motion.div
                 drag
                 dragConstraints={{ left: -10, right: 350, top: -120, bottom: 120 }}
@@ -286,8 +286,8 @@ export default function Stage2_Floating({ onComplete }) {
                   }
                 }}
                 style={{
-                  width: '130px',
-                  height: '130px',
+                  width: '160px',
+                  height: '160px',
                   position: 'relative',
                   display: 'flex',
                   alignItems: 'center',
@@ -298,14 +298,14 @@ export default function Stage2_Floating({ onComplete }) {
                 {renderCorkWithNeedle(false)}
                 <div style={{
                   position: 'absolute',
-                  bottom: '-20px',
-                  left: '5px',
-                  width: '120px',
+                  bottom: '-18px',
+                  left: '15px',
+                  width: '130px',
                   background: '#FFFFFF',
                   border: '1.5px solid #A7F3D0',
                   borderRadius: '12px',
                   padding: '0.35rem 0.5rem',
-                  fontSize: '0.82rem',
+                  fontSize: '0.85rem',
                   fontWeight: 900,
                   color: '#064E3B',
                   boxShadow: '0 4px 10px rgba(6, 78, 59, 0.12)',

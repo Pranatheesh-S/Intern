@@ -3,16 +3,16 @@ import { ArrowRight, Sparkles, CheckCircle2, XCircle, Activity, Radio, Search, M
 import './Activity4_1.css';
 
 const ALL_ITEMS = [
-  { id: 'ruler', name: 'Ruler', icon: '📏', material: 'Plastic / Wood', isMagnetic: false, hotspot: { x: 12.0, y: 88.0 }, desc: 'Dielectric polymer' },
-  { id: 'eraser', name: 'Eraser', icon: '🧹', material: 'Rubber', isMagnetic: false, hotspot: { x: 24.0, y: 74.0 }, desc: 'Non-ferrous elastomer' },
-  { id: 'clips', name: 'Paper Clips', icon: '📎', material: 'Steel (Iron)', isMagnetic: true, hotspot: { x: 31.0, y: 83.0 }, desc: 'Ferromagnetic alloy' },
-  { id: 'coins', name: 'Coins', icon: '🪙', material: 'Nickel Alloy', isMagnetic: true, hotspot: { x: 42.0, y: 75.0 }, desc: 'Ferromagnetic core' },
-  { id: 'pens', name: 'Pens', icon: '🖊️', material: 'Plastic', isMagnetic: false, hotspot: { x: 11.0, y: 60.0 }, desc: 'Synthetic polymer' },
-  { id: 'bottle', name: 'Water Bottle', icon: '🍾', material: 'Glass', isMagnetic: false, hotspot: { x: 23.0, y: 50.0 }, desc: 'Non-magnetic silica' },
-  { id: 'compass', name: 'Compass', icon: '🧭', material: 'Magnetic Needle', isMagnetic: true, hotspot: { x: 44.0, y: 51.0 }, desc: 'Permanent magnet' },
-  { id: 'pencil_case', name: 'Pencil Case', icon: '👝', material: 'Fabric Cloth', isMagnetic: false, hotspot: { x: 59.0, y: 77.0 }, desc: 'Organic textile' },
-  { id: 'notebook', name: 'Notebook', icon: '📓', material: 'Paper', isMagnetic: false, hotspot: { x: 85.0, y: 69.0 }, desc: 'Cellulose fiber' },
-  { id: 'pencil', name: 'Pencil', icon: '✏️', material: 'Wood & Graphite', isMagnetic: false, hotspot: { x: 80.0, y: 91.0 }, desc: 'Carbon & cellulose' },
+  { id: 'pens', name: 'Pens', icon: '🖊️', material: 'Plastic', isMagnetic: false, hotspot: { x: 4.2, y: 72.0 }, desc: 'Synthetic polymer' },
+  { id: 'ruler', name: 'Ruler', icon: '📏', material: 'Plastic / Wood', isMagnetic: false, hotspot: { x: 16.6, y: 84.3 }, desc: 'Dielectric polymer' },
+  { id: 'bottle', name: 'Water Bottle', icon: '🍾', material: 'Glass', isMagnetic: false, hotspot: { x: 28.7, y: 48.3 }, desc: 'Non-magnetic silica' },
+  { id: 'eraser', name: 'Eraser', icon: '🧹', material: 'Rubber', isMagnetic: false, hotspot: { x: 31.1, y: 70.1 }, desc: 'Non-ferrous elastomer' },
+  { id: 'clips', name: 'Paper Clips', icon: '📎', material: 'Steel (Iron)', isMagnetic: true, hotspot: { x: 35.1, y: 90.8 }, desc: 'Ferromagnetic alloy' },
+  { id: 'coins', name: 'Coins', icon: '🪙', material: 'Nickel Alloy', isMagnetic: true, hotspot: { x: 47.0, y: 82.2 }, desc: 'Ferromagnetic core' },
+  { id: 'compass', name: 'Compass', icon: '🧭', material: 'Magnetic Needle', isMagnetic: true, hotspot: { x: 55.5, y: 51.2 }, desc: 'Permanent magnet' },
+  { id: 'pencil_case', name: 'Pencil Case', icon: '👝', material: 'Fabric Cloth', isMagnetic: false, hotspot: { x: 69.8, y: 71.8 }, desc: 'Organic textile' },
+  { id: 'pencil', name: 'Pencil', icon: '✏️', material: 'Wood & Graphite', isMagnetic: false, hotspot: { x: 87.5, y: 86.7 }, desc: 'Carbon & cellulose' },
+  { id: 'notebook', name: 'Notebook', icon: '📓', material: 'Paper', isMagnetic: false, hotspot: { x: 95.8, y: 71.4 }, desc: 'Cellulose fiber' },
 ];
 
 export default function MagneticTable({ onComplete }) {
@@ -200,80 +200,67 @@ export default function MagneticTable({ onComplete }) {
           </>
         )}
 
-        {/* Top/Center Section: Centered Large Emoji + Status Badge */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 3, width: '100%', padding: '0.2rem 0' }}>
-          {/* Centered Large 3D Squircle Emoji */}
-          <div style={{
-            width: '52px',
-            height: '52px',
-            borderRadius: '16px',
-            background: isScanned 
-              ? (isMag ? 'linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%)' : 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)')
-              : '#FFFFFF',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '2.2rem',
-            boxShadow: isScanned
-              ? (isMag ? '0 4px 12px rgba(22, 163, 74, 0.25)' : '0 4px 12px rgba(220, 38, 38, 0.2)')
-              : '0 3px 10px rgba(217, 119, 6, 0.08)',
-            border: isScanned
-              ? (isMag ? '1.5px solid #86EFAC' : '1.5px solid #FCA5A5')
-              : '1.5px solid #FDE68A',
-            flexShrink: 0
-          }}>
-            {item.icon}
+        {/* Top/Center Section: Left Emoji + Object Name (+ Status Pill if Scanned/Scanning) */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          padding: '0.35rem 0.5rem 0.1rem 0.5rem',
+          position: 'relative',
+          zIndex: 3
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            {/* Emoji shifted to the left and brought slightly down */}
+            <span style={{
+              fontSize: '2.4rem',
+              lineHeight: 1,
+              userSelect: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: '0.2rem',
+              flexShrink: 0
+            }}>
+              {item.icon}
+            </span>
+
+            {/* Object's Name in Top Section */}
+            <span style={{
+              fontSize: '1.02rem',
+              fontWeight: 900,
+              color: isDragOver ? '#0369A1' : nameColor,
+              letterSpacing: '0.2px',
+              marginTop: '0.2rem'
+            }}>
+              {item.name}
+            </span>
           </div>
 
-          {/* Right Status Pill */}
-          {isScanned ? (
+          {/* Right Status Pill if Scanning */}
+          {isScanning && (
             <div
               style={{
-                position: 'absolute',
-                top: '-2px',
-                right: 0,
-                padding: '3px 8px',
-                borderRadius: '10px',
-                fontSize: '0.76rem',
-                fontWeight: 900,
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '4px',
-                background: isMag ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)' : 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
-                color: '#FFFFFF',
-                boxShadow: isMag ? '0 2px 8px rgba(22, 163, 74, 0.35)' : '0 2px 8px rgba(220, 38, 38, 0.35)',
-                zIndex: 4
-              }}
-            >
-              {isMag ? <CheckCircle2 size={13} color="#FFFFFF" /> : <XCircle size={13} color="#FFFFFF" />}
-              {isMag ? 'Magnetic' : 'Non-Mag'}
-            </div>
-          ) : isScanning ? (
-            <div
-              style={{
-                position: 'absolute',
-                top: '-2px',
-                right: 0,
-                fontSize: '0.78rem',
-                fontWeight: 900,
-                color: '#0284C7',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                background: '#E0F2FE',
-                padding: '3px 8px',
+                gap: '5px',
+                padding: '0.35rem 0.75rem',
                 borderRadius: '8px',
-                border: '1px solid #7DD3FC',
-                zIndex: 4
+                background: 'rgba(2, 132, 199, 0.95)',
+                border: '1.5px solid #38BDF8',
+                color: '#FFFFFF',
+                fontSize: '0.8rem',
+                fontWeight: 900,
+                marginTop: '0.2rem'
               }}
             >
-              <Activity size={13} className="animate-spin" />
+              <Activity size={13} className="animate-spin" color="#FFFFFF" />
               <span>{scanProgress}%</span>
             </div>
-          ) : null}
+          )}
         </div>
 
-        {/* Middle / Bottom Interactive Bay: Object Name Alone */}
+        {/* Middle / Bottom Interactive Bay: 🔍 Scan Button (or Live Waveform / Magnetic or Non-Magnetic Verdict) */}
         <div style={{ marginTop: '0.35rem', zIndex: 3 }}>
           {isScanning ? (
             /* Live Spectrogram Waveform */
@@ -303,63 +290,65 @@ export default function MagneticTable({ onComplete }) {
               </div>
             </div>
           ) : isScanned ? (
-            /* Result Property Verdict Banner */
+            /* Result Verdict: Magnetic or Non-Magnetic */
             <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              background: isMag ? 'rgba(22, 163, 74, 0.12)' : 'rgba(220, 38, 38, 0.08)',
-              border: isMag ? '1px solid rgba(22, 163, 74, 0.25)' : '1px solid rgba(220, 38, 38, 0.2)',
-              borderRadius: '10px',
-              padding: '0.32rem 0.65rem'
-            }}>
-              <span style={{
-                fontSize: '0.84rem',
-                color: isMag ? '#15803D' : '#991B1B',
-                fontWeight: 900,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}>
-                <span style={{ fontSize: '1.15rem' }}>{isMag ? '🧲' : '🛡️'}</span>
-                <span>{isMag ? 'Attracted' : 'No Attraction'}</span>
-              </span>
-              <span style={{
-                fontSize: '0.74rem',
-                color: isMag ? '#166534' : '#7F1D1D',
-                fontWeight: 800,
-                background: 'rgba(255, 255, 255, 0.85)',
-                padding: '2px 8px',
-                borderRadius: '6px'
-              }}>
-                {item.desc}
-              </span>
-            </div>
-          ) : (
-            /* Unscanned State: Object Name Alone with 🎯 Icon */
-            <div style={{
-              background: isDragOver
-                ? 'linear-gradient(135deg, #BAE6FD 0%, #7DD3FC 100%)'
-                : '#FFFFFF',
-              border: isDragOver ? '2px dashed #0284C7' : '1.5px dashed #FDE68A',
-              borderRadius: '10px',
-              padding: '0.4rem 0.65rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              transition: 'all 0.2s ease',
-              boxShadow: isDragOver ? '0 0 12px rgba(2, 132, 199, 0.35)' : 'none'
+              gap: '6px',
+              background: isMag
+                ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)'
+                : 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
+              borderRadius: '8px',
+              padding: '0.42rem 0.85rem',
+              color: '#FFFFFF',
+              boxShadow: isMag
+                ? '0 2px 8px rgba(22, 163, 74, 0.35)'
+                : '0 2px 8px rgba(220, 38, 38, 0.35)',
+              width: '100%',
+              boxSizing: 'border-box'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px', width: '100%' }}>
-                <span style={{ fontSize: '1.25rem' }}>🎯</span>
-                <span style={{
-                  fontSize: '0.98rem',
+              {isMag ? <CheckCircle2 size={15} color="#FFFFFF" /> : <XCircle size={15} color="#FFFFFF" />}
+              <span style={{
+                fontSize: '0.9rem',
+                fontWeight: 900,
+                letterSpacing: '0.3px'
+              }}>
+                {isMag ? 'Magnetic' : 'Non-Magnetic'}
+              </span>
+            </div>
+          ) : (
+            /* Unscanned State: "🔍 Scan" Button / Drop Target in Bottom Area */
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%'
+            }}>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  width: '100%',
+                  padding: '0.42rem 1.15rem',
+                  borderRadius: '8px',
+                  background: isDragOver ? 'rgba(2, 132, 199, 0.95)' : 'rgba(15, 23, 42, 0.90)',
+                  border: isDragOver ? '2px solid #38BDF8' : '1.5px solid rgba(254, 240, 138, 0.9)',
+                  color: '#FFFFFF',
+                  fontSize: '0.9rem',
                   fontWeight: 900,
-                  color: isDragOver ? '#0369A1' : '#064E3B',
-                  letterSpacing: '0.2px'
-                }}>
-                  {item.name}
-                </span>
+                  boxShadow: 'none',
+                  backdropFilter: 'blur(8px)',
+                  userSelect: 'none',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
+                }}
+              >
+                <Search size={15} color="#FDE68A" />
+                <span style={{ letterSpacing: '0.3px' }}>Scan</span>
               </div>
             </div>
           )}
@@ -477,7 +466,7 @@ export default function MagneticTable({ onComplete }) {
             <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
           </button>
 
-          {/* Interactive Draggable Object Badges over Image (Disappears once scanned, NO "TEST" word) */}
+          {/* Interactive Draggable Object Badges over Image (Box shape, placed exactly on the white paper labels) */}
           {ALL_ITEMS.map((item) => {
             const isScanned = scannedResults[item.id];
             const isScanning = scanningItemId === item.id;
@@ -499,31 +488,33 @@ export default function MagneticTable({ onComplete }) {
                   left: `${item.hotspot.x}%`,
                   top: `${item.hotspot.y}%`,
                   transform: 'translate(-50%, -50%)',
-                  padding: '0.28rem 0.75rem',
-                  borderRadius: '16px',
+                  padding: '0.68rem 0.95rem',
+                  minHeight: '38px',
+                  borderRadius: '9px',
                   backgroundColor: isScanning
                     ? 'rgba(2, 132, 199, 0.95)'
-                    : 'rgba(15, 23, 42, 0.92)',
+                    : 'rgba(15, 23, 42, 0.90)',
                   border: isScanning
                     ? '2px solid #38BDF8'
-                    : '1.5px solid rgba(255, 255, 255, 0.85)',
-                  color: 'white',
-                  fontSize: '0.8rem',
+                    : '1.5px solid rgba(254, 240, 138, 0.9)',
+                  color: '#FFFFFF',
+                  fontSize: '0.85rem',
                   fontWeight: 800,
                   cursor: 'grab',
-                  boxShadow: '0 0 16px rgba(56, 189, 248, 0.65), 0 4px 12px rgba(0,0,0,0.5)',
-                  display: 'flex',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.55), 0 0 12px rgba(245, 158, 11, 0.35)',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.35rem',
+                  justifyContent: 'center',
                   zIndex: 20,
                   userSelect: 'none',
-                  transition: 'all 0.22s ease',
-                  backdropFilter: 'blur(6px)',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  backdropFilter: 'blur(8px)',
+                  whiteSpace: 'nowrap',
+                  boxSizing: 'border-box',
                 }}
                 title={`Drag ${item.name} to its scanner slot on the right`}
               >
-                <span>{item.icon}</span>
-                <span>{item.name}</span>
+                <span style={{ letterSpacing: '0.3px' }}>{item.name}</span>
               </div>
             );
           })}
