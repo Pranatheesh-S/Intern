@@ -443,12 +443,13 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       <div style={{
         flex: 1,
         minHeight: 0,
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        display: currentStep <= 4 ? 'block' : 'grid',
+        gridTemplateColumns: currentStep <= 4 ? 'none' : '1fr 1fr',
         gap: '16px',
         boxSizing: 'border-box',
         overflow: 'hidden'
       }}>
+        {currentStep > 4 && (
         <div style={{
           background: '#ffffff',
           borderRadius: '22px',
@@ -491,6 +492,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
             {renderLeftShowcase()}
           </div>
         </div>
+        )}
 
         <div style={{
           background: '#ffffff',
@@ -505,6 +507,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
           boxSizing: 'border-box',
           overflow: 'hidden'
         }}>
+          {currentStep > 4 && (
           <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ color: 'var(--theme-primary, #0d9488)', fontWeight: '900', fontSize: '0.82rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
@@ -518,16 +521,17 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
               Slide {currentSlide} / {totalSlides}
             </div>
           </div>
+          )}
 
           <div
             style={{
-              background: 'var(--theme-workbench-bg, #f0fdf4)',
+              background: currentStep <= 4 ? 'transparent' : 'var(--theme-workbench-bg, #f0fdf4)',
               borderRadius: '18px',
-              border: '1.8px solid var(--theme-border, #a7f3d0)',
-              padding: '1rem 1.25rem',
+              border: currentStep <= 4 ? 'none' : '1.8px solid var(--theme-border, #a7f3d0)',
+              padding: currentStep <= 4 ? '0' : '1rem 1.25rem',
               flex: 1,
               minHeight: 0,
-              overflow: 'hidden',
+              overflow: currentStep <= 4 ? 'visible' : 'hidden',
               display: 'flex',
               flexDirection: 'column'
             }}
