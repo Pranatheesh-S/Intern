@@ -310,7 +310,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
         </div>
 
         {/* Main Content Area - Full Width */}
-        <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: currentNode.type === 'activity' ? 'hidden' : 'auto' }}>
+        <div className="activity-content" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', overflowY: currentNode.type === 'activity' ? 'hidden' : 'auto', marginLeft: isTimelineOpen ? '320px' : '0px', transition: 'margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
           {currentNode.type === 'mission' && (
             <MissionBriefingSpread 
               data={currentNode} 

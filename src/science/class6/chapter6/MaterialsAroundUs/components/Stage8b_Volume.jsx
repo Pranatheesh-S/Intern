@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Box, Droplet, CheckCircle2, AlertCircle,
-  RefreshCw, Hand, Info, HelpCircle, LayoutGrid, FlaskConical
+  RefreshCw, Hand, Info, HelpCircle, LayoutGrid
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────────
@@ -10,9 +10,7 @@ import {
 ───────────────────────────────────────────── */
 const GRAVITY      = 900;   // px/s²  — particle sim
 const POUR_TILT    = 35;    // degrees — bottle must be at least this tilted to pour
-const MAX_TILT     = 75;    // degrees — visual tilt cap while over tumbler
 const FILL_SPEED   = 0.30;  // fractional/s how fast the tumbler fills
-const PARTICLE_RATE = 3;    // particles per frame while pouring
 
 /* ─────────────────────────────────────────────
    TUMBLER LAYOUT (in the 560-wide SVG canvas)
@@ -24,7 +22,8 @@ const TUMBLER_B = { cx: 420, cy: 260, hitR: 90 };
 /* ─────────────────────────────────────────────
    BOTTLE INITIAL STATE
 ───────────────────────────────────────────── */
-const BOTTLE_INIT = { x: 20, y: 40 }; // canvas-space, bottom-left anchor
+const GROUND_Y = 160;
+const BOTTLE_INIT = { x: 20, y: GROUND_Y }; // canvas-space, bottom-left anchor
 
 const THINK_OPTIONS = [
   "The bottle will hold all the water without any change.",
@@ -134,6 +133,19 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
   };
 
   /* ──────────────────────────────────────
+     ON_COMPLETE TRIGGER
+  ────────────────────────────────────── */
+  useEffect(() => {
+    // Both tumblers reached target volume
+    if (waterLevelA >= 0.50 && waterLevelB >= 0.90) {
+      const timer = setTimeout(() => {
+        if (onComplete) onComplete();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [waterLevelA, waterLevelB, onComplete]);
+
+  /* ──────────────────────────────────────
      PHYSICS LOOP
   ────────────────────────────────────── */
   useEffect(() => {
@@ -144,34 +156,41 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
       const dt = Math.min(0.05, (now - lastTimeRef.current) / 1000);
       lastTimeRef.current = now;
 
-      const pos      = bottleVisualRef.current.pos;
       const tilt     = bottleVisualRef.current.tilt;
       const autoState = autoStateRef.current;
 
       /* ── determine active tumbler based on auto-state ── */
       let target = null;
-      if (autoState === 'POUR_A' && tilt >= POUR_TILT) target = 'A';
-      else if (autoState === 'POUR_B' && tilt <= -POUR_TILT) target = 'B';
+      
+      const currentBottleWater = bottleFillRef.current;
+      
+      if (currentBottleWater > 0) {
+        if (autoState === 'POUR_A' && tilt >= POUR_TILT) target = 'A';
+        else if (autoState === 'POUR_B' && tilt <= -POUR_TILT) target = 'B';
+      }
       
       activeTargetRef.current = target;
 
       /* ── fill tumblers ── */
       if (target === 'A') {
-        const next = Math.min(0.50, waterLevelARef.current + FILL_SPEED * dt);
-        const poured = next - waterLevelARef.current;
-        waterLevelARef.current = next;
-        setWaterLevelA(next);
+        const requestedTransfer = FILL_SPEED * dt;
+        const availableWater = Math.max(0, currentBottleWater);
+        const remainingTargetCapacity = Math.max(0, 0.50 - waterLevelARef.current);
         
-        // When tumbler reaches target, force bottle to exactly 0 to conserve water visually.
-        if (next >= 0.50) {
-          bottleFillRef.current = 0;
-          setBottleFill(0);
-        } else {
-          bottleFillRef.current = Math.max(0, bottleFillRef.current - poured * 0.68);
-          setBottleFill(bottleFillRef.current);
+        // Tumbler A uses a conversion factor of 0.68 from the bottle
+        const maxTransferFromBottle = availableWater / 0.68;
+        
+        const transfer = Math.min(requestedTransfer, maxTransferFromBottle, remainingTargetCapacity);
+        
+        if (transfer > 0) {
+           waterLevelARef.current += transfer;
+           setWaterLevelA(waterLevelARef.current);
+           
+           bottleFillRef.current = Math.max(0, bottleFillRef.current - (transfer * 0.68));
+           setBottleFill(bottleFillRef.current);
         }
         
-        if (next >= 0.50 && autoState === 'POUR_A') {
+        if ((waterLevelARef.current >= 0.50 || bottleFillRef.current <= 0) && autoState === 'POUR_A') {
           autoStateRef.current = 'IDLE';
           setBottleTilt(0);
           bottleTiltRef.current = 0;
@@ -179,21 +198,24 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
           bottlePosRef.current = BOTTLE_INIT;
         }
       } else if (target === 'B') {
-        const next = Math.min(0.95, waterLevelBRef.current + FILL_SPEED * dt);
-        const poured = next - waterLevelBRef.current;
-        waterLevelBRef.current = next;
-        setWaterLevelB(next);
+        const requestedTransfer = FILL_SPEED * dt;
+        const availableWater = Math.max(0, currentBottleWater);
+        const remainingTargetCapacity = Math.max(0, 0.95 - waterLevelBRef.current);
         
-        // When tumbler reaches target, force bottle to exactly 0 to conserve water visually.
-        if (next >= 0.95) {
-          bottleFillRef.current = 0;
-          setBottleFill(0);
-        } else {
-          bottleFillRef.current = Math.max(0, bottleFillRef.current - poured * 0.75);
-          setBottleFill(bottleFillRef.current);
+        // Tumbler B uses a conversion factor of 0.65 from the bottle
+        const maxTransferFromBottle = availableWater / 0.65;
+        
+        const transfer = Math.min(requestedTransfer, maxTransferFromBottle, remainingTargetCapacity);
+        
+        if (transfer > 0) {
+           waterLevelBRef.current += transfer;
+           setWaterLevelB(waterLevelBRef.current);
+           
+           bottleFillRef.current = Math.max(0, bottleFillRef.current - (transfer * 0.65));
+           setBottleFill(bottleFillRef.current);
         }
         
-        if (next >= 0.95 && autoState === 'POUR_B') {
+        if ((waterLevelBRef.current >= 0.95 || bottleFillRef.current <= 0) && autoState === 'POUR_B') {
           autoStateRef.current = 'IDLE';
           setBottleTilt(0);
           bottleTiltRef.current = 0;
@@ -341,7 +363,7 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
      COMPLETION TRIGGER
   ────────────────────────────────────── */
   useEffect(() => {
-    if (waterLevelA >= 0.49 && waterLevelB >= 0.90) {
+    if (waterLevelA >= 0.49 && waterLevelB >= 0.94) {
       if (typeof addXp === 'function') addXp(20);
       if (typeof onComplete === 'function') onComplete();
     }
@@ -405,6 +427,8 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
 
     const dA = Math.hypot(bottleCenterX - TUMBLER_A.cx, bottleCenterY - TUMBLER_A.cy);
     const dB = Math.hypot(bottleCenterX - TUMBLER_B.cx, bottleCenterY - TUMBLER_B.cy);
+
+    if (bottleFillRef.current <= 0) return; // Empty bottle cannot pour
 
     if (dA < TUMBLER_A.hitR * 1.5 && waterLevelARef.current < 0.50) {
       autoStateRef.current = 'POUR_A';
@@ -530,9 +554,9 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
               <div>
                 <h3 style={{ margin: 0, color: colors.textDark, fontSize: '1.4rem', fontWeight: 'bold' }}>Pour Water</h3>
                 <div style={{ fontSize: '1.05rem', color: colors.textMedium, marginTop: '4px' }}>
-                  {waterLevelA === 0
+                  {waterLevelA < 0.49
                     ? 'Drag the bottle over a tumbler and tilt it to pour water.'
-                    : waterLevelB === 0
+                    : waterLevelB < 0.94
                       ? 'Now drag the bottle over Tumbler B to fill it almost completely.'
                       : 'Both tumblers have been measured!'}
                 </div>
@@ -560,7 +584,8 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                 flex: 1, position: 'relative', borderRadius: '12px',
                 overflow: 'hidden',
                 minHeight: 0,
-                background: 'radial-gradient(circle at 50% 25%, #ffffff 0%, #f4f2ee 35%, #e2ded5 70%, #d1cbbd 100%)',
+                background: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)',
+                boxShadow: 'inset 0 4px 20px rgba(0,0,0,0.03)',
                 border: `1.5px solid ${colors.cardBorder}`,
                 display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
                 userSelect: 'none', touchAction: 'none',
@@ -568,28 +593,53 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
             >
               {/* 560-wide canvas content */}
               <div ref={innerContainerRef} style={{ width: '560px', height: '100%', position: 'relative' }}>
+                
+                {/* ── Realistic Lab Countertop ── */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: 0, left: '-50%', right: '-50%',
+                  height: `${GROUND_Y}px`,
+                  background: 'linear-gradient(to bottom, #cbd5e1 0%, #94a3b8 100%)',
+                  borderTop: '2px solid #f1f5f9',
+                  boxShadow: '0 -4px 15px rgba(0,0,0,0.06)',
+                  zIndex: 0
+                }} />
+
                 <svg style={{ width: 0, height: 0, position: 'absolute', pointerEvents: 'none' }}>
                   <defs>
                     <linearGradient id="glassFront" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="rgba(255,255,255,0.85)" />
-                      <stop offset="6%" stopColor="rgba(255,255,255,0.2)" />
-                      <stop offset="15%" stopColor="rgba(255,255,255,0.0)" />
-                      <stop offset="85%" stopColor="rgba(255,255,255,0.0)" />
-                      <stop offset="94%" stopColor="rgba(0,0,0,0.08)" />
+                      <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
+                      <stop offset="4%" stopColor="rgba(255,255,255,0.5)" />
+                      <stop offset="12%" stopColor="rgba(255,255,255,0.05)" />
+                      <stop offset="88%" stopColor="rgba(255,255,255,0.0)" />
+                      <stop offset="95%" stopColor="rgba(0,0,0,0.15)" />
+                      <stop offset="100%" stopColor="rgba(255,255,255,0.8)" />
+                    </linearGradient>
+                    <linearGradient id="glassEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="rgba(255,255,255,0.8)" />
+                      <stop offset="5%" stopColor="rgba(0,0,0,0.2)" />
+                      <stop offset="95%" stopColor="rgba(0,0,0,0.1)" />
                       <stop offset="100%" stopColor="rgba(255,255,255,0.6)" />
                     </linearGradient>
                     <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="rgba(160,215,245,0.45)" />
-                      <stop offset="50%" stopColor="rgba(100,180,220,0.65)" />
+                      <stop offset="0%" stopColor="rgba(160,215,245,0.5)" />
+                      <stop offset="50%" stopColor="rgba(100,180,220,0.7)" />
                       <stop offset="100%" stopColor="rgba(30,120,160,0.85)" />
                     </linearGradient>
                     <linearGradient id="bottleGlassFront" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
-                      <stop offset="8%" stopColor="rgba(255,255,255,0.3)" />
-                      <stop offset="20%" stopColor="rgba(255,255,255,0.0)" />
-                      <stop offset="80%" stopColor="rgba(255,255,255,0.0)" />
-                      <stop offset="92%" stopColor="rgba(0,0,0,0.1)" />
-                      <stop offset="100%" stopColor="rgba(255,255,255,0.7)" />
+                      <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
+                      <stop offset="6%" stopColor="rgba(255,255,255,0.4)" />
+                      <stop offset="15%" stopColor="rgba(255,255,255,0.0)" />
+                      <stop offset="85%" stopColor="rgba(255,255,255,0.0)" />
+                      <stop offset="93%" stopColor="rgba(0,0,0,0.2)" />
+                      <stop offset="100%" stopColor="rgba(255,255,255,0.85)" />
+                    </linearGradient>
+                    <linearGradient id="capGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#0284c7" />
+                      <stop offset="15%" stopColor="#38bdf8" />
+                      <stop offset="50%" stopColor="#0ea5e9" />
+                      <stop offset="85%" stopColor="#0369a1" />
+                      <stop offset="100%" stopColor="#075985" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -606,73 +656,69 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                 />
 
                 {/* ── Tumblers ── */}
-                <div style={{ position: 'absolute', left: '190px', bottom: '40px', display: 'flex', gap: '50px', zIndex: 15 }}>
+                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 15 }}>
                   {/* Tumbler A */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', position: 'relative' }}>
+                  <div style={{ position: 'absolute', left: `${TUMBLER_A.cx - 60}px`, bottom: `${GROUND_Y}px`, width: '120px', height: '170px' }}>
                     {/* Realistic Contact Shadow Layering */}
                     <div style={{ position: 'absolute', bottom: '-2px', left: '50%', transform: 'translateX(-50%)', width: '70px', height: '8px', background: 'rgba(10, 5, 5, 0.7)', filter: 'blur(2px)', zIndex: -1, borderRadius: '50%' }} />
                     <div style={{ position: 'absolute', bottom: '-6px', left: '50%', transform: 'translateX(-50%)', width: '110px', height: '16px', background: 'rgba(20, 15, 10, 0.3)', filter: 'blur(5px)', zIndex: -2, borderRadius: '50%' }} />
                     <div style={{ position: 'absolute', bottom: '-10px', left: '60%', transform: 'translateX(-50%) skewX(-40deg)', width: '150px', height: '30px', background: 'linear-gradient(to right, rgba(30,20,15,0.15), rgba(30,20,15,0))', filter: 'blur(8px)', zIndex: -3, borderRadius: '50%' }} />
 
-                    <div style={{ position: 'relative', width: '120px', height: '170px', marginBottom: '8px' }}>
-                      <svg width="120" height="170" viewBox="0 0 120 170" style={{ position: 'relative', zIndex: 2, display: 'block', overflow: 'visible' }}>
-                        <defs>
-                          <clipPath id="tumblerClipA">
-                            <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" />
-                          </clipPath>
-                        </defs>
+                    <svg width="120" height="170" viewBox="0 0 120 170" style={{ position: 'relative', zIndex: 2, display: 'block', overflow: 'visible' }}>
+                      <defs>
+                        <clipPath id="tumblerClipA">
+                          <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" />
+                        </clipPath>
+                      </defs>
 
-                        {/* Inner Back Wall of Glass */}
-                        <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="rgba(0,0,0,0.03)" />
-                        
-                        {/* WATER LEVEL */}
-                        {waterLevelA > 0 && (
-                           <g>
-                              {/* Main water body */}
-                              <path d={`M ${20 + 8*(1-waterLevelA)} ${150 - 130*waterLevelA} L 28 150 C 28 160, 92 160, 92 150 L ${100 - 8*(1-waterLevelA)} ${150 - 130*waterLevelA} Z`} fill="url(#waterGrad)" />
-                              
-                              {/* Water Base Depth */}
-                              <ellipse cx="60" cy="150" rx="32" ry="6" fill="rgba(10, 80, 130, 0.6)" />
-                              
-                              {/* Water Surface (Meniscus) */}
-                              <ellipse cx="60" cy={150 - 130*waterLevelA} rx={40 - 8*(1-waterLevelA)} ry={7} fill="rgba(180, 230, 255, 0.4)" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" />
-                              
-                              {/* Meniscus Depth Ring */}
-                              <ellipse cx="60" cy={151 - 130*waterLevelA} rx={39 - 8*(1-waterLevelA)} ry={6.5} fill="none" stroke="rgba(0, 50, 100, 0.3)" strokeWidth="2" />
-                           </g>
-                        )}
-                        <rect id="tumbler-a-surface" x="0" y={150 - (130 * waterLevelA)} width="120" height="2" fill="transparent" pointerEvents="none" />
+                      {/* Inner Back Wall of Glass */}
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="rgba(0,0,0,0.06)" />
+                      {/* Deep Refraction Shadow inside */}
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="6" />
+                      
+                      {/* WATER LEVEL */}
+                      {waterLevelA > 0 && (
+                         <g>
+                            {/* Main water body */}
+                            <path d={`M ${20 + 8*(1-waterLevelA)} ${150 - 130*waterLevelA} L 28 150 C 28 160, 92 160, 92 150 L ${100 - 8*(1-waterLevelA)} ${150 - 130*waterLevelA} Z`} fill="url(#waterGrad)" />
+                            
+                            {/* Water Base Depth */}
+                            <ellipse cx="60" cy="150" rx="32" ry="6" fill="rgba(10, 80, 130, 0.6)" />
+                            
+                            {/* Water Surface (Meniscus) */}
+                            <ellipse cx="60" cy={150 - 130*waterLevelA} rx={40 - 8*(1-waterLevelA)} ry={7} fill="rgba(180, 230, 255, 0.4)" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" />
+                            <ellipse cx="60" cy={151 - 130*waterLevelA} rx={39 - 8*(1-waterLevelA)} ry={6} fill="none" stroke="rgba(0, 50, 100, 0.2)" strokeWidth="2" />
+                         </g>
+                      )}
+                      <rect id="tumbler-a-surface" x="0" y={150 - (130 * waterLevelA)} width="120" height="2" fill="transparent" pointerEvents="none" />
 
-                        {/* Front Glass Cylinder */}
-                        <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="url(#glassFront)" />
-                        
-                        {/* Fresnel Edges (Left) */}
-                        <path d="M 20 20 L 28 150" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="3" strokeLinecap="round" />
-                        <path d="M 22 20 L 30 150" fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="2" strokeLinecap="round" />
-                        
-                        {/* Fresnel Edges (Right) */}
-                        <path d="M 100 20 L 92 150" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="3" strokeLinecap="round" />
-                        <path d="M 98 20 L 90 150" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" />
+                      {/* Front Glass Cylinder */}
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="url(#glassFront)" />
+                      
+                      {/* Inner Glass Edge Refraction */}
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="4" />
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="none" stroke="url(#glassEdge)" strokeWidth="2" />
+                      
+                      {/* Intense Left Specular Highlight */}
+                      <path d="M 22 25 L 29 145" stroke="rgba(255,255,255,0.9)" strokeWidth="5" strokeLinecap="round" filter="blur(2px)" />
+                      <path d="M 23 27 L 30 143" stroke="rgba(255,255,255,1)" strokeWidth="2" strokeLinecap="round" />
+                      
+                      {/* Right Shadow Refraction */}
+                      <path d="M 98 25 L 91 145" stroke="rgba(0,0,0,0.3)" strokeWidth="5" strokeLinecap="round" filter="blur(1.5px)" />
+                      <path d="M 99 22 L 92 148" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" strokeLinecap="round" />
 
-                        {/* Thick Glass Base (Refractive Block) */}
-                        <path d="M 28 150 C 28 160, 92 160, 92 150 L 90 156 C 90 165, 30 165, 30 156 Z" fill="rgba(255,255,255,0.6)" />
-                        <ellipse cx="60" cy="156" rx="30" ry="5.5" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" />
-                        <ellipse cx="60" cy="158" rx="28" ry="4.5" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="2" />
+                      {/* Thick Glass Base (Refractive Block) */}
+                      <path d="M 28 150 C 28 160, 92 160, 92 150 L 90 156 C 90 165, 30 165, 30 156 Z" fill="rgba(255,255,255,0.7)" />
+                      <ellipse cx="60" cy="156" rx="30" ry="5.5" fill="none" stroke="rgba(255,255,255,0.95)" strokeWidth="3" />
+                      <ellipse cx="60" cy="158" rx="28" ry="4.5" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="2" />
+                      <path d="M 40 155 Q 60 160 80 155" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="4" filter="blur(1px)" />
 
-                        {/* Top Rim */}
-                        <ellipse cx="60" cy="20" rx="40" ry="7" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.9)" strokeWidth="3" />
-                        <ellipse cx="60" cy="20" rx="37" ry="6" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
-                        
-                        {/* Soft Specular Glare (Front) */}
-                        <path d="M 32 30 L 38 140" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="8" filter="blur(1.5px)" />
-                        {/* Sharp Specular Core */}
-                        <path d="M 33 30 L 39 140" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="2" />
+                      {/* Top Rim */}
+                      <ellipse cx="60" cy="20" rx="40" ry="7" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.95)" strokeWidth="2.5" />
+                      <ellipse cx="60" cy="20" rx="37" ry="6" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
+                    </svg>
 
-                        {/* Secondary Glare (Right) */}
-                        <path d="M 88 30 L 82 140" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="4" filter="blur(1.5px)" />
-                      </svg>
-                    </div>
-                    <div style={{ background: 'rgba(255,255,255,0.92)', border: '1px solid #d6c6b4', borderRadius: '8px', padding: '4px 16px', boxShadow: '0 2px 6px rgba(0,0,0,0.08)', textAlign: 'center' }}>
+                    <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: '12px', background: 'rgba(255,255,255,0.92)', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '4px 16px', boxShadow: '0 2px 6px rgba(0,0,0,0.08)', textAlign: 'center', width: 'max-content' }}>
                       <div style={{ fontWeight: '800', fontSize: '1.05rem', color: colors.textDark }}>Tumbler A</div>
                       <div style={{ fontSize: '0.85rem', color: colors.textMedium, fontWeight: '600' }}>
                         {waterLevelA > 0 ? `${Math.round(waterLevelA * 100)}% Volume` : 'Empty (200ml)'}
@@ -681,71 +727,67 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                   </div>
 
                   {/* Tumbler B */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', position: 'relative' }}>
+                  <div style={{ position: 'absolute', left: `${TUMBLER_B.cx - 60}px`, bottom: `${GROUND_Y}px`, width: '120px', height: '170px' }}>
                     {/* Realistic Contact Shadow Layering */}
                     <div style={{ position: 'absolute', bottom: '-2px', left: '50%', transform: 'translateX(-50%)', width: '70px', height: '8px', background: 'rgba(10, 5, 5, 0.7)', filter: 'blur(2px)', zIndex: -1, borderRadius: '50%' }} />
                     <div style={{ position: 'absolute', bottom: '-6px', left: '50%', transform: 'translateX(-50%)', width: '110px', height: '16px', background: 'rgba(20, 15, 10, 0.3)', filter: 'blur(5px)', zIndex: -2, borderRadius: '50%' }} />
                     <div style={{ position: 'absolute', bottom: '-10px', left: '60%', transform: 'translateX(-50%) skewX(-40deg)', width: '150px', height: '30px', background: 'linear-gradient(to right, rgba(30,20,15,0.15), rgba(30,20,15,0))', filter: 'blur(8px)', zIndex: -3, borderRadius: '50%' }} />
 
-                    <div style={{ position: 'relative', width: '120px', height: '170px', marginBottom: '8px' }}>
-                      <svg width="120" height="170" viewBox="0 0 120 170" style={{ position: 'relative', zIndex: 2, display: 'block', overflow: 'visible' }}>
-                        <defs>
-                          <clipPath id="tumblerClipB">
-                            <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" />
-                          </clipPath>
-                        </defs>
+                    <svg width="120" height="170" viewBox="0 0 120 170" style={{ position: 'relative', zIndex: 2, display: 'block', overflow: 'visible' }}>
+                      <defs>
+                        <clipPath id="tumblerClipB">
+                          <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" />
+                        </clipPath>
+                      </defs>
 
-                        {/* Inner Back Wall of Glass */}
-                        <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="rgba(0,0,0,0.03)" />
-                        
-                        {/* WATER LEVEL */}
-                        {waterLevelB > 0 && (
-                           <g>
-                              {/* Main water body */}
-                              <path d={`M ${20 + 8*(1-waterLevelB)} ${150 - 130*waterLevelB} L 28 150 C 28 160, 92 160, 92 150 L ${100 - 8*(1-waterLevelB)} ${150 - 130*waterLevelB} Z`} fill="url(#waterGrad)" />
-                              
-                              {/* Water Base Depth */}
-                              <ellipse cx="60" cy="150" rx="32" ry="6" fill="rgba(10, 80, 130, 0.6)" />
-                              
-                              {/* Water Surface (Meniscus) */}
-                              <ellipse cx="60" cy={150 - 130*waterLevelB} rx={40 - 8*(1-waterLevelB)} ry={7} fill="rgba(180, 230, 255, 0.4)" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" />
-                              
-                              {/* Meniscus Depth Ring */}
-                              <ellipse cx="60" cy={151 - 130*waterLevelB} rx={39 - 8*(1-waterLevelB)} ry={6.5} fill="none" stroke="rgba(0, 50, 100, 0.3)" strokeWidth="2" />
-                           </g>
-                        )}
-                        <rect id="tumbler-b-surface" x="0" y={150 - (130 * waterLevelB)} width="120" height="2" fill="transparent" pointerEvents="none" />
+                      {/* Inner Back Wall of Glass */}
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="rgba(0,0,0,0.06)" />
+                      {/* Deep Refraction Shadow inside */}
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="6" />
+                      
+                      {/* WATER LEVEL */}
+                      {waterLevelB > 0 && (
+                         <g>
+                            {/* Main water body */}
+                            <path d={`M ${20 + 8*(1-waterLevelB)} ${150 - 130*waterLevelB} L 28 150 C 28 160, 92 160, 92 150 L ${100 - 8*(1-waterLevelB)} ${150 - 130*waterLevelB} Z`} fill="url(#waterGrad)" />
+                            
+                            {/* Water Base Depth */}
+                            <ellipse cx="60" cy="150" rx="32" ry="6" fill="rgba(10, 80, 130, 0.6)" />
+                            
+                            {/* Water Surface (Meniscus) */}
+                            <ellipse cx="60" cy={150 - 130*waterLevelB} rx={40 - 8*(1-waterLevelB)} ry={7} fill="rgba(180, 230, 255, 0.4)" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" />
+                            <ellipse cx="60" cy={151 - 130*waterLevelB} rx={39 - 8*(1-waterLevelB)} ry={6} fill="none" stroke="rgba(0, 50, 100, 0.2)" strokeWidth="2" />
+                         </g>
+                      )}
+                      <rect id="tumbler-b-surface" x="0" y={150 - (130 * waterLevelB)} width="120" height="2" fill="transparent" pointerEvents="none" />
 
-                        {/* Front Glass Cylinder */}
-                        <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="url(#glassFront)" />
-                        
-                        {/* Fresnel Edges (Left) */}
-                        <path d="M 20 20 L 28 150" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="3" strokeLinecap="round" />
-                        <path d="M 22 20 L 30 150" fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="2" strokeLinecap="round" />
-                        
-                        {/* Fresnel Edges (Right) */}
-                        <path d="M 100 20 L 92 150" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="3" strokeLinecap="round" />
-                        <path d="M 98 20 L 90 150" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" />
+                      {/* Front Glass Cylinder */}
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="url(#glassFront)" />
+                      
+                      {/* Inner Glass Edge Refraction */}
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="4" />
+                      <path d="M 20 20 L 28 150 C 28 160, 92 160, 92 150 L 100 20 Z" fill="none" stroke="url(#glassEdge)" strokeWidth="2" />
+                      
+                      {/* Intense Left Specular Highlight */}
+                      <path d="M 22 25 L 29 145" stroke="rgba(255,255,255,0.9)" strokeWidth="5" strokeLinecap="round" filter="blur(2px)" />
+                      <path d="M 23 27 L 30 143" stroke="rgba(255,255,255,1)" strokeWidth="2" strokeLinecap="round" />
+                      
+                      {/* Right Shadow Refraction */}
+                      <path d="M 98 25 L 91 145" stroke="rgba(0,0,0,0.3)" strokeWidth="5" strokeLinecap="round" filter="blur(1.5px)" />
+                      <path d="M 99 22 L 92 148" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" strokeLinecap="round" />
 
-                        {/* Thick Glass Base (Refractive Block) */}
-                        <path d="M 28 150 C 28 160, 92 160, 92 150 L 90 156 C 90 165, 30 165, 30 156 Z" fill="rgba(255,255,255,0.6)" />
-                        <ellipse cx="60" cy="156" rx="30" ry="5.5" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" />
-                        <ellipse cx="60" cy="158" rx="28" ry="4.5" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="2" />
+                      {/* Thick Glass Base (Refractive Block) */}
+                      <path d="M 28 150 C 28 160, 92 160, 92 150 L 90 156 C 90 165, 30 165, 30 156 Z" fill="rgba(255,255,255,0.7)" />
+                      <ellipse cx="60" cy="156" rx="30" ry="5.5" fill="none" stroke="rgba(255,255,255,0.95)" strokeWidth="3" />
+                      <ellipse cx="60" cy="158" rx="28" ry="4.5" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="2" />
+                      <path d="M 40 155 Q 60 160 80 155" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="4" filter="blur(1px)" />
 
-                        {/* Top Rim */}
-                        <ellipse cx="60" cy="20" rx="40" ry="7" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.9)" strokeWidth="3" />
-                        <ellipse cx="60" cy="20" rx="37" ry="6" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
-                        
-                        {/* Soft Specular Glare (Front) */}
-                        <path d="M 32 30 L 38 140" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="8" filter="blur(1.5px)" />
-                        {/* Sharp Specular Core */}
-                        <path d="M 33 30 L 39 140" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="2" />
+                      {/* Top Rim */}
+                      <ellipse cx="60" cy="20" rx="40" ry="7" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.95)" strokeWidth="2.5" />
+                      <ellipse cx="60" cy="20" rx="37" ry="6" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
+                    </svg>
 
-                        {/* Secondary Glare (Right) */}
-                        <path d="M 88 30 L 82 140" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="4" filter="blur(1.5px)" />
-                      </svg>
-                    </div>
-                    <div style={{ background: 'rgba(255,255,255,0.92)', border: '1px solid #d6c6b4', borderRadius: '8px', padding: '4px 16px', boxShadow: '0 2px 6px rgba(0,0,0,0.08)', textAlign: 'center' }}>
+                    <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: '12px', background: 'rgba(255,255,255,0.92)', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '4px 16px', boxShadow: '0 2px 6px rgba(0,0,0,0.08)', textAlign: 'center', width: 'max-content' }}>
                       <div style={{ fontWeight: '800', fontSize: '1.05rem', color: colors.textDark }}>Tumbler B</div>
                       <div style={{ fontSize: '0.85rem', color: colors.textMedium, fontWeight: '600' }}>
                         {waterLevelB >= 0.95 ? 'Almost Full' : waterLevelB > 0 ? `${Math.round(waterLevelB * 100)}% Volume` : 'Empty (200ml)'}
@@ -801,7 +843,9 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                       </defs>
 
                       {/* Inner Back Wall */}
-                      <path d="M 46 22 L 74 22 L 74 52 C 74 65, 98 82, 98 108 L 98 215 C 98 226, 88 232, 76 232 L 44 232 C 32 232, 22 226, 22 215 L 22 108 C 22 82, 46 65, 46 52 Z" fill="rgba(0,0,0,0.03)" />
+                      <path d="M 46 22 L 74 22 L 74 52 C 74 65, 98 82, 98 108 L 98 215 C 98 226, 88 232, 76 232 L 44 232 C 32 232, 22 226, 22 215 L 22 108 C 22 82, 46 65, 46 52 Z" fill="rgba(0,0,0,0.06)" />
+                      {/* Deep Refraction Shadow inside */}
+                      <path d="M 46 22 L 74 22 L 74 52 C 74 65, 98 82, 98 108 L 98 215 C 98 226, 88 232, 76 232 L 44 232 C 32 232, 22 226, 22 215 L 22 108 C 22 82, 46 65, 46 52 Z" fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="6" />
 
                       {/* Water inside */}
                       {bottleFill > 0 && (
@@ -811,30 +855,42 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                           </g>
                           {/* Surface meniscus */}
                           <ellipse cx="60" cy={232 - 180 * bottleFill} rx={bottleFill > 0.68 ? 16 : 38} ry={bottleFill > 0.68 ? 3 : 6} fill="rgba(180, 230, 255, 0.4)" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" />
+                          <ellipse cx="60" cy={233 - 180 * bottleFill} rx={bottleFill > 0.68 ? 15 : 37} ry={bottleFill > 0.68 ? 2 : 5} fill="none" stroke="rgba(0,50,100,0.2)" strokeWidth="2" />
                         </g>
                       )}
 
-                      {/* Front wall */}
+                      {/* Front wall glass reflection */}
                       <path d="M 46 22 L 74 22 L 74 52 C 74 65, 98 82, 98 108 L 98 215 C 98 226, 88 232, 76 232 L 44 232 C 32 232, 22 226, 22 215 L 22 108 C 22 82, 46 65, 46 52 Z" fill="url(#bottleGlassFront)" />
                       
-                      {/* Edge Thickness Fresnel */}
-                      <path d="M 46 22 L 74 22 L 74 52 C 74 65, 98 82, 98 108 L 98 215 C 98 226, 88 232, 76 232 L 44 232 C 32 232, 22 226, 22 215 L 22 108 C 22 82, 46 65, 46 52 Z" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2.5" />
+                      {/* Inner Glass Edge Refraction */}
+                      <path d="M 46 22 L 74 22 L 74 52 C 74 65, 98 82, 98 108 L 98 215 C 98 226, 88 232, 76 232 L 44 232 C 32 232, 22 226, 22 215 L 22 108 C 22 82, 46 65, 46 52 Z" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="4" />
+                      <path d="M 46 22 L 74 22 L 74 52 C 74 65, 98 82, 98 108 L 98 215 C 98 226, 88 232, 76 232 L 44 232 C 32 232, 22 226, 22 215 L 22 108 C 22 82, 46 65, 46 52 Z" fill="none" stroke="url(#glassEdge)" strokeWidth="2" />
                       
-                      {/* Left Highlight */}
-                      <path d="M 25 102 L 25 212" stroke="rgba(255,255,255,0.9)" strokeWidth="4" strokeLinecap="round" filter="blur(1px)" />
-                      <path d="M 26 105 L 26 210" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" strokeLinecap="round" />
+                      {/* Intense Left Specular Highlight */}
+                      <path d="M 26 102 L 26 212" stroke="rgba(255,255,255,0.9)" strokeWidth="6" strokeLinecap="round" filter="blur(2px)" />
+                      <path d="M 27 105 L 27 210" stroke="rgba(255,255,255,1)" strokeWidth="2" strokeLinecap="round" />
 
-                      {/* Right shadow */}
-                      <path d="M 95 105 L 95 210" stroke="rgba(0,0,0,0.3)" strokeWidth="3" strokeLinecap="round" />
+                      {/* Right Shadow Refraction */}
+                      <path d="M 94 105 L 94 210" stroke="rgba(0,0,0,0.3)" strokeWidth="5" strokeLinecap="round" filter="blur(1.5px)" />
+                      <path d="M 96 102 L 96 212" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" strokeLinecap="round" />
 
-                      {/* Base Thickness */}
-                      <path d="M 32 231 Q 60 238 88 231 L 86 234 Q 60 240 34 234 Z" fill="rgba(255,255,255,0.6)" />
-                      <path d="M 32 231 Q 60 238 88 231" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="3" />
-                      <path d="M 30 228 Q 60 235 90 228" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="2" />
+                      {/* Neck Highlights */}
+                      <path d="M 48 24 L 48 50" stroke="rgba(255,255,255,0.8)" strokeWidth="3" filter="blur(1px)" />
+                      <path d="M 72 24 L 72 50" stroke="rgba(0,0,0,0.2)" strokeWidth="3" filter="blur(1px)" />
+
+                      {/* Base Glass Thickness */}
+                      <path d="M 32 231 Q 60 240 88 231 L 86 235 Q 60 242 34 235 Z" fill="rgba(255,255,255,0.7)" />
+                      <path d="M 32 231 Q 60 240 88 231" fill="none" stroke="rgba(255,255,255,0.95)" strokeWidth="3" />
+                      <path d="M 30 228 Q 60 237 90 228" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="2" />
+                      <path d="M 45 233 Q 60 238 75 233" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="4" filter="blur(1px)" />
 
                       {/* Rim / open mouth */}
                       <ellipse id="bottle-mouth-ref" cx="60" cy="22" rx="14" ry="4.5" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.95)" strokeWidth="2" />
                       <ellipse cx="60" cy="22" rx="13" ry="3.5" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="1" />
+                      
+                      {/* Neck threading */}
+                      <path d="M 45 28 Q 60 31 75 28" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" />
+                      <path d="M 45 34 Q 60 37 75 34" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" />
 
                     <g 
                       style={{
@@ -895,39 +951,39 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
         </div>
 
         {/* ────────── RIGHT PANEL ────────── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem', minHeight: 0, overflow: 'hidden' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem', minHeight: 0, overflow: 'hidden' }}>
 
           {/* Investigation Log */}
-          <div style={{ background: colors.cardBg, borderRadius: '12px', border: `1px solid ${colors.cardBorder}`, padding: '0.5rem 0.75rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', flexShrink: 0 }}>
-            <h4 style={{ margin: 0, fontSize: '1.15rem', color: colors.textDark, display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
-              <LayoutGrid size={18} color={colors.textDark} /> Investigation Log
+          <div style={{ background: colors.cardBg, borderRadius: '12px', border: `1px solid ${colors.cardBorder}`, padding: '0.25rem 0.5rem', display: 'flex', flexDirection: 'column', gap: '0.15rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', flexShrink: 0 }}>
+            <h4 style={{ margin: 0, fontSize: '24px', color: colors.textDark, display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800' }}>
+              <LayoutGrid size={24} color={colors.textDark} /> Investigation Log
             </h4>
             <AnimatePresence mode="popLayout">
-              {waterLevelA >= 0.50 && (
-                <motion.div key="obsA" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'white', padding: '0.6rem 1rem', borderRadius: '10px', border: `1px solid ${colors.cardBorder}`, display: 'flex', gap: '1rem', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+              {waterLevelA >= 0.49 && (
+                <motion.div key="obsA" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'white', padding: '0.25rem 0.5rem', borderRadius: '10px', border: `1px solid ${colors.cardBorder}`, display: 'flex', gap: '0.5rem', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                   <div style={{ width: '36px', height: '48px', position: 'relative', flexShrink: 0 }}>
                     <img src="/images/realistic_tumbler_water_half.jpg" alt="Tumbler A" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
                   </div>
                   <div>
-                    <div style={{ color: colors.accent, fontWeight: 'bold', fontSize: '1.15rem' }}>Observation 1</div>
-                    <div style={{ fontSize: '1.05rem', color: colors.textDark, marginTop: '2px', lineHeight: '1.4' }}>Tumbler A is half-filled with water (50% Volume).</div>
+                    <div style={{ color: colors.accent, fontWeight: '800', fontSize: '20px' }}>Observation 1</div>
+                    <div style={{ fontSize: '18px', color: colors.textDark, marginTop: '2px', lineHeight: '1.4', fontWeight: '600' }}>Tumbler A is half-filled with water (50% Volume).</div>
                   </div>
                 </motion.div>
               )}
-              {waterLevelB >= 0.95 && (
-                <motion.div key="obsB" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'white', padding: '0.6rem 1rem', borderRadius: '10px', border: `1px solid ${colors.cardBorder}`, display: 'flex', gap: '1rem', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+              {waterLevelB >= 0.94 && (
+                <motion.div key="obsB" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'white', padding: '0.25rem 0.5rem', borderRadius: '10px', border: `1px solid ${colors.cardBorder}`, display: 'flex', gap: '0.5rem', alignItems: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                   <div style={{ width: '36px', height: '48px', position: 'relative', flexShrink: 0 }}>
                     <img src="/images/realistic_tumbler_water_full.jpg" alt="Tumbler B" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }} />
                   </div>
                   <div>
-                    <div style={{ color: colors.accent, fontWeight: 'bold', fontSize: '1.15rem' }}>Observation 2</div>
-                    <div style={{ fontSize: '1.05rem', color: colors.textDark, marginTop: '2px', lineHeight: '1.4' }}>Tumbler B is almost completely filled with water.</div>
+                    <div style={{ color: colors.accent, fontWeight: '800', fontSize: '20px' }}>Observation 2</div>
+                    <div style={{ fontSize: '18px', color: colors.textDark, marginTop: '2px', lineHeight: '1.4', fontWeight: '600' }}>Tumbler B is almost completely filled with water.</div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
-            {waterLevelA < 0.50 && waterLevelB < 0.95 && (
-              <div style={{ textAlign: 'center', color: colors.textMedium, fontSize: '1.05rem', padding: '0.75rem 0', fontStyle: 'italic' }}>
+            {waterLevelA < 0.49 && waterLevelB < 0.94 && (
+              <div style={{ textAlign: 'center', color: colors.textMedium, fontSize: '18px', padding: '0.5rem 0', fontStyle: 'italic', fontWeight: '500' }}>
                 Waiting for observations...
               </div>
             )}
@@ -936,14 +992,14 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
           {/* Scientific Conclusion */}
           <AnimatePresence>
             {waterLevelB >= 0.90 && (
-              <motion.div key="conclusion" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} style={{ background: colors.successBg, padding: '1rem', borderRadius: '12px', border: `1px solid ${colors.successBorder}`, flexShrink: 0 }}>
-                <div style={{ color: colors.successText, fontWeight: 'bold', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.25rem' }}>
+              <motion.div key="conclusion" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} style={{ background: colors.successBg, padding: '0.25rem 0.5rem', borderRadius: '12px', border: `1px solid ${colors.successBorder}`, flexShrink: 0 }}>
+                <div style={{ color: colors.successText, fontWeight: '800', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '24px' }}>
                   🧪 Scientific Conclusion
                 </div>
-                <div style={{ fontSize: '1.05rem', color: colors.successText, lineHeight: '1.4', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ display: 'flex', gap: '10px' }}><CheckCircle2 size={18} color={colors.successText} style={{ flexShrink: 0, marginTop: '2px' }} /> Even though the tumblers have the same capacity, the water levels differ.</div>
-                  <div style={{ display: 'flex', gap: '10px' }}><CheckCircle2 size={18} color={colors.successText} style={{ flexShrink: 0, marginTop: '2px' }} /> The water in Tumbler A occupies less space than the water in Tumbler B.</div>
-                  <div style={{ display: 'flex', gap: '10px' }}><CheckCircle2 size={18} color={colors.successText} style={{ flexShrink: 0, marginTop: '2px' }} /> The space occupied by an object or substance is called its <strong>volume!</strong></div>
+                <div style={{ fontSize: '18px', color: colors.successText, lineHeight: '1.25', fontWeight: '600', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <div style={{ display: 'flex', gap: '10px' }}><CheckCircle2 size={20} color={colors.successText} style={{ flexShrink: 0, marginTop: '2px' }} /> Even though the tumblers have the same capacity, the water levels differ.</div>
+                  <div style={{ display: 'flex', gap: '10px' }}><CheckCircle2 size={20} color={colors.successText} style={{ flexShrink: 0, marginTop: '2px' }} /> The water in Tumbler A occupies less space than the water in Tumbler B.</div>
+                  <div style={{ display: 'flex', gap: '10px' }}><CheckCircle2 size={20} color={colors.successText} style={{ flexShrink: 0, marginTop: '2px' }} /> The space occupied by an object or substance is called its <strong>volume!</strong></div>
                 </div>
               </motion.div>
             )}
@@ -952,21 +1008,21 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
           {/* Think More */}
           <AnimatePresence>
             {waterLevelB >= 0.90 && (
-              <motion.div key="think" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ background: colors.thinkBg, padding: '0.6rem 0.75rem', borderRadius: '12px', border: `1px solid ${colors.thinkBorder}`, display: 'flex', flexDirection: 'column', gap: '0.4rem', flexShrink: 0, boxSizing: 'border-box' }}>
+              <motion.div key="think" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ background: colors.thinkBg, padding: '0.25rem 0.5rem', borderRadius: '12px', border: `1px solid ${colors.thinkBorder}`, display: 'flex', flexDirection: 'column', gap: '0.15rem', flexShrink: 0, boxSizing: 'border-box' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ color: colors.accent, fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.15rem' }}>
-                    <HelpCircle size={18} /> Think More!
+                  <div style={{ color: colors.accent, fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '24px' }}>
+                    <HelpCircle size={24} /> Think More!
                   </div>
                 </div>
-                <div style={{ fontSize: '1rem', color: colors.thinkText, lineHeight: '1.2', fontWeight: 'bold' }}>
+                <div style={{ fontSize: '18px', color: colors.thinkText, lineHeight: '1.2', fontWeight: '700' }}>
                   What if we pour the water from Tumbler B back into the bottle? What will you observe?
                 </div>
-                <div style={{ fontSize: '0.85rem', fontStyle: 'italic', color: colors.textDark, opacity: 0.85, lineHeight: '1.2' }}>
-                  <Info size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
+                <div style={{ fontSize: '16px', fontStyle: 'italic', color: colors.textDark, opacity: 0.85, lineHeight: '1.2', fontWeight: '500' }}>
+                  <Info size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
                   Hint: The bottle may not be able to hold all the water. What might happen if there is more water than the bottle can hold?
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
                     {THINK_OPTIONS.map((opt, i) => {
                       const isCorrectSelection = thinkFeedback && thinkFeedback.type === 'success' && selectedOption === i;
                       return (
@@ -977,31 +1033,33 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                           handleCheckAnswer(i);
                         }}
                         style={{
-                          padding: '0.5rem 0.75rem',
+                          padding: '6px 12px',
                           borderRadius: '8px',
                           border: `2px solid ${isCorrectSelection ? '#22c55e' : (selectedOption === i ? colors.accent : colors.cardBorder)}`,
                           background: isCorrectSelection ? '#f0fdf4' : (selectedOption === i ? '#fff7ed' : 'white'),
                           color: isCorrectSelection ? '#15803d' : (selectedOption === i ? colors.accent : colors.textDark),
-                          fontSize: '0.95rem',
+                          fontSize: '17px',
+                          lineHeight: '1.2',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '12px',
-                          fontWeight: selectedOption === i ? '600' : '500',
+                          gap: '10px',
+                          fontWeight: selectedOption === i ? '700' : '600',
                           boxShadow: selectedOption === i ? '0 2px 4px rgba(0,0,0,0.05)' : 'none',
-                          transition: 'all 0.2s ease'
+                          transition: 'all 0.2s ease',
+                          minHeight: '42px'
                         }}
                       >
                         <div style={{ 
-                          width: '18px', height: '18px', borderRadius: '50%', 
+                          width: '24px', height: '24px', borderRadius: '50%', 
                           border: `2px solid ${isCorrectSelection ? '#22c55e' : (selectedOption === i ? colors.accent : '#cbd5e1')}`,
                           display: 'flex', justifyContent: 'center', alignItems: 'center', flexShrink: 0,
                           background: 'white'
                         }}>
                           {isCorrectSelection ? (
-                             <CheckCircle2 size={14} color="#15803d" />
+                             <CheckCircle2 size={18} color="#15803d" />
                           ) : (
-                             selectedOption === i && <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: colors.accent }} />
+                             selectedOption === i && <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: colors.accent }} />
                           )}
                         </div>
                         {opt}
@@ -1011,8 +1069,8 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
                   <AnimatePresence>
                     {thinkFeedback && (
                       <motion.div key="feedback" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} style={{ overflow: 'hidden' }}>
-                        <div style={{ padding: '0.75rem 1rem', borderRadius: '8px', background: thinkFeedback.type === 'success' ? colors.successBg : '#fef2f2', border: `1px solid ${thinkFeedback.type === 'success' ? colors.successBorder : '#fecaca'}`, color: thinkFeedback.type === 'success' ? colors.successText : '#b91c1c', fontSize: '0.95rem', fontWeight: '500', display: 'flex', alignItems: 'flex-start', gap: '8px', boxSizing: 'border-box' }}>
-                          {thinkFeedback.type === 'success' ? <CheckCircle2 size={18} style={{ flexShrink: 0, marginTop: '2px' }} /> : <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />}
+                        <div style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: thinkFeedback.type === 'success' ? colors.successBg : '#fef2f2', border: `1px solid ${thinkFeedback.type === 'success' ? colors.successBorder : '#fecaca'}`, color: thinkFeedback.type === 'success' ? colors.successText : '#b91c1c', fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'flex-start', gap: '8px', boxSizing: 'border-box' }}>
+                          {thinkFeedback.type === 'success' ? <CheckCircle2 size={20} style={{ flexShrink: 0, marginTop: '2px' }} /> : <AlertCircle size={20} style={{ flexShrink: 0, marginTop: '2px' }} />}
                           <div>{thinkFeedback.text}</div>
                         </div>
                       </motion.div>
@@ -1022,7 +1080,6 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
               </motion.div>
             )}
           </AnimatePresence>
-
         </div>
       </div>
     </div>
