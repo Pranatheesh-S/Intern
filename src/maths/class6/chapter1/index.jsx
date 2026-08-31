@@ -123,7 +123,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
     if (currentStep === 5) {
       const activeShapeActivity = currentSlide;
       return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary fallback={<div style={{ color: '#0f172a', padding: '1.2rem', fontWeight: '800' }}>3D Studio initializing...</div>}>
             <Canvas camera={{ position: [0, 0.1, 3.2], fov: 45 }} shadows dpr={[1, 2]}>
               <ambientLight intensity={1.9} />
@@ -177,7 +177,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
 
     if (currentStep === 6) {
       return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary>
             <Canvas camera={{ position: [0, 2.2, 3.8], fov: 44 }}>
               <ambientLight intensity={1.8} />
@@ -193,7 +193,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
 
     if (currentStep === 7) {
       return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary>
             <Canvas camera={{ position: [0, 0.8, 4.2], fov: 45 }}>
               <ambientLight intensity={2.0} />
@@ -212,7 +212,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
 
     if (currentStep === 8) {
       return (
-        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
           <ErrorBoundary>
             <Canvas camera={{ position: [0, 1.2, 4.2], fov: 45 }}>
               <ambientLight intensity={1.8} />
@@ -237,26 +237,50 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
   };
 
   const renderBottomNav = (totalSlides, nextStepIndex, prevStepIndex) => (
-    <div className="dark-bottom-nav" style={{ position: 'relative', marginTop: 'auto', alignSelf: 'center', bottom: 'auto', left: 'auto', transform: 'none', marginBottom: '16px', flexShrink: 0 }}>
-      <button className="dark-nav-btn" onClick={() => {
-        if (currentSlide > 1) setCurrentSlide(currentSlide - 1);
-        else if (prevStepIndex) { setCurrentStep(prevStepIndex); setCurrentSlide(1); }
-      }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-        Back
-      </button>
-      <div className="dark-nav-dots">
+    <div className="math-bottom-nav">
+      <div className="math-slide-indicator">Slide {currentSlide} of {totalSlides}</div>
+      <div className="math-nav-dots">
         {Array.from({ length: totalSlides }).map((_, i) => (
-          <div key={i} className={`dark-nav-dot ${currentSlide === i + 1 ? 'active' : ''}`} />
+          <div key={i} className={`math-nav-dot ${currentSlide === i + 1 ? 'active' : ''}`} />
         ))}
       </div>
-      <button className="dark-nav-btn next" onClick={() => {
-        if (currentSlide < totalSlides) setCurrentSlide(currentSlide + 1);
-        else if (nextStepIndex) { setCurrentStep(nextStepIndex); setCurrentSlide(1); }
-      }}>
-        Next
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
-      </button>
+      <div style={{ display: 'flex', gap: '12px' }}>
+        <button className="math-btn-back" onClick={() => {
+          if (currentSlide > 1) setCurrentSlide(currentSlide - 1);
+          else if (prevStepIndex) { setCurrentStep(prevStepIndex); setCurrentSlide(1); }
+        }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+          Back
+        </button>
+        <button className="math-btn-next" onClick={() => {
+          if (currentSlide < totalSlides) setCurrentSlide(currentSlide + 1);
+          else if (nextStepIndex) { setCurrentStep(nextStepIndex); setCurrentSlide(1); }
+        }}>
+          Next
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderLeftPanelContent = () => (
+    <div className="math-left-panel">
+      <div className="math-chapter-eyebrow">CHAPTER 1 · CLASS 6 MATHEMATICS</div>
+      <h1 className="math-chapter-title">Patterns in Mathematics</h1>
+      
+      <div className="math-3d-container">
+        <div className="math-3d-label">✨ INTERACTIVE 3D</div>
+        <div className="math-3d-hint">💡 Drag to Rotate · Scroll to Zoom</div>
+        {renderTopShowcase()}
+      </div>
+
+      <div className="math-quote-card">
+        <div className="math-quote-mark">“</div>
+        <div className="math-quote-text">
+          Mathematics is the science of patterns, and those patterns can be found anywhere — in the stars, in spider webs, and even in the number of petals on a flower.
+        </div>
+        <div className="math-quote-author">— The Mathematics Lab</div>
+      </div>
     </div>
   );
 
@@ -399,79 +423,103 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
           <RelationsAmongSequences onNext={() => { setCurrentStep(5); setCurrentSlide(1); }} />
         ) : currentStep === 5 ? (
           <div className="math-responsive-layout">
-            <div className="math-3d-column">{renderTopShowcase()}</div>
-            <div className="math-content-column">
-              <PatternsInShapes
-                activeActivity={currentSlide}
-                setActiveActivity={(id) => setCurrentSlide(id)}
-                viewMode={viewMode}
-                setViewMode={setViewMode}
-                polygonIdx={polygonIdx}
-                setPolygonIdx={setPolygonIdx}
-                placedPolyEdges={placedPolyEdges}
-                setPlacedPolyEdges={setPlacedPolyEdges}
-                graphIdx={graphIdx}
-                setGraphIdx={setGraphIdx}
-                activeComponentIds={activeComponentIds}
-                setActiveComponentIds={setActiveComponentIds}
-                squareSize={squareSize}
-                setSquareSize={setSquareSize}
-                placedSquareLayers={placedSquareLayers}
-                setPlacedSquareLayers={setPlacedSquareLayers}
-                triangleRows={triangleRows}
-                setTriangleRows={setTriangleRows}
-                placedTriLayers={placedTriLayers}
-                setPlacedTriLayers={setPlacedTriLayers}
-                kochDepth={kochDepth}
-                setKochDepth={setKochDepth}
-              />
-              {renderBottomNav(5, 6, 4)}
+            {renderLeftPanelContent()}
+            <div className="math-right-panel">
+              <div className="math-section-header-area">
+                <div className="math-section-eyebrow">✨ SECTION 5</div>
+                <h2 className="math-section-title">📖 Patterns in Shapes</h2>
+              </div>
+              <div className="math-inner-content-card">
+                <PatternsInShapes
+                  activeActivity={currentSlide}
+                  setActiveActivity={(id) => setCurrentSlide(id)}
+                  viewMode={viewMode}
+                  setViewMode={setViewMode}
+                  polygonIdx={polygonIdx}
+                  setPolygonIdx={setPolygonIdx}
+                  placedPolyEdges={placedPolyEdges}
+                  setPlacedPolyEdges={setPlacedPolyEdges}
+                  graphIdx={graphIdx}
+                  setGraphIdx={setGraphIdx}
+                  activeComponentIds={activeComponentIds}
+                  setActiveComponentIds={setActiveComponentIds}
+                  squareSize={squareSize}
+                  setSquareSize={setSquareSize}
+                  placedSquareLayers={placedSquareLayers}
+                  setPlacedSquareLayers={setPlacedSquareLayers}
+                  triangleRows={triangleRows}
+                  setTriangleRows={setTriangleRows}
+                  placedTriLayers={placedTriLayers}
+                  setPlacedTriLayers={setPlacedTriLayers}
+                  kochDepth={kochDepth}
+                  setKochDepth={setKochDepth}
+                />
+                {renderBottomNav(5, 6, 4)}
+              </div>
             </div>
           </div>
         ) : currentStep === 6 ? (
           <div className="math-responsive-layout">
-            <div className="math-3d-column">{renderTopShowcase()}</div>
-            <div className="math-content-column">
-              <ShapesToNumbers 
-                currentSlide={currentSlide}
-                s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
-                s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
-                s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
-                s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
-              />
-              {renderBottomNav(2, 7, 5)}
+            {renderLeftPanelContent()}
+            <div className="math-right-panel">
+              <div className="math-section-header-area">
+                <div className="math-section-eyebrow">✨ SECTION 6</div>
+                <h2 className="math-section-title">📖 Shapes to Numbers</h2>
+              </div>
+              <div className="math-inner-content-card">
+                <ShapesToNumbers 
+                  currentSlide={currentSlide}
+                  s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
+                  s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
+                  s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
+                  s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
+                />
+                {renderBottomNav(2, 7, 5)}
+              </div>
             </div>
           </div>
         ) : currentStep === 7 ? (
           <div className="math-responsive-layout">
-            <div className="math-3d-column">{renderTopShowcase()}</div>
-            <div className="math-content-column">
-              <RealLifeMathLab 
-                currentSlide={currentSlide}
-                labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
-                labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
-                labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
-                labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
-                labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
-                checkoutStep={checkoutStep}
-                onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
-              />
-              {renderBottomNav(4, 8, 6)}
+            {renderLeftPanelContent()}
+            <div className="math-right-panel">
+              <div className="math-section-header-area">
+                <div className="math-section-eyebrow">✨ SECTION 7</div>
+                <h2 className="math-section-title">📖 Real Life Math Lab</h2>
+              </div>
+              <div className="math-inner-content-card">
+                <RealLifeMathLab 
+                  currentSlide={currentSlide}
+                  labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
+                  labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
+                  labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
+                  labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
+                  labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
+                  checkoutStep={checkoutStep}
+                  onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
+                />
+                {renderBottomNav(4, 8, 6)}
+              </div>
             </div>
           </div>
         ) : (
           <div className="math-responsive-layout">
-            <div className="math-3d-column">{renderTopShowcase()}</div>
-            <div className="math-content-column">
-              <ChapterQuizAndSolutions 
-                currentSlide={currentSlide}
-                quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
-                isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
-                quizScore={quizScore}
-                activeQuizQuestionId={activeQuizQuestionId}
-                setActiveQuizQuestionId={setActiveQuizQuestionId}
-              />
-              {renderBottomNav(1, null, 7)}
+            {renderLeftPanelContent()}
+            <div className="math-right-panel">
+              <div className="math-section-header-area">
+                <div className="math-section-eyebrow">✨ SECTION 8</div>
+                <h2 className="math-section-title">📖 Chapter Quiz & Solutions</h2>
+              </div>
+              <div className="math-inner-content-card">
+                <ChapterQuizAndSolutions 
+                  currentSlide={currentSlide}
+                  quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
+                  isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
+                  quizScore={quizScore}
+                  activeQuizQuestionId={activeQuizQuestionId}
+                  setActiveQuizQuestionId={setActiveQuizQuestionId}
+                />
+                {renderBottomNav(1, null, 7)}
+              </div>
             </div>
           </div>
         )}

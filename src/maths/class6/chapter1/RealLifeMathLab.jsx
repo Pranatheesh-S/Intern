@@ -65,7 +65,7 @@ export default function RealLifeMathLab({
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               The 3×3 Calendar Magic Window
             </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
+            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#e2e8f0', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
               Select any interior date on the calendar. The cumulative sum of all 9 dates enclosed inside the $3 \times 3$ window is invariantly equal to <strong>9 × Center Date</strong>, because opposite paired dates cancel deviations symmetrically.
             </p>
           </div>
@@ -79,18 +79,18 @@ export default function RealLifeMathLab({
               </span>
             </div>
             {magicGameWon ? (
-              <span style={{ background: '#22c55e', color: '#ffffff', padding: '0.3rem 0.85rem', borderRadius: '8px', fontWeight: '900', fontSize: '0.88rem' }}>
+              <span style={{ background: '#22c55e', color: '#0f172a', padding: '0.3rem 0.85rem', borderRadius: '8px', fontWeight: '900', fontSize: '0.88rem' }}>
                 🎉 Solved! {magicTargetSum} / 9 = {safeCenter}
               </span>
             ) : (
-              <span style={{ background: '#ffffff', color: 'var(--theme-primary-dark, #0f766e)', padding: '0.3rem 0.85rem', borderRadius: '8px', fontWeight: '900', fontSize: '0.85rem', border: '1px solid var(--theme-border, #a7f3d0)' }}>
+              <span style={{ background: '#0f172a', color: 'var(--theme-primary-dark, #0f766e)', padding: '0.3rem 0.85rem', borderRadius: '8px', fontWeight: '900', fontSize: '0.85rem', border: '1px solid var(--theme-border, #a7f3d0)' }}>
                 Hint: Target ÷ 9
               </span>
             )}
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: '0.85rem' }}>
-            <div style={{ background: '#ffffff', padding: '0.75rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)' }}>
+            <div style={{ background: '#0f172a', padding: '0.75rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', textAlign: 'center' }}>
                 {['M','T','W','T','F','S','S'].map((d, i) => <span key={i} style={{ fontSize: '0.78rem', fontWeight: '900', color: '#64748b' }}>{d}</span>)}
                 {calendarDays.map(day => {
@@ -106,8 +106,8 @@ export default function RealLifeMathLab({
                         fontWeight: isCenter ? '900' : '700',
                         borderRadius: '6px',
                         border: 'none',
-                        background: isCenter ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : isInBox ? 'var(--theme-badge-bg, #ccfbf1)' : '#f8fafc',
-                        color: isCenter ? '#ffffff' : isInBox ? 'var(--theme-primary-dark, #0f766e)' : '#0f172a',
+                        background: isCenter ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : isInBox ? 'var(--theme-badge-bg, #ccfbf1)' : '#1e293b',
+                        color: isCenter ? '#0f172a' : isInBox ? 'var(--theme-primary-dark, #0f766e)' : '#ffffff',
                         cursor: 'pointer',
                         padding: 0,
                         boxShadow: isCenter ? 'var(--theme-btn-shadow, 0 2px 8px rgba(13, 148, 136, 0.35))' : 'none'
@@ -120,7 +120,7 @@ export default function RealLifeMathLab({
               </div>
             </div>
 
-            <div style={{ background: '#ffffff', padding: '0.65rem 0.85rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.4rem', justifyContent: 'center' }}>
+            <div style={{ background: '#0f172a', padding: '0.65rem 0.85rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.4rem', justifyContent: 'center' }}>
               <div style={{ fontSize: '0.85rem', fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)', textAlign: 'center' }}>
                 Symmetric Pairs Example
               </div>
@@ -132,7 +132,7 @@ export default function RealLifeMathLab({
                   [safeCenter - 6, safeCenter + 6],
                   [safeCenter - 1, safeCenter + 1]
                 ].map((pair, idx) => (
-                  <div key={idx} style={{ background: '#f8fafc', padding: '0.2rem 0.3rem', borderRadius: '6px', fontSize: '0.75rem', textAlign: 'center', fontWeight: '700', color: '#475569', border: '1px solid #e2e8f0' }}>
+                  <div key={idx} style={{ background: '#1e293b', padding: '0.2rem 0.3rem', borderRadius: '6px', fontSize: '0.75rem', textAlign: 'center', fontWeight: '700', color: '#475569', border: '1px solid #475569' }}>
                     {pair[0]} + {pair[1]} = <span style={{ color: 'var(--theme-primary, #0d9488)', fontWeight: '900' }}>{pair[0] + pair[1]}</span>
                   </div>
                 ))}
@@ -157,13 +157,13 @@ export default function RealLifeMathLab({
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               Market Grocery Billing & Arithmetic Progressions
             </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
+            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#e2e8f0', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
               Every supermarket receipt applies linear progression: Total Cost = Unit Rate × Quantity. Adjust produce weights to evaluate billing arithmetic:
             </p>
           </div>
 
           {/* Arithmetic Progression Example Box */}
-          <div style={{ background: '#ffffff', padding: '0.7rem 0.8rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', flex: 1, justifyContent: 'center' }}>
+          <div style={{ background: '#0f172a', padding: '0.7rem 0.8rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', flex: 1, justifyContent: 'center' }}>
             <div style={{ fontSize: '0.85rem', fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)' }}>
               Sequence Rule: Add Unit Rate (₹30 or ₹50) per kg
             </div>
@@ -177,8 +177,8 @@ export default function RealLifeMathLab({
                     <span key={i} style={{ 
                       padding: '0.2rem 0.4rem', 
                       borderRadius: '8px', 
-                      background: isSelected ? 'var(--theme-primary, #0d9488)' : '#f1f5f9', 
-                      color: isSelected ? '#ffffff' : '#334155', 
+                      background: isSelected ? 'var(--theme-primary, #0d9488)' : '#334155', 
+                      color: isSelected ? '#0f172a' : '#e2e8f0', 
                       fontWeight: isSelected ? '900' : '700',
                       fontSize: '0.85rem',
                       boxShadow: isSelected ? '0 3px 8px rgba(13, 148, 136, 0.4)' : 'none',
@@ -202,8 +202,8 @@ export default function RealLifeMathLab({
                     <span key={i} style={{ 
                       padding: '0.2rem 0.4rem', 
                       borderRadius: '8px', 
-                      background: isSelected ? '#ef4444' : '#f1f5f9', 
-                      color: isSelected ? '#ffffff' : '#334155', 
+                      background: isSelected ? '#ef4444' : '#334155', 
+                      color: isSelected ? '#0f172a' : '#e2e8f0', 
                       fontWeight: isSelected ? '900' : '700',
                       fontSize: '0.85rem',
                       boxShadow: isSelected ? '0 3px 8px rgba(239, 68, 68, 0.4)' : 'none',
@@ -226,13 +226,13 @@ export default function RealLifeMathLab({
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
-            <div style={{ background: '#ffffff', padding: '0.85rem 1.15rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)' }}>
+            <div style={{ background: '#0f172a', padding: '0.85rem 1.15rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)' }}>
               <div style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>🥔 Russet Potatoes (₹30/kg)</div>
               <input type="range" min="1" max="10" value={labKgPotatoes} onChange={e => setLabKgPotatoes(parseInt(e.target.value, 10))} style={{ width: '100%', accentColor: 'var(--theme-primary, #0d9488)', margin: '0.5rem 0' }} />
               <div style={{ fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)', fontSize: '0.95rem' }}>{labKgPotatoes} kg = ₹{labKgPotatoes * 30}</div>
             </div>
 
-            <div style={{ background: '#ffffff', padding: '0.85rem 1.15rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)' }}>
+            <div style={{ background: '#0f172a', padding: '0.85rem 1.15rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)' }}>
               <div style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>🍅 Heirloom Tomatoes (₹50/kg)</div>
               <input type="range" min="1" max="10" value={labKgTomatoes} onChange={e => setLabKgTomatoes(parseInt(e.target.value, 10))} style={{ width: '100%', accentColor: 'var(--theme-primary, #0d9488)', margin: '0.5rem 0' }} />
               <div style={{ fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)', fontSize: '0.95rem' }}>{labKgTomatoes} kg = ₹{labKgTomatoes * 50}</div>
@@ -249,7 +249,7 @@ export default function RealLifeMathLab({
               padding: '0.95rem 1.35rem', 
               borderRadius: '14px', 
               fontWeight: '900', 
-              color: '#ffffff', 
+              color: '#0f172a', 
               fontSize: '1.18rem', 
               textAlign: 'center', 
               boxShadow: 'var(--theme-btn-shadow, 0 4px 16px rgba(13, 148, 136, 0.35))',
@@ -274,13 +274,13 @@ export default function RealLifeMathLab({
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               Virahānka Fibonacci Numbers in Botanical Anatomy
             </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
+            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#e2e8f0', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
               Petal counts in flowering plants overwhelmingly belong to the Virahānka sequence ($3, 5, 8, 13, 21 \dots$) because the golden angle packing optimizes sunlight exposure for every petal:
             </p>
           </div>
 
           {/* Fibonacci Sequence Example Box */}
-          <div style={{ background: '#ffffff', padding: '0.8rem 1rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', flex: 1, justifyContent: 'center' }}>
+          <div style={{ background: '#0f172a', padding: '0.8rem 1rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', flex: 1, justifyContent: 'center' }}>
             <div style={{ fontSize: '0.85rem', fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)' }}>
               Sequence Rule: Add the previous two numbers
             </div>
@@ -291,8 +291,8 @@ export default function RealLifeMathLab({
                   <span key={i} style={{ 
                     padding: '0.25rem 0.55rem', 
                     borderRadius: '8px', 
-                    background: isSelected ? 'var(--theme-primary, #0d9488)' : '#f1f5f9', 
-                    color: isSelected ? '#ffffff' : '#334155', 
+                    background: isSelected ? 'var(--theme-primary, #0d9488)' : '#334155', 
+                    color: isSelected ? '#0f172a' : '#e2e8f0', 
                     fontWeight: isSelected ? '900' : '700',
                     fontSize: '0.95rem',
                     boxShadow: isSelected ? '0 3px 10px rgba(13, 148, 136, 0.4)' : 'none',
@@ -329,7 +329,7 @@ export default function RealLifeMathLab({
                   padding: '0.85rem 0.55rem',
                   borderRadius: '14px',
                   border: labSelectedFlower === k ? '2.5px solid var(--theme-primary, #0d9488)' : '1.8px solid var(--theme-border, #a7f3d0)',
-                  background: labSelectedFlower === k ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff',
+                  background: labSelectedFlower === k ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a',
                   textAlign: 'center',
                   cursor: 'pointer',
                   boxShadow: labSelectedFlower === k ? 'var(--theme-btn-shadow, 0 4px 14px rgba(13, 148, 136, 0.25))' : 'none',
@@ -352,12 +352,12 @@ export default function RealLifeMathLab({
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               Powers of 2: The Chessboard Doubling Legend & Viral Reach
             </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.96rem', color: '#334155', lineHeight: 1.55, textAlign: 'justify', textJustify: 'inter-word' }}>
+            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.96rem', color: '#e2e8f0', lineHeight: 1.55, textAlign: 'justify', textJustify: 'inter-word' }}>
               In the celebrated Indian mathematical legend of the chessboard, placing 1 grain on square 1 and doubling each subsequent square (1 → 2 → 4 → 8 → 16 → … → 1024) shows how powers of 2 ($2^N$) grow at an astounding exponential velocity:
             </p>
           </div>
 
-          <div style={{ background: '#ffffff', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: '#0f172a', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>Step N = {labViralRounds}:</span>
             <input
               type="range"
@@ -387,7 +387,7 @@ export default function RealLifeMathLab({
                   padding: '0.45rem 0.5rem',
                   borderRadius: '10px',
                   border: labViralRounds === (item.exp === '2⁰' ? 0 : item.exp === '2³' ? 3 : item.exp === '2⁶' ? 6 : 10) ? '2px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)',
-                  background: labViralRounds === (item.exp === '2⁰' ? 0 : item.exp === '2³' ? 3 : item.exp === '2⁶' ? 6 : 10) ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff',
+                  background: labViralRounds === (item.exp === '2⁰' ? 0 : item.exp === '2³' ? 3 : item.exp === '2⁶' ? 6 : 10) ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a',
                   textAlign: 'center',
                   cursor: 'pointer',
                   boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)'
