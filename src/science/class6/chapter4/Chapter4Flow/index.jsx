@@ -14,14 +14,17 @@ import {
 } from 'lucide-react';
 import './Chapter4Flow.css';
 
+const GOLD_COLOR = "#F59E0B";
+const GOLD_GLOW = "rgba(245, 158, 11, 0.75)";
+
 const CARDS_DATA = [
   {
     num: "01",
     id: "intro_magnets",
     title: "INTRODUCTION",
     sub: "Reshma's storm & compass",
-    color: "#2563eb",
-    glow: "rgba(37, 99, 235, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_1.jpg",
     icon: Target
   },
@@ -30,8 +33,8 @@ const CARDS_DATA = [
     id: "activity_4_1",
     title: "MAGNETIC ITEMS",
     sub: "Predict & test",
-    color: "#e11d48",
-    glow: "rgba(225, 29, 72, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_2.jpg",
     icon: Crosshair
   },
@@ -40,8 +43,8 @@ const CARDS_DATA = [
     id: "magnetic_poles",
     title: "POLES OF MAGNET",
     sub: "Iron filings & pole pairs",
-    color: "#F43F5E",
-    glow: "rgba(244, 63, 94, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_3.jpg",
     icon: Activity
   },
@@ -50,8 +53,8 @@ const CARDS_DATA = [
     id: "suspended_magnet",
     title: "FINDING DIRECTIONS",
     sub: "Hanging magnet N->S",
-    color: "#0284c7",
-    glow: "rgba(2, 132, 199, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_4.jpg",
     icon: Compass
   },
@@ -60,8 +63,8 @@ const CARDS_DATA = [
     id: "magnetic_compass",
     title: "MAKE A COMPASS",
     sub: "Float magnetized needle",
-    color: "#e11d48",
-    glow: "rgba(225, 29, 72, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_5.jpg",
     icon: Crosshair
   },
@@ -70,8 +73,8 @@ const CARDS_DATA = [
     id: "magnet_interaction",
     title: "ATTRACTION & REPULSION",
     sub: "Unlike attract, like repel",
-    color: "#d97706",
-    glow: "rgba(217, 119, 6, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_6.jpg",
     icon: Magnet
   },
@@ -80,8 +83,8 @@ const CARDS_DATA = [
     id: "activity_4_6",
     title: "COMPASS & MAGNET",
     sub: "Deflect needle live",
-    color: "#2563eb",
-    glow: "rgba(37, 99, 235, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_7.jpg",
     icon: Compass
   },
@@ -90,8 +93,8 @@ const CARDS_DATA = [
     id: "activity_4_7",
     title: "THROUGH MATERIALS",
     sub: "Passes through barriers",
-    color: "#e11d48",
-    glow: "rgba(225, 29, 72, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_8.jpg",
     icon: Sliders
   },
@@ -100,8 +103,8 @@ const CARDS_DATA = [
     id: "sci6-ch4-sec45-fun-with-magnets",
     title: "FUN WITH MAGNETS",
     sub: "Maze & runaway cars",
-    color: "#d97706",
-    glow: "rgba(217, 119, 6, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_9.jpg",
     icon: Car
   },
@@ -110,8 +113,8 @@ const CARDS_DATA = [
     id: "chapter_4_quiz",
     title: "TEST KNOWLEDGE",
     sub: "20 Questions on Magnets",
-    color: "#2563eb",
-    glow: "rgba(37, 99, 235, 0.25)",
+    color: GOLD_COLOR,
+    glow: GOLD_GLOW,
     image: "/ch4_cards/img_10.jpg",
     icon: HelpCircle
   }
@@ -119,7 +122,7 @@ const CARDS_DATA = [
 
 export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
   return (
-    <div className="hud-chapter4-wrapper light-theme">
+    <div className="hud-chapter4-wrapper">
       {/* Magnetic Field Vector Lines Background SVG */}
       <svg className="magnetic-lines-bg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M-100 450 C 200 100, 500 100, 720 450 C 940 800, 1240 800, 1540 450" stroke="rgba(37, 99, 235, 0.18)" strokeWidth="3" fill="none" />
@@ -134,8 +137,6 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
         {/* Main 10 Prominent Cards Grid */}
         <div className="hud-grid">
           {CARDS_DATA.map((card, idx) => {
-            const IconComponent = card.icon;
-
             return (
               <motion.div 
                 key={card.id}
@@ -168,11 +169,6 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
                     className="hud-art-img" 
                   />
                   <div className="hud-art-overlay" />
-                  
-                  {/* Floating Circular Icon Badge */}
-                  <div className="hud-icon-badge" style={{ borderColor: card.color }}>
-                    <IconComponent size={18} color={card.color} />
-                  </div>
                 </div>
               </motion.div>
             );
@@ -184,14 +180,6 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
           <button 
             onClick={onBackToDashboard}
             className="hud-btn hud-btn-back"
-            style={{
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '10px',
-              fontWeight: 800,
-              boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)'
-            }}
           >
             <ArrowLeft size={18} color="#ffffff" />
             <span>BACK TO CLASS 6 WING</span>
@@ -200,14 +188,6 @@ export default function Chapter4Flow({ onBackToDashboard, onLaunchActivity }) {
           <button 
             onClick={() => onLaunchActivity('chapter_4_quiz')}
             className="hud-btn hud-btn-quiz"
-            style={{
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '10px',
-              fontWeight: 800,
-              boxShadow: '0 6px 20px rgba(217, 119, 6, 0.45)'
-            }}
           >
             <GraduationCap size={20} color="#ffffff" />
             <span>QUIZ HUB</span>

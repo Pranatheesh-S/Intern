@@ -140,26 +140,6 @@ export default function GroupingBasicsBookSpread({ onBackToDashboard }) {
                 2. Checkpoint {quizDone && '✓'}
               </button>
             </div>
-
-            <div style={{ display: 'flex', gap: '0.3rem' }}>
-              {!isSpeaking ? (
-                <button
-                  onClick={handleReadAloud}
-                  className="outline"
-                  style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem', borderRadius: '6px' }}
-                >
-                  <Volume2 size={12} /> Read aloud
-                </button>
-              ) : (
-                <button
-                  onClick={handleStopSpeech}
-                  className="outline"
-                  style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem', borderRadius: '6px', color: 'var(--danger)', borderColor: 'var(--danger)' }}
-                >
-                  <VolumeX size={12} /> Stop
-                </button>
-              )}
-            </div>
           </div>
 
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px', marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }} className="hide-scrollbar">

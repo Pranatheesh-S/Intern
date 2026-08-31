@@ -6,6 +6,7 @@ import Stage2_Floating from './components/Stage2_Floating';
 import Quiz from './Quiz';
 import DidYouKnow from './DidYouKnow';
 import { HelpCircle } from 'lucide-react';
+import './MagneticCompass.css';
 
 export default function MagneticCompassActivity({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('magnetize');
@@ -17,7 +18,6 @@ export default function MagneticCompassActivity({ onBackToDashboard, onComplete 
 
   const handleStage1Complete = () => {
     setProgress(prev => ({ ...prev, magnetize: true }));
-    // Manual tab transition rule: do not transition automatically
     setActiveTab('floating');
   };
 
@@ -48,7 +48,7 @@ export default function MagneticCompassActivity({ onBackToDashboard, onComplete 
       overflow: 'hidden',
       boxSizing: 'border-box',
       padding: '0.65rem 0.85rem',
-      backgroundColor: '#ECFDF5',
+      backgroundColor: '#FFFFFF',
       position: 'relative',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
@@ -60,7 +60,7 @@ export default function MagneticCompassActivity({ onBackToDashboard, onComplete 
           left: '10%',
           width: '500px',
           height: '500px',
-          background: 'radial-gradient(circle, rgba(167, 243, 208, 0.45) 0%, rgba(236, 253, 245, 0) 70%)',
+          background: 'radial-gradient(circle, rgba(167, 243, 208, 0.45) 0%, rgba(255, 255, 255, 0) 70%)',
           pointerEvents: 'none',
           zIndex: 0
         }}
@@ -72,45 +72,36 @@ export default function MagneticCompassActivity({ onBackToDashboard, onComplete 
           right: '10%',
           width: '500px',
           height: '500px',
-          background: 'radial-gradient(circle, rgba(253, 230, 138, 0.35) 0%, rgba(236, 253, 245, 0) 70%)',
+          background: 'radial-gradient(circle, rgba(253, 230, 138, 0.35) 0%, rgba(255, 255, 255, 0) 70%)',
           pointerEvents: 'none',
           zIndex: 0
         }}
       />
 
-      {/* Top Header Bar matching Activity 4.3 styling */}
+      {/* Top Header Bar matching Activity 4.3 styling (Transparent Container) */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
-        padding: '0.65rem 1.25rem',
-        marginBottom: '0.65rem',
-        background: '#FFFFFF',
-        border: '2px solid #A7F3D0',
-        borderRadius: '24px',
-        boxShadow: '0 6px 24px rgba(6, 78, 59, 0.07)',
+        padding: '0.25rem 0.5rem',
+        marginBottom: '0.45rem',
+        background: 'transparent',
+        border: 'none',
+        boxShadow: 'none',
         flexShrink: 0,
         position: 'relative',
         zIndex: 100
       }}>
         {/* Left: Back Button */}
         <button 
-          onClick={onBackToDashboard} 
+          onClick={onBackToDashboard}
+          className="gold-glow-btn"
           style={{ 
             position: 'relative', zIndex: 100,
             padding: '0.6rem 1.15rem', 
             fontSize: '0.92rem', 
             gap: '0.5rem',
-            background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-            color: '#FFFFFF',
-            border: 'none',
-            borderRadius: '14px',
-            fontWeight: 900,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-            transition: 'all 0.2s ease'
+            borderRadius: '16px'
           }}
         >
           <ArrowLeft size={18} color="#FFFFFF" /> Back to Chapter 4
@@ -137,6 +128,7 @@ export default function MagneticCompassActivity({ onBackToDashboard, onComplete 
                 key={tab.id}
                 onClick={() => !tab.locked && setActiveTab(tab.id)}
                 disabled={tab.locked}
+                className={isActive ? 'gold-glow-btn' : ''}
                 style={{
                   opacity: tab.locked ? 0.45 : 1,
                   cursor: tab.locked ? 'not-allowed' : 'pointer',
@@ -147,17 +139,17 @@ export default function MagneticCompassActivity({ onBackToDashboard, onComplete 
                   fontSize: '0.92rem',
                   fontWeight: 900,
                   borderRadius: '25px',
-                  background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F8FAFC',
-                  color: isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#334155',
-                  border: isActive ? 'none' : '1.5px solid #CBD5E1',
-                  boxShadow: isActive ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
+                  background: isActive ? undefined : '#FFFFFF',
+                  color: isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#78350F',
+                  border: isActive ? undefined : '1.5px solid #FDE68A',
+                  boxShadow: isActive ? undefined : '0 2px 6px rgba(0,0,0,0.03)',
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={18} color={isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#334155'} />
+                <Icon size={18} color={isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#78350F'} />
                 <span>{tab.name}</span>
                 {isCompleted && (
-                  <CheckCircle size={16} style={{ color: isActive ? '#FFFFFF' : '#16A34A', marginLeft: '0.2rem' }} />
+                  <CheckCircle size={16} style={{ color: isActive ? '#FFFFFF' : '#10B981', marginLeft: '0.2rem' }} />
                 )}
               </button>
             );

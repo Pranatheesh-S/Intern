@@ -513,18 +513,18 @@ export default function Stage2_Conclusion({ onComplete }) {
         </div>
       </div>
 
-      {/* Right Side: Guide & Control Panel */}
+      {/* Right Side: Guide & Control Panel (Enlarged Spacious Typography) */}
       <div style={{ 
         flex: '1.05', 
-        background: '#FFFFFF', 
-        border: '2px solid #A7F3D0', 
+        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+        border: '1.5px solid #FDE68A', 
         borderRadius: '24px', 
-        padding: '1.6rem 1.6rem', 
-        boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)', 
+        padding: '1.5rem 1.65rem', 
+        boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)', 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
-        gap: '1.2rem',
+        gap: '1.15rem',
         minWidth: 0, 
         height: '100%', 
         boxSizing: 'border-box', 
@@ -535,21 +535,22 @@ export default function Stage2_Conclusion({ onComplete }) {
           <div style={{ 
             display: 'inline-flex', 
             alignItems: 'center', 
-            gap: '0.45rem', 
-            background: '#D1FAE5', 
-            padding: '0.4rem 0.9rem', 
+            gap: '0.5rem', 
+            background: '#DCFCE7', 
+            padding: '0.45rem 1rem', 
             borderRadius: '20px', 
-            fontSize: '0.85rem', 
-            fontWeight: 800, 
-            color: '#065F46', 
+            fontSize: '0.94rem', 
+            fontWeight: 900, 
+            color: '#15803D', 
+            border: '1.5px solid #86EFAC',
             letterSpacing: '0.5px',
             alignSelf: 'flex-start'
           }}>
-            <Sparkles size={16} color="#059669" /> EXPERIMENT CONCLUSION
+            <Sparkles size={18} color="#10B981" /> EXPERIMENT CONCLUSION
           </div>
 
           <h2 style={{ 
-            fontSize: '1.65rem', 
+            fontSize: '1.75rem', 
             fontWeight: 900, 
             color: '#064E3B', 
             margin: 0,
@@ -560,33 +561,33 @@ export default function Stage2_Conclusion({ onComplete }) {
           </h2>
 
           <p style={{ 
-            fontSize: '1.05rem', 
-            color: '#334155', 
-            lineHeight: 1.65, 
-            fontWeight: 600,
+            fontSize: '1.12rem', 
+            color: '#065F46', 
+            lineHeight: 1.7, 
+            fontWeight: 700,
             margin: 0
           }}>
-            A freely suspended bar magnet or compass needle always comes to rest pointing in the <strong style={{ color: '#D97706' }}>North-South direction</strong>. This fundamental property has guided navigators, explorers, and travelers across the globe for centuries!
+            A freely suspended bar magnet or compass needle always comes to rest pointing in the <strong style={{ color: '#D97706', fontWeight: 900 }}>North-South direction</strong>. This fundamental property has guided navigators, explorers, and travelers across the globe for centuries!
           </p>
 
           {/* Finding Directions with the Sun Info Card */}
           <div style={{
-            background: '#FFFBEB',
-            border: '2px solid #FDE68A',
+            background: '#FFFFFF',
+            border: '1.5px solid #FDE68A',
             borderRadius: '20px',
-            padding: '1.15rem 1.35rem',
+            padding: '1.25rem 1.45rem',
             display: 'flex',
             alignItems: 'flex-start',
-            gap: '0.85rem',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.08)'
+            gap: '0.95rem',
+            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.06)'
           }}>
-            <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>☀️</span>
+            <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>☀️</span>
             <p style={{ 
               margin: 0, 
-              fontSize: '0.98rem', 
-              color: '#92400E', 
-              lineHeight: 1.6, 
-              fontWeight: 600 
+              fontSize: '1.06rem', 
+              color: '#78350F', 
+              lineHeight: 1.65, 
+              fontWeight: 700 
             }}>
               Using the Sun's sunrise or sunset position gives an approximate East-West reference line, allowing us to accurately identify the North-South axis along which the magnet settles.
             </p>
@@ -594,42 +595,44 @@ export default function Stage2_Conclusion({ onComplete }) {
 
           {/* Interactive Controls Card */}
           <div style={{ 
-            background: '#F0FDF4', 
-            border: '2px solid #A7F3D0', 
+            background: '#FFFFFF', 
+            border: '1.5px solid #FDE68A', 
             borderRadius: '20px', 
-            padding: '1.25rem 1.35rem',
-            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)'
+            padding: '1.3rem 1.45rem',
+            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.06)'
           }}>
-            <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#047857', letterSpacing: '0.5px', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Compass size={18} color="#047857" /> COMPASS CONTROLS
+            <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#064E3B', letterSpacing: '0.5px', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+              <Compass size={20} color="#D97706" /> COMPASS CONTROLS
             </div>
 
-            <p style={{ fontSize: '0.98rem', color: '#1E293B', fontWeight: 600, margin: '0 0 0.9rem 0', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '1.05rem', color: '#065F46', fontWeight: 700, margin: '0 0 0.95rem 0', lineHeight: 1.55 }}>
               Tap the button or hover over the compass dial to deflect the magnetized needle:
             </p>
 
             <button
               onClick={handleDeflect}
               disabled={isSpinning}
+              className={!isSpinning ? 'gold-glow-btn' : ''}
               style={{
                 width: '100%',
-                padding: '1.05rem 1.2rem',
-                fontSize: '1.08rem',
+                padding: '1.1rem 1.4rem',
+                fontSize: '1.18rem',
                 fontWeight: 900,
-                borderRadius: '16px',
-                background: isSpinning ? '#CBD5E1' : 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                color: '#FFFFFF',
-                border: 'none',
+                borderRadius: '18px',
+                background: isSpinning ? '#CBD5E1' : undefined,
+                color: isSpinning ? '#64748B' : '#FFFFFF',
+                border: isSpinning ? 'none' : undefined,
                 cursor: isSpinning ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.65rem',
-                boxShadow: isSpinning ? 'none' : '0 4px 16px rgba(217, 119, 6, 0.35)',
-                transition: 'all 0.2s ease'
+                gap: '0.7rem',
+                boxShadow: isSpinning ? 'none' : undefined,
+                transition: 'all 0.2s ease',
+                fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
               }}
             >
-              <RotateCw size={20} className={isSpinning ? 'spin-anim' : ''} /> {isSpinning ? 'Deflecting Needle...' : 'Deflect Compass Needle'}
+              <RotateCw size={22} className={isSpinning ? 'spin-anim' : ''} /> {isSpinning ? 'Deflecting Needle...' : 'Deflect Compass Needle'}
             </button>
           </div>
         </div>
@@ -639,32 +642,30 @@ export default function Stage2_Conclusion({ onComplete }) {
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          borderTop: '2px solid #F1F5F9',
-          paddingTop: '1rem'
+          borderTop: '1.5px solid #FDE68A',
+          paddingTop: '0.9rem'
         }}>
-          <span style={{ fontSize: '0.95rem', color: '#047857', fontWeight: 800 }}>
+          <span style={{ fontSize: '1.02rem', color: '#047857', fontWeight: 800, fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
             Stage 2 of 2 ● ●
           </span>
 
           <button
             onClick={onComplete}
+            className="gold-glow-btn"
             style={{
-              padding: '0.95rem 2.2rem',
-              fontSize: '1.05rem',
+              padding: '1.05rem 2.6rem',
+              fontSize: '1.18rem',
               fontWeight: 900,
-              borderRadius: '25px',
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: '#FFFFFF',
-              border: 'none',
+              borderRadius: '24px',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.55rem',
-              boxShadow: '0 4px 16px rgba(217, 119, 6, 0.4)',
-              transition: 'all 0.2s ease'
+              gap: '0.6rem',
+              transition: 'all 0.2s ease',
+              fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
             }}
           >
-            Proceed to Quiz <ArrowRight size={20} color="#FFFFFF" />
+            Proceed to Quiz <ArrowRight size={22} color="#FFFFFF" />
           </button>
         </div>
       </div>

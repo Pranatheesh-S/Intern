@@ -1,33 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, CheckCircle, RotateCcw, Flag, Maximize2, Minimize2 } from 'lucide-react';
+import { Compass, CheckCircle, RotateCcw, Flag } from 'lucide-react';
 import MagneticNeedleShape from './MagneticNeedleShape';
 
 export default function Stage2_Floating({ onComplete }) {
   const [step, setStep] = useState('initial'); // 'initial', 'floating', 'settled'
   const [rotationAngle, setRotationAngle] = useState(0);
   const [spinCount, setSpinCount] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
 
   const handlePlaceCork = () => {
     // Initial spin when placed in water, then settling to 0 (North-South)
@@ -125,10 +104,10 @@ export default function Stage2_Floating({ onComplete }) {
             title={isInteractive && step === 'settled' ? "Click to rapidly spin the compass needle!" : ""}
           >
             {/* 3D Cork Disc Assembly */}
-            <div style={{ position: 'absolute', width: 96, height: 96, left: -48, top: -48, transformStyle: 'preserve-3d' }}>
+            <div style={{ position: 'absolute', width: 76, height: 76, left: -38, top: -38, transformStyle: 'preserve-3d' }}>
               {/* Soft Water Shadow */}
               <div style={{ 
-                position: 'absolute', width: 104, height: 104, left: -4, top: -4, 
+                position: 'absolute', width: 84, height: 84, left: -4, top: -4, 
                 borderRadius: '50%', background: 'rgba(3, 105, 161, 0.55)', 
                 filter: 'blur(8px)', transform: 'translateZ(-4px)' 
               }} />
@@ -142,7 +121,7 @@ export default function Stage2_Floating({ onComplete }) {
                     : (i % 2 === 0 ? '#D97706' : '#B45309'), 
                   boxShadow: i === 15 ? 'inset 0 0 12px rgba(120, 53, 15, 0.5), 0 0 4px rgba(245, 158, 11, 0.4)' : 'none',
                   border: i === 15 ? '1.5px solid #FEF3C7' : 'none',
-                  transform: `translateZ(${i * 0.9}px)` 
+                  transform: `translateZ(${i * 0.8}px)` 
                 }} />
               ))}
 
@@ -152,13 +131,13 @@ export default function Stage2_Floating({ onComplete }) {
                 position: 'absolute',
                 left: '50%',
                 top: '50%',
-                transform: 'translateZ(18px) translate(-50%, -50%) rotate(90deg)',
-                filter: 'drop-shadow(0 0 16px rgba(245, 158, 11, 0.95)) drop-shadow(0 8px 14px rgba(0,0,0,0.65))',
+                transform: 'translateZ(16px) translate(-50%, -50%) rotate(90deg)',
+                filter: 'drop-shadow(0 0 14px rgba(245, 158, 11, 0.95)) drop-shadow(0 6px 12px rgba(0,0,0,0.65))',
                 pointerEvents: 'none'
               }}>
                 <MagneticNeedleShape 
-                  width={260} 
-                  height={32} 
+                  width={200} 
+                  height={26} 
                   orientation="horizontal"
                   isGlowing={true} 
                 />
@@ -218,46 +197,16 @@ export default function Stage2_Floating({ onComplete }) {
           />
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(0, 0, 0, 0.12)', zIndex: 1, pointerEvents: 'none' }} />
 
-          {/* Fullscreen Button */}
-          <button
-            onClick={toggleFullscreen}
-            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-            style={{
-              position: 'absolute',
-              top: 16,
-              right: 20,
-              zIndex: 30,
-              background: 'rgba(255,255,255,0.92)',
-              padding: '6px 14px',
-              borderRadius: '20px',
-              fontSize: '0.75rem',
-              fontWeight: 800,
-              color: '#0F172A',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255,255,255,0.8)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            {isFullscreen ? <Minimize2 size={15} color="#0F172A" /> : <Maximize2 size={15} color="#0F172A" />}
-            <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
-          </button>
-
-
-          {/* Photorealistic 3D Ceramic Water Bowl & Compass Assembly */}
+          {/* Photorealistic 3D Ceramic Water Bowl & Compass Assembly (Proportionate Size) */}
           <div style={{
-            width: '380px',
-            height: '340px',
+            width: '320px',
+            height: '290px',
             position: 'relative',
             zIndex: 10,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: '4.8rem'
+            marginTop: '3.5rem'
           }}>
             {/* 3D Water Bowl Image */}
             <img 
@@ -372,14 +321,14 @@ export default function Stage2_Floating({ onComplete }) {
       </div>
 
       {/* Right Side: Step-by-Step Guide & Observations (Filled spacious typography) */}
-      {/* Right Side: Step-by-Step Interactive Guide */}
+      {/* Right Side: Step-by-Step Interactive Guide (Warm Amber Theme with Spacious Typography) */}
       <div style={{ 
         flex: '1.15', 
-        background: '#FFFFFF',
-        border: '2px solid #A7F3D0',
+        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+        border: '1.5px solid #FDE68A',
         borderRadius: '24px',
-        padding: '1.5rem 1.6rem',
-        boxShadow: '0 10px 32px rgba(6, 78, 59, 0.08)',
+        padding: '1.45rem 1.6rem',
+        boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'space-between', 
@@ -387,25 +336,25 @@ export default function Stage2_Floating({ onComplete }) {
         height: '100%',
         boxSizing: 'border-box',
         overflowY: 'auto',
-        gap: '1rem'
+        gap: '0.9rem'
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <Compass size={26} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <Compass size={28} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.48rem', color: '#064E3B', fontWeight: 900 }}>
                 Stage 2: Make a Compass
               </h3>
             </div>
             <span style={{
-              background: '#FEF3C7',
-              color: '#92400E',
+              background: '#DCFCE7',
+              color: '#15803D',
               fontWeight: 900,
-              fontSize: '0.85rem',
-              padding: '0.35rem 0.75rem',
-              borderRadius: '12px',
-              border: '1.5px solid #FDE68A'
+              fontSize: '0.96rem',
+              padding: '0.38rem 0.95rem',
+              borderRadius: '14px',
+              border: '1.5px solid #86EFAC'
             }}>
               Step {step === 'settled' ? (spinCount > 0 ? 3 : 2) : 1} of 3
             </span>
@@ -440,44 +389,42 @@ export default function Stage2_Floating({ onComplete }) {
                   style={{
                     padding: '0.95rem 1.15rem',
                     borderRadius: '16px',
-                    background: isCurrent ? '#FEF3C7' : isPast ? '#ECFDF5' : '#F8FAFC',
+                    background: isCurrent ? '#FEF3C7' : isPast ? '#DCFCE7' : '#FFFFFF',
                     border: isCurrent 
-                      ? '2.5px solid #F59E0B' 
+                      ? '2px solid #F59E0B' 
                       : isPast 
-                      ? '2px solid #10B981' 
-                      : '2px solid #CBD5E1',
+                      ? '1.5px solid #86EFAC' 
+                      : '1.5px solid #FDE68A',
                     boxShadow: isCurrent 
-                      ? '0 6px 18px rgba(245, 158, 11, 0.2)' 
-                      : isPast 
-                      ? '0 4px 12px rgba(16, 185, 129, 0.12)' 
+                      ? '0 4px 14px rgba(245, 158, 11, 0.18)' 
                       : '0 2px 8px rgba(0,0,0,0.03)',
                     transition: 'all 0.3s ease'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
                       <span style={{
-                        width: '26px',
-                        height: '26px',
+                        width: '28px',
+                        height: '28px',
                         borderRadius: '50%',
-                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#64748B',
+                        background: isCurrent ? '#D97706' : isPast ? '#059669' : '#CBD5E1',
                         color: '#FFFFFF',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '0.85rem',
+                        fontSize: '0.92rem',
                         fontWeight: 900,
                         flexShrink: 0
                       }}>
                         {s.stepNum}
                       </span>
-                      <span style={{ fontWeight: 900, fontSize: '1.08rem', color: isCurrent ? '#92400E' : isPast ? '#065F46' : '#1E293B' }}>
+                      <span style={{ fontWeight: 900, fontSize: '1.18rem', color: isCurrent ? '#064E3B' : isPast ? '#065F46' : '#064E3B' }}>
                         {s.title}
                       </span>
                     </div>
                     {isPast && <CheckCircle size={20} color="#10B981" />}
                   </div>
-                  <p style={{ margin: '0.38rem 0 0 0', fontSize: '0.92rem', color: '#334155', lineHeight: 1.5, fontWeight: 600 }}>
+                  <p style={{ margin: '0.4rem 0 0 0', fontSize: '1.02rem', color: '#065F46', lineHeight: 1.55, fontWeight: 700 }}>
                     {s.desc}
                   </p>
                 </div>
@@ -487,16 +434,16 @@ export default function Stage2_Floating({ onComplete }) {
 
           {/* Observation Alert Card */}
           <div style={{ 
-            background: step === 'settled' ? '#F0FDF4' : '#F8FAFC', 
-            border: `2px solid ${step === 'settled' ? '#A7F3D0' : '#CBD5E1'}`, 
+            background: '#FFFFFF', 
+            border: '1.5px solid #FDE68A', 
             padding: '1.25rem 1.4rem', 
             borderRadius: '20px',
-            boxShadow: '0 4px 14px rgba(6, 78, 59, 0.05)'
+            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.05)'
           }}>
-            <h5 style={{ margin: '0 0 0.45rem 0', color: step === 'settled' ? '#064E3B' : '#64748B', fontSize: '1.15rem', fontWeight: 900 }}>
+            <h5 style={{ margin: '0 0 0.45rem 0', color: '#064E3B', fontSize: '1.22rem', fontWeight: 900 }}>
               🔍 Scientific Observation
             </h5>
-            <p style={{ margin: 0, fontSize: '0.98rem', color: step === 'settled' ? '#1E293B' : '#64748B', lineHeight: 1.55, fontWeight: 600 }}>
+            <p style={{ margin: 0, fontSize: '1.02rem', color: '#065F46', lineHeight: 1.6, fontWeight: 700 }}>
               {step === 'settled'
                 ? "The magnetized needle always comes to rest pointing North-South, working just like a real magnetic navigation compass!"
                 : "Rotate the needle in different directions and let it settle to observe."}
@@ -505,25 +452,20 @@ export default function Stage2_Floating({ onComplete }) {
         </div>
 
         {/* Action Controls Section on Right */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.4rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.3rem' }}>
           <button
             onClick={step === 'initial' ? handlePlaceCork : handleSpin}
+            className="gold-glow-btn"
             style={{
               width: '100%',
-              padding: '0.95rem 1.5rem',
-              fontSize: '1.05rem',
+              padding: '0.95rem 1.6rem',
+              fontSize: '1.08rem',
               fontWeight: 900,
               borderRadius: '20px',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               gap: '0.65rem',
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: '#FFFFFF',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-              transition: 'all 0.25s ease'
             }}
           >
             {step === 'initial' ? (
@@ -541,21 +483,21 @@ export default function Stage2_Floating({ onComplete }) {
           <button 
             onClick={handleFinish} 
             disabled={step !== 'settled'}
+            className={step === 'settled' ? 'gold-glow-btn' : ''}
             style={{ 
               width: '100%', 
-              padding: '0.95rem 1.5rem', 
-              fontSize: '1.05rem', 
+              padding: '0.95rem 1.6rem', 
+              fontSize: '1.08rem', 
               fontWeight: 900, 
               borderRadius: '20px', 
               display: 'flex', 
               justifyContent: 'center', 
               alignItems: 'center', 
               gap: '0.65rem',
-              background: step === 'settled' ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#E2E8F0',
+              background: step === 'settled' ? undefined : '#F1F5F9',
               color: step === 'settled' ? '#FFFFFF' : '#94A3B8',
-              border: 'none',
+              border: step === 'settled' ? undefined : '1.5px solid #E2E8F0',
               cursor: step === 'settled' ? 'pointer' : 'not-allowed',
-              boxShadow: step === 'settled' ? '0 4px 16px rgba(217, 119, 6, 0.4)' : 'none',
               transition: 'all 0.25s ease'
             }}
           >

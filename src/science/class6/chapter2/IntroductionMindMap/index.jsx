@@ -105,26 +105,6 @@ export default function IntroductionMindMap({ onBackToDashboard }) {
               <BookOpen size={20} strokeWidth={2.2} />
               The Nature Walk Begins
             </div>
-            
-            <div style={{ display: 'flex', gap: '0.4rem' }}>
-              {!isSpeaking ? (
-                <button
-                  onClick={() => handleReadAloud(lessonSpeechText)}
-                  className="outline"
-                  style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem', borderRadius: '6px' }}
-                >
-                  <Volume2 size={12} /> Read Lesson
-                </button>
-              ) : (
-                <button
-                  onClick={handleStopSpeech}
-                  className="outline"
-                  style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem', borderRadius: '6px', color: 'var(--danger)', borderColor: 'var(--danger)' }}
-                >
-                  <VolumeX size={12} /> Stop
-                </button>
-              )}
-            </div>
           </div>
 
           {/* Scrollable contents */}
