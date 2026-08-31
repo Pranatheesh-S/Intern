@@ -236,6 +236,30 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
     return null;
   };
 
+  const renderBottomNav = (totalSlides, nextStepIndex, prevStepIndex) => (
+    <div className="dark-bottom-nav" style={{ position: 'relative', marginTop: 'auto', alignSelf: 'center', bottom: 'auto', left: 'auto', transform: 'none', marginBottom: '16px', flexShrink: 0 }}>
+      <button className="dark-nav-btn" onClick={() => {
+        if (currentSlide > 1) setCurrentSlide(currentSlide - 1);
+        else if (prevStepIndex) { setCurrentStep(prevStepIndex); setCurrentSlide(1); }
+      }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+        Back
+      </button>
+      <div className="dark-nav-dots">
+        {Array.from({ length: totalSlides }).map((_, i) => (
+          <div key={i} className={`dark-nav-dot ${currentSlide === i + 1 ? 'active' : ''}`} />
+        ))}
+      </div>
+      <button className="dark-nav-btn next" onClick={() => {
+        if (currentSlide < totalSlides) setCurrentSlide(currentSlide + 1);
+        else if (nextStepIndex) { setCurrentStep(nextStepIndex); setCurrentSlide(1); }
+      }}>
+        Next
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
+    </div>
+  );
+
   return (
     <div style={{
       position: 'fixed',
@@ -401,6 +425,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                 kochDepth={kochDepth}
                 setKochDepth={setKochDepth}
               />
+              {renderBottomNav(5, 6, 4)}
             </div>
           </div>
         ) : currentStep === 6 ? (
@@ -414,6 +439,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                 s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
                 s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
               />
+              {renderBottomNav(2, 7, 5)}
             </div>
           </div>
         ) : currentStep === 7 ? (
@@ -430,6 +456,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                 checkoutStep={checkoutStep}
                 onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
               />
+              {renderBottomNav(4, 8, 6)}
             </div>
           </div>
         ) : (
@@ -444,6 +471,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                 activeQuizQuestionId={activeQuizQuestionId}
                 setActiveQuizQuestionId={setActiveQuizQuestionId}
               />
+              {renderBottomNav(1, null, 7)}
             </div>
           </div>
         )}
