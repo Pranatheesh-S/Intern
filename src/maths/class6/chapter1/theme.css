@@ -1,0 +1,189 @@
+/* Theme for Class 6 Maths Chapter 1: Patterns in Mathematics - Dynamic Pastel Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;600;700;800&display=swap');
+
+:root {
+  /* Default: Soft Sky & Pastel Periwinkle */
+  --theme-primary: #6366f1;
+  --theme-primary-dark: #3730a3;
+  --theme-primary-light: #818cf8;
+  --theme-bg: #f0f4ff;
+  --theme-card-bg: #ffffff;
+  --theme-workbench-bg: #f8faff;
+  --theme-border: #c7d2fe;
+  --theme-border-strong: #a5b4fc;
+  --theme-badge-bg: #e0e7ff;
+  --theme-badge-text: #3730a3;
+  --theme-heading: #1e1b4b;
+  --theme-btn-gradient: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+  --theme-btn-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  --theme-accent: #4f46e5;
+}
+
+/* 5 Theme Classes for Dynamic Switching */
+.theme-periwinkle, .theme-lavender {
+  --theme-primary: #6366f1;
+  --theme-primary-dark: #3730a3;
+  --theme-primary-light: #818cf8;
+  --theme-bg: #f0f4ff;
+  --theme-card-bg: #ffffff;
+  --theme-workbench-bg: #f8faff;
+  --theme-border: #c7d2fe;
+  --theme-border-strong: #a5b4fc;
+  --theme-badge-bg: #e0e7ff;
+  --theme-badge-text: #3730a3;
+  --theme-heading: #1e1b4b;
+  --theme-btn-gradient: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+  --theme-btn-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  --theme-accent: #4f46e5;
+}
+
+.theme-softsky, .theme-ice {
+  --theme-primary: #0284c7;
+  --theme-primary-dark: #0369a1;
+  --theme-primary-light: #38bdf8;
+  --theme-bg: #f0f9ff;
+  --theme-card-bg: #ffffff;
+  --theme-workbench-bg: #f8fafc;
+  --theme-border: #bae6fd;
+  --theme-border-strong: #7dd3fc;
+  --theme-badge-bg: #e0f2fe;
+  --theme-badge-text: #0369a1;
+  --theme-heading: #0c4a6e;
+  --theme-btn-gradient: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  --theme-btn-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+  --theme-accent: #0284c7;
+}
+
+.theme-mint {
+  --theme-primary: #0d9488;
+  --theme-primary-dark: #0f766e;
+  --theme-primary-light: #14b8a6;
+  --theme-bg: #f0fdfa;
+  --theme-card-bg: #ffffff;
+  --theme-workbench-bg: #f0fdf4;
+  --theme-border: #a7f3d0;
+  --theme-border-strong: #5eead4;
+  --theme-badge-bg: #ccfbf1;
+  --theme-badge-text: #0f766e;
+  --theme-heading: #134e4a;
+  --theme-btn-gradient: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  --theme-btn-shadow: 0 4px 16px rgba(13, 148, 136, 0.35);
+  --theme-accent: #059669;
+}
+
+.theme-peach {
+  --theme-primary: #e11d48;
+  --theme-primary-dark: #be123c;
+  --theme-primary-light: #fb7185;
+  --theme-bg: #fff1f2;
+  --theme-card-bg: #ffffff;
+  --theme-workbench-bg: #fff7ed;
+  --theme-border: #fecdd3;
+  --theme-border-strong: #fda4af;
+  --theme-badge-bg: #ffe4e6;
+  --theme-badge-text: #be123c;
+  --theme-heading: #881337;
+  --theme-btn-gradient: linear-gradient(135deg, #fb7185 0%, #e11d48 100%);
+  --theme-btn-shadow: 0 4px 16px rgba(225, 29, 72, 0.35);
+  --theme-accent: #f43f5e;
+}
+
+.theme-honey {
+  --theme-primary: #d97706;
+  --theme-primary-dark: #b45309;
+  --theme-primary-light: #f59e0b;
+  --theme-bg: #fffbeb;
+  --theme-card-bg: #ffffff;
+  --theme-workbench-bg: #fefce8;
+  --theme-border: #fde68a;
+  --theme-border-strong: #fcd34d;
+  --theme-badge-bg: #fef3c7;
+  --theme-badge-text: #92400e;
+  --theme-heading: #78350f;
+  --theme-btn-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+  --theme-btn-shadow: 0 4px 16px rgba(217, 119, 6, 0.35);
+  --theme-accent: #ca8a04;
+}
+
+.math-serif-title {
+  font-family: 'Lora', Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.math-text-justified {
+  text-align: justify;
+  text-justify: inter-word;
+  line-height: 1.65;
+}
+
+/* Dynamic Action Buttons */
+.math-pill-btn-next {
+  background: var(--theme-btn-gradient, linear-gradient(135deg, #818cf8 0%, #6366f1 100%));
+  color: #ffffff;
+  font-weight: 900;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.65rem 1.85rem;
+  box-shadow: var(--theme-btn-shadow, 0 4px 16px rgba(99, 102, 241, 0.35));
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.96rem;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+}
+
+.math-pill-btn-next:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.math-pill-btn-back {
+  background: #94a3b8;
+  color: #ffffff;
+  font-weight: 800;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.65rem 1.55rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.96rem;
+  transition: all 0.2s ease;
+}
+
+.math-pill-btn-back:hover {
+  background: #64748b;
+  transform: translateY(-1px);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--theme-bg, #f0f4ff);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--theme-border-strong, #a5b4fc);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary, #6366f1);
+}
+
+/* Dual-Studio Card Styling */
+.math-studio-viewport {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+  border: 1.8px solid var(--theme-border, #c7d2fe);
+}
