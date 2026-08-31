@@ -2145,7 +2145,7 @@ export default function PatternsInShapes({
   const currentPoly = POLYGONS_DATA[polygonIdx || 0] || POLYGONS_DATA[0];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', justifyContent: 'space-between', gap: '0.45rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', flexShrink: 0 }}>
       {/* 3 TABLE 3 ACTIVITIES SELECTOR TABS (Light Theme Palette) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.45rem', flexShrink: 0 }}>
         {activities.map((act) => {
@@ -2182,9 +2182,8 @@ export default function PatternsInShapes({
         })}
       </div>
 
-      {/* ACTIVITY 1: REGULAR POLYGONS */}
       {activeActivity === 1 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', height: '100%', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
           {/* Header & Dual View Mode Switcher */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem', flexWrap: 'wrap' }}>
             <div>
@@ -2368,7 +2367,7 @@ export default function PatternsInShapes({
         const isAllActive = activeRouteCount >= currentGraph.total;
 
         return (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', height: '100%', justifyContent: 'space-evenly' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem', justifyContent: 'space-evenly' }}>
             {/* Header & Concept Intro */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -2577,7 +2576,7 @@ export default function PatternsInShapes({
         }
 
         return (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', height: '100%', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem',  }}>
             {/* Header & Concept Intro */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -2760,7 +2759,7 @@ export default function PatternsInShapes({
 
       {/* ACTIVITY 4: STACKED TRIANGLES (PHOTOREALISTIC BILLIARDS 15-BALL TRIANGLE RACK) */}
       {activeActivity === 4 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', height: '100%', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem',  }}>
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
@@ -2868,7 +2867,7 @@ export default function PatternsInShapes({
 
       {/* ACTIVITY 3: KOCH SNOWFLAKE RANGOLI */}
       {activeActivity === 5 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', height: '100%', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem',  }}>
           <div>
             <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               Artisan Glass Geometric Fractal ($3 \times 4^k$)

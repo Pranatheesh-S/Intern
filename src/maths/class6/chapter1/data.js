@@ -3,10 +3,10 @@
 
 export const PASTEL_THEMES = [
   { id: 'periwinkle', name: '🌌 Soft Sky & Pastel Periwinkle', primary: '#6366f1', bg: '#f0f4ff', border: '#c7d2fe', badge: '#e0e7ff', text: '#3730a3', desc: 'Serene pastel blue-violet & tranquil sky' },
-  { id: 'softsky', name: '☁️ Soft Sky Azure', primary: '#0284c7', bg: '#f0f9ff', border: '#bae6fd', badge: '#e0f2fe', text: '#0369a1', desc: 'Tranquil airy sky & crisp azure' },
-  { id: 'mint', name: '🌿 Mint Sage', primary: '#0d9488', bg: '#f0fdfa', border: '#a7f3d0', badge: '#ccfbf1', text: '#0f766e', desc: 'Calming seafoam & fresh sage' },
-  { id: 'peach', name: '🍑 Coral Peach', primary: '#e11d48', bg: '#fff1f2', border: '#fecdd3', badge: '#ffe4e6', text: '#be123c', desc: 'Warm blush & soft coral' },
-  { id: 'honey', name: '🍯 Honey Gold', primary: '#d97706', bg: '#fffbeb', border: '#fde68a', badge: '#fef3c7', text: '#92400e', desc: 'Warm chamomile & buttercream' },
+  { id: 'lavender', name: '☁️ Soft Lavender', primary: '#8b5cf6', bg: '#f5f3ff', border: '#ddd6fe', badge: '#ede9fe', text: '#5b21b6', desc: 'Calming lavender and bright violet' },
+  { id: 'deepviolet', name: '🌿 Deep Violet', primary: '#7c3aed', bg: '#ede9fe', border: '#c4b5fd', badge: '#ddd6fe', text: '#4c1d95', desc: 'Rich velvet purple and soft violet' },
+  { id: 'amethyst', name: '🍑 Soft Amethyst', primary: '#9333ea', bg: '#f3e8ff', border: '#d8b4fe', badge: '#f3e8ff', text: '#581c87', desc: 'Vibrant amethyst and crystal light' },
+  { id: 'wisteria', name: '🍯 Wisteria Purple', primary: '#a855f7', bg: '#faf5ff', border: '#e9d5ff', badge: '#f3e8ff', text: '#6b21a8', desc: 'Warm wisteria and floral purple' },
 ];
 
 export const SEQUENCES = [

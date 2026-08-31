@@ -3,10 +3,10 @@
    ========================================================================== */
 
 :root {
-  --math-bg-main: #f8fafc;
-  --math-panel-left-bg: #f0fdf4; /* Light mint/teal */
+  --math-bg-main: #faf5ff; /* Fuchsia 50 - Very Light Violet */
+  --math-panel-left-bg: #f3e8ff; /* Purple 100 - Light Violet */
   --math-panel-right-bg: #ffffff;
-  --math-inner-card-bg: #f8fafc; /* Very light slate */
+  --math-inner-card-bg: #ffffff;
   
   --math-accent-amber: #f59e0b;
   --math-accent-teal: #0d9488;
@@ -51,21 +51,21 @@
 
 .math-chapter-eyebrow {
   font-family: var(--math-font-sans);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 900;
-  color: var(--math-accent-amber);
+  color: #7c3aed; /* Violet 600 */
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .math-chapter-title {
   font-family: var(--math-font-serif);
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 800;
   color: var(--math-text-dark);
-  margin: 0 0 24px 0;
-  line-height: 1.1;
+  margin: 0 0 16px 0;
+  line-height: 1.15;
 }
 
 .math-3d-container {
@@ -85,7 +85,7 @@
   position: absolute;
   top: 16px;
   left: 16px;
-  background: var(--math-accent-amber);
+  background: #8b5cf6; /* Violet 500 */
   color: #fff;
   padding: 6px 14px;
   border-radius: 20px;
@@ -104,13 +104,11 @@
   position: absolute;
   bottom: 16px;
   right: 16px;
-  color: #fbbf24;
+  color: #8b5cf6; /* Violet 500 */
   font-size: 0.8rem;
-  font-weight: 800;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  font-weight: 700;
+  pointer-events: none;
+  animation: pulseHint 2s infinite;
 }
 
 .math-3d-title-overlay {
@@ -182,13 +180,13 @@
 }
 
 .math-section-header-area {
-  padding: 24px 32px 16px 32px;
+  padding: 16px 24px 12px 24px;
 }
 
 .math-section-eyebrow {
   font-size: 0.85rem;
   font-weight: 900;
-  color: var(--math-accent-amber);
+  color: #8b5cf6; /* Violet 500 */
   text-transform: uppercase;
   letter-spacing: 1.5px;
   display: flex;
@@ -211,21 +209,29 @@
 .math-inner-content-card {
   flex: 1;
   background-color: var(--math-inner-card-bg);
-  border-radius: 20px;
-  margin: 0 24px 24px 24px;
-  padding: 32px;
+  border-radius: 16px;
+  margin: 0 16px 16px 16px;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow: hidden;
   border: 1px solid #e2e8f0;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Base Typography for inner content */
 .math-inner-content-card p {
-  font-size: 1.05rem;
+  font-size: 0.88rem;
   color: var(--math-text-dark);
-  line-height: 1.65;
-  margin: 0 0 16px 0;
+  line-height: 1.45;
+  margin: 0 0 8px 0;
   font-weight: 500;
   text-align: justify;
 }
@@ -237,6 +243,30 @@
 
 
 /* Bottom Navigation inside Right Panel */
+.math-3d-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.math-3d-badge span:first-child {
+  color: #8b5cf6; /* Violet 500 */
+  font-weight: 900;
+  font-size: 0.8rem;
+}
+
+.math-3d-badge span:last-child {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--math-text-dark);
+}
+
 .math-bottom-nav {
   display: flex;
   align-items: center;
@@ -268,17 +298,17 @@
 }
 
 .math-nav-dot.active {
-  background: var(--math-accent-amber);
+  background: #8b5cf6; /* Violet 500 */
   transform: scale(1.2);
 }
 
 .math-btn-back {
-  background: #94a3b8;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
+  background: #ffffff;
+  color: #7c3aed; /* Violet 600 */
+  border: 1.5px solid #c4b5fd; /* Violet 300 */
+  padding: 8px 16px;
   border-radius: 24px;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
@@ -288,26 +318,27 @@
 }
 
 .math-btn-back:hover {
-  background: #64748b;
+  background: #f5f3ff;
+  border-color: #a78bfa;
 }
 
 .math-btn-next {
-  background: var(--math-accent-amber);
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); /* Violet Gradient */
   color: #fff;
   border: none;
-  padding: 10px 24px;
+  padding: 8px 18px;
   border-radius: 24px;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
   transition: all 0.2s;
 }
 
 .math-btn-next:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.45);
 }

@@ -84,7 +84,7 @@ export default function ChapterQuizAndSolutions({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', height: '100%', justifyContent: 'space-between' }}>
           <div style={{ borderBottom: '1.5px solid var(--theme-border, #a7f3d0)', paddingBottom: '0.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ margin: 0, fontSize: '1.28rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <ShieldAlert size={22} color="var(--theme-primary, #0d9488)" /> MISSION BRIEFING: OPERATION PATTERN DECRYPT
+              <ShieldAlert size={22} color="var(--theme-primary, #0d9488)" /> CHAPTER SUMMARY & MISSION BRIEFING
             </h3>
             <span style={{ background: 'var(--theme-badge-bg, #ccfbf1)', padding: '0.2rem 0.65rem', borderRadius: '6px', fontSize: '0.76rem', fontWeight: '800', color: 'var(--theme-badge-text, #0f766e)' }}>
               NCERT GANITA PRAKASH · CH. 1

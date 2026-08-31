@@ -360,7 +360,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                     gap: '0.5rem',
                     padding: '0.45rem 0.55rem',
                     background: isActive ? '#ffffff' : '#f8fafc',
-                    border: `1.5px solid ${isActive ? '#F5A623' : '#cbd5e1'}`,
+                    border: `1.5px solid ${isActive ? '#8b5cf6' : '#cbd5e1'}`,
                     borderRadius: '12px',
                     width: '100%',
                     minHeight: '64px',
@@ -368,18 +368,18 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                     opacity: 1,
                     cursor: tab.locked ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s',
-                    boxShadow: isActive ? '0 4px 15px rgba(245, 166, 35, 0.25)' : 'none',
+                    boxShadow: isActive ? '0 4px 15px rgba(139, 92, 246, 0.25)' : 'none',
                     textAlign: 'left',
                     boxSizing: 'border-box',
                     flexShrink: 0
                   }}
                 >
-                  <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: isActive ? '#F5A623' : (isCompleted ? '#F5A623' : '#64748b'), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0 }}>
+                  <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: isActive ? '#8b5cf6' : (isCompleted ? '#8b5cf6' : '#64748b'), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0 }}>
                     {isCompleted ? <CheckCircle size={12} /> : tab.id}
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', minWidth: 0, flex: 1 }}>
                     <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#0f172a', lineHeight: 1.2, whiteSpace: 'normal', width: '100%' }}>{tab.title}</span>
-                    <span style={{ fontSize: '0.64rem', color: isActive ? '#d97706' : '#334155', lineHeight: 1.2, whiteSpace: 'normal', width: '100%', fontWeight: '700' }}>{tab.subtitle}</span>
+                    <span style={{ fontSize: '0.64rem', color: isActive ? '#8b5cf6' : '#334155', lineHeight: 1.2, whiteSpace: 'normal', width: '100%', fontWeight: '700' }}>{tab.subtitle}</span>
                   </div>
                 </button>
               );
@@ -422,31 +422,35 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                 <h2 className="math-section-title">📖 Patterns in Shapes</h2>
               </div>
               <div className="math-inner-content-card">
-                <PatternsInShapes
-                  activeActivity={currentSlide}
-                  setActiveActivity={(id) => setCurrentSlide(id)}
-                  viewMode={viewMode}
-                  setViewMode={setViewMode}
-                  polygonIdx={polygonIdx}
-                  setPolygonIdx={setPolygonIdx}
-                  placedPolyEdges={placedPolyEdges}
-                  setPlacedPolyEdges={setPlacedPolyEdges}
-                  graphIdx={graphIdx}
-                  setGraphIdx={setGraphIdx}
-                  activeComponentIds={activeComponentIds}
-                  setActiveComponentIds={setActiveComponentIds}
-                  squareSize={squareSize}
-                  setSquareSize={setSquareSize}
-                  placedSquareLayers={placedSquareLayers}
-                  setPlacedSquareLayers={setPlacedSquareLayers}
-                  triangleRows={triangleRows}
-                  setTriangleRows={setTriangleRows}
-                  placedTriLayers={placedTriLayers}
-                  setPlacedTriLayers={setPlacedTriLayers}
-                  kochDepth={kochDepth}
-                  setKochDepth={setKochDepth}
-                />
-                {renderBottomNav(5, 6, 4)}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', minHeight: 0 }} className="hide-scrollbar">
+                  <PatternsInShapes
+                    activeActivity={currentSlide}
+                    setActiveActivity={(id) => setCurrentSlide(id)}
+                    viewMode={viewMode}
+                    setViewMode={setViewMode}
+                    polygonIdx={polygonIdx}
+                    setPolygonIdx={setPolygonIdx}
+                    placedPolyEdges={placedPolyEdges}
+                    setPlacedPolyEdges={setPlacedPolyEdges}
+                    graphIdx={graphIdx}
+                    setGraphIdx={setGraphIdx}
+                    activeComponentIds={activeComponentIds}
+                    setActiveComponentIds={setActiveComponentIds}
+                    squareSize={squareSize}
+                    setSquareSize={setSquareSize}
+                    placedSquareLayers={placedSquareLayers}
+                    setPlacedSquareLayers={setPlacedSquareLayers}
+                    triangleRows={triangleRows}
+                    setTriangleRows={setTriangleRows}
+                    placedTriLayers={placedTriLayers}
+                    setPlacedTriLayers={setPlacedTriLayers}
+                    kochDepth={kochDepth}
+                    setKochDepth={setKochDepth}
+                  />
+                </div>
+                <div style={{ padding: '0 20px 16px 20px', flexShrink: 0 }}>
+                  {renderBottomNav(5, 6, 4)}
+                </div>
               </div>
             </div>
           </div>
@@ -459,14 +463,18 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                 <h2 className="math-section-title">📖 Shapes to Numbers</h2>
               </div>
               <div className="math-inner-content-card">
-                <ShapesToNumbers 
-                  currentSlide={currentSlide}
-                  s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
-                  s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
-                  s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
-                  s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
-                />
-                {renderBottomNav(2, 7, 5)}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', minHeight: 0 }} className="hide-scrollbar">
+                  <ShapesToNumbers 
+                    currentSlide={currentSlide}
+                    s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
+                    s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
+                    s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
+                    s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
+                  />
+                </div>
+                <div style={{ padding: '0 20px 16px 20px', flexShrink: 0 }}>
+                  {renderBottomNav(2, 7, 5)}
+                </div>
               </div>
             </div>
           </div>
@@ -479,17 +487,21 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                 <h2 className="math-section-title">📖 Real Life Math Lab</h2>
               </div>
               <div className="math-inner-content-card">
-                <RealLifeMathLab 
-                  currentSlide={currentSlide}
-                  labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
-                  labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
-                  labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
-                  labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
-                  labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
-                  checkoutStep={checkoutStep}
-                  onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
-                />
-                {renderBottomNav(4, 8, 6)}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', minHeight: 0 }} className="hide-scrollbar">
+                  <RealLifeMathLab 
+                    currentSlide={currentSlide}
+                    labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
+                    labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
+                    labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
+                    labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
+                    labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
+                    checkoutStep={checkoutStep}
+                    onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
+                  />
+                </div>
+                <div style={{ padding: '0 20px 16px 20px', flexShrink: 0 }}>
+                  {renderBottomNav(4, 8, 6)}
+                </div>
               </div>
             </div>
           </div>
@@ -502,15 +514,19 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
                 <h2 className="math-section-title">📖 Chapter Quiz & Solutions</h2>
               </div>
               <div className="math-inner-content-card">
-                <ChapterQuizAndSolutions 
-                  currentSlide={currentSlide}
-                  quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
-                  isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
-                  quizScore={quizScore}
-                  activeQuizQuestionId={activeQuizQuestionId}
-                  setActiveQuizQuestionId={setActiveQuizQuestionId}
-                />
-                {renderBottomNav(1, null, 7)}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', minHeight: 0 }} className="hide-scrollbar">
+                  <ChapterQuizAndSolutions 
+                    currentSlide={currentSlide}
+                    quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
+                    isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
+                    quizScore={quizScore}
+                    activeQuizQuestionId={activeQuizQuestionId}
+                    setActiveQuizQuestionId={setActiveQuizQuestionId}
+                  />
+                </div>
+                <div style={{ padding: '0 20px 16px 20px', flexShrink: 0 }}>
+                  {renderBottomNav(4, null, 7)}
+                </div>
               </div>
             </div>
           </div>
