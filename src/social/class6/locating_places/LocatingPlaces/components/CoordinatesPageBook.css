@@ -99,7 +99,7 @@
   font-family: var(--serif);
   font-weight: 900;
   color: var(--navy);
-  font-size: 44px;
+  font-size: clamp(30px, 4vw, 44px);
   line-height: 1.1;
   margin: 0;
   letter-spacing: -.01em;
@@ -152,7 +152,7 @@
   gap: 12px;
   color: var(--navy);
   font-weight: 900;
-  font-size: 28px;
+  font-size: clamp(22px, 3vw, 28px);
   font-family: var(--serif);
   margin-bottom: 16px;
 }
@@ -380,5 +380,24 @@
   .coords-main-content {
     grid-template-columns: 1fr;
     overflow-y: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .coords-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .coords-hero h3 {
+    font-size: 18px;
+  }
+  .coords-hero p {
+    font-size: 14px;
+  }
+  .coords-fact .v {
+    font-size: 16px;
+  }
+  .coords-left, .coords-right {
+    padding: clamp(10px, 2vw, 16px);
   }
 }

@@ -314,7 +314,8 @@ export default function PatternsEverywhere({ onNext, onPrev }) {
               padding: '20px 32px',
               borderRadius: '16px',
               border: '1px solid rgba(255,255,255,0.05)',
-              lineHeight: '1.6'
+              lineHeight: '1.6',
+              marginBottom: '80px'
             }}>
               Six patterns you met before breakfast — all of them alive: the sunrise, a floor being tiled, a wall being built, the beat of a song, your own heartbeat, and the railway line.
             </div>
@@ -354,12 +355,7 @@ export default function PatternsEverywhere({ onNext, onPrev }) {
             The search for patterns and their explanations can be a fun and creative endeavour. It is for this reason that mathematicians think of mathematics both as an <strong>art</strong> and as a <strong>science</strong>.
           </div>
 
-          <div className="dark-key-idea-box" style={{ margin: '32px 0' }}>
-            <div className="dark-key-idea-title">THE BIG IDEA OF THIS CHAPTER</div>
-            <div className="dark-key-idea-text">
-              Mathematics aims not just to find out <em>what</em> patterns exist, but also the explanation for <em>why</em> they exist. Those explanations can then be used far beyond where they were discovered — which helps propel humanity forward.
-            </div>
-          </div>
+
           
           <div className="dark-step-text">
             For example, understanding patterns in the motion of stars, planets and their satellites led humankind to the theory of gravitation — which let us launch satellites and send rockets to the Moon and Mars. Understanding patterns in genomes has helped in diagnosing and curing diseases.

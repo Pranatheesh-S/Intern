@@ -76,7 +76,7 @@
 }
 
 .dark-step-title {
-  font-size: 34px;
+  font-size: clamp(24px, 4vw, 34px);
   font-weight: 900;
   color: var(--dark-accent-gold);
   margin: 0 0 24px 0;
@@ -85,7 +85,7 @@
 }
 
 .dark-step-text {
-  font-size: 16px;
+  font-size: clamp(14px, 2vw, 16px);
   font-weight: 600;
   line-height: 1.6;
   margin: 0 0 16px 0;
@@ -204,6 +204,8 @@
 
 .infographic-columns {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   flex: 1;
   gap: 20px;
   margin-bottom: 30px;
@@ -258,6 +260,7 @@
 
 .info-suggestions {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
 }
 
@@ -328,5 +331,20 @@
     right: 20px;
     left: auto;
     transform: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .dark-coords-right {
+    padding: 20px 15px;
+  }
+  .dark-step-title {
+    margin: 0 0 16px 0;
+  }
+  .infographic-layout {
+    padding: 15px;
+  }
+  .sugg-box {
+    padding: 15px;
   }
 }
