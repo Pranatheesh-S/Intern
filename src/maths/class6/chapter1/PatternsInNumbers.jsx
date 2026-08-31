@@ -1,347 +1,340 @@
-import React, { useState } from 'react';
-import { Sparkles, Music, Play, Check, Calculator, RefreshCw, Trophy, Zap } from 'lucide-react';
-import confetti from 'canvas-confetti';
-import './theme.css';
-import { SEQUENCES } from './data';
+import React, { useState, useEffect } from 'react';
+import { Pause, Play, CheckCircle } from 'lucide-react';
 
-export default function PatternsInNumbers({ currentSlide = 1 }) {
-  const [selectedSeqId, setSelectedSeqId] = useState('virahanka');
-  const [nSlider, setNSlider] = useState(6);
-  const [guessSeqId, setGuessSeqId] = useState('triangular');
-  const [userGuesses, setUserGuesses] = useState({ t1: '', t2: '', t3: '' });
-  const [quizFeedback, setQuizFeedback] = useState(null);
-  const [scoreStreak, setScoreStreak] = useState(0);
-
-  // Slide 3 Sanskrit Beat Pad State
-  const [beatHistory, setBeatHistory] = useState([]);
-  const [currentMoraTotal, setCurrentMoraTotal] = useState(0);
-
-  const currentSeq = SEQUENCES?.find(s => s.id === selectedSeqId) || {
-    name: 'Virahānka (Fibonacci)',
-    formula: 'a_n = a_{n-1} + a_{n-2}',
-    rule: 'Start with 1, 2. Each subsequent term is sum of previous two terms.',
-    terms: [1, 2, 3, 5, 8, 13, 21, 34],
-    calc: (n) => {
-      let a = 1, b = 2;
-      if (n === 1) return 1;
-      if (n === 2) return 2;
-      for (let i = 3; i <= n; i++) {
-        let temp = a + b;
-        a = b;
-        b = temp;
-      }
-      return b;
+export default function PatternsInNumbers({ onNext }) {
+  const [isRunning, setIsRunning] = useState(true);
+  const [distance, setDistance] = useState(0);
+  
+  // Logic: 1 km every 4 seconds.
+  useEffect(() => {
+    let interval;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setDistance(prev => {
+          if (prev >= 10) return 0; // Loop after 10km
+          return prev + 1;
+        });
+      }, 4000); // 4 seconds per km
     }
-  };
+    return () => clearInterval(interval);
+  }, [isRunning]);
 
-  const playBeep = (freq, durationMs) => {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + durationMs / 1000);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + durationMs / 1000);
-    } catch (e) {}
-  };
+  const fare = 30 + (distance * 15);
 
-  const playVirahankaRhythm = () => {
-    playBeep(440, 150);
-    setTimeout(() => playBeep(330, 350), 300);
-    setTimeout(() => playBeep(440, 150), 750);
-    setTimeout(() => playBeep(440, 150), 1000);
-    setTimeout(() => playBeep(330, 350), 1250);
-  };
+  const toggleAnimation = () => setIsRunning(!isRunning);
 
-  const addBeat = (type) => {
-    const cost = type === 'L' ? 1 : 2;
-    playBeep(type === 'L' ? 520 : 330, type === 'L' ? 160 : 320);
-    setBeatHistory(prev => [...prev, { type, cost }]);
-    setCurrentMoraTotal(prev => prev + cost);
-  };
-
-  const resetBeats = () => {
-    setBeatHistory([]);
-    setCurrentMoraTotal(0);
-  };
-
-  const guessSeq = SEQUENCES?.find(s => s.id === guessSeqId) || currentSeq;
-
-  const handleCheckQuiz = () => {
-    const e1 = guessSeq.calc(5);
-    const e2 = guessSeq.calc(6);
-    const e3 = guessSeq.calc(7);
-
-    const u1 = parseInt(userGuesses.t1, 10);
-    const u2 = parseInt(userGuesses.t2, 10);
-    const u3 = parseInt(userGuesses.t3, 10);
-
-    if (u1 === e1 && u2 === e2 && u3 === e3) {
-      setScoreStreak(prev => prev + 1);
-      setQuizFeedback({ success: true, message: `🎉 Brilliant! Next 3 terms are ${e1}, ${e2}, and ${e3}!` });
-      confetti({ particleCount: 45, spread: 65, origin: { y: 0.6 } });
-      playBeep(587.33, 200);
-    } else {
-      setScoreStreak(0);
-      setQuizFeedback({ success: false, message: `Not quite! Formula yields: ${e1}, ${e2}, ${e3}. Try another sequence!` });
-      playBeep(220, 250);
-    }
-  };
+  // CSS variables for animation play state
+  const playState = isRunning ? 'running' : 'paused';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', justifyContent: 'space-between' }}>
-      {/* SLIDE 1: TABLE 1 */}
-      {currentSlide === 1 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', height: '100%', justifyContent: 'space-between' }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-              Number Theory & Table 1: Fundamental Sequences
-            </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              The branch of mathematics investigating patterns, prime distributions, divisibility, and progressions in whole numbers is termed <strong>Number Theory</strong>. Table 1 catalogs the 10 foundational sequences:
-            </p>
-          </div>
+    <div className="dark-coords-main-content" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+      <style>{`
+        @keyframes panLeftFast {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
+        }
+        @keyframes panLeftSlow {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
+        }
+        @keyframes bobbing {
+          0% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(2px) rotate(-0.5deg); }
+          100% { transform: translateY(0px) rotate(0deg); }
+        }
+        @keyframes dustAnim {
+          0% { transform: translate(0, 0) scale(0.5); opacity: 0.8; }
+          100% { transform: translate(-80px, -10px) scale(2); opacity: 0; }
+        }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        @keyframes moveKmStone {
+          0% { transform: translateX(100vw); }
+          100% { transform: translateX(-20vw); }
+        }
+        
+        .road-lines {
+          background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, #ffffff 40px, #ffffff 80px);
+          background-size: 200% 100%;
+          animation: panLeftFast 1.5s linear infinite;
+        }
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.55rem' }}>
-            {[
-              { id: '1', name: "All 1's", terms: '1, 1, 1, 1, 1 ...' },
-              { id: '2', name: 'Counting Numbers', terms: '1, 2, 3, 4, 5 ...' },
-              { id: '3', name: 'Odd Numbers', terms: '1, 3, 5, 7, 9 ...' },
-              { id: '4', name: 'Even Numbers', terms: '2, 4, 6, 8, 10 ...' },
-              { id: '5', name: 'Triangular Numbers', terms: '1, 3, 6, 10, 15 ...' },
-              { id: '6', name: 'Square Numbers', terms: '1, 4, 9, 16, 25 ...' },
-              { id: '7', name: 'Cube Numbers', terms: '1, 8, 27, 64, 125 ...' },
-              { id: '8', name: 'Virahānka (Fibonacci)', terms: '1, 2, 3, 5, 8 ...' },
-              { id: '9', name: 'Powers of 2', terms: '1, 2, 4, 8, 16 ...' },
-              { id: '10', name: 'Powers of 3', terms: '1, 3, 9, 27, 81 ...' }
-            ].map(s => (
-              <div key={s.id} style={{ background: '#ffffff', padding: '0.65rem 0.95rem', borderRadius: '10px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)' }}>
-                <span style={{ fontWeight: '900', color: 'var(--theme-heading, #134e4a)', fontSize: '0.88rem' }}>{s.id}. {s.name}</span>
-                <span style={{ fontSize: '0.84rem', color: 'var(--theme-primary, #0d9488)', fontFamily: 'monospace', fontWeight: '900' }}>{s.terms}</span>
+        .city-bg {
+          background-image: url("data:image/svg+xml,%3Csvg width='800' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,200 L0,150 L30,150 L30,100 L70,100 L70,130 L90,130 L90,80 L140,80 L140,160 L160,160 L160,60 L210,60 L210,120 L240,120 L240,90 L290,90 L290,170 L310,170 L310,110 L360,110 L360,140 L400,140 L400,70 L460,70 L460,150 L480,150 L480,90 L530,90 L530,130 L570,130 L570,50 L630,50 L630,160 L650,160 L650,100 L700,100 L700,140 L730,140 L730,80 L780,80 L780,200 Z' fill='%231e1b4b'/%3E%3Crect x='40' y='120' width='8' height='12' fill='%23fef08a' opacity='0.6'/%3E%3Crect x='100' y='100' width='8' height='12' fill='%23fef08a' opacity='0.4'/%3E%3Crect x='180' y='80' width='8' height='12' fill='%23fef08a' opacity='0.7'/%3E%3Crect x='260' y='140' width='8' height='12' fill='%23fef08a' opacity='0.5'/%3E%3Crect x='330' y='130' width='8' height='12' fill='%23fef08a' opacity='0.8'/%3E%3Crect x='420' y='100' width='8' height='12' fill='%23fef08a' opacity='0.6'/%3E%3Crect x='500' y='110' width='8' height='12' fill='%23fef08a' opacity='0.5'/%3E%3Crect x='590' y='80' width='8' height='12' fill='%23fef08a' opacity='0.7'/%3E%3Crect x='670' y='130' width='8' height='12' fill='%23fef08a' opacity='0.6'/%3E%3Crect x='750' y='100' width='8' height='12' fill='%23fef08a' opacity='0.8'/%3E%3C/svg%3E");
+          background-repeat: repeat-x;
+          background-size: 800px 200px;
+          animation: panLeftSlow 60s linear infinite;
+        }
+
+        .dust-particle {
+          position: absolute;
+          background: #71717a;
+          border-radius: 50%;
+          animation: dustAnim 1s linear infinite;
+        }
+        
+        .streetlamp-layer {
+          display: flex;
+          position: absolute;
+          width: 200%;
+          bottom: 120px;
+          animation: panLeftFast 8s linear infinite;
+        }
+        
+        .kmstone-layer {
+          display: flex;
+          position: absolute;
+          width: 200%;
+          bottom: 110px;
+          animation: panLeftFast 8s linear infinite;
+        }
+
+        .lamp-post {
+          width: 600px;
+          flex-shrink: 0;
+          position: relative;
+        }
+      `}</style>
+
+      {/* Visual Column */}
+      <div className="dark-coords-left" style={{ position: 'relative', overflow: 'hidden', padding: 0, display: 'flex', flexDirection: 'column', background: '#0a0f1d' }}>
+        
+        {/* The Scene Container */}
+        <div style={{ flex: 1, position: 'relative', overflow: 'hidden', background: 'linear-gradient(to bottom, #0f172a 0%, #312e81 40%, #7c2d12 80%, #171717 100%)' }}>
+          
+          {/* Stars */}
+          <div style={{ position: 'absolute', top: '10%', left: '20%', width: '2px', height: '2px', background: '#fff', opacity: 0.8, borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', top: '25%', left: '45%', width: '3px', height: '3px', background: '#fff', opacity: 0.6, borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', top: '15%', left: '75%', width: '2px', height: '2px', background: '#fff', opacity: 0.9, borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', top: '35%', left: '85%', width: '2px', height: '2px', background: '#fff', opacity: 0.5, borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', top: '5%', left: '55%', width: '1px', height: '1px', background: '#fff', opacity: 0.7, borderRadius: '50%' }} />
+
+          {/* City Skyline Layer */}
+          <div className="city-bg" style={{ position: 'absolute', bottom: '130px', left: 0, width: '200%', height: '200px', animationPlayState: playState }} />
+
+          {/* Streetlamps Layer */}
+          <div className="streetlamp-layer" style={{ animationPlayState: playState, animationDuration: '4s' }}>
+            {[0,1,2,3,4,5,6].map(i => (
+              <div key={i} className="lamp-post">
+                <svg width="60" height="180" viewBox="0 0 60 180">
+                  <path d="M 10 180 L 10 40 Q 10 10, 40 10 L 50 10" fill="none" stroke="#1f2937" strokeWidth="6" />
+                  <ellipse cx="50" cy="12" rx="8" ry="4" fill="#fef08a" />
+                  {/* Glow */}
+                  <polygon points="42,14 58,14 120,180 -20,180" fill="#fef08a" opacity="0.1" />
+                </svg>
               </div>
             ))}
           </div>
-        </div>
-      )}
 
-      {/* SLIDE 2: SEQUENCE EXPLORER & CALCULATOR */}
-      {currentSlide === 2 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', height: '100%', justifyContent: 'space-between' }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-              Interactive Sequence Term Calculator
+          {/* Road Base */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '130px', background: '#171717', borderTop: '2px solid #3f3f46' }}>
+            {/* Road Dashed Lines */}
+            <div className="road-lines" style={{ position: 'absolute', top: '60px', left: 0, width: '100%', height: '6px', animationPlayState: playState, opacity: 0.4 }} />
+          </div>
+
+          {/* KM Stones Layer */}
+          <div style={{ 
+            position: 'absolute', 
+            bottom: '120px', 
+            left: 0, 
+            width: '100%', 
+            height: '40px',
+            animation: 'moveKmStone 4s linear infinite',
+            animationPlayState: playState
+          }}>
+            <svg width="30" height="40" viewBox="0 0 30 40" style={{ position: 'absolute', left: '100%' }}>
+              <path d="M 0 40 L 0 15 Q 15 0, 30 15 L 30 40 Z" fill="#e2e8f0" />
+              <rect x="0" y="15" width="30" height="25" fill="#cbd5e1" />
+              <text x="15" y="28" fontSize="10" fontWeight="bold" fill="#0f172a" textAnchor="middle">{distance + 1}km</text>
+            </svg>
+          </div>
+
+          {/* Headlight beam */}
+          <div style={{
+            position: 'absolute',
+            bottom: '40px',
+            left: '52%',
+            width: '400px',
+            height: '100px',
+            background: 'linear-gradient(90deg, rgba(253,224,71,0.3) 0%, rgba(253,224,71,0) 100%)',
+            clipPath: 'polygon(0 40%, 100% 0, 100% 100%, 0 60%)',
+            transformOrigin: 'left center',
+            animation: 'bobbing 0.5s infinite alternate ease-in-out',
+            animationPlayState: playState
+          }} />
+
+          {/* Auto Rickshaw SVG */}
+          <div style={{
+            position: 'absolute',
+            bottom: '40px',
+            left: '20%', // Positioning Auto in lower left center
+            width: '280px',
+            height: '150px',
+            animation: 'bobbing 0.5s infinite alternate ease-in-out',
+            animationPlayState: playState,
+            zIndex: 10
+          }}>
+            <svg width="280" height="150" viewBox="0 0 280 150">
+              {/* Back chassis structure */}
+              <path d="M 30 110 L 30 60 C 30 40, 50 30, 80 30 L 170 30 C 190 30, 200 40, 220 70 L 250 110 Z" fill="#eab308" />
+              {/* Roof */}
+              <path d="M 25 60 C 25 35, 50 20, 90 20 L 160 20 C 190 20, 200 30, 210 50" fill="none" stroke="#171717" strokeWidth="8" strokeLinecap="round" />
+              <path d="M 15 25 C 40 10, 100 10, 170 20 Z" fill="#171717" />
+              {/* Main Body */}
+              <path d="M 30 70 L 220 70 L 250 110 L 260 120 C 260 130, 250 140, 230 140 L 40 140 C 30 140, 20 130, 20 110 Z" fill="#facc15" />
+              <path d="M 30 70 L 220 70 L 250 110 L 260 120 C 260 130, 250 140, 230 140 L 40 140 C 30 140, 20 130, 20 110 Z" fill="none" stroke="#ca8a04" strokeWidth="4" />
+              {/* Window Cutouts */}
+              <path d="M 50 70 L 50 35 L 90 35 L 90 70 Z" fill="#1e1b4b" />
+              <path d="M 105 70 L 105 35 L 160 35 L 185 70 Z" fill="#1e1b4b" />
+              {/* Driver silhouette */}
+              <circle cx="135" cy="50" r="12" fill="#0f172a" />
+              <rect x="125" y="60" width="20" height="20" fill="#0f172a" />
+              <line x1="145" y1="65" x2="175" y2="70" stroke="#0f172a" strokeWidth="4" />
+              {/* Wheels */}
+              <circle cx="70" cy="140" r="18" fill="#171717" />
+              <circle cx="70" cy="140" r="8" fill="#94a3b8" />
+              <circle cx="210" cy="140" r="18" fill="#171717" />
+              <circle cx="210" cy="140" r="8" fill="#94a3b8" />
+              {/* Headlight */}
+              <ellipse cx="255" cy="105" rx="5" ry="10" fill="#fef08a" />
+              <ellipse cx="255" cy="105" rx="3" ry="6" fill="#ffffff" />
+              {/* Taillight */}
+              <ellipse cx="20" cy="115" rx="4" ry="8" fill="#ef4444" />
+              <ellipse cx="20" cy="115" rx="2" ry="4" fill="#fca5a5" />
+              {/* Details */}
+              <line x1="30" y1="90" x2="240" y2="90" stroke="#ca8a04" strokeWidth="2" />
+              <line x1="30" y1="100" x2="245" y2="100" stroke="#ca8a04" strokeWidth="2" />
+            </svg>
+            
+            {/* Exhaust Dust Particles */}
+            <div className="dust-particle" style={{ bottom: '10px', left: '10px', width: '20px', height: '20px', animationDelay: '0s', animationPlayState: playState }} />
+            <div className="dust-particle" style={{ bottom: '5px', left: '15px', width: '15px', height: '15px', animationDelay: '0.3s', animationPlayState: playState }} />
+            <div className="dust-particle" style={{ bottom: '15px', left: '5px', width: '25px', height: '25px', animationDelay: '0.6s', animationPlayState: playState }} />
+            <div className="dust-particle" style={{ bottom: '8px', left: '12px', width: '18px', height: '18px', animationDelay: '0.9s', animationPlayState: playState }} />
+          </div>
+
+          {/* Digital Meter UI overlay */}
+          <div style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            background: '#022c22', // Dark green background for digital meter
+            border: '3px solid #064e3b',
+            borderRadius: '12px',
+            padding: '16px 24px',
+            boxShadow: '0 0 20px rgba(16, 185, 129, 0.2)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '8px',
+            minWidth: '220px',
+            fontFamily: 'monospace'
+          }}>
+            <div style={{ color: '#34d399', fontSize: '36px', fontWeight: 'bold', textShadow: '0 0 10px #34d399', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '24px' }}>₹</span>
+              <span style={{ minWidth: '70px', textAlign: 'right' }}>{fare}</span>
+            </div>
+            <div style={{ color: '#059669', fontSize: '12px', fontWeight: 'bold', letterSpacing: '2px', display: 'flex', gap: '4px', whiteSpace: 'nowrap' }}>
+              <span style={{ color: '#34d399' }}>{distance} KM</span> - 
+              <span style={{ opacity: distance === 0 ? 1 : 0.5 }}>30</span>, 
+              <span style={{ opacity: distance === 1 ? 1 : 0.5 }}>45</span>, 
+              <span style={{ opacity: distance === 2 ? 1 : 0.5 }}>60</span>, 
+              <span style={{ opacity: distance === 3 ? 1 : 0.5 }}>75</span>, 
+              <span style={{ opacity: distance >= 4 ? 1 : 0.5 }}>90</span>
+            </div>
+            {/* Blinking recording light */}
+            <div style={{ position: 'absolute', top: '10px', left: '10px', width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', animation: 'blink 1s infinite' }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Text/Interaction Column */}
+      <div className="dark-coords-right" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '40px' }}>
+        <div>
+          <div className="dark-top-title" style={{ fontSize: '14px', marginBottom: '8px', opacity: 0.8, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            SECTION 1.2
+          </div>
+          <h2 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '16px', color: '#f8fafc' }}>
+            Patterns in Numbers
+          </h2>
+          <p style={{ fontSize: '18px', color: '#94a3b8', lineHeight: '1.6' }}>
+            Among the most basic patterns in mathematics are patterns of whole numbers: 0, 1, 2, 3, 4, ... The branch of mathematics that studies them is called <strong style={{color: '#f8fafc'}}>number theory</strong>.
+          </p>
+        </div>
+
+        <div style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          padding: '24px',
+          borderRadius: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <h3 style={{ fontSize: '20px', color: '#e2e8f0', margin: 0 }}>
+              🚕 The auto meter counts in equal steps
             </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              Select any sequence from Table 1 and adjust the term position $N$ to evaluate its closed-form formula and observe recurrence relations dynamically:
-            </p>
+            <span style={{ background: '#fef3c7', color: '#b45309', padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '800' }}>
+              LIVING PICTURE - A REAL CASE, MOVING
+            </span>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-            {SEQUENCES?.map(s => (
-              <button
-                key={s.id}
-                onClick={() => setSelectedSeqId(s.id)}
-                style={{
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '8px',
-                  border: selectedSeqId === s.id ? '2px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)',
-                  background: selectedSeqId === s.id ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff',
-                  color: selectedSeqId === s.id ? 'var(--theme-primary-dark, #0f766e)' : '#475569',
-                  fontWeight: '900',
-                  fontSize: '0.82rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s'
-                }}
-              >
-                {s.name}
-              </button>
-            ))}
-          </div>
+          <p style={{ fontSize: '16px', color: '#94a3b8', lineHeight: '1.6', margin: 0 }}>
+            A dusk ride through town. The camera rides with the auto: street lamps sweep past, dust rises off the road, and the meter does its mathematics — ₹30 to start, +₹15 at every kilometre stone.
+          </p>
 
-          <div style={{ background: '#ffffff', padding: '1rem 1.25rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.65rem', boxShadow: '0 4px 14px rgba(0, 0, 0, 0.05)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontWeight: '900', color: 'var(--theme-heading, #134e4a)', fontSize: '1.15rem' }}>{currentSeq.name}</span>
-              <span style={{ background: 'var(--theme-badge-bg, #ccfbf1)', color: 'var(--theme-badge-text, #0f766e)', padding: '0.25rem 0.8rem', borderRadius: '8px', fontWeight: '900', fontSize: '0.88rem', border: '1px solid var(--theme-border, #a7f3d0)' }}>
-                {currentSeq.formula}
-              </span>
-            </div>
-
-            <p style={{ margin: 0, fontSize: '0.92rem', color: '#475569', lineHeight: 1.55, textAlign: 'justify', textJustify: 'inter-word' }}>
-              <strong>Algebraic Rule:</strong> {currentSeq.rule}
-            </p>
-
-            {/* Slider */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--theme-bg, #f0fdfa)', padding: '0.65rem 1rem', borderRadius: '10px', border: '1px solid var(--theme-border, #a7f3d0)' }}>
-              <span style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>Term N = {nSlider}:</span>
-              <input
-                type="range"
-                min="1"
-                max="12"
-                value={nSlider}
-                onChange={(e) => setNSlider(parseInt(e.target.value, 10))}
-                style={{ flex: 1, accentColor: 'var(--theme-primary, #0d9488)' }}
-              />
-              <div style={{ background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))', color: '#ffffff', padding: '0.35rem 1rem', borderRadius: '10px', fontWeight: '900', fontSize: '1rem', boxShadow: 'var(--theme-btn-shadow, 0 4px 12px rgba(13, 148, 136, 0.3))' }}>
-                Term #{nSlider} = {currentSeq.calc(nSlider)}
-              </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '8px', background: 'rgba(0,0,0,0.2)', padding: '16px', borderRadius: '12px' }}>
+            <button
+              onClick={toggleAnimation}
+              style={{
+                background: '#ffffff',
+                color: '#0f172a',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flexShrink: 0,
+                boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+              }}
+            >
+              {isRunning ? <><Pause size={16} /> Pause</> : <><Play size={16} /> Resume</>}
+            </button>
+            <div style={{ color: '#cbd5e1', fontSize: '15px', fontWeight: '500' }}>
+              kilometre stone <strong>{distance}</strong> just passed — same ₹15 jump, every single time
             </div>
           </div>
         </div>
-      )}
 
-      {/* SLIDE 3: ACHARYA VIRAHANKA & SANSKRIT BEAT PAD MINI-GAME */}
-      {currentSlide === 3 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', height: '100%', justifyContent: 'space-between' }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-              Acharya Virahānka (c. 700 CE) — Sanskrit Rhythms
-            </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              Centuries before Fibonacci (1202 CE), the celebrated Indian scholar and prosodist <strong>Acharya Virahānka</strong> proved that composing poetic lines of short syllables (<em>Laghu</em> = 1 beat) and long syllables (<em>Guru</em> = 2 beats) obeys $1, 2, 3, 5, 8, 13, 21 \dots$ where each count equals the sum of the preceding two.
-            </p>
-          </div>
-
-          {/* Interactive Sanskrit Beat Pad Mini-Game */}
-          <div style={{ background: '#ffffff', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)', padding: '1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', boxShadow: '0 4px 14px rgba(0, 0, 0, 0.05)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontWeight: '900', color: 'var(--theme-heading, #134e4a)', fontSize: '1rem' }}>🎵 Interactive Sanskrit Beat Sequencer:</span>
-              <button
-                onClick={playVirahankaRhythm}
-                style={{ padding: '0.4rem 1rem', borderRadius: '8px', background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))', color: '#ffffff', border: 'none', fontWeight: '800', fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', boxShadow: 'var(--theme-btn-shadow, 0 4px 12px rgba(13, 148, 136, 0.25))' }}
-              >
-                <Music size={15} /> Play Full Acoustic Meter
-              </button>
-            </div>
-
-            {/* Beat Trigger Buttons */}
-            <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
-              <button
-                onClick={() => addBeat('L')}
-                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', background: 'var(--theme-badge-bg, #ccfbf1)', border: '1.8px solid var(--theme-border, #a7f3d0)', color: 'var(--theme-primary-dark, #0f766e)', fontWeight: '900', fontSize: '0.92rem', cursor: 'pointer' }}
-              >
-                🥁 Tap Laghu (S = 1 Beat)
-              </button>
-              <button
-                onClick={() => addBeat('G')}
-                style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', background: 'var(--theme-bg, #f0fdfa)', border: '1.8px solid var(--theme-border, #a7f3d0)', color: 'var(--theme-primary, #0d9488)', fontWeight: '900', fontSize: '0.92rem', cursor: 'pointer' }}
-              >
-                🥁 Tap Guru (L = 2 Beats)
-              </button>
-              <button
-                onClick={resetBeats}
-                style={{ padding: '0.65rem 1rem', borderRadius: '10px', background: '#f1f5f9', border: '1.5px solid #cbd5e1', color: '#475569', fontWeight: '800', fontSize: '0.85rem', cursor: 'pointer' }}
-              >
-                Clear
-              </button>
-            </div>
-
-            {/* Active Beat Display */}
-            <div style={{ background: 'var(--theme-bg, #f0fdfa)', padding: '0.75rem 1rem', borderRadius: '10px', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)', fontWeight: '800' }}>
-                Your Meter Pattern: {beatHistory.length === 0 ? 'Tap Laghu or Guru above!' : beatHistory.map(b => b.type === 'L' ? '[S: 1]' : '[L: 2]').join(' ')}
-              </div>
-              <div style={{ background: 'var(--theme-badge-bg, #ccfbf1)', padding: '0.35rem 0.85rem', borderRadius: '8px', fontWeight: '900', color: 'var(--theme-badge-text, #0f766e)', fontSize: '0.95rem' }}>
-                Total Beats: {currentMoraTotal}
-              </div>
-            </div>
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto' }}>
+          <button
+            onClick={onNext}
+            style={{
+              background: '#22c55e',
+              color: 'white',
+              border: 'none',
+              padding: '16px 32px',
+              borderRadius: '12px',
+              fontSize: '18px',
+              fontWeight: '800',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              boxShadow: '0 4px 15px rgba(34, 197, 94, 0.4)'
+            }}
+          >
+            Next Section <CheckCircle size={20} />
+          </button>
         </div>
-      )}
-
-      {/* SLIDE 4: PRACTICE & SEQUENCE DETECTIVE GAME */}
-      {currentSlide === 4 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', height: '100%', justifyContent: 'space-between' }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
-              Pattern Detective: Deduce the Rule & Predict 3 Terms
-            </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
-              Select a sequence, deduce its recurrence rule, and input the subsequent three numbers to verify your prediction accuracy:
-            </p>
-          </div>
-
-          <div style={{ background: '#ffffff', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)', padding: '1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', boxShadow: '0 4px 14px rgba(0, 0, 0, 0.05)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <select
-                  value={guessSeqId}
-                  onChange={(e) => {
-                    setGuessSeqId(e.target.value);
-                    setUserGuesses({ t1: '', t2: '', t3: '' });
-                    setQuizFeedback(null);
-                  }}
-                  style={{ padding: '0.4rem 0.85rem', borderRadius: '8px', border: '1.8px solid var(--theme-border, #a7f3d0)', fontWeight: '800', fontSize: '0.9rem', color: 'var(--theme-heading, #134e4a)' }}
-                >
-                  {SEQUENCES?.map(s => (
-                    <option key={s.id} value={s.id}>{s.name}</option>
-                  ))}
-                </select>
-
-                <span style={{ fontWeight: '900', color: 'var(--theme-heading, #134e4a)', fontSize: '0.95rem' }}>
-                  Given: {guessSeq.calc(1)}, {guessSeq.calc(2)}, {guessSeq.calc(3)}, {guessSeq.calc(4)} ...
-                </span>
-              </div>
-
-              {scoreStreak > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: '#dcfce7', color: '#15803d', padding: '0.3rem 0.75rem', borderRadius: '20px', fontWeight: '900', fontSize: '0.85rem', border: '1px solid #86efac' }}>
-                  <Zap size={15} /> Streak: {scoreStreak}
-                </div>
-              )}
-            </div>
-
-            <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
-              {['t1', 't2', 't3'].map((k, i) => (
-                <input
-                  key={k}
-                  type="number"
-                  placeholder={`Term #${i + 5}`}
-                  value={userGuesses[k]}
-                  onChange={(e) => setUserGuesses({ ...userGuesses, [k]: e.target.value })}
-                  style={{ width: '105px', padding: '0.45rem', borderRadius: '8px', border: '2px solid var(--theme-primary, #0d9488)', textAlign: 'center', fontWeight: '900', fontSize: '0.95rem', color: 'var(--theme-heading, #134e4a)' }}
-                />
-              ))}
-
-              <button
-                onClick={handleCheckQuiz}
-                style={{
-                  padding: '0.45rem 1.25rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))',
-                  color: '#ffffff',
-                  fontWeight: '900',
-                  fontSize: '0.9rem',
-                  cursor: 'pointer',
-                  boxShadow: 'var(--theme-btn-shadow, 0 4px 14px rgba(13, 148, 136, 0.35))'
-                }}
-              >
-                Verify Solution
-              </button>
-            </div>
-
-            {quizFeedback && (
-              <div style={{
-                background: quizFeedback.success ? '#f0fdf4' : '#fef2f2',
-                color: quizFeedback.success ? '#15803d' : '#b91c1c',
-                border: `1.8px solid ${quizFeedback.success ? '#86efac' : '#fca5a5'}`,
-                padding: '0.6rem 1rem',
-                borderRadius: '10px',
-                fontSize: '0.92rem',
-                fontWeight: '900'
-              }}>
-                {quizFeedback.message}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
