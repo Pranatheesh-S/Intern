@@ -3,6 +3,12 @@ import { ArrowLeft, CheckCircle, Gamepad2, Globe2, Star } from 'lucide-react';
 import WhatMaths from './WhatMaths';
 import PatternsEverywhere from './PatternsEverywhere';
 import ManActivity from './ManActivity';
+import PatternMachines from './PatternMachines';
+import PatternsInNumbers from './PatternsInNumbers';
+import NumberSequencesTable from './NumberSequencesTable';
+import VisualisingSequences from './VisualisingSequences';
+import RelationsAmongSequences from './RelationsAmongSequences';
+import './MathsChapter1Dark.css';
 
 export default function Class6MathsChapter1({ onBackToDashboard }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -37,6 +43,15 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
       activeEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
   }, [currentStep]);
+
+  const handleNext = () => {
+    if (subStep < 4) setSubStep(prev => prev + 1);
+    else { setCurrentStep(2); setSubStep(1); }
+  };
+  const handlePrev = () => {
+    if (subStep > 1) setSubStep(prev => prev - 1);
+    else handleBackToMainPage();
+  };
 
   return (
     <div style={{
@@ -169,7 +184,21 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
         paddingRight: '0.5rem' // to avoid scrollbar overlap
       }}>
         {currentStep === 1 ? (
-          subStep === 1 ? <WhatMaths /> : subStep === 2 ? <PatternsEverywhere /> : <ManActivity />
+          <>
+            {subStep === 1 && <WhatMaths onNext={handleNext} onPrev={handlePrev} />}
+            {subStep === 2 && <PatternsEverywhere onNext={handleNext} onPrev={handlePrev} />}
+            {subStep === 3 && <ManActivity onNext={handleNext} onPrev={handlePrev} />}
+            {subStep === 4 && <PatternMachines onNext={handleNext} onPrev={handlePrev} />}
+          </>
+        ) : currentStep === 2 ? (
+          <>
+            {subStep === 1 && <PatternsInNumbers onNext={() => setSubStep(2)} />}
+            {subStep === 2 && <NumberSequencesTable onNext={() => { setCurrentStep(3); setSubStep(1); }} />}
+          </>
+        ) : currentStep === 3 ? (
+          <VisualisingSequences onNext={() => { setCurrentStep(4); setSubStep(1); }} />
+        ) : currentStep === 4 ? (
+          <RelationsAmongSequences onNext={() => { setCurrentStep(5); setSubStep(1); }} />
         ) : (
           <div style={{
             flex: 1,
@@ -187,44 +216,36 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
         )}
 
         {/* Bottom Navigation */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          margin: '1rem 0',
-          flexShrink: 0 
-        }}>
-          <button 
-            style={{ padding: '0.75rem 1.5rem', background: '#ffffff', border: '1.5px solid #cbd5e1', borderRadius: '8px', color: '#0f172a', fontWeight: 'bold', cursor: 'pointer' }}
-            onClick={() => {
-              if (currentStep === 1) {
-                if (subStep === 3) setSubStep(2);
-                else if (subStep === 2) setSubStep(1);
-                else handleBackToMainPage();
-              } else {
+        {currentStep > 2 && (
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            margin: '1rem 0',
+            flexShrink: 0 
+          }}>
+            <button 
+              style={{ padding: '0.75rem 1.5rem', background: '#ffffff', border: '1.5px solid #cbd5e1', borderRadius: '8px', color: '#0f172a', fontWeight: 'bold', cursor: 'pointer' }}
+              onClick={() => {
                 setCurrentStep(prev => prev - 1);
                 setSubStep(1);
-              }
-            }}
-          >
-            Back
-          </button>
-          {currentStep < 8 && (
-            <button 
-              className="primary" 
-              style={{ padding: '0.75rem 1.5rem', background: '#F5A623', border: 'none', borderRadius: '8px', color: 'white', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 10px rgba(245, 166, 35, 0.3)' }}
-              onClick={() => {
-                if (currentStep === 1 && subStep < 3) {
-                  setSubStep(prev => prev + 1);
-                } else {
-                  setCurrentStep(prev => prev + 1);
-                  setSubStep(1);
-                }
               }}
             >
-              Next
+              Back
             </button>
-          )}
-        </div>
+            {currentStep < 8 && (
+              <button 
+                className="primary" 
+                style={{ padding: '0.75rem 1.5rem', background: '#F5A623', border: 'none', borderRadius: '8px', color: 'white', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 10px rgba(245, 166, 35, 0.3)' }}
+                onClick={() => {
+                  setCurrentStep(prev => prev + 1);
+                  setSubStep(1);
+                }}
+              >
+                Next
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
