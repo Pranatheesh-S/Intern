@@ -123,7 +123,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
     if (currentStep === 5) {
       const activeShapeActivity = currentSlide;
       return (
-        <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0, borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)', marginBottom: '1rem' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)' }}>
           <ErrorBoundary fallback={<div style={{ color: '#0f172a', padding: '1.2rem', fontWeight: '800' }}>3D Studio initializing...</div>}>
             <Canvas camera={{ position: [0, 0.1, 3.2], fov: 45 }} shadows dpr={[1, 2]}>
               <ambientLight intensity={1.9} />
@@ -177,7 +177,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
 
     if (currentStep === 6) {
       return (
-        <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0, borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)', marginBottom: '1rem' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)' }}>
           <ErrorBoundary>
             <Canvas camera={{ position: [0, 2.2, 3.8], fov: 44 }}>
               <ambientLight intensity={1.8} />
@@ -193,7 +193,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
 
     if (currentStep === 7) {
       return (
-        <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0, borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)', marginBottom: '1rem' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)' }}>
           <ErrorBoundary>
             <Canvas camera={{ position: [0, 0.8, 4.2], fov: 45 }}>
               <ambientLight intensity={2.0} />
@@ -212,7 +212,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
 
     if (currentStep === 8) {
       return (
-        <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0, borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)', marginBottom: '1rem' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '18px', overflow: 'hidden', background: 'radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 60%, #e2e8f0 100%)', border: '1.5px solid #cbd5e1', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)' }}>
           <ErrorBoundary>
             <Canvas camera={{ position: [0, 1.2, 4.2], fov: 45 }}>
               <ambientLight intensity={1.8} />
@@ -374,70 +374,78 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
         ) : currentStep === 4 ? (
           <RelationsAmongSequences onNext={() => { setCurrentStep(5); setCurrentSlide(1); }} />
         ) : currentStep === 5 ? (
-          <>
-            {renderTopShowcase()}
-            <PatternsInShapes
-              activeActivity={currentSlide}
-              setActiveActivity={(id) => setCurrentSlide(id)}
-              viewMode={viewMode}
-              setViewMode={setViewMode}
-              polygonIdx={polygonIdx}
-              setPolygonIdx={setPolygonIdx}
-              placedPolyEdges={placedPolyEdges}
-              setPlacedPolyEdges={setPlacedPolyEdges}
-              graphIdx={graphIdx}
-              setGraphIdx={setGraphIdx}
-              activeComponentIds={activeComponentIds}
-              setActiveComponentIds={setActiveComponentIds}
-              squareSize={squareSize}
-              setSquareSize={setSquareSize}
-              placedSquareLayers={placedSquareLayers}
-              setPlacedSquareLayers={setPlacedSquareLayers}
-              triangleRows={triangleRows}
-              setTriangleRows={setTriangleRows}
-              placedTriLayers={placedTriLayers}
-              setPlacedTriLayers={setPlacedTriLayers}
-              kochDepth={kochDepth}
-              setKochDepth={setKochDepth}
-            />
-          </>
+          <div className="math-responsive-layout">
+            <div className="math-3d-column">{renderTopShowcase()}</div>
+            <div className="math-content-column">
+              <PatternsInShapes
+                activeActivity={currentSlide}
+                setActiveActivity={(id) => setCurrentSlide(id)}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                polygonIdx={polygonIdx}
+                setPolygonIdx={setPolygonIdx}
+                placedPolyEdges={placedPolyEdges}
+                setPlacedPolyEdges={setPlacedPolyEdges}
+                graphIdx={graphIdx}
+                setGraphIdx={setGraphIdx}
+                activeComponentIds={activeComponentIds}
+                setActiveComponentIds={setActiveComponentIds}
+                squareSize={squareSize}
+                setSquareSize={setSquareSize}
+                placedSquareLayers={placedSquareLayers}
+                setPlacedSquareLayers={setPlacedSquareLayers}
+                triangleRows={triangleRows}
+                setTriangleRows={setTriangleRows}
+                placedTriLayers={placedTriLayers}
+                setPlacedTriLayers={setPlacedTriLayers}
+                kochDepth={kochDepth}
+                setKochDepth={setKochDepth}
+              />
+            </div>
+          </div>
         ) : currentStep === 6 ? (
-          <>
-            {renderTopShowcase()}
-            <ShapesToNumbers 
-              currentSlide={currentSlide}
-              s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
-              s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
-              s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
-              s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
-            />
-          </>
+          <div className="math-responsive-layout">
+            <div className="math-3d-column">{renderTopShowcase()}</div>
+            <div className="math-content-column">
+              <ShapesToNumbers 
+                currentSlide={currentSlide}
+                s2nShapeSides={s2nShapeSides} setS2NShapeSides={setS2NShapeSides}
+                s2nPeopleCount={s2nPeopleCount} setS2NPeopleCount={setS2NPeopleCount}
+                s2nTriRows={s2nTriRows} setS2NTriRows={setS2NTriRows}
+                s2nKochIter={s2nKochIter} setS2NKochIter={setS2NKochIter}
+              />
+            </div>
+          </div>
         ) : currentStep === 7 ? (
-          <>
-            {renderTopShowcase()}
-            <RealLifeMathLab 
-              currentSlide={currentSlide}
-              labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
-              labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
-              labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
-              labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
-              labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
-              checkoutStep={checkoutStep}
-              onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
-            />
-          </>
+          <div className="math-responsive-layout">
+            <div className="math-3d-column">{renderTopShowcase()}</div>
+            <div className="math-content-column">
+              <RealLifeMathLab 
+                currentSlide={currentSlide}
+                labSelectedCenter={labSelectedCenter} setLabSelectedCenter={setLabSelectedCenter}
+                labKgPotatoes={labKgPotatoes} setLabKgPotatoes={(val) => { setLabKgPotatoes(val); setCheckoutStep(0); }}
+                labKgTomatoes={labKgTomatoes} setLabKgTomatoes={(val) => { setLabKgTomatoes(val); setCheckoutStep(0); }}
+                labSelectedFlower={labSelectedFlower} setLabSelectedFlower={setLabSelectedFlower}
+                labViralRounds={labViralRounds} setLabViralRounds={setLabViralRounds}
+                checkoutStep={checkoutStep}
+                onTriggerCheckout={() => setCheckoutStep(prev => prev + 1)}
+              />
+            </div>
+          </div>
         ) : (
-          <>
-            {renderTopShowcase()}
-            <ChapterQuizAndSolutions 
-              currentSlide={currentSlide}
-              quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
-              isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
-              quizScore={quizScore}
-              activeQuizQuestionId={activeQuizQuestionId}
-              setActiveQuizQuestionId={setActiveQuizQuestionId}
-            />
-          </>
+          <div className="math-responsive-layout">
+            <div className="math-3d-column">{renderTopShowcase()}</div>
+            <div className="math-content-column">
+              <ChapterQuizAndSolutions 
+                currentSlide={currentSlide}
+                quizAnswers={quizAnswers} setQuizAnswers={setQuizAnswers}
+                isQuizSubmitted={isQuizSubmitted} setIsQuizSubmitted={setIsQuizSubmitted}
+                quizScore={quizScore}
+                activeQuizQuestionId={activeQuizQuestionId}
+                setActiveQuizQuestionId={setActiveQuizQuestionId}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>
