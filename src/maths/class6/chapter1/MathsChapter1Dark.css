@@ -75,9 +75,10 @@
   flex-shrink: 0;
   border-radius: 20px;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  background: radial-gradient(circle at 50% 30%, #ffffff 0%, #f0f9ff 50%, #bae6fd 100%);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   margin-bottom: 24px;
+  border: 1px solid #e0f2fe;
 }
 
 .math-3d-label {
@@ -130,6 +131,8 @@
   padding: 24px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
   position: relative;
+  flex-shrink: 0;
+  margin-bottom: 32px; /* Fix for padding-bottom getting cut off */
 }
 
 .math-quote-mark {
@@ -240,6 +243,8 @@
   padding-top: 24px;
   margin-top: auto;
   border-top: 1px solid #e2e8f0;
+  flex-shrink: 0;
+  padding-bottom: 16px;
 }
 
 .math-slide-indicator {
