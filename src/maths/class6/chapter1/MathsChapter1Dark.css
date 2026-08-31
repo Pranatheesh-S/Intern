@@ -5,7 +5,7 @@
 :root {
   --math-bg-main: #faf5ff; /* Fuchsia 50 - Very Light Violet */
   --math-panel-left-bg: #f3e8ff; /* Purple 100 - Light Violet */
-  --math-panel-right-bg: #ffffff;
+  --math-panel-right-bg: #faf5ff; /* Very Light Violet */
   --math-inner-card-bg: #ffffff;
   
   --math-accent-amber: #f59e0b;
