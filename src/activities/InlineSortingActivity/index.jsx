@@ -6,7 +6,7 @@ import { useTheme } from '../../../../ThemeContext.jsx';
 import darkForestBg from '../../../../assets/dark_forest_bg.jpg';
 
 import roseImg from '../../../../assets/specimens/rose.png';
-import treeImg from '../../../../assets/tree_1.png';
+import mangoTreeImg from '../../assets/mango_tree.png';
 import lotusImg from '../../../../assets/specimens/lotus.png';
 import grassImg from '../../../../assets/specimens/grass.png';
 import fishImg from '../../../../assets/specimens/fish.png';
@@ -18,7 +18,7 @@ const SORT_ITEMS = [
     name: 'Mango Tree',
     kind: 'Plant 🌳',
     desc: 'Tall plant with hard woody trunk, bears flowers & mangos on land.',
-    image: treeImg,
+    image: mangoTreeImg,
     answers: {
       flowers: 'with_flowers',
       stem: 'hard_stem',
