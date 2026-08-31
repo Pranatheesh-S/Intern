@@ -422,7 +422,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           <button 
             onClick={onBackToDashboard} 
             className="outline" 
-            style={{ padding: '0.85rem 1.6rem', fontSize: '1.3rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', display: 'flex', alignItems: 'center' }}
+            style={{ padding: '0.85rem 1.6rem', fontSize: '1.45rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', display: 'flex', alignItems: 'center' }}
           >
             <ArrowLeft size={24} /> Dashboard
           </button>
@@ -517,7 +517,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               }
             }}
             className="outline"
-            style={{ padding: '0.85rem 1.6rem', fontSize: '1.3rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center' }}
+            style={{ padding: '0.85rem 1.6rem', fontSize: '1.45rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center' }}
           >
             <ArrowLeft size={24} /> Back
           </button>
@@ -534,7 +534,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               setStageCompleted(false);
             }}
             className="outline"
-            style={{ padding: '0.85rem 1.6rem', fontSize: '1.3rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--danger)', borderColor: 'var(--danger-border)', display: 'flex', alignItems: 'center' }}
+            style={{ padding: '0.85rem 1.6rem', fontSize: '1.45rem', fontWeight: 'bold', gap: '0.75rem', borderRadius: '10px', color: 'var(--danger)', borderColor: 'var(--danger-border)', display: 'flex', alignItems: 'center' }}
           >
             <RefreshCw size={22} /> Reset Activity
           </button>
@@ -546,7 +546,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
               className={((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'primary' : 'outline'}
               style={{ 
                 padding: '0.85rem 1.8rem', 
-                fontSize: '1.35rem', 
+                fontSize: '1.5rem', 
                 fontWeight: 'bold',
                 gap: '0.75rem', 
                 borderRadius: '10px',

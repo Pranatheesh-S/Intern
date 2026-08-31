@@ -2,146 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Lightbulb, CheckCircle2, GripVertical } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import imgFrostedGlass from "../../../../../assets/2.froastedglass.png";
+import imgEraser from "../../../../../assets/2.eraser.jpg";
+import imgButterPaper from "../../../../../assets/2.butterpaper.jpg";
+import imgGlass from "../../../../../assets/2.glass.jpg";
+import imgWoodenBoard from "../../../../../assets/2.woodenboard.jpg";
+import imgGlassWindow from "../../../../../assets/2.glasswindow.jpg";
+
+import imgTransparent from "../../../../../assets/2.transparent.png";
+import imgTranslucent from "../../../../../assets/2.transcluent.png";
+import imgOpaque from "../../../../../assets/2.opaque.png";
+
+const trayImages = {
+  Transparent: imgTransparent,
+  Translucent: imgTranslucent,
+  Opaque: imgOpaque,
+};
+
 // ─── Inline SVG object visuals ───────────────────────────────────────────────
 function ObjectVisual({ id, size = 90 }) {
-  const s = size;
-  switch (id) {
-    case 'tumbler': return (
-      <svg width={s} height={s} viewBox="0 0 100 100">
-        <defs>
-          <linearGradient id="tG" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#a8d8f0" stopOpacity="0.6"/>
-            <stop offset="40%" stopColor="#e0f4ff" stopOpacity="0.9"/>
-            <stop offset="70%" stopColor="#b8e4f5" stopOpacity="0.7"/>
-            <stop offset="100%" stopColor="#7ac5e8" stopOpacity="0.5"/>
-          </linearGradient>
-          <linearGradient id="tHL" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="white" stopOpacity="0.6"/>
-            <stop offset="100%" stopColor="white" stopOpacity="0"/>
-          </linearGradient>
-        </defs>
-        <path d="M28 18 L72 18 L65 85 L35 85 Z" fill="url(#tG)" stroke="#5ab3d4" strokeWidth="1.5"/>
-        <rect x="26" y="15" width="48" height="6" rx="3" fill="#7cd0f0" stroke="#4ab0d0" strokeWidth="1"/>
-        <path d="M33 58 Q50 55 67 58 L65 85 L35 85 Z" fill="#60c4ec" fillOpacity="0.45"/>
-        <rect x="34" y="20" width="10" height="55" rx="5" fill="url(#tHL)"/>
-        <path d="M38 22 L40 75" stroke="white" strokeWidth="1.5" strokeOpacity="0.5" strokeLinecap="round"/>
-      </svg>
-    );
-    case 'butter': return (
-      <svg width={s} height={s} viewBox="0 0 100 100">
-        <defs>
-          <linearGradient id="bG" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fefce8"/>
-            <stop offset="50%" stopColor="#fef3c7"/>
-            <stop offset="100%" stopColor="#fde68a"/>
-          </linearGradient>
-        </defs>
-        <ellipse cx="52" cy="88" rx="36" ry="4" fill="rgba(0,0,0,0.1)"/>
-        <path d="M20 25 Q25 20 35 22 Q50 18 65 21 Q78 20 82 28 Q80 45 82 60 Q80 75 76 80 Q60 82 50 80 Q35 82 22 78 Q18 65 20 50 Q18 35 20 25 Z" fill="url(#bG)" stroke="#d4b96a" strokeWidth="1"/>
-        <path d="M20 25 Q35 30 50 28 Q65 26 82 28" stroke="#c9a830" strokeWidth="0.8" strokeOpacity="0.5" fill="none"/>
-        <ellipse cx="42" cy="48" rx="10" ry="7" fill="#fde68a" fillOpacity="0.6"/>
-        <ellipse cx="62" cy="62" rx="8" ry="6" fill="#fde68a" fillOpacity="0.5"/>
-        <path d="M65 21 L82 28 L72 26 Z" fill="#e8c547" fillOpacity="0.4"/>
-        <path d="M30 40 Q40 37 50 40 Q60 43 70 40" stroke="#c9a830" strokeWidth="0.5" strokeOpacity="0.4" fill="none"/>
-        <path d="M28 55 Q38 52 52 55 Q62 58 72 55" stroke="#c9a830" strokeWidth="0.5" strokeOpacity="0.4" fill="none"/>
-      </svg>
-    );
-    case 'eraser': return (
-      <svg width={s} height={s} viewBox="0 0 100 100">
-        <defs>
-          <linearGradient id="eG" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#fda4af"/>
-            <stop offset="100%" stopColor="#f43f5e"/>
-          </linearGradient>
-          <linearGradient id="eBand" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#1d4ed8"/>
-            <stop offset="100%" stopColor="#3b82f6"/>
-          </linearGradient>
-        </defs>
-        <ellipse cx="50" cy="84" rx="30" ry="5" fill="rgba(0,0,0,0.15)"/>
-        <g transform="rotate(-10 50 50)">
-          <rect x="14" y="34" width="72" height="36" rx="4" fill="url(#eG)" stroke="#e11d48" strokeWidth="1"/>
-          <rect x="14" y="34" width="72" height="12" rx="4" fill="#fecdd3"/>
-          <rect x="44" y="34" width="22" height="36" fill="url(#eBand)"/>
-          <rect x="44" y="34" width="22" height="12" fill="#60a5fa"/>
-          <rect x="16" y="35" width="28" height="2" rx="1" fill="white" fillOpacity="0.4"/>
-        </g>
-        <ellipse cx="24" cy="79" rx="3" ry="1.5" fill="#fda4af" transform="rotate(-15 24 79)"/>
-        <ellipse cx="68" cy="81" rx="2.5" ry="1.5" fill="#3b82f6" transform="rotate(10 68 81)"/>
-      </svg>
-    );
-    case 'frosted': return (
-      <svg width={s} height={s} viewBox="0 0 100 100">
-        <defs>
-          <linearGradient id="fG" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#dbeafe" stopOpacity="0.85"/>
-            <stop offset="50%" stopColor="#eff6ff" stopOpacity="0.95"/>
-            <stop offset="100%" stopColor="#bfdbfe" stopOpacity="0.75"/>
-          </linearGradient>
-        </defs>
-        <rect x="12" y="12" width="76" height="76" rx="4" fill="#94a3b8" stroke="#64748b" strokeWidth="2"/>
-        <rect x="10" y="47" width="80" height="6" fill="#78909c"/>
-        <rect x="47" y="10" width="6" height="80" fill="#78909c"/>
-        <rect x="14" y="14" width="31" height="31" rx="2" fill="url(#fG)" stroke="#bfdbfe" strokeWidth="0.5"/>
-        <rect x="55" y="14" width="31" height="31" rx="2" fill="url(#fG)" stroke="#bfdbfe" strokeWidth="0.5"/>
-        <rect x="14" y="55" width="31" height="31" rx="2" fill="url(#fG)" stroke="#bfdbfe" strokeWidth="0.5"/>
-        <rect x="55" y="55" width="31" height="31" rx="2" fill="url(#fG)" stroke="#bfdbfe" strokeWidth="0.5"/>
-        {[18,26,34,22,30,16,24,32,28].map((x,i) => <circle key={i} cx={x} cy={22+(i%3)*7} r="1.2" fill="white" fillOpacity="0.6"/>)}
-        {[58,66,74,62,70,60,68,64,72].map((x,i) => <circle key={i} cx={x} cy={22+(i%3)*7} r="1.2" fill="white" fillOpacity="0.6"/>)}
-        <ellipse cx="29" cy="70" rx="10" ry="6" fill="#94a3b8" fillOpacity="0.25"/>
-        <ellipse cx="70" cy="70" rx="10" ry="6" fill="#94a3b8" fillOpacity="0.25"/>
-        <line x1="16" y1="16" x2="24" y2="24" stroke="white" strokeWidth="1.5" strokeOpacity="0.7" strokeLinecap="round"/>
-      </svg>
-    );
-    case 'wood': return (
-      <svg width={s} height={s} viewBox="0 0 100 100">
-        <defs>
-          <linearGradient id="wG" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#c8a46a"/>
-            <stop offset="50%" stopColor="#a0733a"/>
-            <stop offset="100%" stopColor="#8b5e2a"/>
-          </linearGradient>
-        </defs>
-        <path d="M15 72 L85 72 L85 82 L15 82 Z" fill="#7a4f20"/>
-        <path d="M85 35 L95 40 L95 82 L85 72 Z" fill="#6b3d12"/>
-        <rect x="15" y="28" width="70" height="44" rx="2" fill="url(#wG)"/>
-        <path d="M20 36 Q50 33 80 36" stroke="#8b5e2a" strokeWidth="1" strokeOpacity="0.5" fill="none"/>
-        <path d="M20 44 Q50 41 80 44" stroke="#7a4f20" strokeWidth="0.8" strokeOpacity="0.4" fill="none"/>
-        <path d="M20 52 Q48 49 80 52" stroke="#8b5e2a" strokeWidth="1" strokeOpacity="0.5" fill="none"/>
-        <path d="M22 60 Q50 57 78 60" stroke="#7a4f20" strokeWidth="0.8" strokeOpacity="0.4" fill="none"/>
-        <path d="M22 68 Q52 65 78 68" stroke="#8b5e2a" strokeWidth="0.8" strokeOpacity="0.3" fill="none"/>
-        <ellipse cx="62" cy="42" rx="6" ry="4" fill="#7a4f20" fillOpacity="0.5"/>
-        <ellipse cx="62" cy="42" rx="3" ry="2" fill="#5c3614" fillOpacity="0.5"/>
-        <rect x="15" y="28" width="70" height="8" rx="2" fill="white" fillOpacity="0.15"/>
-        <rect x="15" y="28" width="70" height="44" rx="2" fill="none" stroke="#7a4f20" strokeWidth="1.2"/>
-      </svg>
-    );
-    case 'window': return (
-      <svg width={s} height={s} viewBox="0 0 100 100">
-        <defs>
-          <linearGradient id="winG" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#bae6fd" stopOpacity="0.75"/>
-            <stop offset="50%" stopColor="#e0f2fe" stopOpacity="0.9"/>
-            <stop offset="100%" stopColor="#93c5fd" stopOpacity="0.65"/>
-          </linearGradient>
-        </defs>
-        <rect x="10" y="10" width="80" height="80" rx="5" fill="#78909c" stroke="#546e7a" strokeWidth="2"/>
-        <rect x="8" y="47" width="84" height="6" fill="#78909c"/>
-        <rect x="47" y="8" width="6" height="84" fill="#78909c"/>
-        <rect x="12" y="12" width="33" height="33" rx="2" fill="url(#winG)"/>
-        <rect x="55" y="12" width="33" height="33" rx="2" fill="url(#winG)"/>
-        <rect x="12" y="55" width="33" height="33" rx="2" fill="url(#winG)"/>
-        <rect x="55" y="55" width="33" height="33" rx="2" fill="url(#winG)"/>
-        <rect x="12" y="12" width="33" height="12" rx="2" fill="#93c5fd" fillOpacity="0.5"/>
-        <rect x="55" y="12" width="33" height="12" rx="2" fill="#93c5fd" fillOpacity="0.5"/>
-        <line x1="14" y1="14" x2="28" y2="28" stroke="white" strokeWidth="2" strokeOpacity="0.6" strokeLinecap="round"/>
-        <line x1="57" y1="14" x2="71" y2="28" stroke="white" strokeWidth="2" strokeOpacity="0.6" strokeLinecap="round"/>
-        <rect x="16" y="28" width="6" height="10" fill="#64748b" fillOpacity="0.15" rx="1"/>
-        <rect x="24" y="30" width="6" height="8" fill="#64748b" fillOpacity="0.15" rx="1"/>
-      </svg>
-    );
-    default: return null;
-  }
+  const images = {
+    tumbler: imgGlass,
+    butter: imgButterPaper,
+    eraser: imgEraser,
+    frosted: imgFrostedGlass,
+    wood: imgWoodenBoard,
+    window: imgGlassWindow
+  };
+  return <img src={images[id]} alt={id} style={{ width: size, height: size, objectFit: 'contain', borderRadius: '8px' }} />;
 }
 
 // ─── Tray component ───────────────────────────────────────────────────────────
@@ -208,25 +96,23 @@ function Tray({ type, droppedItems, isDragOver, onDragOver, onDragLeave, onDrop 
           position: 'relative',
           flex: 1,
           minHeight: '230px',
-          borderRadius: '12px 12px 20px 20px',
+          borderRadius: '20px',
           boxShadow: isDragOver
             ? `0 0 0 3px ${c.accent}, 0 8px 30px ${c.glow}`
-            : '0 6px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08)',
+            : '0 4px 15px rgba(0,0,0,0.1)',
           transition: 'box-shadow 0.2s ease',
-          background: c.trayBg,
-          border: `2px solid ${c.rimTop}`,
           overflow: 'hidden',
         }}
       >
-        {/* Rim top highlight */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '20px', background: `linear-gradient(180deg, ${c.rimTop} 0%, transparent 100%)`, borderRadius: '12px 12px 0 0', zIndex: 2, pointerEvents: 'none' }}/>
+        <img 
+          src={trayImages[type]} 
+          alt={`${type} tray`} 
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'fill', zIndex: 0 }} 
+        />
 
         {/* Interior */}
         <div style={{
-          position: 'absolute', inset: '20px 10px 14px 10px',
-          background: c.innerBg,
-          borderRadius: '4px 4px 14px 14px',
-          border: `1px solid ${c.rimTop}30`,
+          position: 'absolute', inset: '25px 25px 25px 25px',
           display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start',
           gap: '8px', padding: '10px 8px 8px 8px',
           overflowY: 'auto', zIndex: 1,
@@ -287,9 +173,6 @@ function Tray({ type, droppedItems, isDragOver, onDragOver, onDragLeave, onDrop 
             ))}
           </AnimatePresence>
         </div>
-
-        {/* Rim bottom shadow */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '24px', background: `linear-gradient(0deg, ${c.rimBottom} 0%, transparent 100%)`, borderRadius: '0 0 20px 20px', zIndex: 2, pointerEvents: 'none' }}/>
 
         {/* Drag-over overlay */}
         {isDragOver && (
