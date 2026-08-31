@@ -30,22 +30,22 @@ const STEPS = [
   {
     step: 1,
     title: "Step 1: Start at Bottom-Left Corner",
-    desc: "The flat magnet rests at the bottom-left corner. The compass needle points naturally to Earth's Magnetic North (0° N)."
+    desc: "The flat bar magnet rests at the bottom-left corner. The compass needle points naturally to Earth's Magnetic North (0° N)."
   },
   {
     step: 2,
     title: "Step 2: Top-Left Station & Polarity Flip",
-    desc: "With [[N][S]], the Red North needle faces the Top-Left magnet (315° NW). When flipped to [[S][N]], the North needle is repelled to North-East (45° NE)."
+    desc: "With [[N][S]], the Red North needle is attracted to Top-Left (315° NW). When flipped to [[S][N]], the North needle is repelled to South-East (135° SE)."
   },
   {
     step: 3,
     title: "Step 3: Bottom-Right Station & Polarity Flip",
-    desc: "With [[N][S]], the Blue South needle faces the Bottom-Right magnet (135° SE). When flipped to [[S][N]], the South needle is repelled to South-West (225° SW)."
+    desc: "With [[N][S]], the Red North needle is repelled to North-West (315° NW). When flipped to [[S][N]], the Red North needle is attracted to Bottom-Right (135° SE)."
   },
   {
     step: 4,
-    title: "Step 4: Return to Initial Corner",
-    desc: "The magnet smoothly returns to the bottom-left corner. Earth's geomagnetic field restores the compass to 0° North."
+    title: "Step 4: Settle in Initial Stage",
+    desc: "The magnet smoothly returns to the bottom-left corner and settles. Earth's geomagnetic field restores the compass to 0° North."
   }
 ];
 
@@ -133,6 +133,17 @@ function getCatmullRomSplinePoint(points, t) {
 export default function Simulation({ onComplete, onNext }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [compassAngle, setCompassAngle] = useState(0);
+  const compassAngleRef = useRef(0);
+
+  // Continuous angle unwrapping so Framer Motion needle never spins 360° across 0°
+  const setContinuousCompassAngle = useCallback((targetDeg) => {
+    const prev = compassAngleRef.current;
+    const delta = ((targetDeg - prev) % 360 + 540) % 360 - 180;
+    const nextAngle = prev + delta;
+    compassAngleRef.current = nextAngle;
+    setCompassAngle(nextAngle);
+  }, []);
+
   // false: Left = North (🔴 N), Right = South (🔵 S)
   // true:  Left = South (🔵 S), Right = North (🔴 N)
   const [isFlipped, setIsFlipped] = useState(false);
@@ -192,7 +203,7 @@ export default function Simulation({ onComplete, onNext }) {
 
     // When magnet is far in the corner, Earth's natural magnetic field dominates
     if (distCenter >= 330) {
-      setCompassAngle(0);
+      setContinuousCompassAngle(0);
       setActiveInteraction('Natural Earth Alignment (0° N)');
       return;
     }
@@ -201,40 +212,38 @@ export default function Simulation({ onComplete, onNext }) {
     const distTopLeft = Math.hypot(x - (-215), y - (-210));
     const distBottomRight = Math.hypot(x - 215, y - 205);
 
-    // 1. Top-Left Region:
-    // - [[N][S]]: North needle attracted to Top-Left Magnet -> 315° (NW)
-    // - [[S][N]]: North needle repelled to North-East -> 45° (NE)
+    // 1. Top-Left Region (-215, -210):
+    // - [[N][S]]: Right half (South) is closest -> Red North needle attracted to Top-Left Magnet -> 315° (NW)
+    // - [[S][N]]: Right half (North) is closest -> Red North needle repelled to South-East -> 135° (SE)
     if (distTopLeft < 90) {
-      const targetAngle = flipped ? 45 : 315;
       const blend = Math.max(0, 1 - distTopLeft / 90);
-      // Smoothly blend towards target angle
       const finalAngle = !flipped 
-        ? 360 - 45 * blend // approaches 315°
-        : 45 * blend;      // approaches 45°
-      setCompassAngle((finalAngle + 360) % 360);
+        ? 360 - 45 * blend // approaches 315° NW
+        : 180 - 45 * blend; // approaches 135° SE
+      setContinuousCompassAngle((finalAngle + 360) % 360);
 
       if (flipped) {
-        setActiveInteraction('🔴 North needle repelled to North-East (45° NE)');
+        setActiveInteraction('🔴 Red North needle repelled to South-East (135° SE)');
       } else {
-        setActiveInteraction('🔴 North needle attracted to Top-Left Magnet (315° NW)');
+        setActiveInteraction('🔴 Red North needle attracted to Top-Left Magnet (315° NW)');
       }
       return;
     }
 
-    // 2. Bottom-Right Region:
-    // - [[N][S]]: South needle faces Bottom-Right Magnet (135° SE) -> Red North needle points 315° (NW)
-    // - [[S][N]]: South needle repelled to South-West (225° SW) -> Red North needle points 45° (NE)
+    // 2. Bottom-Right Region (215, 205):
+    // - [[N][S]]: Left half (North) is closest -> Red North needle repelled to 315° NW (Blue South needle attracted to 135° SE)
+    // - [[S][N]]: Left half (South) is closest -> Red North needle attracted to Bottom-Right Magnet -> 135° SE (Blue South needle repelled to 315° NW)
     if (distBottomRight < 90) {
       const blend = Math.max(0, 1 - distBottomRight / 90);
       const finalAngle = !flipped 
-        ? 360 - 45 * blend // Red needle at 315° NW (South needle at 135° SE)
-        : 45 * blend;      // Red needle at 45° NE (South needle at 225° SW)
-      setCompassAngle((finalAngle + 360) % 360);
+        ? 360 - 45 * blend // Red needle repelled to 315° NW (Blue South needle points 135° SE)
+        : 180 - 45 * blend; // Red needle attracted to 135° SE (Blue South needle points 315° NW)
+      setContinuousCompassAngle((finalAngle + 360) % 360);
 
       if (flipped) {
-        setActiveInteraction('🔵 South needle repelled to South-West (225° SW)');
+        setActiveInteraction('🔴 Red North needle attracted to Bottom-Right (135° SE)');
       } else {
-        setActiveInteraction('🔵 South needle attracted to Bottom-Right Magnet (135° SE)');
+        setActiveInteraction('🔴 Red North needle repelled to 315° NW (🔵 Blue South needle attracted to 135° SE)');
       }
       return;
     }
@@ -280,14 +289,14 @@ export default function Simulation({ onComplete, onNext }) {
     let targetDeg = targetRad * (180 / Math.PI);
     targetDeg = (targetDeg + 360) % 360;
 
-    setCompassAngle(targetDeg);
+    setContinuousCompassAngle(targetDeg);
 
     if (distN < distS) {
-      setActiveInteraction('🔴 Like North Pole Repelling');
+      setActiveInteraction('🔴 Like North Pole Repelling Needle');
     } else {
-      setActiveInteraction('🔵 Opposite South Pole Attracting');
+      setActiveInteraction('🔵 Opposite South Pole Attracting Needle');
     }
-  }, []);
+  }, [setContinuousCompassAngle]);
 
   // Update physics on initial render & state changes
   useEffect(() => {
@@ -387,11 +396,19 @@ export default function Simulation({ onComplete, onNext }) {
     ];
 
     animateAlongSpline(splinePoints, 1400, () => {
-      setStatusMessage('At Top-Left: North needle faces magnet (315° NW). Click Flip to test [[ S ][ N ]]!');
+      setStatusMessage('Top-Left with [[ N ][ S ]]: Red North needle attracted to Top-Left (315° NW)...');
+
+      // Wait 2.5s then flip to test [[S][N]]
+      addTimeout(() => {
+        playMagneticSound('snap');
+        setIsFlipped(true);
+        updateCompassPhysics(-215, -210, true);
+        setStatusMessage('Flipped to [[ S ][ N ]]: Red North needle repelled to South-East (135° SE)... Click Bottom-Rt to continue!');
+      }, 2500);
     });
   };
 
-  // 2. Move from Top-Left around Top & Right to Bottom-Right Station with [[N][S]]
+  // 2. Move to Bottom-Right Station: Wait for [[N][S]] deflection, flip to [[S][N]], observe deflection, then return & settle in initial stage
   const moveToBottomRight = () => {
     if (isAnimating) return;
     clearAllTimeouts();
@@ -418,7 +435,45 @@ export default function Simulation({ onComplete, onNext }) {
     ];
 
     animateAlongSpline(splinePoints, 1700, () => {
-      setStatusMessage('At Bottom-Right: South needle faces magnet (135° SE). Click Flip to test [[ S ][ N ]]!');
+      // 1) When magnet arrives at Bottom-Right: wait for [[N][S]] and needle gets deflected
+      setStatusMessage('Bottom-Right with [[ N ][ S ]]: Magnet\'s North pole repels Red North needle to 315° NW (Blue South needle attracted to 135° SE)...');
+
+      // Wait 2.5s to observe [[N][S]] deflection
+      addTimeout(() => {
+        // 2) Flip to [[S][N]] and needle gets deflected
+        playMagneticSound('snap');
+        setIsFlipped(true);
+        updateCompassPhysics(215, 205, true);
+        setStatusMessage('Flipped to [[ S ][ N ]]: Magnet\'s South pole attracts Red North needle to 135° SE (Blue South needle repelled to 315° NW)...');
+
+        // Wait 2.5s to observe reversed deflection
+        addTimeout(() => {
+          // 3) Come and settle in the initial stage
+          setStatusMessage('Step 4: Returning along bottom path and settling in Initial Corner...');
+          setCurrentStation('corner');
+          setCurrentStep(4);
+
+          const splinePointsReturn = [
+            [215, 205],
+            [215, 205],
+            [80, 260],
+            [-80, 265],
+            [-260, 230],
+            [-260, 230]
+          ];
+
+          animateAlongSpline(splinePointsReturn, 1400, () => {
+            setIsFlipped(false);
+            compassAngleRef.current = 0;
+            setCompassAngle(0);
+            updateCompassPhysics(-260, 230, false);
+            setStatusMessage('Magnet settled in initial stage! Compass needle restored to 0° North.');
+            setHasCompletedTour(true);
+            setIsCompleted(true);
+            if (onComplete) onComplete();
+          });
+        }, 2500);
+      });
     });
   };
 
@@ -443,7 +498,11 @@ export default function Simulation({ onComplete, onNext }) {
     ];
 
     animateAlongSpline(splinePoints, 1300, () => {
-      setStatusMessage('Magnet resting at initial corner position. Compass at 0° N.');
+      setIsFlipped(false);
+      compassAngleRef.current = 0;
+      setCompassAngle(0);
+      updateCompassPhysics(-260, 230, false);
+      setStatusMessage('Magnet settled at initial corner position. Compass needle at 0° North.');
       setCurrentStep(4);
       setHasCompletedTour(true);
       setIsCompleted(true);
@@ -463,11 +522,11 @@ export default function Simulation({ onComplete, onNext }) {
   // -------------------------------------------------------------------
   // Complete Automated Sequential Experiment Flow:
   // 1. Start at Corner with [[N][S]] (Compass at 0° N)
-  // 2. Move to Top-Left with [[N][S]] -> North needle faces Top-Left (315° NW) (wait 2.5s)
-  // 3. Flip to [[S][N]] at Top-Left -> North needle faces North-East (45° NE) (wait 2.5s)
-  // 4. Move around perimeter to Bottom-Right with [[N][S]] -> South needle faces Bottom-Right (135° SE) (wait 2.5s)
-  // 5. Flip to [[S][N]] at Bottom-Right -> South needle faces South-West (225° SW) (wait 2.5s)
-  // 6. Return along bottom path to initial bottom-left corner (Compass at 0° N)
+  // 2. Move to Top-Left with [[N][S]] -> North needle attracted to Top-Left (315° NW) (wait 2.5s)
+  // 3. Flip to [[S][N]] at Top-Left -> North needle repelled to South-East (135° SE) (wait 2.5s)
+  // 4. Move around perimeter to Bottom-Right with [[N][S]] -> Wait for [[N][S]] deflection (315° NW) (wait 2.5s)
+  // 5. Flip to [[S][N]] at Bottom-Right -> Deflect towards Bottom-Right (135° SE) (wait 2.5s)
+  // 6. Return along bottom path to initial bottom-left corner and settle (Compass at 0° N)
   // -------------------------------------------------------------------
   const runFullSequence = () => {
     if (isAnimating) return;
@@ -495,7 +554,7 @@ export default function Simulation({ onComplete, onNext }) {
     ];
 
     animateAlongSpline(splinePoints1, 1400, () => {
-      setStatusMessage('Top-Left with [[ N ][ S ]]: North needle attracted to Top-Left (315° NW)...');
+      setStatusMessage('Top-Left with [[ N ][ S ]]: Red North needle attracted to Top-Left (315° NW)...');
 
       // Wait 2.5s to observe initial deflection
       addTimeout(() => {
@@ -503,7 +562,7 @@ export default function Simulation({ onComplete, onNext }) {
         playMagneticSound('snap');
         setIsFlipped(true);
         updateCompassPhysics(-215, -210, true);
-        setStatusMessage('Flipped to [[ S ][ N ]]: North needle repelled to North-East (45° NE)...');
+        setStatusMessage('Flipped to [[ S ][ N ]]: Red North needle repelled to South-East (135° SE)...');
 
         // Wait 2.5s to observe reversed deflection
         addTimeout(() => {
@@ -527,20 +586,22 @@ export default function Simulation({ onComplete, onNext }) {
           ];
 
           animateAlongSpline(splinePoints2, 1800, () => {
-            setStatusMessage('Bottom-Right with [[ N ][ S ]]: South needle attracted to Bottom-Right (135° SE)...');
+            // When magnet comes to bottom right:
+            // 1) Wait for [[N][S]] and needle gets deflected
+            setStatusMessage('Bottom-Right with [[ N ][ S ]]: Magnet\'s North pole repels Red North needle to 315° NW (Blue South needle attracted to 135° SE)...');
 
             // Wait 2.5s to observe deflection
             addTimeout(() => {
-              // 4. Flip to [[S][N]] at Bottom-Right
+              // 2) Flip to [[S][N]] and needle gets deflected
               playMagneticSound('snap');
               setIsFlipped(true);
               updateCompassPhysics(215, 205, true);
-              setStatusMessage('Flipped to [[ S ][ N ]]: South needle repelled to South-West (225° SW)...');
+              setStatusMessage('Flipped to [[ S ][ N ]]: Magnet\'s South pole attracts Red North needle to 135° SE (Blue South needle repelled to 315° NW)...');
 
               // Wait 2.5s to observe reversed deflection
               addTimeout(() => {
-                // 5. Return to Initial Corner
-                setStatusMessage('Step 3: Returning along bottom path to Initial Corner...');
+                // 3) Return and settle in the initial stage
+                setStatusMessage('Step 4: Returning along bottom path and settling in Initial Corner...');
                 setCurrentStation('corner');
                 setCurrentStep(4);
 
@@ -555,8 +616,10 @@ export default function Simulation({ onComplete, onNext }) {
 
                 animateAlongSpline(splinePoints3, 1400, () => {
                   setIsFlipped(false);
+                  compassAngleRef.current = 0;
+                  setCompassAngle(0);
                   updateCompassPhysics(-260, 230, false);
-                  setStatusMessage('Sequence Complete! Compass needle restored to 0° North.');
+                  setStatusMessage('Sequence Complete! Magnet settled in initial stage. Compass needle restored to 0° North.');
                   setHasCompletedTour(true);
                   setIsCompleted(true);
                   if (onComplete) onComplete();
@@ -582,6 +645,7 @@ export default function Simulation({ onComplete, onNext }) {
     setHasVisitedBottomRight(false);
     setHasCompletedTour(false);
     setIsCompleted(false);
+    compassAngleRef.current = 0;
     setCompassAngle(0);
     setStatusMessage('Magnet resting at bottom-left corner');
     updateCompassPhysics(-260, 230, false);
@@ -623,7 +687,7 @@ export default function Simulation({ onComplete, onNext }) {
   if (currentStation === 'top-left') {
     facingPoleName = isFlipped ? '🔴 North Pole (Right Half facing Compass)' : '🔵 South Pole (Right Half facing Compass)';
   } else if (currentStation === 'bottom-right') {
-    facingPoleName = isFlipped ? '🔴 North Pole (Left Half facing Compass)' : '🔵 South Pole (Left Half facing Compass)';
+    facingPoleName = isFlipped ? '🔵 South Pole (Left Half facing Compass)' : '🔴 North Pole (Left Half facing Compass)';
   } else {
     facingPoleName = 'Bottom-Left Corner (Out of Direct Pull)';
   }
