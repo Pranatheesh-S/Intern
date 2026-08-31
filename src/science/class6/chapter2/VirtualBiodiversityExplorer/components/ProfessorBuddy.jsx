@@ -22,6 +22,7 @@ export default function ProfessorBuddy({
 
   // Handle Speech Narration
   const handleNarrate = () => {
+    if (sounds.muted) return;
     if (talking) {
       sounds.stopSpeech();
       setTalking(false);
@@ -125,19 +126,6 @@ export default function ProfessorBuddy({
               {message}
             </p>
           </div>
-
-          {/* Narration voice toggle */}
-          <button
-            onClick={handleNarrate}
-            className={`p-2 rounded-xl border transition-all ${
-              talking
-                ? 'bg-emerald-500 text-slate-950 border-emerald-300 animate-pulse'
-                : 'bg-slate-800 text-emerald-400 border-emerald-500/30 hover:bg-slate-700'
-            }`}
-            title={talking ? "Stop Narration" : "Read aloud"}
-          >
-            {talking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
         </div>
       </div>
     </div>

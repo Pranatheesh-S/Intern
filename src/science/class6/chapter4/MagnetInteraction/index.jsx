@@ -5,6 +5,7 @@ import Stage1_Build from './components/Stage1_Build';
 import Stage3_Explore from './components/Stage3_Explore';
 import Stage4_Quiz from './components/Stage4_Quiz';
 import DidYouKnow from './DidYouKnow';
+import './MagnetInteraction.css';
 
 export default function MagnetInteractionActivity({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('build');
@@ -43,25 +44,21 @@ export default function MagnetInteractionActivity({ onBackToDashboard, onComplet
       flexDirection: 'column', 
       overflow: 'hidden',
       boxSizing: 'border-box',
-      padding: '0.5rem 0.75rem',
-      backgroundColor: '#ECFDF5',
-      backgroundImage: `
-        radial-gradient(circle at 10% 20%, rgba(167, 243, 208, 0.45) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(253, 230, 138, 0.35) 0%, transparent 40%)
-      `,
-      position: 'relative'
+      padding: '0.65rem 0.85rem',
+      backgroundColor: '#FFFFFF',
+      position: 'relative',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
-      {/* Top Header Bar with Sage Mint Light Theme */}
+      {/* Top Header Bar (Unboxed / Transparent Container) */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
-        padding: '0.55rem 1.15rem',
-        marginBottom: '0.4rem',
-        background: '#FFFFFF',
-        border: '1.5px solid #A7F3D0',
-        borderRadius: '20px',
-        boxShadow: '0 6px 20px rgba(6, 78, 59, 0.06)',
+        padding: '0.25rem 0.5rem',
+        marginBottom: '0.45rem',
+        background: 'transparent',
+        border: 'none',
+        boxShadow: 'none',
         flexShrink: 0,
         position: 'relative',
         zIndex: 100
@@ -69,67 +66,67 @@ export default function MagnetInteractionActivity({ onBackToDashboard, onComplet
         {/* Left: Back Button */}
         <button 
           onClick={onBackToDashboard} 
+          className="gold-glow-btn"
           style={{ 
             position: 'relative', zIndex: 100,
-            padding: '0.55rem 1.25rem', 
-            fontSize: '0.85rem', 
-            gap: '0.4rem',
-            background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-            color: '#FFFFFF',
+            padding: '0.6rem 1.25rem', 
+            fontSize: '0.92rem', 
+            gap: '0.5rem',
+            borderRadius: '16px',
             border: 'none',
-            borderRadius: '25px',
             fontWeight: 900,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
             transition: 'all 0.2s ease'
           }}
         >
-          <ArrowLeft size={16} color="#FFFFFF" /> Back to Chapter 4
+          <ArrowLeft size={18} color="#FFFFFF" /> Back to Chapter 4
         </button>
 
         {/* Center: Title & Subtitle */}
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#064E3B', letterSpacing: '-0.01em' }}>
-            <Compass size={22} style={{ color: '#D97706' }} />
+          <h2 style={{ margin: 0, fontSize: '1.42rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.65rem', color: '#064E3B', letterSpacing: '-0.02em' }}>
+            <Compass size={26} style={{ color: '#D97706' }} />
             Activity 4.6: Attraction and Repulsion of Magnets
           </h2>
-          <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>Class 6 Science — Attraction & Repulsion Between Magnetic Poles</span>
+          <span style={{ fontSize: '0.88rem', color: '#047857', fontWeight: 800 }}>Class 6 Science — Attraction & Repulsion Between Magnetic Poles</span>
         </div>
 
         {/* Right: Tabbed Navigation Bar */}
-        <nav className="tabs-container" style={{ display: 'flex', gap: '0.35rem', margin: 0 }}>
+        <nav className="tabs-container" style={{ display: 'flex', gap: '0.5rem', margin: 0 }}>
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isCompleted = progress[tab.id];
+            const isActive = activeTab === tab.id;
             
             return (
               <button
                 key={tab.id}
                 onClick={() => !tab.locked && setActiveTab(tab.id)}
                 disabled={tab.locked}
+                className={isActive ? 'gold-glow-btn' : ''}
                 style={{
-                  opacity: tab.locked ? 0.4 : 1,
+                  opacity: tab.locked ? 0.45 : 1,
                   cursor: tab.locked ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.35rem',
-                  padding: '0.5rem 1rem',
-                  fontSize: '0.85rem',
+                  gap: '0.45rem',
+                  padding: '0.6rem 1.15rem',
+                  fontSize: '0.92rem',
                   fontWeight: 900,
-                  borderRadius: '20px',
-                  background: activeTab === tab.id ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#FFFFFF',
-                  color: activeTab === tab.id ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#334155',
-                  border: activeTab === tab.id ? 'none' : '1.5px solid #CBD5E1',
-                  boxShadow: activeTab === tab.id ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
+                  borderRadius: '25px',
+                  background: isActive ? undefined : '#FFFFFF',
+                  color: isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#78350F',
+                  border: isActive ? undefined : '1.5px solid #FDE68A',
+                  boxShadow: isActive ? undefined : '0 2px 6px rgba(0,0,0,0.03)',
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={15} color={activeTab === tab.id ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#334155'} />
+                <Icon size={17} color={isActive ? '#FFFFFF' : tab.locked ? '#94A3B8' : '#78350F'} />
                 <span>{tab.name}</span>
                 {isCompleted && (
-                  <CheckCircle size={13} style={{ color: activeTab === tab.id ? '#FFFFFF' : '#16A34A', marginLeft: '0.15rem' }} />
+                  <CheckCircle size={15} style={{ color: isActive ? '#FFFFFF' : '#10B981', marginLeft: '0.2rem' }} />
                 )}
               </button>
             );

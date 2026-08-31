@@ -2,18 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, RotateCcw } from "lucide-react";
 
-import paperImg      from "../../../../../assets/paper basket.png";
-import cardboardImg  from "../../../../../assets/cardboard.jpg";
-import woodImg       from "../../../../../assets/wood basket.png";
-// TODO: Uncomment these imports when the teammate's files are added to the repository
-// import copperWireImg from "../../../../../assets/copperwire image.webp";
-// import aluminiumImg  from "../../../../../assets/aluminiumrod image.webp";
-// import steelSpoonImg from "../../../../../assets/steelspoon image.webp";
-
-// Temporary Procedural SVG Fallbacks
-const copperWireImg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" style="background:%23b87333; border-radius: 8px;"><text x="50%" y="50%" fill="white" font-family="sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle">Copper Wire (Temp)</text></svg>`;
-const aluminiumImg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" style="background:%23b0c4de; border-radius: 8px;"><text x="50%" y="50%" fill="black" font-family="sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle">Aluminium Rod (Temp)</text></svg>`;
-const steelSpoonImg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" style="background:%2371797E; border-radius: 8px;"><text x="50%" y="50%" fill="white" font-family="sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle">Steel Spoon (Temp)</text></svg>`;
+import paperImg      from "../../../../../assets/paper image.webp";
+import cardboardImg  from "../../../../../assets/cardboard image.jpg";
+import woodImg       from "../../../../../assets/wood image.webp";
+import copperWireImg from "../../../../../assets/copperwire image.webp";
+import aluminiumImg  from "../../../../../assets/aluminiumrod image.webp";
+import steelSpoonImg from "../../../../../assets/steelspoon image.webp";
 
 // WhichSide Activity specific imports
 import glassMarbleImg from "../../../../../assets/glassmarble image.jpg";

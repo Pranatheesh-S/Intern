@@ -5,6 +5,7 @@ import Simulation from './Simulation';
 import Questions from './Questions';
 import ChallengeMode from './ChallengeMode';
 import DidYouKnow from './DidYouKnow';
+import './Activity4_6.css';
 
 export default function Activity4_6({ onBackToDashboard, onComplete }) {
   const [activeTab, setActiveTab] = useState('simulation');
@@ -28,47 +29,19 @@ export default function Activity4_6({ onBackToDashboard, onComplete }) {
       overflow: 'hidden',
       boxSizing: 'border-box',
       padding: '0.65rem 0.85rem',
-      backgroundColor: '#ECFDF5',
+      backgroundColor: '#FFFFFF',
       position: 'relative',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
-      {/* Soft Decorative Ambient Background Glows */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: '-10%',
-          left: '10%',
-          width: '500px',
-          height: '500px',
-          background: 'radial-gradient(circle, rgba(167, 243, 208, 0.45) 0%, rgba(236, 253, 245, 0) 70%)',
-          pointerEvents: 'none',
-          zIndex: 0
-        }}
-      />
-      <div 
-        style={{
-          position: 'absolute',
-          bottom: '-10%',
-          right: '10%',
-          width: '500px',
-          height: '500px',
-          background: 'radial-gradient(circle, rgba(253, 230, 138, 0.35) 0%, rgba(236, 253, 245, 0) 70%)',
-          pointerEvents: 'none',
-          zIndex: 0
-        }}
-      />
-
-      {/* Top Header Bar matching Activity 4.3 styling */}
+      {/* Top Header Bar (Unboxed - no container box, keeping contents intact) */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'auto 1fr auto', 
         alignItems: 'center', 
-        padding: '0.5rem 1rem',
-        marginBottom: '0.5rem',
-        background: '#FFFFFF',
-        border: '1.5px solid #A7F3D0',
-        borderRadius: '20px',
-        boxShadow: '0 4px 20px rgba(6, 78, 59, 0.06)',
+        padding: '0.2rem 0.5rem',
+        marginBottom: '0.4rem',
+        background: 'transparent',
+        border: 'none',
         flexShrink: 0,
         position: 'relative',
         zIndex: 100
@@ -76,20 +49,18 @@ export default function Activity4_6({ onBackToDashboard, onComplete }) {
         {/* Left Column: Back Button */}
         <button 
           onClick={onBackToDashboard}
+          className="gold-glow-btn"
           style={{ 
             position: 'relative', zIndex: 100,
-            padding: '0.5rem 1rem', 
-            fontSize: '0.85rem', 
+            padding: '0.55rem 1.15rem', 
+            fontSize: '0.9rem', 
             gap: '0.45rem',
-            background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
             color: '#FFFFFF',
-            border: 'none',
-            borderRadius: '12px',
+            borderRadius: '14px',
             fontWeight: 900,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
             transition: 'all 0.2s ease'
           }}
         >
@@ -98,11 +69,11 @@ export default function Activity4_6({ onBackToDashboard, onComplete }) {
 
         {/* Center Column: Title */}
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', color: '#064E3B', letterSpacing: '-0.01em' }}>
+          <h2 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', color: '#064E3B', letterSpacing: '-0.01em' }}>
             <Compass size={24} style={{ color: '#D97706' }} />
             Activity 4.6: Compass & Bar Magnet
           </h2>
-          <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>Class 6 Science — Make Your Own Magnet & Explore Induction</span>
+          <span style={{ fontSize: '0.85rem', color: '#047857', fontWeight: 700 }}>Class 6 Science — Make Your Own Magnet & Explore Induction</span>
         </div>
 
         {/* Right Column: Active Navigation Tabs */}
@@ -116,24 +87,25 @@ export default function Activity4_6({ onBackToDashboard, onComplete }) {
                 key={tab.id}
                 onClick={() => !tab.disabled && setActiveTab(tab.id)}
                 disabled={tab.disabled}
+                className={isActive ? "gold-glow-btn" : ""}
                 style={{
                   opacity: tab.disabled ? 0.45 : 1,
                   cursor: tab.disabled ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  padding: '0.5rem 1rem',
-                  fontSize: '0.85rem',
+                  padding: '0.55rem 1.1rem',
+                  fontSize: '0.88rem',
                   fontWeight: 800,
                   borderRadius: '25px',
-                  background: isActive ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : '#F8FAFC',
-                  color: isActive ? '#FFFFFF' : tab.disabled ? '#94A3B8' : '#334155',
-                  border: isActive ? 'none' : '1.5px solid #CBD5E1',
-                  boxShadow: isActive ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
+                  background: isActive ? undefined : '#FFFFFF',
+                  color: isActive ? '#FFFFFF' : tab.disabled ? '#94A3B8' : '#065F46',
+                  border: isActive ? 'none' : '1.5px solid #FDE68A',
+                  boxShadow: isActive ? undefined : '0 2px 6px rgba(0,0,0,0.03)',
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Icon size={16} color={isActive ? '#FFFFFF' : tab.disabled ? '#94A3B8' : '#334155'} />
+                <Icon size={16} color={isActive ? '#FFFFFF' : tab.disabled ? '#94A3B8' : '#065F46'} />
                 {tab.label}
               </button>
             );

@@ -107,19 +107,20 @@ export default function App() {
   }, [activeActivity]);
 
   const [isAudioPlaying, setIsAudioPlaying] = useState(true);
+  const [isChapter2SoundButtonVisible, setIsChapter2SoundButtonVisible] = useState(true);
   const audioRef = useRef(null);
 
   useEffect(() => {
     if (!audioRef.current) return;
     audioRef.current.volume = 0.15; // Ambient background sound level
-    if (activeActivity === 'chapter2' && isAudioPlaying) {
+    if (activeActivity === 'chapter2' && isChapter2SoundButtonVisible && isAudioPlaying) {
       audioRef.current.play().catch(err => {
         console.log("Audio autoplay blocked by browser, waiting for interaction", err);
       });
     } else {
       audioRef.current.pause();
     }
-  }, [activeActivity, isAudioPlaying]);
+  }, [activeActivity, isChapter2SoundButtonVisible, isAudioPlaying]);
 
 
   useEffect(() => {
@@ -2890,18 +2891,18 @@ export default function App() {
 
       {/* Page Title Header */}
       {!isFullscreen && (
-        <header className="header" style={{ marginBottom: activeSubject ? '1.5rem' : '2.5rem' }}>
+        <header className="header" style={{ marginBottom: activeActivity === 'chapter4_flow' ? '0' : activeSubject ? '1.5rem' : '2.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
               <div className="header-title">
-                <BookOpen style={{ color: 'var(--accent)' }} size={24} />
-                <h1 style={{ fontSize: '1.75rem' }}>FuturaX Interactive Labs</h1>
+                <BookOpen style={{ color: activeActivity === 'chapter4_flow' ? '#ffffff' : 'var(--accent)' }} size={28} />
+                <h1 style={{ fontSize: '2.15rem', fontWeight: 800 }}>FuturaX Interactive Labs</h1>
               </div>
-              <p className="header-subtitle">
+              <p className="header-subtitle" style={{ fontSize: '1.05rem', marginTop: '0.35rem' }}>
                 Active-learning simulations and concept reviews for science and social science
               </p>
             </div>
-            {activeSubject && (
+            {activeSubject && activeActivity !== 'chapter4_flow' && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                 <div
                   style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
@@ -3076,6 +3077,7 @@ export default function App() {
             <Chapter2LearningLab 
               onBack={() => navigateTo('class6', null)}
               onHeaderVisibilityChange={(visible) => setHideHeader(!visible)}
+              onSoundButtonVisibilityChange={(visible) => setIsChapter2SoundButtonVisible(visible)}
             />
           ) : activeActivity === 'chapter3' ? (
             <Chapter3LearningLab 
@@ -3206,8 +3208,8 @@ export default function App() {
           zIndex: 999999 
         }}
       >
-        {/* Music Toggle Control (only for Chapter 2) */}
-        {activeActivity === 'chapter2' && (
+        {/* Music Toggle Control (only for Chapter 2 Cover, Slogan, and Scenes) */}
+        {activeActivity === 'chapter2' && isChapter2SoundButtonVisible && (
           <button
             onClick={() => setIsAudioPlaying(prev => !prev)}
             style={{

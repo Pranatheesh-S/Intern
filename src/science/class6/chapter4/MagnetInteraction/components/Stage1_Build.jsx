@@ -75,6 +75,7 @@ function TrayItemCard({ step, isPlaced, isUnlocked, renderThumbnail }) {
   });
 
   const isDisabled = isPlaced || !isUnlocked;
+  const isCurrent = isUnlocked && !isPlaced;
 
   return (
     <div 
@@ -88,17 +89,21 @@ function TrayItemCard({ step, isPlaced, isUnlocked, renderThumbnail }) {
         display: 'flex', 
         flexDirection: 'column',
         alignItems: 'center', 
-        gap: '0.85rem', 
-        padding: '1.1rem', 
+        gap: '0.75rem', 
+        padding: '1rem', 
         borderRadius: '16px',
-        background: isPlaced ? '#DCFCE7' : isUnlocked ? '#FFFFFF' : '#F8FAFC',
-        border: `1.5px solid ${isPlaced ? '#16A34A' : isUnlocked ? '#A7F3D0' : '#E2E8F0'}`,
-        color: '#1E293B',
+        background: isPlaced ? '#DCFCE7' : isCurrent ? '#FEF3C7' : '#FFFFFF',
+        border: isPlaced 
+          ? '1.5px solid #86EFAC' 
+          : isCurrent 
+          ? '2px solid #F59E0B' 
+          : '1.5px solid #FDE68A',
+        color: '#064E3B',
         cursor: isDisabled ? 'not-allowed' : 'grab',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.25s ease',
         position: 'relative',
         fontWeight: 800,
-        boxShadow: isUnlocked && !isPlaced ? '0 4px 12px rgba(6, 78, 59, 0.06)' : 'none',
+        boxShadow: isCurrent ? '0 4px 14px rgba(245, 158, 11, 0.18)' : '0 2px 8px rgba(0,0,0,0.03)',
         userSelect: 'none',
         boxSizing: 'border-box',
         flex: 1,
@@ -109,42 +114,48 @@ function TrayItemCard({ step, isPlaced, isUnlocked, renderThumbnail }) {
         width: '100%', 
         flex: 1,
         minHeight: 0,
-        background: '#F0FDF4', 
-        border: '1.5px solid #A7F3D0', 
+        background: isPlaced ? '#F0FDF4' : '#FFFBEB', 
+        border: `1.5px solid ${isPlaced ? '#A7F3D0' : '#FDE68A'}`, 
         borderRadius: '12px', 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center', 
         flexShrink: 0, 
         opacity: isUnlocked ? 1 : 0.4, 
-        padding: '1rem', 
+        padding: '0.85rem', 
         boxSizing: 'border-box',
         position: 'relative'
       }}>
         <div style={{ 
           position: 'absolute', 
-          top: '8px', 
-          left: '12px', 
-          fontSize: '1.4rem', 
-          fontWeight: 900, 
-          color: '#065F46',
-          opacity: 0.6
+          top: '6px', 
+          left: '10px', 
+          width: '26px',
+          height: '26px',
+          borderRadius: '50%',
+          background: isPlaced ? '#059669' : isUnlocked ? '#D97706' : '#CBD5E1',
+          color: '#FFFFFF',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '0.9rem', 
+          fontWeight: 900
         }}>
           {step.id === 'carA' ? '1' : '2'}
         </div>
         {renderThumbnail(step.id)}
       </div>
       
-      <div style={{ textAlign: 'center', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
-        <div style={{ fontSize: '1.1rem', fontWeight: '900', color: isPlaced ? '#065F46' : '#064E3B' }}>{step.name}</div>
+      <div style={{ textAlign: 'center', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem' }}>
+        <div style={{ fontSize: '1.18rem', fontWeight: 900, color: isPlaced ? '#047857' : '#064E3B' }}>{step.name}</div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center' }}>
           {isPlaced ? (
-            <><CheckCircle2 size={18} style={{ color: '#16A34A' }} /> <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#16A34A' }}>Placed</span></>
+            <><CheckCircle2 size={18} style={{ color: '#16A34A' }} /> <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#15803D' }}>Placed in Airspace</span></>
           ) : !isUnlocked ? (
-            <><Lock size={16} style={{ color: '#94A3B8' }} /> <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#94A3B8' }}>Locked</span></>
+            <><Lock size={16} style={{ color: '#94A3B8' }} /> <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#94A3B8' }}>Locked</span></>
           ) : (
-            <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#475569' }}>Drag to sky corridor</span>
+            <span style={{ fontSize: '0.98rem', fontWeight: 700, color: '#92400E' }}>👉 Drag to sky corridor</span>
           )}
         </div>
       </div>
@@ -417,60 +428,74 @@ export default function Stage1_Build({ onComplete, onNext }) {
           </div>
 
           <div style={{ 
-            background: "#FFFFFF",
-            border: "1.5px solid #A7F3D0",
-            borderRadius: "20px",
-            padding: "1rem 1.15rem",
-            boxShadow: "0 6px 20px rgba(6, 78, 59, 0.06)",
+            background: "linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)",
+            border: "1.5px solid #FDE68A",
+            borderRadius: "24px",
+            padding: "1.25rem 1.4rem",
+            boxShadow: "0 6px 24px rgba(217, 119, 6, 0.08)",
             display: "flex", 
             flexDirection: "column", 
             minHeight: 0,
             overflowY: "hidden",
-            gap: "0.75rem"
+            gap: "0.85rem",
+            fontFamily: "system-ui, -apple-system, sans-serif"
           }}>
-            {/* Header Box inside right container */}
+            {/* Header Area inside right container (Unboxed) */}
             <div style={{ 
-              background: "#F0FDF4", 
-              border: "1.5px solid #A7F3D0", 
-              padding: "0.85rem 1rem", 
-              borderRadius: "16px",
-              boxShadow: "0 2px 8px rgba(6, 78, 59, 0.04)",
               display: 'flex', 
               justifyContent: 'space-between', 
-              alignItems: 'center'
+              alignItems: 'center',
+              padding: '0.2rem 0.2rem 0.35rem 0.2rem'
             }}>
-              <h3 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 900, color: '#064E3B', lineHeight: 1.35 }}>
-                ✈️ Build the Experiment: Magnetic Airplanes Setup
-              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#064E3B', lineHeight: 1.3 }}>
+                  ✈️ Build Setup
+                </h3>
+                <span style={{ fontSize: '0.9rem', color: '#047857', fontWeight: 800 }}>
+                  Place Magnetic Airplanes
+                </span>
+              </div>
               <button 
                 onClick={handleReset} 
                 style={{ 
-                  padding: "0.45rem 0.85rem", 
-                  borderRadius: "10px",
-                  background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
-                  color: "#FFFFFF",
-                  border: "none",
+                  padding: "0.5rem 1rem", 
+                  borderRadius: "14px",
+                  background: "#FFFFFF",
+                  color: "#92400E",
+                  border: "1.5px solid #FDE68A",
                   cursor: "pointer",
-                  boxShadow: "0 3px 10px rgba(217, 119, 6, 0.35)",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                   display: "flex",
                   alignItems: "center",
-                  gap: "0.4rem",
-                  fontSize: "0.82rem",
-                  fontWeight: 900,
+                  gap: "0.45rem",
+                  fontSize: "0.92rem",
+                  fontWeight: 800,
                   flexShrink: 0,
-                  marginLeft: "0.5rem",
                   transition: "all 0.2s ease"
                 }} 
               >
-                <RotateCcw size={14} color="#FFFFFF" /> Reset
+                <RotateCcw size={15} color="#D97706" /> Reset
               </button>
             </div>
 
             {/* Flight Components List */}
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
-              <h4 style={{ color: "#064E3B", margin: "0 0 0.55rem 0", fontSize: "0.95rem", fontWeight: 900, display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
-                📦 Flight Components
-              </h4>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: "0 0 0.5rem 0" }}>
+                <h4 style={{ color: "#064E3B", margin: 0, fontSize: "1.12rem", fontWeight: 900, display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                  📦 Flight Components
+                </h4>
+                <span style={{
+                  background: '#DCFCE7',
+                  color: '#15803D',
+                  fontWeight: 900,
+                  fontSize: '0.88rem',
+                  padding: '0.25rem 0.65rem',
+                  borderRadius: '10px',
+                  border: '1.5px solid #86EFAC'
+                }}>
+                  Step {placed.carA && placed.carB ? 2 : placed.carA ? 1 : 0} of 2
+                </span>
+              </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', flex: 1, minHeight: 0 }}>
                 {STEPS.map((step) => (
                   <TrayItemCard 
@@ -484,36 +509,32 @@ export default function Stage1_Build({ onComplete, onNext }) {
               </div>
             </div>
 
-            {/* Popups handled via overlay */}
-
-            {/* Proceed to Explore Button (Directly under Instructions) */}
+            {/* Proceed to Explore Button */}
             <button 
               onClick={() => {
                 onComplete();
                 onNext();
               }}
               disabled={!success}
+              className={success ? 'gold-glow-btn' : ''}
               style={{ 
                 width: '100%',
-                padding: '0.8rem 1.25rem', 
-                fontSize: '0.95rem', 
+                padding: '0.95rem 1.4rem', 
+                fontSize: '1.08rem', 
                 fontWeight: 900, 
                 borderRadius: '16px', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                gap: '0.6rem',
-                background: success 
-                  ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' 
-                  : '#E2E8F0',
+                gap: '0.65rem',
+                background: success ? undefined : '#F1F5F9',
                 color: success ? '#FFFFFF' : '#94A3B8',
-                border: 'none',
+                border: success ? undefined : '1.5px solid #CBD5E1',
                 cursor: success ? 'pointer' : 'not-allowed',
-                boxShadow: success ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
                 transition: 'all 0.25s ease'
               }}
             >
-              Proceed to Explore <ArrowRight size={18} color={success ? "#FFFFFF" : "#94A3B8"} />
+              Proceed to Explore <ArrowRight size={20} color={success ? "#FFFFFF" : "#94A3B8"} />
             </button>
           </div>
 
@@ -561,29 +582,30 @@ export default function Stage1_Build({ onComplete, onNext }) {
               transition={{ type: 'spring', bounce: 0.5, duration: 0.6 }}
               style={{
                 background: '#FFFFFF',
-                border: '1.5px solid #A7F3D0',
+                border: '1.5px solid #FDE68A',
                 borderRadius: '24px',
-                padding: '2.5rem',
-                maxWidth: '420px',
-                boxShadow: '0 12px 40px rgba(6, 78, 59, 0.2)',
+                padding: '2.2rem',
+                maxWidth: '440px',
+                boxShadow: '0 12px 40px rgba(69, 26, 3, 0.2)',
                 textAlign: 'center',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '1.25rem'
+                gap: '1.25rem',
+                fontFamily: 'system-ui, -apple-system, sans-serif'
               }}
             >
-              <div style={{ width: '56px', height: '56px', background: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #A7F3D0' }}>
-                <Info size={28} color="#065F46" />
+              <div style={{ width: '58px', height: '58px', background: '#FEF3C7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #FDE68A' }}>
+                <Info size={30} color="#D97706" />
               </div>
               
-              <h3 style={{ margin: 0, color: '#064E3B', fontSize: '1.35rem', fontWeight: 900 }}>
+              <h3 style={{ margin: 0, color: '#064E3B', fontSize: '1.45rem', fontWeight: 900 }}>
                 {activePopup === 0 && "Step 1: Left Airspace"}
                 {activePopup === 1 && "Step 2: Right Airspace"}
                 {activePopup === 2 && "Observation"}
               </h3>
               
-              <p style={{ margin: 0, color: '#334155', fontSize: '1.05rem', fontWeight: 600, lineHeight: 1.5 }}>
+              <p style={{ margin: 0, color: '#065F46', fontSize: '1.1rem', fontWeight: 600, lineHeight: 1.6 }}>
                 {activePopup === 0 && (
                   <>Drag <strong>Airplane A</strong> from the tray into the <strong>Left flight corridor</strong>.</>
                 )}
@@ -597,24 +619,20 @@ export default function Stage1_Build({ onComplete, onNext }) {
               
               <button
                 onClick={() => setActivePopup(null)}
+                className="gold-glow-btn"
                 style={{
-                  marginTop: '0.75rem',
-                  padding: '0.8rem 2.5rem',
-                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                  color: '#FFFFFF',
-                  border: 'none',
+                  marginTop: '0.5rem',
+                  padding: '0.85rem 2.6rem',
                   borderRadius: '25px',
-                  fontSize: '1rem',
+                  fontSize: '1.05rem',
                   fontWeight: 900,
                   cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
-                  transition: 'transform 0.1s ease',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem'
                 }}
               >
-                Got it! <CheckCircle2 size={18} />
+                Got it! <CheckCircle2 size={18} color="#FFFFFF" />
               </button>
             </motion.div>
           </motion.div>

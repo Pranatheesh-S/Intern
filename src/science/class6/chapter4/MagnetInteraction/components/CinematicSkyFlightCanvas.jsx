@@ -4,14 +4,20 @@ import MagnetActivityBackground from "./MagnetActivityBackground";
 export default function CinematicSkyFlightCanvas({ 
   interactionMode = "same", 
   isRunning = true,
-  polesMatch = true 
+  polesMatch = true,
+  onActionComplete
 }) {
   const canvasRef = useRef(null);
   const isRunningRef = useRef(isRunning);
+  const onActionCompleteRef = useRef(onActionComplete);
 
   useEffect(() => {
     isRunningRef.current = isRunning;
   }, [isRunning]);
+
+  useEffect(() => {
+    onActionCompleteRef.current = onActionComplete;
+  }, [onActionComplete]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -92,6 +98,7 @@ export default function CinematicSkyFlightCanvas({
     let flashAlpha = 0;
     let time = 0;
     let hasTriggeredImpact = false;
+    let hasTriggeredActionCompletion = false;
 
     // Pre-impact magnetic static arc discharge
     function emitPreImpactStaticArcs(x1, y1, x2, y2) {
@@ -645,6 +652,10 @@ export default function CinematicSkyFlightCanvas({
           planeBRoll = -Math.PI / 2 - Math.sin(pTurn * Math.PI) * 0.5; // Smooth banking turn
 
         } else if (samePolesTimer >= 3.5 && samePolesTimer < 5.8) {
+          if (!hasTriggeredActionCompletion && onActionCompleteRef.current) {
+            hasTriggeredActionCompletion = true;
+            onActionCompleteRef.current("same");
+          }
           // Step 4: Move Forward — Both aircraft accelerate forward across clear separated lanes
           const tFwd = samePolesTimer - 3.5;
           const pFwd = Math.min(1.0, tFwd / 2.2);
@@ -665,6 +676,7 @@ export default function CinematicSkyFlightCanvas({
         } else if (samePolesTimer >= 5.8) {
           if (isRunningRef.current) {
             samePolesTimer = 0;
+            hasTriggeredActionCompletion = false;
           }
           planeAX = -220;
           planeBX = cssWidth + 220;
@@ -731,6 +743,11 @@ export default function CinematicSkyFlightCanvas({
             triggerCatastrophicImpact(impactPointX, centerY);
           }
 
+          if (crashTimer >= 2.1 && !hasTriggeredActionCompletion && onActionCompleteRef.current) {
+            hasTriggeredActionCompletion = true;
+            onActionCompleteRef.current("different");
+          }
+
           // Structural Disintegration & Asymmetric Uncontrolled Flat-Spin Dive
           const elapsedCrash = crashTimer - 1.7;
 
@@ -758,6 +775,7 @@ export default function CinematicSkyFlightCanvas({
           if (isRunningRef.current) {
             crashTimer = 0;
             hasTriggeredImpact = false;
+            hasTriggeredActionCompletion = false;
           }
           planeAX = cssWidth * 0.30;
           planeBX = -200;

@@ -91,18 +91,6 @@ export default function DiscoveryPopup({
 
         {/* Actions Footer */}
         <div className="relative z-10 flex items-center gap-3 pt-2">
-          {/* Voice Narration Button */}
-          <button
-            onClick={handleSpeak}
-            className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 border transition ${
-              speaking
-                ? 'bg-amber-500 text-slate-950 border-amber-300 animate-pulse'
-                : 'bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700'
-            }`}
-          >
-            <Volume2 className="w-4 h-4" />
-            <span>{speaking ? 'Stop Reading' : 'Listen Narration'}</span>
-          </button>
 
           {/* Add to Journal Button */}
           <button

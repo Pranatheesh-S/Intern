@@ -161,6 +161,7 @@ class SoundManager {
   }
 
   speak(text) {
+    if (this.muted) return;
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel(); // Stop current speaking
       const utterance = new SpeechSynthesisUtterance(text);

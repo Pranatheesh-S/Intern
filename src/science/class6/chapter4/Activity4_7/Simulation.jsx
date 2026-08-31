@@ -15,6 +15,7 @@ import {
   Zap
 } from 'lucide-react';
 import ExactCompass from '../components/ExactCompass.jsx';
+import Barrier3DCanvas from './components/Barrier3DCanvas.jsx';
 
 const getBearingName = (deg) => {
   const norm = ((deg % 360) + 360) % 360;
@@ -142,484 +143,27 @@ const MagnetVisual = ({ isFlipped, isTesting }) => (
 );
 
 /* -------------------------------------------------------------
-   Ultra-Realistic 3D Material Barrier Components:
+   3D Photorealistic WebGL Material Barrier Components:
    - Wood = Living Oak Tree with Multi-Tier Foliage & Roots
    - Plastic = Molded PET Spring Water Bottle with Bubbles & Cap
    - Glass = Heavy-Base Crystal Glass Tumbler with Water & Ice
    - Cardboard = Corrugated Kraft Shipping Carton Box with Tape & Stamps
 -------------------------------------------------------------- */
 
-// Standard material thickness width calculator
+const BARRIER_HEIGHT = 420;
+
+// Standard material thickness width calculator for physical clearance & collision
 const getMaterialWidth = (type, thickness) => {
-  if (type === 'wood') return 120 + thickness * 18;
-  if (type === 'cardboard') return 80 + thickness * 18;
-  return 68 + thickness * 16;
+  if (type === 'wood') return 360 + thickness * 20;
+  if (type === 'cardboard') return 280 + thickness * 20;
+  return 240 + thickness * 18;
 };
 
-// 1. Ultra-Realistic Living Oak Tree (Natural Wood Material)
-const TreeWoodVisual = ({ thickness }) => {
-  const width = getMaterialWidth('wood', thickness);
-  const height = 290;
-  const trunkW = 26 + thickness * 9;
-  const trunkLeft = (width - trunkW) / 2;
-
-  return (
-    <div style={{
-      width: `${width}px`,
-      height: `${height}px`,
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      filter: 'drop-shadow(0 18px 36px rgba(0,0,0,0.65)) drop-shadow(0 6px 14px rgba(0,0,0,0.45))'
-    }}>
-      {/* Nature Badge */}
-      <div style={{
-        position: 'absolute',
-        top: '-26px',
-        background: 'linear-gradient(135deg, #15803D 0%, #166534 100%)',
-        color: '#FFFFFF',
-        padding: '4px 12px',
-        borderRadius: '14px',
-        fontSize: '11px',
-        fontWeight: 900,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.35)',
-        border: '1.5px solid #86EFAC',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '5px',
-        zIndex: 5,
-        whiteSpace: 'nowrap'
-      }}>
-        🌳 Living Oak Tree (Wood)
-      </div>
-
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
-        <defs>
-          {/* Rich Hardwood Bark Shading */}
-          <linearGradient id="oakBarkGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#1A0A02" />
-            <stop offset="15%" stopColor="#3E1A04" />
-            <stop offset="45%" stopColor="#682A09" />
-            <stop offset="70%" stopColor="#854114" />
-            <stop offset="90%" stopColor="#4A1C06" />
-            <stop offset="100%" stopColor="#1C0A02" />
-          </linearGradient>
-
-          {/* Sunlit Canopy Top Foliage */}
-          <radialGradient id="sunlitCanopyTop" cx="40%" cy="30%" r="65%">
-            <stop offset="0%" stopColor="#A7F3D0" />
-            <stop offset="25%" stopColor="#34D399" />
-            <stop offset="55%" stopColor="#059669" />
-            <stop offset="85%" stopColor="#047857" />
-            <stop offset="100%" stopColor="#064E3B" />
-          </radialGradient>
-
-          {/* Deep Ambient Mid Canopy */}
-          <radialGradient id="midCanopyGrad" cx="50%" cy="40%" r="60%">
-            <stop offset="0%" stopColor="#6EE7B7" />
-            <stop offset="30%" stopColor="#10B981" />
-            <stop offset="65%" stopColor="#047857" />
-            <stop offset="100%" stopColor="#022C22" />
-          </radialGradient>
-
-          {/* Earthen Root Mound */}
-          <linearGradient id="earthGrassGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#166534" />
-            <stop offset="30%" stopColor="#15803D" />
-            <stop offset="70%" stopColor="#451A03" />
-            <stop offset="100%" stopColor="#1C0A02" />
-          </linearGradient>
-        </defs>
-
-        {/* 1. Ground Shadow & Earth Mound */}
-        <ellipse cx={width / 2} cy={height - 12} rx={width * 0.44} ry="14" fill="rgba(15, 23, 42, 0.6)" style={{ filter: 'blur(3px)' }} />
-        <ellipse cx={width / 2} cy={height - 15} rx={width * 0.4} ry="12" fill="url(#earthGrassGrad)" stroke="#14532D" strokeWidth="1.5" />
-        
-        {/* Grass Tufts on Mound */}
-        <path d={`M ${width/2 - 35} ${height - 16} Q ${width/2 - 40} ${height - 25} ${width/2 - 45} ${height - 23}`} stroke="#86EFAC" strokeWidth="2" strokeLinecap="round" fill="none" />
-        <path d={`M ${width/2 - 32} ${height - 16} Q ${width/2 - 30} ${height - 26} ${width/2 - 27} ${height - 24}`} stroke="#4ADE80" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-        <path d={`M ${width/2 + 30} ${height - 16} Q ${width/2 + 35} ${height - 26} ${width/2 + 40} ${height - 23}`} stroke="#86EFAC" strokeWidth="2" strokeLinecap="round" fill="none" />
-
-        {/* Small River Pebbles */}
-        <ellipse cx={width/2 - 25} cy={height - 11} rx="5" ry="3" fill="#64748B" stroke="#334155" strokeWidth="0.8" />
-        <ellipse cx={width/2 + 22} cy={height - 10} rx="4" ry="2.5" fill="#94A3B8" stroke="#475569" strokeWidth="0.8" />
-
-        {/* 2. Spreading Organic Root Buttresses */}
-        <path d={`M ${trunkLeft - 18} ${height - 15} Q ${trunkLeft} ${height - 35} ${trunkLeft + 4} ${height - 75} L ${trunkLeft + trunkW - 4} ${height - 75} Q ${trunkLeft + trunkW} ${height - 35} ${trunkLeft + trunkW + 18} ${height - 15} Z`}
-          fill="url(#oakBarkGrad)" stroke="#1A0A02" strokeWidth="1.5" />
-
-        {/* 3. Main Sturdy Hardwood Trunk Body */}
-        <path d={`M ${trunkLeft + 4} ${height - 75} Q ${trunkLeft + 6} ${height * 0.55} ${trunkLeft + 2} 120 L ${trunkLeft + trunkW - 2} 120 Q ${trunkLeft + trunkW - 6} ${height * 0.55} ${trunkLeft + trunkW - 4} ${height - 75} Z`}
-          fill="url(#oakBarkGrad)" stroke="#1A0A02" strokeWidth="1.5" />
-
-        {/* Vertical Bark Texture Ridges */}
-        <line x1={trunkLeft + trunkW * 0.3} y1="125" x2={trunkLeft + trunkW * 0.28} y2={height - 25} stroke="#1A0A02" strokeWidth="2.2" strokeDasharray="25 8 40 10" opacity="0.85" />
-        <line x1={trunkLeft + trunkW * 0.52} y1="130" x2={trunkLeft + trunkW * 0.5} y2={height - 28} stroke="#4A1C06" strokeWidth="1.8" strokeDasharray="30 12 20 8" opacity="0.75" />
-        <line x1={trunkLeft + trunkW * 0.74} y1="125" x2={trunkLeft + trunkW * 0.76} y2={height - 22} stroke="#1A0A02" strokeWidth="2.4" strokeDasharray="35 10 30 12" opacity="0.85" />
-
-        {/* Realistic Knot Hole */}
-        <g transform={`translate(${trunkLeft + trunkW * 0.55}, ${height * 0.65})`}>
-          <ellipse cx="0" cy="0" rx={Math.min(7, trunkW * 0.18)} ry="11" fill="#1A0A02" stroke="#451A03" strokeWidth="1.5" />
-          <ellipse cx="0" cy="0" rx={Math.min(4.5, trunkW * 0.12)} ry="7" fill="#0A0401" />
-          <path d="M -8 -13 Q 0 -16 8 -13 Q 10 0 7 13 Q 0 16 -7 13 Z" fill="none" stroke="#5A2407" strokeWidth="1.2" opacity="0.8" />
-        </g>
-
-        {/* 4. Natural Forking Branches Extending into Canopy */}
-        <path d={`M ${trunkLeft + 4} 140 Q ${trunkLeft - 18} 105 ${trunkLeft - 28} 85 Q ${trunkLeft - 22} 82 ${trunkLeft - 8} 100 Q ${trunkLeft + 8} 118 ${trunkLeft + trunkW * 0.4} 125 Z`}
-          fill="url(#oakBarkGrad)" stroke="#1A0A02" strokeWidth="1.2" />
-        <path d={`M ${trunkLeft + trunkW - 4} 135 Q ${trunkLeft + trunkW + 18} 100 ${trunkLeft + trunkW + 28} 80 Q ${trunkLeft + trunkW + 22} 77 ${trunkLeft + trunkW + 8} 95 Q ${trunkLeft + trunkW - 6} 115 ${trunkLeft + trunkW * 0.6} 125 Z`}
-          fill="url(#oakBarkGrad)" stroke="#1A0A02" strokeWidth="1.2" />
-
-        {/* 5. Volumetric Multi-Layer Foliage Canopy */}
-        <ellipse cx={width * 0.28} cy="115" rx={width * 0.24} ry="38" fill="url(#midCanopyGrad)" stroke="#064E3B" strokeWidth="1.5" />
-        <ellipse cx={width * 0.72} cy="110" rx={width * 0.24} ry="38" fill="url(#midCanopyGrad)" stroke="#064E3B" strokeWidth="1.5" />
-        <ellipse cx={width * 0.5} cy="120" rx={width * 0.32} ry="40" fill="url(#midCanopyGrad)" stroke="#064E3B" strokeWidth="1.5" />
-
-        {/* Mid-Tier Canopy Cloud Lobes */}
-        <ellipse cx={width * 0.22} cy="75" rx={width * 0.22} ry="38" fill="url(#midCanopyGrad)" stroke="#064E3B" strokeWidth="1.5" />
-        <ellipse cx={width * 0.78} cy="70" rx={width * 0.22} ry="38" fill="url(#midCanopyGrad)" stroke="#064E3B" strokeWidth="1.5" />
-        <ellipse cx={width * 0.5} cy="72" rx={width * 0.38} ry="45" fill="url(#sunlitCanopyTop)" stroke="#064E3B" strokeWidth="1.5" />
-
-        {/* Upper Sun-Dappled Canopy Dome */}
-        <ellipse cx={width * 0.36} cy="42" rx={width * 0.26} ry="32" fill="url(#sunlitCanopyTop)" stroke="#047857" strokeWidth="1.2" />
-        <ellipse cx={width * 0.64} cy="40" rx={width * 0.26} ry="32" fill="url(#sunlitCanopyTop)" stroke="#047857" strokeWidth="1.2" />
-        <ellipse cx={width * 0.5} cy="32" rx={width * 0.28} ry="26" fill="url(#sunlitCanopyTop)" stroke="#047857" strokeWidth="1.5" />
-
-        {/* Leaf Cluster Details & Sunlit Specular Glints */}
-        <circle cx={width * 0.42} cy="26" r="8" fill="#A7F3D0" opacity="0.4" style={{ filter: 'blur(2px)' }} />
-        <circle cx={width * 0.58} cy="36" r="10" fill="#6EE7B7" opacity="0.35" style={{ filter: 'blur(2px)' }} />
-        <circle cx={width * 0.32} cy="65" r="12" fill="#34D399" opacity="0.3" style={{ filter: 'blur(2px)' }} />
-        <circle cx={width * 0.68} cy="68" r="14" fill="#34D399" opacity="0.3" style={{ filter: 'blur(2px)' }} />
-      </svg>
-    </div>
-  );
-};
-
-// 2. Ultra-Realistic Translucent PET Plastic Water Bottle
-const PlasticBottleVisual = ({ thickness }) => {
-  const width = getMaterialWidth('plastic', thickness);
-  const height = 280;
-  return (
-    <div style={{
-      width: `${width}px`,
-      height: `${height}px`,
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      filter: 'drop-shadow(0 16px 34px rgba(14, 165, 233, 0.45)) drop-shadow(0 4px 12px rgba(0,0,0,0.35))'
-    }}>
-      {/* Plastic Badge */}
-      <div style={{
-        position: 'absolute',
-        top: '-26px',
-        background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
-        color: '#FFFFFF',
-        padding: '4px 12px',
-        borderRadius: '14px',
-        fontSize: '11px',
-        fontWeight: 900,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.35)',
-        border: '1.5px solid #7DD3FC',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '5px',
-        zIndex: 5,
-        whiteSpace: 'nowrap'
-      }}>
-        🧴 Plastic (PET Bottle)
-      </div>
-
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
-        <defs>
-          {/* Realistic Translucent Glassy PET Plastic Shading */}
-          <linearGradient id="petPlasticGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="rgba(255, 255, 255, 0.88)" />
-            <stop offset="12%" stopColor="rgba(186, 230, 253, 0.45)" />
-            <stop offset="40%" stopColor="rgba(56, 189, 248, 0.15)" />
-            <stop offset="70%" stopColor="rgba(14, 165, 233, 0.35)" />
-            <stop offset="90%" stopColor="rgba(186, 230, 253, 0.65)" />
-            <stop offset="100%" stopColor="rgba(255, 255, 255, 0.9)" />
-          </linearGradient>
-
-          {/* Pure Spring Water Volume */}
-          <linearGradient id="springWaterGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(56, 189, 248, 0.55)" />
-            <stop offset="40%" stopColor="rgba(14, 165, 233, 0.75)" />
-            <stop offset="100%" stopColor="rgba(2, 132, 199, 0.9)" />
-          </linearGradient>
-
-          {/* Ribbed Blue Sports Cap */}
-          <linearGradient id="bottleCapGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#0284C7" />
-            <stop offset="35%" stopColor="#38BDF8" />
-            <stop offset="70%" stopColor="#0284C7" />
-            <stop offset="100%" stopColor="#0369A1" />
-          </linearGradient>
-
-          {/* Foil Mineral Water Brand Label */}
-          <linearGradient id="brandLabelGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#1E40AF" />
-            <stop offset="30%" stopColor="#3B82F6" />
-            <stop offset="70%" stopColor="#2563EB" />
-            <stop offset="100%" stopColor="#1D4ED8" />
-          </linearGradient>
-        </defs>
-
-        {/* Ambient Ground Shadow */}
-        <ellipse cx={width / 2} cy={height - 8} rx={width * 0.42} ry="7" fill="rgba(15, 23, 42, 0.5)" style={{ filter: 'blur(2px)' }} />
-
-        {/* Blue Ribbed Bottle Cap */}
-        <rect x={width / 2 - 13} y="8" width="26" height="20" rx="3" fill="url(#bottleCapGrad)" stroke="#0369A1" strokeWidth="1.2" />
-        <line x1={width/2 - 9} y1="10" x2={width/2 - 9} y2="26" stroke="#BAE6FD" strokeWidth="1.2" />
-        <line x1={width/2 - 4} y1="10" x2={width/2 - 4} y2="26" stroke="#BAE6FD" strokeWidth="1.2" />
-        <line x1={width/2 + 1} y1="10" x2={width/2 + 1} y2="26" stroke="#BAE6FD" strokeWidth="1.2" />
-        <line x1={width/2 + 6} y1="10" x2={width/2 + 6} y2="26" stroke="#BAE6FD" strokeWidth="1.2" />
-        <rect x={width / 2 - 14} y="28" width="28" height="5" rx="1.5" fill="#0284C7" stroke="#0369A1" strokeWidth="1" />
-
-        {/* Pure Water Filling Lower 75% of Bottle */}
-        <path d={`M ${width/2 - 16} 78 Q ${width/2} 75 ${width/2 + 16} 78 L ${width - 6} 95 L ${width - 6} ${height - 24} Q ${width/2} ${height - 10} 6 ${height - 24} L 6 95 Z`}
-          fill="url(#springWaterGrad)" />
-
-        {/* Effervescent Rising Bubbles inside Water */}
-        <circle cx={width * 0.38} cy={height * 0.65} r="2.5" fill="#FFFFFF" opacity="0.75" />
-        <circle cx={width * 0.42} cy={height * 0.55} r="1.8" fill="#FFFFFF" opacity="0.65" />
-        <circle cx={width * 0.62} cy={height * 0.72} r="2.2" fill="#FFFFFF" opacity="0.7" />
-        <circle cx={width * 0.55} cy={height * 0.45} r="1.5" fill="#FFFFFF" opacity="0.8" />
-
-        {/* Contoured PET Outer Bottle Shell */}
-        <path d={`M ${width/2 - 14} 33 L ${width/2 + 14} 33 L ${width/2 + 18} 55 L ${width - 5} 90 L ${width - 5} ${height - 22} Q ${width/2} ${height - 8} 5 ${height - 22} L 5 90 L ${width/2 - 18} 55 Z`}
-          fill="url(#petPlasticGrad)" stroke="#38BDF8" strokeWidth="2" />
-
-        {/* Mineral Spring Water Wrap Label */}
-        <g transform={`translate(6, ${height * 0.38})`}>
-          <rect x="0" y="0" width={width - 12} height="58" rx="4" fill="url(#brandLabelGrad)" opacity="0.95" stroke="#60A5FA" strokeWidth="1" />
-          <path d={`M ${width/2 - 18} 34 L ${width/2 - 6} 14 L ${width/2 + 6} 34 Z`} fill="#FFFFFF" opacity="0.35" />
-          <path d={`M ${width/2 - 4} 34 L ${width/2 + 8} 10 L ${width/2 + 20} 34 Z`} fill="#FFFFFF" opacity="0.5" />
-          <text x={(width - 12) / 2} y="38" fill="#FFFFFF" fontSize="10" fontWeight="900" textAnchor="middle" letterSpacing="1.2">
-            PURE WATER
-          </text>
-          <text x={(width - 12) / 2} y="49" fill="#93C5FD" fontSize="7" fontWeight="800" textAnchor="middle" letterSpacing="0.8">
-            100% RECYCLED PET
-          </text>
-        </g>
-
-        {/* Ergonomic Grip Grooves */}
-        <path d={`M 9 ${height * 0.68} Q ${width/2} ${height * 0.66} ${width - 9} ${height * 0.68}`} stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" fill="none" />
-        <path d={`M 9 ${height * 0.76} Q ${width/2} ${height * 0.74} ${width - 9} ${height * 0.76}`} stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" fill="none" />
-        <path d={`M 9 ${height * 0.84} Q ${width/2} ${height * 0.82} ${width - 9} ${height * 0.84}`} stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" fill="none" />
-
-        {/* Razor-Sharp Left Specular Highlight Glint */}
-        <path d={`M 10 95 L 14 95 L 14 ${height - 30} L 10 ${height - 30} Z`} fill="#FFFFFF" opacity="0.75" />
-      </svg>
-    </div>
-  );
-};
-
-// 3. Ultra-Realistic Heavy-Base Crystal Glass Tumbler
-const WaterGlassVisual = ({ thickness }) => {
-  const width = getMaterialWidth('glass', thickness);
-  const height = 280;
-  return (
-    <div style={{
-      width: `${width}px`,
-      height: `${height}px`,
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      filter: 'drop-shadow(0 16px 34px rgba(56, 189, 248, 0.5)) drop-shadow(0 4px 12px rgba(0,0,0,0.35))'
-    }}>
-      {/* Glass Badge */}
-      <div style={{
-        position: 'absolute',
-        top: '-26px',
-        background: 'linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%)',
-        color: '#FFFFFF',
-        padding: '4px 12px',
-        borderRadius: '14px',
-        fontSize: '11px',
-        fontWeight: 900,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.35)',
-        border: '1.5px solid #BAE6FD',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '5px',
-        zIndex: 5,
-        whiteSpace: 'nowrap'
-      }}>
-        🥛 Crystal Glass Tumbler
-      </div>
-
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
-        <defs>
-          <linearGradient id="crystalGlassGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="rgba(255, 255, 255, 0.9)" />
-            <stop offset="15%" stopColor="rgba(224, 242, 254, 0.45)" />
-            <stop offset="50%" stopColor="rgba(56, 189, 248, 0.12)" />
-            <stop offset="85%" stopColor="rgba(186, 230, 253, 0.45)" />
-            <stop offset="100%" stopColor="rgba(255, 255, 255, 0.9)" />
-          </linearGradient>
-
-          <linearGradient id="waterCausticGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(56, 189, 248, 0.65)" />
-            <stop offset="60%" stopColor="rgba(14, 165, 233, 0.85)" />
-            <stop offset="100%" stopColor="rgba(2, 132, 199, 0.95)" />
-          </linearGradient>
-
-          <linearGradient id="heavyBaseGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(255, 255, 255, 0.85)" />
-            <stop offset="50%" stopColor="rgba(186, 230, 253, 0.55)" />
-            <stop offset="100%" stopColor="rgba(255, 255, 255, 0.95)" />
-          </linearGradient>
-        </defs>
-
-        {/* Ambient Ground Shadow */}
-        <ellipse cx={width / 2} cy={height - 8} rx={width * 0.44} ry="8" fill="rgba(15, 23, 42, 0.55)" style={{ filter: 'blur(2px)' }} />
-
-        {/* Fresh Water Column Inside Tumbler */}
-        <path d={`M 11 92 L ${width - 11} 92 L ${width - 14} ${height - 35} Q ${width/2} ${height - 24} 14 ${height - 35} Z`}
-          fill="url(#waterCausticGrad)" />
-
-        {/* Curved Surface Water Meniscus */}
-        <ellipse cx={width / 2} cy="92" rx={width / 2 - 11} ry="9" fill="rgba(224, 242, 254, 0.85)" stroke="#FFFFFF" strokeWidth="1" />
-
-        {/* 3D Floating Ice Cube Inside Water */}
-        <g transform={`translate(${width/2 - 12}, 108)`}>
-          <rect x="0" y="0" width="24" height="24" rx="4" fill="rgba(255,255,255,0.75)" stroke="#BAE6FD" strokeWidth="1.5" />
-          <path d="M 0 0 L 16 -6 L 36 -6 L 24 0 Z" fill="rgba(255,255,255,0.9)" />
-          <path d="M 24 0 L 36 -6 L 36 18 L 24 24 Z" fill="rgba(186,230,253,0.8)" />
-        </g>
-
-        {/* Heavy Solid Crystal Base */}
-        <path d={`M 12 ${height - 38} L ${width - 12} ${height - 38} L ${width - 10} ${height - 18} Q ${width/2} ${height - 6} 10 ${height - 18} Z`}
-          fill="url(#heavyBaseGrad)" stroke="#E0F2FE" strokeWidth="2.5" />
-        <line x1="16" y1={height - 28} x2={width - 16} y2={height - 28} stroke="rgba(255,255,255,0.85)" strokeWidth="2" />
-
-        {/* Outer Crystal Glass Tumbler Shell */}
-        <path d={`M 6 28 L ${width - 6} 28 L ${width - 10} ${height - 18} Q ${width/2} ${height - 6} 10 ${height - 18} Z`}
-          fill="url(#crystalGlassGrad)" stroke="#FFFFFF" strokeWidth="2.5" />
-
-        {/* Smooth Rounded Top Crystal Rim */}
-        <ellipse cx={width / 2} cy="28" rx={width / 2 - 6} ry="9" fill="none" stroke="#FFFFFF" strokeWidth="3" />
-
-        {/* Left Vertical High-Gloss Specular Reflection */}
-        <path d={`M 12 38 L 18 38 L 21 ${height - 40} L 15 ${height - 40} Z`} fill="rgba(255,255,255,0.85)" />
-        {/* Right Soft Specular Highlight */}
-        <path d={`M ${width - 18} 38 L ${width - 14} 38 L ${width - 17} ${height - 40} L ${width - 21} ${height - 40} Z`} fill="rgba(255,255,255,0.4)" />
-      </svg>
-    </div>
-  );
-};
-
-// 4. Ultra-Realistic Heavy-Duty Corrugated Shipping Box
-const CardboardBoxVisual = ({ thickness }) => {
-  const width = getMaterialWidth('cardboard', thickness);
-  const height = 280;
-  return (
-    <div style={{
-      width: `${width}px`,
-      height: `${height}px`,
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      filter: 'drop-shadow(0 18px 34px rgba(0,0,0,0.65)) drop-shadow(0 4px 12px rgba(0,0,0,0.45))'
-    }}>
-      {/* Cardboard Badge */}
-      <div style={{
-        position: 'absolute',
-        top: '-26px',
-        background: 'linear-gradient(135deg, #B45309 0%, #92400E 100%)',
-        color: '#FFFFFF',
-        padding: '4px 12px',
-        borderRadius: '14px',
-        fontSize: '11px',
-        fontWeight: 900,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.35)',
-        border: '1.5px solid #FDE68A',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '5px',
-        zIndex: 5,
-        whiteSpace: 'nowrap'
-      }}>
-        📦 Corrugated Cardboard Box
-      </div>
-
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ overflow: 'visible' }}>
-        <defs>
-          <linearGradient id="kraftCardboardGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#78350F" />
-            <stop offset="15%" stopColor="#B45309" />
-            <stop offset="50%" stopColor="#D97706" />
-            <stop offset="85%" stopColor="#B45309" />
-            <stop offset="100%" stopColor="#78350F" />
-          </linearGradient>
-
-          <linearGradient id="packagingTapeGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#A16207" />
-            <stop offset="35%" stopColor="#FACC15" />
-            <stop offset="70%" stopColor="#EAB308" />
-            <stop offset="100%" stopColor="#854D0E" />
-          </linearGradient>
-        </defs>
-
-        {/* Ambient Ground Shadow */}
-        <ellipse cx={width / 2} cy={height - 10} rx={width * 0.46} ry="8" fill="rgba(15, 23, 42, 0.55)" style={{ filter: 'blur(2px)' }} />
-
-        {/* Main Corrugated Kraft Carton Body */}
-        <rect x="4" y="20" width={width - 8} height={height - 40} fill="url(#kraftCardboardGrad)" rx="8" stroke="#78350F" strokeWidth="2.5" />
-
-        {/* Corrugated Vertical Fluting Lines */}
-        {Array.from({ length: Math.floor((width - 16) / 9) }).map((_, i) => (
-          <line key={i} x1={12 + i * 9} y1="24" x2={12 + i * 9} y2={height - 24} stroke="#78350F" strokeWidth="1.2" opacity="0.45" />
-        ))}
-
-        {/* Top and Bottom Folded Flap Crease Lines */}
-        <line x1="4" y1="42" x2={width - 4} y2="42" stroke="#451A03" strokeWidth="2" strokeDasharray="6 3" />
-        <line x1="4" y1={height - 42} x2={width - 4} y2={height - 42} stroke="#451A03" strokeWidth="2" strokeDasharray="6 3" />
-
-        {/* Center Golden Packaging Tape Seam */}
-        <rect x={width / 2 - 12} y="18" width="24" height={height - 36} fill="url(#packagingTapeGrad)" opacity="0.9" rx="2" stroke="#854D0E" strokeWidth="1" />
-        <line x1={width / 2 - 6} y1="18" x2={width / 2 - 6} y2={height - 18} stroke="#FFFFFF" strokeWidth="1" opacity="0.6" />
-
-        {/* Fragile Glass Stamp Icon */}
-        <g transform={`translate(${width/2 - 16}, ${height/2 - 40})`} opacity="0.9">
-          <rect x="-4" y="-4" width="40" height="48" rx="4" fill="rgba(0,0,0,0.12)" />
-          <path d="M 12 8 L 20 8 L 20 18 Q 16 24 16 26 L 16 32 L 22 32 L 22 34 L 10 34 L 10 32 L 16 32 L 16 26 Q 12 24 12 18 Z" fill="#451A03" />
-          <line x1="16" y1="10" x2="16" y2="16" stroke="#451A03" strokeWidth="1" />
-        </g>
-
-        {/* Barcode Shipping Sticker */}
-        <rect x={width / 2 - 20} y={height - 95} width="40" height="26" fill="#FFFBEB" rx="3" stroke="#92400E" strokeWidth="1" />
-        <line x1={width/2 - 16} y1={height - 90} x2={width/2 - 16} y2={height - 76} stroke="#451A03" strokeWidth="2.5" />
-        <line x1={width/2 - 11} y1={height - 90} x2={width/2 - 11} y2={height - 76} stroke="#451A03" strokeWidth="1" />
-        <line x1={width/2 - 7} y1={height - 90} x2={width/2 - 7} y2={height - 76} stroke="#451A03" strokeWidth="2" />
-        <line x1={width/2 - 1} y1={height - 90} x2={width/2 - 1} y2={height - 76} stroke="#451A03" strokeWidth="1.5" />
-        <line x1={width/2 + 5} y1={height - 90} x2={width/2 + 5} y2={height - 76} stroke="#451A03" strokeWidth="3" />
-        <line x1={width/2 + 11} y1={height - 90} x2={width/2 + 11} y2={height - 76} stroke="#451A03" strokeWidth="1.2" />
-        <line x1={width/2 + 15} y1={height - 90} x2={width/2 + 15} y2={height - 76} stroke="#451A03" strokeWidth="2" />
-        <text x={width/2} y={height - 72} fill="#78350F" fontSize="6" fontWeight="900" textAnchor="middle" letterSpacing="0.5">
-          FRAGILE 047
-        </text>
-      </svg>
-    </div>
-  );
-};
-
-// Material barrier renderer
+// 3D WebGL Material Barrier Visual Renderer
 const MaterialBarrierVisual = ({ type, thickness = 1 }) => {
-  if (type === 'wood') return <TreeWoodVisual thickness={thickness} />;
-  if (type === 'plastic') return <PlasticBottleVisual thickness={thickness} />;
-  if (type === 'glass') return <WaterGlassVisual thickness={thickness} />;
-  if (type === 'cardboard') return <CardboardBoxVisual thickness={thickness} />;
-  return null;
+  const width = getMaterialWidth(type, thickness);
+  const height = BARRIER_HEIGHT;
+  return <Barrier3DCanvas type={type} thickness={thickness} width={width} height={height} />;
 };
 
 const MATERIALS = [
@@ -756,37 +300,31 @@ export default function Simulation({ onComplete, onNext }) {
 
   // Geometry calculations
   const matWidth = getMaterialWidth(activeMaterial, thickness);
-  const barrierRightEdge = centerX + matWidth / 2;
-  const barrierLeftEdge = centerX - matWidth / 2;
+  const obstacleHalfWidth = activeMaterial === 'wood' ? (42 + thickness * 5) : activeMaterial === 'cardboard' ? (48 + thickness * 6) : (38 + thickness * 5);
+  const barrierRightEdge = centerX + obstacleHalfWidth;
+  const barrierLeftEdge = centerX - obstacleHalfWidth;
 
   // Compass dynamic placement with auto gap
-  const targetRightCompassX = workspaceSize.width - COMPASS_RADIUS - 45;
+  const targetRightCompassX = workspaceSize.width - COMPASS_RADIUS - 35;
   const dynamicCompassX = Math.max(barrierRightEdge + MIN_OBJECT_COMPASS_GAP + COMPASS_RADIUS, targetRightCompassX);
 
-  // Maximum Magnet Approach X
-  const maxMagnetX = barrierLeftEdge - MIN_MAGNET_GAP - 105;
+  // Maximum Magnet Approach X (allows dragging right up close to the tree barrier)
+  const maxMagnetX = Math.min(centerX - obstacleHalfWidth - 15 - 105, 270);
 
   const getNeedleRotation = (mX, mY, cX, cY, flipped) => {
-    const magnetWidth = 210;
-    const nPoleX = flipped ? mX + magnetWidth / 4 : mX - magnetWidth / 4;
-    const sPoleX = flipped ? mX - magnetWidth / 4 : mX + magnetWidth / 4;
-    const poleY = cY;
+    const magnetTipX = mX + 105; // Right pole tip of magnet facing compass
+    const distToCompass = Math.max(60, cX - magnetTipX);
 
-    const distN = Math.sqrt((nPoleX - cX) ** 2 + (poleY - cY) ** 2);
-    const distS = Math.sqrt((sPoleX - cX) ** 2 + (poleY - cY) ** 2);
-    const minDist = Math.min(distN, distS);
-
-    if (minDist > 750) return 0;
-
-    const angleToN = calculateAngle(cX, cY, nPoleX, poleY);
-    const angleToS = calculateAngle(cX, cY, sPoleX, poleY);
-
-    let targetAngle = distN < distS ? angleToN + 90 : angleToS - 90;
-    while (targetAngle > 180) targetAngle -= 360;
-    while (targetAngle < -180) targetAngle += 360;
-
-    const deflectionFactor = Math.max(0, Math.min(1, 1 - (minDist - 180) / 450));
-    return targetAngle * deflectionFactor;
+    // Normal resting needle is at 0 degrees.
+    // As the magnet approaches the non-magnetic tree barrier, the field penetrates through it,
+    // vigorously deflecting the compass needle!
+    const maxDeflection = flipped ? -72 : 72;
+    
+    // Proximity factor: 0 when far (dist > 580), smoothly scaling to 1.0 when close to barrier
+    const proximity = Math.max(0, Math.min(1, (580 - distToCompass) / 320));
+    const smoothFactor = Math.sin((proximity * Math.PI) / 2); // Smooth sinusoidal ease-in-out
+    
+    return maxDeflection * smoothFactor;
   };
 
   // Update needle angle on state changes
@@ -798,7 +336,7 @@ export default function Simulation({ onComplete, onNext }) {
   const handleTestCurrentObject = () => {
     setIsTesting(true);
     // Glide magnet smoothly toward object
-    const targetX = Math.min(maxMagnetX, 235);
+    const targetX = maxMagnetX;
     setMagnetX(targetX);
 
     setTimeout(() => {
@@ -828,14 +366,14 @@ export default function Simulation({ onComplete, onNext }) {
   const handleNextObject = () => {
     const nextIdx = (selectedMaterialIndex + 1) % MATERIALS.length;
     setSelectedMaterialIndex(nextIdx);
-    setMagnetX(135);
+    setMagnetX(120);
     setFeedback(null);
   };
 
   // Select specific object
   const handleSelectObject = (idx) => {
     setSelectedMaterialIndex(idx);
-    setMagnetX(135);
+    setMagnetX(120);
     setFeedback(null);
     if (currentActionStep === 1) {
       triggerNextActionStep(2, 2000);
@@ -855,12 +393,12 @@ export default function Simulation({ onComplete, onNext }) {
     if (!isDraggingRef.current || !workspaceContainerRef.current) return;
     const rect = workspaceContainerRef.current.getBoundingClientRect();
     const clientX = e.clientX - rect.left;
-    const minX = 115;
+    const minX = 90;
     const clampedX = Math.max(minX, Math.min(maxMagnetX, clientX));
     setMagnetX(clampedX);
 
     // If dragged close to the barrier, trigger deflection observation
-    if (clampedX >= Math.min(maxMagnetX - 15, 205)) {
+    if (clampedX >= maxMagnetX - 45) {
       if (observations[activeMaterial] !== 'deflects') {
         const updated = { ...observations, [activeMaterial]: 'deflects' };
         setObservations(updated);
@@ -956,39 +494,41 @@ export default function Simulation({ onComplete, onNext }) {
       
       {/* Left Column: Automatic Object Selection & Testing Hub */}
       <div className="custom-scroll" style={{
-        background: 'rgba(255, 255, 255, 0.97)',
+        background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
         backdropFilter: 'blur(14px)',
         borderRadius: '24px',
-        border: '2px solid #A7F3D0',
-        padding: '1.6rem',
+        border: '1.5px solid #FDE68A',
+        padding: '1.75rem 1.65rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        boxShadow: '0 10px 36px rgba(6, 78, 59, 0.09)',
+        boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
         zIndex: 10,
         overflowY: 'auto'
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', height: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.35rem', height: '100%', justifyContent: 'space-between' }}>
           
           {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <ShieldCheck size={28} color="#D97706" />
-              <h3 style={{ margin: 0, fontSize: '1.38rem', color: '#064E3B', fontWeight: 900, letterSpacing: '-0.02em' }}>
-                Material Barrier Testing
-              </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <ShieldCheck size={32} color="#D97706" />
+                <h3 style={{ margin: 0, fontSize: '1.52rem', color: '#064E3B', fontWeight: 900, letterSpacing: '-0.02em' }}>
+                  Material Barrier Testing
+                </h3>
+              </div>
+              <span style={{ fontSize: '0.88rem', background: '#DCFCE7', color: '#15803D', padding: '5px 12px', borderRadius: '14px', fontWeight: 900, border: '1.5px solid #86EFAC' }}>
+                Auto-Slide
+              </span>
             </div>
-            <span style={{ fontSize: '0.82rem', background: '#ECFDF5', color: '#047857', padding: '4px 10px', borderRadius: '14px', fontWeight: 800, border: '1.5px solid #A7F3D0' }}>
-              Auto-Slide Stage
-            </span>
+
+            <p style={{ margin: 0, fontSize: '1.05rem', color: '#065F46', lineHeight: 1.6, fontWeight: 600 }}>
+              Select an object to slide it into the center. Observe how the magnetic field passes through each non-magnetic barrier to deflect the compass needle.
+            </p>
           </div>
 
-          <p style={{ margin: 0, fontSize: '0.96rem', color: '#475569', lineHeight: 1.55, fontWeight: 600 }}>
-            Select an object to slide it into the center. Test how magnetic field passes through each non-magnetic barrier to deflect the compass needle.
-          </p>
-
-          {/* Material Barrier Cards List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1, justifyContent: 'space-around' }}>
+          {/* Material Barrier Cards List (Expanded & Larger Typography) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.95rem', flex: 1, justifyContent: 'space-around', margin: '0.35rem 0' }}>
             {MATERIALS.map((mat, idx) => {
               const isSelected = selectedMaterialIndex === idx;
               const isObserved = observations[mat.id] === 'deflects';
@@ -1001,63 +541,63 @@ export default function Simulation({ onComplete, onNext }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '0.95rem 1.25rem',
-                    borderRadius: '18px',
-                    border: isSelected ? '2.5px solid #F59E0B' : '1.5px solid #E2E8F0',
-                    background: isSelected ? '#FEF3C7' : '#F8FAFC',
+                    padding: '1.15rem 1.35rem',
+                    borderRadius: '20px',
+                    border: isSelected ? '2.5px solid #F59E0B' : '1.5px solid #FDE68A',
+                    background: isSelected ? '#FEF3C7' : '#FFFFFF',
                     cursor: 'pointer',
-                    boxShadow: isSelected ? '0 6px 18px rgba(245, 158, 11, 0.22)' : '0 2px 6px rgba(0,0,0,0.02)',
+                    boxShadow: isSelected ? '0 6px 18px rgba(245, 158, 11, 0.22)' : '0 2px 8px rgba(217, 119, 6, 0.04)',
                     transition: 'all 0.25s ease',
                     textAlign: 'left'
                   }}
                   onMouseEnter={(e) => {
                     if (!isSelected) {
-                      e.currentTarget.style.borderColor = '#A7F3D0';
-                      e.currentTarget.style.background = '#F0FDF4';
+                      e.currentTarget.style.borderColor = '#F59E0B';
+                      e.currentTarget.style.background = '#FFFBEB';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected) {
-                      e.currentTarget.style.borderColor = '#E2E8F0';
-                      e.currentTarget.style.background = '#F8FAFC';
+                      e.currentTarget.style.borderColor = '#FDE68A';
+                      e.currentTarget.style.background = '#FFFFFF';
                     }
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{
-                      width: '46px',
-                      height: '46px',
-                      borderRadius: '14px',
-                      background: isSelected ? '#FDE68A' : '#FFFFFF',
-                      border: isSelected ? '1.5px solid #F59E0B' : '1px solid #CBD5E1',
+                      width: '52px',
+                      height: '52px',
+                      borderRadius: '16px',
+                      background: isSelected ? '#FDE68A' : '#FEF3C7',
+                      border: isSelected ? '2px solid #F59E0B' : '1.5px solid #FDE68A',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '1.75rem',
+                      fontSize: '2rem',
                       flexShrink: 0
                     }}>
                       {mat.icon}
                     </div>
                     <div>
-                      <div style={{ fontWeight: 900, fontSize: '1.05rem', color: isSelected ? '#92400E' : '#1E293B' }}>
+                      <div style={{ fontWeight: 900, fontSize: '1.2rem', color: isSelected ? '#92400E' : '#064E3B' }}>
                         {mat.name}
                       </div>
-                      <div style={{ fontSize: '0.84rem', color: '#64748B', fontWeight: 600, marginTop: '2px' }}>
+                      <div style={{ fontSize: '0.94rem', color: '#64748B', fontWeight: 700, marginTop: '3px' }}>
                         {mat.materialName}
                       </div>
                     </div>
                   </div>
 
                   {isObserved ? (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.82rem', fontWeight: 900, color: '#15803D', background: '#DCFCE7', padding: '5px 11px', borderRadius: '12px', border: '1.5px solid #86EFAC' }}>
-                      <CheckCircle2 size={15} color="#16A34A" /> Deflects
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.92rem', fontWeight: 900, color: '#15803D', background: '#DCFCE7', padding: '7px 14px', borderRadius: '14px', border: '1.5px solid #86EFAC' }}>
+                      <CheckCircle2 size={17} color="#16A34A" /> Deflects
                     </span>
                   ) : isSelected ? (
-                    <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#B45309', background: '#FDE68A', padding: '5px 11px', borderRadius: '12px', border: '1px solid #F59E0B' }}>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#92400E', background: '#FDE68A', padding: '7px 14px', borderRadius: '14px', border: '1.5px solid #F59E0B' }}>
                       Active Object
                     </span>
                   ) : (
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8' }}>
+                    <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#94A3B8', padding: '6px 12px' }}>
                       Ready to Test
                     </span>
                   )}
@@ -1066,62 +606,26 @@ export default function Simulation({ onComplete, onNext }) {
             })}
           </div>
 
-          {/* Active Object Testing Controls */}
-          <div style={{ 
-            background: '#F0FDF4', 
-            borderRadius: '20px', 
-            padding: '1.2rem 1.4rem', 
-            border: '2px solid #BBF7D0',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.85rem'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.98rem', fontWeight: 900, color: '#14532D' }}>
-                Active: {activeMaterialObj.name}
-              </span>
-              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#047857', background: '#FFFFFF', padding: '3px 10px', borderRadius: '12px', border: '1px solid #A7F3D0' }}>
-                Barrier Thickness: {thickness}
-              </span>
-            </div>
-
-            {/* Thickness Slider */}
-            <div>
-              <input 
-                type="range" 
-                min="1" 
-                max="5" 
-                value={thickness} 
-                onChange={(e) => handleThicknessChange(Number(e.target.value))} 
-                style={{ width: '100%', cursor: 'pointer', accentColor: '#D97706', height: '8px' }} 
-              />
-            </div>
-          </div>
-
-
-        </div>
-
-        {/* Bottom Hub Actions */}
-        <div style={{ marginTop: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {allCompleted ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+          {/* Bottom Proceed Action when all tested */}
+          {allCompleted && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.4rem' }}>
               <button
                 onClick={() => setShowTakeawayModal(true)}
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
-                  borderRadius: '12px',
-                  border: '1.5px solid #FCD34D',
-                  background: '#FFFBEB',
+                  padding: '0.85rem',
+                  borderRadius: '14px',
+                  border: '1.5px solid #FDE68A',
+                  background: '#FFFFFF',
                   color: '#92400E',
                   fontWeight: 900,
-                  fontSize: '0.86rem',
+                  fontSize: '0.94rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.45rem',
-                  boxShadow: '0 2px 8px rgba(245, 158, 11, 0.15)'
+                  boxShadow: '0 2px 8px rgba(245, 158, 11, 0.12)'
                 }}
               >
                 💡 View Key Scientific Takeaway
@@ -1129,63 +633,22 @@ export default function Simulation({ onComplete, onNext }) {
 
               <button
                 onClick={onNext}
+                className="gold-glow-btn"
                 style={{
                   width: '100%',
-                  padding: '0.85rem',
-                  borderRadius: '14px',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                  color: '#FFFFFF',
+                  padding: '1.05rem 1.6rem',
+                  borderRadius: '18px',
+                  fontSize: '1.12rem',
                   fontWeight: 900,
-                  fontSize: '0.98rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.5rem',
-                  boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4)',
+                  gap: '0.55rem',
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Sparkles size={18} /> Proceed to Concept Check <ArrowRight size={18} />
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button
-                onClick={flipMagnet}
-                style={{
-                  flex: 1,
-                  padding: '0.55rem',
-                  borderRadius: '10px',
-                  border: '1.5px solid #FCD34D',
-                  background: '#FFFBEB',
-                  color: '#92400E',
-                  fontWeight: 800,
-                  fontSize: '0.76rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '4px'
-                }}
-              >
-                <RotateCcw size={13} /> Flip Poles (N ↔ S)
-              </button>
-              <button
-                onClick={handleReset}
-                style={{
-                  padding: '0.55rem 0.8rem',
-                  borderRadius: '10px',
-                  border: '1.5px solid #CBD5E1',
-                  background: '#FFFFFF',
-                  color: '#475569',
-                  fontWeight: 700,
-                  fontSize: '0.76rem',
-                  cursor: 'pointer'
-                }}
-              >
-                Reset
+                <Sparkles size={20} /> Proceed to Concept Check <ArrowRight size={20} />
               </button>
             </div>
           )}
@@ -1198,13 +661,13 @@ export default function Simulation({ onComplete, onNext }) {
         {/* Top Header Stage Bar */}
         <div style={{ 
           padding: '0.5rem 1rem', 
-          background: '#FFFFFF', 
-          border: '1.5px solid #A7F3D0', 
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
+          border: '1.5px solid #FDE68A', 
           borderRadius: '16px', 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          boxShadow: '0 4px 14px rgba(6, 78, 59, 0.04)'
+          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <span style={{ fontSize: '1.2rem' }}>{activeMaterialObj.icon}</span>
@@ -1235,19 +698,16 @@ export default function Simulation({ onComplete, onNext }) {
             </button>
             <button
               onClick={flipMagnet}
+              className="gold-glow-btn"
               style={{
-                padding: '0.4rem 0.9rem',
-                fontSize: '0.78rem',
-                fontWeight: 800,
+                padding: '0.45rem 1rem',
+                fontSize: '0.82rem',
+                fontWeight: 900,
                 borderRadius: '18px',
-                border: 'none',
-                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                color: '#FFFFFF',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.35rem',
-                boxShadow: '0 3px 10px rgba(217, 119, 6, 0.3)'
+                gap: '0.35rem'
               }}
             >
               <RotateCcw size={13} /> Flip Magnet
@@ -1365,7 +825,7 @@ export default function Simulation({ onComplete, onNext }) {
                 style={{
                   position: 'absolute',
                   left: centerX - (matWidth / 2),
-                  top: centerY - (activeMaterial === 'wood' ? 145 : 140),
+                  top: centerY - (BARRIER_HEIGHT / 2),
                   zIndex: 15,
                   pointerEvents: 'none'
                 }}
@@ -1592,21 +1052,18 @@ export default function Simulation({ onComplete, onNext }) {
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.2rem' }}>
                 <button
                   onClick={() => setShowActionModal(false)}
+                  className="gold-glow-btn"
                   style={{
                     width: '100%',
-                    padding: '0.8rem 1.6rem',
+                    padding: '0.85rem 1.6rem',
                     borderRadius: '25px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#FFFFFF',
+                    fontSize: '0.95rem',
                     fontWeight: 900,
-                    fontSize: '0.92rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.4rem',
-                    boxShadow: '0 4px 14px rgba(217, 119, 6, 0.35)',
                     transition: 'all 0.2s ease'
                   }}
                 >
@@ -1755,21 +1212,18 @@ export default function Simulation({ onComplete, onNext }) {
                     setShowTakeawayModal(false);
                     if (onNext) onNext();
                   }}
+                  className="gold-glow-btn"
                   style={{
                     flex: 1.4,
-                    padding: '0.9rem',
+                    padding: '0.95rem',
                     borderRadius: '25px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                    color: '#FFFFFF',
+                    fontSize: '1rem',
                     fontWeight: 900,
-                    fontSize: '0.96rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.45rem',
-                    boxShadow: '0 6px 20px rgba(217, 119, 6, 0.4)',
                     transition: 'all 0.2s ease'
                   }}
                 >
