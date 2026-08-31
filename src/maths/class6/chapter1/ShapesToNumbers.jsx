@@ -32,12 +32,12 @@ export default function ShapesToNumbers({
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               Bridge 1: Regular Polygons ⟷ Counting Numbers
             </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#e2e8f0', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
+            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
               In every closed two-dimensional polygon, the total count of bounding line edges rigorously equals the total count of meeting corners (vertices). Adjust the slider to observe this geometric invariant:
             </p>
           </div>
 
-          <div style={{ background: '#0f172a', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: '#ffffff', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <Hexagon size={24} color="var(--theme-primary, #0d9488)" />
             <span style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>Sides (N) = {s2nShapeSides}:</span>
             <input
@@ -60,7 +60,7 @@ export default function ShapesToNumbers({
               { name: 'Pentagon', sides: 5 },
               { name: 'Hexagon', sides: 6 },
             ].map(p => (
-              <div key={p.name} style={{ background: s2nShapeSides === p.sides ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a', padding: '0.65rem 1rem', borderRadius: '10px', border: s2nShapeSides === p.sides ? '2px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)' }}>
+              <div key={p.name} style={{ background: s2nShapeSides === p.sides ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff', padding: '0.65rem 1rem', borderRadius: '10px', border: s2nShapeSides === p.sides ? '2px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)' }}>
                 <span style={{ fontWeight: '900', color: 'var(--theme-heading, #134e4a)', fontSize: '0.88rem' }}>{p.name}</span>
                 <span style={{ fontSize: '0.88rem', color: 'var(--theme-primary, #0d9488)', fontWeight: '900' }}>{p.sides} Edges</span>
               </div>
@@ -80,12 +80,12 @@ export default function ShapesToNumbers({
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               Bridge 2: The Handshake Network & Triangular Numbers
             </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#e2e8f0', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
+            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
               If $N$ delegates attend a summit and every person shakes hands with all other delegates once, the total handshakes correspond exactly to the $(N - 1)$-th triangular number ($T_{N-1} = N(N - 1)/2$).
             </p>
           </div>
 
-          <div style={{ background: '#0f172a', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: '#ffffff', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <Users size={24} color="var(--theme-primary, #0d9488)" />
             <span style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>People N = {s2nPeopleCount}:</span>
             <input
@@ -102,14 +102,14 @@ export default function ShapesToNumbers({
           </div>
 
           {/* Interactive Network Simulator Bar */}
-          <div style={{ background: '#0f172a', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ background: '#ffffff', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <UserPlus size={18} color="var(--theme-primary, #0d9488)" />
               <span style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>Interactive Party Size: {interactivePeople} People</span>
             </div>
             <button
               onClick={handleAddPerson}
-              style={{ padding: '0.4rem 1rem', borderRadius: '8px', background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))', color: '#0f172a', border: 'none', fontWeight: '900', fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', boxShadow: 'var(--theme-btn-shadow, 0 4px 14px rgba(13, 148, 136, 0.35))' }}
+              style={{ padding: '0.4rem 1rem', borderRadius: '8px', background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))', color: '#ffffff', border: 'none', fontWeight: '900', fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.35rem', boxShadow: 'var(--theme-btn-shadow, 0 4px 14px rgba(13, 148, 136, 0.35))' }}
             >
               <Plus size={14} /> Add Attendee
             </button>
@@ -131,12 +131,12 @@ export default function ShapesToNumbers({
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               Bridge 3: Stacked Triangle Rows ⟷ Square Numbers
             </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#e2e8f0', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
+            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
               In an equilateral triangular grid partitioned into horizontal tiers, each consecutive tier contains successive odd numbers of unit triangles (1, 3, 5, 7, …). Summing these tiers produces perfect square numbers:
             </p>
           </div>
 
-          <div style={{ background: '#0f172a', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: '#ffffff', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <Triangle size={24} color="var(--theme-primary, #0d9488)" />
             <span style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>Tier Rows = {s2nTriRows}:</span>
             <input
@@ -153,7 +153,7 @@ export default function ShapesToNumbers({
           </div>
 
           {/* Odd Numbers to Squares Sequence Example Box */}
-          <div style={{ background: '#0f172a', padding: '0.85rem 1.15rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.7rem', flex: 1, justifyContent: 'center' }}>
+          <div style={{ background: '#ffffff', padding: '0.85rem 1.15rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.7rem', flex: 1, justifyContent: 'center' }}>
             <div style={{ fontSize: '0.88rem', fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)', textAlign: 'center' }}>
               Sequence Rule: Summing Consecutive Odd Numbers
             </div>
@@ -169,14 +169,14 @@ export default function ShapesToNumbers({
                     <span style={{ 
                       padding: '0.35rem 0.65rem', 
                       borderRadius: '10px', 
-                      background: isSelected ? (isCurrent ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'var(--theme-badge-bg, #ccfbf1)') : '#1e293b', 
-                      color: isSelected ? (isCurrent ? '#0f172a' : 'var(--theme-primary-dark, #0f766e)') : '#94a3b8', 
+                      background: isSelected ? (isCurrent ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'var(--theme-badge-bg, #ccfbf1)') : '#f8fafc', 
+                      color: isSelected ? (isCurrent ? '#ffffff' : 'var(--theme-primary-dark, #0f766e)') : '#94a3b8', 
                       fontWeight: isSelected ? '900' : '700',
                       fontSize: '1rem',
                       boxShadow: isCurrent ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
                       transform: isCurrent ? 'scale(1.15)' : 'scale(1)',
                       transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      border: isSelected && !isCurrent ? '1.5px solid var(--theme-border, #a7f3d0)' : isCurrent ? '1.5px solid transparent' : '1px solid #475569',
+                      border: isSelected && !isCurrent ? '1.5px solid var(--theme-border, #a7f3d0)' : isCurrent ? '1.5px solid transparent' : '1px solid #e2e8f0',
                       zIndex: isCurrent ? 10 : 1
                     }}>
                       {num}
@@ -187,7 +187,7 @@ export default function ShapesToNumbers({
               <span style={{ padding: '0.2rem', color: '#64748b', fontWeight: '900', fontSize: '1rem', marginLeft: '0.3rem' }}>...</span>
             </div>
             
-            <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: '800', marginTop: '0.3rem', textAlign: 'center', background: '#334155', padding: '0.6rem 1rem', borderRadius: '10px', width: '100%' }}>
+            <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: '800', marginTop: '0.3rem', textAlign: 'center', background: '#f1f5f9', padding: '0.6rem 1rem', borderRadius: '10px', width: '100%' }}>
               Sum of first <span style={{ color: 'var(--theme-primary, #0d9488)', fontWeight: '900' }}>{s2nTriRows} odd numbers</span> = <span style={{ color: '#d97706', fontWeight: '900', fontSize: '1.1rem' }}>{s2nTriRows * s2nTriRows}</span>
               <div style={{ color: '#15803d', fontWeight: '900', fontSize: '1rem', marginTop: '0.35rem' }}>
                 Which is exactly {s2nTriRows}² ✨
@@ -204,12 +204,12 @@ export default function ShapesToNumbers({
             <h3 style={{ margin: 0, fontSize: '1.38rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               Bridge 4: Koch Snowflake ↔ 3 × Powers of 4
             </h3>
-            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#e2e8f0', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
+            <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.98rem', color: '#334155', lineHeight: 1.6, textAlign: 'justify', textJustify: 'inter-word' }}>
               At each iterative depth k of the Koch fractal, each linear segment splits into 4 sub-segments of length 1/3. The total perimeter segment count follows the exponential geometric progression 3 × 4ᵏ:
             </p>
           </div>
 
-          <div style={{ background: '#0f172a', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: '#ffffff', padding: '0.75rem 1.15rem', borderRadius: '12px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontWeight: '900', fontSize: '0.92rem', color: 'var(--theme-heading, #134e4a)' }}>Depth Iteration k = {s2nKochIter}:</span>
             <input
               type="range"
@@ -225,7 +225,7 @@ export default function ShapesToNumbers({
           </div>
 
           {/* Koch Snowflake Sequence Example Box */}
-          <div style={{ background: '#0f172a', padding: '0.85rem 1.15rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.7rem', flex: 1, justifyContent: 'center' }}>
+          <div style={{ background: '#ffffff', padding: '0.85rem 1.15rem', borderRadius: '14px', border: '1.8px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.7rem', flex: 1, justifyContent: 'center' }}>
             <div style={{ fontSize: '0.88rem', fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)', textAlign: 'center' }}>
               Sequence Rule: Multiply by 4 each Iteration
             </div>
@@ -240,14 +240,14 @@ export default function ShapesToNumbers({
                     <span style={{ 
                       padding: '0.35rem 0.65rem', 
                       borderRadius: '10px', 
-                      background: isSelected ? (isCurrent ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'var(--theme-badge-bg, #ccfbf1)') : '#1e293b', 
-                      color: isSelected ? (isCurrent ? '#0f172a' : 'var(--theme-primary-dark, #0f766e)') : '#94a3b8', 
+                      background: isSelected ? (isCurrent ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'var(--theme-badge-bg, #ccfbf1)') : '#f8fafc', 
+                      color: isSelected ? (isCurrent ? '#ffffff' : 'var(--theme-primary-dark, #0f766e)') : '#94a3b8', 
                       fontWeight: isSelected ? '900' : '700',
                       fontSize: '1rem',
                       boxShadow: isCurrent ? '0 4px 14px rgba(217, 119, 6, 0.35)' : 'none',
                       transform: isCurrent ? 'scale(1.15)' : 'scale(1)',
                       transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      border: isSelected && !isCurrent ? '1.5px solid var(--theme-border, #a7f3d0)' : isCurrent ? '1.5px solid transparent' : '1px solid #475569',
+                      border: isSelected && !isCurrent ? '1.5px solid var(--theme-border, #a7f3d0)' : isCurrent ? '1.5px solid transparent' : '1px solid #e2e8f0',
                       zIndex: isCurrent ? 10 : 1
                     }}>
                       {num}
@@ -258,7 +258,7 @@ export default function ShapesToNumbers({
               <span style={{ padding: '0.2rem', color: '#64748b', fontWeight: '900', fontSize: '1rem', marginLeft: '0.3rem' }}>...</span>
             </div>
             
-            <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: '800', marginTop: '0.3rem', textAlign: 'center', background: '#334155', padding: '0.6rem 1rem', borderRadius: '10px', width: '100%' }}>
+            <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: '800', marginTop: '0.3rem', textAlign: 'center', background: '#f1f5f9', padding: '0.6rem 1rem', borderRadius: '10px', width: '100%' }}>
               Iteration <span style={{ color: 'var(--theme-primary, #0d9488)', fontWeight: '900' }}>k = {s2nKochIter}</span> ➜ <span style={{ color: '#d97706', fontWeight: '900', fontSize: '1.1rem' }}>{3 * Math.pow(4, s2nKochIter)} Segments</span>
               <div style={{ color: '#15803d', fontWeight: '900', fontSize: '1rem', marginTop: '0.35rem' }}>
                 Formula: 3 × 4<sup style={{fontSize:'0.75rem', fontWeight:'900'}}>k</sup> ✨

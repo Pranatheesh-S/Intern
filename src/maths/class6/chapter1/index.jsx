@@ -273,14 +273,6 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
         <div className="math-3d-hint">💡 Drag to Rotate · Scroll to Zoom</div>
         {renderTopShowcase()}
       </div>
-
-      <div className="math-quote-card">
-        <div className="math-quote-mark">“</div>
-        <div className="math-quote-text">
-          Mathematics is the science of patterns, and those patterns can be found anywhere — in the stars, in spider webs, and even in the number of petals on a flower.
-        </div>
-        <div className="math-quote-author">— The Mathematics Lab</div>
-      </div>
     </div>
   );
 

@@ -834,7 +834,7 @@ export function Table3Polygons3D({ polygon, placedEdges, viewMode = 'real' }) {
             <mesh castShadow>
               <sphereGeometry args={[0.09, 24, 24]} />
               <meshStandardMaterial
-                color={isBuilt ? '#0f172a' : '#94a3b8'}
+                color={isBuilt ? '#ffffff' : '#94a3b8'}
                 emissive={isBuilt ? color : '#64748b'}
                 emissiveIntensity={isBuilt ? 0.9 : 0.2}
                 roughness={0.15}
@@ -846,7 +846,7 @@ export function Table3Polygons3D({ polygon, placedEdges, viewMode = 'real' }) {
               <div
                 style={{
                   background: isBuilt ? 'rgba(15, 23, 42, 0.92)' : '#64748b',
-                  color: '#0f172a',
+                  color: '#ffffff',
                   fontSize: '0.66rem',
                   fontWeight: '900',
                   padding: '2px 7px',
@@ -1368,7 +1368,7 @@ export function Table3CompleteGraphs3D({ graph, activeComponentIds = [] }) {
                   background: isFully
                     ? 'linear-gradient(135deg, #059669 0%, #047857 100%)'
                     : 'rgba(15, 23, 42, 0.94)',
-                  color: '#0f172a',
+                  color: '#ffffff',
                   border: `1.5px solid ${isFully ? '#6ee7b7' : hub.light}`,
                   padding: '3px 8px',
                   borderRadius: '12px',
@@ -1385,7 +1385,7 @@ export function Table3CompleteGraphs3D({ graph, activeComponentIds = [] }) {
                 <span
                   style={{
                     background: 'rgba(255,255,255,0.2)',
-                    color: '#0f172a',
+                    color: '#ffffff',
                     padding: '1px 5px',
                     borderRadius: '6px',
                     fontSize: '0.65rem'
@@ -1788,7 +1788,7 @@ const BILLIARDS_BALLS_DATA = [
   { num: 3, type: 'solid', color: '#dc2626', name: '3 Solid Red' },
   // Row 3: 3 balls (Standard 8-Ball in center!)
   { num: 4, type: 'solid', color: '#7c3aed', name: '4 Solid Purple' },
-  { num: 8, type: 'solid', color: '#ffffff', name: '8 Solid Black' },
+  { num: 8, type: 'solid', color: '#0f172a', name: '8 Solid Black' },
   { num: 5, type: 'solid', color: '#ea580c', name: '5 Solid Orange' },
   // Row 4: 4 balls
   { num: 6, type: 'solid', color: '#16a34a', name: '6 Solid Green' },
@@ -1851,7 +1851,7 @@ function PhotorealisticBilliardBall({ radius = 0.22, ballInfo, isPlaced = true }
       <Html position={[0, radius * 0.46, radius * 0.85]} center pointerEvents="none">
         <div
           style={{
-            color: '#ffffff',
+            color: '#0f172a',
             fontSize: '0.62rem',
             fontWeight: '900',
             fontFamily: 'Inter, sans-serif',
@@ -2147,7 +2147,7 @@ export default function PatternsInShapes({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', justifyContent: 'space-between', gap: '0.45rem' }}>
       {/* 3 TABLE 3 ACTIVITIES SELECTOR TABS (Light Theme Palette) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.35rem', flexShrink: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.45rem', flexShrink: 0 }}>
         {activities.map((act) => {
           const isActive = activeActivity === act.id;
           return (
@@ -2157,9 +2157,9 @@ export default function PatternsInShapes({
               style={{
                 padding: '0.35rem 0.4rem',
                 borderRadius: '10px',
-                border: isActive ? '2px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)',
-                background: isActive ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a',
-                color: isActive ? 'var(--theme-primary-dark, #0f766e)' : '#475569',
+                border: isActive ? '1.5px solid var(--theme-primary, #0d9488)' : '1.5px solid #cbd5e1',
+                background: isActive ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff',
+                color: isActive ? 'var(--theme-primary-dark, #0f766e)' : '#334155',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -2170,10 +2170,10 @@ export default function PatternsInShapes({
             >
               <span style={{ fontSize: '1rem' }}>{act.icon}</span>
               <div style={{ textAlign: 'left', overflow: 'hidden' }}>
-                <div style={{ fontSize: '0.74rem', fontWeight: '900', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <div style={{ fontSize: '0.68rem', fontWeight: '800', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {act.name}
                 </div>
-                <div style={{ fontSize: '0.62rem', color: isActive ? 'var(--theme-primary, #0d9488)' : '#94a3b8', fontWeight: '700' }}>
+                <div style={{ fontSize: '0.55rem', color: isActive ? 'var(--theme-primary, #0d9488)' : '#64748b', fontWeight: '700' }}>
                   {act.count}
                 </div>
               </div>
@@ -2191,13 +2191,13 @@ export default function PatternsInShapes({
               <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
                 Regular Polygons & Symmetry
               </h4>
-              <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#e2e8f0', lineHeight: 1.4 }}>
+              <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#334155', lineHeight: 1.4 }}>
                 Explore how adding sides bridges straight-line geometry to smooth circles.
               </p>
             </div>
 
             {/* 3D View Mode Dual Tabs */}
-            <div style={{ display: 'inline-flex', background: '#334155', padding: '3px', borderRadius: '14px', border: '1.5px solid #64748b' }}>
+            <div style={{ display: 'inline-flex', background: '#f1f5f9', padding: '3px', borderRadius: '14px', border: '1.5px solid #64748b' }}>
               <button
                 onClick={() => setViewMode('real')}
                 style={{
@@ -2205,7 +2205,7 @@ export default function PatternsInShapes({
                   borderRadius: '11px',
                   border: 'none',
                   background: viewMode === 'real' ? '#0d9488' : 'transparent',
-                  color: viewMode === 'real' ? '#0f172a' : '#475569',
+                  color: viewMode === 'real' ? '#ffffff' : '#475569',
                   fontSize: '0.72rem',
                   fontWeight: '900',
                   cursor: 'pointer',
@@ -2225,7 +2225,7 @@ export default function PatternsInShapes({
                   borderRadius: '11px',
                   border: 'none',
                   background: viewMode === 'geometric' ? '#0d9488' : 'transparent',
-                  color: viewMode === 'geometric' ? '#0f172a' : '#475569',
+                  color: viewMode === 'geometric' ? '#ffffff' : '#475569',
                   fontSize: '0.72rem',
                   fontWeight: '900',
                   cursor: 'pointer',
@@ -2256,8 +2256,8 @@ export default function PatternsInShapes({
                     padding: '0.3rem 0.55rem',
                     borderRadius: '16px',
                     border: isSelected ? '1.5px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)',
-                    background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#0f172a',
-                    color: isSelected ? '#0f172a' : 'var(--theme-heading, #134e4a)',
+                    background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#ffffff',
+                    color: isSelected ? '#ffffff' : 'var(--theme-heading, #134e4a)',
                     fontWeight: '800',
                     fontSize: '0.74rem',
                     cursor: 'pointer',
@@ -2276,26 +2276,26 @@ export default function PatternsInShapes({
 
           {/* Interactive Geometric Edge Builder (When in geometric mode) */}
           {viewMode === 'geometric' && (
-            <div style={{ background: '#1e293b', padding: '0.5rem 0.75rem', borderRadius: '12px', border: '1.5px solid #475569', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-              <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#f8fafc' }}>
+            <div style={{ background: '#f8fafc', padding: '0.5rem 0.75rem', borderRadius: '12px', border: '1.5px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+              <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#1e293b' }}>
                 Construct Edges: <span style={{ color: '#0d9488', fontWeight: '900' }}>{placedPolyEdges} / {currentPoly.sides}</span>
               </div>
               <div style={{ display: 'flex', gap: '0.3rem' }}>
                 <button
                   onClick={() => setPlacedPolyEdges(prev => Math.max(1, prev - 1))}
-                  style={{ padding: '0.2rem 0.5rem', borderRadius: '8px', border: '1px solid #64748b', background: '#0f172a', fontSize: '0.72rem', fontWeight: '800', cursor: 'pointer' }}
+                  style={{ padding: '0.2rem 0.5rem', borderRadius: '8px', border: '1px solid #cbd5e1', background: '#ffffff', fontSize: '0.72rem', fontWeight: '800', cursor: 'pointer' }}
                 >
                   - Edge
                 </button>
                 <button
                   onClick={() => setPlacedPolyEdges(prev => Math.min(currentPoly.sides, prev + 1))}
-                  style={{ padding: '0.2rem 0.5rem', borderRadius: '8px', border: '1px solid #64748b', background: '#0f172a', fontSize: '0.72rem', fontWeight: '800', cursor: 'pointer' }}
+                  style={{ padding: '0.2rem 0.5rem', borderRadius: '8px', border: '1px solid #cbd5e1', background: '#ffffff', fontSize: '0.72rem', fontWeight: '800', cursor: 'pointer' }}
                 >
                   + Edge
                 </button>
                 <button
                   onClick={() => setPlacedPolyEdges(currentPoly.sides)}
-                  style={{ padding: '0.2rem 0.55rem', borderRadius: '8px', border: 'none', background: '#0d9488', color: '#0f172a', fontSize: '0.72rem', fontWeight: '900', cursor: 'pointer' }}
+                  style={{ padding: '0.2rem 0.55rem', borderRadius: '8px', border: 'none', background: '#0d9488', color: '#ffffff', fontSize: '0.72rem', fontWeight: '900', cursor: 'pointer' }}
                 >
                   Complete
                 </button>
@@ -2304,7 +2304,7 @@ export default function PatternsInShapes({
           )}
 
           {/* Polygon Information & Properties Panel */}
-          <div style={{ background: '#0f172a', borderRadius: '14px', padding: '0.75rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div style={{ background: '#ffffff', borderRadius: '14px', padding: '0.75rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {/* Real-Life Context Bar */}
             <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
               <div style={{ fontSize: '1.8rem', lineHeight: 1 }}>{currentPoly.icon}</div>
@@ -2312,14 +2312,14 @@ export default function PatternsInShapes({
                 <span style={{ fontWeight: '900', color: 'var(--theme-heading, #134e4a)', fontSize: '0.9rem' }}>
                   {currentPoly.realLifeTitle}
                 </span>
-                <span style={{ fontSize: '0.72rem', color: '#64748b', lineHeight: 1.3, marginTop: '0.1rem' }}>
+                <span style={{ fontSize: '0.72rem', color: '#475569', lineHeight: 1.4, marginTop: '0.2rem', display: 'block', textAlign: 'justify' }}>
                   {currentPoly.realLife}
                 </span>
               </div>
             </div>
 
             {/* Mathematical Properties Badges */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.4rem', paddingTop: '0.4rem', borderTop: '1px dashed #475569' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.4rem', paddingTop: '0.4rem', borderTop: '1px dashed #cbd5e1' }}>
               <div style={{ background: '#f0fdfa', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #ccfbf1', textAlign: 'center' }}>
                 <div style={{ fontSize: '0.62rem', color: '#0f766e', fontWeight: '800' }}>SIDES (n)</div>
                 <div style={{ fontSize: '0.86rem', fontWeight: '900', color: '#0d9488' }}>{currentPoly.sides}</div>
@@ -2379,7 +2379,7 @@ export default function PatternsInShapes({
                   {'Triangular Series: T(n-1)'}
                 </span>
               </div>
-              <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.85rem', color: '#e2e8f0', lineHeight: 1.5, textAlign: 'justify' }}>
+              <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.85rem', color: '#334155', lineHeight: 1.5, textAlign: 'justify' }}>
                 If an airline connects <strong>{currentGraph.n} major city hubs</strong> with direct non-stop flights in both directions without layovers, how many flight routes must be scheduled? 
                 The total number of routes forms a <strong>Triangular Number Sequence</strong>. To find the routes for <em>n</em> cities, we sum the first <em>(n-1)</em> integers. For example, adding a 6th city hub requires connecting it to the 5 existing hubs, adding exactly 5 new routes. The total can be computed quickly using the formula <strong>n×(n-1)/2</strong>.
               </p>
@@ -2407,8 +2407,8 @@ export default function PatternsInShapes({
                       padding: '0.3rem 0.65rem',
                       borderRadius: '16px',
                       border: isSelected ? '1.5px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)',
-                      background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#0f172a',
-                      color: isSelected ? '#0f172a' : 'var(--theme-heading, #134e4a)',
+                      background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#ffffff',
+                      color: isSelected ? '#ffffff' : 'var(--theme-heading, #134e4a)',
                       fontWeight: '800',
                       fontSize: '0.74rem',
                       cursor: 'pointer',
@@ -2426,8 +2426,8 @@ export default function PatternsInShapes({
             </div>
 
             {/* Granular Step-by-Step Flight Route Controls */}
-            <div style={{ background: '#1e293b', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #475569', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#f8fafc' }}>
+            <div style={{ background: '#f8fafc', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#1e293b' }}>
                 Active Flight Corridors: <span style={{ color: '#0284c7', fontWeight: '900' }}>{activeRouteCount} of {currentGraph.total}</span>
               </div>
               <div style={{ display: 'flex', gap: '0.35rem' }}>
@@ -2441,8 +2441,8 @@ export default function PatternsInShapes({
                     padding: '0.25rem 0.65rem',
                     borderRadius: '8px',
                     border: '1.5px solid #64748b',
-                    background: '#0f172a',
-                    color: '#f8fafc',
+                    background: '#ffffff',
+                    color: '#1e293b',
                     fontSize: '0.74rem',
                     fontWeight: '800',
                     cursor: 'pointer',
@@ -2462,8 +2462,8 @@ export default function PatternsInShapes({
                     padding: '0.25rem 0.65rem',
                     borderRadius: '8px',
                     border: '1.5px solid #64748b',
-                    background: '#0f172a',
-                    color: '#f8fafc',
+                    background: '#ffffff',
+                    color: '#1e293b',
                     fontSize: '0.74rem',
                     fontWeight: '800',
                     cursor: 'pointer',
@@ -2479,7 +2479,7 @@ export default function PatternsInShapes({
                     borderRadius: '8px',
                     border: 'none',
                     background: 'var(--theme-btn-gradient, linear-gradient(135deg, #0284c7 0%, #0369a1 100%))',
-                    color: '#0f172a',
+                    color: '#ffffff',
                     fontSize: '0.74rem',
                     fontWeight: '900',
                     cursor: 'pointer',
@@ -2494,7 +2494,7 @@ export default function PatternsInShapes({
                     padding: '0.25rem 0.65rem',
                     borderRadius: '8px',
                     border: '1.5px solid #64748b',
-                    background: '#1e293b',
+                    background: '#f8fafc',
                     color: '#475569',
                     fontSize: '0.74rem',
                     fontWeight: '800',
@@ -2507,7 +2507,7 @@ export default function PatternsInShapes({
             </div>
 
             {/* Step-by-Step Airway Breakdown & Formula Card */}
-            <div style={{ background: '#0f172a', borderRadius: '14px', padding: '0.65rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+            <div style={{ background: '#ffffff', borderRadius: '14px', padding: '0.65rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
               {/* Step Breakdown Sequence */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                 <span style={{ fontSize: '0.72rem', fontWeight: '900', color: '#0369a1', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -2531,7 +2531,7 @@ export default function PatternsInShapes({
                       }}
                     >
                       <span>{b.step}</span>
-                      <span style={{ background: '#0284c7', color: '#0f172a', padding: '1px 5px', borderRadius: '6px', fontWeight: '900', fontSize: '0.68rem' }}>
+                      <span style={{ background: '#0284c7', color: '#ffffff', padding: '1px 5px', borderRadius: '6px', fontWeight: '900', fontSize: '0.68rem' }}>
                         +{b.count}
                       </span>
                     </div>
@@ -2540,7 +2540,7 @@ export default function PatternsInShapes({
               </div>
 
               {/* Mathematical Metrics Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', paddingTop: '0.4rem', borderTop: '1px dashed #475569' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', paddingTop: '0.4rem', borderTop: '1px dashed #cbd5e1' }}>
                 <div style={{ background: '#eff6ff', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #dbeafe', textAlign: 'center' }}>
                   <div style={{ fontSize: '0.62rem', color: '#1e40af', fontWeight: '800' }}>TOTAL CITY HUBS (n)</div>
                   <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#2563eb' }}>{currentGraph.n} Cities</div>
@@ -2556,7 +2556,7 @@ export default function PatternsInShapes({
               </div>
 
               {/* Educational Rationale Insight */}
-              <div style={{ fontSize: '0.76rem', color: '#e2e8f0', lineHeight: 1.45, background: '#1e293b', padding: '0.45rem 0.65rem', borderRadius: '8px', textAlign: 'justify' }}>
+              <div style={{ fontSize: '0.76rem', color: '#334155', lineHeight: 1.45, background: '#f8fafc', padding: '0.45rem 0.65rem', borderRadius: '8px', textAlign: 'justify' }}>
                 💡 <strong>Why divide by 2?</strong> Each non-stop flight corridor connects <strong>2 cities</strong> simultaneously (e.g. Delhi ↔ Mumbai is a single bidirectional route). Dividing by 2 prevents scheduling the exact same route twice!
               </div>
             </div>
@@ -2588,7 +2588,7 @@ export default function PatternsInShapes({
                   {'Square Numbers: n²'}
                 </span>
               </div>
-              <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#e2e8f0', lineHeight: 1.4 }}>
+              <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#334155', lineHeight: 1.4 }}>
                 Handcrafted Chettinad artisan floor mosaic. Each square is expanded by wrapping an <strong>L-shaped gnomon</strong> of consecutive odd numbers (1 + 3 + 5 + 7 + 9 = 25 = 5²).
               </p>
             </div>
@@ -2608,8 +2608,8 @@ export default function PatternsInShapes({
                       padding: '0.3rem 0.65rem',
                       borderRadius: '16px',
                       border: isSelected ? '1.5px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)',
-                      background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#0f172a',
-                      color: isSelected ? '#0f172a' : 'var(--theme-heading, #134e4a)',
+                      background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#ffffff',
+                      color: isSelected ? '#ffffff' : 'var(--theme-heading, #134e4a)',
                       fontWeight: '800',
                       fontSize: '0.74rem',
                       cursor: 'pointer',
@@ -2627,8 +2627,8 @@ export default function PatternsInShapes({
             </div>
 
             {/* Granular Gnomon Layer Placement Controls */}
-            <div style={{ background: '#1e293b', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #475569', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#f8fafc' }}>
+            <div style={{ background: '#f8fafc', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#1e293b' }}>
                 Active Mosaic Tiles: <span style={{ color: '#0d9488', fontWeight: '900' }}>{totalPlacedTiles} of {squareSize * squareSize}</span>
               </div>
               <div style={{ display: 'flex', gap: '0.35rem' }}>
@@ -2638,8 +2638,8 @@ export default function PatternsInShapes({
                     padding: '0.25rem 0.65rem',
                     borderRadius: '8px',
                     border: '1.5px solid #64748b',
-                    background: '#0f172a',
-                    color: '#f8fafc',
+                    background: '#ffffff',
+                    color: '#1e293b',
                     fontSize: '0.74rem',
                     fontWeight: '800',
                     cursor: 'pointer',
@@ -2654,8 +2654,8 @@ export default function PatternsInShapes({
                     padding: '0.25rem 0.65rem',
                     borderRadius: '8px',
                     border: '1.5px solid #64748b',
-                    background: '#0f172a',
-                    color: '#f8fafc',
+                    background: '#ffffff',
+                    color: '#1e293b',
                     fontSize: '0.74rem',
                     fontWeight: '800',
                     cursor: 'pointer',
@@ -2671,7 +2671,7 @@ export default function PatternsInShapes({
                     borderRadius: '8px',
                     border: 'none',
                     background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))',
-                    color: '#0f172a',
+                    color: '#ffffff',
                     fontSize: '0.74rem',
                     fontWeight: '900',
                     cursor: 'pointer',
@@ -2686,7 +2686,7 @@ export default function PatternsInShapes({
                     padding: '0.25rem 0.65rem',
                     borderRadius: '8px',
                     border: '1.5px solid #64748b',
-                    background: '#1e293b',
+                    background: '#f8fafc',
                     color: '#475569',
                     fontSize: '0.74rem',
                     fontWeight: '800',
@@ -2699,7 +2699,7 @@ export default function PatternsInShapes({
             </div>
 
             {/* Step-by-Step Gnomon Layer Breakdown & Formula Card */}
-            <div style={{ background: '#0f172a', borderRadius: '14px', padding: '0.65rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+            <div style={{ background: '#ffffff', borderRadius: '14px', padding: '0.65rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
               {/* Step Breakdown Sequence */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                 <span style={{ fontSize: '0.72rem', fontWeight: '900', color: '#0f766e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -2710,7 +2710,7 @@ export default function PatternsInShapes({
                     <div
                       key={gl.layer}
                       style={{
-                        background: gl.isPlaced ? '#f0fdfa' : '#1e293b',
+                        background: gl.isPlaced ? '#f0fdfa' : '#f8fafc',
                         padding: '0.25rem 0.55rem',
                         borderRadius: '8px',
                         border: `1px solid ${gl.isPlaced ? '#ccfbf1' : '#475569'}`,
@@ -2723,7 +2723,7 @@ export default function PatternsInShapes({
                       }}
                     >
                       <span>Layer {gl.layer}</span>
-                      <span style={{ background: gl.isPlaced ? '#0d9488' : '#64748b', color: '#0f172a', padding: '1px 5px', borderRadius: '6px', fontWeight: '900', fontSize: '0.68rem' }}>
+                      <span style={{ background: gl.isPlaced ? '#0d9488' : '#64748b', color: '#ffffff', padding: '1px 5px', borderRadius: '6px', fontWeight: '900', fontSize: '0.68rem' }}>
                         +{gl.count}
                       </span>
                     </div>
@@ -2732,7 +2732,7 @@ export default function PatternsInShapes({
               </div>
 
               {/* Mathematical Metrics Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', paddingTop: '0.4rem', borderTop: '1px dashed #475569' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', paddingTop: '0.4rem', borderTop: '1px dashed #cbd5e1' }}>
                 <div style={{ background: '#eff6ff', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #dbeafe', textAlign: 'center' }}>
                   <div style={{ fontSize: '0.62rem', color: '#1e40af', fontWeight: '800' }}>SIDE LENGTH (n)</div>
                   <div style={{ fontSize: '0.88rem', fontWeight: '900', color: '#2563eb' }}>{squareSize} Units</div>
@@ -2750,7 +2750,7 @@ export default function PatternsInShapes({
               </div>
 
               {/* Educational Rationale Insight */}
-              <div style={{ fontSize: '0.72rem', color: '#475569', lineHeight: 1.35, background: '#1e293b', padding: '0.35rem 0.6rem', borderRadius: '8px' }}>
+              <div style={{ fontSize: '0.72rem', color: '#475569', lineHeight: 1.35, background: '#f8fafc', padding: '0.35rem 0.6rem', borderRadius: '8px' }}>
                 💡 <strong>Why do odd numbers build squares?</strong> Expanding an n × n square to (n+1) × (n+1) requires adding 1 top row (n), 1 side column (n), and 1 corner tile = 2n + 1 (the next consecutive odd number)!
               </div>
             </div>
@@ -2770,7 +2770,7 @@ export default function PatternsInShapes({
                 {'Triangular Numbers: T(n)'}
               </span>
             </div>
-            <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#e2e8f0', lineHeight: 1.4 }}>
+            <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#334155', lineHeight: 1.4 }}>
               In professional pool & billiards, 15 balls are packed inside a wooden triangle frame on green cloth. Each row adds consecutive numbers ($1 + 2 + 3 + 4 + 5 = 15$).
             </p>
           </div>
@@ -2791,8 +2791,8 @@ export default function PatternsInShapes({
                     padding: '0.3rem 0.6rem',
                     borderRadius: '16px',
                     border: isSelected ? '1.5px solid var(--theme-primary, #0d9488)' : '1.5px solid var(--theme-border, #a7f3d0)',
-                    background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#0f172a',
-                    color: isSelected ? '#0f172a' : 'var(--theme-heading, #134e4a)',
+                    background: isSelected ? 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))' : '#ffffff',
+                    color: isSelected ? '#ffffff' : 'var(--theme-heading, #134e4a)',
                     fontWeight: '800',
                     fontSize: '0.74rem',
                     cursor: 'pointer',
@@ -2810,32 +2810,32 @@ export default function PatternsInShapes({
           </div>
 
           {/* Interactive Row Placement Controls */}
-          <div style={{ background: '#1e293b', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #475569', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#f8fafc' }}>
+          <div style={{ background: '#f8fafc', padding: '0.45rem 0.75rem', borderRadius: '12px', border: '1.5px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div style={{ fontSize: '0.76rem', fontWeight: '800', color: '#1e293b' }}>
               Rows Placed in Rack: <span style={{ color: '#0d9488', fontWeight: '900' }}>{placedTriLayers} of {triangleRows}</span>
             </div>
             <div style={{ display: 'flex', gap: '0.35rem' }}>
               <button
                 onClick={() => setPlacedTriLayers(prev => Math.max(1, prev - 1))}
-                style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#0f172a', color: '#f8fafc', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
+                style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#ffffff', color: '#1e293b', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
               >
                 - Row
               </button>
               <button
                 onClick={() => setPlacedTriLayers(prev => Math.min(triangleRows, prev + 1))}
-                style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#0f172a', color: '#f8fafc', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
+                style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#ffffff', color: '#1e293b', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
               >
                 + Row
               </button>
               <button
                 onClick={() => setPlacedTriLayers(triangleRows)}
-                style={{ padding: '0.25rem 0.75rem', borderRadius: '8px', border: 'none', background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))', color: '#0f172a', fontSize: '0.74rem', fontWeight: '900', cursor: 'pointer', boxShadow: '0 2px 6px rgba(13, 148, 136, 0.3)' }}
+                style={{ padding: '0.25rem 0.75rem', borderRadius: '8px', border: 'none', background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))', color: '#ffffff', fontSize: '0.74rem', fontWeight: '900', cursor: 'pointer', boxShadow: '0 2px 6px rgba(13, 148, 136, 0.3)' }}
               >
                 Rack All 15 Balls 🎱
               </button>
               <button
                 onClick={() => setPlacedTriLayers(1)}
-                style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#1e293b', color: '#475569', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer' }}
+                style={{ padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1.5px solid #64748b', background: '#f8fafc', color: '#475569', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer' }}
               >
                 Reset
               </button>
@@ -2843,7 +2843,7 @@ export default function PatternsInShapes({
           </div>
 
           {/* Mathematical Properties Badges */}
-          <div style={{ background: '#0f172a', borderRadius: '14px', padding: '0.65rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+          <div style={{ background: '#ffffff', borderRadius: '14px', padding: '0.65rem 0.85rem', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
               <div style={{ background: '#eff6ff', padding: '0.35rem 0.4rem', borderRadius: '8px', border: '1px solid #dbeafe', textAlign: 'center' }}>
                 <div style={{ fontSize: '0.62rem', color: '#1e40af', fontWeight: '800' }}>ROWS (n)</div>
@@ -2859,7 +2859,7 @@ export default function PatternsInShapes({
               </div>
             </div>
 
-            <div style={{ fontSize: '0.72rem', color: '#64748b', lineHeight: 1.35, background: '#1e293b', padding: '0.35rem 0.6rem', borderRadius: '8px' }}>
+            <div style={{ fontSize: '0.72rem', color: '#64748b', lineHeight: 1.35, background: '#f8fafc', padding: '0.35rem 0.6rem', borderRadius: '8px' }}>
               {'💡 Geometric Insight: An equilateral triangular rack with n rows always holds exactly T(n) = n(n+1)/2 balls.'}
             </div>
           </div>
@@ -2873,12 +2873,12 @@ export default function PatternsInShapes({
             <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: '900', color: 'var(--theme-heading, #134e4a)' }}>
               Artisan Glass Geometric Fractal ($3 \times 4^k$)
             </h4>
-            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: '#e2e8f0', lineHeight: 1.45 }}>
+            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: '#334155', lineHeight: 1.45 }}>
               This beautiful mathematical structure is built using glowing cyan glass links joined perfectly by solid gold spheres. At each geometric iteration, every straight segment fractures into 4 new smaller segments, multiplying the total segment count by 4!
             </p>
           </div>
 
-          <div style={{ background: '#0f172a', padding: '0.5rem 0.85rem', borderRadius: '10px', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+          <div style={{ background: '#ffffff', padding: '0.5rem 0.85rem', borderRadius: '10px', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
             <span style={{ fontWeight: '900', fontSize: '0.82rem', color: 'var(--theme-heading, #134e4a)' }}>Fractal Depth $k = {kochDepth}$:</span>
             <input
               type="range"
@@ -2894,7 +2894,7 @@ export default function PatternsInShapes({
           </div>
 
           {/* Koch Snowflake Sequence Example Box */}
-          <div style={{ background: '#0f172a', padding: '0.65rem 0.85rem', borderRadius: '12px', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem', flex: 1, justifyContent: 'center' }}>
+          <div style={{ background: '#ffffff', padding: '0.65rem 0.85rem', borderRadius: '12px', border: '1.5px solid var(--theme-border, #a7f3d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem', flex: 1, justifyContent: 'center' }}>
             <div style={{ fontSize: '0.8rem', fontWeight: '900', color: 'var(--theme-primary-dark, #0f766e)', textAlign: 'center' }}>
               Sequence Rule: Multiply by 4 each Iteration
             </div>
@@ -2909,14 +2909,14 @@ export default function PatternsInShapes({
                     <span style={{ 
                       padding: '0.25rem 0.5rem', 
                       borderRadius: '8px', 
-                      background: isSelected ? (isCurrent ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'var(--theme-badge-bg, #ccfbf1)') : '#1e293b', 
-                      color: isSelected ? (isCurrent ? '#0f172a' : 'var(--theme-primary-dark, #0f766e)') : '#94a3b8', 
+                      background: isSelected ? (isCurrent ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'var(--theme-badge-bg, #ccfbf1)') : '#f8fafc', 
+                      color: isSelected ? (isCurrent ? '#ffffff' : 'var(--theme-primary-dark, #0f766e)') : '#94a3b8', 
                       fontWeight: isSelected ? '900' : '700',
                       fontSize: '0.85rem',
                       boxShadow: isCurrent ? '0 3px 10px rgba(217, 119, 6, 0.35)' : 'none',
                       transform: isCurrent ? 'scale(1.15)' : 'scale(1)',
                       transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      border: isSelected && !isCurrent ? '1.5px solid var(--theme-border, #a7f3d0)' : isCurrent ? '1.5px solid transparent' : '1px solid #475569',
+                      border: isSelected && !isCurrent ? '1.5px solid var(--theme-border, #a7f3d0)' : isCurrent ? '1.5px solid transparent' : '1px solid #e2e8f0',
                       zIndex: isCurrent ? 10 : 1
                     }}>
                       {num}
@@ -2927,7 +2927,7 @@ export default function PatternsInShapes({
               <span style={{ padding: '0.2rem', color: '#64748b', fontWeight: '900', fontSize: '0.85rem', marginLeft: '0.2rem' }}>...</span>
             </div>
             
-            <div style={{ fontSize: '0.78rem', color: '#475569', fontWeight: '800', marginTop: '0.2rem', textAlign: 'center', background: '#334155', padding: '0.5rem 0.8rem', borderRadius: '8px', width: '100%' }}>
+            <div style={{ fontSize: '0.78rem', color: '#475569', fontWeight: '800', marginTop: '0.2rem', textAlign: 'center', background: '#f1f5f9', padding: '0.5rem 0.8rem', borderRadius: '8px', width: '100%' }}>
               Iteration <span style={{ color: 'var(--theme-primary, #0d9488)', fontWeight: '900' }}>k = {kochDepth}</span> ➜ <span style={{ color: '#d97706', fontWeight: '900', fontSize: '0.95rem' }}>{3 * Math.pow(4, kochDepth)} Segments</span>
               <div style={{ color: '#15803d', fontWeight: '900', fontSize: '0.85rem', marginTop: '0.25rem' }}>
                 Formula: 3 × 4<sup style={{fontSize:'0.65rem', fontWeight:'900'}}>k</sup> ✨

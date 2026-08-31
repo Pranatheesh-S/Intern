@@ -71,12 +71,12 @@ export default function ChapterQuizAndSolutions({
         height: '100%',
         overflow: 'hidden',
         justifyContent: 'space-between',
-        background: '#0f172a',
+        background: '#ffffff',
         padding: '0.75rem 1rem',
         borderRadius: '16px',
         border: '1.8px solid var(--theme-border, #a7f3d0)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)',
-        color: '#f8fafc'
+        color: '#1e293b'
       }}
     >
       {/* SLIDE 1: MISSION BRIEFING / DETECTIVE INTEL (LIGHT THEME) */}
@@ -95,7 +95,7 @@ export default function ChapterQuizAndSolutions({
             <div style={{ color: 'var(--theme-primary-dark, #0f766e)', fontSize: '0.84rem', fontWeight: '900', letterSpacing: '0.04em' }}>
               📋 MATHEMATICAL DISCOVERY DOSSIER
             </div>
-            <ul style={{ margin: '0.3rem 0', paddingLeft: '1.15rem', color: '#e2e8f0', fontSize: '0.86rem', lineHeight: 1.55 }}>
+            <ul style={{ margin: '0.3rem 0', paddingLeft: '1.15rem', color: '#334155', fontSize: '0.86rem', lineHeight: 1.55 }}>
               <li style={{ marginBottom: '0.35rem', textAlign: 'justify', fontSize: '1.0rem' }}>
                 <strong style={{ color: 'var(--theme-heading, #134e4a)' }}>[Universal Laws]:</strong> Mathematics is the search for patterns and explanations—powering orbital gravitation, satellite GPS, and life-saving genomics.
               </li>
@@ -108,21 +108,21 @@ export default function ChapterQuizAndSolutions({
             </ul>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginTop: '0.2rem' }}>
-              <div style={{ background: '#0f172a', padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1px solid var(--theme-border, #a7f3d0)', textAlign: 'center' }}>
+              <div style={{ background: '#ffffff', padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1px solid var(--theme-border, #a7f3d0)', textAlign: 'center' }}>
                 <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: '800' }}>TOTAL CLUES</div>
                 <div style={{ fontSize: '1.05rem', fontWeight: '900', color: 'var(--theme-primary, #0d9488)' }}>{totalQuestions} Questions</div>
               </div>
-              <div style={{ background: '#0f172a', padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1px solid var(--theme-border, #a7f3d0)', textAlign: 'center' }}>
+              <div style={{ background: '#ffffff', padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1px solid var(--theme-border, #a7f3d0)', textAlign: 'center' }}>
                 <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: '800' }}>CLEARANCE PASS</div>
                 <div style={{ fontSize: '1.05rem', fontWeight: '900', color: '#15803d' }}>≥ {passingScore}/{totalQuestions} (80%)</div>
               </div>
-              <div style={{ background: '#0f172a', padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1px solid var(--theme-border, #a7f3d0)', textAlign: 'center' }}>
+              <div style={{ background: '#ffffff', padding: '0.4rem 0.6rem', borderRadius: '8px', border: '1px solid var(--theme-border, #a7f3d0)', textAlign: 'center' }}>
                 <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: '800' }}>REWARD VAULT</div>
                 <div style={{ fontSize: '1.05rem', fontWeight: '900', color: '#d97706' }}>24K Trophy</div>
               </div>
             </div>
 
-            <div style={{ color: 'var(--theme-heading, #134e4a)', fontSize: '0.82rem', fontWeight: '800', textAlign: 'center', padding: '0.35rem', background: '#0f172a', borderRadius: '8px', border: '1px dashed var(--theme-border-strong, #5eead4)' }}>
+            <div style={{ color: 'var(--theme-heading, #134e4a)', fontSize: '0.82rem', fontWeight: '800', textAlign: 'center', padding: '0.35rem', background: '#ffffff', borderRadius: '8px', border: '1px dashed var(--theme-border-strong, #5eead4)' }}>
               🎯 Navigate to Slides 2 & 3 to resolve all 12 forensic clues and unlock the master vault.
             </div>
           </div>
@@ -143,7 +143,7 @@ export default function ChapterQuizAndSolutions({
                   padding: '0.2rem 0.6rem',
                   borderRadius: '6px',
                   border: activeQuestionTier === 0 ? '1.8px solid var(--theme-primary, #0d9488)' : '1px solid var(--theme-border, #a7f3d0)',
-                  background: activeQuestionTier === 0 ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a',
+                  background: activeQuestionTier === 0 ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff',
                   color: activeQuestionTier === 0 ? 'var(--theme-primary-dark, #0f766e)' : '#64748b',
                   fontSize: '0.78rem',
                   fontWeight: '800',
@@ -158,7 +158,7 @@ export default function ChapterQuizAndSolutions({
                   padding: '0.2rem 0.6rem',
                   borderRadius: '6px',
                   border: activeQuestionTier === 1 ? '1.8px solid var(--theme-primary, #0d9488)' : '1px solid var(--theme-border, #a7f3d0)',
-                  background: activeQuestionTier === 1 ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a',
+                  background: activeQuestionTier === 1 ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff',
                   color: activeQuestionTier === 1 ? 'var(--theme-primary-dark, #0f766e)' : '#64748b',
                   fontSize: '0.78rem',
                   fontWeight: '800',
@@ -197,7 +197,7 @@ export default function ChapterQuizAndSolutions({
                     <div style={{ fontWeight: '800', fontSize: '0.9rem', color: 'var(--theme-heading, #134e4a)', lineHeight: 1.35, textAlign: 'left' }}>
                       <span style={{ color: 'var(--theme-primary, #0d9488)' }}>#{q.id}</span> {q.question}
                     </div>
-                    <span style={{ fontSize: '0.68rem', background: '#0f172a', color: '#0f766e', padding: '1px 6px', borderRadius: '4px', border: '1px solid var(--theme-border, #a7f3d0)', flexShrink: 0, marginLeft: '0.4rem', fontWeight: '800' }}>
+                    <span style={{ fontSize: '0.68rem', background: '#ffffff', color: '#0f766e', padding: '1px 6px', borderRadius: '4px', border: '1px solid var(--theme-border, #a7f3d0)', flexShrink: 0, marginLeft: '0.4rem', fontWeight: '800' }}>
                       {q.pageRef} • 3D 🔍
                     </span>
                   </div>
@@ -205,9 +205,9 @@ export default function ChapterQuizAndSolutions({
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.35rem' }}>
                     {q.options.map((opt, idx) => {
                       const isSel = userAns === idx;
-                      let bg = isSel ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a';
+                      let bg = isSel ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff';
                       let borderColor = isSel ? 'var(--theme-primary, #0d9488)' : 'var(--theme-border, #a7f3d0)';
-                      let textColor = isSel ? 'var(--theme-primary-dark, #0f766e)' : '#e2e8f0';
+                      let textColor = isSel ? 'var(--theme-primary-dark, #0f766e)' : '#334155';
 
                       if (isQuizSubmitted) {
                         if (idx === q.correct) {
@@ -275,7 +275,7 @@ export default function ChapterQuizAndSolutions({
                     padding: '0.2rem 0.55rem',
                     borderRadius: '6px',
                     border: activeQuestionTier === 0 ? '1.8px solid var(--theme-primary, #0d9488)' : '1px solid var(--theme-border, #a7f3d0)',
-                    background: activeQuestionTier === 0 ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a',
+                    background: activeQuestionTier === 0 ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff',
                     color: activeQuestionTier === 0 ? 'var(--theme-primary-dark, #0f766e)' : '#64748b',
                     fontSize: '0.76rem',
                     fontWeight: '800',
@@ -290,7 +290,7 @@ export default function ChapterQuizAndSolutions({
                     padding: '0.2rem 0.55rem',
                     borderRadius: '6px',
                     border: activeQuestionTier === 1 ? '1.8px solid var(--theme-primary, #0d9488)' : '1px solid var(--theme-border, #a7f3d0)',
-                    background: activeQuestionTier === 1 ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a',
+                    background: activeQuestionTier === 1 ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff',
                     color: activeQuestionTier === 1 ? 'var(--theme-primary-dark, #0f766e)' : '#64748b',
                     fontSize: '0.76rem',
                     fontWeight: '800',
@@ -311,7 +311,7 @@ export default function ChapterQuizAndSolutions({
                     padding: '0.35rem 0.85rem',
                     borderRadius: '8px',
                     background: 'var(--theme-btn-gradient, linear-gradient(135deg, #14b8a6 0%, #0d9488 100%))',
-                    color: '#0f172a',
+                    color: '#ffffff',
                     border: 'none',
                     fontWeight: '900',
                     fontSize: '0.8rem',
@@ -324,7 +324,7 @@ export default function ChapterQuizAndSolutions({
               ) : (
                 <button
                   onClick={handleResetQuiz}
-                  style={{ padding: '0.25rem 0.6rem', borderRadius: '6px', background: '#334155', color: '#475569', border: '1px solid #64748b', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+                  style={{ padding: '0.25rem 0.6rem', borderRadius: '6px', background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', fontSize: '0.74rem', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
                 >
                   <RotateCcw size={12} /> Retry
                 </button>
@@ -359,7 +359,7 @@ export default function ChapterQuizAndSolutions({
                     <div style={{ fontWeight: '800', fontSize: '0.82rem', color: 'var(--theme-heading, #134e4a)', lineHeight: 1.35 }}>
                       <span style={{ color: 'var(--theme-primary, #0d9488)' }}>#{q.id}</span> {q.question}
                     </div>
-                    <span style={{ fontSize: '0.68rem', background: '#0f172a', color: '#0f766e', padding: '1px 6px', borderRadius: '4px', border: '1px solid var(--theme-border, #a7f3d0)', flexShrink: 0, marginLeft: '0.4rem', fontWeight: '800' }}>
+                    <span style={{ fontSize: '0.68rem', background: '#ffffff', color: '#0f766e', padding: '1px 6px', borderRadius: '4px', border: '1px solid var(--theme-border, #a7f3d0)', flexShrink: 0, marginLeft: '0.4rem', fontWeight: '800' }}>
                       {q.pageRef} • 3D 🔍
                     </span>
                   </div>
@@ -367,9 +367,9 @@ export default function ChapterQuizAndSolutions({
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.35rem' }}>
                     {q.options.map((opt, idx) => {
                       const isSel = userAns === idx;
-                      let bg = isSel ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a';
+                      let bg = isSel ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff';
                       let borderColor = isSel ? 'var(--theme-primary, #0d9488)' : 'var(--theme-border, #a7f3d0)';
-                      let textColor = isSel ? 'var(--theme-primary-dark, #0f766e)' : '#e2e8f0';
+                      let textColor = isSel ? 'var(--theme-primary-dark, #0f766e)' : '#334155';
 
                       if (isQuizSubmitted) {
                         if (idx === q.correct) {
@@ -443,7 +443,7 @@ export default function ChapterQuizAndSolutions({
                   padding: '0.25rem 0.75rem',
                   borderRadius: '8px',
                   border: selectedSolutionTab === sec.section ? '2px solid var(--theme-primary, #0d9488)' : '1px solid var(--theme-border, #a7f3d0)',
-                  background: selectedSolutionTab === sec.section ? 'var(--theme-badge-bg, #ccfbf1)' : '#0f172a',
+                  background: selectedSolutionTab === sec.section ? 'var(--theme-badge-bg, #ccfbf1)' : '#ffffff',
                   color: selectedSolutionTab === sec.section ? 'var(--theme-primary-dark, #0f766e)' : '#475569',
                   fontWeight: '900',
                   fontSize: '0.78rem',
@@ -484,7 +484,7 @@ export default function ChapterQuizAndSolutions({
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', flex: 1, justifyContent: 'space-around', paddingTop: '0.35rem' }}>
                     {activeSec.items.slice(0, 2).map((item, i) => (
-                      <div key={i} style={{ background: '#0f172a', padding: '0.55rem 0.85rem', borderRadius: '8px', border: '1px solid var(--theme-border, #a7f3d0)' }}>
+                      <div key={i} style={{ background: '#ffffff', padding: '0.55rem 0.85rem', borderRadius: '8px', border: '1px solid var(--theme-border, #a7f3d0)' }}>
                         <div style={{ fontWeight: '800', color: 'var(--theme-heading, #134e4a)', fontSize: '0.82rem', marginBottom: '0.2rem' }}>
                           {item.q}
                         </div>
