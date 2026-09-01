@@ -1,5 +1,5 @@
-import React, { Suspense, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import React, { Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { ContactShadows, Environment } from '@react-three/drei';
 import ErrorBoundary from '../../../../../components/ErrorBoundary';
 
@@ -8,19 +8,10 @@ import BottleBarrier from './BottleBarrier';
 import GlassBarrier from './GlassBarrier';
 import CardboardBarrier from './CardboardBarrier';
 
-// Rotating stage wrapper for continuous 360-degree turntable showcase
+// Stable stage wrapper for clear, stationary 3D presentation
 function BarrierModelWrapper({ type, stage = 1, thickness = 1, woodViewMode = 'textured' }) {
-  const groupRef = useRef();
-
-  useFrame((state, delta) => {
-    if (groupRef.current) {
-      // Smooth continuous 360-degree auto-rotation
-      groupRef.current.rotation.y += delta * 0.75;
-    }
-  });
-
   return (
-    <group ref={groupRef} rotation={[0.06, -0.28, 0]}>
+    <group rotation={[0.06, -0.28, 0]}>
       {type === 'wood' && <TreeBarrier stage={stage} thickness={thickness} woodViewMode={woodViewMode} />}
       {type === 'plastic' && <BottleBarrier stage={stage} thickness={thickness} />}
       {type === 'glass' && <GlassBarrier stage={stage} thickness={thickness} />}

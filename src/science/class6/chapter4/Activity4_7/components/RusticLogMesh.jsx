@@ -1,6 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
 
 /**
  * Procedural High-Precision 3D Geometry Generator for Rustic Wooden Log Timber
@@ -281,14 +280,6 @@ export default function RusticLogMesh({ thickness = 1, viewMode = 'textured' }) 
   const trunkGeom = useMemo(() => createDisplacedLogTrunkGeometry(2.4, 0.54, 0.49, 160, 120), []);
   const baseCutGeom = useMemo(() => createDisplacedCutEndGeometry(0.54, false, 56, 160), []);
   const topCutGeom = useMemo(() => createDisplacedCutEndGeometry(0.49, true, 56, 160), []);
-
-  // Gentle idle floating motion
-  useFrame((state) => {
-    if (groupRef.current) {
-      const t = state.clock.getElapsedTime();
-      groupRef.current.position.y = Math.sin(t * 1.5) * 0.035;
-    }
-  });
 
   const scale = 1 + thickness * 0.12;
 

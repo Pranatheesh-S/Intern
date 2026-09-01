@@ -1,6 +1,6 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+import RusticLogMesh from './RusticLogMesh';
 
 // ─── Texture 1: Parchment / Lined Paper Sheet Texture ───
 function generatePaperTexture() {
@@ -103,180 +103,7 @@ function generateOakBarkTexture() {
   return texture;
 }
 
-// ─── Texture 3: Realistic Timber Log Cross-Section (Annual Rings & Radiating Cracks) ───
-function generateRealisticLogCrossSectionTexture() {
-  const size = 1024;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-
-  const cx = size / 2;
-  const cy = size / 2;
-  const radius = size * 0.46;
-
-  // Outer rough bark ring background
-  ctx.fillStyle = '#381c08';
-  ctx.fillRect(0, 0, size, size);
-
-  // Radial wood gradient (warm golden-honey sapwood to rich amber heartwood)
-  const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, radius);
-  grad.addColorStop(0.0, '#78350f');   // Deep amber core
-  grad.addColorStop(0.2, '#b45309');   // Rich honey heartwood
-  grad.addColorStop(0.5, '#d97706');   // Golden amber wood
-  grad.addColorStop(0.8, '#f59e0b');   // Warm light wood
-  grad.addColorStop(0.94, '#fbbf24');  // Lighter outer sapwood
-  grad.addColorStop(0.98, '#92400e');  // Inner bark layer
-  grad.addColorStop(1.0, '#451a03');   // Dark outer bark
-
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // Fine Concentric Annual Growth Rings (50+ rings with natural wobble)
-  for (let r = 8; r < radius - 4; r += 4.5) {
-    const isMajor = Math.floor(r / 20) % 2 === 0;
-    const tone = Math.random() * 0.35 + 0.65;
-    ctx.strokeStyle = `rgba(120, 53, 15, ${isMajor ? 0.65 * tone : 0.38 * tone})`;
-    ctx.lineWidth = isMajor ? 2.5 : 1.2;
-
-    ctx.beginPath();
-    const points = 72;
-    for (let i = 0; i <= points; i++) {
-      const angle = (i / points) * Math.PI * 2;
-      const wobble = Math.sin(angle * 6 + r) * 2.2 + Math.cos(angle * 3) * 1.5;
-      const curR = r + wobble;
-      const x = cx + Math.cos(angle) * curR;
-      const y = cy + Math.sin(angle) * curR;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-    ctx.stroke();
-  }
-
-  // Radiating Split Checks / Cracks (Distinct features seen in the reference photo)
-  const crackAngles = [0.1, 0.45, 0.95, 1.4, 1.85, 2.3, 2.8, 3.4, 3.85, 4.3, 4.8, 5.3, 5.85];
-  crackAngles.forEach((ang) => {
-    ctx.strokeStyle = 'rgba(69, 26, 3, 0.85)';
-    ctx.lineWidth = 2.2 + Math.random() * 1.8;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-
-    let curR = 0;
-    const maxR = radius * (0.65 + Math.random() * 0.32);
-    while (curR < maxR) {
-      curR += 14;
-      const jitter = (Math.random() - 0.5) * 0.08;
-      const curAng = ang + jitter;
-      ctx.lineTo(cx + Math.cos(curAng) * curR, cy + Math.sin(curAng) * curR);
-    }
-    ctx.stroke();
-  });
-
-  // Center Pith Core Circle
-  ctx.beginPath();
-  ctx.arc(cx, cy, 18, 0, Math.PI * 2);
-  ctx.fillStyle = '#451a03';
-  ctx.fill();
-  ctx.strokeStyle = '#78350f';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Natural rough outer bark edge fringe
-  for (let a = 0; a < Math.PI * 2; a += 0.03) {
-    const rBark = radius + (Math.random() - 0.5) * 10;
-    ctx.fillStyle = Math.random() > 0.5 ? '#271003' : '#522307';
-    ctx.beginPath();
-    ctx.arc(cx + Math.cos(a) * rBark, cy + Math.sin(a) * rBark, Math.random() * 6 + 3, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  return texture;
-}
-
-// ─── Texture 3B: Realistic Timber Log Longitudinal Grain & Bark Texture ───
-function generateRealisticLogBarkTexture() {
-  const width = 1024;
-  const height = 512;
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext('2d');
-
-  // Base warm timber log tone with vertical gradient (light top highlight, deeper underside)
-  const baseGrad = ctx.createLinearGradient(0, 0, 0, height);
-  baseGrad.addColorStop(0.0, '#78350f');  // Upper bark edge
-  baseGrad.addColorStop(0.25, '#d97706'); // Warm honey sapwood crown
-  baseGrad.addColorStop(0.5, '#f59e0b');  // Light golden timber highlight
-  baseGrad.addColorStop(0.75, '#b45309'); // Warm amber mid-tone
-  baseGrad.addColorStop(1.0, '#451a03');  // Dark underside bark
-
-  ctx.fillStyle = baseGrad;
-  ctx.fillRect(0, 0, width, height);
-
-  // Horizontal longitudinal wood grain streaks running along length of the log
-  for (let y = 0; y < height; y += 3) {
-    const tone = Math.random() * 0.4 + 0.6;
-    ctx.strokeStyle = `rgba(${Math.floor(140 * tone)}, ${Math.floor(75 * tone)}, ${Math.floor(25 * tone)}, 0.45)`;
-    ctx.lineWidth = Math.random() * 3 + 1;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.bezierCurveTo(
-      width * 0.33, y + (Math.random() - 0.5) * 12,
-      width * 0.66, y + (Math.random() - 0.5) * 12,
-      width, y
-    );
-    ctx.stroke();
-  }
-
-  // Darker bark fissures and natural wood cracks along the log
-  for (let i = 0; i < 35; i++) {
-    const yStart = Math.random() * height;
-    const xStart = Math.random() * width * 0.6;
-    const len = Math.random() * 300 + 100;
-    ctx.strokeStyle = 'rgba(50, 20, 5, 0.75)';
-    ctx.lineWidth = Math.random() * 3.5 + 1.5;
-    ctx.beginPath();
-    ctx.moveTo(xStart, yStart);
-    ctx.lineTo(xStart + len, yStart + (Math.random() - 0.5) * 8);
-    ctx.stroke();
-  }
-
-  // Realistic wood knots and grain swirls (like in reference image)
-  const knots = [
-    { x: 320, y: 160, r: 24 },
-    { x: 580, y: 190, r: 30 },
-    { x: 780, y: 150, r: 20 },
-    { x: 420, y: 340, r: 26 }
-  ];
-
-  knots.forEach((k) => {
-    // Knot center
-    ctx.fillStyle = '#451a03';
-    ctx.beginPath();
-    ctx.ellipse(k.x, k.y, k.r * 0.7, k.r * 0.4, 0.1, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Surrounding grain flow lines looping around knot
-    for (let kr = k.r + 6; kr < k.r + 38; kr += 6) {
-      ctx.strokeStyle = 'rgba(120, 53, 15, 0.6)';
-      ctx.lineWidth = 1.6;
-      ctx.beginPath();
-      ctx.ellipse(k.x, k.y, kr * 1.3, kr * 0.55, 0.08, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-  });
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.ClampToEdgeWrapping;
-  return texture;
-}
-
-// ─── Texture 4: Deep Dark Green Foliage Leaf Texture ───
+// ─── Texture 3: Deep Dark Green Foliage Leaf Texture ───
 function generateDarkGreenLeafTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
@@ -324,22 +151,13 @@ function generateDarkGreenLeafTexture() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// 1. PART 1: Paper Model (Parchment Sheet of Paper)
+// 1. PART 1: Paper Model (Parchment Sheet of Paper on Stand)
 // ─────────────────────────────────────────────────────────────
 function PaperModel({ thickness = 1 }) {
   const paperMap = useMemo(() => generatePaperTexture(), []);
-  const meshRef = useRef();
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      const t = state.clock.getElapsedTime();
-      meshRef.current.position.y = Math.sin(t * 1.5) * 0.04;
-      meshRef.current.rotation.z = Math.sin(t * 1.2) * 0.02;
-    }
-  });
 
   return (
-    <group ref={meshRef} position={[0, 0, 0]} scale={[1 + thickness * 0.1, 1, 1]}>
+    <group position={[0, 0, 0]} scale={[1 + thickness * 0.1, 1, 1]}>
       {/* Front Face of Paper Sheet */}
       <mesh castShadow receiveShadow position={[0, 0, 0.01]}>
         <boxGeometry args={[1.55, 2.15, 0.03]} />
@@ -370,8 +188,6 @@ function PaperModel({ thickness = 1 }) {
   );
 }
 
-import RusticLogMesh from './RusticLogMesh';
-
 // ─────────────────────────────────────────────────────────────
 // 2. PART 2: Small Piece of Wood (High-Precision Rustic Wooden Log Timber)
 // ─────────────────────────────────────────────────────────────
@@ -384,17 +200,9 @@ function WoodPieceModel({ thickness = 1, viewMode = 'textured' }) {
 // ─────────────────────────────────────────────────────────────
 function PlantModel({ thickness = 1 }) {
   const leafMap = useMemo(() => generateDarkGreenLeafTexture(), []);
-  const plantRef = useRef();
-
-  useFrame((state) => {
-    if (plantRef.current) {
-      const t = state.clock.getElapsedTime();
-      plantRef.current.rotation.z = Math.sin(t * 1.4) * 0.02;
-    }
-  });
 
   return (
-    <group ref={plantRef} position={[0, -0.4, 0]} scale={[1 + thickness * 0.12, 1, 1 + thickness * 0.12]}>
+    <group position={[0, -0.4, 0]} scale={[1 + thickness * 0.12, 1, 1 + thickness * 0.12]}>
       {/* Terracotta Ceramic Pot */}
       <mesh position={[0, 0, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.62, 0.44, 0.85, 32]} />
@@ -450,8 +258,6 @@ function PlantModel({ thickness = 1 }) {
 function FullTreeModel({ thickness = 1 }) {
   const barkMap = useMemo(() => generateOakBarkTexture(), []);
   const leafMap = useMemo(() => generateDarkGreenLeafTexture(), []);
-  const treeGroupRef = useRef();
-  const foliageRef = useRef();
 
   const leafClusters = useMemo(() => {
     const clusterCenters = [
@@ -497,20 +303,12 @@ function FullTreeModel({ thickness = 1 }) {
     return cards;
   }, []);
 
-  useFrame((state) => {
-    if (foliageRef.current) {
-      const t = state.clock.getElapsedTime();
-      foliageRef.current.rotation.z = Math.sin(t * 1.1) * 0.012;
-      foliageRef.current.rotation.x = Math.cos(t * 0.8) * 0.008;
-    }
-  });
-
   const scaleX = 0.95 + thickness * 0.15;
   const scaleY = 1.0;
   const scaleZ = 0.95 + thickness * 0.15;
 
   return (
-    <group ref={treeGroupRef} position={[0, -1.35, 0]} scale={[scaleX, scaleY, scaleZ]}>
+    <group position={[0, -1.35, 0]} scale={[scaleX, scaleY, scaleZ]}>
       {/* Buttress Roots */}
       <mesh position={[-0.24, 0.15, 0.18]} rotation={[0.42, -0.6, -0.38]} castShadow>
         <cylinderGeometry args={[0.07, 0.16, 0.65, 16]} />
@@ -582,7 +380,7 @@ function FullTreeModel({ thickness = 1 }) {
       </mesh>
 
       {/* Foliage Clusters */}
-      <group ref={foliageRef}>
+      <group>
         {leafClusters.map((leaf, idx) => (
           <mesh
             key={idx}
