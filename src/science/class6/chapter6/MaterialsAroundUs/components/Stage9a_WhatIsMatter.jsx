@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle, CheckCircle2, Circle, Scale, Box, Wind, Droplets } from 'lucide-react';
+import AirExperiments3D from './AirExperiments3D';
 
 export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -186,15 +187,9 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
                             <div style={{ fontSize: '0.85rem', fontWeight: '800', color: 'var(--lesson-text)' }}>Important Fact:</div>
                             <div style={{ fontSize: '1.1rem', fontWeight: '900', color: 'var(--lesson-primary)' }}>1 m³ = 1000 L</div>
                          </div>
-                         
-                         <div style={{ flex: 1.5, background: 'var(--lesson-success-bg)', borderRadius: '12px', border: '1px solid var(--lesson-success-border)', padding: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <Wind size={24} color="var(--lesson-success)" style={{ flexShrink: 0 }} />
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                               <div style={{ fontSize: '0.85rem', fontWeight: '800', color: 'var(--lesson-success)' }}>Is air matter?</div>
-                               <div style={{ fontSize: '0.8rem', color: 'var(--lesson-text)', lineHeight: '1.2' }}>Air occupies space (inflates balloons) and has mass. <strong>Yes, air is matter!</strong></div>
-                            </div>
-                         </div>
                      </div>
+                     
+                     <AirExperiments3D />
                      
                   </motion.div>
                )}
