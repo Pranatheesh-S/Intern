@@ -93,14 +93,14 @@ export const ATTRACTIVE_PLACES = [
     category: 'mountains',
     rangeId: 'karakoram',
     lat: 35.88, lon: 76.51,
-    map3dX: 30.1, map3dY: 4.6,
+    map3dX: 39.8, map3dY: 9.0,
     alt: '8,611 m',
     type: 'World\'s 2nd Highest Peak',
     imageEmoji: '🏔️',
     realImage: '/mountains/k2.jpg',
-    imageCaption: 'The Savage Mountain — colossal pyramid of rock and ice in the Karakoram Range',
-    description: 'The second highest mountain on Earth. Known as the Savage Mountain for its steep and treacherous ice walls in the Karakoram Range.',
-    highlight: 'Steep pyramid of rock & ice; second only to Mt. Everest',
+    imageCaption: 'K2 — a huge mountain of rock and ice in the Karakoram Range',
+    description: 'K2 is the second tallest mountain in the whole world! It is very steep and covered with ice. It is part of the Karakoram Range in the far north.',
+    highlight: 'It is the 2nd tallest mountain on Earth, just after Mt. Everest!',
     labelOffsetX: 10, labelOffsetY: -8
   },
   {
@@ -110,14 +110,14 @@ export const ATTRACTIVE_PLACES = [
     category: 'mountains',
     rangeId: 'lesser_himalayas',
     lat: 32.24, lon: 77.19,
-    map3dX: 32.1, map3dY: 16.9,
+    map3dX: 41.5, map3dY: 19.1,
     alt: '2,050 m',
     type: 'Lesser Himalayan Valley',
     imageEmoji: '🌲',
     realImage: '/mountains/kullu_manali.jpg',
-    imageCaption: 'Beas River valley flanked by snow-clad Pir Panjal and Dhauladhar ranges',
-    description: 'Nestled along the Beas River between the Pir Panjal and Great Himalayan ranges, known for snow peaks, apple orchards, and pine forests.',
-    highlight: 'Gateway to Solang Valley and Rohtang Pass',
+    imageCaption: 'The beautiful Beas River valley with snowy mountains on both sides',
+    description: 'Kullu-Manali is a beautiful valley where the Beas River flows. It has tall snow-covered mountains, apple gardens, and pine trees all around.',
+    highlight: 'A famous hill station with snow, rivers, and apple orchards!',
     labelOffsetX: -130, labelOffsetY: -6
   },
   {
@@ -127,14 +127,99 @@ export const ATTRACTIVE_PLACES = [
     category: 'mountains',
     rangeId: 'greater_himalayas',
     lat: 30.37, lon: 79.97,
-    map3dX: 41.3, map3dY: 23.4,
+    map3dX: 48.6, map3dY: 24.4,
     alt: '7,816 m',
     type: 'Highest Peak Entirely in India',
     imageEmoji: '🏔️',
     realImage: '/mountains/nanda_devi.jpg',
-    imageCaption: 'The majestic twin summits of Nanda Devi surrounded by an impenetrable mountain ring',
-    description: 'A sacred, majestic peak surrounded by the Nanda Devi National Park and UNESCO Biosphere Reserve in Uttarakhand.',
-    highlight: 'Two-peaked mountain surrounded by a ring of high glaciers',
+    imageCaption: 'The tall twin peaks of Nanda Devi surrounded by mountains and glaciers',
+    description: 'Nanda Devi is the tallest mountain that is fully inside India! It is in Uttarakhand and is surrounded by a beautiful national park.',
+    highlight: 'The highest mountain peak that lies completely inside India!',
+    labelOffsetX: 10, labelOffsetY: 10
+  },
+  {
+    id: 'mount_everest',
+    name: 'Mount Everest (Sagarmatha)',
+    hindiName: 'माउंट एवरेस्ट (सगरमाथा)',
+    category: 'mountains',
+    rangeId: 'greater_himalayas',
+    lat: 27.98, lon: 86.92,
+    map3dX: 66.5, map3dY: 30.9,
+    alt: '8,848.86 m',
+    type: 'Highest Peak in the World',
+    imageEmoji: '🏔️',
+    realImage: '/mountains/mount_everest.jpg',
+    imageCaption: 'Mount Everest — the tallest mountain in the whole world!',
+    description: 'Mount Everest is the tallest mountain on Earth! It is 8,849 metres high. It sits on the border of Nepal and Tibet in the Great Himalayas.',
+    highlight: 'The tallest mountain in the world! It is part of the Great Himalayas (Himadri).',
+    labelOffsetX: 10, labelOffsetY: -6
+  },
+  {
+    id: 'nanga_parbat',
+    name: 'Nanga Parbat',
+    hindiName: 'नंगा परबत',
+    category: 'mountains',
+    rangeId: 'greater_himalayas',
+    lat: 35.23, lon: 74.58,
+    map3dX: 34.8, map3dY: 10.8,
+    alt: '8,126 m',
+    type: 'Western Anchor of Himalayas',
+    imageEmoji: '🏔️',
+    realImage: '/mountains/nanga_parbat.jpg',
+    imageCaption: 'Nanga Parbat — the giant mountain at the western end of the Himalayas.',
+    description: 'Nanga Parbat is the big mountain where the Himalayas begin in the west. The Indus River flows around it in a deep valley.',
+    highlight: 'It marks the starting point of the Himalayas in the west!',
+    labelOffsetX: -110, labelOffsetY: 10
+  },
+  {
+    id: 'namcha_barwa',
+    name: 'Namcha Barwa',
+    hindiName: 'नामचा बरवा',
+    category: 'mountains',
+    rangeId: 'greater_himalayas',
+    lat: 29.62, lon: 95.05,
+    map3dX: 87.3, map3dY: 26.3,
+    alt: '7,782 m',
+    type: 'Eastern Anchor of Himalayas',
+    imageEmoji: '🏔️',
+    realImage: '/mountains/namcha_barwa.jpg',
+    imageCaption: 'Namcha Barwa — where the Brahmaputra River takes a sharp turn.',
+    description: 'Namcha Barwa is the mountain where the Himalayas end in the east. The Brahmaputra River makes a big U-turn around this peak to enter India.',
+    highlight: 'The Brahmaputra River bends around this peak to flow into Arunachal Pradesh!',
+    labelOffsetX: -110, labelOffsetY: -6
+  },
+  {
+    id: 'dodabetta',
+    name: 'Dodabetta Peak',
+    hindiName: 'दोड्डाबेट्टा (नीलगिरि)',
+    category: 'mountains',
+    rangeId: 'western_ghats',
+    lat: 11.40, lon: 76.73,
+    map3dX: 40.3, map3dY: 77.1,
+    alt: '2,637 m',
+    type: 'Highest Peak in Nilgiris',
+    imageEmoji: '⛰️',
+    realImage: '/mountains/dodabetta.jpg',
+    imageCaption: 'Dodabetta — the tallest point in the Nilgiri (Blue Mountains) hills.',
+    description: 'Dodabetta is the tallest peak in the Nilgiri Hills. This is the place where the Western Ghats and Eastern Ghats come close together.',
+    highlight: 'The Kurinji flowers here bloom only once in 12 years!',
+    labelOffsetX: 10, labelOffsetY: 10
+  },
+  {
+    id: 'mahendragiri',
+    name: 'Mahendragiri Peak',
+    hindiName: 'महेंद्रगिरि',
+    category: 'mountains',
+    rangeId: 'eastern_ghats',
+    lat: 18.96, lon: 84.36,
+    map3dX: 59.9, map3dY: 56.0,
+    alt: '1,501 m',
+    type: 'Major Peak of Eastern Ghats',
+    imageEmoji: '⛰️',
+    realImage: '/mountains/mahendragiri.jpg',
+    imageCaption: 'Mahendragiri — a tall peak in the Eastern Ghats of Odisha.',
+    description: 'Mahendragiri is an important peak in the Eastern Ghats. The Eastern Ghats are not one long line like the Western Ghats — they are broken into many parts.',
+    highlight: 'The Eastern Ghats are broken and lower than the Western Ghats!',
     labelOffsetX: 10, labelOffsetY: 10
   },
   {
@@ -144,14 +229,14 @@ export const ATTRACTIVE_PLACES = [
     category: 'mountains',
     rangeId: 'greater_himalayas',
     lat: 27.70, lon: 88.14,
-    map3dX: 68.6, map3dY: 33.0,
+    map3dX: 69.6, map3dY: 31.7,
     alt: '8,586 m',
     type: '3rd Highest Peak on Earth',
     imageEmoji: '🏔️',
     realImage: '/mountains/kanchenjunga.jpg',
-    imageCaption: 'The Five Treasures of Snow glowing in golden sunrise over Sikkim rhododendron hills',
-    description: 'The highest peak in India and 3rd highest in the world, located on the border between Sikkim and Nepal.',
-    highlight: 'Name means "Five Treasures of Snow" in Tibetan',
+    imageCaption: 'Kanchenjunga shining golden at sunrise, seen from Sikkim',
+    description: 'Kanchenjunga is the tallest mountain in India and the 3rd tallest in the world! It is on the border of Sikkim and Nepal.',
+    highlight: 'Its name means "Five Treasures of Snow" because it has five peaks!',
     labelOffsetX: 10, labelOffsetY: -6
   },
   {
@@ -161,14 +246,14 @@ export const ATTRACTIVE_PLACES = [
     category: 'mountains',
     rangeId: 'aravalli',
     lat: 24.65, lon: 72.78,
-    map3dX: 16.5, map3dY: 42.2,
+    map3dX: 30.2, map3dY: 40.2,
     alt: '1,722 m',
     type: 'Highest Peak of Aravalli Range',
     imageEmoji: '⛰️',
     realImage: '/mountains/guru_shikhar.jpg',
-    imageCaption: 'Granite tor peak of Guru Shikhar crowned by the Mount Abu Infrared Observatory',
-    description: 'The highest summit in Rajasthan and the entire Aravalli mountain system, offering views of the surrounding desert plateau.',
-    highlight: 'Located at Mount Abu, the only hill station in Rajasthan',
+    imageCaption: 'Guru Shikhar — the tallest point of the Aravalli mountains in Rajasthan',
+    description: 'Guru Shikhar is the tallest peak of the Aravalli Range. It is at Mount Abu, which is the only hill station in the desert state of Rajasthan!',
+    highlight: 'Mount Abu is the only hill station in Rajasthan!',
     labelOffsetX: -145, labelOffsetY: 4
   },
   {
@@ -178,14 +263,14 @@ export const ATTRACTIVE_PLACES = [
     category: 'mountains',
     rangeId: 'satpura',
     lat: 22.45, lon: 78.37,
-    map3dX: 35.1, map3dY: 50.0,
+    map3dX: 44.5, map3dY: 46.3,
     alt: '1,350 m',
     type: 'Highest Peak of Satpura Range',
     imageEmoji: '🌄',
     realImage: '/mountains/dhupgarh.jpg',
-    imageCaption: 'Spectacular sunset over the jagged sandstone cliffs and sal forests of Satpura',
-    description: 'Dhupgarh is the highest point in Madhya Pradesh, located in the lush Satpura Biosphere Reserve with cascading waterfalls.',
-    highlight: 'Famous for spectacular sunset views across the central Indian plateau',
+    imageCaption: 'A beautiful sunset over the green Satpura hills and forests',
+    description: 'Dhupgarh is the tallest point in Madhya Pradesh. It is in the Satpura Range and is surrounded by thick forests and waterfalls.',
+    highlight: 'You can see amazing sunsets from the top of Dhupgarh!',
     labelOffsetX: 10, labelOffsetY: 8
   },
   {
@@ -195,14 +280,14 @@ export const ATTRACTIVE_PLACES = [
     category: 'mountains',
     rangeId: 'western_ghats',
     lat: 10.17, lon: 77.06,
-    map3dX: 29.6, map3dY: 91.3,
+    map3dX: 41.2, map3dY: 80.5,
     alt: '2,695 m',
     type: 'Highest Peak in South India',
     imageEmoji: '🏔️',
     realImage: '/mountains/anamudi.jpg',
-    imageCaption: 'The Everest of South India rising above the emerald tea carpets of Munnar',
-    description: 'The "Everest of South India", located in Eravikulam National Park, Kerala. Home to Nilgiri Tahr and rolling emerald tea plantations.',
-    highlight: 'Class 6 NCERT: Highest mountain summit in Peninsular India',
+    imageCaption: 'Anamudi — the tallest mountain in South India, surrounded by green tea gardens',
+    description: 'Anamudi is the tallest mountain in all of South India! It is in Kerala and is surrounded by beautiful tea gardens and wild animals like the Nilgiri Tahr.',
+    highlight: 'The tallest mountain peak in the whole of South India!',
     labelOffsetX: 10, labelOffsetY: 6
   },
   {
@@ -212,14 +297,14 @@ export const ATTRACTIVE_PLACES = [
     category: 'mountains',
     rangeId: 'purvanchal',
     lat: 25.74, lon: 95.03,
-    map3dX: 91.7, map3dY: 40.1,
+    map3dX: 87.2, map3dY: 37.2,
     alt: '3,841 m',
     type: 'Highest Peak of Purvanchal',
     imageEmoji: '🏔️',
     realImage: '/mountains/saramati.jpg',
-    imageCaption: 'The snow-capped summit of Mount Saramati on the Nagaland-Myanmar Purvanchal border',
-    description: 'Rising on the Nagaland-Myanmar border in the Naga Hills, permanently draped in clouds and winter snow.',
-    highlight: 'Highest summit in the Purvanchal (North-Eastern) fold belt',
+    imageCaption: 'Mount Saramati — the tallest peak in north-east India, always covered in clouds',
+    description: 'Mount Saramati is the tallest mountain in the Purvanchal hills of north-east India. It is on the border of Nagaland and Myanmar, and is often covered in clouds and snow.',
+    highlight: 'The tallest peak in the north-eastern hills of India!',
     labelOffsetX: 10, labelOffsetY: -6
   },
 
@@ -230,55 +315,89 @@ export const ATTRACTIVE_PLACES = [
     hindiName: 'विशाल गंगा का मैदान',
     category: 'plains',
     rangeId: 'northern_plains',
-    lat: 25.31, lon: 82.97,
+    lat: 26.00, lon: 81.00,
     map3dX: 50.9, map3dY: 40.7,
     alt: '75 - 200 m',
     type: 'Vast Alluvial River Plain',
     imageEmoji: '🌾',
     realImage: '/mountains/gangetic_plain.jpg',
-    imageCaption: 'Vast fertile alluvial paddy fields and sunset reflections across the Ganga River basin',
-    description: 'A vast, level and extremely fertile plain formed by the deposition of rich alluvial silt brought down by the Ganga, Yamuna, and Himalayan rivers.',
-    highlight: 'Class 6 NCERT: Most fertile, level, and densely populated agricultural plain in India',
+    imageCaption: 'The beautiful green fields and rivers of the Gangetic Plain',
+    description: 'This is a huge, flat, and very fertile land. It is made by rich soil brought down by rivers like the Ganga and Yamuna. Many people live and farm here!',
+    highlight: 'The most fertile and crowded farming area in all of India!',
     labelOffsetX: 10, labelOffsetY: 6
   },
   {
     id: 'punjab_plain',
-    name: 'Punjab-Haryana Alluvial Plain',
+    name: 'Punjab-Haryana Plain',
     hindiName: 'पंजाब-हरियाणा का मैदान',
     category: 'plains',
     rangeId: 'northern_plains',
     lat: 30.73, lon: 76.77,
     map3dX: 30.5, map3dY: 22.0,
     alt: '215 m',
-    type: 'Granary of India (Five Rivers)',
+    type: 'Granary of India',
     imageEmoji: '🚜',
     realImage: '/mountains/punjab_plain.jpg',
-    imageCaption: 'Endless golden wheat and mustard fields irrigated by perennial Himalayan canals',
-    description: 'Formed by the Indus river system (Ravi, Beas, Sutlej), this fertile plain is known as the breadbasket of India.',
-    highlight: 'Formed by the Indus river tributaries; India\'s primary wheat granary',
+    imageCaption: 'Golden wheat fields shining bright in the sun',
+    description: 'This fertile land is formed by five rivers. It grows so much wheat and food that it is called the "breadbasket of India"!',
+    highlight: 'It grows most of the wheat for India!',
     labelOffsetX: -140, labelOffsetY: -6
   },
   {
     id: 'brahmaputra_plain',
     name: 'Brahmaputra Valley Plain',
-    hindiName: 'ब्रह्मपुत्र घाटी का मैदान (असम)',
+    hindiName: 'ब्रह्मपुत्र घाटी का मैदान',
     category: 'plains',
     rangeId: 'northern_plains',
-    lat: 26.20, lon: 92.93,
+    lat: 26.50, lon: 93.00,
     map3dX: 84.7, map3dY: 38.4,
     alt: '100 m',
-    type: 'Lush North-Eastern Alluvial Plain',
+    type: 'Lush Green River Valley',
     imageEmoji: '🌱',
     realImage: '/mountains/brahmaputra_plain.jpg',
-    imageCaption: 'Lush green tea gardens and fertile lowlands along the sweeping Brahmaputra river',
-    description: 'A low-lying alluvial corridor in Assam flanked by the Himalayas and Meghalaya plateau, known for world-famous Assam tea.',
-    highlight: 'Alluvial valley famous for world-famous Assam tea estates',
+    imageCaption: 'Beautiful green tea gardens next to the huge Brahmaputra river',
+    description: 'A low flat valley in Assam where the big Brahmaputra river flows. This place is famous all over the world for its tasty Assam tea!',
+    highlight: 'This valley makes the world-famous Assam tea!',
     labelOffsetX: 10, labelOffsetY: 6
+  },
+  {
+    id: 'rajasthan_plains',
+    name: 'Rajasthan Plains',
+    hindiName: 'राजस्थान का मैदान',
+    category: 'plains',
+    rangeId: 'northern_plains',
+    lat: 26.23, lon: 73.02,
+    map3dX: 0, map3dY: 0,
+    alt: '150 - 300 m',
+    type: 'Semi-Arid Desert Plains',
+    imageEmoji: '🐪',
+    realImage: '/mountains/thar_desert.jpg',
+    imageCaption: 'Dry, sandy plains where camels walk across the scrubland',
+    description: 'These are dry, sandy plains near the Great Indian Desert. Not much rain falls here, so only tough plants and bushes can grow.',
+    highlight: 'These dry plains slowly turn into the big Thar Desert!',
+    labelOffsetX: -120, labelOffsetY: 10
+  },
+  {
+    id: 'gujarat_plains',
+    name: 'Gujarat Plains',
+    hindiName: 'गुजरात का मैदान',
+    category: 'plains',
+    rangeId: 'coastal_plains',
+    lat: 22.30, lon: 73.18,
+    map3dX: 0, map3dY: 0,
+    alt: '10 - 50 m',
+    type: 'Fertile Coastal Plains',
+    imageEmoji: '🌿',
+    realImage: '/mountains/punjab_plain.jpg',
+    imageCaption: 'Flat farming lands in Gujarat growing lots of cotton',
+    description: 'A flat and fertile land near the ocean in Gujarat. The soil here is very good for growing crops like cotton and groundnuts.',
+    highlight: 'The dark soil here is perfect for growing cotton!',
+    labelOffsetX: -120, labelOffsetY: 0
   },
   {
     id: 'konkan_coast',
     name: 'Konkan Coastal Plain',
-    hindiName: 'कोंकण तटीय मैदान (महाराष्ट्र-गोवा)',
+    hindiName: 'कोंकण तटीय मैदान',
     category: 'plains',
     rangeId: 'coastal_plains',
     lat: 16.50, lon: 73.30,
@@ -287,43 +406,60 @@ export const ATTRACTIVE_PLACES = [
     type: 'Western Coastal Strip',
     imageEmoji: '🥥',
     realImage: '/mountains/konkan_coast.jpg',
-    imageCaption: 'Golden palm-fringed coastlines between the Western Ghats and Arabian Sea',
-    description: 'A rugged and picturesque western coastal plain between the Sahyadri mountains and the Arabian Sea, rich in mango and coconut orchards.',
-    highlight: 'Narrow coastal plain famous for Alphonso mangoes and pristine beaches',
+    imageCaption: 'A lovely beach with tall coconut trees and hills in the back',
+    description: 'A beautiful narrow strip of land between the Western Ghats and the Arabian Sea. It is full of sweet mangoes, coconuts, and pretty beaches.',
+    highlight: 'Famous for tasty Alphonso mangoes and clean beaches!',
     labelOffsetX: -130, labelOffsetY: -6
   },
   {
     id: 'malabar_coast',
-    name: 'Malabar Coast & Backwaters',
-    hindiName: 'मालाबार तट एवं बैकवाटर्स (केरल)',
+    name: 'Malabar Coast',
+    hindiName: 'मालाबार तट (केरल)',
     category: 'plains',
     rangeId: 'coastal_plains',
     lat: 9.93, lon: 76.26,
     map3dX: 26.9, map3dY: 92.1,
     alt: '0 - 30 m',
-    type: 'South-Western Lagoon Coast',
+    type: 'Backwaters & Lagoons',
     imageEmoji: '🛶',
     realImage: '/mountains/malabar_coast.jpg',
-    imageCaption: 'Network of tranquil backwaters and interconnected lagoons along the Arabian Sea',
-    description: 'Famous for its interconnected coastal lagoons (Kayals), spice gardens, and backwater networks along Kerala.',
-    highlight: 'Class 6 NCERT: Famous for coastal lagoons (Kayals) and spice trade',
-    labelOffsetX: -140, labelOffsetY: 6
+    imageCaption: 'Peaceful green backwaters with traditional wooden houseboats',
+    description: 'This southern coast in Kerala is famous for its backwaters — a beautiful maze of lakes and canals. People also grow lots of spices here.',
+    highlight: 'It has interconnected lakes called Kayals and big spice gardens!',
+    labelOffsetX: -130, labelOffsetY: 6
   },
   {
     id: 'coromandel_coast',
     name: 'Coromandel Coastal Plain',
-    hindiName: 'कोरोमंडल तटीय मैदान (तमिलनाडु)',
+    hindiName: 'कोरोमंडल तटीय मैदान',
     category: 'plains',
     rangeId: 'coastal_plains',
-    lat: 11.94, lon: 79.80,
+    lat: 13.00, lon: 80.25,
     map3dX: 39.0, map3dY: 85.6,
     alt: '0 - 40 m',
     type: 'Eastern Coastal Plain',
     imageEmoji: '🏖️',
     realImage: '/mountains/coromandel_coast.jpg',
-    imageCaption: 'Traditional fishing catamarans and sandy shores along the Coromandel Coast (Tamil Nadu)',
-    description: 'A broad eastern coastal plain along the Bay of Bengal in Tamil Nadu, known for its sandy beaches and retreating winter northeast monsoon.',
-    highlight: 'Receives retreating northeast monsoon rains in October-November; broad eastern coastal plain',
+    imageCaption: 'Wide sandy beaches on the east coast with fishing boats',
+    description: 'A wide coastal plain in Tamil Nadu next to the Bay of Bengal. Unlike other places, this coast gets its heavy rains in the winter months!',
+    highlight: 'This wide coast gets most of its rain in November and December!',
+    labelOffsetX: 10, labelOffsetY: 6
+  },
+  {
+    id: 'northern_circars',
+    name: 'Northern Circars Plain',
+    hindiName: 'उत्तरी सरकार तट',
+    category: 'plains',
+    rangeId: 'coastal_plains',
+    lat: 17.70, lon: 83.30,
+    map3dX: 0, map3dY: 0,
+    alt: '0 - 60 m',
+    type: 'Rich River Delta Plain',
+    imageEmoji: '🌊',
+    realImage: '/mountains/coromandel_coast.jpg',
+    imageCaption: 'Green river deltas where big rivers meet the salty ocean',
+    description: 'The northern part of the east coast between the Mahanadi and Krishna rivers. The rivers make wide, muddy deltas here that are great for farming.',
+    highlight: 'Big rivers create huge, rich farming deltas here before entering the sea!',
     labelOffsetX: 10, labelOffsetY: 6
   },
 
@@ -339,10 +475,10 @@ export const ATTRACTIVE_PLACES = [
     alt: '80 m',
     type: 'Sacred Lifeline of India',
     imageEmoji: '🌊',
-    realImage: '/mountains/ganga_holy_river.jpg',
-    imageCaption: 'The sacred river Ganga flowing past the ancient river ghats and sunrise waters at Varanasi',
-    description: 'The longest river in India (2,525 km), originating as Bhagirathi at Gaumukh glacier in the Himalayas, flowing east into the Bay of Bengal.',
-    highlight: 'Class 6 NCERT: Originates as Bhagirathi from Gangotri glacier; joins Alaknanda at Devprayag to form Ganga; 2,525 km long',
+    realImage: '/mountains/river_ganga_varanasi_new.jpg',
+    imageCaption: 'The sacred Ganga river at Varanasi with ancient ghats, boats and flower offerings',
+    description: 'The longest river in India (2,525 km). It starts at the Gaumukh glacier in the Himalayas and flows east into the Bay of Bengal.',
+    highlight: 'Starts from Gangotri glacier and joins Alaknanda to form the mighty Ganga!',
     labelOffsetX: 10, labelOffsetY: -6
   },
   {
@@ -356,10 +492,10 @@ export const ATTRACTIVE_PLACES = [
     alt: '210 m',
     type: 'Largest Tributary of the Ganga',
     imageEmoji: '🌊',
-    realImage: '/mountains/river_yamuna.jpg',
-    imageCaption: 'Serene Yamuna river flowing peacefully through the northern plains during golden hour',
-    description: 'Originates from the Yamunotri glacier in the Lower Himalayas, flowing parallel to the Ganga before meeting it at the Triveni Sangam in Prayagraj.',
-    highlight: 'Class 6 NCERT: Originates from Yamunotri glacier; major right-bank tributary joining Ganga at Prayagraj (Allahabad)',
+    realImage: '/mountains/river_yamuna_new.jpg',
+    imageCaption: 'The serene Yamuna river flowing past ancient ghats with morning mist',
+    description: 'It starts from the Yamunotri glacier in the Himalayas. It flows next to the Ganga until they meet at Prayagraj.',
+    highlight: 'A major river that joins the Ganga at the famous Triveni Sangam!',
     labelOffsetX: 10, labelOffsetY: -6
   },
   {
@@ -373,10 +509,10 @@ export const ATTRACTIVE_PLACES = [
     alt: '3,200 m',
     type: 'Trans-Himalayan River System',
     imageEmoji: '🏞️',
-    realImage: '/mountains/river_indus.jpg',
-    imageCaption: 'Turquoise glacial waters of the Indus carving through steep rocky Ladakh canyons',
-    description: 'One of the greatest rivers of Asia (3,180 km), originating near Lake Mansarovar in Tibet and flowing through Ladakh between the Ladakh and Zanskar mountain ranges.',
-    highlight: 'Class 6 NCERT: Originates in Tibet near Mansarovar; cradle of the Indus Valley Civilisation',
+    realImage: '/mountains/river_indus_new.jpg',
+    imageCaption: 'Stunning turquoise Indus river cutting through barren Ladakh mountain canyon',
+    description: 'One of the greatest rivers in Asia. It starts in Tibet and flows through the high mountains of Ladakh.',
+    highlight: 'The cradle of the ancient Indus Valley Civilisation!',
     labelOffsetX: -110, labelOffsetY: -6
   },
   {
@@ -390,10 +526,10 @@ export const ATTRACTIVE_PLACES = [
     alt: '55 m',
     type: 'Mighty Red River of North-East',
     imageEmoji: '🚢',
-    realImage: '/mountains/river_brahmaputra.jpg',
-    imageCaption: 'Vast expanse of the braided Brahmaputra river channel during monsoon season in Assam',
-    description: 'Known as Tsangpo in Tibet, enters India through Arunachal Pradesh as Dihang, flows through Assam valley and forms Majuli, the world\'s largest river island.',
-    highlight: 'Class 6 NCERT: Known as Tsangpo in Tibet; creates Majuli island; joins Ganga in Bangladesh to form the world\'s largest delta',
+    realImage: '/mountains/river_brahmaputra_new.jpg',
+    imageCaption: 'Aerial view of the mighty braided Brahmaputra river in Assam with green tea hills',
+    description: 'It enters India through Arunachal Pradesh and flows through Assam. It creates Majuli, the world\'s largest river island.',
+    highlight: 'Joins the Ganga to form the world\'s largest river delta!',
     labelOffsetX: 10, labelOffsetY: -6
   },
   {
@@ -408,9 +544,9 @@ export const ATTRACTIVE_PLACES = [
     type: 'World\'s Largest River Delta',
     imageEmoji: '🐅',
     realImage: '/mountains/sundarbans.jpg',
-    imageCaption: 'Tidal mangrove channels and coastal islands of the vast Sundarbans delta',
-    description: 'Formed by the confluence of the Ganga, Brahmaputra, and Meghna rivers entering the Bay of Bengal. Named after the Sundari mangrove tree.',
-    highlight: 'Class 6 NCERT: The Ganga and Brahmaputra form the largest delta in the world, the Sundarbans delta, triangular in shape',
+    imageCaption: 'Tidal mangrove channels and coastal islands of the Sundarbans',
+    description: 'Formed where the Ganga and Brahmaputra rivers meet the sea. It is named after the beautiful Sundari mangrove trees.',
+    highlight: 'A huge triangular delta famous for its mangrove forests and Royal Bengal Tigers!',
     labelOffsetX: -140, labelOffsetY: 6
   },
   {
@@ -425,9 +561,9 @@ export const ATTRACTIVE_PLACES = [
     type: 'West-Flowing Rift Valley River',
     imageEmoji: '🌊',
     realImage: '/mountains/marble_rocks.jpg',
-    imageCaption: 'Narmada River cutting a deep 3 km gorge through towering pure white marble cliffs at Bhedaghat',
-    description: 'Originates at Amarkantak plateau in Madhya Pradesh and flows west in a tectonic rift valley between the Vindhya and Satpura ranges, plunging at Dhuandhar Falls.',
-    highlight: 'Class 6 NCERT: The Narmada is a west-flowing river that flows through a rift valley into the Arabian Sea',
+    imageCaption: 'Narmada River cutting a deep gorge through pure white marble cliffs',
+    description: 'It starts in Madhya Pradesh and flows west through a deep valley between two mountain ranges. It creates beautiful waterfalls.',
+    highlight: 'A major west-flowing river that drains into the Arabian Sea!',
     labelOffsetX: 10, labelOffsetY: -8
   },
   {
@@ -442,9 +578,9 @@ export const ATTRACTIVE_PLACES = [
     type: 'West-Flowing Peninsular River',
     imageEmoji: '🌊',
     realImage: '/mountains/river_tapi.jpg',
-    imageCaption: 'Tapi River meandering through the Satpura valley towards the Gulf of Khambhat',
-    description: 'Originates in the Satpura range in Betul district, Madhya Pradesh, flowing parallel south of Narmada into the Arabian Sea near Surat.',
-    highlight: 'Class 6 NCERT: Rivers Narmada and Tapi are the two major west-flowing rivers in India that drain into the Arabian Sea',
+    imageCaption: 'Tapi River meandering through the valley towards the sea',
+    description: 'It flows parallel to the Narmada river towards the west, emptying into the Arabian Sea near Surat.',
+    highlight: 'One of the two major west-flowing rivers in India!',
     labelOffsetX: -110, labelOffsetY: 6
   },
   {
@@ -456,12 +592,12 @@ export const ATTRACTIVE_PLACES = [
     lat: 20.46, lon: 85.88,
     map3dX: 60.0, map3dY: 52.0,
     alt: '30 m',
-    type: 'Major East-Flowing River (858 km)',
+    type: 'Major East-Flowing River',
     imageEmoji: '🌊',
     realImage: '/mountains/river_mahanadi.jpg',
-    imageCaption: 'Wide, shimmering expanse of the Mahanadi River flanked by dense green Odisha hills',
-    description: 'Originates in the highlands of Chhattisgarh, flowing 858 km east through Odisha to form a rich agricultural delta on the Bay of Bengal. Home to the historic Hirakud Dam.',
-    highlight: 'Class 6 NCERT: Major east-flowing peninsular river draining into the Bay of Bengal, forming a fertile delta',
+    imageCaption: 'Wide, shimmering expanse of the Mahanadi River in Odisha',
+    description: 'It flows east through Odisha to form a rich farming delta on the Bay of Bengal. The famous Hirakud Dam is built here.',
+    highlight: 'A very important river draining into the Bay of Bengal!',
     labelOffsetX: 10, labelOffsetY: -6
   },
   {
@@ -473,12 +609,12 @@ export const ATTRACTIVE_PLACES = [
     lat: 19.99, lon: 73.78,
     map3dX: 19.4, map3dY: 58.0,
     alt: '250 m',
-    type: 'Longest Peninsular River (1,465 km)',
+    type: 'Longest Peninsular River',
     imageEmoji: '🌊',
-    realImage: '/mountains/river_godavari.jpg',
-    imageCaption: 'The wide flowing waters of the Godavari river flowing across the Deccan Plateau',
-    description: 'Originates at Trimbakeshwar in the Western Ghats (Nashik, Maharashtra) and flows 1,465 km east across the Deccan Plateau into the Bay of Bengal.',
-    highlight: 'Class 6 NCERT: Godavari is the longest river in Peninsular India (1,465 km), famously called the Dakshin Ganga',
+    realImage: '/mountains/river_godavari_new.jpg',
+    imageCaption: 'The wide flowing Godavari river with fishing boats and palm-lined banks',
+    description: 'It is the longest river in southern India. It starts in Maharashtra and flows east into the Bay of Bengal.',
+    highlight: 'Also known as the Dakshin Ganga because of its large size and importance!',
     labelOffsetX: 10, labelOffsetY: 6
   },
   {
@@ -493,9 +629,9 @@ export const ATTRACTIVE_PLACES = [
     type: '2nd Longest Peninsular River',
     imageEmoji: '🌊',
     realImage: '/mountains/river_krishna.jpg',
-    imageCaption: 'Krishna River winding through dramatic lush green Deccan canyons and agricultural basins',
-    description: 'Originates near Mahabaleshwar in the Western Ghats of Maharashtra, flowing 1,400 km through Karnataka, Telangana, and Andhra Pradesh to the Bay of Bengal.',
-    highlight: 'Class 6 NCERT: Major east-flowing river fed by Koyna, Tungabhadra, and Bhima tributaries, draining into the Bay of Bengal',
+    imageCaption: 'Krishna River winding through green valleys and farming basins',
+    description: 'It starts near Mahabaleshwar in the Western Ghats and flows through many states before reaching the sea.',
+    highlight: 'A major east-flowing river fed by important tributaries like Tungabhadra!',
     labelOffsetX: 10, labelOffsetY: 6
   },
   {
@@ -507,12 +643,131 @@ export const ATTRACTIVE_PLACES = [
     lat: 10.79, lon: 79.13,
     map3dX: 34.0, map3dY: 82.0,
     alt: '15 m',
-    type: 'Sacred River of Southern India (800 km)',
+    type: 'Sacred River of Southern India',
     imageEmoji: '🌾',
     realImage: '/mountains/river_kaveri.jpg',
-    imageCaption: 'Kaveri River flowing past lush emerald green paddy fields and palm groves in Tamil Nadu',
-    description: 'Originates at Talakaveri in the Brahmagiri Range (Kodagu, Karnataka), flowing 800 km southeast across Karnataka and Tamil Nadu to create the fertile Rice Bowl delta.',
-    highlight: 'Class 6 NCERT: Originates in the Western Ghats; perennial water flow throughout the year due to both SW and NE monsoon rains',
+    imageCaption: 'Kaveri River flowing past lush emerald green paddy fields',
+    description: 'It flows across Karnataka and Tamil Nadu. It creates a very fertile delta known as the Rice Bowl of the south.',
+    highlight: 'A beautiful river that has water all year round from monsoon rains!',
+    labelOffsetX: 10, labelOffsetY: 6
+  },
+  {
+    id: 'river_sutlej',
+    name: 'Sutlej River',
+    hindiName: 'सतलज नदी (पंजाब)',
+    category: 'rivers',
+    rangeId: 'river_basins',
+    lat: 31.33, lon: 76.43,
+    map3dX: 35.0, map3dY: 18.0,
+    alt: '400 m',
+    type: 'Major Indus Tributary',
+    imageEmoji: '🌊',
+    realImage: '/mountains/river_sutlej_new.jpg',
+    imageCaption: 'The fast-flowing Sutlej river cutting through a dramatic Himalayan gorge',
+    description: 'The longest of the five rivers that flow through Punjab. It provides water for the famous Bhakra Nangal Dam.',
+    highlight: 'An ancient river that helps turn the Punjab plains into rich farm land!',
+    labelOffsetX: -100, labelOffsetY: -6
+  },
+  {
+    id: 'river_chenab',
+    name: 'Chenab River',
+    hindiName: 'चिनाब नदी (जम्मू और कश्मीर)',
+    category: 'rivers',
+    rangeId: 'river_basins',
+    lat: 33.15, lon: 74.92,
+    map3dX: 34.0, map3dY: 16.0,
+    alt: '1,200 m',
+    type: 'Himalayan River',
+    imageEmoji: '🏔️',
+    realImage: '/mountains/river_chenab_new.jpg',
+    imageCaption: 'The Chenab river winding through lush green Kashmir valley with snow peaks',
+    description: 'Formed by the joining of two smaller rivers in the high Himalayas. It flows through Jammu and Kashmir before entering Punjab.',
+    highlight: 'A huge, powerful river famous for its massive bridges and deep gorges!',
+    labelOffsetX: -110, labelOffsetY: -6
+  },
+  {
+    id: 'river_luni',
+    name: 'Luni River',
+    hindiName: 'लूनी नदी (राजस्थान)',
+    category: 'rivers',
+    rangeId: 'river_basins',
+    lat: 25.75, lon: 72.10,
+    map3dX: 31.0, map3dY: 29.0,
+    alt: '150 m',
+    type: 'Desert River',
+    imageEmoji: '🐪',
+    realImage: '/mountains/river_luni_new.jpg',
+    imageCaption: 'The Luni river meandering through the golden Thar Desert at sunset',
+    description: 'The largest river in the Thar desert. It flows during the rainy season and slowly disappears into the salty Rann of Kutch.',
+    highlight: 'A unique inland river that never reaches the open ocean!',
+    labelOffsetX: -110, labelOffsetY: 6
+  },
+  {
+    id: 'river_chambal',
+    name: 'Chambal River',
+    hindiName: 'चंबल नदी',
+    category: 'rivers',
+    rangeId: 'river_basins',
+    lat: 25.85, lon: 76.55,
+    map3dX: 41.0, map3dY: 29.0,
+    alt: '250 m',
+    type: 'Cleanest Major River',
+    imageEmoji: '🐊',
+    realImage: '/mountains/river_chambal_new.jpg',
+    imageCaption: 'The Chambal river flowing through deep rocky ravines and badlands',
+    description: 'A major tributary of the Yamuna river. It is famous for its clean water, deep ravines, and as a home for crocodiles.',
+    highlight: 'Known for its rugged badlands and incredible wildlife sanctuaries!',
+    labelOffsetX: 10, labelOffsetY: -6
+  },
+  {
+    id: 'river_kosi',
+    name: 'Kosi River',
+    hindiName: 'कोसी नदी (बिहार का शोक)',
+    category: 'rivers',
+    rangeId: 'river_basins',
+    lat: 25.42, lon: 87.25,
+    map3dX: 61.0, map3dY: 25.0,
+    alt: '50 m',
+    type: 'Himalayan Tributary',
+    imageEmoji: '🌊',
+    realImage: '/mountains/river_kosi_new.jpg',
+    imageCaption: 'The braided Kosi river flooding across Bihar\'s green floodplains',
+    description: 'A powerful river flowing down from Nepal into Bihar. It brings a lot of water and sand from the mountains.',
+    highlight: 'Known as the "Sorrow of Bihar" because it changes its path and causes floods.',
+    labelOffsetX: 10, labelOffsetY: -6
+  },
+  {
+    id: 'river_tungabhadra',
+    name: 'Tungabhadra River',
+    hindiName: 'तुंगभद्रा नदी',
+    category: 'rivers',
+    rangeId: 'river_basins',
+    lat: 15.88, lon: 78.16,
+    map3dX: 43.0, map3dY: 47.0,
+    alt: '350 m',
+    type: 'Peninsular Tributary',
+    imageEmoji: '🛕',
+    realImage: '/mountains/river_tungabhadra_new.jpg',
+    imageCaption: 'The Tungabhadra river flowing past massive boulders and temples at Hampi',
+    description: 'A major river in southern India that joins the Krishna river. It flows through rocky landscapes and historical cities.',
+    highlight: 'The magnificent ruins of the Vijayanagara Empire at Hampi sit on its banks!',
+    labelOffsetX: 10, labelOffsetY: -6
+  },
+  {
+    id: 'river_vaigai',
+    name: 'Vaigai River',
+    hindiName: 'वईगई नदी (मदुरै)',
+    category: 'rivers',
+    rangeId: 'river_basins',
+    lat: 9.85, lon: 78.98,
+    map3dX: 45.0, map3dY: 57.0,
+    alt: '20 m',
+    type: 'Southern River',
+    imageEmoji: '🌸',
+    realImage: '/mountains/river_vaigai_new.jpg',
+    imageCaption: 'The Vaigai river flowing through Madurai with Meenakshi temple towers',
+    description: 'A river in Tamil Nadu that flows from the Western Ghats to the sea. It passes through the ancient temple city of Madurai.',
+    highlight: 'A river that has supported Tamil civilization for thousands of years!',
     labelOffsetX: 10, labelOffsetY: 6
   },
   {
@@ -524,12 +779,12 @@ export const ATTRACTIVE_PLACES = [
     lat: 14.23, lon: 74.81,
     map3dX: 22.4, map3dY: 77.5,
     alt: '480 m',
-    type: '2nd Highest Plunge Waterfall in India',
+    type: '2nd Highest Plunge Waterfall',
     imageEmoji: '🌊',
     realImage: '/mountains/jog_falls.jpg',
-    imageCaption: 'The dramatic 253 m plunge of Raja, Roarer, Rocket, and Rani cascades in lush Western Ghats',
-    description: 'The Sharavathi River drops 253 meters in four distinct cascades (Raja, Roarer, Rocket, and Rani) down the Western Ghats escarpment.',
-    highlight: 'Class 6 NCERT: Spectacular 253 m waterfall created where west-flowing peninsular rivers plunge down the steep Western Ghats',
+    imageCaption: 'The dramatic 253 m plunge of cascades in the lush Western Ghats',
+    description: 'The Sharavathi River drops steeply down the Western Ghats mountains, creating a huge and beautiful waterfall.',
+    highlight: 'A spectacular 253 m waterfall where the river plunges off a steep cliff!',
     labelOffsetX: -110, labelOffsetY: -8
   },
 
@@ -541,11 +796,11 @@ export const ATTRACTIVE_PLACES = [
     category: 'deserts',
     rangeId: 'arid_regions',
     lat: 26.91, lon: 70.90,
-    map3dX: 10.3, map3dY: 34.4,
+    map3dX: 26.8, map3dY: 36.6, // Relative to map bounds
     alt: '225 m',
     type: 'Great Sand Dune Desert',
     imageEmoji: '🐪',
-    realImage: '/mountains/thar_desert.jpg',
+    realImage: '/mountains/thar_desert_new.jpg',
     imageCaption: 'Golden shifting sand dunes (barchans) under blazing desert sun in Jaisalmer',
     description: 'A vast arid landscape in western Rajasthan characterized by shifting sand dunes, sparse thorny vegetation, and extreme diurnal temperatures.',
     highlight: 'Class 6 NCERT: "In the western part of India lies the Great Indian Desert. It is a dry, hot and sandy stretch of land."',
@@ -558,11 +813,11 @@ export const ATTRACTIVE_PLACES = [
     category: 'deserts',
     rangeId: 'arid_regions',
     lat: 23.83, lon: 70.21,
-    map3dX: 7.7, map3dY: 44.8,
+    map3dX: 25.4, map3dY: 45.4, // Relative to map bounds
     alt: '10 m',
     type: 'Endless White Salt Desert',
     imageEmoji: '🧂',
-    realImage: '/mountains/rann_of_kutch.jpg',
+    realImage: '/mountains/rann_of_kutch_new.jpg',
     imageCaption: 'Glistening white salt crystal crust stretching to the horizon under moonlit skies',
     description: 'One of the largest seasonal salt marsh deserts in the world, turning into an endless pure white salt crust after the monsoon waters evaporate.',
     highlight: 'World\'s largest seasonal salt desert & sanctuary of the Indian Wild Ass',
@@ -575,14 +830,31 @@ export const ATTRACTIVE_PLACES = [
     category: 'deserts',
     rangeId: 'arid_regions',
     lat: 34.15, lon: 77.58,
-    map3dX: 33.6, map3dY: 10.5,
+    map3dX: 34.1, map3dY: 16.1, // Relative to map bounds
     alt: '3,500 m',
     type: 'High-Altitude Rain-Shadow Desert',
     imageEmoji: '❄️',
-    realImage: '/mountains/cold_desert_ladakh.jpg',
-    imageCaption: 'Barren snow-dusted high altitude mountains and azure high lakes under crystal clear skies',
+    realImage: '/mountains/cold_desert_ladakh_new.jpg',
+    imageCaption: 'Barren rocky mountains, a deep blue high-altitude sky, and a crystal clear mountain river carving through the Ladakh valley',
     description: 'A high-altitude arid plateau lying in the rain-shadow of the Great Himalayas, experiencing freezing winter temperatures and minimal rainfall.',
     highlight: 'High-altitude cold desert cut off from monsoon by the Himalayas',
+    labelOffsetX: 10, labelOffsetY: 6
+  },
+  {
+    id: 'cold_desert_spiti',
+    name: 'Spiti Valley Cold Desert',
+    hindiName: 'स्पीति घाटी शीत मरुस्थल',
+    category: 'deserts',
+    rangeId: 'arid_regions',
+    lat: 32.22, lon: 78.03,
+    map3dX: 37.1, map3dY: 22.0, // Relative to map bounds
+    alt: '3,800 m',
+    type: 'High-Altitude Cold Desert',
+    imageEmoji: '🏔️',
+    realImage: '/mountains/spiti_valley_new.jpg',
+    imageCaption: 'Stunning barren valleys of Spiti surrounded by snow-capped Himalayan peaks',
+    description: 'Located in Himachal Pradesh, this is another major cold desert region of India, cut off from the main monsoon path by the towering Pir Panjal ranges.',
+    highlight: 'One of the most rugged and remote cold deserts in the world!',
     labelOffsetX: 10, labelOffsetY: 6
   },
 
@@ -594,11 +866,11 @@ export const ATTRACTIVE_PLACES = [
     category: 'forests',
     rangeId: 'biosphere_forests',
     lat: 29.50, lon: 79.00,
-    map3dX: 31.7, map3dY: 22.3,
+    map3dX: 36.1, map3dY: 25.7,
     alt: '400 m - 1,200 m',
     type: 'Sub-Himalayan Sal & Mixed Broadleaf Forest',
     imageEmoji: '🌲',
-    realImage: '/mountains/kullu_manali.jpg',
+    realImage: '/mountains/himalayan_tropical_forest.jpg',
     imageCaption: 'Dense moist Sal trees and mixed subtropical foothill forests along the Shiwalik and Tarai belt',
     description: 'Lush sub-Himalayan foothill forests stretching along the Tarai and Bhabhar belts, rich in tall Sal timber trees, bamboo thickets, wild elephants, and Bengal tigers.',
     highlight: 'Class 6 NCERT: Sub-Himalayan foothills feature rich natural vegetation and dense Sal forests',
@@ -611,11 +883,11 @@ export const ATTRACTIVE_PLACES = [
     category: 'forests',
     rangeId: 'biosphere_forests',
     lat: 26.80, lon: 81.50,
-    map3dX: 48.8, map3dY: 32.0,
+    map3dX: 51.8, map3dY: 35.9,
     alt: '120 m',
     type: 'Alluvial Riverine & Tropical Dry Forest',
     imageEmoji: '🌾',
-    realImage: '/mountains/gangetic_plain.jpg',
+    realImage: '/mountains/indo_gangetic_woodland.jpg',
     imageCaption: 'Riverine woodlands and agricultural plains interspersed with native Shisham, Neem, and Peepal groves',
     description: 'Extensive alluvial forest and riverine woodlands of the northern fertile plains, characterized by Neem, Shisham, Babul, and sacred Peepal trees flanking the Ganga river basin.',
     highlight: 'Densely populated agricultural heartland interspersed with native riverine forest groves',
@@ -628,11 +900,11 @@ export const ATTRACTIVE_PLACES = [
     category: 'forests',
     rangeId: 'biosphere_forests',
     lat: 22.33, lon: 80.60,
-    map3dX: 36.6, map3dY: 47.8,
+    map3dX: 39.1, map3dY: 50.6,
     alt: '600 m',
     type: 'Tropical Moist & Dry Deciduous Teak Woodland',
     imageEmoji: '🐅',
-    realImage: '/mountains/dhupgarh.jpg',
+    realImage: '/mountains/central_indian_deciduous.jpg',
     imageCaption: 'Sunlight filtering through dense teak and sal canopies in the rolling Satpura-Maikal tiger highlands',
     description: 'The vast heartland of India\'s forest cover across Madhya Pradesh and Chhattisgarh, dominated by valuable Teak and Sal trees, forming prime habitats for tigers, leopards, and gaur.',
     highlight: 'Class 6 NCERT: Tropical Deciduous forests (Monsoon forests) shed their leaves during the dry summer season',
@@ -645,7 +917,7 @@ export const ATTRACTIVE_PLACES = [
     category: 'forests',
     rangeId: 'biosphere_forests',
     lat: 14.50, lon: 74.80,
-    map3dX: 25.4, map3dY: 63.0,
+    map3dX: 28.8, map3dY: 63.0,
     alt: '1,100 m',
     type: 'Tropical Evergreen & Semi-Evergreen Rainforest',
     imageEmoji: '🌴',
@@ -662,11 +934,11 @@ export const ATTRACTIVE_PLACES = [
     category: 'forests',
     rangeId: 'biosphere_forests',
     lat: 11.40, lon: 76.70,
-    map3dX: 33.7, map3dY: 79.2,
+    map3dX: 32.2, map3dY: 82.1,
     alt: '1,800 m',
     type: 'Montane Wet Temperate Shola-Grassland Mosaic',
     imageEmoji: '🌺',
-    realImage: '/mountains/ooty.jpg',
+    realImage: '/mountains/south_indian_shola.jpg',
     imageCaption: 'Misty montane Shola forest patches nestled amidst undulating high-altitude Nilgiri grasslands',
     description: 'Unique high-altitude stunted evergreen Shola forests and moist deciduous reserves spanning the Nilgiri Biosphere, Bandipur, Mudumalai, and Silent Valley.',
     highlight: 'Class 6 NCERT: Nilgiri Hills where Western & Eastern Ghats meet, famous for Shola forest biomes and Kurinji blooms',
@@ -679,7 +951,7 @@ export const ATTRACTIVE_PLACES = [
     category: 'forests',
     rangeId: 'biosphere_forests',
     lat: 26.57, lon: 93.17,
-    map3dX: 77.6, map3dY: 36.1,
+    map3dX: 75.2, map3dY: 38.9,
     alt: '65 m - 1,500 m',
     type: 'Subtropical Wet Hill & Swamp Jungle',
     imageEmoji: '🦏',
@@ -696,7 +968,7 @@ export const ATTRACTIVE_PLACES = [
     category: 'forests',
     rangeId: 'biosphere_forests',
     lat: 21.94, lon: 88.90,
-    map3dX: 71.3, map3dY: 48.1,
+    map3dX: 68.4, map3dY: 46.9,
     alt: '5 m',
     type: 'Tidal Halophytic Mangrove Ecosystem',
     imageEmoji: '🐅',
@@ -713,7 +985,7 @@ export const ATTRACTIVE_PLACES = [
     category: 'forests',
     rangeId: 'biosphere_forests',
     lat: 21.12, lon: 70.82,
-    map3dX: 14.2, map3dY: 49.1,
+    map3dX: 20.5, map3dY: 48.4,
     alt: '150 m',
     type: 'Dry Deciduous Teak & Thorn Scrub',
     imageEmoji: '🦁',
@@ -1351,80 +1623,22 @@ export default function IndiaMountainsMapExplorer({ onClose, initialCategory = '
                   </div>
                 </div>
 
-                {/* 2. SUB-PAGE TABS SELECTOR (1: PHOTO & DETAILS | 2: PHYSICAL REGION GEOGRAPHY) */}
-                <div style={{
-                  display: 'flex',
-                  background: '#F1F5F9',
-                  borderRadius: '10px',
-                  padding: '3px',
-                  border: '1.5px solid #E2E8F0',
-                  flexShrink: 0
-                }}>
-                  <button
-                    onClick={() => setDetailPage(1)}
-                    style={{
-                      flex: 1,
-                      border: 'none',
-                      background: detailPage === 1 ? '#D97706' : 'transparent',
-                      color: detailPage === 1 ? '#FFF' : '#334155',
-                      padding: '7px 0',
-                      borderRadius: '8px',
-                      fontSize: '12.5px',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      transition: 'all 0.15s',
-                      boxShadow: detailPage === 1 ? '0 2px 6px rgba(217, 119, 6, 0.3)' : 'none'
-                    }}
-                  >
-                    <span>📸 Photo & Feature Details</span>
-                  </button>
 
-                  <button
-                    onClick={() => setDetailPage(2)}
-                    style={{
-                      flex: 1,
-                      border: 'none',
-                      background: detailPage === 2 ? '#059669' : 'transparent',
-                      color: detailPage === 2 ? '#FFF' : '#334155',
-                      padding: '7px 0',
-                      borderRadius: '8px',
-                      fontSize: '12.5px',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                      transition: 'all 0.15s',
-                      boxShadow: detailPage === 2 ? '0 2px 6px rgba(5, 150, 105, 0.3)' : 'none'
-                    }}
-                  >
-                    <span>🧭 Physical Region & NCERT</span>
-                  </button>
-                </div>
-
-                {/* 3. PAGINATED BODY CONTENT (Full-Height Immersive Display) */}
+                {/* BODY CONTENT (Full-Height Immersive Display) */}
                 <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  {detailPage === 1 ? (
-                    /* PAGE 1: ENLARGED REALISTIC FIELD PHOTO & RICH STATS */
+                    {/* PAGE 1: ENLARGED REALISTIC FIELD PHOTO & RICH STATS */}
                     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', gap: '8px' }}>
 
                       {/* ENLARGED REALISTIC FEATURE IMAGE BANNER */}
                       <div
-                        onClick={() => setShowPhotoModal(true)}
                         style={{
                           position: 'relative',
                           width: '100%',
-                          height: 'clamp(170px, 24vh, 220px)',
+                          height: 'clamp(200px, 32vh, 280px)',
                           borderRadius: '12px',
                           overflow: 'hidden',
                           border: '2px solid #F2DFBC',
                           boxShadow: '0 6px 18px rgba(0,0,0,0.12)',
-                          cursor: 'pointer',
                           flexShrink: 0
                         }}
                       >
@@ -1471,23 +1685,7 @@ export default function IndiaMountainsMapExplorer({ onClose, initialCategory = '
                           📸 REALISTIC FIELD PHOTO
                         </div>
 
-                        <div style={{
-                          position: 'absolute',
-                          bottom: '10px',
-                          right: '10px',
-                          background: 'rgba(0, 0, 0, 0.85)',
-                          color: '#FFF',
-                          fontSize: '10.5px',
-                          fontWeight: 800,
-                          padding: '4px 10px',
-                          borderRadius: '6px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '5px',
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.4)'
-                        }}>
-                          <Maximize2 size={12} /> Full Photo
-                        </div>
+
 
                         <div style={{
                           position: 'absolute',
@@ -1516,7 +1714,7 @@ export default function IndiaMountainsMapExplorer({ onClose, initialCategory = '
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
                         <div style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '10px', padding: '8px 12px' }}>
                           <div style={{ fontSize: '10px', fontWeight: 800, color: '#92400E', textTransform: 'uppercase' }}>
-                            🏔️ Altitude / Elevation
+                            🏔️ Height
                           </div>
                           <div style={{ fontSize: '13.5px', fontWeight: 900, color: '#451A03', marginTop: '2px' }}>
                             {selectedPlace.alt}
@@ -1534,7 +1732,7 @@ export default function IndiaMountainsMapExplorer({ onClose, initialCategory = '
 
                         <div style={{ background: '#FFF9F0', border: '1.5px solid #F2DFBC', borderRadius: '10px', padding: '8px 12px' }}>
                           <div style={{ fontSize: '10px', fontWeight: 800, color: '#92400E', textTransform: 'uppercase' }}>
-                            🗺️ Physical Region
+                            🗺️ Region
                           </div>
                           <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#451A03', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {selectedRange.name.split('(')[0]}
@@ -1561,64 +1759,6 @@ export default function IndiaMountainsMapExplorer({ onClose, initialCategory = '
                         </div>
                       </div>
                     </div>
-                  ) : (
-                    /* PAGE 2: PHYSICAL REGION DEEP-DIVE & NCERT CORE FACTS (Space Covering with Large Typography) */
-                    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', gap: '10px' }}>
-                      {/* NCERT 6th Grade Textbook Core Fact */}
-                      <div style={{
-                        background: 'linear-gradient(140deg, #FEF3C7 0%, #FDE68A 100%)',
-                        border: '2px solid #F59E0B',
-                        borderRadius: '12px',
-                        padding: '12px 14px',
-                        boxShadow: '0 2px 8px rgba(245, 158, 11, 0.15)'
-                      }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 900, color: '#92400E', textTransform: 'uppercase' }}>
-                          <Sparkles size={14} color="#D97706" /> NCERT Class 6 Core Concept:
-                        </div>
-                        <div style={{ fontSize: '13.5px', color: '#78350F', fontWeight: 700, marginTop: '5px', lineHeight: 1.45, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          {selectedRange.ncertFact}
-                        </div>
-                      </div>
-
-                      {/* States Covered */}
-                      <div style={{ background: '#F8FAFC', border: '1.5px solid #E2E8F0', borderRadius: '10px', padding: '10px 12px', flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', marginBottom: '8px' }}>
-                          🗺️ States Spanned by {selectedRange.name.split('(')[0]}:
-                        </div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                          {selectedRange.states.map(st => (
-                            <span key={st} style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', padding: '5px 10px', borderRadius: '7px', fontSize: '12px', fontWeight: 700, color: '#1E293B', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                              {st}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Geological Characteristics */}
-                      <div style={{ background: '#F0FDF4', border: '1.5px solid #BBF7D0', borderRadius: '10px', padding: '10px 12px', flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#166534', textTransform: 'uppercase', marginBottom: '8px' }}>
-                          ⛰️ Key Characteristics:
-                        </div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                          {selectedRange.features.map(f => (
-                            <span key={f} style={{ background: '#FFFFFF', border: '1.5px solid #86EFAC', padding: '5px 10px', borderRadius: '7px', fontSize: '12px', fontWeight: 700, color: '#166534', boxShadow: '0 1px 3px rgba(22,163,74,0.08)' }}>
-                              ✓ {f}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Did You Know? */}
-                      <div style={{ background: '#EFF6FF', border: '1.5px solid #BFDBFE', borderRadius: '10px', padding: '10px 12px' }}>
-                        <div style={{ fontSize: '10.5px', fontWeight: 900, color: '#1E40AF', textTransform: 'uppercase' }}>
-                          💡 Did You Know?
-                        </div>
-                        <div style={{ fontSize: '12.5px', color: '#1E3A8A', fontWeight: 600, marginTop: '3px', lineHeight: 1.4, textAlign: 'justify', textJustify: 'inter-word' }}>
-                          {selectedRange.didYouKnow || selectedPlace.highlight}
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* 4. BOTTOM ACTION BAR */}
@@ -1698,92 +1838,7 @@ export default function IndiaMountainsMapExplorer({ onClose, initialCategory = '
 
       </div>
 
-      {/* FULLSCREEN REALISTIC MOUNTAIN PHOTO MODAL */}
-      {showPhotoModal && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 100000,
-          background: 'rgba(0, 0, 0, 0.92)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px'
-        }}>
-          <div style={{
-            position: 'relative',
-            maxWidth: '900px',
-            width: '100%',
-            maxHeight: '85vh',
-            background: '#1E293B',
-            borderRadius: '16px',
-            overflow: 'hidden',
-            boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <div style={{
-              height: '46px',
-              background: '#0F172A',
-              padding: '0 16px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              color: '#FFF',
-              borderBottom: '1px solid rgba(255,255,255,0.1)'
-            }}>
-              <div style={{ fontSize: '14px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span>{selectedPlace.imageEmoji}</span> {selectedPlace.name} — Realistic Field Photograph
-                <span style={{ fontSize: '10px', background: '#D97706', padding: '2px 6px', borderRadius: '4px' }}>
-                  {selectedPlace.alt}
-                </span>
-              </div>
-              <button
-                onClick={() => setShowPhotoModal(false)}
-                style={{
-                  background: 'rgba(255,255,255,0.15)',
-                  border: 'none',
-                  color: '#FFF',
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '50%',
-                  display: 'grid',
-                  placeItems: 'center',
-                  cursor: 'pointer'
-                }}
-              >
-                <X size={16} />
-              </button>
-            </div>
 
-            <div style={{ flex: 1, minHeight: 0, background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img
-                src={selectedPlace.realImage}
-                alt={selectedPlace.name}
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '65vh',
-                  objectFit: 'contain'
-                }}
-              />
-            </div>
-
-            <div style={{
-              background: '#0F172A',
-              padding: '10px 16px',
-              color: '#CBD5E1',
-              fontSize: '11.5px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <div>{selectedPlace.imageCaption || selectedPlace.highlight}</div>
-              <div style={{ color: '#F59E0B', fontWeight: 800 }}>NCERT Physical Geography Atlas</div>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   );

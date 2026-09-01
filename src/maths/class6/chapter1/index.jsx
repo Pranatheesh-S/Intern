@@ -131,7 +131,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
               <directionalLight position={[-6, -4, -4]} intensity={1.3} color="#ffffff" />
               <pointLight position={[0, 6, 6]} intensity={1.5} color="#ffffff" />
 
-              <group scale={0.65}>
+              <group scale={1.15}>
               {activeShapeActivity === 1 && (
                 <Table3Polygons3D
                   polygon={POLYGONS_DATA[polygonIdx || 0] || POLYGONS_DATA[0]}
@@ -197,7 +197,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
           <ErrorBoundary>
             <Canvas camera={{ position: [0, 0.8, 4.2], fov: 45 }}>
               <ambientLight intensity={2.0} />
-              <group scale={0.65}>
+              <group scale={1.15}>
               {currentSlide === 1 && <CalendarDesk3D selectedCenter={labSelectedCenter} />}
               {currentSlide === 2 && <MarketProduce3D kgPotatoes={labKgPotatoes} kgTomatoes={labKgTomatoes} checkoutStep={checkoutStep} onCheckoutComplete={() => setCheckoutStep(0)} />}
               {currentSlide === 3 && <BotanicalFlower3D flowerKey={labSelectedFlower} />}
@@ -216,7 +216,7 @@ export default function Class6MathsChapter1({ onBackToDashboard }) {
           <ErrorBoundary>
             <Canvas camera={{ position: [0, 1.2, 4.2], fov: 45 }}>
               <ambientLight intensity={1.8} />
-              <group scale={0.65}>
+              <group scale={1.1}>
               <QuizPhotorealisticLab3D
                 activeQuestionId={activeQuizQuestionId}
                 isSubmitted={isQuizSubmitted}
