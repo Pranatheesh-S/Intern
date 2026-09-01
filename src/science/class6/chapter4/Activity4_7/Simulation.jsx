@@ -160,122 +160,102 @@ const getMaterialWidth = (type, thickness) => {
 };
 
 // 3D WebGL Material Barrier Visual Renderer
-const MaterialBarrierVisual = ({ type, thickness = 1 }) => {
+const MaterialBarrierVisual = ({ type, stage = 1, thickness = 1 }) => {
   const width = getMaterialWidth(type, thickness);
   const height = BARRIER_HEIGHT;
-  return <Barrier3DCanvas type={type} thickness={thickness} width={width} height={height} />;
+  return <Barrier3DCanvas type={type} stage={stage} thickness={thickness} width={width} height={height} />;
+};
+
+const STAGE_CONFIG = {
+  wood: {
+    categoryLabel: 'Wood Types:',
+    stages: [
+      { stage: 1, label: '1. Paper', fullName: 'Paper Sheet (Wood Cellulose)', icon: '📄' },
+      { stage: 2, label: '2. Wood Log', fullName: 'Rustic Timber Log (Wood Piece)', icon: '🪵' },
+      { stage: 3, label: '3. Plant', fullName: 'Sprouting Potted Plant (Sapling)', icon: '🌱' },
+      { stage: 4, label: '4. Tree', fullName: 'Living Oak Tree (Full Tree)', icon: '🌳' }
+    ]
+  },
+  plastic: {
+    categoryLabel: 'Bottle Types:',
+    stages: [
+      { stage: 1, label: '1. 200mL', fullName: '200 mL Pocket Water Bottle', icon: '🧴' },
+      { stage: 2, label: '2. 500mL', fullName: '500 mL Spring Water Bottle', icon: '🧴' },
+      { stage: 3, label: '3. 1 Litre', fullName: '1 Litre Sports Water Bottle', icon: '🍶' },
+      { stage: 4, label: '4. 20 Litre', fullName: '20 Litre Water Canister Jug', icon: '🛢️' }
+    ]
+  },
+  glass: {
+    categoryLabel: 'Glass Types:',
+    stages: [
+      { stage: 1, label: '1. Small Glass', fullName: 'Small Shot Glass Tumbler', icon: '🥃' },
+      { stage: 2, label: '2. Big Glass', fullName: 'Big Highball Glass with Ice', icon: '🥛' },
+      { stage: 3, label: '3. Glass Bowl', fullName: 'Curved Pyrex Glass Bowl', icon: '🥣' },
+      { stage: 4, label: '4. Container', fullName: 'Glass Storage Container Jar', icon: '🫙' }
+    ]
+  },
+  cardboard: {
+    categoryLabel: 'Cardboard Types:',
+    stages: [
+      { stage: 1, label: '1. Small Box', fullName: 'Small Gift Carton Box', icon: '📦' },
+      { stage: 2, label: '2. Sheet', fullName: 'Single-Wall Cardboard Sheet', icon: '📄' },
+      { stage: 3, label: '3. 3 Layers', fullName: '3 Layers Cardboard Sheet', icon: '📚' },
+      { stage: 4, label: '4. Shipping Box', fullName: 'Large Shipping Cardboard Box', icon: '📦' }
+    ]
+  }
 };
 
 const MATERIALS = [
-  { id: 'wood', name: 'Living Oak Tree', materialName: 'Wood (Natural Oak)', icon: '🌳', desc: 'Natural organic tree barrier' },
-  { id: 'plastic', name: 'PET Plastic Bottle', materialName: 'Plastic (PET Polymer)', icon: '🧴', desc: 'Molded beverage bottle' },
-  { id: 'glass', name: 'Crystal Glass Tumbler', materialName: 'Glass (Crystal Silicate)', icon: '🥛', desc: 'Heavy-base glass vessel' },
-  { id: 'cardboard', name: 'Corrugated Shipping Box', materialName: 'Cardboard (Kraft Fiber)', icon: '📦', desc: 'Heavy-duty carton box' }
+  { id: 'wood', name: 'Wood & Plant (4 Stages)', materialName: 'Paper ➔ Wood Log ➔ Plant ➔ Tree', icon: '🌳', desc: 'Paper, Wood Log, Plant, and Tree' },
+  { id: 'plastic', name: 'PET Plastic Bottle (4 Sizes)', materialName: '200mL ➔ 500mL ➔ 1L ➔ 20L Can', icon: '🧴', desc: 'From pocket bottle to 20L water can' },
+  { id: 'glass', name: 'Crystal Glass (4 Vessels)', materialName: 'Small Glass ➔ Big Glass ➔ Bowl ➔ Jar', icon: '🥛', desc: 'Small glass, big tumbler, bowl, and jar' },
+  { id: 'cardboard', name: 'Cardboard (4 Types)', materialName: 'Small Box ➔ Sheet ➔ 3 Layers ➔ Carton', icon: '📦', desc: 'Small box, sheets, triple-layer, and carton' }
 ];
-
-const ACTION_POPUP_DATA = {
-  1: {
-    step: 1,
-    title: "Action 1: Select a Barrier Object",
-    badge: "Step 1 of 5",
-    icon: "🌳",
-    instruction: "Choose any material on the left panel (Living Oak Tree, PET Bottle, Crystal Glass, or Cardboard Box). It will slide directly into the center testing zone!",
-    actionPrompt: "Click an object card on the left panel",
-    btnLabel: "Got it! Selecting Object ➔"
-  },
-  2: {
-    step: 2,
-    title: "Action 2: Drag the Bar Magnet Closer",
-    badge: "Step 2 of 5",
-    icon: "🧲",
-    instruction: "Grab and drag the Bar Magnet on the left toward the central object barrier to see if magnetic field lines pass through it.",
-    actionPrompt: "Drag the magnet toward the center",
-    btnLabel: "Got it! Dragging Magnet ➔"
-  },
-  3: {
-    step: 3,
-    title: "Action 3: Observe & Flip Poles",
-    badge: "Step 3 of 5",
-    icon: "🔄",
-    instruction: "Notice the compass needle deflected! Now click 'Flip Magnet' (or double-click the magnet) to test reverse magnetic poles (N ↔ S).",
-    actionPrompt: "Click 'Flip Magnet' to invert deflection",
-    btnLabel: "Got it! Flipping Poles ➔"
-  },
-  4: {
-    step: 4,
-    title: "Action 4: Adjust Barrier Thickness",
-    badge: "Step 4 of 5",
-    icon: "📏",
-    instruction: "Try sliding the 'Barrier Thickness' slider (1 to 5) to observe how the object scales in 3D while the compass automatically adjusts safe clearance.",
-    actionPrompt: "Move the thickness slider",
-    btnLabel: "Got it! Adjusting Thickness ➔"
-  },
-  5: {
-    step: 5,
-    title: "Action 5: Test Remaining Objects",
-    badge: "Step 5 of 5",
-    icon: "📦",
-    instruction: "Great! Now click 'Next Object ➔' to test the other 3 materials. Once all 4 are tested, you'll review the key scientific takeaway and advance to the Concept Check!",
-    actionPrompt: "Click 'Next Object' to continue testing",
-    btnLabel: "Got it! Testing Next Object ➔"
-  }
-};
 
 const COMPASS_SIZE = 280;
 const COMPASS_RADIUS = 140;
 const MIN_OBJECT_COMPASS_GAP = 55;
 const MIN_MAGNET_GAP = 30;
 
+// Exact needle deflection angles matching user reference images:
+// - Stage 1 (Image 1): Level 1 Maximum Deflection (Red tip at 258° / Blue tip at 78°) -> Angle -102°
+// - Stage 2 (Image 2): Level 2 High Deflection (Red tip at 236° / Blue tip at 56°) -> Angle -124°
+// - Stage 3 (Image 3): Level 3 Moderate Deflection (Red tip at 215° / Blue tip at 35°) -> Angle -145°
+// - Stage 4 (Image 4): Level 4 Subtle Deflection (Red tip at 195° / Blue tip at 15°) -> Angle -165°
+const STAGE_DEFLECTIONS = {
+  1: { angle: -102, label: 'Level 1: Max Deflection', fieldPower: '95%' },
+  2: { angle: -124, label: 'Level 2: High Deflection', fieldPower: '80%' },
+  3: { angle: -145, label: 'Level 3: Moderate Deflection', fieldPower: '60%' },
+  4: { angle: -165, label: 'Level 4: Subtle Deflection', fieldPower: '35%' }
+};
+
 export default function Simulation({ onComplete, onNext }) {
   const [selectedMaterialIndex, setSelectedMaterialIndex] = useState(0);
+  const [materialStages, setMaterialStages] = useState({
+    wood: 1,
+    plastic: 2,
+    glass: 2,
+    cardboard: 4
+  });
   const [workspaceSize, setWorkspaceSize] = useState({ width: 840, height: 560 });
-  const [magnetX, setMagnetX] = useState(135);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isTesting, setIsTesting] = useState(false);
-  const [needleRotation, setNeedleRotation] = useState(0);
-  const [feedback, setFeedback] = useState(null);
+  const [feedback, setFeedback] = useState({
+    type: 'success',
+    text: `✨ Magnetic field passes directly through Paper Sheet! Needle deflected to Level 1!`
+  });
   const [thickness, setThickness] = useState(1);
   const [observations, setObservations] = useState({
-    wood: null,
+    wood: 'deflects',
     cardboard: null,
     plastic: null,
     glass: null
   });
-  const [showTakeawayModal, setShowTakeawayModal] = useState(false);
-  const [currentActionStep, setCurrentActionStep] = useState(1);
-  const [showActionModal, setShowActionModal] = useState(true);
 
   const workspaceContainerRef = useRef(null);
-  const actionTimeoutRef = useRef(null);
-  const takeawayTimeoutRef = useRef(null);
 
-  const activeMaterialObj = MATERIALS[selectedMaterialIndex];
-  const activeMaterial = activeMaterialObj ? activeMaterialObj.id : 'wood';
-
-  // Helper to trigger the next action popup with a clean 2-second delay
-  const triggerNextActionStep = (nextStep, delay = 2000) => {
-    setCurrentActionStep(nextStep);
-    if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
-    actionTimeoutRef.current = setTimeout(() => {
-      setShowActionModal(true);
-    }, delay);
-  };
-
-  // Helper to trigger the takeaway conclusion popup with a 2-second delay
-  const triggerTakeawayModal = (delay = 2000) => {
-    if (takeawayTimeoutRef.current) clearTimeout(takeawayTimeoutRef.current);
-    takeawayTimeoutRef.current = setTimeout(() => {
-      setShowTakeawayModal(true);
-    }, delay);
-  };
-
-  // Cleanup timeouts on unmount
-  useEffect(() => {
-    return () => {
-      if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
-      if (takeawayTimeoutRef.current) clearTimeout(takeawayTimeoutRef.current);
-    };
-  }, []);
+  const activeMaterialObj = MATERIALS[selectedMaterialIndex] || MATERIALS[0];
+  const activeMaterial = activeMaterialObj.id;
+  const currentStage = materialStages[activeMaterial] || 1;
 
   // Measure dynamic workspace dimensions to ensure 100% perfect vertical centering
   useEffect(() => {
@@ -300,159 +280,72 @@ export default function Simulation({ onComplete, onNext }) {
 
   // Geometry calculations
   const matWidth = getMaterialWidth(activeMaterial, thickness);
-  const obstacleHalfWidth = activeMaterial === 'wood' ? (42 + thickness * 5) : activeMaterial === 'cardboard' ? (48 + thickness * 6) : (38 + thickness * 5);
-  const barrierRightEdge = centerX + obstacleHalfWidth;
-  const barrierLeftEdge = centerX - obstacleHalfWidth;
 
-  // Compass dynamic placement with auto gap
-  const targetRightCompassX = workspaceSize.width - COMPASS_RADIUS - 35;
-  const dynamicCompassX = Math.max(barrierRightEdge + MIN_OBJECT_COMPASS_GAP + COMPASS_RADIUS, targetRightCompassX);
+  // Completely fixed, stationary compass position on the right side
+  const compassX = Math.max(500, workspaceSize.width - COMPASS_RADIUS - 35);
 
-  // Maximum Magnet Approach X (allows dragging right up close to the tree barrier)
-  const maxMagnetX = Math.min(centerX - obstacleHalfWidth - 15 - 105, 270);
+  // Completely fixed, stationary magnet position on the left side (Non-draggable)
+  const magnetX = 145;
 
-  const getNeedleRotation = (mX, mY, cX, cY, flipped) => {
-    const magnetTipX = mX + 105; // Right pole tip of magnet facing compass
-    const distToCompass = Math.max(60, cX - magnetTipX);
-
-    // Normal resting needle is at 0 degrees.
-    // As the magnet approaches the non-magnetic tree barrier, the field penetrates through it,
-    // vigorously deflecting the compass needle!
-    const maxDeflection = flipped ? -72 : 72;
-    
-    // Proximity factor: 0 when far (dist > 580), smoothly scaling to 1.0 when close to barrier
-    const proximity = Math.max(0, Math.min(1, (580 - distToCompass) / 320));
-    const smoothFactor = Math.sin((proximity * Math.PI) / 2); // Smooth sinusoidal ease-in-out
-    
-    return maxDeflection * smoothFactor;
-  };
-
-  // Update needle angle on state changes
-  useEffect(() => {
-    setNeedleRotation(getNeedleRotation(magnetX, centerY, dynamicCompassX, centerY, isFlipped));
-  }, [magnetX, centerY, dynamicCompassX, isFlipped]);
-
-  // Handle Automatic Object Testing
-  const handleTestCurrentObject = () => {
-    setIsTesting(true);
-    // Glide magnet smoothly toward object
-    const targetX = maxMagnetX;
-    setMagnetX(targetX);
-
-    setTimeout(() => {
-      // Record observation
-      const updated = { ...observations, [activeMaterial]: 'deflects' };
-      setObservations(updated);
-      setFeedback({
-        type: 'success',
-        text: `✨ Magnetic field passed directly through ${activeMaterialObj.name}! Compass needle deflected!`
-      });
-      setIsTesting(false);
-
-      if (currentActionStep === 2) {
-        triggerNextActionStep(3, 2000);
-      }
-
-      // Check if all tested -> open center pop-up takeaway modal after 2 seconds
-      const allTested = MATERIALS.every(m => updated[m.id] === 'deflects');
-      if (allTested) {
-        if (onComplete) onComplete();
-        triggerTakeawayModal(2000);
-      }
-    }, 700);
-  };
+  // Dynamic needle deflection based on active stage level (1 to 4) & magnetic pole flip
+  const stageDeflection = STAGE_DEFLECTIONS[currentStage] || STAGE_DEFLECTIONS[1];
+  const needleRotation = isFlipped ? -stageDeflection.angle : stageDeflection.angle;
 
   // Switch to next object
   const handleNextObject = () => {
     const nextIdx = (selectedMaterialIndex + 1) % MATERIALS.length;
-    setSelectedMaterialIndex(nextIdx);
-    setMagnetX(120);
-    setFeedback(null);
+    handleSelectObject(nextIdx);
   };
 
   // Select specific object
   const handleSelectObject = (idx) => {
     setSelectedMaterialIndex(idx);
-    setMagnetX(120);
-    setFeedback(null);
-    if (currentActionStep === 1) {
-      triggerNextActionStep(2, 2000);
-    }
-  };
+    const selectedMat = MATERIALS[idx];
+    const targetStage = materialStages[selectedMat.id] || 1;
+    const stageInfo = STAGE_CONFIG[selectedMat.id]?.stages.find(s => s.stage === targetStage);
+    const stageName = stageInfo ? stageInfo.fullName : selectedMat.name;
+    const targetDefl = STAGE_DEFLECTIONS[targetStage] || STAGE_DEFLECTIONS[1];
 
-  const isDraggingRef = useRef(false);
-  const [isManualDragging, setIsManualDragging] = useState(false);
-
-  const handlePointerDown = (e) => {
-    isDraggingRef.current = true;
-    setIsManualDragging(true);
-    e.currentTarget.setPointerCapture(e.pointerId);
-  };
-
-  const handlePointerMove = (e) => {
-    if (!isDraggingRef.current || !workspaceContainerRef.current) return;
-    const rect = workspaceContainerRef.current.getBoundingClientRect();
-    const clientX = e.clientX - rect.left;
-    const minX = 90;
-    const clampedX = Math.max(minX, Math.min(maxMagnetX, clientX));
-    setMagnetX(clampedX);
-
-    // If dragged close to the barrier, trigger deflection observation
-    if (clampedX >= maxMagnetX - 45) {
-      if (observations[activeMaterial] !== 'deflects') {
-        const updated = { ...observations, [activeMaterial]: 'deflects' };
-        setObservations(updated);
-        setFeedback({
-          type: 'success',
-          text: `✨ Magnetic field passed directly through ${activeMaterialObj.name}! Compass needle deflected!`
-        });
-
-        const allTested = MATERIALS.every(m => updated[m.id] === 'deflects');
-        if (allTested) {
-          if (onComplete) onComplete();
-          triggerTakeawayModal(2000);
-        }
+    setFeedback({
+      type: 'success',
+      text: `✨ Magnetic field passes through ${stageName}! Needle deflected (${targetDefl.label})!`
+    });
+    setObservations(prev => {
+      const updated = { ...prev, [selectedMat.id]: 'deflects' };
+      const allTested = MATERIALS.every(m => updated[m.id] === 'deflects');
+      if (allTested && onComplete) {
+        onComplete();
       }
-
-      if (currentActionStep === 2) {
-        triggerNextActionStep(3, 2000);
-      }
-    }
+      return updated;
+    });
   };
 
-  const handlePointerUp = (e) => {
-    isDraggingRef.current = false;
-    setIsManualDragging(false);
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch (_) {}
+  const handleSelectStage = (stage) => {
+    setMaterialStages(prev => ({ ...prev, [activeMaterial]: stage }));
+    const stageInfo = STAGE_CONFIG[activeMaterial]?.stages.find(s => s.stage === stage);
+    const stageName = stageInfo ? stageInfo.fullName : 'Object';
+    const targetDefl = STAGE_DEFLECTIONS[stage] || STAGE_DEFLECTIONS[1];
+    setFeedback({
+      type: 'success',
+      text: `✨ Magnetic field passes through ${stageName}! Needle deflected (${targetDefl.label})!`
+    });
   };
 
   const flipMagnet = () => {
     setIsFlipped(prev => !prev);
-    if (currentActionStep === 3) {
-      triggerNextActionStep(4, 2000);
-    }
   };
 
   const handleThicknessChange = (newVal) => {
     setThickness(newVal);
-    if (currentActionStep === 4) {
-      triggerNextActionStep(5, 2000);
-    }
   };
 
   const handleReset = () => {
-    if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
-    if (takeawayTimeoutRef.current) clearTimeout(takeawayTimeoutRef.current);
-    setMagnetX(135);
     setIsFlipped(false);
     setFeedback(null);
     setThickness(1);
     setSelectedMaterialIndex(0);
-    setObservations({ wood: null, cardboard: null, plastic: null, glass: null });
-    setCurrentActionStep(1);
-    setShowActionModal(true);
+    setMaterialStages({ wood: 1, plastic: 2, glass: 2, cardboard: 4 });
+    setObservations({ wood: 'deflects', cardboard: null, plastic: null, glass: null });
   };
 
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -606,30 +499,30 @@ export default function Simulation({ onComplete, onNext }) {
             })}
           </div>
 
-          {/* Bottom Proceed Action when all tested */}
+          {/* Bottom Summary & Proceed Action when all tested */}
           {allCompleted && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.4rem' }}>
-              <button
-                onClick={() => setShowTakeawayModal(true)}
-                style={{
-                  width: '100%',
-                  padding: '0.85rem',
-                  borderRadius: '14px',
-                  border: '1.5px solid #FDE68A',
-                  background: '#FFFFFF',
-                  color: '#92400E',
-                  fontWeight: 900,
-                  fontSize: '0.94rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.45rem',
-                  boxShadow: '0 2px 8px rgba(245, 158, 11, 0.12)'
-                }}
-              >
-                💡 View Key Scientific Takeaway
-              </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+              {/* Highlighted Inline Scientific Takeaway Banner */}
+              <div style={{
+                background: 'linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%)',
+                border: '2px solid #10B981',
+                borderRadius: '18px',
+                padding: '1rem 1.15rem',
+                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.12)'
+              }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#047857', textTransform: 'uppercase', marginBottom: '4px' }}>
+                  Scientific Conclusion 💡
+                </div>
+                <p style={{
+                  margin: 0,
+                  fontSize: '0.96rem',
+                  fontWeight: 800,
+                  color: '#065F46',
+                  lineHeight: 1.45
+                }}>
+                  Remember: Magnetic induction passes through wood, glass, plastic, and cardboard.
+                </p>
+              </div>
 
               <button
                 onClick={onNext}
@@ -667,35 +560,64 @@ export default function Simulation({ onComplete, onNext }) {
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)'
+          boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
+          gap: '0.5rem',
+          flexWrap: 'wrap'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <span style={{ fontSize: '1.2rem' }}>{activeMaterialObj.icon}</span>
             <span style={{ fontWeight: 800, color: '#064E3B', fontSize: '0.88rem' }}>
-              Current Center Barrier: <strong>{activeMaterialObj.name}</strong>
+              Barrier: <strong>{activeMaterialObj.name}</strong>
             </span>
           </div>
 
+          {/* Dynamic 4-Part Evolution / Size Switcher for Active Material */}
+          {STAGE_CONFIG[activeMaterial] && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              background: '#FFFFFF',
+              padding: '3px 8px',
+              borderRadius: '20px',
+              border: '1.5px solid #FDE68A',
+              boxShadow: '0 2px 8px rgba(217, 119, 6, 0.08)'
+            }}>
+              <span style={{ fontSize: '0.76rem', fontWeight: 900, color: '#92400E', padding: '0 4px' }}>
+                {STAGE_CONFIG[activeMaterial].categoryLabel}
+              </span>
+              {STAGE_CONFIG[activeMaterial].stages.map(s => {
+                const isCurrent = currentStage === s.stage;
+                return (
+                  <button
+                    key={s.stage}
+                    onClick={() => handleSelectStage(s.stage)}
+                    title={s.fullName}
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '0.78rem',
+                      fontWeight: 900,
+                      borderRadius: '14px',
+                      border: isCurrent ? '1.5px solid #F59E0B' : '1px solid #E2E8F0',
+                      background: isCurrent ? 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)' : '#F8FAFC',
+                      color: isCurrent ? '#92400E' : '#475569',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      boxShadow: isCurrent ? '0 2px 6px rgba(245, 158, 11, 0.25)' : 'none',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <span>{s.icon}</span>
+                    <span>{s.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <button
-              onClick={() => setShowActionModal(true)}
-              style={{
-                padding: '0.4rem 0.9rem',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                borderRadius: '18px',
-                border: '1.5px solid #FCD34D',
-                background: '#FFFBEB',
-                color: '#92400E',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-                boxShadow: '0 2px 6px rgba(245, 158, 11, 0.15)'
-              }}
-            >
-              💡 Action Step {currentActionStep} Guide
-            </button>
             <button
               onClick={flipMagnet}
               className="gold-glow-btn"
@@ -759,7 +681,7 @@ export default function Simulation({ onComplete, onNext }) {
             padding: '0.4rem 0.95rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.6rem',
+            gap: '0.75rem',
             boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
             zIndex: 10
           }}>
@@ -767,6 +689,17 @@ export default function Simulation({ onComplete, onNext }) {
               <CompassIcon size={16} color="#D97706" />
               <span>BEARING: <strong style={{ color: '#C2410C' }}>{Math.round((needleRotation % 360 + 360) % 360)}°</strong> {getBearingName(needleRotation)}</span>
             </div>
+            <span style={{
+              background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+              color: '#92400E',
+              padding: '2px 8px',
+              borderRadius: '10px',
+              fontSize: '0.75rem',
+              fontWeight: 900,
+              border: '1px solid #F59E0B'
+            }}>
+              {stageDeflection.label}
+            </span>
           </div>
 
           {/* Fullscreen Button */}
@@ -817,7 +750,7 @@ export default function Simulation({ onComplete, onNext }) {
             {/* Center Material Barrier Visual - Automatically Slides in from Left Container */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeMaterial}
+                key={`${activeMaterial}-${currentStage}`}
                 initial={{ x: -280, opacity: 0, scale: 0.85 }}
                 animate={{ x: 0, opacity: 1, scale: 1 }}
                 exit={{ x: 280, opacity: 0, scale: 0.85 }}
@@ -830,64 +763,58 @@ export default function Simulation({ onComplete, onNext }) {
                   pointerEvents: 'none'
                 }}
               >
-                <MaterialBarrierVisual type={activeMaterial} thickness={thickness} />
+                <MaterialBarrierVisual type={activeMaterial} stage={currentStage} thickness={thickness} />
               </motion.div>
             </AnimatePresence>
 
-            {/* Fixed Magnetic Compass on Right Side (Auto-Positioned & Maintaining Gap) */}
-            <motion.div 
-              initial={false}
-              animate={{ left: dynamicCompassX - COMPASS_RADIUS, top: centerY - COMPASS_RADIUS }}
-              transition={{ type: 'spring', damping: 26, stiffness: 220 }}
+            {/* Completely Fixed Stationary Compass on Right Side (Non-draggable & Non-moving) */}
+            <div 
               style={{ 
                 position: 'absolute', 
+                left: compassX - COMPASS_RADIUS, 
+                top: centerY - COMPASS_RADIUS,
                 zIndex: 20, 
-                pointerEvents: 'none' 
+                pointerEvents: 'none',
+                userSelect: 'none'
               }}
             >
               <ExactCompass rotation={needleRotation} size={COMPASS_SIZE} />
-            </motion.div>
+            </div>
 
-            {/* Left Bar Magnet (Manually Draggable with Mouse/Touch) */}
-            <motion.div 
-              animate={{ left: magnetX - 105, top: centerY - 31 }}
-              transition={isManualDragging ? { duration: 0 } : { type: 'spring', damping: 28, stiffness: 180 }}
+            {/* Left Bar Magnet (Stationary Fixed Position - Non-draggable & Non-moving) */}
+            <div 
               style={{ 
                 position: 'absolute', 
+                left: magnetX - 105, 
+                top: centerY - 31,
                 zIndex: 25, 
-                cursor: isManualDragging ? 'grabbing' : 'grab',
-                touchAction: 'none',
+                cursor: 'pointer',
                 userSelect: 'none'
               }}
-              onPointerDown={handlePointerDown}
-              onPointerMove={handlePointerMove}
-              onPointerUp={handlePointerUp}
-              onDoubleClick={flipMagnet}
-              title="Drag magnet left & right manually to test field penetration. Double-click to flip poles."
+              onClick={flipMagnet}
+              title="Click or use 'Flip Magnet' to reverse magnetic poles (N ↔ S)"
             >
-              <MagnetVisual isFlipped={isFlipped} isTesting={isTesting || isManualDragging} />
-            </motion.div>
+              <MagnetVisual isFlipped={isFlipped} isTesting={true} />
+            </div>
 
-            {/* Dynamic Magnetic Penetration Beam when magnet approaches */}
-            {magnetX > 180 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0.3, 0.7, 0.3] }}
-                transition={{ repeat: Infinity, duration: 1.2 }}
-                style={{
-                  position: 'absolute',
-                  left: magnetX + 105,
-                  top: centerY - 20,
-                  width: Math.max(0, dynamicCompassX - COMPASS_RADIUS - (magnetX + 105)),
-                  height: 40,
-                  background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.3) 0%, rgba(56, 189, 248, 0.4) 50%, rgba(59, 130, 246, 0.3) 100%)',
-                  borderRadius: '20px',
-                  filter: 'blur(8px)',
-                  pointerEvents: 'none',
-                  zIndex: 12
-                }}
-              />
-            )}
+            {/* Dynamic Magnetic Penetration Beam through barrier */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.35, 0.75, 0.35] }}
+              transition={{ repeat: Infinity, duration: 1.4 }}
+              style={{
+                position: 'absolute',
+                left: magnetX + 105,
+                top: centerY - 20,
+                width: Math.max(0, compassX - COMPASS_RADIUS - (magnetX + 105)),
+                height: 40,
+                background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.3) 0%, rgba(56, 189, 248, 0.4) 50%, rgba(59, 130, 246, 0.3) 100%)',
+                borderRadius: '20px',
+                filter: 'blur(8px)',
+                pointerEvents: 'none',
+                zIndex: 12
+              }}
+            />
 
           </div>
 
@@ -923,317 +850,6 @@ export default function Simulation({ onComplete, onNext }) {
           </AnimatePresence>
         </div>
       </div>
-
-      {/* Focused Individual Action Pop-up Modal (Appears before each action) */}
-      <AnimatePresence>
-        {showActionModal && ACTION_POPUP_DATA[currentActionStep] && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: 'rgba(15, 23, 42, 0.72)',
-              backdropFilter: 'blur(6px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 99998,
-              padding: '1rem'
-            }}
-          >
-            <motion.div
-              initial={{ scale: 0.85, y: 25, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.88, y: 15, opacity: 0 }}
-              transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-              style={{
-                background: '#FFFFFF',
-                borderRadius: '26px',
-                padding: '2.2rem 2.4rem',
-                maxWidth: '520px',
-                width: '100%',
-                boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
-                border: '2px solid #A7F3D0',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1.1rem',
-                position: 'relative'
-              }}
-            >
-              {/* Header Badge and Dismiss */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                <span style={{
-                  fontSize: '0.75rem',
-                  fontWeight: 900,
-                  color: '#047857',
-                  background: '#ECFDF5',
-                  padding: '4px 12px',
-                  borderRadius: '12px',
-                  border: '1px solid #A7F3D0',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
-                }}>
-                  {ACTION_POPUP_DATA[currentActionStep].badge}
-                </span>
-
-                <button
-                  onClick={() => setShowActionModal(false)}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#64748B',
-                    fontSize: '0.85rem',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
-                  title="Close hint"
-                >
-                  Dismiss ✕
-                </button>
-              </div>
-
-              {/* Icon & Title */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                <div style={{
-                  width: '54px',
-                  height: '54px',
-                  borderRadius: '16px',
-                  background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
-                  border: '1.5px solid #F59E0B',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.75rem',
-                  flexShrink: 0
-                }}>
-                  {ACTION_POPUP_DATA[currentActionStep].icon}
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '1.24rem', fontWeight: 900, color: '#064E3B' }}>
-                    {ACTION_POPUP_DATA[currentActionStep].title}
-                  </h3>
-                </div>
-              </div>
-
-              {/* Instruction Box */}
-              <div style={{
-                background: '#F8FAFC',
-                border: '1.5px solid #E2E8F0',
-                borderRadius: '16px',
-                padding: '1.1rem 1.25rem',
-                color: '#334155',
-                fontSize: '0.94rem',
-                lineHeight: 1.55,
-                fontWeight: 600
-              }}>
-                {ACTION_POPUP_DATA[currentActionStep].instruction}
-              </div>
-
-              {/* Action Banner */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.82rem',
-                fontWeight: 800,
-                color: '#92400E',
-                background: '#FEF3C7',
-                padding: '0.55rem 0.85rem',
-                borderRadius: '12px',
-                border: '1px solid #FCD34D'
-              }}>
-                <span>👉 Action:</span>
-                <span>{ACTION_POPUP_DATA[currentActionStep].actionPrompt}</span>
-              </div>
-
-              {/* Action Proceed Button */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.2rem' }}>
-                <button
-                  onClick={() => setShowActionModal(false)}
-                  className="gold-glow-btn"
-                  style={{
-                    width: '100%',
-                    padding: '0.85rem 1.6rem',
-                    borderRadius: '25px',
-                    fontSize: '0.95rem',
-                    fontWeight: 900,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.4rem',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {ACTION_POPUP_DATA[currentActionStep].btnLabel}
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Center Pop-up Modal: Key Science Takeaway */}
-      <AnimatePresence>
-        {showTakeawayModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: 'rgba(15, 23, 42, 0.78)',
-              backdropFilter: 'blur(8px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 99999,
-              padding: '1rem'
-            }}
-          >
-            <motion.div
-              initial={{ scale: 0.82, y: 30, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.85, y: 20, opacity: 0 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 260 }}
-              style={{
-                background: '#FFFFFF',
-                borderRadius: '28px',
-                padding: '2.5rem 2.75rem',
-                maxWidth: '580px',
-                width: '100%',
-                textAlign: 'center',
-                boxShadow: '0 25px 60px rgba(0,0,0,0.35)',
-                border: '2.5px solid #A7F3D0',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '1.25rem',
-                position: 'relative'
-              }}
-            >
-              {/* Top Sparkle Icon */}
-              <div style={{
-                width: '68px',
-                height: '68px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
-                border: '2px solid #F59E0B',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 8px 24px rgba(245, 158, 11, 0.35)'
-              }}>
-                <Sparkles size={34} color="#D97706" />
-              </div>
-
-              {/* Title */}
-              <div>
-                <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#047857', textTransform: 'uppercase', letterSpacing: '1px', background: '#ECFDF5', padding: '4px 12px', borderRadius: '12px', border: '1px solid #A7F3D0' }}>
-                  Scientific Conclusion 💡
-                </span>
-                <h2 style={{ margin: '0.6rem 0 0 0', color: '#064E3B', fontSize: '1.75rem', fontWeight: 900, letterSpacing: '-0.02em' }}>
-                  Attraction & Magnetic Induction
-                </h2>
-              </div>
-
-              {/* Highlighted Banner with User's Exact Takeaway */}
-              <div style={{
-                background: 'linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%)',
-                border: '2px solid #10B981',
-                borderRadius: '20px',
-                padding: '1.25rem 1.5rem',
-                boxShadow: '0 6px 20px rgba(16, 185, 129, 0.15)',
-                width: '100%',
-                boxSizing: 'border-box'
-              }}>
-                <p style={{
-                  margin: 0,
-                  fontSize: '1.18rem',
-                  fontWeight: 900,
-                  color: '#065F46',
-                  lineHeight: 1.45,
-                  letterSpacing: '-0.01em'
-                }}>
-                  Remember: Magnetic induction passes through wood, glass, plastic, and cardboard.
-                </p>
-              </div>
-
-              {/* 4 Materials Quick Grid */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '0.5rem',
-                width: '100%'
-              }}>
-                {MATERIALS.map(m => (
-                  <div key={m.id} style={{
-                    background: '#F8FAFC',
-                    border: '1.5px solid #E2E8F0',
-                    borderRadius: '12px',
-                    padding: '0.6rem 0.35rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '3px'
-                  }}>
-                    <span style={{ fontSize: '1.3rem' }}>{m.icon}</span>
-                    <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#1E293B' }}>{m.name.split(' ')[0]}</span>
-                    <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#15803D' }}>Passed ✓</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Action Buttons */}
-              <div style={{ display: 'flex', gap: '0.75rem', width: '100%', marginTop: '0.4rem' }}>
-                <button
-                  onClick={() => setShowTakeawayModal(false)}
-                  style={{
-                    flex: 1,
-                    padding: '0.9rem',
-                    borderRadius: '25px',
-                    border: '1.5px solid #CBD5E1',
-                    background: '#FFFFFF',
-                    color: '#475569',
-                    fontWeight: 800,
-                    fontSize: '0.92rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  Review Lab
-                </button>
-
-                <button
-                  onClick={() => {
-                    setShowTakeawayModal(false);
-                    if (onNext) onNext();
-                  }}
-                  className="gold-glow-btn"
-                  style={{
-                    flex: 1.4,
-                    padding: '0.95rem',
-                    borderRadius: '25px',
-                    fontSize: '1rem',
-                    fontWeight: 900,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.45rem',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  Proceed to Concept Check <ArrowRight size={18} />
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
     </div>
   );
