@@ -109,11 +109,11 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%' }}>
       {/* Intro */}
-      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--accent-border)' }}>
-        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Shield size={22} style={{ color: 'var(--accent)' }} /> Activity 6.3: Let Us Think (Material Suitability)
+      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '1px solid var(--lesson-accent-border)' }}>
+        <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Shield size={22} style={{ color: 'var(--lesson-accent)' }} /> Activity 6.3: Let Us Think (Material Suitability)
         </h3>
-        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+        <p style={{ margin: 0, fontSize: '1rem', color: 'var(--lesson-secondary)', lineHeight: '1.5' }}>
           Why is a window made of glass and not wood? Why is a cooking pot made of metal and not paper? 
           We choose materials based on their <strong>properties</strong> and the <strong>purpose</strong> of the object.
         </p>
@@ -121,8 +121,8 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', alignItems: 'stretch' }}>
         {/* Tumbler Designer */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
-          <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--lesson-border)' }}>
+          <div style={{ borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontWeight: 'bold', fontSize: '1.4rem' }}>1. Storing Water: The Tumbler Test</span>
           </div>
 
@@ -139,20 +139,20 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
             ))}
           </div>
 
-          <div style={{ height: '370px', minHeight: '350px', background: 'var(--neutral-bg)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '0.5rem', boxSizing: 'border-box' }}>
-            {tumblerMaterial ? renderTumblerAnimation() : <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Select a tumbler material</span>}
+          <div style={{ height: '370px', minHeight: '350px', background: 'var(--neutral-bg)', border: '1px solid var(--lesson-border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '0.5rem', boxSizing: 'border-box' }}>
+            {tumblerMaterial ? renderTumblerAnimation() : <span style={{ fontSize: '1rem', color: 'var(--lesson-muted)' }}>Select a tumbler material</span>}
           </div>
 
-          <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>
-            {tumblerMaterial === 'cloth' && <span style={{ color: 'var(--danger)' }}><strong>Leakage!</strong> Cloth has porous holes. Water slips through instantly.</span>}
-            {tumblerMaterial === 'paper' && <span style={{ color: 'var(--danger)' }}><strong>Collapse!</strong> Paper absorbs water and loses structural strength.</span>}
-            {(tumblerMaterial === 'glass' || tumblerMaterial === 'metal') && <span style={{ color: 'var(--success)' }}><strong>Perfect!</strong> Glass and Metal are non-porous and hold liquids perfectly.</span>}
+          <div style={{ fontSize: '1rem', color: 'var(--lesson-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>
+            {tumblerMaterial === 'cloth' && <span style={{ color: 'var(--lesson-danger)' }}><strong>Leakage!</strong> Cloth has porous holes. Water slips through instantly.</span>}
+            {tumblerMaterial === 'paper' && <span style={{ color: 'var(--lesson-danger)' }}><strong>Collapse!</strong> Paper absorbs water and loses structural strength.</span>}
+            {(tumblerMaterial === 'glass' || tumblerMaterial === 'metal') && <span style={{ color: 'var(--lesson-success)' }}><strong>Perfect!</strong> Glass and Metal are non-porous and hold liquids perfectly.</span>}
           </div>
         </div>
 
         {/* Stove Cooking pot */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--border)' }}>
-          <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--lesson-border)' }}>
+          <div style={{ borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontWeight: 'bold', fontSize: '1.4rem' }}>2. Direct Flame: The Cooking Pot</span>
           </div>
 
@@ -169,13 +169,13 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
             ))}
           </div>
 
-          <div style={{ height: '370px', minHeight: '350px', background: 'var(--neutral-bg)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '0.5rem', boxSizing: 'border-box' }}>
-            {potMaterial ? renderPotAnimation() : <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Select a pot material</span>}
+          <div style={{ height: '370px', minHeight: '350px', background: 'var(--neutral-bg)', border: '1px solid var(--lesson-border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: '0.5rem', boxSizing: 'border-box' }}>
+            {potMaterial ? renderPotAnimation() : <span style={{ fontSize: '1rem', color: 'var(--lesson-muted)' }}>Select a pot material</span>}
           </div>
 
-          <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>
-            {potMaterial === 'paper' && <span style={{ color: 'var(--danger)' }}><strong>Danger!</strong> Paper is combustible and catches fire easily.</span>}
-            {potMaterial === 'metal' && <span style={{ color: 'var(--success)' }}><strong>Safe!</strong> Stainless steel is fire-resistant and conducts heat perfectly.</span>}
+          <div style={{ fontSize: '1rem', color: 'var(--lesson-secondary)', lineHeight: '1.5', minHeight: '52px', display: 'flex', alignItems: 'center' }}>
+            {potMaterial === 'paper' && <span style={{ color: 'var(--lesson-danger)' }}><strong>Danger!</strong> Paper is combustible and catches fire easily.</span>}
+            {potMaterial === 'metal' && <span style={{ color: 'var(--lesson-success)' }}><strong>Safe!</strong> Stainless steel is fire-resistant and conducts heat perfectly.</span>}
           </div>
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function Stage5_Suitability({ onComplete, addXp }) {
             <motion.div 
               initial={{ opacity: 0, y: 10 }} 
               animate={{ opacity: 1, y: 0 }} 
-              style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--success)', fontWeight: 'bold', fontSize: '1rem' }}
+              style={{ background: 'var(--lesson-success-bg)', border: '1px solid var(--lesson-success-border)', padding: '1rem 2rem', borderRadius: '8px', color: 'var(--lesson-success)', fontWeight: 'bold', fontSize: '1rem' }}
             >
               Tests Complete! Click "Proceed to next" in the bottom right corner.
             </motion.div>

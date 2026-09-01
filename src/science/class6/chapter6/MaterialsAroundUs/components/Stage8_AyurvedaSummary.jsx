@@ -36,44 +36,44 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
           alt="Chief Detective" 
           style={{ width: '100px', height: '100px', filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.15))', objectFit: 'contain' }}
         />
-        <div style={{ flex: 1, background: 'var(--surface)', padding: '20px', borderRadius: '0 20px 20px 20px', border: '1px solid var(--border)', position: 'relative' }}>
+        <div style={{ flex: 1, background: 'var(--lesson-surface)', padding: '20px', borderRadius: '0 20px 20px 20px', border: '1px solid var(--lesson-border)', position: 'relative' }}>
           {/* Speech bubble tail */}
-          <div style={{ position: 'absolute', left: '-10px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid var(--border)' }}></div>
-          <div style={{ position: 'absolute', left: '-8px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid var(--surface)' }}></div>
+          <div style={{ position: 'absolute', left: '-10px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid var(--lesson-border)' }}></div>
+          <div style={{ position: 'absolute', left: '-8px', top: '20px', width: '0', height: '0', borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderRight: '10px solid var(--lesson-surface)' }}></div>
           
-          <h4 style={{ margin: '0 0 8px 0', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ background: 'var(--accent)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: 'var(--text-sm)' }}>CHIEF DETECTIVE</span>
+          <h4 style={{ margin: '0 0 8px 0', color: 'var(--lesson-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ background: 'var(--lesson-primary)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: 'var(--text-sm)' }}>CHIEF DETECTIVE</span>
           </h4>
-          <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: 'var(--text-lg)', lineHeight: '1.6' }}>
+          <p style={{ margin: 0, color: 'var(--lesson-text)', fontSize: 'var(--text-lg)', lineHeight: '1.6' }}>
             "We have thoroughly explored and understood the various properties of materials in the modern world. But wait! Most of the materials that we see today would have also existed earlier. I am curious to know... how did people classify them back then?"
           </p>
         </div>
       </div>
 
       {/* Do You Know Section */}
-      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', border: '2px solid #b45309', background: '#fffbeb', padding: '2rem' }}>
-        <h3 style={{ margin: 0, fontSize: 'var(--text-3xl)', color: '#92400e', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', border: '2px dashed var(--lesson-warning-border)', background: 'var(--lesson-warning-bg)', padding: '2rem' }}>
+        <h3 style={{ margin: 0, fontSize: 'var(--text-3xl)', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <BookOpen size={32} /> Do You Know? (Ancient Classification)
         </h3>
         
-        <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: '#78350f', lineHeight: '1.6' }}>
+        <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--lesson-text)', lineHeight: '1.6' }}>
           A similar classification system existed in ancient India. <strong>Ayurveda</strong>, one of the Indian medical systems, has a system of grouping things using <strong>20 properties</strong> (<em>guṇa</em>—ten pairs of opposite properties).
         </p>
         
-        <div style={{ background: 'rgba(255, 255, 255, 0.6)', padding: '2rem', borderRadius: '12px', textAlign: 'center', fontStyle: 'italic', color: '#92400e', margin: '1rem 0' }}>
+        <div style={{ background: 'rgba(255, 255, 255, 0.6)', padding: '2rem', borderRadius: '12px', textAlign: 'center', fontStyle: 'italic', color: 'var(--lesson-primary)', margin: '1rem 0' }}>
           <p style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--text-2xl)', fontWeight: 'bold' }}>गुरु मन्द हिम स्निग्ध श्लक्षण सान्द्र मृदु स्थिराः।</p>
           <p style={{ margin: '0 0 0.5rem 0', fontSize: 'var(--text-2xl)', fontWeight: 'bold' }}>गुणाः ससूक्ष्म विशदाः विंशतिः स विपर्ययाः॥</p>
           <p style={{ margin: 0, fontSize: 'var(--text-lg)' }}>(Aṣhṭānga hṛidaya Sūtra sthāna 1.18)</p>
         </div>
 
-        <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: '#78350f', lineHeight: '1.6' }}>
+        <p style={{ margin: 0, fontSize: 'var(--text-xl)', color: 'var(--lesson-text)', lineHeight: '1.6' }}>
           The shloka precisely talks about the 20 properties, which are used to describe all physical matter in Ayurveda. These properties can also be used to describe all living systems (plants, animals and humans), the environment and also food!
         </p>
       </div>
 
       {/* Properties Grid */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem' }}>
-        <h4 style={{ fontSize: 'var(--text-2xl)', color: 'var(--text-heading)', margin: '0 0 0.5rem 0' }}>The 10 Pairs of Opposite Properties:</h4>
+        <h4 style={{ fontSize: 'var(--text-2xl)', color: 'var(--lesson-primary)', margin: '0 0 0.5rem 0' }}>The 10 Pairs of Opposite Properties:</h4>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem' }}>
           {gunasData.map((pair, idx) => (
@@ -83,8 +83,8 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
               style={{ 
-                background: 'var(--surface)', 
-                border: '1px solid var(--border)', 
+                background: 'var(--lesson-surface)', 
+                border: '1px solid var(--lesson-border)', 
                 borderRadius: '16px', 
                 padding: '1.5rem',
                 display: 'flex',
@@ -94,15 +94,15 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                <span style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', color: '#b45309' }}>{pair.sanskrit1}</span>
-                <span style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }}>({pair.eng1})</span>
+                <span style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', color: 'var(--lesson-primary)' }}>{pair.sanskrit1}</span>
+                <span style={{ fontSize: 'var(--text-base)', color: 'var(--lesson-secondary)' }}>({pair.eng1})</span>
               </div>
               
-              <div style={{ padding: '0 20px', color: 'var(--accent)', fontWeight: 'bold', fontSize: 'var(--text-2xl)' }}>×</div>
+              <div style={{ padding: '0 20px', color: 'var(--lesson-primary)', fontWeight: 'bold', fontSize: 'var(--text-2xl)' }}>×</div>
               
               <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', textAlign: 'right' }}>
-                <span style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', color: '#10b981' }}>{pair.sanskrit2}</span>
-                <span style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }}>({pair.eng2})</span>
+                <span style={{ fontSize: 'var(--text-xl)', fontWeight: 'bold', color: 'var(--lesson-success)' }}>{pair.sanskrit2}</span>
+                <span style={{ fontSize: 'var(--text-base)', color: 'var(--lesson-secondary)' }}>({pair.eng2})</span>
               </div>
             </motion.div>
           ))}
@@ -111,7 +111,7 @@ export default function Stage8_AyurvedaSummary({ onComplete, addXp }) {
       
       {/* Footer Instructions */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', minHeight: '40px' }}>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Review the ancient properties, then click "Proceed to next" when you are ready for the final concept map.</p>
+        <p style={{ color: 'var(--lesson-muted)', fontSize: '0.95rem' }}>Review the ancient properties, then click "Proceed to next" when you are ready for the final concept map.</p>
       </div>
 
     </div>
