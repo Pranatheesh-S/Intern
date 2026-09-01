@@ -47,15 +47,15 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
   }, [isComplete, onComplete]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', height: '100%', color: 'var(--text-primary)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', height: '100%', color: 'var(--lesson-text)' }}>
       
       {/* Header */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '800', color: 'var(--text-heading)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <Scale size={24} color="var(--accent)" /> Phase 1: How heavy or light?
+          <h3 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '800', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <Scale size={24} color="var(--lesson-primary)" /> Phase 1: How heavy or light?
           </h3>
-          <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
+          <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: '600', color: 'var(--lesson-secondary)' }}>
             Activity 6.8: Let us measure. Drag each cup to the digital balance to record its mass.
           </p>
         </div>
@@ -72,8 +72,8 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
       }}>
         
         {/* Left Side: Material Evidence */}
-        <div style={{ background: '#fcfaf6', borderRadius: '16px', border: '1px solid #d6c6b4', padding: '1rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: '#574133', borderBottom: '1px solid #d6c6b4', paddingBottom: '0.5rem' }}>MATERIAL EVIDENCE</h4>
+        <div style={{ background: 'var(--lesson-card)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: 'var(--lesson-primary)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem' }}>MATERIAL EVIDENCE</h4>
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-evenly', gap: '0.75rem' }}>
             {cups.map(cup => {
               const hasBeenWeighed = weighedItems[cup.id];
@@ -87,8 +87,8 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                   transition={{ duration: 0.2 }}
                   style={{ 
                     display: 'flex', alignItems: 'center', gap: '1.25rem',
-                    background: hasBeenWeighed ? '#f5f0e6' : '#fcf6ea',
-                    padding: '1.25rem 1rem', borderRadius: '12px', border: hasBeenWeighed ? '1px solid #b8a694' : '1px solid #c8b6a6',
+                    background: hasBeenWeighed ? 'var(--lesson-surface)' : 'var(--lesson-background)',
+                    padding: '1.25rem 1rem', borderRadius: '12px', border: hasBeenWeighed ? '1px solid var(--lesson-border)' : '1px solid var(--lesson-border)',
                     boxShadow: '0 4px 6px rgba(87, 65, 51, 0.08)',
                     position: 'relative',
                     userSelect: 'none',
@@ -108,12 +108,12 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                     />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', zIndex: 1 }}>
-                    <div style={{ fontWeight: '800', fontSize: '1.3rem', color: '#574133', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <GripHorizontal size={18} color="#a89f91" /> {cup.label}
+                    <div style={{ fontWeight: '800', fontSize: '1.3rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <GripHorizontal size={18} color="var(--lesson-muted)" /> {cup.label}
                     </div>
-                    <div style={{ fontSize: '1.6rem', fontWeight: '800', color: '#4a3322' }}>{cup.material}</div>
+                    <div style={{ fontSize: '1.6rem', fontWeight: '800', color: 'var(--lesson-text)' }}>{cup.material}</div>
                   </div>
-                  {hasBeenWeighed && <CheckCircle2 size={28} color="#d97706" style={{ marginLeft: 'auto', marginRight: '0.5rem' }} />}
+                  {hasBeenWeighed && <CheckCircle2 size={28} color="var(--lesson-success)" style={{ marginLeft: 'auto', marginRight: '0.5rem' }} />}
                 </motion.div>
               );
             })}
@@ -121,13 +121,13 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
         </div>
 
         {/* Middle: Weighing Station */}
-        <div style={{ background: '#fcfaf6', borderRadius: '16px', border: '1px solid #d6c6b4', padding: '1rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: '#574133', borderBottom: '1px solid #d6c6b4', paddingBottom: '0.5rem' }}>DIGITAL WEIGHING STATION</h4>
+        <div style={{ background: 'var(--lesson-card)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1.3rem', fontWeight: '800', color: 'var(--lesson-primary)', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.5rem' }}>DIGITAL WEIGHING STATION</h4>
           
           <div style={{ 
               flex: 1,
-              background: '#fcfaf6',
-              border: isDragHoveringScale ? '2px solid #d97706' : (currentOnScale ? '2px solid #d6c6b4' : '2px dashed #d6c6b4'), 
+              background: 'var(--lesson-card)',
+              border: isDragHoveringScale ? '2px solid var(--lesson-success)' : (currentOnScale ? '2px solid var(--lesson-border)' : '2px dashed var(--lesson-border)'), 
               borderRadius: '16px', 
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               position: 'relative',
@@ -139,10 +139,10 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
             {!currentOnScale && (
               <div style={{ position: 'absolute', top: '15%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', pointerEvents: 'none' }}>
                 <svg width="40" height="60" viewBox="0 0 40 60" fill="none">
-                  <path d="M20 10 L 20 50" stroke={isDragHoveringScale ? '#d97706' : '#a89f91'} strokeWidth="2" strokeLinecap="round" strokeDasharray="4 4" />
-                  <path d="M12 42 L 20 50 L 28 42" stroke={isDragHoveringScale ? '#d97706' : '#a89f91'} strokeWidth="2" fill="transparent" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M20 10 L 20 50" stroke={isDragHoveringScale ? 'var(--lesson-success)' : 'var(--lesson-muted)'} strokeWidth="2" strokeLinecap="round" strokeDasharray="4 4" />
+                  <path d="M12 42 L 20 50 L 28 42" stroke={isDragHoveringScale ? 'var(--lesson-success)' : 'var(--lesson-muted)'} strokeWidth="2" fill="transparent" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <div style={{ color: isDragHoveringScale ? '#b45309' : '#8a7b6e', fontSize: '1.2rem', fontWeight: '700', textAlign: 'center', maxWidth: '160px', lineHeight: '1.4' }}>
+                <div style={{ color: isDragHoveringScale ? 'var(--lesson-success)' : '#8a7b6e', fontSize: '1.2rem', fontWeight: '700', textAlign: 'center', maxWidth: '160px', lineHeight: '1.4' }}>
                   {isDragHoveringScale ? 'Release to place on scale' : 'Drag a cup here to weigh it'}
                 </div>
               </div>
@@ -161,8 +161,8 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
         {/* Right Side: Observation Console & Inference */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', minHeight: 0 }}>
           {/* Observation Log: Compact, natural content height with small bottom padding */}
-          <div style={{ background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)', padding: '1rem 1rem 1.25rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <h4 style={{ margin: 0, fontSize: '1.3rem', fontWeight: '800', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
+          <div style={{ background: 'var(--lesson-surface)', borderRadius: '16px', border: '1px solid var(--lesson-border)', padding: '1rem 1rem 1.25rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <h4 style={{ margin: 0, fontSize: '1.3rem', fontWeight: '800', color: 'var(--lesson-accent)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.75rem' }}>
               <Info size={20} /> Observation Log
             </h4>
             
@@ -176,10 +176,10 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                     key={cup.id}
                     layout
                     style={{ 
-                      background: highlight ? '#fef3c7' : 'white', 
+                      background: highlight ? 'var(--lesson-warning-bg)' : 'white', 
                       padding: highlight ? '12px 10px' : '8px 10px', 
                       borderRadius: '8px', 
-                      border: highlight ? '2px solid #f59e0b' : `1px solid ${isWeighed ? '#bbf7d0' : 'var(--border)'}`,
+                      border: highlight ? '2px solid var(--lesson-warning)' : `1px solid ${isWeighed ? 'var(--lesson-success-border)' : 'var(--lesson-border)'}`,
                       boxShadow: highlight ? '0 4px 6px -1px rgba(245, 158, 11, 0.2)' : 'none',
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                       transition: 'all 0.3s'
@@ -190,8 +190,8 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                         <RealisticCup material={cup.id} />
                       </div>
                       <div>
-                        <div style={{ fontWeight: highlight ? '900' : '800', fontSize: '1.1rem', color: highlight ? '#92400e' : 'inherit' }}>{cup.label}</div>
-                        <div style={{ fontSize: '1rem', fontWeight: '600', color: highlight ? '#b45309' : 'var(--text-muted)' }}>{cup.material}</div>
+                        <div style={{ fontWeight: highlight ? '900' : '800', fontSize: '1.1rem', color: highlight ? 'var(--lesson-primary)' : 'inherit' }}>{cup.label}</div>
+                        <div style={{ fontSize: '1rem', fontWeight: '600', color: highlight ? 'var(--lesson-accent)' : 'var(--lesson-muted)' }}>{cup.material}</div>
                       </div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -200,11 +200,11 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
                         initial={{ opacity: 0, x: 5 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4 }}
-                        style={{ fontSize: highlight ? '1.5rem' : '1.3rem', fontWeight: '900', color: highlight ? '#d97706' : (isWeighed ? '#15803d' : 'var(--text-muted)') }}
+                        style={{ fontSize: highlight ? '1.5rem' : '1.3rem', fontWeight: '900', color: highlight ? 'var(--lesson-accent)' : (isWeighed ? 'var(--lesson-success)' : 'var(--lesson-muted)') }}
                       >
                         {isWeighed ? `${cup.mass.toFixed(2)} g` : '?.?? g'}
                       </motion.div>
-                      {highlight && <CheckCircle2 size={24} color="#d97706" />}
+                      {highlight && <CheckCircle2 size={24} color="var(--lesson-accent)" />}
                     </div>
                   </motion.div>
                 );
@@ -219,28 +219,28 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
               animate={{ opacity: 1, y: 0 }} 
               transition={{ duration: 0.4 }} 
               style={{ 
-                background: '#fcf6ea', 
+                background: 'var(--lesson-background)', 
                 padding: '1.5rem 1.5rem 2.25rem 1.5rem', 
                 borderRadius: '16px', 
-                border: '1px solid #c8b6a6', 
+                border: '1px solid var(--lesson-border)', 
                 boxShadow: '0 4px 6px rgba(87, 65, 51, 0.08)',
                 minHeight: '260px',
                 display: 'flex',
                 flexDirection: 'column'
               }}
             >
-              <div style={{ color: '#574133', fontSize: '1.2rem', fontWeight: '900', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ color: 'var(--lesson-primary)', fontSize: '1.2rem', fontWeight: '900', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <AlertCircle size={20} /> INFERENCE
               </div>
-              <p style={{ margin: 0, fontSize: '1.15rem', fontWeight: '700', color: '#574133', lineHeight: '1.55' }}>
+              <p style={{ margin: 0, fontSize: '1.15rem', fontWeight: '700', color: 'var(--lesson-primary)', lineHeight: '1.55' }}>
                 Even though all cups are the same size and half-filled, they have different weights! 
-                The property that makes them heavy or light is called <strong style={{ color: '#d97706', fontWeight: '900', fontSize: '1.25rem' }}>MASS</strong>.
+                The property that makes them heavy or light is called <strong style={{ color: 'var(--lesson-accent)', fontWeight: '900', fontSize: '1.25rem' }}>MASS</strong>.
               </p>
-              <div style={{ marginTop: '1.25rem', background: '#fef3c7', padding: '0.9rem 1.2rem', borderRadius: '10px', borderLeft: '4px solid #f59e0b', display: 'inline-flex', flexDirection: 'column', gap: '6px' }}>
-                <div style={{ fontSize: '1.3rem', fontWeight: '900', color: '#92400e', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                   Pebbles — 142.15 g <CheckCircle2 size={18} color="#d97706" />
+              <div style={{ marginTop: '1.25rem', background: 'var(--lesson-warning-bg)', padding: '0.9rem 1.2rem', borderRadius: '10px', borderLeft: '4px solid var(--lesson-warning)', display: 'inline-flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ fontSize: '1.3rem', fontWeight: '900', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                   Pebbles — 142.15 g <CheckCircle2 size={18} color="var(--lesson-accent)" />
                 </div>
-                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#b45309' }}>
+                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--lesson-accent)' }}>
                    Pebbles have the most mass.
                 </div>
               </div>
@@ -252,13 +252,13 @@ export default function Stage8a_Mass({ onComplete, addXp }) {
       {/* Bottom Section: Progress */}
       <div style={{ display: 'flex', gap: '1rem', flexShrink: 0 }}>
         {/* Footer Progress */}
-        <div style={{ flex: '1', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#d97706' }}>
+        <div style={{ flex: '1', background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--lesson-accent)' }}>
             <Target size={20} />
-            <span style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', fontWeight: '700' }}>Weigh all 3 cups to uncover their mass.</span>
+            <span style={{ color: 'var(--lesson-secondary)', fontSize: '1.1rem', fontWeight: '700' }}>Weigh all 3 cups to uncover their mass.</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--surface)', padding: '8px 16px', borderRadius: '20px', border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--lesson-text)', display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--lesson-surface)', padding: '8px 16px', borderRadius: '20px', border: '1px solid var(--lesson-border)' }}>
               {progressCount} / 3 Weighed
             </div>
           </div>

@@ -229,7 +229,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
           transition: all 0.2s ease-in-out;
         }
         .interactive-tray-item:not(.scanned-item):hover {
-          border-color: #bc4a1a !important;
+          border-color: var(--lesson-accent) !important;
           transform: translateY(-2px);
           box-shadow: 0 6px 16px rgba(188, 74, 26, 0.15) !important;
         }
@@ -243,10 +243,10 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             flexDirection: 'column', 
             gap: '1rem', 
             padding: '24px', 
-            background: '#fdfbf7',
-            backgroundImage: 'radial-gradient(#e2d3b9 1px, transparent 1px)',
+            background: 'var(--lesson-background)',
+            backgroundImage: 'radial-gradient(var(--lesson-border) 1px, transparent 1px)',
             backgroundSize: '20px 20px',
-            border: '2px solid #e2d3b9',
+            border: '2px solid var(--lesson-border)',
             borderRadius: '16px',
             boxShadow: 'inset 0 0 40px rgba(226, 211, 185, 0.2), 0 4px 12px rgba(0,0,0,0.05)',
             height: '100%',
@@ -254,16 +254,16 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             position: 'relative'
           }}>
             {/* Subtle corner markings */}
-            <div style={{ position: 'absolute', top: '10px', left: '10px', width: '10px', height: '10px', borderTop: '2px solid #e2d3b9', borderLeft: '2px solid #e2d3b9' }} />
-            <div style={{ position: 'absolute', top: '10px', right: '10px', width: '10px', height: '10px', borderTop: '2px solid #e2d3b9', borderRight: '2px solid #e2d3b9' }} />
+            <div style={{ position: 'absolute', top: '10px', left: '10px', width: '10px', height: '10px', borderTop: '2px solid var(--lesson-border)', borderLeft: '2px solid var(--lesson-border)' }} />
+            <div style={{ position: 'absolute', top: '10px', right: '10px', width: '10px', height: '10px', borderTop: '2px solid var(--lesson-border)', borderRight: '2px solid var(--lesson-border)' }} />
 
-            <div style={{ borderBottom: '2px dashed #e2d3b9', paddingBottom: '20px', marginBottom: '12px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ borderBottom: '2px dashed var(--lesson-border)', paddingBottom: '20px', marginBottom: '12px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Search size={32} color="#3c2415" />
-                <h4 style={{ margin: 0, fontSize: '2rem', letterSpacing: '1px', color: '#3c2415', fontWeight: '900' }}>EVIDENCE BOARD</h4>
+                <Search size={32} color="var(--lesson-primary)" />
+                <h4 style={{ margin: 0, fontSize: '2rem', letterSpacing: '1px', color: 'var(--lesson-primary)', fontWeight: '900' }}>EVIDENCE BOARD</h4>
               </div>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#8b6508', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start', background: '#bc4a1a', color: 'white', padding: '6px 14px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--lesson-muted)', textTransform: 'uppercase', letterSpacing: '1.5px', fontWeight: '700' }}>CASE FILE 06 • MATERIAL SAMPLES</h3>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start', background: 'var(--lesson-accent)', color: 'white', padding: '6px 14px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', letterSpacing: '0.5px' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'white' }} />
                 {objectsToScan.length} ITEMS • READY TO SCAN
               </div>
@@ -283,28 +283,28 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 const isSelected = selectedObj?.id === obj.id;
                 const isScanning = isSelected && scanState === 'scanning';
                 
-                let borderColor = '#e2d3b9';
+                let borderColor = 'var(--lesson-border)';
                 let shadow = '0 4px 12px rgba(0,0,0,0.04)';
                 let labelText = 'READY TO SCAN';
-                let labelColor = '#5c4033';
-                let bgColor = '#ffffff';
-                let nameColor = '#bc4a1a'; // BURNT ORANGE / TERRACOTTA
+                let labelColor = 'var(--lesson-secondary)';
+                let bgColor = 'whitefff';
+                let nameColor = 'var(--lesson-accent)'; // BURNT ORANGE / TERRACOTTA
                 
                 if (isScanned) {
-                  borderColor = '#22c55e';
+                  borderColor = 'var(--lesson-success)';
                   bgColor = '#f4fcf6';
                   labelText = 'SCANNED';
-                  labelColor = '#22c55e';
+                  labelColor = 'var(--lesson-success)';
                 } else if (isScanning) {
-                  borderColor = '#bc4a1a';
+                  borderColor = 'var(--lesson-accent)';
                   shadow = '0 0 20px rgba(188, 74, 26, 0.2)';
                   labelText = 'SCANNING...';
-                  labelColor = '#bc4a1a';
+                  labelColor = 'var(--lesson-accent)';
                 } else if (isSelected) {
-                  borderColor = '#bc4a1a';
+                  borderColor = 'var(--lesson-accent)';
                   shadow = '0 6px 16px rgba(188, 74, 26, 0.15)';
                   labelText = 'SELECTED FOR SCAN';
-                  labelColor = '#bc4a1a';
+                  labelColor = 'var(--lesson-accent)';
                 }
 
                 return (
@@ -333,12 +333,12 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   >
                     {/* Left: Text Content */}
                     <div style={{ flex: '1 1 65%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '12px', minWidth: 0 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: '#5c4033', fontWeight: '800', letterSpacing: '0.5px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', color: 'var(--lesson-secondary)', fontWeight: '800', letterSpacing: '0.5px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <div style={{ width: '4px', height: '12px', background: '#bc4a1a', borderRadius: '2px' }} />
+                          <div style={{ width: '4px', height: '12px', background: 'var(--lesson-accent)', borderRadius: '2px' }} />
                           <span>EVIDENCE {(index + 1).toString().padStart(2, '0')}</span>
                         </div>
-                        {isScanned && <Check size={16} strokeWidth={3} style={{ color: '#22c55e' }} />}
+                        {isScanned && <Check size={16} strokeWidth={3} style={{ color: 'var(--lesson-success)' }} />}
                       </div>
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -348,7 +348,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                              <motion.span
                                animate={{ opacity: [1, 0.4, 1] }}
                                transition={{ duration: 1, repeat: Infinity }}
-                               style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#bc4a1a', display: 'inline-block' }}
+                               style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--lesson-accent)', display: 'inline-block' }}
                              />
                           )}
                           {labelText}
@@ -396,7 +396,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
           minHeight: 0, 
           overflow: 'hidden',
           borderRadius: '12px',
-          border: isDraggingOver ? '3px dashed var(--accent)' : 'var(--scanner-border)',
+          border: isDraggingOver ? '3px dashed var(--lesson-accent)' : 'var(--scanner-border)',
           transition: 'border 0.25s'
         }}>
           
@@ -474,7 +474,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                         top: 0, left: '10%', right: '10%',
                         height: '4px',
                         background: 'rgba(56, 189, 248, 0.9)',
-                        boxShadow: '0 0 15px var(--accent), 0 0 30px var(--accent)',
+                        boxShadow: '0 0 15px var(--lesson-accent), 0 0 30px var(--lesson-accent)',
                         zIndex: 5
                       }}
                       animate={{ top: ['0%', '100%', '0%'] }}
@@ -501,7 +501,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', gap: '24px' }}>
                         <h3 style={{ margin: 0, color: 'rgba(56, 189, 248, 0.9)', fontSize: '0.85rem', fontWeight: '800', letterSpacing: '1px' }}>SCANNER ACTIVE</h3>
-                        <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#ffffff' }}>{scanProgress}%</div>
+                        <div style={{ fontSize: '1.1rem', fontWeight: '800', color: 'whitefff' }}>{scanProgress}%</div>
                       </div>
                       
                       {/* Progress bar */}
@@ -520,13 +520,13 @@ export default function Stage2_Identify({ onComplete, addXp }) {
             <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
               {allCompleted ? (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', zIndex: 5, textAlign: 'center', padding: '1.5rem', background: 'rgba(0,0,0,0.6)', borderRadius: '16px', backdropFilter: 'blur(8px)' }}>
-                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', border: '3px solid var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)' }}>
-                    <Award size={40} style={{ color: 'var(--success)' }} />
+                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', border: '3px solid var(--lesson-success)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(16, 185, 129, 0.4)' }}>
+                    <Award size={40} style={{ color: 'var(--lesson-success)' }} />
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, color: 'var(--surface)', fontSize: '2rem', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Scan Complete!</h3>
-                    <p style={{ color: 'var(--border)', fontSize: '1.1rem', marginTop: '0.75rem', maxWidth: '340px', lineHeight: '1.5', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-                      You have successfully scanned and identified materials for all objects. Click <strong style={{ color: 'var(--surface)' }}>"Proceed to next"</strong> in the bottom right corner!
+                    <h3 style={{ margin: 0, color: 'var(--lesson-surface)', fontSize: '2rem', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Scan Complete!</h3>
+                    <p style={{ color: 'var(--lesson-border)', fontSize: '1.1rem', marginTop: '0.75rem', maxWidth: '340px', lineHeight: '1.5', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
+                      You have successfully scanned and identified materials for all objects. Click <strong style={{ color: 'var(--lesson-surface)' }}>"Proceed to next"</strong> in the bottom right corner!
                     </p>
                   </div>
                 </div>
@@ -555,14 +555,14 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.75rem',
-                  color: 'var(--success)',
+                  color: 'var(--lesson-success)',
                   fontSize: '1.2rem',
                   fontWeight: 'bold',
                   letterSpacing: '2px',
-                  background: 'var(--surface)',
+                  background: 'var(--lesson-surface)',
                   padding: '1rem 2rem',
                   borderRadius: '2rem',
-                  border: '1px solid var(--success)',
+                  border: '1px solid var(--lesson-success)',
                   boxShadow: '0 0 25px rgba(16, 185, 129, 0.4)',
                   zIndex: 10,
                   backdropFilter: 'blur(8px)'
@@ -606,12 +606,12 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                 
                 {scanState !== 'correct' ? (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', maxWidth: '500px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center', color: 'var(--success)', fontSize: '1.4rem', fontWeight: '800', letterSpacing: '1px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center', color: 'var(--lesson-success)', fontSize: '1.4rem', fontWeight: '800', letterSpacing: '1px' }}>
                       <Check size={22} /> SCAN COMPLETE
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <span style={{ color: 'var(--text-heading)', fontSize: '1.5rem', fontWeight: '800' }}>IDENTIFY MATERIAL</span>
-                      <div style={{ color: 'var(--text-secondary)', fontSize: '1.3rem', fontWeight: '800', marginTop: '0.2rem' }}>{selectedObj.name.toUpperCase()}</div>
+                      <span style={{ color: 'var(--lesson-primary)', fontSize: '1.5rem', fontWeight: '800' }}>IDENTIFY MATERIAL</span>
+                      <div style={{ color: 'var(--lesson-secondary)', fontSize: '1.3rem', fontWeight: '800', marginTop: '0.2rem' }}>{selectedObj.name.toUpperCase()}</div>
                     </div>
                     
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', width: '100%', marginTop: '0.5rem' }}>
@@ -624,9 +624,9 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                           padding: '1rem 0.5rem',
                           fontSize: '1.25rem',
                           fontWeight: '800',
-                          background: 'var(--card-bg)',
-                          color: 'var(--text-primary)',
-                          borderColor: 'var(--border)',
+                          background: 'var(--lesson-card)',
+                          color: 'var(--lesson-text)',
+                          borderColor: 'var(--lesson-border)',
                           transition: 'all 0.2s',
                           borderRadius: '8px',
                           cursor: 'pointer'
@@ -634,13 +634,13 @@ export default function Stage2_Identify({ onComplete, addXp }) {
       
                         if (hasScannedThis && isCorrect) {
                           btnStyle.background = 'rgba(16, 185, 129, 0.1)';
-                          btnStyle.color = 'var(--success)';
-                          btnStyle.borderColor = 'var(--success)';
+                          btnStyle.color = 'var(--lesson-success)';
+                          btnStyle.borderColor = 'var(--lesson-success)';
                           btnStyle.fontWeight = 'bold';
                         } else if (isOptionSelected && scanState === 'incorrect') {
                           btnStyle.background = 'rgba(239, 68, 68, 0.1)';
-                          btnStyle.color = 'var(--danger)';
-                          btnStyle.borderColor = 'var(--danger)';
+                          btnStyle.color = 'var(--lesson-danger)';
+                          btnStyle.borderColor = 'var(--lesson-danger)';
                         }
       
                         return (
@@ -672,7 +672,7 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                           borderRadius: '6px',
                           background: 'rgba(239, 68, 68, 0.1)',
                           border: '1px solid rgba(239, 68, 68, 0.3)',
-                          color: 'var(--danger)'
+                          color: 'var(--lesson-danger)'
                         }}>
                           <strong>Try again!</strong> {selectedObj.explanations[selectedMaterialOption]}
                         </div>
@@ -681,26 +681,26 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                   </motion.div>
                 ) : (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', maxWidth: '500px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontSize: 'clamp(20px, 3vw, 24px)', fontWeight: 900, letterSpacing: '1px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--lesson-success)', fontSize: 'clamp(20px, 3vw, 24px)', fontWeight: 900, letterSpacing: '1px' }}>
                         <Check size={24} strokeWidth={3} /> MATERIAL IDENTIFIED
                       </div>
                     </div>
                     
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', textAlign: 'center' }}>
                       <div>
-                        <div style={{ color: 'var(--text-secondary)', fontSize: 'clamp(15px, 2vw, 18px)', letterSpacing: '1px', marginBottom: '0.25rem', fontWeight: 800 }}>OBJECT</div>
-                        <div style={{ color: 'var(--text-heading)', fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 900, letterSpacing: '0.5px' }}>{selectedObj.name.toUpperCase()}</div>
+                        <div style={{ color: 'var(--lesson-secondary)', fontSize: 'clamp(15px, 2vw, 18px)', letterSpacing: '1px', marginBottom: '0.25rem', fontWeight: 800 }}>OBJECT</div>
+                        <div style={{ color: 'var(--lesson-primary)', fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 900, letterSpacing: '0.5px' }}>{selectedObj.name.toUpperCase()}</div>
                       </div>
                       <div>
-                        <div style={{ color: 'var(--text-secondary)', fontSize: 'clamp(15px, 2vw, 18px)', letterSpacing: '1px', marginBottom: '0.25rem', fontWeight: 800 }}>MATERIAL</div>
-                        <div style={{ color: 'var(--accent)', fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 900, letterSpacing: '1px' }}>{selectedMaterialOption.toUpperCase()}</div>
+                        <div style={{ color: 'var(--lesson-secondary)', fontSize: 'clamp(15px, 2vw, 18px)', letterSpacing: '1px', marginBottom: '0.25rem', fontWeight: 800 }}>MATERIAL</div>
+                        <div style={{ color: 'var(--lesson-accent)', fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 900, letterSpacing: '1px' }}>{selectedMaterialOption.toUpperCase()}</div>
                       </div>
                     </div>
     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
-                      <div style={{ color: 'var(--text-secondary)', fontSize: 'clamp(15px, 2vw, 18px)', letterSpacing: '1px', fontWeight: 800 }}>PROPERTIES</div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontSize: 'clamp(16px, 2vw, 19px)', color: 'var(--text-primary)' }}>
+                      <div style={{ color: 'var(--lesson-secondary)', fontSize: 'clamp(15px, 2vw, 18px)', letterSpacing: '1px', fontWeight: 800 }}>PROPERTIES</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontSize: 'clamp(16px, 2vw, 19px)', color: 'var(--lesson-text)' }}>
                         {(() => {
                           let text = selectedObj.explanations[selectedMaterialOption];
                           const prefix = selectedMaterialOption + ' is ';
@@ -710,8 +710,8 @@ export default function Stage2_Identify({ onComplete, addXp }) {
                           if (text.endsWith('.')) text = text.substring(0, text.length - 1);
                           const parts = text.split(/,\s*and\s+|,\s*|\s+and\s+/).map(p => p.trim()).filter(p => p.length > 0);
                           return parts.map((part, i) => (
-                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--surface)', border: '1px solid var(--border)', padding: '0.4rem 0.75rem', borderRadius: '4px', fontWeight: 700 }}>
-                              <span style={{ color: 'var(--success)' }}>✓</span> {part.charAt(0).toUpperCase() + part.slice(1)}
+                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', padding: '0.4rem 0.75rem', borderRadius: '4px', fontWeight: 700 }}>
+                              <span style={{ color: 'var(--lesson-success)' }}>✓</span> {part.charAt(0).toUpperCase() + part.slice(1)}
                             </div>
                           ));
                         })()}

@@ -3919,12 +3919,12 @@ export default function ChapterLearningLab({
     };
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 8px 32px rgba(0,0,0,0.02)' }}>
-        <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', padding: '1.25rem', background: 'linear-gradient(145deg, rgba(246, 252, 248, 0.97) 0%, rgba(236, 247, 241, 0.95) 100%)', borderRadius: '20px', border: '1.5px solid rgba(167, 243, 208, 0.85)', boxShadow: '0 16px 40px rgba(0,0,0,0.35)' }}>
+        <div style={{ borderBottom: '1.5px solid rgba(167, 243, 208, 0.85)', paddingBottom: '0.55rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+          <span style={{ fontSize: '0.92rem', fontWeight: '900', color: '#064e3b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             🔗 Venation-Root Correlation Linker
           </span>
-          <span style={{ fontSize: '1.05rem', color: '#ffffff', fontWeight: '800', background: 'linear-gradient(135deg, #f59e0b, #d97706)', padding: '0.45rem 1.15rem', borderRadius: '14px', border: '2px solid #92400e', boxShadow: '0 4px 16px rgba(245,158,11,0.5)', textShadow: '0 1px 2px rgba(0,0,0,0.4)' }}>
+          <span style={{ fontSize: '0.92rem', color: '#ffffff', fontWeight: '800', background: 'linear-gradient(135deg, #f59e0b, #d97706)', padding: '0.35rem 0.95rem', borderRadius: '12px', border: '1.5px solid #92400e', boxShadow: '0 2px 8px rgba(245,158,11,0.35)', textShadow: '0 1px 2px rgba(0,0,0,0.4)' }}>
             👉 Tap matching cards on left & right to link
           </span>
         </div>
@@ -3951,36 +3951,36 @@ export default function ChapterLearningLab({
             )}
 
             {/* Reticulate port (left, top) */}
-            <circle cx="46.3%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : 'var(--page-bg)'} stroke={connections.reticulate ? '#059669' : selectedLeaf === 'reticulate' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            <circle cx="46.3%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : '#ffffff'} stroke={connections.reticulate ? '#059669' : selectedLeaf === 'reticulate' ? '#0284c7' : '#94a3b8'} strokeWidth="2.5" />
             {selectedLeaf === 'reticulate' && !connections.reticulate && (
-              <circle cx="46.3%" cy="24%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+              <circle cx="46.3%" cy="24%" r="7" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6">
                 <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
               </circle>
             )}
 
             {/* Parallel port (left, bottom) */}
-            <circle cx="46.3%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : 'var(--page-bg)'} stroke={connections.parallel ? '#059669' : selectedLeaf === 'parallel' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            <circle cx="46.3%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : '#ffffff'} stroke={connections.parallel ? '#059669' : selectedLeaf === 'parallel' ? '#0284c7' : '#94a3b8'} strokeWidth="2.5" />
             {selectedLeaf === 'parallel' && !connections.parallel && (
-              <circle cx="46.3%" cy="74%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+              <circle cx="46.3%" cy="74%" r="7" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6">
                 <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
               </circle>
             )}
 
             {/* Taproot port (right, top) */}
-            <circle cx="53.7%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : 'var(--page-bg)'} stroke={connections.reticulate ? '#059669' : selectedRoot === 'taproot' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            <circle cx="53.7%" cy="24%" r="5" fill={connections.reticulate ? '#10b981' : '#ffffff'} stroke={connections.reticulate ? '#059669' : selectedRoot === 'taproot' ? '#0284c7' : '#94a3b8'} strokeWidth="2.5" />
             {selectedRoot === 'taproot' && !connections.reticulate && (
-              <circle cx="53.7%" cy="24%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+              <circle cx="53.7%" cy="24%" r="7" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6">
                 <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
               </circle>
             )}
 
             {/* Fibrous port (right, bottom) */}
-            <circle cx="53.7%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : 'var(--page-bg)'} stroke={connections.parallel ? '#059669' : selectedRoot === 'fibrous' ? 'var(--accent)' : 'var(--border)'} strokeWidth="2.5" />
+            <circle cx="53.7%" cy="74%" r="5" fill={connections.parallel ? '#10b981' : '#ffffff'} stroke={connections.parallel ? '#059669' : selectedRoot === 'fibrous' ? '#0284c7' : '#94a3b8'} strokeWidth="2.5" />
             {selectedRoot === 'fibrous' && !connections.parallel && (
-              <circle cx="53.7%" cy="74%" r="7" fill="none" stroke="var(--accent)" strokeWidth="1.5" opacity="0.6">
+              <circle cx="53.7%" cy="74%" r="7" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6">
                 <animate attributeName="r" values="5;9;5" dur="1.5s" repeatCount="indefinite" />
                 <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite" />
               </circle>
@@ -3988,32 +3988,32 @@ export default function ChapterLearningLab({
           </svg>
           {/* Leaves */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <span style={{ fontSize: '0.92rem', fontWeight: '900', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Venation</span>
+            <span style={{ fontSize: '0.95rem', fontWeight: '900', color: '#064e3b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Venation</span>
             
             <button
               onClick={() => selectLeaf('reticulate')}
               className="glass-btn"
               style={{ 
                 padding: 0, 
-                borderRadius: '12px', 
+                borderRadius: '14px', 
                 overflow: 'hidden',
-                border: connections.reticulate ? '2.5px solid var(--success)' : selectedLeaf === 'reticulate' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
-                background: 'var(--page-bg)', 
+                border: connections.reticulate ? '2.5px solid #059669' : selectedLeaf === 'reticulate' ? '2.5px solid #0284c7' : '1.5px solid rgba(167, 243, 208, 0.9)', 
+                background: connections.reticulate ? '#f0fdf4' : selectedLeaf === 'reticulate' ? '#f0f9ff' : '#ffffff', 
                 cursor: 'pointer', 
                 textAlign: 'left', 
                 display: 'flex', 
                 flexDirection: 'column',
                 transition: 'all 0.2s',
-                boxShadow: selectedLeaf === 'reticulate' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                boxShadow: connections.reticulate ? '0 4px 14px rgba(5,150,105,0.2)' : selectedLeaf === 'reticulate' ? '0 4px 14px rgba(2,132,199,0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
                 width: '100%'
               }}
             >
-              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <img src={dicotLeafImg} alt="Dicot / Reticulate Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f0fdf4' }} />
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
+                <img src={dicotLeafImg} alt="Dicot / Reticulate Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f8fafc' }} />
               </div>
               <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Reticulate</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Net-like network of veins</span>
+                <span style={{ fontSize: '1.05rem', fontWeight: '900', color: '#064e3b' }}>Reticulate</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>Net-like network of veins</span>
               </div>
             </button>
             
@@ -4022,57 +4022,57 @@ export default function ChapterLearningLab({
               className="glass-btn"
               style={{ 
                 padding: 0, 
-                borderRadius: '12px', 
+                borderRadius: '14px', 
                 overflow: 'hidden',
-                border: connections.parallel ? '2.5px solid var(--success)' : selectedLeaf === 'parallel' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
-                background: 'var(--page-bg)', 
+                border: connections.parallel ? '2.5px solid #059669' : selectedLeaf === 'parallel' ? '2.5px solid #0284c7' : '1.5px solid rgba(167, 243, 208, 0.9)', 
+                background: connections.parallel ? '#f0fdf4' : selectedLeaf === 'parallel' ? '#f0f9ff' : '#ffffff', 
                 cursor: 'pointer', 
                 textAlign: 'left', 
                 display: 'flex', 
                 flexDirection: 'column',
                 transition: 'all 0.2s',
-                boxShadow: selectedLeaf === 'parallel' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                boxShadow: connections.parallel ? '0 4px 14px rgba(5,150,105,0.2)' : selectedLeaf === 'parallel' ? '0 4px 14px rgba(2,132,199,0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
                 width: '100%'
               }}
             >
-              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <img src={monocotLeafImg} alt="Monocot / Parallel Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f0fdf4' }} />
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
+                <img src={monocotLeafImg} alt="Monocot / Parallel Venation" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f8fafc' }} />
               </div>
               <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Parallel</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Veins running side-by-side</span>
+                <span style={{ fontSize: '1.05rem', fontWeight: '900', color: '#064e3b' }}>Parallel</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>Veins running side-by-side</span>
               </div>
             </button>
           </div>
 
           {/* Roots */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <span style={{ fontSize: '0.92rem', fontWeight: '900', color: 'var(--text-heading)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Root System</span>
+            <span style={{ fontSize: '0.95rem', fontWeight: '900', color: '#064e3b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Root System</span>
             
             <button
               onClick={() => selectRoot('taproot')}
               className="glass-btn"
               style={{ 
                 padding: 0, 
-                borderRadius: '12px', 
+                borderRadius: '14px', 
                 overflow: 'hidden',
-                border: connections.reticulate ? '2.5px solid var(--success)' : selectedRoot === 'taproot' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
-                background: 'var(--page-bg)', 
+                border: connections.reticulate ? '2.5px solid #059669' : selectedRoot === 'taproot' ? '2.5px solid #0284c7' : '1.5px solid rgba(167, 243, 208, 0.9)', 
+                background: connections.reticulate ? '#f0fdf4' : selectedRoot === 'taproot' ? '#f0f9ff' : '#ffffff', 
                 cursor: 'pointer', 
                 textAlign: 'left', 
                 display: 'flex', 
                 flexDirection: 'column',
                 transition: 'all 0.2s',
-                boxShadow: selectedRoot === 'taproot' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                boxShadow: connections.reticulate ? '0 4px 14px rgba(5,150,105,0.2)' : selectedRoot === 'taproot' ? '0 4px 14px rgba(2,132,199,0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
                 width: '100%'
               }}
             >
-              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <img src={taprootImg} alt="Taproot" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#fdf8f6' }} />
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
+                <img src={taprootImg} alt="Taproot" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f8fafc' }} />
               </div>
               <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Taproot</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>One deep central thick root</span>
+                <span style={{ fontSize: '1.05rem', fontWeight: '900', color: '#064e3b' }}>Taproot</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>One deep central thick root</span>
               </div>
             </button>
             
@@ -4081,32 +4081,32 @@ export default function ChapterLearningLab({
               className="glass-btn"
               style={{ 
                 padding: 0, 
-                borderRadius: '12px', 
+                borderRadius: '14px', 
                 overflow: 'hidden',
-                border: connections.parallel ? '2.5px solid var(--success)' : selectedRoot === 'fibrous' ? '2.5px solid var(--accent)' : '1px solid var(--border)', 
-                background: 'var(--page-bg)', 
+                border: connections.parallel ? '2.5px solid #059669' : selectedRoot === 'fibrous' ? '2.5px solid #0284c7' : '1.5px solid rgba(167, 243, 208, 0.9)', 
+                background: connections.parallel ? '#f0fdf4' : selectedRoot === 'fibrous' ? '#f0f9ff' : '#ffffff', 
                 cursor: 'pointer', 
                 textAlign: 'left', 
                 display: 'flex', 
                 flexDirection: 'column',
                 transition: 'all 0.2s',
-                boxShadow: selectedRoot === 'fibrous' ? '0 6px 16px rgba(99,102,241,0.2)' : 'none',
+                boxShadow: connections.parallel ? '0 4px 14px rgba(5,150,105,0.2)' : selectedRoot === 'fibrous' ? '0 4px 14px rgba(2,132,199,0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
                 width: '100%'
               }}
             >
-              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                <img src={fibrousImg} alt="Fibrous Root" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#fdf8f6' }} />
+              <div style={{ width: '100%', height: '140px', overflow: 'hidden', borderBottom: '1px solid #e2e8f0', position: 'relative' }}>
+                <img src={fibrousImg} alt="Fibrous Root" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', background: '#f8fafc' }} />
               </div>
               <div style={{ padding: '0.75rem 0.9rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '1.02rem', fontWeight: '900', color: '#4ade80' }}>Fibrous</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--text-secondary)' }}>Cluster of thin threadlike roots</span>
+                <span style={{ fontSize: '1.05rem', fontWeight: '900', color: '#064e3b' }}>Fibrous</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>Cluster of thin threadlike roots</span>
               </div>
             </button>
           </div>
         </div>
 
         {status && (
-          <div style={{ padding: '0.5rem 0.75rem', borderRadius: '8px', background: 'var(--page-bg)', border: '1px solid var(--border)', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+          <div style={{ padding: '0.6rem 0.9rem', borderRadius: '10px', background: '#ffffff', border: '1.5px solid rgba(167, 243, 208, 0.9)', fontSize: '0.88rem', fontWeight: '700', color: status.startsWith('❌') ? '#b91c1c' : '#064e3b', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
             {status}
           </div>
         )}
@@ -4721,9 +4721,11 @@ export default function ChapterLearningLab({
     const isLastSlide = currentSlideIndex === totalSlides - 1;
 
     const isPlantVarietyConcept = lessonId === 'plant_variety_concept';
+    const isVenationRootsConcept = lessonId === 'venation_roots_concept';
+    const isPlantConcept = isPlantVarietyConcept || isVenationRootsConcept;
     const isAdaptationsConcept = lessonId === 'adaptations_concept';
     const isGroupingAnimalsConcept = lessonId === 'grouping_animals_concept';
-    const isEnlargedTextConcept = isPlantVarietyConcept || isAdaptationsConcept;
+    const isEnlargedTextConcept = isPlantConcept || isAdaptationsConcept;
 
     const isScientistSlide = (isGroupingAnimalsConcept && currentSlideIndex === 2) || (isAdaptationsConcept && currentSlideIndex === 2);
 
@@ -4731,13 +4733,41 @@ export default function ChapterLearningLab({
       <div className="split-frame" style={{ width: '100%', minHeight: '560px' }}>
         {/* LEFT COLUMN: Concept text & slideshow buttons */}
         <div 
-          className={`frame-page-left ${isPlantVarietyConcept ? 'act24-mint-left' : ''}`} 
+          className={`frame-page-left ${isPlantConcept ? 'act24-mint-left' : ''}`} 
           style={isGroupingAnimalsConcept ? { padding: '1.25rem 1.4rem' } : undefined}
         >
           {lessonId === 'cotyledons_concept' ? (
             <h1 className="textbook-title" style={{ fontFamily: 'var(--serif-font)', margin: '0 0 1rem 0', fontSize: '1.65rem', color: '#38bdf8', fontWeight: '800' }}>
               Activity 2.8: Let us compare - Seeds & Cotyledons
             </h1>
+          ) : isVenationRootsConcept ? (
+            <div>
+              <div className="textbook-eyebrow" style={{ 
+                fontSize: '14px', 
+                color: '#ffffff', 
+                fontWeight: '800', 
+                letterSpacing: '0.06em',
+                display: 'inline-block',
+                background: 'linear-gradient(135deg, #065f46 0%, #047857 100%)',
+                border: '1.5px solid #064e3b',
+                padding: '0.35rem 0.85rem',
+                borderRadius: '8px',
+                boxShadow: '0 2px 6px rgba(6, 95, 70, 0.25)',
+                marginBottom: '0.5rem'
+              }}>
+                {activeLevel.title}
+              </div>
+              <h1 className="textbook-title" style={{
+                fontFamily: 'var(--serif-font)',
+                margin: '0 0 0.85rem 0',
+                fontSize: '2.1rem',
+                color: '#0f172a',
+                fontWeight: '900',
+                lineHeight: '1.2'
+              }}>
+                {slide.title}
+              </h1>
+            </div>
           ) : isPlantVarietyConcept ? (
             <div>
               <div className="textbook-eyebrow" style={{ 
@@ -4784,38 +4814,147 @@ export default function ChapterLearningLab({
           
           <p style={{
             fontSize: isGroupingAnimalsConcept ? (isScientistSlide ? '1.02rem' : '1.12rem') : (isScientistSlide ? '1.05rem' : (isEnlargedTextConcept ? '1.22rem' : '1.02rem')),
-            color: isPlantVarietyConcept ? '#064e3b' : '#fde047',
+            color: isVenationRootsConcept ? '#1e293b' : (isPlantVarietyConcept ? '#064e3b' : '#fde047'),
             lineHeight: isGroupingAnimalsConcept ? '1.5' : (isScientistSlide ? '1.45' : '1.65'),
             margin: isGroupingAnimalsConcept ? '0 0 0.75rem 0' : '0 0 0.85rem 0',
-            fontWeight: (isGroupingAnimalsConcept || isPlantVarietyConcept) ? '700' : (isEnlargedTextConcept ? '700' : '500'),
+            fontWeight: (isGroupingAnimalsConcept || isPlantConcept) ? '700' : (isEnlargedTextConcept ? '700' : '500'),
             textShadow: (isAdaptationsConcept || isGroupingAnimalsConcept) ? '0 1px 3px rgba(0,0,0,0.6)' : 'none'
           }}>
             {slide.content}
           </p>
 
           {slide.bullets && (
-            <ul style={{
-              margin: isGroupingAnimalsConcept ? '0 0 0.85rem 0' : '0 0 1.25rem 0',
-              paddingLeft: isGroupingAnimalsConcept ? '1.25rem' : '1.25rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: isGroupingAnimalsConcept ? (isScientistSlide ? '0.38rem' : '0.55rem') : (isScientistSlide ? '0.4rem' : (isEnlargedTextConcept ? '0.55rem' : '0.4rem'))
-            }}>
-              {slide.bullets.map((b, i) => (
-                <li key={i} style={{
-                  fontSize: isGroupingAnimalsConcept ? (isScientistSlide ? '0.94rem' : '1.04rem') : (isScientistSlide ? '0.98rem' : (isEnlargedTextConcept ? '1.14rem' : '0.95rem')),
-                  color: isPlantVarietyConcept ? '#064e3b' : '#fde047',
-                  lineHeight: isGroupingAnimalsConcept ? '1.48' : (isScientistSlide ? '1.4' : '1.6'),
-                  fontWeight: (isGroupingAnimalsConcept || isPlantVarietyConcept) ? '700' : (isEnlargedTextConcept ? '700' : '500'),
-                  textShadow: (isAdaptationsConcept || isGroupingAnimalsConcept) ? '0 1px 3px rgba(0,0,0,0.6)' : 'none'
-                }}>
-                  {b}
-                </li>
-              ))}
-            </ul>
+            isVenationRootsConcept ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.65rem',
+                margin: '0 0 0.85rem 0'
+              }}>
+                {slide.bullets.map((b, i) => {
+                  let badgeColor = '#064e3b';
+                  let badgeBg = '#dcfce7';
+                  let badgeBorder = '#86efac';
+                  
+                  if (b.includes('Parallel')) {
+                    badgeColor = '#0369a1';
+                    badgeBg = '#e0f2fe';
+                    badgeBorder = '#7dd3fc';
+                  } else if (b.includes('Taproot')) {
+                    badgeColor = '#92400e';
+                    badgeBg = '#fef3c7';
+                    badgeBorder = '#fde68a';
+                  } else if (b.includes('Fibrous')) {
+                    badgeColor = '#9a3412';
+                    badgeBg = '#ffedd5';
+                    badgeBorder = '#fed7aa';
+                  }
+
+                  const parts = b.split(': ');
+                  return (
+                    <div key={i} style={{
+                      background: '#ffffff',
+                      border: '1.5px solid rgba(167, 243, 208, 0.95)',
+                      borderRadius: '12px',
+                      padding: '0.7rem 0.95rem',
+                      boxShadow: '0 2px 8px rgba(0, 30, 15, 0.04)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.3rem'
+                    }}>
+                      {parts.length > 1 ? (
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{
+                              background: badgeBg,
+                              color: badgeColor,
+                              border: `1px solid ${badgeBorder}`,
+                              padding: '0.18rem 0.65rem',
+                              borderRadius: '6px',
+                              fontWeight: '800',
+                              fontSize: '0.96rem',
+                              letterSpacing: '0.02em'
+                            }}>
+                              {parts[0]}
+                            </span>
+                          </div>
+                          <div style={{ color: '#334155', fontSize: '1.02rem', lineHeight: '1.48', fontWeight: '600', paddingLeft: '0.15rem' }}>
+                            {parts[1]}
+                          </div>
+                        </>
+                      ) : (
+                        <div style={{ color: '#0f172a', fontSize: '1.05rem', lineHeight: '1.48', fontWeight: '700' }}>
+                          {b}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <ul style={{
+                margin: isGroupingAnimalsConcept ? '0 0 0.85rem 0' : '0 0 1.25rem 0',
+                paddingLeft: isGroupingAnimalsConcept ? '1.25rem' : '1.25rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: isGroupingAnimalsConcept ? (isScientistSlide ? '0.38rem' : '0.55rem') : (isScientistSlide ? '0.4rem' : (isEnlargedTextConcept ? '0.55rem' : '0.4rem'))
+              }}>
+                {slide.bullets.map((b, i) => (
+                  <li key={i} style={{
+                    fontSize: isGroupingAnimalsConcept ? (isScientistSlide ? '0.94rem' : '1.04rem') : (isScientistSlide ? '0.98rem' : (isEnlargedTextConcept ? '1.14rem' : '0.95rem')),
+                    color: isPlantVarietyConcept ? '#064e3b' : '#fde047',
+                    lineHeight: isGroupingAnimalsConcept ? '1.48' : (isScientistSlide ? '1.4' : '1.6'),
+                    fontWeight: (isGroupingAnimalsConcept || isPlantConcept) ? '700' : (isEnlargedTextConcept ? '700' : '500'),
+                    textShadow: (isAdaptationsConcept || isGroupingAnimalsConcept) ? '0 1px 3px rgba(0,0,0,0.6)' : 'none'
+                  }}>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            )
           )}
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginTop: 'auto', paddingTop: isGroupingAnimalsConcept ? '0.75rem' : '1rem', borderTop: isPlantVarietyConcept ? '1.5px solid rgba(167, 243, 208, 0.7)' : '1px solid rgba(0,0,0,0.06)' }}>
+          {isVenationRootsConcept && (
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(240, 253, 244, 0.95), rgba(255, 255, 255, 0.98))',
+              border: '1.5px dashed #059669',
+              borderRadius: '12px',
+              padding: '0.75rem 1rem',
+              marginTop: 'auto',
+              marginBottom: '0.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              boxShadow: '0 2px 8px rgba(5, 150, 105, 0.06)'
+            }}>
+              <div style={{
+                width: '34px',
+                height: '34px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #059669, #047857)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.15rem',
+                flexShrink: 0,
+                boxShadow: '0 2px 6px rgba(4, 120, 87, 0.25)'
+              }}>
+                🔬
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: '800', color: '#065f46', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Lab Diagnostic Tip
+                </span>
+                <span style={{ fontSize: '0.92rem', fontWeight: '700', color: '#0f172a', lineHeight: '1.35' }}>
+                  {currentSlideIndex === 0 && 'Inspect leaf veins carefully: net-mesh indicates reticulate, straight lines indicate parallel.'}
+                  {currentSlideIndex === 1 && 'Observe root structure: one main thick taproot vs multiple equal fibrous threadlike roots.'}
+                  {currentSlideIndex === 2 && 'Plants show exact correlation: Reticulate leaf ⇄ Taproot, Parallel leaf ⇄ Fibrous roots.'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginTop: 'auto', paddingTop: isGroupingAnimalsConcept ? '0.75rem' : '1rem', borderTop: isPlantConcept ? '1.5px solid rgba(167, 243, 208, 0.7)' : '1px solid rgba(0,0,0,0.06)' }}>
             <div style={{ display: 'flex', gap: '0.35rem' }}>
               {chapterNum !== 2 && (
                 <button
@@ -4849,7 +4988,7 @@ export default function ChapterLearningLab({
             </div>
 
             <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.75rem', color: isPlantVarietyConcept ? '#047857' : 'var(--text-muted)', fontWeight: isPlantVarietyConcept ? '700' : 'normal', marginRight: '0.2rem' }}>
+              <span style={{ fontSize: '0.75rem', color: isPlantConcept ? '#047857' : 'var(--text-muted)', fontWeight: isPlantConcept ? '700' : 'normal', marginRight: '0.2rem' }}>
                 Slide {currentSlideIndex + 1} of {totalSlides}
               </span>
               {currentSlideIndex > 0 && (
@@ -4860,7 +4999,7 @@ export default function ChapterLearningLab({
                     padding: '0.35rem 0.8rem', 
                     fontSize: '0.75rem', 
                     borderRadius: '20px',
-                    ...(isPlantVarietyConcept ? {
+                    ...(isPlantConcept ? {
                       border: '1.5px solid #10b981',
                       color: '#065f46',
                       fontWeight: '800',
@@ -4887,7 +5026,7 @@ export default function ChapterLearningLab({
                     padding: '0.35rem 0.8rem', 
                     fontSize: '0.75rem', 
                     borderRadius: '20px',
-                    ...(isPlantVarietyConcept ? {
+                    ...(isPlantConcept ? {
                       background: 'linear-gradient(135deg, #059669, #047857)',
                       borderColor: '#059669',
                       fontWeight: '800'
@@ -4905,7 +5044,7 @@ export default function ChapterLearningLab({
                     padding: '0.35rem 0.8rem', 
                     fontSize: '0.75rem', 
                     borderRadius: '20px',
-                    ...(isPlantVarietyConcept ? {
+                    ...(isPlantConcept ? {
                       background: 'linear-gradient(135deg, #059669, #047857)',
                       borderColor: '#059669',
                       fontWeight: '800'

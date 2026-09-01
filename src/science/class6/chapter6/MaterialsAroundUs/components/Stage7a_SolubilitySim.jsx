@@ -21,11 +21,11 @@ const StirringProgress = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '15px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-        <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#431407', letterSpacing: '0.05em' }}>STIRRING</div>
-        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#d97706', lineHeight: 1 }}>{percent}%</div>
+        <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--lesson-primary)', letterSpacing: '0.05em' }}>STIRRING</div>
+        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--lesson-accent)', lineHeight: 1 }}>{percent}%</div>
       </div>
-      <div style={{ width: '100%', height: '24px', background: '#fff', border: '1px solid #d6d3d1', borderRadius: '12px', overflow: 'hidden', padding: '2px' }}>
-        <div style={{ height: '100%', background: '#d97706', width: `${percent}%`, transition: 'width 0.1s linear', borderRadius: '8px' }} />
+      <div style={{ width: '100%', height: '24px', background: 'white', border: '1px solid #d6d3d1', borderRadius: '12px', overflow: 'hidden', padding: '2px' }}>
+        <div style={{ height: '100%', background: 'var(--lesson-accent)', width: `${percent}%`, transition: 'width 0.1s linear', borderRadius: '8px' }} />
       </div>
       <div style={{ fontSize: '1.1rem', color: '#78716c', fontWeight: '600', textTransform: 'uppercase' }}>Mixing...</div>
     </div>
@@ -71,7 +71,7 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
       } else if (mat === 'sugar') {
         color = new THREE.Color('#FAFAFA'); // Slightly off-white crystalline
       } else {
-        color = new THREE.Color('#FFFFFF'); // Bright white for salt
+        color = new THREE.Color('whiteFFF'); // Bright white for salt
       }
 
       // Base scales - keep them small enough to look like hundreds of individual grains
@@ -264,7 +264,7 @@ const ParticleSystem = ({ selectedSubstance, stirState }) => {
         opacity={selectedSubstance.id === 'chalk' ? 0.7 : 1.0}
         roughness={selectedSubstance.id === 'sand' ? 1.0 : (selectedSubstance.id === 'chalk' || selectedSubstance.id === 'sawdust' ? 1.0 : 0.2)}
         metalness={selectedSubstance.id === 'sugar' || selectedSubstance.id === 'salt' ? 0.3 : 0.0}
-        emissive="#ffffff"
+        emissive="whitefff"
         emissiveIntensity={selectedSubstance.id === 'sand' || selectedSubstance.id === 'sawdust' || selectedSubstance.id === 'chalk' ? 0.0 : 0.15}
         depthWrite={true}
       />
@@ -306,10 +306,10 @@ const StirringRod = ({ stirState }) => {
         roughness={0.02} 
         metalness={0.1}
         ior={1.55}
-        color="#ffffff" 
-        attenuationColor="#e0f2fe"
+        color="whitefff" 
+        attenuationColor="var(--lesson-surface)"
         attenuationDistance={2.0}
-        emissive="#ffffff"
+        emissive="whitefff"
         emissiveIntensity={0.02}
         clearcoat={1}
         depthWrite={false}
@@ -382,7 +382,7 @@ const Beaker3D = ({ stirState }) => {
       <mesh renderOrder={4}>
         <latheGeometry args={[beakerPoints, 64]} />
         <meshPhysicalMaterial 
-          color="#ffffff" 
+          color="whitefff" 
           transparent={true}
           transmission={0.98} // High transmission for realism
           opacity={1.0} 
@@ -394,7 +394,7 @@ const Beaker3D = ({ stirState }) => {
           clearcoatRoughness={0.05}
           side={THREE.DoubleSide}
           depthWrite={false}
-          attenuationColor="#ffffff"
+          attenuationColor="whitefff"
           attenuationDistance={10}
         />
       </mesh>
@@ -414,7 +414,7 @@ const Beaker3D = ({ stirState }) => {
           opacity={0.4}
           roughness={0.05}
           metalness={0.05}
-          color="#0ea5e9"
+          color="#7dd3fc"
           depthWrite={false}
         />
       </mesh>
@@ -427,7 +427,7 @@ const Beaker3D = ({ stirState }) => {
           opacity={0.6}
           roughness={0.05}
           metalness={0.1}
-          color="#38bdf8"
+          color="#7dd3fc"
           depthWrite={false}
         />
       </mesh>
@@ -435,7 +435,7 @@ const Beaker3D = ({ stirState }) => {
       {/* Meniscus / Surface Line */}
       <mesh position={[0, 1.5, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
         <torusGeometry args={[1.39, 0.015, 16, 64]} />
-        <meshPhysicalMaterial transparent opacity={0.8} color="#ffffff" roughness={0.0} clearcoat={1} depthWrite={false} />
+        <meshPhysicalMaterial transparent opacity={0.8} color="whitefff" roughness={0.0} clearcoat={1} depthWrite={false} />
       </mesh>
     </group>
   );
@@ -488,10 +488,10 @@ const WebGLBeakerSimulation = ({ selectedSubstance, stirState }) => {
         {/* Camera shifted slightly down to y:0.2 to balance the extra visual weight of the bottom shadow */}
         <Canvas camera={{ position: [0, 0.2, 8.5], fov: 40 }} style={{ width: '100%', height: '100%' }}>
           {/* Photorealistic Studio Lighting */}
-          <ambientLight intensity={0.6} color="#ffffff" />
-          <directionalLight position={[10, 15, 10]} intensity={1.5} color="#ffffff" castShadow />
+          <ambientLight intensity={0.6} color="whitefff" />
+          <directionalLight position={[10, 15, 10]} intensity={1.5} color="whitefff" castShadow />
           <directionalLight position={[-10, 5, -5]} intensity={0.5} color="#e0e0e0" />
-          <spotLight position={[0, 10, 0]} intensity={1.5} penumbra={0.5} angle={0.5} color="#ffffff" />
+          <spotLight position={[0, 10, 0]} intensity={1.5} penumbra={0.5} angle={0.5} color="whitefff" />
           
           <SceneRig stirState={stirState} selectedSubstance={selectedSubstance} />
           
@@ -517,31 +517,31 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
       id: 'sugar', name: 'Sugar', type: 'Soluble', image: '/images/solubility_sugar.png',
       desc: 'Sugar completely disappears when stirred into water.',
       conclusion: 'Materials that dissolve in water are called Soluble.',
-      waterColor: 'var(--accent)', turbidity: 0, solidVisible: false
+      waterColor: '#7dd3fc', turbidity: 0, solidVisible: false
     },
     { 
       id: 'salt', name: 'Salt', type: 'Soluble', image: '/images/solubility_salt.png',
       desc: 'Salt completely disappears when stirred into water.',
       conclusion: 'Materials that dissolve in water are called Soluble.',
-      waterColor: 'var(--accent)', turbidity: 0, solidVisible: false
+      waterColor: '#7dd3fc', turbidity: 0, solidVisible: false
     },
     { 
       id: 'chalk', name: 'Chalk Powder', type: 'Insoluble', image: '/images/solubility_chalk.png',
       desc: 'The water turns cloudy and chalk powder does not disappear.',
       conclusion: 'Materials that do not dissolve in water are Insoluble.',
-      waterColor: 'var(--border)', turbidity: 0.8, solidVisible: true, solidColor: 'var(--surface)', settle: false
+      waterColor: '#f1f5f9', turbidity: 0.8, solidVisible: true, solidColor: '#f1f5f9', settle: false
     },
     { 
       id: 'sand', name: 'Sand', type: 'Insoluble', image: '/images/solubility_sand.png',
       desc: 'Sand settles down at the bottom of the beaker.',
       conclusion: 'Sand is Insoluble in water.',
-      waterColor: 'var(--accent)', turbidity: 0.2, solidVisible: true, solidColor: '#b45309', settle: true
+      waterColor: '#7dd3fc', turbidity: 0.2, solidVisible: true, solidColor: '#eab308', settle: true
     },
     { 
       id: 'sawdust', name: 'Sawdust', type: 'Insoluble', image: '/images/solubility_sawdust.png',
       desc: 'Sawdust floats on the surface of the water.',
       conclusion: 'Sawdust is Insoluble in water.',
-      waterColor: 'var(--accent)', turbidity: 0.1, solidVisible: true, solidColor: '#d97706', float: true
+      waterColor: '#7dd3fc', turbidity: 0.1, solidVisible: true, solidColor: '#d97706', float: true
     }
   ];
 
@@ -576,32 +576,32 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
   }, [isComplete, onComplete]);
 
   return (
-    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', color: 'var(--text-primary)' }}>
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', height: '100%', color: 'var(--lesson-text)' }}>
       
       {/* Header */}
-      <div style={{ background: '#fdfbf7', border: '1px solid #e7e5e4', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}>
+      <div style={{ background: 'var(--lesson-background)', border: '1px solid var(--lesson-border)', borderRadius: '16px', padding: '1.25rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '2rem', color: '#431407', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold' }}>
-            <Search size={32} color="#d97706" /> Phase 1: Solubility Simulator
+          <h3 style={{ margin: 0, fontSize: '2rem', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold' }}>
+            <Search size={32} color="var(--lesson-accent)" /> Phase 1: Solubility Simulator
           </h3>
-          <p style={{ margin: 0, fontSize: '1.15rem', color: '#57534e', fontWeight: '500' }}>
+          <p style={{ margin: 0, fontSize: '1.15rem', color: 'var(--lesson-secondary)', fontWeight: '500' }}>
             Activity 6.7: Let us explore how different materials behave when we mix them in water.
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <div style={{ background: '#fff', border: '1px solid #d6d3d1', borderRadius: '12px', padding: '12px 18px', position: 'relative', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-            <div style={{ fontSize: '1rem', color: '#431407', fontWeight: '600' }}>Does everything dissolve?</div>
-            <div style={{ fontSize: '1rem', color: '#431407', fontWeight: '600' }}>Add to water, then stir!</div>
-            <div style={{ position: 'absolute', right: '-8px', top: '24px', width: '16px', height: '16px', background: '#fff', borderRight: '1px solid #d6d3d1', borderBottom: '1px solid #d6d3d1', transform: 'rotate(-45deg)' }} />
+          <div style={{ background: 'white', border: '1px solid #d6d3d1', borderRadius: '12px', padding: '12px 18px', position: 'relative', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+            <div style={{ fontSize: '1rem', color: 'var(--lesson-primary)', fontWeight: '600' }}>Does everything dissolve?</div>
+            <div style={{ fontSize: '1rem', color: 'var(--lesson-primary)', fontWeight: '600' }}>Add to water, then stir!</div>
+            <div style={{ position: 'absolute', right: '-8px', top: '24px', width: '16px', height: '16px', background: 'white', borderRight: '1px solid #d6d3d1', borderBottom: '1px solid #d6d3d1', transform: 'rotate(-45deg)' }} />
           </div>
           <img src="/images/chief_detective_blake.png" alt="Chief" style={{ width: '90px', height: '90px', objectFit: 'contain' }} />
         </div>
       </div>
 
-      <div style={{ display: 'flex', flex: 1, minHeight: 0, background: 'var(--surface)', borderRadius: '16px', border: '1px solid var(--border)' }}>
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, background: 'var(--lesson-surface)', borderRadius: '16px', border: '1px solid var(--lesson-border)' }}>
         
         {/* Left Side: Experiment */}
-        <div style={{ flex: '1 1 50%', minWidth: 0, maxWidth: '50%', padding: '1.5rem', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--border)', boxSizing: 'border-box' }}>
+        <div style={{ flex: '1 1 50%', minWidth: 0, maxWidth: '50%', padding: '1.5rem', display: 'flex', flexDirection: 'column', borderRight: '1px solid var(--lesson-border)', boxSizing: 'border-box' }}>
           
           <div style={{ marginBottom: '1rem' }}>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '1rem' }}>
@@ -616,9 +616,9 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                     key={sub.id}
                     onClick={() => handleSelect(sub)}
                     style={{
-                      background: isSelected ? 'var(--surface)' : 'white',
-                      border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
-                      color: isSelected ? 'var(--text-heading)' : 'var(--text-primary)',
+                      background: isSelected ? 'var(--lesson-surface)' : 'white',
+                      border: `2px solid ${isSelected ? 'var(--lesson-accent)' : 'var(--lesson-border)'}`,
+                      color: isSelected ? 'var(--lesson-primary)' : 'var(--lesson-text)',
                       padding: '1rem 0.5rem',
                       borderRadius: '16px',
                       fontWeight: 'bold',
@@ -633,11 +633,11 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                     }}
                   >
                     <div style={{ position: 'relative', width: '60px', height: '60px' }}>
-                      <div style={{ width: '100%', height: '100%', background: 'var(--surface)', borderRadius: '50%', padding: '8px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: '100%', height: '100%', background: 'var(--lesson-surface)', borderRadius: '50%', padding: '8px', border: '1px solid var(--lesson-border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <img src={sub.image} alt={sub.name} style={{ width: '40px', height: '40px', objectFit: 'contain', borderRadius: '50%', mixBlendMode: 'multiply' }} />
                       </div>
                       {isObserved && (
-                        <div style={{ position: 'absolute', top: -2, right: -2, background: '#16a34a', color: 'white', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', border: '2px solid white', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>✓</div>
+                        <div style={{ position: 'absolute', top: -2, right: -2, background: 'var(--lesson-success)', color: 'white', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', border: '2px solid white', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>✓</div>
                       )}
                     </div>
                     <span style={{ fontSize: '0.95rem', textAlign: 'center', lineHeight: '1.2' }}>{sub.name}</span>
@@ -664,7 +664,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                     alignItems: 'center',
                     gap: '0.75rem',
                     padding: '0.75rem 2rem',
-                    background: (stirState === 'stirring' || stirState === 'dropping') ? 'var(--text-light)' : '#f97316',
+                    background: (stirState === 'stirring' || stirState === 'dropping') ? 'var(--text-light)' : 'var(--lesson-accent)',
                     color: 'white',
                     border: 'none',
                     borderRadius: '24px',
@@ -680,7 +680,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                 
                 {stirState === 'resolved' && (
                   <div style={{
-                    color: selectedSubstance.type === 'Soluble' ? '#16a34a' : '#ea580c',
+                    color: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success)' : 'var(--lesson-accent)',
                     fontSize: '1.1rem',
                     fontWeight: 'bold',
                     background: 'rgba(255, 255, 255, 0.8)',
@@ -695,7 +695,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
               </>
             )}
             {!selectedSubstance && (
-              <div style={{ color: 'var(--text-muted)', fontSize: '0.95rem', alignSelf: 'center' }}>
+              <div style={{ color: 'var(--lesson-muted)', fontSize: '0.95rem', alignSelf: 'center' }}>
                 Select a material to add to the water.
               </div>
             )}
@@ -704,8 +704,8 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
 
         {/* Right Side: Observation Console */}
         <div style={{ flex: '1 1 50%', minWidth: 0, maxWidth: '50%', padding: '1.5rem', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
-          <h4 style={{ margin: '0 0 1rem 0', color: '#431407', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', fontSize: '1.75rem' }}>
-            <Camera size={28} color="#d97706" /> Observation Console
+          <h4 style={{ margin: '0 0 1rem 0', color: 'var(--lesson-primary)', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--lesson-border)', paddingBottom: '1rem', fontSize: '1.75rem' }}>
+            <Camera size={28} color="var(--lesson-accent)" /> Observation Console
           </h4>
           
           <AnimatePresence mode="wait">
@@ -715,22 +715,22 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', background: '#fdfbf7', borderRadius: '12px', padding: '1.5rem', border: '1px solid #e7e5e4', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', background: 'var(--lesson-background)', borderRadius: '12px', padding: '1.5rem', border: '1px solid var(--lesson-border)', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}
               >
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                  <div style={{ color: '#d97706', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Material</div>
-                  <div style={{ fontSize: '1.5rem', color: '#431407', fontWeight: 'bold' }}>{selectedSubstance.name}</div>
+                  <div style={{ color: 'var(--lesson-accent)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Material</div>
+                  <div style={{ fontSize: '1.5rem', color: 'var(--lesson-primary)', fontWeight: 'bold' }}>{selectedSubstance.name}</div>
                 </div>
 
                 {stirState === 'idle' ? (
-                  <div style={{ background: '#fff', borderRadius: '8px', padding: '1.5rem', border: '1px dashed #d6d3d1' }}>
-                    <div style={{ color: '#57534e', fontSize: '1.1rem' }}>Added to water. Click 'Stir Well' to observe what happens.</div>
+                  <div style={{ background: 'white', borderRadius: '8px', padding: '1.5rem', border: '1px dashed #d6d3d1' }}>
+                    <div style={{ color: 'var(--lesson-secondary)', fontSize: '1.1rem' }}>Added to water. Click 'Stir Well' to observe what happens.</div>
                   </div>
                 ) : (
                   <>
-                    <div style={{ background: '#fff', borderRadius: '12px', padding: '1.5rem', border: '1px solid #d6d3d1', display: 'flex', flexDirection: 'column', gap: '0.75rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                      <div style={{ color: '#d97706', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Observation</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.5rem', fontWeight: 'bold', color: selectedSubstance.type === 'Soluble' ? '#16a34a' : '#ea580c' }}>
+                    <div style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', border: '1px solid #d6d3d1', display: 'flex', flexDirection: 'column', gap: '0.75rem', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                      <div style={{ color: 'var(--lesson-accent)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Observation</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.5rem', fontWeight: 'bold', color: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success)' : 'var(--lesson-accent)' }}>
                         {selectedSubstance.type === 'Soluble' ? 'Disappears in water' : 'Does not disappear'}
                       </div>
                       <div style={{ color: '#44403c', fontSize: '1.1rem', lineHeight: '1.5' }}>
@@ -738,9 +738,9 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                       </div>
                     </div>
 
-                    <div style={{ background: selectedSubstance.type === 'Soluble' ? '#f0fdf4' : '#fdfbf7', borderRadius: '12px', padding: '1.5rem', border: `1px solid ${selectedSubstance.type === 'Soluble' ? '#bbf7d0' : '#e7e5e4'}`, boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                      <div style={{ color: selectedSubstance.type === 'Soluble' ? '#16a34a' : '#d97706', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>Conclusion</div>
-                      <div style={{ color: selectedSubstance.type === 'Soluble' ? '#14532d' : '#431407', fontSize: '1.25rem', lineHeight: '1.5', fontWeight: 'bold' }}>
+                    <div style={{ background: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success-bg)' : 'var(--lesson-background)', borderRadius: '12px', padding: '1.5rem', border: `1px solid ${selectedSubstance.type === 'Soluble' ? 'var(--lesson-success-border)' : 'var(--lesson-border)'}`, boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                      <div style={{ color: selectedSubstance.type === 'Soluble' ? 'var(--lesson-success)' : 'var(--lesson-accent)', fontSize: '1rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>Conclusion</div>
+                      <div style={{ color: selectedSubstance.type === 'Soluble' ? '#14532d' : 'var(--lesson-primary)', fontSize: '1.25rem', lineHeight: '1.5', fontWeight: 'bold' }}>
                         {selectedSubstance.conclusion}
                       </div>
                     </div>
@@ -748,12 +748,12 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                 )}
               </motion.div>
             ) : selectedSubstance && stirState === 'stirring' ? (
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#fdfbf7', borderRadius: '12px', padding: '3rem', border: '1px solid #e7e5e4' }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--lesson-background)', borderRadius: '12px', padding: '3rem', border: '1px solid var(--lesson-border)' }}>
                 <StirringProgress />
               </div>
             ) : (
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', color: '#78716c', textAlign: 'center', border: '2px dashed #d6d3d1', borderRadius: '12px', padding: '2rem', background: '#fafaf9' }}>
-                <div style={{ background: '#fff', padding: '15px', borderRadius: '50%', border: '1px solid #e7e5e4' }}>
+                <div style={{ background: 'white', padding: '15px', borderRadius: '50%', border: '1px solid var(--lesson-border)' }}>
                   <Droplets size={40} color="#a8a29e" />
                 </div>
                 <span style={{ fontSize: '1.1rem' }}>Select a material and stir to observe its solubility.</span>
@@ -766,8 +766,8 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
 
       {/* Footer Progress */}
       <div style={{ 
-        background: '#fdfbf7', 
-        border: '1px solid #e7e5e4', 
+        background: 'var(--lesson-background)', 
+        border: '1px solid var(--lesson-border)', 
         borderRadius: '12px', 
         padding: '12px 24px', 
         minHeight: '64px',
@@ -777,21 +777,21 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
         boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
         flexShrink: 0
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#d97706' }}>
-          <div style={{ background: '#fefce8', padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--lesson-accent)' }}>
+          <div style={{ background: 'var(--lesson-warning-bg)', padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Target size={20} />
           </div>
-          <span style={{ color: '#431407', fontSize: '1.05rem', fontWeight: 'bold' }}>Test all 5 materials to see if they are soluble or insoluble.</span>
+          <span style={{ color: 'var(--lesson-primary)', fontSize: '1.05rem', fontWeight: 'bold' }}>Test all 5 materials to see if they are soluble or insoluble.</span>
         </div>
 
         <div style={{ 
           fontSize: '1rem', 
           fontWeight: 'bold', 
-          color: obsCount === substances.length ? '#16a34a' : '#57534e',
-          background: obsCount === substances.length ? '#dcfce7' : '#f5f5f4',
+          color: obsCount === substances.length ? 'var(--lesson-success)' : 'var(--lesson-secondary)',
+          background: obsCount === substances.length ? 'var(--lesson-success-bg)' : '#f5f5f4',
           padding: '6px 12px',
           borderRadius: '16px',
-          border: `1px solid ${obsCount === substances.length ? '#bbf7d0' : '#e7e5e4'}`,
+          border: `1px solid ${obsCount === substances.length ? 'var(--lesson-success-border)' : 'var(--lesson-border)'}`,
           display: 'flex',
           alignItems: 'center',
           gap: '6px'

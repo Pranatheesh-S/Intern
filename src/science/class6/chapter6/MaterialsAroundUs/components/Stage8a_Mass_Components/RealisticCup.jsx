@@ -79,7 +79,7 @@ const SandMaterial = ({ velocityX }) => {
         <defs>
           <filter id="sandGrain" x="0%" y="0%" width="100%" height="100%">
             <feTurbulence type="fractalNoise" baseFrequency="1.8" numOctaves="4" result="noise" />
-            <feDiffuseLighting in="noise" surfaceScale="2" diffuseConstant="1.1" lightingColor="#fff8f0" result="light">
+            <feDiffuseLighting in="noise" surfaceScale="2" diffuseConstant="1.1" lightingColor="white8f0" result="light">
               <feDistantLight azimuth="45" elevation="45" />
             </feDiffuseLighting>
             <feBlend mode="overlay" in="light" in2="SourceGraphic" result="lit" />

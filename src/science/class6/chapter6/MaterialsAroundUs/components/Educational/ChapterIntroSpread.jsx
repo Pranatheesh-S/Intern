@@ -205,7 +205,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
         /* ================= RIGHT — dynamic column ================= */
         .slogan-right {
           position: relative;
-          background: #fffdf8;
+          background: whitedf8;
           display: flex;
           flex-direction: column;
           padding: 2.2vh 2vw 1.8vh;
@@ -289,14 +289,14 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           align-items: center;
           justify-content: center;
           background: var(--clay);
-          color: #fff;
+          color: white;
           font-size: 1.4vh;
           flex: 0 0 auto;
           font-weight: 700;
         }
 
         .slogan-callout {
-          background: #fff4e0;
+          background: white4e0;
           border: 1px solid #ecd6a4;
         }
         .slogan-callout ul {
@@ -372,7 +372,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
           height: 1.4vh;
           border-radius: 50%;
           background: var(--clay);
-          border: 2px solid #fff;
+          border: 2px solid white;
           margin: 0 auto 0.7vh;
           box-shadow: 0 0 0 1px var(--clay);
         }
@@ -569,7 +569,7 @@ export default function ChapterIntroSpread({ onContinue, onBack }) {
                           <p>Withstands high temperatures without melting easily — used for the outer body.</p>
                         </div>
                         <div className="slogan-card">
-                          <h3><span className="slogan-material-dot" style={{ background: 'var(--text-muted)' }}></span>Iron</h3>
+                          <h3><span className="slogan-material-dot" style={{ background: 'var(--lesson-muted)' }}></span>Iron</h3>
                           <p>Provides strength and durability, keeping the crucible stable during heating.</p>
                         </div>
                       </div>
