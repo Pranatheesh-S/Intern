@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowRight, 
-  CheckCircle2, 
-  RotateCcw, 
+import {
+  ArrowRight,
+  CheckCircle2,
+  RotateCcw,
   Compass as CompassIcon,
   Sparkles,
   Maximize2,
@@ -65,7 +65,7 @@ function playMagneticSound(type = 'snap') {
       osc.start(now);
       osc.stop(now + 0.4);
     }
-  } catch (e) {}
+  } catch (e) { }
 }
 
 const getBearingName = (deg) => {
@@ -85,13 +85,13 @@ const getBearingName = (deg) => {
 // 1. Ultra-Realistic 3D Alnico Steel Bar Magnet Component (210px x 62px)
 // -------------------------------------------------------------
 const MagnetVisual = ({ isFlipped, isTesting }) => (
-  <div style={{ 
-    width: '210px', 
-    height: '62px', 
+  <div style={{
+    width: '210px',
+    height: '62px',
     position: 'relative',
     userSelect: 'none',
-    filter: isTesting 
-      ? 'drop-shadow(0 22px 35px rgba(0,0,0,0.75)) drop-shadow(0 0 20px rgba(56, 189, 248, 0.45))' 
+    filter: isTesting
+      ? 'drop-shadow(0 22px 35px rgba(0,0,0,0.75)) drop-shadow(0 0 20px rgba(56, 189, 248, 0.45))'
       : 'drop-shadow(0 14px 24px rgba(0,0,0,0.55)) drop-shadow(0 4px 8px rgba(0,0,0,0.35))',
     transform: isTesting ? 'scale(1.03)' : 'scale(1)',
     transition: 'transform 0.2s ease, filter 0.2s ease'
@@ -188,16 +188,23 @@ const MagnetVisual = ({ isFlipped, isTesting }) => (
 const BARRIER_HEIGHT = 420;
 
 // Standard material thickness width calculator for physical clearance & collision
-const getMaterialWidth = (type, thickness) => {
+const getMaterialWidth = (type, thickness, stage = 1) => {
+  if (type === 'wood' && stage === 4) return 880 + thickness * 20;
   if (type === 'wood') return 360 + thickness * 20;
   if (type === 'cardboard') return 280 + thickness * 20;
   return 240 + thickness * 18;
 };
 
+const getMaterialHeight = (type, stage = 1) => {
+  if (type === 'wood' && stage === 4) return 560;
+  return BARRIER_HEIGHT;
+};
+
 // 3D WebGL Material Barrier Visual Renderer
 const MaterialBarrierVisual = ({ type, stage = 1, thickness = 1 }) => {
-  const width = getMaterialWidth(type, thickness);
-  const height = BARRIER_HEIGHT;
+  const isTree = type === 'wood' && stage === 4;
+  const width = isTree ? '100%' : getMaterialWidth(type, thickness, stage);
+  const height = isTree ? '100%' : getMaterialHeight(type, stage);
   return <Barrier3DCanvas type={type} stage={stage} thickness={thickness} width={width} height={height} />;
 };
 
@@ -318,11 +325,13 @@ export default function Simulation({ onComplete, onNext }) {
   const centerX = workspaceSize.width ? (workspaceSize.width / 2) : 420;
 
   // Geometry calculations
-  const matWidth = getMaterialWidth(activeMaterial, thickness);
+  const matWidth = getMaterialWidth(activeMaterial, thickness, currentStage);
+  const matHeight = getMaterialHeight(activeMaterial, currentStage);
   const compassX = Math.max(500, workspaceSize.width - COMPASS_RADIUS - 35);
   const magnetX = 145;
 
   const stageDeflection = STAGE_DEFLECTIONS[currentStage] || STAGE_DEFLECTIONS[1];
+  const isTreeStage = activeMaterial === 'wood' && currentStage === 4;
 
   // Helper to trigger object slide-in and delayed needle deflection
   // The compass needle stays at its current angle and NEVER moves to North-South (0°) while another object is coming
@@ -536,7 +545,7 @@ export default function Simulation({ onComplete, onNext }) {
       boxSizing: 'border-box',
       position: 'relative'
     }}>
-      
+
       {/* Left Column: Automatic Object Selection & Testing Hub */}
       <div className="custom-scroll" style={{
         background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
@@ -552,30 +561,17 @@ export default function Simulation({ onComplete, onNext }) {
         overflowY: 'auto'
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem', height: '100%', justifyContent: 'space-between' }}>
-          
+
           {/* Header */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <ShieldCheck size={28} color="#D97706" />
-                <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#064E3B', fontWeight: 900, letterSpacing: '-0.02em' }}>
-                  Material Barrier Testing
-                </h3>
-              </div>
-              <span style={{ 
-                fontSize: '0.82rem', 
-                background: isAutoPlaying ? '#FEF3C7' : '#DCFCE7', 
-                color: isAutoPlaying ? '#92400E' : '#15803D', 
-                padding: '4px 10px', 
-                borderRadius: '12px', 
-                fontWeight: 900, 
-                border: isAutoPlaying ? '1.5px solid #F59E0B' : '1.5px solid #86EFAC' 
-              }}>
-                {isAutoPlaying ? '⚡ Auto Tour Active' : '👆 Manual Mode'}
-              </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <ShieldCheck size={32} color="#D97706" />
+              <h3 style={{ margin: 0, fontSize: '1.65rem', color: '#064E3B', fontWeight: 900, letterSpacing: '-0.02em' }}>
+                Material Barrier Testing
+              </h3>
             </div>
 
-            <p style={{ margin: 0, fontSize: '0.96rem', color: '#065F46', lineHeight: 1.5, fontWeight: 600 }}>
+            <p style={{ margin: 0, fontSize: '1.14rem', color: '#065F46', lineHeight: 1.55, fontWeight: 600 }}>
               Watch the objects automatically advance from <strong>Type 1 to Type 4</strong>. The <strong>Red North Needle</strong> alone deflects to the specified direction upon each object's arrival, maintaining its steady position during object transitions.
             </p>
           </div>
@@ -710,27 +706,20 @@ export default function Simulation({ onComplete, onNext }) {
 
       {/* Right Column: Ocean Themed Interactive Stage */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.65rem', height: '100%', minHeight: 0 }}>
-        
+
         {/* Top Header Stage Bar */}
-        <div style={{ 
-          padding: '0.5rem 0.9rem', 
-          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)', 
-          border: '1.5px solid #FDE68A', 
-          borderRadius: '16px', 
-          display: 'flex', 
-          justifyContent: 'space-between', 
+        <div style={{
+          padding: '0.5rem 0.9rem',
+          background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 50%, #FEF3C7 100%)',
+          border: '1.5px solid #FDE68A',
+          borderRadius: '16px',
+          display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
           boxShadow: '0 6px 24px rgba(217, 119, 6, 0.08)',
           gap: '0.5rem',
           flexWrap: 'wrap'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.2rem' }}>{activeMaterialObj.icon}</span>
-            <span style={{ fontWeight: 800, color: '#064E3B', fontSize: '0.88rem' }}>
-              Barrier: <strong>{activeMaterialObj.name}</strong>
-            </span>
-          </div>
-
           {/* Dynamic 4-Part Evolution / Size Switcher for Active Material */}
           {STAGE_CONFIG[activeMaterial] && (
             <div style={{
@@ -803,26 +792,6 @@ export default function Simulation({ onComplete, onNext }) {
             </button>
 
             <button
-              onClick={handleReplayDemo}
-              title="Replay sequence from Type 1 to Type 4"
-              style={{
-                padding: '0.42rem 0.75rem',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                borderRadius: '16px',
-                border: '1.5px solid #CBD5E1',
-                background: '#FFFFFF',
-                color: '#334155',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.3rem'
-              }}
-            >
-              <RefreshCw size={13} /> Replay
-            </button>
-
-            <button
               onClick={flipMagnet}
               style={{
                 padding: '0.42rem 0.85rem',
@@ -841,31 +810,13 @@ export default function Simulation({ onComplete, onNext }) {
             >
               <RotateCcw size={13} /> {isFlipped ? 'Flip: [S][N] (NE)' : 'Flip: [N][S] (NW)'}
             </button>
-            <button
-              onClick={handleNextObject}
-              style={{
-                padding: '0.4rem 0.85rem',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                borderRadius: '16px',
-                border: '1.5px solid #A7F3D0',
-                background: '#ECFDF5',
-                color: '#065F46',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem'
-              }}
-            >
-              Next <ChevronRight size={14} />
-            </button>
           </div>
         </div>
 
         {/* Deep Ocean Interactive Workspace */}
-        <div 
-          id="simulation-workspace" 
-          ref={workspaceContainerRef} 
+        <div
+          id="simulation-workspace"
+          ref={workspaceContainerRef}
           style={{
             position: 'relative',
             flex: 1,
@@ -877,42 +828,6 @@ export default function Simulation({ onComplete, onNext }) {
             boxShadow: 'inset 0 0 70px rgba(0,0,0,0.5)'
           }}
         >
-          {/* Compass Live Bearing Tag - Focusing Strictly on Red North Needle */}
-          <div style={{
-            position: 'absolute',
-            top: '1rem',
-            left: '1rem',
-            background: 'rgba(255, 253, 245, 0.95)',
-            border: '1.5px solid #EADBB6',
-            borderRadius: '16px',
-            padding: '0.4rem 0.95rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
-            zIndex: 10
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#78350F', fontSize: '0.82rem', fontWeight: 900 }}>
-              <CompassIcon size={16} color="#D97706" />
-              <span>
-                RED NORTH NEEDLE: <strong style={{ color: '#C2410C' }}>{Math.round((needleRotation % 360 + 360) % 360)}°</strong> {getBearingName(needleRotation)}
-              </span>
-            </div>
-            <span style={{
-              background: isObjectArrived 
-                ? 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)' 
-                : '#E2E8F0',
-              color: isObjectArrived ? '#92400E' : '#475569',
-              padding: '2px 8px',
-              borderRadius: '10px',
-              fontSize: '0.75rem',
-              fontWeight: 900,
-              border: isObjectArrived ? '1px solid #F59E0B' : '1px solid #CBD5E1'
-            }}>
-              {isObjectArrived ? stageDeflection.label : 'Object Transitioning...'}
-            </span>
-          </div>
-
           {/* Fullscreen Button */}
           <button
             onClick={toggleFullscreen}
@@ -943,21 +858,9 @@ export default function Simulation({ onComplete, onNext }) {
             <span>{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
           </button>
 
-          {/* Horizontal Axis Guide Line */}
-          <div style={{
-            position: 'absolute',
-            top: `${centerY}px`,
-            left: '5%',
-            right: '5%',
-            height: '1px',
-            borderTop: '1px dashed rgba(56, 189, 248, 0.25)',
-            pointerEvents: 'none',
-            zIndex: 1
-          }} />
-
           {/* Draggable / Fixed Objects Stage */}
           <div style={{ position: 'absolute', inset: 0 }}>
-            
+
             {/* Center Material Barrier Visual - Automatically Slides in from Left Container */}
             <AnimatePresence mode="wait">
               <motion.div
@@ -968,8 +871,10 @@ export default function Simulation({ onComplete, onNext }) {
                 transition={{ type: 'spring', damping: 22, stiffness: 200 }}
                 style={{
                   position: 'absolute',
-                  left: centerX - (matWidth / 2),
-                  top: centerY - (BARRIER_HEIGHT / 2),
+                  left: isTreeStage ? 0 : centerX - (matWidth / 2),
+                  top: isTreeStage ? 0 : centerY - (matHeight / 2),
+                  width: isTreeStage ? '100%' : undefined,
+                  height: isTreeStage ? '100%' : undefined,
                   zIndex: 15,
                   pointerEvents: 'none'
                 }}
@@ -982,8 +887,11 @@ export default function Simulation({ onComplete, onNext }) {
             <div 
               style={{ 
                 position: 'absolute', 
-                left: compassX - COMPASS_RADIUS, 
-                top: centerY - COMPASS_RADIUS,
+                left: isTreeStage ? compassX - COMPASS_RADIUS - 10 : compassX - COMPASS_RADIUS, 
+                top: isTreeStage ? centerY + 175 - COMPASS_RADIUS : centerY - COMPASS_RADIUS,
+                transform: isTreeStage ? 'scale(0.55)' : 'scale(1)',
+                transformOrigin: 'center center',
+                transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 zIndex: 20, 
                 pointerEvents: 'none',
                 userSelect: 'none'
@@ -996,8 +904,11 @@ export default function Simulation({ onComplete, onNext }) {
             <div 
               style={{ 
                 position: 'absolute', 
-                left: magnetX - 105, 
-                top: centerY - 31,
+                left: isTreeStage ? magnetX - 70 : magnetX - 105, 
+                top: isTreeStage ? centerY + 175 - 31 : centerY - 31,
+                transform: isTreeStage ? 'scale(0.55)' : 'scale(1)',
+                transformOrigin: 'center center',
+                transition: 'all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 zIndex: 25, 
                 cursor: 'pointer',
                 userSelect: 'none'
@@ -1005,88 +916,10 @@ export default function Simulation({ onComplete, onNext }) {
               onClick={flipMagnet}
               title={`Click to flip magnet polarity (${isFlipped ? '[S][N] ➔ [N][S]' : '[N][S] ➔ [S][N]'})`}
             >
-              {/* Magnet Polarity Status Badge */}
-              <div style={{
-                position: 'absolute',
-                top: '-25px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: isFlipped 
-                  ? 'linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)' 
-                  : 'linear-gradient(135deg, #991B1B 0%, #DC2626 100%)',
-                color: '#FFFFFF',
-                padding: '2px 10px',
-                borderRadius: '12px',
-                fontSize: '11px',
-                fontWeight: 900,
-                whiteSpace: 'nowrap',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                border: '1.5px solid rgba(255,255,255,0.4)',
-                pointerEvents: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}>
-                <span>{isFlipped ? '🧲 [S][N] ➔ Needle: NE' : '🧲 [N][S] ➔ Needle: NW'}</span>
-              </div>
               <MagnetVisual isFlipped={isFlipped} isTesting={true} />
             </div>
 
-            {/* Dynamic Magnetic Penetration Beam through barrier - illuminates when object is in place */}
-            <motion.div
-              animate={{ 
-                opacity: isObjectArrived ? [0.45, 0.9, 0.45] : 0.25,
-                scaleY: isObjectArrived ? [1, 1.15, 1] : 0.8
-              }}
-              transition={{ repeat: Infinity, duration: 1.2 }}
-              style={{
-                position: 'absolute',
-                left: magnetX + 105,
-                top: centerY - 20,
-                width: Math.max(0, compassX - COMPASS_RADIUS - (magnetX + 105)),
-                height: 40,
-                background: isFlipped 
-                  ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.45) 0%, rgba(56, 189, 248, 0.55) 50%, rgba(239, 68, 68, 0.45) 100%)'
-                  : 'linear-gradient(90deg, rgba(239, 68, 68, 0.45) 0%, rgba(56, 189, 248, 0.55) 50%, rgba(59, 130, 246, 0.45) 100%)',
-                borderRadius: '20px',
-                filter: 'blur(8px)',
-                pointerEvents: 'none',
-                zIndex: 12
-              }}
-            />
-
           </div>
-
-          {/* In-situ Feedback Alert */}
-          <AnimatePresence>
-            {feedback && (
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                style={{
-                  position: 'absolute',
-                  bottom: '16px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  background: '#FFFFFF',
-                  color: feedback.type === 'success' ? '#065F46' : '#1E3A8A',
-                  padding: '0.6rem 1.4rem',
-                  borderRadius: '25px',
-                  border: `2px solid ${feedback.type === 'success' ? '#10B981' : '#3B82F6'}`,
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-                  fontWeight: 800,
-                  fontSize: '0.85rem',
-                  zIndex: 30,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                {feedback.text}
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </div>
 

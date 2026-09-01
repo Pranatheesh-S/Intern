@@ -27,9 +27,9 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
 
   return (
     <div className="chapter4-cover-wrapper">
-      {/* Back Button to Chapter 4 Flow */}
+      {/* Back Button to Class 6 Dashboard */}
       <button
-        onClick={onBack || onStartJourney}
+        onClick={onBack || (() => window.history.back())}
         style={{
           position: 'absolute',
           top: '1.5rem',
@@ -50,7 +50,7 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
           boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
         }}
       >
-        <ArrowLeft size={16} /> Back to Chapter Flow
+        <ArrowLeft size={16} /> Back to Class 6 Wing
       </button>
       <style>{`
         .chapter4-cover-wrapper {
