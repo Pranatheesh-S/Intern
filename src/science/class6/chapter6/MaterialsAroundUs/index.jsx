@@ -100,7 +100,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
       const nextIndex = currentFlowIndex + 1;
       const nextNode = chapterFlow[nextIndex];
       
-      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage7_a' || nextNode.id === 'stage8_a' || nextNode.id === 'stage8_b')) {
+      if (nextNode && (nextNode.id === 'stage2' || nextNode.id === 'stage3_use' || nextNode.id === 'stage4_1' || nextNode.id === 'stage4_4' || nextNode.id === 'stage6_a' || nextNode.id === 'stage7_a' || nextNode.id === 'stage8_a' || nextNode.id === 'stage8_b')) {
         setShowHandbook(false);
       } else {
         setShowHandbook(true);
@@ -501,7 +501,7 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
                 }
               }
 
-              if (!showHandbook && currentNode.type === 'activity' && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') {
+              if (!showHandbook && currentNode.type === 'activity' && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) {
                 setShowHandbook(true);
               } else if (currentFlowIndex > 0) {
                 const prevIndex = currentFlowIndex - 1;
@@ -541,17 +541,17 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
 
           {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
             <button 
-              onClick={showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c' ? () => setShowHandbook(false) : handleNext}
-              disabled={(showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') ? false : !stageCompleted}
-              className={((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'primary' : 'outline'}
+              onClick={showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id) ? () => setShowHandbook(false) : handleNext}
+              disabled={(showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) ? false : !stageCompleted}
+              className={((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) || stageCompleted) ? 'primary' : 'outline'}
               style={{ 
                 padding: '0.85rem 1.8rem', 
                 fontSize: '1.5rem', 
                 fontWeight: 'bold',
                 gap: '0.75rem', 
                 borderRadius: '10px',
-                opacity: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 1 : 0.5,
-                cursor: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'pointer' : 'not-allowed',
+                opacity: ((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) || stageCompleted) ? 1 : 0.5,
+                cursor: ((showHandbook && !['stage8_b', 'stage8_c', 'stage3_use', 'stage4_1', 'stage4_4', 'stage6_a'].includes(currentNode.id)) || stageCompleted) ? 'pointer' : 'not-allowed',
                 transition: 'all 0.3s',
                 display: 'flex',
                 alignItems: 'center'
