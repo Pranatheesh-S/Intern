@@ -105,9 +105,9 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 </div>
               </div>
 
-              <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#d97706', fontSize: 'var(--text-xl)' }}>Examples:</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', color: '#451a03' }}>
+              <div style={{ background: '#f5ebd9', border: '2px solid #e3d8c8', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#a65842', fontSize: 'var(--text-xl)', fontWeight: '900' }}>Examples:</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', fontWeight: '700', color: '#3b2818' }}>
                   <div style={{ display: 'flex', gap: '8px' }}><span>🪑</span> Chair can be made of wood, plastic or steel.</div>
                   <div style={{ display: 'flex', gap: '8px' }}><span>🍽️</span> A plate can be made of steel, glass or plastic.</div>
                   <div style={{ display: 'flex', gap: '8px' }}>

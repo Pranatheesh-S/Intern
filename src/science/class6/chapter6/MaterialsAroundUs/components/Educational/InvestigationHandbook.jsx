@@ -314,9 +314,9 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--lesson-text)' }}><strong style={{ color: 'var(--lesson-primary)', fontWeight: '800', fontSize: '22px' }}>Object:</strong> Anything we can see or use around us.</div>
               </div>
 
-              <div style={{ background: 'var(--lesson-warning-bg)', border: '1px solid var(--lesson-warning-border)', borderRadius: '8px', padding: '12px 16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: 'var(--lesson-accent)', fontSize: '24px', fontWeight: '800' }}>Examples:</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '21px', fontWeight: '600', color: 'var(--lesson-text)' }}>
+              <div style={{ background: '#f5ebd9', border: '2px solid #e3d8c8', borderRadius: '8px', padding: '12px 16px' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#a65842', fontSize: '24px', fontWeight: '900' }}>Examples:</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '21px', fontWeight: '700', color: '#3b2818' }}>
                   <div>Chair can be made of wood, plastic or steel.</div>
                   <div>A plate can be made of steel, glass or plastic.</div>
                   <div>A bottle can be made of plastic, glass or steel.</div>
