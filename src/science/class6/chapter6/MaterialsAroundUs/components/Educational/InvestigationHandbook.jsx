@@ -179,9 +179,9 @@ const PotterySpotlight = ({ page1Layout }) => {
 
       <div style={{ 
         flex: '1 1 auto', 
-        backgroundColor: '#fdfaf3', 
+        backgroundColor: '#f7e3d7', 
         borderRadius: '12px', 
-        border: '2px solid #a65842', 
+        border: '3px solid #a65842', 
         padding: 'clamp(12px, 2vmin, 16px)',
 
         display: 'flex',
@@ -314,8 +314,8 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--lesson-text)' }}><strong style={{ color: 'var(--lesson-primary)', fontWeight: '800', fontSize: '22px' }}>Object:</strong> Anything we can see or use around us.</div>
               </div>
 
-              <div style={{ background: '#f5ebd9', border: '2px solid #e3d8c8', borderRadius: '8px', padding: '12px 16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#a65842', fontSize: '24px', fontWeight: '900' }}>Examples:</h4>
+              <div style={{ background: '#f8e9c6', border: '3px solid #dcb37b', borderRadius: '8px', padding: '12px 16px' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#813928', fontSize: '24px', fontWeight: '900' }}>Examples:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '21px', fontWeight: '700', color: '#3b2818' }}>
                   <div>Chair can be made of wood, plastic or steel.</div>
                   <div>A plate can be made of steel, glass or plastic.</div>
@@ -323,9 +323,9 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 </div>
               </div>
 
-              <div style={{ background: 'var(--lesson-surface)', border: '1px solid var(--lesson-border)', borderRadius: '8px', padding: '16px 20px', display: 'flex', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: '21px', fontWeight: '600', color: 'var(--lesson-primary)', lineHeight: '1.4' }}>
-                  <strong style={{ fontWeight: '800', fontSize: '24px' }}>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
+              <div style={{ background: '#fdfaf3', border: '2px solid #e3d8c8', borderRadius: '8px', padding: '16px 20px', display: 'flex', alignItems: 'flex-start' }}>
+                <div style={{ fontSize: '21px', fontWeight: '700', color: '#3b2818', lineHeight: '1.4' }}>
+                  <strong style={{ fontWeight: '900', fontSize: '24px', color: '#a65842' }}>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
                 </div>
               </div>
             </div>

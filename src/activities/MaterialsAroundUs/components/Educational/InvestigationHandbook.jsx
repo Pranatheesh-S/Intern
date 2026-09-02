@@ -105,8 +105,8 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 </div>
               </div>
 
-              <div style={{ background: '#f5ebd9', border: '2px solid #e3d8c8', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#a65842', fontSize: 'var(--text-xl)', fontWeight: '900' }}>Examples:</h4>
+              <div style={{ background: '#f8e9c6', border: '3px solid #dcb37b', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#813928', fontSize: 'var(--text-xl)', fontWeight: '900' }}>Examples:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: 'var(--text-xl)', fontWeight: '700', color: '#3b2818' }}>
                   <div style={{ display: 'flex', gap: '8px' }}><span>🪑</span> Chair can be made of wood, plastic or steel.</div>
                   <div style={{ display: 'flex', gap: '8px' }}><span>🍽️</span> A plate can be made of steel, glass or plastic.</div>
@@ -124,10 +124,10 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 </div>
               </div>
 
-              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <div style={{ background: '#fdfaf3', border: '2px solid #e3d8c8', borderRadius: '12px', padding: '16px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <div style={{ fontSize: 'var(--text-xl)' }}>💡</div>
-                <div style={{ fontSize: 'var(--text-xl)', color: '#1e3a8a', lineHeight: '1.4' }}>
-                  <strong>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
+                <div style={{ fontSize: 'var(--text-xl)', color: '#3b2818', lineHeight: '1.4', fontWeight: '700' }}>
+                  <strong style={{ color: '#a65842', fontWeight: '900' }}>Think!</strong> One object can be made from different materials. One material can be used to make many different objects.
                 </div>
               </div>
             </div>
@@ -138,7 +138,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 Historical Spotlight: Pottery
               </h2>
 
-              <div style={{ background: '#fdfaf3', border: '2px solid #a65842', borderRadius: '12px', padding: '16px', marginBottom: '16px', position: 'relative' }}>
+              <div style={{ background: '#f7e3d7', border: '3px solid #a65842', borderRadius: '12px', padding: '16px', marginBottom: '16px', position: 'relative' }}>
                 <div style={{ position: 'absolute', top: '-15px', right: '20px', background: '#a65842', color: 'white', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>Do you know?</div>
                 <p style={{ margin: '0 0 12px 0', fontSize: 'var(--text-lg)', color: '#3b2818', lineHeight: '1.5' }}>
                   The earliest pottery found in the Indian subcontinent dates back to <strong>7,000 to 8,000 years</strong> in the Ganga plains (Lahuradewa) and in Baluchistan (Mehrgarh). 
