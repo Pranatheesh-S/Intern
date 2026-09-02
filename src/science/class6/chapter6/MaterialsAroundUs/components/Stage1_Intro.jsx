@@ -736,7 +736,7 @@ export default function Stage1_Intro({ onComplete, addXp }) {
             {/* Bottom Actions */}
             {viewState === 'zoom' && (
               <div style={{ padding: '16px 24px', background: '#FFFFFF', borderTop: '2px solid var(--lesson-border)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                 <button onClick={returnToClassroom} style={{ width: '100%', padding: '16px', background: \'#A64B27\', color: \'#FFFFFF\', border: '2px solid var(--lesson-primary)', fontSize: '1.2rem', fontWeight: '900', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', borderRadius: '16px', cursor: 'pointer', boxShadow: '0 6px 16px rgba(0,0,0,0.05)' }}>
+                 <button onClick={returnToClassroom} style={{ width: '100%', padding: '16px', background: '#A64B27', color: '#FFFFFF', border: '2px solid var(--lesson-primary)', fontSize: '1.2rem', fontWeight: '900', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', borderRadius: '16px', cursor: 'pointer', boxShadow: '0 6px 16px rgba(0,0,0,0.05)' }}>
                    RETURN TO CLASSROOM
                  <ChevronRight size={24} />
                  </button>

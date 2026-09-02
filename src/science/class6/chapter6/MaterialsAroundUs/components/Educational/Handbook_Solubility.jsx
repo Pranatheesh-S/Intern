@@ -68,14 +68,14 @@ export default function Handbook_Solubility({ stageCompleted }) {
       <div style={{ padding: '16px 24px', borderTop: '1px solid var(--lesson-surface)', background: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button 
           disabled
-          style={{ background: \'#A64B27\', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: \'#FFFFFF\', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
+          style={{ background: '#A64B27', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: '#FFFFFF', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           <span>←</span> Previous
         </button>
         <div style={{ color: 'var(--lesson-muted)', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}>Page 1</div>
         <button 
           disabled
-          style={{ background: \'#A64B27\', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: \'#FFFFFF\', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
+          style={{ background: '#A64B27', border: '1px solid var(--lesson-border)', padding: '8px 16px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'not-allowed', color: '#FFFFFF', fontSize: 'var(--text-sm)', fontWeight: 'bold' }}
         >
           Next <span>→</span>
         </button>

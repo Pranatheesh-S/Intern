@@ -292,14 +292,14 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
                 <button
                   onClick={handleVerify}
                   disabled={selected === null}
-                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '1rem 2rem', borderRadius: '8px', background: selected !== null ? '#A64B27' : 'var(--lesson-muted)', color: \'#FFFFFF\', fontWeight: 'bold', fontSize: '1rem', border: 'none', cursor: selected !== null ? 'pointer' : 'not-allowed', transition: 'background 0.2s' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '1rem 2rem', borderRadius: '8px', background: selected !== null ? '#A64B27' : 'var(--lesson-muted)', color: '#FFFFFF', fontWeight: 'bold', fontSize: '1rem', border: 'none', cursor: selected !== null ? 'pointer' : 'not-allowed', transition: 'background 0.2s' }}
                 >
                   Verify Answer <ArrowRight size={18} />
                 </button>
               ) : (
                 <button
                   onClick={handleNext}
-                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '1rem 2rem', borderRadius: '8px', background: \'#A64B27\', color: \'#FFFFFF\', fontWeight: 'bold', fontSize: '1rem', border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '1rem 2rem', borderRadius: '8px', background: '#A64B27', color: '#FFFFFF', fontWeight: 'bold', fontSize: '1rem', border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}
                 >
                   {currentQ < data.questions.length - 1 ? 'Next Question' : 'Complete Review'} <ArrowRight size={18} />
                 </button>
@@ -365,8 +365,8 @@ export default function DetectiveCheckpoint({ data, onComplete, addXp }) {
             <button
               onClick={handleComplete}
               style={{
-                background: \'#A64B27\',
-                color: \'#FFFFFF\',
+                background: '#A64B27',
+                color: '#FFFFFF',
                 border: 'none',
                 padding: '1rem 3rem',
                 borderRadius: '10px',

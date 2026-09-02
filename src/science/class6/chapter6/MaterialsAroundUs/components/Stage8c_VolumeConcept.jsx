@@ -306,7 +306,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                     {volumesRevealed.teaCup ? (
                       <div style={{ color: 'var(--lesson-text)', fontWeight: '900', fontSize: '1.6rem' }}>150 mL</div>
                     ) : (
-                      <button style={{ background: \'#A64B27\', border: '2px solid var(--lesson-border)', color: \'#FFFFFF\', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
+                      <button style={{ background: '#A64B27', border: '2px solid var(--lesson-border)', color: '#FFFFFF', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
                     )}
                   </div>
                 </div>
@@ -321,7 +321,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                     {volumesRevealed.soupBowl ? (
                       <div style={{ color: 'var(--lesson-text)', fontWeight: '900', fontSize: '1.6rem' }}>300 mL</div>
                     ) : (
-                      <button style={{ background: \'#A64B27\', border: '2px solid var(--lesson-border)', color: \'#FFFFFF\', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
+                      <button style={{ background: '#A64B27', border: '2px solid var(--lesson-border)', color: '#FFFFFF', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
                     )}
                   </div>
                 </div>
@@ -336,7 +336,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                     {volumesRevealed.waterGlass ? (
                       <div style={{ color: 'var(--lesson-text)', fontWeight: '900', fontSize: '1.6rem' }}>250 mL</div>
                     ) : (
-                      <button style={{ background: \'#A64B27\', border: '2px solid var(--lesson-border)', color: \'#FFFFFF\', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
+                      <button style={{ background: '#A64B27', border: '2px solid var(--lesson-border)', color: '#FFFFFF', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
                     )}
                   </div>
                 </div>
@@ -351,7 +351,7 @@ export default function Stage8c_VolumeConcept({ onComplete, addXp }) {
                     {volumesRevealed.bucket ? (
                       <div style={{ color: 'var(--lesson-text)', fontWeight: '900', fontSize: '1.6rem' }}>10 L</div>
                     ) : (
-                      <button style={{ background: \'#A64B27\', border: '2px solid var(--lesson-border)', color: \'#FFFFFF\', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
+                      <button style={{ background: '#A64B27', border: '2px solid var(--lesson-border)', color: '#FFFFFF', padding: '8px 24px', borderRadius: '24px', fontSize: '1.1rem', cursor: 'pointer', fontWeight: 'bold', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>Reveal</button>
                     )}
                   </div>
                 </div>

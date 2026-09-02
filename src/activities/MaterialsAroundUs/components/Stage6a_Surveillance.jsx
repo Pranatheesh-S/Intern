@@ -265,7 +265,7 @@ export default function Stage6a_Surveillance({ onComplete, addXp }) {
             Observations: <span style={{ color: isComplete ? '#16a34a' : '#2563eb' }}>{obsCount} / 4</span>
           </div>
           {isComplete && (
-            <button onClick={onComplete} style={{ background: \'#A64B27\', color: \'#FFFFFF\', border: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+            <button onClick={onComplete} style={{ background: '#A64B27', color: '#FFFFFF', border: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
               Proceed to Phase 2
             </button>
           )}

@@ -196,18 +196,18 @@ export const WeighingScale = ({ currentCupOnScale, mass, isHovered }) => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <button style={{
                   width: '85px', height: '28px',
-                  background: \'#A64B27\',
+                  background: '#A64B27',
                   border: '1px solid #D9C9A3', borderRadius: '4px',
-                  color: \'#FFFFFF\', fontSize: '11px', fontWeight: 'bold',
+                  color: '#FFFFFF', fontSize: '11px', fontWeight: 'bold',
                   boxShadow: '0 4px 0 #5c0000, 0 6px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.3)',
                   cursor: 'default', fontFamily: 'Arial, sans-serif',
                   textShadow: '0 1px 2px rgba(0,0,0,0.6)'
                 }}>ON/TARE</button>
                 <button style={{
                   width: '85px', height: '28px',
-                  background: \'#A64B27\',
+                  background: '#A64B27',
                   border: '1px solid #D9C9A3', borderRadius: '4px',
-                  color: \'#FFFFFF\', fontSize: '11px', fontWeight: 'bold',
+                  color: '#FFFFFF', fontSize: '11px', fontWeight: 'bold',
                   boxShadow: '0 4px 0 #8f8f8f, 0 6px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.8)',
                   cursor: 'default', fontFamily: 'Arial, sans-serif',
                   textShadow: '0 1px 0 rgba(255,255,255,0.8)'

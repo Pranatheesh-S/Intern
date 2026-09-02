@@ -318,7 +318,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
                 onClick={handleVerify} 
                 disabled={selectedAns === null}
                 style={{ 
-                  background: selectedAns === null ? 'var(--lesson-border)' : 'var(--lesson-primary)', color: \'#FFFFFF\',
+                  background: selectedAns === null ? 'var(--lesson-border)' : 'var(--lesson-primary)', color: '#FFFFFF',
                   border: 'none', padding: '1rem 2.5rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800',
                   cursor: selectedAns === null ? 'not-allowed' : 'pointer',
                   display: 'flex', alignItems: 'center', gap: '8px', boxShadow: selectedAns !== null ? '0 4px 12px rgba(0,0,0,0.2)' : 'none',
@@ -331,7 +331,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
               <button 
                 onClick={handleNext} 
                 style={{ 
-                  background: \'#A64B27\', color: \'#FFFFFF\',
+                  background: '#A64B27', color: '#FFFFFF',
                   border: 'none', padding: '1rem 2.5rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800',
                   cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
                   transition: 'all 0.2s'
@@ -354,7 +354,7 @@ export default function Stage9_Quiz({ onComplete, addXp }) {
               <p style={{ margin: 0, fontSize: 'clamp(20px, 2.5vw, 24px)', fontWeight: '600', color: 'var(--lesson-secondary)' }}>Master Investigator Badge Unlocked!</p>
             </div>
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <button onClick={restartQuiz} style={{ background: \'#A64B27\', color: \'#FFFFFF\', border: '2px solid var(--lesson-primary)', padding: '1rem 2rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+              <button onClick={restartQuiz} style={{ background: '#A64B27', color: '#FFFFFF', border: '2px solid var(--lesson-primary)', padding: '1rem 2rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
                 <RefreshCcw size={20} /> Retry Mission
               </button>
               <div style={{ background: '#A64B27', color: 'white', padding: '1rem 2rem', borderRadius: '30px', fontSize: 'clamp(17px, 2.5vw, 20px)', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

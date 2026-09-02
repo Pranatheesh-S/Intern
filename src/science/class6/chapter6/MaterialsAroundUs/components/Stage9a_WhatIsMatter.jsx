@@ -127,7 +127,7 @@ export default function Stage9a_WhatIsMatter({ onComplete, addXp }) {
                      <button 
                         onClick={handleSubmit}
                         disabled={!selectedAnswer || clueRevealed}
-                        style={{ background: \'#A64B27\', color: \'#FFFFFF\', border: 'none', padding: '6px 20px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.9rem', opacity: (!selectedAnswer || clueRevealed) ? 0.5 : 1, cursor: (!selectedAnswer || clueRevealed) ? 'default' : 'pointer' }}
+                        style={{ background: '#A64B27', color: '#FFFFFF', border: 'none', padding: '6px 20px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.9rem', opacity: (!selectedAnswer || clueRevealed) ? 0.5 : 1, cursor: (!selectedAnswer || clueRevealed) ? 'default' : 'pointer' }}
                      >
                         Submit ✓
                      </button>

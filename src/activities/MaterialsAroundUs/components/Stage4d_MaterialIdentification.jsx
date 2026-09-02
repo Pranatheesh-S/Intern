@@ -291,7 +291,7 @@ export default function Stage4d_MaterialIdentification({ onComplete, addXp }) {
               </div>
             </div>
           </div>
-          <button style={{ background: \'#A64B27\', border: '1px solid #D9C9A3', padding: '0.5rem 1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', color: \'#FFFFFF\', fontWeight: 'bold', fontSize: '0.9rem', cursor: 'pointer' }}>
+          <button style={{ background: '#A64B27', border: '1px solid #D9C9A3', padding: '0.5rem 1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', color: '#FFFFFF', fontWeight: 'bold', fontSize: '0.9rem', cursor: 'pointer' }}>
             <BookOpen size={18} /> View Detective Notebook
           </button>
         </motion.div>

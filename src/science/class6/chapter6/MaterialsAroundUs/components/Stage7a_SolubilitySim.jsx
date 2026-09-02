@@ -665,7 +665,7 @@ export default function Stage7a_SolubilitySim({ onComplete, addXp }) {
                     gap: '0.75rem',
                     padding: '0.75rem 2rem',
                     background: (stirState === 'stirring' || stirState === 'dropping') ? 'var(--text-light)' : '#A64B27',
-                    color: \'#FFFFFF\',
+                    color: '#FFFFFF',
                     border: 'none',
                     borderRadius: '24px',
                     fontSize: '1rem',

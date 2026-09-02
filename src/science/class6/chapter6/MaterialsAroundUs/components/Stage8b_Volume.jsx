@@ -564,7 +564,7 @@ export default function Stage8b_Volume({ onComplete, addXp }) {
               <button
                 onClick={resetActivity}
                 style={{
-                  background: \'#A64B27\', border: `1px solid ${colors.accent}`,
+                  background: '#A64B27', border: `1px solid ${colors.accent}`,
                   color: colors.accent, padding: '6px 12px', borderRadius: '8px',
                   fontSize: '1rem', fontWeight: 'bold',
                   display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer',
