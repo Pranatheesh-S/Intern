@@ -547,16 +547,16 @@ export default function MaterialsAroundUsActivity({ onBackToDashboard }) {
           {(currentNode.type === 'activity' || currentNode.type === 'checkpoint') && (
             <button 
               onClick={showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c' ? () => setShowHandbook(false) : handleNext}
-              disabled={(showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') ? false : !stageCompleted}
-              className={((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'primary' : 'outline'}
+              disabled={(showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') ? false : !(stageCompleted || currentNode.id === 'stage2')}
+              className={((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted || currentNode.id === 'stage2') ? 'primary' : 'outline'}
               style={{ 
                 padding: '0.85rem 1.8rem', 
                 fontSize: '1.35rem', 
                 fontWeight: 'bold',
                 gap: '0.75rem', 
                 borderRadius: '10px',
-                opacity: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 1 : 0.5,
-                cursor: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted) ? 'pointer' : 'not-allowed',
+                opacity: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted || currentNode.id === 'stage2') ? 1 : 0.5,
+                cursor: ((showHandbook && currentNode.id !== 'stage8_b' && currentNode.id !== 'stage8_c') || stageCompleted || currentNode.id === 'stage2') ? 'pointer' : 'not-allowed',
                 transition: 'all 0.3s',
                 display: 'flex',
                 alignItems: 'center'
