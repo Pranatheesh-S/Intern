@@ -1,29 +1,53 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Zap, ArrowLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Dark Sci-Fi Visual Gallery Collection
+const SCI_FI_SLIDES = [
+  {
+    id: 'bar_magnet',
+    image: '/assets/scifi_bar_magnet.jpg'
+  },
+  {
+    id: 'compass',
+    image: '/assets/scifi_compass.jpg'
+  },
+  {
+    id: 'horseshoe',
+    image: '/assets/scifi_horseshoe.jpg'
+  },
+  {
+    id: 'warship',
+    image: '/assets/scifi_warship.jpg'
+  },
+  {
+    id: 'notebook',
+    image: '/assets/scifi_notebook.jpg'
+  }
+];
 
 export default function Chapter4Cover({ onStartJourney, onBack }) {
-  const [needleAngle, setNeedleAngle] = useState(-15);
-  const plotRef = useRef(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const timerRef = useRef(null);
 
-  // Mouse tracking to deflect compass needle dynamically
-  const handleMouseMove = (e) => {
-    if (!plotRef.current) return;
-    const rect = plotRef.current.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const dx = e.clientX - cx;
-    const dy = e.clientY - cy;
-    
-    const rad = Math.atan2(dy, dx);
-    let deg = rad * (180 / Math.PI) + 90;
-    
-    const targetDeg = deg * 0.35;
-    setNeedleAngle(targetDeg);
-  };
+  // Smooth auto-advancing slideshow
+  useEffect(() => {
+    if (isHovered) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
 
-  const handleMouseLeave = () => {
-    setNeedleAngle(0);
-  };
+    timerRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % SCI_FI_SLIDES.length);
+    }, 3800);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isHovered]);
+
+  const activeSlideData = SCI_FI_SLIDES[currentSlide];
 
   return (
     <div className="chapter4-cover-wrapper">
@@ -35,35 +59,38 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
           top: '1.5rem',
           left: '1.5rem',
           zIndex: 100,
-          padding: '0.5rem 1rem',
+          padding: '0.55rem 1.1rem',
           fontSize: '0.85rem',
           fontWeight: 'bold',
           borderRadius: '24px',
-          border: '1px solid rgba(212, 175, 55, 0.4)',
-          background: 'rgba(18, 9, 4, 0.85)',
-          backdropFilter: 'blur(8px)',
-          color: '#FFF6E5',
+          border: '1px solid rgba(56, 189, 248, 0.35)',
+          background: 'rgba(3, 7, 18, 0.88)',
+          backdropFilter: 'blur(12px)',
+          color: '#E0F2FE',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.4rem',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+          gap: '0.45rem',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
+          transition: 'all 0.2s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.8)';
+          e.currentTarget.style.transform = 'translateY(-1px)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(6, 182, 212, 0.3)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.35)';
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.6)';
         }}
       >
         <ArrowLeft size={16} /> Back to Class 6 Wing
       </button>
+
       <style>{`
         .chapter4-cover-wrapper {
-          --ink: #FFF6E5;
-          --paper1: #2E180B;
-          --paper2: #120904;
-          --line: rgba(212, 175, 55, 0.08);
-          --line2: rgba(212, 175, 55, 0.16);
-          --gold: #F59E0B;
-          --gold-bright: #FFD700;
-          --gold-brass: #D4AF37;
-          --red-north: #EF4444;
-          --blue-south: #3B82F6;
+          --ink: #FFFFFF;
           --geo: "Space Grotesk", system-ui, -apple-system, sans-serif;
           --mono: "IBM Plex Mono", monospace;
           
@@ -74,271 +101,270 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
           font-family: var(--geo);
           color: var(--ink);
           overflow: hidden;
-          background: radial-gradient(130% 120% at 75% 15%, var(--paper1), var(--paper2));
+          background: 
+            radial-gradient(1100px circle at 15% 30%, rgba(6, 182, 212, 0.16) 0%, transparent 60%),
+            radial-gradient(900px circle at 85% 75%, rgba(139, 92, 246, 0.13) 0%, transparent 55%),
+            radial-gradient(800px circle at 50% 10%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+            #030712;
           display: flex;
           align-items: center;
           justify-content: center;
           z-index: 10;
         }
 
-        /* Wood Grain & Grid Texture */
-        .grid-bg {
+        /* Sci-Fi Nodal Matrix Grid */
+        .scifi-grid {
           position: absolute;
           inset: 0;
           pointer-events: none;
-          background:
-            repeating-linear-gradient(0deg, transparent 0 35px, var(--line) 35px 36px),
-            repeating-linear-gradient(90deg, transparent 0 35px, var(--line) 35px 36px);
-        }
-        .grid-bg::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background:
-            repeating-linear-gradient(0deg, transparent 0 140px, var(--line2) 140px 141px),
-            repeating-linear-gradient(90deg, transparent 0 140px, var(--line2) 140px 141px);
+          background-image: 
+            radial-gradient(circle at center, rgba(56, 189, 248, 0.22) 1.2px, transparent 1.2px),
+            linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+          background-size: 40px 40px, 40px 40px, 40px 40px;
+          opacity: 0.85;
         }
 
-        /* Outer Brass Frame */
+        /* Ambient Cybernetic Plasma Wave Flow */
+        .plasma-wave {
+          position: absolute;
+          width: 60vw;
+          height: 60vh;
+          border-radius: 50%;
+          filter: blur(85px);
+          pointer-events: none;
+          opacity: 0.6;
+          animation: plasmaDrift 16s ease-in-out infinite alternate;
+        }
+        .plasma-wave.cyan {
+          top: -15%;
+          left: -10%;
+          background: radial-gradient(circle, rgba(6, 182, 212, 0.25) 0%, transparent 70%);
+        }
+        .plasma-wave.violet {
+          bottom: -15%;
+          right: -10%;
+          background: radial-gradient(circle, rgba(139, 92, 246, 0.22) 0%, transparent 70%);
+          animation-delay: -8s;
+        }
+        @keyframes plasmaDrift {
+          0% { transform: translate(0px, 0px) scale(1); }
+          50% { transform: translate(40px, 25px) scale(1.08); }
+          100% { transform: translate(-25px, 40px) scale(0.95); }
+        }
+
+        /* Floating Micro Particles */
+        .spark-particle {
+          position: absolute;
+          width: 3px;
+          height: 3px;
+          background: #38BDF8;
+          border-radius: 50%;
+          box-shadow: 0 0 8px #38BDF8;
+          pointer-events: none;
+          animation: sparkFloat 6s ease-in-out infinite alternate;
+        }
+        @keyframes sparkFloat {
+          0% { transform: translateY(0px) scale(0.8); opacity: 0.2; }
+          50% { opacity: 0.85; transform: translateY(-15px) scale(1.3); }
+          100% { transform: translateY(-30px) scale(0.6); opacity: 0.15; }
+        }
+
+        /* Outer HUD Frame Line */
         .frame-line {
           position: absolute;
           inset: clamp(16px, 2.5vw, 36px);
-          border: 1px solid rgba(212, 175, 55, 0.25);
-          border-radius: 16px;
+          border: 1px solid rgba(56, 189, 248, 0.2);
+          border-radius: 20px;
           pointer-events: none;
-          box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+          box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.8), 0 0 60px rgba(6, 182, 212, 0.08);
         }
 
-        /* Single Standing Page Layout */
+        /* Corner HUD Reticle Accents */
+        .hud-corner {
+          position: absolute;
+          width: 18px;
+          height: 18px;
+          pointer-events: none;
+          border-color: #38BDF8;
+          border-style: solid;
+        }
+        .hud-corner.tl { top: clamp(14px, 2.3vw, 34px); left: clamp(14px, 2.3vw, 34px); border-width: 2.5px 0 0 2.5px; border-top-left-radius: 6px; }
+        .hud-corner.tr { top: clamp(14px, 2.3vw, 34px); right: clamp(14px, 2.3vw, 34px); border-width: 2.5px 2.5px 0 0; border-top-right-radius: 6px; }
+        .hud-corner.bl { bottom: clamp(14px, 2.3vw, 34px); left: clamp(14px, 2.3vw, 34px); border-width: 0 0 2.5px 2.5px; border-bottom-left-radius: 6px; }
+        .hud-corner.br { bottom: clamp(14px, 2.3vw, 34px); right: clamp(14px, 2.3vw, 34px); border-width: 0 2.5px 2.5px 0; border-bottom-right-radius: 6px; }
+
+        /* Single Standing Page Layout - Text on Left, Divider in Center-Left, Image on Right */
         .layout-container {
           position: relative;
           width: 100%;
-          max-width: 1360px;
+          max-width: 1560px;
           height: 100%;
-          max-height: calc(100vh - 80px);
+          max-height: calc(100vh - 65px);
           margin: 0 auto;
-          padding: 0 clamp(24px, 4vw, 60px);
+          padding: 0 clamp(24px, 4vw, 64px);
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1.1fr);
+          grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1.48fr);
           align-items: center;
-          gap: clamp(32px, 5vw, 80px);
+          gap: clamp(36px, 5vw, 88px);
           z-index: 10;
         }
 
-        /* Left Side: Magnet Physics HUD */
-        .plot-hud {
-          position: relative;
-          aspect-ratio: 1;
-          width: 100%;
-          max-width: min(55vh, 540px);
-          justify-self: center;
-          border: 1.5px solid rgba(212, 175, 55, 0.35);
-          border-radius: 28px;
-          background: rgba(18, 9, 4, 0.75);
-          backdrop-filter: blur(12px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(212, 175, 55, 0.08);
-          cursor: crosshair;
-        }
-
-        /* Magnet Bar */
-        .magnet-bar {
-          position: relative;
-          width: 260px;
-          height: 54px;
-          border-radius: 12px;
-          display: flex;
-          overflow: hidden;
-          box-shadow: 0 0 30px rgba(239, 68, 68, 0.3), 0 0 30px rgba(245, 158, 11, 0.3);
-          z-index: 3;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .pole-n {
-          flex: 1;
-          background: linear-gradient(135deg, #EF4444, #991B1B);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 900;
-          font-size: 1.4rem;
-          color: #FFF;
-          letter-spacing: 2px;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        .pole-s {
-          flex: 1;
-          background: linear-gradient(135deg, #3B82F6, #1E40AF);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 900;
-          font-size: 1.4rem;
-          color: #FFF;
-          letter-spacing: 2px;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        /* SVG Magnetic Field Lines (Gold Theme) */
-        .field-svg {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          z-index: 2;
-        }
-        .field-line {
-          fill: none;
-          stroke: url(#goldFieldGradient);
-          stroke-width: 2;
-          stroke-dasharray: 6 6;
-          animation: dashStream 12s linear infinite;
-          opacity: 0.75;
-        }
-        @keyframes dashStream {
-          from { stroke-dashoffset: 240; }
-          to { stroke-dashoffset: 0; }
-        }
-
-        /* Settling Compass Overlay */
-        .compass-hud {
-          position: absolute;
-          top: 28px;
-          width: 85px;
-          height: 85px;
-          border-radius: 50%;
-          border: 2px solid var(--gold-brass);
-          background: rgba(18, 9, 4, 0.9);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
-          z-index: 4;
-        }
-        .needle-wrapper {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .needle-n {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 30px solid var(--red-north);
-        }
-        .needle-s {
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-top: 30px solid var(--gold-bright);
-        }
-
-        /* Floating Iron Filings Particles */
-        .filing {
-          position: absolute;
-          width: 4px;
-          height: 12px;
-          background: var(--gold-bright);
-          border-radius: 2px;
-          pointer-events: none;
-          animation: floatFiling 4s ease-in-out infinite alternate;
-        }
-        @keyframes floatFiling {
-          0% { transform: translateY(0px) rotate(0deg); opacity: 0.4; }
-          100% { transform: translateY(-8px) rotate(15deg); opacity: 0.9; }
-        }
-
-        /* Divider Line */
-        .meridian-line {
-          position: relative;
-          width: 1px;
-          height: 70%;
-          justify-self: center;
-          background: repeating-linear-gradient(180deg, rgba(212, 175, 55, 0.35) 0 6px, transparent 6px 12px);
-        }
-
-        /* Right Side: Title & Description */
+        /* Left Side: Text Cartouche with Pure White Typography */
         .text-cartouche {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          gap: 1.4rem;
-          max-width: 660px;
+          gap: 1.5rem;
+          max-width: 620px;
+          padding-right: clamp(10px, 2vw, 36px);
         }
 
         .pill-badge {
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 0.5rem 1.1rem;
+          padding: 0.55rem 1.2rem;
           border-radius: 30px;
-          background: rgba(212, 175, 55, 0.12);
-          border: 1px solid rgba(212, 175, 55, 0.35);
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          backdrop-filter: blur(8px);
           font-family: var(--mono);
-          font-size: clamp(0.9rem, 1.05vw, 1.05rem);
+          font-size: clamp(0.88rem, 1.0vw, 1.02rem);
           font-weight: 700;
           letter-spacing: 0.12em;
-          color: var(--gold-bright);
+          color: #FFFFFF;
           text-transform: uppercase;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.3);
         }
 
         .main-title {
           font-family: var(--geo);
-          font-size: clamp(2.6rem, 4.5vw, 4.5rem);
-          font-weight: 800;
+          font-size: clamp(2.7rem, 4.3vw, 4.4rem);
+          font-weight: 900;
           line-height: 1.1;
           margin: 0;
           letter-spacing: -0.02em;
           white-space: nowrap;
-          background: linear-gradient(135deg, #FFF6E5 20%, #FFD700 70%, #F59E0B 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          color: #FFFFFF;
+          text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
         }
 
         .description-text {
-          font-size: clamp(1.35rem, 1.65vw, 1.65rem);
+          font-size: clamp(1.25rem, 1.5vw, 1.55rem);
           line-height: 1.6;
-          color: rgba(255, 246, 229, 0.92);
+          color: #FFFFFF;
           margin: 0;
           font-weight: 400;
+          opacity: 0.95;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
         }
 
         .cta-wrapper {
-          margin-top: 0.4rem;
+          margin-top: 0.5rem;
         }
 
+        /* Shimmering Aqua CTA Button */
         .start-journey-btn {
+          position: relative;
           display: inline-flex;
           align-items: center;
-          gap: 0.75rem;
-          padding: 1.1rem 2.6rem;
+          gap: 0.8rem;
+          padding: 1.15rem 2.75rem;
           border-radius: 30px;
-          background: linear-gradient(135deg, #F59E0B, #D97706);
+          background: linear-gradient(135deg, #00F2FE 0%, #00C6FF 100%);
           border: none;
-          color: #120904;
+          color: #030712;
           font-family: var(--geo);
-          font-weight: 800;
+          font-weight: 900;
           font-size: 1.25rem;
           letter-spacing: 0.03em;
           cursor: pointer;
+          overflow: hidden;
           transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-          box-shadow: 0 10px 25px rgba(245, 158, 11, 0.35);
+          box-shadow: 0 10px 30px rgba(0, 242, 254, 0.45);
+          z-index: 1;
         }
+
+        /* Moving Radiant Shimmer Light Sweep */
+        .start-journey-btn::after {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -75%;
+          width: 50%;
+          height: 200%;
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.75) 50%,
+            rgba(255, 255, 255, 0) 100%
+          );
+          transform: rotate(25deg);
+          animation: shimmerSweep 2.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+          pointer-events: none;
+        }
+
+        @keyframes shimmerSweep {
+          0% {
+            left: -75%;
+          }
+          50%, 100% {
+            left: 175%;
+          }
+        }
+
         .start-journey-btn:hover {
           transform: translateY(-2px) scale(1.03);
-          box-shadow: 0 15px 35px rgba(245, 158, 11, 0.5);
-          background: linear-gradient(135deg, #FFB020, #E67E22);
+          box-shadow: 0 16px 40px rgba(0, 242, 254, 0.7);
+          background: linear-gradient(135deg, #38BDF8 0%, #00F2FE 100%);
         }
         .start-journey-btn:active {
           transform: translateY(0) scale(0.98);
+        }
+
+        /* Center-Left Meridian Dashed Divider Line */
+        .meridian-line {
+          position: relative;
+          width: 1px;
+          height: 74%;
+          justify-self: center;
+          background: repeating-linear-gradient(180deg, rgba(56, 189, 248, 0.4) 0 6px, transparent 6px 12px);
+        }
+
+        /* Right Side: Clean Dark Sci-Fi Visual Showcase Card */
+        .gallery-card {
+          position: relative;
+          aspect-ratio: 16 / 10;
+          width: 100%;
+          max-width: min(82vh, 780px);
+          justify-self: center;
+          border: 2px solid rgba(56, 189, 248, 0.4);
+          border-radius: 32px;
+          background: #000000;
+          overflow: hidden;
+          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.9), 0 0 50px rgba(6, 182, 212, 0.2);
+          cursor: pointer;
+          transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .gallery-card:hover {
+          border-color: rgba(56, 189, 248, 0.85);
+          box-shadow: 0 32px 85px rgba(0, 0, 0, 0.98), 0 0 65px rgba(6, 182, 212, 0.35);
+          transform: translateY(-2px);
+        }
+
+        .gallery-image-container {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .gallery-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
 
         /* FuturaX Corner Branding */
@@ -355,15 +381,16 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
           width: 32px;
           height: 32px;
           border-radius: 8px;
-          background: var(--gold-bright);
-          color: #120904;
+          background: #00F2FE;
+          color: #030712;
           display: grid;
           place-items: center;
           font-weight: 900;
           font-size: 16px;
+          box-shadow: 0 0 14px rgba(0, 242, 254, 0.5);
         }
         .brand-title { font-size: 14px; font-weight: 700; color: #FFF; }
-        .brand-sub { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: rgba(255, 246, 229, 0.6); display: block; }
+        .brand-sub { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: rgba(224, 242, 254, 0.6); display: block; }
 
         @media (max-width: 860px) {
           .layout-container {
@@ -372,77 +399,38 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
             gap: 1.5rem;
           }
           .meridian-line { display: none; }
-          .text-cartouche { align-items: center; }
-          .plot-hud { max-width: 360px; }
+          .text-cartouche { align-items: center; padding-right: 0; }
+          .gallery-card { max-width: 460px; }
           .corner-brand { position: static; margin-top: 0.5rem; justify-content: center; }
           .main-title { white-space: normal; }
         }
       `}</style>
 
-      {/* Frame Background */}
-      <div className="grid-bg"></div>
+      {/* Futuristic Cybernetic Background Elements */}
+      <div className="scifi-grid"></div>
+      <div className="plasma-wave cyan"></div>
+      <div className="plasma-wave violet"></div>
+
+      {/* Floating Star Sparks */}
+      <div className="spark-particle" style={{ top: '22%', left: '18%', animationDelay: '0s' }}></div>
+      <div className="spark-particle" style={{ top: '75%', left: '12%', animationDelay: '-2s' }}></div>
+      <div className="spark-particle" style={{ top: '35%', right: '14%', animationDelay: '-4s' }}></div>
+      <div className="spark-particle" style={{ top: '82%', right: '24%', animationDelay: '-1s' }}></div>
+
+      {/* Outer HUD Framing & Corner Reticles */}
       <div className="frame-line"></div>
+      <div className="hud-corner tl"></div>
+      <div className="hud-corner tr"></div>
+      <div className="hud-corner bl"></div>
+      <div className="hud-corner br"></div>
 
       {/* Center Layout Container */}
       <div className="layout-container">
         
-        {/* Left Magnet Simulation Box (Only FuturaX content, no extra names) */}
-        <div 
-          ref={plotRef}
-          className="plot-hud"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-        >
-          {/* Settling Compass */}
-          <div className="compass-hud">
-            <div className="needle-wrapper" style={{ transform: `rotate(${needleAngle}deg)` }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div className="needle-n" />
-                <div className="needle-s" />
-              </div>
-            </div>
-          </div>
-
-          {/* SVG Field Lines (Warm Amber Gold) */}
-          <svg className="field-svg" viewBox="0 0 400 400">
-            <defs>
-              <linearGradient id="goldFieldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#EF4444" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#FFD700" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.8" />
-              </linearGradient>
-            </defs>
-            
-            <path className="field-line" d="M 120 200 C 120 100, 280 100, 280 200" />
-            <path className="field-line" d="M 120 200 C 120 300, 280 300, 280 200" />
-            <path className="field-line" d="M 100 200 C 100 50, 300 50, 300 200" style={{ animationDuration: '16s' }} />
-            <path className="field-line" d="M 100 200 C 100 350, 300 350, 300 200" style={{ animationDuration: '16s' }} />
-            <path className="field-line" d="M 80 200 C 80 10, 320 10, 320 200" style={{ animationDuration: '20s' }} />
-            <path className="field-line" d="M 80 200 C 80 390, 320 390, 320 200" style={{ animationDuration: '20s' }} />
-          </svg>
-
-          {/* Floating Iron Filings Particles */}
-          <div className="filing" style={{ top: '25%', left: '30%', transform: 'rotate(20deg)' }} />
-          <div className="filing" style={{ top: '22%', left: '68%', transform: 'rotate(-25deg)' }} />
-          <div className="filing" style={{ bottom: '26%', left: '32%', transform: 'rotate(-15deg)' }} />
-          <div className="filing" style={{ bottom: '22%', left: '65%', transform: 'rotate(30deg)' }} />
-          <div className="filing" style={{ top: '48%', left: '15%', transform: 'rotate(90deg)' }} />
-          <div className="filing" style={{ top: '48%', right: '15%', transform: 'rotate(90deg)' }} />
-
-          {/* Central Bar Magnet */}
-          <div className="magnet-bar">
-            <div className="pole-n">N</div>
-            <div className="pole-s">S</div>
-          </div>
-        </div>
-
-        {/* Divider Line */}
-        <div className="meridian-line"></div>
-
-        {/* Right Cartouche (FuturaX Content) */}
+        {/* Left Cartouche (Pure White Typography & Shimmer CTA) */}
         <div className="text-cartouche">
           <div className="pill-badge">
-            <Zap size={18} color="#FFD700" />
+            <Zap size={18} color="#FFFFFF" />
             GRADE 6 · SCIENCE · CHAPTER 4
           </div>
 
@@ -461,6 +449,36 @@ export default function Chapter4Cover({ onStartJourney, onBack }) {
               <ArrowRight size={22} />
             </button>
           </div>
+        </div>
+
+        {/* Center-Left Meridian Dashed Divider Line */}
+        <div className="meridian-line"></div>
+
+        {/* Right Side: Clean Dark Sci-Fi Visual Showcase Card */}
+        <div
+          className="gallery-card"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={() => setCurrentSlide((prev) => (prev + 1) % SCI_FI_SLIDES.length)}
+          title="Click to view next visual asset"
+        >
+          {/* Animated Image Slide with Crossfade Transition */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSlideData.id}
+              className="gallery-image-container"
+              initial={{ opacity: 0, scale: 1.03 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.55, ease: 'easeInOut' }}
+            >
+              <img
+                src={activeSlideData.image}
+                alt={`Dark Sci-Fi Visual ${currentSlide + 1}`}
+                className="gallery-image"
+              />
+            </motion.div>
+          </AnimatePresence>
         </div>
 
       </div>

@@ -1,44 +1,105 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as THREE from 'three';
 
 /**
- * 2D Billboard Image Mesh PET Plastic Bottle Barrier with 4 Evolution Stages:
- * - Stage 1: 200ml Compact Pocket Water Bottle (/assets/bottle_200ml.png)
- * - Stage 2: 500ml Standard Spring Water Bottle (/assets/bottle_500ml.png)
- * - Stage 3: 1 Litre Sports Ribbed Water Bottle (/assets/bottle_1l.png)
- * - Stage 4: 20 Litre Commercial Dispenser Jug / Can (/assets/bottle_20l.png)
+ * 2D Transparent Billboard Image Mesh PET Plastic Bottle Barrier with 4 Evolution Stages:
+ * - Stage 1: 200 mL Compact Pocket Water Bottle (Shorter, medium-wide stout base) -> /assets/bottle_200ml.png
+ * - Stage 2: 500 mL Standard Spring Water Bottle (Balanced mid-size height & standard cylindrical width) -> /assets/bottle_500ml.png
+ * - Stage 3: 1 Litre Sports Ribbed Water Bottle (Tallest height with appropriately wide cylindrical diameter) -> /assets/bottle_1l.png
+ * - Stage 4: 20 Litre Commercial Dispenser Jug / Canister -> /assets/bottle_20l.png
  */
 
-// ─── Helper hook to load & configure transparent bottle textures cleanly ───
+// ─── Offscreen Canvas Texture Processor with Transparent Margin Padding ───
 function useBottleTexture(url) {
-  return useMemo(() => {
-    const loader = new THREE.TextureLoader();
-    const tex = loader.load(url);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.anisotropy = 8;
-    tex.generateMipmaps = true;
-    tex.minFilter = THREE.LinearMipmapLinearFilter;
-    tex.magFilter = THREE.LinearFilter;
-    return tex;
+  const [texture, setTexture] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
+
+    img.onload = () => {
+      if (!isMounted) return;
+
+      // Add 12% transparent padding around all 4 sides so bottle artwork never touches borders
+      const padRatio = 0.12;
+      const origW = img.naturalWidth || img.width;
+      const origH = img.naturalHeight || img.height;
+      const targetW = Math.round(origW * (1 + padRatio * 2));
+      const targetH = Math.round(origH * (1 + padRatio * 2));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext('2d');
+
+      ctx.clearRect(0, 0, targetW, targetH);
+
+      const drawX = Math.round(origW * padRatio);
+      const drawY = Math.round(origH * padRatio);
+      ctx.drawImage(img, drawX, drawY, origW, origH);
+
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+
+      // Key out any white background and edge artifacts
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        const minVal = Math.min(r, g, b);
+        const maxVal = Math.max(r, g, b);
+        const isNeutral = (maxVal - minVal) < 22;
+
+        if (minVal > 240 && isNeutral) {
+          data[i + 3] = 0; // Pure transparent background
+        } else if (minVal > 220 && isNeutral) {
+          const factor = (240 - minVal) / 20;
+          data[i + 3] = Math.floor(data[i + 3] * Math.max(0, Math.min(1, factor)));
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 8;
+      tex.generateMipmaps = true;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.needsUpdate = true;
+
+      setTexture(tex);
+    };
+
+    return () => {
+      isMounted = false;
+      if (texture) texture.dispose();
+    };
   }, [url]);
+
+  return texture;
 }
 
-// ─── Stage 1: 200 mL Compact Pocket Water Bottle Billboard ───
+// ─── Stage 1: 200 mL Pocket Bottle (Shorter height, medium-wide stout base) ───
 function Bottle200ml({ thickness = 1 }) {
   const texture = useBottleTexture('/assets/bottle_200ml.png');
   const scale = 1 + (thickness - 1) * 0.14;
-  const height = 2.2 * scale;
-  const width = 1.35 * scale;
+  // Natural realistic stout bottle proportions (expanded width)
+  const height = 3.0 * scale;
+  const width = 2.85 * scale;
 
   return (
-    <group position={[0, -0.65, 0]}>
+    <group position={[0, -2.7, 0]}>
       <mesh position={[0, height / 2, 0]}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
           color="#ffffff"
           transparent={true}
-          alphaTest={0.15}
+          alphaTest={0.08}
           side={THREE.DoubleSide}
           toneMapped={false}
           depthWrite={false}
@@ -48,22 +109,23 @@ function Bottle200ml({ thickness = 1 }) {
   );
 }
 
-// ─── Stage 2: 500 mL Standard Spring Water Bottle Billboard ───
+// ─── Stage 2: 500 mL Spring Water Bottle (Balanced mid-size height & standard cylindrical width) ───
 function Bottle500ml({ thickness = 1 }) {
   const texture = useBottleTexture('/assets/bottle_500ml.png');
   const scale = 1 + (thickness - 1) * 0.14;
-  const height = 2.7 * scale;
-  const width = 1.4 * scale;
+  // Balanced standard cylindrical water bottle proportions (expanded width)
+  const height = 3.7 * scale;
+  const width = 2.95 * scale;
 
   return (
-    <group position={[0, -0.85, 0]}>
+    <group position={[0, -3.0, 0]}>
       <mesh position={[0, height / 2, 0]}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
           color="#ffffff"
           transparent={true}
-          alphaTest={0.15}
+          alphaTest={0.08}
           side={THREE.DoubleSide}
           toneMapped={false}
           depthWrite={false}
@@ -73,22 +135,23 @@ function Bottle500ml({ thickness = 1 }) {
   );
 }
 
-// ─── Stage 3: 1 Litre Ribbed Water Bottle Billboard ───
+// ─── Stage 3: 1 Litre Sports Bottle (Tallest height with appropriately wide cylindrical diameter) ───
 function Bottle1Litre({ thickness = 1 }) {
   const texture = useBottleTexture('/assets/bottle_1l.png');
   const scale = 1 + (thickness - 1) * 0.14;
-  const height = 3.1 * scale;
-  const width = 1.45 * scale;
+  // Tallest height with wide sturdy diameter
+  const height = 4.25 * scale;
+  const width = 3.25 * scale;
 
   return (
-    <group position={[0, -1.05, 0]}>
+    <group position={[0, -3.2, 0]}>
       <mesh position={[0, height / 2, 0]}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
           color="#ffffff"
           transparent={true}
-          alphaTest={0.15}
+          alphaTest={0.08}
           side={THREE.DoubleSide}
           toneMapped={false}
           depthWrite={false}
@@ -98,22 +161,22 @@ function Bottle1Litre({ thickness = 1 }) {
   );
 }
 
-// ─── Stage 4: 20 Litre Commercial Dispenser Jug / Can Billboard ───
+// ─── Stage 4: 20 Litre Commercial Dispenser Jug / Can ───
 function WaterCan20Litre({ thickness = 1 }) {
   const texture = useBottleTexture('/assets/bottle_20l.png');
   const scale = 1 + (thickness - 1) * 0.14;
-  const height = 3.3 * scale;
-  const width = 2.25 * scale;
+  const height = 4.5 * scale;
+  const width = 3.85 * scale;
 
   return (
-    <group position={[0, -1.15, 0]}>
+    <group position={[0, -3.3, 0]}>
       <mesh position={[0, height / 2, 0]}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={texture}
           color="#ffffff"
           transparent={true}
-          alphaTest={0.15}
+          alphaTest={0.08}
           side={THREE.DoubleSide}
           toneMapped={false}
           depthWrite={false}

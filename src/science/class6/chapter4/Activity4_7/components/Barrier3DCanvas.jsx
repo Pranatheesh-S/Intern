@@ -21,15 +21,25 @@ function CinematicCameraController({ stage, type }) {
     let targetFov = 40;
 
     if (type === 'wood') {
-      if (stage === 1) { targetY = 0.35; targetZ = 4.1; targetFov = 38; }
-      else if (stage === 2) { targetY = 0.25; targetZ = 4.1; targetFov = 38; }
-      else if (stage === 3) { targetY = 0.35; targetZ = 4.2; targetFov = 39; }
+      if (stage === 1) { targetY = -0.75; targetZ = 4.3; targetFov = 40; }
+      else if (stage === 2) { targetY = -0.70; targetZ = 4.8; targetFov = 42; }
+      else if (stage === 3) { targetY = -0.70; targetZ = 4.9; targetFov = 42; }
       else if (stage === 4) { targetY = -0.55; targetZ = 7.4; targetFov = 50; }
     } else if (type === 'plastic') {
-      if (stage === 1) { targetY = 0.45; targetZ = 4.0; targetFov = 38; }
-      else if (stage === 2) { targetY = 0.50; targetZ = 4.4; targetFov = 40; }
-      else if (stage === 3) { targetY = 0.50; targetZ = 4.8; targetFov = 40; }
-      else if (stage === 4) { targetY = 0.50; targetZ = 5.0; targetFov = 42; }
+      if (stage === 1) { targetY = -0.80; targetZ = 4.3; targetFov = 40; }
+      else if (stage === 2) { targetY = -0.70; targetZ = 4.8; targetFov = 41; }
+      else if (stage === 3) { targetY = -0.70; targetZ = 5.2; targetFov = 42; }
+      else if (stage === 4) { targetY = -0.65; targetZ = 5.6; targetFov = 44; }
+    } else if (type === 'glass') {
+      if (stage === 1) { targetY = -0.75; targetZ = 4.3; targetFov = 40; }
+      else if (stage === 2) { targetY = -0.70; targetZ = 4.9; targetFov = 42; }
+      else if (stage === 3) { targetY = -0.80; targetZ = 4.5; targetFov = 40; }
+      else if (stage === 4) { targetY = -0.65; targetZ = 5.2; targetFov = 43; }
+    } else if (type === 'cardboard') {
+      if (stage === 1) { targetY = -0.75; targetZ = 4.4; targetFov = 40; }
+      else if (stage === 2) { targetY = -0.70; targetZ = 4.6; targetFov = 41; }
+      else if (stage === 3) { targetY = -0.70; targetZ = 4.6; targetFov = 41; }
+      else if (stage === 4) { targetY = -0.70; targetZ = 5.3; targetFov = 43; }
     }
 
     // Smooth cinematic damping
@@ -46,11 +56,10 @@ function CinematicCameraController({ stage, type }) {
 }
 
 // Stable stage wrapper for clear, stationary 3D presentation
-function BarrierModelWrapper({ type, stage = 1, thickness = 1, woodViewMode = 'textured' }) {
-  const isBillboard = (type === 'wood' && stage === 4) || type === 'plastic';
+function BarrierModelWrapper({ type, stage = 1, thickness = 1 }) {
   return (
-    <group rotation={isBillboard ? [0, 0, 0] : [0.06, -0.28, 0]}>
-      {type === 'wood' && <TreeBarrier stage={stage} thickness={thickness} woodViewMode={woodViewMode} />}
+    <group rotation={[0, 0, 0]}>
+      {type === 'wood' && <TreeBarrier stage={stage} thickness={thickness} />}
       {type === 'plastic' && <BottleBarrier stage={stage} thickness={thickness} />}
       {type === 'glass' && <GlassBarrier stage={stage} thickness={thickness} />}
       {type === 'cardboard' && <CardboardBarrier stage={stage} thickness={thickness} />}
@@ -97,12 +106,6 @@ const BADGE_CONFIG = {
 
 export default function Barrier3DCanvas({ type = 'wood', treeStage = 1, stage = null, thickness = 1, width = 360, height = 420 }) {
   const currentStage = stage !== null ? stage : (treeStage || 1);
-  const [woodViewMode, setWoodViewMode] = React.useState('textured'); // 'textured' | 'clay' | 'quads'
-
-  const materialConfig = BADGE_CONFIG[type] || BADGE_CONFIG.wood;
-  const badge = materialConfig[currentStage] || materialConfig[1] || { title: 'Material Barrier', bg: '#0284C7', border: '#7DD3FC' };
-
-  const isLogStage = type === 'wood' && currentStage === 2;
 
   return (
     <div style={{
@@ -114,56 +117,12 @@ export default function Barrier3DCanvas({ type = 'wood', treeStage = 1, stage = 
       alignItems: 'center',
       justifyContent: 'center',
       userSelect: 'none',
-      background: 'transparent'
+      background: 'transparent',
+      overflow: 'visible'
     }}>
-      {/* 3D Mesh Inspection Mode Selector for Rustic Wooden Log */}
-      {isLogStage && (
-        <div style={{
-          position: 'absolute',
-          bottom: '8px',
-          zIndex: 20,
-          display: 'flex',
-          gap: '4px',
-          background: 'rgba(15, 23, 42, 0.85)',
-          backdropFilter: 'blur(8px)',
-          padding: '3px 6px',
-          borderRadius: '20px',
-          border: '1px solid rgba(148, 163, 184, 0.35)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.3)'
-        }}>
-          {[
-            { id: 'textured', label: '🪵 Weathered Wood', desc: 'Weathered Grain & Cracks' },
-            { id: 'clay', label: '🏛️ Gray Clay', desc: 'Untextured 3D Sculpt' },
-            { id: 'quads', label: '🌐 Quad Mesh', desc: 'Quad Topology Grid' }
-          ].map((m) => {
-            const active = woodViewMode === m.id;
-            return (
-              <button
-                key={m.id}
-                onClick={() => setWoodViewMode(m.id)}
-                title={m.desc}
-                style={{
-                  background: active ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' : 'transparent',
-                  color: active ? '#FFFFFF' : '#CBD5E1',
-                  border: 'none',
-                  borderRadius: '14px',
-                  padding: '3px 9px',
-                  fontSize: '10px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                {m.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
-
       {/* 3D WebGL Canvas */}
       <ErrorBoundary title="3D Barrier Model Glitch">
-        <div style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
+        <div style={{ width: '100%', height: '100%', pointerEvents: 'none', overflow: 'visible' }}>
           <Canvas
             shadows
             camera={{ position: [0, 0.45, 4.4], fov: 40 }}
@@ -212,9 +171,17 @@ export default function Barrier3DCanvas({ type = 'wood', treeStage = 1, stage = 
 
               {/* Realistic Ground Contact Shadows */}
               <ContactShadows
-                position={[0, type === 'wood' && currentStage === 4 ? -1.68 : -1.08, 0]}
+                position={[
+                  0,
+                  type === 'wood' && currentStage === 4
+                    ? -1.68
+                    : type === 'plastic'
+                      ? (currentStage === 1 ? -2.8 : currentStage === 2 ? -3.1 : currentStage === 3 ? -3.3 : -3.4)
+                      : -1.08,
+                  0
+                ]}
                 opacity={0.45}
-                scale={4.5}
+                scale={type === 'plastic' ? 5.2 : 4.5}
                 blur={2.2}
                 far={3.8}
                 color="#0f172a"
@@ -225,7 +192,6 @@ export default function Barrier3DCanvas({ type = 'wood', treeStage = 1, stage = 
                 type={type}
                 stage={currentStage}
                 thickness={thickness}
-                woodViewMode={woodViewMode}
               />
             </Suspense>
           </Canvas>

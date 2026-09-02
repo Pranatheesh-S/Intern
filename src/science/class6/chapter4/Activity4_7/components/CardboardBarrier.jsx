@@ -1,287 +1,187 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as THREE from 'three';
-import { useTexture } from '@react-three/drei';
 
 /**
- * 3D Cardboard Barrier Component with 4 Stages:
- * - Stage 1: Small Box (Compact product / gift carton)
- * - Stage 2: Cardboard Sheet (Single-wall corrugated cardboard sheet with fluting edge)
- * - Stage 3: 3 Layers of Cardboard Sheet (Triple-wall heavy-duty corrugated sandwich)
- * - Stage 4: Shipping Cardboard Box (Large corrugated shipping box with tape & stamps)
+ * 2D Transparent Billboard Image Mesh Cardboard Barrier with 4 Evolution Stages:
+ * - Stage 1: Single Flat Mailer Box (Individual flat pizza/mailer box) -> /assets/cardboard_small.png
+ * - Stage 2: Cardboard Sheet (Scaled down, 3/4 isometric flute perspective) -> /assets/cardboard_sheet.png
+ * - Stage 3: Compact Stack of Sheets (Reduced volume compact bundle) -> /assets/cardboard_3layers.png
+ * - Stage 4: Large Moving Box (Noticeably larger & taller shipping carton) -> /assets/cardboard_box.png
  */
 
-// ─── Stage 1: Small Cardboard Box ───
-function SmallCardboardBox({ thickness = 1 }) {
-  const [cardboardMap, cardboardNormal, tapeMap] = useTexture([
-    '/textures/cardboard.png',
-    '/textures/cardboard-normal.png',
-    '/textures/tape.png'
-  ]);
+// ─── Offscreen Canvas Texture Processor with 15% Transparent Padding Buffer ───
+function useCardboardTexture(url) {
+  const [texture, setTexture] = useState(null);
 
-  useMemo(() => {
-    if (cardboardMap) {
-      cardboardMap.wrapS = cardboardMap.wrapT = THREE.RepeatWrapping;
-      cardboardMap.repeat.set(1.5, 1.5);
-    }
-  }, [cardboardMap]);
+  useEffect(() => {
+    let isMounted = true;
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = url;
 
-  const scale = 1.05 + thickness * 0.15;
+    img.onload = () => {
+      if (!isMounted) return;
 
-  return (
-    <group position={[0, -0.6, 0]} scale={[scale, scale, scale]}>
-      {/* Main Cube Box */}
-      <mesh position={[0, 0.6, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.2, 1.2, 1.2]} />
-        <meshStandardMaterial
-          map={cardboardMap}
-          normalMap={cardboardNormal}
-          roughness={0.85}
-          metalness={0.01}
-          color="#c2884d"
-        />
-      </mesh>
+      // Add generous transparent padding around all 4 sides so artwork never touches borders
+      const padRatio = 0.15; // 15% transparent horizontal and vertical margin
+      const origW = img.naturalWidth || img.width;
+      const origH = img.naturalHeight || img.height;
+      const targetW = Math.round(origW * (1 + padRatio * 2));
+      const targetH = Math.round(origH * (1 + padRatio * 2));
 
-      {/* Top Seam Tape */}
-      <mesh position={[0, 1.202, 0]} rotation={[-Math.PI / 2, 0, 0]} castShadow>
-        <planeGeometry args={[0.22, 1.18]} />
-        <meshPhysicalMaterial
-          map={tapeMap}
-          transparent
-          opacity={0.88}
-          roughness={0.2}
-          clearcoat={1.0}
-        />
-      </mesh>
+      const canvas = document.createElement('canvas');
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext('2d');
 
-      {/* Front Barcode Label */}
-      <mesh position={[0, 0.6, 0.602]}>
-        <planeGeometry args={[0.45, 0.32]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.5} />
-      </mesh>
-      <mesh position={[0, 0.6, 0.603]}>
-        <planeGeometry args={[0.35, 0.16]} />
-        <meshBasicMaterial color="#1e293b" />
-      </mesh>
-    </group>
-  );
+      // Clear entire canvas to transparent
+      ctx.clearRect(0, 0, targetW, targetH);
+
+      // Draw the image centered with generous padding
+      const drawX = Math.round(origW * padRatio);
+      const drawY = Math.round(origH * padRatio);
+      ctx.drawImage(img, drawX, drawY, origW, origH);
+
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+
+      // Key out plain background pixels and any bottom floor artifacts
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        const minVal = Math.min(r, g, b);
+        const maxVal = Math.max(r, g, b);
+        const isNeutral = (maxVal - minVal) < 22;
+
+        if (minVal > 238 && isNeutral) {
+          data[i + 3] = 0; // Pure transparent background
+        } else if (minVal > 218 && isNeutral) {
+          // Antialiased edge alpha falloff
+          const factor = (238 - minVal) / 20;
+          data[i + 3] = Math.floor(data[i + 3] * Math.max(0, Math.min(1, factor)));
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 8;
+      tex.generateMipmaps = true;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.needsUpdate = true;
+
+      setTexture(tex);
+    };
+
+    return () => {
+      isMounted = false;
+      if (texture) texture.dispose();
+    };
+  }, [url]);
+
+  return texture;
 }
 
-// ─── Stage 2: Single Cardboard Sheet ───
-function CardboardSheet({ thickness = 1 }) {
-  const [cardboardMap, cardboardNormal] = useTexture([
-    '/textures/cardboard.png',
-    '/textures/cardboard-normal.png'
-  ]);
-
-  useMemo(() => {
-    if (cardboardMap) {
-      cardboardMap.wrapS = cardboardMap.wrapT = THREE.RepeatWrapping;
-      cardboardMap.repeat.set(2, 2);
-    }
-  }, [cardboardMap]);
-
-  const scale = 1 + thickness * 0.15;
+// ─── Stage 1: Single Flat Mailer Box (Individual flat carton sitting alone) ───
+function SingleFlatBoxMesh({ thickness = 1 }) {
+  const texture = useCardboardTexture('/assets/cardboard_small.png');
+  const scale = 1 + (thickness - 1) * 0.14;
+  // Expanded width & height to accommodate full padded texture without clipping
+  const height = 3.6 * scale;
+  const width = 3.6 * scale;
 
   return (
-    <group position={[0, -1.1, 0]} scale={[scale, 1, scale]}>
-      {/* Front Linerboard Face */}
-      <mesh position={[0, 1.1, 0.04]} castShadow receiveShadow>
-        <planeGeometry args={[1.65, 2.2]} />
-        <meshStandardMaterial
-          map={cardboardMap}
-          normalMap={cardboardNormal}
-          roughness={0.88}
-          color="#c2884d"
+    <group position={[0, -2.6, 0]}>
+      <mesh position={[0, height / 2, 0]}>
+        <planeGeometry args={[width, height]} />
+        <meshBasicMaterial
+          map={texture}
+          color="#ffffff"
+          transparent={true}
+          alphaTest={0.08}
           side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Back Linerboard Face */}
-      <mesh position={[0, 1.1, -0.04]} rotation={[0, Math.PI, 0]} castShadow receiveShadow>
-        <planeGeometry args={[1.65, 2.2]} />
-        <meshStandardMaterial
-          map={cardboardMap}
-          normalMap={cardboardNormal}
-          roughness={0.88}
-          color="#c2884d"
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Internal Corrugated Fluting Core Slab */}
-      <mesh position={[0, 1.1, 0]} castShadow>
-        <boxGeometry args={[1.64, 2.19, 0.075]} />
-        <meshStandardMaterial color="#8c5828" roughness={0.9} />
-      </mesh>
-
-      {/* Side Edge Sinusoidal Fluting Wave Teeth */}
-      {[-0.82, 0.82].map((xSide, sIdx) => (
-        <group key={sIdx} position={[xSide, 1.1, 0]}>
-          {Array.from({ length: 22 }).map((_, idx) => (
-            <mesh key={idx} position={[0, -1.0 + idx * 0.095, 0]}>
-              <boxGeometry args={[0.015, 0.04, 0.065]} />
-              <meshStandardMaterial color="#78350f" roughness={0.8} />
-            </mesh>
-          ))}
-        </group>
-      ))}
-    </group>
-  );
-}
-
-// ─── Stage 3: 3 Layers of Cardboard Sheet ───
-function TripleLayerCardboard({ thickness = 1 }) {
-  const [cardboardMap, cardboardNormal] = useTexture([
-    '/textures/cardboard.png',
-    '/textures/cardboard-normal.png'
-  ]);
-
-  useMemo(() => {
-    if (cardboardMap) {
-      cardboardMap.wrapS = cardboardMap.wrapT = THREE.RepeatWrapping;
-      cardboardMap.repeat.set(2, 2);
-    }
-  }, [cardboardMap]);
-
-  const scale = 1 + thickness * 0.15;
-  const layers = [-0.14, 0.0, 0.14];
-
-  return (
-    <group position={[0, -1.1, 0]} scale={[scale, 1, scale]}>
-      {/* 3 Heavy-Duty Corrugated Board Sandwiches */}
-      {layers.map((zPos, layerIdx) => (
-        <group key={layerIdx} position={[0, 1.1, zPos]}>
-          {/* Main Board Slab */}
-          <mesh castShadow receiveShadow>
-            <boxGeometry args={[1.65, 2.2, 0.09]} />
-            <meshStandardMaterial
-              map={cardboardMap}
-              normalMap={cardboardNormal}
-              roughness={0.88}
-              color={layerIdx === 1 ? "#c2884d" : "#a86d38"}
-            />
-          </mesh>
-
-          {/* Visible Fluting Wave Edges */}
-          {[-0.826, 0.826].map((xEdge, eIdx) => (
-            <group key={eIdx} position={[xEdge, 0, 0]}>
-              {Array.from({ length: 18 }).map((_, idx) => (
-                <mesh key={idx} position={[0, -0.9 + idx * 0.105, 0]}>
-                  <boxGeometry args={[0.012, 0.045, 0.08]} />
-                  <meshStandardMaterial color="#573310" roughness={0.9} />
-                </mesh>
-              ))}
-            </group>
-          ))}
-        </group>
-      ))}
-
-      {/* Heavy-Duty Outer Binding Strap */}
-      <mesh position={[0, 1.1, 0]}>
-        <boxGeometry args={[1.67, 0.15, 0.40]} />
-        <meshStandardMaterial color="#1e293b" roughness={0.4} />
-      </mesh>
-    </group>
-  );
-}
-
-// ─── Stage 4: Large Shipping Cardboard Box ───
-function ShippingCardboardBox({ thickness = 1 }) {
-  const [cardboardMap, cardboardNormal, decalMap, tapeMap] = useTexture([
-    '/textures/cardboard.png',
-    '/textures/cardboard-normal.png',
-    '/textures/shipping-decal.png',
-    '/textures/tape.png'
-  ]);
-
-  useMemo(() => {
-    if (cardboardMap) {
-      cardboardMap.wrapS = cardboardMap.wrapT = THREE.RepeatWrapping;
-      cardboardMap.repeat.set(1.5, 2.5);
-    }
-    if (cardboardNormal) {
-      cardboardNormal.wrapS = cardboardNormal.wrapT = THREE.RepeatWrapping;
-      cardboardNormal.repeat.set(1.5, 2.5);
-    }
-    if (tapeMap) {
-      tapeMap.wrapS = tapeMap.wrapT = THREE.RepeatWrapping;
-      tapeMap.repeat.set(1, 4);
-    }
-  }, [cardboardMap, cardboardNormal, tapeMap]);
-
-  const scaleX = 0.65 + thickness * 0.24;
-
-  return (
-    <group position={[0, -1.1, 0]} scale={[scaleX, 1, 1]}>
-      {/* Main Corrugated Kraft Box Chassis */}
-      <mesh position={[0, 1.1, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.2, 2.2, 1.6]} />
-        <meshStandardMaterial
-          map={cardboardMap}
-          normalMap={cardboardNormal}
-          normalScale={new THREE.Vector2(1.5, 1.5)}
-          roughness={0.88}
-          metalness={0.01}
-          color="#c2884d"
-        />
-      </mesh>
-
-      {/* Flap Seam Crease Lines */}
-      <mesh position={[0, 1.1, 0.801]}>
-        <planeGeometry args={[0.006, 2.18]} />
-        <meshBasicMaterial color="#573310" />
-      </mesh>
-      <mesh position={[0, 2.201, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.006, 1.58]} />
-        <meshBasicMaterial color="#573310" />
-      </mesh>
-
-      {/* Flush Shipping Label & FRAGILE Stencils */}
-      <mesh position={[0, 1.1, 0.802]}>
-        <planeGeometry args={[1.15, 2.15]} />
-        <meshStandardMaterial
-          map={decalMap}
-          transparent
-          roughness={0.6}
+          toneMapped={false}
           depthWrite={false}
         />
       </mesh>
+    </group>
+  );
+}
 
-      {/* Packaging Tape */}
-      <mesh position={[0, 1.1, 0.803]} castShadow>
-        <planeGeometry args={[0.26, 2.18]} />
-        <meshPhysicalMaterial
-          map={tapeMap}
-          transparent
-          opacity={0.88}
-          roughness={0.15}
-          ior={1.5}
-          specularIntensity={1.0}
-          clearcoat={1.0}
+// ─── Stage 2: Cardboard Sheet (3/4 Isometric Perspective showing Flutes) ───
+function CardboardSheetMesh({ thickness = 1 }) {
+  const texture = useCardboardTexture('/assets/cardboard_sheet.png');
+  const scale = 1 + (thickness - 1) * 0.14;
+  const height = 3.8 * scale;
+  const width = 3.6 * scale;
+
+  return (
+    <group position={[0, -2.8, 0]}>
+      <mesh position={[0, height / 2, 0]}>
+        <planeGeometry args={[width, height]} />
+        <meshBasicMaterial
+          map={texture}
+          color="#ffffff"
+          transparent={true}
+          alphaTest={0.08}
+          side={THREE.DoubleSide}
+          toneMapped={false}
+          depthWrite={false}
         />
       </mesh>
-      <mesh position={[0, 2.202, 0]} rotation={[-Math.PI / 2, 0, 0]} castShadow>
-        <planeGeometry args={[0.26, 1.58]} />
-        <meshPhysicalMaterial
-          map={tapeMap}
-          transparent
-          opacity={0.88}
-          roughness={0.15}
-          ior={1.5}
-          specularIntensity={1.0}
-          clearcoat={1.0}
+    </group>
+  );
+}
+
+// ─── Stage 3: Compact Stack of Corrugated Sheets ───
+function CompactStackMesh({ thickness = 1 }) {
+  const texture = useCardboardTexture('/assets/cardboard_3layers.png');
+  const scale = 1 + (thickness - 1) * 0.14;
+  const height = 3.9 * scale;
+  const width = 3.7 * scale;
+
+  return (
+    <group position={[0, -2.9, 0]}>
+      <mesh position={[0, height / 2, 0]}>
+        <planeGeometry args={[width, height]} />
+        <meshBasicMaterial
+          map={texture}
+          color="#ffffff"
+          transparent={true}
+          alphaTest={0.08}
+          side={THREE.DoubleSide}
+          toneMapped={false}
+          depthWrite={false}
         />
       </mesh>
-      <mesh position={[0, 1.1, -0.803]} rotation={[0, Math.PI, 0]} castShadow>
-        <planeGeometry args={[0.26, 2.18]} />
-        <meshPhysicalMaterial
-          map={tapeMap}
-          transparent
-          opacity={0.88}
-          roughness={0.15}
-          ior={1.5}
-          specularIntensity={1.0}
-          clearcoat={1.0}
+    </group>
+  );
+}
+
+// ─── Stage 4: Large Moving Box (Noticeably Larger & Taller) ───
+function LargeMovingBoxMesh({ thickness = 1 }) {
+  const texture = useCardboardTexture('/assets/cardboard_box.png');
+  const scale = 1 + (thickness - 1) * 0.14;
+  // Expanded width & height to accommodate full padded texture without clipping
+  const height = 4.8 * scale;
+  const width = 4.8 * scale;
+
+  return (
+    <group position={[0, -3.3, 0]}>
+      <mesh position={[0, height / 2, 0]}>
+        <planeGeometry args={[width, height]} />
+        <meshBasicMaterial
+          map={texture}
+          color="#ffffff"
+          transparent={true}
+          alphaTest={0.08}
+          side={THREE.DoubleSide}
+          toneMapped={false}
+          depthWrite={false}
         />
       </mesh>
     </group>
@@ -289,9 +189,9 @@ function ShippingCardboardBox({ thickness = 1 }) {
 }
 
 // ─── Master Cardboard Barrier Component (Switches among 4 Stages) ───
-export default function CardboardBarrier({ stage = 4, thickness = 1 }) {
-  if (stage === 1) return <SmallCardboardBox thickness={thickness} />;
-  if (stage === 2) return <CardboardSheet thickness={thickness} />;
-  if (stage === 3) return <TripleLayerCardboard thickness={thickness} />;
-  return <ShippingCardboardBox thickness={thickness} />;
+export default function CardboardBarrier({ stage = 1, thickness = 1 }) {
+  if (stage === 1) return <SingleFlatBoxMesh thickness={thickness} />;
+  if (stage === 2) return <CardboardSheetMesh thickness={thickness} />;
+  if (stage === 3) return <CompactStackMesh thickness={thickness} />;
+  return <LargeMovingBoxMesh thickness={thickness} />;
 }
