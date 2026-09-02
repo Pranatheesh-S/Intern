@@ -1,19 +1,149 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, Sparkles, CheckCircle2, XCircle, Activity, Radio, Search, Maximize2, Minimize2 } from 'lucide-react';
+import { ArrowRight, Sparkles, CheckCircle2, XCircle, Activity, Radio, Search, Maximize2, Minimize2, Magnet } from 'lucide-react';
 import './Activity4_1.css';
 
 const ALL_ITEMS = [
-  { id: 'pens', name: 'Pens', icon: '🖊️', material: 'Plastic', isMagnetic: false, hotspot: { x: 4.2, y: 72.0 }, desc: 'Synthetic polymer' },
-  { id: 'ruler', name: 'Ruler', icon: '📏', material: 'Plastic / Wood', isMagnetic: false, hotspot: { x: 16.6, y: 84.3 }, desc: 'Dielectric polymer' },
-  { id: 'bottle', name: 'Water Bottle', icon: '🍾', material: 'Glass', isMagnetic: false, hotspot: { x: 28.7, y: 48.3 }, desc: 'Non-magnetic silica' },
-  { id: 'eraser', name: 'Eraser', icon: '🧹', material: 'Rubber', isMagnetic: false, hotspot: { x: 31.1, y: 70.1 }, desc: 'Non-ferrous elastomer' },
-  { id: 'clips', name: 'Paper Clips', icon: '📎', material: 'Steel (Iron)', isMagnetic: true, hotspot: { x: 35.1, y: 90.8 }, desc: 'Ferromagnetic alloy' },
-  { id: 'coins', name: 'Coins', icon: '🪙', material: 'Nickel Alloy', isMagnetic: true, hotspot: { x: 47.0, y: 82.2 }, desc: 'Ferromagnetic core' },
-  { id: 'compass', name: 'Compass', icon: '🧭', material: 'Magnetic Needle', isMagnetic: true, hotspot: { x: 55.5, y: 51.2 }, desc: 'Permanent magnet' },
-  { id: 'pencil_case', name: 'Pencil Case', icon: '👝', material: 'Fabric Cloth', isMagnetic: false, hotspot: { x: 69.8, y: 71.8 }, desc: 'Organic textile' },
-  { id: 'pencil', name: 'Pencil', icon: '✏️', material: 'Wood & Graphite', isMagnetic: false, hotspot: { x: 87.5, y: 86.7 }, desc: 'Carbon & cellulose' },
-  { id: 'notebook', name: 'Notebook', icon: '📓', material: 'Paper', isMagnetic: false, hotspot: { x: 95.8, y: 71.4 }, desc: 'Cellulose fiber' },
+  { id: 'pens', name: 'Pens', icon: '🖊️', material: 'Plastic', isMagnetic: false, hotspot: { x: 4.2, y: 72.0 }, desc: 'Synthetic polymer', crop: { sx: 80, sy: 390, sw: 220, sh: 360 } },
+  { id: 'ruler', name: 'Ruler', icon: '📏', material: 'Plastic / Wood', isMagnetic: false, hotspot: { x: 16.6, y: 84.3 }, desc: 'Dielectric polymer', crop: { sx: 50, sy: 790, sw: 340, sh: 160 } },
+  { id: 'bottle', name: 'Water Bottle', icon: '🍾', material: 'Glass', isMagnetic: false, hotspot: { x: 28.7, y: 48.3 }, desc: 'Non-magnetic silica', crop: { sx: 310, sy: 295, sw: 140, sh: 380 } },
+  { id: 'eraser', name: 'Eraser', icon: '🧹', material: 'Rubber', isMagnetic: false, hotspot: { x: 31.1, y: 70.1 }, desc: 'Non-ferrous elastomer', crop: { sx: 350, sy: 685, sw: 120, sh: 75 } },
+  { id: 'clips', name: 'Paper Clips', icon: '📎', material: 'Steel (Iron)', isMagnetic: true, hotspot: { x: 35.1, y: 90.8 }, desc: 'Ferromagnetic alloy', crop: { sx: 415, sy: 740, sw: 210, sh: 115 } },
+  { id: 'coins', name: 'Coins', icon: '🪙', material: 'Nickel Alloy', isMagnetic: true, hotspot: { x: 47.0, y: 82.2 }, desc: 'Ferromagnetic core', crop: { sx: 620, sy: 695, sw: 175, sh: 85 } },
+  { id: 'compass', name: 'Compass', icon: '🧭', material: 'Magnetic Needle', isMagnetic: true, hotspot: { x: 55.5, y: 51.2 }, desc: 'Permanent magnet', crop: { sx: 655, sy: 345, sw: 180, sh: 220 } },
+  { id: 'pencil_case', name: 'Pencil Case', icon: '👝', material: 'Fabric Cloth', isMagnetic: false, hotspot: { x: 69.8, y: 71.8 }, desc: 'Organic textile', crop: { sx: 830, sy: 635, sw: 340, sh: 230 } },
+  { id: 'pencil', name: 'Pencil', icon: '✏️', material: 'Wood & Graphite', isMagnetic: false, hotspot: { x: 87.5, y: 86.7 }, desc: 'Carbon & cellulose', crop: { sx: 1175, sy: 745, sw: 340, sh: 200 } },
+  { id: 'notebook', name: 'Notebook', icon: '📓', material: 'Paper', isMagnetic: false, hotspot: { x: 95.8, y: 71.4 }, desc: 'Cellulose fiber', crop: { sx: 1205, sy: 575, sw: 445, sh: 235 } },
 ];
+
+function CroppedObjectViewer({ item, scanProgress }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    if (!item || !item.crop) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const render = (img) => {
+      if (!img || !img.naturalWidth) return;
+      const { sx, sy, sw, sh } = item.crop;
+
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width || 160;
+      const h = rect.height || 125;
+
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Fit cropped region within canvas maintaining exact aspect ratio
+      const scale = Math.min((w - 12) / sw, (h - 12) / sh);
+      const dw = sw * scale;
+      const dh = sh * scale;
+      const dx = (w - dw) / 2;
+      const dy = (h - dh) / 2;
+
+      // Draw rounded clipped region for high visual quality
+      ctx.save();
+      const r = 8;
+      ctx.beginPath();
+      ctx.moveTo(dx + r, dy);
+      ctx.lineTo(dx + dw - r, dy);
+      ctx.quadraticCurveTo(dx + dw, dy, dx + dw, dy + r);
+      ctx.lineTo(dx + dw, dy + dh - r);
+      ctx.quadraticCurveTo(dx + dw, dy + dh, dx + dw - r, dy + dh);
+      ctx.lineTo(dx + r, dy + dh);
+      ctx.quadraticCurveTo(dx, dy + dh, dx, dy + dh - r);
+      ctx.lineTo(dx, dy + r);
+      ctx.quadraticCurveTo(dx, dy, dx + r, dy);
+      ctx.closePath();
+      ctx.clip();
+
+      ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+      ctx.restore();
+    };
+
+    const existingImg = document.querySelector('img[src*="activity_4.1.png"]');
+    if (existingImg && existingImg.complete && existingImg.naturalWidth > 0) {
+      render(existingImg);
+    } else {
+      const img = new Image();
+      img.src = '/Activity4_1/activity_4.1.png';
+      img.onload = () => render(img);
+    }
+  }, [item]);
+
+  return (
+    <div style={{
+      width: '100%',
+      height: '100%',
+      maxHeight: '138px',
+      position: 'relative',
+      borderRadius: '14px',
+      background: 'rgba(15, 23, 42, 0.94)',
+      border: '1.5px solid #38BDF8',
+      boxShadow: '0 0 16px rgba(56, 189, 248, 0.3), inset 0 0 14px rgba(2, 132, 199, 0.25)',
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'block',
+        }}
+      />
+
+      {/* Laser Scanning Line Sweep synced to progress */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: `${scanProgress}%`,
+          width: '2.5px',
+          background: '#38BDF8',
+          boxShadow: '0 0 10px #38BDF8, 0 0 18px #0284C7',
+          pointerEvents: 'none',
+          zIndex: 4,
+        }}
+      />
+
+      {/* Corner Reticles */}
+      <div style={{ position: 'absolute', top: 4, left: 4, width: 8, height: 8, borderTop: '2px solid #38BDF8', borderLeft: '2px solid #38BDF8', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: 4, right: 4, width: 8, height: 8, borderTop: '2px solid #38BDF8', borderRight: '2px solid #38BDF8', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: 4, left: 4, width: 8, height: 8, borderBottom: '2px solid #38BDF8', borderLeft: '2px solid #38BDF8', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: 4, right: 4, width: 8, height: 8, borderBottom: '2px solid #38BDF8', borderRight: '2px solid #38BDF8', pointerEvents: 'none' }} />
+
+      {/* Item Label Badge */}
+      <div style={{
+        position: 'absolute',
+        bottom: 4,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        background: 'rgba(3, 7, 18, 0.88)',
+        border: '1px solid rgba(56, 189, 248, 0.45)',
+        borderRadius: '6px',
+        padding: '2px 8px',
+        fontSize: '0.66rem',
+        fontWeight: 900,
+        color: '#E0F2FE',
+        letterSpacing: '0.4px',
+        whiteSpace: 'nowrap',
+        pointerEvents: 'none',
+        zIndex: 5,
+      }}>
+        ISOLATED OBJECT
+      </div>
+    </div>
+  );
+}
 
 export default function MagneticTable({ onComplete }) {
   const [scanningItemId, setScanningItemId] = useState(null);
@@ -21,6 +151,8 @@ export default function MagneticTable({ onComplete }) {
   const [scannedResults, setScannedResults] = useState({});
   const [draggedItem, setDraggedItem] = useState(null);
   const [dragOverCardId, setDragOverCardId] = useState(null);
+  const [isDragOverScanner, setIsDragOverScanner] = useState(false);
+  const [activeScannerItem, setActiveScannerItem] = useState(null);
   const [showInstructionModal, setShowInstructionModal] = useState(true);
   const [showCompletionPopup, setShowCompletionPopup] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -50,11 +182,12 @@ export default function MagneticTable({ onComplete }) {
     if (scanningItemId || scannedResults[item.id]) return;
 
     setScanningItemId(item.id);
+    setActiveScannerItem(item);
     setScanProgress(0);
 
     let progress = 0;
     const interval = setInterval(() => {
-      progress += 4;
+      progress += 1;
       setScanProgress(progress);
 
       if (progress >= 100) {
@@ -71,7 +204,7 @@ export default function MagneticTable({ onComplete }) {
         setScanningItemId(null);
         setScanProgress(0);
       }
-    }, 32);
+    }, 28);
   };
 
   const isComplete = Object.keys(scannedResults).length === ALL_ITEMS.length;
@@ -96,6 +229,29 @@ export default function MagneticTable({ onComplete }) {
     if (itemToScan && itemToScan.id === targetItem.id) {
       if (!scannedResults[targetItem.id] && !scanningItemId) {
         startScanForItem(targetItem);
+      }
+    }
+    setDraggedItem(null);
+  };
+
+  const handleDropOnScanner = (e) => {
+    e.preventDefault();
+    setIsDragOverScanner(false);
+    let itemId = null;
+    try {
+      if (e.dataTransfer) {
+        itemId = e.dataTransfer.getData('text/plain');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+
+    const itemToScan = ALL_ITEMS.find(i => i.id === itemId) || draggedItem;
+    if (itemToScan) {
+      if (!scannedResults[itemToScan.id] && !scanningItemId) {
+        startScanForItem(itemToScan);
+      } else if (scannedResults[itemToScan.id]) {
+        setActiveScannerItem(itemToScan);
       }
     }
     setDraggedItem(null);
@@ -148,24 +304,30 @@ export default function MagneticTable({ onComplete }) {
         }}
         onDragLeave={() => setDragOverCardId(null)}
         onDrop={(e) => handleDropOnCard(e, item)}
+        onClick={() => {
+          if (!scannedResults[item.id] && !scanningItemId) {
+            startScanForItem(item);
+          } else if (scannedResults[item.id]) {
+            setActiveScannerItem(item);
+          }
+        }}
         style={{
-          flex: 1,
           display: 'flex',
-          flexDirection: 'column',
+          alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0.55rem 0.75rem',
+          padding: '0.65rem 0.95rem',
+          minHeight: '56px',
           background: cardBg,
-          borderRadius: '16px',
+          borderRadius: '14px',
           border: cardBorder,
           boxShadow: cardShadow,
           cursor: isScanned ? 'default' : 'pointer',
           transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
           position: 'relative',
           overflow: 'hidden',
-          minHeight: 0,
           userSelect: 'none',
           boxSizing: 'border-box',
-          transform: isDragOver ? 'scale(1.03)' : 'scale(1)',
+          transform: isDragOver ? 'scale(1.02)' : 'scale(1)',
         }}
         title={isScanned ? `${item.name}: ${item.desc}` : `Drag ${item.name} from the experiment table here!`}
       >
@@ -200,158 +362,81 @@ export default function MagneticTable({ onComplete }) {
           </>
         )}
 
-        {/* Top/Center Section: Left Emoji + Object Name (+ Status Pill if Scanned/Scanning) */}
+        {/* Left: Item Icon + (Object Name on Line 1, Magnetic/Non-Magnetic on Line 2) */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          gap: '0.65rem',
+          minWidth: 0,
           width: '100%',
-          padding: '0.35rem 0.5rem 0.1rem 0.5rem',
           position: 'relative',
-          zIndex: 3
+          zIndex: 3,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            {/* Emoji shifted to the left and brought slightly down */}
-            <span style={{
-              fontSize: '2.4rem',
-              lineHeight: 1,
-              userSelect: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: '0.2rem',
-              flexShrink: 0
-            }}>
-              {item.icon}
-            </span>
+          <span style={{
+            fontSize: '1.95rem',
+            lineHeight: 1,
+            userSelect: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            {item.icon}
+          </span>
 
-            {/* Object's Name in Top Section */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: '2px',
+            minWidth: 0,
+            flex: 1,
+          }}>
             <span style={{
               fontSize: '1.02rem',
               fontWeight: 900,
               color: isDragOver ? '#0369A1' : nameColor,
               letterSpacing: '0.2px',
-              marginTop: '0.2rem'
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}>
               {item.name}
             </span>
-          </div>
 
-          {/* Right Status Pill if Scanning */}
-          {isScanning && (
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                padding: '0.35rem 0.75rem',
-                borderRadius: '8px',
-                background: 'rgba(2, 132, 199, 0.95)',
-                border: '1.5px solid #38BDF8',
-                color: '#FFFFFF',
-                fontSize: '0.8rem',
-                fontWeight: 900,
-                marginTop: '0.2rem'
-              }}
-            >
-              <Activity size={13} className="animate-spin" color="#FFFFFF" />
-              <span>{scanProgress}%</span>
-            </div>
-          )}
-        </div>
-
-        {/* Middle / Bottom Interactive Bay: 🔍 Scan Button (or Live Waveform / Magnetic or Non-Magnetic Verdict) */}
-        <div style={{ marginTop: '0.35rem', zIndex: 3 }}>
-          {isScanning ? (
-            /* Live Spectrogram Waveform */
-            <div style={{
-              background: 'rgba(2, 132, 199, 0.08)',
-              border: '1px solid rgba(2, 132, 199, 0.25)',
-              borderRadius: '10px',
-              padding: '0.35rem 0.65rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}>
-              <span style={{ fontSize: '0.78rem', color: '#0284C7', fontWeight: 900, letterSpacing: '0.3px' }}>ANALYZING:</span>
-              <div style={{ display: 'flex', gap: '3px', flex: 1, alignItems: 'flex-end', height: '14px' }}>
-                {[40, 85, 50, 100, 70, 90, 45, 80, 60, 95].map((h, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      flex: 1,
-                      height: `${(h * (scanProgress % 50)) / 45}%`,
-                      maxHeight: '100%',
-                      background: 'linear-gradient(to top, #0284C7, #38BDF8)',
-                      borderRadius: '1px',
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : isScanned ? (
-            /* Result Verdict: Magnetic or Non-Magnetic */
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              background: isMag
-                ? 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)'
-                : 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
-              borderRadius: '8px',
-              padding: '0.42rem 0.85rem',
-              color: '#FFFFFF',
-              boxShadow: isMag
-                ? '0 2px 8px rgba(22, 163, 74, 0.35)'
-                : '0 2px 8px rgba(220, 38, 38, 0.35)',
-              width: '100%',
-              boxSizing: 'border-box'
-            }}>
-              {isMag ? <CheckCircle2 size={15} color="#FFFFFF" /> : <XCircle size={15} color="#FFFFFF" />}
-              <span style={{
-                fontSize: '0.9rem',
-                fontWeight: 900,
-                letterSpacing: '0.3px'
-              }}>
-                {isMag ? 'Magnetic' : 'Non-Magnetic'}
-              </span>
-            </div>
-          ) : (
-            /* Unscanned State: "🔍 Scan" Button / Drop Target in Bottom Area */
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%'
-            }}>
+            {/* Next Line: Magnetic / Non-Magnetic Status inside the card */}
+            {isScanning ? (
               <div
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  width: '100%',
-                  padding: '0.42rem 1.15rem',
-                  borderRadius: '8px',
-                  background: isDragOver ? 'rgba(2, 132, 199, 0.95)' : 'rgba(15, 23, 42, 0.90)',
-                  border: isDragOver ? '2px solid #38BDF8' : '1.5px solid rgba(254, 240, 138, 0.9)',
-                  color: '#FFFFFF',
-                  fontSize: '0.9rem',
+                  gap: '4px',
+                  color: '#0284C7',
+                  fontSize: '0.78rem',
                   fontWeight: 900,
-                  boxShadow: 'none',
-                  backdropFilter: 'blur(8px)',
-                  userSelect: 'none',
                   whiteSpace: 'nowrap',
-                  transition: 'all 0.2s ease',
-                  cursor: 'pointer'
                 }}
               >
-                <Search size={15} color="#FDE68A" />
-                <span style={{ letterSpacing: '0.3px' }}>Scan</span>
+                <Activity size={12} className="animate-spin" color="#0284C7" />
+                <span>Scanning {scanProgress}%</span>
               </div>
-            </div>
-          )}
+            ) : isScanned ? (
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  color: isMag ? '#15803D' : '#B91C1C',
+                  fontSize: '0.8rem',
+                  fontWeight: 900,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {isMag ? <CheckCircle2 size={13} color="#15803D" /> : <XCircle size={13} color="#B91C1C" />}
+                <span>{isMag ? 'Magnetic' : 'Non-Magnetic'}</span>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     );
@@ -597,31 +682,249 @@ export default function MagneticTable({ onComplete }) {
                 justifyContent: 'space-between',
               }}
             >
-              <span style={{ fontSize: '0.82rem', color: '#991B1B', fontWeight: 800 }}>🛡️ Non-Mag:</span>
+              <span style={{ fontSize: '0.82rem', color: '#991B1B', fontWeight: 800 }}>🛡️ Non-Magnetic:</span>
               <strong style={{ fontSize: '0.95rem', color: '#B91C1C', fontWeight: 900 }}>{nonMagneticCount}</strong>
             </div>
           </div>
         </div>
 
-        {/* 2-Column Scanner Slots Grid */}
+        {/* HOLOGRAPHIC SCANNING CHAMBER (Drag & Drop Scanner Area: 40% Empty Left, 60% Wordings Right) */}
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            if (!scanningItemId) {
+              setIsDragOverScanner(true);
+            }
+          }}
+          onDragLeave={() => setIsDragOverScanner(false)}
+          onDrop={handleDropOnScanner}
+          style={{
+            minHeight: '160px',
+            margin: '0.65rem 0.75rem 0.35rem',
+            borderRadius: '20px',
+            background: isDragOverScanner
+              ? 'linear-gradient(135deg, rgba(224, 242, 254, 0.95) 0%, rgba(254, 243, 199, 0.95) 100%)'
+              : scanningItemId
+              ? 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 50%, #E0F2FE 100%)'
+              : activeScannerItem && scannedResults[activeScannerItem.id]
+              ? activeScannerItem.isMagnetic
+                ? 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 50%, #FEF3C7 100%)'
+                : 'linear-gradient(135deg, #FFF1F2 0%, #FEE2E2 50%, #FEF3C7 100%)'
+              : 'linear-gradient(135deg, #FFFFFF 0%, #FFFBEB 55%, #FEF3C7 100%)',
+            border: isDragOverScanner
+              ? '2.5px dashed #0284C7'
+              : scanningItemId
+              ? '2px solid #38BDF8'
+              : activeScannerItem && scannedResults[activeScannerItem.id]
+              ? activeScannerItem.isMagnetic
+                ? '2px solid #86EFAC'
+                : '2px solid #FCA5A5'
+              : '2px dashed #F59E0B',
+            boxShadow: isDragOverScanner
+              ? '0 0 28px rgba(2, 132, 199, 0.35), inset 0 0 16px rgba(2, 132, 199, 0.15)'
+              : scanningItemId
+              ? '0 0 25px rgba(245, 158, 11, 0.3), inset 0 0 16px rgba(56, 189, 248, 0.2)'
+              : '0 6px 20px rgba(217, 119, 6, 0.08), inset 0 2px 10px rgba(255, 255, 255, 0.9)',
+            position: 'relative',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'stretch',
+            padding: '1rem',
+            boxSizing: 'border-box',
+            transition: 'all 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
+            flexShrink: 0,
+          }}
+        >
+          {/* Laser Sweep FX across entire chamber when scanning */}
+          {scanningItemId && (
+            <>
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  width: `${scanProgress}%`,
+                  background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.04) 0%, rgba(2, 132, 199, 0.22) 100%)',
+                  pointerEvents: 'none',
+                  zIndex: 1,
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: `${scanProgress}%`,
+                  width: '3px',
+                  background: '#0284C7',
+                  boxShadow: '0 0 14px #0284C7, 0 0 24px #38BDF8',
+                  pointerEvents: 'none',
+                  zIndex: 2,
+                }}
+              />
+            </>
+          )}
+
+          {/* Left 40%: Isolated Object Displayed until scan finishes */}
+          <div
+            style={{
+              width: '40%',
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              zIndex: 3,
+              paddingRight: '0.4rem',
+              boxSizing: 'border-box',
+            }}
+          >
+            {scanningItemId && ALL_ITEMS.find(i => i.id === scanningItemId) ? (
+              <CroppedObjectViewer
+                item={ALL_ITEMS.find(i => i.id === scanningItemId)}
+                scanProgress={scanProgress}
+              />
+            ) : null}
+          </div>
+
+          {/* Right 60%: Wordings / Content */}
+          <div
+            style={{
+              width: '60%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              paddingLeft: '1rem',
+              position: 'relative',
+              zIndex: 3,
+              boxSizing: 'border-box',
+            }}
+          >
+            {scanningItemId && ALL_ITEMS.find(i => i.id === scanningItemId) ? (() => {
+              const scanningItem = ALL_ITEMS.find(i => i.id === scanningItemId);
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <span style={{ fontSize: '1.8rem', lineHeight: 1 }}>{scanningItem.icon}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontSize: '1.18rem', fontWeight: 900, color: '#064E3B' }}>{scanningItem.name}</span>
+                      <span style={{ fontSize: '0.8rem', color: '#B45309', fontWeight: 700 }}>Material: {scanningItem.material}</span>
+                    </div>
+                  </div>
+
+                  {/* Frequency Visualizer */}
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '18px', width: '85%' }}>
+                    {[35, 75, 95, 60, 100, 80, 45, 90, 70, 85, 55, 90, 40].map((h, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          flex: 1,
+                          height: `${Math.max(20, (h * ((scanProgress * 3 + i * 20) % 100)) / 100)}%`,
+                          background: 'linear-gradient(to top, #D97706, #0284C7)',
+                          borderRadius: '2px',
+                          transition: 'height 0.08s ease',
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                    <Activity size={14} className="animate-spin" color="#0284C7" />
+                    <span style={{ fontSize: '0.84rem', fontWeight: 900, color: '#0284C7' }}>
+                      ANALYZING PERMEABILITY... {scanProgress}%
+                    </span>
+                  </div>
+                </div>
+              );
+            })() : activeScannerItem && scannedResults[activeScannerItem.id] ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span style={{ fontSize: '1.8rem', lineHeight: 1 }}>{activeScannerItem.icon}</span>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                      <span style={{ fontSize: '1.12rem', fontWeight: 900, color: '#0F172A' }}>{activeScannerItem.name}</span>
+                      <span style={{
+                        fontSize: '0.74rem',
+                        fontWeight: 800,
+                        padding: '2px 7px',
+                        borderRadius: '6px',
+                        background: 'rgba(0,0,0,0.06)',
+                        color: '#475569'
+                      }}>
+                        {activeScannerItem.material}
+                      </span>
+                    </div>
+                    <div style={{
+                      fontSize: '0.92rem',
+                      fontWeight: 900,
+                      color: activeScannerItem.isMagnetic ? '#15803D' : '#B91C1C',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      marginTop: '3px',
+                    }}>
+                      {activeScannerItem.isMagnetic ? <CheckCircle2 size={16} color="#15803D" /> : <XCircle size={16} color="#B91C1C" />}
+                      <span>{activeScannerItem.isMagnetic ? 'MAGNETIC (Attracted)' : 'NON-MAGNETIC (No Pull)'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Idle State: Wordings only, No shoe magnet icon, No "DROP ZONE: SCANNING CHAMBER" title */
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', alignItems: 'flex-start' }}>
+                <span style={{
+                  fontSize: '0.98rem',
+                  color: isDragOverScanner ? '#0369A1' : '#78350F',
+                  fontWeight: 800,
+                  lineHeight: 1.45,
+                }}>
+                  {isDragOverScanner
+                    ? 'Release item to detect magnetic properties'
+                    : 'Drag any object name from the experiment table and drop here to scan'}
+                </span>
+
+                <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '0.24rem 0.75rem',
+                  borderRadius: '12px',
+                  background: 'rgba(245, 158, 11, 0.14)',
+                  border: '1px solid rgba(245, 158, 11, 0.35)',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  color: '#B45309',
+                }}>
+                  <Sparkles size={13} color="#D97706" />
+                  <span>Scanner Sensor Ready</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 2-Column Scanner Slots Grid in Lower Half */}
         <div
           style={{
-            flex: 1,
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
             gap: '0.45rem',
             padding: '0.55rem',
             overflowY: 'auto',
+            overflowX: 'hidden',
             boxSizing: 'border-box',
+            width: '100%',
           }}
         >
           {/* Column 1 (5 items) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', height: '100%', flex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', minWidth: 0 }}>
             {ALL_ITEMS.slice(0, 5).map(renderCard)}
           </div>
 
           {/* Column 2 (5 items) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', height: '100%', flex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', minWidth: 0 }}>
             {ALL_ITEMS.slice(5, 10).map(renderCard)}
           </div>
         </div>
