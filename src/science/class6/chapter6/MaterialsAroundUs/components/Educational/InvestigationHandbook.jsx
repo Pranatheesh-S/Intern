@@ -169,17 +169,17 @@ const PotterySpotlight = ({ page1Layout }) => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '0', boxSizing: 'border-box', overflow: 'hidden' }}>
       
       <div style={{ marginBottom: 'clamp(8px, 1.5vh, 16px)' }}>
-        <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '900', color: 'var(--lesson-text)', margin: '0 0 4px 0', wordBreak: 'break-word', lineHeight: '1.2' }}>
+        <h3 style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '900', color: '#7A6A52', margin: '0 0 4px 0', wordBreak: 'break-word', lineHeight: '1.2' }}>
           {currentData.title}
         </h3>
-        <div style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '900', color: '#3B2A1F', letterSpacing: '1px' }}>
+        <div style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: '900', color: '#A64B27', letterSpacing: '1px' }}>
           DO YOU KNOW?
         </div>
       </div>
 
       <div style={{ 
         flex: '1 1 auto', 
-        backgroundColor: '#FFFFFF', 
+        backgroundColor: '#FDF6F2', 
         borderRadius: '12px', 
         border: '3px solid #D9C9A3', 
         padding: 'clamp(12px, 2vmin, 16px)',
@@ -314,7 +314,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
                 <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--lesson-text)' }}><strong style={{ color: 'var(--lesson-primary)', fontWeight: '800', fontSize: '22px' }}>Object:</strong> Anything we can see or use around us.</div>
               </div>
 
-              <div style={{ background: '#FFFFFF', border: '3px solid #D9C9A3', borderRadius: '8px', padding: '12px 16px' }}>
+              <div style={{ background: '#FFFDF5', border: '3px solid #D9C9A3', borderRadius: '8px', padding: '12px 16px' }}>
                 <h4 style={{ margin: '0 0 8px 0', color: '#3B2A1F', fontSize: '24px', fontWeight: '900' }}>Examples:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '21px', fontWeight: '700', color: '#3b2818' }}>
                   <div>Chair can be made of wood, plastic or steel.</div>
@@ -332,7 +332,7 @@ export default function InvestigationHandbook({ highestUnlockedIndex = 0, curren
 
             {/* ================= RIGHT PAGE (PAGE 2) ================= */}
             <div style={{ flex: 1, minHeight: 0, padding: '24px 32px', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ margin: '0 0 16px 0', fontSize: 'clamp(28px, 3.5vw, 34px)', color: 'var(--lesson-primary)', fontWeight: '900', borderBottom: '4px solid #A64B27', paddingBottom: '8px', display: 'inline-block' }}>
+              <h2 style={{ margin: '0 0 16px 0', fontSize: 'clamp(28px, 3.5vw, 34px)', color: '#3B2A1F', fontWeight: '900', borderBottom: '4px solid #A64B27', paddingBottom: '8px', display: 'inline-block' }}>
                 Historical Spotlight: Pottery
               </h2>
 
