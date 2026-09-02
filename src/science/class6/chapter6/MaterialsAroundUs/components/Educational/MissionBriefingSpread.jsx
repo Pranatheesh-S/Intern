@@ -57,7 +57,7 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             background: #f6f1e4;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: stretch;
             height: 100%;
             overflow: hidden;
@@ -66,26 +66,24 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
           }
           .left-hero-wrapper {
             width: 100%;
-            flex: 1 1 auto;
-            max-height: 56%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             overflow: hidden;
-            border-radius: 12px;
           }
           .barrier2-hero-img {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 12px;
+            height: clamp(480px, 60vh, 650px);
+            object-fit: cover;
+            object-position: top center;
+            display: block;
             filter: drop-shadow(0 6px 16px rgba(0,0,0,0.12));
           }
           .default-hero-img {
-            height: 100%;
-            max-height: 500px;
-            object-fit: contain;
+            width: 100%;
+            height: clamp(480px, 60vh, 650px);
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
           }
 
           /* ---------- RIGHT PAGE ---------- */
@@ -116,7 +114,10 @@ export default function MissionBriefingSpread({ data, onContinue, onBack }) {
             margin-top: 4px;
             width: 100%;
             background: white;
-            padding: 1.2rem 1.5rem;
+            padding: 2.5rem 1.8rem;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             z-index: 20;
